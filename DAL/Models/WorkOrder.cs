@@ -8,6 +8,10 @@ namespace DAL.Models
 {
     public class WorkOrder 
     {
+        public WorkOrder()
+        {
+            PartNumbers = new List<WorkOrderPartNumber>();
+        }
         [Key]
         public long ID { get; set; }
 
@@ -69,6 +73,8 @@ namespace DAL.Models
         public DateTime UpdatedDate { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
+
+        public virtual List<WorkOrderPartNumber> PartNumbers { get; set; }
 
     }
 }

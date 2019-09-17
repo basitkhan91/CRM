@@ -249,6 +249,8 @@ namespace DAL
 
         IDashNumberRepository DashNumberRepository { get; }
 
+        ICommonRepository CommonRepository { get; }
+      
         IAssetCapes AssetCapes { get; }
 
         IAssetIntangibleAttributeType AssetIntangibleAttributeType { get; }

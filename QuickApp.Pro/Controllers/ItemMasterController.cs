@@ -179,7 +179,7 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<Manufacturer>))]
         public IActionResult GetParntnumberlist()
         {
-            var obj = _context.ItemMaster.Where(a => (a.IsActive == null || a.IsActive == true) && a.IsDelete == true || a.IsDelete == null).OrderByDescending(c => c.ItemMasterId).ToList();
+            var obj = _context.ItemMaster.Where(a => (a.IsActive == null || a.IsActive == true) && (a.IsDelete == false || a.IsDelete == null)).OrderByDescending(c => c.ItemMasterId).ToList();
             return Ok(obj);
         }
 

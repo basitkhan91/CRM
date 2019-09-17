@@ -1,12 +1,15 @@
 ﻿import { OnInit, Component } from "@angular/core";
 import { fadeInOut } from "../../services/animations";
-import { AuthService} from "../../services/auth.service";
-import { AlertService, MessageSeverity  } from "../../services/alert.service";
+import { AuthService } from "../../services/auth.service";
+import { AlertService, MessageSeverity } from "../../services/alert.service";
 import { NgbModalRef, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { AircraftType } from "../../models/AircraftType.model";
 import { AircraftManufacturerService } from "../../services/aircraft-manufacturer/aircraftManufacturer.service";
 import { SingleScreenAuditDetails } from "../../models/single-screen-audit-details.model";
 import { LazyLoadEvent } from "primeng/api";
+import { MasterCompany } from "../../models/mastercompany.model";
+import { MasterComapnyService } from "../../services/mastercompany.service";
+import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 @Component({
     selector: 'app-aircraft-manufacturer',
     templateUrl: './aircraft-manufacturer.component.html',
@@ -14,34 +17,51 @@ import { LazyLoadEvent } from "primeng/api";
     animations: [fadeInOut]
 })
 /** aircraft-manufacturer component*/
-export class AircraftManufacturerComponent implements OnInit{
+export class AircraftManufacturerComponent implements OnInit {
     pageSearch: { query: any; field: any; };
     first: number;
     rows: number;
     paginatorState: any;
-
+    loadingIndicator: boolean;
     AuditDetails: any[];
     /** aircraft-manufacturer ctor */
-
+    allComapnies: MasterCompany[] = [];
     currentAircraftManufacturerType: AircraftType;
     aircraftManufacturerTypeToUpdate: AircraftType;
     aircraftManufacturerTypeToRemove: AircraftType;
+    aircraftManufacturertoview: AircraftType;
     aircraftManufacturerList: AircraftType[];
     aircraftManufacturerPagination: AircraftType[];//added
-
+    public sourceaircraftmanufacturer: any = {}
     aircraftManufacturerSearchList: AircraftType[];
+    aircraftManufacturerPaginationList: any[] = [];
     modal: NgbModalRef;
     display: boolean = false;
     modelValue: boolean = false;
     Active: string;
-
+    manufactureViewField: any = {};
     //adding for Pagination start
     totalRecords: number;
     cols: any[];
     loading: boolean;
+    comments: any = " ";
+    createdBy: any = "";
+    updatedBy: any = "";
+    createdDate: any = "";
+    updatedDate: any = "";
+    field: any;
+    aircraftManufacturer = [];
+    totelPages: number;
+    allmanufacturerInfo: AircraftType[] = [];
+    actionmanufacturer: any[] = [];
+    selectedActionName: any;
+    localCollection: any[] = [];
+    disableSave: boolean = false;
+    manufacturer: string;
     //adding for Pagination End
 
-    constructor(private aircraftManufacurerService: AircraftManufacturerService,private alertService: AlertService, private modalService: NgbModal, private authService: AuthService,) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService,
+        private aircraftManufacurerService: AircraftManufacturerService, private masterComapnyService: MasterComapnyService, private alertService: AlertService, private modalService: NgbModal, private authService: AuthService, ) {
 
     }
 
@@ -57,10 +77,36 @@ export class AircraftManufacturerComponent implements OnInit{
     //    });
     //  }
 
+    private loadMasterCompanies() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.masterComapnyService.getMasterCompanies().subscribe(
+            results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+
+    }
+    private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
+        // alert('success');
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allComapnies = allComapnies;
+
+    }
+    private onDataLoadFailed(error: any) {
+        // alert(error);
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+
+    }
     ngOnInit(): void {
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-aircraft-manufacturer';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
         this.aircraftManufacurerService.getAll().subscribe(aircraftManufacturer => {
             this.aircraftManufacturerList = aircraftManufacturer[0];
+            this.allmanufacturerInfo = aircraftManufacturer[0];            
             this.totalRecords = this.aircraftManufacturerList.length;//Adding for Pagination
+            this.totelPages = Math.ceil(this.totalRecords / this.rows);
             this.aircraftManufacturerList.forEach(function (manufacturer) {
                 manufacturer.isActive = manufacturer.isActive == false ? false : true;
             });
@@ -71,6 +117,7 @@ export class AircraftManufacturerComponent implements OnInit{
         this.cols = [
             { field: 'aircraftTypeId', header: 'ID' },
             { field: 'description', header: 'Aircraft Manufacturer Name' },
+            { field: 'memo', header: 'Memo' },
         ];
         this.loading = true;
         //P-table Code End
@@ -81,17 +128,39 @@ export class AircraftManufacturerComponent implements OnInit{
         this.loading = true;
         this.rows = event.rows;
         this.first = event.first;
-        setTimeout(() => {
-            if (this.aircraftManufacturerList) {
-                this.aircraftManufacurerService.getServerPages(event).subscribe( //we are sending event details to service
+        if (this.field) {
+            this.aircraftManufacturer.push({
+                first: this.first,
+                page: 10,
+                pageCount: 10,
+                rows: this.rows,
+                limit: 5
+            })
+            if (this.aircraftManufacturer) {
+                this.aircraftManufacurerService.getServerPages(this.aircraftManufacturer[this.aircraftManufacturer.length - 1]).subscribe( //we are sending event details to service
                     pages => {
                         if (pages.length > 0) {
-                            this.aircraftManufacturerPagination = pages[0];
+                            this.aircraftManufacturerPaginationList = pages;
+                            this.totalRecords = this.aircraftManufacturerPaginationList[0].totalRecordsCount;
+                            this.totelPages = Math.ceil(this.totalRecords / this.rows);                            
                         }
                     });
-                this.loading = false;
             }
-        }, 1000);
+        }
+        else {
+            setTimeout(() => {
+                if (this.aircraftManufacturerList) {
+                    this.aircraftManufacurerService.getServerPages(event).subscribe( //we are sending event details to service
+                        pages => {
+                            if (pages.length > 0) {
+                                this.aircraftManufacturerPagination = pages[0];
+                            }
+                        });
+                    this.loading = false;
+                }
+            }, 1000);
+        }
+
     }
     //Pagination Code End
 
@@ -105,7 +174,7 @@ export class AircraftManufacturerComponent implements OnInit{
             return;
         }
         this.currentAircraftManufacturerType.createdBy = this.userName;
-        this.currentAircraftManufacturerType.updatedBy = this.userName;
+        this.currentAircraftManufacturerType.updatedBy = this.userName;       
         this.aircraftManufacurerService.add(this.currentAircraftManufacturerType).subscribe(aircraftManufacturer => {
             this.alertService.showMessage("Success", 'Aircraft manufacturer Added successfully.', MessageSeverity.success);
             this.updatePaginatorState(); // previously after update we used to call getAll now we can this method to get required list
@@ -114,6 +183,8 @@ export class AircraftManufacturerComponent implements OnInit{
         });
 
     }
+
+
 
     setAircraftManufacturerToUpdate(editAircraftManufacturerpopup: any, id: number): void {
         this.aircraftManufacturerTypeToUpdate = Object.assign({}, this.aircraftManufacturerPagination.filter(function (aircraftManufacturer) {
@@ -160,7 +231,13 @@ export class AircraftManufacturerComponent implements OnInit{
         })[0]);;
         this.modal = this.modalService.open(content, { size: 'sm' });
     }
-
+    openView(viewData, id): void {
+        this.aircraftManufacturertoview = Object.assign({}, this.aircraftManufacturerPagination.filter(function (manufacturer) {
+            return manufacturer.aircraftTypeId == id;
+        })[0]);;
+        console.log(this.aircraftManufacturertoview);
+        this.modal = this.modalService.open(viewData, { size: 'sm' });
+    }
     toggleIsActive(assetStatus: any, event): void {
         this.aircraftManufacturerTypeToUpdate = assetStatus;
         this.aircraftManufacturerTypeToUpdate.isActive = event.checked == false ? false : true;
@@ -197,6 +274,41 @@ export class AircraftManufacturerComponent implements OnInit{
         }
         if (this.paginatorState) {
             this.loadAircraftManufacturer(this.paginatorState);
+        }
+    }
+    manufactureId(event){
+        for (let i = 0; i < this.actionmanufacturer.length; i++) {            
+            if (event == this.actionmanufacturer[i][0].manufacturer) {
+                //alert("Action Name already Exists");
+                this.disableSave = true;
+                this.selectedActionName = event;
+            }
+        }
+    }
+    filterManufacturer(event) {
+
+        this.localCollection = [];
+        for (let i = 0; i < this.allmanufacturerInfo.length; i++) {
+            let manufacturer = this.allmanufacturerInfo[i].description;
+            if (manufacturer.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.actionmanufacturer.push([{
+                    "aircraftTypeId": this.allmanufacturerInfo[i].aircraftTypeId,
+                    "manufacturer": manufacturer
+                }]),
+                this.localCollection.push(manufacturer);
+            }
+        }
+    }
+  eventHandler(event) {
+        let value = event.target.value.toLowerCase();
+        if (this.selectedActionName) {
+            if (value == this.selectedActionName.toLowerCase()) {
+                //alert("Action Name already Exists");
+                this.disableSave = true;
+            }
+            else {
+                this.disableSave = false;
+            }
         }
     }
 }

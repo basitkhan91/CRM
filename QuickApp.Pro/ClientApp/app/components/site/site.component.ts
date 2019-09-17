@@ -53,8 +53,9 @@ export class SiteComponent implements OnInit, AfterViewInit {
 	allCountryinfo: any[];
 
 	localCollection: any[] = [];
-	
-	
+	totalRecords: number;
+	rows: number;
+
 	private isEditMode: boolean = false;
 	private isDeleteMode: boolean = false;
 	dataSource: MatTableDataSource<any>;
@@ -68,38 +69,38 @@ export class SiteComponent implements OnInit, AfterViewInit {
 	allComapnies: MasterCompany[] = [];
 	public auditHisory: AuditHistory[] = [];
 	allSites: Site[] = [];
-	displayedColumns = ['SiteId', 'name', 'Address1', 'Address2', 'Address3', 'City', 'StateOrProvince', 'Country','PostalCode', 'Memo', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
+	displayedColumns = ['SiteId', 'name', 'Address1', 'Address2', 'Address3', 'City', 'StateOrProvince', 'Country', 'PostalCode', 'Memo', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
 	selectedColumn: Site[];
 	selectedColumns: any[];
 	cols: any[];
 	site_Name: any = "";
-    selectedActionName: any;
-    disableSave: boolean;
-    stateOrProvince: any;
-    allManagemtninfo: any[];
+	selectedActionName: any;
+	disableSave: boolean;
+	stateOrProvince: any;
+	allManagemtninfo: any[];
 	gridData: TreeNode[];//Managemnt
 	gridData1: TreeNode[];//Managemnt
 	cols1: any[];
-	localSelectedManagement : any[]=[];
+	localSelectedManagement: any[] = [];
 	selectedManagementValues: any;
 	index: any;
 	selectedNodes3: any;
 	selectedNodeTest: TreeNode[];
 	siteInfo: Site;
-    localManagementSiteCollection: any;
+	localManagementSiteCollection: any;
 	localManagementSiteEditCollection: TreeNode[];
 	Active: string = "Active";
 	actionamecolle: any[] = [];
-    selectedSiteName: any;
-    disableSaveManufacturer: boolean;
-    selectedSite: any;
-    siteNamecolle: any;
-    AuditDetails: SingleScreenAuditDetails[];
-
+	selectedSiteName: any;
+	disableSaveManufacturer: boolean;
+	selectedSite: any;
+	siteNamecolle: any;
+	AuditDetails: SingleScreenAuditDetails[];
+	totelPages: number;
 	ngOnInit(): void {
 		//This Headers will Place in Html
 		this.cols = [
-			
+
 			{ field: 'siteId', header: 'Site ID' },
 			{ field: 'name', header: 'Site Name' },
 			{ field: 'address1', header: 'Address Line 1' },
@@ -127,7 +128,7 @@ export class SiteComponent implements OnInit, AfterViewInit {
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	/** site ctor */
-	constructor(public manageMentService: LegalEntityService,private breadCrumb: SingleScreenBreadcrumbService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: SiteService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+	constructor(public manageMentService: LegalEntityService, private breadCrumb: SingleScreenBreadcrumbService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: SiteService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 		this.dataSource = new MatTableDataSource();
 		this.sourceSite = new Site();
 
@@ -137,7 +138,7 @@ export class SiteComponent implements OnInit, AfterViewInit {
 		this.closeCmpny = false;
 	}
 
-	
+
 	public allWorkFlows: Site[] = [];
 
 	private loadData()  //retriving Information
@@ -170,8 +171,7 @@ export class SiteComponent implements OnInit, AfterViewInit {
 	//	this.allATAMaininfo = getAtaMainList;
 	//}
 
-	handleChange(rowData, e)
-	{
+	handleChange(rowData, e) {
 		if (e.checked == false) {
 			this.sourceSite = rowData;
 			this.sourceSite.updatedBy = this.userName;
@@ -225,8 +225,7 @@ export class SiteComponent implements OnInit, AfterViewInit {
 		];
 	}
 
-	makeNestedObj(arr, parent)
-	{
+	makeNestedObj(arr, parent) {
 		var out = []
 		for (var i in arr) {
 			if (arr[i].parentId == parent) {
@@ -241,17 +240,13 @@ export class SiteComponent implements OnInit, AfterViewInit {
 		return out
 	}
 
-	makeNestedObj1(child, arr, parent)
-	{
+	makeNestedObj1(child, arr, parent) {
 
 		var out = []
 		if (child) {
-			for (var i = 0; i < child.length; i++)
-			{
-				for (var j = 0; j < arr.length; j++)
-				{
-					if (arr[j].data)
-					{
+			for (var i = 0; i < child.length; i++) {
+				for (var j = 0; j < arr.length; j++) {
+					if (arr[j].data) {
 						if (child[i].managementStructureId == arr[j].data.managementStructureId) {
 							arr[j].data.managementSiteId = child[i].managementSiteId;
 							arr[j].data.siteId = child[i].siteId;
@@ -260,14 +255,13 @@ export class SiteComponent implements OnInit, AfterViewInit {
 							break;
 						}
 					}
-					else if (child[i].managementStructureId == arr[j].managementStructureId)
-					{
-							arr[j].data.managementSiteId = child[i].managementSiteId;
-							arr[j].data.siteId = child[i].siteId;
-							out.push(arr[j]);
-							console.log(arr[j].data);
-							break;
-						
+					else if (child[i].managementStructureId == arr[j].managementStructureId) {
+						arr[j].data.managementSiteId = child[i].managementSiteId;
+						arr[j].data.siteId = child[i].siteId;
+						out.push(arr[j]);
+						console.log(arr[j].data);
+						break;
+
 					}
 				}
 			}
@@ -281,8 +275,7 @@ export class SiteComponent implements OnInit, AfterViewInit {
 		console.log("selected node", event, event.node);
 	}
 
-	managementStructureClick(data)
-	{
+	managementStructureClick(data) {
 		console.log(this.selectedNodeTest);
 		//this.localSelectedManagement.push(this.selectedNodeTest);
 		//console.log(this.localSelectedManagement);
@@ -307,17 +300,17 @@ export class SiteComponent implements OnInit, AfterViewInit {
 		//		data.selectedManagementValues = true;
 		//		this.localSelectedManagement.push(data);
 		//	}
-			
-			
+
+
 		//}
 		//else
 		//{
 		//	data.selectedManagementValues = true;
 		//	this.localSelectedManagement.push(data);
 		//}
-		
+
 	}
-	
+
 	//ApplyFilter
 	public applyFilter(filterValue: string) {
 		this.dataSource.filter = filterValue;
@@ -335,9 +328,11 @@ export class SiteComponent implements OnInit, AfterViewInit {
 
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
-		this.dataSource.data = getSiteList; //need
+		this.dataSource.data = getSiteList;
+		//need
 		this.allSites = getSiteList; //Contain first array of Loaded table Data will put in Html as [value]
-
+		this.totalRecords = this.allSites.length;
+		//this.totelPages = Math.ceil(this.totalRecords / this.rows);
 		//console.log(this.allSites);
 
 
@@ -363,8 +358,7 @@ export class SiteComponent implements OnInit, AfterViewInit {
 
 
 	//LoadMasterCompanies
-	private loadMasterCompanies()
-	{
+	private loadMasterCompanies() {
 
 
 		this.alertService.startLoadingMessage();
@@ -395,43 +389,39 @@ export class SiteComponent implements OnInit, AfterViewInit {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
 	}
-	
+
 	//OpenDelete
 	openDelete(content, row) {
-
 		this.isEditMode = false;
 		this.isDeleteMode = true;
 		this.sourceSite = row;
+		this.name = row.name
 		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
-	} 
+	}
 
-	localManagementSiteCollectionEdit(data)
-	{
+	localManagementSiteCollectionEdit(data) {
 		console.log(data);
 	}
 	//OpenEdit
 	openEdit(content, row) {
 
 		this.isEditMode = true;
-		this.isSaving = true; 
+		this.isSaving = true;
 		this.loadMasterCompanies();
 		this.disableSaveManufacturer = false;
 		this.sourceSite = row;
 		//Getting ManagementSite Data
 		this.workFlowtService.getManagementSiteEditData(this.sourceSite.siteId).subscribe(data11 => {
 			this.localManagementSiteEditCollection = data11; //local SiteManagement Data for Edit Collection
-			if (this.localManagementSiteEditCollection)
-			{
-				if (this.gridData)
-				{
+			if (this.localManagementSiteEditCollection) {
+				if (this.gridData) {
 					//this.gridData = this.makeNestedObj(this.localManagementSiteEditCollection, null);
 					this.gridData1 = this.makeNestedObj1(this.localManagementSiteEditCollection, this.allManagemtninfo, null);
 				}
-				else
-				{
+				else {
 					this.gridData = this.makeNestedObj(this.allManagemtninfo, null);
 				}
 			}
@@ -474,7 +464,7 @@ export class SiteComponent implements OnInit, AfterViewInit {
 		this.createdDate = row.createdDate;
 		this.updatedDate = row.updatedDate;
 		this.loadMasterCompanies();
-		this.modal = this.modalService.open(content, { size: 'lg' });
+		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -488,11 +478,10 @@ export class SiteComponent implements OnInit, AfterViewInit {
 		}, () => { console.log('Backdrop click') })
 	}
 
-	Manufacturerdescription(event)
-	{
+	Manufacturerdescription(event) {
 		//
 		if (this.allSites) {
-			
+
 			for (let i = 0; i < this.actionamecolle.length; i++) {
 				if (event == this.actionamecolle[i][0].siteName) {
 					//this.sourceSite.name = this.allSites[i][0].name;
@@ -507,7 +496,7 @@ export class SiteComponent implements OnInit, AfterViewInit {
 
 	ManufacturerHandler(event) //auto suzition start hear and value will pass to 
 	{
-		
+
 		if (event.target.value != "") {
 			let value = event.target.value.toLowerCase();
 			if (this.selectedSite) {
@@ -588,9 +577,9 @@ export class SiteComponent implements OnInit, AfterViewInit {
 		}
 	}
 
-	
 
-	
+
+
 
 	//DeleteItemAndCloseModel
 	deleteItemAndCloseModel() {
@@ -627,10 +616,10 @@ export class SiteComponent implements OnInit, AfterViewInit {
 	}
 
 
-	
 
 
-	
+
+
 
 
 	//SaveCompleted
@@ -665,8 +654,7 @@ export class SiteComponent implements OnInit, AfterViewInit {
 	}
 
 	//SaveSuccessCompleted
-	private savesuccessCompleted(user?: any)
-	{
+	private savesuccessCompleted(user?: any) {
 		this.isSaving = false;
 		this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 		this.loadData();
@@ -678,8 +666,7 @@ export class SiteComponent implements OnInit, AfterViewInit {
 		for (let i = 0; i < data1.length; i++) {
 			if (data1[i].data.managementStructureId != null) {
 				data1[i].data.siteId = siteId;
-				this.workFlowtService.newManagementSite(data1[i].data).subscribe(data11 =>
-				{
+				this.workFlowtService.newManagementSite(data1[i].data).subscribe(data11 => {
 					this.localManagementSiteCollection = data11; //local SiteManagement Data
 				})
 			}
@@ -687,7 +674,7 @@ export class SiteComponent implements OnInit, AfterViewInit {
 
 		this.loadData();
 	}
-	
+
 
 	//GetUserName
 	get userName(): string {
@@ -703,32 +690,27 @@ export class SiteComponent implements OnInit, AfterViewInit {
 		this.alertService.showStickyMessage(error, null, MessageSeverity.error);
 	}
 
-	
+
 	//EditItem
-	editItemAndCloseModel()
-	{
+	SaveandEditsite() {
 		this.isSaving = true;
-		if (this.isEditMode == false)
-		{
+		if (this.isEditMode == false) {
 			this.sourceSite.createdBy = this.userName;
 			this.sourceSite.updatedBy = this.userName;
 			this.sourceSite.masterCompanyId = 1;
 			this.sourceSite.name = this.name;
-			
 			this.workFlowtService.newSite(this.sourceSite).subscribe(data => {
 				this.siteInfo = data;
 				//retrive after enter siteid get and submit managementsite
-				if (data != null)
-				{
+				if (data != null) {
 					this.saveManagement(data.siteId, this.selectedNodeTest); //pushing Site Management Need Site Value so after getting SiteId we are calling
 
 				}
-				
+
 			})
 			this.loadData();
 		}
-		else
-		{
+		else {
 
 			this.sourceSite.updatedBy = this.userName;
 			this.sourceSite.name = this.name;
@@ -737,19 +719,17 @@ export class SiteComponent implements OnInit, AfterViewInit {
 				response => this.saveCompleted(this.sourceSite),
 				error => this.saveFailedHelper(error));
 
-            if (this.selectedNodeTest && this.selectedNodeTest.length > 0)
-            {
-                this.workFlowtService.deleteManagementSite(this.selectedNodeTest).subscribe(data => {
-                });
-            }
-			
-            if (this.selectedNodeTest && this.selectedNodeTest.length > 0)
-            {
-                this.saveManagement(this.selectedNodeTest[0].data.siteId, this.selectedNodeTest); // will call ManagementSite Edit Data
+			if (this.selectedNodeTest && this.selectedNodeTest.length > 0) {
+				this.workFlowtService.deleteManagementSite(this.selectedNodeTest).subscribe(data => {
+				});
+			}
 
-            }
-			
-			
+			if (this.selectedNodeTest && this.selectedNodeTest.length > 0) {
+				this.saveManagement(this.selectedNodeTest[0].data.siteId, this.selectedNodeTest); // will call ManagementSite Edit Data
+
+			}
+
+
 
 			this.selectedNodeTest = []; //after Edit making empty
 		}
@@ -758,19 +738,19 @@ export class SiteComponent implements OnInit, AfterViewInit {
 		this.loadData();
 	}
 
-    showAuditPopup(template, id): void {
-        this.auditAssetStatus(id);
-        this.modal = this.modalService.open(template, { size: 'sm' });
-    }
+	showAuditPopup(template, id): void {
+		this.auditAssetStatus(id);
+		this.modal = this.modalService.open(template, { size: 'sm' });
+	}
 
-    auditAssetStatus(siteId: number): void {
-        this.AuditDetails = [];
-        this.workFlowtService.getSiteAudit(siteId).subscribe(audits => {
-            if (audits.length > 0) {
-                this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["siteAuditId", "siteId", "createdBy", "createdDate", "updatedDate"];
-            }
-        });
-    }
-	
+	auditAssetStatus(siteId: number): void {
+		this.AuditDetails = [];
+		this.workFlowtService.getSiteAudit(siteId).subscribe(audits => {
+			if (audits.length > 0) {
+				this.AuditDetails = audits;
+				this.AuditDetails[0].ColumnsToAvoid = ["siteAuditId", "siteId", "createdBy", "createdDate", "updatedDate"];
+			}
+		});
+	}
+
 }

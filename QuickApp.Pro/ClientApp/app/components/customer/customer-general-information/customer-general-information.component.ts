@@ -202,19 +202,18 @@ export class CustomerGeneralInformationComponent implements OnInit {
     selectedCustomerClassification: any;
     disableSaveCustomerClassification: boolean;
     disableSaveParentName: boolean;
-    integrationCols: any[];
-    intSelectedColumns: any[];
+    //integrationCols: any[];
+    //intSelectedColumns: any[];
     memoPopupContent: string;
     memoPopupValue: string;
+    actionamecolle: any[] = [];
     //@ViewChild('generalInfoForm') gIForm: NgForm;
 
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         //if (this.workFlowtService.isEditMode == false) {
         //    this.gIForm.resetForm();
         //}
-        this.sourceCustomer.isAddressForBilling = true;
-        this.sourceCustomer.isAddressForShipping = true;
+
         this.workFlowtService.currentUrl = '/customersmodule/customerpages/app-customer-general-information';
         this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
         //steps Code  Start
@@ -246,12 +245,12 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
         this.loadCurrencyData();
 
-        if (!this.classificationName)
-        {
+        if (!this.classificationName) {
             this.disableSaveCustomerClassificationSave = true;
         }
 
-        this.integrationCols = [
+
+        /*this.integrationCols = [
             { field: '145.com', header: '145.com' },
             { field: 'Aeroxchange', header: 'Aeroxchange' },
             { field: 'AvRef', header: 'AvRef' },
@@ -261,7 +260,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
         if (!this.intSelectedColumns) {
             this.intSelectedColumns = this.cols;
-        }
+        }*/
 
     }
 
@@ -269,6 +268,11 @@ export class CustomerGeneralInformationComponent implements OnInit {
         public workFlowtService: CustomerService, public vendorser: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private currencyService: CurrencyService) {
 
         this.dataSource = new MatTableDataSource();
+
+
+
+
+
 
         if (this.workFlowtService.listCollection != null && this.workFlowtService.isEditMode == true) {
             //debugger;
@@ -292,10 +296,21 @@ export class CustomerGeneralInformationComponent implements OnInit {
             this.sourceAuditHistory.stateOrProvince = this.workFlowtService.listCollection.ad.stateOrProvince;
             this.sourceAuditHistory.postalCode = this.workFlowtService.listCollection.ad.postalCode;
             this.sourceCustomer.customerAffiliationId = this.sourceCustomer.customerAffiliationId;
+
+            this.sourceCustomer.isAddressForBilling = this.local.isAddressForBilling;
+            this.sourceCustomer.isAddressForShipping = this.local.isAddressForShipping;
+            this.sourceCustomer.edi = this.local.edi;
+            this.sourceCustomer.isAeroExchange = this.local.isAeroExchange;
+
             if (this.workFlowtService.listCollection.t.ataChapterId) {
                 this.getATASubChapterData(this.workFlowtService.listCollection.t.ataChapterId);
             }
 
+        } else {
+            this.sourceCustomer.isAddressForBilling = true;
+            this.sourceCustomer.isAddressForShipping = true;
+            this.sourceCustomer.edi = true;
+            this.sourceCustomer.isAeroExchange = true;
         }
         if (this.vendorser.isVendorAlsoCustomer == true) {
             this.sourceCustomer = this.vendorser.localCollectiontoCustomer;
@@ -305,7 +320,6 @@ export class CustomerGeneralInformationComponent implements OnInit {
             this.sourceCustomer.customerCode = this.vendorser.localCollectiontoCustomer.vendorCode;
             this.sourceCustomer.doingBuinessAsName = this.vendorser.localCollectiontoCustomer.doingBusinessAsName;
             this.sourceCustomer.postalCode = this.vendorser.localCollectiontoCustomer.PostalCode;
-
         }
 
     }
@@ -427,7 +441,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     private countrylist() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getCountrylist().subscribe(           
+        this.workFlowtService.getCountrylist().subscribe(
             results => this.onDatacountrySuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -593,9 +607,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
     private onDataLoadClassifiSuccessful(getCustomerClassificationList: CustomerClassification[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.dataSource.data = getCustomerClassificationList;
 
-        this.allcustomerclassificationInfo = getCustomerClassificationList;
+        this.dataSource.data = getCustomerClassificationList.filter(obj => obj.isActive.toString().toLowerCase() == "true");
+
+        this.allcustomerclassificationInfo = getCustomerClassificationList.filter(obj => obj.isActive.toString().toLowerCase() == "true");
     }
 
     //For google Maps
@@ -645,7 +660,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
-        
+
     }
 
 
@@ -679,7 +694,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.integrationName;
+            this.sourceAction.portalURL = this.integrationName;
             this.sourceAction.masterCompanyId = 1;
             this.integration.newAction(this.sourceAction).subscribe(
                 role => this.saveSuccessHelper(role),
@@ -688,7 +703,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
         else {
 
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.integrationName;
+            this.sourceAction.portalURL = this.integrationName;
             this.integration.updateAction(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
@@ -712,14 +727,12 @@ export class CustomerGeneralInformationComponent implements OnInit {
             else {
             }
         }
-        if (!(this.classificationName))
-        {
+        if (!(this.classificationName)) {
             this.displayCustomerClassification = true;
             this.customerClassificationError = true;
             this.modelValue = true;
         }
-        if (this.classificationName)
-        {
+        if (this.classificationName) {
             this.isSaving = true;
             if (this.isEditMode == false) {
                 this.sourceClassification.createdBy = this.userName;
@@ -745,10 +758,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
             this.customerClassificationError = false;
             this.modal.close();
         }
-        
-       
-        
-        
+
+
+
+
     }
 
     // Load  Customer Clasfication data
@@ -764,12 +777,15 @@ export class CustomerGeneralInformationComponent implements OnInit {
     private onVendorDataLoad(getCustomerClassificationList: CustomerClassification[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
+
         this.dataSource.data = getCustomerClassificationList;
         this.allCustomerClassInfo = getCustomerClassificationList;
     }
+
     public applyFilter(filterValue: string) {
         this.dataSource.filter = filterValue;
     }
+
 
 
     private refresh() {
@@ -1054,10 +1070,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     // Save Customer Data//
     editItemAndCloseModel() {
-        if (!(this.sourceCustomer.address1 && this.sourceCustomer.customerTypeId  && this.sourceCustomer.name && this.sourceCustomer.customerCode && this.sourceCustomer.customerPhone && this.sourceCustomer.email
-            && this.sourceCustomer.city && this.sourceCustomer.stateOrProvince && this.sourceCustomer.generalCurrencyId && this.sourceCustomer.postalCode && this.sourceCustomer.country && this.sourceCustomer.customerClassificationId
-        ))
-        {
+        if (!(this.sourceCustomer.address1 && this.sourceCustomer.customerTypeId && this.sourceCustomer.name && this.sourceCustomer.customerCode && this.sourceCustomer.customerPhone && this.sourceCustomer.email
+            && this.sourceCustomer.city && this.sourceCustomer.stateOrProvince && this.sourceCustomer.postalCode && this.sourceCustomer.country && this.sourceCustomer.customerClassificationId
+        )) {
             //this.display = true;
             this.modelValue = true;
 
@@ -1105,12 +1120,12 @@ export class CustomerGeneralInformationComponent implements OnInit {
             else {
                 this.customerStateOrProvidenceError = false;
             }
-            if (!this.sourceCustomer.generalCurrencyId) {
-                this.customerCurrencyError = true;
-            }
-            else {
-                this.customerCurrencyError = false;
-            }
+            // if (!this.sourceCustomer.generalCurrencyId) {
+            //     this.customerCurrencyError = true;
+            // }
+            // else {
+            //     this.customerCurrencyError = false;
+            // }
             if (!this.sourceCustomer.postalCode) {
                 this.customerPostalCodeError = true;
             }
@@ -1137,18 +1152,23 @@ export class CustomerGeneralInformationComponent implements OnInit {
             }
         }
         if (this.sourceCustomer.name && this.sourceCustomer.customerCode && this.sourceCustomer.customerPhone && this.sourceCustomer.email
-            && this.sourceCustomer.city && this.sourceCustomer.customerClassificationId && this.sourceCustomer.generalCurrencyId && this.sourceCustomer.stateOrProvince && this.sourceCustomer.postalCode && this.sourceCustomer.country
-        )
-        {
+            && this.sourceCustomer.city && this.sourceCustomer.customerClassificationId && this.sourceCustomer.stateOrProvince && this.sourceCustomer.postalCode && this.sourceCustomer.country
+        ) {
             this.isSaving = true;
             if (!this.sourceCustomer.customerId) {
                 this.sourceCustomer.createdBy = this.userName;
                 this.sourceCustomer.updatedBy = this.userName;
                 this.sourceCustomer.masterCompanyId = 1;
                 this.sourceCustomer.isActive = true;
+                this.sourceCustomer.edi = true;
+
                 if (this.sourceCustomer.parent == false || this.sourceCustomer.parent == null) {
                     this.sourceCustomer.customerParentName = '';
 
+                }
+                if (this.selectedIntegrationTypes != null) //separting Array whic is having ","
+                {
+                    this.sourceCustomer.IntegrationPortalId = this.selectedIntegrationTypes.toString().split(",");
                 }
                 this.workFlowtService.newAction(this.sourceCustomer).subscribe(data => {
                     this.sourceCustomer.updatedBy = this.userName;
@@ -1189,10 +1209,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
                     this.nextClick();//I am calling After Data is Saved
 
                 })
-                if (this.selectedIntegrationTypes != null) //separting Array which is having ","
-                {
-                    this.sourceCustomer.IntegrationPortalId = this.selectedIntegrationTypes.toString().split(",");
-                }
+                // if (this.selectedIntegrationTypes != null) //separting Array which is having ","
+                // {
+                //     this.sourceCustomer.IntegrationPortalId = this.selectedIntegrationTypes.toString().split(",");
+                // }
 
 
             }
@@ -1211,8 +1231,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
                     this.sourceCustomer.customerParentName = '';
 
                 }
-                this.workFlowtService.updateAction(this.sourceCustomer).subscribe(data =>
-                {
+                this.workFlowtService.updateAction(this.sourceCustomer).subscribe(data => {
                     this.sourceCustomer.updatedBy = this.userName;
                     this.localCollection = data;
                     this.sourceCustomer = data;
@@ -1558,20 +1577,17 @@ export class CustomerGeneralInformationComponent implements OnInit {
         }
     }
 
-    onAddIntegrationWith() {
-        this.router.navigate(['/singlepages/singlepages/app-integration']);
-    }
 
     onClickPBHCustomer(value) {
         if (value == 'PBHCustomer') {
-            this.memoPopupContent = this.sourceCustomer.pbhCustomerMemo;      
+            this.memoPopupContent = this.sourceCustomer.pbhCustomerMemo;
         }
         if (value == 'restrictPMA') {
-            this.memoPopupContent = this.sourceCustomer.restrictPMAMemo;      
+            this.memoPopupContent = this.sourceCustomer.restrictPMAMemo;
         }
         if (value == 'restrictBER') {
-            this.memoPopupContent = this.sourceCustomer.restrictBERMemo;           
-        }           
+            this.memoPopupContent = this.sourceCustomer.restrictBERMemo;
+        }
         this.memoPopupValue = value;
     }
 
@@ -1588,5 +1604,60 @@ export class CustomerGeneralInformationComponent implements OnInit {
         }
         this.memoPopupContent = '';
     }
+
+    integrationopen(content) {
+        this.sourceAction = {};
+        this.isEditMode = false;
+        this.isDeleteMode = false;
+        this.disableSave = false;
+        this.isSaving = true;
+        this.integrationData();
+        this.loadMasterCompanies();
+        this.sourceAction.isActive = true;
+        this.integrationName = "";
+        this.sourceAction.description = "";
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+    private integrationData() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.integration.getWorkFlows().subscribe(
+            results => this.onDatainteSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private onDatainteSuccessful(allWorkFlowValues: Integration[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allIntegrationInfo = allWorkFlowValues;
+    }
+
+    integrationId(event) {
+        for (let i = 0; i < this.actionamecolle.length; i++) {
+            if (event == this.actionamecolle[i][0].integrationName) {
+                this.disableSave = true;
+                this.selectedActionName = event;
+            }
+        }
+    }
+
+    integrationeventHandler(event) {
+        let value = event.target.value.toLowerCase();
+        if (this.selectedActionName) {
+            if (value == this.selectedActionName.toLowerCase()) {
+                this.disableSave = true;
+            }
+            else {
+                this.disableSave = false;
+            }
+        }
+    }
+
+
 
 }

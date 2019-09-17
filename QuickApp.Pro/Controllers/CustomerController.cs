@@ -298,6 +298,7 @@ namespace QuickApp.Pro.Controllers
                 ct.CustomerTypeId = 1;
                 customerViewModel.MasterCompanyId = 1;
                 actionobject.IsActive = true;
+                actionobject.IsDelete = false;
                 actionobject.CustomerAffiliationId = customerViewModel.CustomerAffiliationId;
                 actionobject.CurrencyId = customerViewModel.CurrencyId;
                 actionobject.CreditTermsId = customerViewModel.CreditTermsId;
@@ -311,6 +312,12 @@ namespace QuickApp.Pro.Controllers
                 actionobject.ScanDocuments = customerViewModel.ScanDocuments;
                 actionobject.PBHCustomerMemo = customerViewModel.PBHCustomerMemo;
                 actionobject.RestrictPMA = customerViewModel.RestrictPMA;
+                actionobject.IsAddressForBilling = customerViewModel.IsAddressForBilling;
+                actionobject.IsAddressForShipping = customerViewModel.IsAddressForShipping;
+                actionobject.EDI = customerViewModel.EDI;
+                actionobject.IsAeroExchange = customerViewModel.IsAeroExchange;
+                actionobject.AeroExchangeDescription = customerViewModel.AeroExchangeDescription;
+                actionobject.EDIDescription = customerViewModel.EDIDescription;
                 // actionobject.IntegrationPortalId = customerViewModel.IntegrationPortalId;
                 actionobject.RestrictBERMemo = customerViewModel.RestrictBERMemo;
                 actionobject.CustomerClassificationId = customerViewModel.CustomerClassificationId;
@@ -333,7 +340,6 @@ namespace QuickApp.Pro.Controllers
                 actionobject.ATAChapterId = customerViewModel.ATAChapterId;
                 actionobject.GeneralCurrencyId = customerViewModel.GeneralCurrencyId;
                 actionobject.ataSubChapterId = customerViewModel.ataSubChapterId;
-                actionobject.IsAddressForBillingAndShipping = customerViewModel.IsAddressForBillingAndShipping;
                 actionobject.CreatedDate = DateTime.Now;
                 actionobject.UpdatedDate = DateTime.Now;
                 actionobject.CreatedBy = customerViewModel.CreatedBy;
@@ -581,6 +587,7 @@ namespace QuickApp.Pro.Controllers
                 contactObj.WorkPhone = contactViewModel.WorkPhone;
                 contactObj.WebsiteURL = contactViewModel.WebsiteURL;
                 contactObj.MasterCompanyId = contactViewModel.MasterCompanyId;
+                contactObj.WorkPhoneExtn = contactViewModel.WorkPhoneExtn;
                 contactObj.IsActive = true;
                 contactObj.CreatedDate = DateTime.Now;
                 contactObj.UpdatedDate = DateTime.Now;
@@ -659,7 +666,7 @@ namespace QuickApp.Pro.Controllers
             }
 
 
-            return Ok(ModelState);
+            return Ok(contactViewModel);
         }
         [HttpGet("getContactHistroty/{id}", Name = "getContactHistrotyById")]
         [Produces(typeof(List<AuditHistory>))]
@@ -1491,22 +1498,39 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("CustomerAircraftPost")]
-        public IActionResult InsertCustomerAircraftInfo([FromBody] CustomerAircraftMapping[] customerAircraftMapping)
+        [Produces(typeof(CustomerAircraftMapping[]))]
+        public IActionResult InsertCustomerAircraftInfo([FromBody] CustomerAircraftMappingViewModel[] customerAircraftMappingVM)
         {
             if (ModelState.IsValid)
             {
-                foreach (var aircraftMapping in customerAircraftMapping)
+                for (int i = 0; i < customerAircraftMappingVM.Length; i++)
                 {
-                    _unitOfWork.Repository<CustomerAircraftMapping>().Add(aircraftMapping);
+                    CustomerAircraftMapping customerAircraftMapping = new CustomerAircraftMapping
+                    {
+                        AircraftType = customerAircraftMappingVM[i].AircraftType,
+                        AircraftModel = customerAircraftMappingVM[i].AircraftModel,
+                        DashNumber = customerAircraftMappingVM[i].DashNumber,
+                        AircraftModelId = customerAircraftMappingVM[i].AircraftModelId,
+                        DashNumberId = customerAircraftMappingVM[i].DashNumberId,
+                        Memo = customerAircraftMappingVM[i].Memo,
+                        MasterCompanyId = customerAircraftMappingVM[i].MasterCompanyId,
+                        CreatedBy = customerAircraftMappingVM[i].CreatedBy,
+                        UpdatedBy = customerAircraftMappingVM[i].UpdatedBy,
+                        CustomerId = customerAircraftMappingVM[i].CustomerId,
+                        CreatedDate =  System.DateTime.Now,
+                        UpdatedDate =  System.DateTime.Now,
+                        IsDeleted = customerAircraftMappingVM[i].IsDeleted,
+                        Inventory = customerAircraftMappingVM[i].Inventory,
+                        AircraftTypeId = customerAircraftMappingVM[i].AircraftTypeId
+                };
+                    _unitOfWork.Repository<CustomerAircraftMapping>().Add(customerAircraftMapping);
                     _unitOfWork.SaveChanges();
                 }
-                
             }
             else
             {
-                return BadRequest($"{nameof(customerAircraftMapping)} cannot be null");
+                return BadRequest($"{nameof(customerAircraftMappingVM)} cannot be null");
             }
-
             return Ok(ModelState);
         }
         
@@ -1567,6 +1591,8 @@ namespace QuickApp.Pro.Controllers
                 customerObj.SecondarySalesPersonName = customerViewModel.CustomerPhone;
                 customerObj.CSRName = customerViewModel.CSRName;
                 customerObj.AgentName = customerViewModel.AgentName;
+                customerObj.AnnualQuota = customerViewModel.AnnualQuota;
+                customerObj.AnnualRevenuePotential = customerViewModel.AnnualRevenuePotential;
                 customerObj.MasterCompanyId = customerViewModel.MasterCompanyId;
                 customerObj.IsActive = customerViewModel.IsActive;
                 customerObj.CreatedDate = DateTime.Now;
@@ -1792,13 +1818,15 @@ namespace QuickApp.Pro.Controllers
                                      ad.Country,
                                      ad.PostalCode,
                                      t.PrimarySalesPersonFirstName,
-                                     t.IsActive
-                                 }).ToList();
+									 t.CustomerClassification,
+									 t.IsActive
+                                 }).OrderByDescending(a => a.UpdatedDate).ToList();
                 foreach (var item in customers)
                 {
                     customer = new CustomerSearchViewModel();
                     customer.CustomerId = item.CustomerId;
-                    customer.CustomerCode = item.CustomerCode;
+					customer.CustomerPhone = item.CustomerPhone;
+					customer.CustomerCode = item.CustomerCode;
                     customer.City = item.City;
                     customer.StateOrProvince = item.StateOrProvince;
                     customer.CustomerType = item.Description;
@@ -1867,7 +1895,7 @@ namespace QuickApp.Pro.Controllers
                                  join ad in _context.Address on t.AddressId equals ad.AddressId
                                  join ct in _context.CustomerType on t.CustomerTypeId equals ct.CustomerTypeId
 
-                                 where t.IsDelete == true || t.IsDelete == null
+                                 where t.IsDelete == false || t.IsDelete == null
                                  select new
                                  {
                                      ct.Description,
@@ -1891,7 +1919,7 @@ namespace QuickApp.Pro.Controllers
                                      ad.PostalCode,
                                      t.PrimarySalesPersonFirstName,
                                      t.IsActive
-                                 }).ToList();
+                                 }).OrderByDescending(a => a.UpdatedDate).ToList();
                 foreach (var item in customers)
                 {
                     customer = new CustomerSearchViewModel();

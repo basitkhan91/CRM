@@ -163,12 +163,14 @@ namespace DAL
         public DbSet<ACH> ACH { get; set; }
 
         public DbSet<ItemMasterCapes> ItemMasterCapes { get; set; }
+        public DbSet<VendorCapes> VendorCapes { get; set; }
 
         public DbSet<Warning> Warning { get; set; }
 
 
         public DbSet<Capability> Capability { get; set; }
         public DbSet<ItemMasterAircraftModel> ItemMasterAircraftModel { get; set; }
+        public DbSet<VendorCapabiltiyAircraftModel> VendorAircraftModel { get; set; }
 
         public DbSet<ItemMasterIntegrationPortal> ItemMasterIntegrationPortal { get; set; }
 

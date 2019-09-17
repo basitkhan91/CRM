@@ -261,6 +261,12 @@ export class SingleComponent {
 				];
 			}
 
+			else if (this.currentUrl == '/singlepages/singlepages/app-percent') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Percent' }
+				];
+			}
 			else if (this.currentUrl == '/singlepages/singlepages/app-provision') {
 				this.items = [
 					{ label: 'Single Screens' },
@@ -807,8 +813,19 @@ export class SingleComponent {
 					{ label: 'Single Screens' },
 					{ label: 'Location' }
 				];
-			}
-
+            }
+            else if (this.currentUrl == '/singlepages/singlepages/app-aircraft-model') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Aircraft Model' }
+                ];
+            }
+            else if (this.currentUrl == '/singlepages/singlepages/app-aircraft-manufacturer') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Aircraft Manufacturer' }
+                ];
+            }
 		}
 	}
 }

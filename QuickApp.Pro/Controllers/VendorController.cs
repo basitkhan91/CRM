@@ -422,23 +422,23 @@ namespace QuickApp.Pro.Controllers
             return Ok(checkAddress);
 
         }
-        [HttpGet("vendorAddressGet/{id}")]
-        [Produces(typeof(List<VendorShippingAddress>))]
-        public IActionResult AllVendorendorAddressGet(long id)
-        {
-            var allAddresses = _unitOfWork.VendorShippingAddress.GetAllShippingAddressDetails(id); //.GetAllCustomersData();
-            return Ok(allAddresses);
 
-        }
+        //[HttpGet("vendorAddressGet/{id}")]
+        //[Produces(typeof(List<VendorShippingAddress>))]
+        //public IActionResult AllVendorAddressGet(long id)
+        //{
+        //    var allAddresses = _unitOfWork.VendorShippingAddress.GetAllShippingAddressDetails(id); //.GetAllCustomersData();
+        //    return Ok(allAddresses);
+        //}
+
         [HttpGet("getVendorShipViaDetails/{Selectedrow}")]
         [Produces(typeof(List<VendorShipping>))]
         public IActionResult getVendorShipViaDetails(long Selectedrow)
         {
-
             var allShipViaDetails = _unitOfWork.VendorShippingAddress.GetAllShipViaDetails(Selectedrow); //.GetAllCustomersData();
             return Ok(allShipViaDetails);
-
         }
+
         [HttpGet("cusshippingGetwithid/{Selectedrow}")]
         [Produces(typeof(List<VendorShipping>))]
         public IActionResult cusshippingGetwithid(long Selectedrow)
@@ -705,8 +705,9 @@ namespace QuickApp.Pro.Controllers
                     actionobject.RequisitionedBy = poViewModel.RequisitionedBy;
                     actionobject.RequisitionedDate = poViewModel.RequisitionedDate;
                     actionobject.POPartSplitAddressId = poViewModel.POPartSplitAddressId;
+					actionobject.MasterCompanyId = poViewModel.MasterCompanyId;
 
-                    actionobject.NeedByDate = poViewModel.NeedByDate;
+					actionobject.NeedByDate = poViewModel.NeedByDate;
                     actionobject.Approver = poViewModel.Approver;
                     actionobject.ApprovedDate = poViewModel.ApprovedDate;
                     actionobject.NeedByDate = poViewModel.NeedByDate;
@@ -755,7 +756,8 @@ namespace QuickApp.Pro.Controllers
 
                     actionobject.PurchaseOrderId = poViewModel.PurchaseOrderId;
                     actionobject.ItemMasterId = poViewModel.ItemMasterId;
-                    actionobject.SerialNumber = poViewModel.SerialNumber;
+					actionobject.MasterCompanyId = poViewModel.MasterCompanyId;
+					actionobject.SerialNumber = poViewModel.SerialNumber;
                     actionobject.NonInventory = poViewModel.NonInventory;
                     actionobject.RequisitionedBy = poViewModel.RequisitionedBy;
                     actionobject.RequisitionedDate = poViewModel.RequisitionedDate;
@@ -2579,6 +2581,14 @@ namespace QuickApp.Pro.Controllers
             return Ok(aircraft);
         }
 
+        [HttpGet("vendorAddressGet/{id}")]
+        [Produces(typeof(List<VendorShippingAddress>))]
+        public IActionResult vendorAddressGet(long id, VendorShippingAddress vendorBillingAddress)
+        {
+            var allVendShipdetails = _unitOfWork.VendorShippingAddress.GetAllShippingAddressDetails(id); //.GetAllCustomersData();
+            return Ok(allVendShipdetails);
+
+        }
         [HttpGet("vendorAircraftManufacturerGet/{id}")]
         [Produces(typeof(List<VendorCapabilityAircraftType>))]
         public IActionResult vendorAircraftManufacturerGet(int id)
@@ -2696,6 +2706,119 @@ namespace QuickApp.Pro.Controllers
             return Ok(deleterecord);
 
         }
+
+        #region Capes
+
+        [HttpGet("GetVendorCapesDatawithMasterId/{id}")]
+        [Produces(typeof(List<AircraftModelViewModel>))]
+        public IActionResult GetVendorCapesDatawithMasterId(long id, CapesInfoViewModel capesInfoViewModel)
+        {
+
+
+            var allseectedaircarftmodels = _unitOfWork.aircraftModel.GetCapesWithMasterid(id); //.GetAllCustomersData();
+            return Ok(allseectedaircarftmodels);
+
+        }
+        [HttpPost("VendorMancapespost")]
+        public IActionResult addCharges([FromBody] List<Capability> capability)
+        {
+            if (ModelState.IsValid)
+            {
+                for (var i = 0; i < capability.Count(); i++)
+                {
+                    // capability[i].CapabilityId = 0;
+                    capability[i].MasterCompanyId = 1;
+                    capability[i].CreatedDate = DateTime.Now;
+                    if (capability[i].CapabilityId > 0)
+                    {
+                        _unitOfWork.Repository<Capability>().Update(capability[i]);
+                    }
+                    else
+                    {
+                        _unitOfWork.Repository<Capability>().Add(capability[i]);
+                    }
+                    _unitOfWork.SaveChanges();
+                }
+            }
+            return Ok();
+        }
+        public void saveItemcapes(long returnid, long itemid)
+        {
+            VendorCapes imc = new VendorCapes();
+
+            imc.CapabilityId = returnid;
+            imc.VendorId = itemid;
+            imc.MasterCompanyId = 1;
+            imc.CreatedDate = DateTime.Now;
+            imc.UpdatedDate = DateTime.Now;
+            imc.IsActive = true;
+            _context.VendorCapes.Add(imc);
+            _context.SaveChanges();
+        }
+
+        [HttpPost("Aircraftpost")]
+        public IActionResult CreateAircraftmodelspot([FromBody] VendorCapabiltiyAircraftModel vendorAircraftModel)
+        {
+            if (ModelState.IsValid)
+            {
+                if (_context.VendorAircraftModel.Any(o => o.AircraftModelId == vendorAircraftModel.AircraftModelId))
+                {
+                    // return BadRequest($"{nameof(capesInfoViewModel)} cannot be null");
+                    var existingresult = _context.VendorAircraftModel.Where(c => c.AircraftModelId == vendorAircraftModel.AircraftModelId).FirstOrDefault();
+                    existingresult.AircraftModelId = vendorAircraftModel.AircraftModelId;
+
+                    existingresult.VendorId = vendorAircraftModel.VendorId;
+                    existingresult.DashNumber = vendorAircraftModel.DashNumber;
+                    existingresult.CreatedBy = vendorAircraftModel.CreatedBy;
+                    existingresult.UpdatedBy = vendorAircraftModel.UpdatedBy;
+                    existingresult.MasterCompanyId = 1;
+                    existingresult.CreatedDate = DateTime.Now;
+                    existingresult.UpdatedDate = DateTime.Now;
+                    _context.VendorAircraftModel.Update(existingresult);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                     var cp = new VendorCapabiltiyAircraftModel
+                    {
+                        AircraftModelId = vendorAircraftModel.AircraftModelId,
+                        VendorId = vendorAircraftModel.VendorId,
+                        DashNumber = vendorAircraftModel.DashNumber,
+                        MasterCompanyId = 1,
+                        CreatedBy = vendorAircraftModel.CreatedBy,
+                        UpdatedBy = vendorAircraftModel.UpdatedBy,
+                        CreatedDate = DateTime.Now,
+                        UpdatedDate = DateTime.Now
+                };
+                    
+                    _context.VendorAircraftModel.Add(cp);
+                    _context.SaveChanges();
+                    //long returnid = cp.CapabilityId;
+                    //saveItemcapes(returnid, vendorAircraftModel.itemId);
+
+                }
+            }
+            return Ok(vendorAircraftModel);
+            // return Ok(ModelState);
+        }
+
+
+        [HttpGet("GetListforCapes")]
+        [Produces(typeof(List<VendorViewModel>))]
+        public IActionResult GetListforCapes()
+        {
+            var allTaxrateInfo = _context.Vendor.Include("Manufacturer").Include("Provision").Include("Priority")
+                .Include("ItemClassification").Include("Currency").Include("ExportClassification")
+                    .Where(a => a.VendorTypeId == 1 
+                                && (a.IsDelete == true || a.IsDelete == null) || a.VendorTypeId == 1 && (a.IsDelete == true || a.IsDelete == null))
+                                    .ToList(); 
+            return Ok(allTaxrateInfo);
+
+        }
+
+
+        #endregion
+
 
 
         #region Private Methods

@@ -141,16 +141,23 @@ export class CustomerFinancialInformationComponent implements OnInit {
     itemQuantity2 = [];
     isCustomerAlsoVendor: boolean;
 
-	constructor(public taxtypeser: TaxTypeService, private cdRef: ChangeDetectorRef, public CreditTermsService: CreditTermsService, public currencyService: CurrencyService, public customerClassificationService: CustomerClassificationService, private router: ActivatedRoute, public inteservice: IntegrationService, public taxRateService: TaxRateService, public itemser: ItemMasterService, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: CustomerService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
-        if (this.workFlowtService.contactCollection) {
-            this.local = this.workFlowtService.contactCollection;
+	constructor(public taxtypeser: TaxTypeService, private cdRef: ChangeDetectorRef, public CreditTermsService: CreditTermsService, public currencyService: CurrencyService, public customerClassificationService: CustomerClassificationService, private router: ActivatedRoute, public inteservice: IntegrationService, public taxRateService: TaxRateService, public itemser: ItemMasterService, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public customerService: CustomerService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+        if (this.customerService.contactCollection) {
+            this.local = this.customerService.contactCollection;
         }
         this.dataSource = new MatTableDataSource();
-        if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
+        if (this.customerService.listCollection && this.customerService.isEditMode == true) {
 
-            this.local = this.workFlowtService.listCollection.t;
-            this.sourceCustomer = this.workFlowtService.listCollection.t;
+            console.log(this.customerService)
+            this.local = this.customerService.listCollection.t;
+            this.sourceCustomer = this.customerService.listCollection.t;
+        }else if(this.customerService.financeCollection) {
+            // console.log(this.customerService)
+            this.sourceCustomer = this.customerService.financeCollection;
         }
+
+
+
 
     }
 
@@ -159,10 +166,10 @@ export class CustomerFinancialInformationComponent implements OnInit {
         this.itemQuantity = Array(100).fill(1).map((x, i) => i + 1);
         this.itemQuantity1 = Array(30).fill(1).map((x, i) => i + 1);
         this.itemQuantity2 = Array(366).fill(1).map((x, i) => i + 1);
-        this.workFlowtService.currentUrl = '/customersmodule/customerpages/app-customer-financial-information';
-        this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
-        this.workFlowtService.ShowPtab = true;
-        this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab); //steps
+        this.customerService.currentUrl = '/customersmodule/customerpages/app-customer-financial-information';
+        this.customerService.bredcrumbObj.next(this.customerService.currentUrl);
+        this.customerService.ShowPtab = true;
+        this.customerService.alertObj.next(this.customerService.ShowPtab); //steps
         this.loadDiscountData();
         this.loadCreditTermsData();
         this.loadCurrencyData();
@@ -174,7 +181,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
         if (this.local) {
             this.getCustomerList();
         }
-        if (this.workFlowtService.isEditMode == false) {
+        if (this.customerService.isEditMode == false) {
             this.sourceCustomer.allowPartialBilling = true;
             this.sourceCustomer.allowProformaBilling = true;
         }
@@ -184,7 +191,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
 
-        this.workFlowtService.getCustomerdata(this.local.customerId).subscribe(
+        this.customerService.getCustomerdata(this.local.customerId).subscribe(
             results => this.onCustomersLoadSuccssfull(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -207,7 +214,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getWorkFlows().subscribe(
+        this.customerService.getWorkFlows().subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -407,28 +414,43 @@ export class CustomerFinancialInformationComponent implements OnInit {
         if (data == 'creditTermsId ') {
             this.showCreditTearms = false;
         }
-        if (data == 'currencyId') {
-            this.showCurrency = false;
-        }
+        // if (data == 'currencyId') {
+        //     this.showCurrency = false;
+        // }
     }
 
 
     // Save Finance Info
     editItemAndCloseModel() {
         this.isSaving = true;
-		if (!(this.sourceCustomer.creditLimit && this.sourceCustomer.creditTermsId && this.sourceCustomer.currencyId)) {
+		if (!(this.sourceCustomer.creditLimit && this.sourceCustomer.creditTermsId)) {
             this.display = true;
             this.modelValue = true;
         }
-        if (this.sourceCustomer.creditLimit && this.sourceCustomer.creditTermsId && this.sourceCustomer.currencyId) {
+
+        if (this.sourceCustomer.creditLimit && this.sourceCustomer.creditTermsId) {
             if (this.sourceCustomer.customerId) {
                 this.sourceCustomer.createdBy = this.userName;
                 this.sourceCustomer.updatedBy = this.userName;
                 this.sourceCustomer.masterCompanyId = 1;
-                this.workFlowtService.updatefinanceinfo(this.sourceCustomer, this.local.customerId).subscribe(data => {
+                this.sourceCustomer.isAddressForBillingAndShipping = false;
+                this.local.creditLimit = this.sourceCustomer.creditLimit
+                this.local.creditTermsId = this.sourceCustomer.creditTermsId;
+                this.local.discountId = this.sourceCustomer.discountId;
+                this.local.markUpPercentageId = this.sourceCustomer.markUpPercentageId;
+                this.local.isTaxExempt = this.sourceCustomer.isTaxExempt;
+                this.local.taxRateStateOrProvince = this.sourceCustomer.taxRateStateOrProvince;
+                this.local.taxRateOther = this.sourceCustomer.taxRateOther;
+                this.local.taxTypeId = this.sourceCustomer.taxTypeId;
+                this.local.allowPartialBilling = this.sourceCustomer.allowPartialBilling;
+                this.local.allowProformaBilling = this.sourceCustomer.allowProformaBilling;
+                this.local.isAddressForBillingAndShipping = this.sourceCustomer.isAddressForBillingAndShipping;
+                // this.local = this.sourceCustomer;
+                console.log(this.local);
+                this.customerService.updatefinanceinfo(this.sourceCustomer, this.local.customerId).subscribe(data => {
 					this.localCollection = data;
 					this.saveCompleted(this.sourceCustomer);
-					this.workFlowtService.financeCollection = this.local;
+					this.customerService.financeCollection = this.local;
 
                 })
 
@@ -436,16 +458,32 @@ export class CustomerFinancialInformationComponent implements OnInit {
             else {
 
                 this.sourceCustomer.updatedBy = this.userName;
-                this.sourceCustomer.masterCompanyId = 1;
-                this.workFlowtService.updatefinanceinfo(this.sourceCustomer, this.local.customerId).subscribe(data => {
+                this.sourceCustomer.masterCompanyId = 1; 
+                this.sourceCustomer.isAddressForBillingAndShipping = false;
+                this.local.creditLimit = this.sourceCustomer.creditLimit
+                this.local.creditTermsId = this.sourceCustomer.creditTermsId;
+                this.local.discountId = this.sourceCustomer.discountId;
+                this.local.markUpPercentageId = this.sourceCustomer.markUpPercentageId;
+                this.local.isTaxExempt = this.sourceCustomer.isTaxExempt;
+                this.local.taxRateStateOrProvince = this.sourceCustomer.taxRateStateOrProvince;
+                this.local.taxRateOther = this.sourceCustomer.taxRateOther;
+                this.local.taxTypeId = this.sourceCustomer.taxTypeId;
+                this.local.allowPartialBilling = this.sourceCustomer.allowPartialBilling;
+                this.local.allowProformaBilling = this.sourceCustomer.allowProformaBilling;
+                this.local.isAddressForBillingAndShipping = this.sourceCustomer.isAddressForBillingAndShipping;
+
+         
+                // this.local = this.sourceCustomer;
+                console.log(this.local);
+                this.customerService.updatefinanceinfo(this.sourceCustomer, this.local.customerId).subscribe(data => {
 					this.localCollection = data;
 					this.saveCompleted(this.sourceCustomer);
-					this.workFlowtService.financeCollection = this.local;
+					this.customerService.financeCollection = this.local;
                 })
                 
             }
         }
-        else { }
+
 
 
 
@@ -610,18 +648,18 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
 
 	nextClick() {
-		this.workFlowtService.contactCollection = this.local;
-		this.activeIndex = 3;
-        this.workFlowtService.indexObj.next(this.activeIndex);
+		this.customerService.contactCollection = this.local;
+		this.activeIndex = 5;
+        this.customerService.indexObj.next(this.activeIndex);
         this.editItemAndCloseModel();
 		this.route.navigateByUrl('/customersmodule/customerpages/app-customer-billing-information');
 
 	}
 	backClick() {
-		this.workFlowtService.contactCollection = this.local;
-		this.activeIndex = 1;
-		this.workFlowtService.indexObj.next(this.activeIndex);
-		this.route.navigateByUrl('/customersmodule/customerpages/app-customer-contacts');
+		this.customerService.contactCollection = this.local;
+		this.activeIndex = 3;
+		this.customerService.indexObj.next(this.activeIndex);
+        this.route.navigateByUrl('/customersmodule/customerpages/app-customer-ata');
 
 	}
 
@@ -667,7 +705,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
             this.currencyService.newAddcurrency(this.sourceAction).subscribe(data => {
 				this.loadCurrencyData();
 				this.saveCompleted(this.sourceAction);
-				this.sourceCustomer.currencyId = data.currencyId;
+                // this.sourceCustomer.currencyId = data.currencyId;
+                
             });
         }
         else {
@@ -979,12 +1018,14 @@ export class CustomerFinancialInformationComponent implements OnInit {
 		this.discountcollection = [];
 		for (let i = 0; i < this.alldiscountvalueInfo.length; i++) {
 			let discontValue = this.alldiscountvalueInfo[i].discontValue;
-			if (discontValue.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+            if (discontValue.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+
 				this.namecolle.push([{
 					"discountId": this.alldiscountvalueInfo[i].discountId,
 					"discontValue": discontValue
 				}]),
-					this.discountcollection.push(discontValue)
+                    this.discountcollection.push(discontValue)
+                console.log(this.discountcollection);
 			}
 			}
 		}
@@ -994,14 +1035,15 @@ export class CustomerFinancialInformationComponent implements OnInit {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
 
-		this.workFlowtService.getDiscountList().subscribe(
+		this.customerService.getDiscountList().subscribe(
 			results => this.onDataLoadClassifiSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
 
 	}
 	private onDataLoadClassifiSuccessful(getDiscountList: DiscountValue[]) {
-		// alert('success');
+        // alert('success');
+        console.log(getDiscountList);
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.dataSource.data = getDiscountList;
@@ -1028,23 +1070,23 @@ export class CustomerFinancialInformationComponent implements OnInit {
 			this.sourceAction.createdBy = this.userName;
 			this.sourceAction.updatedBy = this.userName;
 			this.sourceAction.discontValue = this.discontValue;
-			this.workFlowtService.newAddDiscount(this.sourceAction).
+			this.customerService.newAddDiscount(this.sourceAction).
 				subscribe(data => {
 				this.loadDiscountData()
 
 			})
 
-			this.activeIndex = 2;
+			this.activeIndex = 5;
 		}
 		else {
 			this.sourceAction.updatedBy = this.userName;
 			this.sourceAction.discontValue = this.discontValue;
 			this.sourceAction.masterCompanyId = 1;
-			this.workFlowtService.updatediscount(this.sourceAction).subscribe(
+			this.customerService.updatediscount(this.sourceAction).subscribe(
 				response => this.saveCompleted(this.sourceAction),
 				error => this.saveFailedHelper(error));
 
-			this.activeIndex = 2;
+			this.activeIndex = 5;
 
 			
 		}
@@ -1149,7 +1191,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     // Load markup data
     private loadMarkUpData() {
         this.loadingIndicator = true;
-        this.workFlowtService.getMarkUpList().subscribe(
+        this.customerService.getMarkUpList().subscribe(
             results => this.markUpLoadData(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -1187,24 +1229,24 @@ export class CustomerFinancialInformationComponent implements OnInit {
             this.sourceCustomer.createdBy = this.userName;
             this.sourceCustomer.updatedBy = this.userName;
             this.sourceCustomer.markUpValue = this.markUpValue;
-            this.workFlowtService.newMarkUp(this.sourceCustomer).subscribe(data => {
+            this.customerService.newMarkUp(this.sourceCustomer).subscribe(data => {
                 this.sourceCustomer.markUpPercentageId = data.markUpPercentageId;
                     this.loadMarkUpData()
                     
                 })
 
-            this.activeIndex = 2;
+            this.activeIndex = 4;
         }
         else {
             this.sourceCustomer.updatedBy = this.userName;
             this.sourceCustomer.markUpValue = this.markUpValue;
             this.sourceCustomer.masterCompanyId = 1;
-            this.workFlowtService.updateMarkUp(this.sourceCustomer).
+            this.customerService.updateMarkUp(this.sourceCustomer).
                 subscribe(data => {
                     this.loadMarkUpData()
                 })
 
-            this.activeIndex = 2;
+            this.activeIndex = 4;
         }
         this.modal.close();
     }

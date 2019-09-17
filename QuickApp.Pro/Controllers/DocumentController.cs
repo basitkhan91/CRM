@@ -70,7 +70,8 @@ namespace QuickApp.Pro.Controllers
                 DAL.Models.Document actionattributeobject = new DAL.Models.Document();
                 actionattributeobject.DocumentCode = actionAttributeViewModel.DocumentCode;
                 actionattributeobject.Description = actionAttributeViewModel.Description;
-                //actionattributeobject.Memo = actionAttributeViewModel.Memo;
+                actionattributeobject.Memo = actionAttributeViewModel.Memo;
+                actionattributeobject.Link = actionAttributeViewModel.Link;
                 actionattributeobject.Customer = actionAttributeViewModel.Customer;
                 actionattributeobject.ItemMaster = actionAttributeViewModel.ItemMaster;
                 actionattributeobject.PurchaseOrder = actionAttributeViewModel.PurchaseOrder;
@@ -112,7 +113,8 @@ namespace QuickApp.Pro.Controllers
                 existingResult.Description = actionAttributeViewModel.Description;
                 existingResult.Customer = actionAttributeViewModel.Customer;
 
-                //existingResult.Memo = actionAttributeViewModel.Memo;
+                existingResult.Memo = actionAttributeViewModel.Memo;
+                existingResult.Link = actionAttributeViewModel.Link;
                 existingResult.ItemMaster = actionAttributeViewModel.ItemMaster;
                 existingResult.PurchaseOrder = actionAttributeViewModel.PurchaseOrder;
                 existingResult.RepairOrder = actionAttributeViewModel.RepairOrder;
@@ -195,6 +197,8 @@ namespace QuickApp.Pro.Controllers
                     document.UpdatedDate = item.UpdatedDate;
                     document.UpdatedBy = item.UpdatedBy;
                     document.IsActive = item.IsActive;
+                    document.Memo = item.Memo;
+                    document.Link = item.Link;
                     documentList.Add(document);
                 }
                 if (!string.IsNullOrEmpty(paginate.Description))
@@ -236,6 +240,8 @@ namespace QuickApp.Pro.Controllers
                     document.UpdatedDate = item.UpdatedDate;
                     document.UpdatedBy = item.UpdatedBy;
                     document.IsActive = item.IsActive;
+                    document.Memo = item.Memo;
+                    document.Link = item.Link;
                     documentList.Add(document);
                 }
                 documentList.Add(document);

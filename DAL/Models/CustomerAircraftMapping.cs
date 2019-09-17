@@ -11,7 +11,6 @@ namespace DAL.Models
         public long AircraftModelId { get; set; }
         public int AircraftTypeId { get; set; }
         public long DashNumberId { get; set; }
-        public string PartNumber { get; set; }
         public string DashNumber { get; set; }
         public string AircraftType { get; set; }
         public string AircraftModel { get; set; }
@@ -22,5 +21,6 @@ namespace DAL.Models
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public bool? IsDeleted { get; set; }
+        public int? Inventory { get; set; }
     }
 }

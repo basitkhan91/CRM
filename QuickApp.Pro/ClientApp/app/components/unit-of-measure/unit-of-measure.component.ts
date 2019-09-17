@@ -155,7 +155,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         this.dataSource.data = getUnitOfMeasureList;
         this.totalRecords = getUnitOfMeasureList.length;//Adding for Pagination
         this.allUnitOfMeasureinfo = getUnitOfMeasureList;
-        console.log(this.allUnitOfMeasureinfo);
+        
     }
 
     private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
@@ -216,6 +216,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceAction = row;
+        this.unitofmeasure_Name = row.description;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -243,23 +244,15 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
     openHist(content, row) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
-
         this.sourceAction = row;
-
-
-
         //this.isSaving = true;
         // debugger;
         this.unitofmeasureService.historyUnitOfMeasure(this.sourceAction.unitOfMeasureId).subscribe(
             results => this.onHistoryLoadSuccessful(results[0], content),
             error => this.saveFailedHelper(error));
-
-
     }
 
     openView(content, row) {
-
         this.sourceAction = row;
         this.unitofmeasure_Name = row.description;
         this.shortName = row.shortName;
@@ -281,14 +274,11 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-
-
-
     eventHandler(event) {
         let value = event.target.value.toLowerCase();
         if (this.selectedActionName) {
             if (value == this.selectedActionName.toLowerCase()) {
-                //alert("Action Name already Exists");
+                
                 this.disableSave = true;
             }
             else {
@@ -303,6 +293,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
                 //alert("Action Name already Exists");
                 this.disableSave = true;
                 this.selectedActionName = event;
+                
             }
         }
     }

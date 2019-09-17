@@ -188,6 +188,11 @@ namespace DAL
         IDashNumberRepository dashNumberRepository;
         IWorkOrderRepository workOrderRepository;
         //IPurchaseOrderPartRepository _purchaseOrderPartRepository;
+
+        ICommonRepository _commonRepository;
+
+        ICustomerAircraftMapping _customerAircraftMapping;
+
         IAssetCapes _assetCapes;
         IAssetIntangibleAttributeType _assetIntangibleAttributeType;
         IAssetDepreciationInterval _assetDepreciationInterval;
@@ -483,7 +488,14 @@ namespace DAL
             }
         }
 
-
+        public ICustomerAircraftMapping CustomerAircraftMapping
+        {
+            get
+            {
+                return _customerAircraftMapping;
+            }
+           
+        }
 
         public int SaveChanges()
         {
@@ -1134,7 +1146,10 @@ namespace DAL
                     _aircraftModel = new AircraftModelRepository(_context);
                 return _aircraftModel;
             }
+
         }
+
+
 
         public ICustomerAircraftModel customerAircraftModel
         {
@@ -1664,6 +1679,17 @@ namespace DAL
                 return workOrderRepository;
             }
         }
+
+        public ICommonRepository CommonRepository
+        {
+            get
+            {
+                if (_commonRepository == null)
+                    _commonRepository = new CommonRepository(_context);
+                return _commonRepository;
+            }
+        }
+        
         IAssetCapes IUnitOfWork.AssetCapes
         {
             get {

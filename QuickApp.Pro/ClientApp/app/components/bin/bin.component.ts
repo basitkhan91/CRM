@@ -120,7 +120,7 @@ export class BinComponent {
 	disableSaveManufacturer: boolean = false;
     selectedBin: any;
     AuditDetails: SingleScreenAuditDetails[];
-
+    IS
 	ngOnInit(): void {
 		this.cols = [
 			{ field: 'name', header: 'Bin Name' },
@@ -568,14 +568,12 @@ export class BinComponent {
 	open(content) {
 		this.isEditMode = false;
 		this.isDeleteMode = false;
-		this.isSaving = true;
-		
+		this.isSaving = true;		
 		this.loadMasterCompanies();
 		this.loadManagementdata(); //Calling Management Data
 		this.selectedNodeTest = []; //while Open new Node Data Should Be Empty
 		this.disableSaveManufacturer = false;
-		this.sourceBin = {};
-		
+		this.sourceBin = {};		
 		this.address1 = "";
 		this.address2 = "";
 		this.address3 = "";
@@ -583,7 +581,6 @@ export class BinComponent {
 		this.country ="";
 		this.postalCode = "";
 		this.stateOrProvince ="";
-
 		this.name = "";
 		this.modal = this.modalService.open(content, { size: 'lg' });
 		this.modal.result.then(() => {
@@ -596,6 +593,7 @@ export class BinComponent {
 		this.isEditMode = false;
 		this.isDeleteMode = true;
 		this.sourceBin = row;
+		this.binName = row.name;
 		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
 			console.log('When user closes');
@@ -740,7 +738,7 @@ export class BinComponent {
 			this.sourceBin.updatedBy = this.userName;
 			this.sourceBin.masterCompanyId = 1;
 			this.sourceBin.name = this.name;
-			this.workFlowtService.newBin(this.sourceBin).subscribe(data => {
+			this.workFlowtService.newBin({...this.sourceBin,isDelete: this.isDeleteMode}).subscribe(data => {
 				if (data != null) {
 					this.saveManagement(data.binId, this.selectedNodeTest); //pushing Site Management Need Site Value so after getting SiteId we are calling
 				}

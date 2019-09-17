@@ -184,7 +184,7 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
         this.loadMasterCompanies();
 		this.sourceAction = new Provision();
         this.sourceAction.isActive = true;
-
+        this.provisionName = " ";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
 
@@ -196,10 +196,10 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
 
 
     openDelete(content, row) {
-
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceAction = row;
+        this.provision_Name = row.description;   
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -207,9 +207,7 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
     }
 
     openEdit(content, row) {
-
         this.isEditMode = true;
-
         this.isSaving = true;
         this.loadMasterCompanies();
 		this.disableSave = false;
@@ -228,6 +226,7 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
         let value = event.target.value.toLowerCase()
         if (this.selectedreason) {
             if (value == this.selectedreason.toLowerCase()) {
+
                 this.disableSave = true;
             }
             else {
@@ -242,7 +241,6 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
     provisionId(event) {
         for (let i = 0; i < this.allprovisin.length; i++) {
             if (event == this.allprovisin[i][0].provisionName) {
-
                 this.disableSave = true;
                 this.selectedreason = event;
             }

@@ -540,4 +540,17 @@ export class VendorService {
             this.actionEndpoint.getVendorContactEndpoint<any[]>(vendorId, isDContact));
     }
 
+    saveManfacturerinforcapes(data) {
+        return this.actionEndpoint.saveVendorCapesmaninfo<any>(data);
+    }
+
+    getVendorCapesData(vendorID: any) {
+        return this.actionEndpoint.getVendorCapesData(vendorID);
+	}
+	
+	getVendorContactsListByID(vendorId: any) {
+        return Observable.forkJoin(
+            this.actionEndpoint.getVendorContactsByIDEndpoint<any[]>(vendorId));
+    }
+
 }

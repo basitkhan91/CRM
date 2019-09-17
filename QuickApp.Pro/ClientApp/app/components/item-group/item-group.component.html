@@ -23,6 +23,12 @@
                                     </div>
                                     <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
                                     <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                    <div class="excel-upload  excel-upload-cstm">
+                                        <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                                        <label for="upload">
+                                            <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+                                        </label>
+                                    </div>
                                 </div>
                             </ng-template>
                             <ng-template pTemplate="header" let-columns>
@@ -98,7 +104,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <strong>Item Group ID : <span class="new-label">{{itemGroup_Name}}</span></strong>
+                                <strong>Item Group ID : <span class="new-label">"{{itemGroup_Name}}"</span></strong>
                             </div>
 
                             <div class="modal-footer">
@@ -288,7 +294,7 @@
                                     <div class="clear"></div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
+                                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
                                 </div>
                             </div>
 

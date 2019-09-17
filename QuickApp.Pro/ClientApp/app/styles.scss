@@ -7762,8 +7762,7 @@ input[type="text"] {
 
     .x_panel {
         padding: 0;
-        margin-top: 0px !important;
-        border: 1px solid gray;
+        margin-top: 0px !important;        
     }
 
     .workflow-form .input {
@@ -13979,7 +13978,7 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     font-size: 12px !important;
 }
 .pub-multi3 {
-    width: 231px;
+    width: 100%;
 }
 
 .pub-multi3 .ui-chkbox {
@@ -14022,6 +14021,9 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 }
 .new-margin {
     margin-top: 10px;
+}
+.new-label {
+    color: cadetblue;
 }
 .imstock-pddowm .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item.ui-state-highlight {
     color: #fff !important;
@@ -14083,12 +14085,58 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .p-calendar-cstm .ui-calendar-button {
     padding: 3px;
 }
-
+.p-radiobutton-cstm .ui-radiobutton {
+    margin-right: -5px !important;
+    padding-top: 8px !important;
+}
+.p-radiobutton-cstm .ui-radiobutton .ui-radiobutton-box {
+    width: 15px !important;
+    height: 15px !important;
+}
+.p-radiobutton-cstm .ui-radiobutton .ui-radiobutton-box .ui-radiobutton-icon {
+    left: 58% !important;
+    top: 58% !important;
+    width: 7px !important;
+    height: 7px !important;
+}
+.cus-contact-table tr th {
+    padding: 7px !important;
+}
+.cus-contact-table tr td {
+    padding: 4px !important;
+}
+// .ro-grid-form-cstm .ng-invalid {
+//     border: 1px solid red;
+// }
+.border-red-clr {
+    border: 1px solid red;
+}
+.alert-danger-cstm {
+    padding: 0px 5px 2px !important;
+    margin: 0 !important;
+}
 .modal-full {
     max-width: 700px !important;
 }
 .margintop {
     margin-top: 7px !important;
+}
+.md-stepper-horizontal {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px 5px;
+}
+@media only screen and (max-width: 1024px) {
+    .md-stepper-horizontal .md-step.active.done .md-step-title, .md-stepper-horizontal .md-step.active.editable .md-step-title {
+        font-size: 10px !important;
+    }
+    .md-stepper-horizontal .md-step .md-step-title {
+        margin-top: 10px !important;
+        font-size: 10px  !important;
+    }
+    .md-stepper-horizontal .md-step {
+        padding: 8px !important;
+    }
 }
 
 .rounder-corners-cstm {

@@ -192,7 +192,6 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
 
 
     openDelete(content, row) {
-
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceAction = row;
@@ -346,7 +345,8 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
         }
 
         this.modal.close();
-    }
+    }   
+
     handleChange(rowData, e) {
         if (e.checked == false) {
             this.sourceAction = rowData;

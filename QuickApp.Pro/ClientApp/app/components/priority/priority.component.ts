@@ -17,6 +17,9 @@ import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 
+
+
+
 @Component({
     selector: 'app-priority',
     templateUrl: './priority.component.html',
@@ -33,6 +36,10 @@ export class PriorityComponent implements OnInit, AfterViewInit {
     updatedBy: any = "";
     createdDate: any = "";
     updatedDate: any = "";
+
+
+    afbakbfob;
+    saklfoias;
 
     ngOnInit(): void {
 		this.loadData();
@@ -177,6 +184,7 @@ export class PriorityComponent implements OnInit, AfterViewInit {
 
         this.isEditMode = false;
         this.isDeleteMode = true;
+        this.priority_Name = row.description;
         this.sourceAction = row;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -190,9 +198,6 @@ export class PriorityComponent implements OnInit, AfterViewInit {
 		this.disableSave = false;
         this.isSaving = true;
         this.loadMasterCompanies();
-
-
-
         this.sourceAction = row;
         this.priorityName = this.sourceAction.description;
         this.loadMasterCompanies();
@@ -226,9 +231,13 @@ export class PriorityComponent implements OnInit, AfterViewInit {
 
 
     eventHandler(event) {
-        let value = event.target.value.toLowerCase()
-        if (this.selectedreason) {
-            if (value == this.selectedreason.toLowerCase()) {
+     
+        let value = event.target.value.toLowerCase();
+        
+
+        for (let i = 0; i < this.allpriority.length; i++) {            
+            if (value == this.allpriority[i][0].priorityName) {      
+              //  console.log(value);
                 this.disableSave = true;
             }
             else {
@@ -239,6 +248,7 @@ export class PriorityComponent implements OnInit, AfterViewInit {
     priorityId(event) {
         for (let i = 0; i < this.allpriority.length; i++) {
             if (event == this.allpriority[i][0].priorityName) {
+               // console.log(event);
                 this.disableSave = true;
                 this.selectedreason = event;
             }
@@ -247,15 +257,16 @@ export class PriorityComponent implements OnInit, AfterViewInit {
     filterpriorities(event) {
         this.localCollection = [];
         for (let i = 0; i < this.allPriorityInfo.length; i++) {
-            let priorityName = this.allPriorityInfo[i].description;
+            let priorityName = this.allPriorityInfo[i].description;            
             if (priorityName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                 this.allpriority.push([{
                     "priorityId": this.allPriorityInfo[i].priorityId,
                     "priorityName": priorityName
                 }]),
-                this.localCollection.push(priorityName);
-            }
+                    this.localCollection.push(priorityName);               
+            }         
         }
+      
     }
     openHist(content, row) {
 
@@ -319,7 +330,7 @@ export class PriorityComponent implements OnInit, AfterViewInit {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.description = this.priorityName;
-            this.priorityService.newPriority(this.sourceAction).subscribe(
+            this.priorityService.newPriority({ ...this.sourceAction, isDelete: this.isDeleteMode }).subscribe(
                 role => this.saveSuccessHelper(role),
                 error => this.saveFailedHelper(error));
         }

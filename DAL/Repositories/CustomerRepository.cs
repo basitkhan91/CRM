@@ -42,7 +42,7 @@ namespace DAL.Repositories
                         join creditTerms in _appContext.CreditTerms on t.CreditTermsId equals creditTerms.CreditTermsId into cre
                         from creditTerms in cre.DefaultIfEmpty()
                         join cc in _appContext.CustomerClassification on t.CustomerClassificationId equals cc.CustomerClassificationId
-                        where t.IsDelete == true || t.IsDelete == null
+                        where t.IsDelete == false || t.IsDelete == null
                         // select new { t, ad, vt }).ToList();
                         select new
                         {
@@ -293,11 +293,12 @@ namespace DAL.Repositories
                         c.AircraftType,
                         c.AircraftModelId,
                         c.DashNumberId,
-                        c.PartNumber,
+                        c.CreatedBy,
                         c.DashNumber,
                         c.AircraftModel,
-                        c.Memo
-
+                        c.Memo,
+                        c.Inventory,
+                        c.MasterCompanyId
                     }).ToList();
                 return data;
             }

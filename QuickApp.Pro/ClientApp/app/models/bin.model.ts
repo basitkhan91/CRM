@@ -2,7 +2,7 @@
 
 export class Bin {
 	// Note: Using only optional constructor properties without backing store disables typescript's type checking for the type
-	constructor(masterCompany?: MasterCompany, binId?: number,/*actionId?: number,*/ /*description?: string, */masterCompanyId?: number, createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string, isActive?: boolean, memo?: string) {
+    constructor(masterCompany?: MasterCompany, binId?: number,/*actionId?: number,*/ /*description?: string, */masterCompanyId?: number, createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string, isActive?: boolean, isDelete?: boolean, memo?: string) {
 
 		//this.actionId = actionId;
 		//this.description = description;
@@ -13,7 +13,8 @@ export class Bin {
 		this.updatedDate = updatedDate;
 		this.updatedBy = updatedBy;
 		this.masterCompany = masterCompany;
-		this.isActive = isActive;
+        this.isActive = isActive;
+        this.isDelete = isDelete;
 		this.memo = memo;
 
 	}
@@ -30,7 +31,8 @@ export class Bin {
 	public updatedDate: Date;
 	public masterCompany?: MasterCompany;
 	public isActive: boolean;
-	public memo: string;
+    public memo: string;
+    public isDelete: boolean;
 
 
 }

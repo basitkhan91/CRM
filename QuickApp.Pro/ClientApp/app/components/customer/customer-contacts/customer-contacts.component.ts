@@ -24,10 +24,10 @@ import { CustomerService } from '../../../services/customer.service';
 
 
 @Component({
-    selector: 'app-customer-contacts',
-    templateUrl: './customer-contacts.component.html',
-    styleUrls: ['./customer-contacts.component.scss'],
-    animations: [fadeInOut]
+	selector: 'app-customer-contacts',
+	templateUrl: './customer-contacts.component.html',
+	styleUrls: ['./customer-contacts.component.scss'],
+	animations: [fadeInOut]
 })
 /** CustomerEdit component*/
 export class CustomerContactsComponent implements OnInit, AfterViewInit {
@@ -54,7 +54,7 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
 	updatedDate: any = "";
 	sub: any;
 	local: any;
-    isCustomerAlsoVendor: boolean=false;
+	isCustomerAlsoVendor: boolean = false;
 	allViewforContact: any = {};
 	sourceViewforContact: any = {};
 	@ViewChild(MatPaginator) paginator: MatPaginator;
@@ -87,22 +87,23 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
 	display: boolean = false;
 	modelValue: boolean = false;
 	isEditMode: boolean = false;
-    isDeleteMode: boolean = false;
-    public allWorkFlows: any[] = [];
-    isDefaultContact: any;
-    selectedFirstName: any;
-    disableSaveFirstName: boolean;
-    disableSaveMiddleName: boolean;
-    selectedMiddleName: any;
-    disableSaveName: any;
-    disableSavelastName: any;
-    disableSaveLastName: boolean;
-    sourceCustomerTemp: any = {};
-    //@ViewChild('addContactForm') addContactForm: NgForm;
+	isDeleteMode: boolean = false;
+	public allWorkFlows: any[] = [];
+	isDefaultContact: any;
+	selectedFirstName: any;
+	disableSaveFirstName: boolean;
+	disableSaveMiddleName: boolean;
+	selectedMiddleName: any;
+	disableSaveName: any;
+	disableSavelastName: any;
+	disableSaveLastName: boolean;
+	sourceCustomerTemp: any = {};
+	emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{3,}";
+	//@ViewChild('addContactForm') addContactForm: NgForm;
 
 	constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public customerService: CustomerService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 
-			//this.comName = companyDirective.companyName;
+		//this.comName = companyDirective.companyName;
 		if (this.customerService.generalCollection) {
 
 			this.local = this.customerService.generalCollection;
@@ -117,37 +118,37 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
 			this.local = this.customerService.listCollection.t;
 			this.loadData();
 		}
-        this.alertService.stopLoadingMessage();
-    }
+		this.alertService.stopLoadingMessage();
+	}
 
-    ngOnInit(): void {
-        this.customerService.currentUrl = '/customersmodule/customerpages/app-customer-contacts';
-        this.customerService.bredcrumbObj.next(this.customerService.currentUrl);
-        this.customerService.ShowPtab = true;
-        this.customerService.alertObj.next(this.customerService.ShowPtab); //steps
-        if (this.local) {
-            this.loadData();
-        }
-        this.loadCompleteddata();
-        this.router.queryParams.subscribe((params: Params) => {
-        });
-    }
-    //Filter Customer First Name//
-	filterFirstNames(event) {
-        this.firstNames = [];
-        if (this.alldata) {
-            for (let i = 0; i < this.alldata.length; i++) {
-                let firstName = this.alldata[i].firstName;
-
-                if (firstName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                    this.firstNames.push(firstName);
-
-                }
-            }
+	ngOnInit(): void {
+		this.customerService.currentUrl = '/customersmodule/customerpages/app-customer-contacts';
+		this.customerService.bredcrumbObj.next(this.customerService.currentUrl);
+		this.customerService.ShowPtab = true;
+		this.customerService.alertObj.next(this.customerService.ShowPtab); //steps
+		if (this.local) {
+			this.loadData();
 		}
-    }
+		this.loadCompleteddata();
+		this.router.queryParams.subscribe((params: Params) => {
+		});
+	}
+	//Filter Customer First Name//
+	filterFirstNames(event) {
+		this.firstNames = [];
+		if (this.alldata) {
+			for (let i = 0; i < this.alldata.length; i++) {
+				let firstName = this.alldata[i].firstName;
 
-    // filter Last Name of Customer//
+				if (firstName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+					this.firstNames.push(firstName);
+
+				}
+			}
+		}
+	}
+
+	// filter Last Name of Customer//
 	filterLastNames(event) {
 		this.lastNames = [];
 		for (let i = 0; i < this.alldata.length; i++) {
@@ -158,9 +159,9 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
 
 			}
 		}
-    }
+	}
 
-    // filter Middle Name of Customer//
+	// filter Middle Name of Customer//
 	filterMiddleNames(event) {
 		this.middleNames = [];
 		for (let i = 0; i < this.alldata.length; i++) {
@@ -173,22 +174,22 @@ export class CustomerContactsComponent implements OnInit, AfterViewInit {
 
 			}
 		}
-    }
-    private onDataLoadSuccessful(allWorkFlows: any[]) {
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.dataSource.data = allWorkFlows;
-        this.allActions = allWorkFlows;
+	}
+	private onDataLoadSuccessful(allWorkFlows: any[]) {
+		this.alertService.stopLoadingMessage();
+		this.loadingIndicator = false;
+		this.dataSource.data = allWorkFlows;
+		this.allActions = allWorkFlows;
 
 
-    }
+	}
 	ngAfterViewInit() {
 		this.dataSource.paginator = this.paginator;
 		this.dataSource.sort = this.sort;
 	}
 
 	//Load Contacts//
-loadData() {
+	loadData() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
 		this.customerService.getContacts(this.local.customerId).subscribe(
@@ -201,11 +202,11 @@ loadData() {
 			{ field: 'contactTitle', header: 'Contact Title' },
 			{ field: 'email', header: 'Email' },
 			{ field: 'workPhone', header: 'Work Phone' },
-            { field: 'mobilePhone', header: 'Mobile Phone' },
-            { field: 'fax', header: 'Fax' },
+			{ field: 'mobilePhone', header: 'Mobile Phone' },
+			{ field: 'fax', header: 'Fax' },
 			//{ field: 'createdBy', header: 'Created By' },
 			//{ field: 'updatedBy', header: 'Updated By' },
-            { field: 'isDefaultContact', header: 'Primary Contact' },
+			{ field: 'isDefaultContact', header: 'Primary Contact' },
 			{ field: 'notes', header: 'Memo' },
 			{ field: 'updatedDate', header: 'Updated Date' },
 			{ field: 'createdDate', header: 'Created Date' }
@@ -216,7 +217,7 @@ loadData() {
 
 	}
 
-    // Load Compamiesdata//
+	// Load Compamiesdata//
 	private loadCompleteddata() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
@@ -237,12 +238,12 @@ loadData() {
 		);
 
 	}
-    private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.allComapnies = allComapnies;
+	private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
+		this.alertService.stopLoadingMessage();
+		this.loadingIndicator = false;
+		this.allComapnies = allComapnies;
 
-    }
+	}
 
 
 	public applyFilter(filterValue: string) {
@@ -256,9 +257,9 @@ loadData() {
 			this.sourceCustomer.isActive == false;
 			this.customerService.updateContactinfo(this.sourceCustomer).subscribe(
 				response => this.saveCompleted(this.sourceCustomer),
-                error => this.saveFailedHelper(error));
-            this.sourceCustomer = "";
-        
+				error => this.saveFailedHelper(error));
+			this.sourceCustomer = "";
+
 		}
 		else {
 			this.sourceCustomer = rowData;
@@ -267,8 +268,8 @@ loadData() {
 			this.sourceCustomer.isActive == true;
 			this.customerService.updateContactinfo(this.sourceCustomer).subscribe(
 				response => this.saveCompleted(this.sourceCustomer),
-                error => this.saveFailedHelper(error));
-            this.sourceCustomer = "";
+				error => this.saveFailedHelper(error));
+			this.sourceCustomer = "";
 		}
 
 	}
@@ -276,7 +277,7 @@ loadData() {
 	private refresh() {
 		this.applyFilter(this.dataSource.filter);
 	}
-	
+
 	private ondata(allWorkFlows: any[]) {
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
@@ -287,22 +288,22 @@ loadData() {
 	dismissModel() {
 		this.modal.close();
 	}
-	
 
-    // Filter Values//
+
+	// Filter Values//
 	filterActions(event) {
 		this.localCollection = [];
 		for (let i = 0; i < this.alldata.length; i++) {
 			let actionName = this.alldata[i].description;
 			if (actionName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
 				this.localCollection.push(actionName);
-                }
+			}
 		}
 	}
 
-	
 
-	
+
+
 
 	private onDataLoadFailed(error: any) {
 		this.alertService.stopLoadingMessage();
@@ -341,15 +342,15 @@ loadData() {
 		this.loadMasterCompanies();
 		this.loadData();
 	}*/
-    openEditContact(row) {
-        this.isEditMode = true;
+	openEditContact(row) {
+		this.isEditMode = true;
 		this.isSaving = true;
-        this.sourceCustomer = {...row};
-    }
-    onAddContactDetails() {
-        this.sourceCustomer = {};
-        this.isEditMode = false;
-    }
+		this.sourceCustomer = { ...row };
+	}
+	onAddContactDetails() {
+		this.sourceCustomer = {};
+		this.isEditMode = false;
+	}
 	opencontactView(content, row) {
 		this.sourceViewforContact = row;
 		this.createdBy = row.createdBy;
@@ -369,7 +370,7 @@ loadData() {
 		}, () => { console.log('Backdrop click') })
 	}
 
-    //Open History
+	//Open History
 	openHist(content, row) {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
@@ -379,17 +380,17 @@ loadData() {
 			results => this.onHistoryLoadSuccessful(results[0], content),
 			error => this.saveFailedHelper(error));
 	}
-    private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.auditHisory = auditHistory;
-        this.modal = this.modalService.open(content, { size: 'lg' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+	private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
+		this.alertService.stopLoadingMessage();
+		this.loadingIndicator = false;
+		this.auditHisory = auditHistory;
+		this.modal = this.modalService.open(content, { size: 'lg' });
+		this.modal.result.then(() => {
+			console.log('When user closes');
+		}, () => { console.log('Backdrop click') })
 
 
-    }
+	}
 	onBlurMethod(data) {
 		if (data == 'firstName') {
 			this.showFirstName = false;
@@ -406,60 +407,60 @@ loadData() {
 	}
 
 
-    // Save Customer Contact Info
+	// Save Customer Contact Info
 	editItemAndCloseModel() {
-        if (!(this.sourceCustomer.firstName && this.sourceCustomer.lastName &&
-            this.sourceCustomer.workPhone && this.sourceCustomer.email
-        )) {
-            //this.display = true;
-            this.modelValue = true;
-        }
+		if (!(this.sourceCustomer.firstName && this.sourceCustomer.lastName &&
+			this.sourceCustomer.workPhone && this.sourceCustomer.email
+		)) {
+			//this.display = true;
+			this.modelValue = true;
+		}
 		if (this.sourceCustomer.firstName && this.sourceCustomer.lastName && this.sourceCustomer.workPhone && this.sourceCustomer.email) {
 
 			this.isSaving = true;
 			if (!this.sourceCustomer.customerContactId) {
 				this.sourceCustomer.createdBy = this.userName;
 				this.sourceCustomer.updatedBy = this.userName;
-                this.sourceCustomer.masterCompanyId = 1;
-                if(this.sourceCustomer.isDefaultContact === undefined){
-                        this.sourceCustomer.isDefaultContact = false;
-                    }
-            
-                console.log(this.sourceCustomer.isDefaultContact);
-                this.isDefault = this.sourceCustomer.isDefaultContact;
+				this.sourceCustomer.masterCompanyId = 1;
+				if (this.sourceCustomer.isDefaultContact === undefined) {
+					this.sourceCustomer.isDefaultContact = false;
+				}
+
+
+				this.isDefault = this.sourceCustomer.isDefaultContact;
 				this.customerService.newAddContactInfo(this.sourceCustomer).subscribe(data => {
 					this.localCollection = data;
-					this.sourceCustomer= new Object();
+					this.sourceCustomer = new Object();
 					this.localCollection.CustomerId = this.local.customerId;
 					this.localCollection.ContactId = this.local.contactId;
-                    this.loadData();
-                    if (data) {
-                        this.localCollection.isDefaultContact = this.isDefault;
-                        this.updateCustomerContact(this.localCollection);
-                        this.loadData();
-                    }
+					this.loadData();
+					if (data) {
+						this.localCollection.isDefaultContact = this.isDefault;
+						this.updateCustomerContact(this.localCollection);
+						this.loadData();
+					}
 					if (this.sourceCustomer.isCustomerAlsoVendor == true) {
 						this.customerService.isCustomerAlsoVendor = this.isCustomerAlsoVendor;
 						this.customerService.localCollectiontoVendor = data;
 					}
 					this.customerService.contactCollection = this.local;
 					this.savesuccessCompleted(this.sourceCustomer);
-					this.activeIndex = 1;
+					this.activeIndex = 2;
 					this.customerService.indexObj.next(this.activeIndex);
-					
+
 				})
 
 
 			}
 			else {
-				
+
 				this.activeIndex = 1;
 				this.sourceCustomer.updatedBy = this.userName;
-                this.sourceCustomer.masterCompanyId = 1;
-                this.isDefault = this.sourceCustomer.isDefaultContact;
-              
+				this.sourceCustomer.masterCompanyId = 1;
+				this.isDefault = this.sourceCustomer.isDefaultContact;
+
 				this.customerService.updateContactinfo(this.sourceCustomer).subscribe(data => {
-                    this.loadData();                  
+					this.loadData();
 					if (data) { this.sourceCustomer = new Object(); }
 
 				})
@@ -470,23 +471,23 @@ loadData() {
 
 		else {
 		}
-		
-    }
+
+	}
 
 	toggledbldisplay(data) {
 		this.sourceCustomer = data;
 
-    }
-    // Next Click
-    nextClick() {
-        this.customerService.contactCollection = this.local;
+	}
+	// Next Click
+	nextClick() {
+		this.customerService.contactCollection = this.local;
 		this.activeIndex = 2;
 		this.customerService.indexObj.next(this.activeIndex);
-		this.route.navigateByUrl('/customersmodule/customerpages/app-customer-financial-information');
-		
-    }
+		this.route.navigate(['/customersmodule/customerpages/app-customer-aircraft']);
 
-    // Back Click
+	}
+
+	// Back Click
 	backClick() {
 		this.customerService.contactCollection = this.local;
 		this.activeIndex = 0;
@@ -538,109 +539,109 @@ loadData() {
 		this.alertService.stopLoadingMessage();
 		this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
 		this.alertService.showStickyMessage(error, null, MessageSeverity.error);
-    }
+	}
 
-    // Tried For Keypress event 
-    keyPress(event: any) {
-        const pattern = /[0-9\+\-\ ]/;
-        let inputChar = String.fromCharCode(event.charCode);
-        if (event.keyCode != 8 && !pattern.test(inputChar)) {
-            event.preventDefault();
-        }
-    }
+	// Tried For Keypress event 
+	keyPress(event: any) {
+		const pattern = /[0-9\+\-\ ]/;
+		let inputChar = String.fromCharCode(event.charCode);
+		if (event.keyCode != 8 && !pattern.test(inputChar)) {
+			event.preventDefault();
+		}
+	}
 
-    onKeyUpFirstNames(event) {
-        if (event.target.value != "") {
-            let value = event.target.value.toLowerCase();
-            if (this.selectedFirstName) {
-                if (value == this.selectedFirstName.toLowerCase()) {
-                    this.disableSaveFirstName = true;
+	onKeyUpFirstNames(event) {
+		if (event.target.value != "") {
+			let value = event.target.value.toLowerCase();
+			if (this.selectedFirstName) {
+				if (value == this.selectedFirstName.toLowerCase()) {
+					this.disableSaveFirstName = true;
 
-                }
-                else {
-                    this.disableSaveFirstName = false;
+				}
+				else {
+					this.disableSaveFirstName = false;
 
-                }
-            }
+				}
+			}
 
-        }
-    }
+		}
+	}
 
-    onSelectFirstName(event) {
-        if (this.alldata) {
-            for (let i = 0; i < this.alldata.length; i++) {
-                if (event == this.alldata[i].firstName) {
-                    this.sourceCustomer.firstName = this.alldata[i].firstName;
-                    this.disableSaveFirstName = true;
+	onSelectFirstName(event) {
+		if (this.alldata) {
+			for (let i = 0; i < this.alldata.length; i++) {
+				if (event == this.alldata[i].firstName) {
+					this.sourceCustomer.firstName = this.alldata[i].firstName;
+					this.disableSaveFirstName = true;
 
-                    this.selectedFirstName = event;
-                }
+					this.selectedFirstName = event;
+				}
 
-            }
-        }
-    }
+			}
+		}
+	}
 
-    onKeyUpMiddleNames(event) {
-        if (event.target.value != "") {
-            let value = event.target.value.toLowerCase();
-            if (this.disableSaveName) {
-                if (value == this.disableSaveName.toLowerCase()) {
-                    this.disableSaveMiddleName = true;
+	onKeyUpMiddleNames(event) {
+		if (event.target.value != "") {
+			let value = event.target.value.toLowerCase();
+			if (this.disableSaveName) {
+				if (value == this.disableSaveName.toLowerCase()) {
+					this.disableSaveMiddleName = true;
 
-                }
-                else {
-                    this.disableSaveMiddleName = false;
+				}
+				else {
+					this.disableSaveMiddleName = false;
 
-                }
-            }
+				}
+			}
 
-        }
-    }
+		}
+	}
 
-    onSelectMiddleName(event) {
-        if (this.alldata) {
-            for (let i = 0; i < this.alldata.length; i++) {
-                if (event == this.alldata[i].middleName) {
-                    this.sourceCustomer.middleName = this.alldata[i].middleName;
-                    this.disableSaveMiddleName = true;
+	onSelectMiddleName(event) {
+		if (this.alldata) {
+			for (let i = 0; i < this.alldata.length; i++) {
+				if (event == this.alldata[i].middleName) {
+					this.sourceCustomer.middleName = this.alldata[i].middleName;
+					this.disableSaveMiddleName = true;
 
-                    this.disableSaveName = event;
-                }
+					this.disableSaveName = event;
+				}
 
-            }
-        }
-    }
+			}
+		}
+	}
 
-    onKeyUpLastNames(event) {
-        if (event.target.value != "") {
-            let value = event.target.value.toLowerCase();
-            if (this.disableSavelastName) {
-                if (value == this.disableSavelastName.toLowerCase()) {
-                    this.disableSaveLastName = true;
+	onKeyUpLastNames(event) {
+		if (event.target.value != "") {
+			let value = event.target.value.toLowerCase();
+			if (this.disableSavelastName) {
+				if (value == this.disableSavelastName.toLowerCase()) {
+					this.disableSaveLastName = true;
 
-                }
-                else {
-                    this.disableSaveLastName = false;
+				}
+				else {
+					this.disableSaveLastName = false;
 
-                }
-            }
+				}
+			}
 
-        }
-    }
+		}
+	}
 
-    onSelectLastName(event) {
-        if (this.alldata) {
-            for (let i = 0; i < this.alldata.length; i++) {
-                if (event == this.alldata[i].lastName) {
-                    this.sourceCustomer.lastName = this.alldata[i].lastName;
-                    this.disableSaveLastName = true;
+	onSelectLastName(event) {
+		if (this.alldata) {
+			for (let i = 0; i < this.alldata.length; i++) {
+				if (event == this.alldata[i].lastName) {
+					this.sourceCustomer.lastName = this.alldata[i].lastName;
+					this.disableSaveLastName = true;
 
-                    this.disableSavelastName = event;
-                }
+					this.disableSavelastName = event;
+				}
 
-            }
-        }
-    }
+			}
+		}
+	}
 
 }
 

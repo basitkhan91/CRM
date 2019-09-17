@@ -2,6 +2,7 @@
 using DAL.Repositories.Interfaces;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace DAL.Repositories
 {
@@ -26,7 +27,12 @@ namespace DAL.Repositories
                 purchaseOrder.PurchaseOderPart.ToList().ForEach(part =>
                 {
                     part.ItemMaster = _appContext.ItemMaster.Find(part.ItemMasterId);
-                    part.StockLine = _appContext.StockLine.Where(x => x.PurchaseOrderId == part.PurchaseOrderId).ToList();
+
+                    var stockLines = _appContext.StockLine.Where(x => x.PurchaseOrderPartRecordId != null && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId).ToList();
+                    if (stockLines != null && stockLines.Count > 0) {
+                        part.StockLineCount = (long)stockLines.Sum(x => x.Quantity);
+                    }
+                    
                     if (!part.isParent)
                     {
                         part.POPartSplitAddress = _appContext.Address.Where(x => x.AddressId == part.POPartSplitAddressId).FirstOrDefault();
@@ -40,7 +46,7 @@ namespace DAL.Repositories
 
                 return purchaseOrder;
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
                 throw new System.Exception("Error while loading data");
             }

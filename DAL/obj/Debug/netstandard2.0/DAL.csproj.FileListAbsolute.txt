@@ -1,0 +1,9 @@
+C:\Users\jrajput\Documents\Personal\PAS\PAS_DEV\DAL\bin\Debug\netstandard2.0\DAL.deps.json
+C:\Users\jrajput\Documents\Personal\PAS\PAS_DEV\DAL\bin\Debug\netstandard2.0\DAL.dll
+C:\Users\jrajput\Documents\Personal\PAS\PAS_DEV\DAL\bin\Debug\netstandard2.0\DAL.pdb
+C:\Users\jrajput\Documents\Personal\PAS\PAS_DEV\DAL\obj\Debug\netstandard2.0\DAL.csproj.CoreCompileInputs.cache
+C:\Users\jrajput\Documents\Personal\PAS\PAS_DEV\DAL\obj\Debug\netstandard2.0\DAL.AssemblyInfoInputs.cache
+C:\Users\jrajput\Documents\Personal\PAS\PAS_DEV\DAL\obj\Debug\netstandard2.0\DAL.AssemblyInfo.cs
+C:\Users\jrajput\Documents\Personal\PAS\PAS_DEV\DAL\obj\Debug\netstandard2.0\DAL.dll
+C:\Users\jrajput\Documents\Personal\PAS\PAS_DEV\DAL\obj\Debug\netstandard2.0\DAL.pdb
+C:\Users\jrajput\Documents\Personal\PAS\PAS_DEV\DAL\obj\Debug\netstandard2.0\DAL.csprojAssemblyReference.cache
