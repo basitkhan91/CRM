@@ -17,6 +17,9 @@ import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 
+
+
+
 @Component({
     selector: 'app-priority',
     templateUrl: './priority.component.html',
@@ -33,6 +36,10 @@ export class PriorityComponent implements OnInit, AfterViewInit {
     updatedBy: any = "";
     createdDate: any = "";
     updatedDate: any = "";
+
+
+    afbakbfob;
+    saklfoias;
 
     ngOnInit(): void {
 		this.loadData();
