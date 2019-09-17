@@ -194,7 +194,8 @@ namespace DAL
         ICustomerAircraftMapping _customerAircraftMapping;
 
         IAssetCapes _assetCapes;
-        
+        IAssetIntangibleAttributeType _assetIntangibleAttributeType;
+        IAssetDepreciationInterval _assetDepreciationInterval;
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
@@ -1695,6 +1696,25 @@ namespace DAL
                 if (_assetCapes == null)
                     _assetCapes = new AssetCapesRepository(_context);
                 return _assetCapes;
+            }
+        }
+
+        IAssetIntangibleAttributeType IUnitOfWork.AssetIntangibleAttributeType
+        {
+            get
+            {
+                if (_assetIntangibleAttributeType == null)
+                    _assetIntangibleAttributeType = new AssetIntangibleAttributeTypeRepository(_context);
+                return _assetIntangibleAttributeType;
+            }
+        }
+        IAssetDepreciationInterval IUnitOfWork.AssetDepreciationInterval
+        {
+            get
+            {
+                if (_assetDepreciationInterval == null)
+                    _assetDepreciationInterval = new AssetDepreciationIntervalRepository(_context);
+                return _assetDepreciationInterval;
             }
         }
     }

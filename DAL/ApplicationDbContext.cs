@@ -368,6 +368,8 @@ namespace DAL
         public DbSet<AssetCapes> AssetCapes { get; set; }
         public DbSet<AssetCapesAudit> AssetCapesAudit { get; set; }
 
+        public DbSet<AssetIntangibleAttributeType> AssetIntangibleAttributeType { get; set; }
+
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }
