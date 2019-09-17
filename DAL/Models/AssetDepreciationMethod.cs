@@ -10,14 +10,14 @@ namespace DAL.Models
     {
         [Key]
         public long? AssetDepreciationMethodId { get; set; }
-        //[Required(ErrorMessage = "Id Is Required.")]
-        //public string AssetDepreciationId { get; set; }
+        [Required(ErrorMessage = "Id Is Required.")]
+        public string AssetDepreciationId { get; set; }
 
         [Required(ErrorMessage = "Name Is Required.")]
         public string AssetDepreciationMethodName { get; set; }
 
-        //public string AssetDepreciationBasis { get; set; }
-        public string AssetDepreciationMethodBasis { get; set; }
+        public string AssetDepreciationBasis { get; set; }
+
         public string AssetDepreciationMemo { get; set; }
 
         [ForeignKey("MasterCompanyId")]

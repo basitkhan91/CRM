@@ -8,7 +8,6 @@ using QuickApp.Pro.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace QuickApp.Pro.Controllers
@@ -147,41 +146,6 @@ namespace QuickApp.Pro.Controllers
             var pageCount = (pageIndex / pageListPerPage) + 1;
             var data = DAL.Common.PaginatedList<GLAccountClass>.Create(_unitOfWork.GLAccountClass.GetPaginationData(), pageCount, pageListPerPage);
             return Ok(data);
-        }
-
-        [HttpGet("getAll")]
-        public IActionResult GetAll()
-        {
-            List<ColumHeader> columHeaders = new List<ColumHeader>();
-            PropertyInfo[] propertyInfos = typeof(GLAccountClassModel).GetProperties();
-            ColumHeader columnHeader;
-            DynamicGridData<GLAccountClassModel> dynamicGridData = new DynamicGridData<GLAccountClassModel>();
-            foreach (PropertyInfo property in propertyInfos)
-            {
-                columnHeader = new ColumHeader();
-                columnHeader.field = property.Name;
-                columnHeader.header = property.Name;
-                columHeaders.Add(columnHeader);
-            }
-            dynamicGridData.columHeaders = columHeaders;
-            List<GLAccountClassModel> gLAccountClassModels = new List<GLAccountClassModel>();
-            GLAccountClassModel gLAccountClass = null;
-            var gLAccounts = _unitOfWork.GLAccountClass.GetAll();
-            foreach (var item in gLAccounts)
-            {
-                gLAccountClass = new GLAccountClassModel();
-                gLAccountClass.GLAccountClassId = item.GLAccountClassId;
-                gLAccountClass.GLCID = item.GLCID;
-                gLAccountClass.GLAccountClassName = item.GLAccountClassName;
-                gLAccountClass.CreatedDate = item.CreatedDate;
-                gLAccountClass.CreatedBy = item.CreatedBy;
-                gLAccountClass.UpdatedDate = item.UpdatedDate;
-                gLAccountClass.UpdatedBy = item.UpdatedBy;
-                //currency.IsActive = item.IsActive;
-                gLAccountClassModels.Add(gLAccountClass);
-            }
-            dynamicGridData.ColumnData = gLAccountClassModels;
-            return Ok(dynamicGridData);
         }
     }
 }

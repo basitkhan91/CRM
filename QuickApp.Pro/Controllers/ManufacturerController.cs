@@ -8,7 +8,6 @@ using QuickApp.Pro.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace QuickApp.Pro.Controllers
@@ -228,43 +227,6 @@ namespace QuickApp.Pro.Controllers
             public int TotalRecordsCount { get; set; }
             public List<ManufacturerPaginationViewModel> ManufacturerList { get; set; }
         }
-        #region Individual grids code
-
-        [HttpGet("getAll")]
-        public IActionResult GetAll()
-        {
-            List<ColumHeader> columHeaders = new List<ColumHeader>();
-            PropertyInfo[] propertyInfos = typeof(ManufacturerModel).GetProperties();
-            ColumHeader columnHeader;
-            DynamicGridData<ManufacturerModel> dynamicGridData = new DynamicGridData<ManufacturerModel>();
-            foreach (PropertyInfo property in propertyInfos)
-            {
-                columnHeader = new ColumHeader();
-                columnHeader.field = property.Name;
-                columnHeader.header = property.Name;
-                columHeaders.Add(columnHeader);
-            }
-            dynamicGridData.columHeaders = columHeaders;
-            List<ManufacturerModel> manufacturerList = new List<ManufacturerModel>();
-            ManufacturerModel manufacturer = null;
-            var manufacturers = _unitOfWork.Manufacturer.GetAllManufacturerData();
-            foreach (var item in manufacturers)
-            {
-                manufacturer = new ManufacturerModel();
-                manufacturer.ManufacturerId = item.ManufacturerId;
-                manufacturer.Name = item.Name;
-                manufacturer.Comments = item.Comments;
-                manufacturer.CreatedDate = item.CreatedDate;
-                manufacturer.CreatedBy = item.CreatedBy;
-                manufacturer.UpdatedDate = item.UpdatedDate;
-                manufacturer.UpdatedBy = item.UpdatedBy;
-                //manufacturer.IsActive = item.IsActive;
-                manufacturerList.Add(manufacturer);
-            }
-            dynamicGridData.ColumnData = manufacturerList;
-            return Ok(dynamicGridData);
-        }
-        #endregion
     }
 }
 

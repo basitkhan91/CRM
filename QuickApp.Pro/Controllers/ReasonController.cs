@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
 using DAL;
@@ -255,44 +254,6 @@ namespace QuickApp.Pro.Controllers
             public int TotalRecordsCount { get; set; }
             public List<ReasonPaginationViewModel> ReasonList { get; set; }
         }
-        #region Individual grids code
-
-        [HttpGet("getAll")]
-        public IActionResult GetAll()
-        {
-            List<ColumHeader> columHeaders = new List<ColumHeader>();
-            PropertyInfo[] propertyInfos = typeof(ReasonModel).GetProperties();
-            ColumHeader columnHeader;
-            DynamicGridData<ReasonModel> dynamicGridData = new DynamicGridData<ReasonModel>();
-            foreach (PropertyInfo property in propertyInfos)
-            {
-                columnHeader = new ColumHeader();
-                columnHeader.field = property.Name;
-                columnHeader.header = property.Name;
-                columHeaders.Add(columnHeader);
-            }
-            dynamicGridData.columHeaders = columHeaders;
-            List<ReasonModel> ReasonList = new List<ReasonModel>();
-            ReasonModel Reason = null;
-            var Reasons = _unitOfWork.Reasons.GetAllReasonData();
-            foreach (var item in Reasons)
-            {
-                Reason = new ReasonModel();
-                Reason.ReasonId = item.ReasonId;
-                Reason.ReasonCode = item.ReasonCode;
-                Reason.ReasonForRemoval = item.ReasonForRemoval;
-                Reason.Memo = item.Memo;
-                Reason.CreatedDate = item.CreatedDate;
-                Reason.CreatedBy = item.CreatedBy;
-                Reason.UpdatedDate = item.UpdatedDate;
-                Reason.UpdatedBy = item.UpdatedBy;
-               // Reason.IsActive = item.IsActive;
-                ReasonList.Add(Reason);
-            }
-            dynamicGridData.ColumnData = ReasonList;
-            return Ok(dynamicGridData);
-        }
-        #endregion
     }
 }
 
