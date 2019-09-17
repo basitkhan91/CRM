@@ -224,9 +224,13 @@ export class PriorityComponent implements OnInit, AfterViewInit {
 
 
     eventHandler(event) {
-        let value = event.target.value.toLowerCase()
-        if (this.selectedreason) {
-            if (value == this.selectedreason.toLowerCase()) {
+     
+        let value = event.target.value.toLowerCase();
+        
+
+        for (let i = 0; i < this.allpriority.length; i++) {            
+            if (value == this.allpriority[i][0].priorityName) {      
+              //  console.log(value);
                 this.disableSave = true;
             }
             else {
@@ -237,6 +241,7 @@ export class PriorityComponent implements OnInit, AfterViewInit {
     priorityId(event) {
         for (let i = 0; i < this.allpriority.length; i++) {
             if (event == this.allpriority[i][0].priorityName) {
+               // console.log(event);
                 this.disableSave = true;
                 this.selectedreason = event;
             }
@@ -245,15 +250,16 @@ export class PriorityComponent implements OnInit, AfterViewInit {
     filterpriorities(event) {
         this.localCollection = [];
         for (let i = 0; i < this.allPriorityInfo.length; i++) {
-            let priorityName = this.allPriorityInfo[i].description;
+            let priorityName = this.allPriorityInfo[i].description;            
             if (priorityName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                 this.allpriority.push([{
                     "priorityId": this.allPriorityInfo[i].priorityId,
                     "priorityName": priorityName
                 }]),
-                this.localCollection.push(priorityName);
-            }
+                    this.localCollection.push(priorityName);               
+            }         
         }
+      
     }
     openHist(content, row) {
 
@@ -317,7 +323,7 @@ export class PriorityComponent implements OnInit, AfterViewInit {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.description = this.priorityName;
-            this.priorityService.newPriority(this.sourceAction).subscribe(
+            this.priorityService.newPriority({ ...this.sourceAction, isDelete: this.isDeleteMode }).subscribe(
                 role => this.saveSuccessHelper(role),
                 error => this.saveFailedHelper(error));
         }

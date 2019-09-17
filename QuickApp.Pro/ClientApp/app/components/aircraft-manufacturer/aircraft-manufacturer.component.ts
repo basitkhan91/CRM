@@ -174,7 +174,7 @@ export class AircraftManufacturerComponent implements OnInit {
             return;
         }
         this.currentAircraftManufacturerType.createdBy = this.userName;
-        this.currentAircraftManufacturerType.updatedBy = this.userName;
+        this.currentAircraftManufacturerType.updatedBy = this.userName;       
         this.aircraftManufacurerService.add(this.currentAircraftManufacturerType).subscribe(aircraftManufacturer => {
             this.alertService.showMessage("Success", 'Aircraft manufacturer Added successfully.', MessageSeverity.success);
             this.updatePaginatorState(); // previously after update we used to call getAll now we can this method to get required list

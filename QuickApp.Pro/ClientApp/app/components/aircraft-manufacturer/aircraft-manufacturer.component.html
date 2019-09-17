@@ -201,7 +201,7 @@
                         <label class="control-label">Memo:</label>
                     </div>
                     <div class="col-sm-5">
-                        <textarea class="text-item" [(ngModel)]="aircraftManufacturerTypeToUpdate.memo"></textarea>
+                        <textarea class="text-item" name="memo" [(ngModel)]="aircraftManufacturerTypeToUpdate.memo"></textarea>
                     </div>
                 </div>
             </div>
@@ -344,7 +344,7 @@
                         </label>
                     </div>
                     <div class="col-sm-5">
-                        <p-autoComplete [(ngModel)]="currentAircraftManufacturerType.description" (onSelect)="manufactureId($event)" (onKeyUp)=eventHandler($event) name="description"  [suggestions]="localCollection" (completeMethod)="filterManufacturer($event)" [size]="30"
+                        <p-autoComplete name="manufacturerId" [(ngModel)]="currentAircraftManufacturerType.description" (onSelect)="manufactureId($event)" (onKeyUp)=eventHandler($event)   [suggestions]="localCollection" (completeMethod)="filterManufacturer($event)" [size]="30"
                             [dropdown]="true" class="p-autoComplete-ctsm" required>
                             <ng-template let-manufacturer pTemplate="item">
                                 <div class="ui-helper-clearfix">{{manufacturer}}</div>
@@ -360,7 +360,7 @@
                         <label class="control-label">Memo</label>
                     </div>
                     <div class="col-sm-5">
-                        <textarea class="text-item" [(ngModel)]="currentAircraftManufacturerType.memo"></textarea>
+                        <textarea class="text-item" name="memo" [(ngModel)]="currentAircraftManufacturerType.memo"></textarea>
                     </div>
                 </div>
             </div>
