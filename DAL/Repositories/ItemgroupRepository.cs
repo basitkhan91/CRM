@@ -12,7 +12,7 @@ namespace DAL.Repositories
 
         public IEnumerable<DAL.Models.Itemgroup> GetItemgroups()
         {
-            return _appContext.Itemgroup.Include("MasterCompany").Where(c=> c.IsDelete== false) .OrderByDescending(c => c.ItemGroupId).ToList();
+            return _appContext.Itemgroup.Include("MasterCompany").Where(c=> c.IsDelete== false || c.IsDelete == null) .OrderByDescending(c => c.ItemGroupId).ToList();
         }
 
         override
