@@ -1,7 +1,7 @@
-USE [PAS_DEV]
+USE [PAS_DESIGN]
 GO
 
-/****** Object:  Table [dbo].[AssetAcquisitionType]    Script Date: 8/29/2019 6:13:50 PM ******/
+/****** Object:  Table [dbo].[AssetAcquisitionType]    Script Date: 9/17/2019 12:45:04 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -12,13 +12,13 @@ CREATE TABLE [dbo].[AssetAcquisitionType](
 	[AssetAcquisitionTypeId] [tinyint] IDENTITY(1,1) NOT NULL,
 	[Name] [varchar](50) NOT NULL,
 	[Memo] [varchar](2000) NULL,
-	[IsDelete] [bit] NOT NULL,
-	[IsActive] [bit] NOT NULL,
+	[MasterCompanyId] [int] NOT NULL,
 	[CreatedBy] [varchar](256) NOT NULL,
 	[UpdatedBy] [varchar](256) NOT NULL,
 	[CreatedDate] [datetime2](7) NOT NULL,
 	[UpdatedDate] [datetime2](7) NOT NULL,
-	[MasterCompanyId] [int] NOT NULL,
+	[IsActive] [bit] NOT NULL,
+	[IsDeleted] [bit] NOT NULL,
  CONSTRAINT [PK__AssetAcq__1FCF1ABE0F921C31] PRIMARY KEY CLUSTERED 
 (
 	[AssetAcquisitionTypeId] ASC
