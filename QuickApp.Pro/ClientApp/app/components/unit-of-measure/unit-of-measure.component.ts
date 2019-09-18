@@ -49,7 +49,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
     rows: number;
     loading: boolean;
     selectedActionName: any;
-    actionamecolle: any[]=[];
+    actionamecolle: any[] = [];
     disableSave: boolean = false;
     unitofmeasure_Name: any = "";
     shortName: any = "";
@@ -64,9 +64,9 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
 
     isSaving: boolean;
     ngOnInit(): void {
-		this.loadData();
-		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-unit-of-measure';
-		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
+        this.loadData();
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-unit-of-measure';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
     }
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -85,17 +85,17 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
     cols: any[];
     selectedColumns: any[];
     modal: NgbModalRef;
+    allunitData: any;
     selectedColumn: UnitOfMeasure[];
     unitName: string;
     filteredBrands: any[];
     localCollection: any[] = [];
 
-    /** Actions ctor */
 
     private isEditMode: boolean = false;
-    private isDeleteMode: boolean = false;
+    private isDelete: boolean = false;
 
-	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public unitofmeasureService: UnitOfMeasureService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public unitofmeasureService: UnitOfMeasureService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
         this.sourceAction = new UnitOfMeasure();
@@ -107,37 +107,54 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         this.dataSource.sort = this.sort;
     }
     public allWorkFlows: UnitOfMeasure[] = [];
-
-    private loadData() {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-        this.unitofmeasureService.getUnitOfMeasureList().subscribe(
-            results => this.onDataLoadSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
+    private loadData() {    
+        this.unitofmeasureService.getAllUnitofMeasureList().subscribe(data => {
+            this.allunitData = data[0].columHeaders;
+            this.allUnitOfMeasureinfo = data[0].columnData;
+            console.log(this.allUnitOfMeasureinfo);
+            this.totalRecords = this.allUnitOfMeasureinfo.length;         
+            this.cols = [
+                console.log(this.allunitData),
+                this.selectedColumns = this.allunitData
+            ];
+        }
         );
-
-        this.cols = [
-            //{ field: 'provisionId', header: 'Provison Id' },
-            { field: 'description', header: 'Unit of Measure' },
-            { field: 'shortName', header: 'Short Name' },
-            { field: 'standard', header: 'Standard' },
-            { field: 'memo', header: 'Memo' },
-            { field: 'createdBy', header: 'Created By' },
-            { field: 'updatedBy', header: 'Updated By' },
-          //  { field: 'updatedDate', header: 'Updated Date' },
-           // { field: 'createdDate', header: 'Created Date' }
-        ];
-        this.selectedColumns = this.cols;
     }
+
+    // private loadData() {
+    //     this.alertService.startLoadingMessage();
+    //     this.loadingIndicator = true;
+    //     this.unitofmeasureService.getUnitOfMeasureList().subscribe(
+    //         results => this.onDataLoadSuccessful(results[0]),
+    //         error => this.onDataLoadFailed(error)
+    //     );
+
+    //     this.cols = [
+    //         //{ field: 'provisionId', header: 'Provison Id' },
+    //         { field: 'description', header: 'Unit of Measure' },
+    //         { field: 'shortName', header: 'Short Name' },
+    //         { field: 'standard', header: 'Standard' },
+    //         { field: 'memo', header: 'Memo' },
+    //         { field: 'createdBy', header: 'Created By' },
+    //         { field: 'updatedBy', header: 'Updated By' },
+    //       //  { field: 'updatedDate', header: 'Updated Date' },
+    //        // { field: 'createdDate', header: 'Created Date' }
+    //     ];
+    //     this.selectedColumns = this.cols;
+    // }
+    // RemoveIsActive(columHeaders,columnData){
+    //    const response = this.allunitData;
+    //    columHeaders = response.filter(x=>{
+    //        x.field
+    //    })
+    // }
     private loadMasterCompanies() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
         this.masterComapnyService.getMasterCompanies().subscribe(
             results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
-
     }
 
     public applyFilter(filterValue: string) {
@@ -148,15 +165,16 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         // Causes the filter to refresh there by updating with recently added data.
         this.applyFilter(this.dataSource.filter);
     }
-    private onDataLoadSuccessful(getUnitOfMeasureList: UnitOfMeasure[]) {
-        // alert('success');
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.dataSource.data = getUnitOfMeasureList;
-        this.totalRecords = getUnitOfMeasureList.length;//Adding for Pagination
-        this.allUnitOfMeasureinfo = getUnitOfMeasureList;
+    // private onDataLoadSuccessful(getUnitOfMeasureList) {
+    //     // alert('success');
+    //     this.alertService.stopLoadingMessage();
+    //     this.loadingIndicator = false;
+    //     this.dataSource.data = getUnitOfMeasureList;      
+    //     this.totalRecords = getUnitOfMeasureList.length;//Adding for Pagination
+    //     this.allUnitOfMeasureinfo = getUnitOfMeasureList;
         
-    }
+
+    // }
 
     private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
 
@@ -194,11 +212,11 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
     open(content) {
 
         this.isEditMode = false;
-        this.isDeleteMode = false;
-		this.disableSave = false;
+        this.isDelete = false;
+        this.disableSave = false;
         this.isSaving = true;
         this.loadMasterCompanies();
-		this.sourceAction = new UnitOfMeasure();
+        this.sourceAction = new UnitOfMeasure();
         this.sourceAction.isActive = true;
         this.unitName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
@@ -214,7 +232,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
     openDelete(content, row) {
 
         this.isEditMode = false;
-        this.isDeleteMode = true;
+        this.isDelete= true;
         this.sourceAction = row;
         this.unitofmeasure_Name = row.description;
         this.modal = this.modalService.open(content, { size: 'sm' });
@@ -225,7 +243,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
 
     openEdit(content, row) {
         this.isEditMode = true;
-		this.disableSave = false;
+        this.disableSave = false;
         this.isSaving = true;
         this.loadMasterCompanies();
         this.sourceAction = row;
@@ -274,7 +292,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         let value = event.target.value.toLowerCase();
         if (this.selectedActionName) {
             if (value == this.selectedActionName.toLowerCase()) {
-                
+
                 this.disableSave = true;
             }
             else {
@@ -289,15 +307,10 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
                 //alert("Action Name already Exists");
                 this.disableSave = true;
                 this.selectedActionName = event;
-                
+
             }
         }
     }
-
-
-
-
-
 
     filterUnitOfMeasures(event) {
 
@@ -310,7 +323,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
                     "unitOfMeasureId": this.allUnitOfMeasureinfo[i].unitOfMeasureId,
                     "unitName": unitName
                 }]),
-                this.localCollection.push(unitName);
+                    this.localCollection.push(unitName);
             }
         }
     }
@@ -326,7 +339,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
             this.sourceAction.masterCompanyId = 1;
             this.unitofmeasureService.updateUnitOfMeasure(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));            
+                error => this.saveFailedHelper(error));
         }
         else {
             this.sourceAction = rowData;
@@ -342,14 +355,15 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
 
     }
 
-   
+
     SaveandEditUOM() {
         // debugger;
         this.isSaving = true;
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.unitName;
+            this.sourceAction.description = this.unitName;     
+            this.sourceAction.isDelete = this.isDelete;       
             this.sourceAction.masterCompanyId = 1;
             this.unitofmeasureService.newUnitOfMeasure(this.sourceAction).subscribe(
                 role => this.saveSuccessHelper(role),
@@ -368,7 +382,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         this.modal.close();
     }
 
-    deleteItemAndCloseModel() {        
+    deleteItemAndCloseModel() {
         this.isSaving = true;
         this.sourceAction.updatedBy = this.userName;
         this.unitofmeasureService.deleteUnitOfMeasure(this.sourceAction.unitOfMeasureId).subscribe(
@@ -378,7 +392,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
     }
 
     dismissModel() {
-        this.isDeleteMode = false;
+        this.isDelete = false;
         this.isEditMode = false;
         this.modal.close();
     }
@@ -386,9 +400,9 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
     private saveCompleted(user?: UnitOfMeasure) {
         this.isSaving = false;
 
-        if (this.isDeleteMode == true) {
+        if (this.isDelete == true) {
             this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
-            this.isDeleteMode = false;
+            this.isDelete = false;
         }
         else {
             this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
@@ -489,7 +503,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
     //                         this.unitOfMeasurePagination = this.unitOfMeasurePaginationList[0].unitOfMeasureList;
     //                         this.totalRecords = this.unitOfMeasurePaginationList[0].totalRecordsCount;
     //                         this.totelPages = Math.ceil(this.totalRecords / this.rows);
-                            
+
     //                     });
     //                 this.loading = false;
     //             }
@@ -497,7 +511,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
     //         this.loading = false;
     //     }
 
-       
+
     // }
 
     // updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
@@ -510,7 +524,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
     //         this.loadUnitOfMeasure(this.paginatorState);
     //     }
     // }
-    
+
 
     // inputFiledFilter(event, filed, matchMode) {
     //     this.first = 0;
