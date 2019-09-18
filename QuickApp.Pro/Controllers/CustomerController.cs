@@ -2070,22 +2070,19 @@ namespace QuickApp.Pro.Controllers
             return Ok();
         }
 
-        [HttpPost("internationalshippingdetaillist")]
-        public IActionResult GetCustomerInternationalShippingDetails(CustomerInternationalShipping model)
+        [HttpGet("internationalshippingdetaillist")]
+        public IActionResult GetCustomerInternationalShippingDetails(long customerId, int pageNumber, int pageSize)
         {
-           var result= _unitOfWork.Customer.GetCustomerInternationalShippingDetails(model);
+           var result= _unitOfWork.Customer.GetCustomerInternationalShippingDetails(customerId, pageNumber, pageSize);
             return Ok(result);
         }
 
-        [HttpPost("internationalshippingdetailsbyid")]
+        [HttpGet("internationalshippingdetailsbyid")]
         public IActionResult GetCustomerInternationalShippingDetailsById(long id)
         {
            var result= _unitOfWork.Customer.GetCustomerInternationalShippingDetailsById(id);
             return Ok(result);
         }
-
-
-
 
         [HttpPost("createshippingviadetails")]
         public IActionResult CreateShippingViaDetails([FromBody] ShippingViaDetails model)
@@ -2126,9 +2123,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("getshippingviadetails")]
-        public IActionResult GetShippingViaDetails(ShippingViaDetails model)
+        public IActionResult GetShippingViaDetails(long internationalShippingId, int pageNumber, int pageSize)
         {
-            var result =_unitOfWork.Customer.GetShippingViaDetails(model);
+            var result =_unitOfWork.Customer.GetShippingViaDetails(internationalShippingId, pageNumber, pageSize);
             return Ok(result);
         }
 

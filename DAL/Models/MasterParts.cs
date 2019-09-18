@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Models
 {
@@ -9,9 +8,11 @@ namespace DAL.Models
     {
         [Key]
         public long MasterPartId { get; set; }
-        public long? ItemMasterId { get; set; }
         public string PartNumber { get; set; }
         public string Description { get; set; }
+        [ForeignKey("ManufacturerId")]
+        public long? ManufacturerId { get; set; }
+        [ForeignKey("MasterCompanyId")]
         public int? MasterCompanyId {get;set;}
         public DateTime CreatedDate { get; set; }
         public string CreatedBy { get; set; }
@@ -19,5 +20,8 @@ namespace DAL.Models
         public string UpdatedBy { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
+
+        public virtual MasterCompany MasterCompany { get; set; }
+        public virtual Manufacturer Manufacturer { get; set; }
     }
 }

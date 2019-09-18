@@ -164,7 +164,7 @@ namespace DAL.Models
         public Int32? MarkUpPercentageId { get; set; }
         public long? GeneralCurrencyId { get; set; }
 
-        public bool? IsAddressForBillingAndShipping { get; set; }
+        //public bool? IsAddressForBillingAndShipping { get; set; }
 
         public virtual MasterCompany MasterCompany { get; set; }
 

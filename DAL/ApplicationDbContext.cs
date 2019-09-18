@@ -376,7 +376,8 @@ namespace DAL
         public DbSet<ClassificationMapping> ClassificationMapping { get; set; }
         public DbSet<RestrictedParts> RestrictedParts { get; set; }
         public DbSet<MasterParts> MasterParts { get; set; }
-        
+        public DbSet<Nha_Tla_Alt_Equ_ItemMapping> Nha_Tla_Alt_Equ_ItemMapping { get; set; }
+
         public DbSet<AssetIntangibleAttributeType> AssetIntangibleAttributeType { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)

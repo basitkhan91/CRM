@@ -715,22 +715,26 @@ namespace QuickApp.Pro.Controllers
                     {
                         itemmaserObj.ProvisionId = null;
                     }
-                    _unitOfWork.itemMaster.Add(itemmaserObj);
-                    _unitOfWork.SaveChanges();
+
 
                     /*Master Item Parts */
                     MasterParts masterParts = new MasterParts();
                     masterParts.Description = itemmaserObj.PartDescription;
-                    masterParts.ItemMasterId = itemmaserObj.ItemMasterId;
                     masterParts.PartNumber = itemmaserObj.PartNumber;
+                    masterParts.ManufacturerId = itemmaserObj.ManufacturerId;
                     masterParts.MasterCompanyId = itemmaserObj.MasterCompanyId;
-                    masterParts.UpdatedBy=masterParts.CreatedBy = itemmaserObj.CreatedBy;
+                    masterParts.UpdatedBy = masterParts.CreatedBy = itemmaserObj.CreatedBy;
                     masterParts.UpdatedDate = masterParts.CreatedDate = itemmaserObj.CreatedDate;
                     masterParts.IsActive = true;
                     masterParts.IsDeleted = false;
-                    
 
-                    _unitOfWork.CommonRepository.CreateMasterParts(masterParts);
+                    var masterPartId=  _unitOfWork.CommonRepository.CreateMasterParts(masterParts);
+                    itemmaserObj.MasterPartId = masterPartId;
+
+                    _unitOfWork.itemMaster.Add(itemmaserObj);
+                    _unitOfWork.SaveChanges();
+
+                    
 
                     try
                     {
@@ -1019,22 +1023,25 @@ namespace QuickApp.Pro.Controllers
                     itemmaserObj.ProvisionId = null;
                 }
 
-                _unitOfWork.itemMaster.Update(itemmaserObj);
-                _unitOfWork.SaveChanges();
-
                 /*Master Item Parts */
                 MasterParts masterParts = new MasterParts();
+                masterParts.MasterPartId = itemmaserObj.MasterPartId;
                 masterParts.Description = itemmaserObj.PartDescription;
-                masterParts.ItemMasterId = itemmaserObj.ItemMasterId;
                 masterParts.PartNumber = itemmaserObj.PartNumber;
+                masterParts.ManufacturerId = itemmaserObj.ManufacturerId;
                 masterParts.MasterCompanyId = itemmaserObj.MasterCompanyId;
-                masterParts.UpdatedBy = masterParts.CreatedBy = itemmaserObj.CreatedBy;
-                masterParts.UpdatedDate = masterParts.CreatedDate = itemmaserObj.CreatedDate;
+                masterParts.CreatedBy = itemmaserObj.CreatedBy;
+                masterParts.UpdatedBy = itemmaserObj.UpdatedBy;
+                masterParts.CreatedDate = itemmaserObj.CreatedDate;
+                //masterParts.UpdatedDate = Convert.ToDateTime(itemmaserObj.UpdatedDate); 
                 masterParts.IsActive = true;
                 masterParts.IsDeleted = false;
 
-
                 _unitOfWork.CommonRepository.UpdateMasterParts(masterParts);
+
+                _unitOfWork.itemMaster.Update(itemmaserObj);
+                _unitOfWork.SaveChanges();
+
                 return Ok(itemmaserObj);
             }
 
@@ -1052,10 +1059,12 @@ namespace QuickApp.Pro.Controllers
                 var itemmaserObj = _unitOfWork.itemMaster.GetSingleOrDefault(c => c.ItemMasterId == id);
                 itemmaserObj.IsDelete = true;
 
+                _unitOfWork.CommonRepository.DeleteMasterParts(itemmaserObj.MasterPartId, itemmaserObj.UpdatedBy);
+
                 _unitOfWork.itemMaster.Update(itemmaserObj);
                 _unitOfWork.SaveChanges();
 
-                _unitOfWork.CommonRepository.DeleteMasterParts(id, itemmaserObj.UpdatedBy);
+               
             }
 
 
@@ -1134,6 +1143,11 @@ namespace QuickApp.Pro.Controllers
 
             CustomerObj.IsActive = itemMasterViewModel.IsActive;
             CustomerObj.UpdatedDate = DateTime.Now; ;
+
+            //  MasterPartsStatus(long masterPartId, bool status, string updatedBy)
+
+            _unitOfWork.CommonRepository.MasterPartsStatus(CustomerObj.MasterPartId, Convert.ToBoolean(itemMasterViewModel.IsActive), itemMasterViewModel.UpdatedBy);
+
             _unitOfWork.itemMaster.Update(CustomerObj);
             _unitOfWork.SaveChanges();
             return Ok(CustomerObj);
@@ -1689,6 +1703,59 @@ namespace QuickApp.Pro.Controllers
             return Ok();
         }
 
+        [HttpPost]
+        public IActionResult CreateNhaTlaAltEquItemMapping(Nha_Tla_Alt_Equ_ItemMapping model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (model == null)
+                    return BadRequest($"{nameof(model)} cannot be null");
+                _context.Nha_Tla_Alt_Equ_ItemMapping.Add(model);
+                _context.SaveChanges();
+            }
+            return Ok(ModelState);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateNhaTlaAltEquItemMapping(Nha_Tla_Alt_Equ_ItemMapping model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (model == null)
+                    return BadRequest($"{nameof(model)} cannot be null");
+                _context.Nha_Tla_Alt_Equ_ItemMapping.Update(model);
+                _context.SaveChanges();
+            }
+            return Ok(ModelState);
+        }
+
+        [HttpGet]
+        public IActionResult DeleteNhaTlaAltEquItemMapping(long id,string updatedBy)
+        {
+            _unitOfWork.itemMaster.DeleteNhaTlaAltEquItemMapping(id, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet]
+        public IActionResult NhaTlaAltEquItemMappingStatus(long id,bool status, string updatedBy)
+        {
+            _unitOfWork.itemMaster.NhaTlaAltEquItemMappingStatus(id, status, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet]
+        public IActionResult NhaTlaAltEquItemMappingList(int mappingType, int pageNumber, int pageSize)
+        {
+            var result = _unitOfWork.itemMaster.NhaTlaAltEquItemMappingList(mappingType, pageNumber, pageSize);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public IActionResult NhaTlaAltEquItemMappingById(long itemMappingId, int mappingType)
+        {
+            var result = _unitOfWork.itemMaster.NhaTlaAltEquItemMappingById(itemMappingId, mappingType);
+            return Ok(result);
+        }
     }
 
 }

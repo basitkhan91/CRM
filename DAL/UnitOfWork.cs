@@ -1723,14 +1723,14 @@ namespace DAL
             }
         }
         
-        IAssetCapes IUnitOfWork.AssetCapes
-        {
-            get {
-                if (_assetCapes == null)
-                    _assetCapes = new AssetCapesRepository(_context);
-                return _assetCapes;
-            }
-        }
+        //IAssetCapes IUnitOfWork.AssetCapes
+        //{
+        //    get {
+        //        if (_assetCapes == null)
+        //            _assetCapes = new AssetCapesRepository(_context);
+        //        return _assetCapes;
+        //    }
+        //}
 
         IOptions<AppSettings> _appSettings;
         public IFileUploadRepository FileUploadRepository
