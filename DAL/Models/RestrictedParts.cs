@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace DAL.Models
 {
     public class RestrictedParts
     {
+        [Key]
         public long RestrictedPartId { get; set; }
         public int ModuleId { get; set; }
         public long? ReferenceId { get; set; }
