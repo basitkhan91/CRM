@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using QuickApp.Pro.Helpers;
 using QuickApp.Pro.ViewModels;
 using System.Linq.Dynamic.Core;
+using DAL.Common;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -17,7 +18,7 @@ namespace QuickApp.Pro.Controllers
     public class CustomerController : Controller
     {
 
-
+        
         private IUnitOfWork _unitOfWork;
         readonly ILogger _logger;
         readonly IEmailer _emailer;
@@ -49,6 +50,7 @@ namespace QuickApp.Pro.Controllers
 
         [HttpGet("Getdiscount")]
         [Produces(typeof(List<DiscountViewModel>))]
+
         public IActionResult Getdiscount()
 
         {
@@ -352,6 +354,16 @@ namespace QuickApp.Pro.Controllers
                 }
                 _unitOfWork.Customer.Add(actionobject);
                 _unitOfWork.SaveChanges();
+
+
+                List<AttachmentDetails> attachmentDetails = new List<AttachmentDetails>();
+
+                _unitOfWork.CommonRepository.CreateRestrictedParts(actionobject.RestrictedPMAParts, actionobject.CustomerId);
+                _unitOfWork.CommonRepository.CreateRestrictedParts(actionobject.RestrictedDERParts, actionobject.CustomerId);
+                _unitOfWork.CommonRepository.CreateClassificationMappings(actionobject.CustomerClassificationMapping, actionobject.CustomerId);
+
+                // _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, attachmentDetails, actionobject.CustomerId,Convert.ToInt32(DAL.Common.ModuleEnum.Customer), Convert.ToString(DAL.Common.ModuleEnum.Customer), actionobject.CreatedBy, actionobject.MasterCompanyId);
+
                 return Ok(actionobject);
             }
 
@@ -420,7 +432,7 @@ namespace QuickApp.Pro.Controllers
             address.CreatedDate = DateTime.Now;
             address.UpdatedDate = DateTime.Now;
             actionobject.GeneralCurrencyId = customerViewModel.GeneralCurrencyId;
-            actionobject.IsAddressForBillingAndShipping = customerViewModel.IsAddressForBillingAndShipping;
+            //actionobject.IsAddressForBillingAndShipping = customerViewModel.IsAddressForBillingAndShipping;
             if (customerViewModel.AircraftTypeId != null)
             {
                 var aircraftTypeList = _unitOfWork.customerAircraftType.GetAllData().ToList();
@@ -473,6 +485,10 @@ namespace QuickApp.Pro.Controllers
             _unitOfWork.SaveChanges();
             _unitOfWork.Customer.Update(actionobject);
             _unitOfWork.SaveChanges();
+
+            _unitOfWork.CommonRepository.UpdateRestrictedParts(actionobject.RestrictedPMAParts, actionobject.CustomerId);
+            _unitOfWork.CommonRepository.UpdateRestrictedParts(actionobject.RestrictedDERParts, actionobject.CustomerId);
+            _unitOfWork.CommonRepository.UpdateClassificationMappings(actionobject.CustomerClassificationMapping, actionobject.CustomerId);
             return Ok(actionobject);
 
 
@@ -605,6 +621,7 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("ContactPost")]
         public IActionResult CreateCustomerContact([FromBody] CustomercontactViewModel CustomerContactViewModel)
         {
+
             if (ModelState.IsValid)
             {
                 if (CustomerContactViewModel == null)
@@ -622,6 +639,10 @@ namespace QuickApp.Pro.Controllers
                 contactObj.UpdatedBy = CustomerContactViewModel.UpdatedBy;
                 _unitOfWork.CustomerContact.Add(contactObj);
                 _unitOfWork.SaveChanges();
+
+                
+
+             
 
             }
 
@@ -657,11 +678,25 @@ namespace QuickApp.Pro.Controllers
                 contactObj.CreatedDate = DateTime.Now;
                 contactObj.UpdatedDate = DateTime.Now;
                 contactObj.WorkPhoneExtn = contactViewModel.WorkPhoneExtn;
-                customercontactView.IsDefaultContact = customercontactView.IsDefaultContact;
+                //contactObj.IsDefaultContact = contactViewModel.IsDefaultContact;
                 contactObj.CreatedBy = contactViewModel.CreatedBy;
                 contactObj.UpdatedBy = contactViewModel.UpdatedBy;
                 _unitOfWork.ContactRepository.Update(contactObj);
                 _unitOfWork.SaveChanges();
+
+
+                /*Update Customer Contacts*/
+
+                var customerContact = _context.CustomerContact.Where(p => p.ContactId == id).FirstOrDefault();
+                if(customerContact!=null)
+                {
+                    customerContact.UpdatedDate = DateTime.Now;
+                    customerContact.UpdatedBy = contactViewModel.UpdatedBy;
+                    customerContact.IsDefaultContact = contactViewModel.IsDefaultContact;
+
+                    _unitOfWork.CustomerContact.Update(customerContact);
+                    _unitOfWork.SaveChanges();
+                }
 
             }
 
@@ -751,7 +786,7 @@ namespace QuickApp.Pro.Controllers
             var CustomerObj = _unitOfWork.Repository<Customer>().Find(x => x.CustomerId == id).FirstOrDefault();
             if (CustomerObj != null)
             {
-                CustomerObj.IsDelete = false;
+                CustomerObj.IsDelete = true;
                 CustomerObj.UpdatedDate = DateTime.Now;
                 _unitOfWork.Repository<Customer>().Update(CustomerObj);
                 _unitOfWork.SaveChanges();
@@ -1071,10 +1106,10 @@ namespace QuickApp.Pro.Controllers
                 checkPaymentObj.MasterCompanyId = 1;
                 checkPaymentObj.IsDelete = true;
                 checkPaymentObj.UpdatedDate = DateTime.Now;
-                checkPaymentObj.CreatedBy = CustomerShippingViewModel.CreatedBy;
+                //checkPaymentObj.CreatedBy = CustomerShippingViewModel.CreatedBy;
                 checkPaymentObj.UpdatedBy = CustomerShippingViewModel.UpdatedBy;
                 addressObj.UpdatedDate = DateTime.Now;
-                addressObj.CreatedBy = CustomerShippingViewModel.CreatedBy;
+               // addressObj.CreatedBy = CustomerShippingViewModel.CreatedBy;
                 addressObj.UpdatedBy = CustomerShippingViewModel.UpdatedBy;
                 _unitOfWork.Address.Update(addressObj);
                 _unitOfWork.CustomerBillingInformation.Update(checkPaymentObj);
@@ -1794,8 +1829,8 @@ namespace QuickApp.Pro.Controllers
                 var customers = (from t in _context.Customer
                                  join ad in _context.Address on t.AddressId equals ad.AddressId
                                  join ct in _context.CustomerType on t.CustomerTypeId equals ct.CustomerTypeId
-
-                                 where t.IsDelete == true || t.IsDelete == null
+                                 join cc in _context.CustomerClassification on t.CustomerClassificationId equals cc.CustomerClassificationId
+                                 where t.IsDelete == false || t.IsDelete == null
                                  select new
                                  {
                                      ct.Description,
@@ -1819,7 +1854,8 @@ namespace QuickApp.Pro.Controllers
                                      ad.PostalCode,
                                      t.PrimarySalesPersonFirstName,
 									 t.CustomerClassification,
-									 t.IsActive
+									 t.IsActive,
+                                     CustomerClarification= cc.Description
                                  }).OrderByDescending(a => a.UpdatedDate).ToList();
                 foreach (var item in customers)
                 {
@@ -1838,6 +1874,7 @@ namespace QuickApp.Pro.Controllers
                     customer.UpdatedBy = item.UpdatedBy;
                     customer.PrimarySalesPersonFirstName = item.PrimarySalesPersonFirstName;
                     customer.IsActive = item.IsActive;
+                    customer.CustomerClarifiacationName = item.CustomerClarification;
                     customersList.Add(customer);
                 }
                 #region Pagination for join tables
@@ -1894,7 +1931,7 @@ namespace QuickApp.Pro.Controllers
                 var customers = (from t in _context.Customer
                                  join ad in _context.Address on t.AddressId equals ad.AddressId
                                  join ct in _context.CustomerType on t.CustomerTypeId equals ct.CustomerTypeId
-
+                                 join cc in _context.CustomerClassification on t.CustomerClassificationId equals cc.CustomerClassificationId
                                  where t.IsDelete == false || t.IsDelete == null
                                  select new
                                  {
@@ -1918,7 +1955,8 @@ namespace QuickApp.Pro.Controllers
                                      ad.Country,
                                      ad.PostalCode,
                                      t.PrimarySalesPersonFirstName,
-                                     t.IsActive
+                                     t.IsActive,
+                                     CustomerClarification = cc.Description
                                  }).OrderByDescending(a => a.UpdatedDate).ToList();
                 foreach (var item in customers)
                 {
@@ -1936,6 +1974,7 @@ namespace QuickApp.Pro.Controllers
                     customer.UpdatedBy = item.UpdatedBy;
                     customer.PrimarySalesPersonFirstName = item.PrimarySalesPersonFirstName;
                     customer.IsActive = item.IsActive;
+                    customer.CustomerClarifiacationName = item.CustomerClarification;
                     customersList.Add(customer);
                     getData.TotalRecordsCount = customersList.Count();
                 }
@@ -1988,6 +2027,129 @@ namespace QuickApp.Pro.Controllers
             else
                 return BadRequest(new Exception("Error Occured while fetching customer specific details."));
         }
+
+
+
+
+
+        [HttpPost("createinternationalshipping")]
+        public IActionResult CreateCustomerInternationalShipping([FromBody] CustomerInternationalShipping model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (model == null)
+                    return BadRequest($"{nameof(model)} cannot be null");
+                _unitOfWork.Customer.CreateCustomerInternationalShippingDetails(model);
+            }
+            return Ok(ModelState);
+        }
+
+        [HttpPost("updateinternationalshipping")]
+        public IActionResult UpdateCustomerInternationalShipping([FromBody] CustomerInternationalShipping model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (model == null)
+                    return BadRequest($"{nameof(model)} cannot be null");
+                _unitOfWork.Customer.UpdateCustomerInternationalShippingDetails(model);
+            }
+            return Ok(ModelState);
+        }
+
+        [HttpGet("deleteinternationalshipping")]
+        public IActionResult DeleteCustomerInternationalShippingDetails(long id, string updatedBy)
+        {
+            _unitOfWork.Customer.DeleteCustomerInternationalShippingDetails(id, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("internationalshippingdetailsstatus")]
+        public IActionResult CustomerInternationalShippingDetailsStatus(long id, bool status, string updatedBy)
+        {
+            _unitOfWork.Customer.CustomerInternationalShippingDetailsStatus(id, status, updatedBy);
+            return Ok();
+        }
+
+        [HttpPost("internationalshippingdetaillist")]
+        public IActionResult GetCustomerInternationalShippingDetails(CustomerInternationalShipping model)
+        {
+           var result= _unitOfWork.Customer.GetCustomerInternationalShippingDetails(model);
+            return Ok(result);
+        }
+
+        [HttpPost("internationalshippingdetailsbyid")]
+        public IActionResult GetCustomerInternationalShippingDetailsById(long id)
+        {
+           var result= _unitOfWork.Customer.GetCustomerInternationalShippingDetailsById(id);
+            return Ok(result);
+        }
+
+
+
+
+        [HttpPost("createshippingviadetails")]
+        public IActionResult CreateShippingViaDetails([FromBody] ShippingViaDetails model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (model == null)
+                    return BadRequest($"{nameof(model)} cannot be null");
+                _unitOfWork.Customer.CreateShippingViaDetails(model);
+            }
+            return Ok(ModelState);
+        }
+
+        [HttpPost("updateshippingviadetails")]
+        public IActionResult UpdateShippingViaDetails([FromBody] ShippingViaDetails model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (model == null)
+                    return BadRequest($"{nameof(model)} cannot be null");
+                _unitOfWork.Customer.UpdateShippingViaDetails(model);
+            }
+            return Ok(ModelState);
+        }
+
+        [HttpGet("deleteshippingviadetails")]
+        public IActionResult DeleteShippingViaDetails(long id, string updatedBy)
+        {
+            _unitOfWork.Customer.DeleteShippingViaDetails(id, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("shippingviadetailsstatus")]
+        public IActionResult ShippingViaDetailsStatus(long id, bool status, string updatedBy)
+        {
+            _unitOfWork.Customer.ShippingViaDetailsStatus(id, status, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("getshippingviadetails")]
+        public IActionResult GetShippingViaDetails(ShippingViaDetails model)
+        {
+            var result =_unitOfWork.Customer.GetShippingViaDetails(model);
+            return Ok(result);
+        }
+
+        [HttpGet("getshippingviadetailsbyid")]
+        public IActionResult GetShippingViaDetailsById(long id)
+        {
+            var result = _unitOfWork.Customer.GetShippingViaDetailsById(id);
+            return Ok(result);
+        }
+
+
+
+
+
+        [HttpGet("getrestrictedparts")]
+        public IActionResult GetRestrictedParts(int moduleId, long? referenceId, string partType)
+        {
+          var result=  _unitOfWork.CommonRepository.GetRestrictedParts(moduleId, referenceId, partType);
+            return Ok(result);
+        }
+
 
         public class GetData
         {

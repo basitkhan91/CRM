@@ -3,6 +3,7 @@
 // www.ebenmonney.com/quickapp-pro
 // ===============================
 
+using DAL.Common;
 using DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -29,5 +30,21 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<Customer> getAllCustomersInfo();
         IEnumerable<object> GetCustomerRowByid(long customerId);
         new IQueryable<Customer> GetPaginationData();
+
+        void CreateCustomerInternationalShippingDetails(CustomerInternationalShipping model);
+        void UpdateCustomerInternationalShippingDetails(CustomerInternationalShipping model);
+        void DeleteCustomerInternationalShippingDetails(long id, string updatedBy);
+        void CustomerInternationalShippingDetailsStatus(long id, bool status, string updatedBy);
+        GetData<CustomerInternationalShipping> GetCustomerInternationalShippingDetails(CustomerInternationalShipping model);
+        CustomerInternationalShipping GetCustomerInternationalShippingDetailsById(long id);
+
+
+        void CreateShippingViaDetails(ShippingViaDetails model);
+        void UpdateShippingViaDetails(ShippingViaDetails model);
+        void DeleteShippingViaDetails(long id, string updatedBy);
+        void ShippingViaDetailsStatus(long id, bool status, string updatedBy);
+        GetData<ShippingViaDetails> GetShippingViaDetails(ShippingViaDetails model);
+        ShippingViaDetails GetShippingViaDetailsById(long id);
+
     }
 }

@@ -253,6 +253,8 @@ namespace DAL
       
         IAssetCapes AssetCapes { get; }
 
+        IFileUploadRepository FileUploadRepository { get; }
+
         IAssetIntangibleAttributeType AssetIntangibleAttributeType { get; }
         IAssetDepreciationInterval AssetDepreciationInterval { get; }
 

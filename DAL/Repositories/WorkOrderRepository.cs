@@ -240,7 +240,7 @@ namespace DAL.Repositories
                 }
                 else
                 {
-                    getData.ItemClassificationList = new List<WorkOrderList>();
+                    getData.PaginationList = new List<WorkOrderList>();
                     getData.TotalRecordsCount = totalRecords;
                 }
 
