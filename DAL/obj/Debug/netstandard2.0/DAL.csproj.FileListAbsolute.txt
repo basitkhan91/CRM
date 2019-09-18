@@ -7,3 +7,12 @@ C:\Users\jrajput\Documents\Personal\PAS\PAS_DEV\DAL\obj\Debug\netstandard2.0\DAL
 C:\Users\jrajput\Documents\Personal\PAS\PAS_DEV\DAL\obj\Debug\netstandard2.0\DAL.dll
 C:\Users\jrajput\Documents\Personal\PAS\PAS_DEV\DAL\obj\Debug\netstandard2.0\DAL.pdb
 C:\Users\jrajput\Documents\Personal\PAS\PAS_DEV\DAL\obj\Debug\netstandard2.0\DAL.csprojAssemblyReference.cache
+C:\Users\SureshA\source\repos\PAS_DEV\DAL\bin\Debug\netstandard2.0\DAL.deps.json
+C:\Users\SureshA\source\repos\PAS_DEV\DAL\bin\Debug\netstandard2.0\DAL.dll
+C:\Users\SureshA\source\repos\PAS_DEV\DAL\bin\Debug\netstandard2.0\DAL.pdb
+C:\Users\SureshA\source\repos\PAS_DEV\DAL\obj\Debug\netstandard2.0\DAL.csproj.CoreCompileInputs.cache
+C:\Users\SureshA\source\repos\PAS_DEV\DAL\obj\Debug\netstandard2.0\DAL.AssemblyInfoInputs.cache
+C:\Users\SureshA\source\repos\PAS_DEV\DAL\obj\Debug\netstandard2.0\DAL.AssemblyInfo.cs
+C:\Users\SureshA\source\repos\PAS_DEV\DAL\obj\Debug\netstandard2.0\DAL.dll
+C:\Users\SureshA\source\repos\PAS_DEV\DAL\obj\Debug\netstandard2.0\DAL.pdb
+C:\Users\SureshA\source\repos\PAS_DEV\DAL\obj\Debug\netstandard2.0\DAL.csprojAssemblyReference.cache

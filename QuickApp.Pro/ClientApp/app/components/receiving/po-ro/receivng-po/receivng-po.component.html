@@ -569,7 +569,7 @@
                                                                                 <div class="ui-helper-clearfix">{{Value}}</div>
                                                                             </ng-template>
                                                                         </p-autoComplete>
-                                                                        <input *ngIf="part.stocklineListObj[part.currentSLIndex].obtainFromType == 2" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].owner" pInputText>
+                                                                        <input *ngIf="part.stocklineListObj[part.currentSLIndex].obtainFromType == 2" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].obtainFrom" pInputText>
                                                                         <p-autoComplete *ngIf="part.stocklineListObj[part.currentSLIndex].obtainFromType == 3"
                                                                                         class="rpo-acomp"
                                                                                         [size]="32"

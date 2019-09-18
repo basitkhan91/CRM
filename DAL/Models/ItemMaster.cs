@@ -9,7 +9,8 @@ namespace DAL.Models
     {
         [Key]
         public long? ItemMasterId { get; set; }
-
+        [ForeignKey("MasterPartId")]
+        public long MasterPartId { get; set; }
         public bool? IsAlternatePartChecked { get; set; }
         public long? PartAlternatePartId { get; set; }
         public string NHA { get; set; }
@@ -169,7 +170,7 @@ namespace DAL.Models
         public bool? IsExportMilitary { get; set; }
         public bool? IsExportDual { get; set; }
         
-        public int? oemPNId { get; set; }
+        public int? oemPNId { get; set; } 
 
         public virtual Manufacturer Manufacturer { get;set;}
         public virtual Provision Provision {get;set;}
@@ -179,6 +180,8 @@ namespace DAL.Models
         public virtual ExportClassification ExportClassification { get; set; }
         public virtual GLAccount GLAccount { get; set; }
         public virtual ItemNonStockClassification ItemNonStockClassification { get; set; }
+
+        public virtual MasterParts MasterParts { get; set; }
 
 
     }
