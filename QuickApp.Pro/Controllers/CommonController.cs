@@ -13,7 +13,7 @@ namespace QuickApp.Pro.Controllers
     public class CommonController : Controller
     {
         private IUnitOfWork _unitOfWork;
-        
+
         public CommonController(IUnitOfWork unitOfWork, ILogger<CustomerController> logger)
         {
             _unitOfWork = unitOfWork;
@@ -23,7 +23,7 @@ namespace QuickApp.Pro.Controllers
         [Route("vendorcontacts")]
         public IActionResult GetVendorContactsList(long vendorId)
         {
-            var vendorContacts = _unitOfWork.CommonRepository.GetVendorContactsList(vendorId); 
+            var vendorContacts = _unitOfWork.CommonRepository.GetVendorContactsList(vendorId);
             return Ok(vendorContacts);
 
         }
@@ -32,7 +32,7 @@ namespace QuickApp.Pro.Controllers
         [Route("customercontacts")]
         public IActionResult GetCustomerContactsList(long customerId)
         {
-            var vendorContacts = _unitOfWork.CommonRepository.GetCustomerContactsList(customerId); 
+            var vendorContacts = _unitOfWork.CommonRepository.GetCustomerContactsList(customerId);
             return Ok(vendorContacts);
 
         }
@@ -41,7 +41,7 @@ namespace QuickApp.Pro.Controllers
         [Route("getmasterparts")]
         public IActionResult GetMasterParts()
         {
-            var masterParts = _unitOfWork.CommonRepository.GetMasterParts(); 
+            var masterParts = _unitOfWork.CommonRepository.GetMasterParts();
             return Ok(masterParts);
 
         }
@@ -50,9 +50,10 @@ namespace QuickApp.Pro.Controllers
         [Route("getrestrictedparts")]
         public IActionResult GetRestrictedParts(int moduleId, long? referenceId, string partType)
         {
-            var restrictedParts = _unitOfWork.CommonRepository.GetRestrictedParts(moduleId, referenceId, partType); 
+            var restrictedParts = _unitOfWork.CommonRepository.GetRestrictedParts(moduleId, referenceId, partType);
             return Ok(restrictedParts);
 
         }
+
     }
 }

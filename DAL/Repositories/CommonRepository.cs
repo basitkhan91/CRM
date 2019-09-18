@@ -10,7 +10,7 @@ namespace DAL.Repositories
     public class CommonRepository : Repository<Contact>, ICommonRepository
     {
         public CommonRepository(ApplicationDbContext context) : base(context)
-        { 
+        {
         }
         public IEnumerable<ContactList> GetVendorContactsList(long vendorId)
         {
@@ -108,12 +108,13 @@ namespace DAL.Repositories
 
         }
 
-        public void CreateMasterParts(MasterParts masterPart)
+        public long CreateMasterParts(MasterParts masterPart)
         {
             try
             {
                 _appContext.MasterParts.Add(masterPart);
                 _appContext.SaveChanges();
+                return masterPart.MasterPartId;
             }
             catch (System.Exception)
             {
@@ -126,16 +127,9 @@ namespace DAL.Repositories
         {
             try
             {
-                var data = _appContext.MasterParts.Where(p => p.ItemMasterId == masterPart.ItemMasterId).FirstOrDefault();
-
-                if (data != null && data.MasterPartId > 0)
-                {
-                    masterPart.MasterPartId = data.MasterPartId;
-                    _appContext.MasterParts.Update(masterPart);
-                    _appContext.SaveChanges();
-                }
-
-
+                masterPart.UpdatedDate = DateTime.Now;
+                _appContext.MasterParts.Update(masterPart);
+                _appContext.SaveChanges();
             }
             catch (System.Exception)
             {
@@ -144,22 +138,45 @@ namespace DAL.Repositories
             }
         }
 
-        public void DeleteMasterParts(long itemMasterId, string updatedBy)
+        public void DeleteMasterParts(long masterPartId, string updatedBy)
         {
             try
             {
-                var masterPart = _appContext.MasterParts.Where(p => p.ItemMasterId == itemMasterId).FirstOrDefault();
+                MasterParts masterPart = new MasterParts();
 
-                if (masterPart != null && masterPart.MasterPartId > 0)
-                {
-                    masterPart.IsDeleted = true;
-                    masterPart.UpdatedBy = updatedBy;
-                    masterPart.UpdatedDate = DateTime.Now;
-                    _appContext.MasterParts.Update(masterPart);
-                    _appContext.SaveChanges();
-                }
+                masterPart.MasterPartId = masterPartId;
+                masterPart.IsDeleted = true;
+                masterPart.UpdatedBy = updatedBy;
+                masterPart.UpdatedDate = DateTime.Now;
 
+                _appContext.MasterParts.Attach(masterPart);
+                _appContext.Entry(masterPart).Property(x => x.IsDeleted).IsModified = true;
+                _appContext.Entry(masterPart).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(masterPart).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.SaveChanges();
+            }
+            catch (System.Exception)
+            {
 
+                throw;
+            }
+        }
+
+        public void MasterPartsStatus(long masterPartId,bool status, string updatedBy)
+        {
+            try
+            {
+                MasterParts masterPart = new MasterParts();
+                masterPart.MasterPartId = masterPartId;
+                masterPart.IsActive = status;
+                masterPart.UpdatedBy = updatedBy;
+                masterPart.UpdatedDate = DateTime.Now;
+
+                _appContext.MasterParts.Attach(masterPart);
+                _appContext.Entry(masterPart).Property(x => x.IsActive).IsModified = true;
+                _appContext.Entry(masterPart).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(masterPart).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.SaveChanges();
             }
             catch (System.Exception)
             {
@@ -213,7 +230,7 @@ namespace DAL.Repositories
                         }
                         else
                         {
-                             item.ReferenceId = referenceId;
+                            item.ReferenceId = referenceId;
                             _appContext.RestrictedParts.Add(item);
                         }
                         _appContext.SaveChanges();
@@ -288,7 +305,7 @@ namespace DAL.Repositories
             }
         }
 
-        public List<ClassificationMapping> GetCustomerClassificationMappings(int moduleId,int referenceId)
+        public List<ClassificationMapping> GetCustomerClassificationMappings(int moduleId, int referenceId)
         {
             List<ClassificationMapping> ClassificationMappingList = new List<ClassificationMapping>();
             ClassificationMapping classificationMapping;
@@ -308,7 +325,7 @@ namespace DAL.Repositories
                              })
                              .ToList();
 
-                if(result!=null && result.Count>0)
+                if (result != null && result.Count > 0)
                 {
                     foreach (var item in result)
                     {

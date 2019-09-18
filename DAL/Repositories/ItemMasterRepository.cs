@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using DAL.Core;
 using DAL.Models;
+using DAL.Common;
 
 namespace DAL.Repositories
 {
@@ -33,126 +34,126 @@ namespace DAL.Repositories
 
                             select new
                             {
-                                iM.PartNumber ,
-                                    iM.ItemTypeId ,
-                                    iM.PartDescription ,
-                                    iM.ExchangeListPrice,
-                                    iM.OverheadCost ,
-                                    iM.IsAlternatePartChecked ,
-                                    iM.TurnTimeOverhaulHours ,
-                                    iM.TurnTimeRepairHours ,
-                                    iM.IsSerialized ,
-                                    iM.ItemGroupId ,
-                                    iM.ItemClassificationId ,
-                                    iM.IsAcquiredMethodBuy ,
-                                    iM.IsHazardousMaterial ,
-                                    iM.IsExpirationDateAvailable ,
-                                    iM.ExpirationDate ,
-                                    iM.IsReceivedDateAvailable ,
-                                    iM.DaysReceived ,
-                                    iM.IsManufacturingDateAvailable ,
-                                    iM.ManufacturingDays ,
-                                    iM.IsTagDateAvailable ,
-                                    iM.TagDays ,
-                                    iM.IsOpenDateAvailable ,
-                                    iM.OpenDays ,
-                                    iM.IsShippedDateAvailable ,
-                                    iM.ShippedDays ,
-                                    iM.IsOtherDateAvailable ,
-                                    iM.OtherDays ,
-                                    iM.ShelfLife ,
-                                    iM.ProvisionId,
-                                    iM.ManufacturerId,
-                                    iM.PurchaseLastListPriceDate ,
-                                    iM.SalesLastSalePriceDate ,
-                                    iM.PurchaseLastDiscountPercentDate ,
-                                    iM.PurchaseLastListPriceAfterDiscountDate ,
-                                    iM.SalesLastMarkUpPercentOnListPriceDate ,
-                                    iM.SalesLastMakUpPercentOnListPriceAfterDiscDate ,
-                                    iM.SalesLastBaselineSalesPriceDate ,
-                                    iM.SalesLastSalesDiscountPercentDate ,
-                                    iM.PMA ,
-                                    iM.DER ,
-                                    iM.ATAChapterId ,
-                                    iM.ATASubChapterId ,
-                                    iM.NationalStockNumber ,
-                                    iM.IsSchematic ,
-                                    iM.SalesIsFixedPrice ,
-                                    iM.OverhaulHours ,
-                                    iM.RPHours ,
-                                    iM.SalesPrice ,
-                                    iM.SalesCurrencyId ,
-                                    iM.TestHours ,
-                                    iM.CSE ,
-                                    iM.RFQTracking ,
-                                    iM.GLAccountId ,
-                                    iM.PurchaseUnitOfMeasureId ,
-                                    iM.ExportUomId ,
-                                    iM.StockUnitOfMeasureId ,
-                                    iM.ConsumeUnitOfMeasureId,
-                                    iM.SoldUnitOfMeasureId ,
-                                    iM.LeadTimeDays ,
-                                    iM.LeadTimeHours ,
-                                    iM.ReorderQuantiy ,
-                                    iM.ReorderPoint ,
-                                    iM.MinimumOrderQuantity ,
-                                    iM.IsExchangeInfoAvailable ,
-                                    iM.CoreValue ,
-                                    iM.PartListPrice ,
-                                    iM.POCoreCharge ,
-                                    iM.SOCoreCharge ,
-                                    iM.PriorityId ,
-                                    iM.WarningId ,
-                                    iM.Memo ,
-									iM.ExportECCN,
-									iM.ITARNumber,
-                                    iM.ExportCountryId ,
-                                    iM.ExportValue ,
-                                    iM.ExportCurrencyId ,
-                                    iM.ExportWeight ,
-                                    iM.ExportWeightUnit ,
-                                    iM.ExportSizeLength ,
-                                    iM.ExportSizeWidth ,
-                                    iM.ExportSizeHeight ,
-                                    iM.ExportSizeUnit ,
-                                    iM.ExportClassificationId ,
-                                    iM.PurchaseDiscountOffListPrice ,
-                                    iM.PurchaseListPriceAfterDiscount ,
-                                    iM.PurchaseCurrencyId ,
-                                    iM.SalesMarkUpOnPurchaseListPriceActive ,
-                                    iM.SalesMarkUpOnListPrice ,
-                                    iM.SalesDiscountPercent ,
-                                    iM.SalesMarkUpOnListPriceAfterDisc ,
-                                    iM.SalesBaselineSalesPrice ,
-                                    iM.StandAloneEquipment ,
-                                    iM.ComponentEquipment ,
-                                    iM.MasterCompanyId ,
-                                    iM.IsTimeLife ,
-                                    iM.ListPrice ,
-                                    iM.PriceDate ,
-                                    iM.UnitCost ,
-                                    iM.DiscountPurchasePercent ,
-                                    iM.ItemNonStockClassificationId ,
-                                    iM.StockLevel ,
-                                    iM.ShelfLifeAvailable ,
-                                    iM.isPma ,
-                                    iM.mfgHours ,
-                                    iM.turnTimeMfg ,
-                                    iM.turnTimeBenchTest ,
-                                    iM.IsExportUnspecified ,
-                                    iM.IsExportNONMilitary ,
-                                    iM.IsExportMilitary ,
-                                    iM.IsExportDual ,
-                                    ManufacturerName = mfgs == null ? "" : mfgs.Name,
-                                    CountryData = countryID.ToList(),
-								//CountryName = ct == null ? "" : ct.countries_name,
-								//IPortalIDS = iPortalIds.Select(e => e.IntegrationPortalId).ToList(),
-								IntegrationPortalIds = iPortalIds.Select(e => e.IntegrationPortalId).ToList(),
-								//IntegrationPortalIds = iPortalIds.ToList(),
-								oemPNData = Imast.ToList(),
-                                
+                                iM.PartNumber,
+                                iM.ItemTypeId,
+                                iM.PartDescription,
+                                iM.ExchangeListPrice,
+                                iM.OverheadCost,
+                                iM.IsAlternatePartChecked,
+                                iM.TurnTimeOverhaulHours,
+                                iM.TurnTimeRepairHours,
+                                iM.IsSerialized,
+                                iM.ItemGroupId,
+                                iM.ItemClassificationId,
+                                iM.IsAcquiredMethodBuy,
+                                iM.IsHazardousMaterial,
+                                iM.IsExpirationDateAvailable,
+                                iM.ExpirationDate,
+                                iM.IsReceivedDateAvailable,
+                                iM.DaysReceived,
+                                iM.IsManufacturingDateAvailable,
+                                iM.ManufacturingDays,
+                                iM.IsTagDateAvailable,
+                                iM.TagDays,
+                                iM.IsOpenDateAvailable,
+                                iM.OpenDays,
+                                iM.IsShippedDateAvailable,
+                                iM.ShippedDays,
+                                iM.IsOtherDateAvailable,
+                                iM.OtherDays,
+                                iM.ShelfLife,
+                                iM.ProvisionId,
+                                iM.ManufacturerId,
+                                iM.PurchaseLastListPriceDate,
+                                iM.SalesLastSalePriceDate,
+                                iM.PurchaseLastDiscountPercentDate,
+                                iM.PurchaseLastListPriceAfterDiscountDate,
+                                iM.SalesLastMarkUpPercentOnListPriceDate,
+                                iM.SalesLastMakUpPercentOnListPriceAfterDiscDate,
+                                iM.SalesLastBaselineSalesPriceDate,
+                                iM.SalesLastSalesDiscountPercentDate,
+                                iM.PMA,
+                                iM.DER,
+                                iM.ATAChapterId,
+                                iM.ATASubChapterId,
+                                iM.NationalStockNumber,
+                                iM.IsSchematic,
+                                iM.SalesIsFixedPrice,
+                                iM.OverhaulHours,
+                                iM.RPHours,
+                                iM.SalesPrice,
+                                iM.SalesCurrencyId,
+                                iM.TestHours,
+                                iM.CSE,
+                                iM.RFQTracking,
+                                iM.GLAccountId,
+                                iM.PurchaseUnitOfMeasureId,
+                                iM.ExportUomId,
+                                iM.StockUnitOfMeasureId,
+                                iM.ConsumeUnitOfMeasureId,
+                                iM.SoldUnitOfMeasureId,
+                                iM.LeadTimeDays,
+                                iM.LeadTimeHours,
+                                iM.ReorderQuantiy,
+                                iM.ReorderPoint,
+                                iM.MinimumOrderQuantity,
+                                iM.IsExchangeInfoAvailable,
+                                iM.CoreValue,
+                                iM.PartListPrice,
+                                iM.POCoreCharge,
+                                iM.SOCoreCharge,
+                                iM.PriorityId,
+                                iM.WarningId,
+                                iM.Memo,
+                                iM.ExportECCN,
+                                iM.ITARNumber,
+                                iM.ExportCountryId,
+                                iM.ExportValue,
+                                iM.ExportCurrencyId,
+                                iM.ExportWeight,
+                                iM.ExportWeightUnit,
+                                iM.ExportSizeLength,
+                                iM.ExportSizeWidth,
+                                iM.ExportSizeHeight,
+                                iM.ExportSizeUnit,
+                                iM.ExportClassificationId,
+                                iM.PurchaseDiscountOffListPrice,
+                                iM.PurchaseListPriceAfterDiscount,
+                                iM.PurchaseCurrencyId,
+                                iM.SalesMarkUpOnPurchaseListPriceActive,
+                                iM.SalesMarkUpOnListPrice,
+                                iM.SalesDiscountPercent,
+                                iM.SalesMarkUpOnListPriceAfterDisc,
+                                iM.SalesBaselineSalesPrice,
+                                iM.StandAloneEquipment,
+                                iM.ComponentEquipment,
+                                iM.MasterCompanyId,
+                                iM.IsTimeLife,
+                                iM.ListPrice,
+                                iM.PriceDate,
+                                iM.UnitCost,
+                                iM.DiscountPurchasePercent,
+                                iM.ItemNonStockClassificationId,
+                                iM.StockLevel,
+                                iM.ShelfLifeAvailable,
+                                iM.isPma,
+                                iM.mfgHours,
+                                iM.turnTimeMfg,
+                                iM.turnTimeBenchTest,
+                                iM.IsExportUnspecified,
+                                iM.IsExportNONMilitary,
+                                iM.IsExportMilitary,
+                                iM.IsExportDual,
+                                ManufacturerName = mfgs == null ? "" : mfgs.Name,
+                                CountryData = countryID.ToList(),
+                                //CountryName = ct == null ? "" : ct.countries_name,
+                                //IPortalIDS = iPortalIds.Select(e => e.IntegrationPortalId).ToList(),
+                                IntegrationPortalIds = iPortalIds.Select(e => e.IntegrationPortalId).ToList(),
+                                //IntegrationPortalIds = iPortalIds.ToList(),
+                                oemPNData = Imast.ToList(),
+
                             }).ToList();
-                                            
+
                 return data;
             }
             catch (Exception ex)
@@ -163,7 +164,7 @@ namespace DAL.Repositories
         public IEnumerable<DAL.Models.ItemMaster> getAlldata()
         {
             return null;
-           
+
         }
         public IEnumerable<object> Getdescriptionbypart(string partNumber)
         {
@@ -186,12 +187,12 @@ namespace DAL.Repositories
                                 t.ItemMasterId,
                                 t.GLAccountId,
                                 t.ManufacturerId,
-                                t.Manufacturer                          
+                                t.Manufacturer
                             }).ToList();
                 return data;
             }
         }
-        
+
         public IEnumerable<object> getItemMasterData(long id)
         {
             try
@@ -228,7 +229,8 @@ namespace DAL.Repositories
                                 IPortalIDS = iPortalIds.Select(e => e.IntegrationPortalId).ToList()
                             }).ToList();
                 return data;
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw;
             }
@@ -261,7 +263,7 @@ namespace DAL.Repositories
 
             {
                 var data = (from iM in _appContext.ItemMasterAircraftMapping
-							where iM.ItemMasterId == id
+                            where iM.ItemMasterId == id
 
                             select new
                             {
@@ -279,7 +281,7 @@ namespace DAL.Repositories
         public IEnumerable<object> getAllItemMasterdata()
         {
             var data = (from IM in _appContext.ItemMaster
-                        
+
                         join MF in _appContext.Manufacturer on IM.ManufacturerId equals MF.ManufacturerId into mfg
 
                         from MF in mfg.DefaultIfEmpty()
@@ -325,7 +327,7 @@ namespace DAL.Repositories
             return data;
 
         }
-       
+
 
         public IEnumerable<object> getRolesData()
         {
@@ -347,14 +349,14 @@ namespace DAL.Repositories
                         {
                             IM.UserRoleLevelEntityId,
                             PT.UserRoleLevelId,
-                            UserRoleLevelDescription= PT.Description,
+                            UserRoleLevelDescription = PT.Description,
                             PS.EntityName,
                             PS.ModuleName,
-                            PS. ScreenName,
+                            PS.ScreenName,
                             PS.TableName,
                             PS.FieldName,
                             MF.PermittedEditActionId,
-                            PermittedEditActionDescription=MF.Description
+                            PermittedEditActionDescription = MF.Description
                         }).ToList();
             return data;
 
@@ -374,7 +376,7 @@ namespace DAL.Repositories
                         from PS in pro.DefaultIfEmpty()
                         join MF in _appContext.PermittedEditAction on IM.PermittedEditActionId equals MF.PermittedEditActionId into mfg
                         from MF in mfg.DefaultIfEmpty()
-                        where PT.UserRoleLevelId==value
+                        where PT.UserRoleLevelId == value
 
                         select new
                         {
@@ -397,25 +399,25 @@ namespace DAL.Repositories
 
         public IEnumerable<object> getLegalEntityAccountsData(long value)
         {
-            var data =          (from e in _appContext.LegalEntity
-                                join dw in _appContext.DomesticWirePayment on e.DomesticWirePaymentId equals dw.DomesticWirePaymentId into domesticwire
-                                from domeswire in domesticwire.DefaultIfEmpty()
-                                join iw in _appContext.InternationalWirePayment on e.InternationalWirePaymentId equals iw.InternationalWirePaymentId into interwire
-                                from internalwire in interwire.DefaultIfEmpty()
-                                join ach in _appContext.ACH on e.ACHId equals ach.ACHId into achdetails
-                                from achdata in achdetails.DefaultIfEmpty()
+            var data = (from e in _appContext.LegalEntity
+                        join dw in _appContext.DomesticWirePayment on e.DomesticWirePaymentId equals dw.DomesticWirePaymentId into domesticwire
+                        from domeswire in domesticwire.DefaultIfEmpty()
+                        join iw in _appContext.InternationalWirePayment on e.InternationalWirePaymentId equals iw.InternationalWirePaymentId into interwire
+                        from internalwire in interwire.DefaultIfEmpty()
+                        join ach in _appContext.ACH on e.ACHId equals ach.ACHId into achdetails
+                        from achdata in achdetails.DefaultIfEmpty()
 
-                                where e.LegalEntityId == value
+                        where e.LegalEntityId == value
 
 
-                                select new
-                                {
-                                    e.LegalEntityId,
-                                    domeswire.AccountNumber,
-                                    internalwire.BeneficiaryBankAccount,
-                                    achAccountNumber = achdata.AccountNumber
+                        select new
+                        {
+                            e.LegalEntityId,
+                            domeswire.AccountNumber,
+                            internalwire.BeneficiaryBankAccount,
+                            achAccountNumber = achdata.AccountNumber
 
-                                }).ToList();
+                        }).ToList();
 
             return data;
         }
@@ -425,8 +427,8 @@ namespace DAL.Repositories
             var data = _appContext.ItemMaster.Include("Manufacturer").Include("Provision").Include("GLAccount").
                 Include("Priority").Include("ItemClassification").Include("Currency").Include("ExportClassification")
 
-                   .Where(a => a.ItemTypeId == 1 && (a.IsDelete == false || a.IsDelete==null)).OrderByDescending(a => a.ItemMasterId).ToList();
-        
+                   .Where(a => a.ItemTypeId == 1 && (a.IsDelete == false || a.IsDelete == null)).OrderByDescending(a => a.ItemMasterId).ToList();
+
 
             return data;
         }
@@ -508,24 +510,24 @@ namespace DAL.Repositories
 
                                 };
 
-            return leftOuterJoin.OrderByDescending(a=>a.LegalEntityId).ToList();
+            return leftOuterJoin.OrderByDescending(a => a.LegalEntityId).ToList();
         }
 
-        
+
 
         public IEnumerable<object> getAllItemMasterNonstockdata()
         {
-          
+
             var data = _appContext.ItemMaster.Include("Manufacturer").Include("ItemClassification").Include("Currency")
                 .Where(a => a.ItemTypeId == 2 && (a.IsDelete == false || a.IsDelete == null)).OrderByDescending(a => a.ItemMasterId).ToList();
             return data;
         }
 
         public IEnumerable<object> getAllItemMasterequipmentdata()
-        {            
-             var data = _appContext.ItemMaster.Include("Equipment").Include("EquipmentValidationType").Include("Manufacturer")
+        {
+            var data = _appContext.ItemMaster.Include("Equipment").Include("EquipmentValidationType").Include("Manufacturer")
 
-                  .Where(a => a.ItemTypeId == 3 && (a.IsDelete == false || a.IsDelete == null)).OrderByDescending(a => a.ItemMasterId).ToList();
+                 .Where(a => a.ItemTypeId == 3 && (a.IsDelete == false || a.IsDelete == null)).OrderByDescending(a => a.ItemMasterId).ToList();
             return data;
 
         }
@@ -534,14 +536,14 @@ namespace DAL.Repositories
         public IEnumerable<object> Getdescriptionbypart(long partNumber)
         {
             var data = (from IM in _appContext.ItemMaster
-                        
-                        where(
+
+                        where (
                         IM.ItemTypeId == 1 && IM.IsActive == true)
-                        
+
                         select new
                         {
-                        IM,
-                        IM.PartDescription,
+                            IM,
+                            IM.PartDescription,
                         }).ToList();
             return data;
 
@@ -567,9 +569,9 @@ namespace DAL.Repositories
                 return data;
             }
         }
-        
 
-            public IEnumerable<object> getCapabilityData(long id)
+
+        public IEnumerable<object> getCapabilityData(long id)
         {
 
             {
@@ -597,7 +599,7 @@ namespace DAL.Repositories
                 return data;
             }
         }
-      
+
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
         public IEnumerable<object> GetAircraftMapped(long ItemmasterId)
         {
@@ -652,8 +654,8 @@ namespace DAL.Repositories
             var myAircraftTypeId = AircraftTypeId.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
             var myAircraftModelId = AirModelId.Split(',').Select(y => Convert.ToInt64(y)).ToArray();
             var myDashNumberId = DashNumberId.Split(',').Select(x => Convert.ToInt64(x)).ToArray();
-            var data = (from it in  _appContext.ItemMasterAircraftMapping
-                        where it.AircraftModelId  != null && it.DashNumberId!=null && it.IsActive == true && it.ItemMasterId== ItemmasterId &&  myAircraftTypeId.Contains(it.AircraftTypeId) && myAircraftModelId.Contains(it.AircraftModelId.Value) && myDashNumberId.Contains(it.DashNumberId.Value)
+            var data = (from it in _appContext.ItemMasterAircraftMapping
+                        where it.AircraftModelId != null && it.DashNumberId != null && it.IsActive == true && it.ItemMasterId == ItemmasterId && myAircraftTypeId.Contains(it.AircraftTypeId) && myAircraftModelId.Contains(it.AircraftModelId.Value) && myDashNumberId.Contains(it.DashNumberId.Value)
 
                         select new
                         {
@@ -673,24 +675,24 @@ namespace DAL.Repositories
             return data;
         }
 
-        public IEnumerable<object> getItemATAMappingDataByMultiTypeIdATAIDATASUBID(long ItemMasterid,string ATAID,string ATASubID)
+        public IEnumerable<object> getItemATAMappingDataByMultiTypeIdATAIDATASUBID(long ItemMasterid, string ATAID, string ATASubID)
         {
-                long[] myATAID = ATAID.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
-                long[] myATASubID = ATASubID.Split(',').Select(x => Convert.ToInt64(x)).ToArray();
-                var data = (from iM in _appContext.ItemMasterATAMapping
-                            where iM.ItemMasterId == ItemMasterid && myATAID.Contains(iM.ATAChapterId) && myATASubID.Contains(iM.ATASubChapterId) && iM.IsActive == true && iM.IsDeleted == false
-                            select new
-                            {
-                                iM.ItemMasterATAMappingId,
-                                iM.ItemMasterId,
-                                iM.ATAChapterId,
-                                iM.ATAChapterCode,
-                                iM.ATAChapterName,
-                                iM.PartNumber,
-                                iM.ATASubChapterId,
-                                iM.ATASubChapterDescription
-                            }).ToList();
-                return data;
+            long[] myATAID = ATAID.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
+            long[] myATASubID = ATASubID.Split(',').Select(x => Convert.ToInt64(x)).ToArray();
+            var data = (from iM in _appContext.ItemMasterATAMapping
+                        where iM.ItemMasterId == ItemMasterid && myATAID.Contains(iM.ATAChapterId) && myATASubID.Contains(iM.ATASubChapterId) && iM.IsActive == true && iM.IsDeleted == false
+                        select new
+                        {
+                            iM.ItemMasterATAMappingId,
+                            iM.ItemMasterId,
+                            iM.ATAChapterId,
+                            iM.ATAChapterCode,
+                            iM.ATAChapterName,
+                            iM.PartNumber,
+                            iM.ATASubChapterId,
+                            iM.ATASubChapterDescription
+                        }).ToList();
+            return data;
         }
 
         public IEnumerable<object> searchItemAircraftMappingDataByMultiTypeIdModelIDDashID(long ItemmasterId, string AircraftTypeId, string AircraftModelId, string DashNumberId)
@@ -698,50 +700,51 @@ namespace DAL.Repositories
             long[] myAircraftTypeId = null;
             long[] myAircraftModelId = null;
             long[] myDashNumberId = null;
-            if (AircraftTypeId != null && AircraftTypeId!="")
+            if (AircraftTypeId != null && AircraftTypeId != "")
                 myAircraftTypeId = AircraftTypeId.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
-            if (AircraftModelId != null && AircraftModelId!="")
+            if (AircraftModelId != null && AircraftModelId != "")
                 myAircraftModelId = AircraftModelId.Split(',').Select(y => Convert.ToInt64(y)).ToArray();
             if (DashNumberId != null && DashNumberId != "")
                 myDashNumberId = DashNumberId.Split(',').Select(x => Convert.ToInt64(x)).ToArray();
             if (AircraftTypeId != null && AircraftModelId != null && myDashNumberId != null)
-            {               var data = (from it in _appContext.ItemMasterAircraftMapping
-                            where it.IsActive == true && it.ItemMasterId == ItemmasterId && myAircraftTypeId.Contains(it.AircraftTypeId) && myAircraftModelId.Contains(it.AircraftModelId.Value) && myDashNumberId.Contains(it.DashNumberId.Value) && it.IsDeleted!=true
-                            select new{it.ItemMasterId,it.PartNumber,it.AircraftTypeId,it.AircraftModelId,it.DashNumberId,it.DashNumber,it.AircraftType,it.AircraftModel,it.Memo,it.MasterCompanyId,it.IsActive,it.IsDeleted}).ToList();
-                            var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
-                            return uniquedata;
+            {
+                var data = (from it in _appContext.ItemMasterAircraftMapping
+                            where it.IsActive == true && it.ItemMasterId == ItemmasterId && myAircraftTypeId.Contains(it.AircraftTypeId) && myAircraftModelId.Contains(it.AircraftModelId.Value) && myDashNumberId.Contains(it.DashNumberId.Value) && it.IsDeleted != true
+                            select new { it.ItemMasterId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, it.DashNumber, it.AircraftType, it.AircraftModel, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
             }
             else if (AircraftTypeId != null && AircraftModelId != null && myDashNumberId == null)
             {
-                            var data = (from it in _appContext.ItemMasterAircraftMapping
+                var data = (from it in _appContext.ItemMasterAircraftMapping
                             where it.IsActive == true && it.ItemMasterId == ItemmasterId && myAircraftTypeId.Contains(it.AircraftTypeId) && myAircraftModelId.Contains(it.AircraftModelId.Value) && it.IsDeleted != true
-                            select new{it.ItemMasterId,it.PartNumber,it.AircraftTypeId,it.AircraftModelId,it.DashNumberId,it.DashNumber,it.AircraftType,it.AircraftModel,it.Memo,it.MasterCompanyId,it.IsActive,it.IsDeleted}).ToList();
-                            var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
-                            return uniquedata;
+                            select new { it.ItemMasterId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, it.DashNumber, it.AircraftType, it.AircraftModel, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
             }
             else if (AircraftTypeId != null && myAircraftModelId == null && myDashNumberId == null)
             {
-                            var data = (from it in _appContext.ItemMasterAircraftMapping
+                var data = (from it in _appContext.ItemMasterAircraftMapping
                             where it.IsActive == true && it.ItemMasterId == ItemmasterId && myAircraftTypeId.Contains(it.AircraftTypeId) && it.IsDeleted != true
-                            select new{it.ItemMasterId,it.PartNumber,it.AircraftTypeId,it.AircraftModelId,it.DashNumberId,it.DashNumber,it.AircraftType,it.AircraftModel,it.Memo,it.MasterCompanyId,it.IsActive,it.IsDeleted}).ToList();
-                            var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
-                            return uniquedata;
+                            select new { it.ItemMasterId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, it.DashNumber, it.AircraftType, it.AircraftModel, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
             }
             else if (AircraftTypeId != null && myAircraftModelId == null && myDashNumberId != null)
             {
-                            var data = (from it in _appContext.ItemMasterAircraftMapping
+                var data = (from it in _appContext.ItemMasterAircraftMapping
                             where it.IsActive == true && it.ItemMasterId == ItemmasterId && myAircraftTypeId.Contains(it.AircraftTypeId) && myDashNumberId.Contains(it.DashNumberId.Value) && it.IsDeleted != true
-                            select new{it.ItemMasterId,it.PartNumber,it.AircraftTypeId,it.AircraftModelId,it.DashNumberId,it.DashNumber,it.AircraftType,it.AircraftModel,it.Memo,it.MasterCompanyId,it.IsActive,it.IsDeleted}).ToList();
-                            var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
-                            return uniquedata;
+                            select new { it.ItemMasterId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, it.DashNumber, it.AircraftType, it.AircraftModel, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
             }
             else if (AircraftTypeId == null && AircraftModelId != null && myDashNumberId != null)
             {
-                            var data = (from it in _appContext.ItemMasterAircraftMapping
+                var data = (from it in _appContext.ItemMasterAircraftMapping
                             where it.IsActive == true && it.ItemMasterId == ItemmasterId && myAircraftModelId.Contains(it.AircraftModelId.Value) && myDashNumberId.Contains(it.DashNumberId.Value) && it.IsDeleted != true
-                            select new{it.ItemMasterId,it.PartNumber,it.AircraftTypeId,it.AircraftModelId,it.DashNumberId,it.DashNumber,it.AircraftType,it.AircraftModel,it.Memo,it.MasterCompanyId,it.IsActive,it.IsDeleted}).ToList();
-                            var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
-                            return uniquedata;
+                            select new { it.ItemMasterId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, it.DashNumber, it.AircraftType, it.AircraftModel, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
             }
             else if (AircraftTypeId == null && AircraftModelId != null && myDashNumberId == null)
             {
@@ -753,19 +756,19 @@ namespace DAL.Repositories
             }
             else if (AircraftTypeId == null && myAircraftModelId == null && myDashNumberId != null)
             {
-                            var data = (from it in _appContext.ItemMasterAircraftMapping
+                var data = (from it in _appContext.ItemMasterAircraftMapping
                             where it.IsActive == true && it.ItemMasterId == ItemmasterId && myDashNumberId.Contains(it.DashNumberId.Value) && it.IsDeleted != true
                             select new { it.ItemMasterId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, it.DashNumber, it.AircraftType, it.AircraftModel, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
-                            var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
-                            return uniquedata;
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
             }
             else
             {
-                            var data = (from it in _appContext.ItemMasterAircraftMapping
+                var data = (from it in _appContext.ItemMasterAircraftMapping
                             where it.IsActive == true && it.ItemMasterId == ItemmasterId && it.IsDeleted != true
                             select new { it.ItemMasterId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, it.DashNumber, it.AircraftType, it.AircraftModel, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
-                            var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
-                            return uniquedata;
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
             }
         }
         public IEnumerable<object> searchgetItemATAMappingDataByMultiTypeIdATAIDATASUBID(long ItemMasterid, string ATAChapterId, string ATASubChapterID)
@@ -777,37 +780,38 @@ namespace DAL.Repositories
             if (ATASubChapterID != null && ATASubChapterID != "")
                 myATASubChapterID = ATASubChapterID.Split(',').Select(y => Convert.ToInt64(y)).ToArray();
             if (ATAChapterId != null && ATASubChapterID != null)
-            {               var data = (from iM in _appContext.ItemMasterATAMapping
+            {
+                var data = (from iM in _appContext.ItemMasterATAMapping
                             where iM.ItemMasterId == ItemMasterid && myATAChapterId.Contains(iM.ATAChapterId) && myATASubChapterID.Contains(iM.ATASubChapterId) && iM.IsActive == true && iM.IsDeleted != true
-                            select new{iM.ItemMasterATAMappingId,iM.ItemMasterId,iM.ATAChapterId,iM.ATAChapterCode,iM.ATAChapterName,iM.PartNumber,iM.ATASubChapterId,iM.ATASubChapterDescription}).ToList();
-                            var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
-                            return uniquedata;
+                            select new { iM.ItemMasterATAMappingId, iM.ItemMasterId, iM.ATAChapterId, iM.ATAChapterCode, iM.ATAChapterName, iM.PartNumber, iM.ATASubChapterId, iM.ATASubChapterDescription }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
+                return uniquedata;
             }
             else if (ATAChapterId != null && ATASubChapterID == null)
             {
-                            var data = (from iM in _appContext.ItemMasterATAMapping
-                            where iM.ItemMasterId == ItemMasterid && myATAChapterId.Contains(iM.ATAChapterId)  && iM.IsActive == true && iM.IsDeleted != true
+                var data = (from iM in _appContext.ItemMasterATAMapping
+                            where iM.ItemMasterId == ItemMasterid && myATAChapterId.Contains(iM.ATAChapterId) && iM.IsActive == true && iM.IsDeleted != true
                             select new { iM.ItemMasterATAMappingId, iM.ItemMasterId, iM.ATAChapterId, iM.ATAChapterCode, iM.ATAChapterName, iM.PartNumber, iM.ATASubChapterId, iM.ATASubChapterDescription }).ToList();
-                            var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
-                            return uniquedata;
+                var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
+                return uniquedata;
 
             }
             else if (ATAChapterId == null && ATASubChapterID != null)
             {
-                            var data = (from iM in _appContext.ItemMasterATAMapping
+                var data = (from iM in _appContext.ItemMasterATAMapping
                             where iM.ItemMasterId == ItemMasterid && myATASubChapterID.Contains(iM.ATASubChapterId) && iM.IsActive == true && iM.IsDeleted != true
                             select new { iM.ItemMasterATAMappingId, iM.ItemMasterId, iM.ATAChapterId, iM.ATAChapterCode, iM.ATAChapterName, iM.PartNumber, iM.ATASubChapterId, iM.ATASubChapterDescription }).ToList();
-                            var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
-                            return uniquedata;
+                var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
+                return uniquedata;
 
             }
-            else 
+            else
             {
-                            var data = (from iM in _appContext.ItemMasterATAMapping
+                var data = (from iM in _appContext.ItemMasterATAMapping
                             where iM.ItemMasterId == ItemMasterid && iM.IsActive == true && iM.IsDeleted != true
                             select new { iM.ItemMasterATAMappingId, iM.ItemMasterId, iM.ATAChapterId, iM.ATAChapterCode, iM.ATAChapterName, iM.PartNumber, iM.ATASubChapterId, iM.ATASubChapterDescription }).ToList();
-                            var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
-                            return uniquedata;
+                var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
+                return uniquedata;
 
             }
         }
@@ -815,23 +819,202 @@ namespace DAL.Repositories
         public IEnumerable<object> gePurcSaleByItemMasterID(long ItemMasterid)
         {
 
-                var data = (from iM in _appContext.ItemMasterPurchaseSale
-                            where iM.ItemMasterId == ItemMasterid && iM.IsActive == true && iM.IsDeleted == false
-                            select new
-                            {
-                                iM.Condition,iM.ItemMasterId,
-                                iM.ItemMasterPurchaseSaleId,iM.PartNumber,iM.PP_CurrencyId,iM.PP_FXRatePerc,iM.PP_LastListPriceDate,
-                                iM.PP_LastPurchaseDiscDate,iM.PP_PurchaseDiscAmount,iM.PP_PurchaseDiscPerc,iM.PP_UnitPurchasePrice,
-                                iM.PP_UOMId,iM.PP_VendorListPrice,iM.SP_CalSPByPP_BaseSalePrice,iM.SP_CalSPByPP_LastMarkUpDate,
-                                iM.SP_CalSPByPP_LastSalesDiscDate,iM.SP_CalSPByPP_MarkUpAmount,iM.SP_CalSPByPP_MarkUpPercOnListPrice,
-                                iM.SP_CalSPByPP_SaleDiscAmount,iM.SP_CalSPByPP_SaleDiscPerc,iM.SP_CalSPByPP_UnitSalePrice,
-                                iM.SP_FSP_CurrencyId,iM.SP_FSP_FlatPriceAmount,iM.SP_FSP_FXRatePerc,iM.SP_FSP_LastFlatPriceDate,
-                                iM.SP_FSP_UOMId,iM.UpdatedBy,iM.UpdatedDate,iM.IsActive,iM.IsDeleted,iM.CreatedBy,iM.CreatedDate,
+            var data = (from iM in _appContext.ItemMasterPurchaseSale
+                        where iM.ItemMasterId == ItemMasterid && iM.IsActive == true && iM.IsDeleted == false
+                        select new
+                        {
+                            iM.Condition,
+                            iM.ItemMasterId,
+                            iM.ItemMasterPurchaseSaleId,
+                            iM.PartNumber,
+                            iM.PP_CurrencyId,
+                            iM.PP_FXRatePerc,
+                            iM.PP_LastListPriceDate,
+                            iM.PP_LastPurchaseDiscDate,
+                            iM.PP_PurchaseDiscAmount,
+                            iM.PP_PurchaseDiscPerc,
+                            iM.PP_UnitPurchasePrice,
+                            iM.PP_UOMId,
+                            iM.PP_VendorListPrice,
+                            iM.SP_CalSPByPP_BaseSalePrice,
+                            iM.SP_CalSPByPP_LastMarkUpDate,
+                            iM.SP_CalSPByPP_LastSalesDiscDate,
+                            iM.SP_CalSPByPP_MarkUpAmount,
+                            iM.SP_CalSPByPP_MarkUpPercOnListPrice,
+                            iM.SP_CalSPByPP_SaleDiscAmount,
+                            iM.SP_CalSPByPP_SaleDiscPerc,
+                            iM.SP_CalSPByPP_UnitSalePrice,
+                            iM.SP_FSP_CurrencyId,
+                            iM.SP_FSP_FlatPriceAmount,
+                            iM.SP_FSP_FXRatePerc,
+                            iM.SP_FSP_LastFlatPriceDate,
+                            iM.SP_FSP_UOMId,
+                            iM.UpdatedBy,
+                            iM.UpdatedDate,
+                            iM.IsActive,
+                            iM.IsDeleted,
+                            iM.CreatedBy,
+                            iM.CreatedDate,
 
 
 
-                            }).ToList();
-                return data;
+                        }).ToList();
+            return data;
+        }
+
+        public void DeleteNhaTlaAltEquItemMapping(long id, string updatedBy)
+        {
+            try
+            {
+                Nha_Tla_Alt_Equ_ItemMapping model = new Nha_Tla_Alt_Equ_ItemMapping();
+
+                model.ItemMappingId = id;
+                model.IsDeleted = true;
+                model.UpdatedDate = DateTime.Now;
+                model.UpdatedBy = updatedBy;
+
+                _appContext.Nha_Tla_Alt_Equ_ItemMapping.Attach(model);
+
+                _appContext.Entry(model).Property(x => x.IsDeleted).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
+
+                _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void NhaTlaAltEquItemMappingStatus(long id, bool status, string updatedBy)
+        {
+            try
+            {
+                Nha_Tla_Alt_Equ_ItemMapping model = new Nha_Tla_Alt_Equ_ItemMapping();
+
+
+
+                model.ItemMappingId = id;
+                model.IsActive = status;
+                model.UpdatedDate = DateTime.Now;
+                model.UpdatedBy = updatedBy;
+
+                _appContext.Nha_Tla_Alt_Equ_ItemMapping.Attach(model);
+
+                _appContext.Entry(model).Property(x => x.IsActive).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
+
+                _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public GetData<Nha_Tla_Alt_Equ_ItemMapping_List> NhaTlaAltEquItemMappingList(int mappingType, int pageNumber, int pageSize)
+        {
+            GetData<Nha_Tla_Alt_Equ_ItemMapping_List> getData = new GetData<Nha_Tla_Alt_Equ_ItemMapping_List>();
+            Nha_Tla_Alt_Equ_ItemMapping_List itemMapping;
+
+            try
+            {
+                pageNumber = pageNumber + 1;
+                var take = pageSize;
+                var skip = take * (pageNumber - 1);
+
+
+                getData.TotalRecordsCount = _appContext.Nha_Tla_Alt_Equ_ItemMapping
+                   .Join(_appContext.ItemMaster,
+                              mp => mp.ItemMasterId,
+                              im => im.ItemMasterId,
+                              (mp, im) => new { mp, im })
+
+                    .Where(p => p.mp.IsDeleted == false && p.mp.MappingType == mappingType)
+                    .Count();
+
+                var result = _appContext.Nha_Tla_Alt_Equ_ItemMapping
+                   .Join(_appContext.ItemMaster,
+                              mp => mp.ItemMasterId,
+                              im => im.ItemMasterId,
+                              (mp, im) => new { mp, im })
+
+                    .Where(p => p.mp.IsDeleted == false && p.mp.MappingType == mappingType)
+                    .Select(p => new
+                    {
+                        IItemMaster = p.im,
+                        Memo = p.mp.Memo
+                    })
+                    .OrderByDescending(p => p.IItemMaster.UpdatedDate)
+                    .Skip(skip)
+                    .Take(take)
+                    .ToList();
+
+                if (result != null && result.Count > 0)
+                {
+                    getData.PaginationList = new List<Nha_Tla_Alt_Equ_ItemMapping_List>();
+                    foreach (var item in result)
+                    {
+                        itemMapping = new Nha_Tla_Alt_Equ_ItemMapping_List();
+                        itemMapping.ItemMaster = item.IItemMaster;
+                        itemMapping.MappingMemo = item.Memo;
+                        getData.PaginationList.Add(itemMapping);
+                    }
+                }
+                else
+                {
+                    getData.PaginationList = new List<Nha_Tla_Alt_Equ_ItemMapping_List>();
+                    getData.TotalRecordsCount = 0;
+                }
+
+                return getData;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public Nha_Tla_Alt_Equ_ItemMapping NhaTlaAltEquItemMappingById(long itemMappingId,int mappingType)
+        {
+            Nha_Tla_Alt_Equ_ItemMapping itemMapping = new Nha_Tla_Alt_Equ_ItemMapping();
+
+            try
+            {
+
+                var result = _appContext.Nha_Tla_Alt_Equ_ItemMapping
+                   .Join(_appContext.ItemMaster,
+                              mp => mp.ItemMasterId,
+                              im => im.ItemMasterId,
+                              (mp, im) => new { mp, im })
+
+                    .Where(p => p.mp.IsDeleted == false && p.mp.ItemMappingId == itemMappingId && p.mp.MappingType == mappingType)
+                    .Select(p => new
+                    {
+                        ItemMaster = p.im,
+                        ItemMapping=p.mp
+                    })
+                    .FirstOrDefault();
+                    
+
+                if (result != null && result.ItemMapping!=null && result.ItemMapping.ItemMappingId>0)
+                {
+                    itemMapping = result.ItemMapping;
+                    itemMapping.ItemMaster = result.ItemMaster;
+                   
+                }
+                return itemMapping;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

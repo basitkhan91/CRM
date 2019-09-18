@@ -503,12 +503,11 @@ namespace DAL.Repositories
                      ExpirationDate = p.cis.ExpirationDate,
                      ShipToCountryId = p.cis.ShipToCountryId,
                      ShipToCountry = p.c.countries_name,
-                     IsShippingViaDetails = p.cis.IsShippingViaDetails,
                      IsActive = p.cis.IsActive,
                      IsDeleted = p.cis.IsDeleted,
                      UpdatedDate = p.cis.UpdatedDate
                  })
-                 .Where(p => p.IsDeleted == false)
+                 .Where(p => p.IsDeleted == false && p.CustomerId==model.CustomerId)
                  .OrderByDescending(p => p.UpdatedDate)
                  .Skip(skip)
                  .Take(take)
@@ -526,7 +525,85 @@ namespace DAL.Repositories
                         intShipping.InternationalShippingId = item.InternationalShippingId;
                         intShipping.IsActive = item.IsActive;
                         intShipping.IsPrimary = item.IsPrimary;
-                        intShipping.IsShippingViaDetails = item.IsShippingViaDetails;
+                        intShipping.ShipToCountry = item.ShipToCountry;
+                        intShipping.StartDate = item.StartDate;
+                        getData.PaginationList.Add(intShipping);
+                    }
+                }
+                else
+                {
+                    getData.PaginationList = new List<CustomerInternationalShipping>();
+                }
+                getData.TotalRecordsCount = totalRecords;
+
+                return getData;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public GetData<CustomerInternationalShipping> GetCustomerInternationalShippingDetails(long customerId,int pageNumber,int pageSize)
+        {
+            GetData<CustomerInternationalShipping> getData = new GetData<CustomerInternationalShipping>();
+            CustomerInternationalShipping intShipping;
+            var totalRecords = 0;
+            try
+            {
+                pageNumber = pageNumber + 1;
+                var take = pageSize;
+                var skip = take * (pageNumber - 1);
+
+                totalRecords = _appContext.CustomerInternationalShipping
+                 .Join(_appContext.Countries,
+                           cis => cis.ShipToCountryId,
+                           c => c.countries_id,
+                           (cis, c) => new { cis, c })
+                 .Where(p => p.cis.IsDeleted == false)
+                 .Count();
+
+                var result = _appContext.CustomerInternationalShipping
+                 .Join(_appContext.Countries,
+                           cis => cis.ShipToCountryId,
+                           c => c.countries_id,
+                           (cis, c) => new { cis, c })
+                 .Select(p => new
+                 {
+                     InternationalShippingId = p.cis.InternationalShippingId,
+                     CustomerId = p.cis.CustomerId,
+                     ExportLicense = p.cis.ExportLicense,
+                     StartDate = p.cis.StartDate,
+                     Amount = p.cis.Amount,
+                     IsPrimary = p.cis.IsPrimary,
+                     Description = p.cis.Description,
+                     ExpirationDate = p.cis.ExpirationDate,
+                     ShipToCountryId = p.cis.ShipToCountryId,
+                     ShipToCountry = p.c.countries_name,
+                     IsActive = p.cis.IsActive,
+                     IsDeleted = p.cis.IsDeleted,
+                     UpdatedDate = p.cis.UpdatedDate
+                 })
+                 .Where(p => p.IsDeleted == false && p.CustomerId == customerId)
+                 .OrderByDescending(p => p.UpdatedDate)
+                 .Skip(skip)
+                 .Take(take)
+                 .ToList();
+
+                if (result != null && result.Count > 0)
+                {
+                    getData.PaginationList = new List<CustomerInternationalShipping>();
+                    foreach (var item in result)
+                    {
+                        intShipping = new CustomerInternationalShipping();
+                        intShipping.Amount = item.Amount;
+                        intShipping.Description = item.Description;
+                        intShipping.ExpirationDate = item.ExpirationDate;
+                        intShipping.ExportLicense = item.ExportLicense;
+                        intShipping.InternationalShippingId = item.InternationalShippingId;
+                        intShipping.IsActive = item.IsActive;
+                        intShipping.IsPrimary = item.IsPrimary;
                         intShipping.ShipToCountry = item.ShipToCountry;
                         intShipping.StartDate = item.StartDate;
                         getData.PaginationList.Add(intShipping);
@@ -561,6 +638,7 @@ namespace DAL.Repositories
                            cis1 => cis1.cis.CustomerId,
                            cust => cust.CustomerId,
                            (cis1, cust) => new { cis1, cust })
+                 .Where(p=>p.cis1.cis.InternationalShippingId==id)
                  .Select(p => new
                  {
                      InternationalShippingId = p.cis1.cis.InternationalShippingId,
@@ -574,7 +652,6 @@ namespace DAL.Repositories
                      ExpirationDate = p.cis1.cis.ExpirationDate,
                      ShipToCountryId = p.cis1.cis.ShipToCountryId,
                      ShipToCountry = p.cis1.c.countries_name,
-                     IsShippingViaDetails = p.cis1.cis.IsShippingViaDetails,
                      MasterCompanyId = p.cis1.cis.MasterCompanyId,
                      CreatedBy = p.cis1.cis.CreatedBy,
                      UpdatedBy = p.cis1.cis.UpdatedBy,
@@ -595,7 +672,6 @@ namespace DAL.Repositories
                     intShipping.InternationalShippingId = result.InternationalShippingId;
                     intShipping.IsActive = result.IsActive;
                     intShipping.IsPrimary = result.IsPrimary;
-                    intShipping.IsShippingViaDetails = result.IsShippingViaDetails;
                     intShipping.ShipToCountry = result.ShipToCountry;
                     intShipping.StartDate = result.StartDate;
                 }
@@ -712,6 +788,36 @@ namespace DAL.Repositories
 
                 getData.PaginationList = _appContext.ShippingViaDetails
                  .Where(p => p.IsDeleted == false)
+                 .OrderByDescending(p => p.UpdatedDate)
+                 .Skip(skip)
+                 .Take(take)
+                 .ToList();
+
+                return getData;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public GetData<ShippingViaDetails> GetShippingViaDetails(long internationalShippingId, int pageNumber, int pageSize)
+        {
+            GetData<ShippingViaDetails> getData = new GetData<ShippingViaDetails>();
+            try
+            {
+                pageNumber = pageNumber + 1;
+                var take = pageSize;
+                var skip = take * (pageNumber - 1);
+
+                getData.TotalRecordsCount = _appContext.ShippingViaDetails.Where(p => p.IsDeleted == false)
+                 .OrderByDescending(p => p.UpdatedDate)
+                 .Count();
+
+
+                getData.PaginationList = _appContext.ShippingViaDetails
+                 .Where(p => p.IsDeleted == false && p.InternationalShippingId== internationalShippingId)
                  .OrderByDescending(p => p.UpdatedDate)
                  .Skip(skip)
                  .Take(take)

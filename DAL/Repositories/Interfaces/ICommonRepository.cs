@@ -10,9 +10,10 @@ namespace DAL.Repositories.Interfaces
 
         IEnumerable<CustomerContactList> GetCustomerContactsList(long customerId);
 
-        void CreateMasterParts(MasterParts masterPart);
+        long CreateMasterParts(MasterParts masterPart);
         void UpdateMasterParts(MasterParts masterPart);
         void DeleteMasterParts(long itemMasterId, string updatedBy);
+        void MasterPartsStatus(long masterPartId, bool status, string updatedBy);
         List<MasterParts> GetMasterParts();
 
         void CreateRestrictedParts(List<RestrictedParts> restrictedParts, long? referenceId);
