@@ -14,6 +14,7 @@ using QuickApp.Pro.ViewModels;
 
 namespace QuickApp.Pro.Controllers
 {
+
     [Route("api/[controller]")]
     //[ApiController]
     public class WorkflowController : ControllerBase
@@ -50,29 +51,31 @@ namespace QuickApp.Pro.Controllers
             }
             if (ModelState.IsValid)
             {
+                List<long> taskIds = new List<long>();
+                if (workFlow.WorkflowId > 0)
+                {
+                    taskIds = getAllUniqueTaskIds(workFlow);
+                }
 
                 if (workFlow.Charges != null && workFlow.Charges.Count > 0)
                 {
                     var currentIds = workFlow.Charges.Select(x => x.WorkflowChargesListId).ToList();
                     List<WorkflowChargesList> itemsToRemove = new List<WorkflowChargesList>();
-                    List<long> taskIds = new List<long>();
-                    taskIds = getAllUniqueTaskIds(workFlow);
 
                     if (workFlow.WorkflowId > 0)
                     {
                         itemsToRemove = UnitOfWork.Repository<WorkflowChargesList>()
                         .Find(x => x.WorkflowId == workFlow.Charges.FirstOrDefault().WorkflowId &&
-                            x.TaskId == workFlow.Charges.FirstOrDefault().TaskId &&
-                            !currentIds.Contains(x.WorkflowChargesListId)
+                        x.IsDelete == false && !currentIds.Contains(x.WorkflowChargesListId)
                         ).ToList();
-                    }
 
-                    foreach (var charges in itemsToRemove)
-                    {
-                        charges.IsDelete = true;
-                    }
+                        foreach (var charges in itemsToRemove)
+                        {
+                            charges.IsDelete = true;
+                        }
 
-                    workFlow.Charges.AddRange(itemsToRemove);
+                        workFlow.Charges.AddRange(itemsToRemove);
+                    }
 
                     foreach (var charge in workFlow.Charges)
                     {
@@ -83,242 +86,280 @@ namespace QuickApp.Pro.Controllers
                 }
                 else
                 {
-                    List<long> taskIds = new List<long>();
-                    if (workFlow.WorkScopeId >= 0)
+                    if (workFlow.WorkflowId > 0)
                     {
-                        taskIds = getAllUniqueTaskIds(workFlow);
-                    }
-
-                    workFlow.Charges = UnitOfWork.Repository<WorkflowChargesList>()
+                        workFlow.Charges = UnitOfWork.Repository<WorkflowChargesList>()
                                             .Find(x => x.WorkflowId == workFlow.WorkflowId &&
-                                                taskIds.Contains(x.TaskId)
+                                                x.IsDelete == false
                                             ).ToList();
 
-                    foreach (var charge in workFlow.Charges)
-                    {
-                        charge.IsDelete = true;
+                        foreach (var item in workFlow.Charges)
+                        {
+                            item.IsDelete = true;
+                        }
                     }
                 }
 
                 if (workFlow.Directions != null && workFlow.Directions.Count > 0)
                 {
-                    var currentids = workFlow.Directions.Select(x => x.WorkflowDirectionId).ToList();
+                    var currentIds = workFlow.Directions.Select(x => x.WorkflowDirectionId).ToList();
+                    List<WorkFlowDirection> itemsToRemove = new List<WorkFlowDirection>();
 
-                    var itemsToRemove = UnitOfWork.Repository<WorkFlowDirection>()
-                        .Find(x => x.WorkflowId == workFlow.Directions.FirstOrDefault().WorkflowId &&
-                            x.TaskId == workFlow.Directions.FirstOrDefault().TaskId &&
-                            !currentids.Contains(x.WorkflowDirectionId)
-                        );
-
-                    foreach (var direction in itemsToRemove)
+                    if (workFlow.WorkflowId > 0)
                     {
-                        direction.IsDelete = true;
+                        itemsToRemove = UnitOfWork.Repository<WorkFlowDirection>()
+                        .Find(x => x.WorkflowId == workFlow.Directions.FirstOrDefault().WorkflowId &&
+                        x.IsDelete == false && !currentIds.Contains(x.WorkflowDirectionId)
+                        ).ToList();
+
+                        foreach (var item in itemsToRemove)
+                        {
+                            item.IsDelete = true;
+                        }
+
+                        workFlow.Directions.AddRange(itemsToRemove);
                     }
 
-                    workFlow.Directions.AddRange(itemsToRemove);
-
-                    foreach (var direction in workFlow.Directions)
+                    foreach (var item in workFlow.Directions)
                     {
-                        direction.CreatedDate = DateTime.Now;
-                        direction.CreatedBy = "admin";
-                        direction.MasterCompanyId = 1;
+                        item.CreatedDate = DateTime.Now;
+                        item.CreatedBy = "admin";
+                        item.MasterCompanyId = 1;
                     }
                 }
                 else
                 {
-                    workFlow.Directions = UnitOfWork.Repository<WorkFlowDirection>()
-                                            .Find(x => x.WorkflowId == workFlow.Directions.FirstOrDefault().WorkflowId &&
-                                                x.TaskId == workFlow.Directions.FirstOrDefault().TaskId
+                    if (workFlow.WorkflowId > 0)
+                    {
+                        workFlow.Directions = UnitOfWork.Repository<WorkFlowDirection>()
+                                            .Find(x => x.WorkflowId == workFlow.WorkflowId
+                                            && x.IsDelete == false
                                             ).ToList();
 
-                    foreach (var direction in workFlow.Directions)
-                    {
-                        direction.IsDelete = true;
+                        foreach (var item in workFlow.Directions)
+                        {
+                            item.IsDelete = true;
+                        }
                     }
                 }
 
                 if (workFlow.Equipments != null && workFlow.Equipments.Count > 0)
                 {
-                    var currentids = workFlow.Equipments.Select(x => x.WorkflowEquipmentListId).ToList();
+                    var currentIds = workFlow.Equipments.Select(x => x.WorkflowEquipmentListId).ToList();
+                    List<WorkflowEquipmentList> itemsToRemove = new List<WorkflowEquipmentList>();
 
-                    var itemsToRemove = UnitOfWork.Repository<WorkflowEquipmentList>()
+                    if (workFlow.WorkflowId > 0)
+                    {
+                        itemsToRemove = UnitOfWork.Repository<WorkflowEquipmentList>()
                         .Find(x => x.WorkflowId == workFlow.Equipments.FirstOrDefault().WorkflowId &&
-                            x.TaskId == workFlow.Equipments.FirstOrDefault().TaskId &&
-                            !currentids.Contains(x.WorkflowEquipmentListId)
-                        );
+                        x.IsDelete == false && !currentIds.Contains(x.WorkflowEquipmentListId)
+                        ).ToList();
 
-                    foreach (var equipment in itemsToRemove)
-                    {
-                        equipment.IsDelete = true;
+                        foreach (var item in itemsToRemove)
+                        {
+                            item.IsDelete = true;
+                        }
+
+                        workFlow.Equipments.AddRange(itemsToRemove);
                     }
 
-                    workFlow.Equipments.AddRange(itemsToRemove);
-
-                    foreach (var equipment in workFlow.Equipments)
+                    foreach (var item in workFlow.Equipments)
                     {
-                        equipment.CreatedDate = DateTime.Now;
-                        equipment.CreatedBy = "admin";
-                        equipment.MasterCompanyId = 1;
+                        item.CreatedDate = DateTime.Now;
+                        item.CreatedBy = "admin";
+                        item.MasterCompanyId = 1;
                     }
+
                 }
                 else
                 {
-                    workFlow.Equipments = UnitOfWork.Repository<WorkflowEquipmentList>()
-                       .Find(x => x.WorkflowId == workFlow.Equipments.FirstOrDefault().WorkflowId &&
-                           x.TaskId == workFlow.Equipments.FirstOrDefault().TaskId
-                       ).ToList();
-
-                    foreach (var equipment in workFlow.Equipments)
+                    if (workFlow.WorkflowId > 0)
                     {
-                        equipment.IsDelete = true;
+                        workFlow.Equipments = UnitOfWork.Repository<WorkflowEquipmentList>()
+                                            .Find(x => x.WorkflowId == workFlow.WorkflowId
+                                                && x.IsDelete == false
+                                            ).ToList();
+
+                        foreach (var item in workFlow.Equipments)
+                        {
+                            item.IsDelete = true;
+                        }
                     }
                 }
 
                 if (workFlow.Exclusions != null && workFlow.Exclusions.Count > 0)
                 {
-                    var currentids = workFlow.Exclusions.Select(x => x.WorkflowExclusionId).ToList();
+                    var currentIds = workFlow.Exclusions.Select(x => x.WorkflowExclusionId).ToList();
+                    List<WorkFlowExclusion> itemsToRemove = new List<WorkFlowExclusion>();
 
-                    var itemsToRemove = UnitOfWork.Repository<WorkFlowExclusion>()
+                    if (workFlow.WorkflowId > 0)
+                    {
+                        itemsToRemove = UnitOfWork.Repository<WorkFlowExclusion>()
                         .Find(x => x.WorkflowId == workFlow.Exclusions.FirstOrDefault().WorkflowId &&
-                            x.TaskId == workFlow.Exclusions.FirstOrDefault().TaskId &&
-                            !currentids.Contains(x.WorkflowExclusionId)
-                        );
+                        x.IsDelete == false && !currentIds.Contains(x.WorkflowExclusionId)
+                        ).ToList();
 
-                    foreach (var exclusion in itemsToRemove)
-                    {
-                        exclusion.IsDelete = true;
+                        foreach (var item in itemsToRemove)
+                        {
+                            item.IsDelete = true;
+                        }
+
+                        workFlow.Exclusions.AddRange(itemsToRemove);
                     }
 
-                    workFlow.Exclusions.AddRange(itemsToRemove);
-
-                    foreach (var exclusion in workFlow.Exclusions)
+                    foreach (var item in workFlow.Exclusions)
                     {
-                        exclusion.CreatedDate = DateTime.Now;
-                        exclusion.CreatedBy = "admin";
-                        exclusion.MasterCompanyId = 1;
+                        item.CreatedDate = DateTime.Now;
+                        item.CreatedBy = "admin";
+                        item.MasterCompanyId = 1;
                     }
+
                 }
                 else
                 {
-                    workFlow.Exclusions = UnitOfWork.Repository<WorkFlowExclusion>()
-                     .Find(x => x.WorkflowId == workFlow.Exclusions.FirstOrDefault().WorkflowId &&
-                         x.TaskId == workFlow.Exclusions.FirstOrDefault().TaskId
-                     ).ToList();
-
-                    foreach (var exclusion in workFlow.Exclusions)
+                    if (workFlow.WorkflowId > 0)
                     {
-                        exclusion.IsDelete = true;
+                        workFlow.Exclusions = UnitOfWork.Repository<WorkFlowExclusion>()
+                                            .Find(x => x.WorkflowId == workFlow.WorkflowId
+                                                && x.IsDelete == false
+                                            ).ToList();
+
+                        foreach (var item in workFlow.Exclusions)
+                        {
+                            item.IsDelete = true;
+                        }
                     }
                 }
 
                 if (workFlow.Expertise != null && workFlow.Expertise.Count > 0)
                 {
-                    var currentids = workFlow.Expertise.Select(x => x.WorkflowExpertiseListId).ToList();
+                    var currentIds = workFlow.Expertise.Select(x => x.WorkflowExpertiseListId).ToList();
+                    List<WorkflowExpertiseList> itemsToRemove = new List<WorkflowExpertiseList>();
 
-                    var itemsToRemove = UnitOfWork.Repository<WorkflowExpertiseList>()
+                    if (workFlow.WorkflowId > 0)
+                    {
+                        itemsToRemove = UnitOfWork.Repository<WorkflowExpertiseList>()
                         .Find(x => x.WorkflowId == workFlow.Expertise.FirstOrDefault().WorkflowId &&
-                            x.TaskId == workFlow.Expertise.FirstOrDefault().TaskId &&
-                            !currentids.Contains(x.WorkflowExpertiseListId)
-                        );
+                        x.IsDelete == false && !currentIds.Contains(x.WorkflowExpertiseListId)
+                        ).ToList();
 
-                    foreach (var expertise in itemsToRemove)
-                    {
-                        expertise.IsDelete = true;
+                        foreach (var item in itemsToRemove)
+                        {
+                            item.IsDelete = true;
+                        }
+
+                        workFlow.Expertise.AddRange(itemsToRemove);
                     }
 
-                    workFlow.Expertise.AddRange(itemsToRemove);
-
-                    foreach (var expert in workFlow.Expertise)
+                    foreach (var item in workFlow.Expertise)
                     {
-                        expert.CreatedDate = DateTime.Now;
-                        expert.CreatedBy = "admin";
-                        expert.MasterCompanyId = 1;
+                        item.CreatedDate = DateTime.Now;
+                        item.CreatedBy = "admin";
+                        item.MasterCompanyId = 1;
                     }
+
                 }
                 else
                 {
-                    workFlow.Expertise = UnitOfWork.Repository<WorkflowExpertiseList>()
-                         .Find(x => x.WorkflowId == workFlow.Expertise.FirstOrDefault().WorkflowId &&
-                             x.TaskId == workFlow.Expertise.FirstOrDefault().TaskId
-                         ).ToList();
-
-                    foreach (var expertise in workFlow.Expertise)
+                    if (workFlow.WorkflowId > 0)
                     {
-                        expertise.IsDelete = true;
+                        workFlow.Expertise = UnitOfWork.Repository<WorkflowExpertiseList>()
+                                            .Find(x => x.WorkflowId == workFlow.Expertise.FirstOrDefault().WorkflowId
+                                                && x.IsDelete == false
+                                            ).ToList();
+
+                        foreach (var item in workFlow.Expertise)
+                        {
+                            item.IsDelete = true;
+                        }
                     }
                 }
 
                 if (workFlow.MaterialList != null && workFlow.MaterialList.Count > 0)
                 {
-                    var currentids = workFlow.MaterialList.Select(x => x.WorkflowMaterialListId).ToList();
+                    var currentIds = workFlow.MaterialList.Select(x => x.WorkflowMaterialListId).ToList();
+                    List<WorkflowMaterial> itemsToRemove = new List<WorkflowMaterial>();
 
-                    var itemsToRemove = UnitOfWork.Repository<WorkflowMaterial>()
-                        .Find(x => x.WorkflowId == workFlow.MaterialList.FirstOrDefault().WorkflowId &&
-                            x.TaskId == workFlow.MaterialList.FirstOrDefault().TaskId &&
-                            !currentids.Contains(x.WorkflowMaterialListId)
-                        );
-
-                    foreach (var material in itemsToRemove)
+                    if (workFlow.WorkflowId > 0)
                     {
-                        material.IsDelete = true;
+                        itemsToRemove = UnitOfWork.Repository<WorkflowMaterial>()
+                        .Find(x => x.WorkflowId == workFlow.Expertise.FirstOrDefault().WorkflowId &&
+                        x.IsDelete == false && !currentIds.Contains(x.WorkflowMaterialListId)
+                        ).ToList();
+
+                        foreach (var item in itemsToRemove)
+                        {
+                            item.IsDelete = true;
+                        }
+
+                        workFlow.MaterialList.AddRange(itemsToRemove);
                     }
 
-                    workFlow.MaterialList.AddRange(itemsToRemove);
-
-                    foreach (var material in workFlow.MaterialList)
+                    foreach (var item in workFlow.MaterialList)
                     {
-                        material.CreatedDate = DateTime.Now;
-                        material.CreatedBy = "admin";
-                        material.MasterCompanyId = 1;
+                        item.CreatedDate = DateTime.Now;
+                        item.CreatedBy = "admin";
+                        item.MasterCompanyId = 1;
                     }
+
                 }
                 else
                 {
-                    workFlow.MaterialList = UnitOfWork.Repository<WorkflowMaterial>()
-                         .Find(x => x.WorkflowId == workFlow.MaterialList.FirstOrDefault().WorkflowId &&
-                             x.TaskId == workFlow.MaterialList.FirstOrDefault().TaskId
-                         ).ToList();
-
-                    foreach (var material in workFlow.MaterialList)
+                    if (workFlow.WorkflowId > 0)
                     {
-                        material.IsDelete = true;
+                        workFlow.MaterialList = UnitOfWork.Repository<WorkflowMaterial>()
+                                            .Find(x => x.WorkflowId == workFlow.WorkflowId
+                                                && x.IsDelete == false
+                                            ).ToList();
+
+                        foreach (var item in workFlow.MaterialList)
+                        {
+                            item.IsDelete = true;
+                        }
                     }
                 }
 
                 if (workFlow.Measurements != null && workFlow.Measurements.Count > 0)
                 {
-                    var currentids = workFlow.Measurements.Select(x => x.WorkflowMeasurementId).ToList();
+                    var currentIds = workFlow.Measurements.Select(x => x.WorkflowMeasurementId).ToList();
+                    List<WorkflowMeasurement> itemsToRemove = new List<WorkflowMeasurement>();
 
-                    var itemsToRemove = UnitOfWork.Repository<WorkflowMeasurement>()
+                    if (workFlow.WorkflowId > 0)
+                    {
+                        itemsToRemove = UnitOfWork.Repository<WorkflowMeasurement>()
                         .Find(x => x.WorkflowId == workFlow.Measurements.FirstOrDefault().WorkflowId &&
-                            x.TaskId == workFlow.Measurements.FirstOrDefault().TaskId &&
-                            !currentids.Contains(x.WorkflowMeasurementId)
-                        );
+                        x.IsDelete == false && !currentIds.Contains(x.WorkflowMeasurementId)
+                        ).ToList();
 
-                    foreach (var measurement in itemsToRemove)
-                    {
-                        measurement.IsDelete = true;
+                        foreach (var item in itemsToRemove)
+                        {
+                            item.IsDelete = true;
+                        }
+
+                        workFlow.Measurements.AddRange(itemsToRemove);
                     }
 
-                    workFlow.Measurements.AddRange(itemsToRemove);
-
-                    foreach (var measurement in workFlow.Measurements)
+                    foreach (var item in workFlow.Measurements)
                     {
-                        measurement.CreatedDate = DateTime.Now;
-                        measurement.CreatedBy = "admin";
-                        measurement.MasterCompanyId = 1;
+                        item.CreatedDate = DateTime.Now;
+                        item.CreatedBy = "admin";
+                        item.MasterCompanyId = 1;
                     }
+
                 }
                 else
                 {
-                    workFlow.Measurements = UnitOfWork.Repository<WorkflowMeasurement>()
-                         .Find(x => x.WorkflowId == workFlow.Measurements.FirstOrDefault().WorkflowId &&
-                             x.TaskId == workFlow.Measurements.FirstOrDefault().TaskId
-                         ).ToList();
-
-                    foreach (var measurement in workFlow.Measurements)
+                    if (workFlow.WorkflowId > 0)
                     {
-                        measurement.IsDelete = true;
+                        workFlow.Measurements = UnitOfWork.Repository<WorkflowMeasurement>()
+                                            .Find(x => x.WorkflowId == workFlow.WorkflowId
+                                                && x.IsDelete == false
+                                            ).ToList();
+
+                        foreach (var item in workFlow.Measurements)
+                        {
+                            item.IsDelete = true;
+                        }
                     }
                 }
 
@@ -328,9 +369,10 @@ namespace QuickApp.Pro.Controllers
                     var currentids = workFlow.Publication.Select(x => x.Id).ToList();
 
                     var itemsToRemove = UnitOfWork.Repository<Publications>()
-                        .Find(x => x.WorkflowId == workFlow.Publication.FirstOrDefault().WorkflowId &&
-                            x.TaskId == workFlow.Publication.FirstOrDefault().TaskId &&
-                            !currentids.Contains(x.Id)
+                        .Find(x => x.WorkflowId == workFlow.Publication.FirstOrDefault().WorkflowId
+                        && x.TaskId == workFlow.Publication.FirstOrDefault().TaskId
+                        && !currentids.Contains(x.Id)
+                        && x.IsDeleted == false
                         );
 
                     foreach (var publication in itemsToRemove)
@@ -340,10 +382,10 @@ namespace QuickApp.Pro.Controllers
 
                     workFlow.Publication.AddRange(itemsToRemove);
 
-
+                    List<long> ids = new List<long>();
                     foreach (var publication in workFlow.Publication)
                     {
-                        List<long> ids = new List<long>();
+                        ids.Clear();
 
                         if (publication.WorkflowPublicationDashNumbers != null)
                         {
@@ -369,17 +411,20 @@ namespace QuickApp.Pro.Controllers
                 }
                 else
                 {
-                    workFlow.Publication = UnitOfWork.Repository<Publications>()
-                         .Find(x => x.WorkflowId == workFlow.Publication.FirstOrDefault().WorkflowId &&
-                             x.TaskId == workFlow.Publication.FirstOrDefault().TaskId
+                    if (workFlow.WorkflowId > 0)
+                    {
+                        workFlow.Publication = UnitOfWork.Repository<Publications>()
+                         .Find(x => x.WorkflowId == workFlow.WorkflowId
+                            && x.IsDeleted == false
                          ).ToList();
 
-                    foreach (var publication in workFlow.Publication)
-                    {
-                        publication.IsDeleted = true;
+                        foreach (var item in workFlow.Publication)
+                        {
+                            item.IsDeleted = true;
+                        }
                     }
                 }
-                //var existingWorkflow = UnitOfWork.Repository<Workflow>().Find(workflow => workflow.WorkflowId == workFlow.WorkflowId).FirstOrDefault();
+                ////var existingWorkflow = UnitOfWork.Repository<Workflow>().Find(workflow => workflow.WorkflowId == workFlow.WorkflowId).FirstOrDefault();
 
                 if (workFlow != null && workFlow.WorkflowId > 0)
                 {
@@ -408,6 +453,7 @@ namespace QuickApp.Pro.Controllers
                     UnitOfWork.SaveChanges();
                     return Ok(workFlow);
                 }
+
             }
             else
             {
@@ -420,7 +466,7 @@ namespace QuickApp.Pro.Controllers
         {
             if (workFlow == null)
             {
-                return BadRequest("Something went wrong while serialization. Please contact administrator.");
+                return BadRequest("Something went wrong while doing serialization. Please contact administrator.");
             }
             if (ModelState.IsValid)
             {
@@ -435,7 +481,7 @@ namespace QuickApp.Pro.Controllers
                     workFlow.IsActive = true;
                     UnitOfWork.Repository<Workflow>().Update(workFlow);
 
-                    
+
                 }
                 else
                 {
