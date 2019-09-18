@@ -47,21 +47,20 @@
                                 </tr>
                                 <tr>
                                     <th *ngFor="let col of columns" [ngSwitch]="col.field">
-                                        <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                                        <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
                                     </th>
                                     <th style="width:150px"></th>
                                 </tr>
                             </ng-template>
-                            <ng-template pTemplate="body" ngFor let-model [ngForOf]="aircraftManufacturerPagination">
-                                <tr>
-                                    <td>{{model.aircraftTypeId}}</td>
+                            <ng-template pTemplate="body" ngFor let-model [ngForOf]="allmanufacturerInfo">
+                                <tr>                                   
                                     <td>{{model.description}}</td>
                                     <td>{{model.memo}}</td>
                                     <td>
+                                       
                                         <p-inputSwitch *ngIf="(model.isActive == true) || (model.isActive == null)" matTooltip="Active" onLabel="on" offLabel="off"
-                                            (onChange)="toggleIsActive(model,$event)" [(ngModel)]="model.isActive"></p-inputSwitch>
-                                        <p-inputSwitch *ngIf="model.isActive == false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(model,$event)"
-                                            [(ngModel)]="model.isActive"></p-inputSwitch>
+                                            (onChange)="updateStatus(model)" [(ngModel)]="model.isActive"></p-inputSwitch>
+                                       <!-- <p-inputSwitch [(ngModel)]="model.isActive" name="isActive" (onChange)="updateStatus(model)" ></p-inputSwitch> -->
                                         <span data-toggle="modal" data-target="#view">
                                             <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(viewData,model.aircraftTypeId)" title="View">
                                                 <i class="fa fa-eye"></i>
