@@ -538,6 +538,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                                         this.setCurrentPanel(this.selectedItems[0].Name, this.selectedItems[0].Id);
                                     }
                                 }, 1000);
+                                this.calculateTotalWorkFlowCost();
                             },
                             error => this.errorMessage = <any>error
                         );
@@ -2017,6 +2018,10 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
     taskDeleteConfirmation(confirmDeleteTemplate: any, task: any): void {
         // this.modal = this.modalService.open(confirmDeleteTemplate, { size: 'sm' });
+    }
+
+    removeTask(workFlow : any): void {
+        this.workFlowList.splice(this.workFlowList.indexOf(workFlow), 1);
     }
 
     dismissModel() {
