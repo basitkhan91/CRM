@@ -102,17 +102,8 @@ export class AircraftManufacturerComponent implements OnInit {
     ngOnInit(): void {
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-aircraft-manufacturer';
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
-        this.aircraftManufacurerService.getAll().subscribe(aircraftManufacturer => {
-            this.aircraftManufacturerList = aircraftManufacturer[0];
-            this.allmanufacturerInfo = aircraftManufacturer[0];            
-            this.totalRecords = this.aircraftManufacturerList.length;//Adding for Pagination
-            this.totelPages = Math.ceil(this.totalRecords / this.rows);
-            this.aircraftManufacturerList.forEach(function (manufacturer) {
-                manufacturer.isActive = manufacturer.isActive == false ? false : true;
-            });
-        });
         this.currentAircraftManufacturerType = new AircraftType();
-
+        this.loadData();
         //Adding for p-table in table also we can put headers and columns manually
         this.cols = [
             { field: 'aircraftTypeId', header: 'ID' },
@@ -121,6 +112,17 @@ export class AircraftManufacturerComponent implements OnInit {
         ];
         this.loading = true;
         //P-table Code End
+    }
+    public loadData() {
+        this.aircraftManufacurerService.getAll().subscribe(aircraftManufacturer => {
+            this.aircraftManufacturerList = aircraftManufacturer[0];
+            this.allmanufacturerInfo = aircraftManufacturer[0];
+            this.totalRecords = this.aircraftManufacturerList.length;//Adding for Pagination
+            this.totelPages = Math.ceil(this.totalRecords / this.rows);
+            this.aircraftManufacturerList.forEach(function (manufacturer) {
+                manufacturer.isActive = manufacturer.isActive == false ? false : true;
+            });
+        });
     }
 
     loadAircraftManufacturer(event: LazyLoadEvent) //when page initilizes it will call this method
@@ -142,7 +144,7 @@ export class AircraftManufacturerComponent implements OnInit {
                         if (pages.length > 0) {
                             this.aircraftManufacturerPaginationList = pages;
                             this.totalRecords = this.aircraftManufacturerPaginationList[0].totalRecordsCount;
-                            this.totelPages = Math.ceil(this.totalRecords / this.rows);                            
+                            this.totelPages = Math.ceil(this.totalRecords / this.rows);
                         }
                     });
             }
@@ -177,7 +179,8 @@ export class AircraftManufacturerComponent implements OnInit {
         this.currentAircraftManufacturerType.updatedBy = this.userName;
         this.aircraftManufacurerService.add(this.currentAircraftManufacturerType).subscribe(aircraftManufacturer => {
             this.alertService.showMessage("Success", 'Aircraft manufacturer Added successfully.', MessageSeverity.success);
-            this.updatePaginatorState(); // previously after update we used to call getAll now we can this method to get required list
+            // this.updatePaginatorState(); // previously after update we used to call getAll now we can this method to get required list
+            this.loadData();
             this.resetAddAircraftManufacturer();
             this.dismissModel();
         });
@@ -190,6 +193,7 @@ export class AircraftManufacturerComponent implements OnInit {
         this.aircraftManufacturerTypeToUpdate = Object.assign({}, this.aircraftManufacturerPagination.filter(function (aircraftManufacturer) {
             return aircraftManufacturer.aircraftTypeId == id;
         })[0]);
+        this.loadData();
         this.modal = this.modalService.open(editAircraftManufacturerpopup, { size: 'sm' });
     }
 
@@ -197,7 +201,8 @@ export class AircraftManufacturerComponent implements OnInit {
         this.currentAircraftManufacturerType.updatedBy = this.userName;
         this.aircraftManufacurerService.update(this.aircraftManufacturerTypeToUpdate).subscribe(aircraftmanufacturer => {
             this.alertService.showMessage("Success", 'Aircraft manufacturer Updated successfully.', MessageSeverity.success);
-            this.updatePaginatorState(); // previously after update we used to call getAll now we can this method to get required list
+            // this.updatePaginatorState(); // previously after update we used to call getAll now we can this method to get required list
+            this.loadData();
             this.resetUpdateAircraftManufacturer();
             this.dismissModel();
         });
@@ -206,7 +211,8 @@ export class AircraftManufacturerComponent implements OnInit {
     removeAircraftManufacturer(): void {
         this.aircraftManufacurerService.remove(this.aircraftManufacturerTypeToRemove.aircraftTypeId).subscribe(response => {
             this.alertService.showMessage("Success", 'Aircraft manufacturer removed successfully.', MessageSeverity.success);
-            this.updatePaginatorState(); // previously after update we used to call getAll now we can this method to get required list
+            // this.updatePaginatorState(); // previously after update we used to call getAll now we can this method to get required list
+            this.loadData();
             this.dismissModel();
         });
 
@@ -266,18 +272,18 @@ export class AircraftManufacturerComponent implements OnInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-    updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
-    {
-        this.paginatorState = {
-            rows: this.rows,
-            first: this.first
-        }
-        if (this.paginatorState) {
-            this.loadAircraftManufacturer(this.paginatorState);
-        }
-    }
-    manufactureId(event){
-        for (let i = 0; i < this.actionmanufacturer.length; i++) {            
+    // updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
+    // {
+    //     this.paginatorState = {
+    //         rows: this.rows,
+    //         first: this.first
+    //     }
+    //     if (this.paginatorState) {
+    //         this.loadAircraftManufacturer(this.paginatorState);
+    //     }
+    // }
+    manufactureId(event) {
+        for (let i = 0; i < this.actionmanufacturer.length; i++) {
             if (event == this.actionmanufacturer[i][0].manufacturer) {
                 //alert("Action Name already Exists");
                 this.disableSave = true;
@@ -295,11 +301,11 @@ export class AircraftManufacturerComponent implements OnInit {
                     "aircraftTypeId": this.allmanufacturerInfo[i].aircraftTypeId,
                     "manufacturer": manufacturer
                 }]),
-                this.localCollection.push(manufacturer);
+                    this.localCollection.push(manufacturer);
             }
         }
     }
-  eventHandler(event) {
+    eventHandler(event) {
         let value = event.target.value.toLowerCase();
         if (this.selectedActionName) {
             if (value == this.selectedActionName.toLowerCase()) {

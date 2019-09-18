@@ -5,6 +5,33 @@ using System.Threading.Tasks;
 using DAL.Models;
 namespace QuickApp.Pro.ViewModels
 {
+
+
+    #region Individual items
+    public class ColumHeader
+    {
+        public string field { get; set; }
+        public string header { get; set; }
+    }
+
+    //public class ColumnData
+    //{
+    //    List<dynamic> DynamicRows { get; set; }
+    //}
+
+    //public class DynamicGridData
+    //{
+    //    public List<ColumHeader>  columHeaders { get; set; }
+    //    public IEnumerable<UnitOfMeasureModel> ColumnData { get; set; }
+    //}
+
+    public class DynamicGridData<T> where T : class
+    {
+        public List<ColumHeader> columHeaders { get; set; }
+        public IEnumerable<T> ColumnData { get; set; }
+    } 
+    #endregion
+
     public class PaginateViewModel
     {
         public int first { get; set; }
@@ -88,7 +115,7 @@ namespace QuickApp.Pro.ViewModels
     }
     #endregion
 
-    #region unitOfMeasure
+    #region Itemgroup
     public class ItemGroupViewModel : Itemgroup, IPaginateViewModel
     {
         public int first { get; set; }
@@ -96,6 +123,27 @@ namespace QuickApp.Pro.ViewModels
         public int pageCount { get; set; }
         public int rows { get; set; }
         public int limit { get; set; }
+    }
+    public class ItemgroupModel
+    {
+
+        public long ItemGroupId { get; set; }
+
+        public string ItemGroupCode { get; set; }
+        public string Memo { get; set; }
+
+        public string Description { get; set; }
+
+        public Int32 MasterCompanyId { get; set; }
+
+        public string CreatedBy { get; set; }
+
+        public string UpdatedBy { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+
+        public DateTime UpdatedDate { get; set; }
+
     }
     #endregion
 
@@ -119,6 +167,31 @@ namespace QuickApp.Pro.ViewModels
         public int rows { get; set; }
         public int limit { get; set; }
     }
+    public class ManufacturerModel
+    {
+        public long ManufacturerId { get; set; }
+        public string Name { get; set; }
+        public Int32 MasterCompanyId { get; set; }
+        public string Comments { get; set; }
+        public string CreatedBy { get; set; }
+        public string UpdatedBy { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
+    }
+    public class ItemClassficationModel
+    {
+        public long ItemClassificationId { get; set; }
+        public string ItemClassificationCode { get; set; }
+        public string Description { get; set; }
+        public string ItemType { get; set; }
+        public string Memo { get; set; }
+        public Int32 MasterCompanyId { get; set; }
+        public string CreatedBy { get; set; }
+        public string UpdatedBy { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
+       // public bool? IsActive { get; set; }
+    }
     #endregion
 
     #region charge
@@ -141,6 +214,20 @@ namespace QuickApp.Pro.ViewModels
         public int rows { get; set; }
         public int limit { get; set; }
     }
+
+
+    public class ReasonModel
+    {
+        public long ReasonId { get; set; }
+        public string ReasonCode { get; set; }
+        public string ReasonForRemoval { get; set; }
+        public string Memo { get; set; }
+        //public bool? IsActive { get; set; }
+        public string CreatedBy { get; set; }
+        public string UpdatedBy { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+    }
     #endregion
 
     #region Currency
@@ -152,6 +239,26 @@ namespace QuickApp.Pro.ViewModels
         public int rows { get; set; }
         public int limit { get; set; }
     }
+
+    public class CurrencyModel 
+    {
+        public Int32 CurrencyId { get; set; }
+
+        public string Code { get; set; }
+
+        public string Memo { get; set; }
+
+        public string Symbol { get; set; }
+
+        public string DisplayName { get; set; }
+        public string CreatedBy { get; set; }
+        public string UpdatedBy { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        //public bool? IsActive { get; set; }
+        //public bool? IsDelete { get; set; }
+    }
+
     #endregion
 
     #region Currency
@@ -164,7 +271,45 @@ namespace QuickApp.Pro.ViewModels
         public int limit { get; set; }
         public int totalNoRecords { get; set; }
     }
+
+
+    public class GLAccountClassModel
+    {
+        public long GLAccountClassId { get; set; }
+
+        public long GLCID { get; set; }
+
+        public string GLAccountClassName { get; set; }
+
+        public string CreatedBy { get; set; }
+
+        public string UpdatedBy { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+
+        public DateTime? UpdatedDate { get; set; }
+
+        //public bool? IsActive { get; set; }
+
+        //public bool? IsDelete { get; set; }
+    }
     #endregion
+
+    #region Currency - GLAccount
+    public class GLAccountModel
+    {
+        public long? GLAccountTypeId { get; set; }
+        public string Name { get; set; }
+        public string CreatedBy { get; set; }
+
+        public string UpdatedBy { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+
+        public DateTime? UpdatedDate { get; set; }
+    }
+    #endregion
+
 
     #region Currency
     public class GlClassFlowClassificationPaginationViewModel : GlClassFlowClassification, IPaginateViewModel
@@ -281,6 +426,20 @@ namespace QuickApp.Pro.ViewModels
     }
     #endregion
 
+    #region AssetDepreciationMethod
+    public class AssetDepreciationMethodModel : PasBase
+    {
+        public long? AssetDepreciationMethodId { get; set; }
+        public string AssetDepreciationMethodName { get; set; }
+
+        public string AssetDepreciationMethodCode { get; set; }
+        public string AssetDepreciationMethodBasis { get; set; }
+        public string AssetDepreciationMemo { get; set; }
+        public Int32 MasterCompanyId { get; set; }
+        //public bool? IsActive { get; set; }
+    }
+    #endregion
+
     #region ATAChapter
     public class ATAChapterPaginationViewModel : ATAChapter, IPaginateViewModel
     {
@@ -289,6 +448,41 @@ namespace QuickApp.Pro.ViewModels
         public int pageCount { get; set; }
         public int rows { get; set; }
         public int limit { get; set; }
+    }
+    #endregion
+
+    #region AssetIntangibleAttributeType
+    public class AssetIntangibleAttributeTypeModel : PasBase
+    {
+        public long AssetIntangibleAttributeTypeId { get; set; }
+        public int IntangibleLife { get; set; }
+        public string AmortizationFrequency { get; set; }
+        //public bool? IsActive { get; set; }
+    }
+    #endregion
+
+    #region AssetDepreciationInterval
+    public class AssetDepreciationIntervalModel :PasBase
+    {
+        public long AssetDepreciationIntervalId { get; set; }
+        public string AssetDepreciationIntervalCode { get; set; }
+        public string AssetDepreciationIntervalName { get; set; }
+        public string AssetDepreciationIntervalMemo { get; set; }
+    }
+    #endregion
+    #region Credit Terms
+    public class CreditTermsModel : PasBase
+    {
+        public Int16 CreditTermsId { get; set; }
+
+        public string Name { get; set; }
+        public string Memo { get; set; }
+
+        public byte? Percentage { get; set; }
+
+        public byte? Days { get; set; }
+
+        public byte? NetDays { get; set; }
     }
     #endregion
 }

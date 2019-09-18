@@ -255,6 +255,8 @@ namespace DAL
 
         IFileUploadRepository FileUploadRepository { get; }
 
+        IAssetIntangibleAttributeType AssetIntangibleAttributeType { get; }
+        IAssetDepreciationInterval AssetDepreciationInterval { get; }
 
         void SaveChanges(Employee employeeobject);
     }

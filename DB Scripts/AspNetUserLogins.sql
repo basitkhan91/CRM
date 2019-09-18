@@ -1,7 +1,7 @@
 USE [PAS_DEV]
 GO
 
-/****** Object:  Table [dbo].[AspNetUserLogins]    Script Date: 8/29/2019 6:12:49 PM ******/
+/****** Object:  Table [dbo].[AspNetUserLogins]    Script Date: 9/17/2019 5:12:29 PM ******/
 SET ANSI_NULLS ON
 GO
 

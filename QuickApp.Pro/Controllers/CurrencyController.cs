@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
 using DAL;
@@ -252,5 +253,45 @@ namespace QuickApp.Pro.Controllers
             public int TotalRecordsCount { get; set; }
             public List<CurrencyPaginationViewModel> CurrencyList { get; set; }
         }
+
+        #region Individual grids code
+
+        [HttpGet("getAll")]
+        public IActionResult GetAll()
+        {
+            List<ColumHeader> columHeaders = new List<ColumHeader>();
+            PropertyInfo[] propertyInfos = typeof(CurrencyModel).GetProperties();
+            ColumHeader columnHeader;
+            DynamicGridData<CurrencyModel> dynamicGridData = new DynamicGridData<CurrencyModel>();
+            foreach (PropertyInfo property in propertyInfos)
+            {
+                columnHeader = new ColumHeader();
+                columnHeader.field = property.Name;
+                columnHeader.header = property.Name;
+                columHeaders.Add(columnHeader);
+            }
+            dynamicGridData.columHeaders = columHeaders;
+            List<CurrencyModel> currencyList = new List<CurrencyModel>();
+            CurrencyModel currency = null;
+            var currencys = _unitOfWork.Currencys.GetAllCurrencyData();
+            foreach (var item in currencys)
+            {
+                currency = new CurrencyModel();
+                currency.CurrencyId = item.CurrencyId;
+                currency.Code = item.Code;
+                currency.Symbol = item.Symbol;
+                currency.DisplayName = item.DisplayName;
+                currency.Memo = item.Memo;
+                currency.CreatedDate = item.CreatedDate;
+                currency.CreatedBy = item.CreatedBy;
+                currency.UpdatedDate = item.UpdatedDate;
+                currency.UpdatedBy = item.UpdatedBy;
+                //currency.IsActive = item.IsActive;
+                currencyList.Add(currency);
+            }
+            dynamicGridData.ColumnData = currencyList;
+            return Ok(dynamicGridData);
+        }
+        #endregion
     }
 }

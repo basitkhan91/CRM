@@ -37,6 +37,10 @@ namespace DAL.Models
         public bool? IsActive { get; set; }
 
         public bool? IsDelete { get; set; }
+
+        [ForeignKey("AssetIntangibleType")]
+        public long AssetIntangibleAttributeTypeId { get; set; }
+        public virtual AssetIntangibleType AssetIntangibleAttributeType { get; set; }
         public long? AssetIntangibleTypeSingleId { get; set; }
         public virtual AssetIntangibleTypeSingleScreen AssetIntangibleTypeSingleScreen { get; set; }
 

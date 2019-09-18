@@ -39,7 +39,7 @@ export class LocationComponent implements OnInit, AfterViewInit {
 	addressId: any;
 	locationId: any;
 
-
+    totalRecords: number;
 	memo: any = "";
 
 	address1: any;
