@@ -76,6 +76,7 @@ namespace QuickApp.Pro.Controllers
                 unitOfMeasureobject.Memo = unitOfMeasureViewModel.Memo;
                 unitOfMeasureobject.MasterCompanyId = unitOfMeasureViewModel.MasterCompanyId;
                 unitOfMeasureobject.IsActive = unitOfMeasureViewModel.IsActive;
+                unitOfMeasureobject.IsDelete = unitOfMeasureViewModel.IsDelete;
                 unitOfMeasureobject.CreatedDate = DateTime.Now;
                 unitOfMeasureobject.UpdatedDate = DateTime.Now;
                 unitOfMeasureobject.CreatedBy = unitOfMeasureViewModel.CreatedBy;
@@ -305,39 +306,19 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetAll()
         {
             List<ColumHeader> columHeaders = new List<ColumHeader>();
-            PropertyInfo[] propertyInfos = typeof(UnitOfMeasureModel).GetProperties();
+            PropertyInfo[] propertyInfos = typeof(UnitOfMeasureSPModel).GetProperties();
             ColumHeader columnHeader;
-            DynamicGridData< UnitOfMeasureModel> dynamicGridData = new DynamicGridData<UnitOfMeasureModel>();
+            DynamicGridData<dynamic> dynamicGridData = new DynamicGridData<dynamic>();
             foreach (PropertyInfo property in propertyInfos)
             {
                 columnHeader = new ColumHeader();
-                columnHeader.field = property.Name;
+                columnHeader.field = char.ToLower(property.Name[0]) + property.Name.Substring(1);//FirstCharToUpper(property.Name);
                 columnHeader.header = property.Name;
                 columHeaders.Add(columnHeader);
             }
             dynamicGridData.columHeaders = columHeaders;
-            List<UnitOfMeasureModel> unitOfMeasureList = new List<UnitOfMeasureModel>();
-            UnitOfMeasureModel unitOfMeasure = null;
-            var unitOfMeasures = _unitOfWork.UnitOfMeasure.GetAll();
-
-            foreach (var item in unitOfMeasures)
-            {
-                unitOfMeasure = new UnitOfMeasureModel();
-                unitOfMeasure.UnitOfMeasureId = item.UnitOfMeasureId;
-                unitOfMeasure.Description = item.Description;
-                unitOfMeasure.ShortName = item.ShortName;
-                unitOfMeasure.Standard = item.Standard;
-                unitOfMeasure.Memo = item.Memo;
-                unitOfMeasure.CreatedDate = item.CreatedDate;
-                unitOfMeasure.CreatedBy = item.CreatedBy;
-                unitOfMeasure.UpdatedDate = item.UpdatedDate;
-                unitOfMeasure.UpdatedBy = item.UpdatedBy;
-                unitOfMeasure.IsActive = item.IsActive;
-                unitOfMeasureList.Add(unitOfMeasure);
-            }
-            dynamicGridData.ColumnData = unitOfMeasureList;
-            return Ok(dynamicGridData); 
-
+            dynamicGridData.ColumnData = _unitOfWork.UnitOfMeasure.GetAll().Where(u => u.IsDelete == false);
+            return Ok(dynamicGridData);
         }
 
         public void ImportXlsData()
