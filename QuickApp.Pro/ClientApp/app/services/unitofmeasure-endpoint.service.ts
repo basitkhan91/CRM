@@ -15,6 +15,7 @@ export class UnitOfMeasureEndpoint extends EndpointFactory {
     private readonly _actionsUrlNew: string = "/api/UnitOfMeasure/unitofmeasure";
     private readonly _actionsUrlAuditHistory: string = "/api/UnitOfMeasure/auditHistoryById";
     private readonly _auditsUrl: string = "/api/UnitOfMeasure/audits";
+    private readonly _actionUrlAll: string = "/api/UnitOfMeasure/getAll"
     private readonly getUnitOfMeasure: string = "/api/UnitOfMeasure/pagination";
 
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
@@ -29,6 +30,12 @@ export class UnitOfMeasureEndpoint extends EndpointFactory {
         return this.http.get<T>(this.actionsUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getUnitOfMeasureEndpoint());
+            });
+    }
+    getAllUnitOfMeasureEndpoint<T>(): Observable<T> {
+        return this.http.get<T>(this._actionUrlAll, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAllUnitOfMeasureEndpoint());
             });
     }
     getNewUnitOfMeasureEndpoint<T>(userObject: any): Observable<T> {
@@ -92,7 +99,7 @@ export class UnitOfMeasureEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getUnitOfMeasurePages(paginationOption));
             });
     }
-
+   
 
 }
 

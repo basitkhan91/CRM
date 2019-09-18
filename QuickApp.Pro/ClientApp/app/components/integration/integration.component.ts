@@ -164,9 +164,9 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
     openDelete(content, row) {
 
         this.isEditMode = false;
-        this.isDeleteMode = true;
-        this.integration_Name = row.description;
+        this.isDeleteMode = true;       
         this.sourceAction = row;
+        this.integration_Name = row.portalUrl;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -181,7 +181,7 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
         this.loadMasterCompanies();
         this.sourceAction = row;
 		this.integrationName = this.sourceAction.description;
-		this.portalURL = row.portalURL;
+		this.portalURL = row.portalUrl;
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {

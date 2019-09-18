@@ -115,6 +115,13 @@ namespace QuickApp.Pro.ViewModels
         public DateTime CreatedDate { get; set; }
         public bool? IsActive { get; set; }
     }
+    public class UnitOfMeasureSPModel
+    {
+        public string Description { get; set; }
+        public string ShortName { get; set; }
+        public string Memo { get; set; }
+        public string Standard { get; set; }
+    }
     #endregion
 
     #region Itemgroup

@@ -529,6 +529,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 		this.isEditMode = false;
 		this.isDeleteMode = true;
 		this.sourceWarehouse = row;
+		this.warehouse_Name = row.name;
 		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
 			console.log('When user closes');
@@ -538,7 +539,6 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 
 	//OpenEdit
 	openEdit(content, row) {
-
 		this.isEditMode = true;
 		this.isSaving = true;
 		this.loadMasterCompanies();
@@ -718,7 +718,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 
 
 	//EditItem
-	editItemAndCloseModel() {
+	SaveandEditWarehouse() {
 		this.isSaving = true;
 
         if (this.isEditMode == false) {
@@ -731,7 +731,8 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
             //this.sourceWarehouse.siteId = this.siteId;
             //this.sourceWarehouse.siteID = this.selectedSiteIdValue;
             this.workFlowtService.newWarehouse(this.sourceWarehouse).subscribe(data => {
-               
+				response => this.saveCompleted(this.sourceWarehouse)
+				error => this.saveFailedHelper(error)
             if (data != null) {
                 this.saveManagement(data.warehouseId, this.selectedNodeTest); //pushing Site Management Need Site Value so after getting SiteId we are calling
 

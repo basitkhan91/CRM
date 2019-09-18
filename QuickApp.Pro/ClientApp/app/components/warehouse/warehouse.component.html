@@ -11,19 +11,19 @@
 								<i class="fa fa-plus-circle fa-lg"></i>
 							</a>
 						</div>
-						<p-table #dt class="rpo-table-cstm rro-table-cstm" [totalRecords]="totalRecords"  [value]="allWareHouses" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]"
-						 [columns]="selectedColumns" selectionMode="multiple"  [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true"
-						 [scrollable]="true" scrollHeight="450px">
+						<p-table #dt class="rpo-table-cstm rro-table-cstm" [totalRecords]="totalRecords" [value]="allWareHouses" [rows]="10" [paginator]="true"
+						 [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn"
+						 [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
 							<ng-template pTemplate="caption">
 								<div style="text-align: right">
 									<p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" selectedItemsLabel="{0} columns selected"
 									 [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-
+									<!-- 
 									<div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
 										<i class="fa fa-search"></i>
 										<input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')"
 										 placeholder="Global Filter">
-									</div>
+									</div> -->
 									<button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
 									 iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
 									<button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
@@ -54,7 +54,7 @@
 								</tr>
 								<tr>
 									<th *ngFor="let col of columns" [ngSwitch]="col.field">
-										<input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+										<input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
 									</th>
 									<th style="width:180px;position:sticky"></th>
 								</tr>
@@ -98,8 +98,8 @@
 							<ng-template pTemplate="summary" id="footer">
 								<label id="footer" class="footer">No'of records:</label>
 								<input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
-								<label id="footer" class="footer1">Pages Count:</label>
-								<input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" />
+								<!-- <label id="footer" class="footer1">Pages Count:</label>
+								<input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" /> -->
 							</ng-template>
 						</p-table>
 					</div>
@@ -121,93 +121,117 @@
 	</div>
 
 	<div class="modal-body">
-		<form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemAndCloseModel()">
-			<div class="row">
-				<div class="col-sm-6">
-
-
-					<div class="form-group input-icon1">
-						<label class="control-label col-sm-4">Site Name</label>
-						<div class="inner-addon right-addon autosuggesions-add inline-block">
-
-
-							<select [(ngModel)]="sourceWarehouse.siteId" [ngModelOptions]="{standalone: true}" (change)="siteValueChange($event.target.value)">
-
-								<option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option>
-								<!--(onchange)="siteValueChange(site.siteName)"-->
-
-							</select>
+		<form #userForm="ngForm" class="form-horizontal" (ngSubmit)="SaveandEditWarehouse()">
+			<div class="col-sm-12">
+				<div class="col-sm-5">
+					<div class="form-group">
+						<div class="col-sm-12">
+							<div class="col-sm-4">
+								<label class="control-label">Site Name
+									<span class="clr-red">*</span>
+								</label>
+							</div>
+							<div class="col-sm-7">
+								<select [(ngModel)]="sourceWarehouse.siteId" [ngModelOptions]="{standalone: true}" (change)="siteValueChange($event.target.value)">
+									<option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-sm-12">
+							<div class="col-sm-4">
+								<label for="actionname" class="control-label">WareHouse Name
+									<span class="clr-red">*</span>
+								</label>
+							</div>
+							<div class="col-sm-7">
+								<p-autoComplete (onSelect)="Manufacturerdescription($event)" (onKeyUp)=ManufacturerHandler($event) (completeMethod)="filtermanufacturer($event)"
+								 [(ngModel)]="name" [suggestions]="localCollection" [size]="30" [minLength]="2" name="warehouse"
+								 [dropdown]="true" class="p-autoComplete-ctsm">
+								</p-autoComplete>
+								<div *ngIf="disableSaveManufacturer" class="clr-red">Already Exists</div>
+								<div class="clear"></div>
+							</div>
+						</div>
+						<div class="col-sm-12" *ngIf="showAddress">
+							<div class="col-sm-4">
+								<label for="description" class="control-label">Address Line 1</label>
+							</div>
+							<div class="col-sm-7">
+								<input type="text" class="form-control" disabled placeholder="Address Line 1" id="memo" required value={{address1}}>
+							</div>
+						</div>
+						<div class="col-sm-12" *ngIf="showAddress">
+							<div class="col-sm-4">
+								<label for="description" class="control-label">Address Line 2</label>
+							</div>
+							<div class="col-sm-7">
+								<input class="form-control" type="text" disabled placeholder="Address Line 2" minlength="2" required value={{address2}}>
+							</div>
+						</div>
+						<div class="col-sm-12" *ngIf="showAddress">
+							<div class="col-sm-4">
+								<label for="description" class="control-label">Address Line 3</label>
+							</div>
+							<div class="col-sm-7">
+								<input class="form-control" type="text" disabled placeholder="Address Line 3" minlength="2" required value={{address3}}>
+							</div>
+						</div>
+						<div class="col-sm-12" *ngIf="showAddress">
+							<div class="col-sm-4">
+								<label for="description" class="control-label">City</label>
+							</div>
+							<div class="col-sm-7">
+								<input type="text" class="form-control" disabled placeholder="City" minlength="2" required value={{city}}>
+							</div>
+						</div>
+						<div class="col-sm-12" *ngIf="showAddress">
+							<div class="col-sm-4">
+								<label for="description" class="control-label">State</label>
+							</div>
+							<div class="col-sm-7">
+								<input type="text" class="form-control" disabled placeholder="State" minlength="2" required value={{stateOrProvince}}>
+							</div>
+						</div>
+						<div class="col-sm-12" *ngIf="showAddress">
+							<div class="col-sm-4">
+								<label for="description" class="control-label">Country</label>
+							</div>
+							<div class="col-sm-7">
+								<input type="text" class="form-control" disabled placeholder="Country" minlength="2" required value={{country}}>
+							</div>
+						</div>
+						<div class="col-sm-12" *ngIf="showAddress">
+							<div class="col-sm-4">
+								<label for="description" class="control-label">Zip Code</label>
+							</div>
+							<div class="col-sm-7">
+								<input type="text" class="form-control" disabled placeholder="Zip Code" minlength="2" required value={{postalCode}}>
+							</div>
+						</div>
+						<div class="col-sm-12">
+							<div class="col-sm-4">
+								<label for="description" class="control-label">Memo</label>
+							</div>
+							<div class="col-sm-7">
+								<textarea [(ngModel)]="sourceWarehouse.memo" name="memo"></textarea>
+							</div>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="actionname" class="control-label">WareHouse Name
-							<span class="clr-red">*</span>
-						</label>
-						<div class="inner-addon right-addon inline-block">
-							<p-autoComplete (onSelect)="Manufacturerdescription($event)" (onKeyUp)=ManufacturerHandler($event) (completeMethod)="filtermanufacturer($event)"
-							 [(ngModel)]="name" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" [size]="30" [minLength]="2"
-							 [dropdown]="true">
-							</p-autoComplete>
-							<div *ngIf="disableSaveManufacturer" class="clr-red">Already Exists</div>
-							<div class="clear"></div>
-						</div>
-					</div>
-					<div *ngIf="showAddress">
-						<div class="form-group">
-							<label for="description" class="control-label">Address Line 1</label>
-							<div class="control-data">
-								<input disabled placeholder="Address Line 1" id="memo" minlength="2" required value={{address1}}>
+						<div class="col-sm-7">
+							<div class="checkbox-cstm">
+								<label>
+									<input type="checkbox" name="isActive" #isActive="ngModel" checked id="isActive" [(ngModel)]="sourceWarehouse.isActive">
+									<span class="cr">
+										<i class="cr-icon pi pi-check"></i>
+									</span>
+									Active
+								</label>
 							</div>
 						</div>
-						<div class="form-group">
-							<label for="description" class="control-label">Address Line 2</label>
-							<div class="control-data">
-								<input disabled placeholder="Address Line 2" minlength="2" required value={{address2}}>
-							</div>
-
-						</div>
-						<div class="form-group">
-							<label for="description" class="control-label">Address Line 3</label>
-							<div class="control-data">
-								<input disabled placeholder="Address Line 3" minlength="2" required value={{address3}}>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="description" class="control-label">City</label>
-							<div class="control-data">
-								<input disabled placeholder="City" minlength="2" required value={{city}}>
-							</div>
-							<div class="clear"></div>
-						</div>
-						<div class="form-group">
-							<label for="description" class="control-label">State</label>
-							<div class="control-data">
-								<input disabled placeholder="State" minlength="2" required value={{stateOrProvince}}>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="description" class="control-label">Country</label>
-							<div class="control-data">
-								<input disabled placeholder="Country" minlength="2" required value={{country}}>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="description" class="control-label">Zip Code</label>
-							<div class="control-data">
-								<input disabled placeholder="Zip Code" minlength="2" required value={{postalCode}}>
-							</div>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="description" class="control-label">Memo</label>
-						<div class="control-data">
-							<input [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceWarehouse.memo" required>
-						</div>
-						<div class="clear"></div>
 					</div>
 				</div>
 				<div class="col-sm-6" *ngIf="showManagement">
-					<!-- Check Box Management Data -->
 					<p-treeTable [value]="gridData" [columns]="cols1" class="p-Treetable-view" [(selection)]="selectedNodeTest">
 						<ng-template pTemplate="header" let-columns>
 							<tr>
@@ -224,20 +248,17 @@
 									{{rowData[col.field]}}
 								</td>
 							</tr>
-						</ng-template>						
+						</ng-template>
 					</p-treeTable>
-					<!-- Check box Management Date End -->
 				</div>
 			</div>
 
 			<div class="modal-footer">
-
-				<button class="btn btn-success" [disabled]="disableSaveManufacturer">Submit</button>
-				<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+				<button class="btn btn-primary-cstm" [disabled]="disableSaveManufacturer">Save</button>
+				<button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
 			</div>
 		</form>
 	</div>
-
 
 </ng-template>
 
@@ -249,10 +270,17 @@
 			<span aria-hidden="true">&times;</span>
 		</button>
 	</div>
-
+	<div class="modal-body">
+		<strong>
+			Warehouse Name:
+			<span class="new-label">
+				"{{warehouse_Name}}"
+			</span>
+		</strong>
+	</div>
 	<div class="modal-footer">
-		<button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
-		<button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+		<button type="button" class="btn btn-primary-cstm" (click)="deleteItemAndCloseModel()">Yes</button>
+		<button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">No</button>
 	</div>
 
 </ng-template>
@@ -264,13 +292,10 @@
 
 <ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
 	<div class="modal-header">
-
 		<h4 class="modal-title">History of Credit Terms</h4>
 		<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
 			<span aria-hidden="true">&times;</span>
 		</button>
-
-
 	</div>
 	<div class="modal-body">
 
@@ -296,7 +321,7 @@
 		</table>
 	</div>
 	<div class="modal-footer">
-		<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+		<button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
 	</div>
 </ng-template>
 
@@ -353,6 +378,9 @@
 					</span>
 					<span class="value">{{stateOrProvince}}</span>
 				</p>
+
+			</div>
+			<div class="col-sm-6">
 				<p>
 					<span class="label">
 						<b> Country: </b>
@@ -400,7 +428,7 @@
 			<div class="clear"></div>
 		</div>
 		<div class="modal-footer">
-			<button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
+			<button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
 		</div>
 	</div>
 

@@ -29,6 +29,7 @@ export class AircraftManufacturerComponent implements OnInit {
     currentAircraftManufacturerType: AircraftType;
     aircraftManufacturerTypeToUpdate: AircraftType;
     aircraftManufacturerTypeToRemove: AircraftType;
+    aircraftManufacturerTypeToUpdateActive: AircraftType;
     aircraftManufacturertoview: AircraftType;
     aircraftManufacturerList: AircraftType[];
     aircraftManufacturerPagination: AircraftType[];//added
@@ -106,7 +107,7 @@ export class AircraftManufacturerComponent implements OnInit {
         this.loadData();
         //Adding for p-table in table also we can put headers and columns manually
         this.cols = [
-            { field: 'aircraftTypeId', header: 'ID' },
+            
             { field: 'description', header: 'Aircraft Manufacturer Name' },
             { field: 'memo', header: 'Memo' },
         ];
@@ -190,7 +191,7 @@ export class AircraftManufacturerComponent implements OnInit {
 
 
     setAircraftManufacturerToUpdate(editAircraftManufacturerpopup: any, id: number): void {
-        this.aircraftManufacturerTypeToUpdate = Object.assign({}, this.aircraftManufacturerPagination.filter(function (aircraftManufacturer) {
+        this.aircraftManufacturerTypeToUpdate = Object.assign({}, this.allmanufacturerInfo.filter(function (aircraftManufacturer) {
             return aircraftManufacturer.aircraftTypeId == id;
         })[0]);
         this.loadData();
@@ -217,6 +218,14 @@ export class AircraftManufacturerComponent implements OnInit {
         });
 
     }
+    // UpdateActiveManufacture() {
+    //     this.aircraftManufacurerService.updateActive(this.aircraftManufacturerTypeToUpdateActive.aircraftTypeId).subscribe(response => {
+    //         this.alertService.showMessage("Success", 'Aircraft manufacturer removed successfully.', MessageSeverity.success);
+    //         // this.updatePaginatorState(); // previously after update we used to call getAll now we can this method to get required list
+    //         this.loadData();
+    //         this.dismissModel();
+    //     });
+    // }
     resetAddAircraftManufacturer(): void {
         this.currentAircraftManufacturerType = new AircraftType();
     }
@@ -232,22 +241,49 @@ export class AircraftManufacturerComponent implements OnInit {
     }
 
     confirmDelete(content, id): void {
-        this.aircraftManufacturerTypeToRemove = Object.assign({}, this.aircraftManufacturerPagination.filter(function (manufacturer) {
+        this.aircraftManufacturerTypeToRemove = Object.assign({}, this.allmanufacturerInfo.filter(function (manufacturer) {
             return manufacturer.aircraftTypeId == id;
         })[0]);;
         this.modal = this.modalService.open(content, { size: 'sm' });
     }
     openView(viewData, id): void {
-        this.aircraftManufacturertoview = Object.assign({}, this.aircraftManufacturerPagination.filter(function (manufacturer) {
+        this.aircraftManufacturertoview = Object.assign({}, this.allmanufacturerInfo.filter(function (manufacturer) {
             return manufacturer.aircraftTypeId == id;
         })[0]);;
         console.log(this.aircraftManufacturertoview);
         this.modal = this.modalService.open(viewData, { size: 'sm' });
     }
-    toggleIsActive(assetStatus: any, event): void {
-        this.aircraftManufacturerTypeToUpdate = assetStatus;
-        this.aircraftManufacturerTypeToUpdate.isActive = event.checked == false ? false : true;
-        this.updateAircraftManufacturer();
+    updateStatus(rowData){
+        const data = {
+            AircraftTypeId : rowData.aircraftTypeId,
+            Description : rowData.description,
+            Memo : rowData.memo,
+            MasterCompanyId :  1,
+
+       }
+       this.modal = this.modalService.open(rowData, { size: 'sm' });
+              this.aircraftManufacurerService.updateActive(data).subscribe(response => { 
+
+        })
+    }
+    toggleIsActive(rowData: any): void {
+        const data = {
+             AircraftTypeId : rowData.AircraftTypeId,
+             Description : rowData.Description,
+             Memo : rowData.Memo,
+             MasterCompanyId :  1,
+ 
+        }
+        // this.aircraftManufacturerTypeToUpdateActive = assetStatus;
+        // this.aircraftManufacturerTypeToUpdateActive.isActive = assetStatus.isActive;
+        // this.aircraftManufacturerTypeToRemove = Object.assign({}, this.allmanufacturerInfo.filter(function (manufacturer) {
+        //     return manufacturer.aircraftTypeId == id;
+        // })[0]);;
+        this.modal = this.modalService.open(rowData, { size: 'sm' });
+        // this.aircraftManufacurerService.updateActive(data).subscribe(response => { 
+
+        // })
+        // this.UpdateActiveManufacture();
     }
 
     showAuditPopup(template, manufacturerId): void {

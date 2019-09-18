@@ -40,6 +40,10 @@ export class UnitOfMeasureService {
         return Observable.forkJoin(
             this.unitofmeasureEndpoint.getUnitOfMeasureEndpoint<UnitOfMeasure[]>());
     }
+    getAllUnitofMeasureList() {
+        return Observable.forkJoin(
+            this.unitofmeasureEndpoint.getAllUnitOfMeasureEndpoint<any>());
+    }
     newUnitOfMeasure(unitofmeasure: UnitOfMeasure) {
         return this.unitofmeasureEndpoint.getNewUnitOfMeasureEndpoint<UnitOfMeasure>(unitofmeasure);
     }

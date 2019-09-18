@@ -39,8 +39,8 @@ export class AircraftManufacturerService {
     remove(aircraftManufacturerId: number) {
         return this.aircraftManufacturerEndpoint.removeAircraftManufacturerById(aircraftManufacturerId);
     }
-    updateActive(aircraftManufacturer: any) {
-        return this.aircraftManufacturerEndpoint.getUpdateForActive(aircraftManufacturer, aircraftManufacturer.aircraftTypeId);
+    updateActive(data: any) {
+        return this.aircraftManufacturerEndpoint.getUpdateForActive(data, data.AircraftTypeId);
     }
     getAudit(aircraftManufacturerId: number) {
         return this.aircraftManufacturerEndpoint.getAudit<any[]>(aircraftManufacturerId);

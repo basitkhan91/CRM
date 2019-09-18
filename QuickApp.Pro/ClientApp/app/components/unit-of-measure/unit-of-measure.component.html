@@ -40,33 +40,29 @@
                                     </div>
                                 </div>
                             </ng-template>
-                            <ng-template pTemplate="colgroup" let-columns>
-                                <colgroup>
-                                    <col *ngFor="let col of columns" style="width:140px">
-                                </colgroup>
-                            </ng-template>
+                         
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
-                                    <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                    <th  style="width:120px" *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                         {{col.header}}
                                         <p-sortIcon [field]="col.field"></p-sortIcon>
                                     </th>
-                                    <th style="width:180px;position:sticky"></th>
+                                    <th style="width:200px;position:sticky"></th>
                                 </tr>
                                 <tr>
-                                    <th *ngFor="let col of columns" [ngSwitch]="col.field">
-                                        <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                                    <th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                        <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field,'contains')">
                                     </th>
-                                    <th style="width:180px;position:sticky"></th>
+                                    <th style="width:200px;position:sticky"></th>
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="body" let-rowData let-columns="columns">
                                 <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openEdits(rowData)">
-                                    <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                                    <td style="width:120px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                         {{col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?
                                         (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                     </td>
-                                    <td style="width:180px">
+                                    <td style="width:200px">
                                         <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)"
                                             [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                         <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)"
@@ -99,8 +95,8 @@
                             <ng-template pTemplate="summary" id="footer">
                                 <label id="footer" class="footer">No'of records:</label>
                                 <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
-                                <label id="footer" class="footer1">Pages Count:</label>
-                                <input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" />
+                                <!-- <label id="footer" class="footer1">Pages Count:</label>
+                                <input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" /> -->
                             </ng-template>
                         </p-table>
                     </div>
