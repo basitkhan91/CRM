@@ -717,6 +717,21 @@ namespace QuickApp.Pro.Controllers
                     }
                     _unitOfWork.itemMaster.Add(itemmaserObj);
                     _unitOfWork.SaveChanges();
+
+                    /*Master Item Parts */
+                    MasterParts masterParts = new MasterParts();
+                    masterParts.Description = itemmaserObj.PartDescription;
+                    masterParts.ItemMasterId = itemmaserObj.ItemMasterId;
+                    masterParts.PartNumber = itemmaserObj.PartNumber;
+                    masterParts.MasterCompanyId = itemmaserObj.MasterCompanyId;
+                    masterParts.UpdatedBy=masterParts.CreatedBy = itemmaserObj.CreatedBy;
+                    masterParts.UpdatedDate = masterParts.CreatedDate = itemmaserObj.CreatedDate;
+                    masterParts.IsActive = true;
+                    masterParts.IsDeleted = false;
+                    
+
+                    _unitOfWork.CommonRepository.CreateMasterParts(masterParts);
+
                     try
                     {
                         if (itemMasterViewModel.IntegrationPortalId != null)
@@ -1006,6 +1021,20 @@ namespace QuickApp.Pro.Controllers
 
                 _unitOfWork.itemMaster.Update(itemmaserObj);
                 _unitOfWork.SaveChanges();
+
+                /*Master Item Parts */
+                MasterParts masterParts = new MasterParts();
+                masterParts.Description = itemmaserObj.PartDescription;
+                masterParts.ItemMasterId = itemmaserObj.ItemMasterId;
+                masterParts.PartNumber = itemmaserObj.PartNumber;
+                masterParts.MasterCompanyId = itemmaserObj.MasterCompanyId;
+                masterParts.UpdatedBy = masterParts.CreatedBy = itemmaserObj.CreatedBy;
+                masterParts.UpdatedDate = masterParts.CreatedDate = itemmaserObj.CreatedDate;
+                masterParts.IsActive = true;
+                masterParts.IsDeleted = false;
+
+
+                _unitOfWork.CommonRepository.UpdateMasterParts(masterParts);
                 return Ok(itemmaserObj);
             }
 
@@ -1026,6 +1055,7 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.itemMaster.Update(itemmaserObj);
                 _unitOfWork.SaveChanges();
 
+                _unitOfWork.CommonRepository.DeleteMasterParts(id, itemmaserObj.UpdatedBy);
             }
 
 

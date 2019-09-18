@@ -253,6 +253,9 @@ namespace DAL
       
         IAssetCapes AssetCapes { get; }
 
+        IFileUploadRepository FileUploadRepository { get; }
+
+
         void SaveChanges(Employee employeeobject);
     }
 }

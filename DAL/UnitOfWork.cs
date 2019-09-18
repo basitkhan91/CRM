@@ -10,10 +10,13 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using DAL.Common;
 using DAL.Models;
 using DAL.Repositories;
 using DAL.Repositories.Interfaces;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace DAL
 {
@@ -193,11 +196,14 @@ namespace DAL
 
         ICustomerAircraftMapping _customerAircraftMapping;
 
+        IFileUploadRepository _fileUploadRepository { get; set; }
+
         IAssetCapes _assetCapes;
         
-        public UnitOfWork(ApplicationDbContext context)
+        public UnitOfWork(ApplicationDbContext context, IOptions<AppSettings> appSettings)
         {
             _context = context;
+            _appSettings = appSettings;
         }
 
 
@@ -1695,6 +1701,17 @@ namespace DAL
                 if (_assetCapes == null)
                     _assetCapes = new AssetCapesRepository(_context);
                 return _assetCapes;
+            }
+        }
+
+        IOptions<AppSettings> _appSettings;
+        public IFileUploadRepository FileUploadRepository
+        {
+            get
+            {
+                if (_fileUploadRepository == null)
+                    _fileUploadRepository = new FileUploadRepository(_context, _appSettings);
+                return _fileUploadRepository;
             }
         }
     }

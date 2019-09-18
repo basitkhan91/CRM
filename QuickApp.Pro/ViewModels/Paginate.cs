@@ -60,8 +60,8 @@ namespace QuickApp.Pro.ViewModels
 
 		public string CustomerPhone { get; set; }
 
-
-	}
+        public string CustomerClarifiacationName { get; set; }
+    }
     #endregion
 
     #region unitOfMeasure

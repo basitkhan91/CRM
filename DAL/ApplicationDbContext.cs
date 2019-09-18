@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using DAL.Models.Interfaces;
+using DAL.Common;
 
 namespace DAL
 {
@@ -367,6 +368,14 @@ namespace DAL
         public DbSet<CustomerATAMapping> CustomerATAMapping { get; set; }
         public DbSet<AssetCapes> AssetCapes { get; set; }
         public DbSet<AssetCapesAudit> AssetCapesAudit { get; set; }
+
+        public DbSet<CustomerInternationalShipping> CustomerInternationalShipping { get; set; }
+        public DbSet<ShippingViaDetails> ShippingViaDetails { get; set; }
+        public DbSet<Attachment> Attachment { get; set; }
+        public DbSet<AttachmentDetails> AttachmentDetails { get; set; }
+        public DbSet<ClassificationMapping> ClassificationMapping { get; set; }
+        public DbSet<RestrictedParts> RestrictedParts { get; set; }
+        public DbSet<MasterParts> MasterParts { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
