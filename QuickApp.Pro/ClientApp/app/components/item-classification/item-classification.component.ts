@@ -184,7 +184,7 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
         this.loadingIndicator = false;
 
     }
-
+   
 	open(content) {
 		this.disableSave = false;
 		this.disableClassdesc = false;
@@ -478,7 +478,7 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
 
         }
 
-        this.updatePaginatorState();
+        this.loadData();
     }
 
 
@@ -510,7 +510,7 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 
-        this.updatePaginatorState();
+        this.loadData();
 
     }
 
@@ -600,85 +600,85 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
         
     }
 
-    updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
-    {
-        this.paginatorState = {
-            rows: this.rows,
-            first: this.first
-        }
-        if (this.paginatorState) {
-            this.loadItemClassification(this.paginatorState);
-        }
-    }
+    // updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
+    // {
+    //     this.paginatorState = {
+    //         rows: this.rows,
+    //         first: this.first
+    //     }
+    //     if (this.paginatorState) {
+    //         this.loadItemClassification(this.paginatorState);
+    //     }
+    // }
 
-    inputFiledFilter(event, filed, matchMode) {
-        this.first = 0;
-        this.event = event;
-        this.field = filed;
-        this.matvhMode = matchMode;
+    // inputFiledFilter(event, filed, matchMode) {
+    //     this.first = 0;
+    //     this.event = event;
+    //     this.field = filed;
+    //     this.matvhMode = matchMode;
 
-        if (filed == 'itemClassificationCode') {
-            this.itemClassificationCodeInputFieldValue = event;
-        }
-        if (filed == 'description') {
-            this.descriptionInputFieldValue = event;
-        }
-        if (filed == 'itemType') {
-            this.itemTypeInputFieldValue = event;
-        }
-        if (filed == 'memo') {
-            this.memoInputFieldValue = event;
-        }
-        if (filed == 'createdBy') {
-            this.createdByInputFieldValue = event;
-        }
-        if (filed == 'updatedBy') {
-            this.updatedByInputFieldValue = event;
-        }
-        this.itemClassification.push({
-            ItemClassificationCode: this.itemClassificationCodeInputFieldValue,
-            Description: this.descriptionInputFieldValue,
-            ItemType: this.itemTypeInputFieldValue,
-            Memo: this.memoInputFieldValue,
-            CreatedBy: this.createdByInputFieldValue,
-            UpdatedBy: this.updatedByInputFieldValue,
-            first: this.first,
-            page: 10,
-            pageCount: 10,
-            rows: this.rows,
-            limit: 5
-        })
-        if (this.itemClassification) {
-            this.workFlowtService.getServerPages(this.itemClassification[this.itemClassification.length - 1]).subscribe( //we are sending event details to service
-                pages => {
-                    this.itemClassificationPaginationList = pages;
-                    this.itemClassificationPagination = this.itemClassificationPaginationList[0].itemClassificationList;
-                    this.totalRecords = this.itemClassificationPaginationList[0].totalRecordsCount;
-                    this.totelPages = Math.ceil(this.totalRecords / this.rows);
-                });
-        }
-        else {
-        }
-    }
-    eventPage(data) {
-        this.property = data.field;
-        this.itemClassificationPaginationList = this.sortData(this.itemClassificationPaginationList, this.property, false);
+    //     if (filed == 'itemClassificationCode') {
+    //         this.itemClassificationCodeInputFieldValue = event;
+    //     }
+    //     if (filed == 'description') {
+    //         this.descriptionInputFieldValue = event;
+    //     }
+    //     if (filed == 'itemType') {
+    //         this.itemTypeInputFieldValue = event;
+    //     }
+    //     if (filed == 'memo') {
+    //         this.memoInputFieldValue = event;
+    //     }
+    //     if (filed == 'createdBy') {
+    //         this.createdByInputFieldValue = event;
+    //     }
+    //     if (filed == 'updatedBy') {
+    //         this.updatedByInputFieldValue = event;
+    //     }
+    //     this.itemClassification.push({
+    //         ItemClassificationCode: this.itemClassificationCodeInputFieldValue,
+    //         Description: this.descriptionInputFieldValue,
+    //         ItemType: this.itemTypeInputFieldValue,
+    //         Memo: this.memoInputFieldValue,
+    //         CreatedBy: this.createdByInputFieldValue,
+    //         UpdatedBy: this.updatedByInputFieldValue,
+    //         first: this.first,
+    //         page: 10,
+    //         pageCount: 10,
+    //         rows: this.rows,
+    //         limit: 5
+    //     })
+    //     if (this.itemClassification) {
+    //         this.workFlowtService.getServerPages(this.itemClassification[this.itemClassification.length - 1]).subscribe( //we are sending event details to service
+    //             pages => {
+    //                 this.itemClassificationPaginationList = pages;
+    //                 this.itemClassificationPagination = this.itemClassificationPaginationList[0].itemClassificationList;
+    //                 this.totalRecords = this.itemClassificationPaginationList[0].totalRecordsCount;
+    //                 this.totelPages = Math.ceil(this.totalRecords / this.rows);
+    //             });
+    //     }
+    //     else {
+    //     }
+    // }
+    // eventPage(data) {
+    //     this.property = data.field;
+    //     this.itemClassificationPaginationList = this.sortData(this.itemClassificationPaginationList, this.property, false);
 
-        console.log(this.property);
-        console.log(data);
-    }
+    //     console.log(this.property);
+    //     console.log(data);
+    // }
 
-    sortData(array: any[], property: string, isNumber: boolean) {
-        var collection;
-        if (isNumber) {
-            return array.sort((item1, item2) => {
-                return (item1[property] > item2[property]) ? 1 : -1;
-            });
-        } else {
-            return array.sort((item1, item2) => {
-                return (item1[property].toLowerCase() > item2[property].toLowerCase()) ? 1 : -1;
-            });
-        }
-    }
+    // sortData(array: any[], property: string, isNumber: boolean) {
+    //     var collection;
+    //     if (isNumber) {
+    //         return array.sort((item1, item2) => {
+    //             return (item1[property] > item2[property]) ? 1 : -1;
+    //         });
+    //     } else {
+    //         return array.sort((item1, item2) => {
+    //             return (item1[property].toLowerCase() > item2[property].toLowerCase()) ? 1 : -1;
+    //         });
+    //     }
+    // }
 
 }

@@ -73,7 +73,7 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
     }
     ngOnInit(): void {
         this.cols = [           
-            { field: 'portalURL', header: 'Website Url' },
+            { field: 'portalUrl', header: 'Website Url' },
             { field: 'description', header: 'Integration' },
             { field: 'memo', header: 'Memo' },
             { field: 'createdBy', header: 'Created By' },

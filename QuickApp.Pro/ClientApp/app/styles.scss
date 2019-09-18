@@ -11644,7 +11644,7 @@ table thead tr th:first-child input, table tr td:first-child input {
     p-autocomplete .ui-autocomplete input.ui-inputtext {
         color: #333 !important;
     }
-
+     
     .ui-autocomplete-items li.ui-autocomplete-list-item .ui-helper-clearfix {
         border-bottom: none !important;
     }
@@ -12900,7 +12900,7 @@ button {
     /* component workflow list css */
     p-multiselect {
         display: block;
-        height: 32px;
+        height: 32px !important;
         padding: 5px 12px;
         font-size: 14px;
         line-height: 1.42857143;
@@ -12933,7 +12933,19 @@ button {
     p-multiselect label {
         margin-left: 10px !important;
     }
-
+   .p-Multiselect-cstm .ui-multiselect-filter-container{
+    display: block;
+    height: 32 !important;
+    padding: 3px 12px !important;
+    font-size: 14px !important;
+    line-height: 1.42857143 !important;
+    color: #555 !important;
+    background-color: #fff !important;
+    border-radius: 4px !important;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s !important;
+}
     p-multiselect .ui-multiselect-filter-container {
         margin-left: 10px !important;
         margin-top: 11px !important;
@@ -13802,6 +13814,7 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     font-weight: bold;
     font-size: 16px !important;
     color: #295d92 !important;
+    margin-left: 6px;
 }
 .pas-table-cstm tr th {
     padding: 8px 4px !important;
@@ -13956,6 +13969,7 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .p-autocomplete-ctsm .ui-autocomplete .ui-autocomplete-panel{
     width: 100% !important;
 }
+
 .p-dropdown-custom .ui-dropdown label.ui-dropdown-label {
     text-align: left;
     font-size: 12px !important;
@@ -13977,9 +13991,25 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     text-align: left;
     font-size: 12px !important;
 }
+.p-Treetable-view .ui-treetable .ui-treetable-tbody > tr > td{
+    font-size: 11px;
+}
+.p-Tree-checkbox .ui-chkbox .ui-chkbox-box{
+ margin-top: -6px !important;
+}
+.p-Tree-checkbox .ui-chkbox .ui-chkbox-box.ui-state-active{
+    border: 1px solid #a6a6a6 !important;
+    color:  #333333 !important;
+}
+.p-Tree-checkbox .ui-chkbox .ui-chkbox-box .ui-chkbox-icon {   
+    position: relative;
+    margin-left: -4px !important;
+    margin-top: -2px !important;   
+}
 .pub-multi3 {
     width: 100%;
 }
+
 
 .pub-multi3 .ui-chkbox {
     float: left;

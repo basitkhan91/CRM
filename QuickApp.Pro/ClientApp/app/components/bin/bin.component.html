@@ -19,11 +19,11 @@
 									<p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" selectedItemsLabel="{0} columns selected"
 									 [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
 
-									<div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
+									<!-- <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
 										<i class="fa fa-search"></i>
 										<input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')"
 										 placeholder="Global Filter">
-									</div>
+									</div> -->
 									<button type="button" class="btn btn-primary-cstm " pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
 									<button type="button" class="btn btn-primary-cstm " pButton icon="fa-download" iconPos="left" label="Export Selection Only"
 									 (click)="dt.exportCSV({selectionOnly:true})"></button>
@@ -268,7 +268,7 @@
 					</div>
 				</div>
 				<div class="col-sm-6" *ngIf="showManagement">
-					<p-treeTable [value]="gridData" [columns]="cols1" [(selection)]="selectedNodeTest">
+					<p-treeTable [value]="gridData" [columns]="cols1" class="p-Treetable-view" [(selection)]="selectedNodeTest">
 						<ng-template pTemplate="header" let-columns>
 							<tr>
 								<th *ngFor="let col of columns">
@@ -280,7 +280,7 @@
 							<tr>
 								<td *ngFor="let col of columns; let i = index">
 									<p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
-									<p-treeTableCheckbox [value]="rowNode" *ngIf="i == 0" (click)="managementStructureClick(rowData)"></p-treeTableCheckbox>
+									<p-treeTableCheckbox class="p-Tree-checkbox" [value]="rowNode" *ngIf="i == 0" (click)="managementStructureClick(rowData)"></p-treeTableCheckbox>
 									{{rowData[col.field]}}
 								</td>
 							</tr>
