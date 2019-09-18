@@ -10,7 +10,7 @@ namespace DAL.Repositories
     public class CommonRepository : Repository<Contact>, ICommonRepository
     {
         public CommonRepository(ApplicationDbContext context) : base(context)
-        {
+        { 
         }
         public IEnumerable<ContactList> GetVendorContactsList(long vendorId)
         {
