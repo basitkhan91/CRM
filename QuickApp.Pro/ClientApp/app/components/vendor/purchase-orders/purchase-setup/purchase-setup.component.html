@@ -44,7 +44,7 @@
                                         <option *ngFor="let priorityName of allPriorityInfo" [ngValue]="priorityName.priorityId">{{priorityName.description}}</option>
                                     </select> -->
                                     <p-autoComplete field="description" class="pautocomp-cstm" 
-                                    [(ngModel)]="sourcePoApproval.priorityId" name="priorityId" [suggestions]="allPriorityDetails" 
+                                    [(ngModel)]="sourcePoApproval.priorityId" name="priorityName" [suggestions]="allPriorityDetails" 
                                     (completeMethod)="filterPriorityNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" #priorityId="ngModel" 
                                     errorMessage="Records not found" [forceSelection]="true" required>                                       
                                     </p-autoComplete>
@@ -72,7 +72,7 @@
                                     <p-autoComplete field="vendorName" class="pautocomp-cstm" (onKeyUp)=eventHandler($event) 
                                     [(ngModel)]="sourcePoApproval.vendorId" name="vendorName" [suggestions]="vendorNames" 
                                     (completeMethod)="filterVendorNames($event)" [size]="30" [minLength]="1" [dropdown]="true" 
-                                    (onSelect)="selectedVendorName($event)" errorMessage="Records not found" [forceSelection]="true" #vendorName=ngModel required>
+                                    errorMessage="Records not found" [forceSelection]="true" #vendorName=ngModel required>
                                         <!-- <ng-template let-vendorName pTemplate="item">
                                             <div class="ui-helper-clearfix">{{vendorName}}</div>
                                         </ng-template> -->
@@ -208,9 +208,10 @@
                                 </div>
                                 <div class="card-body" style="padding: 12px 12px 4px;">
                                     <div class="form-group">
-                                        <select class="form-control" name="company name" [(ngModel)]="sourcePoApproval.masterCompanyId" (change)="getBUList(sourcePoApproval.masterCompanyId)" #mCompanyName required>
+                                        <select class="form-control" name="company" [(ngModel)]="sourcePoApproval.masterCompanyId" 
+                                        (change)="getBUList(sourcePoApproval.masterCompanyId)" #mCompanyName required>
                                             <option value="0">Select Company</option>
-                                            <option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                            <option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
                                         </select>
                                         <div *ngIf="mCompanyName.invalid && (mCompanyName.dirty || mCompanyName.touched)" class="alert alert-danger alert-danger-cstm">
                                                 <div *ngIf="mCompanyName.errors.required">
@@ -327,7 +328,7 @@
                             <th style="padding-bottom: 2px !important;min-width: 50px;">
                                 <span class="checkbox-cstm">
                                     <label style="width: 20px;">
-                                        <input type="checkbox" name="checkAllPartsList" [(ngModel)]="checkAllPartsList" (click)="checkAllPartDetails()">
+                                        <input type="checkbox" name="checkAllPartsList" [(ngModel)]="checkAllPartsList" #checkAllPartsList1> <!--checkAllPartDetails()-->
                                         <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                     </label>
                                 </span>
@@ -365,7 +366,7 @@
                                 <td>
                                     <span class="checkbox-cstm">
                                         <label style="width: 20px;">
-                                            <input type="checkbox">
+                                            <input type="checkbox" name="checkPartList" [checked]="checkAllPartsList1.checked">
                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                         </label>
                                     </span>
@@ -472,8 +473,7 @@
                                 <td><input type="text" class="form-control" [(ngModel)]="partList.foreignExchangeRate" name="foreignExchangeRate" pKeyFilter="pint"></td>
                                 <td>
                                     <p-autoComplete field="symbol" class="pautocomp-cstm"
-                                    [(ngModel)]="partList.transactionalCurrencyId" name="transactionalCurrencyId" [suggestions]="functionalTransList" 
-                                    (completeMethod)="filterTransCurrency($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" 
+                                    [(ngModel)]="partList.transactionalCurrencyId" name="transactionalCurrencyId" [suggestions]="functionalTransList" (completeMethod)="filterTransCurrency($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" [disabled]=true
                                     >                                       
                                     </p-autoComplete> 
                                     <!-- <select class="form-control" [(ngModel)]="partList.transactionalCurrencyId" name="transactionalCurrencyId">
@@ -484,6 +484,7 @@
                                 <td><input type="text" class="form-control" [(ngModel)]="partList.repairOrderId" name="repairOrderId"></td>
                                 <td><input type="text" class="form-control" [(ngModel)]="partList.salesOrderId" name="salesOrderId"></td>
                                 <td style="min-width: 90px;">
+                                    <label style="width:90px;">Company:</label>
                                     <select class="form-control" [(ngModel)]="partList.companyId" name="companyName{{row_index}}" (change)="onPartCompanyChange(partList)" #pcompanyName required>
                                         <option value="0">Select</option>
                                         <option *ngFor="let company of mainPartcompanylist" value="{{company.managementStructureId}}">{{company.code}}</option>
@@ -495,18 +496,21 @@
                                     </div> 
                                 </td>
                                 <td style="min-width: 90px;">
+                                    <label style="width:90px;">BU:</label>
                                     <select class="form-control" [(ngModel)]="partList.partBusinessUnitId" name="BU{{row_index}}" (change)="onPartBusinessUnitChange(partList)">
                                         <option value="0">Select</option>
                                         <option *ngFor="let businessUnit of partList.partBulist" value="{{businessUnit.managementStructureId}}">{{businessUnit.code}}</option>
                                     </select>
                                 </td>
                                 <td style="min-width: 90px;">
+                                    <label style="width:90px;">Division:</label>
                                     <select class="form-control" [(ngModel)]="partList.partDivisionId" name="division{{row_index}}" (change)="onPartDivisionChange(partList)">
                                         <option value="0">Select</option>
                                         <option *ngFor="let division of partList.partDivisionList" value="{{division.managementStructureId}}">{{division.code}}</option>
                                     </select>
                                 </td>
                                 <td style="min-width: 90px;">
+                                    <label style="width:90px;">Dept:</label>
                                     <select class="form-control" [(ngModel)]="partList.partDepartmentId" name="dept{{row_index}}" (change)="onPartDepartmentChange(partList)">
                                         <option value="0">Select</option>
                                         <option *ngFor="let department of partList.partDepartmentList " value="{{department.managementStructureId}}">{{department.code}}</option>
@@ -625,6 +629,7 @@
                                 <td><input class="form-control" type="text" pKeyFilter="pint" [(ngModel)]="partChildList.quantityOrdered" name="quantityOrdered" /></td>
                                 <td><p-calendar class="pcal-cpo-grid" [showIcon]="true" [(ngModel)]="partChildList.needByDate" name="needByDate"></p-calendar></td>
                                 <td>
+                                    <label style="width:90px;">Company:</label>
                                     <select class="inner-addon right-addon autosuggesions-add inline-block mw400"
                                             name="companyName{{row_no}}"
                                             [(ngModel)]="partChildList.companyId"
@@ -634,6 +639,7 @@
                                     </select>
                                 </td>
                                 <td>
+                                    <label style="width:90px;">BU:</label>
                                     <select class="inner-addon right-addon autosuggesions-add inline-block mw400"
                                             name="BU{{row_no}}"
                                             [(ngModel)]="partChildList.partBusinessUnitId"
@@ -643,6 +649,7 @@
                                     </select>
                                 </td>
                                 <td>
+                                    <label style="width:90px;">Division:</label>
                                     <select class="inner-addon right-addon autosuggesions-add inline-block mw400"
                                             name="division{{row_no}}"
                                             [(ngModel)]="partChildList.partDivisionId"
@@ -655,6 +662,7 @@
                                     </select>
                                 </td>
                                 <td>
+                                    <label style="width:90px;">Dept:</label>
                                     <select class="inner-addon right-addon autosuggesions-add inline-block mw400"
                                             name="dept{{row_no}}"
                                             [(ngModel)]="partChildList.partDepartmentId"
@@ -771,7 +779,7 @@
                                     </ng-template>
                                 </p-autoComplete>-->
                                 <p-autoComplete field="vendorName" class="pautocomp-cstm"
-                                                (onKeyUp)=eventHandler($event) [(ngModel)]="sourcePoApproval.shipToUserName" name="vendor name" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onVendorselectedForShipTo($event)" errorMessage="Records not found" [forceSelection]="true" #shipVendorName="ngModel" required>
+                                                (onKeyUp)=eventHandler($event) [(ngModel)]="sourcePoApproval.shipToUserName" name="shipVendorName" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onVendorselectedForShipTo($event)" errorMessage="Records not found" [forceSelection]="true" #shipVendorName="ngModel" required>
                                     <!-- <ng-template let-vendorName pTemplate="item">
                                         <div class="ui-helper-clearfix">{{vendorName}}</div>
                                     </ng-template> -->
@@ -789,7 +797,7 @@
                         </div>
                         <div class="form-row" *ngIf="sourcePoApproval.shipToUserType==3">
                             <div class="col-sm-12">
-                                <input class="form-control" type="text" name="shipToUserName" [(ngModel)]="sourcePoApproval.shipToUserName" pInputText #shipCompanyName="ngModel" required>
+                                <input class="form-control" type="text" name="shipCompanyName" [(ngModel)]="sourcePoApproval.shipToUserName" pInputText #shipCompanyName="ngModel" required>
                                 <div *ngIf="shipCompanyName.invalid && (shipCompanyName.dirty || shipCompanyName.touched)" class="alert alert-danger alert-danger-cstm">
                                         <div *ngIf="shipCompanyName.errors.required">
                                             <small> Company Name is required </small>
@@ -804,9 +812,11 @@
                             <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="openedit(contentEdit)"></a></span>
                             <span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" data-toggle="modal" data-target="#edit-shipto" (click)="openEditissued(contentmodel,selectedValue1)"></a></span>
                         </label>
-                        <select class="form-control" (change)="getValueforShipTo(selectedValue1)" name="selectedValue1" [(ngModel)]="selectedValue1" #shipCusSiteName="ngModel" required>
+                        <select class="form-control" (change)="getValueforShipTo(sourcePoApproval , sourcePoApproval.shipToAddressId)" name="shipCusSiteName" 
+                        [(ngModel)]="sourcePoApproval.shipToAddressId" #shipCusSiteName="ngModel" required>
                             <option>-- Select --</option>
-                            <option *ngFor="let object of shipToCusData" [ngValue]="object">{{object.siteName}}</option>
+                            <option *ngFor="let object of shipToCusData" 
+                            [ngValue]="object.customerShippingAddressId">{{object.siteName}}</option>
                         </select>
                         <div *ngIf="shipCusSiteName.invalid && (shipCusSiteName.dirty || shipCusSiteName.touched)" class="alert alert-danger alert-danger-cstm">
                                 <div *ngIf="shipCusSiteName.errors.required">
@@ -820,9 +830,11 @@
                             <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="openSiteedit(contentSiteEdit)"></a></span>
                             <span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" data-toggle="modal" data-target="#edit-shipto" (click)="openEditissued(contentmodel,selectedValue1)"></a></span>
                         </label>
-                        <select class="form-control" (change)="getValueforShipTo(selectedValue1)" name="selectedValue1" [(ngModel)]="selectedValue1" #shipVenSiteName="ngModel" required>
+                        <select class="form-control" (change)="getValueforShipTo(sourcePoApproval ,sourcePoApproval.shipToAddressId)" name="shipVenSiteName" 
+                        [(ngModel)]="sourcePoApproval.shipToAddressId" #shipVenSiteName="ngModel" required>
                             <option>-- Select --</option>
-                            <option *ngFor="let object of vendorSelected" [ngValue]="object">{{object.siteName}}   </option>
+                            <option *ngFor="let object of vendorSelected"  
+                            [ngValue]="object.vendorShippingAddressId">{{object.siteName}}   </option>
                         </select>
                         <div *ngIf="shipVenSiteName.invalid && (shipVenSiteName.dirty || shipVenSiteName.touched)" class="alert alert-danger alert-danger-cstm">
                                 <div *ngIf="shipVenSiteName.errors.required">
@@ -836,7 +848,7 @@
                             <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="openedit(contentSiteEdit)"></a></span>
                             <span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" data-toggle="modal" data-target="#edit-shipto" (click)="openEditissued(contentmodel,selectedValue1)"></a></span>
                         </label>
-                        <select class="form-control" (change)="siteValueChange(selectedValue1)" name="selectedValue1" [(ngModel)]="selectedValue1" #shipCompSiteName="ngModel" required>
+                        <select class="form-control" (change)="siteValueChange(selectedValue1)" name="shipCompSiteName" [(ngModel)]="selectedValue1" #shipCompSiteName="ngModel" required>
                             <option>-- Select --</option>
                             <option *ngFor="let site of allManagementSiteData" [ngValue]="site.siteId">{{site.siteName}}</option>
                         </select>
@@ -983,9 +995,9 @@
                             <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="openeditmodel(content)"></a></span>
                             <span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" data-toggle="modal" data-target="#edit-billto" (click)="openEditissued1(cmodel,selectedValue2)"></a></span>
                         </label>
-                        <select class="form-control" (change)="getValueforBillTo(selectedValue2)" name="selectedValue2" [(ngModel)]="selectedValue2" #billCusSiteName="ngModel" required>
+                        <select class="form-control" (change)="getValueforBillTo(sourcePoApproval , sourcePoApproval.billToAddressId)" name="billCusSiteName" [(ngModel)]="sourcePoApproval.billToAddressId" #billCusSiteName="ngModel" required>
                             <option>-- Select --</option>
-                            <option *ngFor="let object of billToCusData" [ngValue]="object">{{object.siteName}} </option>
+                            <option *ngFor="let object of billToCusData" [ngValue]="object.customerShippingAddressId">{{object.siteName}} </option>
                         </select>
                         <div *ngIf="billCusSiteName.invalid && (billCusSiteName.dirty || billCusSiteName.touched)" class="alert alert-danger alert-danger-cstm">
                                 <div *ngIf="billCusSiteName.errors.required">
@@ -999,9 +1011,9 @@
                             <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="openeditmodel(content)"></a></span>
                             <span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" data-toggle="modal" data-target="#edit-billto" (click)="openEditissued1(cmodel,selectedValue2)"></a></span>
                         </label>
-                        <select class="form-control" (change)="getValueforBillTo(selectedValue2)" name="selectedValue2" [(ngModel)]="selectedValue2" #billVendorSiteName="ngModel" required>
+                        <select class="form-control" (change)="getValueforBillTo(sourcePoApproval , sourcePoApproval.billToAddressId)" name="billVendorSiteName" [(ngModel)]="sourcePoApproval.billToAddressId" #billVendorSiteName="ngModel" required>
                             <option>-- Select --</option>
-                            <option *ngFor="let object of vendorSelectedForBillTo" [ngValue]="object">{{object.siteName}} </option>
+                            <option *ngFor="let object of vendorSelectedForBillTo" [ngValue]="object.vendorShippingAddressId">{{object.siteName}} </option>
                         </select>
                         <div *ngIf="billVendorSiteName.invalid && (billVendorSiteName.dirty || billVendorSiteName.touched)" class="alert alert-danger alert-danger-cstm">
                                 <div *ngIf="billVendorSiteName.errors.required">
@@ -1015,7 +1027,7 @@
                             <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="openeditmodel(content)"></a></span>
                             <span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" data-toggle="modal" data-target="#edit-billto" (click)="openEditissued1(cmodel,selectedValue2)"></a></span>
                         </label>
-                        <select class="form-control" (change)="siteValueChange1(selectedValue2)" name="selectedValue2" [(ngModel)]="selectedValue2" #billCompSiteName="ngModel" required>
+                        <select class="form-control" (change)="siteValueChange1(selectedValue2)" name="billCompSiteName" [(ngModel)]="selectedValue2" #billCompSiteName="ngModel" required>
                             <option>-- Select --</option>
                             <option *ngFor="let site of allManagementSiteData" [ngValue]="site.siteId">{{site.siteName}}</option>
                         </select>
@@ -2113,7 +2125,7 @@
     
     </ng-template>
     
-    <ng-template #contentMultipleParts let-c="close" let-d="dismiss" style="width:auto">
+    <!-- <ng-template #contentMultipleParts let-c="close" let-d="dismiss" style="width:auto">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -2123,7 +2135,6 @@
                 <div class="modal-body">
     
     
-                    <!--<form method="post" id="" name="">-->
     
                     <p>
                         <span class="col-sm-3"><b>List of PN's (Saperated by Comma): </b></span>
@@ -2133,33 +2144,26 @@
                     <table class="table table-bordered table-striped multiple-pns-table">
                         <thead>
                             <tr>
-                                <!--<th>Enterd Part</th>-->
                                 <th>PN</th>
                                 <th>Description</th>
                                 <th>Item Type</th>
                                 <th>Hazardous Material</th>
                                 <th>Manufacturer</th>
-                                <!--<th>Aircraft Manufacturer</th>
-                                <th>NSN</th>-->
                                 <th>Priority</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let obj of returnPartsListArray">
-                                <!--<th>{{obj.enterdPart}}</th>-->
                                 <td>{{obj.partNumber}}</td>
                                 <td>{{obj.description}}</td>
                                 <td>{{obj.itemTypeId}}</td>
                                 <td>{{obj.isHazardousMaterial}}</td>
                                 <td>{{obj.manufacturerId}}</td>
-                                <!--<td>{{obj.partNumber}}</td>
-                                <td>{{obj.partNumber}}</td>-->
                                 <td>{{obj.priorityId}}</td>
                                 <td></td>
                             </tr>
                             <tr *ngFor="let obj of array">
-                                <!--<th>{{obj.enterdPart}}</th>-->
                                 <td>{{obj}}</td>
                                 <td></td>
                                 <td></td>
@@ -2172,7 +2176,6 @@
                         </tbody>
                     </table>
     
-                    <!--</form>-->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success" data-dismiss="modal" (click)="addAvailableParts()">Add Available Parts</button>
@@ -2180,7 +2183,7 @@
                 </div>
             </div>
         </div>
-    </ng-template>
+    </ng-template> -->
     
     <!-- Site Template -->
     
@@ -2445,6 +2448,7 @@
                         <span class="col-sm-7 "><textarea class="form-control" [(ngModel)]="partNumbers"></textarea></span>
                         <span class="col-sm-2"><button type="button" class="btn btn-primary height40 black-search-button multiple-pns-search-btn btn-cstm" (click)="getAllparts()"><i class="fa fa-search"></i></button></span>
                     </p>
+                    <form #addMultiPNTable="ngForm">                   
                     <div class="table-responsive pas-table-cstm">
                         <table class="table table-bordered ">
                             <thead>
@@ -2452,7 +2456,7 @@
                                     <th style="padding-bottom: 0 !important;">
                                         <span class="checkbox-cstm">
                                             <label style="width: 20px;">
-                                                <input type="checkbox">
+                                                <input type="checkbox" name="addAllMultiPN" #addAllMultiPN>
                                                 <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                             </label>
                                         </span>
@@ -2469,11 +2473,11 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let obj of returnPartsListArray">
+                                <tr *ngFor="let obj of returnPartsListArray; let row_no=index;">
                                     <td>
                                         <span class="checkbox-cstm" *ngIf="!multiplePNDetails">
                                             <label style="width: 20px;margin-top: 5px;">
-                                                <input type="checkbox">
+                                                <input type="checkbox" name="addAllMultiPNRows{{row_no}}" [checked]="addAllMultiPN.checked">
                                                 <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                             </label>
                                         </span>
@@ -2491,8 +2495,21 @@
                                     <td>{{obj.priorityId === null ? '-':obj.priorityId}}</td>
                                     <td><a href="#" class="clr-red" target="_blank" *ngIf="multiplePNDetails" (click)="onAddPartNum()">Add Part Number</a></td>
                                 </tr>
+                                <tr *ngFor="let obj of array">
+                                    <!--<th>{{obj.enterdPart}}</th>-->
+                                    <td></td>
+                                    <td style="padding: 6px;">{{obj}}</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><a [routerLink]="['/itemmastersmodule/itemmasterpages/app-item-master-stock']" class="clr-red" target="_blank">Add Part Number</a></td> <!--onAddPartNum()-->
+                                </tr>
                                 <!-- TODO: Remove dummy content -->
-                                <tr *ngIf="returnPartsListArray !== null">
+                                <!-- <tr *ngIf="returnPartsListArray !== null">
                                     <td></td>
                                     <td style="padding: 6px;">PN98510</td>
                                     <td></td>
@@ -2503,22 +2520,13 @@
                                     <td></td>
                                     <td></td>
                                     <td><a href="#" class="clr-red" target="_blank" (click)="onAddPartNum()">Add Part Number</a></td>
-                                </tr>
+                                </tr> -->
                                 <!-- ./TODO: Remove dummy content -->
-                                <!--<tr *ngFor="let obj of array">
-                                    <th>{{obj.enterdPart}}</th>
-                                    <td>{{obj}}</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-    
-                                    <td></td>
-                                    <td style="color:red">Add Part Number</td>
-                                </tr>-->
+
                             </tbody>
                         </table>
                     </div>
+                </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="addAvailableParts()">Add Available Parts</button>
