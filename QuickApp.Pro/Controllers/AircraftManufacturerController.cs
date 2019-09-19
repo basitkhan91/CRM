@@ -115,23 +115,23 @@ namespace QuickApp.Pro.Controllers
                 }
             }
 
-            [HttpPut("updateActive/{id}")]
-            public IActionResult UpdateAircraftManufacturer(long id, [FromBody] AircraftType aircraftmanufacturer)
+        [HttpPut("updateActive/{id}")]
+        public IActionResult UpdateAircraftManufacturer(long id, [FromBody] AircraftType aircraftmanufacturer)
+        {
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
+                if (aircraftmanufacturer != null)
                 {
-                    if (aircraftmanufacturer != null)
-                    {
-                        var existingResult = unitOfWork.Repository<AircraftType>().Find(x => x.AircraftTypeId == id).FirstOrDefault();
-                        aircraftmanufacturer.UpdatedDate = DateTime.Now;
-                        existingResult.IsActive = aircraftmanufacturer.IsActive;
-                        unitOfWork.Repository<AircraftType>().Update(aircraftmanufacturer);
-                        unitOfWork.SaveChanges();
-                        return Ok();
-                    }
+                    var existingResult = unitOfWork.Repository<AircraftType>().Find(x => x.AircraftTypeId == id).FirstOrDefault();
+                    existingResult.UpdatedDate = DateTime.Now;
+                    existingResult.IsActive = aircraftmanufacturer.IsActive;
+                    unitOfWork.Repository<AircraftType>().Update(existingResult);
+                    unitOfWork.SaveChanges();
+                    return Ok();
                 }
-                return Ok(ModelState);
             }
+            return Ok(ModelState);
+        }
 
         [HttpGet("audits/{id}")]
         public IActionResult AuditDetails(long id)
