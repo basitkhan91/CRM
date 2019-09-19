@@ -24,6 +24,9 @@ import { Site } from '../../../../models/site.model';
 import { CreatePOPartsList, PartDetails } from '../../../../models/create-po-partslist.model';
 import { NgForm } from '@angular/forms';
 import * as $ from 'jquery';
+import { GlAccountService } from '../../../../services/glAccount/glAccount.service';
+import { GlAccount } from '../../../../models/GlAccount.model';
+import { getValueFromObjectByKey, getObjectByValue, getValueFromArrayOfObjectById, getObjectById } from '../../../../generic/autocomplete';
 
 @Component({
 	selector: 'app-purchase-setup',
@@ -188,9 +191,12 @@ export class PurchaseSetupComponent {
 	purchaseOrderId: any;
 	purchaseOrderPartRecordId: any;
 	glAccountTemp: any;
+	//addAllMultiPNRows: boolean = false;
+	allGlInfo: GlAccount[];
+	selectedMasterCompany: any;
 
 	/** po-approval ctor */
-	constructor(public siteService: SiteService, public warehouseService: WarehouseService, private masterComapnyService: MasterComapnyService, public cusservice: CustomerService, private itemser: ItemMasterService, private modalService: NgbModal, private route: Router, public legalEntityService: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public vendorService: VendorService, public priority: PriorityService, private alertService: AlertService) {
+	constructor(public siteService: SiteService, public warehouseService: WarehouseService, private masterComapnyService: MasterComapnyService, public cusservice: CustomerService, private itemser: ItemMasterService, private modalService: NgbModal, private route: Router, public legalEntityService: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public vendorService: VendorService, public priority: PriorityService, private alertService: AlertService ,public glAccountService: GlAccountService) {
 
 		this.loadcustomerData();
 		this.loadData();
@@ -373,6 +379,7 @@ export class PurchaseSetupComponent {
 		this.employeedata();
 		this.ptnumberlistdata();
 		this.loadcustomerData();
+		this.glAccountData();
 		this.sourcePoApproval.masterCompanyId = 0;
 		this.sourcePoApproval.buid1 = 0;
 		this.sourcePoApproval.divid1 = 0;
@@ -413,6 +420,21 @@ export class PurchaseSetupComponent {
 		);
 	}
 
+	private glAccountData() {
+		this.glAccountService.getAll().subscribe(
+            results => this.onGlAccountLoad(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+	}
+
+	private onGlAccountLoad(getGlList: GlAccount[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+		this.allGlInfo = getGlList;
+		console.log(this.allGlInfo)
+    }
+
+
 	private getAddresses() {
 
 		this.vendorService.getSiteAddresses().subscribe(
@@ -452,6 +474,9 @@ export class PurchaseSetupComponent {
 							//}
 						}
 
+					} 
+					else {
+						 return this.array;
 					}
 
 				});
@@ -472,10 +497,10 @@ export class PurchaseSetupComponent {
 		} 
 		else {
 			this.userName = 'admin';
-		this.sourcePoApproval.vendorId = this.tempVendorId;
+		// this.sourcePoApproval.vendorId = this.tempVendorId;
 		this.sourcePoApproval.createdBy = this.userName;
 		this.sourcePoApproval.updatedBy = this.userName;
-		this.sourcePoApproval.masterCompanyId = 1;
+		// this.sourcePoApproval.masterCompanyId = 1;
 
 		if (!this.sourcePoApproval.deferredReceiver) {
 			this.sourcePoApproval.deferredReceiver = 0;
@@ -487,6 +512,12 @@ export class PurchaseSetupComponent {
 	
 		this.vendorService.savePurchaseorder({
 			...this.sourcePoApproval,
+
+			// shipToAddressId: getValueFromObjectByKey('customerShippingAddressId' , this.sourcePoApproval.shipToAddressId ),
+			// billToAddressId : getValueFromObjectByKey('customerShippingAddressId' , this.sourcePoApproval.billToAddressId ),
+			masterCompanyId : 1,
+			managementStructureId : getValueFromArrayOfObjectById( 'managementStructureId', 'managementStructureId' ,  this.sourcePoApproval.masterCompanyId , this.maincompanylist),
+			vendorId : getValueFromObjectByKey('vendorId', this.sourcePoApproval.vendorId),
 			purchaseOrderId : this.purchaseOrderId,
 			priorityId: this.sourcePoApproval.priorityId.priorityId !== undefined ? this.sourcePoApproval.priorityId.priorityId : 0,
 			creditTermsId: this.sourcePoApproval.creditTermsId !== undefined ? this.sourcePoApproval.creditTermsId.creditTermsId : 0
@@ -711,7 +742,8 @@ export class PurchaseSetupComponent {
 								parentdata.name = this.partWithId.name;
 								parentdata.itemMasterId = this.partWithId.itemMasterId;
 								parentdata.glAccountId = this.partWithId.glAccountId;
-								//parentdata.glAccountId = autoCompleteBindById(this.partWithId.glAccountId);
+								//parentdata.glAccountId = this.autoCompleteBindById('glAccountId', this.partWithId.glAccountId, this.allGlInfo);
+								console.log(parentdata.glAccountId)
 								parentdata.shortName = this.partWithId.shortName;
 								parentdata.listPrice = this.partWithId.listPrice; //Initial Value
 								parentdata.purchaseDiscountOffListPrice = this.partWithId.purchaseDiscountOffListPrice; //Percentage
@@ -761,7 +793,7 @@ export class PurchaseSetupComponent {
 						discountPerUnit: this.partListData[i].discountPerUnit,
 						discountCostPerUnit: this.partListData[i].discountCostPerUnit,
 						extendedCost: this.partListData[i].extendedCost,
-						transactionalCurrencyId: this.partListData[i].transactionalCurrencyId,
+						transactionalCurrencyId: this.partListData[i].transactionalCurrencyId.currencyId,
 						functionalCurrencyId: this.partListData[i].functionalCurrencyId.currencyId,
 						foreignExchangeRate: this.partListData[i].foreignExchangeRate,
 						workOrderId: this.partListData[i].workOrderId,
@@ -829,7 +861,7 @@ export class PurchaseSetupComponent {
 										//discountPerUnit: this.partListData[i].discountPerUnit,
 										//discountCostPerUnit: this.partListData[i].discountCostPerUnit,
 										//extendedCost: this.partListData[i].extendedCost,
-										transactionalCurrencyId: this.partListData[i].transactionalCurrencyId,
+										transactionalCurrencyId: this.partListData[i].transactionalCurrencyId.currencyId,
 										functionalCurrencyId: this.partListData[i].functionalCurrencyId.currencyId,
 										//foreignExchangeRate: this.partListData[i].foreignExchangeRate,
 										//workOrderId: this.partListData[i].workOrderId,
@@ -889,7 +921,7 @@ export class PurchaseSetupComponent {
 										//discountPerUnit: this.partListData[i].discountPerUnit,
 										//discountCostPerUnit: this.partListData[i].discountCostPerUnit,
 										//extendedCost: this.partListData[i].extendedCost,
-										transactionalCurrencyId: this.partListData[i].transactionalCurrencyId,
+										transactionalCurrencyId: this.partListData[i].transactionalCurrencyId.currencyId,
 										functionalCurrencyId: this.partListData[i].functionalCurrencyId.currencyId,
 										//foreignExchangeRate: this.partListData[i].foreignExchangeRate,
 										//workOrderId: this.partListData[i].workOrderId,
@@ -956,7 +988,7 @@ export class PurchaseSetupComponent {
 						discountPerUnit: this.partListData[i].discountPerUnit,
 						discountCostPerUnit: this.partListData[i].discountCostPerUnit,
 						extendedCost: this.partListData[i].extendedCost,
-						transactionalCurrencyId: this.partListData[i].transactionalCurrencyId,
+						transactionalCurrencyId: this.partListData[i].transactionalCurrencyId.currencyId,
 						functionalCurrencyId: this.partListData[i].functionalCurrencyId.currencyId,
 						foreignExchangeRate: this.partListData[i].foreignExchangeRate,
 						workOrderId: this.partListData[i].workOrderId,
@@ -1021,7 +1053,7 @@ export class PurchaseSetupComponent {
 									//discountPerUnit: this.partListData[i].discountPerUnit,
 									//discountCostPerUnit: this.partListData[i].discountCostPerUnit,
 									//extendedCost: this.partListData[i].extendedCost,
-									transactionalCurrencyId: this.partListData[i].transactionalCurrencyId,
+									transactionalCurrencyId: this.partListData[i].transactionalCurrencyId.currencyId,
 									functionalCurrencyId: this.partListData[i].functionalCurrencyId.currencyId,
 									//foreignExchangeRate: this.partListData[i].foreignExchangeRate,
 									//workOrderId: this.partListData[i].workOrderId,
@@ -1093,7 +1125,7 @@ export class PurchaseSetupComponent {
 					discountPerUnit: this.partListData[i].discountPerUnit,
 					discountCostPerUnit: this.partListData[i].discountCostPerUnit,
 					extendedCost: this.partListData[i].extendedCost,
-					transactionalCurrencyId: this.partListData[i].transactionalCurrencyId,
+					transactionalCurrencyId: this.partListData[i].transactionalCurrencyId.currencyId,
 					functionalCurrencyId: this.partListData[i].functionalCurrencyId.currencyId,
 					foreignExchangeRate: this.partListData[i].foreignExchangeRate,
 					workOrderId: this.partListData[i].workOrderId,
@@ -1159,7 +1191,7 @@ export class PurchaseSetupComponent {
 								//discountPerUnit: this.partListData[i].discountPerUnit,
 								//discountCostPerUnit: this.partListData[i].discountCostPerUnit,
 								//extendedCost: this.partListData[i].extendedCost,
-								transactionalCurrencyId: this.partListData[i].transactionalCurrencyId,
+								transactionalCurrencyId: this.partListData[i].transactionalCurrencyId.currencyId,
 								functionalCurrencyId: this.partListData[i].functionalCurrencyId.currencyId,
 								//foreignExchangeRate: this.partListData[i].foreignExchangeRate,
 								//workOrderId: this.partListData[i].workOrderId,
@@ -1277,7 +1309,7 @@ export class PurchaseSetupComponent {
 		this.cusservice.getCustomerShipAddressGet(customer.customerId).subscribe(returnedcustomerAddressses => {
 			this.spiltshipmentData = returnedcustomerAddressses[0];
 			part.addressData = returnedcustomerAddressses[0];
-			part.poPartSplitAddressId = 0;
+			//part.poPartSplitAddressId = 0;
 		});
 
 	}
@@ -1586,7 +1618,9 @@ export class PurchaseSetupComponent {
 
 	}
 	getBUList(masterCompanyId) {
-		this.sourcePoApproval.managementStructureId = masterCompanyId; //Saving Management Structure Id if there Company Id
+		// this.selectedMasterCompany = masterCompanyId;
+	
+		// this.sourcePoApproval.managementStructureId = masterCompanyId; //Saving Management Structure Id if there Company Id
 
 		this.bulist = [];
 		this.departmentList = [];
@@ -1834,12 +1868,16 @@ export class PurchaseSetupComponent {
 
 	addAvailableParts() {
 		this.partListData.splice(0, 1);
+		console.log(this.returnPartsListArray);
 
 		for (let i = 0; i < this.returnPartsListArray.length; i++) {
 
 			this.partListData.push(this.defaultPartListObj(true));
 			this.getMultiplParts(this.partListData[i], this.returnPartsListArray[i])
 		}
+		this.partNumbers = null;
+		this.returnPartsListArray = [];
+		this.array = [];
 		this.modal.close();
 	}
 	addPartNumber() {
@@ -1940,31 +1978,44 @@ export class PurchaseSetupComponent {
 	private loadCurrencyData() {
 
 		this.currencyService.getCurrencyList().subscribe(currencydata => {
+			console.log(currencydata)
 			this.allCurrencyData = currencydata[0];
 		})
 
 
 	}
-	getValueforShipTo(data) {
-		this.shipToAddress = data;
-		if (data.customerShippingAddressId) {
-			this.sourcePoApproval.shipToAddressId = data.customerShippingAddressId;
+	getValueforShipTo(data , id) {
+		console.log(data , id);
+
+		if(data.billToUserType == 1){
+			this.shipToAddress = getObjectById('customerShippingAddressId' , id , this.shipToCusData ) ;
+		}else if(data.billToUserType == 2){
+			this.shipToAddress = getObjectById('vendorShippingAddressId' , id , this.vendorSelected ) ;
 		}
-		else {
-			this.sourcePoApproval.shipToAddressId = data.vendorShippingAddressId;
-		}
-		console.log(data);
+		// if (data.customerShippingAddressId) {
+		// 	this.sourcePoApproval.shipToAddressId = data.customerShippingAddressId;
+		// }
+		// else {
+		// 	this.sourcePoApproval.shipToAddressId = data.vendorShippingAddressId;
+		// }
+		// console.log(data);
 	}
 
-	getValueforBillTo(data) {
-		this.billToAddress = data;
-		if (data.customerShippingAddressId) {
-			this.sourcePoApproval.billToAddressId = data.customerShippingAddressId;
+	getValueforBillTo(data, id) {
+		console.log(data , id);
+		if(data.billToUserType == 1){
+			this.billToAddress = getObjectById('customerShippingAddressId' , id , this.billToCusData ) ;
+		}else if(data.billToUserType == 2){
+			this.billToAddress = getObjectById('vendorShippingAddressId' , id , this.billToCusData ) ;
 		}
-		else {
-			this.sourcePoApproval.billToAddressId = data.vendorShippingAddressId;
-		}
-		console.log(data);
+	
+		// if (data.customerShippingAddressId) {
+		// 	this.sourcePoApproval.billToAddressId = data.customerShippingAddressId;
+		// }
+		// else {
+		// 	this.sourcePoApproval.billToAddressId = data.vendorShippingAddressId;
+		// }
+		// console.log(data);
 	}
 
 	onVendorselected(partChildList, event) //Calling For Vendor Ship Data
@@ -2145,13 +2196,13 @@ export class PurchaseSetupComponent {
 
 	selectedVendorName(value) {
 		console.log(value);
-		this.tempVendorId = value.vendorId;
+		// this.tempVendorId = value.vendorId;
 		this.sourcePoApproval.vendorName = value.vendorName;
 		this.sourcePoApproval.vendorCode = value.vendorCode;
 		this.sourcePoApproval.firstName = this.getVendorContactsListByID(value.vendorId);
 		console.log(this.sourcePoApproval.firstName)
 		this.sourcePoApproval.workPhone = value.vendorPhone;
-		this.sourcePoApproval.terms = value.creditLimit
+		this.sourcePoApproval.terms = value.creditLimit;
 		// this.sourcePoApproval.creditLimit = value.creditTermsId;
 		this.sourcePoApproval.creditTermsId = this.autoCompleteBindById('creditTermsId', value.creditTermsId, this.allcreditTermInfo);		
 		
@@ -2827,19 +2878,23 @@ export class PurchaseSetupComponent {
 		this.partListData.splice(index, 1);
 	}
 
-	checkAllPartDetails() {
-		this.createPOPartsList.map(x => {
-			if (!this.checkAllPartsList) {
-				x.checkPartList = true;
-			} else {
-				x.checkPartList = false;
-			}
-		})
-	}
+	// checkAllPartDetails() {
+	// 	this.partListData.map(x => {
+	// 		if (!this.checkAllPartsList) {
+	// 			x.checkPartList = true;
+	// 		} else {
+	// 			x.checkPartList = false;
+	// 		}
+	// 	})
+	// }
 
-	onAddPartNum() {
-		this.route.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-stock');
-	}
+	// onAddPartNum() {
+	// 	this.route.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-stock');
+	// }
+
+	// onAddAllMultiPN() {
+	// 	this.addAllMultiPNRows = !this.addAllMultiPNRows;
+	// }
 
 	shipUserType(event) {
 		if (event.target.value === '1') {
