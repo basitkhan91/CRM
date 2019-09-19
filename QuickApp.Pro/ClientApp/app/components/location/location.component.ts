@@ -544,8 +544,7 @@ export class LocationComponent implements OnInit, AfterViewInit {
 
 		this.isEditMode = false;
 		this.isDeleteMode = false;
-		this.isSaving = true;
-		
+		this.isSaving = true;		
 		this.loadMasterCompanies();
 		this.loadManagementdata(); //Calling Management Data
 		this.selectedNodeTest = []; //while Open new Node Data Should Be Empty
@@ -574,6 +573,7 @@ export class LocationComponent implements OnInit, AfterViewInit {
 		this.isEditMode = false;
 		this.isDeleteMode = true;
 		this.sourceLocation = row;
+		this.location_Name = row.name;
 		this.modal = this.modalService.open(content, { size: 'lg' });
 		this.modal.result.then(() => {
 			console.log('When user closes');
@@ -593,7 +593,6 @@ export class LocationComponent implements OnInit, AfterViewInit {
 			this.siteValueChange(row.siteId);
 		}
 		this.name = this.sourceLocation.name;
-
 		//Getting ManagementSite Data
 		this.workFlowtService.getManagementLocationEditData(this.sourceLocation.locationId).subscribe(data11 => {
 			this.localManagementLocationEditCollection = data11; //local SiteManagement Data for Edit Collection
@@ -631,7 +630,6 @@ export class LocationComponent implements OnInit, AfterViewInit {
 
 	//OpenView
 	openView(content, row) {
-
 		this.sourceLocation = row;
 		this.locationId = row.LocationId;
 		this.location_Name = row.name;
@@ -704,8 +702,7 @@ export class LocationComponent implements OnInit, AfterViewInit {
 
 
 	//EditItem
-	editItemAndCloseModel() {
-
+	saveandeditLocation() {
 		// debugger;
 
 		this.isSaving = true;

@@ -18,12 +18,11 @@
 								<div style="text-align: right">
 									<p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" selectedItemsLabel="{0} columns selected"
 									 [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-
-									<div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
+									<!-- <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
 										<i class="fa fa-search"></i>
 										<input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')"
 										 placeholder="Global Filter">
-									</div>
+									</div> -->
 									<button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
 									 iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
 									<button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
@@ -102,119 +101,154 @@
 								<input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" />
 							</ng-template>
 						</p-table>
-						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+</div>
 
 
 
 
-	<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
-		<div class="modal-header">
-			<h4 class="modal-title" *ngIf="isEditMode">Edit Location</h4>
-			<h4 class="modal-title" *ngIf="!isEditMode">Add Location</h4>
-			<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-				<span aria-hidden="true">&times;</span>
-			</button>
-		</div>
+<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
+	<div class="modal-header">
+		<h4 class="modal-title" *ngIf="isEditMode">Edit Location</h4>
+		<h4 class="modal-title" *ngIf="!isEditMode">Add Location</h4>
+		<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
 
-		<div class="modal-body">
-			<form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemAndCloseModel()">
-				<div class="row">
-					<div class="col-md-6">
-
-						<div class="form-group col-sm-12 input-icon1">
-							<label class="control-label col-sm-4">Site Name</label>
-							<div class="inner-addon right-addon autosuggesions-add inline-block">
-								<select [(ngModel)]="sourceLocation.siteId" [ngModelOptions]="{standalone: true}" (change)="siteValueChange($event.target.value)">
+	<div class="modal-body">
+		<form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveandeditLocation()">
+			<div class="col-sm-12">
+				<div class="col-sm-6">
+					<div class="form-group">
+						<div class="col-sm-12">
+							<div class="col-sm-4">
+								<label class="control-label">Site Name
+									<span class="clr-red">*</span>
+								</label>
+							</div>
+							<div class="col-sm-5">
+								<select [(ngModel)]="sourceLocation.siteId" [ngModelOptions]="{standalone: true}" (change)="siteValueChange($event.target.value)" required>
 									<option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option>
-									<!--(onchange)="siteValueChange(site.siteName)"-->
-
 								</select>
 							</div>
 						</div>
-						<div class="form-group col-sm-12 input-icon1">
-							<label class="control-label col-sm-4">Warehouse Name</label>
-							<div class="inner-addon right-addon autosuggesions-add inline-block">
-								<select [(ngModel)]="sourceLocation.warehouseId" [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange(sourceLocation.warehouseId)">
-									<!--[(ngModel)]="sourceWarehouse.siteID"-->
-
+						<div class="col-sm-12">
+							<div class="col-sm-4">
+								<label class="control-label">Warehouse Name
+									<span class="clr-red">*</span>
+								</label>
+							</div>
+							<div class="col-sm-5">
+								<select [(ngModel)]="sourceLocation.warehouseId" [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange(sourceLocation.warehouseId)" required>
 									<option *ngFor="let site of allWareHouses" [ngValue]="site.warehouseId">{{site.warehouseName}}</option>
-									<!--(onchange)="siteValueChange(site.siteName)"-->
-
 								</select>
 							</div>
 						</div>
-						<div class="form-group">
-							<label for="actionname" class="control-label">Location Name
-								<span class="clr-red">*</span>
-							</label>
-							<div class="inner-addon right-addon inline-block">
+						<div class="col-sm-12">
+							<div class="col-sm-4">
+								<label for="actionname" class="control-label">Location Name
+									<span class="clr-red">*</span>
+								</label>
+							</div>
+							<div class="col-sm-5">
 								<p-autoComplete (onSelect)="Manufacturerdescription($event)" (onKeyUp)=ManufacturerHandler($event) (completeMethod)="filtermanufacturer($event)"
 								 [(ngModel)]="name" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" [size]="30" [minLength]="2"
-								 [dropdown]="true">
+								 [dropdown]="true" class="p-autoComplete-ctsm">
 								</p-autoComplete>
 								<div *ngIf="disableSaveManufacturer" class="clr-red">Already Exists</div>
-								<div class="clear"></div>
 							</div>
 						</div>
-						<div *ngIf="showAddress">
-							<div class="form-group">
+						<div class="col-sm-12" *ngIf="showAddress">
+							<div class="col-sm-4">
 								<label for="description" class="control-label">Address Line 1</label>
-								<input disabled placeholder="Address Line 2" minlength="2" required value={{address1}}>
 							</div>
-							<div class="form-group">
+							<div class="col-sm-5">
+								<input class="form-control" type="text" disabled placeholder="Address Line 2" minlength="2" required value={{address1}}>
+							</div>
+						</div>
+						<div class="col-sm-12" *ngIf="showAddress">
+							<div class="col-sm-4">
 								<label for="description" class="control-label">Address Line 2</label>
-								<div class="control-data">
-									<input disabled placeholder="Address Line 2" minlength="2" required value={{address2}}>
-								</div>
+							</div>
+							<div class="col-sm-5">
+								<input disabled class="form-control" type="text" placeholder="Address Line 2" minlength="2" required value={{address2}}>
+							</div>
+						</div>
 
-							</div>
-							<div class="form-group">
+						<div class="col-sm-12" *ngIf="showAddress">
+							<div class="col-sm-4">
 								<label for="description" class="control-label">Address Line 3</label>
-								<div class="control-data">
-									<input disabled placeholder="Address Line 3" minlength="2" required value={{address3}}>
-								</div>
 							</div>
-							<div class="form-group">
+							<div class="col-sm-5">
+								<input class="form-control" type="text" disabled placeholder="Address Line 3" minlength="2" required value={{address3}}>
+							</div>
+						</div>
+
+						<div class="col-sm-12" *ngIf="showAddress">
+							<div class="col-sm-4">
 								<label for="description" class="control-label">City</label>
-								<div class="control-data">
-									<input disabled placeholder="City" minlength="2" required value={{city}}>
-								</div>
-								<div class="clear"></div>
 							</div>
-							<div class="form-group">
-								<label for="description" class="control-label">State</label>
-								<div class="control-data">
-									<input disabled placeholder="State" minlength="2" required value={{stateOrProvince}}>
-								</div>
+							<div class="col-sm-5">
+								<input class="form-control" type="text" disabled placeholder="City" minlength="2" required value={{city}}>
+							 </div>
 							</div>
-							<div class="form-group">
-								<label for="description" class="control-label">Country</label>
-								<div class="control-data">
-									<input disabled placeholder="Country" minlength="2" required value={{country}}>
+
+							<div class="col-sm-12" *ngIf="showAddress">
+								<div class="col-sm-4">
+									<label for="description" class="control-label">State</label>
+								</div>
+								<div class="col-sm-5">
+									<input  class="form-control" type="text" disabled placeholder="State" minlength="2" required value={{stateOrProvince}}>
 								</div>
 							</div>
-							<div class="form-group">
-								<label for="description" class="control-label">Zip Code</label>
-								<div class="control-data">
-									<input disabled placeholder="Zip Code" minlength="2" required value={{postalCode}}>
+
+							<div class="col-sm-12" *ngIf="showAddress">
+								<div class="col-sm-4">
+									<label for="description" class="control-label">Country</label>
+								</div>
+								<div class="col-sm-5">
+									<input  class="form-control" type="text" disabled placeholder="Country" minlength="2" required value={{country}}>
+								</div>
+							</div>
+
+							<div class="col-sm-12" *ngIf="showAddress">
+								<div class="col-sm-4">
+									<label for="description" class="control-label">Zip Code</label>
+								</div>
+								<div class="col-sm-5">
+									<input  class="form-control" type="text" disabled placeholder="Zip Code" minlength="2" required value={{postalCode}}>
+								</div>
+							</div>
+							<div class="col-sm-12">
+								<div class="col-sm-4">
+									<label for="description" class="control-label">Memo</label>
+								</div>
+								<div class="col-sm-5">
+									<textarea name="memo" [(ngModel)]="sourceLocation.memo"></textarea>
 								</div>
 							</div>
 
 						</div>
 						<div class="form-group">
-							<label for="description" class="control-label">Memo</label>
-							<div class="control-data">
-								<input [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLocation.memo" required>
+								<div class="col-sm-7">
+									<div class="checkbox-cstm">
+										<label>
+											<input type="checkbox" name="isActive" #isActive="ngModel" checked id="isActive" [(ngModel)]="sourceLocation.isActive">
+											<span class="cr">
+												<i class="cr-icon pi pi-check"></i>
+											</span>
+											Active
+										</label>
+									</div>
+								</div>
 							</div>
-							<div class="clear"></div>
-						</div>
 					</div>
-					<div class="col-md-6" *ngIf="showManagement">
+					<div class="col-sm-6" *ngIf="showManagement">
 						<p-treeTable [value]="gridData" [columns]="cols1" class="p-Treetable-view" [(selection)]="selectedNodeTest">
 							<ng-template pTemplate="header" let-columns>
 								<tr>
@@ -232,197 +266,194 @@
 									</td>
 								</tr>
 							</ng-template>
-							<!--<ng-template pTemplate="summary">
-				<div style="text-align: left">
-					Selected Nodes: <span *ngIf="!selectedNodeTest || selectedNodeTest.length === 0" style="font-weight: normal">none</span>
-					<ul *ngIf="selectedNodeTest && selectedNodeTest.length">
-						<li *ngFor="let node of selectedNodeTest">
-							<span style="font-weight: normal">{{'Management Id:'+node.data.managementStructureId + '  Code:' + node.data.code + '  Legal Entity ID:' + node.data.legalEntityId}}</span>
-						</li>
-					</ul>
-				</div>
-			</ng-template>-->
 						</p-treeTable>
 					</div>
 				</div>
+
 				<div class="modal-footer">
-
-					<button class="btn btn-success" [disabled]="disableSaveManufacturer">Submit</button>
-					<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+					<button class="btn btn-primary-cstm" [disabled]="!userForm.valid || disableSaveManufacturer">Save</button>
+					<button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
 				</div>
 
-			</form>
+		</form>
 		</div>
-	</ng-template>
+</ng-template>
 
-	<!-- Delete -->
-	<ng-template #content let-c="close" let-d="dismiss">
-		<div class="modal-header">
-			<h4 class="modal-title">Are You Sure Want to Delete ?</h4>
-			<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-				<span aria-hidden="true">&times;</span>
-			</button>
-		</div>
+<!-- Delete -->
+<ng-template #content let-c="close" let-d="dismiss">
+	<div class="modal-header">
+		<h4 class="modal-title">Are You Sure Want to Delete ?</h4>
+		<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<strong>
+			Location Name:
+			<span class="new-label">"{{location_Name}}"</span>
+		</strong>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-primary-cstm" (click)="deleteItemAndCloseModel()">Yes</button>
+		<button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">No</button>
+	</div>
 
-		<div class="modal-footer">
-			<button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
-			<button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
-		</div>
-
-	</ng-template>
-
-
-
-	<!-- History -->
-
-
-	<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
-		<div class="modal-header">
-
-			<h4 class="modal-title">History of Credit Terms</h4>
-			<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-				<span aria-hidden="true">&times;</span>
-			</button>
+</ng-template>
 
 
-		</div>
-		<div class="modal-body">
 
-			<table class="table table-bordered">
-				<thead>
-					<tr>
-						<th>warehouseId</th>
-						<th>siteId</th>
-						<th>Description</th>
-						<th>Previous Value</th>
-						<th>New Value</th>
-						<th>Last Updated By</th>
-						<th>Last Updated Time</th>
-					</tr>
-				</thead>
-				<tr *ngFor="let audit of auditHisory">
-					<td>{{audit.auditHistoryId}}</td>
-					<td>{{audit.columnName}}</td>
-					<td>{{audit.previousValue}}</td>
-					<td>{{audit.newValue}}</td>
-					<td>{{audit.updatedBy}}</td>
-					<td>{{audit.updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</td>
+<!-- History -->
+
+
+<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
+	<div class="modal-header">
+
+		<h4 class="modal-title">History of Credit Terms</h4>
+		<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+
+
+	</div>
+	<div class="modal-body">
+
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>warehouseId</th>
+					<th>siteId</th>
+					<th>Description</th>
+					<th>Previous Value</th>
+					<th>New Value</th>
+					<th>Last Updated By</th>
+					<th>Last Updated Time</th>
 				</tr>
-			</table>
+			</thead>
+			<tr *ngFor="let audit of auditHisory">
+				<td>{{audit.auditHistoryId}}</td>
+				<td>{{audit.columnName}}</td>
+				<td>{{audit.previousValue}}</td>
+				<td>{{audit.newValue}}</td>
+				<td>{{audit.updatedBy}}</td>
+				<td>{{audit.updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</td>
+			</tr>
+		</table>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+	</div>
+</ng-template>
+
+<!-- View -->
+
+<ng-template #view class="modal fade " id="view" role="dialog">
+
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
+			<h4 class="modal-title">Location Details</h4>
+		</div>
+		<div class="modal-body viewform">
+			<div class="col-sm-6">
+				<p>
+					<span class="label">
+						<b> Location Name : </b>
+					</span>
+					<span class="value">{{location_Name}}</span>
+				</p>
+				<p>
+					<span class="label">
+						<b> Warehouse Name : </b>
+					</span>
+					<span class="value">{{warehouseName}}</span>
+				</p>
+				<p>
+					<span class="label">
+						<b> Site Name : </b>
+					</span>
+					<span class="value">{{siteName}}</span>
+				</p>
+				<p>
+					<span class="label">
+						<b> Address1: </b>
+					</span>
+					<span class="value">{{address1}}</span>
+				</p>
+				<p>
+					<span class="label">
+						<b> Address2: </b>
+					</span>
+					<span class="value">{{address2}}</span>
+				</p>
+				<p>
+					<span class="label">
+						<b> Address3: </b>
+					</span>
+					<span class="value">{{address3}}</span>
+				</p>
+				<p>
+					<span class="label">
+						<b> City: </b>
+					</span>
+					<span class="value">{{city}}</span>
+				</p>
+				<p>
+					<span class="label">
+						<b> State: </b>
+					</span>
+					<span class="value">{{stateOrProvince}}</span>
+				</p>
+			</div>
+			<div class="col-sm-6">
+				<p>
+					<span class="label">
+						<b> Country: </b>
+					</span>
+					<span class="value">{{country}}</span>
+				</p>
+				<p>
+					<span class="label">
+						<b> ZipCode: </b>
+					</span>
+					<span class="value">{{postalCode}}</span>
+				</p>
+				<p>
+					<span class="label">
+						<b>Memo: </b>
+					</span>
+					<span class="value">{{memo}}</span>
+				</p>
+				<p>
+					<span class="label">
+						<b>Created By: </b>
+					</span>
+					<span class="value">{{createdBy}}</span>
+				</p>
+				<p>
+					<span class="label">
+						<b>Created Date: </b>
+					</span>
+					<span class="value">{{createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
+				</p>
+				<p>
+					<span class="label">
+						<b>Updated By: </b>
+					</span>
+					<span class="value">{{updatedBy}}</span>
+				</p>
+				<p>
+					<span class="label">
+						<b>Updated Date: </b>
+					</span>
+					<span class="value">{{updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
+				</p>
+			</div>
+
+			<div class="clear"></div>
 		</div>
 		<div class="modal-footer">
-			<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+			<button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
 		</div>
-	</ng-template>
+	</div>
 
-	<!-- View -->
-
-	<ng-template #view class="modal fade " id="view" role="dialog">
-
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-				<h4 class="modal-title">Location Details</h4>
-			</div>
-			<div class="modal-body viewform">
-				<div class="col-sm-6">
-					<p>
-						<span class="label">
-							<b> Location Name : </b>
-						</span>
-						<span class="value">{{location_Name}}</span>
-					</p>
-					<p>
-						<span class="label">
-							<b> Warehouse Name : </b>
-						</span>
-						<span class="value">{{warehouseName}}</span>
-					</p>
-					<p>
-						<span class="label">
-							<b> Site Name : </b>
-						</span>
-						<span class="value">{{siteName}}</span>
-					</p>
-					<p>
-						<span class="label">
-							<b> Address1: </b>
-						</span>
-						<span class="value">{{address1}}</span>
-					</p>
-					<p>
-						<span class="label">
-							<b> Address2: </b>
-						</span>
-						<span class="value">{{address2}}</span>
-					</p>
-					<p>
-						<span class="label">
-							<b> Address3: </b>
-						</span>
-						<span class="value">{{address3}}</span>
-					</p>
-					<p>
-						<span class="label">
-							<b> City: </b>
-						</span>
-						<span class="value">{{city}}</span>
-					</p>
-					<p>
-						<span class="label">
-							<b> State: </b>
-						</span>
-						<span class="value">{{stateOrProvince}}</span>
-					</p>
-					<p>
-						<span class="label">
-							<b> Country: </b>
-						</span>
-						<span class="value">{{country}}</span>
-					</p>
-					<p>
-						<span class="label">
-							<b> ZipCode: </b>
-						</span>
-						<span class="value">{{postalCode}}</span>
-					</p>
-					<p>
-						<span class="label">
-							<b>Memo: </b>
-						</span>
-						<span class="value">{{memo}}</span>
-					</p>
-					<p>
-						<span class="label">
-							<b>Created By: </b>
-						</span>
-						<span class="value">{{createdBy}}</span>
-					</p>
-					<p>
-						<span class="label">
-							<b>Created Date: </b>
-						</span>
-						<span class="value">{{createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
-					</p>
-					<p>
-						<span class="label">
-							<b>Updated By: </b>
-						</span>
-						<span class="value">{{updatedBy}}</span>
-					</p>
-					<p>
-						<span class="label">
-							<b>Updated Date: </b>
-						</span>
-						<span class="value">{{updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
-					</p>
-				</div>
-
-				<div class="clear"></div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
-			</div>
-		</div>
-
-	</ng-template>
+</ng-template>

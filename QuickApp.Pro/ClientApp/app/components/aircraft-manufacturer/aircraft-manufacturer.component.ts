@@ -24,6 +24,7 @@ export class AircraftManufacturerComponent implements OnInit {
     paginatorState: any;
     loadingIndicator: boolean;
     AuditDetails: any[];
+    public sourceAction : any;
     /** aircraft-manufacturer ctor */
     allComapnies: MasterCompany[] = [];
     currentAircraftManufacturerType: AircraftType;
@@ -268,10 +269,10 @@ export class AircraftManufacturerComponent implements OnInit {
     }
     toggleIsActive(rowData: any): void {
         const data = {
-             AircraftTypeId : rowData.AircraftTypeId,
-             Description : rowData.Description,
-             Memo : rowData.Memo,
-             MasterCompanyId :  1,
+             aircraftTypeId : rowData.AircraftTypeId,
+             description : rowData.Description,
+             memo : rowData.Memo,
+             masterCompanyId :  1,
  
         }
         // this.aircraftManufacturerTypeToUpdateActive = assetStatus;
@@ -284,6 +285,19 @@ export class AircraftManufacturerComponent implements OnInit {
 
         // })
         // this.UpdateActiveManufacture();
+    }
+    handleChange(rowData: any) {
+           this.sourceAction = rowData;           
+            this.Active = "In Active";
+            this.sourceAction.isActive == false;
+           this.aircraftManufacurerService.updateActive(this.sourceAction).subscribe(
+               data =>{
+                   console.log(data);
+               }
+           )
+            //alert(e);
+        
+
     }
 
     showAuditPopup(template, manufacturerId): void {
