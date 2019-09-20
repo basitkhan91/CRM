@@ -312,7 +312,7 @@
 
                 <p-accordion [multiple]="true" class="p-accordion-cstm">
                     <p-accordionTab *ngFor="let task of addedTasks" header="{{task.Name}}" (click)="onAccordTabClick1()">
-                        <div *ngIf="sourceWorkFlow.publication.length > 0">
+                        <div *ngIf="task.publication.length > 0">
                             <h5 class="po-head">Publications</h5>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-fixed wfl-table-popup-cstm">
@@ -337,7 +337,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr *ngFor="let publication of sourceWorkFlow.publication;let i = index">
+                                        <tr *ngFor="let publication of task.publication;let i = index">
                                             <td>{{(i+1)}}</td>
                                             <td>{{publication.publicationId}}</td>
                                             <td>{{publication.publicationDescription}}</td>
@@ -359,7 +359,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div *ngIf="sourceWorkFlow.measurements.length > 0">
+                        <div *ngIf="task.measurements.length > 0">
                             <h5 class="po-head">Measurements</h5>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-fixed wfl-table-popup-cstm">
@@ -377,7 +377,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr *ngFor="let measurement of sourceWorkFlow.measurements;let i = index">
+                                        <tr *ngFor="let measurement of task.measurements;let i = index">
                                             <td>{{(i+1)}}</td>
                                             <td>{{measurement.PartName}}</td>
                                             <td>{{measurement.sequence}}</td>
@@ -392,7 +392,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div *ngIf="sourceWorkFlow.exclusions.length > 0">
+                        <div *ngIf="task.exclusions.length > 0">
                             <h5 class="po-head">Exclusions</h5>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-fixed wfl-table-popup-cstm">
@@ -409,7 +409,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr *ngFor="let exclusion of sourceWorkFlow.exclusions;let i = index">
+                                        <tr *ngFor="let exclusion of task.exclusions;let i = index">
                                             <td>{{(i+1)}}</td>
                                             <td>{{exclusion.partNumber}}</td>
                                             <td>{{exclusion.partDescription}}</td>
@@ -433,7 +433,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div *ngIf="sourceWorkFlow.directions.length > 0">
+                        <div *ngIf="task.directions.length > 0">
                             <h5 class="po-head">Directions</h5>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-fixed wfl-table-popup-cstm">
@@ -447,7 +447,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr *ngFor="let direction of sourceWorkFlow.directions;let i = index">
+                                        <tr *ngFor="let direction of task.directions;let i = index">
                                             <td>{{(i + 1)}}</td>
                                             <td>{{direction.action}}</td>
                                             <td>{{direction.description}}</td>
@@ -458,7 +458,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div *ngIf="sourceWorkFlow.expertise.length > 0">
+                        <div *ngIf="task.expertise.length > 0">
                             <h5 class="po-head">Expertise</h5>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-fixed wfl-table-popup-cstm">
@@ -475,7 +475,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr *ngFor="let expertise of sourceWorkFlow.expertise;let i=index">
+                                        <tr *ngFor="let expertise of task.expertise;let i=index">
                                             <td>{{(i+1)}}</td>
                                             <td>{{expertise.expetiseTypeName}}</td>
                                             <td>{{expertise.estimatedHours}}</td>
@@ -499,7 +499,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div *ngIf="sourceWorkFlow.equipments.length > 0">
+                        <div *ngIf="task.equipments.length > 0">
                             <h5 class="po-head">Equipment</h5>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-fixed wfl-table-popup-cstm">
@@ -513,7 +513,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr *ngFor="let equipment of sourceWorkFlow.equipments;let i=index">
+                                        <tr *ngFor="let equipment of task.equipments;let i=index">
                                             <td>{{(i+1)}}</td>
                                             <td>{{equipment.assetName}}</td>
                                             <td>{{equipment.assetTypeName}}</td>
@@ -524,7 +524,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div>
+                        <div *ngIf="task.charges.length > 0">
                             <h5 class="po-head">Charges</h5>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-fixed wfl-table-popup-cstm">
@@ -542,7 +542,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr *ngFor="let charge of sourceWorkFlow.charges;let i=index">
+                                        <tr *ngFor="let charge of task.charges;let i=index">
                                             <td>{{(i+1)}}</td>
                                             <td>{{charge.chargesTypeName}}</td>
                                             <td>{{charge.description}}</td>
@@ -568,7 +568,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div >
+                        <div *ngIf="task.materialList.length > 0">
                             <h5 class="po-head">Material List</h5>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-fixed wfl-table-popup-cstm">
@@ -590,7 +590,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr *ngFor="let material of sourceWorkFlow.materialList;let i = index">
+                                        <tr *ngFor="let material of task.materialList;let i = index">
                                             <td>{{(i+1)}}</td>
                                             <td>{{material.partNumber}}</td>
                                             <td>{{material.partDescription}}</td>
@@ -636,7 +636,7 @@
                                
                             </p-accordion>-->
                             
-                <h5>Total Cost for the Work Flow : $660.00</h5>
+                <!--<h5>Total Cost for the Work Flow : $660.00</h5>-->
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
