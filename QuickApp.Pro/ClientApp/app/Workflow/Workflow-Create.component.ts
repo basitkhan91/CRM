@@ -301,9 +301,6 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         if (this.sourceWorkFlow.fixedAmount == undefined && this.sourceWorkFlow.percentOfNew == undefined && this.sourceWorkFlow.percentOfReplacement == undefined) {
             this.sourceWorkFlow.berThresholdAmount = 0;
         }
-
-
-
     }
 
     loadWorkFlow() {
@@ -2020,15 +2017,13 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         // this.modal = this.modalService.open(confirmDeleteTemplate, { size: 'sm' });
     }
 
-    removeTask(workFlow : any): void {
+    removeTask(workFlow: any): void {
         this.workFlowList.splice(this.workFlowList.indexOf(workFlow), 1);
     }
 
     dismissModel() {
         this.modal.close();
     }
-
-
 
     private resetWorkflowGrid(): void {
         for (let wf of this.workFlowList) {
@@ -2094,7 +2089,8 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         this.MaterialCost = parseFloat((this.MaterialCost).toFixed(2));
         this.TotalCharges = parseFloat((this.TotalCharges).toFixed(2));
         this.TotalExpertiseCost = parseFloat((this.TotalExpertiseCost).toFixed(2));
-        this.Total = this.MaterialCost + this.TotalCharges + this.TotalExpertiseCost + parseFloat(((this.sourceWorkFlow.otherCost == undefined || this.sourceWorkFlow.otherCost == '') ? 0 : this.sourceWorkFlow.otherCost).toFixed(2));
+        this.Total = parseFloat((this.MaterialCost + this.TotalCharges + this.TotalExpertiseCost + parseFloat(((this.sourceWorkFlow.otherCost == undefined || this.sourceWorkFlow.otherCost == '') ? 0 : this.sourceWorkFlow.otherCost).toFixed(2))).toFixed(2));
         this.PercentBERThreshold = parseFloat((this.Total / this.sourceWorkFlow.berThresholdAmount).toFixed(2));
     }
+
 }
