@@ -1,4 +1,5 @@
-﻿using DAL.Models;
+﻿using DAL.Common;
+using DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -42,8 +43,10 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> searchgetItemATAMappingDataByMultiTypeIdATAIDATASUBID(long ItemMasterid, string ATAChapterId, string ATASubChapterID);
         IEnumerable<object> gePurcSaleByItemMasterID(long ItemMasterid);
 
-
-
+        void DeleteNhaTlaAltEquItemMapping(long id, string updatedBy);
+        void NhaTlaAltEquItemMappingStatus(long id, bool status, string updatedBy);
+        GetData<Nha_Tla_Alt_Equ_ItemMapping_List> NhaTlaAltEquItemMappingList(int mappingType, int pageNumber, int pageSize);
+         Nha_Tla_Alt_Equ_ItemMapping NhaTlaAltEquItemMappingById(long itemMappingId, int mappingType);
 
 
     }

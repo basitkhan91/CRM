@@ -12,7 +12,9 @@ export class SiteEndpoint extends EndpointFactory {
 
 	private readonly _actionsUrl: string = "/api/Site/Get";
 	private readonly _actionsManagemetUrl: string = "/api/Site/GetMangementSite";
-	private readonly _actionsUrlNew: string = "/api/Site/sitesPost";
+    private readonly _actionsUrlNew: string = "/api/Site/sitesAdd";
+    private readonly _actionsUrlUpdate: string = "/api/Site/sitesUpdate";
+    private readonly _actionsUrlDelete: string = "/api/Site/sitesDelete";
 	private readonly _actionsUrlAuditHistory: string = "/api/Site/ataauditHistoryById";
     private readonly _actionsUrlManagementPost: string = "/api/Site/managementSitesPost";
     private readonly getSiteAuditDataById: string = "/api/Site/audits";
@@ -88,8 +90,7 @@ export class SiteEndpoint extends EndpointFactory {
 	
 
 	getUpdateSiteEndpoint<T>(roleObject: any, siteId: number): Observable<T> {
-		let endpointUrl = `${this._actionsUrlNew}/${siteId}`;
-
+        let endpointUrl = `${this._actionsUrlUpdate}/${siteId}`;
 		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
 			.catch(error => {
 				return this.handleError(error, () => this.getUpdateSiteEndpoint(roleObject, siteId));
@@ -108,7 +109,7 @@ export class SiteEndpoint extends EndpointFactory {
 
 
 	getDeleteSiteEndpoint<T>(siteId: number): Observable<T> {
-		let endpointUrl = `${this._actionsUrlNew}/${siteId}`;
+        let endpointUrl = `${this._actionsUrlDelete}/${siteId}`;
 
 		return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
 			.catch(error => {

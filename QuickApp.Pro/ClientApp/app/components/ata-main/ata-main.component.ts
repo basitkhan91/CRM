@@ -34,7 +34,7 @@ import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-scre
 export class AtaMainComponent implements OnInit, AfterViewInit {
     selectedActionName: any;
     disableSave: boolean;
-    actionamecolle: any[] = [];
+    actionamecolle: any[];
     ataChapter_Name: any = "";
     ataChapterCategory = "";
     memo: any = "";
@@ -63,7 +63,7 @@ export class AtaMainComponent implements OnInit, AfterViewInit {
 
     displayedColumns = ['ataChapterId', 'ataChapterCode', 'ataChapterName', 'ataChapterCategory', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
     dataSource: MatTableDataSource<ATAChapter>;
-    allATAMaininfo: any[];
+    allATAMaininfo: any[] = [];
     allComapnies: MasterCompany[] = [];
     private isSaving: boolean;
     public sourceAction: any;
@@ -230,6 +230,7 @@ export class AtaMainComponent implements OnInit, AfterViewInit {
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceAction = row;
+        this.ataChapter_Name = row.ataChapterName;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -332,8 +333,10 @@ export class AtaMainComponent implements OnInit, AfterViewInit {
     }
     eventHandler(event) {
         let value = event.target.value.toLowerCase();
+        console.log(this.selectedActionName)
         if (this.selectedActionName) {
             if (value == this.selectedActionName.toLowerCase()) {
+                console.log("true");
                 this.disableSave = true;
             }
             else {
@@ -344,20 +347,21 @@ export class AtaMainComponent implements OnInit, AfterViewInit {
     }
     partnmId(event) {
 
-        if (this.allATAMaininfo) {
-            for (let i = 0; i < this.allATAMaininfo.length; i++) {
-                if (event == this.allATAMaininfo[i].capabilityName) {
-                    this.sourceAction.ataChapterName = this.allATAMaininfo[i].ataChapterName;
+        for (let i = 0; i < this.capabilityNamecolle.length; i++) {            
+            if (event == this.capabilityNamecolle[i][0].ataChapterName) {
+               this.sourceAction.ataChapterName = this.capabilityNamecolle[i].ataChapterName;
+
                     this.disableSave = true;
-                    this.selectedActionName = event;
+                this.selectedActionName = event;
+               
                 }
-            }
         }
+    
     }
     filterAtamains(event) {
         this.localCollection = [];
         for (let i = 0; i < this.allATAMaininfo.length; i++) {
-            let ataChapterName = this.allATAMaininfo[i].ataChapterName;
+            let ataChapterName = this.allATAMaininfo[i].ataChapterName;            
             if (ataChapterName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                 this.capabilityNamecolle.push([{
                     "ataChapterId": this.allATAMaininfo[i].ataChapterId,

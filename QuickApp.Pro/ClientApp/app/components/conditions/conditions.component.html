@@ -53,7 +53,7 @@
                                 </tr>
                                 <tr>
                                     <th *ngFor="let col of columns" [ngSwitch]="col.field">
-                                        <input style="width:100%;" pInputText type="text" (keydown.enter)="inputFiledFilter($event.target.value, col.field, col.filterMatchMode)">
+                                        <input style="width:100%;" pInputText type="text" (keydown.enter)="inputFiledFilter($event.target.value, col.field, 'contains')">
                                     </th>
                                     <th style="width:150px;position:sticky"></th>
                                 </tr>

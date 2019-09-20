@@ -1,7 +1,7 @@
 USE [PAS_DEV]
 GO
 
-/****** Object:  Table [dbo].[ACH]    Script Date: 8/29/2019 6:03:52 PM ******/
+/****** Object:  Table [dbo].[ACH]    Script Date: 9/17/2019 4:03:05 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -23,11 +23,18 @@ CREATE TABLE [dbo].[ACH](
 	[CreatedDate] [datetime2](7) NOT NULL,
 	[UpdatedDate] [datetime2](7) NOT NULL,
 	[IsActive] [bit] NOT NULL,
+	[IsDeleted] [bit] NOT NULL,
  CONSTRAINT [PK_ACHId] PRIMARY KEY CLUSTERED 
 (
 	[ACHId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[ACH] ADD  CONSTRAINT [DF_ACH_IsActive]  DEFAULT ((1)) FOR [IsActive]
+GO
+
+ALTER TABLE [dbo].[ACH] ADD  CONSTRAINT [DF_ACH_IsDeleted]  DEFAULT ((0)) FOR [IsDeleted]
 GO
 
 ALTER TABLE [dbo].[ACH]  WITH CHECK ADD  CONSTRAINT [FK_ACHId_Address] FOREIGN KEY([BankAddressId])

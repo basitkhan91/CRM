@@ -4,7 +4,7 @@ export class CertificationType {
 
 
 	// Note: Using only optional constructor properties without backing store disables typescript's type checking for the type
-	constructor(masterCompany?: MasterCompany, CertificationTypeId?: number, CertificationName?: string, masterCompanyId?: number, createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string, isActive?: boolean) {
+    constructor(masterCompany?: MasterCompany, CertificationTypeId?: number, CertificationName?: string, masterCompanyId?: number, createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string, isActive?: boolean, isDelete?: boolean) {
 
 		this.CertificationTypeId = CertificationTypeId;
 		
@@ -15,7 +15,8 @@ export class CertificationType {
 		this.updatedDate = updatedDate;
 		this.updatedBy = updatedBy;
 		this.masterCompany = masterCompany;
-		this.isActive = isActive;
+        this.isActive = isActive;
+        this.isDelete = isDelete;
 		
 
 	}
@@ -28,7 +29,8 @@ export class CertificationType {
 	public createdDate: Date;
 	public updatedDate: Date;
 	public masterCompany?: MasterCompany;
-	public isActive: boolean;
+    public isActive: boolean;
+    public isDelete: boolean;
 
 
 

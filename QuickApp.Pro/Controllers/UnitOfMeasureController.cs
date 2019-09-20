@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
 using DAL;
@@ -75,6 +76,7 @@ namespace QuickApp.Pro.Controllers
                 unitOfMeasureobject.Memo = unitOfMeasureViewModel.Memo;
                 unitOfMeasureobject.MasterCompanyId = unitOfMeasureViewModel.MasterCompanyId;
                 unitOfMeasureobject.IsActive = unitOfMeasureViewModel.IsActive;
+                unitOfMeasureobject.IsDelete = unitOfMeasureViewModel.IsDelete;
                 unitOfMeasureobject.CreatedDate = DateTime.Now;
                 unitOfMeasureobject.UpdatedDate = DateTime.Now;
                 unitOfMeasureobject.CreatedBy = unitOfMeasureViewModel.CreatedBy;
@@ -153,98 +155,145 @@ namespace QuickApp.Pro.Controllers
             return Ok(auditResult);
         }
 
+        [HttpPost]
+        public IActionResult getData()
+        {
+            IEnumerable<UnitOfMeasure> unitOfMeasures = _unitOfWork.UnitOfMeasure.getUnitOfMeasureData();
+            foreach (var item in unitOfMeasures)
+            {
+
+            }
+
+            return Ok();
+        }
+
         [HttpPost("pagination")]
         public IActionResult GetUnitOfMeasure([FromBody]UnitOfMeasureSearchViewModel paginate)
         {
             GetData getData = new GetData();
-
-            IQueryable<UnitOfMeasureModel> queryable = null;
             List<UnitOfMeasureModel> unitOfMeasureList = new List<UnitOfMeasureModel>();
+            #region new code
             UnitOfMeasureModel unitOfMeasure = null;
-            if (!string.IsNullOrEmpty(paginate.Description) 
-                || !string.IsNullOrEmpty(paginate.ShortName)
-                || !string.IsNullOrEmpty(paginate.Memo)
-                || !string.IsNullOrEmpty(paginate.Standard)
-                || !string.IsNullOrEmpty(paginate.CreatedBy)
-                || !string.IsNullOrEmpty(paginate.UpdatedBy))
+            var unitOfMeasures = _unitOfWork.UnitOfMeasure.getUnitOfMeasureData();
+            
+            foreach (var item in unitOfMeasures)
             {
-                //var unitOfMeasures = _unitOfWork.UnitOfMeasure;
-                var unitOfMeasures = _unitOfWork.UnitOfMeasure.getUnitOfMeasureData();
-                foreach (var item in unitOfMeasures)
-                {
-                    unitOfMeasure = new UnitOfMeasureModel();
-                    unitOfMeasure.UnitOfMeasureId = item.UnitOfMeasureId;
-                    unitOfMeasure.Description = item.Description;
-                    unitOfMeasure.ShortName = item.ShortName;
-                    unitOfMeasure.Standard = item.Standard;
-                    unitOfMeasure.Memo = item.Memo;
-                    unitOfMeasure.CreatedDate = item.CreatedDate;
-                    unitOfMeasure.CreatedBy = item.CreatedBy;
-                    unitOfMeasure.UpdatedDate = item.UpdatedDate;
-                    unitOfMeasure.UpdatedBy = item.UpdatedBy;
-                    unitOfMeasure.IsActive = item.IsActive;
-                    unitOfMeasureList.Add(unitOfMeasure);
-                }
-                if (!string.IsNullOrEmpty(paginate.Description))
-                {
-                    unitOfMeasureList = unitOfMeasureList.Where(c => c.Description.ToUpper().Contains(paginate.Description.ToUpper().Trim())).ToList();
-                }
-                if (!string.IsNullOrEmpty(paginate.ShortName))
-                {
-                    unitOfMeasureList = unitOfMeasureList.Where(c => c.ShortName.ToUpper().Contains(paginate.ShortName.ToUpper().Trim())).ToList();
-                }
-                if (!string.IsNullOrEmpty(paginate.Standard))
-                {
-                    unitOfMeasureList = unitOfMeasureList.Where(c => c.Standard != null &&  c.Standard.ToUpper().Contains(paginate.Standard.ToUpper().Trim())).ToList();
-                }
-                if (!string.IsNullOrEmpty(paginate.Memo))
-                {
-                    unitOfMeasureList = unitOfMeasureList.Where(c => c.Memo != null && c.Memo.ToUpper().Contains(paginate.Memo.ToUpper().Trim())).ToList();
-                }
-                if (!string.IsNullOrEmpty(paginate.CreatedBy))
-                {
-                    unitOfMeasureList = unitOfMeasureList.Where(c => c.CreatedBy != null && c.CreatedBy.ToUpper().Contains(paginate.CreatedBy.ToUpper().Trim())).ToList();
-                }
-                if (!string.IsNullOrEmpty(paginate.UpdatedBy))
-                {
-                    unitOfMeasureList = unitOfMeasureList.Where(c => c.UpdatedBy != null && c.UpdatedBy.ToUpper().Contains(paginate.UpdatedBy.ToUpper().Trim())).ToList();
-                }
-                getData.TotalRecordsCount = unitOfMeasureList.Count();
-            }
-            else
-            {
-                var unitOfMeasures = _unitOfWork.UnitOfMeasure.getUnitOfMeasureData();
-                foreach (var item in unitOfMeasures)
-                {
-                    unitOfMeasure = new UnitOfMeasureModel();
-                    unitOfMeasure.UnitOfMeasureId = item.UnitOfMeasureId;
-                    unitOfMeasure.Description = item.Description;
-                    unitOfMeasure.ShortName = item.ShortName;
-                    unitOfMeasure.Standard = item.Standard;
-                    unitOfMeasure.Memo = item.Memo;
-                    unitOfMeasure.CreatedDate = item.CreatedDate;
-                    unitOfMeasure.CreatedBy = item.CreatedBy;
-                    unitOfMeasure.UpdatedDate = item.UpdatedDate;
-                    unitOfMeasure.UpdatedBy = item.UpdatedBy;
-                    unitOfMeasure.IsActive = item.IsActive;
-                    unitOfMeasureList.Add(unitOfMeasure);
-                    getData.TotalRecordsCount = unitOfMeasureList.Count();
-                }
+                unitOfMeasure = new UnitOfMeasureModel();
+                unitOfMeasure.UnitOfMeasureId = item.UnitOfMeasureId;
+                unitOfMeasure.Description = item.Description;
+                unitOfMeasure.ShortName = item.ShortName;
+                unitOfMeasure.Standard = item.Standard;
+                unitOfMeasure.Memo = item.Memo;
+                unitOfMeasure.CreatedDate = item.CreatedDate;
+                unitOfMeasure.CreatedBy = item.CreatedBy;
+                unitOfMeasure.UpdatedDate = item.UpdatedDate;
+                unitOfMeasure.UpdatedBy = item.UpdatedBy;
+                unitOfMeasure.IsActive = item.IsActive;
                 unitOfMeasureList.Add(unitOfMeasure);
-                
             }
-            queryable = unitOfMeasureList.AsQueryable();
-
-            if (paginate != null)
+            getData.TotalRecordsCount = unitOfMeasureList.Count();
+            if (unitOfMeasureList != null)
             {
-                var pageListPerPage = paginate.rows;
-                var pageIndex = paginate.first;
-                var pageCount = (pageIndex / pageListPerPage) + 1;
-                getData.UnitOfMeasureList = DAL.Common.PaginatedList<UnitOfMeasureModel>.Create(queryable, pageCount, pageListPerPage);
+                getData.UnitOfMeasureList = unitOfMeasureList;
                 return Ok(getData);
             }
             else
                 return BadRequest(new Exception("Error Occured while fetching customer specific details."));
+            #endregion
+
+
+            #region Old Code
+            //IQueryable<UnitOfMeasureModel> queryable = null;
+            //List<UnitOfMeasureModel> unitOfMeasureList = new List<UnitOfMeasureModel>();
+            //UnitOfMeasureModel unitOfMeasure = null;
+            //if (!string.IsNullOrEmpty(paginate.Description)
+            //    || !string.IsNullOrEmpty(paginate.ShortName)
+            //    || !string.IsNullOrEmpty(paginate.Memo)
+            //    || !string.IsNullOrEmpty(paginate.Standard)
+            //    || !string.IsNullOrEmpty(paginate.CreatedBy)
+            //    || !string.IsNullOrEmpty(paginate.UpdatedBy))
+            //{
+            //    //var unitOfMeasures = _unitOfWork.UnitOfMeasure;
+            //    var unitOfMeasures = _unitOfWork.UnitOfMeasure.getUnitOfMeasureData();
+            //    foreach (var item in unitOfMeasures)
+            //    {
+            //        unitOfMeasure = new UnitOfMeasureModel();
+            //        unitOfMeasure.UnitOfMeasureId = item.UnitOfMeasureId;
+            //        unitOfMeasure.Description = item.Description;
+            //        unitOfMeasure.ShortName = item.ShortName;
+            //        unitOfMeasure.Standard = item.Standard;
+            //        unitOfMeasure.Memo = item.Memo;
+            //        unitOfMeasure.CreatedDate = item.CreatedDate;
+            //        unitOfMeasure.CreatedBy = item.CreatedBy;
+            //        unitOfMeasure.UpdatedDate = item.UpdatedDate;
+            //        unitOfMeasure.UpdatedBy = item.UpdatedBy;
+            //        unitOfMeasure.IsActive = item.IsActive;
+            //        unitOfMeasureList.Add(unitOfMeasure);
+            //    }
+            //    if (!string.IsNullOrEmpty(paginate.Description))
+            //    {
+            //        unitOfMeasureList = unitOfMeasureList.Where(c => c.Description.ToUpper().Contains(paginate.Description.ToUpper().Trim())).ToList();
+            //    }
+            //    if (!string.IsNullOrEmpty(paginate.ShortName))
+            //    {
+            //        unitOfMeasureList = unitOfMeasureList.Where(c => c.ShortName.ToUpper().Contains(paginate.ShortName.ToUpper().Trim())).ToList();
+            //    }
+            //    if (!string.IsNullOrEmpty(paginate.Standard))
+            //    {
+            //        unitOfMeasureList = unitOfMeasureList.Where(c => c.Standard != null && c.Standard.ToUpper().Contains(paginate.Standard.ToUpper().Trim())).ToList();
+            //    }
+            //    if (!string.IsNullOrEmpty(paginate.Memo))
+            //    {
+            //        unitOfMeasureList = unitOfMeasureList.Where(c => c.Memo != null && c.Memo.ToUpper().Contains(paginate.Memo.ToUpper().Trim())).ToList();
+            //    }
+            //    if (!string.IsNullOrEmpty(paginate.CreatedBy))
+            //    {
+            //        unitOfMeasureList = unitOfMeasureList.Where(c => c.CreatedBy != null && c.CreatedBy.ToUpper().Contains(paginate.CreatedBy.ToUpper().Trim())).ToList();
+            //    }
+            //    if (!string.IsNullOrEmpty(paginate.UpdatedBy))
+            //    {
+            //        unitOfMeasureList = unitOfMeasureList.Where(c => c.UpdatedBy != null && c.UpdatedBy.ToUpper().Contains(paginate.UpdatedBy.ToUpper().Trim())).ToList();
+            //    }
+            //    getData.TotalRecordsCount = unitOfMeasureList.Count();
+            //}
+            //else
+            //{
+            //    var unitOfMeasures = _unitOfWork.UnitOfMeasure.getUnitOfMeasureData();
+            //    foreach (var item in unitOfMeasures)
+            //    {
+            //        unitOfMeasure = new UnitOfMeasureModel();
+            //        unitOfMeasure.UnitOfMeasureId = item.UnitOfMeasureId;
+            //        unitOfMeasure.Description = item.Description;
+            //        unitOfMeasure.ShortName = item.ShortName;
+            //        unitOfMeasure.Standard = item.Standard;
+            //        unitOfMeasure.Memo = item.Memo;
+            //        unitOfMeasure.CreatedDate = item.CreatedDate;
+            //        unitOfMeasure.CreatedBy = item.CreatedBy;
+            //        unitOfMeasure.UpdatedDate = item.UpdatedDate;
+            //        unitOfMeasure.UpdatedBy = item.UpdatedBy;
+            //        unitOfMeasure.IsActive = item.IsActive;
+            //        unitOfMeasureList.Add(unitOfMeasure);
+            //    }
+            //    getData.TotalRecordsCount = unitOfMeasureList.Count();
+            //    //unitOfMeasureList.Add(unitOfMeasure);
+
+            //}
+            //queryable = unitOfMeasureList.AsQueryable();
+
+            //if (paginate != null)
+            //{
+            //    //var pageListPerPage = paginate.rows;
+            //    //var pageIndex = paginate.first;
+            //    //var pageCount = (pageIndex / pageListPerPage) + 1;
+            //    //getData.UnitOfMeasureList = DAL.Common.PaginatedList<UnitOfMeasureModel>.Create(queryable, pageCount, pageListPerPage);
+            //    //return Ok(getData);
+
+            //    getData.UnitOfMeasureList = unitOfMeasureList;
+            //    return Ok(getData);
+            //}
+            //else
+            //    return BadRequest(new Exception("Error Occured while fetching customer specific details.")); 
+            #endregion
         }
 
         public class GetData
@@ -252,6 +301,38 @@ namespace QuickApp.Pro.Controllers
             public int TotalRecordsCount { get; set; }
             public List<UnitOfMeasureModel> UnitOfMeasureList { get; set; }
         }
+
+        [HttpGet("getAll")]
+        public IActionResult GetAll()
+        {
+            List<ColumHeader> columHeaders = new List<ColumHeader>();
+            PropertyInfo[] propertyInfos = typeof(UnitOfMeasureSPModel).GetProperties();
+            ColumHeader columnHeader;
+            DynamicGridData<dynamic> dynamicGridData = new DynamicGridData<dynamic>();
+            foreach (PropertyInfo property in propertyInfos)
+            {
+                columnHeader = new ColumHeader();
+                columnHeader.field = char.ToLower(property.Name[0]) + property.Name.Substring(1);//FirstCharToUpper(property.Name);
+                columnHeader.header = property.Name;
+                columHeaders.Add(columnHeader);
+            }
+            dynamicGridData.columHeaders = columHeaders;
+            dynamicGridData.ColumnData = _unitOfWork.UnitOfMeasure.GetAll().Where(u => u.IsDelete == false);
+            return Ok(dynamicGridData);
+        }
+
+        public void ImportXlsData()
+        {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                string x = "";
+            }
+        }
+
     }
 
 }

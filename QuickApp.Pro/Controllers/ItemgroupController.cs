@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
 using DAL;
@@ -229,5 +230,45 @@ namespace QuickApp.Pro.Controllers
             public int TotalRecordsCount { get; set; }
             public List<ItemGroupViewModel> ItemGroupList { get; set; }
         }
+
+
+        #region Individual grids code
+
+        [HttpGet("getAll")]
+        public IActionResult GetAll()
+        {
+            List<ColumHeader> columHeaders = new List<ColumHeader>();
+            PropertyInfo[] propertyInfos = typeof(ItemgroupModel).GetProperties();
+            ColumHeader columnHeader;
+            DynamicGridData<ItemgroupModel> dynamicGridData = new DynamicGridData<ItemgroupModel>();
+            foreach (PropertyInfo property in propertyInfos)
+            {
+                columnHeader = new ColumHeader();
+                columnHeader.field = property.Name;
+                columnHeader.header = property.Name;
+                columHeaders.Add(columnHeader);
+            }
+            dynamicGridData.columHeaders = columHeaders;
+            List<ItemgroupModel> itemGroupList = new List<ItemgroupModel>();
+            ItemgroupModel itemGroup = null;
+            var itemGroups = _unitOfWork.Itemgroup.GetItemgroups();
+            foreach (var item in itemGroups)
+            {
+                itemGroup = new ItemgroupModel();
+                itemGroup.ItemGroupId = item.ItemGroupId;
+                itemGroup.ItemGroupCode = item.ItemGroupCode;
+                itemGroup.Description = item.Description;
+                itemGroup.Memo = item.Memo;
+                itemGroup.CreatedDate = item.CreatedDate;
+                itemGroup.CreatedBy = item.CreatedBy;
+                itemGroup.UpdatedDate = item.UpdatedDate;
+                itemGroup.UpdatedBy = item.UpdatedBy;
+                itemGroupList.Add(itemGroup);
+            }
+            dynamicGridData.ColumnData = itemGroupList;
+            return Ok(dynamicGridData);
+        }
+        #endregion
+
     }
 }

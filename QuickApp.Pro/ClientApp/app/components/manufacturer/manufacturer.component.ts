@@ -235,7 +235,7 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 
-        this.updatePaginatorState();
+        this.loadData();
 
     }
     deleteItemAndCloseModel() {
@@ -376,7 +376,7 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
 
         }
 
-        this.updatePaginatorState();
+        this.loadData();
     }
     private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
 
@@ -432,103 +432,103 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
         });
     }
 
-    updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
-    {
-        this.paginatorState = {
-            rows: this.rows,
-            first: this.first
-        }
-        if (this.paginatorState) {
-            this.loadManufacturer(this.paginatorState);
-        }
-    }
+    // updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
+    // {
+    //     this.paginatorState = {
+    //         rows: this.rows,
+    //         first: this.first
+    //     }
+    //     if (this.paginatorState) {
+    //         this.loadManufacturer(this.paginatorState);
+    //     }
+    // }
 
-    loadManufacturer(event: LazyLoadEvent) //when page initilizes it will call this method
-    {
-        this.loading = true;
-        this.rows = event.rows;
-        this.first = event.first;
-        if (this.field)
-        {
-            this.manufacturer.push({
-                Name: this.nameInputFieldValue,
-                Comments: this.commentsInputFieldValue,
-                CreatedBy: this.createdByInputFieldValue,
-                UpdatedBy: this.updatedByInputFieldValue,
-                first: this.first,
-                page: 10,
-                pageCount: 10,
-                rows: this.rows,
-                limit: 5
-            })
-            if (this.manufacturer) {
-                this.workFlowtService.getServerPages(this.manufacturer[this.manufacturer.length - 1]).subscribe( //we are sending event details to service
-                    pages => {
-                        this.manufacturerPaginationList = pages;
-                        this.manufacturerPagination = this.manufacturerPaginationList[0].manufacturerList;
-                        this.totalRecords = this.manufacturerPaginationList[0].totalRecordsCount;
-                        this.totelPages = Math.ceil(this.totalRecords / this.rows);
-                    });
-            }
-            else {
-            }
-        }
-        else {
-            setTimeout(() => {
-                if (this.allManufacturerInfo) {
-                    this.workFlowtService.getServerPages(event).subscribe( //we are sending event details to service
-                        pages => {
-                            this.manufacturerPaginationList = pages;
-                            this.manufacturerPagination = this.manufacturerPaginationList[0].manufacturerList;
-                            this.totalRecords = this.manufacturerPaginationList[0].totalRecordsCount;
-                            this.totelPages = Math.ceil(this.totalRecords / this.rows);
-                        });
-                    this.loading = false;
-                }
-            }, 1000);
-        }
+    // loadManufacturer(event: LazyLoadEvent) //when page initilizes it will call this method
+    // {
+    //     this.loading = true;
+    //     this.rows = event.rows;
+    //     this.first = event.first;
+    //     if (this.field)
+    //     {
+    //         this.manufacturer.push({
+    //             Name: this.nameInputFieldValue,
+    //             Comments: this.commentsInputFieldValue,
+    //             CreatedBy: this.createdByInputFieldValue,
+    //             UpdatedBy: this.updatedByInputFieldValue,
+    //             first: this.first,
+    //             page: 10,
+    //             pageCount: 10,
+    //             rows: this.rows,
+    //             limit: 5
+    //         })
+    //         if (this.manufacturer) {
+    //             this.workFlowtService.getServerPages(this.manufacturer[this.manufacturer.length - 1]).subscribe( //we are sending event details to service
+    //                 pages => {
+    //                     this.manufacturerPaginationList = pages;
+    //                     this.manufacturerPagination = this.manufacturerPaginationList[0].manufacturerList;
+    //                     this.totalRecords = this.manufacturerPaginationList[0].totalRecordsCount;
+    //                     this.totelPages = Math.ceil(this.totalRecords / this.rows);
+    //                 });
+    //         }
+    //         else {
+    //         }
+    //     }
+    //     else {
+    //         setTimeout(() => {
+    //             if (this.allManufacturerInfo) {
+    //                 this.workFlowtService.getServerPages(event).subscribe( //we are sending event details to service
+    //                     pages => {
+    //                         this.manufacturerPaginationList = pages;
+    //                         this.manufacturerPagination = this.manufacturerPaginationList[0].manufacturerList;
+    //                         this.totalRecords = this.manufacturerPaginationList[0].totalRecordsCount;
+    //                         this.totelPages = Math.ceil(this.totalRecords / this.rows);
+    //                     });
+    //                 this.loading = false;
+    //             }
+    //         }, 1000);
+    //     }
         
-    }
+    // }
 
-    inputFiledFilter(event, filed, matchMode) {
-        this.first = 0;
-        this.event = event;
-        this.field = filed;
-        this.matvhMode = matchMode;
+    // inputFiledFilter(event, filed, matchMode) {
+    //     this.first = 0;
+    //     this.event = event;
+    //     this.field = filed;
+    //     this.matvhMode = matchMode;
 
-        if (filed == 'name') {
-            this.nameInputFieldValue = event;
-        }
-        if (filed == 'comments') {
-            this.commentsInputFieldValue = event;
-        }
-        if (filed == 'createdBy') {
-            this.createdByInputFieldValue = event;
-        }
-        if (filed == 'updatedBy') {
-            this.updatedByInputFieldValue = event;
-        }
-        this.manufacturer.push({
-            Name: this.nameInputFieldValue,
-            Comments: this.commentsInputFieldValue,
-            CreatedBy: this.createdByInputFieldValue,
-            UpdatedBy: this.updatedByInputFieldValue,
-            first: this.first,
-            page: 10,
-            pageCount: 10,
-            rows: this.rows,
-            limit: 5
-        })
-        if (this.manufacturer) {
-            this.workFlowtService.getServerPages(this.manufacturer[this.manufacturer.length - 1]).subscribe( //we are sending event details to service
-                pages => {
-                    this.manufacturerPaginationList = pages;
-                    this.manufacturerPagination = this.manufacturerPaginationList[0].manufacturerList;
-                    this.totalRecords = this.manufacturerPaginationList[0].totalRecordsCount;
-                    this.totelPages = Math.ceil(this.totalRecords / this.rows);
-                });
-        }
-        else {
-        }
-    }
+    //     if (filed == 'name') {
+    //         this.nameInputFieldValue = event;
+    //     }
+    //     if (filed == 'comments') {
+    //         this.commentsInputFieldValue = event;
+    //     }
+    //     if (filed == 'createdBy') {
+    //         this.createdByInputFieldValue = event;
+    //     }
+    //     if (filed == 'updatedBy') {
+    //         this.updatedByInputFieldValue = event;
+    //     }
+    //     this.manufacturer.push({
+    //         Name: this.nameInputFieldValue,
+    //         Comments: this.commentsInputFieldValue,
+    //         CreatedBy: this.createdByInputFieldValue,
+    //         UpdatedBy: this.updatedByInputFieldValue,
+    //         first: this.first,
+    //         page: 10,
+    //         pageCount: 10,
+    //         rows: this.rows,
+    //         limit: 5
+    //     })
+    //     if (this.manufacturer) {
+    //         this.workFlowtService.getServerPages(this.manufacturer[this.manufacturer.length - 1]).subscribe( //we are sending event details to service
+    //             pages => {
+    //                 this.manufacturerPaginationList = pages;
+    //                 this.manufacturerPagination = this.manufacturerPaginationList[0].manufacturerList;
+    //                 this.totalRecords = this.manufacturerPaginationList[0].totalRecordsCount;
+    //                 this.totelPages = Math.ceil(this.totalRecords / this.rows);
+    //             });
+    //     }
+    //     else {
+    //     }
+    // }
 }

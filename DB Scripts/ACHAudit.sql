@@ -1,7 +1,7 @@
 USE [PAS_DEV]
 GO
 
-/****** Object:  Table [dbo].[ACHAudit]    Script Date: 8/29/2019 6:04:08 PM ******/
+/****** Object:  Table [dbo].[ACHAudit]    Script Date: 9/17/2019 4:03:21 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -24,6 +24,7 @@ CREATE TABLE [dbo].[ACHAudit](
 	[CreatedDate] [datetime2](7) NULL,
 	[UpdatedDate] [datetime2](7) NOT NULL,
 	[IsActive] [bit] NULL,
+	[IsDeleted] [bit] NULL,
  CONSTRAINT [PK__ACHAudit__854679C88159CD0F] PRIMARY KEY CLUSTERED 
 (
 	[ACHAuditId] ASC

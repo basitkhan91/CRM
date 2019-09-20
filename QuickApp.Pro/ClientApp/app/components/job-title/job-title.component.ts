@@ -39,6 +39,7 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
     createdDate: any = "";
     updatedDate: any = "";
     disableSave: boolean = false;
+    totalRecords: number;
     AuditDetails: SingleScreenAuditDetails[];
 
     ngOnInit(): void {
@@ -137,6 +138,7 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allJobTitlesinfo = allWorkFlows;
+        this.totalRecords = this.allJobTitlesinfo.length;
     }
 	openHist(content, row) {
 		this.alertService.startLoadingMessage();
@@ -213,6 +215,7 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceAction = row;
+        this.job_Name = row.description;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');

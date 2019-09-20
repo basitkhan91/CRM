@@ -1,7 +1,7 @@
 USE [PAS_DEV]
 GO
 
-/****** Object:  Table [dbo].[AircraftDashNumberAudit]    Script Date: 8/29/2019 6:07:30 PM ******/
+/****** Object:  Table [dbo].[AircraftDashNumberAudit]    Script Date: 9/17/2019 4:06:23 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -14,6 +14,7 @@ CREATE TABLE [dbo].[AircraftDashNumberAudit](
 	[AircraftTypeId] [int] NULL,
 	[AircraftModelId] [bigint] NULL,
 	[DashNumber] [varchar](250) NULL,
+	[Memo] [varchar](2000) NULL,
 	[MasterCompanyId] [int] NULL,
 	[CreatedBy] [varchar](256) NULL,
 	[UpdatedBy] [varchar](256) NULL,
@@ -21,7 +22,6 @@ CREATE TABLE [dbo].[AircraftDashNumberAudit](
 	[UpdatedDate] [datetime2](7) NOT NULL,
 	[IsActive] [bit] NULL,
 	[IsDeleted] [bit] NULL,
-	[Memo] [varchar](2000) NULL,
  CONSTRAINT [PK_AircraftDashNumberAudit] PRIMARY KEY CLUSTERED 
 (
 	[DashNumberAuditId] ASC

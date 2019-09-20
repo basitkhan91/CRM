@@ -1,6 +1,7 @@
 ﻿using DAL.Common;
 using DAL.Models;
 using DAL.Repositories.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -49,7 +50,7 @@ namespace DAL.Repositories
             {
                 throw;
             }
-                        
+
         }
 
         public IEnumerable<CustomerContactList> GetCustomerContactsList(long customerId)
@@ -73,12 +74,12 @@ namespace DAL.Repositories
                          ContactId = z.con.ContactId,
                          WorkPhone = z.con.WorkPhone,
                          CustomerCode = z.cc1.cust.CustomerCode,
-                         ContractReference=z.cc1.cust.ContractReference,
+                         ContractReference = z.cc1.cust.ContractReference,
                          Reference = string.Empty,
                          CreditLimt = z.cc1.cust.CreditLimit,
                          CreditTermId = z.cc1.cust.CreditTermsId,
                          CSR = z.cc1.cust.CSRName,
-						 Email = z.cc1.cust.Email
+                         Email = z.cc1.cust.Email
                      }).ToList();
 
                 if (contacts != null && contacts.Count > 0)
@@ -94,7 +95,7 @@ namespace DAL.Repositories
                         objContact.CustomerCode = item.CustomerCode;
                         objContact.CustomerReference = item.Reference;
                         objContact.WorkPhone = item.WorkPhone;
-						objContact.Email = item.Email;
+                        objContact.Email = item.Email;
                         customerContacts.Add(objContact);
                     }
                 }
@@ -105,6 +106,285 @@ namespace DAL.Repositories
                 throw;
             }
 
+        }
+
+        public long CreateMasterParts(MasterParts masterPart)
+        {
+            try
+            {
+                _appContext.MasterParts.Add(masterPart);
+                _appContext.SaveChanges();
+                return masterPart.MasterPartId;
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void UpdateMasterParts(MasterParts masterPart)
+        {
+            try
+            {
+                masterPart.UpdatedDate = DateTime.Now;
+                _appContext.MasterParts.Update(masterPart);
+                _appContext.SaveChanges();
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void DeleteMasterParts(long masterPartId, string updatedBy)
+        {
+            try
+            {
+                MasterParts masterPart = new MasterParts();
+
+                masterPart.MasterPartId = masterPartId;
+                masterPart.IsDeleted = true;
+                masterPart.UpdatedBy = updatedBy;
+                masterPart.UpdatedDate = DateTime.Now;
+
+                _appContext.MasterParts.Attach(masterPart);
+                _appContext.Entry(masterPart).Property(x => x.IsDeleted).IsModified = true;
+                _appContext.Entry(masterPart).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(masterPart).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.SaveChanges();
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void MasterPartsStatus(long masterPartId,bool status, string updatedBy)
+        {
+            try
+            {
+                MasterParts masterPart = new MasterParts();
+                masterPart.MasterPartId = masterPartId;
+                masterPart.IsActive = status;
+                masterPart.UpdatedBy = updatedBy;
+                masterPart.UpdatedDate = DateTime.Now;
+
+                _appContext.MasterParts.Attach(masterPart);
+                _appContext.Entry(masterPart).Property(x => x.IsActive).IsModified = true;
+                _appContext.Entry(masterPart).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(masterPart).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.SaveChanges();
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public List<MasterParts> GetMasterParts()
+        {
+            try
+            {
+                return _appContext.MasterParts.Where(p => p.IsDeleted == false).ToList();
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void CreateRestrictedParts(List<RestrictedParts> restrictedParts, long? referenceId)
+        {
+            try
+            {
+                if (restrictedParts != null && restrictedParts.Count > 0)
+                {
+                    restrictedParts.ForEach(p => p.ReferenceId = referenceId);
+                    _appContext.RestrictedParts.AddRange(restrictedParts);
+                    _appContext.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void UpdateRestrictedParts(List<RestrictedParts> restrictedParts, long? referenceId)
+        {
+            try
+            {
+                if (restrictedParts != null && restrictedParts.Count > 0)
+                {
+                    foreach (var item in restrictedParts)
+                    {
+                        if (item.RestrictedPartId > 0)
+                        {
+                            _appContext.RestrictedParts.Update(item);
+                        }
+                        else
+                        {
+                            item.ReferenceId = referenceId;
+                            _appContext.RestrictedParts.Add(item);
+                        }
+                        _appContext.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public List<RestrictedParts> GetRestrictedParts(int moduleId, long? referenceId, string partType)
+        {
+            try
+            {
+                return _appContext.RestrictedParts.Where(p => p.IsDeleted == false && p.ModuleId == moduleId && p.ReferenceId == referenceId && p.PartType == partType)
+                                                   .OrderBy(p => p.RestrictedPartId)
+                                                   .ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void CreateClassificationMappings(List<ClassificationMapping> classificationMappings, long referenceId)
+        {
+            try
+            {
+                if (classificationMappings != null && classificationMappings.Count > 0)
+                {
+                    classificationMappings.ForEach(p => p.ReferenceId = referenceId);
+                    _appContext.ClassificationMapping.AddRange(classificationMappings);
+                    _appContext.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void UpdateClassificationMappings(List<ClassificationMapping> classificationMappings, long referenceId)
+        {
+            try
+            {
+                if (classificationMappings != null && classificationMappings.Count > 0)
+                {
+                    foreach (var item in classificationMappings)
+                    {
+                        if (item.ClassificationMappingId > 0)
+                        {
+                            _appContext.ClassificationMapping.Update(item);
+                        }
+                        else
+                        {
+                            item.ReferenceId = referenceId;
+                            _appContext.ClassificationMapping.Add(item);
+                        }
+                        _appContext.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public List<ClassificationMapping> GetCustomerClassificationMappings(int moduleId, int referenceId)
+        {
+            List<ClassificationMapping> ClassificationMappingList = new List<ClassificationMapping>();
+            ClassificationMapping classificationMapping;
+            try
+            {
+                var result = _appContext.ClassificationMapping
+                             .Join(_appContext.CustomerClassification,
+                             cm => cm.ClasificationId,
+                             cc => cc.CustomerClassificationId,
+                             (cm, cc) => new { cm, cc })
+                             .Where(p => p.cm.IsDeleted == false && p.cm.ModuleId == moduleId && p.cm.ReferenceId == referenceId)
+                             .Select(p => new
+                             {
+                                 ClassificationMappingId = p.cm.ClassificationMappingId,
+                                 ClasificationId = p.cm.ClasificationId,
+                                 Description = p.cc.Description
+                             })
+                             .ToList();
+
+                if (result != null && result.Count > 0)
+                {
+                    foreach (var item in result)
+                    {
+                        classificationMapping = new ClassificationMapping();
+                        classificationMapping.ClassificationMappingId = item.ClassificationMappingId;
+                        classificationMapping.ClasificationId = item.ClasificationId;
+                        classificationMapping.Description = item.Description;
+                        ClassificationMappingList.Add(classificationMapping);
+                    }
+                }
+
+                return ClassificationMappingList;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public List<ClassificationMapping> GetVendorClassificationMappings(int moduleId, int referenceId)
+        {
+            List<ClassificationMapping> ClassificationMappingList = new List<ClassificationMapping>();
+            ClassificationMapping classificationMapping;
+            try
+            {
+                var result = _appContext.ClassificationMapping
+                             .Join(_appContext.VendorClassification,
+                             cm => cm.ClasificationId,
+                             vc => vc.VendorClassificationId,
+                             (cm, vc) => new { cm, vc })
+                             .Where(p => p.cm.IsDeleted == false && p.cm.ModuleId == moduleId && p.cm.ReferenceId == referenceId)
+                             .Select(p => new
+                             {
+                                 ClassificationMappingId = p.cm.ClassificationMappingId,
+                                 ClasificationId = p.cm.ClasificationId,
+                                 Description = p.vc.ClassificationName
+                             })
+                             .ToList();
+
+                if (result != null && result.Count > 0)
+                {
+                    foreach (var item in result)
+                    {
+                        classificationMapping = new ClassificationMapping();
+                        classificationMapping.ClassificationMappingId = item.ClassificationMappingId;
+                        classificationMapping.ClasificationId = item.ClasificationId;
+                        classificationMapping.Description = item.Description;
+                        ClassificationMappingList.Add(classificationMapping);
+                    }
+                }
+
+                return ClassificationMappingList;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

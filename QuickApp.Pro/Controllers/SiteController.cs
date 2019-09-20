@@ -49,7 +49,7 @@ namespace QuickApp.Pro.Controllers
         }
 
 
-        [HttpPost("sitesPost")]
+        [HttpPost("sitesAdd")]
         //[Authorize(Authorization.Policies.ManageAllRolesPolicy)]
         public IActionResult CreateAction([FromBody] SiteViewModel siteViewModel,Address address)
         {
@@ -88,6 +88,7 @@ namespace QuickApp.Pro.Controllers
             address.Line2 = siteViewModel.Address2;
             address.Line3 = siteViewModel.Address3;
             address.PostalCode = siteViewModel.PostalCode;
+            address.IsActive = siteViewModel.IsActive;
             address.StateOrProvince = siteViewModel.StateOrProvince;
             address.City = siteViewModel.City;
             address.Country = siteViewModel.Country;
@@ -136,8 +137,8 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
-        [HttpPut("sitesPost/{id}")]
-        public IActionResult UpdateAction(long id, [FromBody] SiteViewModel siteViewModel)
+        [HttpPut("sitesUpdate/{id}")]
+        public IActionResult UpdateAction(long id,[FromBody] SiteViewModel siteViewModel)
         {
 
             if (ModelState.IsValid)
@@ -218,7 +219,7 @@ namespace QuickApp.Pro.Controllers
         }
 
 
-        [HttpDelete("sitesPost/{id}")]
+        [HttpDelete("sitesDelete/{id}")]
         [Produces(typeof(SiteViewModel))]
         public IActionResult DeleteAction(long id)
         {

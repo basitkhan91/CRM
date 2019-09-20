@@ -10,10 +10,13 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using DAL.Common;
 using DAL.Models;
 using DAL.Repositories;
 using DAL.Repositories.Interfaces;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace DAL
 {
@@ -193,11 +196,17 @@ namespace DAL
 
         ICustomerAircraftMapping _customerAircraftMapping;
 
+        IFileUploadRepository _fileUploadRepository { get; set; }
+
         IAssetCapes _assetCapes;
         
-        public UnitOfWork(ApplicationDbContext context)
+        IAssetIntangibleAttributeType _assetIntangibleAttributeType;
+        IAssetDepreciationInterval _assetDepreciationInterval;
+        
+        public UnitOfWork(ApplicationDbContext context, IOptions<AppSettings> appSettings)
         {
             _context = context;
+            _appSettings = appSettings;
         }
 
 
@@ -1145,10 +1154,7 @@ namespace DAL
                     _aircraftModel = new AircraftModelRepository(_context);
                 return _aircraftModel;
             }
-
         }
-
-
 
         public ICustomerAircraftModel customerAircraftModel
         {
@@ -1678,6 +1684,34 @@ namespace DAL
                 return workOrderRepository;
             }
         }
+        IAssetCapes IUnitOfWork.AssetCapes
+        {
+            get {
+                if (_assetCapes == null)
+                    _assetCapes = new AssetCapesRepository(_context);
+                return _assetCapes;
+            }
+        }
+
+        IAssetIntangibleAttributeType IUnitOfWork.AssetIntangibleAttributeType
+        {
+            get
+            {
+                if (_assetIntangibleAttributeType == null)
+                    _assetIntangibleAttributeType = new AssetIntangibleAttributeTypeRepository(_context);
+                return _assetIntangibleAttributeType;
+            }
+        }
+        
+        IAssetDepreciationInterval IUnitOfWork.AssetDepreciationInterval
+        {
+            get
+            {
+                if (_assetDepreciationInterval == null)
+                    _assetDepreciationInterval = new AssetDepreciationIntervalRepository(_context);
+                return _assetDepreciationInterval;
+            }
+        }
 
         public ICommonRepository CommonRepository
         {
@@ -1689,12 +1723,23 @@ namespace DAL
             }
         }
         
-        IAssetCapes IUnitOfWork.AssetCapes
+        //IAssetCapes IUnitOfWork.AssetCapes
+        //{
+        //    get {
+        //        if (_assetCapes == null)
+        //            _assetCapes = new AssetCapesRepository(_context);
+        //        return _assetCapes;
+        //    }
+        //}
+
+        IOptions<AppSettings> _appSettings;
+        public IFileUploadRepository FileUploadRepository
         {
-            get {
-                if (_assetCapes == null)
-                    _assetCapes = new AssetCapesRepository(_context);
-                return _assetCapes;
+            get
+            {
+                if (_fileUploadRepository == null)
+                    _fileUploadRepository = new FileUploadRepository(_context, _appSettings);
+                return _fileUploadRepository;
             }
         }
     }

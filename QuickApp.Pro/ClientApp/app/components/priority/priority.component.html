@@ -17,10 +17,10 @@
                                 <div style="text-align: right">
                                     <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
                                                    selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-                                    <div class="inner-addon right-addon w200 inline-block  g-filter-search-cstm">
+                                    <!-- <div class="inner-addon right-addon w200 inline-block  g-filter-search-cstm">
                                         <i class="fa fa-search"></i>
                                         <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (blur)="inputGlobalFiledFilter($event.target.value, 'contains')" placeholder="Global Filter">
-                                    </div>
+                                    </div> -->
                                     <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
                                     <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload excel-upload-cstm">
@@ -46,7 +46,7 @@
                                 </tr>
                                 <tr>
                                     <th *ngFor="let col of columns" [ngSwitch]="col.field">
-                                        <input style="width:100%;" pInputText type="text" (keydown.enter)="inputFiledFilter($event.target.value, col.field, col.filterMatchMode)">
+                                        <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field,'contains')">
                                     </th>
                                     <th style="width:150px;position:sticky"></th>
                                 </tr>
@@ -68,7 +68,7 @@
                                         <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="openDelete(content,rowData)">
                                             <mat-icon color="warn">delete</mat-icon>
                                         </button>
-                                        <button class="btn-history" mat-icon-button matTooltip="history" (click)="showAuditPopup(auditContent,rowData.provisionId)">
+                                        <button class="btn-history" mat-icon-button matTooltip="history" (click)="showAuditPopup(contentHist,rowData.provisionId)">
                                             <mat-icon color="green">history</mat-icon>
                                         </button>
                                     </td>
@@ -120,7 +120,7 @@
                                                 <label for="description" class="control-label">Priority Name<span class="clr-red">*</span></label>
                                             </div>
                                             <div class="col-sm-5">
-                                                <p-autoComplete [(ngModel)]="priorityName" (onSelect)="priorityId($event)" (onKeyUp)="eventHandler($event)" name="id" [suggestions]="localCollection" (completeMethod)="filterpriorities($event)" [size]="30"
+                                                <p-autoComplete [(ngModel)]="priorityName" (onSelect)="priorityId($event)" (copy)="$event.preventDefault()" (paste)="$event.preventDefault()" (onKeyUp)="eventHandler($event)" name="id" [suggestions]="localCollection" (completeMethod)="filterpriorities($event)" [size]="30"
                                                                 [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
                                                     <ng-template let-priorityName pTemplate="item">
                                                         <div class="ui-helper-clearfix">{{priorityName}}</div>

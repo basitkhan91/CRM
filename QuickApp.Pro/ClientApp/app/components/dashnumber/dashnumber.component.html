@@ -54,7 +54,7 @@
                                 </tr>
                                 <tr>
                                     <th *ngFor="let col of columns" [ngSwitch]="col.field">
-                                        <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                                        <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field,'contains')">
                                     </th>
                                     <th></th>
                                 </tr>
@@ -214,8 +214,8 @@
                         </label>
                     </div>
                     <div class="col-sm-5">
-                        <select [(ngModel)]="selectedAircraftId" required [ngModelOptions]="{standalone: true}" (change)="aircraftManufacturerChange()">
-                            <option *ngIf="isEditMode">{{selectedAircraftId}}</option>
+                        <select [(ngModel)]="sourceAction.aircraftTypeId" required [ngModelOptions]="{standalone: true}" (change)="aircraftManufacturerChange()">
+                            <option *ngIf="isEditMode">{{sourceAction.aircraftTypeId}}</option>
                             <option *ngFor="let manufacturer of aircraftManufacturerList" [ngValue]="manufacturer.aircraftTypeId">{{manufacturer.description}}</option>
                         </select>
                     </div>
@@ -229,7 +229,7 @@
                     </div>
                     <div class="col-sm-5">
                         <p-multiSelect required maxSelectedLabels="1" selectedItemsLabel="{0} columns selected" class="pub-multi3" [options]="aircraftModelsList"
-                            [(ngModel)]="selectedAircraftModel" name="modelname" (onChange)="getDashNumberByManfacturerandModel()"></p-multiSelect>
+                            [(ngModel)]="sourceAction.aircraft_Model" name="modelname" (onChange)="getDashNumberByManfacturerandModel()"></p-multiSelect>
                     </div>
                 </div>
                 <div class="col-sm-12">
@@ -240,7 +240,7 @@
                         </label>
                     </div>
                     <div class="col-sm-5">
-                        <p-autoComplete [(ngModel)]="selectedDashnumber" (onSelect)="dashNumberSelection($event)" (onKeyUp)=eventHandler($event)
+                        <p-autoComplete [(ngModel)]="sourceAction.dashnumber" (onSelect)="dashNumberSelection($event)" (onKeyUp)=eventHandler($event)
                             name="description" [suggestions]="localCollection" (completeMethod)="filterDashnumber($event)" [size]="30"
                             [dropdown]="true" class="p-autoComplete-ctsm" required>
                             <ng-template let-dashnumber pTemplate="item">
@@ -258,7 +258,7 @@
                         </label>
                     </div>
                     <div class="col-sm-5">
-                        <textarea class="input-field-value" [(ngModel)]="selectedMemo" name="memo"></textarea>
+                        <textarea class="input-field-value" [(ngModel)]="sourceAction.memo" name="memo"></textarea>
                     </div>
                 </div>
             </div>
