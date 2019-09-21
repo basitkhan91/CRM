@@ -2153,6 +2153,38 @@ namespace QuickApp.Pro.Controllers
             public int TotalRecordsCount { get; set; }
             public List<CustomerSearchViewModel> CustomerList { get; set; }
         }
+        [HttpGet("searchGetCustomerATAMappedByMultiATAIDATASubID/{CustomerId}")]
+        public IActionResult CustomerATAMappedList(long CustomerId, string ATAChapterId, string ATASubChapterID)
+        {
+            var result = _unitOfWork.Customer.searchgetCustomerATAMappingDataByMultiTypeIdATAIDATASUBID(CustomerId, ATAChapterId, ATASubChapterID);
+
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+        [HttpDelete("DeleteCustomerATAMapping/{id}")]
+        public IActionResult DeleteCustomerATA(long id)
+        {
+            var existingResult = _unitOfWork.Repository<CustomerATAMapping>().GetSingleOrDefault(c => c.CustomerATAMappingId == id);
+            existingResult.IsDeleted = true;
+            _unitOfWork.Repository<CustomerATAMapping>().Update(existingResult);
+            _unitOfWork.SaveChanges();
+            return Ok(id);
+        }
+        [HttpDelete("DeleteCustomerAircraftMappint/{id}")]
+        public IActionResult DeleteCustomerAircraft(long id)
+        {
+            var existingResult = _unitOfWork.Repository<CustomerAircraftMapping>().GetSingleOrDefault(c => c.CustomerAircraftMappingId == id);
+            existingResult.IsDeleted = true;
+            _unitOfWork.Repository<CustomerAircraftMapping>().Update(existingResult);
+            _unitOfWork.SaveChanges();
+            return Ok(id);
+        }
 
     }
 }
