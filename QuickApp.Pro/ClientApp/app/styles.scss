@@ -14103,6 +14103,9 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     margin-right: 0;
     font-weight: normal;
 }
+.p-table-padding  .ui-table .ui-table-thead > tr > th{ 
+    padding: 6px !important;
+}
 .autocomp-customer-cstm.ng-dirty.ng-invalid > .ui-autocomplete > .ui-inputtext {
     border: 1px solid #bdbdbd;
 }
