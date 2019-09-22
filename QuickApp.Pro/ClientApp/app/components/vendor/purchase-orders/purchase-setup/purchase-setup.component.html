@@ -317,7 +317,7 @@
     <p-tabView class="pas-tabview">
         <p-tabPanel header="Parts List">
             <button (click)="addPartNumber()" class="btn btn-primary-cstm addpn-btn">Add Part Number</button>
-            <button data-toggle="modal" data-target="#add-multiple-partnum" class="btn btn-primary-cstm addpn-btn">Add Multiple Part Numbers</button>
+            <button data-toggle="modal" data-target="#add-multiple-partnum" class="btn btn-primary-cstm addpn-btn" (click)="onAddMultParts()">Add Multiple Part Numbers</button>
             <div class="table-responsive pas-table-cstm roview-table-cstm" style="margin-top: 5px;">
     
                 <table class="table table-bordered " id="po-table">
@@ -327,7 +327,7 @@
                             <th style="padding-bottom: 2px !important;min-width: 50px;">
                                 <span class="checkbox-cstm">
                                     <label style="width: 20px;">
-                                        <input type="checkbox" name="checkAllPartsList" [(ngModel)]="checkAllPartsList" (onChange)="checkAllPartsListRow()" #checkAllPartsList1> <!--checkAllPartDetails()-->
+                                        <input type="checkbox" name="checkAllPartsList" [(ngModel)]="checkAllPartsList" #checkAllPartsList1> <!--checkAllPartDetails()-->
                                         <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                     </label>
                                 </span>
@@ -409,7 +409,14 @@
                                 <td *ngIf="partList?.itemTypeId==0"></td>
                                 <td>{{partList?.name}}</td>
                                 <td>
-                                    {{partList?.glAccountId}}
+                                    <!--{{partList?.glAccountId}}-->
+                                      
+                                         <p-autoComplete field="accountName" class="pautocomp-cstm" [(ngModel)]="partList.glAccount" 
+                                    name="glAccountId{{row_index}}" [size]="30" [minLength]="1" [dropdown]="true" [disabled]=true>
+                                    </p-autoComplete>  
+                                     <!--<select class="form-control" name="glAccountId{{row_index}}" [(ngModel)]="partList.glAccountId.glAccountId" disabled>
+                                        <option [ngValue]="7">{{'partList.glAccountId.accountName'}}</option>
+                                    </select>--> 
                                 </td>
                                 <td>
                                     <!--<select class="w80" [(ngModel)]="partList.uomId">
@@ -566,7 +573,8 @@
                                             </div> 
                                         </div>
                                         <div class="col-sm-1">
-                                            <div class="child-add-icon"><a class="fa fa-plus-circle fa-lg" (click)="addPageCustomer()"></a></div>
+                                            <div class="child-add-icon"><a target="_blank" 
+                                                [routerLink]="['/customersmodule/customerpages/app-customer-general-information']"><i class="fa fa-plus-circle fa-lg"></i></a></div> <!--addPageCustomer()-->
                                         </div>
                                     </div>
                                     <div class="inner-addon right-addon autosuggesions-add inline-block w175" *ngIf="partChildList.poPartSplitUserTypeId==2">
@@ -590,7 +598,8 @@
                                             </div> 
                                         </div>
                                         <div class="col-sm-1">
-                                            <div class="child-add-icon"><a class="fa fa-plus-circle fa-lg"></a></div>
+                                            <div class="child-add-icon"><a target="_blank" 
+                                                [routerLink]="['/vendorsmodule/vendorpages/app-vendor-general-information']"><i class="fa fa-plus-circle fa-lg"></i></a></div>
                                         </div>
                                     </div>
                                     <div class="inner-addon right-addon autosuggesions-add inline-block w100" *ngIf="partChildList.poPartSplitUserTypeId==3">
@@ -761,7 +770,8 @@
                                 </div> 
                             </div>
                             <div class="col-sm-1">
-                                <div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" (click)="addPageCustomer()"></a></div>
+                                <div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" target="_blank" 
+                                    [routerLink]="['/customersmodule/customerpages/app-customer-general-information']"></a></div>
                             </div>
                         </div>
                         <div class="form-row" *ngIf="sourcePoApproval.shipToUserType==2">
@@ -786,7 +796,8 @@
                                 <!--<div *ngIf="disableSaveVenderName" class="clr-red">Already Exists</div>-->
                             </div>
                             <div class="col-sm-1">
-                                <div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg"></a></div>
+                                <div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" target="_blank" 
+                                    [routerLink]="['/vendorsmodule/vendorpages/app-vendor-general-information']"></a></div>
                             </div>
                         </div>
                         <div class="form-row" *ngIf="sourcePoApproval.shipToUserType==3">
@@ -944,7 +955,8 @@
                                 </div> 
                             </div>
                             <div class="col-sm-1">
-                                <div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" (click)="addPageCustomer()"></a></div>
+                                <div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" target="_blank" 
+                                    [routerLink]="['/customersmodule/customerpages/app-customer-general-information']"></a></div>
                             </div>
                         </div>
                         <div class="form-row" *ngIf="sourcePoApproval.billToUserType==2">
@@ -969,7 +981,8 @@
                                 <!--<div *ngIf="disableSaveVenderName" class="clr-red">Already Exists</div>-->
                             </div>
                             <div class="col-sm-1">
-                                <div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg"></a></div>
+                                <div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" target="_blank" 
+                                    [routerLink]="['/vendorsmodule/vendorpages/app-vendor-general-information']"></a></div>
                             </div>
                         </div>
                         <div class="form-row" *ngIf="sourcePoApproval.billToUserType==3">
@@ -2438,8 +2451,8 @@
                 </div>
                 <div class="modal-body">
                     <p>
-                        <span class="col-sm-3"><b>List of PN's (Saperated by Comma): </b></span>
-                        <span class="col-sm-7 "><textarea class="form-control" [(ngModel)]="partNumbers"></textarea></span>
+                        <span class="col-sm-3"><b>List of PN's (Separated by Comma): </b></span>
+                        <span class="col-sm-7 "><textarea class="form-control" name="partNumbers" [(ngModel)]="partNumbers"></textarea></span>
                         <span class="col-sm-2"><button type="button" class="btn btn-primary height40 black-search-button multiple-pns-search-btn btn-cstm" (click)="getAllparts()"><i class="fa fa-search"></i></button></span>
                     </p>
                     <form #addMultiPNTable="ngForm">                   
@@ -2450,7 +2463,7 @@
                                     <th style="padding-bottom: 0 !important;">
                                         <span class="checkbox-cstm">
                                             <label style="width: 20px;">
-                                                <input type="checkbox" name="addAllMultiPN" #addAllMultiPN>
+                                                <input type="checkbox" name="addAllMultiPN" [(ngModel)]="addAllMultiPN" (change)="onChangeAddAllMultiPN($event)">
                                                 <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                             </label>
                                         </span>
@@ -2471,7 +2484,7 @@
                                     <td>
                                         <span class="checkbox-cstm" *ngIf="!multiplePNDetails">
                                             <label style="width: 20px;margin-top: 5px;">
-                                                <input type="checkbox" name="addAllMultiPNRows{{row_no}}" [checked]="addAllMultiPN.checked">
+                                                <input type="checkbox" name="addAllMultiPNRows{{row_no}}" [(ngModel)]="obj.addAllMultiPNRows">
                                                 <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                             </label>
                                         </span>
@@ -2487,9 +2500,10 @@
                                     <td>{{obj.aircraftManufacturer === null ? '-':obj.aircraftManufacturer}}</td>
                                     <td>{{obj.nsn === null ? '-':obj.nsn}}</td>
                                     <td>{{obj.priorityId === null ? '-':obj.priorityId}}</td>
-                                    <td><a href="#" class="clr-red" target="_blank" *ngIf="multiplePNDetails" (click)="onAddPartNum()">Add Part Number</a></td>
+                                    <td></td>
+                                    <!-- <td><a href="#" class="clr-red" target="_blank" *ngIf="multiplePNDetails" (click)="onAddPartNum()">Add Part Number</a></td> -->
                                 </tr>
-                                <tr *ngFor="let obj of array">
+                                <tr *ngFor="let obj of newPNList">
                                     <!--<th>{{obj.enterdPart}}</th>-->
                                     <td></td>
                                     <td style="padding: 6px;">{{obj}}</td>
