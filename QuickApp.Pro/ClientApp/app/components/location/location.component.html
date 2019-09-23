@@ -132,7 +132,7 @@
 								</label>
 							</div>
 							<div class="col-sm-5">
-								<select [(ngModel)]="sourceLocation.siteId" [ngModelOptions]="{standalone: true}" (change)="siteValueChange($event.target.value)" required>
+								<select [(ngModel)]="sourceLocation.siteId" name="location" (change)="siteValueChange($event.target.value)" required>
 									<option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option>
 								</select>
 							</div>
@@ -144,7 +144,7 @@
 								</label>
 							</div>
 							<div class="col-sm-5">
-								<select [(ngModel)]="sourceLocation.warehouseId" [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange(sourceLocation.warehouseId)" required>
+								<select [(ngModel)]="sourceLocation.warehouseId" name="warehouse" (change)="wareHouseValueChange(sourceLocation.warehouseId)" required>
 									<option *ngFor="let site of allWareHouses" [ngValue]="site.warehouseId">{{site.warehouseName}}</option>
 								</select>
 							</div>
@@ -157,8 +157,8 @@
 							</div>
 							<div class="col-sm-5">
 								<p-autoComplete (onSelect)="Manufacturerdescription($event)" (onKeyUp)=ManufacturerHandler($event) (completeMethod)="filtermanufacturer($event)"
-								 [(ngModel)]="name" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" [size]="30" [minLength]="2"
-								 [dropdown]="true" class="p-autoComplete-ctsm">
+								 [(ngModel)]="name" name="description" [suggestions]="localCollection" [size]="30" [minLength]="2"
+								 [dropdown]="true" class="p-autoComplete-ctsm" required>
 								</p-autoComplete>
 								<div *ngIf="disableSaveManufacturer" class="clr-red">Already Exists</div>
 							</div>

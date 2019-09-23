@@ -325,8 +325,9 @@ export class ShelfComponent {
 
 		this.cols1 = [
 			{ field: 'code', header: 'Code' },
+			{ field: 'name', header: 'Name' },
 			{ field: 'description', header: 'Description' },
-			{ field: 'legalEntityId', header: 'ID' },
+			//{ field: 'legalEntityId', header: 'ID' },
 		];
 	}
 

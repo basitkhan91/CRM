@@ -5,7 +5,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="inline-block display-flex">
-                            <h3 class="po-head lead">DefaultMessage</h3>
+                            <h3 class="po-head lead">Default Message</h3>
                             &nbsp;&nbsp;
                             <a class="plusicon-cstm new-margin" pTooltip="Add Default Message" tooltipPosition="right" (click)="open(contentEdit)">
                                 <i class="fa fa-plus-circle fa-lg"></i>
@@ -139,8 +139,8 @@
 
 <ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
     <div class="modal-header">
-        <h4 class="modal-title" *ngIf="isEditMode">Edit DefaultMessage</h4>
-        <h4 class="modal-title" *ngIf="!isEditMode">Add DefaultMessage</h4>
+        <h4 class="modal-title" *ngIf="isEditMode">Edit Default Message</h4>
+        <h4 class="modal-title" *ngIf="!isEditMode">Add Default Message</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
             <span aria-hidden="true">&times;</span>
         </button>
