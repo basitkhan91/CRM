@@ -297,7 +297,7 @@ export class CertificationTypeComponent implements OnInit, AfterViewInit {
 				this.sourcecertificationtype.updatedBy = this.userName;
 				//this.sourcecertificationtype.certificationName = this.certificationName;
 				this.sourcecertificationtype.masterCompanyId = 1;
-				this.workFlowtService.newCertificationtype(this.sourcecertificationtype).subscribe(
+				this.workFlowtService.newCertificationtype({...this.sourcecertificationtype,isDelete: this.isDeleteMode}).subscribe(
 					role => this.saveSuccessHelper(role),
 					error => this.saveFailedHelper(error));
 			}

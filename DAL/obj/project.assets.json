@@ -4472,29 +4472,30 @@
   "projectFileDependencyGroups": {
     ".NETStandard,Version=v2.0": [
       "AutoMapper >= 6.2.2",
+      "Microsoft.AspNetCore.Authentication >= 2.0.1",
       "Microsoft.AspNetCore.Identity.EntityFrameworkCore >= 2.0.1",
       "NETStandard.Library >= 2.0.3",
       "System.Linq.Dynamic.Core >= 1.0.18"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\SureshA\\.nuget\\packages\\": {},
+    "C:\\Users\\PAS\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "2.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\SureshA\\source\\repos\\PAS_DEV\\DAL\\DAL.csproj",
+      "projectUniqueName": "C:\\Users\\PAS\\source\\repos\\PAS_DEV\\DAL\\DAL.csproj",
       "projectName": "DAL",
-      "projectPath": "C:\\Users\\SureshA\\source\\repos\\PAS_DEV\\DAL\\DAL.csproj",
-      "packagesPath": "C:\\Users\\SureshA\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\SureshA\\source\\repos\\PAS_DEV\\DAL\\obj\\",
+      "projectPath": "C:\\Users\\PAS\\source\\repos\\PAS_DEV\\DAL\\DAL.csproj",
+      "packagesPath": "C:\\Users\\PAS\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\PAS\\source\\repos\\PAS_DEV\\DAL\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\SureshA\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\PAS\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4521,6 +4522,10 @@
           "AutoMapper": {
             "target": "Package",
             "version": "[6.2.2, )"
+          },
+          "Microsoft.AspNetCore.Authentication": {
+            "target": "Package",
+            "version": "[2.0.1, )"
           },
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
             "target": "Package",

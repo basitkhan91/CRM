@@ -70,6 +70,7 @@ namespace QuickApp.Pro.Controllers
                 glaccountclassobject.Description = employeeLicenseTypeViewModel.Description;
                 glaccountclassobject.MasterCompanyId = employeeLicenseTypeViewModel.MasterCompanyId;
                 glaccountclassobject.IsActive = true;
+                glaccountclassobject.IsDelete = false;
                 glaccountclassobject.CreatedDate = DateTime.Now;
                 glaccountclassobject.UpdatedDate = DateTime.Now;
                 glaccountclassobject.CreatedBy = employeeLicenseTypeViewModel.CreatedBy;

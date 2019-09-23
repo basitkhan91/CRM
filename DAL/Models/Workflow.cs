@@ -46,6 +46,8 @@ namespace DAL.Models
         [ForeignKey("ItemMasterId")]
         public Nullable<long> ItemMasterId { get; set; }
 
+        public string PartNumber { get; set; }
+
         //[Required(ErrorMessage = "Part Number Descrption is required")]
         public string PartNumberDescription { get; set; }
 

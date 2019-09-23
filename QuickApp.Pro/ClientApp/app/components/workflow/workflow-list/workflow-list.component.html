@@ -113,10 +113,10 @@
 
 <div class="modal fade bd-example-modal-lg" tabindex="-1" id="view" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content ">
+        <div class="modal-content" *ngIf="sourceWorkFlow != undefined">
             <div class="modal-header">
                 <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-                <h4 class="modal-title">Work Flow Details of "ACC123" for PN "PN15245" and Scope "OVH"</h4>
+                <h4 class="modal-title">Work Flow Details of ACC{{ sourceWorkFlow.workflowId}} for PN-{{sourceWorkFlow.itemMaster.partNumber}} and Scope {{sourceWorkFlow.workScope.description}}</h4>
             </div>
             <div class="modal-body">
                 <div class="card">
@@ -137,42 +137,42 @@
                                     <div class="form-row" style="margin-top: 20px;">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label>Work Flow ID: </label> {{currentWFList.workflow.workflowId}}
+                                                <label>Work Flow ID: </label> {{sourceWorkFlow.workflowId}}
                                             </div>
                                             <div class="form-group">
-                                                <label>Work Flow Description: </label>{{currentWFList.workflow.workflowDescription}}
+                                                <label>Work Flow Description: </label>{{sourceWorkFlow.workflowDescription}}
                                             </div>
                                             <div class="form-group">
-                                                <label>Version: </label>{{currentWFList.version}}
+                                                <label>Version: </label>{{sourceWorkFlow.version}}
                                             </div>
                                             <div class="form-group">
-                                                <label>Create Date: </label>{{currentWFList.workflowCreateDate}}
+                                                <label>Create Date: </label>{{sourceWorkFlow.workflowCreateDate}}
                                             </div>
                                             <div class="form-group">
-                                                <label>Expiration Date: </label>{{currentWFList.workflowExpirationDate}}
+                                                <label>Expiration Date: </label>{{sourceWorkFlow.workflowExpirationDate}}
                                             </div>
                                             <div class="form-group">
-                                                <label>Currency: </label>
+                                                <label>Currency: </label> {{sourceWorkFlow.currencySymbol}}
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label>PN: </label>{{currentWFList.partNumber}}
+                                                <label>PN: </label>{{sourceWorkFlow.itemMaster.partNumber}}
                                             </div>
                                             <div class="form-group">
-                                                <label>PN Description: </label>{{currentWFList.partDescription}}
+                                                <label>PN Description: </label>{{sourceWorkFlow.itemMaster.partDescription}}
                                             </div>
                                             <div class="form-group">
-                                                <label>Changed PN: </label>{{currentWFList.workflow.changedPartNumber}}
+                                                <label>Changed PN: </label>{{sourceWorkFlow.changedPartNumber}}
                                             </div>
                                             <div class="form-group">
-                                                <label>Work Scope: </label>{{currentWFList.workflow.workScope.description}}
+                                                <label>Work Scope: </label>{{sourceWorkFlow.workScope.description}}
                                             </div>
                                             <div class="form-group">
-                                                <label>Customer Name: </label>{{currentWFList.name}}
+                                                <label>Customer Name: </label>{{sourceWorkFlow.customerName}}
                                             </div>
                                             <div class="form-group">
-                                                <label>Memo: </label>{{currentWFList.workflow.workScope.memo}}
+                                                <label>Memo: </label>{{sourceWorkFlow.memo}}
                                             </div>
                                         </div>
                                     </div>
@@ -183,51 +183,50 @@
                                             <h5 style="margin-bottom: 0;font-size: 15px;">BER Determination</h5>
                                         </div>
                                         <div class="card-body" style="padding: 10px 20px;">
-                                            <div class="row">
+                                            <div class="row" *ngIf="sourceWorkFlow.isFixedAmount">
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <label>Fixed Amount: </label>{{currentWFList.workflow.fixedAmount}}
+                                                        <label>Fixed Amount: </label>{{sourceWorkFlow.fixedAmount}}
                                                     </div>
                                                 </div>
                                                 <div class="col-md-8">
-
                                                     <div style="float:right;">
                                                         <div class="form-group">
                                                             <label style="margin-top: 5px;">BER Threshold: </label>
-                                                            <input class="w60 form-control wf-ber-thrld" type="number" value="{{currentWFList.workflow.berThresholdAmount}}" disabled>
+                                                            <input class="w60 form-control wf-ber-thrld" type="number" value="{{sourceWorkFlow.berThresholdAmount}}" disabled>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <div class="row">
+                                            <div class="row" *ngIf="sourceWorkFlow.isPercentageOfNew == true">
                                                 <div class="col-md-12">
                                                     <div class="form-group">
-                                                        <label style="text-align: left;width: 150px;">% of Cost of New: </label>
+                                                        <label style="text-align: left;width: 150px;">% of Cost of New </label>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12">
                                                     <div style="padding-left: 36px;margin-top: 8px;">
                                                         <div class="col-sm-4">
                                                             <div class="form-group">
-                                                                <label style="width: 80px;">Cost of New: </label>{{currentWFList.workflow.costOfNew}}
+                                                                <label style="width: 80px;">Cost of New: </label>{{sourceWorkFlow.costOfNew}}
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
                                                             <div class="form-group">
-                                                                <label>Percent: </label> <span style="width: 60px">{{currentWFList.workflow.percentageOfNew}}%</span>
+                                                                <label>Percent: </label> <span style="width: 60px">{{sourceWorkFlow.percentageOfNew}}%</span>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
                                                             <div class="form-group">
-                                                                <label style="width: 80px;">Amount: </label> 
+                                                                <label style="width: 80px;">Amount: </label> {{sourceWorkFlow.percentOfNew}}
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <div class="row">
+                                            <div class="row" *ngIf="sourceWorkFlow.isPercentageOfReplacement == true">
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label style="text-align: left;width: 150px;">% of Replacement Cost: </label>
@@ -237,17 +236,17 @@
                                                     <div style="padding-left: 36px;margin-top: 8px;">
                                                         <div class="col-sm-4">
                                                             <div class="form-group">
-                                                                <label style="width: 80px;">Cost of Replace: </label> {{currentWFList.workflow.costOfReplacement}}
+                                                                <label style="width: 80px;">Cost of Replace: </label> {{sourceWorkFlow.costOfReplacement}}
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
                                                             <div class="form-group">
-                                                                <label>Percent: </label> <span style="width: 60px">{{currentWFList.workflow.percentageOfReplacement}}%</span>
+                                                                <label>Percent: </label> <span style="width: 60px">{{sourceWorkFlow.percentageOfReplacement}}%</span>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
                                                             <div class="form-group">
-                                                                <label style="width: 80px;">Amount: </label> 
+                                                                <label style="width: 80px;">Amount: </label> {{ sourceWorkFlow.percentOfReplacement}}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -267,39 +266,39 @@
                                     <div class="form-row">
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label>Material Cost: </label>
+                                                <label>Material Cost: </label> {{MaterialCost}}
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label>Expertise Cost: </label>
+                                                <label>Expertise Cost: </label> {{TotalExpertiseCost}}
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label>Charges: </label>
+                                                <label>Charges: </label> {{TotalCharges}}
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label>Other: </label>${{currentWFList.otherCost}}
+                                                <label>Other: </label>${{sourceWorkFlow.otherCost}}
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-row">
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label style="width: 130px;">Total Work Flow Cost: </label>
+                                                <label style="width: 130px;">Total Work Flow Cost: </label> {{Total}}
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label style="width: 130px;">% of BER Threshold: </label>
+                                                <label style="width: 130px;">% of BER Threshold: </label> {{PercentBERThreshold}}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>                           
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -312,8 +311,8 @@
                 </div>
 
                 <p-accordion [multiple]="true" class="p-accordion-cstm">
-                    <p-accordionTab header="Assemble" [selected]="displayAccord1" (click)="onAccordTabClick1()">
-                        <div>
+                    <p-accordionTab *ngFor="let task of addedTasks" header="{{task.Name}}" (click)="onAccordTabClick1()">
+                        <div *ngIf="task.publication.length > 0">
                             <h5 class="po-head">Publications</h5>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-fixed wfl-table-popup-cstm">
@@ -338,30 +337,29 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>1.</td>
-                                            <td>45789</td>
-                                            <td>Engine</td>
-                                            <td>123</td>
-                                            <td>5/5/19</td>
-                                            <td>Mandatory</td>
-                                            <td>2</td>
+                                        <tr *ngFor="let publication of task.publication;let i = index">
+                                            <td>{{(i+1)}}</td>
+                                            <td>{{publication.publicationId}}</td>
+                                            <td>{{publication.publicationDescription}}</td>
+                                            <td>{{publication.revision}}</td>
+                                            <td>{{publication.RrevisionDate}}</td>
+                                            <td>{{publication.publicationType}}</td>
+                                            <td>{{publication.sequence}}</td>
+                                            <td>{{publication.source}}</td>
+                                            <td>{{publication.aircraftManufacturer}}</td>
+                                            <td>{{publication.model}}</td>
                                             <td></td>
-                                            <td>Manufacturer</td>
-                                            <td>123</td>
-                                            <td>123</td>
-                                            <td>NY</td>
-                                            <td>John</td>
-                                            <td>5/6/19</td>
-                                            <td>Open</td>
+                                            <td>{{publication.location}}</td>
+                                            <td>{{publication.verifiedBy}}</td>
+                                            <td>{{publication.verifiedDate}}</td>
+                                            <td>{{publication.status}}</td>
                                             <td><img src="" class="img-responsive" alt="" /></td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-
-                        <div>
+                        <div *ngIf="task.measurements.length > 0">
                             <h5 class="po-head">Measurements</h5>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-fixed wfl-table-popup-cstm">
@@ -379,23 +377,22 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>1.</td>
-                                            <td>45789</td>
-                                            <td>123</td>
-                                            <td>123</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td>Memo Description</td>
+                                        <tr *ngFor="let measurement of task.measurements;let i = index">
+                                            <td>{{(i+1)}}</td>
+                                            <td>{{measurement.PartName}}</td>
+                                            <td>{{measurement.sequence}}</td>
+                                            <td>{{measurement.stage}}</td>
+                                            <td>{{measurement.min}}</td>
+                                            <td>{{measurement.max}}</td>
+                                            <td>{{measurement.expected}}</td>
+                                            <td>{{measurement.diagramURL}}</td>
+                                            <td>{{measurement.memo}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-
-                        <div>
+                        <div *ngIf="task.exclusions.length > 0">
                             <h5 class="po-head">Exclusions</h5>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-fixed wfl-table-popup-cstm">
@@ -412,23 +409,23 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>1.</td>
-                                            <td>45789</td>
-                                            <td>Description</td>
-                                            <td>2</td>
-                                            <td>10.00</td>
-                                            <td></td>
-                                            <td>11%</td>
-                                            <td>Memo Description</td>
+                                        <tr *ngFor="let exclusion of task.exclusions;let i = index">
+                                            <td>{{(i+1)}}</td>
+                                            <td>{{exclusion.partNumber}}</td>
+                                            <td>{{exclusion.partDescription}}</td>
+                                            <td>{{exclusion.quantity}}</td>
+                                            <td>{{exclusion.unitCost}}</td>
+                                            <td>{{exclusion.extendedCost}}</td>
+                                            <td>{{exclusion.estimtPercentOccurrance}}%</td>
+                                            <td>{{exclusion.memo}}</td>
                                         </tr>
                                         <tr>
                                             <td><b>Total</b></td>
                                             <td></td>
                                             <td></td>
-                                            <td>0</td>
+                                            <td>{{task.exclusionQty}}</td>
                                             <td></td>
-                                            <td>0</td>
+                                            <td>{{task.exclusionextendedQty}}</td>
                                             <td></td>
                                             <td></td>
                                         </tr>
@@ -436,8 +433,7 @@
                                 </table>
                             </div>
                         </div>
-
-                        <div>
+                        <div *ngIf="task.directions.length > 0">
                             <h5 class="po-head">Directions</h5>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-fixed wfl-table-popup-cstm">
@@ -451,19 +447,18 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>1.</td>
-                                            <td></td>
-                                            <td>Description</td>
-                                            <td>2</td>
-                                            <td>Memo Description</td>
+                                        <tr *ngFor="let direction of task.directions;let i = index">
+                                            <td>{{(i + 1)}}</td>
+                                            <td>{{direction.action}}</td>
+                                            <td>{{direction.description}}</td>
+                                            <td>{{direction.sequence}}</td>
+                                            <td>{{direction.memo}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-
-                        <div>
+                        <div *ngIf="task.expertise.length > 0">
                             <h5 class="po-head">Expertise</h5>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-fixed wfl-table-popup-cstm">
@@ -480,32 +475,31 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>1.</td>
-                                            <td>Inspector</td>
-                                            <td>22</td>
-                                            <td>123</td>
-                                            <td>123</td>
-                                            <td>3%</td>
-                                            <td>3</td>
-                                            <td>3</td>
+                                        <tr *ngFor="let expertise of task.expertise;let i=index">
+                                            <td>{{(i+1)}}</td>
+                                            <td>{{expertise.expetiseTypeName}}</td>
+                                            <td>{{expertise.estimatedHours}}</td>
+                                            <td>{{expertise.laborDirectRate}}</td>
+                                            <td>{{expertise.directLaborRate}}</td>
+                                            <td>{{expertise.overheadBurden}}</td>
+                                            <td>{{expertise.overheadCost}}</td>
+                                            <td>{{expertise.laborOverheadCost}}</td>
                                         </tr>
                                         <tr>
                                             <td><b>Total</b></td>
                                             <td></td>
-                                            <td>0</td>
+                                            <td>{{task.expertiseTotalEstimatedHours}}</td>
                                             <td></td>
-                                            <td>0</td>
+                                            <td>{{task.expertiseTotalDirectLaborCost}}</td>
                                             <td></td>
-                                            <td>0</td>
-                                            <td>0</td>
+                                            <td>{{task.expertiseTotalOHCost}}</td>
+                                            <td>{{task.expertiseTotalDirectLabourAndOHCost}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-
-                        <div>
+                        <div *ngIf="task.equipments.length > 0">
                             <h5 class="po-head">Equipment</h5>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-fixed wfl-table-popup-cstm">
@@ -519,19 +513,18 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>1.</td>
-                                            <td>22</td>
-                                            <td>Type</td>
-                                            <td>Description</td>
-                                            <td>3</td>
+                                        <tr *ngFor="let equipment of task.equipments;let i=index">
+                                            <td>{{(i+1)}}</td>
+                                            <td>{{equipment.assetName}}</td>
+                                            <td>{{equipment.assetTypeName}}</td>
+                                            <td>{{equipment.assetDescription}}</td>
+                                            <td>{{equipment.quantity}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-
-                        <div>
+                        <div *ngIf="task.charges.length > 0">
                             <h5 class="po-head">Charges</h5>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-fixed wfl-table-popup-cstm">
@@ -549,34 +542,33 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>1.</td>
-                                            <td>AOG Fee</td>
-                                            <td>Description</td>
-                                            <td>3</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td>John</td>
+                                        <tr *ngFor="let charge of task.charges;let i=index">
+                                            <td>{{(i+1)}}</td>
+                                            <td>{{charge.chargesTypeName}}</td>
+                                            <td>{{charge.description}}</td>
+                                            <td>{{charge.quantity}}</td>
+                                            <td>{{charge.unitCost}}</td>
+                                            <td>{{charge.extendedCost}}</td>
+                                            <td>{{charge.unitPrice}}</td>
+                                            <td>{{charge.extendedPrice}}</td>
+                                            <td>{{charge.vendorName}}</td>
                                         </tr>
                                         <tr>
                                             <td><b>Total</b></td>
                                             <td></td>
                                             <td></td>
-                                            <td>0</td>
+                                            <td>{{task.chargesTotalQty}}</td>
                                             <td></td>
-                                            <td>0</td>
+                                            <td>{{task.chargesTotalExtendedCost}}</td>
                                             <td></td>
-                                            <td>0</td>
+                                            <td>{{task.chargesTotalChargesCost}}</td>
                                             <td></td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-
-                        <div>
+                        <div *ngIf="task.materialList.length > 0">
                             <h5 class="po-head">Material List</h5>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-fixed wfl-table-popup-cstm">
@@ -598,27 +590,20 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>1.</td>
-                                            <td>3433</td>
-                                            <td>Description</td>
-                                            <td>New</td>
-                                            <td>Mandatory</td>
-                                            <td></td>
-                                            <td>2</td>
-                                            <td></td>
-                                            <td>23</td>
-                                            <td>23</td>
-                                            <td>23</td>
-                                            <td>Memo Description</td>
-                                            <td>
-                                                <div class="checkbox-cstm">
-                                                    <label style="width: 50px;">
-                                                        <input type="checkbox" disabled="disabled">
-                                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                    </label>
-                                                </div>
-                                            </td>
+                                        <tr *ngFor="let material of task.materialList;let i = index">
+                                            <td>{{(i+1)}}</td>
+                                            <td>{{material.partNumber}}</td>
+                                            <td>{{material.partDescription}}</td>
+                                            <td>{{material.conditionName}}</td>
+                                            <td>{{material.mandatoryOrSupplementalName}}</td>
+                                            <td>{{material.itemClassificationName}}</td>
+                                            <td>{{material.quantity}}</td>
+                                            <td>{{material.uomName}}</td>
+                                            <td>{{material.unitCost}}</td>
+                                            <td>{{material.extendedCost}}</td>
+                                            <td>{{material.price}}</td>
+                                            <td>{{material.memo}}</td>
+                                            <td>{{material.isDeferred}}</td>
                                         </tr>
                                         <tr>
                                             <td><b>Total</b></td>
@@ -627,11 +612,11 @@
                                             <td></td>
                                             <td></td>
                                             <td></td>
-                                            <td>0</td>
+                                            <td>{{task.materialTotalQty}}</td>
                                             <td></td>
                                             <td></td>
-                                            <td>0</td>
-                                            <td>0</td>
+                                            <td>{{task.materialTotalExtendedCost}}</td>
+                                            <td>{{task.materialTotalPrice}}</td>
                                             <td></td>
                                             <td></td>
                                         </tr>
@@ -639,45 +624,24 @@
                                 </table>
                             </div>
                         </div>
-                        <h5>Total Cost for Assemble Action : $220.00</h5>
                     </p-accordionTab>
-                    <p-accordionTab header="Cleaning" [selected]="displayAccord2" (click)="onAccordTabClick2()">
-
-                    </p-accordionTab>
-                    <p-accordionTab header="DER" [selected]="displayAccord3" (click)="onAccordTabClick3()">
-
-                    </p-accordionTab>
-                    <p-accordionTab header="Disassemble" [selected]="displayAccord4" (click)="onAccordTabClick4()">
-
-                    </p-accordionTab>
-                    <p-accordionTab header="Evaluate" [selected]="displayAccord5" (click)="onAccordTabClick5()">
-
-                    </p-accordionTab>
-                    <p-accordionTab header="Inspect" [selected]="displayAccord6" (click)="onAccordTabClick6()">
-
-                    </p-accordionTab>
-                    <p-accordionTab header="Part Out" [selected]="displayAccord7" (click)="onAccordTabClick7()">
-
-                    </p-accordionTab>
-                    <p-accordionTab header="QC" [selected]="displayAccord8" (click)="onAccordTabClick8()">
-
-                    </p-accordionTab>
-                    <p-accordionTab header="Receive" [selected]="displayAccord9" (click)="onAccordTabClick9()">
-
-                    </p-accordionTab>
-                    <p-accordionTab header="Shipping" [selected]="displayAccord10" (click)="onAccordTabClick10()">
-
-                    </p-accordionTab>
-                    <p-accordionTab header="Teardown" [selected]="displayAccord11" (click)="onAccordTabClick11()">
-
-                    </p-accordionTab>
-                </p-accordion>
-                <h5>Total Cost for the Work Flow : $660.00</h5>
+                    </p-accordion>
+                            <!--<p-accordion [multiple]="true" class="p-accordion-cstm">
+                                <p-accordionTab header="Assemble" [selected]="displayAccord1" (click)="onAccordTabClick1()">
+                                  
+                                    
+                                    
+                                    <h5>Total Cost for Assemble Action : $220.00</h5>
+                                </p-accordionTab>
+                               
+                            </p-accordion>-->
+                            
+                <!--<h5>Total Cost for the Work Flow : $660.00</h5>-->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
+                        </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
-            </div>
-        </div>
     </div>
 </div>
 

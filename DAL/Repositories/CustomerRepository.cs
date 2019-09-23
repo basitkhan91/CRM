@@ -854,6 +854,126 @@ namespace DAL.Repositories
             }
         }
 
+        public IEnumerable<object> searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID(long CustomerId, string AircraftTypeId, string AircraftModelId, string DashNumberId)
+        {
+            long[] myAircraftTypeId = null;
+            long[] myAircraftModelId = null;
+            long[] myDashNumberId = null;
+            if (AircraftTypeId != null && AircraftTypeId != "")
+                myAircraftTypeId = AircraftTypeId.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
+            if (AircraftModelId != null && AircraftModelId != "")
+                myAircraftModelId = AircraftModelId.Split(',').Select(y => Convert.ToInt64(y)).ToArray();
+            if (DashNumberId != null && DashNumberId != "")
+                myDashNumberId = DashNumberId.Split(',').Select(x => Convert.ToInt64(x)).ToArray();
+            if (AircraftTypeId != null && AircraftModelId != null && myDashNumberId != null)
+            {
+                var data = (from cam in _appContext.CustomerAircraftMapping
+                            where cam.CustomerId == CustomerId && myAircraftTypeId.Contains(cam.AircraftTypeId) && myAircraftModelId.Contains(cam.AircraftModelId) && myDashNumberId.Contains(cam.DashNumberId) && cam.IsDeleted != true
+                            select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
+            }
+            else if (AircraftTypeId != null && AircraftModelId != null && myDashNumberId == null)
+            {
+                var data = (from cam in _appContext.CustomerAircraftMapping
+                            where cam.CustomerId == CustomerId && myAircraftTypeId.Contains(cam.AircraftTypeId) && myAircraftModelId.Contains(cam.AircraftModelId) && cam.IsDeleted != true
+                            select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
+            }
+            else if (AircraftTypeId != null && myAircraftModelId == null && myDashNumberId == null)
+            {
+                var data = (from cam in _appContext.CustomerAircraftMapping
+                            where cam.CustomerId == CustomerId && myAircraftTypeId.Contains(cam.AircraftTypeId) && cam.IsDeleted != true
+                            select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
+            }
+            else if (AircraftTypeId != null && myAircraftModelId == null && myDashNumberId != null)
+            {
+                var data = (from cam in _appContext.CustomerAircraftMapping
+                            where cam.CustomerId == CustomerId && myAircraftTypeId.Contains(cam.AircraftTypeId) && myDashNumberId.Contains(cam.DashNumberId) && cam.IsDeleted != true
+                            select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
+            }
+            else if (AircraftTypeId == null && AircraftModelId != null && myDashNumberId != null)
+            {
+                var data = (from cam in _appContext.CustomerAircraftMapping
+                            where cam.CustomerId == CustomerId && myAircraftModelId.Contains(cam.AircraftModelId) && myDashNumberId.Contains(cam.DashNumberId) && cam.IsDeleted != true
+                            select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
+            }
+            else if (AircraftTypeId == null && AircraftModelId != null && myDashNumberId == null)
+            {
+                var data = (from cam in _appContext.CustomerAircraftMapping
+                            where cam.CustomerId == CustomerId && myAircraftModelId.Contains(cam.AircraftModelId) && cam.IsDeleted != true
+                            select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
+            }
+            else if (AircraftTypeId == null && myAircraftModelId == null && myDashNumberId != null)
+            {
+                var data = (from cam in _appContext.CustomerAircraftMapping
+                            where cam.CustomerId == CustomerId && myDashNumberId.Contains(cam.DashNumberId) && cam.IsDeleted != true
+                            select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
+            }
+            else
+            {
+                var data = (from cam in _appContext.CustomerAircraftMapping
+                            where cam.CustomerId == CustomerId && cam.IsDeleted != true
+                            select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
+            }
+        }
+        public IEnumerable<object> searchgetCustomerATAMappingDataByMultiTypeIdATAIDATASUBID(long CustomerId, string ATAChapterId, string ATASubChapterID)
+        {
+            long[] myATAChapterId = null;
+            long[] myATASubChapterID = null;
+            if (ATAChapterId != null && ATAChapterId != "")
+                myATAChapterId = ATAChapterId.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
+            if (ATASubChapterID != null && ATASubChapterID != "")
+                myATASubChapterID = ATASubChapterID.Split(',').Select(y => Convert.ToInt64(y)).ToArray();
+            if (ATAChapterId != null && ATASubChapterID != null)
+            {
+                var data = (from cATA in _appContext.CustomerATAMapping
+                            where cATA.CustomerId == CustomerId && myATAChapterId.Contains(cATA.ATAChapterId) && myATASubChapterID.Contains(cATA.ATASubChapterId) && cATA.IsDeleted != true
+                            select new { cATA.CustomerATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
+                return uniquedata;
+            }
+            else if (ATAChapterId != null && ATASubChapterID == null)
+            {
+                var data = (from cATA in _appContext.CustomerATAMapping
+                            where cATA.CustomerId == CustomerId && myATAChapterId.Contains(cATA.ATAChapterId) && cATA.IsDeleted != true
+                            select new { cATA.CustomerATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
+                return uniquedata;
+
+            }
+            else if (ATAChapterId == null && ATASubChapterID != null)
+            {
+                var data = (from cATA in _appContext.CustomerATAMapping
+                            where cATA.CustomerId == CustomerId && myATASubChapterID.Contains(cATA.ATASubChapterId) && cATA.IsDeleted != true
+                            select new { cATA.CustomerATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
+                return uniquedata;
+
+            }
+            else
+            {
+                var data = (from cATA in _appContext.CustomerATAMapping
+                            where cATA.CustomerId == CustomerId && cATA.IsDeleted != true
+                            select new { cATA.CustomerATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
+                return uniquedata;
+
+            }
+        }
 
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

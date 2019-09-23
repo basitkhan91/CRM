@@ -84,7 +84,7 @@ export class DefaultMessageComponent implements OnInit, AfterViewInit {
     loading: boolean;
 
     /** Currency ctor */
-	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, private masterComapnyService: MasterComapnyService, private modalService: NgbModal, public defaultmessageService: DefaultMessageService, private dialog: MatDialog) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, private masterComapnyService: MasterComapnyService, private modalService: NgbModal, public defaultmessageService: DefaultMessageService, private dialog: MatDialog) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
 
@@ -96,12 +96,13 @@ export class DefaultMessageComponent implements OnInit, AfterViewInit {
             { field: 'defaultMessageCode', header: 'Default Message Name' },
             { field: 'description', header: 'Default Message  Description' },
             { field: 'memo', header: 'Memo' },
-            { field: 'createdBy', header: 'Created By' },
-            { field: 'updatedBy', header: 'Updated By' },           // { field: 'updatedDate', header: 'Updated Date' },
-           // { field: 'createdDate', header: 'Created Date' }
-		];
-		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-default-message';
-		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
+            // { field: 'createdBy', header: 'Created By' },
+            // { field: 'updatedBy', header: 'Updated By' },     
+            // { field: 'updatedDate', header: 'Updated Date' },
+            // { field: 'createdDate', header: 'Created Date' }
+        ];
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-default-message';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
         this.selectedColumns = this.cols;
 
     }
@@ -139,7 +140,6 @@ export class DefaultMessageComponent implements OnInit, AfterViewInit {
         // debugger;
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
         this.defaultmessageService.getDefaultMessageList().subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
@@ -162,6 +162,7 @@ export class DefaultMessageComponent implements OnInit, AfterViewInit {
         this.dataSource.data = getDefaultMessageList;
 
         this.allDefaultMessageInfo = getDefaultMessageList;
+        console.log(this.allDefaultMessageInfo);
     }
 
     private onDataLoadFailed(error: any) {
@@ -183,10 +184,10 @@ export class DefaultMessageComponent implements OnInit, AfterViewInit {
 
         this.isEditMode = false;
         this.isDeleteMode = false;
-		this.disableSave = false;
+        this.disableSave = false;
         this.isSaving = true;
         this.loadMasterCompanies();
-		this.sourceAction = new DefaultMessage();
+        this.sourceAction = new DefaultMessage();
         this.sourceAction.isActive = true;
         this.messageName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
@@ -204,6 +205,7 @@ export class DefaultMessageComponent implements OnInit, AfterViewInit {
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceAction = row;
+        this.defaultMessage_Name = row.defaultMessageCode;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -222,7 +224,7 @@ export class DefaultMessageComponent implements OnInit, AfterViewInit {
     openEdit(content, row) {
 
         this.isEditMode = true;
-		this.disableSave = false;
+        this.disableSave = false;
         this.isSaving = true;
         this.loadMasterCompanies();
 
@@ -242,12 +244,12 @@ export class DefaultMessageComponent implements OnInit, AfterViewInit {
         this.loadingIndicator = true;
         this.sourceAction = row;
         this.isSaving = true;
-           this.defaultmessageService.historyDefaultMessage(this.sourceAction.defaultMessageId).subscribe(
+        this.defaultmessageService.historyDefaultMessage(this.sourceAction.defaultMessageId).subscribe(
             results => this.onHistoryLoadSuccessful(results[0], content),
             error => this.saveFailedHelper(error));
 
 
-    
+
     }
     openView(content, row) {
 
@@ -274,13 +276,13 @@ export class DefaultMessageComponent implements OnInit, AfterViewInit {
     eventHandler(event) {
         let value = event.target.value.toLowerCase();
         if (this.selectedActionName) {
-        if (value == this.selectedActionName.toLowerCase()) {
-            //alert("Action Name already Exists");
-            this.disableSave = true;
-        }
-        else {
-            this.disableSave = false;
-        }
+            if (value == this.selectedActionName.toLowerCase()) {
+                //alert("Action Name already Exists");
+                this.disableSave = true;
+            }
+            else {
+                this.disableSave = false;
+            }
         }
     }
     partnmId(event) {
@@ -305,13 +307,13 @@ export class DefaultMessageComponent implements OnInit, AfterViewInit {
                     "defaultMessageId": this.allDefaultMessageInfo[i].defaultMessageId,
                     "messageName": messageName
                 }]),
-                this.localCollection.push(messageName);
+                    this.localCollection.push(messageName);
             }
         }
     }
     private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
 
-       
+
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
 
@@ -329,7 +331,6 @@ export class DefaultMessageComponent implements OnInit, AfterViewInit {
 
 
     editItemAndCloseModel() {
-
         // debugger;
 
         this.isSaving = true;
@@ -338,7 +339,7 @@ export class DefaultMessageComponent implements OnInit, AfterViewInit {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.defaultMessageCode = this.messageName;
-              this.sourceAction.masterCompanyId= 1;
+            this.sourceAction.masterCompanyId = 1;
             this.defaultmessageService.newDefaultMessage(this.sourceAction).subscribe(
                 role => this.saveSuccessHelper(role),
                 error => this.saveFailedHelper(error));
@@ -347,7 +348,7 @@ export class DefaultMessageComponent implements OnInit, AfterViewInit {
 
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.defaultMessageCode = this.messageName;
-              this.sourceAction.masterCompanyId= 1;
+            this.sourceAction.masterCompanyId = 1;
             this.defaultmessageService.updateDefaultMessage(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
@@ -382,15 +383,15 @@ export class DefaultMessageComponent implements OnInit, AfterViewInit {
             this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
 
         }
-
-        this.updatePaginatorState();
+        this.loadData();
+        // this.updatePaginatorState();
     }
 
     private saveSuccessHelper(role?: DefaultMessage) {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
-
-        this.updatePaginatorState();
+        this.loadData();
+        //this.updatePaginatorState();
 
     }
 
@@ -430,78 +431,78 @@ export class DefaultMessageComponent implements OnInit, AfterViewInit {
         });
     }
 
-    updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
-    {
-        this.paginatorState = {
-            rows: this.rows,
-            first: this.first
-        }
-        if (this.paginatorState) {
-            this.loadDefaultMessage(this.paginatorState);
-        }
-    }
+    // updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
+    // {
+    //     this.paginatorState = {
+    //         rows: this.rows,
+    //         first: this.first
+    //     }
+    //     if (this.paginatorState) {
+    //         this.loadDefaultMessage(this.paginatorState);
+    //     }
+    // }
 
-    loadDefaultMessage(event: LazyLoadEvent) //when page initilizes it will call this method
-    {
-        this.loading = true;
-        this.rows = event.rows;
-        this.first = event.first;
-        setTimeout(() => {
-            if (this.allDefaultMessageInfo) {
-                this.defaultmessageService.getServerPages(event).subscribe( //we are sending event details to service
-                    pages => {
-                        if (pages.length > 0) {
-                            this.defaultMessagePagination = pages[0];
-                        }
-                    });
-                this.loading = false;
-            }
-        }, 1000);
-    }
+    // loadDefaultMessage(event: LazyLoadEvent) //when page initilizes it will call this method
+    // {
+    //     this.loading = true;
+    //     this.rows = event.rows;
+    //     this.first = event.first;
+    //     setTimeout(() => {
+    //         if (this.allDefaultMessageInfo) {
+    //             this.defaultmessageService.getServerPages(event).subscribe( //we are sending event details to service
+    //                 pages => {
+    //                     if (pages.length > 0) {
+    //                         this.defaultMessagePagination = pages[0];
+    //                     }
+    //                 });
+    //             this.loading = false;
+    //         }
+    //     }, 1000);
+    // }
 
-    inputFiledFilter(event, filed, matchMode) {
+    // inputFiledFilter(event, filed, matchMode) {
 
-        this.event = event;
-        this.field = filed;
-        this.matvhMode = matchMode;
+    //     this.event = event;
+    //     this.field = filed;
+    //     this.matvhMode = matchMode;
 
-        if (filed == 'defaultMessageCode') {
-            this.defaultMessageCodeInputFieldValue = event;
-        }
-        if (filed == 'description') {
-            this.descriptionInputFieldValue = event;
-        }
-        if (filed == 'memo') {
-            this.memoInputFieldValue = event;
-        }
-        
-        if (filed == 'createdBy') {
-            this.createdByInputFieldValue = event;
-        }
-        if (filed == 'updatedBy') {
-            this.updatedByInputFieldValue = event;
-        }
-        this.defaultMessage.push({
-            DefaultMessageCode: this.defaultMessageCodeInputFieldValue,
-            Description: this.descriptionInputFieldValue,
-            Memo: this.memoInputFieldValue,
-            CreatedBy: this.createdByInputFieldValue,
-            UpdatedBy: this.updatedByInputFieldValue,
-            first: this.first,
-            page: 10,
-            pageCount: 10,
-            rows: this.rows,
-            limit: 5
-        })
-        if (this.defaultMessage) {
-            this.defaultmessageService.getServerPages(this.defaultMessage[this.defaultMessage.length - 1]).subscribe( //we are sending event details to service
-                pages => {
-                    if (pages.length > 0) {
-                        this.defaultMessagePagination = pages[0];
-                    }
-                });
-        }
-        else {
-        }
-    }
+    //     if (filed == 'defaultMessageCode') {
+    //         this.defaultMessageCodeInputFieldValue = event;
+    //     }
+    //     if (filed == 'description') {
+    //         this.descriptionInputFieldValue = event;
+    //     }
+    //     if (filed == 'memo') {
+    //         this.memoInputFieldValue = event;
+    //     }
+
+    //     if (filed == 'createdBy') {
+    //         this.createdByInputFieldValue = event;
+    //     }
+    //     if (filed == 'updatedBy') {
+    //         this.updatedByInputFieldValue = event;
+    //     }
+    //     this.defaultMessage.push({
+    //         DefaultMessageCode: this.defaultMessageCodeInputFieldValue,
+    //         Description: this.descriptionInputFieldValue,
+    //         Memo: this.memoInputFieldValue,
+    //         CreatedBy: this.createdByInputFieldValue,
+    //         UpdatedBy: this.updatedByInputFieldValue,
+    //         first: this.first,
+    //         page: 10,
+    //         pageCount: 10,
+    //         rows: this.rows,
+    //         limit: 5
+    //     })
+    //     if (this.defaultMessage) {
+    //         this.defaultmessageService.getServerPages(this.defaultMessage[this.defaultMessage.length - 1]).subscribe( //we are sending event details to service
+    //             pages => {
+    //                 if (pages.length > 0) {
+    //                     this.defaultMessagePagination = pages[0];
+    //                 }
+    //             });
+    //     }
+    //     else {
+    //     }
+    // }
 }

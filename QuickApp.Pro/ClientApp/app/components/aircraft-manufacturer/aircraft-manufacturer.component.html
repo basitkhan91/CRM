@@ -52,15 +52,15 @@
                                     <th style="width:150px"></th>
                                 </tr>
                             </ng-template>
-                            <ng-template pTemplate="body" ngFor let-model [ngForOf]="allmanufacturerInfo">
+                            <ng-template pTemplate="body" let-rowData ngFor let-model [ngForOf]="allmanufacturerInfo" let-rowIndex="rowIndex">
                                 <tr>                                   
                                     <td>{{model.description}}</td>
                                     <td>{{model.memo}}</td>
                                     <td>
                                        
-                                        <p-inputSwitch *ngIf="(model.isActive == true) || (model.isActive == null)" matTooltip="Active" onLabel="on" offLabel="off"
-                                            (onChange)="updateStatus(model)" [(ngModel)]="model.isActive"></p-inputSwitch>
-                                       <!-- <p-inputSwitch [(ngModel)]="model.isActive" name="isActive" (onChange)="updateStatus(model)" ></p-inputSwitch> -->
+                                        <!-- <p-inputSwitch *ngIf="(model.isActive == true) || (model.isActive == null)" matTooltip="Active" onLabel="on" offLabel="off"
+                                            (onChange)="updateStatus(model)" [(ngModel)]="model.isActive"></p-inputSwitch> -->
+                                       <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}" (onChange)="handleChange(rowData)" ></p-inputSwitch>
                                         <span data-toggle="modal" data-target="#view">
                                             <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(viewData,model.aircraftTypeId)" title="View">
                                                 <i class="fa fa-eye"></i>
@@ -181,7 +181,6 @@
                             <label class="control-label">Manufacturer Name:
                                 <span class="clr-red">*</span>
                             </label>
-
                         </div>
                         <div class="col-sm-5">
                             <p-autoComplete [(ngModel)]="aircraftManufacturerTypeToUpdate.description" (onSelect)="manufactureId($event)" (onKeyUp)=eventHandler($event)
@@ -201,6 +200,19 @@
                         </div>
                         <div class="col-sm-5">
                             <textarea class="text-item" name="memo" [(ngModel)]="aircraftManufacturerTypeToUpdate.memo"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-7">
+                        <div class="checkbox-cstm">
+                            <label>
+                                <input type="checkbox" name="isActive" #isActive="ngModel" checked id="isActive" [(ngModel)]="aircraftManufacturerTypeToUpdate.isActive">
+                                <span class="cr">
+                                    <i class="cr-icon pi pi-check"></i>
+                                </span>
+                                Active
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -362,6 +374,19 @@
                         </div>
                         <div class="col-sm-5">
                             <textarea class="text-item" name="memo" [(ngModel)]="currentAircraftManufacturerType.memo"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-7">
+                        <div class="checkbox-cstm">
+                            <label>
+                                <input type="checkbox" name="isActive" #isActive="ngModel" checked id="isActive" [(ngModel)]="currentAircraftManufacturerType.isActive">
+                                <span class="cr">
+                                    <i class="cr-icon pi pi-check"></i>
+                                </span>
+                                Active
+                            </label>
                         </div>
                     </div>
                 </div>

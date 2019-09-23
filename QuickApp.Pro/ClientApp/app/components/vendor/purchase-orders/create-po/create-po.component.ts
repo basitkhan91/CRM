@@ -181,10 +181,10 @@ export class CreatePoComponent implements OnInit {
 		// this.dataSource.data = getPriorityList;
 		this.allPriorityInfo = getPriorityList;
 	}
-	gotoCreatePO(data) {
-		this.workFlowtService.purchasepartcollection = [];
-		this.workFlowtService.isEditMode = true;
-		this.workFlowtService.vendorForPoCollection=data;
+	gotoCreatePO() {
+		//this.workFlowtService.purchasepartcollection = [];
+		//this.workFlowtService.isEditMode = true;
+		//this.workFlowtService.vendorForPoCollection=data;
 		this._router.navigateByUrl('/vendorsmodule/vendorpages/app-purchase-setup');
 	}
 	private onDataLoadFailed(error: any) {

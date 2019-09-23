@@ -47,6 +47,8 @@ namespace DAL.Repositories.Interfaces
         GetData<ShippingViaDetails> GetShippingViaDetails(ShippingViaDetails model);
         GetData<ShippingViaDetails> GetShippingViaDetails(long internationalShippingId, int pageNumber, int pageSize);
         ShippingViaDetails GetShippingViaDetailsById(long id);
+        IEnumerable<object> searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID(long CustomerId, string AircraftTypeId, string AircraftModelId, string DashNumberId);
+        IEnumerable<object> searchgetCustomerATAMappingDataByMultiTypeIdATAIDATASUBID(long CustomerId, string ATAChapterId, string ATASubChapterID);
 
     }
 }
