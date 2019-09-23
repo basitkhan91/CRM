@@ -78,43 +78,47 @@ namespace QuickApp.Pro.Controllers
         }
         [HttpPost("publicationpost")]
         //[Authorize(Authorization.Policies.ManageAllRolesPolicy)]
-        public IActionResult CreateAction([FromBody] Publication publicationViewModel)
+        public IActionResult CreateAction()
         {
+
             try
             {
+
+
+                DAL.Models.Publication publicationobject = new DAL.Models.Publication();
                 if (ModelState.IsValid)
                 {
-                    if (publicationViewModel == null)
-                        return BadRequest($"{nameof(publicationViewModel)} cannot be null");
 
-                    //DAL.Models.Publication publicationobject = new DAL.Models.Publication();
-                    //publicationobject.PublicationRecordId = publicationViewModel.PublicationRecordId;
-                    //publicationobject.PublicationId = publicationViewModel.PublicationId;
-                    //publicationobject.Description = publicationViewModel.Description;
-                    //publicationobject.Memo = publicationViewModel.Memo;
-                    //publicationobject.Platform = publicationViewModel.Platform;
-                    //publicationobject.Description = publicationViewModel.Description;
-                    //publicationobject.MasterCompanyId = publicationViewModel.MasterCompanyId;
-                    //publicationobject.IsActive = publicationViewModel.IsActive;
-                    //publicationobject.IsDeleted= publicationViewModel.IsDeleted;
-                    //publicationobject.EntryDate = publicationViewModel.EntryDate;
-                    //publicationobject.revisionDate = publicationViewModel.revisionDate;
-                    //publicationobject.nextreviewDate = publicationViewModel.nextreviewDate;
-                    //publicationobject.ASD = publicationViewModel.ASD;
-                    //publicationobject.publishby = publicationViewModel.publishby;
-                    //publicationobject.location = publicationViewModel.location;
-                    //publicationobject.revision = publicationViewModel.revision;
-                    //publicationobject.verifiedby = publicationViewModel.verifiedby;
-                    //publicationobject.verifieddate = publicationViewModel.verifieddate;
-                    //publicationobject.employee = publicationViewModel.employee;
-                    //publicationobject.docpath = publicationViewModel.docpath;
-                    //publicationobject.CreatedDate = DateTime.Now;
-                    //publicationobject.UpdatedDate = DateTime.Now;
-                    //publicationobject.CreatedBy = publicationViewModel.CreatedBy;
-                    //publicationobject.UpdatedBy = publicationViewModel.UpdatedBy;
-                    _unitOfWork.Publication.Add(publicationViewModel);
+                    if (Request.Form == null)
+                        return BadRequest($"{nameof(publicationobject)} cannot be null");
+
+                    
+                    //publicationobject.PublicationRecordId = Request.Form["PublicationRecordId"];
+                    publicationobject.PublicationId = Request.Form["PublicationId"];
+                    publicationobject.Description = Request.Form["Description"];
+                    publicationobject.Memo = Request.Form["Memo"];
+                    publicationobject.Platform = Request.Form["Platform"];
+                    publicationobject.MasterCompanyId =Convert.ToInt32(Request.Form["MasterCompanyId"]);
+                    publicationobject.IsActive = true;
+                    publicationobject.IsDeleted = false;
+                    publicationobject.EntryDate = Request.Form["EntryDate"].ToString()==null? DateTime.Now :Convert.ToDateTime(Request.Form["EntryDate"]);
+                    publicationobject.revisionDate = Request.Form["revisionDate"].ToString() == null ? DateTime.Now : Convert.ToDateTime(Request.Form["revisionDate"]);
+                    publicationobject.nextreviewDate = Request.Form["nextreviewDate"].ToString() == null ? DateTime.Now : Convert.ToDateTime(Request.Form["nextreviewDate"]);
+                    publicationobject.ASD = Request.Form["ASD"];
+                    publicationobject.publishby = Request.Form["publishby"];
+                    publicationobject.location = Request.Form["location"];
+                    publicationobject.revision = Request.Form["revision"];
+                    publicationobject.verifiedby = Request.Form["verifiedby"];
+                    publicationobject.verifieddate = Request.Form["verifieddate"].ToString() == null ? DateTime.Now : Convert.ToDateTime(Request.Form["verifieddate"]);
+                    publicationobject.employee = Request.Form["employee"];
+                    publicationobject.docpath = Request.Form["docpath"];
+                    publicationobject.CreatedDate = DateTime.Now;
+                    publicationobject.UpdatedDate = DateTime.Now;
+                    publicationobject.CreatedBy = Request.Form["CreatedBy"];
+                    publicationobject.UpdatedBy = Request.Form["UpdatedBy"];
+                    _unitOfWork.Publication.Add(publicationobject);
                     _unitOfWork.SaveChanges();
-                    return Ok(publicationViewModel);
+                    return Ok(publicationobject);
                 }
                 return Ok(ModelState);
             }
