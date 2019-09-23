@@ -58,8 +58,8 @@ export class PublicationService {
             this.publicationEndpoint.getpublicationbyIdEndpoint<Publication[]>()
         );
     }
-  newAction(action: Publication) {
-    return this.publicationEndpoint.getNewpublicationEndpoint<Publication>(
+  newAction(action) {
+    return this.publicationEndpoint.getNewpublicationEndpoint<any>(
       action
     );
   }

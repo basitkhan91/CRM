@@ -1,4 +1,4 @@
-﻿import { Router } from '@angular/router';
+﻿import { Router, ActivatedRoute } from '@angular/router';
 import { PublicationService } from '../../../services/publication.service';
 import {
   MatDialog,
@@ -40,6 +40,7 @@ export class CreatePublicationComponent implements OnInit {
   private isSaving: boolean;
   private isEditMode: boolean;
   selectedFile: File = null;
+  itemMasterId: number;
 
   publicationGeneralInformation = {
     entryDate: new Date(),
@@ -136,7 +137,8 @@ export class CreatePublicationComponent implements OnInit {
     private itemMasterService: ItemMasterService,
     private Dashnumservice: DashNumberService,
     private employeeService: EmployeeService,
-    private route: Router
+    private route: Router,
+    private _actRoute: ActivatedRoute
   ) { }
   aircraftInformationCols: any[] = [
     { field: 'aircraft', header: 'Aircraft' },
@@ -146,8 +148,11 @@ export class CreatePublicationComponent implements OnInit {
   ];
   first: number = 0;
   ngOnInit() {
-    this.getAllEmployeeList();
+    // this.itemMasterId = this._actRoute.snapshot.params['id'];
 
+    this.getAllEmployeeList();
+    this.itemMasterId = this._actRoute.snapshot.params['id'];
+    console.log(this.itemMasterId)
 
   }
 
@@ -242,7 +247,66 @@ export class CreatePublicationComponent implements OnInit {
       this.http.post('~/upload', formData).subscribe(val => { });
     }
   }
+
+  // uploadProfile(event) {
+  //   const fileSizeinMB = event.target.files[0].size / (1024 * 1000);
+  //   const size = Math.round(fileSizeinMB * 100) / 100;
+  //   if (!this.imageFormats.includes(event.target.files[0].type)) {
+  //     this.fileError = true;
+  //     this.fileErrorMessage = 'Image files only';
+  //     // this.myInputVariable.nativeElement.value = '';
+  //   } else if (size > 2) {
+  //     this.fileError = true;
+  //     this.fileErrorMessage = 'File size cannot be greater than 2 MB.';
+  //   } else {
+  //     this.fileError = false;
+  //     if (event.target.files && event.target.files[0]) {
+  //       this.uploadImage = event.target.files[0];
+  //       const reader: any = new FileReader();
+  //       reader.readAsDataURL(event.target.files[0]);
+  //       // tslint:disable-next-line:no-shadowed-variable
+  //       reader.onload = event => {
+  //         this.image = event.target.result;
+  //       };
+  //     }
+  //   }
+
   editItemCloseModel() {
+    const data = this.sourcePublication;
+    // entryDate: new Date(),
+    // PublicationId: '',
+    // description: '',
+    // pubType: '',
+    // ASD: '',
+    // sequence: '',
+    // publishby: '',
+    // location: '',
+    // revisionDate: new Date(),
+    // expirationDate: new Date(),
+    // nextreviewDate: new Date(),
+    // employee: null,
+    // verifiedby: '',
+    // masterCompanyId: 1,
+    const formData = new FormData();
+    formData.append('entryDate',  data.entryDate);
+    formData.append('PublicationId', data.PublicationId);
+    formData.append('description', data.description);
+    formData.append('pubType', data.pubType);
+    formData.append('ASD', data.ASD);
+    formData.append('sequence', data.sequence);
+    formData.append('publishby', data.publishby);
+    formData.append('location', data.location);
+    formData.append('revisionDate', data.revisionDate);
+    formData.append('expirationDate', data.expirationDate);
+    formData.append('nextreviewDate', data.nextreviewDate);
+    formData.append('employee', data.employee);
+    formData.append('verifiedby', data.verifiedby);
+    formData.append('masterCompanyId', data.masterCompanyId);
+    formData.append('CreatedBy',this.userName);
+    formData.append('UpdatedBy',this.userName);
+    formData.append('IsActive', 'true');
+    formData.append('IsDeleted', 'false');
+    // formData.append('file', this.uploadImage, this.uploadImage.name);
 
     if (this.sourcePublication.PublicationId != '' && this.publicationRecordId == null) {
       this.generalInformationDetails = this.sourcePublication;
@@ -250,12 +314,15 @@ export class CreatePublicationComponent implements OnInit {
       {
         this.sourcePublication.PublicationId = this.sourcePublication.PublicationId;
         this.publicationService
-          .newAction({
-            ...this.sourcePublication, CreatedBy: this.userName,
-            UpdatedBy: this.userName,
-            IsActive: true,
-            IsDeleted: false,
-          })
+          .newAction(formData
+          //   {
+          //   ...this.sourcePublication, CreatedBy: this.userName,
+          //   UpdatedBy: this.userName,
+          //   IsActive: true,
+          //   IsDeleted: false,
+          // }
+          
+          )
           .subscribe(res => {
             const { publicationRecordId } = res;
             this.publicationRecordId = publicationRecordId;

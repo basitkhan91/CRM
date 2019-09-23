@@ -288,12 +288,14 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         this.isSaving = true;
         this.loadMasterCompanies();
         this.sourceAction = row;
+        console.log(this.sourceAction);
         this.publicationName = this.sourceAction.publicationId;
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+        this.router.navigateByUrl(`/singlepages/singlepages/app-create-publication/edit/${this.sourceAction.publicationId}`);
+        // this.modal = this.modalService.open(content, { size: 'sm' });
+        // this.modal.result.then(() => {
+        //     console.log('When user closes');
+        // }, () => { console.log('Backdrop click') })
     }
 
 
