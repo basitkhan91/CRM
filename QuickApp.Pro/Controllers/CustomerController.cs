@@ -1093,7 +1093,32 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
+        [HttpPut("updateShipVia/{id}")]
+        public IActionResult UpdateShipvia(long id, [FromBody] CustomerShippingViewModel CustomerShippingViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var updateShipObj = _unitOfWork.CustomerShipping.GetSingleOrDefault(c => c.CustomerShippingId == id);
 
+                updateShipObj.CustomerId = CustomerShippingViewModel.CustomerId;
+                updateShipObj.CustomerShippingAddressId = CustomerShippingViewModel.CustomerShippingAddressId;
+                updateShipObj.ShipVia = CustomerShippingViewModel.ShipVia;
+                updateShipObj.ShippingAccountinfo = CustomerShippingViewModel.ShippingAccountinfo;
+                updateShipObj.ShippingId = CustomerShippingViewModel.ShippingId;
+                updateShipObj.ShippingURL = CustomerShippingViewModel.ShippingURL;
+                updateShipObj.MasterCompanyId = CustomerShippingViewModel.MasterCompanyId;
+                updateShipObj.IsActive = CustomerShippingViewModel.IsActive;
+                updateShipObj.Memo = CustomerShippingViewModel.Memo;
+                updateShipObj.CreatedDate = DateTime.Now;
+                updateShipObj.UpdatedDate = DateTime.Now;
+                updateShipObj.CreatedBy = CustomerShippingViewModel.CreatedBy;
+                updateShipObj.UpdatedBy = CustomerShippingViewModel.UpdatedBy;
+                _unitOfWork.CustomerShipping.Update(updateShipObj);
+                _unitOfWork.SaveChanges();
+                return Ok(updateShipObj);
+            }
+            return Ok(ModelState);
+        }
 
         [HttpPut("updateStatuscusShippingAddress/{id}")]
         public IActionResult updateStatuscusShippingAddress(long id, [FromBody] CustomerShippingViewModel CustomerShippingViewModel)
