@@ -450,6 +450,7 @@ namespace DAL.Repositories
                 model.InternationalShippingId = id;
                 model.UpdatedDate = DateTime.Now;
                 model.IsActive = status;
+                model.UpdatedBy = updatedBy;
 
                 _appContext.CustomerInternationalShipping.Attach(model);
 
@@ -474,9 +475,9 @@ namespace DAL.Repositories
             var totalRecords = 0;
             try
             {
-                var pageNumber = (model.first / model.rows) + 1;
-                var take = model.rows;
-                var skip = take * (pageNumber - 1);
+                var pageNumber = 0;//(model.first / model.rows) + 1;
+                var take = 0;// model.rows;
+                var skip = 0;// take * (pageNumber - 1);
 
                 totalRecords = _appContext.CustomerInternationalShipping
                  .Join(_appContext.Countries,
@@ -561,7 +562,7 @@ namespace DAL.Repositories
                            cis => cis.ShipToCountryId,
                            c => c.countries_id,
                            (cis, c) => new { cis, c })
-                 .Where(p => p.cis.IsDeleted == false)
+                 .Where(p => p.cis.IsDeleted == false && p.cis.CustomerId == customerId)
                  .Count();
 
                 var result = _appContext.CustomerInternationalShipping
@@ -569,6 +570,7 @@ namespace DAL.Repositories
                            cis => cis.ShipToCountryId,
                            c => c.countries_id,
                            (cis, c) => new { cis, c })
+                 .Where(p => p.cis.IsDeleted == false && p.cis.CustomerId == customerId)
                  .Select(p => new
                  {
                      InternationalShippingId = p.cis.InternationalShippingId,
@@ -585,7 +587,7 @@ namespace DAL.Repositories
                      IsDeleted = p.cis.IsDeleted,
                      UpdatedDate = p.cis.UpdatedDate
                  })
-                 .Where(p => p.IsDeleted == false && p.CustomerId == customerId)
+                 
                  .OrderByDescending(p => p.UpdatedDate)
                  .Skip(skip)
                  .Take(take)
@@ -674,6 +676,8 @@ namespace DAL.Repositories
                     intShipping.IsPrimary = result.IsPrimary;
                     intShipping.ShipToCountry = result.ShipToCountry;
                     intShipping.StartDate = result.StartDate;
+                    intShipping.IsDeleted = result.IsDeleted;
+                    intShipping.ShipToCountryId = result.ShipToCountryId;
                 }
 
                 
@@ -811,7 +815,7 @@ namespace DAL.Repositories
                 var take = pageSize;
                 var skip = take * (pageNumber - 1);
 
-                getData.TotalRecordsCount = _appContext.ShippingViaDetails.Where(p => p.IsDeleted == false)
+                getData.TotalRecordsCount = _appContext.ShippingViaDetails.Where(p => p.IsDeleted == false && p.InternationalShippingId == internationalShippingId)
                  .OrderByDescending(p => p.UpdatedDate)
                  .Count();
 
