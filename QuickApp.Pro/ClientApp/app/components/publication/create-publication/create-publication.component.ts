@@ -40,7 +40,7 @@ export class CreatePublicationComponent implements OnInit {
   private isSaving: boolean;
   private isEditMode: boolean;
   selectedFile: File = null;
-  itemMasterId: number;
+  publicationId: number;
 
   publicationGeneralInformation = {
     entryDate: new Date(),
@@ -105,9 +105,9 @@ export class CreatePublicationComponent implements OnInit {
 
   publicationTypes = [
     { label: 'Select Publication Type', value: null },
-    { label: 'CMM', value: 'CMM' },
-    { label: 'AD', value: 'AD' },
-    { label: 'SB', value: 'SB' }
+    { label: 'CMM', value: '2' },
+    { label: 'AD', value: '3' },
+    { label: 'SB', value: '4' }
   ];
 
   // table columns for ata
@@ -121,7 +121,7 @@ export class CreatePublicationComponent implements OnInit {
     { label: 'Active', value: 'Active' },
     { label: 'In-Active', value: 'In-Active' }
   ];
-
+  formData = new FormData();
   /** Create-publication ctor */
   constructor(
     private publicationService: PublicationService,
@@ -151,8 +151,12 @@ export class CreatePublicationComponent implements OnInit {
     // this.itemMasterId = this._actRoute.snapshot.params['id'];
 
     this.getAllEmployeeList();
-    this.itemMasterId = this._actRoute.snapshot.params['id'];
-    console.log(this.itemMasterId)
+    this.publicationId = this._actRoute.snapshot.params['id'];
+    // if(this.publicationId) {
+    //   this.publicationService.getAllbyIdPublications().subscribe(res => {
+    //     console.log(res);
+    //   })
+    // }
 
   }
 
@@ -225,28 +229,28 @@ export class CreatePublicationComponent implements OnInit {
     );
     this.alertService.showStickyMessage(error, null, MessageSeverity.error);
   }
-  onSelect(event) {
-    //Execute the actual UPDATES here.
-    for (let file of event.files) {
-      this.uploadedFiles.push(file);
-      //this.fileupload..push(file);
-    }
-    this.selectedFile = <File>event.target.files[0];
-  }
+  // onSelect(event) {
+  //   //Execute the actual UPDATES here.
+  //   for (let file of event.files) {
+  //     this.uploadedFiles.push(file);
+  //     //this.fileupload..push(file);
+  //   }
+  //   this.selectedFile = <File>event.target.files[0];
+  // }
 
-  onUpload(event) {
-    for (let file of event.files) {
-      this.uploadedFiles.push(file);
-    }
-  }
+  // onUpload(event) {
+  //   for (let file of event.files) {
+  //     this.uploadedFiles.push(file);
+  //   }
+  // }
 
-  postMethod(event) {
-    if (this.sourcePublication.docpath != '') {
-      let formData = new FormData();
-      formData.append('image', this.selectedFile, event.files.name);
-      this.http.post('~/upload', formData).subscribe(val => { });
-    }
-  }
+  // postMethod(event) {
+  //   if (this.sourcePublication.docpath != '') {
+  //     let formData = new FormData();
+  //     formData.append('image', this.selectedFile, event.files.name);
+  //     this.http.post('~/upload', formData).subscribe(val => { });
+  //   }
+  // }
 
   // uploadProfile(event) {
   //   const fileSizeinMB = event.target.files[0].size / (1024 * 1000);
@@ -271,6 +275,21 @@ export class CreatePublicationComponent implements OnInit {
   //     }
   //   }
 
+  // publicationFileUpload(event){
+  //   for(let file of event.files) {
+  //     this.uploadedFiles.push(file);
+  //   }
+  // }
+  upload(files) {
+    if (files.length === 0)
+      return;
+
+    // const formData = new FormData();
+
+    for (let file of files)
+      this.formData.append(file.name, file);
+  }
+
   editItemCloseModel() {
     const data = this.sourcePublication;
     // entryDate: new Date(),
@@ -287,26 +306,28 @@ export class CreatePublicationComponent implements OnInit {
     // employee: null,
     // verifiedby: '',
     // masterCompanyId: 1,
-    const formData = new FormData();
-    formData.append('entryDate',  data.entryDate);
-    formData.append('PublicationId', data.PublicationId);
-    formData.append('description', data.description);
-    formData.append('pubType', data.pubType);
-    formData.append('ASD', data.ASD);
-    formData.append('sequence', data.sequence);
-    formData.append('publishby', data.publishby);
-    formData.append('location', data.location);
-    formData.append('revisionDate', data.revisionDate);
-    formData.append('expirationDate', data.expirationDate);
-    formData.append('nextreviewDate', data.nextreviewDate);
-    formData.append('employee', data.employee);
-    formData.append('verifiedby', data.verifiedby);
-    formData.append('masterCompanyId', data.masterCompanyId);
-    formData.append('CreatedBy',this.userName);
-    formData.append('UpdatedBy',this.userName);
-    formData.append('IsActive', 'true');
-    formData.append('IsDeleted', 'false');
-    // formData.append('file', this.uploadImage, this.uploadImage.name);
+    // const files: Array<File> = this.uploadedFiles;
+    
+
+    this.formData.append('entryDate',  moment(data.entryDate).format('DD/MM/YYYY'));
+    this.formData.append('PublicationId', data.PublicationId);
+    this.formData.append('description', data.description);
+    this.formData.append('pubType',data.pubType);
+    this.formData.append('ASD', data.ASD);
+    this.formData.append('sequence', data.sequence);
+    this.formData.append('publishby', data.publishby);
+    this.formData.append('location', data.location);
+    this.formData.append('revisionDate', moment(data.revisionDate).format('DD/MM/YYYY') );
+    this.formData.append('expirationDate',  moment(data.expirationDate).format('DD/MM/YYYY'));
+    this.formData.append('nextreviewDate', moment(data.nextreviewDate).format('DD/MM/YYYY'));
+    this.formData.append('employee', data.employee);
+    this.formData.append('verifiedby', data.verifiedby);
+    this.formData.append('masterCompanyId', data.masterCompanyId);
+    this.formData.append('CreatedBy',this.userName);
+    this.formData.append('UpdatedBy',this.userName);
+    this.formData.append('IsActive', 'true');
+    this.formData.append('IsDeleted', 'false');
+    
 
     if (this.sourcePublication.PublicationId != '' && this.publicationRecordId == null) {
       this.generalInformationDetails = this.sourcePublication;
@@ -314,7 +335,7 @@ export class CreatePublicationComponent implements OnInit {
       {
         this.sourcePublication.PublicationId = this.sourcePublication.PublicationId;
         this.publicationService
-          .newAction(formData
+          .newAction(this.formData
           //   {
           //   ...this.sourcePublication, CreatedBy: this.userName,
           //   UpdatedBy: this.userName,

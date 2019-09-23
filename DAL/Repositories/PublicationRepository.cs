@@ -126,6 +126,9 @@ namespace DAL.Repositories
                 {
                     publication = result.Publication;
                     publication.PublicationType = result.PublictationType;
+                    var attachment= _appContext.Attachment.Where(p => p.ReferenceId == ID && p.ModuleId == Convert.ToInt32(ModuleEnum.Publication)).FirstOrDefault();
+                    if (attachment != null)
+                        publication.AttachmentId = attachment.AttachmentId;
                 }
 
                 return publication;
@@ -625,6 +628,7 @@ namespace DAL.Repositories
 
                 if (result != null && result.Count > 0)
                 {
+                    getData.PaginationList = new List<Publication>();
                     foreach (var item in result)
                     {
                         publication = new Publication();

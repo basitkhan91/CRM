@@ -12,7 +12,7 @@
                 <span class="help-icon" (click)="openHelpText(helpText)" data-original-title="Help" data-toggle="tooltip"><i class="fa fa-info" data-toggle="modal" data-target="#help-popup"></i></span>
 
 
-                <p-table #dt [value]="allpublicationInfo" [rows]="20" [metaKeySelection]="true" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true">
+                <p-table #dt [value]="allpublicationInfo" [rows]="20" [metaKeySelection]="true" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true"> <!--[first]="pageIndex" (onPage)="publicationPagination($event)"-->
                     <ng-template pTemplate="caption">
 
                         <div style="text-align: right">
@@ -318,8 +318,104 @@
     </div>
 </ng-template>
 <ng-template #view class="modal fade " id="view" role="dialog">
+        <div class="modal-header">
+                <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
+                <h4 class="modal-title">Publication Details</h4>
 
-    <div class="modal-content">
+            </div>
+        <div class="modal-body viewform">
+                <div id="adminsearchlocationajax" class="table-responsive default-bg clear">
+                    
+                    <!--<a href="#" class="btn btn-primary openall">open all</a> <a href="#" class="btn btn-warning closeall">close all</a>-->
+                    <div class="panel-group" id="accordion">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step1">General Information</a> </h4>
+                            </div>
+                            <div id="step1" class="panel-collapse collapse in">
+                                <div class="panel-body">
+                                    <div class="modal-content">
+                                        <div class="table-responsive default-bg clear">
+                                            <div class="col-sm-4">
+                                                <p><span class="label"><b>Entry Date: </b></span><span class="value">{{generalInfo.entryDate ? generalInfo.entryDate : '-'}}</span></p>
+                                                <p><span class="label"><b>Publication ID: </b></span><span class="value">{{generalInfo.publicationId ? generalInfo.publicationId : '-'}}</span></p>
+                                                <p><span class="label"><b>Publication Description: </b></span><span class="value">{{generalInfo.description ? generalInfo.description : '-'}}</span></p>
+                                                <p><span class="label"><b>Publication Type: </b></span><span class="value">{{generalInfo.publicationType ? generalInfo.publicationType : '-'}}</span></p>
+                                                <p><span class="label"><b>Author/Source/Directive: </b></span><span class="value">{{generalInfo.asd ? generalInfo.asd : '-'}}</span></p>                                                                                         
+                                            </div>
+                                            <div class="col-sm-4">
+                                                    <p><span class="label"><b>Sequence: </b></span><span class="value">{{generalInfo.sequence ? generalInfo.sequence : '-'}}</span></p>
+                                                    <p><span class="label"><b>Published By: </b></span><span class="value">{{generalInfo.publishby ? generalInfo.publishby : '-'}}</span></p>
+                                                    <p><span class="label"><b>Location: </b></span><span class="value">{{generalInfo.location ? generalInfo.location : '-'}}</span></p>
+                                                    <p><span class="label"><b>Revision Date: </b></span><span class="value">{{generalInfo.revisionDate ? generalInfo.revisionDate : '-'}}</span></p>
+                                                    <p><span class="label"><b>Expiration Date: </b></span><span class="value">{{generalInfo.expirationDate ? generalInfo.expirationDate : '-'}}</span></p>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                    <p><span class="label"><b>Next Review Date: </b></span><span class="value">{{generalInfo.nextreviewDate ? generalInfo.nextreviewDate : '-'}}</span></p>
+                                                    <p><span class="label"><b>Employee: </b></span><span class="value">{{generalInfo.employee ? generalInfo.employee : '-'}}</span></p>
+                                                    <p><span class="label"><b>Verified By: </b></span><span class="value">{{generalInfo.verifiedby ? generalInfo.verifiedby : '-'}}</span></p>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step2">Purchase and Sales</a> </h4>
+                                </div>
+                                <div id="step2" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="col-sm-6">
+                                            <h4>Purchase Price</h4>
+                                            <p><span class="label"><b>CurrencyId: </b></span><span class="value">{{viewItemMaster.purchaseCurrencyId}}</span></p>
+                                            <p><span class="label"><b>List Price: </b></span><span class="value">{{viewItemMaster.listPrice}}</span></p>
+                                            <p><span class="label"><b>Discount off list Price %: </b></span><span class="value">{{viewItemMaster.purchaseDiscountOffListPrice}}</span></p>
+                                            <p><span class="label"><b>List Price After Discount: </b></span><span class="value">{{viewItemMaster.purchaseListPriceAfterDiscount}}</span></p>
+                                            <p><span class="label"><b>FX Rate: </b></span><span class="value">{{viewItemMaster.exportClassificationId}}</span></p>
+                                            <p><span class="label"><b>Last List Price Date: </b></span><span class="value">{{viewItemMaster.purchaseLastListPriceDate}}</span></p>
+                                            <p><span class="label"><b>Last disc(%) Date: </b></span><span class="value">{{viewItemMaster.purchaseLastDiscountPercentDate}}</span></p>
+                                            <p><span class="label"><b>Last list price after discount date:: </b></span><span class="value">{{viewItemMaster.purchaseLastListPriceAfterDiscountDate}}</span></p>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <h4>Sales Price</h4>
+                                            <p><span class="label"><b>CurrencyId: </b></span><span class="value">{{viewItemMaster.salesCurrencyId}}</span></p>
+                                            <p><span class="label"><b>Markup (%) on List Price: </b></span><span class="value">{{viewItemMaster.exportValue}}</span></p>
+                                            <p><span class="label"><b>Baseline sale Price: </b></span><span class="value">{{viewItemMaster.salesLastBaselineSalesPriceDate}}</span></p>
+                                            <p><span class="label"><b>Sale Disc: </b></span><span class="value">{{viewItemMaster.salesMarkUpOnListPriceAfterDisc}}</span></p>
+                                            <p><span class="label"><b>sale Price: </b></span><span class="value">{{viewItemMaster.salesBaselineSalesPrice}}</span></p>
+                                            <p><span class="label"><b>FX Rate: </b></span><span class="value">{{viewItemMaster.salesIsFixedPrice}}</span></p>
+                                            <p><span class="label"><b>Last Markup(%) on List Price Date: </b></span><span class="value">{{viewItemMaster.salesLastMarkUpPercentOnListPriceDate}}</span></p>
+                                            <p><span class="label"><b>Last List Price after disc Date: </b></span><span class="value">{{viewItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate}}</span></p>
+                                            <p><span class="label"><b>Last Baseline sale price date: </b></span><span class="value">{{viewItemMaster.salesLastMarkUpPercentOnListPriceDate}}</span></p>
+                                            <p><span class="label"><b>Last sale disc(%) Date: </b></span><span class="value">{{viewItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate}}</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step3">Export Information</a> </h4>
+                                </div>
+                                <div id="step3" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="col-sm-4">
+                                            <p><span class="label"><b>CountryId: </b></span><span class="value">{{viewItemMaster.exportCountryId}}</span></p>
+                                            <p><span class="label"><b>Value: </b></span><span class="value">{{viewItemMaster.exportValue}}</span></p>
+                                            <p><span class="label"><b>Weight: </b></span><span class="value">{{viewItemMaster.exportWeight}}</span></p>
+                                            <p><span class="label"><b>Size(L,W,H): </b></span><span class="value">{{viewItemMaster.exportSizeLength}} , {{viewItemMaster.exportSizeWidth}} , {{viewItemMaster.exportSizeHeight}}</span></p>
+                                            <p><span class="label"><b>Classification: </b></span><span class="value">{{viewItemMaster.exportClassificationId}}</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+    
+            </div>
+
+    <!-- <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
             <h4 class="modal-title">Publication Details</h4>
@@ -346,7 +442,7 @@
         <div class="modal-footer">
             <button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
         </div>
-    </div>
+    </div> -->
 
 </ng-template>
 

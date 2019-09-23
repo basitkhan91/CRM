@@ -144,8 +144,10 @@
 
           <div class="form-group">
             <label for="workflowid">File Upload </label>
-            <p-fileUpload name="myfile[]"    multiple="multiple"
-              [showCancelButton]="false"></p-fileUpload>
+            <input #file type="file" multiple (change)="upload(file.files)" />
+            <!-- <p-fileUpload name="myfile[]"  url="./upload.php"   multiple="multiple"
+              [showCancelButton]="false" customUpload="true" (uploadHandler)="publicationFileUpload($event)"></p-fileUpload> -->
+              
           </div>
 
 
@@ -356,7 +358,7 @@
                     <th *ngFor="let col of columns">
                       {{ col.header }}
                     </th>
-                    <th>Actions</th>
+                    <th *ngIf="!publicationId">Actions</th>
                   </tr>
                 </ng-template>
                 <ng-template
@@ -370,7 +372,7 @@
                     <td *ngFor="let col of columns">
                       {{ rowData[col.field] }}
                     </td>
-                    <td>
+                    <td *ngIf="!publicationId">
                       <a class="btn btn-primary nobg">
                         <i class="fa fa-edit"></i>
                       </a>
@@ -459,7 +461,7 @@
                     <th *ngFor="let col of columns">
                       {{ col.header }}
                     </th>
-                    <th>Actions</th>
+                    <th *ngIf="!publicationId">Actions</th>
                   </tr>
                 </ng-template>
                 <ng-template
@@ -473,7 +475,7 @@
                     <td *ngFor="let col of columns">
                       {{ rowData[col.field] }}
                     </td>
-                    <td>
+                    <td *ngIf="!publicationId">
                       <a class="btn btn-primary nobg">
                         <i class="fa fa-edit"></i>
                       </a>

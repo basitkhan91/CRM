@@ -56,6 +56,8 @@ namespace DAL.Models
 
         [NotMapped]
         public string PublicationType { get; set; }
+        [NotMapped]
+        public long AttachmentId { get; set; }
     }
 }
 

@@ -8,7 +8,7 @@ import { ConfigurationService } from './configuration.service';
 
 @Injectable()
 export class PublicationEndpointService extends EndpointFactory {
-    private readonly _publicationGetUrl: string = '/api/Publication/Get';
+    private readonly _publicationGetUrl: string = '/api/Publication/getpublicationslist';
     private readonly _publicationGetByIdUrl: string = '/api/Publication/GetPublicationByID';
     
   private readonly _publicationUrlNew: string =

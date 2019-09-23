@@ -19,7 +19,7 @@ namespace DAL.Repositories
              AppSettings = settings.Value;
         }
 
-        public void UploadFiles(IFormFileCollection files, List<AttachmentDetails> attachmentDetailList, long? referenceId, int moduleId, string entityName, string uploadedBy,int? masterCompanyId)
+        public void UploadFiles(IFormFileCollection files,  long? referenceId, int moduleId, string moduleName, string uploadedBy,int? masterCompanyId)
         {
             int count = 0;
             try
@@ -30,7 +30,7 @@ namespace DAL.Repositories
                     attachment.ModuleId = moduleId;
                     attachment.MasterCompanyId = masterCompanyId;
                     attachment.IsActive = true;
-                    attachment.IsDelete = false;
+                    attachment.IsDeleted = false;
                     attachment.ReferenceId = referenceId;
                     attachment.UpdatedDate=attachment.CreatedDate = DateTime.Now;
                     attachment.UpdatedBy = attachment.CreatedBy = uploadedBy;
@@ -42,10 +42,8 @@ namespace DAL.Repositories
                         {
 
                             AttachmentDetails attachmentDetails = new AttachmentDetails();
-                            string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"') + "_" + DateTime.Now;
-                            string filePath = AppSettings.UploadFilePath+"\\" + entityName + "\\" + referenceId + "\\" + fileName;
-                            //string webRootPath = _hostingEnvironment.WebRootPath;
-                            //string filePath = Path.Combine(webRootPath, folderName);
+                            string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"') ;
+                            string filePath = Path.Combine(AppSettings.UploadFilePath,moduleName,referenceId.ToString());
 
                             if (!Directory.Exists(filePath))
                             {
@@ -58,13 +56,12 @@ namespace DAL.Repositories
                                 file.CopyTo(stream);
                             }
 
-                            attachmentDetails.Code = attachmentDetailList[count].Code;
-                            attachmentDetails.Description = attachmentDetailList[count].Description;
-                            attachmentDetails.FileFormat = attachmentDetailList[count].FileFormat;
+                            attachmentDetails.Code = "";
+                            attachmentDetails.Description = "";
+                            attachmentDetails.FileFormat = "";
+                            attachmentDetails.Memo = "";
+
                             attachmentDetails.FileSize = Math.Round(Convert.ToDecimal(fileSize / (1024 * 1024)), 2);
-                            attachmentDetails.Link = attachmentDetailList[count].Link;
-                            attachmentDetails.Memo = attachmentDetailList[count].Memo;
-                            
                             attachmentDetails.FileName = fileName;
                             attachmentDetails.Link = fullPath;
                             attachmentDetails.FileType = file.ContentType;
