@@ -131,7 +131,7 @@
 								</label>
 							</div>
 							<div class="col-sm-5">
-								<select [(ngModel)]="sourceShelf.siteId" [ngModelOptions]="{standalone: true}" (change)="siteValueChange($event.target.value)">
+								<select [(ngModel)]="sourceShelf.siteId" name="site" (change)="siteValueChange($event.target.value)" required>
 									<option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option>
 								</select>
 							</div>
@@ -143,7 +143,7 @@
 								</label>
 							</div>
 							<div class="col-sm-5">
-								<select [(ngModel)]="sourceShelf.warehouseId" [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange($event.target.value)">
+								<select [(ngModel)]="sourceShelf.warehouseId" name="warehouse" (change)="wareHouseValueChange($event.target.value)" required>
 									<option *ngFor="let site of allWareHouses" [ngValue]="site.warehouseId">{{site.warehouseName}}</option>
 								</select>
 							</div>
@@ -155,7 +155,7 @@
 								</label>
 							</div>
 							<div class="col-sm-5">
-								<select [(ngModel)]="sourceShelf.locationId" [ngModelOptions]="{standalone: true}" (change)="locationValueChange(sourceShelf.locationId)">
+								<select [(ngModel)]="sourceShelf.locationId" name="locationid" required (change)="locationValueChange(sourceShelf.locationId)">
 									<option *ngFor="let site of allLocations" [ngValue]="site.locationId">{{site.name}}</option>
 								</select>
 							</div>
@@ -169,7 +169,7 @@
 							<div class="col-sm-5">
 								<p-autoComplete (onSelect)="Manufacturerdescription($event)" (onKeyUp)=ManufacturerHandler($event) (completeMethod)="filtermanufacturer($event)"
 								 [(ngModel)]="name" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" [size]="30" [minLength]="2"
-								 [dropdown]="true" class="p-autoComplete-ctsm">
+								 [dropdown]="true" class="p-autoComplete-ctsm" required>
 								</p-autoComplete>
 								<div *ngIf="disableSaveManufacturer" class="clr-red">Already Exists</div>
 								<div class="clear"></div>
@@ -289,7 +289,7 @@
 
 			<div class="modal-footer">
 
-				<button class="btn btn-primary-cstm" [disabled]="disableSaveManufacturer">Save</button>
+				<button class="btn btn-primary-cstm" [disabled]="!userForm.valid ||disableSaveManufacturer">Save</button>
 				<button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
 			</div>
 

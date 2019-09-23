@@ -128,7 +128,7 @@
 								</label>
 							</div>
 							<div class="col-sm-5">
-								<select [(ngModel)]="sourceBin.siteId" name="site" (change)="siteValueChange($event.target.value)">
+								<select [(ngModel)]="sourceBin.siteId" name="site" (change)="siteValueChange($event.target.value)" required>
 									<option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option>
 								</select>
 							</div>
@@ -140,7 +140,7 @@
 								</label>
 							</div>
 							<div class="col-sm-5">
-								<select [(ngModel)]="sourceBin.warehouseId" name="warehouse" (change)="wareHouseValueChange($event.target.value)">
+								<select [(ngModel)]="sourceBin.warehouseId" required name="warehouse" (change)="wareHouseValueChange($event.target.value)">
 									<option *ngFor="let site of allWareHouses" [ngValue]="site.warehouseId">{{site.warehouseName}}</option>
 								</select>
 							</div>
@@ -177,7 +177,7 @@
 							</div>
 							<div class="col-sm-5">
 								<p-autoComplete (onSelect)="Manufacturerdescription($event)" (onKeyUp)=ManufacturerHandler($event) (completeMethod)="filtermanufacturer($event)"
-								 [(ngModel)]="name" name="manufacturer" [suggestions]="localCollection" [size]="30" [minLength]="2" [dropdown]="true"
+								 [(ngModel)]="name" name="manufacturer" [suggestions]="localCollection" [size]="30" [minLength]="2" [dropdown]="true" required
 								 class="p-autoComplete-ctsm">
 									<ng-template let-name pTemplate="item">
 										<div class="ui-helper-clearfix">{{name}}</div>
@@ -292,7 +292,7 @@
 				</div> -->
 			</div>
 			<div class="modal-footer">
-				<button class="btn btn-primary-cstm" [disabled]="disableSaveManufacturer">Save</button>
+				<button class="btn btn-primary-cstm" [disabled]="!userForm.valid || disableSaveManufacturer">Save</button>
 				<button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
 			</div>
 		</form>

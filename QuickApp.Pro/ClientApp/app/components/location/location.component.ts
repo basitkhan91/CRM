@@ -380,8 +380,9 @@ export class LocationComponent implements OnInit, AfterViewInit {
 
         this.cols1 = [
             { field: 'code', header: 'Code' },
-            { field: 'description', header: 'Description' },
-            { field: 'legalEntityId', header: 'ID' },
+			{ field: 'name', header: 'Name' },
+			{ field: 'description', header: 'Description' },
+            // { field: 'legalEntityId', header: 'ID' },
         ];
     }
 
