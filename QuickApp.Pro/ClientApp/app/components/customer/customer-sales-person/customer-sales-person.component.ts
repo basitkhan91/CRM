@@ -203,7 +203,7 @@ export class CustomerSalesPersonComponent implements OnInit, AfterViewInit {
         }
         		
 		//this.saveCompleted(this.sourceCustomer);
-        this.editItemAndCloseModel();
+        this.editItemAndCloseModel(this.allEmployeeinfo);
         this.activeIndex = 8;
         this.workFlowtService.indexObj.next(this.activeIndex);
 		this.route.navigateByUrl('/customersmodule/customerpages/app-customer-warnings');
@@ -385,7 +385,7 @@ export class CustomerSalesPersonComponent implements OnInit, AfterViewInit {
 	}
 	
 
-    editItemAndCloseModel() {
+    editItemAndCloseModel(employees? : any) {
 
         this.isSaving = true;
 
@@ -396,6 +396,8 @@ export class CustomerSalesPersonComponent implements OnInit, AfterViewInit {
 
             this.local.primarySalesPersonFirstName = this.sourceCustomer.primarySalesPersonFirstName;
             this.local.secondarySalesPersonName = this.sourceCustomer.secondarySalesPersonName;
+            this.local.PrimarySalesPersonId = employees.filter(x => x = this.sourceCustomer.primarySalesPersonFirstName)[0].employeeId;
+            this.local.SecondarySalesPersonId = employees.filter(x => x = this.sourceCustomer.secondarySalesPersonName)[0].employeeId;
             this.local.csrName = this.sourceCustomer.csrName;
             this.local.agentName = this.sourceCustomer.agentName;
             this.local.annualRevenuePotential = this.sourceCustomer.annualRevenuePotential;
