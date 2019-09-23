@@ -2,20 +2,7 @@
 import { AircraftModel } from "./aircraft-model.model";
 
 export class AircraftDashNumber {
-    //dashNumberId: number;
-    //aircraftTypeId: number;
-    //aircraftModelId: number;
-    //memo: string;
-    //dashNumber: string;
-    //createdBy: string;
-    //updatedBy: string;
-    //createdDate: Date;
-    //updatedDate: Date;
-    //isDeleted: boolean;
-    //isActive: boolean;
-    //aircraftType: AircraftType;
-    //aircraftModel: AircraftModel;
-    //aircraftDashNumberList: AircraftDashNumber[];
+
     constructor(aircraftTypeId?: number, aircraftModelId?: number, dashNumberId?: number, isActive?: boolean, isDelete?: boolean, dashNumber?: number, masterCompanyId?: number, createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string, memo?: string) {
         this.aircraftTypeId = aircraftTypeId;
         this.aircraftModelId = aircraftModelId;   
