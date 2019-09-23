@@ -73,7 +73,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
     Active: string = "Active";
     displayedColumns = ['unitofmeasureId', 'description', 'shortname', 'standard', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
     dataSource: MatTableDataSource<UnitOfMeasure>;
-    allUnitOfMeasureinfo: UnitOfMeasure[] = [];
+    allUnitOfMeasureinfo:any  = [];
     sourceAction: UnitOfMeasure;
     allComapnies: MasterCompany[] = [];
     public auditHisory: AuditHistory[] = [];
@@ -105,6 +105,15 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
     }
+    validateRecordExistsOrNot(field: string, currentInput: any, originalData: any) {
+        console.log(field, currentInput , originalData)
+        if ((field !== '' || field !== undefined) && (currentInput !== '' || currentInput !== undefined) && (originalData !== undefined)) {
+            const data = originalData.filter(x => {
+                return x[field].toLowerCase() === currentInput.toLowerCase()
+            })
+            return data;
+        }
+    }
     public allWorkFlows: UnitOfMeasure[] = [];
     private loadData() {    
         this.unitofmeasureService.getAllUnitofMeasureList().subscribe(data => {
@@ -121,33 +130,6 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         );
     }
 
-    // private loadData() {
-    //     this.alertService.startLoadingMessage();
-    //     this.loadingIndicator = true;
-    //     this.unitofmeasureService.getUnitOfMeasureList().subscribe(
-    //         results => this.onDataLoadSuccessful(results[0]),
-    //         error => this.onDataLoadFailed(error)
-    //     );
-
-    //     this.cols = [
-    //         //{ field: 'provisionId', header: 'Provison Id' },
-    //         { field: 'description', header: 'Unit of Measure' },
-    //         { field: 'shortName', header: 'Short Name' },
-    //         { field: 'standard', header: 'Standard' },
-    //         { field: 'memo', header: 'Memo' },
-    //         { field: 'createdBy', header: 'Created By' },
-    //         { field: 'updatedBy', header: 'Updated By' },
-    //       //  { field: 'updatedDate', header: 'Updated Date' },
-    //        // { field: 'createdDate', header: 'Created Date' }
-    //     ];
-    //     this.selectedColumns = this.cols;
-    // }
-    // RemoveIsActive(columHeaders,columnData){
-    //    const response = this.allunitData;
-    //    columHeaders = response.filter(x=>{
-    //        x.field
-    //    })
-    // }
     private loadMasterCompanies() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -165,16 +147,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         // Causes the filter to refresh there by updating with recently added data.
         this.applyFilter(this.dataSource.filter);
     }
-    // private onDataLoadSuccessful(getUnitOfMeasureList) {
-    //     // alert('success');
-    //     this.alertService.stopLoadingMessage();
-    //     this.loadingIndicator = false;
-    //     this.dataSource.data = getUnitOfMeasureList;      
-    //     this.totalRecords = getUnitOfMeasureList.length;//Adding for Pagination
-    //     this.allUnitOfMeasureinfo = getUnitOfMeasureList;
-        
-
-    // }
+  
 
     private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
 
@@ -288,44 +261,33 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-    eventHandler(event) {
-        let value = event.target.value.toLowerCase();
-        if (this.selectedActionName) {
-            if (value == this.selectedActionName.toLowerCase()) {
-
-                this.disableSave = true;
-            }
-            else {
-                this.disableSave = false;
-            }
+    eventHandler(field,value) {
+        
+        const exists = this.validateRecordExistsOrNot(field,value, this.allUnitOfMeasureinfo);
+        console.log(exists);
+        if( exists.length > 0){
+            this.disableSave = true;
         }
+        else{
+            this.disableSave = false;
+        }
+       
     }
     partnmId(event) {
         //debugger;
-        for (let i = 0; i < this.actionamecolle.length; i++) {
-            if (event == this.actionamecolle[i][0].unitName) {
-                //alert("Action Name already Exists");
-                this.disableSave = true;
-                this.selectedActionName = event;
-
-            }
-        }
+        this.disableSave = true;
+        
     }
 
     filterUnitOfMeasures(event) {
+        this.localCollection = this.allUnitOfMeasureinfo;
 
-        this.localCollection = [];
-        for (let i = 0; i < this.allUnitOfMeasureinfo.length; i++) {
-            let unitName = this.allUnitOfMeasureinfo[i].description;
-            if (unitName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-
-                this.actionamecolle.push([{
-                    "unitOfMeasureId": this.allUnitOfMeasureinfo[i].unitOfMeasureId,
-                    "unitName": unitName
-                }]),
-                    this.localCollection.push(unitName);
-            }
-        }
+		if (event.query !== undefined && event.query !== null) {
+			const uom = [...this.allUnitOfMeasureinfo.filter(x => {
+				return x.description.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.localCollection = uom;
+		}      
     }
 
 
@@ -460,119 +422,4 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
                 }
         });
     }
-
-    // loadUnitOfMeasure(event: LazyLoadEvent) //when page initilizes it will call this method
-    // {
-    //     this.loading = true;
-    //     this.rows = event.rows;
-    //     this.first = event.first;
-    //     if (this.field)
-    //     {
-    //         this.unitOfMeasure.push({
-    //             Description: this.descriptionInputFieldValue,
-    //             ShortName: this.shortNameInputFieldValue,
-    //             Standard: this.standardInputFieldValue,
-    //             Memo: this.memoInputFieldValue,
-    //             first: this.first,
-    //             page: 10,
-    //             pageCount: 10,
-    //             rows: this.rows,
-    //             limit: 5
-    //         })
-    //         if (this.unitOfMeasure)
-    //         {
-    //             this.unitofmeasureService.getServerPages(this.unitOfMeasure[this.unitOfMeasure.length - 1]).subscribe( //we are sending event details to service
-    //                 pages => {
-    //                     if (pages.length > 0) {
-    //                         this.unitOfMeasurePaginationList = pages;
-    //                         this.unitOfMeasurePagination = this.unitOfMeasurePaginationList[0].unitOfMeasureList;
-    //                         this.totalRecords = this.unitOfMeasurePaginationList[0].totalRecordsCount;
-    //                         this.totelPages = Math.ceil(this.totalRecords / this.rows);
-    //                     }
-    //                 });
-    //         }
-    //     }
-
-    //     else
-    //     {
-    //         setTimeout(() => {
-    //             if (this.allUnitOfMeasureinfo) {
-    //                 this.unitofmeasureService.getServerPages(event).subscribe( //we are sending event details to service
-    //                     pages => {
-    //                         this.unitOfMeasurePaginationList = pages;
-    //                         this.unitOfMeasurePagination = this.unitOfMeasurePaginationList[0].unitOfMeasureList;
-    //                         this.totalRecords = this.unitOfMeasurePaginationList[0].totalRecordsCount;
-    //                         this.totelPages = Math.ceil(this.totalRecords / this.rows);
-
-    //                     });
-    //                 this.loading = false;
-    //             }
-    //         }, 1000);
-    //         this.loading = false;
-    //     }
-
-
-    // }
-
-    // updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
-    // {
-    //     this.paginatorState = {
-    //         rows: this.rows,
-    //         first: this.first
-    //     }
-    //     if (this.paginatorState) {
-    //         this.loadUnitOfMeasure(this.paginatorState);
-    //     }
-    // }
-
-
-    // inputFiledFilter(event, filed, matchMode) {
-    //     this.first = 0;
-    //     this.event = event;
-    //     this.field = filed;
-    //     this.matvhMode = matchMode;
-
-    //     if (filed == 'description') {
-    //         this.descriptionInputFieldValue = event;
-    //     }
-    //     if (filed == 'shortName') {
-    //         this.shortNameInputFieldValue = event;
-    //     }
-    //     if (filed == 'standard') {
-    //         this.standardInputFieldValue = event;
-    //     }
-    //     if (filed == 'memo') {
-    //         this.memoInputFieldValue = event;
-    //     }
-    //     if (filed == 'createdBy') {
-    //         this.createdByInputFieldValue = event;
-    //     }
-    //     if (filed == 'updatedBy') {
-    //         this.updatedByInputFieldValue = event;
-    //     }
-    //     this.unitOfMeasure.push({
-    //         Description: this.descriptionInputFieldValue,
-    //         ShortName: this.shortNameInputFieldValue, 
-    //         Standard: this.standardInputFieldValue,
-    //         Memo: this.memoInputFieldValue,
-    //         CreatedBy: this.createdByInputFieldValue,
-    //         UpdatedBy: this.updatedByInputFieldValue,
-    //         first: this.first,
-    //         page: 10,
-    //         pageCount: 10,
-    //         rows: this.rows,
-    //         limit: 5
-    //     })
-    //     if (this.unitOfMeasure) {
-    //         this.unitofmeasureService.getServerPages(this.unitOfMeasure[this.unitOfMeasure.length - 1]).subscribe( //we are sending event details to service
-    //             pages => {
-    //                 this.unitOfMeasurePaginationList = pages;
-    //                 this.unitOfMeasurePagination = this.unitOfMeasurePaginationList[0].unitOfMeasureList;
-    //                 this.totalRecords = this.unitOfMeasurePaginationList[0].totalRecordsCount;
-    //                 this.totelPages = Math.ceil(this.totalRecords / this.rows);
-    //             });
-    //     }
-    //     else {
-    //     }
-    // }
 }

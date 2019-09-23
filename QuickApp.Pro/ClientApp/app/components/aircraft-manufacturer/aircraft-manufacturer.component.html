@@ -12,7 +12,7 @@
                             </a>
                         </div>
                         <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="allmanufacturerInfo" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]"
-						 [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumns" [resizableColumns]="true" [reorderableColumns]="true"
+						 [columns]="selectedColumns" selectionMode="multiple"  [metaKeySelection]="true" [(selection)]="selectedColumns" [resizableColumns]="true" [reorderableColumns]="true"
 						 [scrollable]="true" scrollHeight="450px">
 							<ng-template pTemplate="caption">
 								<div style="text-align: right">
@@ -59,12 +59,10 @@
 									<th style="width:180px;position:sticky"></th>
 								</tr>
 							</ng-template>
-							<ng-template pTemplate="body" let-rowData let-columns="columns">
-								<tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openEdits(rowData)">
-									<td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-										{{col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?
-										(rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
-									</td>
+                            <ng-template pTemplate="body" let-rowData ngFor let-model [ngForOf]="allmanufacturerInfo" let-rowIndex="rowIndex">
+                                    <tr>                                   
+                                        <td>{{model.description}}</td>
+                                        <td>{{model.memo}}</td>
 									<td style="width:180px">
 										<p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)"
 										 [(ngModel)]="rowData['isActive']"></p-inputSwitch>
