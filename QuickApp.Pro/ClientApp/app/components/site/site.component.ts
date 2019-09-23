@@ -639,11 +639,13 @@ export class SiteComponent implements OnInit, AfterViewInit {
 			this.sourceSite.name = this.name;
 			this.workFlowtService.newSite(this.sourceSite).subscribe(data => {
 				this.siteInfo = data;
+				this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 				response => this.saveCompleted(this.sourceSite)
 				error => this.saveFailedHelper(error)
 				//retrive after enter siteid get and submit managementsite
 				if (data != null) {
 					this.saveManagement(data.siteId, this.selectedNodeTest); //pushing Site Management Need Site Value so after getting SiteId we are calling
+					this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 					response => this.saveCompleted(this.sourceSite)
 					error => this.saveFailedHelper(error)
 				}
@@ -655,9 +657,9 @@ export class SiteComponent implements OnInit, AfterViewInit {
 			this.sourceSite.updatedBy = this.userName;
 			this.sourceSite.name = this.name;
 			this.sourceSite.masterCompanyId = 1;
-			this.workFlowtService.updateSite(this.sourceSite).subscribe(
-				response => this.saveCompleted(this.sourceSite),
-				error => this.saveFailedHelper(error));
+			this.workFlowtService.updateSite(this.sourceSite).subscribe(		
+
+				this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success));
 
 			if (this.selectedNodeTest && this.selectedNodeTest.length > 0) {
 				this.workFlowtService.deleteManagementSite(this.selectedNodeTest).subscribe(data => {

@@ -98,8 +98,8 @@
                             <ng-template pTemplate="summary" id="footer">
                                 <label id="footer" class="footer">No'of records:</label>
                                 <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
-                                <label id="footer" class="footer1">Pages Count:</label>
-                                <input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" />
+                                <!-- <label id="footer" class="footer1">Pages Count:</label>
+                                <input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" /> -->
                             </ng-template>
                         </p-table>
                     </div>
@@ -134,7 +134,7 @@
         </strong>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-success-cstm" (click)="deleteItemAndCloseModel()">Yes</button>
+        <button type="button" class="btn btn-primary-cstm" (click)="deleteItemAndCloseModel()">Yes</button>
         <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">No</button>
     </div>
 
@@ -160,7 +160,7 @@
                     <div class="col-sm-5">
                         <p-autoComplete (onSelect)="partnmId($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="employeeName" [ngModelOptions]="{standalone: true}"
                             [suggestions]="localCollection" (completeMethod)="filterEmployeeNames($event)" [size]="30" [minLength]="1"
-                            [dropdown]="true" required>
+                            [dropdown]="true" required class="p-autoComplete-ctsm">
                             <ng-template let-employeeName pTemplate="item">
                                 <div class="ui-helper-clearfix">{{employeeName}}</div>
                             </ng-template>
@@ -191,7 +191,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-success-cstm" [disabled]="!userForm.valid || disableSave">Save</button>
+                <button class="btn btn-primary-cstm" [disabled]="!userForm.valid || disableSave">Save</button>
                 <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
             </div>
         </form>
@@ -249,7 +249,7 @@
             <div class="col-sm-12">
                 <p>
                     <span class="label">
-                        <b>Employee Expertise Name: </b>
+                        <b>Employee Expertise: </b>
                     </span>
                     <span class="value">{{ employeeExpertise_Name}}</span>
                 </p>

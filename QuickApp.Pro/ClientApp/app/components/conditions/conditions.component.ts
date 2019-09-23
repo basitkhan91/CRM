@@ -61,6 +61,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
     filteredBrands: any[];
     localCollection: any[] = [];
     Active: string = "Active";
+    totalRecords: number;
     /** Currency ctor */
     constructor(public router: Router, private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, private masterComapnyService: MasterComapnyService, private modalService: NgbModal, public conditionService: ConditionService, private dialog: MatDialog) {
         this.displayedColumns.push('action');
@@ -113,8 +114,9 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = getConditionList;
-
+    
         this.allConditionInfo = getConditionList;
+        this.totalRecords = this.allConditionInfo.length;
     }
 
     private onDataLoadFailed(error: any) {

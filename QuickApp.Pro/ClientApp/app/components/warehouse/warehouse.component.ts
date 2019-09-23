@@ -167,8 +167,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 			this.Active = "In Active";
 			this.sourceWarehouse.isActive == false;
 			this.workFlowtService.updateWarehouse(this.sourceWarehouse).subscribe(
-				response => this.saveCompleted(this.sourceWarehouse),
-				error => this.saveFailedHelper(error));
+				this.alertService.showMessage("Success", `Action was Updated successfully`, MessageSeverity.success));
 			//alert(e);
 		}
 		else {
@@ -620,8 +619,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 		this.isSaving = true;
 		this.sourceWarehouse.updatedBy = this.userName;
 		this.workFlowtService.deleteWarehouse(this.sourceWarehouse.warehouseId).subscribe(
-			response => this.saveCompleted(this.sourceWarehouse),
-			error => this.saveFailedHelper(error));
+			this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success));
 		this.modal.close();
 	}
 
@@ -731,6 +729,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
             //this.sourceWarehouse.siteId = this.siteId;
             //this.sourceWarehouse.siteID = this.selectedSiteIdValue;
             this.workFlowtService.newWarehouse(this.sourceWarehouse).subscribe(data => {
+				this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 				response => this.saveCompleted(this.sourceWarehouse)
 				error => this.saveFailedHelper(error)
             if (data != null) {
@@ -746,9 +745,11 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 			this.sourceWarehouse.updatedBy = this.userName;
 			this.sourceWarehouse.name = this.name;
 			this.sourceWarehouse.masterCompanyId = 1;
-			this.workFlowtService.updateWarehouse(this.sourceWarehouse).subscribe(
-				response => this.saveCompleted(this.sourceWarehouse),
-				error => this.saveFailedHelper(error));
+			this.workFlowtService.updateWarehouse(this.sourceWarehouse).subscribe(data=>{
+				this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
+				response => this.saveCompleted(this.sourceWarehouse)
+				error => this.saveFailedHelper(error)
+			});
             if (this.selectedNodeTest && this.selectedNodeTest.length > 0)
             {
                 this.workFlowtService.deleteManagementWarehouse(this.selectedNodeTest).subscribe(data => {
@@ -762,6 +763,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 			
 			this.selectedNodeTest = []; //after Edit making empty
 		}
+	
 
 		this.modal.close();
 		this.loadData();
