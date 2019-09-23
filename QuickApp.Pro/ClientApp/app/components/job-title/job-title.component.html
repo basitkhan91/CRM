@@ -98,8 +98,8 @@
                             <ng-template pTemplate="summary" id="footer">
                                 <label id="footer" class="footer">No'of records:</label>
                                 <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
-                                <label id="footer" class="footer1">Pages Count:</label>
-                                <input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" />
+                                <!-- <label id="footer" class="footer1">Pages Count:</label>
+                                <input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" /> -->
                             </ng-template>
                         </p-table>
                     </div>
@@ -123,7 +123,7 @@
         </strong>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-success-cstm" (click)="deleteItemAndCloseModel()">Yes</button>
+        <button type="button" class="btn btn-primary-cstm" (click)="deleteItemAndCloseModel()">Yes</button>
         <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">No</button>
     </div>
 
@@ -142,7 +142,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="col-sm-4">
-                        <label for="description" class="control-label">Description
+                        <label for="description" class="control-label">Job Title
                             <span class="clr-red">*</span>
                         </label>
                     </div>
@@ -181,7 +181,7 @@
             </div>
             <div class="clear"></div>
             <div class="modal-footer">                
-                <button class="btn btn-success-cstm" [disabled]="!userForm.valid || disableSave">Save</button>
+                <button class="btn btn-primary-cstm" [disabled]="!userForm.valid || disableSave">Save</button>
                 <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
             </div>
         </form>

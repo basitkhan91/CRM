@@ -401,11 +401,7 @@ export class DashnumberComponent implements OnInit {
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.masterCompanyId = 1;
-            // this.sourceAction.AircraftTypeId = this.selectedAircraftId;
-            // this.sourceAction.AircraftModelId = this.selectedAircraftModel[0];
-            //this.sourceAction.DashNumber = this.selectedDashnumber;
-            // this.sourceAction.Memo = this.selectedMemo;
+            this.sourceAction.masterCompanyId = 1;        
             this.dashNumberService.add({ ...this.sourceAction, isDeleted: this.isDeleted, createdDate: new Date(), UpdatedDate: new Date() }).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));

@@ -1,6 +1,6 @@
 ﻿import { OnInit, Component, ViewChild } from "@angular/core";
 import { fadeInOut } from "../../services/animations";
-import { AlertService } from "../../services/alert.service";
+import { AlertService,MessageSeverity } from "../../services/alert.service";
 import { NgbModalRef, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { AuthService } from "../../services/auth.service";
 import { AircraftModel } from "../../models/aircraft-model.model";
@@ -76,7 +76,7 @@ export class AircraftModelComponent implements OnInit{
 
         //Adding for p-table in table also we can put headers and columns manually
         this.cols = [
-            { field: 'aircraftModelId', header: 'ID' },
+          
             { field: 'aircraftType.description', header: 'Aircraft Manufacturer' },
             { field: 'modelName', header: 'Model Name' },
             { field: 'memo', header: 'Memo'}
@@ -118,7 +118,7 @@ export class AircraftModelComponent implements OnInit{
         this.currentAircraftModelType.createdBy = this.userName;
         this.currentAircraftModelType.updatedBy = this.userName;
         this.aircraftModelService.add(this.currentAircraftModelType).subscribe(aircraftModel => {
-            this.alertService.showMessage('Aircraft Model added successfully.');
+            this.alertService.showMessage("Success", 'Aircraft Model Added successfully.', MessageSeverity.success);
             this.updatePaginatorState(); // previously after update we used to call getAll now we can this method to get required list
             this.resetAddAircraftModel();
             this.dismissModel();
@@ -136,7 +136,7 @@ export class AircraftModelComponent implements OnInit{
         this.currentAircraftModelType.updatedBy = this.userName;
         this.aircraftModelTypeToUpdate.aircraftType = null;
         this.aircraftModelService.update(this.aircraftModelTypeToUpdate).subscribe(aircraftModel => {
-            this.alertService.showMessage('aircraft Model updated successfully.');
+            this.alertService.showMessage("Success", 'Aircraft Model Updated successfully.', MessageSeverity.success);
             this.updatePaginatorState(); // previously after update we used to call getAll now we can this method to get required list
             this.resetUpdateAircraftManufacturer();
             this.dismissModel();//added
@@ -145,7 +145,7 @@ export class AircraftModelComponent implements OnInit{
 
     removeAircraftModel(): void {
         this.aircraftModelService.remove(this.aircraftModelTypeToRemove.aircraftModelId).subscribe(response => {
-            this.alertService.showMessage("Model removed successfully.");
+            this.alertService.showMessage("Success", 'Aircraft Model Removed successfully.', MessageSeverity.success);
             this.updatePaginatorState(); // previously after Remove we used to call getAll now we can this method to get required list
             this.modal.close();
         });

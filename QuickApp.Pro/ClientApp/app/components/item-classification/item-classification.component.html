@@ -66,10 +66,8 @@
 
                                     <button class="btn-history" mat-icon-button matTooltip="history" (click)="showAuditPopup(auditContent,rowData.itemClassificationId)">
                                         <mat-icon color="green">history</mat-icon>
-                                    </button>
-                                    
+                                    </button>                                    
                                 </td>
-
                             </tr>
                         </ng-template>
                         <ng-template #auditContent let-c="close" let-d="dismiss">
@@ -80,7 +78,7 @@
                         <ng-template pTemplate="summary" id="footer">
                             <label id="footer" class="footer">No'of records:</label> <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" />
                             &nbsp;&nbsp;
-                            <label id="footer" class="footer1">Pages Count:</label> <input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" />
+                            <!-- <label id="footer" class="footer1">Pages Count:</label> <input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" /> -->
                         </ng-template>
                     </p-table>
                 </div>
@@ -159,7 +157,7 @@
                                             <label for="netDays" class="control-label control-item">Item Type<span class="clr-red">*</span></label>
                                         </div>
                                         <div class="col-sm-5">
-                                            <p-autoComplete (onSelect)="classificationtypeId($event)" name="type" class="p-autoComplete-ctsm" (onKeyUp)=classeventtypeHandler($event)
+                                            <!-- <p-autoComplete (onSelect)="classificationtypeId($event)" name="type" class="p-autoComplete-ctsm" (onKeyUp)=classeventtypeHandler($event)
                                                             [(ngModel)]="itemTypeName"
                                                             [suggestions]="localtypeCollection" (completeMethod)="filterItemtypes($event)" [size]="30"
                                                             [minLength]="1" [dropdown]="true" required>
@@ -168,7 +166,8 @@
                                                 </ng-template>
 
                                             </p-autoComplete>
-                                            <div *ngIf="disabletypeSave" style="color:Red">Already Exist</div>
+                                            <div *ngIf="disabletypeSave" style="color:Red">Already Exist</div> -->
+                                            
                                         </div>
                                     </div>
                                     <div class="col-sm-12">
