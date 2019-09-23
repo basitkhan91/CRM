@@ -192,10 +192,12 @@ export class PurchaseSetupComponent {
 	purchaseOrderPartRecordId: any;
 	glAccountTemp: any;
 	//addAllMultiPNRows: boolean = false;
+	addAllMultiPN: boolean = false;
 	allGlInfo: GlAccount[];
 	selectedMasterCompany: any;
 	childObject: any;
 	tempParentData: any;
+	newPNList = [];
 
 	/** po-approval ctor */
 	constructor(public siteService: SiteService, public warehouseService: WarehouseService, private masterComapnyService: MasterComapnyService, public cusservice: CustomerService, private itemser: ItemMasterService, private modalService: NgbModal, private route: Router, public legalEntityService: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public vendorService: VendorService, public priority: PriorityService, private alertService: AlertService ,public glAccountService: GlAccountService) {
@@ -434,6 +436,8 @@ export class PurchaseSetupComponent {
         this.loadingIndicator = false;
 		this.allGlInfo = getGlList;
 		console.log(this.allGlInfo)
+		//const abc = this.autoCompleteBindById('glAccountId', 7, this.allGlInfo);
+		//console.log(abc);
     }
 
 
@@ -450,22 +454,26 @@ export class PurchaseSetupComponent {
 
 		//let partsArray = [];
 		this.returnPartsListArray = [];
+		this.newPNList = [];
 		this.array = this.partNumbers.split(',');
 		if (this.array.length > 0) {
 			for (let i = 0; i < this.array.length; i++) {
 
 				this.vendorService.getPartDetailsWithid(this.array[i]).subscribe(returndata => {
 					//console.log(returndata[0]);
-					returndata[0].map(x => {
+					const mulAlParts = returndata[0].map(x => {
+						
 						if (x.partDescription === null && x.itemTypeId === null && x.isHazardousMaterial === null && x.manufacturerId === null && x.priorityId === null) {
 							this.multiplePNDetails = true;
 						}
+						return {...x, addAllMultiPNRows: false};
 					});
 
 
-					if (returndata[0].length > 0) {
-						for (let k = 0; k < returndata[0].length; k++) {
-							this.returnPartsListArray.push(returndata[0][k]);
+					if (mulAlParts.length > 0) {
+						console.log(mulAlParts);
+						for (let k = 0; k < mulAlParts.length; k++) {
+							this.returnPartsListArray.push(mulAlParts[k]);
 							//for (let j = 0; j < this.array.length; j++) {
 							//	if (this.array[j] == returndata[0][k].partNumber) {
 							//		this.array.splice(j, 1)
@@ -478,10 +486,24 @@ export class PurchaseSetupComponent {
 
 					} 
 					else {
-						 return this.array;
+						 //return this.array;
 					}
+					console.log(this.array)
+				console.log(mulAlParts)
+				for(let i=0; i < mulAlParts.length; i++) {
+					for(let j=0; j<this.array.length; j++) {
+						if (mulAlParts[i].partNumber.toLowerCase() !== this.array[j].toLowerCase()) {
+							if (this.newPNList.indexOf(this.array[j]) === -1) {
+								this.newPNList.push(this.array[j]);
+							console.log(this.newPNList)
+							}
+							
+						}
+					}
+				}
 
 				});
+				
 
 			}
 		}
@@ -743,9 +765,9 @@ export class PurchaseSetupComponent {
 								parentdata.itemTypeId = this.partWithId.itemTypeId;
 								parentdata.name = this.partWithId.name;
 								parentdata.itemMasterId = this.partWithId.itemMasterId;
-								parentdata.glAccountId = this.partWithId.glAccountId;
-								//parentdata.glAccountId = this.autoCompleteBindById('glAccountId', this.partWithId.glAccountId, this.allGlInfo);
-								console.log(parentdata.glAccountId)
+								//parentdata.glAccountId = this.partWithId.glAccountId;
+								parentdata.glAccount = getObjectById('glAccountId', this.partWithId.glAccountId, this.allGlInfo);
+                                //console.log(parentdata.glAccount.accountName)
 								parentdata.shortName = this.partWithId.shortName;
 								parentdata.listPrice = this.partWithId.listPrice; //Initial Value
 								parentdata.purchaseDiscountOffListPrice = this.partWithId.purchaseDiscountOffListPrice; //Percentage
@@ -800,7 +822,7 @@ export class PurchaseSetupComponent {
 		// 			workOrderId: this.partListData[i].workOrderId,
 		// 			repairOrderId: this.partListData[i].repairOrderId,
 		// 			salesOrderId: this.partListData[i].salesOrderId,
-		// 			generalLedgerAccounId: this.partListData[i].glAccountId,
+		// 			generalLedgerAccounId: this.partListData[i].glAccount.glAccountId,
 		// 			UOMId: this.partListData[i].UOMId,
 		// 			memo: this.partListData[i].memo,
 		// 			poPartSplitAddressId: this.partListData[i].poPartSplitAddressId,
@@ -864,7 +886,7 @@ export class PurchaseSetupComponent {
 		// 						//workOrderId: this.partListData[i].workOrderId,
 		// 						//repairOrderId: this.partListData[i].repairOrderId,
 		// 						//salesOrderId: this.partListData[i].salesOrderId,
-		// 						generalLedgerAccounId: this.partListData[i].glAccountId,
+		// 						generalLedgerAccounId: this.partListData[i].glAccount.glAccountId,
 		// 						memo: this.partListData[i].memo,
 		// 						poPartSplitAddressId: childDataList[k].poPartSplitAddressId,
 		// 						poPartSplitUserTypeId: childDataList[k].poPartSplitUserTypeId,
@@ -921,7 +943,7 @@ export class PurchaseSetupComponent {
 		// 						//workOrderId: this.partListData[i].workOrderId,
 		// 						//repairOrderId: this.partListData[i].repairOrderId,
 		// 						//salesOrderId: this.partListData[i].salesOrderId,
-		// 						generalLedgerAccounId: this.partListData[i].glAccountId,
+		// 						generalLedgerAccounId: this.partListData[i].glAccount.glAccountId,
 		// 						memo: this.partListData[i].memo,
 		// 						poPartSplitAddressId: childDataList[k].poPartSplitAddressId,
 		// 						poPartSplitUserTypeId: childDataList[k].poPartSplitUserTypeId,
@@ -1002,7 +1024,7 @@ export class PurchaseSetupComponent {
 						workOrderId: this.partListData[i].workOrderId,
 						repairOrderId: this.partListData[i].repairOrderId,
 						salesOrderId: this.partListData[i].salesOrderId,
-						generalLedgerAccounId: this.partListData[i].glAccountId,
+						generalLedgerAccounId: this.partListData[i].glAccount.glAccountId,
 						UOMId: this.partListData[i].UOMId,
 						memo: this.partListData[i].memo,
 						poPartSplitAddressId: this.partListData[i].poPartSplitAddressId,
@@ -1071,7 +1093,7 @@ export class PurchaseSetupComponent {
 										//workOrderId: this.partListData[i].workOrderId,
 										//repairOrderId: this.partListData[i].repairOrderId,
 										//salesOrderId: this.partListData[i].salesOrderId,
-										generalLedgerAccounId: this.partListData[i].glAccountId,
+										generalLedgerAccounId: this.partListData[i].glAccount.glAccountId,
 										memo: this.partListData[i].memo,
 										poPartSplitAddressId: childDataList[k].poPartSplitAddressId,
 										poPartSplitUserTypeId: childDataList[k].poPartSplitUserTypeId,
@@ -1131,7 +1153,7 @@ export class PurchaseSetupComponent {
 										//workOrderId: this.partListData[i].workOrderId,
 										//repairOrderId: this.partListData[i].repairOrderId,
 										//salesOrderId: this.partListData[i].salesOrderId,
-										generalLedgerAccounId: this.partListData[i].glAccountId,
+										generalLedgerAccounId: this.partListData[i].glAccount.glAccountId,
 										memo: this.partListData[i].memo,
 										poPartSplitAddressId: childDataList[k].poPartSplitAddressId,
 										poPartSplitUserTypeId: childDataList[k].poPartSplitUserTypeId,
@@ -1198,7 +1220,7 @@ export class PurchaseSetupComponent {
 						workOrderId: this.partListData[i].workOrderId,
 						repairOrderId: this.partListData[i].repairOrderId,
 						salesOrderId: this.partListData[i].salesOrderId,
-						generalLedgerAccounId: this.partListData[i].glAccountId,
+						generalLedgerAccounId: this.partListData[i].glAccount.glAccountId,
 						memo: this.partListData[i].memo,
 						poPartSplitAddressId: this.partListData[i].poPartSplitAddressId,
 						poPartSplitUserTypeId: this.partListData[i].poPartSplitUserTypeId,
@@ -1266,12 +1288,12 @@ export class PurchaseSetupComponent {
 									//workOrderId: this.partListData[i].workOrderId,
 									//repairOrderId: this.partListData[i].repairOrderId,
 									//salesOrderId: this.partListData[i].salesOrderId,
-									generalLedgerAccounId: this.partListData[i].glAccountId,
+									generalLedgerAccounId: this.partListData[i].glAccount.glAccountId,
 									memo: this.partListData[i].memo,
 									poPartSplitAddressId: childDataList[k].poPartSplitAddressId,
 									poPartSplitUserTypeId: childDataList[k].poPartSplitUserTypeId,
 									poPartSplitUserId: childDataList[k].poPartSplitUserId,
-									poPartSplitAddress: childDataList[k].addressData,
+									poPartSplitAddress: childDataList[k].addressData[0],
 									poPartSplitAddress1: childDataList[k].poPartSplitAddress1,
 									//poPartSplitAddress2: childDataList[k].poPartSplitAddress2,
 									//poPartSplitAddress3: childDataList[k].poPartSplitAddress3,
@@ -1342,7 +1364,7 @@ export class PurchaseSetupComponent {
 		// 			workOrderId: this.partListData[i].workOrderId,
 		// 			repairOrderId: this.partListData[i].repairOrderId,
 		// 			salesOrderId: this.partListData[i].salesOrderId,
-		// 			generalLedgerAccounId: this.partListData[i].glAccountId,
+		// 			generalLedgerAccounId: this.partListData[i].glAccount.glAccountId,
 		// 			memo: this.partListData[i].memo,
 		// 			poPartSplitUserTypeId: this.partListData[i].poPartSplitUserTypeId,
 		// 			poPartSplitAddressId: this.partListData[i].poPartSplitAddressId,
@@ -1408,7 +1430,7 @@ export class PurchaseSetupComponent {
 		// 						//workOrderId: this.partListData[i].workOrderId,
 		// 						//repairOrderId: this.partListData[i].repairOrderId,
 		// 						//salesOrderId: this.partListData[i].salesOrderId,
-		// 						generalLedgerAccounId: this.partListData[i].glAccountId,
+		// 						generalLedgerAccounId: this.partListData[i].glAccount.glAccountId,
 		// 						memo: this.partListData[i].memo,
 		// 						poPartSplitAddressId: this.childDataList[k].poPartSplitAddressId,
 		// 						poPartSplitUserTypeId: this.childDataList[k].poPartSplitUserTypeId,
@@ -2017,7 +2039,7 @@ export class PurchaseSetupComponent {
 		if (data) {
 			this.partWithId = data;
 			parentdata.partAlternatePartId = this.partWithId.partAlternatePartId;
-			parentdata.partId = this.partWithId.partId;
+			//parentdata.partId = this.partWithId.partId;
 			parentdata.partdescription = this.partWithId.description;
 			parentdata.partNumber = this.partWithId.partNumber;
 			parentdata.itemTypeId = this.partWithId.itemTypeId;
@@ -2084,18 +2106,23 @@ export class PurchaseSetupComponent {
 	}
 
 	addAvailableParts() {
-		this.partListData.splice(0, 1);
+		//this.partListData.splice(0, 1);
 		console.log(this.returnPartsListArray);
+		console.log(this.partListData)
 
 		for (let i = 0; i < this.returnPartsListArray.length; i++) {
-
-			this.partListData.push(this.defaultPartListObj(true));
-			this.getMultiplParts(this.partListData[i], this.returnPartsListArray[i])
+			if (this.returnPartsListArray[i].addAllMultiPNRows) {
+				this.partListData.push(this.returnPartsListArray[i]);
+				
+				//this.partListData.push(this.defaultPartListObj(true));
+			//this.getMultiplParts(this.partListData[i], this.returnPartsListArray[i])
+			}			
 		}
 		this.partNumbers = null;
 		this.returnPartsListArray = [];
+		this.addAllMultiPN = false;
 		this.array = [];
-		this.modal.close();
+		//this.modal.close();
 	}
 	addPartNumber() {
 		//this.itemTypeId=0;		
@@ -2402,14 +2429,14 @@ export class PurchaseSetupComponent {
 		// }
 	}
 
-	autoCompleteBindById(field: string, id: any, originalData: any) {
-		const data = originalData.filter(x => {
-			if (x[field] === id) {
-				return x;
-			}
-		})
-		return data[0];
-	}
+	// autoCompleteBindById(field: string, id: any, originalData: any) {
+	// 	const data = originalData.filter(x => {
+	// 		if (x[field] === id) {
+	// 			return x;
+	// 		}
+	// 	})
+	// 	return data[0];
+	// }
 
 	selectedVendorName(value) {
 		console.log(value);
@@ -2421,7 +2448,7 @@ export class PurchaseSetupComponent {
 		this.sourcePoApproval.workPhone = value.vendorPhone;
 		this.sourcePoApproval.terms = value.creditLimit;
 		// this.sourcePoApproval.creditLimit = value.creditTermsId;
-		this.sourcePoApproval.creditTermsId = this.autoCompleteBindById('creditTermsId', value.creditTermsId, this.allcreditTermInfo);		
+		this.sourcePoApproval.creditTermsId = getObjectById('creditTermsId', value.creditTermsId, this.allcreditTermInfo);		
 		
 	}
 
@@ -2441,11 +2468,11 @@ export class PurchaseSetupComponent {
 		this.vendorPhoneNum = this.allActions;
 
 		if (event.query !== undefined && event.query !== null) {
-			const vendorFilter = [...this.allActions.filter(x => {
-
+			const vendorFilter1 = [...this.allActions.filter(x => {
 				return x.vendorPhone.toLowerCase().includes(event.query.toLowerCase())
 			})]
-			this.vendorPhoneNum = vendorFilter;
+			this.vendorPhoneNum = vendorFilter1;
+			console.log(this.vendorPhoneNum)
 		}
 	}
 
@@ -3087,9 +3114,9 @@ export class PurchaseSetupComponent {
 		this.orderQuantity = event;
 	}
 
-	addPageCustomer() {
-		this.route.navigateByUrl('/customersmodule/customerpages/app-customer-general-information');
-	}
+	// addPageCustomer() {
+	// 	this.route.navigateByUrl('/customersmodule/customerpages/app-customer-general-information');
+	// }
 
 	onDelPNRow(index) {
 		this.partListData.splice(index, 1);
@@ -3278,10 +3305,30 @@ export class PurchaseSetupComponent {
 		})
 	}
 
-	checkAllPartsListRow() {
-		if(!this.checkAllPartsList) {
-			alert('abc');
+	onChangeAddAllMultiPN(event) {
+		if (event.target.checked) {
+			if (this.returnPartsListArray) {
+				for (let i=0; i < this.returnPartsListArray.length; i++) {
+					this.returnPartsListArray[i].addAllMultiPNRows = true;
+				}
+			}
+			//this.addAllMultiPNRows = true;
+		} else {
+			if (this.returnPartsListArray) {
+				for (let i=0; i < this.returnPartsListArray.length; i++) {
+					this.returnPartsListArray[i].addAllMultiPNRows = false;
+				}
+			}
+			//this.addAllMultiPNRows = false;
 		}
+	}
+
+	onAddMultParts() {
+		this.partNumbers = null;
+		this.returnPartsListArray = [];
+		this.array = [];
+		this.newPNList = [];
+		this.addAllMultiPN = false;
 	}
 
 }
