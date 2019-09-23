@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Models
 {
-    public class CustomerInternationalShipping: Pagination
+    public class CustomerInternationalShipping
     {
         [Key]
         public long InternationalShippingId { get; set; }

@@ -27,6 +27,8 @@ namespace QuickApp.Pro.Controllers
 
         #endregion Constructor
 
+        #region Work Order
+
         [HttpGet("workorderbyid")]
         public IActionResult WorkOrderById(long workOrderId)
         {
@@ -102,6 +104,262 @@ namespace QuickApp.Pro.Controllers
             var result = unitOfWork.WorkOrderRepository.GetWorkFlowNos(partId, workScopeId);
             return Ok(result);
         }
+
+        #endregion
+
+        #region Work Flow Work Order
+
+        [HttpPost("createworkflowworkorder")]
+        public IActionResult CreateWorkFlowWorkOrder(WorkFlowWorkOrder workFlowWorkOrder)
+        {
+            if (ModelState.IsValid)
+            {
+                workFlowWorkOrder.WorkFlowWorkOrderId = unitOfWork.WorkOrderRepository.CreateWorkFlowWorkOrder(workFlowWorkOrder);
+                return Ok(workFlowWorkOrder);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+            
+        }
+
+        [HttpPost("updateworkflowworkorder")]
+        public IActionResult UpdateWorkFlowWorkOrder(WorkFlowWorkOrder workFlowWorkOrder)
+        {
+            if (ModelState.IsValid)
+            {
+                 unitOfWork.WorkOrderRepository.UpdateWorkFlowWorkOrder(workFlowWorkOrder);
+                return Ok(workFlowWorkOrder);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+        
+        #endregion
+
+        #region Work Order Labor
+
+        [HttpPost("createworkorderlabor")]
+        public IActionResult CreateWorkOrderLabor(WorkOrderLaborHeader workOrderLabor)
+        {
+            if (ModelState.IsValid)
+            {
+                workOrderLabor.WorkOrderLaborHeaderId = unitOfWork.WorkOrderRepository.CreateWorkOrderLabor(workOrderLabor);
+                return Ok(workOrderLabor);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpPost("updateworkorderlabor")]
+        public IActionResult UpdateWorkOrderLabor(WorkOrderLaborHeader workOrderLabor)
+        {
+            if (ModelState.IsValid)
+            {
+                unitOfWork.WorkOrderRepository.UpdateWorkOrderLabor(workOrderLabor);
+                return Ok(workOrderLabor);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpGet("getworkflowworkorderlabourlist")]
+        public IActionResult GetWorkFlowWorkOrderLabourList(long wfwoId = 0, long workOrderId = 0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkFlowWorkOrderLabourList(wfwoId, workOrderId);
+            return Ok(result);
+        }
+
+        #endregion
+
+        #region Work Order Charges
+
+        [HttpPost("createworkordercharges")]
+        public IActionResult CreateWorkOrderCharges(WorkOrderCharges workOrderCharges)
+        {
+            if (ModelState.IsValid)
+            {
+                workOrderCharges.WorkOrderChargesId = unitOfWork.WorkOrderRepository.CreateWorkOrderCharges(workOrderCharges);
+                return Ok(workOrderCharges);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpPost("updateworkordercharges")]
+        public IActionResult UpdateWorkOrderCharges(WorkOrderCharges workOrderCharges)
+        {
+            if (ModelState.IsValid)
+            {
+                unitOfWork.WorkOrderRepository.UpdateWorkOrderCharges(workOrderCharges);
+                return Ok(workOrderCharges);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpGet("getworkflowworkorderchargeslist")]
+        public IActionResult GetWorkFlowWorkOrderChargesList(long wfwoId = 0, long workOrderId = 0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkFlowWorkOrderChargesList(wfwoId, workOrderId);
+            return Ok(result);
+        }
+
+        #endregion
+
+        #region Work Order Assets
+
+        [HttpPost("createworkorderassets")]
+        public IActionResult CreateWorkOrderAssets(WorkOrderAssets workOrderAssets)
+        {
+            if (ModelState.IsValid)
+            {
+                workOrderAssets.WorkOrderAssetId = unitOfWork.WorkOrderRepository.CreateWorkOrderAssets(workOrderAssets);
+                return Ok(workOrderAssets);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpPost("updateworkorderassets")]
+        public IActionResult UpdateWorkOrderAssets(WorkOrderAssets workOrderAssets)
+        {
+            if (ModelState.IsValid)
+            {
+                unitOfWork.WorkOrderRepository.UpdateWorkOrderAssets(workOrderAssets);
+                return Ok(workOrderAssets);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpGet("getworkflowworkorderassetslist")]
+        public IActionResult GetWorkFlowWorkOrderAssetsList(long wfwoId = 0, long workOrderId = 0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkFlowWorkOrderAssetsList(wfwoId, workOrderId);
+            return Ok(result);
+        }
+
+        #endregion
+
+        #region Work Order Exclusions
+
+        [HttpPost("createworkorderexclusions")]
+        public IActionResult CreateWorkOrderExclusions(WorkOrderExclusions workOrderExclusions)
+        {
+            if (ModelState.IsValid)
+            {
+                workOrderExclusions.WorkOrderExclusionsId = unitOfWork.WorkOrderRepository.CreateWorkOrderExclusions(workOrderExclusions);
+                return Ok(workOrderExclusions);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpPost("updateworkorderexclusions")]
+        public IActionResult UpdateWorkOrderExclusions(WorkOrderExclusions workOrderExclusions)
+        {
+            if (ModelState.IsValid)
+            {
+                unitOfWork.WorkOrderRepository.UpdateWorkOrderExclusions(workOrderExclusions);
+                return Ok(workOrderExclusions);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpGet("getworkflowworkorderexclusionslist")]
+        public IActionResult GetWorkFlowWorkOrderExclusionsList(long wfwoId = 0, long workOrderId = 0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkFlowWorkOrderExclusionsList(wfwoId, workOrderId);
+            return Ok(result);
+        }
+
+        #endregion
+
+        #region Work Order Documents
+
+        [HttpPost("createworkorderdocuments")]
+        public IActionResult CreateWorkOrderDocuments(WorkOrderDocuments workOrderDocuments)
+        {
+            if (ModelState.IsValid)
+            {
+                workOrderDocuments.WorkOrderDocumentsId = unitOfWork.WorkOrderRepository.CreateWorkOrderDocuments(workOrderDocuments);
+                return Ok(workOrderDocuments);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpPost("updateworkorderdocuments")]
+        public IActionResult UpdateWorkOrderDocuments(WorkOrderDocuments workOrderDocuments)
+        {
+            if (ModelState.IsValid)
+            {
+                unitOfWork.WorkOrderRepository.UpdateWorkOrderDocuments(workOrderDocuments);
+                return Ok(workOrderDocuments);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpGet("getworkflowworkorderdocumentslist")]
+        public IActionResult GetWorkFlowWorkOrderDocumentsList(long wfwoId = 0, long workOrderId = 0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkFlowWorkOrderDocumentsList(wfwoId, workOrderId);
+            return Ok(result);
+        }
+
+        #endregion
+
+
+        [HttpGet("createworkflowWorkorder1")]
+        public IActionResult CreateWorkFlowWorkOrder1(long workFlowId)
+        {
+            unitOfWork.WorkOrderRepository.CreateWorkFlowWorkOrderForWorkFlow1(workFlowId);
+            return Ok();
+        }
+        
+
+
+
+
+
+
 
 
 
