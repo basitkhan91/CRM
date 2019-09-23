@@ -1063,6 +1063,38 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+
+        [HttpPost("InsShipVia")]
+        public IActionResult InsertShipViaDetails([FromBody]  CustomerShippingViewModel CustomerShippingDetailsViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                if (CustomerShippingDetailsViewModel == null)
+                    return BadRequest($"{nameof(CustomerShippingDetailsViewModel)} cannot be null");
+                CustomerShipping actionobject = new CustomerShipping();
+                actionobject.CustomerId = CustomerShippingDetailsViewModel.CustomerId;
+                actionobject.ShipVia = CustomerShippingDetailsViewModel.ShipVia;
+                actionobject.CustomerShippingAddressId = CustomerShippingDetailsViewModel.CustomerShippingAddressId;
+                actionobject.ShippingAccountinfo = CustomerShippingDetailsViewModel.ShippingAccountinfo;
+                actionobject.ShippingId = CustomerShippingDetailsViewModel.ShippingId;
+                actionobject.ShippingURL = CustomerShippingDetailsViewModel.ShippingURL;
+                actionobject.Memo = CustomerShippingDetailsViewModel.Memo;
+                actionobject.MasterCompanyId = CustomerShippingDetailsViewModel.MasterCompanyId = 1;
+                actionobject.CreatedDate = DateTime.Now;
+                actionobject.UpdatedDate = DateTime.Now;
+                actionobject.CreatedBy = CustomerShippingDetailsViewModel.CreatedBy;
+                actionobject.UpdatedBy = CustomerShippingDetailsViewModel.UpdatedBy;
+                actionobject.IsActive = CustomerShippingDetailsViewModel.IsActive;
+                _unitOfWork.CustomerShipping.Add(actionobject);
+                _unitOfWork.SaveChanges();
+                return Ok(actionobject);
+            }
+
+            return Ok(ModelState);
+        }
+
+
+
         [HttpPut("updateStatuscusShippingAddress/{id}")]
         public IActionResult updateStatuscusShippingAddress(long id, [FromBody] CustomerShippingViewModel CustomerShippingViewModel)
         {
