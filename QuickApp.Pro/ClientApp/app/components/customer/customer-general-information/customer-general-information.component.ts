@@ -248,31 +248,12 @@ export class CustomerGeneralInformationComponent implements OnInit {
         if (!this.classificationName) {
             this.disableSaveCustomerClassificationSave = true;
         }
-
-
-        /*this.integrationCols = [
-            { field: '145.com', header: '145.com' },
-            { field: 'Aeroxchange', header: 'Aeroxchange' },
-            { field: 'AvRef', header: 'AvRef' },
-            { field: 'ILS', header: 'ILS' },
-            { field: 'partsBase', header: 'Parts base' },
-        ];
-
-        if (!this.intSelectedColumns) {
-            this.intSelectedColumns = this.cols;
-        }*/
-
     }
 
     constructor(public integration: IntegrationService, public customerClassificationService: CustomerClassificationService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService,
         public workFlowtService: CustomerService, public vendorser: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private currencyService: CurrencyService) {
 
         this.dataSource = new MatTableDataSource();
-
-
-
-
-
 
         if (this.workFlowtService.listCollection != null && this.workFlowtService.isEditMode == true) {
             //debugger;
@@ -299,8 +280,6 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
             this.sourceCustomer.isAddressForBilling = this.local.isAddressForBilling;
             this.sourceCustomer.isAddressForShipping = this.local.isAddressForShipping;
-            this.sourceCustomer.edi = this.local.edi;
-            this.sourceCustomer.isAeroExchange = this.local.isAeroExchange;
 
             if (this.workFlowtService.listCollection.t.ataChapterId) {
                 this.getATASubChapterData(this.workFlowtService.listCollection.t.ataChapterId);
@@ -309,8 +288,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
         } else {
             this.sourceCustomer.isAddressForBilling = true;
             this.sourceCustomer.isAddressForShipping = true;
-            this.sourceCustomer.edi = true;
-            this.sourceCustomer.isAeroExchange = true;
+
         }
         if (this.vendorser.isVendorAlsoCustomer == true) {
             this.sourceCustomer = this.vendorser.localCollectiontoCustomer;
