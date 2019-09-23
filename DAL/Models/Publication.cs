@@ -51,6 +51,11 @@ namespace DAL.Models
         public Nullable<DateTime> verifieddate { get; set; }
         public string employee { get; set; }
         public string docpath { get; set; }
+
+        public int PublicationTypeId { get; set; }
+
+        [NotMapped]
+        public string PublicationType { get; set; }
     }
 }
 

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DAL.Common;
+using DAL.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,7 +11,7 @@ namespace DAL.Repositories.Interfaces
     public interface IPublication : IRepository<DAL.Models.Publication>
     {
         IEnumerable<object> GetPublications();
-        IEnumerable<object> GetPublicationsById(long id);
+        Publication GetPublicationsById(long id);
         IEnumerable<object> GetPubPNMappingData(string id);
         IEnumerable<object> GetAircraftMappingDataById(long Publicationid);
         IEnumerable<object> GetATAMappingDataById(long Publicationid);
@@ -24,7 +26,8 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> searchgetAircraftMappingDataByMultiTypeIdModelIDDashID(long PublicationId, string aircraftTypeID, string aircraftModelID, string dashNumberId);
         IEnumerable<object> searchGetATAMappingDataByMultiATAIdSUBATAID(long PublicationId, string ATAChapterID, string SubATAChapterID);
 
-
+        GetData<Publication> GetPublicationsList(string publicationId, string description, int? publicationTypeId, string publishedBy, string employee, string location, int pageNumber, int pageSize);
+        GetData<Publication> PublicationsGlobalSearch(long? ataChapterId, long? ataSubChapterId, long? airCraftId, long? modelId, long? dashNumberId, int pageNumber, int pageSize);
 
 
 
