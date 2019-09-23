@@ -399,8 +399,9 @@ export class BinComponent {
 
 		this.cols1 = [
 			{ field: 'code', header: 'Code' },
+			{ field: 'name', header: 'Name' },
 			{ field: 'description', header: 'Description' },
-			{ field: 'legalEntityId', header: 'ID' },
+			//{ field: 'legalEntityId', header: 'ID' },
 		];
 	}
 
@@ -739,6 +740,7 @@ export class BinComponent {
 			this.sourceBin.masterCompanyId = 1;
 			this.sourceBin.name = this.name;
 			this.workFlowtService.newBin({...this.sourceBin,isDelete: this.isDeleteMode}).subscribe(data => {
+				this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 				if (data != null) {
 					this.saveManagement(data.binId, this.selectedNodeTest); //pushing Site Management Need Site Value so after getting SiteId we are calling
 				}

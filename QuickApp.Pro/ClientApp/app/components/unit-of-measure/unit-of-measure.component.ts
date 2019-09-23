@@ -90,8 +90,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
     unitName: string;
     filteredBrands: any[];
     localCollection: any[] = [];
-
-
+    selectedData: any;
     private isEditMode: boolean = false;
     private isDelete: boolean = false;
 
@@ -113,10 +112,11 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
             this.allUnitOfMeasureinfo = data[0].columnData;
             console.log(this.allUnitOfMeasureinfo);
             this.totalRecords = this.allUnitOfMeasureinfo.length;         
-            this.cols = [
-                console.log(this.allunitData),
+            this.cols = [                
                 this.selectedColumns = this.allunitData
+
             ];
+            this.selectedData = this.selectedColumns
         }
         );
     }

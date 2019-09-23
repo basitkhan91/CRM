@@ -248,7 +248,7 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
 
         this.sourceAction = row;
         this.integration_Name = row.description;
-        this.portalURL = row.portalURL;   
+        this.portalURL = row.portalUrl;   
         this.memo = row.memo;
         this.createdBy = row.createdBy;
         this.updatedBy = row.updatedBy;
