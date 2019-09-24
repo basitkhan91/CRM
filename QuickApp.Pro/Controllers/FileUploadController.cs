@@ -27,5 +27,23 @@ namespace QuickApp.Pro.Controllers
             return Ok();
 
         }
+
+        [HttpGet]
+        [Route("getattachmentdetails")]
+        public IActionResult GetAttachmentDetails(long attachmentId, long? referenceId, int moduleId)
+        {
+           var result= _unitOfWork.FileUploadRepository.GetAttachmentDetails(attachmentId, referenceId, moduleId);
+            return Ok(result);
+
+        }
+
+        [HttpGet]
+        [Route("deleteattachement")]
+        public IActionResult DeleteAttachement(List<long> attachmentDetailIds, string deletedBy)
+        {
+             _unitOfWork.FileUploadRepository.DeleteAttachement(attachmentDetailIds, deletedBy);
+            return Ok();
+
+        }
     }
 }
