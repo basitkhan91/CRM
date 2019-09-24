@@ -1219,39 +1219,44 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("saveCustomerWarnings")]
-        public IActionResult SaveCustomerWarnings([FromBody]  CustomerWarningViewModel CustomerWarningViewModel)
+        public IActionResult SaveCustomerWarnings([FromBody]  CustomerWarningViewModel[] CustomerWarningViewModel)
         {
             if (ModelState.IsValid)
             {
                 if (CustomerWarningViewModel == null)
                     return BadRequest($"{nameof(CustomerWarningViewModel)} cannot be null");
-                CustomerWarning CustomerObject = new CustomerWarning();
 
-                CustomerWarningViewModel.MasterCompanyId = 1;
-                // CustomerWarningViewModel.IsActive = true;
-                CustomerObject.CustomerId = CustomerWarningViewModel.CustomerId;
-                CustomerObject.Allow = CustomerWarningViewModel.Allow;
-                CustomerObject.SourceModule = CustomerWarningViewModel.SourceModule;
-                CustomerObject.Restrict = CustomerWarningViewModel.Restrict;
-                CustomerObject.Warning = CustomerWarningViewModel.Warning;
-                CustomerObject.WarningMessage = CustomerWarningViewModel.WarningMessage;
-                CustomerObject.RestrictMessage = CustomerWarningViewModel.RestrictMessage;
-                CustomerObject.MasterCompanyId = CustomerWarningViewModel.MasterCompanyId;
-                CustomerObject.IsActive = CustomerWarningViewModel.IsActive;
-                CustomerObject.CreatedDate = DateTime.Now;
-                CustomerObject.UpdatedDate = DateTime.Now;
-                CustomerObject.CreatedBy = CustomerWarningViewModel.CreatedBy;
-                CustomerObject.UpdatedBy = CustomerWarningViewModel.UpdatedBy;
-                CustomerObject.IsAllow = CustomerWarningViewModel.IsAllow;
-                _unitOfWork.CustomerWarning.Add(CustomerObject);
-                _unitOfWork.SaveChanges();
-                return Ok(CustomerObject);
+                for (int i = 0; i < CustomerWarningViewModel.Length; i++)
+                {
+
+                    CustomerWarning CustomerObject = new CustomerWarning();
+
+                    CustomerWarningViewModel[i].MasterCompanyId = 1;
+                    // CustomerWarningViewModel.IsActive = true;
+                    CustomerObject.CustomerId = CustomerWarningViewModel[i].CustomerId;
+                    CustomerObject.Allow = CustomerWarningViewModel[i].Allow;
+                    CustomerObject.SourceModule = CustomerWarningViewModel[i].SourceModule;
+                    CustomerObject.Restrict = CustomerWarningViewModel[i].Restrict;
+                    CustomerObject.Warning = CustomerWarningViewModel[i].Warning;
+                    CustomerObject.WarningMessage = CustomerWarningViewModel[i].WarningMessage;
+                    CustomerObject.RestrictMessage = CustomerWarningViewModel[i].RestrictMessage;
+                    CustomerObject.MasterCompanyId = CustomerWarningViewModel[i].MasterCompanyId;
+                    CustomerObject.IsActive = CustomerWarningViewModel[i].IsActive;
+                    CustomerObject.CreatedDate = DateTime.Now;
+                    CustomerObject.UpdatedDate = DateTime.Now;
+                    CustomerObject.CreatedBy = CustomerWarningViewModel[i].CreatedBy;
+                    CustomerObject.UpdatedBy = CustomerWarningViewModel[i].UpdatedBy;
+                    CustomerObject.IsAllow = CustomerWarningViewModel[i].IsAllow;
+                    _unitOfWork.CustomerWarning.Add(CustomerObject);
+                    _unitOfWork.SaveChanges();
+                    return Ok(CustomerObject);
+                }
             }
 
             return Ok(ModelState);
         }
         [HttpPut("saveCustomerWarnings/{id}")]
-        public IActionResult SaveCustomerWarningswithid(long id, [FromBody]  CustomerWarningViewModel CustomerWarningViewModel)
+        public IActionResult SaveCustomerWarningswithid(long id, [FromBody]  CustomerWarningViewModel[] CustomerWarningViewModel)
         {
             if (ModelState.IsValid)
             {
@@ -1259,27 +1264,30 @@ namespace QuickApp.Pro.Controllers
                     return BadRequest($"{nameof(CustomerWarningViewModel)} cannot be null");
                 var CustomerObject = _unitOfWork.CustomerWarning.GetSingleOrDefault(c => c.CustomerWarningId == id);
 
-                CustomerWarningViewModel.MasterCompanyId = 1;
-                CustomerObject.CustomerId = CustomerWarningViewModel.CustomerId;
-                CustomerObject.Allow = CustomerWarningViewModel.Allow;
-                CustomerObject.SourceModule = CustomerWarningViewModel.SourceModule;
-                CustomerObject.Restrict = CustomerWarningViewModel.Restrict;
-                CustomerObject.Warning = CustomerWarningViewModel.Warning;
-                CustomerObject.WarningMessage = CustomerWarningViewModel.WarningMessage;
-                CustomerObject.RestrictMessage = CustomerWarningViewModel.RestrictMessage;
-                CustomerObject.MasterCompanyId = CustomerWarningViewModel.MasterCompanyId;
-                CustomerObject.IsActive = CustomerWarningViewModel.IsActive;
-                CustomerObject.CreatedDate = DateTime.Now;
-                //CustomerObject.IsActive = true;
-                CustomerObject.UpdatedDate = DateTime.Now;
-                CustomerObject.CreatedBy = CustomerWarningViewModel.CreatedBy;
-                CustomerObject.UpdatedBy = CustomerWarningViewModel.UpdatedBy;
-                CustomerObject.IsAllow = CustomerWarningViewModel.IsAllow;
-                CustomerObject.IsWarning = CustomerWarningViewModel.IsWarning;
-                CustomerObject.IsRestrict = CustomerWarningViewModel.IsRestrict;
-                _unitOfWork.CustomerWarning.Update(CustomerObject);
-                _unitOfWork.SaveChanges();
-                return Ok(CustomerObject);
+                for (int i = 0; i < CustomerWarningViewModel.Length; i++)
+                {
+                    CustomerWarningViewModel[i].MasterCompanyId = 1;
+                    CustomerObject.CustomerId = CustomerWarningViewModel[i].CustomerId;
+                    CustomerObject.Allow = CustomerWarningViewModel[i].Allow;
+                    CustomerObject.SourceModule = CustomerWarningViewModel[i].SourceModule;
+                    CustomerObject.Restrict = CustomerWarningViewModel[i].Restrict;
+                    CustomerObject.Warning = CustomerWarningViewModel[i].Warning;
+                    CustomerObject.WarningMessage = CustomerWarningViewModel[i].WarningMessage;
+                    CustomerObject.RestrictMessage = CustomerWarningViewModel[i].RestrictMessage;
+                    CustomerObject.MasterCompanyId = CustomerWarningViewModel[i].MasterCompanyId;
+                    CustomerObject.IsActive = CustomerWarningViewModel[i].IsActive;
+                    CustomerObject.CreatedDate = DateTime.Now;
+                    //CustomerObject.IsActive = true;
+                    CustomerObject.UpdatedDate = DateTime.Now;
+                    CustomerObject.CreatedBy = CustomerWarningViewModel[i].CreatedBy;
+                    CustomerObject.UpdatedBy = CustomerWarningViewModel[i].UpdatedBy;
+                    CustomerObject.IsAllow = CustomerWarningViewModel[i].IsAllow;
+                    CustomerObject.IsWarning = CustomerWarningViewModel[i].IsWarning;
+                    CustomerObject.IsRestrict = CustomerWarningViewModel[i].IsRestrict;
+                    _unitOfWork.CustomerWarning.Update(CustomerObject);
+                    _unitOfWork.SaveChanges();
+                    return Ok(CustomerObject);
+                }
             }
 
             return Ok(ModelState);
