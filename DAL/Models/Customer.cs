@@ -16,6 +16,7 @@ namespace DAL.Models
 {
     public class Customer : PasBase//, IAudit
     {
+        
         [Key]
         public long CustomerId { get; set; }
 
@@ -163,7 +164,7 @@ namespace DAL.Models
         public Int32? MarkUpPercentageId { get; set; }
         public long? GeneralCurrencyId { get; set; }
 
-        public bool? IsAddressForBillingAndShipping { get; set; }
+        //public bool? IsAddressForBillingAndShipping { get; set; }
 
         public virtual MasterCompany MasterCompany { get; set; }
 
@@ -185,6 +186,10 @@ namespace DAL.Models
         public virtual CustomerShipping CustomerShipping { get; set; }
 
         public virtual CustomerType CustomerType { get; set; }
+
+        public List<ClassificationMapping> CustomerClassificationMapping { get; set; }
+        public List<RestrictedParts> RestrictedPMAParts { get; set; }
+        public List<RestrictedParts> RestrictedDERParts { get; set; }
 
         //public virtual Order Orders { get; set; }
     }

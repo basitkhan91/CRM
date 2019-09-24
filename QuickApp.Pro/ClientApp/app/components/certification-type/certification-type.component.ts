@@ -60,16 +60,18 @@ export class CertificationTypeComponent implements OnInit, AfterViewInit {
 	private isEditMode: boolean = false;
 	private isDeleteMode: boolean = false;
 	description: string;
+	memo: string;
 	filteredBrands: any[];
 	localCollection: any[] = [];
 	selectedColumn: any[];
 	Active: string = "Active";
-    certificationViewFileds: any = {};
-    AuditDetails: SingleScreenAuditDetails[];
+	certificationViewFileds: any = {};
+	totalRecords: number;
+	AuditDetails: SingleScreenAuditDetails[];
 	//disablesave: boolean = false;
 
 
-	
+
 	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: CertificationtypeService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 		this.displayedColumns.push('action');
 		this.dataSource = new MatTableDataSource();
@@ -78,23 +80,18 @@ export class CertificationTypeComponent implements OnInit, AfterViewInit {
 	ngOnInit(): void {
 		this.loadData();
 		this.cols = [
-
-
 			{ field: 'description', header: 'Certification Name' },
+			{ field: 'memo', header: 'Memo' },
 			{ field: 'createdBy', header: 'Created By' },
 			{ field: 'updatedBy', header: 'Updated By' },
-
-
 		];
 		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-certification-type';
 		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
 		this.selectedColumns = this.cols;
-
 	}
 	ngAfterViewInit() {
 		this.dataSource.paginator = this.paginator;
 		this.dataSource.sort = this.sort;
-
 	}
 	private loadData() {
 		this.alertService.startLoadingMessage();
@@ -135,6 +132,7 @@ export class CertificationTypeComponent implements OnInit, AfterViewInit {
 		this.loadingIndicator = false;
 		//this.dataSource.data = allWorkFlows;
 		this.allCertification = allWorkFlows;
+		this.totalRecords = this.allCertification.length;
 
 	}
 	private onDataLoadFailed(error: any) {
@@ -144,7 +142,7 @@ export class CertificationTypeComponent implements OnInit, AfterViewInit {
 
 	}
 	open(content) {
-		
+
 		this.isEditMode = false;
 		this.isDeleteMode = false;
 		this.disablesave = false;
@@ -152,12 +150,10 @@ export class CertificationTypeComponent implements OnInit, AfterViewInit {
 		this.loadMasterCompanies();
 		this.sourcecertificationtype = new CertificationType();
 		this.description = "";
+		this.memo = "";
 		this.sourcecertificationtype.isActive = true;
 		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
-
-
-
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
 	}
@@ -178,6 +174,7 @@ export class CertificationTypeComponent implements OnInit, AfterViewInit {
 		this.isEditMode = false;
 		this.isDeleteMode = true;
 		this.sourcecertificationtype = row;
+		this.certificationViewFileds.capabilityName = row.description;
 		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
 			console.log('When user closes');
@@ -191,6 +188,7 @@ export class CertificationTypeComponent implements OnInit, AfterViewInit {
 		this.loadMasterCompanies();
 		this.sourcecertificationtype = row;
 		this.description = this.sourcecertificationtype.description;
+		this.memo = this.sourcecertificationtype.memo;
 		this.loadMasterCompanies();
 		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
@@ -199,9 +197,7 @@ export class CertificationTypeComponent implements OnInit, AfterViewInit {
 	}
 
 	openHist(content, row) {
-
 		this.sourcecertificationtype = row;
-
 		this.workFlowtService.historyCertificationtype(this.sourcecertificationtype.employeeLicenseTypeId).subscribe(
 			results => this.onHistoryLoadSuccessful(results[0], content),
 			error => this.saveFailedHelper(error));
@@ -221,19 +217,19 @@ export class CertificationTypeComponent implements OnInit, AfterViewInit {
 		else {
 			this.sourcecertificationtype = rowData;
 			this.sourcecertificationtype.updatedBy = this.userName;
-		
+
 			this.Active = "Active";
 			this.sourcecertificationtype.isActive == true;
 			this.workFlowtService.updateCertificationtype(this.sourcecertificationtype).subscribe(
 				response => this.saveCompleted(this.sourcecertificationtype),
 				error => this.saveFailedHelper(error));
-			
+
 		}
 
 	}
 	eventHandler(event) {
 		if (event.target.value != "") {
-		let value = event.target.value.toLowerCase();
+			let value = event.target.value.toLowerCase();
 			if (this.selectedcertificationName) {
 				if (value == this.selectedcertificationName.toLowerCase()) {
 					//alert("Action Name already Exists");
@@ -257,7 +253,7 @@ export class CertificationTypeComponent implements OnInit, AfterViewInit {
 		}
 	}
 	//partnmId(event) {
-		
+
 
 	//		for (let i = 0; i < this.allCertification.length; i++) {
 	//			if (event == this.allCertification[i][0].description) {
@@ -390,19 +386,18 @@ export class CertificationTypeComponent implements OnInit, AfterViewInit {
 		}
 	}
 
-    showAuditPopup(template, id): void {
-        this.certificationType(id);
-        this.modal = this.modalService.open(template, { size: 'sm' });
-    }
+	showAuditPopup(template, id): void {
+		this.certificationType(id);
+		this.modal = this.modalService.open(template, { size: 'sm' });
+	}
 
-    certificationType(certificationTypeId: number): void
-    {
-        this.AuditDetails = [];
-        this.workFlowtService.getEmployeeLicenceAudit(certificationTypeId).subscribe(audits => {
-            if (audits.length > 0) {
-                this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["employeeLicenseTypeAuditId", "employeeLicenseTypeId", "createdBy", "createdDate", "updatedDate"];
-            }
-        });
-    }
+	certificationType(certificationTypeId: number): void {
+		this.AuditDetails = [];
+		this.workFlowtService.getEmployeeLicenceAudit(certificationTypeId).subscribe(audits => {
+			if (audits.length > 0) {
+				this.AuditDetails = audits;
+				this.AuditDetails[0].ColumnsToAvoid = ["employeeLicenseTypeAuditId", "employeeLicenseTypeId", "createdBy", "createdDate", "updatedDate"];
+			}
+		});
+	}
 }

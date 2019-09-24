@@ -15,6 +15,7 @@ namespace DAL.Models
         public DateTime UpdatedDate { get; set; }
         public Int32? MasterCompanyId { get; set; }
         public bool? IsDelete { get; set; }
+        public string Memo { get; set; }
 
     }
 }

@@ -136,7 +136,7 @@ export class DashnumberComponent implements OnInit {
     }
     getAircraftModelByManfacturer(value) {
         this.newValue = value.originalEvent.target.textContent;
-        this.aircraftModelService.getAircraftModelListByManufactureId(this.selectedAircraftId).subscribe(models => {
+        this.aircraftModelService.getAircraftModelListByManufactureId(this.sourceAction.aircraftTypeId).subscribe(models => {
             const responseValue = models[0];
             this.LoadValues = responseValue.map(models => {
                 return {
@@ -223,10 +223,10 @@ export class DashnumberComponent implements OnInit {
         this.sourceAction = new AircraftDashNumber();
         this.sourceAction.isActive = true;
         this.isSaving = true;
-        this.selectedAircraftId = "";
-        this.selectedAircraftModel = "";
+        this.sourceAction.aircraftTypeId = "";
+        this.sourceAction.aircraft_Model = "";
         this.selectedDashnumber = "";
-        this.selectedMemo = "";
+        this.sourceAction.memo = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -250,15 +250,14 @@ export class DashnumberComponent implements OnInit {
         this.loadMasterCompanies();
         this.sourceAction = row;
         this.aircraftManufacturerChange(this.sourceAction.aircraftTypeId);
-        this.aircraftModelService.getAircraftModelListByManufactureId(this.sourceAction.aircraftTypeId).subscribe(data=>{
+        this.aircraftModelService.getAircraftModelListByManufactureId(this.sourceAction.aircraftTypeId).subscribe(data => {
             this.aircraftModelList = data[0];
-            console.log(this.aircraftModelList);
-        })       
+        })
         console.log(this.sourceAction);
-        this.selectedAircraftId = this.sourceAction.aircraftType;
-        this.selectedAircraftModel = [this.sourceAction.aircraftModelId];
-        this.selectedDashnumber = this.sourceAction.dashNumber;
-        this.selectedMemo = this.sourceAction.memo;
+       // this.selectedAircraftId = this.sourceAction.aircraftType;
+       this.sourceAction.aircraft_Model = [this.sourceAction.aircraftModelId];
+       this.sourceAction.dashnumber = this.sourceAction.dashNumber;
+       this.sourceAction.memo = this.sourceAction.memo;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -275,7 +274,7 @@ export class DashnumberComponent implements OnInit {
         this.updatedBy = row.updatedBy;
         this.createdDate = row.createdDate;
         this.updatedDate = row.updatedDate;
-       
+
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -328,7 +327,7 @@ export class DashnumberComponent implements OnInit {
 
 
     aircraftManufacturerChange(typeId?) {
-        const id = typeId == undefined ? this.selectedAircraftId : typeId
+        const id = typeId == undefined ? this.sourceAction.aircraftTypeId : typeId
         this.aircraftModelService.getAircraftModelListByManufactureId(id).subscribe(dashNumbers => {
             const responseValue = dashNumbers[0];
             this.aircraftModelsList = responseValue.map(x => {
@@ -340,7 +339,7 @@ export class DashnumberComponent implements OnInit {
         });
     }
     getDashNumberByManfacturerandModel() {
-        this.dashNumberService.getDashNumberByModelTypeId(this.selectedAircraftModel, this.selectedAircraftId).subscribe((dashnumberValues) => {
+        this.dashNumberService.getDashNumberByModelTypeId(this.sourceAction.aircraft_Model, this.sourceAction.aircraftTypeId).subscribe((dashnumberValues) => {
             const respData = dashnumberValues;
             this.alldashnumberInfo = dashnumberValues;
             console.log(this.alldashnumberInfo)
@@ -402,23 +401,20 @@ export class DashnumberComponent implements OnInit {
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.masterCompanyId = 1;
-            this.sourceAction.AircraftTypeId = this.selectedAircraftId;
-            this.sourceAction.AircraftModelId = this.selectedAircraftModel[0];
-            this.sourceAction.DashNumber = this.selectedDashnumber;
-            this.sourceAction.Memo = this.selectedMemo;
+            this.sourceAction.masterCompanyId = 1;        
             this.dashNumberService.add({ ...this.sourceAction, isDeleted: this.isDeleted, createdDate: new Date(), UpdatedDate: new Date() }).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
         }
         else {
+
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.masterCompanyId = 1;
             this.sourceAction.aircraftType = this.autoCompleteBindById('aircraftTypeId', this.sourceAction.aircraftTypeId, this.aircraftManufacturerList)
             this.sourceAction.aircraftModel = this.autoCompleteBindById('aircraftModelId', this.sourceAction.aircraftModelId, this.aircraftModelList)
             console.log(this.sourceAction);
-            this.dashNumberService.update({...this.sourceAction,isDelete:  this.isDeleted}).subscribe(
+            this.dashNumberService.update({ ...this.sourceAction, isDelete: this.isDeleted }).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
         }

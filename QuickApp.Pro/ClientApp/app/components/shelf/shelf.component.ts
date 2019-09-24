@@ -24,8 +24,8 @@ import { TreeNode, MenuItem } from 'primeng/api';
 import { LegalEntityService } from '../../services/legalentity.service';
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 @Component({
-    selector: 'app-shelf',
-    templateUrl: './shelf.component.html',
+	selector: 'app-shelf',
+	templateUrl: './shelf.component.html',
 	styleUrls: ['./shelf.component.scss'],
 	animations: [fadeInOut]
 })
@@ -87,22 +87,22 @@ export class ShelfComponent {
 	allSites: Site[];
 	allWareHouses: any[];
 	allAddress: any;
-    allSelfs: any[];
-    shelfId: any;
-    location_Name: any;
-    allLocations: any;
-    showAddress: boolean;
+	allSelfs: any[];
+	shelfId: any;
+	location_Name: any;
+	allLocations: any;
+	showAddress: boolean;
 	gridData: TreeNode[];//Managemnt
 	gridData1: TreeNode[];//Managemnt
 	gridData2: TreeNode[];//Managemnt
-    cols1: any[];
-    localSelectedManagement: any[] = [];
-    selectedManagementValues: any;
-    index: any;
-    selectedNodes3: any;
-    selectedNodeTest: any;
-    localManagementSiteCollection: any;
-    allManagemtninfo: any[];
+	cols1: any[];
+	localSelectedManagement: any[] = [];
+	selectedManagementValues: any;
+	index: any;
+	selectedNodes3: any;
+	selectedNodeTest: any;
+	localManagementSiteCollection: any;
+	allManagemtninfo: any[];
 	shelfInfo: Shelf;
 	localManagementShelfEditCollection: TreeNode[];
 	localManagementLocationCollection: any;
@@ -112,8 +112,8 @@ export class ShelfComponent {
 	disableSaveManufacturer: boolean = false;;
 	selectedShelf: any;
 	localCollection: any[] = [];
-    shelfName: any;
-    AuditDetails: SingleScreenAuditDetails[];
+	shelfName: any;
+	AuditDetails: SingleScreenAuditDetails[];
 
 	ngOnInit(): void {
 		this.cols = [
@@ -135,8 +135,8 @@ export class ShelfComponent {
 			//{ field: 'createdDate', header: 'createdDate' }
 		];
 		this.loadData();
-        this.loadSiteData();
-        this.loadManagementdata(); //Calling Management Data
+		this.loadSiteData();
+		this.loadManagementdata(); //Calling Management Data
 		//	this.loadWareHouseData();
 		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-shelf';
 		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
@@ -146,8 +146,7 @@ export class ShelfComponent {
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 
-    constructor(public manageMentService: LegalEntityService,public workFlowtService: ShelfService, public locationService: LocationService, public wareHouseService: WarehouseService, public siteService: SiteService, private breadCrumb: SingleScreenBreadcrumbService, private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService)
-	{
+	constructor(public manageMentService: LegalEntityService, public workFlowtService: ShelfService, public locationService: LocationService, public wareHouseService: WarehouseService, public siteService: SiteService, private breadCrumb: SingleScreenBreadcrumbService, private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 		this.dataSource = new MatTableDataSource();
 		this.sourceShelf = new Shelf();
 
@@ -237,14 +236,13 @@ export class ShelfComponent {
 				error => this.onDataLoadFailed(error)
 			);
 
-			
+
 
 		}
 
 	}
 
-	wareHouseValueChange(data)
-	{
+	wareHouseValueChange(data) {
 		console.log(this.sourceShelf.warehouseId);
 		this.workFlowtService.getLocationDate(this.sourceShelf.warehouseId).subscribe( //calling and Subscribing for Location Data
 			results => this.onDataLoadLocation(results), //sending Location
@@ -253,8 +251,7 @@ export class ShelfComponent {
 	}
 
 
-	locationValueChange(data)
-	{
+	locationValueChange(data) {
 		this.showManagement = true;
 		this.workFlowtService.getManagementLocationData(data).subscribe(
 			data2 => {
@@ -282,7 +279,7 @@ export class ShelfComponent {
 
 	}
 
-	
+
 
 	addressDataArray(data: any) //Getting Address Based on Change
 	{
@@ -300,52 +297,53 @@ export class ShelfComponent {
 		}
 		//Storing Address Details
 
-    }
+	}
 
 
-    private loadManagementdata() //Loading Management Structure Data
-    {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
+	private loadManagementdata() //Loading Management Structure Data
+	{
+		this.alertService.startLoadingMessage();
+		this.loadingIndicator = true;
 
-        this.manageMentService.getManagemententity().subscribe(
-            results => this.onManagemtntdataLoad(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-        this.selectedColumns = this.cols;
-    }
+		this.manageMentService.getManagemententity().subscribe(
+			results => this.onManagemtntdataLoad(results[0]),
+			error => this.onDataLoadFailed(error)
+		);
+		this.selectedColumns = this.cols;
+	}
 
-    private onManagemtntdataLoad(getAtaMainList: any[]) {
-        // alert('success');
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.dataSource.data = getAtaMainList;
-        this.allManagemtninfo = getAtaMainList;
-        //debugger;
-        if (this.allManagemtninfo) {
-            this.gridData = this.makeNestedObj(this.allManagemtninfo, null);
-        }
+	private onManagemtntdataLoad(getAtaMainList: any[]) {
+		// alert('success');
+		this.alertService.stopLoadingMessage();
+		this.loadingIndicator = false;
+		this.dataSource.data = getAtaMainList;
+		this.allManagemtninfo = getAtaMainList;
+		//debugger;
+		if (this.allManagemtninfo) {
+			this.gridData = this.makeNestedObj(this.allManagemtninfo, null);
+		}
 
-        this.cols1 = [
-            { field: 'code', header: 'Code' },
-            { field: 'description', header: 'Description' },
-            { field: 'legalEntityId', header: 'ID' },
-        ];
-    }
+		this.cols1 = [
+			{ field: 'code', header: 'Code' },
+			{ field: 'name', header: 'Name' },
+			{ field: 'description', header: 'Description' },
+			//{ field: 'legalEntityId', header: 'ID' },
+		];
+	}
 
-    makeNestedObj(arr, parent) {
-        var out = []
-        for (var i in arr) {
-            if (arr[i].parentId == parent) {
-                var children = this.makeNestedObj(arr, arr[i].managementStructureId)
-                arr[i] = { "data": arr[i] };
-                if (children.length) {
-                    arr[i].children = children
-                }
-                out.push(arr[i])
-            }
-        }
-        return out
+	makeNestedObj(arr, parent) {
+		var out = []
+		for (var i in arr) {
+			if (arr[i].parentId == parent) {
+				var children = this.makeNestedObj(arr, arr[i].managementStructureId)
+				arr[i] = { "data": arr[i] };
+				if (children.length) {
+					arr[i].children = children
+				}
+				out.push(arr[i])
+			}
+		}
+		return out
 	}
 
 	makeNestedObj1(child, arr, parent) {
@@ -362,8 +360,7 @@ export class ShelfComponent {
 							console.log(arr[j].data);
 							break;
 						}
-						else if (child[i].managementStructureId == arr[j].managementStructureId)
-						{
+						else if (child[i].managementStructureId == arr[j].managementStructureId) {
 							arr[j].data.managementShelfId = child[i].managementShelfId;
 							arr[j].data.shelfId = child[i].shelfId;
 							out.push(arr[j]);
@@ -379,17 +376,17 @@ export class ShelfComponent {
 		return out;
 	}
 
-    nodeSelect(event) {
-        debugger;
-        //event.node = selected node
-        console.log("selected node", event, event.node);
-    }
+	nodeSelect(event) {
+		debugger;
+		//event.node = selected node
+		console.log("selected node", event, event.node);
+	}
 
-    managementStructureClick(data) {
-    //    this.localSelectedManagement.push(this.selectedNodeTest);
-        console.log(this.localSelectedManagement);
+	managementStructureClick(data) {
+		//    this.localSelectedManagement.push(this.selectedNodeTest);
+		console.log(this.localSelectedManagement);
 
-    }
+	}
 
 	public applyFilter(filterValue: string) {
 		this.dataSource.filter = filterValue;
@@ -460,7 +457,7 @@ export class ShelfComponent {
 		this.loadingIndicator = false;
 		this.dataSource.data = getSelfList;
 		this.allSelfs = getSelfList;
-		
+
 	}
 
 	private onDataLoadFailed(error: any) {
@@ -560,8 +557,7 @@ export class ShelfComponent {
 		this.showManagement = true;
 		this.disableSaveManufacturer = false;
 		this.sourceShelf = row;
-		if (row.siteId)
-		{
+		if (row.siteId) {
 			this.siteValueChange(row.siteId);
 			this.wareHouseValueChange(row.wareHouseId);
 			this.locationValueChange(row.locationId);
@@ -657,19 +653,19 @@ export class ShelfComponent {
 		this.alertService.showStickyMessage(error, null, MessageSeverity.error);
 	}
 
-    public saveManagement(shelfId, data1) //retriving SiteManagement Array
-    {
-        debugger;
-        for (let i = 0; i < data1.length; i++) {
-            if (data1[i].data.managementStructureId != null) {
-                data1[i].data.shelfId = shelfId;
-                this.workFlowtService.newManagementShelf(data1[i].data).subscribe(data11 => {
-                    this.localManagementSiteCollection = data11; //local SiteManagement Data
-                })
-            }
+	public saveManagement(shelfId, data1) //retriving SiteManagement Array
+	{
+		debugger;
+		for (let i = 0; i < data1.length; i++) {
+			if (data1[i].data.managementStructureId != null) {
+				data1[i].data.shelfId = shelfId;
+				this.workFlowtService.newManagementShelf(data1[i].data).subscribe(data11 => {
+					this.localManagementSiteCollection = data11; //local SiteManagement Data
+				})
+			}
 		}
 		this.loadData();
-    }
+	}
 	//EditItem
 	editItemAndCloseModel() {
 		this.isSaving = true;
@@ -680,12 +676,13 @@ export class ShelfComponent {
 			this.sourceShelf.updatedBy = this.userName;
 			this.sourceShelf.masterCompanyId = 1;
 			this.sourceShelf.name = this.name;
-            this.workFlowtService.newShelf(this.sourceShelf).subscribe(data => {
-                this.shelfInfo = data;
-                if (data != null) {
-                    this.saveManagement(data.shelfId, this.selectedNodeTest); //pushing Site Management Need Site Value so after getting SiteId we are calling
+			this.workFlowtService.newShelf(this.sourceShelf).subscribe(data => {
+				this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
+				this.shelfInfo = data;
+				if (data != null) {
+					this.saveManagement(data.shelfId, this.selectedNodeTest); //pushing Site Management Need Site Value so after getting SiteId we are calling
 
-                }
+				}
 			})
 			this.loadData();
 		}
@@ -698,17 +695,15 @@ export class ShelfComponent {
 			this.workFlowtService.updateShelf(this.sourceShelf).subscribe( //Update
 				response => this.saveCompleted(this.sourceShelf),
 				error => this.saveFailedHelper(error));
-            if (this.selectedNodeTest && this.selectedNodeTest.length > 0)
-            {
-                this.workFlowtService.deleteManagementShelf(this.selectedNodeTest).subscribe(data => {
+			if (this.selectedNodeTest && this.selectedNodeTest.length > 0) {
+				this.workFlowtService.deleteManagementShelf(this.selectedNodeTest).subscribe(data => {
 
-                });
-            }
-            if (this.selectedNodeTest && this.selectedNodeTest.length > 0)
-            {
-                this.saveManagement(this.selectedNodeTest[0].data.shelfId, this.selectedNodeTest); // will call ManagementSite Edit Data
-            }
-			
+				});
+			}
+			if (this.selectedNodeTest && this.selectedNodeTest.length > 0) {
+				this.saveManagement(this.selectedNodeTest[0].data.shelfId, this.selectedNodeTest); // will call ManagementSite Edit Data
+			}
+
 			this.selectedNodeTest = []; //after Edit making empty
 		}
 
@@ -743,20 +738,20 @@ export class ShelfComponent {
 
 
 		this.loadData();
-    }
+	}
 
-    showAuditPopup(template, id): void {
-        this.auditShelf(id);
-        this.modal = this.modalService.open(template, { size: 'sm' });
-    }
+	showAuditPopup(template, id): void {
+		this.auditShelf(id);
+		this.modal = this.modalService.open(template, { size: 'sm' });
+	}
 
-    auditShelf(shelfId: number): void {
-        this.AuditDetails = [];
-        this.workFlowtService.getShelfAudit(shelfId).subscribe(audits => {
-            if (audits.length > 0) {
-                this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["shelfAuditId", "shelfId", "createdBy", "createdDate", "updatedDate"];
-            }
-        });
-    }
+	auditShelf(shelfId: number): void {
+		this.AuditDetails = [];
+		this.workFlowtService.getShelfAudit(shelfId).subscribe(audits => {
+			if (audits.length > 0) {
+				this.AuditDetails = audits;
+				this.AuditDetails[0].ColumnsToAvoid = ["shelfAuditId", "shelfId", "createdBy", "createdDate", "updatedDate"];
+			}
+		});
+	}
 }

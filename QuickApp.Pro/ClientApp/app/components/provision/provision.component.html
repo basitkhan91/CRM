@@ -46,7 +46,7 @@
                                 </tr>
                                 <tr>
                                     <th *ngFor="let col of columns" [ngSwitch]="col.field">
-                                        <input style="width:100%;" pInputText type="text" (keydown.enter)="inputFiledFilter($event.target.value, col.field, col.filterMatchMode)">
+                                        <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field,'contains')">
                                     </th>
                                     <th style="width:150px;position:sticky"></th>
                                 </tr>
@@ -68,7 +68,7 @@
                                         <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="openDelete(content,rowData)">
                                             <mat-icon color="warn">delete</mat-icon>
                                         </button>
-                                        <button class="btn-history" mat-icon-button matTooltip="history" (click)="showAuditPopup(auditContent,rowData.provisionId)">
+                                        <button class="btn-history" mat-icon-button matTooltip="history" (click)="showAuditPopup(contentHist,rowData.provisionId)">
                                             <mat-icon color="green">history</mat-icon>
                                         </button>
                                     </td>
@@ -77,7 +77,7 @@
                             <ng-template pTemplate="summary" id="footer">
                                 <label id="footer" class="footer">No'of records:</label> <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" />
                                 &nbsp;&nbsp;
-                                <label id="footer" class="footer1">Pages Count:</label> <input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" />
+                                <!-- <label id="footer" class="footer1">Pages Count:</label> <input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" /> -->
                             </ng-template>
                         </p-table>
                     </div>

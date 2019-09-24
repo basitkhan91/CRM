@@ -400,14 +400,14 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
 
         }
 
-        this.updatePaginatorState();
+        this.loadData();
     }
 
     private saveSuccessHelper(role?: Itemgroup) {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 
-        this.updatePaginatorState();
+        this.loadData();
 
     }
 
@@ -497,62 +497,62 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
         
     }
 
-    updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
-    {
-        this.paginatorState = {
-            rows: this.rows,
-            first: this.first
-        }
-        if (this.paginatorState) {
-            this.loadItemGroup(this.paginatorState);
-        }
-    }
+//     updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
+//     {
+//         this.paginatorState = {
+//             rows: this.rows,
+//             first: this.first
+//         }
+//         if (this.paginatorState) {
+//             this.loadItemGroup(this.paginatorState);
+//         }
+//     }
 
-    inputFiledFilter(event, filed, matchMode) {
-        this.first = 0;
-        this.event = event;
-        this.field = filed;
-        this.matchMode = matchMode;
+//     inputFiledFilter(event, filed, matchMode) {
+//         this.first = 0;
+//         this.event = event;
+//         this.field = filed;
+//         this.matchMode = matchMode;
 
-        if (filed == 'itemGroupCode') {
-            this.itemGroupCodeInputFieldValue = event;
-        }
-        if (filed == 'description') {
-            this.descriptionInputFieldValue = event;
-        }
-        if (filed == 'memo') {
-            this.memoInputFieldValue = event;
-        }
-        if (filed == 'createdBy') {
-            this.createdByInputFieldValue = event;
-        }
-        if (filed == 'updatedBy') {
-            this.updatedByInputFieldValue = event;
-        }
+//         if (filed == 'itemGroupCode') {
+//             this.itemGroupCodeInputFieldValue = event;
+//         }
+//         if (filed == 'description') {
+//             this.descriptionInputFieldValue = event;
+//         }
+//         if (filed == 'memo') {
+//             this.memoInputFieldValue = event;
+//         }
+//         if (filed == 'createdBy') {
+//             this.createdByInputFieldValue = event;
+//         }
+//         if (filed == 'updatedBy') {
+//             this.updatedByInputFieldValue = event;
+//         }
        
-        this.itemGroup.push({
-            ItemGroupCode: this.itemGroupCodeInputFieldValue,
-            description: this.descriptionInputFieldValue,
-            memo: this.memoInputFieldValue,
-            Memo: this.memoInputFieldValue,
-            CreatedBy: this.createdByInputFieldValue,
-            UpdatedBy: this.updatedByInputFieldValue,
-            first: this.first,
-            page: 10,
-            pageCount: 10,
-            rows: this.rows,
-            limit: 5
-        })
-        if (this.itemGroup) {
-            this.workFlowtService.getServerPages(this.itemGroup[this.itemGroup.length - 1]).subscribe( //we are sending event details to service
-                pages => {
-                    this.itemGroupPaginationList = pages;
-                    this.itemGroupPagination = this.itemGroupPaginationList[0].itemGroupList;
-                    this.totalRecords = this.itemGroupPaginationList[0].totalRecordsCount;
-                    this.totelPages = Math.ceil(this.totalRecords / this.rows);
-                });
-        }
-        else {
-        }
-    }
-}
+//         this.itemGroup.push({
+//             ItemGroupCode: this.itemGroupCodeInputFieldValue,
+//             description: this.descriptionInputFieldValue,
+//             memo: this.memoInputFieldValue,
+//             Memo: this.memoInputFieldValue,
+//             CreatedBy: this.createdByInputFieldValue,
+//             UpdatedBy: this.updatedByInputFieldValue,
+//             first: this.first,
+//             page: 10,
+//             pageCount: 10,
+//             rows: this.rows,
+//             limit: 5
+//         })
+//         if (this.itemGroup) {
+//             this.workFlowtService.getServerPages(this.itemGroup[this.itemGroup.length - 1]).subscribe( //we are sending event details to service
+//                 pages => {
+//                     this.itemGroupPaginationList = pages;
+//                     this.itemGroupPagination = this.itemGroupPaginationList[0].itemGroupList;
+//                     this.totalRecords = this.itemGroupPaginationList[0].totalRecordsCount;
+//                     this.totelPages = Math.ceil(this.totalRecords / this.rows);
+//                 });
+//         }
+//         else {
+//         }
+//     }
+ }

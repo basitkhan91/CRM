@@ -21,6 +21,7 @@ import { Warehouse } from '../../models/warehouse.model';
 import { TreeNode, MenuItem } from 'primeng/api';
 import { LegalEntityService } from '../../services/legalentity.service';
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
+import { take } from 'rxjs/operators';
 
 @Component({
     selector: 'app-warehouse',
@@ -36,7 +37,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 
 	addressId: any;
 	wareHouseID: any;
-
+    totalRecords: number;
 	wareHouseName: any;
 	siteName: any;
 	memo: any = "";
@@ -166,8 +167,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 			this.Active = "In Active";
 			this.sourceWarehouse.isActive == false;
 			this.workFlowtService.updateWarehouse(this.sourceWarehouse).subscribe(
-				response => this.saveCompleted(this.sourceWarehouse),
-				error => this.saveFailedHelper(error));
+				this.alertService.showMessage("Success", `Action was Updated successfully`, MessageSeverity.success));
 			//alert(e);
 		}
 		else {
@@ -300,9 +300,10 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
         }
 
         this.cols1 = [
-            { field: 'code', header: 'Code' },
+			{ field: 'code', header: 'Code' },
+			{ field: 'name', header: 'Name' },
             { field: 'description', header: 'Description' },
-            { field: 'legalEntityId', header: 'ID' },
+            //{ field: 'legalEntityId', header: 'ID' },
         ];
     }
 
@@ -446,8 +447,10 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
-		this.dataSource.data = getWarehouseList; //cha
-		this.allWareHouses = getWarehouseList; //cha
+        this.dataSource.data = getWarehouseList; //cha
+        this.allWareHouses = getWarehouseList;
+        this.totalRecords = getWarehouseList.length;
+        //cha
 		//this.localWareHouseCollction = getWarehouseList;
 		
 		//console.log(this.allActions);
@@ -526,6 +529,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 		this.isEditMode = false;
 		this.isDeleteMode = true;
 		this.sourceWarehouse = row;
+		this.warehouse_Name = row.name;
 		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
 			console.log('When user closes');
@@ -535,7 +539,6 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 
 	//OpenEdit
 	openEdit(content, row) {
-
 		this.isEditMode = true;
 		this.isSaving = true;
 		this.loadMasterCompanies();
@@ -617,8 +620,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 		this.isSaving = true;
 		this.sourceWarehouse.updatedBy = this.userName;
 		this.workFlowtService.deleteWarehouse(this.sourceWarehouse.warehouseId).subscribe(
-			response => this.saveCompleted(this.sourceWarehouse),
-			error => this.saveFailedHelper(error));
+			this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success));
 		this.modal.close();
 	}
 
@@ -715,7 +717,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 
 
 	//EditItem
-	editItemAndCloseModel() {
+	SaveandEditWarehouse() {
 		this.isSaving = true;
 
         if (this.isEditMode == false) {
@@ -728,7 +730,9 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
             //this.sourceWarehouse.siteId = this.siteId;
             //this.sourceWarehouse.siteID = this.selectedSiteIdValue;
             this.workFlowtService.newWarehouse(this.sourceWarehouse).subscribe(data => {
-               
+				this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
+				response => this.saveCompleted(this.sourceWarehouse)
+				error => this.saveFailedHelper(error)
             if (data != null) {
                 this.saveManagement(data.warehouseId, this.selectedNodeTest); //pushing Site Management Need Site Value so after getting SiteId we are calling
 
@@ -742,9 +746,11 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 			this.sourceWarehouse.updatedBy = this.userName;
 			this.sourceWarehouse.name = this.name;
 			this.sourceWarehouse.masterCompanyId = 1;
-			this.workFlowtService.updateWarehouse(this.sourceWarehouse).subscribe(
-				response => this.saveCompleted(this.sourceWarehouse),
-				error => this.saveFailedHelper(error));
+			this.workFlowtService.updateWarehouse(this.sourceWarehouse).subscribe(data=>{
+				this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
+				response => this.saveCompleted(this.sourceWarehouse)
+				error => this.saveFailedHelper(error)
+			});
             if (this.selectedNodeTest && this.selectedNodeTest.length > 0)
             {
                 this.workFlowtService.deleteManagementWarehouse(this.selectedNodeTest).subscribe(data => {
@@ -758,6 +764,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 			
 			this.selectedNodeTest = []; //after Edit making empty
 		}
+	
 
 		this.modal.close();
 		this.loadData();

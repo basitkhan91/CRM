@@ -18,6 +18,7 @@ namespace QuickApp.Pro.Controllers
         private IUnitOfWork _unitOfWork;
         readonly ILogger _logger;
         readonly IEmailer _emailer;
+
         public CertificationTypeController(IUnitOfWork unitOfWork, ILogger<CertificationTypeController> logger, IEmailer emailer)
         {
             _unitOfWork = unitOfWork;
@@ -25,6 +26,7 @@ namespace QuickApp.Pro.Controllers
             _emailer = emailer;
 
         }
+
         [HttpGet("Get")]
         [Produces(typeof(List<EmployeeLicenseTypeViewModel>))]
         public IActionResult Get()
@@ -70,17 +72,18 @@ namespace QuickApp.Pro.Controllers
                 glaccountclassobject.Description = employeeLicenseTypeViewModel.Description;
                 glaccountclassobject.MasterCompanyId = employeeLicenseTypeViewModel.MasterCompanyId;
                 glaccountclassobject.IsActive = true;
+                glaccountclassobject.IsDelete = false;
                 glaccountclassobject.CreatedDate = DateTime.Now;
                 glaccountclassobject.UpdatedDate = DateTime.Now;
                 glaccountclassobject.CreatedBy = employeeLicenseTypeViewModel.CreatedBy;
                 glaccountclassobject.UpdatedBy = employeeLicenseTypeViewModel.UpdatedBy;
+                glaccountclassobject.Memo = employeeLicenseTypeViewModel.Memo;
                 _unitOfWork.employeeLicenseType.Add(glaccountclassobject);
                 _unitOfWork.SaveChanges();
-
             }
-
             return Ok(ModelState);
         }
+
         [HttpPut("certificationtypepost/{id}")]
         public IActionResult UpdateAction(long id, [FromBody] EmployeeLicenseTypeViewModel employeeLicenseTypeViewModel)
         {
@@ -109,6 +112,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+
         [HttpDelete("certificationtypepost/{id}")]
         [Produces(typeof(EmployeeLicenseTypeViewModel))]
         public IActionResult DeleteAction(long id)

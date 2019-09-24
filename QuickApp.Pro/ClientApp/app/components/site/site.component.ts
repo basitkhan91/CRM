@@ -29,8 +29,7 @@ import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-scre
 /** site component*/
 export class SiteComponent implements OnInit, AfterViewInit {
 	disableSaveSiteName: boolean;
-	public sourceSite: any = {};
-
+	sourceSite: Site;
 	siteId: any;
 	siteName: any;
 	address1: any;
@@ -46,7 +45,6 @@ export class SiteComponent implements OnInit, AfterViewInit {
 	createdDate: any = "";
 	updatedDate: any = "";
 	name: any;
-
 	addressId: any;
 	countrycollection: any;
 	countryName: string;
@@ -220,8 +218,9 @@ export class SiteComponent implements OnInit, AfterViewInit {
 
 		this.cols1 = [
 			{ field: 'code', header: 'Code' },
+			{ field: 'name', header: 'Name' },
 			{ field: 'description', header: 'Description' },
-			{ field: 'legalEntityId', header: 'ID' },
+
 		];
 	}
 
@@ -359,8 +358,6 @@ export class SiteComponent implements OnInit, AfterViewInit {
 
 	//LoadMasterCompanies
 	private loadMasterCompanies() {
-
-
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
 		//Getting Master Company Data
@@ -374,16 +371,17 @@ export class SiteComponent implements OnInit, AfterViewInit {
 	//Open
 	open(content) //it will Open Form and Creating New Site Object
 	{
-
 		this.isEditMode = false;
 		this.isDeleteMode = false;
 		this.isSaving = true;
 		this.loadMasterCompanies();
-		this.loadManagementdata(); //Calling Management Data
+		this.loadManagementdata();
+		this.sourceSite = new Site();
+		this.sourceSite.isActive = true;
+		//Calling Management Data
 		this.disableSaveManufacturer = false;
 		this.sourceSite = new Site(); //Creating sourceSite Object and use in [(ngModel)]
 		this.name = "";
-
 		this.modal = this.modalService.open(content, { size: 'lg' });
 		this.modal.result.then(() => {
 			console.log('When user closes');
@@ -407,7 +405,6 @@ export class SiteComponent implements OnInit, AfterViewInit {
 	}
 	//OpenEdit
 	openEdit(content, row) {
-
 		this.isEditMode = true;
 		this.isSaving = true;
 		this.loadMasterCompanies();
@@ -447,7 +444,6 @@ export class SiteComponent implements OnInit, AfterViewInit {
 
 	//OpenView
 	openView(content, row) {
-
 		this.sourceSite = row;
 		this.name = row.name;
 		this.address1 = row.address1;
@@ -458,13 +454,12 @@ export class SiteComponent implements OnInit, AfterViewInit {
 		this.country = row.country;
 		this.postalCode = row.postalCode;
 		this.memo = row.memo;
-
 		this.createdBy = row.createdBy;
 		this.updatedBy = row.updatedBy;
 		this.createdDate = row.createdDate;
 		this.updatedDate = row.updatedDate;
 		this.loadMasterCompanies();
-		this.modal = this.modalService.open(content, { size: 'sm' });
+		this.modal = this.modalService.open(content, { size: 'lg' });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -513,52 +508,7 @@ export class SiteComponent implements OnInit, AfterViewInit {
 		}
 	}
 
-	//filtermanufacturer(event) {
 
-	//	this.localCollection = [];
-	//	for (let i = 0; i < this.allSites.length; i++) {
-	//		let name = this.allSites[i].name;
-	//		if (name.toLowerCase().indexOf(event.query.toLowerCase()) == 0)
-	//		{
-	//			this.siteNamecolle.push([{
-	//				"siteId": this.allSites[i].siteId,
-	//				"name": name
-	//			}]),
-	//				this.localCollection.push(name)
-
-	//		}
-	//	}
-	//}
-
-
-	//partnmId(event) {
-	//	//debugger;
-	//	for (let i = 0; i < this.actionamecolle.length; i++) {
-	//		if (event == this.actionamecolle[i][0].gLAccountCategoryName) {
-	//			//alert("Action Name already Exists");
-	//			this.disableSave = true;
-	//			this.selectedSiteName = event;
-	//		}
-	//	}
-	//}
-
-	//eventHandler(event) {
-	//	if (event.target.value != "") {
-	//		let value = event.target.value.toLowerCase();
-	//		if (this.selectedSiteName) {
-	//			if (value == this.selectedSiteName.toLowerCase()) {
-	//				//alert("Action Name already Exists");
-	//				this.selectedSiteName = true;
-
-	//			}
-	//			else {
-	//				this.disableSaveManufacturer = false;
-
-	//			}
-	//		}
-
-	//	}
-	//}
 
 	filtermanufacturer(event) // will call when we click droup down button
 	{
@@ -588,14 +538,8 @@ export class SiteComponent implements OnInit, AfterViewInit {
 		this.workFlowtService.deleteSite(this.sourceSite.siteId).subscribe(
 			response => this.saveCompleted(this.sourceSite),
 			error => this.saveFailedHelper(error));
-
-		////tryed for Management Delete But not Need 
-		//this.workFlowtService.deleteManagementSite(this.sourceSite.siteId).subscribe(
-		//	error => this.saveFailedHelper(error));
-		//this.modal.close();
+		this.modal.close();
 	}
-
-
 	//OnHistoryLoadSuccessful
 	private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
 
@@ -614,15 +558,6 @@ export class SiteComponent implements OnInit, AfterViewInit {
 
 
 	}
-
-
-
-
-
-
-
-
-	//SaveCompleted
 	private saveCompleted(user?: Site) {
 		this.isSaving = false;
 
@@ -667,7 +602,10 @@ export class SiteComponent implements OnInit, AfterViewInit {
 			if (data1[i].data.managementStructureId != null) {
 				data1[i].data.siteId = siteId;
 				this.workFlowtService.newManagementSite(data1[i].data).subscribe(data11 => {
-					this.localManagementSiteCollection = data11; //local SiteManagement Data
+					response => this.saveCompleted(this.sourceSite)
+					error => this.saveFailedHelper(error)
+					this.localManagementSiteCollection = data11;
+					//local SiteManagement Data
 				})
 			}
 		}
@@ -701,12 +639,16 @@ export class SiteComponent implements OnInit, AfterViewInit {
 			this.sourceSite.name = this.name;
 			this.workFlowtService.newSite(this.sourceSite).subscribe(data => {
 				this.siteInfo = data;
+				this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
+				response => this.saveCompleted(this.sourceSite)
+				error => this.saveFailedHelper(error)
 				//retrive after enter siteid get and submit managementsite
 				if (data != null) {
 					this.saveManagement(data.siteId, this.selectedNodeTest); //pushing Site Management Need Site Value so after getting SiteId we are calling
-
+					this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
+					response => this.saveCompleted(this.sourceSite)
+					error => this.saveFailedHelper(error)
 				}
-
 			})
 			this.loadData();
 		}
@@ -715,9 +657,9 @@ export class SiteComponent implements OnInit, AfterViewInit {
 			this.sourceSite.updatedBy = this.userName;
 			this.sourceSite.name = this.name;
 			this.sourceSite.masterCompanyId = 1;
-			this.workFlowtService.updateSite(this.sourceSite).subscribe(
-				response => this.saveCompleted(this.sourceSite),
-				error => this.saveFailedHelper(error));
+			this.workFlowtService.updateSite(this.sourceSite).subscribe(		
+
+				this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success));
 
 			if (this.selectedNodeTest && this.selectedNodeTest.length > 0) {
 				this.workFlowtService.deleteManagementSite(this.selectedNodeTest).subscribe(data => {
@@ -728,9 +670,6 @@ export class SiteComponent implements OnInit, AfterViewInit {
 				this.saveManagement(this.selectedNodeTest[0].data.siteId, this.selectedNodeTest); // will call ManagementSite Edit Data
 
 			}
-
-
-
 			this.selectedNodeTest = []; //after Edit making empty
 		}
 

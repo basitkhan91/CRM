@@ -31,7 +31,7 @@ export class EmployeeExpertiseComponent implements OnInit, AfterViewInit {
     updatedBy: any = "";
     createdDate: any = "";
     updatedDate: any = "";
-
+    totalRecords: number;
 
     auditHisory: AuditHistory[];
     Active: string = "Active";
@@ -67,7 +67,7 @@ export class EmployeeExpertiseComponent implements OnInit, AfterViewInit {
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
 
-	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: EmployeeExpertiseService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: EmployeeExpertiseService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
         this.sourceAction = new EmployeeExpertise();
@@ -81,11 +81,11 @@ export class EmployeeExpertiseComponent implements OnInit, AfterViewInit {
             { field: 'memo', header: 'Memo' },
             { field: 'createdBy', header: 'Created By' },
             { field: 'updatedBy', header: 'Updated By' },
-           //{ field: 'updatedDate', header: 'Updated Date' },
-           //{ field: 'createdDate', header: 'Created Date' }
-		];
-		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-employee-expertise';
-		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
+            //{ field: 'updatedDate', header: 'Updated Date' },
+            //{ field: 'createdDate', header: 'Created Date' }
+        ];
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-employee-expertise';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
         this.selectedColumns = this.cols;
     }
 
@@ -132,6 +132,7 @@ export class EmployeeExpertiseComponent implements OnInit, AfterViewInit {
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allEmployeeExpertiseInfo = allWorkFlows;
+        this.totalRecords = this.allEmployeeExpertiseInfo.length;
     }
 
     private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
@@ -153,10 +154,10 @@ export class EmployeeExpertiseComponent implements OnInit, AfterViewInit {
 
         this.isEditMode = false;
         this.isDeleteMode = false;
-		this.disableSave = false;
+        this.disableSave = false;
         this.isSaving = true;
         this.loadMasterCompanies();
-		this.sourceAction = new EmployeeExpertise();
+        this.sourceAction = new EmployeeExpertise();
         this.sourceAction.isActive = true;
         this.employeeName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
@@ -174,6 +175,7 @@ export class EmployeeExpertiseComponent implements OnInit, AfterViewInit {
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceAction = row;
+        this.employeeExpertise_Name = row.description;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -183,7 +185,7 @@ export class EmployeeExpertiseComponent implements OnInit, AfterViewInit {
     openEdit(content, row) {
 
         this.isEditMode = true;
-		this.disableSave = false;
+        this.disableSave = false;
         this.isSaving = true;
         this.loadMasterCompanies();
         this.sourceAction = row;
@@ -250,7 +252,7 @@ export class EmployeeExpertiseComponent implements OnInit, AfterViewInit {
                     "employeeExpertiseId": this.allEmployeeExpertiseInfo[i].employeeExpertiseId,
                     "employeeName": employeeName
                 }]),
-                this.localCollection.push(employeeName);
+                    this.localCollection.push(employeeName);
             }
         }
     }
@@ -278,7 +280,7 @@ export class EmployeeExpertiseComponent implements OnInit, AfterViewInit {
 
     }
 
-    
+
     openHist(content, row) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -323,7 +325,7 @@ export class EmployeeExpertiseComponent implements OnInit, AfterViewInit {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.description = this.employeeName;
-              this.sourceAction.masterCompanyId= 1;
+            this.sourceAction.masterCompanyId = 1;
             this.workFlowtService.newAction(this.sourceAction).subscribe(
                 role => this.saveSuccessHelper(role),
                 error => this.saveFailedHelper(error));
@@ -332,7 +334,7 @@ export class EmployeeExpertiseComponent implements OnInit, AfterViewInit {
 
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.description = this.employeeName;
-              this.sourceAction.masterCompanyId= 1;
+            this.sourceAction.masterCompanyId = 1;
             this.workFlowtService.updateAction(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));

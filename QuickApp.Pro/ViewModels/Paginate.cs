@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DAL.Models;
+
+
 namespace QuickApp.Pro.ViewModels
 {
 
@@ -87,8 +89,8 @@ namespace QuickApp.Pro.ViewModels
 
 		public string CustomerPhone { get; set; }
 
-
-	}
+        public string CustomerClarifiacationName { get; set; }
+    }
     #endregion
 
     #region unitOfMeasure
@@ -112,6 +114,13 @@ namespace QuickApp.Pro.ViewModels
         public DateTime? UpdatedDate { get; set; }
         public DateTime CreatedDate { get; set; }
         public bool? IsActive { get; set; }
+    }
+    public class UnitOfMeasureSPModel
+    {
+        public string Description { get; set; }
+        public string ShortName { get; set; }
+        public string Memo { get; set; }
+        public string Standard { get; set; }
     }
     #endregion
 
@@ -452,17 +461,16 @@ namespace QuickApp.Pro.ViewModels
     #endregion
 
     #region AssetIntangibleAttributeType
-    public class AssetIntangibleAttributeTypeModel : PasBase
+    public class AssetIntangibleAttributeTypeModel 
     {
         public long AssetIntangibleAttributeTypeId { get; set; }
         public int IntangibleLife { get; set; }
         public string AmortizationFrequency { get; set; }
-        //public bool? IsActive { get; set; }
     }
     #endregion
 
     #region AssetDepreciationInterval
-    public class AssetDepreciationIntervalModel :PasBase
+    public class AssetDepreciationIntervalModel
     {
         public long AssetDepreciationIntervalId { get; set; }
         public string AssetDepreciationIntervalCode { get; set; }
@@ -471,18 +479,50 @@ namespace QuickApp.Pro.ViewModels
     }
     #endregion
     #region Credit Terms
-    public class CreditTermsModel : PasBase
+    public class CreditTermsModel
     {
-        public Int16 CreditTermsId { get; set; }
-
         public string Name { get; set; }
         public string Memo { get; set; }
-
         public byte? Percentage { get; set; }
-
         public byte? Days { get; set; }
-
         public byte? NetDays { get; set; }
+    }
+    #endregion
+
+    #region Findings model
+    public class FindingModel
+    {
+        public long FindingId { get; set; }
+        public string FindingCode { get; set; }
+        public string Memo { get; set; }
+        public string Description { get; set; }
+    }
+    #endregion
+
+    #region Work Performed
+    public class WorkPerformedModel 
+    {
+        public string Description { get; set; }
+        public string WorkPerformedCode { get; set; }
+        public string Memo { get; set; }
+    }
+    #endregion
+
+    #region Gate codes
+    public class GateCodeModel
+    {
+        public string GateCode { get; set; }
+        public string Description { get; set; }
+        public string Sequence { get; set; }
+        public string Memo { get; set; }
+    }
+    #endregion
+    #region Expenditure Category
+    public class ExpenditureCategoryModel 
+    {
+        public long ExpenditureCategoryId { get; set; }
+        public string Description { get; set; }
+        public string Memo { get; set; }
     }
     #endregion
 }

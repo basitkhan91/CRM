@@ -7,28 +7,33 @@
                         <div class="inline-block display-flex">
                             <h3 class="po-head lead">Manufacturer</h3>
                             &nbsp;&nbsp;
-                            <a class="plusicon-cstm new-margin" pTooltip="Add Manufacturer" tooltipPosition="right" (click)="open(contentEdit)"><i class="fa fa-plus-circle fa-lg"></i></a>
+                            <a class="plusicon-cstm new-margin" pTooltip="Add Manufacturer" tooltipPosition="right" (click)="open(contentEdit)">
+                                <i class="fa fa-plus-circle fa-lg"></i>
+                            </a>
                         </div>
-                        <p-table #dt [value]="manufacturerPagination" class="rpo-table-cstm rro-table-cstm"
-                                 [lazy]="true" (onLazyLoad)="loadManufacturer($event)" [paginator]="true"
-                                 [rows]="10" [rowsPerPageOptions]="[10,20,30]" [totalRecords]="totalRecords" 
-                                 [metaKeySelection]="true" [pageLinks]="3" [columns]="selectedColumns" selectionMode="multiple"
-                                 [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true">
+                        <p-table #dt [value]="allManufacturerInfo" class="rpo-table-cstm rro-table-cstm" 
+                            [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,20,30]" [totalRecords]="totalRecords" [metaKeySelection]="true"
+                            [pageLinks]="3" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn"
+                            [resizableColumns]="true" [reorderableColumns]="true">
                             <ng-template pTemplate="caption">
                                 <div style="text-align: right">
-                                    <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
-                                                   selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-
+                                    <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" selectedItemsLabel="{0} columns selected"
+                                        [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
+                                    <!-- 
                                     <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
                                         <i class="fa fa-search"></i>
                                         <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter">
-                                    </div>
+                                    </div> -->
                                     <button type="button" class="btn btn-primary-cstm " pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm " pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                    <button type="button" class="btn btn-primary-cstm " pButton icon="fa-download" iconPos="left" label="Export Selection Only"
+                                        (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload  excel-upload-cstm">
-                                        <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                                        <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected"
+                                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                                         <label for="upload">
-                                            <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+                                            <span matTooltip="Upload Data (Excel)">
+                                                <i class="fa fa-upload"></i>
+                                            </span>
                                         </label>
                                     </div>
                                 </div>
@@ -43,7 +48,7 @@
                                 </tr>
                                 <tr>
                                     <th *ngFor="let col of columns" [ngSwitch]="col.field">
-                                        <input style="width:100%;" pInputText type="text" (keydown.enter)="inputFiledFilter($event.target.value, col.field, col.filterMatchMode)">
+                                        <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field,'contains')">
                                     </th>
                                     <th style="width:150px"></th>
                                 </tr>
@@ -51,14 +56,23 @@
                             <ng-template pTemplate="body" let-rowData let-columns="columns">
                                 <tr [pSelectableRow]="rowData">
                                     <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-                                        {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
+                                        {{col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?
+                                        (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
                                     </td>
                                     <td>
-                                        <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                        <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                        <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)"
+                                            [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)"
+                                            [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)"
+                                            [(ngModel)]="rowData['isActive']"></p-inputSwitch>
 
-                                        <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" title="View"><i class="fa fa-eye"></i></a> </span>
+                                        <span data-toggle="modal" data-target="#view">
+                                            <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)"
+                                                title="View">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                        </span>
                                         <button class="btn-edit" mat-icon-button (click)="openEdit(contentEdit,rowData)" matTooltip="edit">
                                             <mat-icon>edit</mat-icon>
                                         </button>
@@ -72,160 +86,201 @@
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="summary" id="footer">
-                                <label id="footer" class="footer">No'of records:</label> <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" />
-                                &nbsp;&nbsp;
-                                <label id="footer" class="footer1">Pages Count:</label> <input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" />
+                                <label id="footer" class="footer">No'of records:</label>
+                                <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true"
+                                    pInputText type="text" /> &nbsp;&nbsp;
+                                <!-- <label id="footer" class="footer1">Pages Count:</label>
+                                <input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true"
+                                    pInputText type="text" /> -->
                             </ng-template>
                         </p-table>
-                    </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 
-                        <ng-template #auditContent let-c="close" let-d="dismiss">
-                            <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
-                                <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
-                            </div>
-                        </ng-template>
+<ng-template #auditContent let-c="close" let-d="dismiss">
+    <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
+        <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+    </div>
+</ng-template>
 
-                        <ng-template #content let-c="close" let-d="dismiss">
-                            <div class="modal-header">
-                                <h4 class="modal-title">Are You Sure Want to Delete?</h4>
-                                <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <strong>Manufacturer name: <span class="new-label">{{manufactureViewField.name}}</span></strong>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary-cstm" (click)="deleteItemAndCloseModel()">Yes</button>
-                                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">No</button>
-                            </div>
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <strong>Manufacturer name:
+            <span class="new-label">{{manufactureViewField.name}}</span>
+        </strong>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary-cstm" (click)="deleteItemAndCloseModel()">Yes</button>
+        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">No</button>
+    </div>
 
-                        </ng-template>
+</ng-template>
 
-                        <ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
-                            <div class="modal-header">
-                                <h4 class="modal-title" *ngIf="isEditMode">Edit Manufacturer</h4>
-                                <h4 class="modal-title" *ngIf="!isEditMode">Add  Manufacturer</h4>
-                                <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemAndCloseModel()">
-                                    <div class="form-group">
-                                        <div class="col-sm-12">
-                                            <div class="col-sm-4">
-                                                <label for="netdays" class="control-label">Manufacturer Name<span class="clr-red">*</span></label>
-                                            </div>
-                                            <div class="col-sm-5">
-                                                <p-autoComplete (onSelect)="Manufacturerdescription($event)" (onKeyUp)=ManufacturerHandler($event) [(ngModel)]="sourcemanufacturer.name" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filtermanufacturer($event)" [size]="30"
-                                                                [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
-                                                    <ng-template let-name pTemplate="item">
-                                                        <div class="ui-helper-clearfix">{{name}}</div>
-                                                    </ng-template>
-                                                </p-autoComplete>
-                                                <div *ngIf="disableSave" class="clr-red">Already Exists</div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <div class="col-sm-4">
-                                                <label for="description" class="control-label">Comments</label>
-                                            </div>
-                                            <div class="col-sm-5">
-                                                <input type="text"  class="form-control" id="comments" name="comments" [(ngModel)]="sourcemanufacturer.comments" minlength="2" required>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <br/>
-                                    <div class="form-group">
-                                        <div class="col-sm-6">
-                                            <div class="checkbox-cstm">
-                                                <label>
-                                                    <input type="checkbox" name="isActive" #isActive="ngModel" [(ngModel)]="sourcemanufacturer.isActive">
-                                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                    Active
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="clear"></div>
-                                    <div class="modal-footer">
-                                        <button class="btn btn-primary-cstm" [disabled]="!userForm.valid || disableSave">Save</button>
-                                        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
-                                    </div>
-                                </form>
-                            </div>
+<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
+    <div class="modal-header">
+        <h4 class="modal-title" *ngIf="isEditMode">Edit Manufacturer</h4>
+        <h4 class="modal-title" *ngIf="!isEditMode">Add Manufacturer</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemAndCloseModel()">
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="col-sm-4">
+                        <label for="netdays" class="control-label">Manufacturer Name
+                            <span class="clr-red">*</span>
+                        </label>
+                    </div>
+                    <div class="col-sm-5">
+                        <p-autoComplete (onSelect)="Manufacturerdescription($event)" (onKeyUp)=ManufacturerHandler($event) [(ngModel)]="sourcemanufacturer.name"
+                            [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filtermanufacturer($event)"
+                            [size]="30" [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
+                            <ng-template let-name pTemplate="item">
+                                <div class="ui-helper-clearfix">{{name}}</div>
+                            </ng-template>
+                        </p-autoComplete>
+                        <div *ngIf="disableSave" class="clr-red">Already Exists</div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="col-sm-4">
+                        <label for="description" class="control-label">Comments</label>
+                    </div>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" id="comments" name="comments" [(ngModel)]="sourcemanufacturer.comments" minlength="2"
+                            required>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="form-group">
+                <div class="col-sm-6">
+                    <div class="checkbox-cstm">
+                        <label>
+                            <input type="checkbox" name="isActive" #isActive="ngModel" [(ngModel)]="sourcemanufacturer.isActive">
+                            <span class="cr">
+                                <i class="cr-icon pi pi-check"></i>
+                            </span>
+                            Active
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div class="modal-footer">
+                <button class="btn btn-primary-cstm" [disabled]="!userForm.valid || disableSave">Save</button>
+                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+            </div>
+        </form>
+    </div>
 
-                        </ng-template>
-
-
-                        <ng-template #view class="modal fade" id="view" role="dialog">
-
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-                                    <h4 class="modal-title">Manufacturer Details</h4>
-                                </div>
-                                <div class="modal-body viewform">
-                                    <p><span class="label"><b>Manufacturer Name: </b></span><span class="value">{{manufactureViewField.name}}</span></p>
-                                    <p><span class="label"><b>Comments: </b></span><span class="value">{{manufactureViewField.comments}}</span></p>
-                                    <p><span class="label"><b>Created By: </b></span><span class="value">{{createdBy}}</span></p>
-                                    <p><span class="label"><b>Created Date: </b></span><span class="value">{{createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span></p>
-                                    <p><span class="label"><b>Updated By: </b></span><span class="value">{{updatedBy}}</span></p>
-                                    <p><span class="label"><b>Updated Date: </b></span><span class="value">{{updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span></p>
-                                    <div class="clear"></div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
-                                </div>
-                            </div>
-
-                        </ng-template>
+</ng-template>
 
 
+<ng-template #view class="modal fade" id="view" role="dialog">
 
-                        <ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
-                            <div class="modal-header">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
+            <h4 class="modal-title">Manufacturer Details</h4>
+        </div>
+        <div class="modal-body viewform">
+            <p>
+                <span class="label">
+                    <b>Manufacturer Name: </b>
+                </span>
+                <span class="value">{{manufactureViewField.name}}</span>
+            </p>
+            <p>
+                <span class="label">
+                    <b>Comments: </b>
+                </span>
+                <span class="value">{{manufactureViewField.comments}}</span>
+            </p>
+            <p>
+                <span class="label">
+                    <b>Created By: </b>
+                </span>
+                <span class="value">{{createdBy}}</span>
+            </p>
+            <p>
+                <span class="label">
+                    <b>Created Date: </b>
+                </span>
+                <span class="value">{{createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
+            </p>
+            <p>
+                <span class="label">
+                    <b>Updated By: </b>
+                </span>
+                <span class="value">{{updatedBy}}</span>
+            </p>
+            <p>
+                <span class="label">
+                    <b>Updated Date: </b>
+                </span>
+                <span class="value">{{updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
+            </p>
+            <div class="clear"></div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
+        </div>
+    </div>
 
-                                <h4 class="modal-title">History of  Manufacturer</h4>
-                                <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
+</ng-template>
 
 
-                            </div>
-                            <div class="modal-body">
 
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>Manufacturer Name</th>
-                                                <th>Field Name</th>
-                                                <th>Previous Value</th>
-                                                <th>After Value</th>
-                                                <th>Last Updated By</th>
-                                                <th>Last Updated Time</th>
-                                            </tr>
-                                        </thead>
-                                        <tr *ngFor="let audit of auditHisory">
-                                            <td>{{audit.auditHistoryId}}</td>
-                                            <td>{{audit.name}}</td>
-                                            <td>{{audit.newValue}}</td>
-                                            <td>{{audit.previousValue}}</td>
-                                            <td>{{audit.updatedBy}}</td>
-                                            <td>{{audit.updatedDate| date: 'MM/dd/yyyy h:mm:ss a'}}</td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-                            </div>
-                        </ng-template>
+<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
+    <div class="modal-header">
+
+        <h4 class="modal-title">History of Manufacturer</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+
+    </div>
+    <div class="modal-body">
+
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Manufacturer Name</th>
+                        <th>Field Name</th>
+                        <th>Previous Value</th>
+                        <th>After Value</th>
+                        <th>Last Updated By</th>
+                        <th>Last Updated Time</th>
+                    </tr>
+                </thead>
+                <tr *ngFor="let audit of auditHisory">
+                    <td>{{audit.auditHistoryId}}</td>
+                    <td>{{audit.name}}</td>
+                    <td>{{audit.newValue}}</td>
+                    <td>{{audit.previousValue}}</td>
+                    <td>{{audit.updatedBy}}</td>
+                    <td>{{audit.updatedDate| date: 'MM/dd/yyyy h:mm:ss a'}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+    </div>
+</ng-template>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
 using DAL;
@@ -146,7 +147,26 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(auditResult);
         }
-
+        #region
+        [HttpGet("getAll")]
+        public IActionResult GetAll()
+        {
+            List<ColumHeader> columHeaders = new List<ColumHeader>();
+            PropertyInfo[] propertyInfos = typeof(ExpenditureCategoryModel).GetProperties();
+            ColumHeader columnHeader;
+            DynamicGridData<dynamic> dynamicGridData = new DynamicGridData<dynamic>();
+            foreach (PropertyInfo property in propertyInfos)
+            {
+                columnHeader = new ColumHeader();
+                columnHeader.field = char.ToLower(property.Name[0]) + property.Name.Substring(1);
+                columnHeader.header = property.Name;
+                columHeaders.Add(columnHeader);
+            }
+            dynamicGridData.columHeaders = columHeaders;
+            dynamicGridData.ColumnData = _unitOfWork.ExpenditureCategory.GetAll().Where(u => u.IsDelete == false);
+            return Ok(dynamicGridData);
+        }
+        #endregion
     }
 
 

@@ -68,7 +68,7 @@ namespace QuickApp.Pro.ViewModels
 
         public long? Addressid { get; set; }
 
-        public bool IsAddressForBillingAndShipping { get; set; }
+        //public bool IsAddressForBillingAndShipping { get; set; }
 
         public bool IsCustomerAlsoVendor { get; set; }
 

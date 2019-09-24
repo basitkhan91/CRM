@@ -37,12 +37,13 @@ namespace QuickApp.Pro.Controllers
         }
 
         // GET: api/values
-        [HttpGet("Get")]
+        [HttpGet("getpublicationslist")]
         [Produces(typeof(List<PublicationViewModel>))]
-        public IActionResult Get()
+        public IActionResult Get(string publicationId, string description, int publicationTypeId, string publishedBy, string employee, string location, int pageNumber, int pageSize)
         {
+            //var allpublicationinfo = _unitOfWork.Publication.GetPublications(); //.GetAllCustomersData();
+            var allpublicationinfo = _unitOfWork.Publication.GetPublicationsList(publicationId, description, publicationTypeId, publishedBy, employee, location, pageNumber, pageSize); //.GetAllCustomersData();
 
-            var allpublicationinfo = _unitOfWork.Publication.GetPublications(); //.GetAllCustomersData();
             return Ok((allpublicationinfo));
 
         }
@@ -77,7 +78,7 @@ namespace QuickApp.Pro.Controllers
         }
         [HttpPost("publicationpost")]
         //[Authorize(Authorization.Policies.ManageAllRolesPolicy)]
-        public IActionResult CreateAction([FromBody] PublicationViewModel publicationViewModel)
+        public IActionResult CreateAction([FromBody] Publication publicationViewModel)
         {
             try
             {
@@ -86,34 +87,34 @@ namespace QuickApp.Pro.Controllers
                     if (publicationViewModel == null)
                         return BadRequest($"{nameof(publicationViewModel)} cannot be null");
 
-                    DAL.Models.Publication publicationobject = new DAL.Models.Publication();
-                    publicationobject.PublicationRecordId = publicationViewModel.PublicationRecordId;
-                    publicationobject.PublicationId = publicationViewModel.PublicationId;
-                    publicationobject.Description = publicationViewModel.Description;
-                    publicationobject.Memo = publicationViewModel.Memo;
-                    publicationobject.Platform = publicationViewModel.Platform;
-                    publicationobject.Description = publicationViewModel.Description;
-                    publicationobject.MasterCompanyId = publicationViewModel.MasterCompanyId;
-                    publicationobject.IsActive = publicationViewModel.IsActive;
-                    publicationobject.IsDeleted= publicationViewModel.IsDeleted;
-                    publicationobject.EntryDate = publicationViewModel.EntryDate;
-                    publicationobject.revisionDate = publicationViewModel.revisionDate;
-                    publicationobject.nextreviewDate = publicationViewModel.nextreviewDate;
-                    publicationobject.ASD = publicationViewModel.ASD;
-                    publicationobject.publishby = publicationViewModel.publishby;
-                    publicationobject.location = publicationViewModel.location;
-                    publicationobject.revision = publicationViewModel.revision;
-                    publicationobject.verifiedby = publicationViewModel.verifiedby;
-                    publicationobject.verifieddate = publicationViewModel.verifieddate;
-                    publicationobject.employee = publicationViewModel.employee;
-                    publicationobject.docpath = publicationViewModel.docpath;
-                    publicationobject.CreatedDate = DateTime.Now;
-                    publicationobject.UpdatedDate = DateTime.Now;
-                    publicationobject.CreatedBy = publicationViewModel.CreatedBy;
-                    publicationobject.UpdatedBy = publicationViewModel.UpdatedBy;
-                    _unitOfWork.Publication.Add(publicationobject);
+                    //DAL.Models.Publication publicationobject = new DAL.Models.Publication();
+                    //publicationobject.PublicationRecordId = publicationViewModel.PublicationRecordId;
+                    //publicationobject.PublicationId = publicationViewModel.PublicationId;
+                    //publicationobject.Description = publicationViewModel.Description;
+                    //publicationobject.Memo = publicationViewModel.Memo;
+                    //publicationobject.Platform = publicationViewModel.Platform;
+                    //publicationobject.Description = publicationViewModel.Description;
+                    //publicationobject.MasterCompanyId = publicationViewModel.MasterCompanyId;
+                    //publicationobject.IsActive = publicationViewModel.IsActive;
+                    //publicationobject.IsDeleted= publicationViewModel.IsDeleted;
+                    //publicationobject.EntryDate = publicationViewModel.EntryDate;
+                    //publicationobject.revisionDate = publicationViewModel.revisionDate;
+                    //publicationobject.nextreviewDate = publicationViewModel.nextreviewDate;
+                    //publicationobject.ASD = publicationViewModel.ASD;
+                    //publicationobject.publishby = publicationViewModel.publishby;
+                    //publicationobject.location = publicationViewModel.location;
+                    //publicationobject.revision = publicationViewModel.revision;
+                    //publicationobject.verifiedby = publicationViewModel.verifiedby;
+                    //publicationobject.verifieddate = publicationViewModel.verifieddate;
+                    //publicationobject.employee = publicationViewModel.employee;
+                    //publicationobject.docpath = publicationViewModel.docpath;
+                    //publicationobject.CreatedDate = DateTime.Now;
+                    //publicationobject.UpdatedDate = DateTime.Now;
+                    //publicationobject.CreatedBy = publicationViewModel.CreatedBy;
+                    //publicationobject.UpdatedBy = publicationViewModel.UpdatedBy;
+                    _unitOfWork.Publication.Add(publicationViewModel);
                     _unitOfWork.SaveChanges();
-                    return Ok(publicationobject);
+                    return Ok(publicationViewModel);
                 }
                 return Ok(ModelState);
             }
@@ -489,6 +490,17 @@ namespace QuickApp.Pro.Controllers
             {
                 return Ok(result);
             }
+        }
+
+
+        // GET: api/values
+        [HttpGet("publicationsglobalsearch")]
+        [Produces(typeof(List<Publication>))]
+        public IActionResult PublicationsGlobalSearch(long? ataChapterId, long? ataSubChapterId, long? airCraftId, long? modelId, long? dashNumberId, int pageNumber, int pageSize)
+        {
+            var allpublicationinfo = _unitOfWork.Publication.PublicationsGlobalSearch(ataChapterId, ataSubChapterId, airCraftId, modelId, dashNumberId, pageNumber, pageSize); 
+            return Ok((allpublicationinfo));
+
         }
 
     }

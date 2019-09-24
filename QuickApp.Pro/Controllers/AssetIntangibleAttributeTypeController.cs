@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using DAL;
 using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 using QuickApp.Pro.ViewModels;
-
 namespace QuickApp.Pro.Controllers
 {
     [Route("api/AssetIntangibleAttributeType")]
@@ -101,32 +99,16 @@ namespace QuickApp.Pro.Controllers
             List<ColumHeader> columHeaders = new List<ColumHeader>();
             PropertyInfo[] propertyInfos = typeof(AssetIntangibleAttributeTypeModel).GetProperties();
             ColumHeader columnHeader;
-            DynamicGridData<AssetIntangibleAttributeTypeModel> dynamicGridData = new DynamicGridData<AssetIntangibleAttributeTypeModel>();
+            DynamicGridData<dynamic> dynamicGridData = new DynamicGridData<dynamic>();
             foreach (PropertyInfo property in propertyInfos)
             {
                 columnHeader = new ColumHeader();
-                columnHeader.field = property.Name;
+                columnHeader.field = char.ToLower(property.Name[0]) + property.Name.Substring(1);
                 columnHeader.header = property.Name;
                 columHeaders.Add(columnHeader);
             }
             dynamicGridData.columHeaders = columHeaders;
-            List<AssetIntangibleAttributeTypeModel> assetIntangibleAttributeTypeModels = new List<AssetIntangibleAttributeTypeModel>();
-            AssetIntangibleAttributeTypeModel assetIntangibleAttributeTypeModel = null;
-            var gLAccounts = unitOfWork.Repository<AssetIntangibleAttributeType>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AssetIntangibleAttributeTypeId);
-            foreach (var item in gLAccounts)
-            {
-                assetIntangibleAttributeTypeModel = new AssetIntangibleAttributeTypeModel();
-                assetIntangibleAttributeTypeModel.AssetIntangibleAttributeTypeId = item.AssetIntangibleAttributeTypeId;
-                assetIntangibleAttributeTypeModel.AmortizationFrequency = item.AmortizationFrequency;
-                assetIntangibleAttributeTypeModel.IntangibleLife = item.IntangibleLife;
-                assetIntangibleAttributeTypeModel.CreatedDate = item.CreatedDate;
-                assetIntangibleAttributeTypeModel.CreatedBy = item.CreatedBy;
-                assetIntangibleAttributeTypeModel.UpdatedDate = item.UpdatedDate;
-                assetIntangibleAttributeTypeModel.UpdatedBy = item.UpdatedBy;
-                //assetIntangibleAttributeTypeModel.IsActive = item.IsActive;
-                assetIntangibleAttributeTypeModels.Add(assetIntangibleAttributeTypeModel);
-            }
-            dynamicGridData.ColumnData = assetIntangibleAttributeTypeModels;
+            dynamicGridData.ColumnData = unitOfWork.Repository<AssetIntangibleAttributeType>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AssetIntangibleAttributeTypeId);
             return Ok(dynamicGridData);
         }
         #endregion

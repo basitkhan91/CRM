@@ -31,6 +31,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Rewrite;
 using IdentityServer4.AccessTokenValidation;
 using System.Collections.Generic;
+using DAL.Common;
 
 namespace QuickApp.Pro
 {
@@ -185,6 +186,8 @@ namespace QuickApp.Pro
 
             // Configurations
             services.Configure<SmtpConfig>(Configuration.GetSection("SmtpConfig"));
+
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
 
             // Business Services
