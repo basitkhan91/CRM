@@ -42,6 +42,7 @@ export class DepriciationMethodComponent implements OnInit {
     selectedColumns: any[];
     loadingIndicator: boolean;
     cols: any[];
+    selectedColumn: any;
     memoPopupText: string;
     memoNotes: string = 'This is  memo';
     AuditDetails: SingleScreenAuditDetails[];
