@@ -9,6 +9,7 @@ namespace DAL.Common
         Customer=1,
         CustomerContact,
         Vendor,
-        Employee
+        Employee,
+        Publication
     }
 }

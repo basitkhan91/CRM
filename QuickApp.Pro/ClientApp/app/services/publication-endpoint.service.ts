@@ -8,7 +8,7 @@ import { ConfigurationService } from './configuration.service';
 
 @Injectable()
 export class PublicationEndpointService extends EndpointFactory {
-    private readonly _publicationGetUrl: string = '/api/Publication/Get';
+    private readonly _publicationGetUrl: string = '/api/Publication/getpublicationslist';
     private readonly _publicationGetByIdUrl: string = '/api/Publication/GetPublicationByID';
     
   private readonly _publicationUrlNew: string =
@@ -83,18 +83,23 @@ export class PublicationEndpointService extends EndpointFactory {
             });
     }
     
-  getNewpublicationEndpoint<T>(userObject: any): Observable<T> {
+  getNewpublicationEndpoint<T>(file: any): Observable<T> {
+    const headers = new Headers({ 'Content-Type': 'multipart/form-data' });
     return this.http
-      .post<T>(
-        this._publicationUrlNew,
-        JSON.stringify(userObject),
-        this.getRequestHeaders()
-      )
-      .catch(error => {
-        return this.handleError(error, () =>
-          this.getNewpublicationEndpoint(userObject)
-        );
-      });
+      .post<T>(`${this._publicationUrlNew}`, file)
+      
+
+        // return this.http
+    //   .post<T>(
+    //     this._publicationUrlNew,
+    //     JSON.stringify(userObject),
+    //     this.getRequestHeaders()
+    //   )
+    //   .catch(error => {
+    //     return this.handleError(error, () =>
+    //       this.getNewpublicationEndpoint(userObject)
+    //     );
+    //   });
   }
 
   getEditActionEndpoint<T>(actionId?: number): Observable<T> {

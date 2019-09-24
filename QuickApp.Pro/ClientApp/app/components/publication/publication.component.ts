@@ -16,7 +16,9 @@ import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 import { zip } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { getObjectById, getValueFromArrayOfObjectById } from '../../generic/autocomplete';
+import { EmployeeService } from '../../services/employee.service';
 
 @Component({
     selector: 'app-publication',
@@ -42,6 +44,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
     createdDate: any = "";
     updatedDate: any = "";
     disableSave: boolean = false;
+    allEmployeeinfo: any[] = [];
 
     AuditDetails: SingleScreenAuditDetails[];
     auditHisory: AuditHistory[];
@@ -76,9 +79,10 @@ export class PublicationComponent implements OnInit, AfterViewInit {
 
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
+    generalInfo: any;
+    pageIndex: number;
 
-    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: PublicationService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService
-        , private router: Router
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: PublicationService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private router: Router, public employeeService: EmployeeService
     ) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
@@ -87,16 +91,22 @@ export class PublicationComponent implements OnInit, AfterViewInit {
     }
     ngOnInit(): void {
         this.loadData();
+        this.employeedata();
+
         this.cols = [
             { field: 'publicationId', header: 'Publication ID' },
             { field: 'description', header: 'Description' },
-            { field: 'aircraftModel', header: 'Aircraft Model' },
-            { field: 'aircraftType', header: 'Aircraft Type' },
-            { field: 'ataChapterName', header: 'ATAChapter Name' },
-            { field: 'ataSubChapterDescription', header: 'ATA SubChapter' },
-            { field: 'memo', header: 'Memo' },
-            { field: 'createdBy', header: 'Created By' },
-            { field: 'updatedBy', header: 'Updated By' },
+            { field: 'publicationType', header: 'Publication Type' },
+            { field: 'publishby', header: 'Published By' },
+            { field: 'employee', header: 'Employee' },
+            { field: 'location', header: 'Location' },
+            //{ field: 'aircraftModel', header: 'Aircraft Model' },
+            //{ field: 'aircraftType', header: 'Aircraft Type' },
+            //{ field: 'ataChapterName', header: 'ATAChapter Name' },
+            //{ field: 'ataSubChapterDescription', header: 'ATA SubChapter' },
+            //{ field: 'memo', header: 'Memo' },
+            //{ field: 'createdBy', header: 'Created By' },
+            //{ field: 'updatedBy', header: 'Updated By' },
 
         ];
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-publication';
@@ -114,7 +124,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         this.loadingIndicator = true;
 
         this.workFlowtService.getWorkFlows().subscribe(
-            results => this.onDataLoadSuccessful(results[0]),
+            results => this.onDataLoadSuccessful(results[0]['paginationList']),
             error => this.onDataLoadFailed(error)
         );
 
@@ -177,7 +187,13 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
-        this.allpublicationInfo = allWorkFlows;
+        this.allpublicationInfo = allWorkFlows.map(x => {
+            return {
+                ...x,
+                employee: getValueFromArrayOfObjectById('firstName', 'employeeId', x.employee, this.allEmployeeinfo),
+            }
+        });
+        console.log(this.allpublicationInfo)
 
 
 
@@ -248,7 +264,8 @@ export class PublicationComponent implements OnInit, AfterViewInit {
 
 
     openView(content, row) {
-
+        //console.log(row)
+        this.generalInfo = row;
         this.sourceAction = row;
         this.publication_Name = row.publicationId;
         this.description = row.description;
@@ -264,7 +281,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         this.createdDate = row.createdDate;
         this.updatedDate = row.updatedDate;
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'lg' });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -288,12 +305,14 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         this.isSaving = true;
         this.loadMasterCompanies();
         this.sourceAction = row;
+        console.log(this.sourceAction);
         this.publicationName = this.sourceAction.publicationId;
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+        this.router.navigateByUrl(`/singlepages/singlepages/app-create-publication/edit/${publicationRecordId}`);
+        // this.modal = this.modalService.open(content, { size: 'sm' });
+        // this.modal.result.then(() => {
+        //     console.log('When user closes');
+        // }, () => { console.log('Backdrop click') })
     }
 
 
@@ -470,4 +489,28 @@ export class PublicationComponent implements OnInit, AfterViewInit {
             }
         });
     }
+
+    private employeedata() {
+		this.alertService.startLoadingMessage();
+		this.loadingIndicator = true;
+
+		this.employeeService.getEmployeeList().subscribe(
+			results => { console.log(results), this.onempDataLoadSuccessful(results[0]) },
+			error => this.onDataLoadFailed(error)
+		);
+    }
+    
+    private onempDataLoadSuccessful(getEmployeeCerficationList: any[]) {
+		// alert('success');
+		this.alertService.stopLoadingMessage();
+		this.loadingIndicator = false;
+		//this.dataSource.data = getEmployeeCerficationList;
+		this.allEmployeeinfo = getEmployeeCerficationList;
+    }
+    
+    // publicationPagination(event: { first: any; rows: number }) {
+    //     const pageIndex = parseInt(event.first) / event.rows;
+    //     this.pageIndex = pageIndex;
+    //     //this.pageSizeForInternationalShipVia = this.pageSizeForInternationalShipVia;
+    // }
 }

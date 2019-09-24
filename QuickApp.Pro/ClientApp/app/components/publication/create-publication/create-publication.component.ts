@@ -1,4 +1,4 @@
-﻿import { Router } from '@angular/router';
+﻿import { Router, ActivatedRoute } from '@angular/router';
 import { PublicationService } from '../../../services/publication.service';
 import {
   MatDialog,
@@ -40,6 +40,7 @@ export class CreatePublicationComponent implements OnInit {
   private isSaving: boolean;
   private isEditMode: boolean;
   selectedFile: File = null;
+  publicationId: number;
 
   publicationGeneralInformation = {
     entryDate: new Date(),
@@ -104,9 +105,9 @@ export class CreatePublicationComponent implements OnInit {
 
   publicationTypes = [
     { label: 'Select Publication Type', value: null },
-    { label: 'CMM', value: 'CMM' },
-    { label: 'AD', value: 'AD' },
-    { label: 'SB', value: 'SB' }
+    { label: 'CMM', value: '2' },
+    { label: 'AD', value: '3' },
+    { label: 'SB', value: '4' }
   ];
 
   // table columns for ata
@@ -120,7 +121,7 @@ export class CreatePublicationComponent implements OnInit {
     { label: 'Active', value: 'Active' },
     { label: 'In-Active', value: 'In-Active' }
   ];
-
+  formData = new FormData();
   /** Create-publication ctor */
   constructor(
     private publicationService: PublicationService,
@@ -136,7 +137,8 @@ export class CreatePublicationComponent implements OnInit {
     private itemMasterService: ItemMasterService,
     private Dashnumservice: DashNumberService,
     private employeeService: EmployeeService,
-    private route: Router
+    private route: Router,
+    private _actRoute: ActivatedRoute
   ) { }
   aircraftInformationCols: any[] = [
     { field: 'aircraft', header: 'Aircraft' },
@@ -146,8 +148,15 @@ export class CreatePublicationComponent implements OnInit {
   ];
   first: number = 0;
   ngOnInit() {
-    this.getAllEmployeeList();
+    // this.itemMasterId = this._actRoute.snapshot.params['id'];
 
+    this.getAllEmployeeList();
+    this.publicationId = this._actRoute.snapshot.params['id'];
+    // if(this.publicationId) {
+    //   this.publicationService.getAllbyIdPublications().subscribe(res => {
+    //     console.log(res);
+    //   })
+    // }
 
   }
 
@@ -220,29 +229,105 @@ export class CreatePublicationComponent implements OnInit {
     );
     this.alertService.showStickyMessage(error, null, MessageSeverity.error);
   }
-  onSelect(event) {
-    //Execute the actual UPDATES here.
-    for (let file of event.files) {
-      this.uploadedFiles.push(file);
-      //this.fileupload..push(file);
-    }
-    this.selectedFile = <File>event.target.files[0];
+  // onSelect(event) {
+  //   //Execute the actual UPDATES here.
+  //   for (let file of event.files) {
+  //     this.uploadedFiles.push(file);
+  //     //this.fileupload..push(file);
+  //   }
+  //   this.selectedFile = <File>event.target.files[0];
+  // }
+
+  // onUpload(event) {
+  //   for (let file of event.files) {
+  //     this.uploadedFiles.push(file);
+  //   }
+  // }
+
+  // postMethod(event) {
+  //   if (this.sourcePublication.docpath != '') {
+  //     let formData = new FormData();
+  //     formData.append('image', this.selectedFile, event.files.name);
+  //     this.http.post('~/upload', formData).subscribe(val => { });
+  //   }
+  // }
+
+  // uploadProfile(event) {
+  //   const fileSizeinMB = event.target.files[0].size / (1024 * 1000);
+  //   const size = Math.round(fileSizeinMB * 100) / 100;
+  //   if (!this.imageFormats.includes(event.target.files[0].type)) {
+  //     this.fileError = true;
+  //     this.fileErrorMessage = 'Image files only';
+  //     // this.myInputVariable.nativeElement.value = '';
+  //   } else if (size > 2) {
+  //     this.fileError = true;
+  //     this.fileErrorMessage = 'File size cannot be greater than 2 MB.';
+  //   } else {
+  //     this.fileError = false;
+  //     if (event.target.files && event.target.files[0]) {
+  //       this.uploadImage = event.target.files[0];
+  //       const reader: any = new FileReader();
+  //       reader.readAsDataURL(event.target.files[0]);
+  //       // tslint:disable-next-line:no-shadowed-variable
+  //       reader.onload = event => {
+  //         this.image = event.target.result;
+  //       };
+  //     }
+  //   }
+
+  // publicationFileUpload(event){
+  //   for(let file of event.files) {
+  //     this.uploadedFiles.push(file);
+  //   }
+  // }
+  upload(files) {
+    if (files.length === 0)
+      return;
+
+    // const formData = new FormData();
+
+    for (let file of files)
+      this.formData.append(file.name, file);
   }
 
-  onUpload(event) {
-    for (let file of event.files) {
-      this.uploadedFiles.push(file);
-    }
-  }
-
-  postMethod(event) {
-    if (this.sourcePublication.docpath != '') {
-      let formData = new FormData();
-      formData.append('image', this.selectedFile, event.files.name);
-      this.http.post('~/upload', formData).subscribe(val => { });
-    }
-  }
   editItemCloseModel() {
+    const data = this.sourcePublication;
+    // entryDate: new Date(),
+    // PublicationId: '',
+    // description: '',
+    // pubType: '',
+    // ASD: '',
+    // sequence: '',
+    // publishby: '',
+    // location: '',
+    // revisionDate: new Date(),
+    // expirationDate: new Date(),
+    // nextreviewDate: new Date(),
+    // employee: null,
+    // verifiedby: '',
+    // masterCompanyId: 1,
+    // const files: Array<File> = this.uploadedFiles;
+    
+
+    this.formData.append('entryDate',  moment(data.entryDate).format('DD/MM/YYYY'));
+    this.formData.append('PublicationId', data.PublicationId);
+    this.formData.append('description', data.description);
+    this.formData.append('pubType',data.pubType);
+    this.formData.append('ASD', data.ASD);
+    this.formData.append('sequence', data.sequence);
+    this.formData.append('publishby', data.publishby);
+    this.formData.append('location', data.location);
+    this.formData.append('revisionDate', moment(data.revisionDate).format('DD/MM/YYYY') );
+    this.formData.append('expirationDate',  moment(data.expirationDate).format('DD/MM/YYYY'));
+    this.formData.append('nextreviewDate', moment(data.nextreviewDate).format('DD/MM/YYYY'));
+    this.formData.append('employee', data.employee);
+    this.formData.append('verifiedby', data.verifiedby);
+    this.formData.append('masterCompanyId', data.masterCompanyId);
+    this.formData.append('CreatedBy',this.userName);
+    this.formData.append('UpdatedBy',this.userName);
+    this.formData.append('IsActive', 'true');
+    this.formData.append('IsDeleted', 'false');
+    
 
     if (this.sourcePublication.PublicationId != '' && this.publicationRecordId == null) {
       this.generalInformationDetails = this.sourcePublication;
@@ -250,12 +335,15 @@ export class CreatePublicationComponent implements OnInit {
       {
         this.sourcePublication.PublicationId = this.sourcePublication.PublicationId;
         this.publicationService
-          .newAction({
-            ...this.sourcePublication, CreatedBy: this.userName,
-            UpdatedBy: this.userName,
-            IsActive: true,
-            IsDeleted: false,
-          })
+          .newAction(this.formData
+          //   {
+          //   ...this.sourcePublication, CreatedBy: this.userName,
+          //   UpdatedBy: this.userName,
+          //   IsActive: true,
+          //   IsDeleted: false,
+          // }
+          
+          )
           .subscribe(res => {
             const { publicationRecordId } = res;
             this.publicationRecordId = publicationRecordId;

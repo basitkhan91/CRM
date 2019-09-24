@@ -23,8 +23,7 @@ namespace QuickApp.Pro.Controllers
         [Route("uploadfiles")]
         public IActionResult UploadFiles(long? referenceId, int moduleId, string moduleName, string uploadedBy, int? masterCompanyId)
         {
-            List<AttachmentDetails> attachmentDetailList = new List<AttachmentDetails>();
-            _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, attachmentDetailList, referenceId, moduleId, moduleName, uploadedBy, masterCompanyId);
+            _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, referenceId, moduleId, moduleName, uploadedBy, masterCompanyId);
             return Ok();
 
         }
