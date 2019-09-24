@@ -22,6 +22,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
+import { getObjectByValue } from '../../generic/autocomplete';
 
 @Component({
     selector: 'app-provision',
@@ -31,7 +32,7 @@ import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-scre
 })
 /** Actions component*/
 export class ProvisionComponent implements OnInit, AfterViewInit {
-    allprovisin: any[]=[];
+    allprovisin: any[] = [];
     selectedreason: any;
     provision_Name: any = "";
     memo: any = "";
@@ -41,16 +42,17 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
     updatedDate: any = "";
     disableSave: boolean = false;
     isSaving: boolean;
+    totalRecords: number;
     ngOnInit(): void {
-		this.loadData();
-		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-provision';
-		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
+        this.loadData();
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-provision';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
     }
     Active: string = "Active";
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
-    displayedColumns = ['provisionId', 'description','createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
+    displayedColumns = ['provisionId', 'description', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
     dataSource: MatTableDataSource<Provision>;
     allProvisonInfo: Provision[] = [];
     allComapnies: MasterCompany[] = [];
@@ -66,7 +68,7 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
     modal: NgbModalRef;
     selectedColumn: Provision[];
 
-    provisionName: string;
+    provisionName: any;
     filteredBrands: any[];
     localCollection: any[] = [];
 
@@ -77,13 +79,21 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
 
-	constructor(private breadCrumb: SingleScreenBreadcrumbService,private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public provisionService: ProvisionService,  private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public provisionService: ProvisionService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
         this.sourceAction = new Provision();
 
     }
-
+    validateRecordExistsOrNot(field: string, currentInput: any, originalData: any) {
+        //console.log(field, currentInput, originalData)
+        if ((field !== '' || field !== undefined) && (currentInput !== '' || currentInput !== undefined) && (originalData !== undefined)) {
+            const data = originalData.filter(x => {
+                return x[field].toLowerCase() === currentInput.toLowerCase()
+            })
+            return data;
+        }
+    }
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -105,15 +115,14 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
             { field: 'memo', header: 'Memo' },
             { field: 'createdBy', header: 'Created By' },
             { field: 'updatedBy', header: 'Updated By' },
-           // { field: 'updatedDate', header: 'Updated Date' },
-           // { field: 'createdDate', header: 'Created Date' }
+            // { field: 'updatedDate', header: 'Updated Date' },
+            // { field: 'createdDate', header: 'Created Date' }
         ];
         this.selectedColumns = this.cols;
     }
     private loadMasterCompanies() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
         this.masterComapnyService.getMasterCompanies().subscribe(
             results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
@@ -135,9 +144,10 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
         this.loadingIndicator = false;
         this.dataSource.data = getProvisionList;
         this.allProvisonInfo = getProvisionList;
+        this.totalRecords = this.allProvisonInfo.length;
     }
 
-   
+
 
     private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
         // alert('success');
@@ -156,7 +166,7 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
     openView(content, row) {
 
         this.sourceAction = row;
-        this.provision_Name = row.description;   
+        this.provision_Name = row.description;
         this.memo = row.memo;
         this.createdBy = row.createdBy;
         this.updatedBy = row.updatedBy;
@@ -179,10 +189,10 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
 
         this.isEditMode = false;
         this.isDeleteMode = false;
-		this.disableSave = false;
+        this.disableSave = false;
         this.isSaving = true;
         this.loadMasterCompanies();
-		this.sourceAction = new Provision();
+        this.sourceAction = new Provision();
         this.sourceAction.isActive = true;
         this.provisionName = " ";
         this.modal = this.modalService.open(content, { size: 'sm' });
@@ -199,7 +209,7 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceAction = row;
-        this.provision_Name = row.description;   
+        this.provision_Name = row.description;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -210,11 +220,9 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
         this.isEditMode = true;
         this.isSaving = true;
         this.loadMasterCompanies();
-		this.disableSave = false;
-
-
-        this.sourceAction = row;
-        this.provisionName = this.sourceAction.description;
+        this.disableSave = false;
+        this.sourceAction = {...row};
+        this.provisionName = getObjectByValue('description',row.description,this.allProvisonInfo)
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -222,47 +230,45 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
         }, () => { console.log('Backdrop click') })
     }
 
-    eventHandler(event) {
-        let value = event.target.value.toLowerCase()
-        if (this.selectedreason) {
-            if (value == this.selectedreason.toLowerCase()) {
-
-                this.disableSave = true;
-            }
-            else {
-                this.disableSave = false;
-            }
+    eventHandler(field, value) {
+        const exists = this.validateRecordExistsOrNot(field, value, this.allProvisonInfo);
+        //console.log(exists);
+        if (exists.length > 0) {
+            this.disableSave = true;
         }
+        else {
+            this.disableSave = false;
+        }
+
     }
 
 
 
 
     provisionId(event) {
-        for (let i = 0; i < this.allprovisin.length; i++) {
-            if (event == this.allprovisin[i][0].provisionName) {
-                this.disableSave = true;
-                this.selectedreason = event;
-            }
-
-
-
-
-        }
+        this.disableSave = true;
     }
 
     filterprovisions(event) {
 
-        this.localCollection = [];
-        for (let i = 0; i < this.allProvisonInfo.length; i++) {
-            let provisionName = this.allProvisonInfo[i].description;
-            if (provisionName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                this.allprovisin.push([{
-                    "provisionId": this.allProvisonInfo[i].provisionId,
-                    "provisionName": provisionName
-                }]),
-                this.localCollection.push(provisionName);
-            }
+        // this.localCollection = [];
+        // for (let i = 0; i < this.allProvisonInfo.length; i++) {
+        //     let provisionName = this.allProvisonInfo[i].description;
+        //     if (provisionName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        //         this.allprovisin.push([{
+        //             "provisionId": this.allProvisonInfo[i].provisionId,
+        //             "provisionName": provisionName
+        //         }]),
+        //             this.localCollection.push(provisionName);
+        //     }
+        // }
+        this.localCollection = this.allProvisonInfo;
+
+        if (event.query !== undefined && event.query !== null) {
+            const provision = [...this.allProvisonInfo.filter(x => {
+                return x.description.toLowerCase().includes(event.query.toLowerCase())
+            })]
+            this.localCollection = provision;
         }
     }
 
@@ -325,7 +331,7 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
 
     }
 
-   
+
     editItemAndCloseModel() {
 
         // debugger;
@@ -344,7 +350,7 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
         else {
 
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.provisionName;
+            this.sourceAction.description = this.provisionName.description;
             this.sourceAction.masterCompanyId = 1;
             this.provisionService.updateProvision(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
@@ -413,23 +419,21 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
         }
     }
 
-    showAuditPopup(template, id): void
-    {
+    showAuditPopup(template, id): void {
         this.modal = this.modalService.open(template, { size: 'sm' });
         this.auditProvision(id);
-       
+
     }
 
-    auditProvision(provisionId: number): void
-    {
+    auditProvision(provisionId: number): void {
         this.AuditDetails = [];
         this.provisionService.getProvisionAudit(provisionId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["provisionAuditId", "provisionId", "masterCompanyId", "createdBy", "createdDate", "updatedDate","updatedBy"];
+                this.AuditDetails[0].ColumnsToAvoid = ["provisionAuditId", "provisionId", "masterCompanyId", "createdBy", "createdDate", "updatedDate", "updatedBy"];
             }
 
-           
+
         });
     }
 }

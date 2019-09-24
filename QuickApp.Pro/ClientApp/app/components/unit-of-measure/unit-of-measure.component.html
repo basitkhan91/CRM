@@ -152,7 +152,7 @@
                         <p-autoComplete field="description" [(ngModel)]="unitName" (onSelect)="partnmId($event)" (onKeyUp)="eventHandler('description', $event.target.value)" name="uom"
                             [suggestions]="localCollection" (completeMethod)="filterUnitOfMeasures($event)" [size]="30" [minLength]="1"
                             [dropdown]="true" class="p-autoComplete-ctsm" required>
-                         
+       
                         </p-autoComplete>
                         <div *ngIf="disableSave" class="clr-red">Already Exists</div>
                         <div class="clear"></div>
@@ -165,7 +165,7 @@
                         </label>
                     </div>
                     <div class="col-sm-5">
-                        <input type="text" name="shortName" class="form-control" #shortName="ngModel" [(ngModel)]="sourceAction.shortName" required>
+                        <input type="text"  name="shortName" class="form-control" #shortName="ngModel" [(ngModel)]="sourceAction.shortName" required>
                         <div *ngIf="shortName.dirty && shortName.errors?.required && shortName.errors" class="invalid-form-error-message">
                             Short Name required.
                         </div>
@@ -289,7 +289,7 @@
             <div class="col-sm-12">
                 <p>
                     <span class="label">
-                        <b>UnitOfMeasure Name: </b>
+                        <b>Unit Of Measure: </b>
                     </span>
                     <span class="value">{{ unitofmeasure_Name}}</span>
                 </p>

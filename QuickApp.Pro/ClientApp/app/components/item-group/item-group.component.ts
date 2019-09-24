@@ -15,6 +15,7 @@ import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem, LazyLoadEvent } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
+import { getObjectByValue } from '../../generic/autocomplete';
 
 @Component({
     selector: 'app-item-group',
@@ -69,7 +70,7 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
     id: number;
     errorMessage: any;
     modal: NgbModalRef;
-    itemGroupName: string;
+    itemGroupName: any;
     filteredBrands: any[];
     localCollection: any[] = [];
 
@@ -116,7 +117,15 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
         this.dataSource.sort = this.sort;
     }
     public allWorkFlows: Itemgroup[] = [];
-
+    validateRecordExistsOrNot(field: string, currentInput: any, originalData: any) {
+       // console.log(field, currentInput, originalData)
+        if ((field !== '' || field !== undefined) && (currentInput !== '' || currentInput !== undefined) && (originalData !== undefined)) {
+            const data = originalData.filter(x => {
+                return x[field].toLowerCase() === currentInput.toLowerCase()
+            })
+            return data;
+        }
+    }
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -207,8 +216,9 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
         this.isEditMode = true;
         this.isSaving = true;
         this.loadMasterCompanies();
-        this.sourceAction = row;
-        this.itemGroupName = this.sourceAction.itemGroupCode;
+        this.sourceAction = {...row};
+        this.itemGroupName = getObjectByValue('itemGroupCode',row.itemGroupCode,this.allitemgroupobjInfo)
+        //this.itemGroupName = this.sourceAction.itemGroupCode;
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -251,55 +261,29 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
         }, () => { console.log('Backdrop click') })
     }
 
-    eventHandler(event) {
-        let value = event.target.value.toLowerCase()
-        if (this.selectedreason) {
-        if (value == this.selectedreason.toLowerCase()) {
-            this.disableSave = true;
-        }
-        else {
-            this.disableSave = false;
-            }
-        }
+    eventHandler(field,value) {
+        const exists = this.validateRecordExistsOrNot(field, value, this.allitemgroupobjInfo);
+        // console.log(exists);
+         if (exists.length > 0) {
+             this.disableSave = true;
+         }
+         else {
+             this.disableSave = false;
+         }
     }
-
-
-
 
     itemGroupId(event) {
-        for (let i = 0; i < this.allreasn.length; i++) {
-            if (event == this.allreasn[i][0].itemGroupName) {
-
-
-                this.disableSave = true;
-                this.selectedreason = event;
-            }
-
-
-
-
-        }
+      this.disableSave = true;
     }
-
-
-
-
-
 
 
     filterItemgroups(event) {
-
-        this.localCollection = [];
-        for (let i = 0; i < this.allitemgroupobjInfo.length; i++) {
-            let itemGroupName = this.allitemgroupobjInfo[i].itemGroupCode;
-            if (itemGroupName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-
-                this.allreasn.push([{
-                    "itemGroupId": this.allitemgroupobjInfo[i].itemGroupId,
-                    "itemGroupName": itemGroupName
-                }]),
-                this.localCollection.push(itemGroupName);
-            }
+        this.localCollection = this.allitemgroupobjInfo;
+        if (event.query !== undefined && event.query !== null) {
+            const itemGroup = [...this.allitemgroupobjInfo.filter(x => {
+                return x.itemGroupCode.toLowerCase().includes(event.query.toLowerCase())
+            })]
+            this.localCollection = itemGroup;
         }
     }
     private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
@@ -337,7 +321,7 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
         else {
 
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.itemGroupCode = this.itemGroupName;
+            this.sourceAction.itemGroupCode = this.itemGroupName.itemGroupCode;
             this.sourceAction.masterCompanyId = 1;
             this.workFlowtService.updateAction(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),

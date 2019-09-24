@@ -16,6 +16,7 @@ import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
+import { getObjectByValue } from '../../generic/autocomplete';
 
 
 
@@ -36,10 +37,9 @@ export class PriorityComponent implements OnInit, AfterViewInit {
     updatedBy: any = "";
     createdDate: any = "";
     updatedDate: any = "";
+    totalRecords: number;
 
-
-    afbakbfob;
-    saklfoias;
+   
 
     ngOnInit(): void {
 		this.loadData();
@@ -53,7 +53,7 @@ export class PriorityComponent implements OnInit, AfterViewInit {
     displayedColumns = ['priorityId' ,'description'];
     //, 'Sequence', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'
     dataSource: MatTableDataSource<Priority>;
-    allPriorityInfo: Priority[] = [];
+    allPriorityInfo: any = [];
     allComapnies: MasterCompany[] = [];
     public auditHisory: AuditHistory[] = [];
     private isSaving: boolean;
@@ -69,7 +69,7 @@ export class PriorityComponent implements OnInit, AfterViewInit {
     /** Actions ctor */
     cols: any[];
     selectedColumns: any[];
-    priorityName: string;
+    priorityName: any;
     filteredBrands: any[];
     localCollection: any[] = [];
 
@@ -102,18 +102,25 @@ export class PriorityComponent implements OnInit, AfterViewInit {
 
 
         this.cols = [
-            //{ field: 'priorityId', header: 'Priority ID' },
+       
             { field: 'description', header: 'Priority Name' },
             { field: 'memo', header: 'Memo' },
             { field: 'createdBy', header: 'Created By' },
             { field: 'updatedBy', header: 'Updated By' },
-            //{ field: 'updatedDate', header: 'Updated Date' },
-            //{ field: 'createdDate', header: 'Created Date' }
+          
         ];
         this.selectedColumns = this.cols;
     }
 
-  
+    validateRecordExistsOrNot(field: string, currentInput: any, originalData: any) {
+       // console.log(field, currentInput, originalData)
+        if ((field !== '' || field !== undefined) && (currentInput !== '' || currentInput !== undefined) && (originalData !== undefined)) {
+            const data = originalData.filter(x => {
+                return x[field].toLowerCase() === currentInput.toLowerCase()
+            })
+            return data;
+        }
+    }
 
     private loadMasterCompanies() {
         this.alertService.startLoadingMessage();
@@ -140,6 +147,7 @@ export class PriorityComponent implements OnInit, AfterViewInit {
         this.loadingIndicator = false;
         this.dataSource.data = getPriorityList;
         this.allPriorityInfo = getPriorityList;
+        this.totalRecords= this.allPriorityInfo.length;
     }
 
     private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
@@ -198,8 +206,9 @@ export class PriorityComponent implements OnInit, AfterViewInit {
 		this.disableSave = false;
         this.isSaving = true;
         this.loadMasterCompanies();
-        this.sourceAction = row;
-        this.priorityName = this.sourceAction.description;
+        this.sourceAction = {...row};
+        this.priorityName = getObjectByValue('description',row.description,this.allPriorityInfo)
+        //this.priorityName = this.sourceAction.description;
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -230,43 +239,31 @@ export class PriorityComponent implements OnInit, AfterViewInit {
     }
 
 
-    eventHandler(event) {
-     
-        let value = event.target.value.toLowerCase();
-        
-
-        for (let i = 0; i < this.allpriority.length; i++) {            
-            if (value == this.allpriority[i][0].priorityName) {      
-              //  console.log(value);
-                this.disableSave = true;
-            }
-            else {
-                this.disableSave = false;
-            }
+    eventHandler(field, value) {
+        const exists = this.validateRecordExistsOrNot(field, value, this.allPriorityInfo);
+        console.log(exists);
+        if (exists.length > 0) {
+            this.disableSave = true;
         }
+        else {
+            this.disableSave = false;
+        }
+
     }
     priorityId(event) {
-        for (let i = 0; i < this.allpriority.length; i++) {
-            if (event == this.allpriority[i][0].priorityName) {
-               // console.log(event);
-                this.disableSave = true;
-                this.selectedreason = event;
-            }
-        }
+        this.disableSave = true;
+      
     }
     filterpriorities(event) {
-        this.localCollection = [];
-        for (let i = 0; i < this.allPriorityInfo.length; i++) {
-            let priorityName = this.allPriorityInfo[i].description;            
-            if (priorityName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                this.allpriority.push([{
-                    "priorityId": this.allPriorityInfo[i].priorityId,
-                    "priorityName": priorityName
-                }]),
-                    this.localCollection.push(priorityName);               
-            }         
+     
+        this.localCollection = this.allPriorityInfo;
+
+        if (event.query !== undefined && event.query !== null) {
+            const priority = [...this.allPriorityInfo.filter(x => {
+                return x.description.toLowerCase().includes(event.query.toLowerCase())
+            })]
+            this.localCollection = priority;
         }
-      
     }
     openHist(content, row) {
 
@@ -337,7 +334,7 @@ export class PriorityComponent implements OnInit, AfterViewInit {
         else {
 
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.priorityName;
+            this.sourceAction.description = this.priorityName.description;
             this.priorityService.updatePriority(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
@@ -395,15 +392,15 @@ export class PriorityComponent implements OnInit, AfterViewInit {
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
     }
 
-    private getDismissReason(reason: any): string {
-        if (reason === ModalDismissReasons.ESC) {
-            return 'by pressing ESC';
-        } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-            return 'by clicking on a backdrop';
-        } else {
-            return `with: ${reason}`;
-        }
-    }
+    // private getDismissReason(reason: any): string {
+    //     if (reason === ModalDismissReasons.ESC) {
+    //         return 'by pressing ESC';
+    //     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+    //         return 'by clicking on a backdrop';
+    //     } else {
+    //         return `with: ${reason}`;
+    //     }
+    // }
 
     showAuditPopup(template, id): void {
         this.auditPriority(id);
