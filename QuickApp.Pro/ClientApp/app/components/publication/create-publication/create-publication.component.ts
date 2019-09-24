@@ -149,14 +149,40 @@ export class CreatePublicationComponent implements OnInit {
   first: number = 0;
   ngOnInit() {
     // this.itemMasterId = this._actRoute.snapshot.params['id'];
-
     this.getAllEmployeeList();
-    this.publicationId = this._actRoute.snapshot.params['id'];
-    // if(this.publicationId) {
-    //   this.publicationService.getAllbyIdPublications().subscribe(res => {
-    //     console.log(res);
-    //   })
-    // }
+    this.publicationRecordId = this._actRoute.snapshot.params['id'];
+    console.log(this.publicationRecordId);
+    if(this.publicationRecordId) {
+      this.isEditMode = true;
+      this.isDisabledSteps = true;
+      this.publicationService.getAllbyIdPublications().subscribe(res => {
+        console.log(res);
+      })
+
+      //get PN mapping edit mode
+      this.publicationService
+        .getPublicationPNMapping(this.publicationRecordId)
+        .subscribe(res => {
+          console.log(res);
+          this.pnMappingList = res.map(x => {
+            return {
+              ...x,
+              PartNumber: x.partNumber,
+              PartNumberDescription: x.partNumberDescription,
+              ItemClassification: x.itemClassification
+            };
+          });        
+        });
+
+        //get aircraft info edit mode
+        this.getAircraftInformationByPublicationId();
+
+        //get atachapter edit mode
+        this.getAtaChapterByPublicationId();
+
+    } else {
+        this.isEditMode = false;
+    }
 
   }
 
@@ -347,6 +373,7 @@ export class CreatePublicationComponent implements OnInit {
           .subscribe(res => {
             const { publicationRecordId } = res;
             this.publicationRecordId = publicationRecordId;
+            console.log(this.publicationRecordId)
 
             this.changeOfTab('PnMap'),
               this.alertService.showMessage("Success", `Publication saved Successfully`, MessageSeverity.success),
@@ -383,6 +410,7 @@ export class CreatePublicationComponent implements OnInit {
       return {
         PublicationRecordId: this.publicationRecordId,
         PublicationId: this.generalInformationDetails.PublicationId,
+        //PublicationId: this.isEditMode ?  : this.generalInformationDetails.PublicationId,
         PartNumber: obj.partNumber,
         PartNumberDescription: obj.partDescription,
         ItemMasterId: obj.itemMasterId,
@@ -415,7 +443,8 @@ export class CreatePublicationComponent implements OnInit {
               ItemClassification: x.itemClassification
             };
           });
-          this.alertService.showMessage("Success", `PN Mapping Done Successfully`, MessageSeverity.success);
+            this.alertService.showMessage("Success", `PN Mapping Done Successfully`, MessageSeverity.success);
+          
         });
 
       this.getAircraftInformationByPublicationId();
@@ -744,5 +773,26 @@ export class CreatePublicationComponent implements OnInit {
           };
         });
       });
+  }
+
+  onDeletePNMappingRow(rowData, rowIndex) {
+    console.log(rowData)
+    console.log(rowIndex)
+    // this.publicationService.deleteItemMasterMapping(rowData.publicationItemMasterMappingId).subscribe(res => {
+    //   console.log(res);
+    //   this.publicationService
+    //     .getPublicationPNMapping(this.publicationRecordId)
+    //     .subscribe(res => {
+    //       console.log(res);
+    //       this.pnMappingList = res.map(x => {
+    //         return {
+    //           ...x,
+    //           PartNumber: x.partNumber,
+    //           PartNumberDescription: x.partNumberDescription,
+    //           ItemClassification: x.itemClassification
+    //         };
+    //       });        
+    //     });
+    // })
   }
 }

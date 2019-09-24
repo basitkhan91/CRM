@@ -74,15 +74,34 @@ export class PublicationComponent implements OnInit, AfterViewInit {
     publicationName: string;
     filteredBrands: any[];
     localCollection: any[] = [];
-
-
-
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
     generalInfo: any;
     pageIndex: number;
+    pnMappingList = [];
+    aircraftList: any = [];
+    ataList = [];
+    headersforPNMapping = [
+        { field: 'PartNumber', header: 'PN ID/Code' },
+        { field: 'PartNumberDescription', header: 'PN Description' },
+        { field: 'ItemClassification', header: 'Item Classification' }
+    ];
+    aircraftInformationCols: any[] = [
+        { field: 'aircraft', header: 'Aircraft' },
+        { field: 'model', header: 'Model' },
+        { field: 'dashNumber', header: 'Dash Numbers' },
+        { field: 'memo', header: 'Memo' }
+      ];
+    atacols = [
+    { field: 'ataChapter', header: 'AtaChapter' },
+    { field: 'ataSubChapter', header: 'AtaSubChapter' }
+    ];
+    
 
-    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: PublicationService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private router: Router, public employeeService: EmployeeService
+    first: number = 0;
+    pagesize: number;
+
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: PublicationService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private router: Router, public employeeService: EmployeeService, private publicationService: PublicationService
     ) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
@@ -112,6 +131,8 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-publication';
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
         this.selectedColumns = this.cols;
+
+        
     }
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
@@ -264,7 +285,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
 
 
     openView(content, row) {
-        //console.log(row)
+        console.log(row)
         this.generalInfo = row;
         this.sourceAction = row;
         this.publication_Name = row.publicationId;
@@ -285,6 +306,50 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
+
+        //get PN Mapping info
+        this.publicationService.getPublicationPNMapping(row.publicationRecordId)
+        .subscribe(res => {
+            console.log(res);
+          this.pnMappingList = res.map(x => {
+            return {
+              ...x,
+              PartNumber: x.partNumber,
+              PartNumberDescription: x.partNumberDescription,
+              ItemClassification: x.itemClassification
+            };
+          });
+        });
+
+        //get aircraft info
+        this.publicationService
+      .getAircraftMappedByPublicationId(row.publicationRecordId)
+      .subscribe(res => {
+        this.aircraftList = res.map(x => {
+          return {
+            aircraft: x.aircraftType,
+            model: x.aircraftModel,
+            dashNumber: x.dashNumber,
+            memo: x.memo
+          };
+        });
+      });
+
+      // get ata chapter info
+      this.publicationService
+      .getAtaMappedByPublicationId(row.publicationRecordId)
+      .subscribe(res => {
+        const responseData = res;
+        this.ataList = responseData.map(x => {
+          return {
+            ataChapter: x.ataChapterName,
+            ataSubChapter: x.ataSubChapterDescription,
+            ataChapterCode: x.ataChapterCode,
+            ataSubChapterId: x.ataSubChapterId,
+            ataChapterId: x.ataChapterId
+          };
+        });
+      });
     }
     openHelpText(content) {
         this.modal = this.modalService.open(content, { size: 'sm' });
@@ -511,6 +576,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
     // publicationPagination(event: { first: any; rows: number }) {
     //     const pageIndex = parseInt(event.first) / event.rows;
     //     this.pageIndex = pageIndex;
+    //     this.pagesize = 10;
     //     //this.pageSizeForInternationalShipVia = this.pageSizeForInternationalShipVia;
     // }
 }

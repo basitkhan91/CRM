@@ -12,7 +12,7 @@
                 <span class="help-icon" (click)="openHelpText(helpText)" data-original-title="Help" data-toggle="tooltip"><i class="fa fa-info" data-toggle="modal" data-target="#help-popup"></i></span>
 
 
-                <p-table #dt [value]="allpublicationInfo" [rows]="20" [metaKeySelection]="true" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true"> <!--[first]="pageIndex" (onPage)="publicationPagination($event)"-->
+                <p-table #dt [value]="allpublicationInfo" [rows]="20" [metaKeySelection]="true" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true"> <!--[rows]="pagesize" [first]="pageIndex" (onPage)="publicationPagination($event)"-->
                     <ng-template pTemplate="caption">
 
                         <div style="text-align: right">
@@ -360,40 +360,137 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="panel panel-default">
+
+                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step2">Purchase and Sales</a> </h4>
+                                    <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step2">PN Mapping</a> </h4>
                                 </div>
                                 <div id="step2" class="panel-collapse collapse">
                                     <div class="panel-body">
-                                        <div class="col-sm-6">
-                                            <h4>Purchase Price</h4>
-                                            <p><span class="label"><b>CurrencyId: </b></span><span class="value">{{viewItemMaster.purchaseCurrencyId}}</span></p>
-                                            <p><span class="label"><b>List Price: </b></span><span class="value">{{viewItemMaster.listPrice}}</span></p>
-                                            <p><span class="label"><b>Discount off list Price %: </b></span><span class="value">{{viewItemMaster.purchaseDiscountOffListPrice}}</span></p>
-                                            <p><span class="label"><b>List Price After Discount: </b></span><span class="value">{{viewItemMaster.purchaseListPriceAfterDiscount}}</span></p>
-                                            <p><span class="label"><b>FX Rate: </b></span><span class="value">{{viewItemMaster.exportClassificationId}}</span></p>
-                                            <p><span class="label"><b>Last List Price Date: </b></span><span class="value">{{viewItemMaster.purchaseLastListPriceDate}}</span></p>
-                                            <p><span class="label"><b>Last disc(%) Date: </b></span><span class="value">{{viewItemMaster.purchaseLastDiscountPercentDate}}</span></p>
-                                            <p><span class="label"><b>Last list price after discount date:: </b></span><span class="value">{{viewItemMaster.purchaseLastListPriceAfterDiscountDate}}</span></p>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <h4>Sales Price</h4>
-                                            <p><span class="label"><b>CurrencyId: </b></span><span class="value">{{viewItemMaster.salesCurrencyId}}</span></p>
-                                            <p><span class="label"><b>Markup (%) on List Price: </b></span><span class="value">{{viewItemMaster.exportValue}}</span></p>
-                                            <p><span class="label"><b>Baseline sale Price: </b></span><span class="value">{{viewItemMaster.salesLastBaselineSalesPriceDate}}</span></p>
-                                            <p><span class="label"><b>Sale Disc: </b></span><span class="value">{{viewItemMaster.salesMarkUpOnListPriceAfterDisc}}</span></p>
-                                            <p><span class="label"><b>sale Price: </b></span><span class="value">{{viewItemMaster.salesBaselineSalesPrice}}</span></p>
-                                            <p><span class="label"><b>FX Rate: </b></span><span class="value">{{viewItemMaster.salesIsFixedPrice}}</span></p>
-                                            <p><span class="label"><b>Last Markup(%) on List Price Date: </b></span><span class="value">{{viewItemMaster.salesLastMarkUpPercentOnListPriceDate}}</span></p>
-                                            <p><span class="label"><b>Last List Price after disc Date: </b></span><span class="value">{{viewItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate}}</span></p>
-                                            <p><span class="label"><b>Last Baseline sale price date: </b></span><span class="value">{{viewItemMaster.salesLastMarkUpPercentOnListPriceDate}}</span></p>
-                                            <p><span class="label"><b>Last sale disc(%) Date: </b></span><span class="value">{{viewItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate}}</span></p>
-                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="shadow-Box">
+                                              <p-table
+                                                [columns]="headersforPNMapping"
+                                                [value]="pnMappingList"
+                                                [paginator]="true"
+                                                [rows]="10"
+                                                [first]="first"
+                                              >
+                                                <ng-template pTemplate="header" let-columns>
+                                                  <tr>
+                                                    <th>Sl.No</th>
+                                                    <th *ngFor="let col of columns">
+                                                      {{ col.header }}
+                                                    </th>
+                                                  </tr>
+                                                </ng-template>
+                                                <ng-template
+                                                  pTemplate="body"
+                                                  let-rowData
+                                                  let-columns="columns"
+                                                  let-rowIndex="rowIndex"
+                                                >
+                                                  <tr>
+                                                    <td>{{ rowIndex + 1 }}</td>
+                                                    <td *ngFor="let col of columns">
+                                                      {{ rowData[col.field] }}
+                                                    </td>
+                                                  </tr>
+                                                </ng-template>
+                                              </p-table>
+                                            </div>
+                                          </div>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#step3">Aircraft Information</a> </h4>
+                                </div>
+                                <div id="step3" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="col-sm-12">
+                                            <div class="shadow-Box">
+                                                <p-table
+                                                  [columns]="aircraftInformationCols"
+                                                  [value]="aircraftList"
+                                                  [paginator]="true"
+                                                  [rows]="10"
+                                                  [first]="first"
+                                                >
+                                                  <ng-template pTemplate="header" let-columns>
+                                                    <tr>
+                                                      <th>ID</th>
+                                                      <th *ngFor="let col of columns">
+                                                        {{ col.header }}
+                                                      </th>
+                                                    </tr>
+                                                  </ng-template>
+                                                  <ng-template
+                                                    pTemplate="body"
+                                                    let-rowData
+                                                    let-columns="columns"
+                                                    let-rowIndex="rowIndex"
+                                                  >
+                                                    <tr>
+                                                      <td>{{ rowIndex + 1 }}</td>
+                                                      <td *ngFor="let col of columns">
+                                                        {{ rowData[col.field] }}
+                                                      </td>
+                                                    </tr>
+                                                  </ng-template>
+                                                </p-table>
+                                              </div>
+                                          </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#step4">ATA Chapter</a></h4>
+                                </div>
+                                <div id="step4" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="col-sm-12">
+                                            <div class="shadow-Box">
+                                                <p-table
+                                                  [columns]="atacols"  
+                                                  [value]="ataList"             
+                                                  [paginator]="true"
+                                                  [rows]="10"
+                                                  [first]="first"
+                                                >
+                                                  <ng-template pTemplate="header" let-columns>
+                                                    <tr>
+                                                      <th>ID</th>
+                                                      <th *ngFor="let col of columns">
+                                                        {{ col.header }}
+                                                      </th>
+                                                    </tr>
+                                                  </ng-template>
+                                                  <ng-template
+                                                    pTemplate="body"
+                                                    let-rowData
+                                                    let-columns="columns"
+                                                    let-rowIndex="rowIndex"
+                                                  >
+                                                    <tr>
+                                                      <td>{{ rowIndex + 1 }}</td>
+                                                      <td *ngFor="let col of columns">
+                                                        {{ rowData[col.field] }}
+                                                      </td>
+                                                    </tr>
+                                                  </ng-template>
+                                                </p-table>
+                                              </div>
+                                          </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                           <!-- <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step3">Export Information</a> </h4>
                                 </div>
