@@ -33,7 +33,8 @@ export class OpenCloseArsubledgerComponent {
             this.completeCalendarData = data[0];
 
             for (let i = 0; i < this.completeCalendarData.length; i++) {
-                if (this.completeCalendarData[i].name == this.currentArledgerObj.ledgerName && this.completeCalendarData[i].fiscalYear == this.currentArledgerObj.fiscalYear && this.completeCalendarData[i].legalEntityId == this.currentArledgerObj.legalEntityId) {
+                //if (this.completeCalendarData[i].name == this.currentArledgerObj.ledgerName && this.completeCalendarData[i].fiscalYear == this.currentArledgerObj.fiscalYear && this.completeCalendarData[i].legalEntityId == this.currentArledgerObj.legalEntityId) {
+                if (this.completeCalendarData[i].fiscalYear == this.currentArledgerObj.fiscalYear && this.completeCalendarData[i].legalEntityId == this.currentArledgerObj.legalEntityId) {
                     this.setFromDate(this.completeCalendarData[i]);
                     this.seToDate(this.completeCalendarData[i]);
                     this.finalCalendarArry.push(this.completeCalendarData[i]);
@@ -94,11 +95,11 @@ export class OpenCloseArsubledgerComponent {
         else {
             obj.isUpdate = true;
         }
-        
+
     }
     saveCalendar() {
         debugger;
-          if (this.finalCalendarArry && this.finalCalendarArry.length > 0) {
+        if (this.finalCalendarArry && this.finalCalendarArry.length > 0) {
             for (let i = 0; i < this.finalCalendarArry.length; i++) {
                 if (this.finalCalendarArry[i].status == 3) {
                     this.finalCalendarArry[i].isUpdate = true;
