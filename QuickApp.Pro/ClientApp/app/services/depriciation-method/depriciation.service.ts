@@ -20,7 +20,7 @@ export class DepriciationMethodService {
 
     getAll() {
         return Observable.forkJoin(
-            this.depriciationMethodEndpointService.getAlldepriciationMethod<DepriciationMethod[]>());
+            this.depriciationMethodEndpointService.getAlldepriciationMethod<any>());
     }
 
     getById(assetDepreciationMethodId: number) {

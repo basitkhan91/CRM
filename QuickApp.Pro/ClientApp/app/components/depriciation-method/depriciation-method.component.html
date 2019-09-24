@@ -14,8 +14,8 @@
                         <div class="inline-block display-flex">
                             <h3 class="po-head lead">Depreciation Method</h3>
                             &nbsp;&nbsp;
-                            <a class="plusicon-cstm new-margin" href="#" id="btnAdddepriciationMethod" pTooltip="Add New" tooltipPosition="right" title="Add" *ngIf="!this.updateMode"  data-toggle="modal" data-target="#Modaladd"><i class="fa fa-plus-circle fa-lg"></i></a>
-                                                  </div> 
+                            <a class="plusicon-cstm new-margin" href="#" id="btnAdddepriciationMethod" pTooltip="Add New" tooltipPosition="right" title="Add" *ngIf="!this.updateMode" data-toggle="modal" data-target="#Modaladd"><i class="fa fa-plus-circle fa-lg"></i></a>
+                        </div>
                         <div class="form-row col-row col-row1">
                             <div class="col-md-2">
                                 <label class="control-label">Code <strong class="clr-red">*</strong></label>
@@ -43,7 +43,7 @@
                                 <label class="control-label">
                                     Depreciation Basis<strong class="clr-red">*</strong>&nbsp;
                                 </label>
-                                <input type="text" [(ngModel)]="currentDepriciationmethod.assetDepreciationBasis"  class="form-control" id="cmname" name="" autocomplete="off">
+                                <input type="text" [(ngModel)]="currentDepriciationmethod.assetDepreciationBasis" class="form-control" id="cmname" name="" autocomplete="off">
                             </div>
                             <div class="col-md-2">
                                 <label class="control-label">
@@ -70,52 +70,93 @@
                             </div>
                         </div>
 
-                        <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="depriciationMethodList" [rows]="10"
-                                 [paginator]="true"
-                                 [rowsPerPageOptions]="[10,20,30]"
-                                 [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumns"
+                        <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="depriciationMethodList" [rows]="10" [paginator]="true" [pageLinks]="3"
+                                 [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn"
                                  [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
+                            <ng-template pTemplate="caption">
+                                <div style="text-align: right">
+                                    <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" selectedItemsLabel="{0} columns selected"
+                                                   [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
+                                    <!--
+            <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
+                <i class="fa fa-search"></i>
+                <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                 placeholder="Global Filter">
+            </div> -->
+                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
+                                            iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
+                                            iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                    <div class="excel-upload  excel-upload-cstm">
+                                        <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected"
+                                               accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                                        <label for="upload">
+                                            <span matTooltip="Upload Data (Excel)">
+                                                <i class="fa fa-upload"></i>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </ng-template>
+
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
-                                    <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                    <th style="width:120px" *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                         {{col.header}}
                                         <p-sortIcon [field]="col.field"></p-sortIcon>
                                     </th>
-                                    <th style="width:150px;position:sticky">Action</th>
+                                    <th style="width:200px;position:sticky"></th>
+                                </tr>
+                                <tr>
+                                    <th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                        <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field,'contains')">
+                                    </th>
+                                    <th style="width:200px;position:sticky"></th>
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="body" let-rowData let-columns="columns">
                                 <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openEdits(rowData)">
-                                    <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-                                        {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                                    <td style="width:120px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                                        {{
+col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?
+                                        (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]
+                                        }}
                                     </td>
-                                    <td style="width:150px">
-                                        <p-inputSwitch *ngIf="depriciationMethod['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(depriciationMethod,$event)" [(ngModel)]="depriciationMethod['isActive']"></p-inputSwitch>
-                                        <p-inputSwitch *ngIf="depriciationMethod['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(depriciationMethod,$event)" [(ngModel)]="depriciationMethod['isActive']"></p-inputSwitch>
-                                        <p-inputSwitch *ngIf="depriciationMethod['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(depriciationMethod,$event)" [(ngModel)]="depriciationMethod['isActive']"></p-inputSwitch>
+                                    <td style="width:200px">
+                                        <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)"
+                                                       [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)"
+                                                       [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)"
+                                                       [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <span data-toggle="modal" data-target="#view">
+                                            <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                        </span>
+                                        <button class="btn-edit" mat-icon-button (click)="openEdit(contentEdit,rowData)" matTooltip="Edit">
+                                            <mat-icon>edit</mat-icon>
+                                        </button>
 
-                                        <span (click)="setdepriciationmethodToUpdate(editAssetTypes,depriciationMethod.assetDepreciationMethodId)" data-toggle="modal" data-target="#edit">
-                                            <a data-toggle="tooltip" title="" class="btn btn-primary nobg" data-original-title="" edit="">
-                                                <i class="fa fa-edit"></i>
-                                            </a>
-                                        </span>
-                                        <span data-toggle="modal" data-target="#history">
-                                            <a data-toggle="tooltip" (click)="showAuditPopup(auditContent,depriciationMethod.assetDepreciationMethodId)" title="" class="btn btn-success nobg" data-original-title="History">
-                                                <i class="fa fa-history"></i>
-                                            </a>
-                                        </span>
-                                        <span (click)="openDelete(content,depriciationMethod)" data-toggle="modal" data-target="#data">
-                                            <a class="btn btn-danger nobg" data-toggle="tooltip" title="" data-original-title="Delete">
-                                                <i class="fa fa-trash"></i>
-                                            </a>
-                                        </span>
+                                        <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="openDelete(content,rowData)">
+                                            <mat-icon color="warn">delete</mat-icon>
+                                        </button>
+                                        <button class="btn-history" mat-icon-button matTooltip="History" (click)="showAuditPopup(auditContent,rowData.shelfId)">
+                                            <mat-icon color="green">history</mat-icon>
+                                        </button>
                                     </td>
                                 </tr>
                             </ng-template>
+                            <ng-template #auditContent let-c="close" let-d="dismiss">
+                                <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
+                                    <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+                                </div>
+                            </ng-template>
                             <ng-template pTemplate="summary" id="footer">
-                                <label id="footer" class="footer">No'of records:</label> <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" />
-                                &nbsp;&nbsp;
-                                <label id="footer" class="footer1">Pages Count:</label> <input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" />
+                                <label id="footer" class="footer">No'of records:</label>
+                                <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                                <!-- <label id="footer" class="footer1">Pages Count:</label>
+        <input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" /> -->
                             </ng-template>
                         </p-table>
                     </div>

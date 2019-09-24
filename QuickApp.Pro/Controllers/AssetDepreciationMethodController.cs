@@ -138,7 +138,8 @@ namespace QuickApp.Pro.Controllers
             foreach (PropertyInfo property in propertyInfos)
             {
                 columnHeader = new ColumHeader();
-                columnHeader.field = property.Name;
+                columnHeader.field = char.ToLower(property.Name[0]) + property.Name.Substring(1);//FirstCharToUpper(property.Name);
+                // columnHeader.field = property.Name;
                 columnHeader.header = property.Name;
                 columHeaders.Add(columnHeader);
             }
@@ -151,13 +152,13 @@ namespace QuickApp.Pro.Controllers
                 assetDepreciationMethod = new AssetDepreciationMethodModel();
                 assetDepreciationMethod.AssetDepreciationMethodId = item.AssetDepreciationMethodId;
                 assetDepreciationMethod.AssetDepreciationMethodName = item.AssetDepreciationMethodName;
-                //assetDepreciationMethod.AssetDepreciationMethodCode = item.AssetDepreciationMethodCode;
+                assetDepreciationMethod.AssetDepreciationMethodCode = item.AssetDepreciationMethodCode;
                 assetDepreciationMethod.AssetDepreciationMethodBasis = item.AssetDepreciationMethodBasis;
                 assetDepreciationMethod.CreatedDate = item.CreatedDate;
                 assetDepreciationMethod.CreatedBy = item.CreatedBy;
                 assetDepreciationMethod.UpdatedDate = item.UpdatedDate;
                 assetDepreciationMethod.UpdatedBy = item.UpdatedBy;
-                //currency.IsActive = item.IsActive;
+                assetDepreciationMethod.IsActive = item.IsActive;
                 assetDepreciationMethods.Add(assetDepreciationMethod);
             }
             dynamicGridData.ColumnData = assetDepreciationMethods;
