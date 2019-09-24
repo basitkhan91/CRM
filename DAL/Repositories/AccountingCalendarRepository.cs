@@ -20,7 +20,7 @@ namespace DAL.Repositories
 
             public IEnumerable<DAL.Models.AccountingCalendar> GetAllAccountingCalendar()
             {
-                return _appContext.AccountingCalendar.Include("MasterCompany").Where(c => c.IsDeleted == false || c.IsDeleted == null).OrderByDescending(c => c.AccountingCalendarId).ToList();
+                return _appContext.AccountingCalendar.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.AccountingCalendarId).ToList();
             }
 
 

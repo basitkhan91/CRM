@@ -34,7 +34,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getAllCalendarData")]
         public IActionResult getAll()
         {
-            var calendaData = unitOfWork.Repository<AccountingCalendar>().GetAll().Where(x => x.IsDeleted != true).OrderByDescending(x => x.AccountingCalendarId);
+            var calendaData = unitOfWork.Repository<AccountingCalendar>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AccountingCalendarId);
             return Ok(calendaData);
         }
 
@@ -51,16 +51,12 @@ namespace QuickApp.Pro.Controllers
                         if (calendarObj[i].AccountingCalendarId > 0)
                         {
                             calendarObj[i].UpdatedDate = DateTime.Now.Date;
-                            calendarObj[i].isUpdate = true;
-
+                           
                             unitOfWork.Repository<AccountingCalendar>().Update(calendarObj[i]);
                         }
                         else
                         {
                             calendarObj[i].MasterCompanyId = 1;
-                            calendarObj[i].IsActive = true;
-                            calendarObj[i].IsDeleted = false;
-                            calendarObj[i].isUpdate = false;                         
                             calendarObj[i].CreatedDate = DateTime.Now;
                             calendarObj[i].UpdatedDate = DateTime.Now;
                             unitOfWork.Repository<AccountingCalendar>().Add(calendarObj[i]);

@@ -16,7 +16,7 @@ export class OpenCloseApSubledgerComponent implements OnInit {
     completeCalendarData: any[] = [];
     currentApledgerObj: any = {};
     companyList: any[] = [];
-    constructor(private legalEntityservice: LegalEntityService, private calendarService: AccountCalenderService, private alertService: AlertService) {
+    constructor(private legalEntityservice:LegalEntityService,private calendarService: AccountCalenderService, private alertService:AlertService) {
 
     }
     setIsUpdate(value, obj) {
@@ -38,30 +38,21 @@ export class OpenCloseApSubledgerComponent implements OnInit {
         });
     }
     loadAccountCalendarData() {
-        this.calendarService.getAll().subscribe(data => {
-            this.completeCalendarData = data[0];
+         this.calendarService.getAll().subscribe(data => {
+             this.completeCalendarData = data[0];
+           
+             for (let i = 0; i < this.completeCalendarData.length; i++) {
+                 if (this.completeCalendarData[i].name == this.currentApledgerObj.ledgerName && this.completeCalendarData[i].fiscalYear == this.currentApledgerObj.fiscalYear && this.completeCalendarData[i].legalEntityId==this.currentApledgerObj.legalEntityId) {
+                     this.setFromDate(this.completeCalendarData[i]);
+                     this.seToDate(this.completeCalendarData[i]);
+                     this.finalCalendarArry.push(this.completeCalendarData[i]);
+                 }
 
-            for (let i = 0; i < this.completeCalendarData.length; i++) {
-                console.log(this.completeCalendarData[i].name);
-                console.log(this.completeCalendarData[i].fiscalYear);
-                console.log(this.completeCalendarData[i].legalEntityId);
-                console.log(this.currentApledgerObj.ledgerName);
-                console.log(this.currentApledgerObj.fiscalYear);
-                console.log(this.currentApledgerObj.legalEntityId);
-                // if (this.completeCalendarData[i].name == this.currentApledgerObj.ledgerName && this.completeCalendarData[i].fiscalYear == this.currentApledgerObj.fiscalYear && this.completeCalendarData[i].legalEntityId==this.currentApledgerObj.legalEntityId) {
-                if (this.completeCalendarData[i].fiscalYear == this.currentApledgerObj.fiscalYear && this.completeCalendarData[i].legalEntityId == this.currentApledgerObj.legalEntityId) {
-                    this.setFromDate(this.completeCalendarData[i]);
-                    this.seToDate(this.completeCalendarData[i]);
-                    this.finalCalendarArry.push(this.completeCalendarData[i]);
-                }
-
-            }
-            this.calendarArray = JSON.parse(JSON.stringify(this.finalCalendarArry));;
+             }
+             this.calendarArray = JSON.parse(JSON.stringify(this.finalCalendarArry));;
             console.log(this.completeCalendarData);
-            
-
         })
-
+        
     }
     setFromDate(completeObj) {
 
@@ -106,7 +97,7 @@ export class OpenCloseApSubledgerComponent implements OnInit {
         completeObj.toDate = year + '-' + month + '-' + day;
     }
     saveCalendar() {
-
+     
         if (this.finalCalendarArry && this.finalCalendarArry.length > 0) {
             for (let i = 0; i < this.finalCalendarArry.length; i++) {
                 if (this.finalCalendarArry[i].status == 3) {
