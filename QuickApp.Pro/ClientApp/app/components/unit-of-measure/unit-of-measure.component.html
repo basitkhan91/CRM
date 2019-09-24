@@ -149,12 +149,10 @@
                         </label>
                     </div>
                     <div class="col-sm-5">
-                        <p-autoComplete [(ngModel)]="unitName" (onSelect)="partnmId($event)" (onKeyUp)=eventHandler($event) [ngModelOptions]="{standalone: true}"
+                        <p-autoComplete field="description" [(ngModel)]="unitName" (onSelect)="partnmId($event)" (onKeyUp)="eventHandler('description', $event.target.value)" name="uom"
                             [suggestions]="localCollection" (completeMethod)="filterUnitOfMeasures($event)" [size]="30" [minLength]="1"
                             [dropdown]="true" class="p-autoComplete-ctsm" required>
-                            <ng-template let-unitName pTemplate="item">
-                                <div class="ui-helper-clearfix">{{unitName}}</div>
-                            </ng-template>
+                         
                         </p-autoComplete>
                         <div *ngIf="disableSave" class="clr-red">Already Exists</div>
                         <div class="clear"></div>
