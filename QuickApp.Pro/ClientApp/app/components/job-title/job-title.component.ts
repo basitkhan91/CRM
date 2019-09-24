@@ -22,6 +22,7 @@ import { JobTitleService } from '../../services/job-title.service';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
+import { getObjectByValue } from '../../generic/autocomplete';
 @Component({
     selector: 'app-job-title',
     templateUrl: './job-title.component.html',
@@ -69,9 +70,10 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
     errorMessage: any;
     modal: NgbModalRef;
     selectedColumn: JobTitle[];
-    jobName: string;
+    jobName: any;
     filteredBrands: any[];
     localCollection: any[] = [];
+    isDelete : boolean =false;
     /** Actions ctor */
 
     private isEditMode: boolean = false;
@@ -83,7 +85,15 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
         this.sourceAction = new JobTitle();
 
     }
-
+    validateRecordExistsOrNot(field: string, currentInput: any, originalData: any) {
+        console.log(field, currentInput, originalData)
+        if ((field !== '' || field !== undefined) && (currentInput !== '' || currentInput !== undefined) && (originalData !== undefined)) {
+            const data = originalData.filter(x => {
+                return x[field].toLowerCase() === currentInput.toLowerCase()
+            })
+            return data;
+        }
+    }
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -228,11 +238,9 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
 		this.disableSave = false;
         this.isSaving = true;
 		this.loadMasterCompanies();
-		
-
-
-        this.sourceAction = row;
-        this.jobName = this.sourceAction.description;
+        this.sourceAction = {...row};
+        this.jobName = getObjectByValue('description',row.description,this.allJobTitlesinfo)
+       
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -262,48 +270,34 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
     }
 
 
-
-    eventHandler(event) {
-        let value = event.target.value.toLowerCase()
-        if (this.selectedreason) {
-            if (value == this.selectedreason.toLowerCase()) {
-                this.disableSave = true;
-            }
-            else {
-                this.disableSave = false;
-            }
+    eventHandler(field, value) {
+        const exists = this.validateRecordExistsOrNot(field, value, this.allJobTitlesinfo);
+       // console.log(exists);
+        if (exists.length > 0) {
+            this.disableSave = true;
         }
+        else {
+            this.disableSave = false;
+        }
+
     }
 
 
 
 
     jobTitleId(event) {
-        for (let i = 0; i < this.allreasn.length; i++) {
-            if (event == this.allreasn[i][0].jobName) {
-
-                this.disableSave = true;
-                this.selectedreason = event;
-            }
-
-
-
-
-        }
+       this.disableSave = true;
     }
 
     filterJobs(event) {
 
-        this.localCollection = [];
-        for (let i = 0; i < this.allJobTitlesinfo.length; i++) {
-            let jobName = this.allJobTitlesinfo[i].description;
-            if (jobName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                this.allreasn.push([{
-                    "jobTitleId": this.allJobTitlesinfo[i].jobTitleId,
-                    "jobName": jobName
-                }]),
-                this.localCollection.push(jobName);
-            }
+        this.localCollection = this.allJobTitlesinfo;
+
+        if (event.query !== undefined && event.query !== null) {
+            const jobTitle = [...this.allJobTitlesinfo.filter(x => {
+                return x.description.toLowerCase().includes(event.query.toLowerCase())
+            })]
+            this.localCollection = jobTitle;
         }
     }
     handleChange(rowData, e) {
@@ -341,15 +335,17 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.description = this.jobName;
             this.sourceAction.masterCompanyId = 1;
+            this.sourceAction.isDelete = false;
             this.workFlowtService.newAction(this.sourceAction).subscribe(
                 role => this.saveSuccessHelper(role),
                 error => this.saveFailedHelper(error));
         }
         else {
-
+     
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.jobName;
+            this.sourceAction.description = this.jobName.description;
             this.sourceAction.masterCompanyId = 1;
+            this.sourceAction.isDelete = false;
             this.workFlowtService.updateAction(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));

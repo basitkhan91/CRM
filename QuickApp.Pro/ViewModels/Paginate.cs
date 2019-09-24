@@ -438,14 +438,14 @@ namespace QuickApp.Pro.ViewModels
     #region AssetDepreciationMethod
     public class AssetDepreciationMethodModel : PasBase
     {
-        public long? AssetDepreciationMethodId { get; set; }
+       public long? AssetDepreciationMethodId { get; set; }
         public string AssetDepreciationMethodName { get; set; }
 
         public string AssetDepreciationMethodCode { get; set; }
         public string AssetDepreciationMethodBasis { get; set; }
         public string AssetDepreciationMemo { get; set; }
         public Int32 MasterCompanyId { get; set; }
-        //public bool? IsActive { get; set; }
+        public bool? IsActive { get; set; }
     }
     #endregion
 

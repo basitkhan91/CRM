@@ -14,7 +14,7 @@
                                  [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn"
                                  [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
                             <ng-template pTemplate="caption">
-                                <div style="text-align: right">
+                                <div style="text-align: right;margin-left:-6px !important;">
                                     <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
                                                    selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
                                     <!-- <div class="inner-addon right-addon w200 inline-block  g-filter-search-cstm">
@@ -53,7 +53,7 @@
 
                             </ng-template>
                             <ng-template pTemplate="body" let-rowData let-columns="columns">
-                                <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openEdits(rowData)">
+                                <tr [pSelectableRow]="rowData" pReorderableRowHandle>
                                     <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                         {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                     </td>
@@ -120,11 +120,11 @@
                                                 <label for="description" class="control-label">Priority Name<span class="clr-red">*</span></label>
                                             </div>
                                             <div class="col-sm-5">
-                                                <p-autoComplete [(ngModel)]="priorityName" (onSelect)="priorityId($event)" (copy)="$event.preventDefault()" (paste)="$event.preventDefault()" (onKeyUp)="eventHandler($event)" name="id" [suggestions]="localCollection" (completeMethod)="filterpriorities($event)" [size]="30"
+                                                <p-autoComplete field="description" [(ngModel)]="priorityName" (onSelect)="priorityId($event)"(onKeyUp)="eventHandler('description' ,$event.target.value)" name="id" [suggestions]="localCollection" (completeMethod)="filterpriorities($event)" [size]="30"
                                                                 [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
-                                                    <ng-template let-priorityName pTemplate="item">
+                                                    <!-- <ng-template let-priorityName pTemplate="item">
                                                         <div class="ui-helper-clearfix">{{priorityName}}</div>
-                                                    </ng-template>
+                                                    </ng-template> -->
                                                 </p-autoComplete>
                                                 <div *ngIf="disableSave" class="clr-red">Already Exists</div>
                                                 <div class="clear"></div>

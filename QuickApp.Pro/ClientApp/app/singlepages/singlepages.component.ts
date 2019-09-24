@@ -305,21 +305,21 @@ export class SingleComponent {
 			else if (this.currentUrl == '/singlepages/singlepages/app-unit-of-measure') {
 				this.items = [
 					{ label: 'Single Screens' },
-					{ label: 'UnitOf Measure' }
+					{ label: 'Unit Of Measure' }
 				];
 			}
 
 			else if (this.currentUrl == '/singlepages/singlepages/app-vendor-classification') {
 				this.items = [
 					{ label: 'Single Screens' },
-					{ label: 'VendorClassification' }
+					{ label: 'Vendor Classification' }
 				];
 			}
 
 			else if (this.currentUrl == '/singlepages/singlepages/app-work-performed') {
 				this.items = [
 					{ label: 'Single Screens' },
-					{ label: 'WorkPerformed' }
+					{ label: 'Work Performed' }
 				];
 			}
 

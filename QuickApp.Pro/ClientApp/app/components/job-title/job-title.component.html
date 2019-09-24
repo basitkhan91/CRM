@@ -147,12 +147,9 @@
                         </label>
                     </div>
                     <div class="col-sm-5">
-                        <p-autoComplete [(ngModel)]="jobName" [ngModelOptions]="{standalone: true}" (onSelect)="jobTitleId($event)" (onKeyUp)="eventHandler($event)"
+                        <p-autoComplete field="description" [(ngModel)]="jobName" name="jobtitile" (onSelect)="jobTitleId($event)" (onKeyUp)="eventHandler('description',$event.target.value)"
                             [suggestions]="localCollection" (completeMethod)="filterJobs($event)" [size]="30" [minLength]="1"
-                            [dropdown]="true" class="p-autoComplete-ctsm" required>
-                            <ng-template let-jobName pTemplate="item">
-                                <div class="ui-helper-clearfix">{{jobName}}</div>
-                            </ng-template>
+                            [dropdown]="true" class="p-autoComplete-ctsm" required>                           
                         </p-autoComplete>
                         <div *ngIf="disableSave" class="clr-red">Already Exists</div>
                     </div>
