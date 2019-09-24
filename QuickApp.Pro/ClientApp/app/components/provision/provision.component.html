@@ -14,7 +14,7 @@
                                  [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" 
                                  [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
                             <ng-template pTemplate="caption">
-                                <div style="text-align: right">
+                                <div style="text-align: right;margin-left:-6px !important;">
                                     <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
                                                    selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
                                     <div class="inner-addon right-addon w200 inline-block  g-filter-search-cstm">
@@ -123,12 +123,10 @@
                                                 <label for="description" class="control-label">Provision Name<span class="clr-red">*</span></label>
                                             </div>
                                             <div class="col-sm-5">
-                                                <p-autoComplete [(ngModel)]="provisionName" name="provision" (onSelect)="provisionId($event)" (onKeyUp)="eventHandler($event)"
+                                                <p-autoComplete field="description" [(ngModel)]="provisionName" name="provision" (onSelect)="provisionId($event)" (onKeyUp)="eventHandler('description',$event.target.value)"
                                                                 [suggestions]="localCollection" (completeMethod)="filterprovisions($event)" [size]="30"
                                                                 [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
-                                                    <ng-template let-provisionName pTemplate="item">
-                                                        <div class="ui-helper-clearfix">{{provisionName}}</div>
-                                                    </ng-template>
+                                                    
                                                 </p-autoComplete>
                                                 <div *ngIf="disableSave" class="clr-red">Already Exists</div>
                                             </div>

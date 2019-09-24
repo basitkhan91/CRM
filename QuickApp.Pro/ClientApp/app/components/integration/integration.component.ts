@@ -17,6 +17,7 @@ import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
+import { getObjectByValue } from '../../generic/autocomplete';
 @Component({
     selector: 'app-integration',
     templateUrl: './integration.component.html',
@@ -37,17 +38,17 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
     updatedDate: any = "";
     AuditDetails: SingleScreenAuditDetails[];
     Active: string = "Active";
-	auditHisory: AuditHistory[];
+    auditHisory: AuditHistory[];
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     selectedColumns: any[];
     cols: any[];
     displayedColumns = ['IntegrationPortalId', 'description', 'Portalurl'];
     dataSource: MatTableDataSource<Integration>;
-    allIntegrationInfo: Integration[] = [];
+    allIntegrationInfo: any = [];
     allComapnies: MasterCompany[] = [];
     private isSaving: boolean;
-	public sourceAction: any = {};
+    public sourceAction: any = {};
     private bodyText: string;
     loadingIndicator: boolean;
     closeResult: string;
@@ -60,27 +61,28 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
     integrationName: string;
     filteredBrands: any[];
     localCollection: any[] = [];
+    totalRecords: number;
     /** Actions ctor */
 
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
 
-	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: IntegrationService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: IntegrationService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
         //this.sourceAction = new Integration();
 
     }
     ngOnInit(): void {
-        this.cols = [           
+        this.cols = [
             { field: 'portalUrl', header: 'Website Url' },
             { field: 'description', header: 'Integration' },
             { field: 'memo', header: 'Memo' },
             { field: 'createdBy', header: 'Created By' },
-            { field: 'updatedBy', header: 'Updated By' },         
-		];
-		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-integration';
-		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
+            { field: 'updatedBy', header: 'Updated By' },
+        ];
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-integration';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
         this.selectedColumns = this.cols;
         this.loadData();
     }
@@ -89,7 +91,15 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
         this.dataSource.sort = this.sort;
     }
     public allWorkFlows: Integration[] = [];
-
+    validateRecordExistsOrNot(field: string, currentInput: any, originalData: any) {
+       // console.log(field, currentInput, originalData)
+        if ((field !== '' || field !== undefined) && (currentInput !== '' || currentInput !== undefined) && (originalData !== undefined)) {
+            const data = originalData.filter(x => {
+                return x[field].toLowerCase() === currentInput.toLowerCase()
+            })
+            return data;
+        }
+    }
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -121,11 +131,11 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
         this.applyFilter(this.dataSource.filter);
     }
     private onDataLoadSuccessful(allWorkFlows: Integration[]) {
-       
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allIntegrationInfo = allWorkFlows;
+        this.totalRecords = this.allIntegrationInfo.length;
     }
 
     private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
@@ -143,17 +153,17 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
 
     }
     open(content) {
-		this.sourceAction = {};
+        this.sourceAction = {};
         this.isEditMode = false;
         this.isDeleteMode = false;
-		this.disableSave = false;
+        this.disableSave = false;
         this.isSaving = true;
         this.loadMasterCompanies();
-		//this.sourceAction = new Integration();
-		this.sourceAction.isActive = true;
-		this.portalURL = "";
-		this.integrationName = "";
-		this.sourceAction.description = "";
+        //this.sourceAction = new Integration();
+        this.sourceAction.isActive = true;
+        this.portalURL = "";
+        this.integrationName = "";
+        this.sourceAction.description = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -164,7 +174,7 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
     openDelete(content, row) {
 
         this.isEditMode = false;
-        this.isDeleteMode = true;       
+        this.isDeleteMode = true;
         this.sourceAction = row;
         this.integration_Name = row.portalUrl;
         this.modal = this.modalService.open(content, { size: 'sm' });
@@ -176,71 +186,56 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
     openEdit(content, row) {
 
         this.isEditMode = true;
-		this.isSaving = true;
-		this.disableSave = false;
+        this.isSaving = true;
+        this.disableSave = false;
         this.loadMasterCompanies();
-        this.sourceAction = row;
-		this.integrationName = this.sourceAction.description;
-		this.portalURL = row.portalUrl;
+        this.sourceAction = {...row};
+        this.integrationName = this.sourceAction.description;
+        this.portalURL = getObjectByValue('portalUrl',row.portalUrl,this.allIntegrationInfo)              
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-    eventHandler(event) {
-        let value = event.target.value.toLowerCase();
-        if (this.selectedActionName) {
-            if (value == this.selectedActionName.toLowerCase()) {
-               
-                this.disableSave = true;
-            }
-            else {
-                this.disableSave = false;
-            }
+    eventHandler(field, value) {
+        const exists = this.validateRecordExistsOrNot(field, value, this.allIntegrationInfo);
+       // console.log(exists,"test");
+        if (exists.length > 0) {
+            this.disableSave = true;
+        }
+        else {
+            this.disableSave = false;
         }
 
     }
     partnmId(event) {
         //debugger;
-        for (let i = 0; i < this.actionamecolle.length; i++) {
-            if (event == this.actionamecolle[i][0].integrationName) {
-                //alert("Action Name already Exists");
-                this.disableSave = true;
-                this.selectedActionName = event;
-            }
-        }
+        this.disableSave = true;
     }
 
 
-    filterintegrations(event) {
-        this.localCollection = [];
-        for (let i = 0; i < this.allIntegrationInfo.length; i++) {
-            let integrationName = this.allIntegrationInfo[i].description;
-            if (integrationName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                this.actionamecolle.push([{
-                    "chargeId": this.allIntegrationInfo[i].integrationPortalId,
-                    "integrationName": integrationName
-                }]),
-                this.localCollection.push(integrationName);
-            }
+    filterintegrations(event) {       
+    
+        this.localCollection = this.allIntegrationInfo;
+        if (event.query !== undefined && event.query !== null) {
+            const integration = [...this.allIntegrationInfo.filter(x => {
+               // return x.description.toLowerCase().includes(event.query.toLowerCase())
+                return x.portalUrl.toLowerCase().includes(event.query.toLowerCase())
+            })]
+            console.log(integration,"test2");
+            this.localCollection = integration;
         }
     }
 
-	openHist(content, row) {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
-
-
-		this.sourceAction = row;
-
-
-
-		this.isSaving = true;
-
-		this.workFlowtService.historyintegration(this.sourceAction.integrationPortalId).subscribe(
-			results => this.onHistoryLoadSuccessful(results[0], content),
-			error => this.saveFailedHelper(error));
+    openHist(content, row) {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.sourceAction = row;
+        this.isSaving = true;
+        this.workFlowtService.historyintegration(this.sourceAction.integrationPortalId).subscribe(
+            results => this.onHistoryLoadSuccessful(results[0], content),
+            error => this.saveFailedHelper(error));
 
 
     }
@@ -248,7 +243,7 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
 
         this.sourceAction = row;
         this.integration_Name = row.description;
-        this.portalURL = row.portalUrl;   
+        this.portalURL = row.portalUrl;
         this.memo = row.memo;
         this.createdBy = row.createdBy;
         this.updatedBy = row.updatedBy;
@@ -268,23 +263,23 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
     }
 
 
-	private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
+    private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
 
 
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
 
-		this.auditHisory = auditHistory;
-
-
-		this.modal = this.modalService.open(content, { size: 'lg' });
-
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
+        this.auditHisory = auditHistory;
 
 
-	}
+        this.modal = this.modalService.open(content, { size: 'lg' });
+
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+
+
+    }
     handleChange(rowData, e) {
         if (e.checked == false) {
             this.sourceAction = rowData;
@@ -317,16 +312,15 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
             //this.sourceAction.description = this.integrationName;
-			this.sourceAction.portalURL = this.portalURL;
+            this.sourceAction.portalURL = this.portalURL;
             this.workFlowtService.newAction(this.sourceAction).subscribe(
                 role => this.saveSuccessHelper(role),
                 error => this.saveFailedHelper(error));
         }
         else {
-
-            this.sourceAction.updatedBy = this.userName;
-			this.sourceAction.description = this.integrationName;
-			this.sourceAction.portalURL = this.portalURL;
+            this.sourceAction.updatedBy = this.userName;    
+            this.sourceAction.Portalurl = this.portalURL.portalUrl;
+            console.log(this.sourceAction.Portalurl );              
             this.workFlowtService.updateAction(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
@@ -338,7 +332,7 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
     deleteItemAndCloseModel() {
         this.isSaving = true;
         this.sourceAction.updatedBy = this.userName;
-		this.workFlowtService.deleteAcion(this.sourceAction.integrationPortalId).subscribe(
+        this.workFlowtService.deleteAcion(this.sourceAction.integrationPortalId).subscribe(
             response => this.saveCompleted(this.sourceAction),
             error => this.saveFailedHelper(error));
         this.modal.close();
@@ -403,7 +397,7 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
         this.workFlowtService.getAudit(integrationPortalId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["integrationPortalAuditId", "integrationPortalId", "createdBy", "createdDate", "updatedDate","masterCompanyId",];
+                this.AuditDetails[0].ColumnsToAvoid = ["integrationPortalAuditId", "integrationPortalId", "createdBy", "createdDate", "updatedDate", "masterCompanyId",];
             }
         });
     }

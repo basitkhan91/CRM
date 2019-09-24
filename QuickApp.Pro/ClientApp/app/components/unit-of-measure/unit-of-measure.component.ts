@@ -22,6 +22,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { MenuItem, LazyLoadEvent } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
+import { getObjectByValue, getValueFromObjectByKey } from '../../generic/autocomplete';
 
 @Component({
     selector: 'app-unit-of-measure',
@@ -73,7 +74,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
     Active: string = "Active";
     displayedColumns = ['unitofmeasureId', 'description', 'shortname', 'standard', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
     dataSource: MatTableDataSource<UnitOfMeasure>;
-    allUnitOfMeasureinfo:any  = [];
+    allUnitOfMeasureinfo: any = [];
     sourceAction: UnitOfMeasure;
     allComapnies: MasterCompany[] = [];
     public auditHisory: AuditHistory[] = [];
@@ -87,13 +88,15 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
     modal: NgbModalRef;
     allunitData: any;
     selectedColumn: UnitOfMeasure[];
-    unitName: string;
+    unitName: any;
+    shortname: string;
     filteredBrands: any[];
     localCollection: any[] = [];
     selectedData: any;
     private isEditMode: boolean = false;
     private isDelete: boolean = false;
-
+    uomEditTempInfo: any = {};
+    
     constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public unitofmeasureService: UnitOfMeasureService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
@@ -106,7 +109,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         this.dataSource.sort = this.sort;
     }
     validateRecordExistsOrNot(field: string, currentInput: any, originalData: any) {
-        console.log(field, currentInput , originalData)
+        console.log(field, currentInput, originalData)
         if ((field !== '' || field !== undefined) && (currentInput !== '' || currentInput !== undefined) && (originalData !== undefined)) {
             const data = originalData.filter(x => {
                 return x[field].toLowerCase() === currentInput.toLowerCase()
@@ -115,13 +118,13 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         }
     }
     public allWorkFlows: UnitOfMeasure[] = [];
-    private loadData() {    
+    private loadData() {
         this.unitofmeasureService.getAllUnitofMeasureList().subscribe(data => {
             this.allunitData = data[0].columHeaders;
             this.allUnitOfMeasureinfo = data[0].columnData;
             console.log(this.allUnitOfMeasureinfo);
-            this.totalRecords = this.allUnitOfMeasureinfo.length;         
-            this.cols = [                
+            this.totalRecords = this.allUnitOfMeasureinfo.length;
+            this.cols = [
                 this.selectedColumns = this.allunitData
 
             ];
@@ -143,28 +146,18 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         this.dataSource.filter = filterValue;
     }
 
-    private refresh() {
-        // Causes the filter to refresh there by updating with recently added data.
-        this.applyFilter(this.dataSource.filter);
-    }
-  
+
+
 
     private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
-
         // debugger;
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-
         this.auditHisory = auditHistory;
-
-
         this.modal = this.modalService.open(content, { size: 'lg' });
-
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
-
-
     }
 
     private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
@@ -172,18 +165,15 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allComapnies = allComapnies;
-
     }
 
     private onDataLoadFailed(error: any) {
         // alert(error);
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-
     }
 
     open(content) {
-
         this.isEditMode = false;
         this.isDelete = false;
         this.disableSave = false;
@@ -194,9 +184,6 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         this.unitName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
-
-
-
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
@@ -205,7 +192,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
     openDelete(content, row) {
 
         this.isEditMode = false;
-        this.isDelete= true;
+        this.isDelete = true;
         this.sourceAction = row;
         this.unitofmeasure_Name = row.description;
         this.modal = this.modalService.open(content, { size: 'sm' });
@@ -219,8 +206,9 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         this.disableSave = false;
         this.isSaving = true;
         this.loadMasterCompanies();
-        this.sourceAction = row;
-        this.unitName = this.sourceAction.description;
+        this.sourceAction = {...row};        
+        this.unitName = getObjectByValue('description', row.description, this.allUnitOfMeasureinfo)  
+        console.log(this.unitName)     
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -232,7 +220,6 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         this.sourceAction = row;
-        //this.isSaving = true;
         // debugger;
         this.unitofmeasureService.historyUnitOfMeasure(this.sourceAction.unitOfMeasureId).subscribe(
             results => this.onHistoryLoadSuccessful(results[0], content),
@@ -261,33 +248,32 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-    eventHandler(field,value) {
-        
-        const exists = this.validateRecordExistsOrNot(field,value, this.allUnitOfMeasureinfo);
-        console.log(exists);
-        if( exists.length > 0){
+    eventHandler(field, value) {
+        const exists = this.validateRecordExistsOrNot(field, value, this.allUnitOfMeasureinfo);
+       // console.log(exists);
+        if (exists.length > 0) {
             this.disableSave = true;
         }
-        else{
+        else {
             this.disableSave = false;
         }
-       
+
     }
     partnmId(event) {
         //debugger;
         this.disableSave = true;
-        
+
     }
 
     filterUnitOfMeasures(event) {
         this.localCollection = this.allUnitOfMeasureinfo;
 
-		if (event.query !== undefined && event.query !== null) {
-			const uom = [...this.allUnitOfMeasureinfo.filter(x => {
-				return x.description.toLowerCase().includes(event.query.toLowerCase())
-			})]
-			this.localCollection = uom;
-		}      
+        if (event.query !== undefined && event.query !== null) {
+            const uom = [...this.allUnitOfMeasureinfo.filter(x => {
+                return x.description.toLowerCase().includes(event.query.toLowerCase())
+            })]
+            this.localCollection = uom;
+        }
     }
 
 
@@ -324,28 +310,27 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.unitName;     
-            this.sourceAction.isDelete = this.isDelete;       
+            this.sourceAction.description = this.unitName;
+            this.sourceAction.isDelete = this.isDelete;
             this.sourceAction.masterCompanyId = 1;
             this.unitofmeasureService.newUnitOfMeasure(this.sourceAction).subscribe(
                 role => this.saveSuccessHelper(role),
                 error => this.saveFailedHelper(error));
         }
         else {
-
-            this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.unitName;
-            this.sourceAction.masterCompanyId = 1;
+            console.log(this.unitName.description);
+            this.sourceAction.description = this.unitName.description;
+            this.sourceAction.updatedBy = this.userName;         
+            this.sourceAction.masterCompanyId = 1;            
             this.unitofmeasureService.updateUnitOfMeasure(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
         }
-
         this.modal.close();
     }
 
     deleteItemAndCloseModel() {
-        this.isSaving = true;
+        //this.isSaving = true;
         this.sourceAction.updatedBy = this.userName;
         this.unitofmeasureService.deleteUnitOfMeasure(this.sourceAction.unitOfMeasureId).subscribe(
             response => this.saveCompleted(this.sourceAction),
@@ -368,7 +353,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         }
         else {
             this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
-
+         
         }
 
         //this.updatePaginatorState();
@@ -395,16 +380,16 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
     }
 
-    private getDismissReason(reason: any): string {
-        debugger;
-        if (reason === ModalDismissReasons.ESC) {
-            return 'by pressing ESC';
-        } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-            return 'by clicking on a backdrop';
-        } else {
-            return `with: ${reason}`;
-        }
-    }
+    // private getDismissReason(reason: any): string {
+    //     debugger;
+    //     if (reason === ModalDismissReasons.ESC) {
+    //         return 'by pressing ESC';
+    //     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+    //         return 'by clicking on a backdrop';
+    //     } else {
+    //         return `with: ${reason}`;
+    //     }
+    // }
 
     showAuditPopup(template, id): void {
         debugger;
