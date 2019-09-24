@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DAL.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -58,6 +59,10 @@ namespace DAL.Models
         public string PublicationType { get; set; }
         [NotMapped]
         public long AttachmentId { get; set; }
+        [NotMapped]
+        public string EmployeeName { get; set; }
+        [NotMapped]
+        public List<AttachmentDetails> AttachmentDetails { get; set; }
     }
 }
 

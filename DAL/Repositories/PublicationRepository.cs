@@ -126,9 +126,37 @@ namespace DAL.Repositories
                 {
                     publication = result.Publication;
                     publication.PublicationType = result.PublictationType;
+
+                    var emp = _appContext.Employee.Where(x => x.EmployeeId == ((string.IsNullOrEmpty(result.Publication.employee)) ? 0 : Convert.ToInt64(result.Publication.employee))).FirstOrDefault();
+                    if (emp != null)
+                        publication.EmployeeName = emp.FirstName + ' ' + emp.LastName;
+
                     var attachment= _appContext.Attachment.Where(p => p.ReferenceId == ID && p.ModuleId == Convert.ToInt32(ModuleEnum.Publication)).FirstOrDefault();
                     if (attachment != null)
+                    {
                         publication.AttachmentId = attachment.AttachmentId;
+
+                          var details= _appContext.Attachment
+                            .Join(_appContext.AttachmentDetails,
+                                   a => a.AttachmentId,
+                                   ad => ad.AttachmentId,
+                                   (a, ad) => new { a, ad })
+                            .Where(p => p.ad.IsDeleted == false && p.a.AttachmentId == publication.AttachmentId && p.a.ModuleId == Convert.ToInt32(ModuleEnum.Publication) && p.a.ReferenceId == ID)
+                            .Select(p => new
+                            {
+                                AttachmentDetails = p.ad
+                            })
+                            .ToList();
+
+                        if(details!=null && details.Count>0)
+                        {
+                            publication.AttachmentDetails = new List<AttachmentDetails>();
+                            foreach (var item in details)
+                            {
+                                publication.AttachmentDetails.Add(item.AttachmentDetails);
+                            }
+                        }
+                    }
                 }
 
                 return publication;

@@ -67,6 +67,8 @@ namespace DAL.Repositories
                             attachmentDetails.FileType = file.ContentType;
                             attachmentDetails.IsActive = true;
                             attachmentDetails.IsDeleted = false;
+                            attachmentDetails.UpdatedBy= attachmentDetails.CreatedBy = uploadedBy;
+                            attachmentDetails.UpdatedDate = attachmentDetails.CreatedDate = DateTime.Now;
 
                             attachment.AttachmentDetails.Add(attachmentDetails);
                             count++;
