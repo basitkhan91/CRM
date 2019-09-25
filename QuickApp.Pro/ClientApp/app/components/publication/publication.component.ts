@@ -117,7 +117,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
             { field: 'description', header: 'Description' },
             { field: 'publicationType', header: 'Publication Type' },
             { field: 'publishby', header: 'Published By' },
-            { field: 'employee', header: 'Employee' },
+            { field: 'employeeName', header: 'Employee' },
             { field: 'location', header: 'Location' },
             //{ field: 'aircraftModel', header: 'Aircraft Model' },
             //{ field: 'aircraftType', header: 'Aircraft Type' },
@@ -211,7 +211,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         this.allpublicationInfo = allWorkFlows.map(x => {
             return {
                 ...x,
-                employee: getValueFromArrayOfObjectById('firstName', 'employeeId', x.employee, this.allEmployeeinfo),
+                //employee: getValueFromArrayOfObjectById('firstName', 'employeeId', x.employee, this.allEmployeeinfo),
             }
         });
         console.log(this.allpublicationInfo)
@@ -448,9 +448,9 @@ export class PublicationComponent implements OnInit, AfterViewInit {
 
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.publicationId = this.publicationName;
-            this.workFlowtService.updateAction(this.sourceAction).subscribe(
-                response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));
+            // this.workFlowtService.updateAction(this.sourceAction).subscribe(
+            //     response => this.saveCompleted(this.sourceAction),
+            //     error => this.saveFailedHelper(error));
         }
 
         this.modal.close();
@@ -492,9 +492,9 @@ export class PublicationComponent implements OnInit, AfterViewInit {
             this.sourceAction.updatedBy = this.userName;
             this.Active = "In Active";
             this.sourceAction.isActive == false;
-            this.workFlowtService.updateAction(this.sourceAction).subscribe(
-                response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));
+            // this.workFlowtService.updateAction(this.sourceAction).subscribe(
+            //     response => this.saveCompleted(this.sourceAction),
+            //     error => this.saveFailedHelper(error));
             //alert(e);
         }
         else {
@@ -502,9 +502,9 @@ export class PublicationComponent implements OnInit, AfterViewInit {
             this.sourceAction.updatedBy = this.userName;
             this.Active = "Active";
             this.sourceAction.isActive == true;
-            this.workFlowtService.updateAction(this.sourceAction).subscribe(
-                response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));
+            // this.workFlowtService.updateAction(this.sourceAction).subscribe(
+            //     response => this.saveCompleted(this.sourceAction),
+            //     error => this.saveFailedHelper(error));
             //alert(e);
         }
 

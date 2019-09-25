@@ -56,48 +56,42 @@
       General Information
     </div>
   <div class="card-body">
+    <form #generalInfoForm="ngForm">
       <div class="form-row">
         <div class="col-md-3">
           <div class="form-group">
-            <label for="workflowid">Entry Date</label>
-            <p-calendar [showIcon]="true" [ngModelOptions]="{ standalone: true }"
-              [(ngModel)]="sourcePublication.entryDate" dateFormat="dd/mm/yy"></p-calendar>
+            <label for="workflowid">Entry Date <span class="clr-red">*</span></label>
+            <p-calendar [showIcon]="true" name="gEntryDate" [(ngModel)]="sourcePublication.entryDate" dateFormat="dd/mm/yy" required></p-calendar>
           </div>
           <div class="form-group">
-            <label for="publicationid">Publication ID</label>
-            <input class="form-control" #pubID="ngModel" type="text" [ngModelOptions]="{ standalone: true }"
-              [(ngModel)]="sourcePublication.PublicationId" />
+            <label for="publicationid">Publication ID <span class="clr-red">*</span></label>
+            <input class="form-control" #pubID="ngModel" type="text" name="gPublicationid" [(ngModel)]="sourcePublication.publicationId"  required/>
           </div>
 
           <div class="form-group">
-            <label for="PublicationDescription">Publication Description</label>
+            <label for="PublicationDescription">Publication Description <span class="clr-red">*</span></label>
             <textarea pInputTextarea class="form-control" #pubDescription="ngModel" type="text"
-              [ngModelOptions]="{ standalone: true }" [(ngModel)]="sourcePublication.description"></textarea>
+              name="gDescription" [(ngModel)]="sourcePublication.description" required></textarea>
           </div>
 
           <div class="form-group">
-            <label for="Publicationtype">Publication Type</label>
-            <p-dropdown class="pub-type-select" #pubType="ngModel"
-            [options]="publicationTypes"
-              [(ngModel)]="sourcePublication.pubType"></p-dropdown>
+            <label for="Publicationtype">Publication Type <span class="clr-red">*</span></label>
+            <p-dropdown name="gPubType" class="pub-type-select" #pubType="ngModel" [options]="publicationTypes" [(ngModel)]="sourcePublication.publicationTypeId" required></p-dropdown>
           </div>
 
 
           <div class="form-group">
             <label for="asd">Author/Source/Directive</label>
-            <input class="form-control" #pubID="ngModel" type="text" [ngModelOptions]="{ standalone: true }"
-              [(ngModel)]="sourcePublication.ASD" />
+            <input class="form-control" #pubID="ngModel" type="text" name="gAsd" [(ngModel)]="sourcePublication.asd" />
           </div>
 
           <div class="form-group">
             <label for="sequence">Sequence</label>
-            <input class="form-control" #pubID="ngModel" type="text" [ngModelOptions]="{ standalone: true }"
-              [(ngModel)]="sourcePublication.sequence" />
+            <input name="gSequence" class="form-control" #pubID="ngModel" type="text" [(ngModel)]="sourcePublication.sequence" />
           </div>
           <div class="form-group">
-            <label for="Publicationby">Published By</label>
-            <input class="form-control" #pubID="ngModel" type="text" [ngModelOptions]="{ standalone: true }"
-              [(ngModel)]="sourcePublication.publishby" />
+            <label for="Publishedby">Published By</label>
+            <input class="form-control" #pubID="ngModel" type="text" name="gPublishBy" [(ngModel)]="sourcePublication.publishby" />
           </div>
 
 
@@ -106,36 +100,37 @@
         <div class="col-md-3">
 
           <div class="form-group">
-            <label for="Publicationby">Location</label>
-            <input class="form-control" #pubID="ngModel" type="text" [ngModelOptions]="{ standalone: true }"
-              [(ngModel)]="sourcePublication.location" />
+            <label>Location</label>
+            <input class="form-control" #pubID="ngModel" type="text" name="gLocation" [(ngModel)]="sourcePublication.location" />
           </div>
           <div class="form-group">
-            <label for="workflowid">Revision Date</label>
-            <p-calendar [showIcon]="true" [ngModelOptions]="{ standalone: true }"
-              [(ngModel)]="sourcePublication.revisionDate" dateFormat="dd/mm/yy"></p-calendar>
+            <label>Revision Date</label>
+            <p-calendar [showIcon]="true" name="gRevisionDate" [(ngModel)]="sourcePublication.revisionDate" dateFormat="dd/mm/yy"></p-calendar>
           </div>
 
 
           <div class="form-group">
-            <label for="workflowid">Expiration Date</label>
-            <p-calendar [showIcon]="true" [(ngModel)]="sourcePublication.expirationDate" dateFormat="dd/mm/yy"></p-calendar>
+            <label>Expiration Date</label>
+            <p-calendar [showIcon]="true" name="gExpirationDate" [(ngModel)]="sourcePublication.expirationDate" dateFormat="dd/mm/yy"></p-calendar>
           </div>
 
           <div class="form-group">
-            <label for="workflowid">Next Review Date</label>
-            <p-calendar [showIcon]="true" [ngModelOptions]="{ standalone: true }"
-              [(ngModel)]="sourcePublication.nextreviewDate" dateFormat="dd/mm/yy"></p-calendar>
+            <label>Next Review Date</label>
+            <p-calendar [showIcon]="true" name="gNextreviewDate" [(ngModel)]="sourcePublication.nextreviewDate" dateFormat="dd/mm/yy"></p-calendar>
           </div>
 
           <div class="form-group">
-            <label for="workflowid">Employee</label>
-            <p-dropdown [options]="employeeList" class="pub-type-select" [(ngModel)]="sourcePublication.employee"  #pubID="ngModel"     ></p-dropdown>
+            <label>Employee <span class="clr-red">*</span></label>
+            <p-dropdown [options]="employeeList" name="gEmployee" class="pub-type-select" [(ngModel)]="sourcePublication.employeeId" #pubID="ngModel" required></p-dropdown>
 
           </div>
           <div class="form-group">
-            <label for="workflowid">Verified By</label>
-            <input pInputText type="text" [(ngModel)]="sourcePublication.verifiedby" />
+            <label>Verified By</label>
+            <input pInputText type="text" name="gVerifiedby" [(ngModel)]="sourcePublication.verifiedby" />
+          </div>
+          <div class="form-group">
+            <label>Verified Date</label>
+            <p-calendar [showIcon]="true" name="gVerifiedDate" [(ngModel)]="sourcePublication.verifieddate" dateFormat="dd/mm/yy"></p-calendar>
           </div>
 
         </div>
@@ -143,31 +138,23 @@
         <div class="col-md-6">
 
           <div class="form-group">
-            <label for="workflowid">File Upload </label>
-            <input #file type="file" multiple (change)="upload(file.files)" />
+            <label for="fileupload">File Upload </label>
+            <input #file type="file" name="gFileupload" multiple (change)="upload(file.files)" />
             <!-- <p-fileUpload name="myfile[]"  url="./upload.php"   multiple="multiple"
               [showCancelButton]="false" customUpload="true" (uploadHandler)="publicationFileUpload($event)"></p-fileUpload> -->
               
           </div>
-
-
         </div>
-
       </div>
-
   
       <div class="pull-right">
-          <button class="btn btn-primary-cstm  button-save" type="submit" (click)="editItemCloseModel(); ">
+          <button class="btn btn-primary-cstm  button-save" [disabled]="!generalInfoForm.valid" type="submit" (click)="editItemCloseModel(); ">
             Save & Next
           </button>
         </div>               
-
-
-
-
-      
+ 
   
-   
+      </form>
   </div>
   </div>
      <div  [ngClass]="{hideTab : currentTab !== 'PnMap'}">

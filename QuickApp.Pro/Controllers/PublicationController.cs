@@ -112,13 +112,13 @@ namespace QuickApp.Pro.Controllers
                     publicationobject.revision = Request.Form["revision"];
                     publicationobject.verifiedby = Request.Form["verifiedby"];
                     publicationobject.verifieddate = Request.Form["verifieddate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["verifieddate"].ToString(), "dd/MM/yyyy", null);
-                    publicationobject.EmployeeId = Convert.ToInt32(Request.Form["employee"]);
+                    publicationobject.EmployeeId = Convert.ToInt32(Request.Form["employeeId"]);
                     publicationobject.docpath = Request.Form["docpath"];
                     publicationobject.CreatedDate = DateTime.Now;
                     publicationobject.UpdatedDate = DateTime.Now;
                     publicationobject.CreatedBy = Request.Form["CreatedBy"];
                     publicationobject.UpdatedBy = Request.Form["UpdatedBy"];
-                    publicationobject.PublicationTypeId = Request.Form["pubType"].ToString()=="" ? 0 : Convert.ToInt32(Request.Form["pubType"].ToString());
+                    publicationobject.PublicationTypeId = Request.Form["publicationTypeId"].ToString()=="" ? 0 : Convert.ToInt32(Request.Form["publicationTypeId"].ToString());
 
                     _unitOfWork.Publication.Add(publicationobject);
                     _unitOfWork.SaveChanges();
@@ -136,7 +136,7 @@ namespace QuickApp.Pro.Controllers
                 throw;
             }
         }
-        [HttpPut("publicationpost/{id}")]
+        [HttpPut("publicationpost")]
         public IActionResult UpdateAction()
         {
 
@@ -164,13 +164,13 @@ namespace QuickApp.Pro.Controllers
                 publicationobject.revision = Request.Form["revision"];
                 publicationobject.verifiedby = Request.Form["verifiedby"];
                 publicationobject.verifieddate = Request.Form["verifieddate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["verifieddate"].ToString(), "dd/MM/yyyy", null);
-                publicationobject.EmployeeId =Convert.ToInt32(Request.Form["employee"]);
+                publicationobject.EmployeeId =Convert.ToInt32(Request.Form["employeeId"]);
                 publicationobject.docpath = Request.Form["docpath"];
                 publicationobject.CreatedDate = Convert.ToDateTime(Request.Form["CreatedDate"]);
                 publicationobject.UpdatedDate = DateTime.Now;
                 publicationobject.CreatedBy = Request.Form["CreatedBy"];
                 publicationobject.UpdatedBy = Request.Form["UpdatedBy"];
-                publicationobject.PublicationTypeId = Request.Form["pubType"].ToString() == "" ? 0 : Convert.ToInt32(Request.Form["pubType"].ToString());
+                publicationobject.PublicationTypeId = Request.Form["publicationTypeId"].ToString() == "" ? 0 : Convert.ToInt32(Request.Form["publicationTypeId"].ToString());
 
 
                 _unitOfWork.Publication.Update(publicationobject);

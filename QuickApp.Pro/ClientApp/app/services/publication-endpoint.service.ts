@@ -75,11 +75,11 @@ export class PublicationEndpointService extends EndpointFactory {
         return this.handleError(error, () => this.getpublicationEndpoint());
       });
     }
-    getpublicationbyIdEndpoint<T>(): Observable<T> {
+    getpublicationbyIdEndpoint<T>(id): Observable<T> {
         return this.http
-            .get<T>(this._publicationGetByIdUrl, this.getRequestHeaders())
+            .get<T>(`${this._publicationGetByIdUrl}/${id}`, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getpublicationbyIdEndpoint());
+                return this.handleError(error, () => this.getpublicationbyIdEndpoint(id));
             });
     }
     
@@ -116,14 +116,15 @@ export class PublicationEndpointService extends EndpointFactory {
       });
   }
 
-  getUpdateActionEndpoint<T>(roleObject: any, actionId: any): Observable<T> {
-    let endpointUrl = `${this._publicationUrlNew}/${actionId}`;
+    getUpdateActionEndpoint<T>(file: any): Observable<T> {
+    const headers = new Headers({ 'Content-Type': 'multipart/form-data' });
+    let endpointUrl = `${this._publicationUrlNew}`;
 
     return this.http
-      .put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+      .put<T>(endpointUrl, file  )
       .catch(error => {
         return this.handleError(error, () =>
-          this.getUpdateActionEndpoint(roleObject, actionId)
+          this.getUpdateActionEndpoint(file)
         );
       });
   }
