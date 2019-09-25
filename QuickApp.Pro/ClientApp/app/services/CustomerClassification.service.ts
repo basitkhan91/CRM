@@ -39,9 +39,9 @@ export class CustomerClassificationService {
 
     getCustomerClassificationList() {
         return Observable.forkJoin(
-            this.CustomerClassificationEndpoint.getCustomerClassificationEndpoint <CustomerClassification[]>());
+            this.CustomerClassificationEndpoint.getCustomerClassificationEndpoint<CustomerClassification[]>());
     }
-    newAddcustomerclass(action: CustomerClassification) {
+    newAddcustomerclass(action) {
         return this.CustomerClassificationEndpoint.getNewCustomerClassification<CustomerClassification>(action);
     }
     updatecustomerclass(action: CustomerClassification) {
@@ -59,5 +59,5 @@ export class CustomerClassificationService {
     getCustomerclassification(CustomerClassificationId: number) {
         return this.CustomerClassificationEndpoint.getAuditCustomerClassification<any[]>(CustomerClassificationId);
     }
-	
+
 }
