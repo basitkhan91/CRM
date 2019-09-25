@@ -131,7 +131,7 @@ namespace DAL.Repositories
                             it.DashNumber,
                             it.AircraftType,
                             it.AircraftModel,
-                            it.Memo,
+                            it.Memo, 
                             it.MasterCompanyId
                         }).ToList();
             return data;
