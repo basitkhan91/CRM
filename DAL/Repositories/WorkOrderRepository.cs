@@ -1332,6 +1332,130 @@ namespace DAL.Repositories
 
         #endregion
 
+        #region Work Order Address
+
+        public long CreateWorkOrderAddress(WorkOrderAddress workOrderAddress)
+        {
+            try
+            {
+                workOrderAddress.CreatedDate = workOrderAddress.UpdatedDate = DateTime.Now;
+                workOrderAddress.IsActive = true;
+                workOrderAddress.IsDeleted = false;
+
+                _appContext.WorkOrderAddress.Add(workOrderAddress);
+                _appContext.SaveChanges();
+                return workOrderAddress.WorkOrderAddressId;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void UpdateWorkOrderAddress(WorkOrderAddress workOrderAddress)
+        {
+            try
+            {
+                workOrderAddress.UpdatedDate = DateTime.Now;
+                workOrderAddress.IsActive = true;
+                workOrderAddress.IsDeleted = false;
+
+                _appContext.WorkOrderAddress.Update(workOrderAddress);
+                _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<WorkOrderAddress> GetWorkFlowWorkOrderAddressList(long wfwoId = 0, long workOrderId = 0)
+        {
+            List<WorkOrderAddress> workOrderAddressList = new List<WorkOrderAddress>();
+            WorkOrderAddress workOrderAddress;
+
+            try
+            {
+                var result = _appContext.WorkOrderAddress
+                             .Join(_appContext.Countries,
+                            wa => wa.CountryId,
+                            c => c.countries_id,
+                            (wa, c) => new { wa, c })
+                            .Where(p => (p.wa.WorkFlowWorkOrderId == wfwoId || p.wa.WorkOrderId == workOrderId) && p.wa.IsDeleted == false)
+                             .Select(p => new
+                             {
+                                 WorkOrderAddress = p.wa,
+                                 CountryName=p.c.countries_name
+                             })
+                             .ToList();
+                if (result != null && result.Count > 0)
+                {
+                    foreach (var item in result)
+                    {
+                        workOrderAddress = new WorkOrderAddress();
+                        workOrderAddress = item.WorkOrderAddress;
+                        workOrderAddress.CountryName = item.CountryName;
+                        workOrderAddressList.Add(workOrderAddress);
+                    }
+                }
+
+                return workOrderAddressList;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+        #endregion
+
+        #region Work Order Quote
+
+        public long CreateWorkOrderQuote(WorkOrderQuote workOrderQuote)
+        {
+            try
+            {
+                workOrderQuote.CreatedDate = workOrderQuote.UpdatedDate = DateTime.Now;
+                workOrderQuote.IsActive = true;
+                workOrderQuote.IsDeleted = false;
+
+                _appContext.WorkOrderQuote.Add(workOrderQuote);
+                _appContext.SaveChanges();
+                return workOrderQuote.WorkOrderQuoteId;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void UpdateWorkOrderQuote(WorkOrderQuote workOrderQuote)
+        {
+            try
+            {
+                workOrderQuote.UpdatedDate = DateTime.Now;
+                workOrderQuote.IsActive = true;
+                workOrderQuote.IsDeleted = false;
+
+                _appContext.WorkOrderQuote.Update(workOrderQuote);
+                _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+       
+
+
+        #endregion
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 

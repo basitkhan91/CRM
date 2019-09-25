@@ -45,6 +45,13 @@ namespace DAL.Repositories.Interfaces
         void UpdateWorkOrderDocuments(WorkOrderDocuments workOrderDocuments);
         IEnumerable<WorkOrderDocuments> GetWorkFlowWorkOrderDocumentsList(long wfwoId = 0, long workOrderId = 0);
 
+
+        long CreateWorkOrderAddress(WorkOrderAddress workOrderAddress);
+        void UpdateWorkOrderAddress(WorkOrderAddress workOrderAddress);
+        IEnumerable<WorkOrderAddress> GetWorkFlowWorkOrderAddressList(long wfwoId = 0, long workOrderId = 0);
+
+
+
         void CreateWorkFlowWorkOrderForWorkFlow1(long workFlowId);
 
     }

@@ -346,6 +346,47 @@ namespace QuickApp.Pro.Controllers
 
         #endregion
 
+        #region Work Order Address
+
+        [HttpPost("createworkorderaddress")]
+        public IActionResult CreateWorkOrderAddress(WorkOrderAddress workOrderAddress)
+        {
+            if (ModelState.IsValid)
+            {
+                workOrderAddress.WorkOrderAddressId = unitOfWork.WorkOrderRepository.CreateWorkOrderAddress(workOrderAddress);
+                return Ok(workOrderAddress);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpPost("updateworkorderaddress")]
+        public IActionResult UpdateWorkOrderAddress(WorkOrderAddress workOrderAddress)
+        {
+            if (ModelState.IsValid)
+            {
+                unitOfWork.WorkOrderRepository.UpdateWorkOrderAddress(workOrderAddress);
+                return Ok(workOrderAddress);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpGet("getworkflowworkorderaddresslist")]
+        public IActionResult GetWorkFlowWorkOrderAddressList(long wfwoId = 0, long workOrderId = 0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkFlowWorkOrderAddressList(wfwoId, workOrderId);
+            return Ok(result);
+        }
+
+        #endregion
+
 
         [HttpGet("createworkflowWorkorder1")]
         public IActionResult CreateWorkFlowWorkOrder1(long workFlowId)
