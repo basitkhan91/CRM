@@ -75,7 +75,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
     displayedColumns = ['unitofmeasureId', 'description', 'shortname', 'standard', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
     dataSource: MatTableDataSource<UnitOfMeasure>;
     allUnitOfMeasureinfo: any = [];
-    sourceAction: UnitOfMeasure;
+    sourceAction: any;
     allComapnies: MasterCompany[] = [];
     public auditHisory: AuditHistory[] = [];
     loadingIndicator: boolean;
@@ -113,6 +113,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         if ((field !== '' || field !== undefined) && (currentInput !== '' || currentInput !== undefined) && (originalData !== undefined)) {
             const data = originalData.filter(x => {
                 return x[field].toLowerCase() === currentInput.toLowerCase()
+              
             })
             return data;
         }
@@ -207,7 +208,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         this.isSaving = true;
         this.loadMasterCompanies();
         this.sourceAction = {...row};        
-        this.unitName = getObjectByValue('description', row.description, this.allUnitOfMeasureinfo)  
+        this.sourceAction.unitName = getObjectByValue('description', row.description, this.allUnitOfMeasureinfo)  
         console.log(this.unitName)     
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm' });
@@ -249,7 +250,9 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         }, () => { console.log('Backdrop click') })
     }
     eventHandler(field, value) {
+        value = value.trim();
         const exists = this.validateRecordExistsOrNot(field, value, this.allUnitOfMeasureinfo);
+      
        // console.log(exists);
         if (exists.length > 0) {
             this.disableSave = true;
@@ -319,7 +322,7 @@ export class UnitOfMeasureComponent implements OnInit, AfterViewInit {
         }
         else {
             console.log(this.unitName.description);
-            this.sourceAction.description = this.unitName.description;
+            this.sourceAction.description = this.sourceAction.unitName;
             this.sourceAction.updatedBy = this.userName;         
             this.sourceAction.masterCompanyId = 1;            
             this.unitofmeasureService.updateUnitOfMeasure(this.sourceAction).subscribe(

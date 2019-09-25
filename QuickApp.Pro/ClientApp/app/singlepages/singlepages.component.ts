@@ -305,7 +305,7 @@ export class SingleComponent {
 			else if (this.currentUrl == '/singlepages/singlepages/app-unit-of-measure') {
 				this.items = [
 					{ label: 'Single Screens' },
-					{ label: 'Unit Of Measure' }
+					{ label: 'Unit of Measure' }
 				];
 			}
 
@@ -604,7 +604,7 @@ export class SingleComponent {
 			else if (this.currentUrl == '/singlepages/singlepages/app-unit-of-measure') {
 				this.items = [
 					{ label: 'Single Screens' },
-					{ label: 'UnitOf Measure' }
+					{ label: 'Unit Of Measure' }
 				];
 			}
 
