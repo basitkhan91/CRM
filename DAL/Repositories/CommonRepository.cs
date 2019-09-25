@@ -12,12 +12,12 @@ namespace DAL.Repositories
         public CommonRepository(ApplicationDbContext context) : base(context)
         {
         }
-        public IEnumerable<ContactList> GetVendorContactsList(long vendorId)
+        public IEnumerable<VendorContactList> GetVendorContactsList(long vendorId)
         {
             try
             {
-                List<ContactList> vendorContacts = new List<ContactList>();
-                ContactList objContact;
+                List<VendorContactList> vendorContacts = new List<VendorContactList>();
+                VendorContactList objContact;
                 var contacts = _appContext.Vendor
                      .Join(_appContext.VendorContact,
                            v => v.VendorId,
@@ -32,18 +32,48 @@ namespace DAL.Repositories
                      {
                          ContactId = z.con.ContactId,
                          WorkPhone = z.con.WorkPhone,
+                         CustomerCode = z.vc1.v.VendorCode,
+                         ContractReference = z.vc1.v.VendorContractReference,
+                         Reference = string.Empty,
+                         CreditLimt = z.vc1.v.CreditLimit,
+                         CreditTermId = z.vc1.v.CreditTermsId,
+                         CSR = z.con.FirstName + " " +z.con.LastName,
+                         Email = z.vc1.v.VendorEmail
                      }).ToList();
 
                 if (contacts != null && contacts.Count > 0)
                 {
                     foreach (var item in contacts)
                     {
-                        objContact = new ContactList();
-                        objContact.Contact = item.WorkPhone;
+                        objContact = new VendorContactList();
                         objContact.ContactId = item.ContactId;
+                        objContact.ContractReference = item.ContractReference;
+                        objContact.CreditLimt = item.CreditLimt;
+                        objContact.CreditTermId = item.CreditTermId;
+                        objContact.CSR = item.CSR;
+                        objContact.VendorCode = item.CustomerCode;
+                        objContact.VendorReference = item.Reference;
+                        objContact.WorkPhone = item.WorkPhone;
+                        objContact.Email = item.Email;
                         vendorContacts.Add(objContact);
                     }
                 }
+                //     .Select(z => new
+                //     {
+                //         ContactId = z.con.ContactId,
+                //         WorkPhone = z.con.WorkPhone,
+                //     }).ToList();
+
+                //if (contacts != null && contacts.Count > 0)
+                //{
+                //    foreach (var item in contacts)
+                //    {
+                //        objContact = new ContactList();
+                //        objContact.Contact = item.WorkPhone;
+                //        objContact.ContactId = item.ContactId;
+                //        vendorContacts.Add(objContact);
+                //    }
+                //}
                 return vendorContacts;
             }
             catch (System.Exception)
