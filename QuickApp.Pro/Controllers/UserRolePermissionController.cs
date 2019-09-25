@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using DAL;
 using DAL.Models;
 using DAL.Repositories.Interfaces;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Session;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -148,6 +151,8 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getUserRolesByUserId/{userId}")]
         public IActionResult getUserRolesByUserId(string userId)
         {
+
+            HttpContext.Session.SetString("UserId", userId);
             var roles = unitOfWork.UserRole.GetUserRoleWithPermission(userId);
             return Ok(roles);        
         }
