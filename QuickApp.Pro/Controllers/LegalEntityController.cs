@@ -136,6 +136,7 @@ namespace QuickApp.Pro.Controllers
                 address.Country = legalEntityViewModel.Country;
                 address.RecordModifiedDate = legalEntityViewModel.RecordModifiedDate;
                 address.MasterCompanyId = 1;
+                address.IsActive = legalEntityViewModel.IsActive;
                 address.RecordCreateDate = DateTime.Now;
                 address.CreatedBy = legalEntityViewModel.CreatedBy;
                 address.UpdatedBy = legalEntityViewModel.UpdatedBy;
@@ -220,6 +221,7 @@ namespace QuickApp.Pro.Controllers
             address.Country = legalEntityViewModel.Country;
             address.RecordModifiedDate = legalEntityViewModel.RecordModifiedDate;
             address.MasterCompanyId = 1;
+            address.IsActive = true;
             address.RecordCreateDate = DateTime.Now;
             address.CreatedBy = legalEntityViewModel.CreatedBy;
             address.UpdatedBy = legalEntityViewModel.UpdatedBy;
