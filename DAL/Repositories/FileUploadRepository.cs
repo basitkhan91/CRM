@@ -19,9 +19,10 @@ namespace DAL.Repositories
              AppSettings = settings.Value;
         }
 
-        public void UploadFiles(IFormFileCollection files,  long? referenceId, int moduleId, string moduleName, string uploadedBy,int? masterCompanyId)
+        public long UploadFiles(IFormFileCollection files,  long? referenceId, int moduleId, string moduleName, string uploadedBy,int? masterCompanyId)
         {
             int count = 0;
+            long attachmentId = 0;
             try
             {
                 if (files != null && files.Count > 0)
@@ -78,7 +79,10 @@ namespace DAL.Repositories
 
                     _appContext.Attachment.Add(attachment);
                     _appContext.SaveChanges();
+
+                    return attachment.AttachmentId;
                 }
+                return attachmentId;
             }
             catch (Exception)
             {
