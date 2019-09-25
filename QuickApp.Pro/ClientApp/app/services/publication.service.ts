@@ -55,7 +55,7 @@ export class PublicationService {
   }
     getAllbyIdPublications(id) {
         return Observable.forkJoin(
-            this.publicationEndpoint.getpublicationbyIdEndpoint<Publication[]>(id)
+            this.publicationEndpoint.getpublicationbyIdEndpoint<any>(id)
         );
     }
   newAction(action) {

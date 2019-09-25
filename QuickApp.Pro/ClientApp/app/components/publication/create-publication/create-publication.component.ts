@@ -53,10 +53,10 @@ export class CreatePublicationComponent implements OnInit {
     location: '',
     revisionDate: new Date(),
     expirationDate: new Date(),
-    nextreviewDate: new Date(),
+    nextReviewDate: new Date(),
     employeeId: null,
-    verifiedby: '',
-    verifieddate: new Date(),
+    verifiedBy: '',
+    verifiedDate: new Date(),
     masterCompanyId: 1,
   }
 
@@ -73,7 +73,7 @@ export class CreatePublicationComponent implements OnInit {
   partNumberList = [];
   selectedPartNumbers = [];
   pnMappingList = [];
-  publicationRecordId: number;
+  publicationRecordId: any;
   employeeList = [];
   ataList = [];
   headersforPNMapping = [
@@ -156,18 +156,7 @@ export class CreatePublicationComponent implements OnInit {
     if(this.publicationRecordId) {
       this.isEditMode = true;
       this.isDisabledSteps = true;
-      this.publicationService.getAllbyIdPublications(this.publicationRecordId).subscribe(res => {        
-        this.sourcePublication = res[0].map(x => {
-          return {
-          ...x,
-          revisionDate: new Date(x.revisionDate),
-          expirationDate: new Date(x.revisionDate),
-          nextreviewDate: new Date(x.nextreviewDate),
-          verifieddate: new Date(x.verifieddate)
-          }
-        });
-        console.log(this.sourcePublication);
-      })
+      this.getPublicationDataonEdit();
 
       //get PN mapping edit mode
       this.publicationService
@@ -200,6 +189,26 @@ export class CreatePublicationComponent implements OnInit {
     return this.authService.currentUser
       ? this.authService.currentUser.userName
       : '';
+  }
+
+  async getPublicationDataonEdit(){
+   await  this.publicationService.getAllbyIdPublications(this.publicationRecordId).subscribe(res => {   
+      console.log(res[0]);
+      const responseData = res;
+      //this.sourcePublication = res[0];
+      this.sourcePublication =  responseData[0]
+      // responseData.map(x => {
+      //   return{
+      //     ...x,
+      //     revisionDate: new Date(x.revisionDate),
+      //    expirationDate: new Date(x.expirationDate),
+      //    nextReviewDate: new Date(x.nextReviewDate),
+      //    verifiedDate: new Date(x.verifiedDate) 
+      //   }
+      // });
+      
+      console.log(this.sourcePublication);
+    })
   }
 
   onFileChanged(event) {
@@ -355,10 +364,10 @@ export class CreatePublicationComponent implements OnInit {
     this.formData.append('location', data.location);
     this.formData.append('revisionDate', moment(data.revisionDate).format('DD/MM/YYYY') );
     this.formData.append('expirationDate',  moment(data.expirationDate).format('DD/MM/YYYY'));
-    this.formData.append('nextreviewDate', moment(data.nextreviewDate).format('DD/MM/YYYY'));
+    this.formData.append('nextReviewDate', moment(data.nextReviewDate).format('DD/MM/YYYY'));
     this.formData.append('employeeId', data.employeeId);
-    this.formData.append('verifiedby', data.verifiedby);
-    this.formData.append('verifieddate', moment(data.verifieddate).format('DD/MM/YYYY'));
+    this.formData.append('verifiedBy', data.verifiedBy);
+    this.formData.append('verifiedDate', moment(data.verifiedDate).format('DD/MM/YYYY'));
     this.formData.append('masterCompanyId', data.masterCompanyId);
     this.formData.append('CreatedBy',this.userName);
     this.formData.append('UpdatedBy',this.userName);
@@ -398,7 +407,7 @@ export class CreatePublicationComponent implements OnInit {
 
     if(this.isEditMode) {
       console.log(data)
-      this.formData.append('publicationRecordId', data.publicationRecordId);
+      this.formData.append('publicationRecordId', this.publicationRecordId);
       
       this.publicationService
           .updateAction(this.formData)
