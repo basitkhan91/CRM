@@ -104,6 +104,24 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
             return data;
         }
     }
+    editValueAssignByCondition(field: any, value: any) {
+		console.log(field, value)
+		if ((value !== undefined) && (field !== '' || field !== undefined)) {
+	
+			if (typeof (value) === 'string') {
+				return value
+			} 
+			else {
+				return this.getValueFromObjectByKey(field, value)
+			}
+		}
+    }
+    getValueFromObjectByKey(field: string, object: any) {
+		console.log(field, object)
+		if ((field !== '' || field !== undefined) && (object !== undefined)) {
+			return object[field];
+		}
+	}
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -260,6 +278,7 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
 
 
     eventHandler(field, value) {
+        value = value.trim();
         const exists = this.validateRecordExistsOrNot(field, value, this.allJobTitlesinfo);
        // console.log(exists);
         if (exists.length > 0) {
@@ -270,9 +289,6 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
         }
 
     }
-
-
-
 
     jobTitleId(event) {
        this.disableSave = true;
@@ -328,8 +344,8 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
         }
         else {
      
-            this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.sourceAction.jobName;
+            this.sourceAction.updatedBy = this.userName;          
+            this.sourceAction.jobName = this.editValueAssignByCondition('description',this.sourceAction.jobName)
             this.sourceAction.masterCompanyId = 1;
             this.sourceAction.isDelete = false;
             this.workFlowtService.updateAction(this.sourceAction).subscribe(

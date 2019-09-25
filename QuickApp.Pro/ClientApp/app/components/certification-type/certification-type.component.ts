@@ -24,6 +24,7 @@ import { MasterComapnyService } from '../../services/mastercompany.service';
 import { CertificationtypeService } from '../../services/certificationtype.service';
 import { CertificationType } from '../../models/certificationtype.model';
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
+import { getObjectByValue } from '../../generic/autocomplete';
 
 @Component({
 	selector: 'app-certification-type',
@@ -69,13 +70,40 @@ export class CertificationTypeComponent implements OnInit, AfterViewInit {
 	totalRecords: number;
 	AuditDetails: SingleScreenAuditDetails[];
 	//disablesave: boolean = false;
-
+	public certificationname: any = "";
 
 
 	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: CertificationtypeService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 		this.displayedColumns.push('action');
 		this.dataSource = new MatTableDataSource();
 		this.sourcecertificationtype = new CertificationType();
+	}
+	validateRecordExistsOrNot(field: string, currentInput: any, originalData: any) {
+		// console.log(field, currentInput, originalData)
+		if ((field !== '' || field !== undefined) && (currentInput !== '' || currentInput !== undefined) && (originalData !== undefined)) {
+			const data = originalData.filter(x => {
+				return x[field].toLowerCase() === currentInput.toLowerCase()
+			})
+			return data;
+		}
+	}
+	editValueAssignByCondition(field: any, value: any) {
+		console.log(field, value)
+		if ((value !== undefined) && (field !== '' || field !== undefined)) {
+
+			if (typeof (value) === 'string') {
+				return value
+			}
+			else {
+				return this.getValueFromObjectByKey(field, value)
+			}
+		}
+	}
+	getValueFromObjectByKey(field: string, object: any) {
+		console.log(field, object)
+		if ((field !== '' || field !== undefined) && (object !== undefined)) {
+			return object[field];
+		}
 	}
 	ngOnInit(): void {
 		this.loadData();
@@ -149,8 +177,8 @@ export class CertificationTypeComponent implements OnInit, AfterViewInit {
 		this.isSaving = true;
 		this.loadMasterCompanies();
 		this.sourcecertificationtype = new CertificationType();
-		this.description = "";
-		this.memo = "";
+		this.sourcecertificationtype.certificationname = "";
+		//this.memo = "";
 		this.sourcecertificationtype.isActive = true;
 		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
@@ -186,10 +214,9 @@ export class CertificationTypeComponent implements OnInit, AfterViewInit {
 		this.isEditMode = true;
 		this.isSaving = true;
 		this.loadMasterCompanies();
-		this.sourcecertificationtype = row;
-		this.description = this.sourcecertificationtype.description;
-		this.memo = this.sourcecertificationtype.memo;
-		this.loadMasterCompanies();
+		this.sourcecertificationtype = { ...row };
+		this.sourcecertificationtype.certificationname = getObjectByValue('description', row.description, this.allCertification)
+
 		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
 			console.log('When user closes');
@@ -227,30 +254,21 @@ export class CertificationTypeComponent implements OnInit, AfterViewInit {
 		}
 
 	}
-	eventHandler(event) {
-		if (event.target.value != "") {
-			let value = event.target.value.toLowerCase();
-			if (this.selectedcertificationName) {
-				if (value == this.selectedcertificationName.toLowerCase()) {
-					//alert("Action Name already Exists");
-					this.disablesave = true;
-				}
-				else {
-					this.disablesave = false;
-
-				}
-			}
+	eventHandler(field, value) {
+		value = value.trim();
+		const exists = this.validateRecordExistsOrNot(field, value, this.allCertification);
+		// console.log(exists,"test");
+		if (exists.length > 0) {
+			this.disablesave = true;
+		}
+		else {
+			this.disablesave = false;
 		}
 	}
 
 	partnmId(event) {
 
-		for (let i = 0; i < this.allCertification.length; i++) {
-			if (event == this.allCertification[i].description) {
-				this.disablesave = true;
-				this.selectedcertificationName = event;
-			}
-		}
+		this.disablesave = true;
 	}
 	//partnmId(event) {
 
@@ -265,27 +283,23 @@ export class CertificationTypeComponent implements OnInit, AfterViewInit {
 	//		}
 	//}
 	filterGlAccountclass(event) {
+		this.localCollection = this.allCertification;
+		if (event.query !== undefined && event.query !== null) {
+			const certification = [...this.allCertification.filter(x => {
+				// return x.description.toLowerCase().includes(event.query.toLowerCase())
+				return x.description.toLowerCase().includes(event.query.toLowerCase())
+			})]
 
-		this.localCollection = [];
-		for (let i = 0; i < this.allCertification.length; i++) {
-			let description = this.allCertification[i].description;
-			if (description.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-				this.certificationNamecolle.push([{
-					"employeeLicenseTypeId": this.allCertification[i].employeeLicenseTypeId,
-					"description": description
-				}]),
-					this.localCollection.push(description)
-
-			}
+			this.localCollection = certification;
 		}
 	}
 
 	editItemAndCloseModel() {
-		if (!(this.sourcecertificationtype.description)) {
+		if (!(this.sourcecertificationtype.certificationame)) {
 			this.display = true;
 			this.modelValue = true;
 		}
-		if ((this.sourcecertificationtype.description)) {
+		if ((this.sourcecertificationtype.certificationame)) {
 			this.isSaving = true;
 
 			if (this.isEditMode == false) {
@@ -300,7 +314,8 @@ export class CertificationTypeComponent implements OnInit, AfterViewInit {
 			else {
 
 				this.sourcecertificationtype.updatedBy = this.userName;
-				//this.sourcecertificationtype.certificationName = this.certificationName;
+				//this.sourcecertificationtype.certificationName = this.sourcecertificationtype.description;
+				this.sourcecertificationtype.certificationname = this.editValueAssignByCondition('description', this.sourcecertificationtype.certificationname)
 				this.sourcecertificationtype.masterCompanyId = 1;
 				this.workFlowtService.updateCertificationtype(this.sourcecertificationtype).subscribe(
 					response => this.saveCompleted(this.sourcecertificationtype),

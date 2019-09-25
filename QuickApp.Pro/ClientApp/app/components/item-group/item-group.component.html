@@ -122,7 +122,7 @@
                                                 <label for="name" class="control-label control-item">Item Group Id<span class="clr-red">*</span></label>
                                             </div>
                                             <div class="col-sm-5">
-                                                <p-autoComplete field="itemGroupCode" [(ngModel)]="sourceAction.itemGroupName" name="itemgroup" (onSelect)="itemGroupId($event)" (onKeyUp)="eventHandler('itemGroupCode',$event.target.value)" [suggestions]="localCollection" (completeMethod)="filterItemgroups($event)" [size]="30"
+                                                <p-autoComplete field="itemGroupCode" [(ngModel)]="sourceAction.itemgroupCode" name="itemgroup" (onSelect)="itemGroupId($event)" (onKeyUp)="eventHandler('itemGroupCode',$event.target.value)" [suggestions]="localCollection" (completeMethod)="filterItemgroups($event)" [size]="30"
                                                                 [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
                                                 
                                                 </p-autoComplete>
