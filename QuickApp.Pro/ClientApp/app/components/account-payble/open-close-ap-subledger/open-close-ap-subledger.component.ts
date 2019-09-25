@@ -40,16 +40,18 @@ export class OpenCloseApSubledgerComponent implements OnInit {
     loadAccountCalendarData() {
          this.calendarService.getAll().subscribe(data => {
              this.completeCalendarData = data[0];
-           
-             for (let i = 0; i < this.completeCalendarData.length; i++) {
-                 if (this.completeCalendarData[i].name == this.currentApledgerObj.ledgerName && this.completeCalendarData[i].fiscalYear == this.currentApledgerObj.fiscalYear && this.completeCalendarData[i].legalEntityId==this.currentApledgerObj.legalEntityId) {
-                     this.setFromDate(this.completeCalendarData[i]);
-                     this.seToDate(this.completeCalendarData[i]);
-                     this.finalCalendarArry.push(this.completeCalendarData[i]);
-                 }
+                   
 
-             }
-             this.calendarArray = JSON.parse(JSON.stringify(this.finalCalendarArry));;
+            for (let i = 0; i < this.completeCalendarData.length; i++) {             
+                // if (this.completeCalendarData[i].name == this.currentApledgerObj.ledgerName && this.completeCalendarData[i].fiscalYear == this.currentApledgerObj.fiscalYear && this.completeCalendarData[i].legalEntityId==this.currentApledgerObj.legalEntityId) {
+                if (this.completeCalendarData[i].fiscalYear == this.currentApledgerObj.fiscalYear && this.completeCalendarData[i].legalEntityId == this.currentApledgerObj.legalEntityId) {
+                    this.setFromDate(this.completeCalendarData[i]);
+                    this.seToDate(this.completeCalendarData[i]);
+                    this.finalCalendarArry.push(this.completeCalendarData[i]);
+                }
+
+            }
+            this.calendarArray = JSON.parse(JSON.stringify(this.finalCalendarArry));;
             console.log(this.completeCalendarData);
         })
         
