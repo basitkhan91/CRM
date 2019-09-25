@@ -335,7 +335,7 @@ export class PriorityComponent implements OnInit, AfterViewInit {
         else {
            
             this.sourceAction.updatedBy = this.userName;
-            //this.sourceAction.description = this.sourceAction.priorityName;
+            this.sourceAction.description = this.sourceAction.priorityName;
            // console.log( this.sourceAction.description)
             this.priorityService.updatePriority(this.sourceAction).subscribe(
 
