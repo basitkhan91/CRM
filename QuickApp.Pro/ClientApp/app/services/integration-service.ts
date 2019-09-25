@@ -44,7 +44,7 @@ export class IntegrationService {
             this.integrationEndpointService.getIntegrationEndpoint<Integration[]>());
     }
 
-    newAction(action: Integration) {
+    newAction(action) {
         return this.integrationEndpointService.getNewActionEndpoint<Integration>(action);
     }
 
@@ -53,17 +53,17 @@ export class IntegrationService {
     }
 
     updateAction(action: Integration) {
-		return this.integrationEndpointService.getUpdateActionEndpoint(action, action.integrationPortalId);
+        return this.integrationEndpointService.getUpdateActionEndpoint(action, action.integrationPortalId);
     }
 
     deleteAcion(actionId: number) {
 
         return this.integrationEndpointService.getDeleteActionEndpoint(actionId);
 
-	}
-	historyintegration(actionId: number) {
-		return Observable.forkJoin(this.integrationEndpointService.getHistoryintegrationEndpoint<AuditHistory[]>(actionId));
-	}
+    }
+    historyintegration(actionId: number) {
+        return Observable.forkJoin(this.integrationEndpointService.getHistoryintegrationEndpoint<AuditHistory[]>(actionId));
+    }
     getAudit(integrationPortalId: number) {
         return this.integrationEndpointService.getAuditById<any[]>(integrationPortalId);
     }
