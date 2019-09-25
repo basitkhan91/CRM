@@ -44,18 +44,19 @@ export class CreatePublicationComponent implements OnInit {
 
   publicationGeneralInformation = {
     entryDate: new Date(),
-    PublicationId: '',
+    publicationId: '',
     description: '',
-    pubType: '',
-    ASD: '',
+    publicationTypeId: '',
+    asd: '',
     sequence: '',
     publishby: '',
     location: '',
     revisionDate: new Date(),
     expirationDate: new Date(),
-    nextreviewDate: new Date(),
-    employee: null,
-    verifiedby: '',
+    nextReviewDate: new Date(),
+    employeeId: null,
+    verifiedBy: '',
+    verifiedDate: new Date(),
     masterCompanyId: 1,
   }
 
@@ -72,7 +73,7 @@ export class CreatePublicationComponent implements OnInit {
   partNumberList = [];
   selectedPartNumbers = [];
   pnMappingList = [];
-  publicationRecordId: number;
+  publicationRecordId: any;
   employeeList = [];
   ataList = [];
   headersforPNMapping = [
@@ -155,9 +156,7 @@ export class CreatePublicationComponent implements OnInit {
     if(this.publicationRecordId) {
       this.isEditMode = true;
       this.isDisabledSteps = true;
-      this.publicationService.getAllbyIdPublications().subscribe(res => {
-        console.log(res);
-      })
+      this.getPublicationDataonEdit();
 
       //get PN mapping edit mode
       this.publicationService
@@ -190,6 +189,26 @@ export class CreatePublicationComponent implements OnInit {
     return this.authService.currentUser
       ? this.authService.currentUser.userName
       : '';
+  }
+
+  async getPublicationDataonEdit(){
+   await  this.publicationService.getAllbyIdPublications(this.publicationRecordId).subscribe(res => {   
+      console.log(res[0]);
+      const responseData = res;
+      //this.sourcePublication = res[0];
+      this.sourcePublication =  responseData[0]
+      // responseData.map(x => {
+      //   return{
+      //     ...x,
+      //     revisionDate: new Date(x.revisionDate),
+      //    expirationDate: new Date(x.expirationDate),
+      //    nextReviewDate: new Date(x.nextReviewDate),
+      //    verifiedDate: new Date(x.verifiedDate) 
+      //   }
+      // });
+      
+      console.log(this.sourcePublication);
+    })
   }
 
   onFileChanged(event) {
@@ -336,18 +355,19 @@ export class CreatePublicationComponent implements OnInit {
     
 
     this.formData.append('entryDate',  moment(data.entryDate).format('DD/MM/YYYY'));
-    this.formData.append('PublicationId', data.PublicationId);
+    this.formData.append('publicationId', data.publicationId);
     this.formData.append('description', data.description);
-    this.formData.append('pubType',data.pubType);
-    this.formData.append('ASD', data.ASD);
+    this.formData.append('publicationTypeId',data.publicationTypeId);
+    this.formData.append('asd', data.asd);
     this.formData.append('sequence', data.sequence);
     this.formData.append('publishby', data.publishby);
     this.formData.append('location', data.location);
     this.formData.append('revisionDate', moment(data.revisionDate).format('DD/MM/YYYY') );
     this.formData.append('expirationDate',  moment(data.expirationDate).format('DD/MM/YYYY'));
-    this.formData.append('nextreviewDate', moment(data.nextreviewDate).format('DD/MM/YYYY'));
-    this.formData.append('employee', data.employee);
-    this.formData.append('verifiedby', data.verifiedby);
+    this.formData.append('nextReviewDate', moment(data.nextReviewDate).format('DD/MM/YYYY'));
+    this.formData.append('employeeId', data.employeeId);
+    this.formData.append('verifiedBy', data.verifiedBy);
+    this.formData.append('verifiedDate', moment(data.verifiedDate).format('DD/MM/YYYY'));
     this.formData.append('masterCompanyId', data.masterCompanyId);
     this.formData.append('CreatedBy',this.userName);
     this.formData.append('UpdatedBy',this.userName);
@@ -383,6 +403,25 @@ export class CreatePublicationComponent implements OnInit {
       }
     } else {
       this.changeOfTab('PnMap');
+    }
+
+    if(this.isEditMode) {
+      console.log(data)
+      this.formData.append('publicationRecordId', this.publicationRecordId);
+      
+      this.publicationService
+          .updateAction(this.formData)
+          .subscribe(res => {
+            // const { publicationRecordId } = res;
+            // this.publicationRecordId = publicationRecordId;
+            // console.log(this.publicationRecordId)
+            console.log(res);
+            this.changeOfTab('PnMap'),
+            this.formData = new FormData(),
+              this.alertService.showMessage("Success", `Publication Updated Successfully`, MessageSeverity.success),
+              role => this.saveSuccessHelper(role),
+              error => this.saveFailedHelper(error);
+          });
     }
 
 

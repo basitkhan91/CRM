@@ -53,9 +53,9 @@ export class PublicationService {
       this.publicationEndpoint.getpublicationEndpoint<Publication[]>()
     );
   }
-    getAllbyIdPublications() {
+    getAllbyIdPublications(id) {
         return Observable.forkJoin(
-            this.publicationEndpoint.getpublicationbyIdEndpoint<Publication[]>()
+            this.publicationEndpoint.getpublicationbyIdEndpoint<any>(id)
         );
     }
   newAction(action) {
@@ -70,10 +70,9 @@ export class PublicationService {
     );
   }
 
-  updateAction(action: Publication) {
-    return this.publicationEndpoint.getUpdateActionEndpoint(
-      action,
-      action.publicationRecordId
+  updateAction(file: any) {
+    return this.publicationEndpoint.getUpdateActionEndpoint<any>(
+      file
     );
   }
 

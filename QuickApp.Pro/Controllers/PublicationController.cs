@@ -133,7 +133,7 @@ namespace QuickApp.Pro.Controllers
                 throw;
             }
         }
-        [HttpPut("publicationpost/{id}")]
+        [HttpPut("publicationpost")]
         public IActionResult UpdateAction()
         {
 
@@ -162,7 +162,7 @@ namespace QuickApp.Pro.Controllers
                 publicationobject.CreatedDate = Convert.ToDateTime(Request.Form["CreatedDate"]);
                 publicationobject.UpdatedDate = DateTime.Now;
                 publicationobject.CreatedBy = Request.Form["CreatedBy"];
-                publicationobject.UpdatedBy = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                publicationobject.UpdatedBy = Request.Form["UpdatedBy"];
                 publicationobject.PublicationTypeId = Request.Form["PublicationTypeId"].ToString() == "" ? 0 : Convert.ToInt32(Request.Form["PublicationTypeId"].ToString());
                 publicationobject.Sequence = Request.Form["Sequence"];
                 publicationobject.ExpirationDate = Request.Form["ExpirationDate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["ExpirationDate"].ToString(), "dd/MM/yyyy", null);
