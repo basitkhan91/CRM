@@ -40,10 +40,10 @@ namespace QuickApp.Pro.Controllers
         // GET: api/values
         [HttpGet("getpublicationslist")]
         [Produces(typeof(List<PublicationViewModel>))]
-        public IActionResult Get(string publicationId="", string description="", int publicationTypeId=0, string publishedBy="", string employee="", string location="", int pageNumber=0, int pageSize=10)
+        public IActionResult Get(string publicationId="", string description="", int publicationTypeId=0, string publishedBy="", long employeeId=0, string location="", int pageNumber=0, int pageSize=10)
         {
             //var allpublicationinfo = _unitOfWork.Publication.GetPublications(); //.GetAllCustomersData();
-            var allpublicationinfo = _unitOfWork.Publication.GetPublicationsList(publicationId, description, publicationTypeId, publishedBy, employee, location, pageNumber, pageSize); //.GetAllCustomersData();
+            var allpublicationinfo = _unitOfWork.Publication.GetPublicationsList(publicationId, description, publicationTypeId, publishedBy, employeeId, location, pageNumber, pageSize); //.GetAllCustomersData();
 
             return Ok((allpublicationinfo));
 
@@ -112,7 +112,7 @@ namespace QuickApp.Pro.Controllers
                     publicationobject.revision = Request.Form["revision"];
                     publicationobject.verifiedby = Request.Form["verifiedby"];
                     publicationobject.verifieddate = Request.Form["verifieddate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["verifieddate"].ToString(), "dd/MM/yyyy", null);
-                    publicationobject.employee = Request.Form["employee"];
+                    publicationobject.EmployeeId = Convert.ToInt32(Request.Form["employee"]);
                     publicationobject.docpath = Request.Form["docpath"];
                     publicationobject.CreatedDate = DateTime.Now;
                     publicationobject.UpdatedDate = DateTime.Now;
@@ -164,7 +164,7 @@ namespace QuickApp.Pro.Controllers
                 publicationobject.revision = Request.Form["revision"];
                 publicationobject.verifiedby = Request.Form["verifiedby"];
                 publicationobject.verifieddate = Request.Form["verifieddate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["verifieddate"].ToString(), "dd/MM/yyyy", null);
-                publicationobject.employee = Request.Form["employee"];
+                publicationobject.EmployeeId =Convert.ToInt32(Request.Form["employee"]);
                 publicationobject.docpath = Request.Form["docpath"];
                 publicationobject.CreatedDate = Convert.ToDateTime(Request.Form["CreatedDate"]);
                 publicationobject.UpdatedDate = DateTime.Now;
