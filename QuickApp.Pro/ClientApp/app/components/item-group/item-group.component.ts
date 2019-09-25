@@ -71,6 +71,7 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
     errorMessage: any;
     modal: NgbModalRef;
     itemGroupName: any;
+    itemgroupCode: any;
     filteredBrands: any[];
     localCollection: any[] = [];
 
@@ -126,6 +127,24 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
             return data;
         }
     }
+    editValueAssignByCondition(field: any, value: any) {
+		console.log(field, value)
+		if ((value !== undefined) && (field !== '' || field !== undefined)) {
+	
+			if (typeof (value) === 'string') {
+				return value
+			} 
+			else {
+				return this.getValueFromObjectByKey(field, value)
+			}
+		}
+    }
+    getValueFromObjectByKey(field: string, object: any) {
+		console.log(field, object)
+		if ((field !== '' || field !== undefined) && (object !== undefined)) {
+			return object[field];
+		}
+	}
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -189,7 +208,7 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
         this.loadMasterCompanies();
 		this.sourceAction = new Itemgroup();
         this.sourceAction.isActive = true;
-        this.sourceAction.itemGroupName = "";
+        this.sourceAction.itemgroupCode = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
 
@@ -217,10 +236,9 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
         this.isSaving = true;
         this.loadMasterCompanies();
         this.sourceAction = {...row};
-        this.sourceAction.itemGroupName = getObjectByValue('itemGroupCode',row.itemGroupCode,this.allitemgroupobjInfo)
-       
+        this.sourceAction.itemgroupCode = getObjectByValue('itemGroupCode',row.itemGroupCode,this.allitemgroupobjInfo)
         //this.itemGroupName = this.sourceAction.itemGroupCode;
-        this.loadMasterCompanies();
+       
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -263,6 +281,7 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
     }
 
     eventHandler(field,value) {
+        value = value.trim();
         const exists = this.validateRecordExistsOrNot(field, value, this.allitemgroupobjInfo);
         // console.log(exists);
          if (exists.length > 0) {
@@ -310,19 +329,22 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
 
         this.isSaving = true;
 
-        if (this.isEditMode == false) {
+        if (this.isEditMode == false) {      
+            
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.itemGroupCode = this.sourceAction.itemGroupName;
+            this.sourceAction.itemGroupCode = this.sourceAction.itemgroupCode;
             this.sourceAction.masterCompanyId = 1;
             this.workFlowtService.newAction(this.sourceAction).subscribe(
                 role => this.saveSuccessHelper(role),
                 error => this.saveFailedHelper(error));
         }
         else {
-
+           
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.itemGroupCode = this.sourceAction.itemGroupName;            
+            this.sourceAction.itemgroupCode = this.editValueAssignByCondition('itemGroupCode',this.sourceAction.itemgroupCode);
+            // this.sourceAction.itemGroupName = this.editValueAssignByCondition('itemGroupCode',this.sourceAction.description);
+            //this.sourceAction.itemGroupCode = this.sourceAction.itemGroupName;            
             this.sourceAction.masterCompanyId = 1;
             this.workFlowtService.updateAction(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
@@ -334,6 +356,7 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
 
     handleChange(rowData, e) {
         if (e.checked == false) {
+            console.log('Smoe2');
             this.sourceAction = rowData;
             this.sourceAction.updatedBy = this.userName;
             this.Active = "In Active";
@@ -346,6 +369,7 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
             //alert(e);
         }
         else {
+            console.log('Smoe3');
             this.sourceAction = rowData;
             this.sourceAction.updatedBy = this.userName;
             this.Active = "Active";

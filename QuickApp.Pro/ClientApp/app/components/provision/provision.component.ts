@@ -104,6 +104,24 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
             return data;
         }
     }
+    editValueAssignByCondition(field: any, value: any) {
+		console.log(field, value)
+		if ((value !== undefined) && (field !== '' || field !== undefined)) {
+	
+			if (typeof (value) === 'string') {
+				return value
+			} 
+			else {
+				return this.getValueFromObjectByKey(field, value)
+			}
+		}
+    }
+    getValueFromObjectByKey(field: string, object: any) {
+		console.log(field, object)
+		if ((field !== '' || field !== undefined) && (object !== undefined)) {
+			return object[field];
+		}
+	}
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -229,6 +247,7 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
     }
 
     eventHandler(field, value) {
+        value = value.trim();
         const exists = this.validateRecordExistsOrNot(field, value, this.allProvisonInfo);
         //console.log(exists);
         if (exists.length > 0) {
@@ -337,8 +356,8 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
         else {
 
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.sourceAction.provisionName;
-            
+            this.sourceAction.provisionName = this.editValueAssignByCondition('description',this.sourceAction.provisionName)
+            //this.sourceAction.description = this.sourceAction.provisionName;            
             this.sourceAction.masterCompanyId = 1;
             this.provisionService.updateProvision(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),

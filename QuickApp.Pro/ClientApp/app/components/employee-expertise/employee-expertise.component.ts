@@ -16,6 +16,7 @@ import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
+import { getObjectByValue } from '../../generic/autocomplete';
 
 @Component({
     selector: 'app-employee-expertise',
@@ -46,7 +47,7 @@ export class EmployeeExpertiseComponent implements OnInit, AfterViewInit {
     allEmployeeExpertiseInfo: EmployeeExpertise[] = [];
     allComapnies: MasterCompany[] = [];
     private isSaving: boolean;
-    public sourceAction: EmployeeExpertise;
+    public sourceAction: any;
     private bodyText: string;
     loadingIndicator: boolean;
     closeResult: string;
@@ -66,6 +67,7 @@ export class EmployeeExpertiseComponent implements OnInit, AfterViewInit {
 
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
+    tempValue: any;
 
     constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: EmployeeExpertiseService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.displayedColumns.push('action');
@@ -89,7 +91,33 @@ export class EmployeeExpertiseComponent implements OnInit, AfterViewInit {
         this.selectedColumns = this.cols;
     }
 
-
+    validateRecordExistsOrNot(field: string, currentInput: any, originalData: any) {
+        // console.log(field, currentInput, originalData)
+        if ((field !== '' || field !== undefined) && (currentInput !== '' || currentInput !== undefined) && (originalData !== undefined)) {
+            const data = originalData.filter(x => {
+                return x[field].toLowerCase() === currentInput.toLowerCase()
+            })
+            return data;
+        }
+    }
+    editValueAssignByCondition(field: any, value: any) {
+		console.log(field, value)
+		if ((value !== undefined) && (field !== '' || field !== undefined)) {
+	
+			if (typeof (value) === 'string') {
+				return value
+			} 
+			else {
+				return this.getValueFromObjectByKey(field, value)
+			}
+		}
+	}
+	getValueFromObjectByKey(field: string, object: any) {
+		console.log(field, object)
+		if ((field !== '' || field !== undefined) && (object !== undefined)) {
+			return object[field];
+		}
+	}
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -159,12 +187,9 @@ export class EmployeeExpertiseComponent implements OnInit, AfterViewInit {
         this.loadMasterCompanies();
         this.sourceAction = new EmployeeExpertise();
         this.sourceAction.isActive = true;
-        this.employeeName = "";
+        this.sourceAction.employeeName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
-
-
-
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
@@ -188,9 +213,11 @@ export class EmployeeExpertiseComponent implements OnInit, AfterViewInit {
         this.disableSave = false;
         this.isSaving = true;
         this.loadMasterCompanies();
-        this.sourceAction = row;
-        this.employeeName = this.sourceAction.description;
-        this.loadMasterCompanies();
+        this.sourceAction = {...row};
+        this.sourceAction.employeeName =getObjectByValue('description',row.description,this.allEmployeeExpertiseInfo);
+        this.tempValue = this.sourceAction;
+        console.log(this.tempValue)       
+        
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -217,44 +244,42 @@ export class EmployeeExpertiseComponent implements OnInit, AfterViewInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-    eventHandler(event) {
-        let value = event.target.value.toLowerCase();
-        if (this.selectedActionName) {
-            if (value == this.selectedActionName.toLowerCase()) {
-                //alert("Action Name already Exists");
-                this.disableSave = true;
-            }
-            else {
-                this.disableSave = false;
-            }
+    eventHandler(field,value) {
+        value = value.trim();
+        const exists = this.validateRecordExistsOrNot(field, value, this.allEmployeeExpertiseInfo);
+        // console.log(exists,"test");
+        if (exists.length > 0) {
+            this.disableSave = true;
+        }
+        else {
+            this.disableSave = false;
         }
 
     }
     partnmId(event) {
         //debugger;
-        for (let i = 0; i < this.actionamecolle.length; i++) {
-            if (event == this.actionamecolle[i][0].employeeName) {
-                //alert("Action Name already Exists");
-                this.disableSave = true;
-                this.selectedActionName = event;
-            }
-        }
+        this.disableSave = true;
+        // for (let i = 0; i < this.actionamecolle.length; i++) {
+        //     if (event == this.actionamecolle[i][0].employeeName) {
+        //         //alert("Action Name already Exists");
+        //         this.disableSave = true;
+        //         this.selectedActionName = event;
+        //     }
+       // }
     }
 
 
     filterEmployeeNames(event) {
-
-        this.localCollection = [];
-        for (let i = 0; i < this.allEmployeeExpertiseInfo.length; i++) {
-            let employeeName = this.allEmployeeExpertiseInfo[i].description;
-            if (employeeName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                this.actionamecolle.push([{
-                    "employeeExpertiseId": this.allEmployeeExpertiseInfo[i].employeeExpertiseId,
-                    "employeeName": employeeName
-                }]),
-                    this.localCollection.push(employeeName);
-            }
+        this.localCollection = this.allEmployeeExpertiseInfo;
+        if (event.query !== undefined && event.query !== null) {
+            const employeeName = [...this.allEmployeeExpertiseInfo.filter(x => {
+                // return x.description.toLowerCase().includes(event.query.toLowerCase())
+                return x.description.toLowerCase().includes(event.query.toLowerCase())
+            })]
+          
+            this.localCollection = employeeName;
         }
+     
     }
     handleChange(rowData, e) {
         if (e.checked == false) {
@@ -268,6 +293,7 @@ export class EmployeeExpertiseComponent implements OnInit, AfterViewInit {
             //alert(e);
         }
         else {
+            
             this.sourceAction = rowData;
             this.sourceAction.updatedBy = this.userName;
             this.Active = "Active";
@@ -324,18 +350,18 @@ export class EmployeeExpertiseComponent implements OnInit, AfterViewInit {
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.employeeName;
+            this.sourceAction.description = this.sourceAction.employeeName;
             this.sourceAction.masterCompanyId = 1;
             this.workFlowtService.newAction(this.sourceAction).subscribe(
                 role => this.saveSuccessHelper(role),
                 error => this.saveFailedHelper(error));
         }
         else {
-
+            console.log(this.tempValue)
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.employeeName;
+            this.sourceAction.description = this.editValueAssignByCondition('description',this.sourceAction.employeeName)
             this.sourceAction.masterCompanyId = 1;
-            this.workFlowtService.updateAction(this.sourceAction).subscribe(
+            this.workFlowtService.updateAction(this.tempValue).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
         }

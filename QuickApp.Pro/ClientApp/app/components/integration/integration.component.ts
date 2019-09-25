@@ -100,6 +100,25 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
             return data;
         }
     }
+  
+	editValueAssignByCondition(field: any, value: any) {
+		console.log(field, value)
+		if ((value !== undefined) && (field !== '' || field !== undefined)) {
+	
+			if (typeof (value) === 'string') {
+				return value
+			} 
+			else {
+				return this.getValueFromObjectByKey(field, value)
+			}
+		}
+    }
+    getValueFromObjectByKey(field: string, object: any) {
+		console.log(field, object)
+		if ((field !== '' || field !== undefined) && (object !== undefined)) {
+			return object[field];
+		}
+	}
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -192,13 +211,14 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
         this.sourceAction = { ...row };
         this.integrationName = this.sourceAction.description;
         this.sourceAction.portalURL = getObjectByValue('portalUrl', row.portalUrl, this.allIntegrationInfo)
-        this.loadMasterCompanies();
+
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
     eventHandler(field, value) {
+        value = value.trim();
         const exists = this.validateRecordExistsOrNot(field, value, this.allIntegrationInfo);
         // console.log(exists,"test");
         if (exists.length > 0) {
@@ -261,21 +281,13 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
 
 
     private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
-
-
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-
         this.auditHisory = auditHistory;
-
-
         this.modal = this.modalService.open(content, { size: 'lg' });
-
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
-
-
     }
     handleChange(rowData, e) {
         if (e.checked == false) {
@@ -302,9 +314,7 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
     }
 
     editItemAndCloseModel() {
-
         this.isSaving = true;
-
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
@@ -316,9 +326,8 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
         }
         else {
             this.sourceAction.updatedBy = this.userName;
-            // this.sourceAction.Portalurl = this.portalURL.portalUrl;
-            //this.sourceAction.memo = this.sourceAction.memo;
-            console.log(this.sourceAction.Portalurl);
+            this.sourceAction.portalURL = this.editValueAssignByCondition('portalUrl',this.sourceAction.portalURL);
+           // this.sourceAction.description = this.editValueAssignByCondition('description',this.sourceAction.description);
             this.workFlowtService.updateAction(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));

@@ -149,7 +149,7 @@
                         </label>
                     </div>
                     <div class="col-sm-5">
-                        <p-autoComplete field="description" [(ngModel)]="unitName" (onSelect)="partnmId($event)" (onKeyUp)="eventHandler('description', $event.target.value)" name="uom"
+                        <p-autoComplete field="description" [(ngModel)]="sourceAction.unitName" (onSelect)="partnmId($event)" (onKeyUp)="eventHandler('description', $event.target.value)" name="uom"
                             [suggestions]="localCollection" (completeMethod)="filterUnitOfMeasures($event)" [size]="30" [minLength]="1"
                             [dropdown]="true" class="p-autoComplete-ctsm" required>
        

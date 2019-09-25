@@ -158,12 +158,9 @@
                         </label>
                     </div>
                     <div class="col-sm-5">
-                        <p-autoComplete (onSelect)="partnmId($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="employeeName" [ngModelOptions]="{standalone: true}"
+                        <p-autoComplete field="description" (onSelect)="partnmId($event)" (onKeyUp)="eventHandler('description',$event.target.value)" [(ngModel)]="sourceAction.employeeName" name="employee"
                             [suggestions]="localCollection" (completeMethod)="filterEmployeeNames($event)" [size]="30" [minLength]="1"
-                            [dropdown]="true" required class="p-autoComplete-ctsm">
-                            <ng-template let-employeeName pTemplate="item">
-                                <div class="ui-helper-clearfix">{{employeeName}}</div>
-                            </ng-template>
+                            [dropdown]="true" required class="p-autoComplete-ctsm">                           
                         </p-autoComplete>
                         <div *ngIf="disableSave" class="clr-red">Already Exists</div>
                     </div>
