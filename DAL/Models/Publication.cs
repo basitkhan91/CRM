@@ -13,10 +13,7 @@ namespace DAL.Models
         [Key]
         public long PublicationRecordId { get; set; }
         public string  PublicationId { get; set; }
-
-        
         public string Memo { get; set; }
-
         public string Description { get; set; }
 
         public string Platform { get; set; }
@@ -50,10 +47,11 @@ namespace DAL.Models
 
         public string verifiedby { get; set; }
         public Nullable<DateTime> verifieddate { get; set; }
-        public string employee { get; set; }
         public string docpath { get; set; }
-
+        [Required(ErrorMessage ="Please select Publication Type")]
         public int PublicationTypeId { get; set; }
+        [Required(ErrorMessage = "Please select Employee")]
+        public long EmployeeId { get; set; }
 
         [NotMapped]
         public string PublicationType { get; set; }

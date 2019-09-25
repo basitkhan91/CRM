@@ -51,7 +51,7 @@ namespace DAL.Repositories
                                 Mainpub.publishby,
                                 Mainpub.location,
                                 Mainpub.verifiedby,
-                                Mainpub.employee,
+                                Mainpub.EmployeeId,
 
                                 PublicationItemMaster.PartNumberDescription,
                                 ItemMasterAircraft.AircraftModel,
@@ -127,7 +127,7 @@ namespace DAL.Repositories
                     publication = result.Publication;
                     publication.PublicationType = result.PublictationType;
 
-                    var emp = _appContext.Employee.Where(x => x.EmployeeId == ((string.IsNullOrEmpty(result.Publication.employee)) ? 0 : Convert.ToInt64(result.Publication.employee))).FirstOrDefault();
+                    var emp = _appContext.Employee.Where(x => x.EmployeeId == result.Publication.EmployeeId).FirstOrDefault();
                     if (emp != null)
                         publication.EmployeeName = emp.FirstName + ' ' + emp.LastName;
 
@@ -594,7 +594,7 @@ namespace DAL.Repositories
             }
         }
 
-        public GetData<Publication> GetPublicationsList(string publicationId,string description,int? publicationTypeId,string publishedBy,string employee,string location,int pageNumber, int pageSize)
+        public GetData<Publication> GetPublicationsList(string publicationId,string description,int? publicationTypeId,string publishedBy,long employeeId,string location,int pageNumber, int pageSize)
         {
             try
             {
@@ -617,7 +617,7 @@ namespace DAL.Repositories
                                    && p.p.Description.Contains(!String.IsNullOrEmpty(description) ? description : p.p.Description)
                                    && p.p.PublicationTypeId == (publicationTypeId > 0 ? publicationTypeId : p.p.PublicationTypeId)
                                    && p.p.publishby.Contains(!String.IsNullOrEmpty(publishedBy) ? publishedBy : p.p.publishby)
-                                   && p.p.employee == (!String.IsNullOrEmpty(employee) ? employee : p.p.employee)
+                                   && p.p.EmployeeId == p.p.EmployeeId
                                    && p.p.location == (!String.IsNullOrEmpty(location) ? location : p.p.location)
                                    )
                             .Count();
@@ -627,26 +627,31 @@ namespace DAL.Repositories
                             p => p.PublicationTypeId,
                             pt => pt.Id,
                             (p, pt) => new { p, pt })
-                             .Where(p => (p.p.IsDeleted == null || p.p.IsDeleted == false)
-                                    && p.p.PublicationId.Contains(!String.IsNullOrEmpty(publicationId) ? publicationId : p.p.PublicationId)
-                                    && p.p.Description.Contains(!String.IsNullOrEmpty(description) ? description : p.p.Description)
-                                    && p.p.PublicationTypeId== (publicationTypeId>0 ? publicationTypeId : p.p.PublicationTypeId)
-                                    && p.p.publishby.Contains(!String.IsNullOrEmpty(publishedBy) ? publishedBy : p.p.publishby)
-                                    && p.p.employee==(!String.IsNullOrEmpty(employee)  ? employee : p.p.employee)
-                                    && p.p.location == (!String.IsNullOrEmpty(location) ? location : p.p.location)
+                            .Join(_appContext.Employee,
+                            p1 =>p1.p.EmployeeId,
+                            e => e.EmployeeId,
+                            (p1, e) => new { p1, e })
+                             .Where(p => (p.p1.p.IsDeleted == null || p.p1.p.IsDeleted == false)
+                                    && p.p1.p.PublicationId.Contains(!String.IsNullOrEmpty(publicationId) ? publicationId : p.p1.p.PublicationId)
+                                    && p.p1.p.Description.Contains(!String.IsNullOrEmpty(description) ? description : p.p1.p.Description)
+                                    && p.p1.p.PublicationTypeId== (publicationTypeId>0 ? publicationTypeId : p.p1.p.PublicationTypeId)
+                                    && p.p1.p.publishby.Contains(!String.IsNullOrEmpty(publishedBy) ? publishedBy : p.p1.p.publishby)
+                                    && p.p1.p.EmployeeId == p.p1.p.EmployeeId
+                                    && p.p1.p.location == (!String.IsNullOrEmpty(location) ? location : p.p1.p.location)
                                     )
                              .Select(p => new
                              {
-                                 PublicationRecordId = p.p.PublicationRecordId,
-                                 PublicationId = p.p.PublicationId,
-                                 Description = p.p.Description,
-                                 PublicationTypeId = p.p.PublicationTypeId,
-                                 PublicationType = p.pt.Name,
-                                 Publishby = p.p.publishby,
-                                 Employee = p.p.employee,
-                                 Location = p.p.location,
-                                 IsActive = p.p.IsActive,
-                                 UpdatedDate = p.p.UpdatedDate
+                                 PublicationRecordId = p.p1.p.PublicationRecordId,
+                                 PublicationId = p.p1.p.PublicationId,
+                                 Description = p.p1.p.Description,
+                                 PublicationTypeId = p.p1.p.PublicationTypeId,
+                                 PublicationType = p.p1.pt.Name,
+                                 Publishby = p.p1.p.publishby,
+                                 EmployeeId = p.p1.p.EmployeeId,
+                                 Location = p.p1.p.location,
+                                 IsActive = p.p1.p.IsActive,
+                                 UpdatedDate = p.p1.p.UpdatedDate,
+                                 EmployeeName=p.e.FirstName+' '+p.e.LastName
 
                              })
                              .OrderByDescending(p => p.UpdatedDate)
@@ -666,9 +671,10 @@ namespace DAL.Repositories
                         publication.PublicationTypeId = item.PublicationTypeId;
                         publication.PublicationType = item.PublicationType;
                         publication.publishby = item.Publishby;
-                        publication.employee = item.Employee;
+                        publication.EmployeeId = item.EmployeeId;
                         publication.location = item.Location;
                         publication.IsActive = item.IsActive;
+                        publication.EmployeeName = item.EmployeeName;
 
                         getData.PaginationList.Add(publication);
                     }
@@ -733,11 +739,10 @@ namespace DAL.Repositories
                                  PublicationTypeId = p.pim1.p1.p.PublicationTypeId,
                                  PublicationType = p.pim1.p1.pt.Name,
                                  Publishby = p.pim1.p1.p.publishby,
-                                 Employee = p.pim1.p1.p.employee,
+                                 EmployeeId = p.pim1.p1.p.EmployeeId,
                                  Location = p.pim1.p1.p.location,
                                  IsActive = p.pim1.p1.p.IsActive,
                                  UpdatedDate = p.pim1.p1.p.UpdatedDate
-
                              })
                              .OrderByDescending(p => p.UpdatedDate)
                              .ToList();
@@ -768,7 +773,7 @@ namespace DAL.Repositories
                                      PublicationTypeId = p.pim1.p1.p.PublicationTypeId,
                                      PublicationType = p.pim1.p1.pt.Name,
                                      Publishby = p.pim1.p1.p.publishby,
-                                     Employee = p.pim1.p1.p.employee,
+                                     EmployeeId = p.pim1.p1.p.EmployeeId,
                                      Location = p.pim1.p1.p.location,
                                      IsActive = p.pim1.p1.p.IsActive,
                                      UpdatedDate = p.pim1.p1.p.UpdatedDate
@@ -782,40 +787,36 @@ namespace DAL.Repositories
                               ata => ata.PublicationRecordId,
                               craft => craft.PublicationRecordId,
                               (ata, craft) => new { ata, craft })
-                          .Select(p => new
-                          {
-                              PublicationRecordId = p.ata.PublicationRecordId,
-                              PublicationId = p.ata.PublicationId,
-                              Description = p.ata.Description,
-                              PublicationTypeId = p.ata.PublicationTypeId,
-                              PublicationType = p.ata.PublicationType,
-                              Publishby = p.ata.Publishby,
-                              Employee = p.ata.Employee,
-                              Location = p.ata.Location,
-                              IsActive = p.ata.IsActive,
-                              UpdatedDate = p.ata.UpdatedDate
-
-                          })
+                          .Join(_appContext.Employee,
+                            ata1 => ata1.ata.EmployeeId,
+                            e => e.EmployeeId,
+                            (ata1, e) => new { ata1, e })
                           .Count();
 
-                    var result = ataresult.
-                          Join(aircraftResult,
+                    var result = ataresult
+                          .Join(aircraftResult,
                               ata => ata.PublicationRecordId,
                               craft => craft.PublicationRecordId,
                               (ata, craft) => new { ata, craft })
+
+                          .Join(_appContext.Employee,
+                            ata1 => ata1.ata.EmployeeId,
+                            e => e.EmployeeId,
+                            (ata1, e) => new { ata1, e })
+
                           .Select(p => new
                           {
-                              PublicationRecordId = p.ata.PublicationRecordId,
-                              PublicationId = p.ata.PublicationId,
-                              Description = p.ata.Description,
-                              PublicationTypeId = p.ata.PublicationTypeId,
-                              PublicationType = p.ata.PublicationType,
-                              Publishby = p.ata.Publishby,
-                              Employee = p.ata.Employee,
-                              Location = p.ata.Location,
-                              IsActive = p.ata.IsActive,
-                              UpdatedDate = p.ata.UpdatedDate
-
+                              PublicationRecordId = p.ata1.ata.PublicationRecordId,
+                              PublicationId = p.ata1.ata.PublicationId,
+                              Description = p.ata1.ata.Description,
+                              PublicationTypeId = p.ata1.ata.PublicationTypeId,
+                              PublicationType = p.ata1.ata.PublicationType,
+                              Publishby = p.ata1.ata.Publishby,
+                              EmployeeId = p.ata1.ata.EmployeeId,
+                              Location = p.ata1.ata.Location,
+                              IsActive = p.ata1.ata.IsActive,
+                              UpdatedDate = p.ata1.ata.UpdatedDate,
+                              EmployeeName=p.e.FirstName+' '+p.e.LastName
                           })
                           .Skip(skip)
                           .Take(take)
@@ -832,9 +833,10 @@ namespace DAL.Repositories
                             publication.PublicationTypeId = item.PublicationTypeId;
                             publication.PublicationType = item.PublicationType;
                             publication.publishby = item.Publishby;
-                            publication.employee = item.Employee;
+                            publication.EmployeeId = item.EmployeeId;
                             publication.location = item.Location;
                             publication.IsActive = item.IsActive;
+                            publication.EmployeeName = item.EmployeeName;
                             getData.PaginationList.Add(publication);
                         }
                     }
@@ -855,10 +857,14 @@ namespace DAL.Repositories
                             pim1 => pim1.pim.ItemMasterId,
                             ata => ata.ItemMasterId,
                             (pim1, ata) => new { pim1, ata })
+                            .Join(_appContext.Employee,
+                            p2 => p2.pim1.p1.p.EmployeeId,
+                            e => e.EmployeeId,
+                            (p2, e) => new { p2, e })
 
-                             .Where(p => (p.pim1.p1.p.IsDeleted == null || p.pim1.p1.p.IsDeleted == false)
-                                          && p.ata.ATAChapterId == ataChapterId
-                                          && p.ata.ATASubChapterId == (ataSubChapterId > 0 ? ataSubChapterId : p.ata.ATASubChapterId))
+                             .Where(p => (p.p2.pim1.p1.p.IsDeleted == null || p.p2.pim1.p1.p.IsDeleted == false)
+                                          && p.p2.ata.ATAChapterId == ataChapterId
+                                          && p.p2.ata.ATASubChapterId == (ataSubChapterId > 0 ? ataSubChapterId : p.p2.ata.ATASubChapterId))
                              .Count();
 
 
@@ -875,22 +881,27 @@ namespace DAL.Repositories
                             pim1 => pim1.pim.ItemMasterId,
                             ata => ata.ItemMasterId,
                             (pim1, ata) => new { pim1, ata })
+                            .Join(_appContext.Employee,
+                            p2 => p2.pim1.p1.p.EmployeeId,
+                            e => e.EmployeeId,
+                            (p2, e) => new { p2, e })
 
-                             .Where(p => (p.pim1.p1.p.IsDeleted == null || p.pim1.p1.p.IsDeleted == false)
-                                          && p.ata.ATAChapterId == ataChapterId
-                                          && p.ata.ATASubChapterId == (ataSubChapterId > 0 ? ataSubChapterId : p.ata.ATASubChapterId))
+                             .Where(p => (p.p2.pim1.p1.p.IsDeleted == null || p.p2.pim1.p1.p.IsDeleted == false)
+                                          && p.p2.ata.ATAChapterId == ataChapterId
+                                          && p.p2.ata.ATASubChapterId == (ataSubChapterId > 0 ? ataSubChapterId : p.p2.ata.ATASubChapterId))
                              .Select(p => new
                              {
-                                 PublicationRecordId = p.pim1.p1.p.PublicationRecordId,
-                                 PublicationId = p.pim1.p1.p.PublicationId,
-                                 Description = p.pim1.p1.p.Description,
-                                 PublicationTypeId = p.pim1.p1.p.PublicationTypeId,
-                                 PublicationType = p.pim1.p1.pt.Name,
-                                 Publishby = p.pim1.p1.p.publishby,
-                                 Employee = p.pim1.p1.p.employee,
-                                 Location = p.pim1.p1.p.location,
-                                 IsActive = p.pim1.p1.p.IsActive,
-                                 UpdatedDate = p.pim1.p1.p.UpdatedDate
+                                 PublicationRecordId = p.p2.pim1.p1.p.PublicationRecordId,
+                                 PublicationId = p.p2.pim1.p1.p.PublicationId,
+                                 Description = p.p2.pim1.p1.p.Description,
+                                 PublicationTypeId = p.p2.pim1.p1.p.PublicationTypeId,
+                                 PublicationType = p.p2.pim1.p1.pt.Name,
+                                 Publishby = p.p2.pim1.p1.p.publishby,
+                                 EmployeeId = p.p2.pim1.p1.p.EmployeeId,
+                                 Location = p.p2.pim1.p1.p.location,
+                                 IsActive = p.p2.pim1.p1.p.IsActive,
+                                 UpdatedDate = p.p2.pim1.p1.p.UpdatedDate,
+                                 EmployeeName=p.e.FirstName+' '+p.e.LastName
 
                              })
                              .OrderByDescending(p => p.UpdatedDate)
@@ -909,9 +920,10 @@ namespace DAL.Repositories
                             publication.PublicationTypeId = item.PublicationTypeId;
                             publication.PublicationType = item.PublicationType;
                             publication.publishby = item.Publishby;
-                            publication.employee = item.Employee;
+                            publication.EmployeeId = item.EmployeeId;
                             publication.location = item.Location;
                             publication.IsActive = item.IsActive;
+                            publication.EmployeeName = item.EmployeeName;
                             getData.PaginationList.Add(publication);
                         }
                     }
@@ -932,11 +944,15 @@ namespace DAL.Repositories
                                pim1 => pim1.pim.ItemMasterId,
                                ata => ata.ItemMasterId,
                                (pim1, ata) => new { pim1, ata })
+                                .Join(_appContext.Employee,
+                            p2 => p2.pim1.p1.p.EmployeeId,
+                            e => e.EmployeeId,
+                            (p2, e) => new { p2, e })
 
-                                .Where(p => (p.pim1.p1.p.IsDeleted == null || p.pim1.p1.p.IsDeleted == false)
-                                              && p.ata.ItemMasterAircraftMappingId == airCraftId
-                                              && p.ata.AircraftModelId == (modelId > 0 ? modelId : p.ata.AircraftModelId)
-                                              && p.ata.DashNumberId == (dashNumberId > 0 ? dashNumberId : p.ata.DashNumberId))
+                                .Where(p => (p.p2.pim1.p1.p.IsDeleted == null || p.p2.pim1.p1.p.IsDeleted == false)
+                                              && p.p2.ata.ItemMasterAircraftMappingId == airCraftId
+                                              && p.p2.ata.AircraftModelId == (modelId > 0 ? modelId : p.p2.ata.AircraftModelId)
+                                              && p.p2.ata.DashNumberId == (dashNumberId > 0 ? dashNumberId : p.p2.ata.DashNumberId))
                                 .Count();
 
                     var aircraftResult = _appContext.Publication
@@ -952,23 +968,28 @@ namespace DAL.Repositories
                                pim1 => pim1.pim.ItemMasterId,
                                ata => ata.ItemMasterId,
                                (pim1, ata) => new { pim1, ata })
+                               .Join(_appContext.Employee,
+                            p2 => p2.pim1.p1.p.EmployeeId,
+                            e => e.EmployeeId,
+                            (p2, e) => new { p2, e })
 
-                                .Where(p => (p.pim1.p1.p.IsDeleted == null || p.pim1.p1.p.IsDeleted == false)
-                                              && p.ata.ItemMasterAircraftMappingId == airCraftId
-                                              && p.ata.AircraftModelId == (modelId > 0 ? modelId : p.ata.AircraftModelId)
-                                              && p.ata.DashNumberId == (dashNumberId > 0 ? dashNumberId : p.ata.DashNumberId))
+                                .Where(p => (p.p2.pim1.p1.p.IsDeleted == null || p.p2.pim1.p1.p.IsDeleted == false)
+                                              && p.p2.ata.ItemMasterAircraftMappingId == airCraftId
+                                              && p.p2.ata.AircraftModelId == (modelId > 0 ? modelId : p.p2.ata.AircraftModelId)
+                                              && p.p2.ata.DashNumberId == (dashNumberId > 0 ? dashNumberId : p.p2.ata.DashNumberId))
                                 .Select(p => new
                                 {
-                                    PublicationRecordId = p.pim1.p1.p.PublicationRecordId,
-                                    PublicationId = p.pim1.p1.p.PublicationId,
-                                    Description = p.pim1.p1.p.Description,
-                                    PublicationTypeId = p.pim1.p1.p.PublicationTypeId,
-                                    PublicationType = p.pim1.p1.pt.Name,
-                                    Publishby = p.pim1.p1.p.publishby,
-                                    Employee = p.pim1.p1.p.employee,
-                                    Location = p.pim1.p1.p.location,
-                                    IsActive = p.pim1.p1.p.IsActive,
-                                    UpdatedDate = p.pim1.p1.p.UpdatedDate
+                                    PublicationRecordId = p.p2.pim1.p1.p.PublicationRecordId,
+                                    PublicationId = p.p2.pim1.p1.p.PublicationId,
+                                    Description = p.p2.pim1.p1.p.Description,
+                                    PublicationTypeId = p.p2.pim1.p1.p.PublicationTypeId,
+                                    PublicationType = p.p2.pim1.p1.pt.Name,
+                                    Publishby = p.p2.pim1.p1.p.publishby,
+                                    EmployeeId = p.p2.pim1.p1.p.EmployeeId,
+                                    Location = p.p2.pim1.p1.p.location,
+                                    IsActive = p.p2.pim1.p1.p.IsActive,
+                                    UpdatedDate = p.p2.pim1.p1.p.UpdatedDate,
+                                    EmployeeName=p.e.FirstName+' '+p.e.LastName
 
                                 })
                                 .OrderByDescending(p => p.UpdatedDate)
@@ -987,9 +1008,10 @@ namespace DAL.Repositories
                             publication.PublicationTypeId = item.PublicationTypeId;
                             publication.PublicationType = item.PublicationType;
                             publication.publishby = item.Publishby;
-                            publication.employee = item.Employee;
+                            publication.EmployeeId = item.EmployeeId;
                             publication.location = item.Location;
                             publication.IsActive = item.IsActive;
+                            publication.EmployeeName = item.EmployeeName;
                             getData.PaginationList.Add(publication);
                         }
                     }
