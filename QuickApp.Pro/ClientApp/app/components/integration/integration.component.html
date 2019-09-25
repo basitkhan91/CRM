@@ -23,9 +23,10 @@
                                     <!-- <i class="fa fa-search"></i>
                                         <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (blur)="inputGlobalFiledFilter($event.target.value, 'contains')" placeholder="Global Filter">
                                     </div> -->
-                                    <button type="button" class="btn btn-primary-cstm" pTooltip="Export all data" tooltipPosition="top" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm" pTooltip="Export selected data" tooltipPosition="top" pButton icon="fa-download" iconPos="left" label="Export Selection Only"
-                                        (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                    <button type="button" class="btn btn-primary-cstm" pTooltip="Export all data" tooltipPosition="top" pButton icon="fa-download"
+                                        iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+                                    <button type="button" class="btn btn-primary-cstm" pTooltip="Export selected data" tooltipPosition="top" pButton icon="fa-download"
+                                        iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload excel-upload-cstm">
                                         <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected"
                                             accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
@@ -72,8 +73,7 @@
                                         <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)"
                                             [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                         <span data-toggle="modal" data-target="#view">
-                                            <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)"
-                                                matTooltip="View">
+                                            <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View">
                                                 <i class="fa fa-eye"></i>
                                             </a>
                                         </span>
@@ -91,9 +91,8 @@
                             </ng-template>
                             <ng-template pTemplate="summary" id="footer">
                                 <label id="footer" class="footer">No'of records:</label>
-                                <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true"
-                                    pInputText type="text" /> &nbsp;&nbsp;
-                          
+                                <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+
                             </ng-template>
                         </p-table>
                     </div>
@@ -146,8 +145,9 @@
                         </label>
                     </div>
                     <div class="col-sm-5">
-                        <p-autoComplete field="portalUrl" (onSelect)="partnmId($event)" (onKeyUp)="eventHandler('portalUrl',$event.target.value)" [(ngModel)]="portalURL" name="url" [suggestions]="localCollection"                            (completeMethod)="filterintegrations($event)" [size]="30" [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm"
-                            required>                           
+                        <p-autoComplete field="portalUrl" (onSelect)="partnmId($event)" (onKeyUp)="eventHandler('portalUrl',$event.target.value)"
+                            [(ngModel)]="sourceAction.portalURL" name="url" [suggestions]="localCollection" (completeMethod)="filterintegrations($event)"
+                            [size]="30" [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
                         </p-autoComplete>
                         <div *ngIf="disableSave" style="color:red">Already Exists</div>
                     </div>
@@ -155,7 +155,7 @@
                 <div class="col-sm-12">
                     <div class="col-sm-4">
                         <label for="netDays" class="control-label">Integration
-                                <span class="clr-red">*</span>
+                            <span class="clr-red">*</span>
                         </label>
                     </div>
                     <div class="col-sm-5">

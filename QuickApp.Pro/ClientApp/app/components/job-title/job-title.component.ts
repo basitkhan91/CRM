@@ -43,7 +43,17 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
     totalRecords: number;
     AuditDetails: SingleScreenAuditDetails[];
 
-    ngOnInit(): void {
+    ngOnInit(): void {        
+        this.cols = [
+            //{ field: 'jobTitleId', header: 'Job Title Id' },
+            { field: 'description', header: 'Job Titles' },
+            { field: 'memo', header: 'Memo' },
+            { field: 'createdBy', header: 'Created By' },
+            { field: 'updatedBy', header: 'Updated By' },
+            //{ field: 'updatedDate', header: 'Updated Date' },
+            //{ field: 'createdDate', header: 'createdDate' }
+        ];
+        this.selectedColumns = this.cols;
 		this.loadData();
 		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-job-title';
 		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
@@ -57,7 +67,7 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
     allJobTitlesinfo: JobTitle[] = [];
     allComapnies: MasterCompany[] = [];
     private isSaving: boolean;
-    public sourceAction: JobTitle;
+    public sourceAction: any;
     public auditHisory: AuditHistory[] = [];
     private bodyText: string;
     loadingIndicator: boolean;
@@ -109,17 +119,6 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
             error => this.onDataLoadFailed(error)
         );
 
-        this.cols = [
-            //{ field: 'jobTitleId', header: 'Job Title Id' },
-            { field: 'description', header: 'Job Titles' },
-            { field: 'memo', header: 'Memo' },
-            { field: 'createdBy', header: 'Created By' },
-            { field: 'updatedBy', header: 'Updated By' },
-            //{ field: 'updatedDate', header: 'Updated Date' },
-            //{ field: 'createdDate', header: 'createdDate' }
-        ];
-
-        this.selectedColumns = this.cols;
 
     }
 
@@ -199,29 +198,22 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
     }
 
     open(content) {
-
         this.isEditMode = false;
         this.isDeleteMode = false;
-
         this.isSaving = true;
         this.loadMasterCompanies();
 		this.sourceAction = new JobTitle();
 		this.disableSave = false;
         this.sourceAction.isActive = true;
-        this.jobName = "";
-
+        this.sourceAction.jobName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
-
-
-
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
 
 
     openDelete(content, row) {
-
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceAction = row;
@@ -233,14 +225,12 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
     }
 
     openEdit(content, row) {
-
         this.isEditMode = true;
 		this.disableSave = false;
         this.isSaving = true;
 		this.loadMasterCompanies();
         this.sourceAction = {...row};
-        this.jobName = getObjectByValue('description',row.description,this.allJobTitlesinfo)
-       
+        this.sourceAction.jobName = getObjectByValue('description',row.description,this.allJobTitlesinfo)       
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -248,7 +238,6 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
         }, () => { console.log('Backdrop click') })
     }
     openView(content, row) {
-
         this.sourceAction = row;
         this.job_Name = row.description;
         this.memo = row.memo;
@@ -324,16 +313,13 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
 
     }
 
-    editItemAndCloseModel() {
-
-        
+    editItemAndCloseModel() {       
 
         this.isSaving = true;
-
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.jobName;
+            this.sourceAction.description = this.sourceAction.jobName;
             this.sourceAction.masterCompanyId = 1;
             this.sourceAction.isDelete = false;
             this.workFlowtService.newAction(this.sourceAction).subscribe(
@@ -343,7 +329,7 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
         else {
      
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.jobName.description;
+            this.sourceAction.description = this.sourceAction.jobName;
             this.sourceAction.masterCompanyId = 1;
             this.sourceAction.isDelete = false;
             this.workFlowtService.updateAction(this.sourceAction).subscribe(

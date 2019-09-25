@@ -38,13 +38,22 @@ export class PriorityComponent implements OnInit, AfterViewInit {
     createdDate: any = "";
     updatedDate: any = "";
     totalRecords: number;
+    tempPriorityName: any;
 
    
-
     ngOnInit(): void {
-		this.loadData();
-		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-priority';
+        this.cols = [
+       
+            { field: 'description', header: 'Priority Name' },
+            { field: 'memo', header: 'Memo' },
+            { field: 'createdBy', header: 'Created By' },
+            { field: 'updatedBy', header: 'Updated By' },
+          
+        ];
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-priority';
 		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
+        this.selectedColumns = this.cols;
+        this.loadData();
     }
     Active: string = "Active";
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -57,7 +66,7 @@ export class PriorityComponent implements OnInit, AfterViewInit {
     allComapnies: MasterCompany[] = [];
     public auditHisory: AuditHistory[] = [];
     private isSaving: boolean;
-    public sourceAction: Priority;
+    public sourceAction: any;
     private bodyText: string;
     loadingIndicator: boolean;
     closeResult: string;
@@ -69,7 +78,7 @@ export class PriorityComponent implements OnInit, AfterViewInit {
     /** Actions ctor */
     cols: any[];
     selectedColumns: any[];
-    priorityName: any;
+    priorityName: any = "";
     filteredBrands: any[];
     localCollection: any[] = [];
 
@@ -94,22 +103,10 @@ export class PriorityComponent implements OnInit, AfterViewInit {
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
         this.priorityService.getPriorityList().subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
-        );
-
-
-        this.cols = [
-       
-            { field: 'description', header: 'Priority Name' },
-            { field: 'memo', header: 'Memo' },
-            { field: 'createdBy', header: 'Created By' },
-            { field: 'updatedBy', header: 'Updated By' },
-          
-        ];
-        this.selectedColumns = this.cols;
+        );   
     }
 
     validateRecordExistsOrNot(field: string, currentInput: any, originalData: any) {
@@ -177,7 +174,7 @@ export class PriorityComponent implements OnInit, AfterViewInit {
         this.loadMasterCompanies();
 		this.sourceAction = new Priority();
         this.sourceAction.isActive = true;
-        this.priorityName = "";
+        this.sourceAction.priorityName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
 
@@ -201,13 +198,16 @@ export class PriorityComponent implements OnInit, AfterViewInit {
     }
 
     openEdit(content, row) {
-
+        console.log(row)
         this.isEditMode = true;
 		this.disableSave = false;
         this.isSaving = true;
         this.loadMasterCompanies();
         this.sourceAction = {...row};
-        this.priorityName = getObjectByValue('description',row.description,this.allPriorityInfo)
+        this.sourceAction.priorityName = getObjectByValue('description',row.description,this.allPriorityInfo)
+        this.tempPriorityName = this.priorityName;
+        console.log(this.priorityName);
+        console.log(this.priorityName.description);
         //this.priorityName = this.sourceAction.description;
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm' });
@@ -320,22 +320,25 @@ export class PriorityComponent implements OnInit, AfterViewInit {
 
     
     editItemAndCloseModel() {
-
+        console.log(this.sourceAction.priorityName)
+        console.log(this.sourceAction.memo)
         this.isSaving = true;
 
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.priorityName;
+            this.sourceAction.description = this.sourceAction.priorityName;
             this.priorityService.newPriority({ ...this.sourceAction, isDelete: this.isDeleteMode }).subscribe(
                 role => this.saveSuccessHelper(role),
                 error => this.saveFailedHelper(error));
         }
         else {
-
+           
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.priorityName.description;
+            //this.sourceAction.description = this.sourceAction.priorityName;
+           // console.log( this.sourceAction.description)
             this.priorityService.updatePriority(this.sourceAction).subscribe(
+
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
         }

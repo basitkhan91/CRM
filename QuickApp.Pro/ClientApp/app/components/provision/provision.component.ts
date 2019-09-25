@@ -44,6 +44,16 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
     isSaving: boolean;
     totalRecords: number;
     ngOnInit(): void {
+        this.cols = [
+            //{ field: 'provisionId', header: 'Provison Id' },
+            { field: 'description', header: 'Provision Name' },
+            { field: 'memo', header: 'Memo' },
+            { field: 'createdBy', header: 'Created By' },
+            { field: 'updatedBy', header: 'Updated By' },
+            // { field: 'updatedDate', header: 'Updated Date' },
+            // { field: 'createdDate', header: 'Created Date' }
+        ];
+        this.selectedColumns = this.cols;
         this.loadData();
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-provision';
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
@@ -57,7 +67,7 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
     allProvisonInfo: Provision[] = [];
     allComapnies: MasterCompany[] = [];
     public auditHisory: AuditHistory[] = [];
-    sourceAction: Provision;
+    sourceAction: any;
     loadingIndicator: boolean;
     actionForm: FormGroup;
     title: string = "Create";
@@ -109,16 +119,7 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
             error => this.onDataLoadFailed(error)
         );
 
-        this.cols = [
-            //{ field: 'provisionId', header: 'Provison Id' },
-            { field: 'description', header: 'Provision Name' },
-            { field: 'memo', header: 'Memo' },
-            { field: 'createdBy', header: 'Created By' },
-            { field: 'updatedBy', header: 'Updated By' },
-            // { field: 'updatedDate', header: 'Updated Date' },
-            // { field: 'createdDate', header: 'Created Date' }
-        ];
-        this.selectedColumns = this.cols;
+    
     }
     private loadMasterCompanies() {
         this.alertService.startLoadingMessage();
@@ -194,12 +195,9 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
         this.loadMasterCompanies();
         this.sourceAction = new Provision();
         this.sourceAction.isActive = true;
-        this.provisionName = " ";
+        this.sourceAction.provisionName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
-
-
-
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
@@ -222,7 +220,7 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
         this.loadMasterCompanies();
         this.disableSave = false;
         this.sourceAction = {...row};
-        this.provisionName = getObjectByValue('description',row.description,this.allProvisonInfo)
+        this.sourceAction.provisionName = getObjectByValue('description',row.description,this.allProvisonInfo)
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -250,18 +248,7 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
     }
 
     filterprovisions(event) {
-
-        // this.localCollection = [];
-        // for (let i = 0; i < this.allProvisonInfo.length; i++) {
-        //     let provisionName = this.allProvisonInfo[i].description;
-        //     if (provisionName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-        //         this.allprovisin.push([{
-        //             "provisionId": this.allProvisonInfo[i].provisionId,
-        //             "provisionName": provisionName
-        //         }]),
-        //             this.localCollection.push(provisionName);
-        //     }
-        // }
+     
         this.localCollection = this.allProvisonInfo;
 
         if (event.query !== undefined && event.query !== null) {
@@ -341,7 +328,7 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.provisionName;
+            this.sourceAction.description = this.sourceAction.provisionName;
             this.sourceAction.masterCompanyId = 1;
             this.provisionService.newProvision(this.sourceAction).subscribe(
                 role => this.saveSuccessHelper(role),
@@ -350,7 +337,8 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
         else {
 
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.provisionName.description;
+            this.sourceAction.description = this.sourceAction.provisionName;
+            
             this.sourceAction.masterCompanyId = 1;
             this.provisionService.updateProvision(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),

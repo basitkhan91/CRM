@@ -92,7 +92,7 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
     }
     public allWorkFlows: Integration[] = [];
     validateRecordExistsOrNot(field: string, currentInput: any, originalData: any) {
-       // console.log(field, currentInput, originalData)
+        // console.log(field, currentInput, originalData)
         if ((field !== '' || field !== undefined) && (currentInput !== '' || currentInput !== undefined) && (originalData !== undefined)) {
             const data = originalData.filter(x => {
                 return x[field].toLowerCase() === currentInput.toLowerCase()
@@ -189,9 +189,9 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
         this.isSaving = true;
         this.disableSave = false;
         this.loadMasterCompanies();
-        this.sourceAction = {...row};
+        this.sourceAction = { ...row };
         this.integrationName = this.sourceAction.description;
-        this.portalURL = getObjectByValue('portalUrl',row.portalUrl,this.allIntegrationInfo)              
+        this.sourceAction.portalURL = getObjectByValue('portalUrl', row.portalUrl, this.allIntegrationInfo)
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -200,7 +200,7 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
     }
     eventHandler(field, value) {
         const exists = this.validateRecordExistsOrNot(field, value, this.allIntegrationInfo);
-       // console.log(exists,"test");
+        // console.log(exists,"test");
         if (exists.length > 0) {
             this.disableSave = true;
         }
@@ -213,17 +213,14 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
         //debugger;
         this.disableSave = true;
     }
-
-
-    filterintegrations(event) {       
-    
+    filterintegrations(event) {
         this.localCollection = this.allIntegrationInfo;
         if (event.query !== undefined && event.query !== null) {
             const integration = [...this.allIntegrationInfo.filter(x => {
-               // return x.description.toLowerCase().includes(event.query.toLowerCase())
+                // return x.description.toLowerCase().includes(event.query.toLowerCase())
                 return x.portalUrl.toLowerCase().includes(event.query.toLowerCase())
             })]
-            console.log(integration,"test2");
+            console.log(integration, "test2");
             this.localCollection = integration;
         }
     }
@@ -312,15 +309,16 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
             //this.sourceAction.description = this.integrationName;
-            this.sourceAction.portalURL = this.portalURL;
+            //this.sourceAction.portalURL = this.portalURL;
             this.workFlowtService.newAction(this.sourceAction).subscribe(
                 role => this.saveSuccessHelper(role),
                 error => this.saveFailedHelper(error));
         }
         else {
-            this.sourceAction.updatedBy = this.userName;    
-            this.sourceAction.Portalurl = this.portalURL.portalUrl;
-            console.log(this.sourceAction.Portalurl );              
+            this.sourceAction.updatedBy = this.userName;
+            // this.sourceAction.Portalurl = this.portalURL.portalUrl;
+            //this.sourceAction.memo = this.sourceAction.memo;
+            console.log(this.sourceAction.Portalurl);
             this.workFlowtService.updateAction(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
