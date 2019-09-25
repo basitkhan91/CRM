@@ -123,7 +123,7 @@
                                                 <label for="description" class="control-label">Provision Name<span class="clr-red">*</span></label>
                                             </div>
                                             <div class="col-sm-5">
-                                                <p-autoComplete field="description" [(ngModel)]="provisionName" name="provision" (onSelect)="provisionId($event)" (onKeyUp)="eventHandler('description',$event.target.value)"
+                                                <p-autoComplete field="description" [(ngModel)]="sourceAction.provisionName" name="provision" (onSelect)="provisionId($event)" (onKeyUp)="eventHandler('description',$event.target.value)"
                                                                 [suggestions]="localCollection" (completeMethod)="filterprovisions($event)" [size]="30"
                                                                 [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
                                                     

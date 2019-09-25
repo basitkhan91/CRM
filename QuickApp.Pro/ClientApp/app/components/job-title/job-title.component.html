@@ -147,7 +147,7 @@
                         </label>
                     </div>
                     <div class="col-sm-5">
-                        <p-autoComplete field="description" [(ngModel)]="jobName" name="jobtitile" (onSelect)="jobTitleId($event)" (onKeyUp)="eventHandler('description',$event.target.value)"
+                        <p-autoComplete field="description" [(ngModel)]="sourceAction.jobName" name="jobtitile" (onSelect)="jobTitleId($event)" (onKeyUp)="eventHandler('description',$event.target.value)"
                             [suggestions]="localCollection" (completeMethod)="filterJobs($event)" [size]="30" [minLength]="1"
                             [dropdown]="true" class="p-autoComplete-ctsm" required>                           
                         </p-autoComplete>

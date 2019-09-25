@@ -61,7 +61,7 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
     allitemgroupobjInfo: Itemgroup[] = [];
     allComapnies: MasterCompany[] = [];
     private isSaving: boolean;
-    public sourceAction: Itemgroup;
+    public sourceAction: any;;
     private bodyText: string;
     loadingIndicator: boolean;
     closeResult: string;
@@ -189,7 +189,7 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
         this.loadMasterCompanies();
 		this.sourceAction = new Itemgroup();
         this.sourceAction.isActive = true;
-        this.itemGroupName = "";
+        this.sourceAction.itemGroupName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
 
@@ -217,7 +217,8 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
         this.isSaving = true;
         this.loadMasterCompanies();
         this.sourceAction = {...row};
-        this.itemGroupName = getObjectByValue('itemGroupCode',row.itemGroupCode,this.allitemgroupobjInfo)
+        this.sourceAction.itemGroupName = getObjectByValue('itemGroupCode',row.itemGroupCode,this.allitemgroupobjInfo)
+       
         //this.itemGroupName = this.sourceAction.itemGroupCode;
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm' });
@@ -312,7 +313,7 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.itemGroupCode = this.itemGroupName;
+            this.sourceAction.itemGroupCode = this.sourceAction.itemGroupName;
             this.sourceAction.masterCompanyId = 1;
             this.workFlowtService.newAction(this.sourceAction).subscribe(
                 role => this.saveSuccessHelper(role),
@@ -321,7 +322,7 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
         else {
 
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.itemGroupCode = this.itemGroupName.itemGroupCode;
+            this.sourceAction.itemGroupCode = this.sourceAction.itemGroupName;            
             this.sourceAction.masterCompanyId = 1;
             this.workFlowtService.updateAction(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
