@@ -4,6 +4,7 @@ using DAL.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace DAL.Repositories
 {
@@ -415,6 +416,52 @@ namespace DAL.Repositories
 
                 throw;
             }
+        }
+
+        public dynamic UpdateEntity(dynamic uiModel, dynamic dbModel,ref IDictionary<string, object> keyValuePairs)
+        {
+
+            uiModel.MasterCompanyId = dbModel.MasterCompanyId;
+            uiModel.CreatedDate = dbModel.CreatedDate;
+            uiModel.CreatedBy = dbModel.CreatedBy;
+            uiModel.UpdatedBy = dbModel.UpdatedBy;
+            uiModel.UpdatedDate = dbModel.UpdatedDate;
+
+            PropertyInfo[] uiProperties = GetProperties(uiModel);
+            PropertyInfo[] dbProperties = GetProperties(dbModel);
+
+            foreach (var uip in uiProperties)
+            {
+                dynamic uiValue = uip.GetValue(uiModel, null);
+                foreach (var dbp in dbProperties)
+                {
+                    if (!uip.PropertyType.FullName.StartsWith("DAL.Models"))
+                    {
+                        if (uip.Name == dbp.Name)
+                        {
+                            dynamic dbValue = dbp.GetValue(dbModel, null);
+                            if (uiValue != dbValue)
+                            {
+                                dbp.SetValue(dbModel, uiValue);
+                                keyValuePairs.Add(uip.Name, uiValue);
+                            }
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                        
+                }
+            }
+
+            return dbModel;
+        }
+
+        private static PropertyInfo[] GetProperties(object obj)
+        {
+            return obj.GetType().GetProperties();
         }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

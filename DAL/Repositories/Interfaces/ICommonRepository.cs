@@ -23,5 +23,7 @@ namespace DAL.Repositories.Interfaces
         void UpdateClassificationMappings(List<ClassificationMapping> classificationMappings, long referenceId);
         List<ClassificationMapping> GetCustomerClassificationMappings(int moduleId, int referenceId);
         List<ClassificationMapping> GetVendorClassificationMappings(int moduleId, int referenceId);
+
+        dynamic UpdateEntity(dynamic uiModel, dynamic dbModel, ref IDictionary<string, object> keyValuePairs);
     }
 }

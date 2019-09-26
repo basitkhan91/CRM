@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using QuickApp.Pro.Helpers;
 using QuickApp.Pro.ViewModels;
+using Microsoft.AspNetCore.Http;
 namespace QuickApp.Pro.Controllers
 {
 
@@ -21,12 +22,14 @@ namespace QuickApp.Pro.Controllers
         readonly ILogger _logger;
         readonly IEmailer _emailer;
         private const string GetActionByIdActionName = "GetActionById";
+        private readonly ApplicationDbContext _context;
 
-        public ItemClassificationController(IUnitOfWork unitOfWork, ILogger<ItemClassificationController> logger, IEmailer emailer)
+        public ItemClassificationController(IUnitOfWork unitOfWork, ILogger<ItemClassificationController> logger, IEmailer emailer, ApplicationDbContext context)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
             _emailer = emailer;
+            _context = context;
         }
 
         // GET: api/values
@@ -90,7 +93,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
-       
+
         [HttpPut("itemclasspost/{id}")]
         public IActionResult UpdateAction(long id, [FromBody] ItemClassifcationViewModel itemclassificationViewModel)
         {
@@ -100,17 +103,27 @@ namespace QuickApp.Pro.Controllers
                 if (itemclassificationViewModel == null)
                     return BadRequest($"{nameof(itemclassificationViewModel)} cannot be null");
                 var existingResult = _unitOfWork.ItemClassification.GetSingleOrDefault(c => c.ItemClassificationId == id);
-                existingResult.UpdatedDate = DateTime.Now;
-                existingResult.UpdatedBy = itemclassificationViewModel.UpdatedBy;
-                existingResult.ItemClassificationCode = itemclassificationViewModel.ItemClassificationCode;
-                existingResult.Description = itemclassificationViewModel.Description;
-                existingResult.Memo = itemclassificationViewModel.Memo;
-                existingResult.ItemType = itemclassificationViewModel.ItemType;
-                existingResult.IsActive = itemclassificationViewModel.IsActive;
-                existingResult.MasterCompanyId = itemclassificationViewModel.MasterCompanyId;
-                _unitOfWork.ItemClassification.Update(existingResult);
-                _unitOfWork.SaveChanges();
 
+                IDictionary<string, object> keyValuePairs = new Dictionary<string, object>();
+                existingResult = _unitOfWork.CommonRepository.UpdateEntity(itemclassificationViewModel,existingResult,ref keyValuePairs);
+
+
+                if (keyValuePairs != null && keyValuePairs.Count > 0)
+                {
+                    _context.ItemClassification.Attach(existingResult);
+                    foreach (var item in keyValuePairs)
+                    {
+                        _context.Entry(existingResult).Property(item.Key).IsModified = true;
+                    }
+
+                    existingResult.UpdatedDate = DateTime.Now;
+                    existingResult.UpdatedBy = HttpContext.Session.GetString("UserId");
+
+                    _context.Entry(existingResult).Property(x => x.UpdatedDate).IsModified = true;
+                    _context.Entry(existingResult).Property(x => x.UpdatedBy).IsModified = true;
+
+                    _context.SaveChanges();
+                }
             }
             return Ok(ModelState);
         }
