@@ -28,6 +28,8 @@ namespace DAL.Models
         public long CurrencyId { get; set; }
         public string DSO { get; set; }
         public decimal AccountsReceivableBalance { get; set; }
+        public long SalesPersonId { get; set; }
+        public long EmployeeId { get; set; }
         public int? MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
@@ -58,12 +60,10 @@ namespace DAL.Models
         public int CreditTermId { get; set; }
         [NotMapped]
         public string CreditTerm { get; set; }
-        [NotMapped]
-        public long SalesPersonId { get; set; }
+        
         [NotMapped]
         public string SalesPersonName { get; set; }
-        [NotMapped]
-        public long EmployeeId { get; set; }
+        
         [NotMapped]
         public long EmployeeName { get; set; }
 
