@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 namespace DAL.Models
 {
- public  class Employee:PasBase
+    public class Employee : PasBase
     {
         public long? EmployeeId { get; set; }
+        [Required(ErrorMessage = "First name is required."), MaxLength(50)]
         public string FirstName { get; set; }
         public string LastName { get; set; }
-         public string MiddleName { get; set; }
+        public string MiddleName { get; set; }
         public string EmployeeIdAsPerPayroll { get; set; }
         public string StationId { get; set; }
         public Int16? JobTitleId { get; set; }
@@ -27,7 +29,7 @@ namespace DAL.Models
         public bool? AllowOvertime { get; set; }
         public bool? AllowDoubleTime { get; set; }
         public bool? IsHourly { get; set; }
-       // public bool? IsLaborChargedToJob { get; set; }
+        // public bool? IsLaborChargedToJob { get; set; }
         public decimal? HourlyPay { get; set; }
         public bool? EmployeeCertifyingStaff { get; set; }
         public Byte? EmployeeLeaveTypeId { get; set; }
