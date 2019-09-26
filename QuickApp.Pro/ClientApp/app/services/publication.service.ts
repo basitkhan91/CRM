@@ -78,7 +78,12 @@ export class PublicationService {
 
   deleteAcion(actionId: any) {
     return this.publicationEndpoint.getDeleteActionEndpoint(actionId);
-  }
+    }
+
+    publicationStatus(publicationRecordId: number, status: boolean, updatedBy: string) {
+        return this.publicationEndpoint.publicationStatusEndpoint(publicationRecordId, status, updatedBy);
+    }
+
   historyAcion(actionId: number) {
     return Observable.forkJoin(
       this.publicationEndpoint.getHistoryActionEndpoin<AuditHistory[]>(actionId)

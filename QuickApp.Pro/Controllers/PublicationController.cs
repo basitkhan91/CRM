@@ -531,5 +531,12 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [HttpGet("publicationstatus")]
+        public IActionResult PublicationStatus(long publicationRecordId, bool status, string updatedBy)
+        {
+            _unitOfWork.Publication.PublicationStatus(publicationRecordId,status,updatedBy);
+            return Ok();
+
+        }
     }
 }

@@ -976,6 +976,29 @@ namespace DAL.Repositories
             }
         }
 
+        public void PublicationStatus(long publicationRecordId, bool status,string updatedBy)
+        {
+            Publication publication = new Publication();
+            try
+            {
+                publication.PublicationRecordId = publicationRecordId;
+                publication.UpdatedDate = DateTime.Now;
+                publication.UpdatedBy = updatedBy;
+                publication.IsActive = status;
+
+                _appContext.Publication.Attach(publication);
+                _appContext.Entry(publication).Property(x => x.IsActive).IsModified = true;
+                _appContext.Entry(publication).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(publication).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         private List<AttachmentDetails> GetAttachmentDetails(long publicationRecordId)
         {
             List<AttachmentDetails> attachmentDetailsList = new List<AttachmentDetails>();

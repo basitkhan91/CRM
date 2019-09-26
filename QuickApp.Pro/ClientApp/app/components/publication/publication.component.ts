@@ -116,7 +116,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
             { field: 'publicationId', header: 'Publication ID' },
             { field: 'description', header: 'Description' },
             { field: 'publicationType', header: 'Publication Type' },
-            { field: 'publishby', header: 'Published By' },
+            { field: 'publishedBy', header: 'Published By' },
             { field: 'employeeName', header: 'Employee' },
             { field: 'location', header: 'Location' },
             //{ field: 'aircraftModel', header: 'Aircraft Model' },
@@ -492,9 +492,9 @@ export class PublicationComponent implements OnInit, AfterViewInit {
             this.sourceAction.updatedBy = this.userName;
             this.Active = "In Active";
             this.sourceAction.isActive == false;
-            // this.workFlowtService.updateAction(this.sourceAction).subscribe(
-            //     response => this.saveCompleted(this.sourceAction),
-            //     error => this.saveFailedHelper(error));
+            this.workFlowtService.publicationStatus(this.sourceAction.publicationRecordId, false, this.userName).subscribe(
+                 response => this.saveCompleted(this.sourceAction),
+                 error => this.saveFailedHelper(error));
             //alert(e);
         }
         else {
@@ -502,9 +502,9 @@ export class PublicationComponent implements OnInit, AfterViewInit {
             this.sourceAction.updatedBy = this.userName;
             this.Active = "Active";
             this.sourceAction.isActive == true;
-            // this.workFlowtService.updateAction(this.sourceAction).subscribe(
-            //     response => this.saveCompleted(this.sourceAction),
-            //     error => this.saveFailedHelper(error));
+            this.workFlowtService.publicationStatus(this.sourceAction.publicationRecordId, true, this.userName).subscribe(
+                 response => this.saveCompleted(this.sourceAction),
+                 error => this.saveFailedHelper(error));
             //alert(e);
         }
 
