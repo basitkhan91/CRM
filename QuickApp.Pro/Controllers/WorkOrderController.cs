@@ -85,9 +85,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("workorderstatus")]
-        public IActionResult WorkOrderStatus(long workOrderId,bool status)
+        public IActionResult WorkOrderStatus(long workOrderId,bool status,string updatedBy)
         {
-            unitOfWork.WorkOrderRepository.WorkOrderStatus(workOrderId, status);
+            unitOfWork.WorkOrderRepository.WorkOrderStatus(workOrderId, status, updatedBy);
             return Ok(ModelState);
         }
 
@@ -382,6 +382,47 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetWorkFlowWorkOrderAddressList(long wfwoId = 0, long workOrderId = 0)
         {
             var result = unitOfWork.WorkOrderRepository.GetWorkFlowWorkOrderAddressList(wfwoId, workOrderId);
+            return Ok(result);
+        }
+
+        #endregion
+
+        #region Work Order Quote
+
+        [HttpPost("createworkorderquote")]
+        public IActionResult CreateWorkOrderQuote(WorkOrderQuote workOrderQuote)
+        {
+            if (ModelState.IsValid)
+            {
+                workOrderQuote.WorkOrderQuoteId = unitOfWork.WorkOrderRepository.CreateWorkOrderQuote(workOrderQuote);
+                return Ok(workOrderQuote);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpPost("updateworkorderquote")]
+        public IActionResult UpdateWorkOrderQuote(WorkOrderQuote workOrderQuote)
+        {
+            if (ModelState.IsValid)
+            {
+                unitOfWork.WorkOrderRepository.UpdateWorkOrderQuote(workOrderQuote);
+                return Ok(workOrderQuote);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpGet("getworkflowWorkorderquote")]
+        public IActionResult GetWorkFlowWorkOrderQuote(long wfwoId = 0, long workOrderId = 0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkFlowWorkOrderQuote(wfwoId, workOrderId);
             return Ok(result);
         }
 

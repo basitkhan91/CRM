@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace DAL.Models
 {
@@ -17,10 +15,10 @@ namespace DAL.Models
         public string QuoteNumber { get; set; }
         public DateTime OpenDate { get; set; }
         public DateTime QuoteDueDate { get; set; }
-        public int validForDays { get; set; }
+        public int ValidForDays { get; set; }
         public DateTime ExpirationDate { get; set; }
         public int QuoteStatusId { get; set; }
-        public string workOrderNumber { get; set; }
+        
         [ForeignKey("CustomerId")]
         public long CustomerId { get; set; }
         public int Quantity { get; set; }
@@ -55,7 +53,7 @@ namespace DAL.Models
         [NotMapped]
         public string CustomerReference { get; set; }
         [NotMapped]
-        public decimal CreditLimit { get; set; }
+        public decimal? CreditLimit { get; set; }
         [NotMapped]
         public int CreditTermId { get; set; }
         [NotMapped]
@@ -65,8 +63,9 @@ namespace DAL.Models
         public string SalesPersonName { get; set; }
         
         [NotMapped]
-        public long EmployeeName { get; set; }
-
+        public string EmployeeName { get; set; }
+        [NotMapped]
+        public string workOrderNumber { get; set; }
 
     }
 }

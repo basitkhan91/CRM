@@ -98,17 +98,17 @@ namespace DAL.Repositories
             }
         }
 
-        public void WorkOrderStatus(long workOrderId, bool status)
+        public void WorkOrderStatus(long workOrderId, bool status,string updatedBy)
         {
             WorkOrder workOrder = new WorkOrder();
             try
             {
                 workOrder.UpdatedDate = DateTime.Now;
-                workOrder.UpdatedBy = "admin";
+                workOrder.UpdatedBy = updatedBy;
                 workOrder.IsActive = status;
 
                 _appContext.WorkOrder.Attach(workOrder);
-                _appContext.Entry(workOrder).Property(x => x.IsDeleted).IsModified = true;
+                _appContext.Entry(workOrder).Property(x => x.IsActive).IsModified = true;
                 _appContext.Entry(workOrder).Property(x => x.UpdatedDate).IsModified = true;
                 _appContext.Entry(workOrder).Property(x => x.UpdatedBy).IsModified = true;
                 _appContext.SaveChanges();
@@ -1042,32 +1042,23 @@ namespace DAL.Repositories
 
             try
             {
-                var result = _appContext.WorkOrderExclusions
-                             .Join(_appContext.ItemMaster,
-                            we => we.ItemMasterId,
-                            im => im.ItemMasterId,
-                            (we, im) => new { we, im })
-                             .Join(_appContext.ExclusionEstimatedOccurances,
-                            we1 => we1.we.EstOcuuranceId,
-                            eo => eo.Id,
-                            (we1, eo) => new { we1, eo })
-                              .Join(_appContext.MarkUpPercentage,
-                            we2 => we2.we1.we.MarkUpPercentageId,
-                            mp => mp.MarkUpPercentageId,
-                            (we2, mp) => new { we2, mp })
 
-                             .Where(p => (p.we2.we1.we.WorkOrderId == workOrderId || p.we2.we1.we.WorkFlowWorkOrderId == wfwoId) && p.we2.we1.we.IsDeleted == false)
-                             .Select(p => new
-                             {
-                                 WorkOrderExclusions = p.we2.we1.we,
-                                 Epn = p.we2.we1.im.PartNumber,
-                                 EpnDescription = p.we2.we1.im.PartDescription,
-                                 Source = string.Empty,
-                                 EstOcuurance = p.we2.eo.Name,
-                                 MarkUpPercentage = p.mp.MarkUpValue
-
-                             })
+                var result = (from we in _appContext.WorkOrderExclusions
+                               join im in _appContext.ItemMaster on we.ItemMasterId equals im.ItemMasterId
+                               join eo in _appContext.ExclusionEstimatedOccurances on we.EstOcuuranceId equals eo.Id
+                               join mp in _appContext.MarkUpPercentage on we.MarkUpPercentageId equals mp.MarkUpPercentageId
+                               where we.IsDeleted == false && (we.WorkFlowWorkOrderId == wfwoId || we.WorkOrderId == workOrderId)
+                               select new
+                               {
+                                   WorkOrderExclusions = we,
+                                   Epn = im.PartNumber,
+                                   EpnDescription = im.PartDescription,
+                                   Source = string.Empty,
+                                   EstOcuurance = eo.Name,
+                                   MarkUpPercentage = mp.MarkUpValue
+                               })
                              .ToList();
+                
                 if (result != null && result.Count > 0)
                 {
                     foreach (var item in result)
@@ -1079,6 +1070,7 @@ namespace DAL.Repositories
                         workOrderExclusions.Source = item.Source;
                         workOrderExclusions.EstOcuurance = item.EstOcuurance;
                         workOrderExclusions.MarkUpPercentage = item.MarkUpPercentage;
+
                         workOrderExclusionsList.Add(workOrderExclusions);
                     }
                 }
@@ -1141,39 +1133,26 @@ namespace DAL.Repositories
 
             try
             {
-                var result = _appContext.WorkOrderDocuments
-                             .Join(_appContext.Company,
-                            wd => wd.CompanyId,
-                            c => c.CompanyId,
-                            (wd, c) => new { wd, c })
-                             .Join(_appContext.BusinessUnit,
-                            wd1 => wd1.wd.BusinessUnitId,
-                            bu => bu.BusinessUnitId,
-                            (wd1, bu) => new { wd1, bu })
-                              .Join(_appContext.Division,
-                            wd2 => wd2.wd1.wd.DivisionId,
-                            div => div.DivisionId,
-                            (wd2, div) => new { wd2, div })
-                              .Join(_appContext.Department,
-                            wd3 => wd3.wd2.wd1.wd.DepartmentId,
-                            dept => dept.DepartmentId,
-                            (wd3, dept) => new { wd3, dept })
-                               .Join(_appContext.Document,
-                            wd4 => wd4.wd3.wd2.wd1.wd.DocumentId,
-                            doc => doc.DocumentId,
-                            (wd4, doc) => new { wd4, doc })
 
-                             .Where(p => (p.wd4.wd3.wd2.wd1.wd.WorkFlowWorkOrderId == wfwoId || p.wd4.wd3.wd2.wd1.wd.WorkOrderId == workOrderId) && p.wd4.wd3.wd2.wd1.wd.IsDeleted == false)
-                             .Select(p => new
-                             {
-                                 WorkOrderDocuments = p.wd4.wd3.wd2.wd1.wd,
-                                 Company = p.wd4.wd3.wd2.wd1.c.CompanyName,
-                                 BusinessUnit = p.wd4.wd3.wd2.bu.BusinessUnitName,
-                                 Divison = p.wd4.wd3.div.DivisionName,
-                                 Department = p.wd4.dept.DepartmentName,
-                                 DocumentCode = p.doc.DocumentCode
-                             })
+                var result = (from wd in _appContext.WorkOrderDocuments
+                              join c in _appContext.Company on wd.CompanyId equals c.CompanyId
+                              join bu in _appContext.BusinessUnit on wd.BusinessUnitId equals bu.BusinessUnitId
+                              join div in _appContext.Division on wd.DivisionId equals div.DivisionId
+                              join dept in _appContext.Department on wd.DepartmentId equals dept.DepartmentId
+                              join doc in _appContext.Document on wd.DocumentId equals doc.DocumentId
+                              where wd.IsDeleted == false && (wd.WorkFlowWorkOrderId == wfwoId || wd.WorkOrderId == workOrderId)
+                              select new
+                              {
+                                  WorkOrderDocuments = wd,
+                                  Company = c.CompanyName,
+                                  BusinessUnit = bu.BusinessUnitName,
+                                  Divison = div.DivisionName,
+                                  Department = dept.DepartmentName,
+                                  DocumentCode = doc.DocumentCode
+                              })
                              .ToList();
+
+                
                 if (result != null && result.Count > 0)
                 {
                     foreach (var item in result)
@@ -1452,7 +1431,69 @@ namespace DAL.Repositories
             }
         }
 
-       
+        public WorkOrderQuote GetWorkFlowWorkOrderQuote(long wfwoId = 0, long workOrderId = 0)
+        {
+            try
+            {
+                WorkOrderQuote workOrderQuote = new WorkOrderQuote();
+                var result = (from wq in _appContext.WorkOrderQuote
+                                      join wo in _appContext.WorkOrder on wq.WorkOrderId equals wo.ID
+                                      join cust in _appContext.Customer on wq.CustomerId equals cust.CustomerId
+                                      join cur in _appContext.Currency on wq.CurrencyId equals cur.CurrencyId
+                                      join emp in _appContext.Employee on wq.EmployeeId equals emp.EmployeeId
+                                      join sp in _appContext.Employee on wq.SalesPersonId equals sp.EmployeeId
+                                      join cc in _appContext.CustomerContact on cust.CustomerId equals cc.CustomerId
+                                      join con in _appContext.Contact on cc.ContactId equals con.ContactId
+                                      join ct in _appContext.CreditTerms on cust.CreditTermsId equals ct.CreditTermsId
+                                      where (wq.WorkFlowWorkOrderId == wfwoId || wq.WorkOrderId == workOrderId) && wq.IsDeleted == false
+                                      select new
+                                      {
+                                          WorkOrderQuote=wq,
+                                          WorkOrderNumber=wo.WorkOrderNum,
+                                          CurrencyName = cur.Symbol,
+                                          CurrencyCode = cur.Code,
+                                          CustomerName = cust.Name,
+                                          CustomerCode = cust.CustomerCode,
+                                          CustomerContact = con.WorkPhone,
+                                          CustomerEmail = cust.Email,
+                                          CustomerPhone = cust.CustomerPhone,
+                                          CustomerReference = cust.CSRName,
+                                          CreditLimit = cust.CreditLimit,
+                                          CreditTermId = ct.CreditTermsId,
+                                          CreditTerm = ct.Name,
+                                          SalesPersonName = sp.FirstName + ' ' + sp.LastName,
+                                          EmployeeName = emp.FirstName + ' ' + emp.LastName
+
+                                      })
+                                .FirstOrDefault();
+                if(result!=null)
+                {
+                    workOrderQuote = result.WorkOrderQuote;
+                    workOrderQuote.workOrderNumber = result.WorkOrderNumber;
+                    workOrderQuote.CurrencyName = result.CurrencyName;
+                    workOrderQuote.CurrencyCode = result.CurrencyCode;
+                    workOrderQuote.CustomerName = result.CustomerName;
+                    workOrderQuote.CustomerCode = result.CustomerCode;
+                    workOrderQuote.CustomerContact = result.CustomerContact;
+                    workOrderQuote.CustomerEmail = result.CustomerEmail;
+                    workOrderQuote.CustomerPhone = result.CustomerPhone;
+                    workOrderQuote.CustomerReference = result.CustomerReference;
+                    workOrderQuote.CreditLimit = result.CreditLimit;
+                    workOrderQuote.CreditTermId = result.CreditTermId;
+                    workOrderQuote.CreditTerm = result.CreditTerm;
+                    workOrderQuote.SalesPersonName = result.SalesPersonName;
+                    workOrderQuote.EmployeeName = result.EmployeeName;
+
+                }
+
+                return workOrderQuote;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
 
 
         #endregion

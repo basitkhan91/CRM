@@ -13,7 +13,7 @@ namespace DAL.Repositories.Interfaces
         WorkOrder CreateWorkOrder(WorkOrder workOrder);
         WorkOrder UpdateWorkOrder(WorkOrder workOrder);
         void DeleteWorkOrder(long workOrderId);
-        void WorkOrderStatus(long workOrderId, bool status);
+        void WorkOrderStatus(long workOrderId, bool status, string updatedBy);
         GetData<WorkOrderList> GetWorkOrdersList(WorkOrderList workOrderList);
         WorkOrder WorkOrderById(long workOrderId);
         Dictionary<long, string> GetWorkFlowNos(long partId, long workScopeId);
@@ -50,6 +50,10 @@ namespace DAL.Repositories.Interfaces
         void UpdateWorkOrderAddress(WorkOrderAddress workOrderAddress);
         IEnumerable<WorkOrderAddress> GetWorkFlowWorkOrderAddressList(long wfwoId = 0, long workOrderId = 0);
 
+
+        long CreateWorkOrderQuote(WorkOrderQuote workOrderQuote);
+        void UpdateWorkOrderQuote(WorkOrderQuote workOrderQuote);
+        WorkOrderQuote GetWorkFlowWorkOrderQuote(long wfwoId = 0, long workOrderId = 0);
 
 
         void CreateWorkFlowWorkOrderForWorkFlow1(long workFlowId);

@@ -55,7 +55,10 @@ export class PublicationEndpointService extends EndpointFactory {
     '/api/Publication/searchGetItemAirMappedByPublicationIdMultiTypeIDModelIDDashID';
 
   private readonly _searchgetATAMappingByMultiChapterIDSubID: string =
-    '/api/Publication/searchGetItemATAMappedByPublicationIdMultiATAIDSubChapterID';
+        '/api/Publication/searchGetItemATAMappedByPublicationIdMultiATAIDSubChapterID';
+
+    private readonly _publicationStatus: string =
+        '/api/Publication/publicationstatus';
   get getCodeUrl() {
     return this.configurations.baseUrl + this._publicationGetUrl;
   }
@@ -82,6 +85,8 @@ export class PublicationEndpointService extends EndpointFactory {
                 return this.handleError(error, () => this.getpublicationbyIdEndpoint(id));
             });
     }
+
+   
     
   getNewpublicationEndpoint<T>(file: any): Observable<T> {
     const headers = new Headers({ 'Content-Type': 'multipart/form-data' });
@@ -139,7 +144,17 @@ export class PublicationEndpointService extends EndpointFactory {
           this.getDeleteActionEndpoint(actionId)
         );
       });
-  }
+    }
+
+    publicationStatusEndpoint<T>(id, status, updatedBy): Observable<T> {
+        return this.http
+            .get<T>(`${this._publicationStatus}?publicationRecordId=${id}&status=${status}&updatedBy=${updatedBy}`, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.publicationStatusEndpoint(id, status, updatedBy));
+            });
+    }
+
+
   getHistoryActionEndpoin<T>(actionId: number): Observable<T> {
     let endpointUrl = `${this._actionsUrlAuditHistory}/${actionId}`;
 

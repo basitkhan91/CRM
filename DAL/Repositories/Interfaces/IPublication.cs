@@ -28,7 +28,7 @@ namespace DAL.Repositories.Interfaces
         GetData<PublicationsList> GetPublicationsList(string publicationId, string description, int? publicationTypeId, string publishedBy, long employeeId, string location, int pageNumber, int pageSize);
         GetData<PublicationsList> PublicationsGlobalSearch(long? ataChapterId, long? ataSubChapterId, long? airCraftId, long? modelId, long? dashNumberId, int pageNumber, int pageSize);
         object PublicationView(long publicationRecordId);
-
+        void PublicationStatus(long publicationRecordId, bool status, string updatedBy);
 
 
     }
