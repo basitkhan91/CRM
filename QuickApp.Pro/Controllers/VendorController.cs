@@ -1274,6 +1274,7 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult AddAddress(VendorViewModel vendorViewModel)
         {
             Address address = new Address();
@@ -1297,6 +1298,7 @@ namespace QuickApp.Pro.Controllers
             vendorViewModel.AddressId = address.AddressId.Value;
             return Ok(ModelState);
         }
+
         [HttpPost("vendorContactPost")]
         public IActionResult CreateContact([FromBody] ContactViewModel contactViewModel)
         {
@@ -1459,8 +1461,6 @@ namespace QuickApp.Pro.Controllers
         //}
 
 
-
-
         [HttpPut("vendorContactPost/{id}")]
         public IActionResult updateContact(long id, [FromBody] ContactViewModel contactViewModel)
         {
@@ -1501,6 +1501,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+
         [HttpPut("vendorFinancePost/{id}")]
         public IActionResult Updatefinance(long id, [FromBody] VendorViewModel vendorViewModel)
         {
@@ -1547,6 +1548,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+
         [HttpPost("vendorShippingPost")]
         public IActionResult CreateShipping([FromBody] VendorShippingViewModel vendorshipping, Address address, long? vendAddressid, VendorShippingAdressViewModel vendorShippingAdressViewModel)
         {
@@ -1587,6 +1589,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+
         [HttpPost("updateShipping")]
         public IActionResult updateShipping([FromBody] VendorShippingViewModel vendorshipping, Address address, long? vendAddressid, VendorShippingAdressViewModel vendorShippingAdressViewModel)
         {
@@ -1616,6 +1619,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+
         [HttpPost("vendorShippingAddressDetails")]
         public IActionResult updateVendorShippingAddress([FromBody] VendorShippingAdressViewModel vendorshippingAddressViewModel, long? id, VendorShippingViewModel vendorshipping, Address address)
         {
@@ -1646,6 +1650,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+
         [HttpPost("paymentCheckPost")]
         public IActionResult CreatePaymentinfo([FromBody] CheckPaymentViewModel checkPaymentViewModel, Address address)
         {
@@ -1687,6 +1692,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+
         [HttpPut("checkPaymentUpdate/{id}")]
         public IActionResult updateCheckPaymentInfo(long id, [FromBody] CheckPaymentViewModel checkPaymentViewModel, Address address)
         {
@@ -1726,6 +1732,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+
         [HttpPost("vendorCheckPayment")]
         public IActionResult UpdateCheckpaymentToVendor([FromBody] VendorCheckPaymentViewModel vendorCheckPayment)
         {
@@ -1750,6 +1757,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+
         [HttpPost("paymentDomesticPost")]
         public IActionResult CreateDomesticpaymentinfo([FromBody] DomesticWirePaymentViewModel domesticWirePaymentViewModel, Address address)
         {
@@ -1792,6 +1800,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+
         [HttpPut("domesticPaymentUpdate/{id}")]
         public IActionResult updateDomesticDetails(long id, [FromBody] DomesticWirePaymentViewModel domesticWirePaymentViewModel)
         {
@@ -1836,6 +1845,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+
         [HttpPut("InternationalUpdate/{id}")]
         public IActionResult updateInternationalDetails(long id, [FromBody] InternationalWirePaymentViewModel internationalWirePaymentmodel)
         {
@@ -1879,6 +1889,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+
         [HttpPost("vendorDomesticPayment")]
         public IActionResult UpdateDomesticpaymentToVendor([FromBody] VendorDomesticWirePaymentViewModel vendorDomesticWirePaymentViewModel)
         {
@@ -1903,6 +1914,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+
         [HttpPost("paymentInternationalPost")]
         public IActionResult CreateInternationalpaymentinfo([FromBody] InternationalWirePaymentViewModel internationalWirePaymentViewModel, Address address)
         {
@@ -1947,7 +1959,6 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-        
         [HttpPost("paymentDefaultPost")]
         public IActionResult CreateDefaultmethod([FromBody] VendorPaymentViewModel vendorPaymentViewModel)
         {
@@ -1972,6 +1983,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+
         [HttpPut("defaultUpdate/{id}")]
         public IActionResult updatedefault(long id, [FromBody] VendorPaymentViewModel vendorPaymentViewModel)
         {
@@ -2041,6 +2053,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(id);
         }
+
         [HttpDelete("deleteCheckPayment/{id}")]
         [Produces(typeof(CheckPaymentViewModel))]
         public IActionResult DeleteCheckPayment(long id)
@@ -2054,6 +2067,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(id);
         }
+
         [HttpPut("updateShipAddress/{id}")]
         public IActionResult saveShipDetails(long id, [FromBody] VendorShippingAdressViewModel vendorShippingViewModel)
         {
@@ -2168,9 +2182,9 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.SaveChanges();
                 return Ok(actionobject);
             }
-
             return Ok(ModelState);
         }
+
         [HttpPut("updateShipViaDetails/{id}")]
         public IActionResult updateShipviaAddress(long id, [FromBody] VendorShippingViewModel vendorShippingViewModel)
         {
@@ -2203,8 +2217,6 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-
-
         [HttpPut("updateStatusVenShippingAddress/{id}")]
         public IActionResult updateStatusVenShippingAddress(long id, [FromBody] VendorShippingAdressViewModel vendorShippingViewModel)
         {
@@ -2230,12 +2242,11 @@ namespace QuickApp.Pro.Controllers
 
                 _unitOfWork.SaveChanges();
                 return Ok(checkPaymentObj);
-
-
             }
 
             return Ok(ModelState);
         }
+
         [HttpPut("updateStatusVendorShipping/{id}")]
         public IActionResult updateStatusVendorShipping(long id, [FromBody] VendorShippingViewModel vendorShippingViewModel)
         {
@@ -2374,8 +2385,6 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-
-
         [HttpGet("getShipViaHistory/{id}", Name = "GetShipViaHistory")]
         [Produces(typeof(List<AuditHistory>))]
         public IActionResult GetShipviaHistory(long id)
@@ -2398,6 +2407,7 @@ namespace QuickApp.Pro.Controllers
 
 
         }
+
         [HttpPost("saveVendorWarnings")]
         public IActionResult SaveVendorWarnings([FromBody]  VendorWarningViewModel vendorWarningViewModel)
         {
@@ -2431,6 +2441,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+
         [HttpPut("saveVendorWarnings/{id}")]
         public IActionResult SaveVendorWarningswithid(long id, [FromBody]  VendorWarningViewModel vendorWarningViewModel)
         {
@@ -2464,6 +2475,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+
         [HttpPut("updateVendorIsactive/{id}")]
         public IActionResult updateVendorIsatctive(long id, [FromBody]  VendorViewModel vendor)
         {
@@ -2506,7 +2518,6 @@ namespace QuickApp.Pro.Controllers
             }
         }
 
-
         [HttpPost("vendorCapabilityPost")]
         public IActionResult addCharges([FromBody] VendorCapabiliy vendorCapability) //it is for Model we will pass
         {
@@ -2526,8 +2537,6 @@ namespace QuickApp.Pro.Controllers
             }
             return Ok(vendorCapability);
         }
-
-        
 
         [HttpPost("vendorCapabilityTypePost")]
         public IActionResult addCharges([FromBody] VendorCapabilityType vendorcaptype) //it is for Model we will pass
@@ -2589,6 +2598,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(allVendShipdetails);
 
         }
+
         [HttpGet("vendorAircraftManufacturerGet/{id}")]
         [Produces(typeof(List<VendorCapabilityAircraftType>))]
         public IActionResult vendorAircraftManufacturerGet(int id)
@@ -2719,6 +2729,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(allseectedaircarftmodels);
 
         }
+
         [HttpPost("VendorMancapespost")]
         public IActionResult addCharges([FromBody] List<Capability> capability)
         {
@@ -2742,6 +2753,8 @@ namespace QuickApp.Pro.Controllers
             }
             return Ok();
         }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
         public void saveItemcapes(long returnid, long itemid)
         {
             VendorCapes imc = new VendorCapes();
@@ -2802,7 +2815,6 @@ namespace QuickApp.Pro.Controllers
             // return Ok(ModelState);
         }
 
-
         [HttpGet("GetListforCapes")]
         [Produces(typeof(List<VendorViewModel>))]
         public IActionResult GetListforCapes()
@@ -2859,6 +2871,7 @@ namespace QuickApp.Pro.Controllers
                 }
                 
             }
+
         [HttpGet("getvendorContactByVendorID/{vendorid}/{isDContact}")]
         [Produces(typeof(List<VendorCapabiltiyAircraftModel>))]
         public IActionResult GetVendorByID(long vendorid,bool isDContact)

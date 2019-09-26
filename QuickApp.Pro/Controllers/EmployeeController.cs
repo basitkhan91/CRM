@@ -61,6 +61,7 @@ namespace QuickApp.Pro.Controllers
 
 
         }
+
         [HttpGet("RolesGet")]
         [Produces(typeof(List<EmployeeViewModel>))]
         public IActionResult RolesGet()
@@ -69,6 +70,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(allEmployeeinfo);
 
         }
+
         [HttpGet("UserRolelevelList")]
         [Produces(typeof(List<EmployeeViewModel>))]
         public IActionResult UserRolelevelList()
@@ -77,9 +79,9 @@ namespace QuickApp.Pro.Controllers
             return Ok(allEmployeeinfo);
 
         }
+
         [HttpGet("shiftGet")]
         [Produces(typeof(List<EmployeeViewModel>))]
-
         public IActionResult Getshift()
         {
             var allEmployeeinfo = _unitOfWork.shift.Getshift(); //.GetAllCustomersData();
@@ -89,7 +91,6 @@ namespace QuickApp.Pro.Controllers
 
         [HttpGet("CountriesGet")]
         [Produces(typeof(List<EmployeeViewModel>))]
-
         public IActionResult GetCountries()
         {
             var allEmployeeinfo = _unitOfWork.Countries.GetCountries(); //.GetAllCustomersData();
@@ -99,7 +100,6 @@ namespace QuickApp.Pro.Controllers
 
         [HttpGet("EmployeeTrainingTypeGet")]
         [Produces(typeof(List<EmployeeViewModel>))]
-
         public IActionResult GetemployeeTrainingType()
         {
             var allEmployeeinfo = _unitOfWork.EmployeeTrainingType.GetAllEmployeeTrainingType(); //.GetAllCustomersData();
@@ -109,16 +109,15 @@ namespace QuickApp.Pro.Controllers
 
         [HttpGet("EmployeeLeaveTypeGet")]
         [Produces(typeof(List<EmployeeLeaveTypeViewModel>))]
-
         public IActionResult GetEmployeeLeaveType()
         {
             var allEmployeeinfo = _unitOfWork.EmployeeLeaveType.GetAllEmployeeLeaveTypeData(); //.GetAllCustomersData();
             return Ok(allEmployeeinfo);
 
         }
+
         [HttpGet("empTrainingTypesGet")]
         [Produces(typeof(List<EmployeeTrainingType>))]
-
         public IActionResult empTrainingTypesGet()
         {
             var allEmployeeinfo = _unitOfWork.EmployeeTrainingType.GetAllEmployeeTrainingType(); //.GetAllCustomersData();
@@ -134,6 +133,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(allEmployeeinfo);
 
         }
+
         [HttpGet("employeecertificationpost/{id}")]
         [Produces(typeof(List<EmployeeViewModel>))]
         public IActionResult employeecertificationpost(long id)
@@ -143,31 +143,23 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-
         [HttpGet("auditHistoryById/{id}")]
         [Produces(typeof(List<AuditHistory>))]
         public IActionResult GetAuditHostoryById(long id)
         {
             var result = _unitOfWork.AuditHistory.GetAllHistory("Employee", id); //.GetAllCustomersData();
-
-
             try
             {
                 var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
-
                 return Ok(resul1);
             }
             catch (Exception ex)
             {
-
                 throw;
             }
-
-
-
         }
-        [HttpPost("employeepost")]
 
+        [HttpPost("employeepost")]
         public IActionResult CreateAction([FromBody] EmployeeViewModel employeeViewModel)
         {
             if (ModelState.IsValid)
@@ -258,11 +250,9 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-
         [HttpPut("employeelistgpost/{id}")]
         public IActionResult UpdateAction(long id, [FromBody] EmployeeViewModel employeeViewModel)
         {
-
             if (ModelState.IsValid)
             {
                 if (employeeViewModel == null)
@@ -345,7 +335,6 @@ namespace QuickApp.Pro.Controllers
 
                     }
                 }
-
                 _unitOfWork.employee.Update(existingResult);
 
                 _unitOfWork.SaveChanges();
@@ -353,6 +342,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult addEmployeeShiftDetails([FromBody] long employeeid, int shifid, EmployeeViewModel employeeViewModel)
         {
             EmployeeShiftMapping employeeLicensureViewModel = new EmployeeShiftMapping();
@@ -381,6 +371,8 @@ namespace QuickApp.Pro.Controllers
             }
             return Ok(ModelState);
         }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult updateShiftDetials([FromBody] long employeeid, int shifid, EmployeeViewModel employeeViewModel)
         {
             EmployeeShiftMapping employeeLicensureViewModel = new EmployeeShiftMapping();
@@ -556,7 +548,6 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPut("certifilistgpost/{id}")]
-
         public IActionResult UpdateCertificationAction(long id, [FromBody] EmployeeLicensureViewModel employeeLicensureViewModel)
         {
 
@@ -744,7 +735,6 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("AddRolesData")]
-
         public IActionResult AddRolesData([FromBody] UserRoleLevelEntityViewModel uirolelevEntity)
         {
             var existingobj = _context.UserRoleLevelEntity.Where(a => a.UserRoleLevelId == uirolelevEntity.UserRoleLevelId).ToList();

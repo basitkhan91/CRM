@@ -23,6 +23,7 @@ namespace QuickApp.Pro.Controllers
         readonly ILogger _logger;
         readonly IEmailer _emailer;
         private readonly ApplicationDbContext _context;
+
         public CustomerController(IUnitOfWork unitOfWork, ILogger<CustomerController> logger, IEmailer emailer, ApplicationDbContext context)
         {
             _unitOfWork = unitOfWork;
@@ -37,30 +38,17 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("Get")]
         [Produces(typeof(List<CustomerViewModel>))]
         public IActionResult Get()
-
         {
             var result = _unitOfWork.Customer.GetAllCustomersData(); //.GetAllCustomersData();
-
-
             return Ok(result);
-
-
-
         }
 
         [HttpGet("Getdiscount")]
         [Produces(typeof(List<DiscountViewModel>))]
-
         public IActionResult Getdiscount()
-
         {
             var result = _unitOfWork.Discount.GetAllDiscountData(); //.GetAllCustomersData();
-
-
             return Ok(result);
-
-
-
         }
 
         [HttpGet("GetCustomerBynameList/{name}")]
@@ -69,7 +57,6 @@ namespace QuickApp.Pro.Controllers
         {
             var allCustomerBynamelistDetails = _unitOfWork.Customer.GetCustomerBynameList(name); //.GetAllCustomersData();
             return Ok(allCustomerBynamelistDetails);
-
         }
 
 
@@ -79,7 +66,6 @@ namespace QuickApp.Pro.Controllers
         {
             //.GetAllCustomersData();
             return Ok(customerViewModel);
-
         }
 
         [HttpGet("fianlEmptyObj")]
@@ -88,22 +74,18 @@ namespace QuickApp.Pro.Controllers
         {
             //.GetAllCustomersData();
             return Ok(customerViewModel);
-
         }
 
         //Added by Vishnu:
         [HttpGet("CustomerTypeGet")]
-
         [Produces(typeof(List<CustomerViewModel>))]
         public IActionResult cusTypeGet(CustomerViewModel customerViewModel)
         {
             var allcustomertype = _unitOfWork.customerType.GetCustomerTypes(); //.GetAllCustomersData();
             return Ok(allcustomertype);
-
         }
 
         [HttpGet("GetcountryList")]
-
         [Produces(typeof(List<Countries>))]
         public IActionResult GetcountryList()
         {
@@ -111,9 +93,6 @@ namespace QuickApp.Pro.Controllers
             return Ok(allcustomertype);
 
         }
-
-
-
 
         [HttpGet("aircraftTypeGet/{id}")]
         [Produces(typeof(List<AircraftModelViewModel>))]
@@ -125,7 +104,6 @@ namespace QuickApp.Pro.Controllers
             return Ok(allcustomertype);
 
         }
-
 
         [HttpGet("CustomerlistIdGet/{customerId}")]
         [Produces(typeof(List<CustomerViewModel>))]
@@ -145,7 +123,6 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-
         [HttpGet("AtachapterGet")]
         [Produces(typeof(List<ATAChapterViewModel>))]
         public IActionResult atachapterGet(ATAChapterViewModel aTAChapterViewModel)
@@ -154,6 +131,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(allatachapter);
 
         }
+
         [HttpGet("customerAddressGet/{id}")]
         [Produces(typeof(List<CustomerBillingAddress>))]
         public IActionResult customerAddressGet(long id, CustomerBillingAddress cstomerBillingAddress)
@@ -162,6 +140,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(allCusbilldetails);
 
         }
+
         [HttpGet("getCustomerBillViaDetails/{id}")]
         [Produces(typeof(List<CustomerBillingAddress>))]
         public IActionResult getCustomerBillViaDetails(long id, CustomerBillingAddress cstomerBillingAddress)
@@ -170,6 +149,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(allCusbilldetails);
 
         }
+
         [HttpGet("cusshippingGet/{id}")]
         [Produces(typeof(List<CustomerBillingAddress>))]
         public IActionResult cusshippingGet(long id, CustomerBillingAddress cstomerBillingAddress)
@@ -187,6 +167,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(allatachapter);
 
         }
+
         [HttpGet("aircraftManufacturerGet/{id}")]
         [Produces(typeof(List<CustomerAircraftModelViewModel>))]
         public IActionResult aircraftManufacturerGet(int id)
@@ -196,6 +177,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(aircraftManufacturer);
 
         }
+
         [HttpGet("AddressGet")]
         [Produces(typeof(List<Address>))]
         public IActionResult GetAddress()
@@ -264,7 +246,6 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-
         [HttpPut("updatediscount/{id}")]
         public IActionResult UpdateDiscont(long id, DiscountViewModel discountViewModel)
         {
@@ -273,11 +254,7 @@ namespace QuickApp.Pro.Controllers
             _context.Discount.Add(disc);
             _context.SaveChanges();
             return Ok(disc);
-
-
         }
-
-
 
         [HttpGet("GetDescriptionbypart/{name}")]
         [Produces(typeof(List<CustomerViewModel>))]
@@ -287,8 +264,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(descriptionbypart);
 
         }
-
-
+        
         [HttpPost("customers")]
         public IActionResult CreateAction([FromBody] CustomerViewModel customerViewModel, Address address, CustomerType ct)
         {
@@ -369,10 +345,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
-
-
-
-
+        
         [HttpPut("customers/{id}")]
         public IActionResult UpdateCustomers(long id, [FromBody] CustomerViewModel customerViewModel, CustomerType ct)
         {
@@ -495,6 +468,7 @@ namespace QuickApp.Pro.Controllers
             //return Ok(ModelState);
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult AddAddress(CustomerViewModel customerViewModel)
         {
             Address address = new Address();
@@ -518,6 +492,7 @@ namespace QuickApp.Pro.Controllers
             customerViewModel.Addressid = address.AddressId.Value;
             return Ok(ModelState);
         }
+
         [HttpGet("contactEmptyObj")]
         [Produces(typeof(List<ContactViewModel>))]
         public IActionResult getContactEmptyObj(ContactViewModel contactViewModel)
@@ -527,14 +502,16 @@ namespace QuickApp.Pro.Controllers
             return Ok(contactViewModel1);
 
         }
-        [HttpGet("fianlEmptyObj")]
+
+        [HttpGet("fianlContactEmptyObj")]
         [Produces(typeof(List<ContactViewModel>))]
-        public IActionResult getFianlEmptyObj(ContactViewModel contactViewModel)
+        public IActionResult getFianlContactEmptyObj(ContactViewModel contactViewModel)
         {
             //.GetAllCustomersData();
             return Ok(contactViewModel);
 
         }
+
         [HttpGet("paymentEmptyObj")]
         [Produces(typeof(List<ContactViewModel>))]
         public IActionResult getPaymentEmptyObj(ContactViewModel contactViewModel)
@@ -543,6 +520,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(contactViewModel);
 
         }
+
         [HttpGet("getCustomerShipViaDetails/{Selectedrow}")]
         [Produces(typeof(List<CustomerShipping>))]
         public IActionResult getCustomerShipViaDetails(long Selectedrow)
@@ -552,6 +530,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(allShipViaDetails);
 
         }
+
         [HttpGet("ContactGet/{contactId}")]
         [Produces(typeof(List<Contact>))]
         public IActionResult Contactget(long contactId)
@@ -560,6 +539,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(allContacts);
 
         }
+
         [HttpGet("ContactCompleteGet")]
         [Produces(typeof(List<Contact>))]
         public IActionResult ContactCompleteget()
@@ -568,6 +548,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(allContacts);
 
         }
+
         [HttpGet("CustomerWarningsget/{Selectedrow}")]
         [Produces(typeof(List<CustomerShipping>))]
         public IActionResult getCustomerWarningsWithid(long Selectedrow)
@@ -577,6 +558,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(allShipViaDetails);
 
         }
+
         [HttpPost("CustomerContactPost")]
         public IActionResult CreateContact([FromBody] ContactViewModel contactViewModel, CustomercontactViewModel customercontactViewModel)
         {
@@ -618,6 +600,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+
         [HttpPost("ContactPost")]
         public IActionResult CreateCustomerContact([FromBody] CustomercontactViewModel CustomerContactViewModel)
         {
@@ -639,19 +622,13 @@ namespace QuickApp.Pro.Controllers
                 contactObj.UpdatedBy = CustomerContactViewModel.UpdatedBy;
                 _unitOfWork.CustomerContact.Add(contactObj);
                 _unitOfWork.SaveChanges();
-
-                
-
-             
-
             }
-
             return Ok(ModelState);
         }
+
         [HttpPut("CustomerContactPost/{id}")]
         public IActionResult updateContact(long id, [FromBody] ContactViewModel contactViewModel, CustomercontactViewModel customercontactView)
         {
-
             if (ModelState.IsValid)
             {
                 if (contactViewModel == null)
@@ -683,8 +660,6 @@ namespace QuickApp.Pro.Controllers
                 contactObj.UpdatedBy = contactViewModel.UpdatedBy;
                 _unitOfWork.ContactRepository.Update(contactObj);
                 _unitOfWork.SaveChanges();
-
-
                 /*Update Customer Contacts*/
 
                 var customerContact = _context.CustomerContact.Where(p => p.ContactId == id).FirstOrDefault();
@@ -699,13 +674,13 @@ namespace QuickApp.Pro.Controllers
                 }
 
             }
-
-
             return Ok(contactViewModel);
         }
+
         [HttpGet("getContactHistroty/{id}", Name = "getContactHistrotyById")]
         [Produces(typeof(List<AuditHistory>))]
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult GetAuditHostoryById(long id)
         {
             var result = _unitOfWork.AuditHistory.GetAllHistory("Contact", id); //.GetAllCustomersData();
@@ -726,6 +701,7 @@ namespace QuickApp.Pro.Controllers
 
 
         }
+
         [HttpDelete("CustomerContact/{id}")]
         [Produces(typeof(CustomercontactViewModel))]
         public IActionResult DeleteAction(long id)
@@ -774,11 +750,11 @@ namespace QuickApp.Pro.Controllers
                 long? id = address.AddressId;
                 updateCusShipdetails(customerShippingAdressViewModel, id, Customershipping, address);
                 return Ok(Customershipping);
-
             }
 
             return Ok(ModelState);
         }
+
         [HttpGet("updatelistStatus/{id}")]
         public IActionResult DeleteCustomer(long id)
         {
@@ -798,6 +774,7 @@ namespace QuickApp.Pro.Controllers
             }
             
         }
+
         [HttpPut("customersUpdateforActive/{id}")]
         public IActionResult customersUpdateforActive(long id, [FromBody]CustomerViewModel Customershipping)
         {
@@ -924,6 +901,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult updateCusShipdetails([FromBody] CustomerShippingAdressViewModel CustomershippingViewModel, long? id, CustomerShippingViewModel Customershipping, Address address)
         {
             if (ModelState.IsValid)
@@ -952,12 +930,10 @@ namespace QuickApp.Pro.Controllers
                 Customershipping.CustomerShippingId = CustomerShippingAddressObj.CustomerShippingAddressId;
                 //updateShipping(vendorshipping, address, venAddressid, CustomerShippingViewModel);
                 return Ok(CustomerShippingAddressObj);
-
-
             }
-
             return Ok(ModelState);
         }
+
         [HttpPut("updateShipAddress/{id}")]
         public IActionResult saveShipDetails(long id, [FromBody] CustomerShippingViewModel CustomerShippingViewModel)
         {
@@ -992,12 +968,11 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.CustomerShippingAddress.Update(checkPaymentObj);
                 _unitOfWork.SaveChanges();
                 return Ok(checkPaymentObj);
-
-
             }
 
             return Ok(ModelState);
         }
+
         [HttpPost("addShipViaDetails")]
         public IActionResult CreateShipViaDetails([FromBody]  CustomerShippingViewModel CustomerShippingDetailsViewModel)
         {
@@ -1029,6 +1004,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+
         [HttpPut("updateShipViaDetails/{id}")]
         public IActionResult updateShipviaAddress(long id, [FromBody] CustomerShippingViewModel CustomerShippingViewModel)
         {
@@ -1143,12 +1119,11 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.CustomerShippingAddress.Update(checkPaymentObj);
                 _unitOfWork.SaveChanges();
                 return Ok(checkPaymentObj);
-
-
             }
 
             return Ok(ModelState);
         }
+
         [HttpPut("updateStatusCustomerBilling/{id}")]
         public IActionResult updateStatusCustomerBilling(long id, [FromBody] CustomerShippingViewModel CustomerShippingViewModel)
         {
@@ -1255,6 +1230,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+
         [HttpPut("saveCustomerWarnings/{id}")]
         public IActionResult SaveCustomerWarningswithid(long id, [FromBody]  CustomerWarningViewModel[] CustomerWarningViewModel)
         {
@@ -1368,12 +1344,10 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.CustomerBillingInformation.Update(checkBillingObj);
                 _unitOfWork.SaveChanges();
                 return Ok(checkBillingObj);
-
-
             }
-
             return Ok(ModelState);
         }
+
         [HttpPut("cusShippingUpdate/{id}")]
         public IActionResult cusShippingUpdate(long id, [FromBody] CustomerShippingAdressViewModel customerBillingAddressViewModel)
         {
@@ -1423,6 +1397,8 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
         //[HttpPost("vendorShippingAddressDetails")]
         public IActionResult updateCustomerbillingAddress([FromBody] CustomerBillingAddressViewModel customerBillingAddressViewModel, long? id, Address address)
         {
@@ -1448,12 +1424,10 @@ namespace QuickApp.Pro.Controllers
                 cbs.CustomerBillingAddressId = vendorShippingAddressObj.CustomerBillingAddressId;
                 //updateShipping(vendorshipping, address, venAddressid, customerBillingAddressViewModel);
                 return Ok(vendorShippingAddressObj);
-
-
             }
-
             return Ok(ModelState);
         }
+
         [HttpPut("customerFinancePost/{id}")]
         public IActionResult Updatefinance(long id, [FromBody] CustomerViewModel customerViewModel)
         {
@@ -1491,9 +1465,9 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.SaveChanges();
                 return Ok(customerObj);
             }
-
             return Ok(ModelState);
         }
+
         [HttpPost("Saleslist")]
         public IActionResult SalepersonAction([FromBody] CustomerViewModel customerViewModel)
         {
@@ -1522,9 +1496,9 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.SaveChanges();
                 return Ok(actionobject);
             }
-
             return Ok(ModelState);
         }
+
         [HttpPost("Aircraftpost")]
         public IActionResult CreateAircraftModels([FromBody] CustomerAircraftModel customerAircraftModel)
         {
@@ -1711,12 +1685,11 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<AircraftModelViewModel>))]
         public IActionResult GetAircarftmodelsdata(long id, AircraftModelViewModel aircraftModelViewModel)
         {
-
-
             var allseectedaircarftmodels = _unitOfWork.aircraftModel.GetSelectedAircraftModeldata(id); //.GetAllCustomersData();
             return Ok(allseectedaircarftmodels);
 
         }
+
         [HttpPost("saveCustomeraircraftdata")]
         public IActionResult SaveCustomeraircraft([FromBody]  CustomerAircraftTypeViewModel customerAircraftTypeViewModel)
         {
@@ -1743,6 +1716,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+
         [HttpPost("postCountryList")]
         public IActionResult CountryList([FromBody] CountriesViewModel countriesViewModel)
         {
@@ -2093,10 +2067,6 @@ namespace QuickApp.Pro.Controllers
                 return BadRequest(new Exception("Error Occured while fetching customer specific details."));
         }
 
-
-
-
-
         [HttpPost("createinternationalshipping")]
         public IActionResult CreateCustomerInternationalShipping([FromBody] CustomerInternationalShipping model)
         {
@@ -2201,10 +2171,6 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
-
-
-
-
         [HttpGet("getrestrictedparts")]
         public IActionResult GetRestrictedParts(int moduleId, long? referenceId, string partType)
         {
@@ -2218,6 +2184,7 @@ namespace QuickApp.Pro.Controllers
             public int TotalRecordsCount { get; set; }
             public List<CustomerSearchViewModel> CustomerList { get; set; }
         }
+
         [HttpGet("searchGetCustomerATAMappedByMultiATAIDATASubID/{CustomerId}")]
         public IActionResult CustomerATAMappedList(long CustomerId, string ATAChapterId, string ATASubChapterID)
         {
@@ -2232,6 +2199,7 @@ namespace QuickApp.Pro.Controllers
                 return Ok(result);
             }
         }
+
         [HttpDelete("DeleteCustomerATAMapping/{id}")]
         public IActionResult DeleteCustomerATA(long id)
         {
@@ -2241,6 +2209,7 @@ namespace QuickApp.Pro.Controllers
             _unitOfWork.SaveChanges();
             return Ok(id);
         }
+
         [HttpDelete("DeleteCustomerAircraftMappint/{id}")]
         public IActionResult DeleteCustomerAircraft(long id)
         {

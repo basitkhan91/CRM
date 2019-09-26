@@ -23,6 +23,7 @@ namespace QuickApp.Pro.Controllers
         readonly IEmailer _emailer;
         private readonly ApplicationDbContext _context;
         private const string GetActionByIdActionName = "GetActionById";
+
         public ItemMasterController(IUnitOfWork unitOfWork, ILogger<ItemMasterController> logger, IEmailer emailer, ApplicationDbContext context)
         {
             _unitOfWork = unitOfWork;
@@ -128,6 +129,7 @@ namespace QuickApp.Pro.Controllers
 
 
         }
+
         [HttpGet("GetItemStocklist")]
         [Produces(typeof(List<ItemMasterViewModel>))]
         public IActionResult itemstocklist(ItemMasterViewModel itemMasterViewModel)
@@ -468,6 +470,8 @@ namespace QuickApp.Pro.Controllers
             }
             return Ok();
         }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
         public void saveItemcapes(long returnid, long itemid)
         {
             ItemMasterCapes imc = new ItemMasterCapes();
@@ -1703,6 +1707,7 @@ namespace QuickApp.Pro.Controllers
             return Ok();
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpPost]
         public IActionResult CreateNhaTlaAltEquItemMapping(Nha_Tla_Alt_Equ_ItemMapping model)
         {
@@ -1716,6 +1721,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpPost]
         public IActionResult UpdateNhaTlaAltEquItemMapping(Nha_Tla_Alt_Equ_ItemMapping model)
         {
@@ -1729,6 +1735,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpGet]
         public IActionResult DeleteNhaTlaAltEquItemMapping(long id,string updatedBy)
         {
@@ -1736,6 +1743,7 @@ namespace QuickApp.Pro.Controllers
             return Ok();
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpGet]
         public IActionResult NhaTlaAltEquItemMappingStatus(long id,bool status, string updatedBy)
         {
@@ -1743,6 +1751,7 @@ namespace QuickApp.Pro.Controllers
             return Ok();
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpGet]
         public IActionResult NhaTlaAltEquItemMappingList(int mappingType, int pageNumber, int pageSize)
         {
@@ -1750,6 +1759,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpGet]
         public IActionResult NhaTlaAltEquItemMappingById(long itemMappingId, int mappingType)
         {

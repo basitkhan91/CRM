@@ -20,6 +20,7 @@ namespace QuickApp.Pro.Controllers
         readonly ILogger _logger;
         readonly IEmailer _emailer;
         private readonly ApplicationDbContext _context;
+
         public LegalEntityController(IUnitOfWork unitOfWork, ILogger<LegalEntityController> logger, IEmailer emailer,  ApplicationDbContext context)
         {
             _unitOfWork = unitOfWork;
@@ -27,7 +28,6 @@ namespace QuickApp.Pro.Controllers
             _emailer = emailer;
             _context = context;
         }
-
 
         [HttpGet("auditHistoryById/{id}")]
         [Produces(typeof(List<AuditHistory>))]
@@ -69,6 +69,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(allentity);
 
         }
+
         [HttpGet("GetforEdigt")]
         [Produces(typeof(List<LegalEntityViewModel>))]
         public IActionResult GetforEdigt()
@@ -78,8 +79,6 @@ namespace QuickApp.Pro.Controllers
             return Ok(allentity);
 
         }
-
-
 
         [HttpPost("legalEntitypost")]
         public IActionResult CreateAction([FromBody] LegalEntityViewModel legalEntityViewModel, Address address)
@@ -210,6 +209,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult AddAddress(LegalEntityViewModel legalEntityViewModel)
         {
             Address address = new Address();
@@ -233,7 +233,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult UpdateToParent(LegalEntity legalEntityViewModel)
         {
             var existingresult = _context.LegalEntity.Where(a => a.LegalEntityId == legalEntityViewModel.LegalEntityId).SingleOrDefault();
@@ -241,9 +241,8 @@ namespace QuickApp.Pro.Controllers
             _context.LegalEntity.Update(existingresult);      
             _context.SaveChanges();
             return Ok(ModelState);
-
-
         }
+
         [HttpPut("legalEntitypost/{id}")]
         public IActionResult UpdateLegalEntityDetails([FromBody] LegalEntityViewModel legalEntityViewModel)
         {
@@ -375,13 +374,9 @@ namespace QuickApp.Pro.Controllers
                 }
             }
             return Ok(ModelState);
-        
-
-
-        
          }
-        [HttpPost("managementEntitypost")]
 
+        [HttpPost("managementEntitypost")]
         public IActionResult CreateManagement([FromBody] ManagementStructureViewModel managementStructureViewModel, Address address)
         {
             ManagementStructure managementStructure = new ManagementStructure();

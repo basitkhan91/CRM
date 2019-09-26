@@ -22,6 +22,7 @@ namespace QuickApp.Pro.Controllers
         readonly ILogger _logger;
         readonly IEmailer _emailer;
         private readonly ApplicationDbContext _context;
+
         public UnitOfMeasureController(IUnitOfWork unitOfWork, ILogger<UnitOfMeasureController> logger, IEmailer emailer)
         {
             _unitOfWork = unitOfWork;
@@ -48,10 +49,8 @@ namespace QuickApp.Pro.Controllers
 
                 throw;
             }
-
-
-
         }
+
         [HttpGet("Get")]
         [Produces(typeof(List<UnitOfMeasureViewModel>))]
         public IActionResult Get()
@@ -321,6 +320,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(dynamicGridData);
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public void ImportXlsData()
         {
             try
