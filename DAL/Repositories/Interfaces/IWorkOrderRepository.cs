@@ -56,6 +56,11 @@ namespace DAL.Repositories.Interfaces
         WorkOrderQuote GetWorkFlowWorkOrderQuote(long wfwoId = 0, long workOrderId = 0);
 
 
+        long CreateWorkOrderFreight(WorkOrderFreight workOrderFreight);
+        void UpdateWorkOrderFreight(WorkOrderFreight workOrderFreight);
+        IEnumerable<WorkOrderFreight> GetWorkFlowWorkOrderFreightList(long wfwoId = 0, long workOrderId = 0);
+
+
         void CreateWorkFlowWorkOrderForWorkFlow1(long workFlowId);
 
     }
