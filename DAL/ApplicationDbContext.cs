@@ -242,7 +242,6 @@ namespace DAL
         public DbSet<MaterialUOM> MaterialUOMs { get; set; }
 
         public DbSet<PublicationType> PublicationTypes { get; set; }
-        public DbSet<PublicationAircraftManufacturer> PublicationAircraftManufacturers { get; set; }
         public DbSet<PublicationModel> PublicationModels { get; set; }
         public DbSet<PublicationStatus> PublicationStatuses { get; set; }
         public DbSet<ExclusionEstimatedOccurance> ExclusionEstimatedOccurances { get; set; }
@@ -387,7 +386,8 @@ namespace DAL
         public DbSet<WorkOrderDocuments> WorkOrderDocuments { get; set; }
         public DbSet<WorkOrderAddress> WorkOrderAddress { get; set; }
         public DbSet<WorkOrderQuote> WorkOrderQuote { get; set; }
-        
+        public DbSet<WorkOrderFreight> WorkOrderFreight { get; set; }
+
 
         public DbSet<AssetIntangibleAttributeType> AssetIntangibleAttributeType { get; set; }
 

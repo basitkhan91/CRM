@@ -65,11 +65,6 @@ namespace DAL
                 _context.PublicationTypes.Add(new PublicationType { Id = 3, Name = "SB" });
             }
 
-            if (!await _context.PublicationAircraftManufacturers.AnyAsync())
-            {
-                _context.PublicationAircraftManufacturers.Add(new PublicationAircraftManufacturer { Id = 1, Name = "AirBus" });
-                _context.PublicationAircraftManufacturers.Add(new PublicationAircraftManufacturer { Id = 2, Name = "Beoing" });
-            }
             if (!await _context.PublicationModels.AnyAsync())
             {
 

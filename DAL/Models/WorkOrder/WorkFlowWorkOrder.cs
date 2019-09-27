@@ -19,6 +19,7 @@ namespace DAL.Models
             Documents = new List<WorkOrderDocuments>();
             WorkOrderAddress = new List<WorkOrderAddress>();
             WorkOrderQuote = new WorkOrderQuote();
+            WorkOrderFreight = new List<WorkOrderFreight>();
         }
 
         [Key]
@@ -120,5 +121,6 @@ namespace DAL.Models
         public virtual List<WorkOrderDocuments> Documents { get; set; }
         public virtual List<WorkOrderAddress> WorkOrderAddress { get; set; }
         public virtual WorkOrderQuote WorkOrderQuote { get; set; }
+        public virtual List<WorkOrderFreight> WorkOrderFreight { get; set; }
     }
 }
