@@ -242,7 +242,6 @@ namespace DAL
         public DbSet<MaterialUOM> MaterialUOMs { get; set; }
 
         public DbSet<PublicationType> PublicationTypes { get; set; }
-        public DbSet<PublicationAircraftManufacturer> PublicationAircraftManufacturers { get; set; }
         public DbSet<PublicationModel> PublicationModels { get; set; }
         public DbSet<PublicationStatus> PublicationStatuses { get; set; }
         public DbSet<ExclusionEstimatedOccurance> ExclusionEstimatedOccurances { get; set; }
