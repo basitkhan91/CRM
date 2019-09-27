@@ -59,6 +59,11 @@ export class PublicationEndpointService extends EndpointFactory {
 
     private readonly _publicationStatus: string =
         '/api/Publication/publicationstatus';
+    private readonly _publicationGetByIdViewUrl: string = '/api/Publication/publicationview';
+        
+
+
+
   get getCodeUrl() {
     return this.configurations.baseUrl + this._publicationGetUrl;
   }
@@ -409,16 +414,17 @@ export class PublicationEndpointService extends EndpointFactory {
       });
   }
 
-  deleteitemMasterMappedEndpoint<T>(userObject: any): Observable<T> {
+  deleteitemMasterMappedEndpoint<T>(PublicationItemMasterMappingId: any): Observable<T> {
     return this.http
       .post<T>(
-        this._deleteItemMasterMappingByID,
-        JSON.stringify(userObject),
+        `${this._deleteItemMasterMappingByID}/${PublicationItemMasterMappingId}`,
+        //JSON.stringify(userObject),
+     {},
         this.getRequestHeaders()
       )
       .catch(error => {
         return this.handleError(error, () =>
-          this.deleteitemMasterMappedEndpoint(userObject)
+          this.deleteitemMasterMappedEndpoint(PublicationItemMasterMappingId)
         );
       });
   }
@@ -451,5 +457,21 @@ export class PublicationEndpointService extends EndpointFactory {
           this.searchgetAtaMappedByMultiSubChapterID(searchUrl, PublicationID)
         );
       });
+  }
+
+  getpublicationbyIdViewEndpoint<T>(id): Observable<T> {
+    return this.http
+        .get<T>(`${this._publicationGetByIdViewUrl}/${id}`, this.getRequestHeaders())
+        .catch(error => {
+            return this.handleError(error, () => this.getpublicationbyIdViewEndpoint(id));
+        });
+}
+
+getpublicationListEndpoint<T>(pageIndex, pageSize): Observable<T> {
+  return this.http
+    .get<T>(`${this.getCodeUrl}?pageNumber=${pageIndex}&pageSize=${pageSize}`, this.getRequestHeaders())
+    .catch(error => {
+      return this.handleError(error, () => this.getpublicationListEndpoint(pageIndex, pageSize));
+    });
   }
 }

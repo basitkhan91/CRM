@@ -139,9 +139,8 @@
 
           <div class="form-group">
             <label for="fileupload">File Upload </label>
-            <input #file type="file" name="gFileupload" multiple (change)="upload(file.files)" />
-            <!-- <p-fileUpload name="myfile[]"  url="./upload.php"   multiple="multiple"
-              [showCancelButton]="false" customUpload="true" (uploadHandler)="publicationFileUpload($event)"></p-fileUpload> -->
+            <!-- <input #file type="file" name="gFileupload" multiple (change)="upload(file.files)" /> -->
+             <p-fileUpload name="gFileupload[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUpload($event)"></p-fileUpload> <!--(uploadHandler)="publicationFileUpload($event)" url="./upload.php"-->
               
           </div>
         </div>

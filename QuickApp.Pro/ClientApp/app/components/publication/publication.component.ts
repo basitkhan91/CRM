@@ -76,15 +76,17 @@ export class PublicationComponent implements OnInit, AfterViewInit {
     localCollection: any[] = [];
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
+    private isActive: boolean = false;
+    totalRecords: any;
     generalInfo: any;
-    pageIndex: number;
+    pageIndex: number = 0;
     pnMappingList = [];
     aircraftList: any = [];
     ataList = [];
     headersforPNMapping = [
-        { field: 'PartNumber', header: 'PN ID/Code' },
-        { field: 'PartNumberDescription', header: 'PN Description' },
-        { field: 'ItemClassification', header: 'Item Classification' }
+        { field: 'partNumber', header: 'PN ID/Code' },
+        { field: 'partDescription', header: 'PN Description' },
+        { field: 'itemClassification', header: 'Item Classification' }
     ];
     aircraftInformationCols: any[] = [
         { field: 'aircraft', header: 'Aircraft' },
@@ -96,12 +98,16 @@ export class PublicationComponent implements OnInit, AfterViewInit {
     { field: 'ataChapter', header: 'AtaChapter' },
     { field: 'ataSubChapter', header: 'AtaSubChapter' }
     ];
-    
+    headersforAttachment = [
+        { field: 'fileName', header: 'File Name' },
+        //{ field: 'link', header: 'Action' },
+    ];
 
     first: number = 0;
-    pagesize: number;
+    pagesize: number = 10;
+    attachmentList: any[] = [];
 
-    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: PublicationService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private router: Router, public employeeService: EmployeeService, private publicationService: PublicationService
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public publicationService: PublicationService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private router: Router, public employeeService: EmployeeService,
     ) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
@@ -143,9 +149,14 @@ export class PublicationComponent implements OnInit, AfterViewInit {
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
-        this.workFlowtService.getWorkFlows().subscribe(
-            results => this.onDataLoadSuccessful(results[0]['paginationList']),
+        console.log(this.pageIndex)
+        console.log(this.pagesize)
+        this.publicationService.getWorkFlows(this.pageIndex, this.pagesize).subscribe(
+            results => {
+                this.onDataLoadSuccessful(results[0]['paginationList']);
+                console.log(results[0]['totalRecordsCount']);
+                this.totalRecords = results[0]['totalRecordsCount'];
+        },
             error => this.onDataLoadFailed(error)
         );
 
@@ -286,26 +297,39 @@ export class PublicationComponent implements OnInit, AfterViewInit {
 
     openView(content, row) {
         console.log(row)
-        this.generalInfo = row;
-        this.sourceAction = row;
-        this.publication_Name = row.publicationId;
-        this.description = row.description;
-        this.partNumber = row.partNumber;
-        this.model = row.model;
-        this.ataMain = row.ataMain;
-        this.ataSubChapter = row.ataSubChapter;
-        this.ataPositionZone = row.ataPositionZone;
-        this.platform = row.platform;
-        this.memo = row.memo;
-        this.createdBy = row.createdBy;
-        this.updatedBy = row.updatedBy;
-        this.createdDate = row.createdDate;
-        this.updatedDate = row.updatedDate;
+        //this.generalInfo = row;
+        // this.sourceAction = row;
+        // this.publication_Name = row.publicationId;
+        // this.description = row.description;
+        // this.partNumber = row.partNumber;
+        // this.model = row.model;
+        // this.ataMain = row.ataMain;
+        // this.ataSubChapter = row.ataSubChapter;
+        // this.ataPositionZone = row.ataPositionZone;
+        // this.platform = row.platform;
+        // this.memo = row.memo;
+        // this.createdBy = row.createdBy;
+        // this.updatedBy = row.updatedBy;
+        // this.createdDate = row.createdDate;
+        // this.updatedDate = row.updatedDate;
+        this.isActive = row.isActive;
+        console.log(this.isActive);
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'lg' });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
+
+        //get general info
+        this.publicationService.getpublicationbyIdView(row.publicationRecordId).subscribe(res => {
+            this.generalInfo = res[0];
+            this.attachmentList = res[0].attachmentDetails.map(x => {
+                return {
+                    fileName: x.fileName,
+                    //link: x.link
+                }
+            })
+        })
 
         //get PN Mapping info
         this.publicationService.getPublicationPNMapping(row.publicationRecordId)
@@ -314,9 +338,9 @@ export class PublicationComponent implements OnInit, AfterViewInit {
           this.pnMappingList = res.map(x => {
             return {
               ...x,
-              PartNumber: x.partNumber,
-              PartNumberDescription: x.partNumberDescription,
-              ItemClassification: x.itemClassification
+              partNumber: x.partNumber,
+              partDescription: x.partDescription,
+              itemClassification: x.itemClassification
             };
           });
         });
@@ -407,7 +431,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
 
         //this.isSaving = true;
         // debugger;
-        this.workFlowtService.historyAcion(this.sourceAction.publicationRecordId).subscribe(
+        this.publicationService.historyAcion(this.sourceAction.publicationRecordId).subscribe(
             results => this.onHistoryLoadSuccessful(results[0], content),
             error => this.saveFailedHelper(error));
 
@@ -440,7 +464,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.publicationId = this.publicationName;
             this.sourceAction.masterCompanyId = 1;
-            this.workFlowtService.newAction(this.sourceAction).subscribe(
+            this.publicationService.newAction(this.sourceAction).subscribe(
                 role => this.saveSuccessHelper(role),
                 error => this.saveFailedHelper(error));
         }
@@ -448,7 +472,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
 
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.publicationId = this.publicationName;
-            // this.workFlowtService.updateAction(this.sourceAction).subscribe(
+            // this.publicationService.updateAction(this.sourceAction).subscribe(
             //     response => this.saveCompleted(this.sourceAction),
             //     error => this.saveFailedHelper(error));
         }
@@ -459,7 +483,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
     deleteItemAndCloseModel() {
         this.isSaving = true;
         this.sourceAction.updatedBy = this.userName;
-        this.workFlowtService.deleteAcion(this.sourceAction.publicationRecordId).subscribe(
+        this.publicationService.deleteAcion(this.sourceAction.publicationRecordId).subscribe(
             response => this.saveCompleted(this.sourceAction),
             error => this.saveFailedHelper(error));
         this.modal.close();
@@ -492,7 +516,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
             this.sourceAction.updatedBy = this.userName;
             this.Active = "In Active";
             this.sourceAction.isActive == false;
-            this.workFlowtService.publicationStatus(this.sourceAction.publicationRecordId, false, this.userName).subscribe(
+            this.publicationService.publicationStatus(this.sourceAction.publicationRecordId, false, this.userName).subscribe(
                  response => this.saveCompleted(this.sourceAction),
                  error => this.saveFailedHelper(error));
             //alert(e);
@@ -502,7 +526,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
             this.sourceAction.updatedBy = this.userName;
             this.Active = "Active";
             this.sourceAction.isActive == true;
-            this.workFlowtService.publicationStatus(this.sourceAction.publicationRecordId, true, this.userName).subscribe(
+            this.publicationService.publicationStatus(this.sourceAction.publicationRecordId, true, this.userName).subscribe(
                  response => this.saveCompleted(this.sourceAction),
                  error => this.saveFailedHelper(error));
             //alert(e);
@@ -547,7 +571,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
 
     auditAssetStatus(publicationId: number): void {
         this.AuditDetails = [];
-        this.workFlowtService.getPublicationAudit(publicationId).subscribe(audits => {
+        this.publicationService.getPublicationAudit(publicationId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
                 this.AuditDetails[0].ColumnsToAvoid = ["publicationAuditId", "publicationRecordId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
@@ -573,10 +597,11 @@ export class PublicationComponent implements OnInit, AfterViewInit {
 		this.allEmployeeinfo = getEmployeeCerficationList;
     }
     
-    // publicationPagination(event: { first: any; rows: number }) {
-    //     const pageIndex = parseInt(event.first) / event.rows;
-    //     this.pageIndex = pageIndex;
-    //     this.pagesize = 10;
-    //     //this.pageSizeForInternationalShipVia = this.pageSizeForInternationalShipVia;
-    // }
+    publicationPagination(event: { first: any; rows: number }) {
+        console.log(event);
+        const pageIndex = (event.first / event.rows);
+        this.pageIndex = pageIndex;
+        this.pagesize = event.rows; //10
+        this.loadData();
+    }
 }

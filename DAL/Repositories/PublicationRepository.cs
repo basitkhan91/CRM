@@ -31,31 +31,40 @@ namespace DAL.Repositories
 
                 if (publication != null)
                 {
-                    var attachment = _appContext.Attachment.Where(p => p.ReferenceId == ID && p.ModuleId == Convert.ToInt32(ModuleEnum.Publication)).FirstOrDefault();
-                    if (attachment != null)
+                    var attachmentList = _appContext.Attachment.Where(p => p.ReferenceId == ID && p.ModuleId == Convert.ToInt32(ModuleEnum.Publication)).ToList();
+                    if (attachmentList != null && attachmentList.Count>0)
                     {
-                        publication.AttachmentId = attachment.AttachmentId;
-
-                        var details = _appContext.Attachment
-                          .Join(_appContext.AttachmentDetails,
-                                 a => a.AttachmentId,
-                                 ad => ad.AttachmentId,
-                                 (a, ad) => new { a, ad })
-                          .Where(p => p.ad.IsDeleted == false && p.a.AttachmentId == publication.AttachmentId && p.a.ModuleId == Convert.ToInt32(ModuleEnum.Publication) && p.a.ReferenceId == ID)
-                          .Select(p => new
-                          {
-                              AttachmentDetails = p.ad
-                          })
-                          .ToList();
-
-                        if (details != null && details.Count > 0)
+                        publication.AttachmentDetails = new List<AttachmentDetails>();
+                        foreach (var attachment in attachmentList )
                         {
-                            publication.AttachmentDetails = new List<AttachmentDetails>();
-                            foreach (var item in details)
+                            publication.AttachmentId = attachment.AttachmentId;
+
+                            var details = _appContext.Attachment
+                              .Join(_appContext.AttachmentDetails,
+                                     a => a.AttachmentId,
+                                     ad => ad.AttachmentId,
+                                     (a, ad) => new { a, ad })
+                              .Where(p => p.ad.IsDeleted == false 
+                                    && p.a.AttachmentId == publication.AttachmentId 
+                                    && p.a.ModuleId == Convert.ToInt32(ModuleEnum.Publication) 
+                                    && p.a.ReferenceId == ID)
+                              .Select(p => new
+                              {
+                                  AttachmentDetails = p.ad
+                              })
+                              .ToList();
+
+                            if (details != null && details.Count > 0)
                             {
-                                publication.AttachmentDetails.Add(item.AttachmentDetails);
+                               
+                                foreach (var item in details)
+                                {
+                                    publication.AttachmentDetails.Add(item.AttachmentDetails);
+                                }
                             }
                         }
+
+                        
                     }
                 }
 
