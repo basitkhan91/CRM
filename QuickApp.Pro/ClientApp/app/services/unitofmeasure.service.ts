@@ -44,7 +44,7 @@ export class UnitOfMeasureService {
         return Observable.forkJoin(
             this.unitofmeasureEndpoint.getAllUnitOfMeasureEndpoint<any>());
     }
-    newUnitOfMeasure(unitofmeasure: UnitOfMeasure) {
+    newUnitOfMeasure(unitofmeasure) {
         return this.unitofmeasureEndpoint.getNewUnitOfMeasureEndpoint<UnitOfMeasure>(unitofmeasure);
     }
 
@@ -56,7 +56,7 @@ export class UnitOfMeasureService {
         return this.unitofmeasureEndpoint.getEditUnitOfMeasureEndpoint<UnitOfMeasure>(unitofmeasureId);
     }
 
-    updateUnitOfMeasure(unitofmeasure: UnitOfMeasure) {
+    updateUnitOfMeasure(unitofmeasure) {
         return this.unitofmeasureEndpoint.getUpdateUnitOfMeasureEndpoint(unitofmeasure, unitofmeasure.unitOfMeasureId);
     }
 
