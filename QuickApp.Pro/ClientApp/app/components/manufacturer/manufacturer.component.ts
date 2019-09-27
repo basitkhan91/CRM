@@ -24,6 +24,7 @@ import { AlertService, MessageSeverity } from '../../services/alert.service';
 import { MasterComapnyService } from '../../services/mastercompany.service';
 import { Manufacturer } from '../../models/manufacturer.model';
 import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
+import { getObjectByValue } from '../../generic/autocomplete';
 
 
 @Component({
@@ -104,14 +105,47 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
 
     }
     ngOnInit(): void {
-
         this.loadData();
-
+        this.cols = [
+            { field: 'name', header: 'Manufacturer Name' },
+            { field: 'comments', header: 'Memo' },
+            // { field: 'createdBy', header: 'Created By' },
+            //{ field: 'updatedBy', header: 'Updated By' },
+            //{ field: 'createdDate', header: 'Created Date' },
+            //{ field: 'updatedDate', header: 'Updated Date' }
+        ];
+        this.selectedColumns = this.cols;
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-manufacturer';
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
 
     }
+    validateRecordExistsOrNot(field: string, currentInput: any, originalData: any) {
+        console.log(field, currentInput, originalData)
+        if ((field !== '' || field !== undefined) && (currentInput !== '' || currentInput !== undefined) && (originalData !== undefined)) {
+            const data = originalData.filter(x => {
+                return x[field].toLowerCase() === currentInput.toLowerCase()
+            })
+            return data;
+        }
+    }
+    editValueAssignByCondition(field: any, value: any) {
+        console.log(field, value)
+        if ((value !== undefined) && (field !== '' || field !== undefined)) {
 
+            if (typeof (value) === 'string') {
+                return value
+            }
+            else {
+                return this.getValueFromObjectByKey(field, value)
+            }
+        }
+    }
+    getValueFromObjectByKey(field: string, object: any) {
+        console.log(field, object)
+        if ((field !== '' || field !== undefined) && (object !== undefined)) {
+            return object[field];
+        }
+    }
 
     private loadMasterCompanies() {
         this.alertService.startLoadingMessage();
@@ -132,11 +166,11 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
     open(content) {
         this.disableSave = false;
         this.isEditMode = false;
-        this.isDeleteMode = false;        
+        this.isDeleteMode = false;
         this.isSaving = true;
         this.loadMasterCompanies();
         this.sourcemanufacturer = new Manufacturer();
-        this.name = "";
+        this.sourcemanufacturer.name= "";
         this.sourcemanufacturer.isActive = true;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -156,56 +190,21 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
     }
 
 
-    ManufacturerHandler(event) {
-        if (event.target.value != "") {
-            let value = event.target.value.toLowerCase();
-            if (this.selectedManufacturer) {
-                if (value == this.selectedManufacturer.toLowerCase()) {                  
-                    this.disableSave = true;
-                }
-                else {
-                    this.disableSave = false;
-                }
-            }
-
+    ManufacturerHandler(field, value) {
+        value = value.trim();
+        const exists = this.validateRecordExistsOrNot(field, value, this.allManufacturerInfo);
+        // console.log(exists);
+        if (exists.length > 0) {
+            this.disableSave = true;
+        }
+        else {
+            this.disableSave = false;
         }
     }
 
-    //ManufacturerHandler(event) {
-    //	let value = event.target.value.toLowerCase();
-    //	if (this.selectedManufacturer) {
-    //		if (value == this.selectedManufacturer.toLowerCase()) {
-    //			//alert("Action Name already Exists");
-    //			this.disableSave = true;
-    //		}
-    //		else {
-    //			this.disableSave = false;
-    //		}
-    //	}
-    //	else {
-    //		for (let i = 0; i < this.actionamecolle.length; i++) {
-    //			if (value == this.actionamecolle[i][0].name.toLowerCase()) {
-    //				//alert("Action Name already Exists");
-    //				this.disableSave = true;
-    //				this.selectedManufacturer = event;
-    //			}
-    //		}
-    //	}
-
-    //}
     Manufacturerdescription(event) {
         //
-        if (this.allManufacturerInfo) {
-
-            for (let i = 0; i < this.allManufacturerInfo.length; i++) {
-                if (event == this.allManufacturerInfo[i].name) {
-                    this.sourcemanufacturer.name = this.allManufacturerInfo[i].name;
-                    this.disableSave = true;
-                    this.selectedManufacturer = event;
-                }
-
-            }
-        }
+        this.disableSave = true;
     }
     editItemAndCloseModel() {
 
@@ -214,7 +213,7 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
             this.sourcemanufacturer.createdBy = this.userName;
             this.sourcemanufacturer.updatedBy = this.userName;
             this.sourcemanufacturer.masterCompanyId = 1;
-            //this.sourceglaccountclass.glaccountclassname = this.glAccountclassName;
+            this.sourcemanufacturer.name = this.editValueAssignByCondition('name', this.sourcemanufacturer.name);
             this.workFlowtService.newManufacturer(this.sourcemanufacturer).subscribe(
                 role => this.saveSuccessHelper(role),
                 error => this.saveFailedHelper(error));
@@ -222,7 +221,7 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
         else {
 
             this.sourcemanufacturer.updatedBy = this.userName;
-            //this.sourcemanufacturer.name = this.name;
+            this.sourcemanufacturer.name = this.editValueAssignByCondition('name', this.sourcemanufacturer.name);
             this.sourcemanufacturer.masterCompanyId = 1;
             this.workFlowtService.updateManufacturer(this.sourcemanufacturer).subscribe(
                 response => this.saveCompleted(this.sourcemanufacturer),
@@ -255,16 +254,13 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
         //console.log(this.allActions);
     }
     filtermanufacturer(event) {
-        this.localCollection = [];
-        for (let i = 0; i < this.allManufacturerInfo.length; i++) {
-            let name = this.allManufacturerInfo[i].name;
-            if (name.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                this.namecolle.push([{
-                    "manufacturerId": this.allManufacturerInfo[i].manufacturerId,
-                    "name": name
-                }]),
-                    this.localCollection.push(name)
-            }
+        this.localCollection = this.allManufacturerInfo;
+
+        if (event.query !== undefined && event.query !== null) {
+            const name = [...this.allManufacturerInfo.filter(x => {
+                return x.name.toLowerCase().includes(event.query.toLowerCase())
+            })]
+            this.localCollection = name;
         }
     }
 
@@ -273,8 +269,8 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
         this.isSaving = true;
         this.loadMasterCompanies();
         this.disableSave = false;
-        this.sourcemanufacturer = row;
-        this.name = this.sourcemanufacturer.name;
+        this.sourcemanufacturer = {...row};
+        this.sourcemanufacturer.name = getObjectByValue('name', row.name, this.allManufacturerInfo)
         //this.comments = this.sourcemanufacturer.comments;
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm' });
@@ -316,7 +312,7 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
             this.Active = "In Active";
             this.sourcemanufacturer.isActive == false;
             this.loadMasterCompanies();
-            this.sourcemanufacturer.masterCompanyId = 1;         
+            this.sourcemanufacturer.masterCompanyId = 1;
 
             this.workFlowtService.updateManufacturer(this.sourcemanufacturer).subscribe(
 
@@ -329,7 +325,7 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
             this.Active = "Active";
             this.sourcemanufacturer.isActive == true;
             this.loadMasterCompanies();
-            this.sourcemanufacturer.masterCompanyId = 1;           
+            this.sourcemanufacturer.masterCompanyId = 1;
             this.workFlowtService.updateManufacturer(this.sourcemanufacturer).subscribe(
 
                 response => this.saveCompleted(this.sourcemanufacturer),
@@ -346,24 +342,9 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
             results => this.onmanufacturerSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
-        this.cols = [
-            { field: 'name', header: 'Manufacturer Name' },
-            { field: 'comments', header: 'Comments' },
-            { field: 'createdBy', header: 'Created By' },
-            { field: 'updatedBy', header: 'Updated By' },
-            //{ field: 'createdDate', header: 'Created Date' },
-            //{ field: 'updatedDate', header: 'Updated Date' }
-        ];
-        this.selectedColumns = this.cols;
+   
     }
-    private onDataLoadSuccessful(allWorkFlows: any[]) {
-        // alert('success');
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        //this.dataSource.data = allWorkFlows;
-        this.allManufacturer = allWorkFlows;
 
-    }
     private saveCompleted(user?: any) {
         this.isSaving = false;
 
@@ -427,7 +408,7 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
         this.workFlowtService.getManufacturerAuditDetails(Id).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["manufacturerAuditId", "manufacturerId","masterCompanyId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["manufacturerAuditId", "manufacturerId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
         });
     }
@@ -487,7 +468,7 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
     //             }
     //         }, 1000);
     //     }
-        
+
     // }
 
     // inputFiledFilter(event, filed, matchMode) {

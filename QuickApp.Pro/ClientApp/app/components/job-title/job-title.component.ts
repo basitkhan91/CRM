@@ -31,9 +31,9 @@ import { getObjectByValue } from '../../generic/autocomplete';
 })
 /** Actions component*/
 export class JobTitleComponent implements OnInit, AfterViewInit {
-    allreasn: any[]=[];
+    allreasn: any[] = [];
     selectedreason: any;
-    job_Name: any = "";   
+    job_Name: any = "";
     memo: any = "";
     createdBy: any = "";
     updatedBy: any = "";
@@ -41,22 +41,23 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
     updatedDate: any = "";
     disableSave: boolean = false;
     totalRecords: number;
+    totalPages: number;
+    rows: number;
     AuditDetails: SingleScreenAuditDetails[];
-
-    ngOnInit(): void {        
+    ngOnInit(): void {
         this.cols = [
             //{ field: 'jobTitleId', header: 'Job Title Id' },
             { field: 'description', header: 'Job Titles' },
             { field: 'memo', header: 'Memo' },
-            { field: 'createdBy', header: 'Created By' },
-            { field: 'updatedBy', header: 'Updated By' },
+            // { field: 'createdBy', header: 'Created By' },
+            // { field: 'updatedBy', header: 'Updated By' },
             //{ field: 'updatedDate', header: 'Updated Date' },
             //{ field: 'createdDate', header: 'createdDate' }
         ];
         this.selectedColumns = this.cols;
-		this.loadData();
-		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-job-title';
-		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
+        this.loadData();
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-job-title';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
     }
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -72,7 +73,6 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
     private bodyText: string;
     loadingIndicator: boolean;
     closeResult: string;
-
     selectedColumns: any[];
     cols: any[];
     title: string = "Create";
@@ -83,13 +83,13 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
     jobName: any;
     filteredBrands: any[];
     localCollection: any[] = [];
-    isDelete : boolean =false;
+    isDelete: boolean = false;
     /** Actions ctor */
 
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
 
-	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: JobTitleService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: JobTitleService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
         this.sourceAction = new JobTitle();
@@ -105,23 +105,23 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
         }
     }
     editValueAssignByCondition(field: any, value: any) {
-		console.log(field, value)
-		if ((value !== undefined) && (field !== '' || field !== undefined)) {
-	
-			if (typeof (value) === 'string') {
-				return value
-			} 
-			else {
-				return this.getValueFromObjectByKey(field, value)
-			}
-		}
+        console.log(field, value)
+        if ((value !== undefined) && (field !== '' || field !== undefined)) {
+
+            if (typeof (value) === 'string') {
+                return value
+            }
+            else {
+                return this.getValueFromObjectByKey(field, value)
+            }
+        }
     }
     getValueFromObjectByKey(field: string, object: any) {
-		console.log(field, object)
-		if ((field !== '' || field !== undefined) && (object !== undefined)) {
-			return object[field];
-		}
-	}
+        console.log(field, object)
+        if ((field !== '' || field !== undefined) && (object !== undefined)) {
+            return object[field];
+        }
+    }
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -131,7 +131,6 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
         this.workFlowtService.getWorkFlows().subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
@@ -143,7 +142,6 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
     private loadMasterCompanies() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
         this.masterComapnyService.getMasterCompanies().subscribe(
             results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
@@ -164,39 +162,34 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
+        console.log(this.dataSource.data);
         this.allJobTitlesinfo = allWorkFlows;
         this.totalRecords = this.allJobTitlesinfo.length;
+        this.totalPages = Math.ceil(this.totalRecords / this.rows);
+        console.log(this.totalPages);
+
     }
-	openHist(content, row) {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
-
-
-		this.sourceAction = row;
-
-
-
-		//this.isSaving = true;
-		// debugger;
-		this.workFlowtService.historyJobTitle(this.sourceAction.jobTitleId).subscribe(
-			results => this.onHistoryLoadSuccessful(results[0], content),
-			error => this.saveFailedHelper(error));
-
-
-	}
-	private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
+    openHist(content, row) {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.sourceAction = row;
+        //this.isSaving = true;
+        // debugger;
+        this.workFlowtService.historyJobTitle(this.sourceAction.jobTitleId).subscribe(data => {
+            console.log(data);
+            results => this.onHistoryLoadSuccessful(results[0], content)
+            error => this.saveFailedHelper(error)
+        });
+    }
+    private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
         // alert('success');
 
-       
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-
-		this.auditHisory = auditHistory; this.modal = this.modalService.open(content, { size: 'lg' });
-
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-
+        this.auditHisory = auditHistory; this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
 
     }
 
@@ -205,14 +198,12 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allComapnies = allComapnies;
-
     }
 
     private onDataLoadFailed(error: any) {
         // alert(error);
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-
     }
 
     open(content) {
@@ -220,8 +211,8 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
         this.isDeleteMode = false;
         this.isSaving = true;
         this.loadMasterCompanies();
-		this.sourceAction = new JobTitle();
-		this.disableSave = false;
+        this.sourceAction = new JobTitle();
+        this.disableSave = false;
         this.sourceAction.isActive = true;
         this.sourceAction.jobName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
@@ -244,11 +235,11 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
 
     openEdit(content, row) {
         this.isEditMode = true;
-		this.disableSave = false;
+        this.disableSave = false;
         this.isSaving = true;
-		this.loadMasterCompanies();
-        this.sourceAction = {...row};
-        this.sourceAction.jobName = getObjectByValue('description',row.description,this.allJobTitlesinfo)       
+        this.loadMasterCompanies();
+        this.sourceAction = { ...row };
+        this.sourceAction.jobName = getObjectByValue('description', row.description, this.allJobTitlesinfo)
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -280,18 +271,17 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
     eventHandler(field, value) {
         value = value.trim();
         const exists = this.validateRecordExistsOrNot(field, value, this.allJobTitlesinfo);
-       // console.log(exists);
+        // console.log(exists);
         if (exists.length > 0) {
             this.disableSave = true;
         }
         else {
             this.disableSave = false;
         }
-
     }
 
     jobTitleId(event) {
-       this.disableSave = true;
+        this.disableSave = true;
     }
 
     filterJobs(event) {
@@ -329,7 +319,7 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
 
     }
 
-    editItemAndCloseModel() {       
+    editItemAndCloseModel() {
 
         this.isSaving = true;
         if (this.isEditMode == false) {
@@ -343,9 +333,10 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
                 error => this.saveFailedHelper(error));
         }
         else {
-     
-            this.sourceAction.updatedBy = this.userName;          
-            this.sourceAction.jobName = this.editValueAssignByCondition('description',this.sourceAction.jobName)
+
+            this.sourceAction.updatedBy = this.userName;
+            this.sourceAction.jobName = this.editValueAssignByCondition('description', this.sourceAction.jobName)
+            this.sourceAction.description = this.sourceAction.jobName;
             this.sourceAction.masterCompanyId = 1;
             this.sourceAction.isDelete = false;
             this.workFlowtService.updateAction(this.sourceAction).subscribe(
@@ -425,7 +416,7 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
         this.workFlowtService.getJobTitleAudit(jobTitleId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["jobTitleAuditId", "jobTitleId", "masterCompanyId","createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["jobTitleAuditId", "jobTitleId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
         });
     }

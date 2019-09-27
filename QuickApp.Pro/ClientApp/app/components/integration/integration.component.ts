@@ -78,8 +78,8 @@ export class IntegrationComponent implements OnInit, AfterViewInit {
             { field: 'portalUrl', header: 'Website Url' },
             { field: 'description', header: 'Integration' },
             { field: 'memo', header: 'Memo' },
-            { field: 'createdBy', header: 'Created By' },
-            { field: 'updatedBy', header: 'Updated By' },
+            // { field: 'createdBy', header: 'Created By' },
+            // { field: 'updatedBy', header: 'Updated By' },
         ];
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-integration';
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);

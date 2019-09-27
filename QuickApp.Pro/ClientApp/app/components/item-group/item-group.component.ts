@@ -38,15 +38,16 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
     field: any;
     event: any;
     selectedreason: any;
-    allreasn: any[]=[];
+    allreasn: any[] = [];
     itemGroup_Name: any = "";
-    description: any = "";   
+    description: any = "";
     memo: any = "";
     createdBy: any = "";
     updatedBy: any = "";
     createdDate: any = "";
     updatedDate: any = "";
     disableSave: boolean = false;
+    disableCode: boolean = false;
     AuditDetails: SingleScreenAuditDetails[];
 
     auditHisory: AuditHistory[];
@@ -87,31 +88,31 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
     loading: boolean;
     itemGroupPagination: Itemgroup[];//added
 
-	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: ItemGroupService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: ItemGroupService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
         this.sourceAction = new Itemgroup();
 
     }
-  
+
 
     ngOnInit(): void {
         this.loadData();
         this.cols = [
-            //{ field: 'itemGroupId', header: 'Item Group Id' },
+           // { field: 'itemGroupId', header: 'IGID' },
             { field: 'itemGroupCode', header: 'Item Group ID' },
             { field: 'description', header: 'Item Group Name' },
             { field: 'memo', header: 'Memo' },
-            { field: 'createdBy', header: 'Created By' },
-            { field: 'updatedBy', header: 'Updated By' },
+            // { field: 'createdBy', header: 'Created By' },
+            // { field: 'updatedBy', header: 'Updated By' },
             //{ field: 'updatedDate', header: 'Updated Date' },
             //{ field: 'createdDate', header: 'Created Date' }
-		];
-		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-item-group';
-		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
+        ];
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-item-group';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
         this.selectedColumns = this.cols;
     }
- 
+
 
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
@@ -119,7 +120,7 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
     }
     public allWorkFlows: Itemgroup[] = [];
     validateRecordExistsOrNot(field: string, currentInput: any, originalData: any) {
-       // console.log(field, currentInput, originalData)
+        // console.log(field, currentInput, originalData)
         if ((field !== '' || field !== undefined) && (currentInput !== '' || currentInput !== undefined) && (originalData !== undefined)) {
             const data = originalData.filter(x => {
                 return x[field].toLowerCase() === currentInput.toLowerCase()
@@ -128,27 +129,26 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
         }
     }
     editValueAssignByCondition(field: any, value: any) {
-		console.log(field, value)
-		if ((value !== undefined) && (field !== '' || field !== undefined)) {
-	
-			if (typeof (value) === 'string') {
-				return value
-			} 
-			else {
-				return this.getValueFromObjectByKey(field, value)
-			}
-		}
+        console.log(field, value)
+        if ((value !== undefined) && (field !== '' || field !== undefined)) {
+
+            if (typeof (value) === 'string') {
+                return value
+            }
+            else {
+                return this.getValueFromObjectByKey(field, value)
+            }
+        }
     }
     getValueFromObjectByKey(field: string, object: any) {
-		console.log(field, object)
-		if ((field !== '' || field !== undefined) && (object !== undefined)) {
-			return object[field];
-		}
-	}
+        console.log(field, object)
+        if ((field !== '' || field !== undefined) && (object !== undefined)) {
+            return object[field];
+        }
+    }
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
         this.workFlowtService.getWorkFlows().subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
@@ -159,7 +159,6 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
     private loadMasterCompanies() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
         this.masterComapnyService.getMasterCompanies().subscribe(
             results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
@@ -171,10 +170,7 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
         this.dataSource.filter = filterValue;
     }
 
-    private refresh() {
-        // Causes the filter to refresh there by updating with recently added data.
-        this.applyFilter(this.dataSource.filter);
-    }
+   
     private onDataLoadSuccessful(allWorkFlows: Itemgroup[]) {
         // alert('success');
         this.alertService.stopLoadingMessage();
@@ -182,6 +178,8 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
         this.dataSource.data = allWorkFlows;
         this.totalRecords = allWorkFlows.length
         this.allitemgroupobjInfo = allWorkFlows;
+      
+
     }
 
     private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
@@ -203,17 +201,15 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
 
         this.isEditMode = false;
         this.isDeleteMode = false;
-		this.disableSave = false;
+        this.disableSave = false;
+        this.disableCode = false;
         this.isSaving = true;
         this.loadMasterCompanies();
-		this.sourceAction = new Itemgroup();
+        this.sourceAction = new Itemgroup();
         this.sourceAction.isActive = true;
         this.sourceAction.itemgroupCode = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
-
-
-
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
@@ -231,14 +227,14 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
     }
 
     openEdit(content, row) {
-		this.disableSave = false;
+        this.disableSave = false;
+        this.disableCode = false;
         this.isEditMode = true;
         this.isSaving = true;
         this.loadMasterCompanies();
-        this.sourceAction = {...row};
-        this.sourceAction.itemgroupCode = getObjectByValue('itemGroupCode',row.itemGroupCode,this.allitemgroupobjInfo)
-        //this.itemGroupName = this.sourceAction.itemGroupCode;
-       
+        this.sourceAction = { ...row };
+        this.sourceAction.itemgroupCode = getObjectByValue('itemGroupCode', row.itemGroupCode, this.allitemgroupobjInfo)
+        this.sourceAction.description = getObjectByValue('description', row.description, this.allitemgroupobjInfo);
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -261,7 +257,7 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
 
         this.sourceAction = row;
         this.itemGroup_Name = row.itemGroupCode;
-        this.description = row.description;      
+        this.description = row.description;
         this.memo = row.memo;
         this.createdBy = row.createdBy;
         this.updatedBy = row.updatedBy;
@@ -280,22 +276,34 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
         }, () => { console.log('Backdrop click') })
     }
 
-    eventHandler(field,value) {
+    eventHandler(field, value) {
         value = value.trim();
         const exists = this.validateRecordExistsOrNot(field, value, this.allitemgroupobjInfo);
         // console.log(exists);
-         if (exists.length > 0) {
-             this.disableSave = true;
-         }
-         else {
-             this.disableSave = false;
-         }
+        if (exists.length > 0) {
+            this.disableSave = true;
+        }
+        else {
+            this.disableSave = false;
+        }
+    }
+    itemDescription(field, value) {
+        value = value.trim();
+        const data = this.validateRecordExistsOrNot(field, value, this.allitemgroupobjInfo);
+        if (data.length > 0) {
+            this.disableCode = true;
+        }
+        else {
+            this.disableCode = false;
+        }
     }
 
     itemGroupId(event) {
-      this.disableSave = true;
+        this.disableSave = true;
     }
-
+    itemGroupDescription(event) {
+        this.disableCode = true;
+    }
 
     filterItemgroups(event) {
         this.localCollection = this.allitemgroupobjInfo;
@@ -306,9 +314,16 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
             this.localCollection = itemGroup;
         }
     }
+    filterItemgroupDescription(event) {
+        this.localCollection = this.allitemgroupobjInfo;
+        if (event.query !== undefined && event.query !== null) {
+            const itemDescription = [...this.allitemgroupobjInfo.filter(x => {
+                return x.description.toLowerCase().includes(event.query.toLowerCase())
+            })]
+            this.localCollection = itemDescription;
+        }
+    }
     private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
-
-
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
 
@@ -329,8 +344,8 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
 
         this.isSaving = true;
 
-        if (this.isEditMode == false) {      
-            
+        if (this.isEditMode == false) {
+
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.itemGroupCode = this.sourceAction.itemgroupCode;
@@ -340,10 +355,10 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
                 error => this.saveFailedHelper(error));
         }
         else {
-           
+
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.itemgroupCode = this.editValueAssignByCondition('itemGroupCode',this.sourceAction.itemgroupCode);
-            // this.sourceAction.itemGroupName = this.editValueAssignByCondition('itemGroupCode',this.sourceAction.description);
+            this.sourceAction.itemgroupCode = this.editValueAssignByCondition('itemGroupCode', this.sourceAction.itemgroupCode);
+            this.sourceAction.description = this.editValueAssignByCondition('description', this.sourceAction.description);
             //this.sourceAction.itemGroupCode = this.sourceAction.itemGroupName;            
             this.sourceAction.masterCompanyId = 1;
             this.workFlowtService.updateAction(this.sourceAction).subscribe(
@@ -352,7 +367,7 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
         }
 
         this.modal.close();
-    }   
+    }
 
     handleChange(rowData, e) {
         if (e.checked == false) {
@@ -488,8 +503,7 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
             }
         }
 
-        else
-        {
+        else {
             setTimeout(() => {
                 if (this.allitemgroupobjInfo) {
                     this.workFlowtService.getServerPages(event).subscribe( //we are sending event details to service
@@ -503,65 +517,65 @@ export class ItemGroupComponent implements OnInit, AfterViewInit {
                 }
             }, 1000);
         }
-        
+
     }
 
-//     updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
-//     {
-//         this.paginatorState = {
-//             rows: this.rows,
-//             first: this.first
-//         }
-//         if (this.paginatorState) {
-//             this.loadItemGroup(this.paginatorState);
-//         }
-//     }
+    //     updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
+    //     {
+    //         this.paginatorState = {
+    //             rows: this.rows,
+    //             first: this.first
+    //         }
+    //         if (this.paginatorState) {
+    //             this.loadItemGroup(this.paginatorState);
+    //         }
+    //     }
 
-//     inputFiledFilter(event, filed, matchMode) {
-//         this.first = 0;
-//         this.event = event;
-//         this.field = filed;
-//         this.matchMode = matchMode;
+    //     inputFiledFilter(event, filed, matchMode) {
+    //         this.first = 0;
+    //         this.event = event;
+    //         this.field = filed;
+    //         this.matchMode = matchMode;
 
-//         if (filed == 'itemGroupCode') {
-//             this.itemGroupCodeInputFieldValue = event;
-//         }
-//         if (filed == 'description') {
-//             this.descriptionInputFieldValue = event;
-//         }
-//         if (filed == 'memo') {
-//             this.memoInputFieldValue = event;
-//         }
-//         if (filed == 'createdBy') {
-//             this.createdByInputFieldValue = event;
-//         }
-//         if (filed == 'updatedBy') {
-//             this.updatedByInputFieldValue = event;
-//         }
-       
-//         this.itemGroup.push({
-//             ItemGroupCode: this.itemGroupCodeInputFieldValue,
-//             description: this.descriptionInputFieldValue,
-//             memo: this.memoInputFieldValue,
-//             Memo: this.memoInputFieldValue,
-//             CreatedBy: this.createdByInputFieldValue,
-//             UpdatedBy: this.updatedByInputFieldValue,
-//             first: this.first,
-//             page: 10,
-//             pageCount: 10,
-//             rows: this.rows,
-//             limit: 5
-//         })
-//         if (this.itemGroup) {
-//             this.workFlowtService.getServerPages(this.itemGroup[this.itemGroup.length - 1]).subscribe( //we are sending event details to service
-//                 pages => {
-//                     this.itemGroupPaginationList = pages;
-//                     this.itemGroupPagination = this.itemGroupPaginationList[0].itemGroupList;
-//                     this.totalRecords = this.itemGroupPaginationList[0].totalRecordsCount;
-//                     this.totelPages = Math.ceil(this.totalRecords / this.rows);
-//                 });
-//         }
-//         else {
-//         }
-//     }
- }
+    //         if (filed == 'itemGroupCode') {
+    //             this.itemGroupCodeInputFieldValue = event;
+    //         }
+    //         if (filed == 'description') {
+    //             this.descriptionInputFieldValue = event;
+    //         }
+    //         if (filed == 'memo') {
+    //             this.memoInputFieldValue = event;
+    //         }
+    //         if (filed == 'createdBy') {
+    //             this.createdByInputFieldValue = event;
+    //         }
+    //         if (filed == 'updatedBy') {
+    //             this.updatedByInputFieldValue = event;
+    //         }
+
+    //         this.itemGroup.push({
+    //             ItemGroupCode: this.itemGroupCodeInputFieldValue,
+    //             description: this.descriptionInputFieldValue,
+    //             memo: this.memoInputFieldValue,
+    //             Memo: this.memoInputFieldValue,
+    //             CreatedBy: this.createdByInputFieldValue,
+    //             UpdatedBy: this.updatedByInputFieldValue,
+    //             first: this.first,
+    //             page: 10,
+    //             pageCount: 10,
+    //             rows: this.rows,
+    //             limit: 5
+    //         })
+    //         if (this.itemGroup) {
+    //             this.workFlowtService.getServerPages(this.itemGroup[this.itemGroup.length - 1]).subscribe( //we are sending event details to service
+    //                 pages => {
+    //                     this.itemGroupPaginationList = pages;
+    //                     this.itemGroupPagination = this.itemGroupPaginationList[0].itemGroupList;
+    //                     this.totalRecords = this.itemGroupPaginationList[0].totalRecordsCount;
+    //                     this.totelPages = Math.ceil(this.totalRecords / this.rows);
+    //                 });
+    //         }
+    //         else {
+    //         }
+    //     }
+}
