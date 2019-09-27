@@ -317,7 +317,10 @@ namespace QuickApp.Pro.Controllers
             }
             dynamicGridData.columHeaders = columHeaders;
             dynamicGridData.ColumnData = _unitOfWork.UnitOfMeasure.GetAll().Where(u => u.IsDelete == false);
-            return Ok(dynamicGridData);
+			dynamicGridData.TotalRecords = dynamicGridData.ColumnData.Count();
+
+
+			return Ok(dynamicGridData);
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
