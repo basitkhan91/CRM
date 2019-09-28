@@ -19,6 +19,10 @@ import { zip } from 'rxjs/operators';
 import { Router, ActivatedRoute } from '@angular/router';
 import { getObjectById, getValueFromArrayOfObjectById } from '../../generic/autocomplete';
 import { EmployeeService } from '../../services/employee.service';
+import { AircraftManufacturerService } from '../../services/aircraft-manufacturer/aircraftManufacturer.service';
+import { AircraftModelService } from '../../services/aircraft-model/aircraft-model.service';
+import { DashNumberService } from '../../services/dash-number/dash-number.service';
+import { AtaMainService } from '../../services/atamain.service';
 
 @Component({
     selector: 'app-publication',
@@ -102,12 +106,34 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         { field: 'fileName', header: 'File Name' },
         //{ field: 'link', header: 'Action' },
     ];
+    
 
     first: number = 0;
     pagesize: number = 10;
     attachmentList: any[] = [];
+    showModelAircraftModel: boolean = false;
+    selectedAircraftModel: any;
+    selectedDashNumbers = [];
+    selectAircraftManfacturer: any;
+    selectedATAchapter: any;
+    selectedATASubChapter: any;
+    airCraftTypesList = [
+        { label: 'Select Aircraft', value: null }
+      ];
+    aircraftModelList = [
+        { label: 'Select Aircraft Model', value: null }
+    ];
+    dashNumberList = [
+        { label: 'Select Dash Number', value: null }
+    ];
+    ataChapterList = [
+        { label: 'Select ATA Chapter', value: null }
+    ];
+    ataSubChapterList = [
+        { label: 'Select ATA SubChapter', value: null }
+    ];
 
-    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public publicationService: PublicationService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private router: Router, public employeeService: EmployeeService,
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public publicationService: PublicationService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private router: Router, public employeeService: EmployeeService, private aircraftManufacturerService: AircraftManufacturerService, private aircraftModelService: AircraftModelService, private Dashnumservice: DashNumberService, private ataMainSer: AtaMainService
     ) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
@@ -137,6 +163,8 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-publication';
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
         this.selectedColumns = this.cols;
+        this.getAllAircraftManufacturer();
+        this.getAllATAChapter();
 
         
     }
@@ -325,10 +353,12 @@ export class PublicationComponent implements OnInit, AfterViewInit {
             this.generalInfo = res[0];
             this.attachmentList = res[0].attachmentDetails.map(x => {
                 return {
+                    ...x,
                     fileName: x.fileName,
                     //link: x.link
                 }
             })
+            console.log(this.attachmentList);
         })
 
         //get PN Mapping info
@@ -375,12 +405,12 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         });
       });
     }
-    openHelpText(content) {
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
+    // openHelpText(content) {
+    //     this.modal = this.modalService.open(content, { size: 'sm' });
+    //     this.modal.result.then(() => {
+    //         console.log('When user closes');
+    //     }, () => { console.log('Backdrop click') })
+    // }
     openEdit(content, row) {
         const { publicationRecordId } = row;
 
@@ -604,4 +634,158 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         this.pagesize = event.rows; //10
         this.loadData();
     }
+
+    // get All AircraftManufacturer
+  getAllAircraftManufacturer() {
+    this.aircraftManufacturerService
+      .getAll()
+      .subscribe(aircraftManufacturer => {
+        this.showModelAircraftModel = false;
+        const responseData = aircraftManufacturer[0];
+        responseData.map(x => {          
+          this.airCraftTypesList.push({
+            value: x.aircraftTypeId,
+            label: x.description
+          });
+        });
+      });
+    }
+    // get all Aircraft Models
+    // getAllAircraftModels() {
+    //     this.aircraftModelService.getAll().subscribe(models => {
+    //       const responseValue = models[0];
+    //       responseValue.map(models => {
+    //         this.aircraftModelList.push({
+    //             label: models.modelName,
+    //             value: models.aircraftModelId
+    //           });
+    //       });
+    //     });
+    //   }   
+      // get all dashnumber
+    //   getAllDashNumbers() {
+    //     this.Dashnumservice.getAll().subscribe(dashnumbers => {
+    //       const responseData = dashnumbers[0];
+    //         responseData.map(dashnumbers => {
+    //             this.dashNumberList.push({
+    //                 label: dashnumbers.dashNumber,
+    //                 value: dashnumbers.dashNumberId
+    //               });
+    //       });
+    //     });
+    //   }
+
+    // get AircraftModels By manufacturer Type
+    async getAircraftModelByManfacturerType() {
+        // construct url from array
+        //await this.searchByFieldUrlCreateforAircraftInformation();
+        // reset the dropdowns
+        this.selectedAircraftModel = []
+        this.selectedDashNumbers = []
+        this.aircraftModelList = [
+            { label: 'Select Aircraft Model', value: null }
+        ];
+        this.dashNumberList = [
+            { label: 'Select Dash Number', value: null }
+        ];
+        // checks where select is empty or not and calls the service
+        if (this.selectAircraftManfacturer !== '') {
+          this.aircraftModelService
+            .getAircraftModelListByManufactureId(this.selectAircraftManfacturer)
+            .subscribe(models => {
+              const responseValue = models[0];
+              responseValue.map(models => {
+                this.aircraftModelList.push({
+                    label: models.modelName,
+                    value: models.aircraftModelId
+                  });
+              });
+            });
+        } else {
+          //this.getAllAircraftModels();
+          //this.getAllDashNumbers();
+        }  
+      }
+
+      async getDashNumberByManfacturerandModel() {
+        // construct url from array
+        //await this.searchByFieldUrlCreateforAircraftInformation();
+        // reset dropdown
+        this.selectedDashNumbers = []
+        this.dashNumberList = [
+            { label: 'Select DashNumber', value: null }
+        ];
+        // checks where multi select is empty or not and calls the service
+    
+        if (this.selectAircraftManfacturer !== '' && this.selectedAircraftModel !== '') {
+          this.Dashnumservice.getDashNumberByModelTypeId(
+            this.selectedAircraftModel,
+            this.selectAircraftManfacturer
+          ).subscribe(dashnumbers => {
+            const responseData = dashnumbers;
+             responseData.map(dashnumbers => {
+                this.dashNumberList.push({
+                    label: dashnumbers.dashNumber,
+                    value: dashnumbers.dashNumber
+                  })
+            });
+          });
+        }
+      }
+
+      // get ata chapter for dropdown
+        getAllATAChapter() {
+            this.ataMainSer.getAtaMainList().subscribe(Atachapter => {
+            const response = Atachapter[0];
+            response.map(x => {
+                this.ataChapterList.push({
+                    value: x.ataChapterId,
+                    label: x.ataChapterName
+                    });
+            });
+            });
+        }
+
+         // get all subchapter for dropdown
+        //   getAllSubChapters() {
+        //     this.atasubchapter1service
+        //       .getAtaSubChapter1List()
+        //       .subscribe(atasubchapter => {
+        //         const responseData = atasubchapter[0];
+        //         this.ataSubChapterList = responseData.map(x => {
+        //           return {
+        //             label: x.description,
+        //             value: x.ataSubChapterId
+        //           };
+        //         });
+        //       });
+        //   }
+
+      getSubChapterByATAChapter() {
+        if (this.selectedATAchapter !== '') {
+          this.ataMainSer
+            .getMultiATASubDesc(this.selectedATAchapter)
+            .subscribe(atasubchapter => {
+              const responseData = atasubchapter;
+               responseData.map(x => {
+                this.ataSubChapterList.push({
+                    label: x.description,
+                    value: x.ataSubChapterId
+                  });
+              });
+            });
+    
+        } else {
+          //this.getAllSubChapters();
+        }
+      }
+
+      onSearchAircraftInfoAtaChapter() {
+          if(this.selectAircraftManfacturer !== undefined || this.selectedATAchapter !== undefined) {
+            this.publicationService.getpublicationGlobalSearch(this.selectedATAchapter, this.ataSubChapterList, this.selectAircraftManfacturer, this.selectedAircraftModel, this.selectedDashNumbers, this.pageIndex, this.pagesize).subscribe(res => {
+                console.log(res);
+            })
+          }
+      }
+      
 }

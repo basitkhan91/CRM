@@ -209,5 +209,11 @@ export class PublicationService {
     return Observable.forkJoin(
         this.publicationEndpoint.getpublicationbyIdViewEndpoint<any>(id)
     );
-}
+  }
+
+  getpublicationGlobalSearch(ataChapterId, ataSubChapterId, airCraftId, modelId, dashNumberId, pageNumber, pageSize) {
+    return Observable.forkJoin(
+        this.publicationEndpoint.getpublicationGlobalSearchEndpoint<any>(ataChapterId, ataSubChapterId, airCraftId, modelId, dashNumberId, pageNumber, pageSize)
+    );
+  }
 }
