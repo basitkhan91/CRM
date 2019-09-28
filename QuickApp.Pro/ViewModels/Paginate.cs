@@ -31,7 +31,10 @@ namespace QuickApp.Pro.ViewModels
     {
         public List<ColumHeader> columHeaders { get; set; }
         public IEnumerable<T> ColumnData { get; set; }
-    } 
+
+		public int TotalRecords { get; set;  }
+
+	} 
     #endregion
 
     public class PaginateViewModel
