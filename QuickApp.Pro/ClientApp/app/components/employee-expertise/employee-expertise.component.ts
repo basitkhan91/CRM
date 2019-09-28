@@ -81,8 +81,8 @@ export class EmployeeExpertiseComponent implements OnInit, AfterViewInit {
             //{ field: 'employeeExpertiseId', header: 'EmployeeExpertise Id' },
             { field: 'description', header: 'Employee Expertise' },
             { field: 'memo', header: 'Memo' },
-            { field: 'createdBy', header: 'Created By' },
-            { field: 'updatedBy', header: 'Updated By' },
+            // { field: 'createdBy', header: 'Created By' },
+            // { field: 'updatedBy', header: 'Updated By' },
             //{ field: 'updatedDate', header: 'Updated Date' },
             //{ field: 'createdDate', header: 'Created Date' }
         ];

@@ -43,11 +43,11 @@ export class PriorityComponent implements OnInit, AfterViewInit {
    
     ngOnInit(): void {
         this.cols = [
-       
+            
             { field: 'description', header: 'Priority Name' },
             { field: 'memo', header: 'Memo' },
-            { field: 'createdBy', header: 'Created By' },
-            { field: 'updatedBy', header: 'Updated By' },
+            // { field: 'createdBy', header: 'Created By' },
+            // { field: 'updatedBy', header: 'Updated By' },
           
         ];
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-priority';
@@ -223,9 +223,7 @@ export class PriorityComponent implements OnInit, AfterViewInit {
         this.loadMasterCompanies();
         this.sourceAction = {...row};
         this.sourceAction.priorityName = getObjectByValue('description',row.description,this.allPriorityInfo)
-        this.tempPriorityName = this.priorityName;
-        console.log(this.priorityName);
-        console.log(this.priorityName.description);
+       
         //this.priorityName = this.sourceAction.description;
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm' });
@@ -355,7 +353,7 @@ export class PriorityComponent implements OnInit, AfterViewInit {
            
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.priorityName = this.editValueAssignByCondition('description',this.sourceAction.priorityName)
-            //this.sourceAction.description = this.sourceAction.priorityName;
+            this.sourceAction.description = this.sourceAction.priorityName;
            // console.log( this.sourceAction.description)
             this.priorityService.updatePriority(this.sourceAction).subscribe(
 
