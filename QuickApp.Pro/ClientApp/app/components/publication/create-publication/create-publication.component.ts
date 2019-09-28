@@ -77,9 +77,9 @@ export class CreatePublicationComponent implements OnInit {
   employeeList = [];
   ataList = [];
   headersforPNMapping = [
-    { field: 'PartNumber', header: 'PN ID/Code' },
-    { field: 'PartNumberDescription', header: 'PN Description' },
-    { field: 'ItemClassification', header: 'Item Classification' }
+    { field: 'partNumber', header: 'PN ID/Code' },
+    { field: 'partDescription', header: 'PN Description' },
+    { field: 'itemClassification', header: 'Item Classification' }
   ];
 
   aircraftManufacturerList: { label: string; value: number }[];
@@ -166,9 +166,9 @@ export class CreatePublicationComponent implements OnInit {
           this.pnMappingList = res.map(x => {
             return {
               ...x,
-              PartNumber: x.partNumber,
-              PartNumberDescription: x.partNumberDescription,
-              ItemClassification: x.itemClassification
+              partNumber: x.partNumber,
+              partDescription: x.partDescription,
+              itemClassification: x.itemClassification
             };
           });        
         });
@@ -196,16 +196,18 @@ export class CreatePublicationComponent implements OnInit {
       console.log(res[0]);
       const responseData = res;
       //this.sourcePublication = res[0];
-      this.sourcePublication =  responseData[0]
-      // responseData.map(x => {
-      //   return{
-      //     ...x,
-      //     revisionDate: new Date(x.revisionDate),
-      //    expirationDate: new Date(x.expirationDate),
-      //    nextReviewDate: new Date(x.nextReviewDate),
-      //    verifiedDate: new Date(x.verifiedDate) 
-      //   }
-      // });
+      const tempsourcepub =  //responseData[0]
+      responseData.map(x => {
+        return{
+          ...x,
+          entryDate: new Date(x.entryDate),
+         revisionDate: new Date(x.revisionDate),
+         expirationDate: new Date(x.expirationDate),
+         nextReviewDate: new Date(x.nextReviewDate),
+         verifiedDate: new Date(x.verifiedDate)
+        }
+      });
+      this.sourcePublication = tempsourcepub[0];
       
       console.log(this.sourcePublication);
     })
@@ -325,13 +327,14 @@ export class CreatePublicationComponent implements OnInit {
   //     this.uploadedFiles.push(file);
   //   }
   // }
-  upload(files) {
-    if (files.length === 0)
+  fileUpload(event) {
+    console.log(event);
+    if (event.files.length === 0)
       return;
 
     // const formData = new FormData();
 
-    for (let file of files)
+    for (let file of event.files)
       this.formData.append(file.name, file);
   }
 
@@ -477,9 +480,9 @@ export class CreatePublicationComponent implements OnInit {
           this.pnMappingList = res.map(x => {
             return {
               ...x,
-              PartNumber: x.partNumber,
-              PartNumberDescription: x.partNumberDescription,
-              ItemClassification: x.itemClassification
+              partNumber: x.partNumber,
+              partDescription: x.partDescription,
+              itemClassification: x.itemClassification
             };
           });
             this.alertService.showMessage("Success", `PN Mapping Done Successfully`, MessageSeverity.success);
@@ -817,21 +820,21 @@ export class CreatePublicationComponent implements OnInit {
   onDeletePNMappingRow(rowData, rowIndex) {
     console.log(rowData)
     console.log(rowIndex)
-    // this.publicationService.deleteItemMasterMapping(rowData.publicationItemMasterMappingId).subscribe(res => {
-    //   console.log(res);
-    //   this.publicationService
-    //     .getPublicationPNMapping(this.publicationRecordId)
-    //     .subscribe(res => {
-    //       console.log(res);
-    //       this.pnMappingList = res.map(x => {
-    //         return {
-    //           ...x,
-    //           PartNumber: x.partNumber,
-    //           PartNumberDescription: x.partNumberDescription,
-    //           ItemClassification: x.itemClassification
-    //         };
-    //       });        
-    //     });
-    // })
+    this.publicationService.deleteItemMasterMapping(rowData.publicationItemMasterMappingId).subscribe(res => {
+      console.log(res);
+      this.publicationService
+        .getPublicationPNMapping(this.publicationRecordId)
+        .subscribe(res => {
+          console.log(res);
+          this.pnMappingList = res.map(x => {
+            return {
+              ...x,
+              PartNumber: x.partNumber,
+              PartNumberDescription: x.partNumberDescription,
+              ItemClassification: x.itemClassification
+            };
+          });        
+        });
+    })
   }
 }
