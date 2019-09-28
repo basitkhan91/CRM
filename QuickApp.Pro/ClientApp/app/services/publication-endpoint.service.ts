@@ -60,7 +60,7 @@ export class PublicationEndpointService extends EndpointFactory {
     private readonly _publicationStatus: string =
         '/api/Publication/publicationstatus';
     private readonly _publicationGetByIdViewUrl: string = '/api/Publication/publicationview';
-        
+    private readonly _publicationGlobalSearchUrl: string = '/api/Publication/publicationsglobalsearch';        
 
 
 
@@ -474,4 +474,13 @@ getpublicationListEndpoint<T>(pageIndex, pageSize): Observable<T> {
       return this.handleError(error, () => this.getpublicationListEndpoint(pageIndex, pageSize));
     });
   }
+
+  getpublicationGlobalSearchEndpoint<T>(ataChapterId, ataSubChapterId, airCraftId, modelId, dashNumberId, pageNumber, pageSize): Observable<T> {
+    return this.http
+        .get<T>(`${this._publicationGlobalSearchUrl}/${ataChapterId}`, this.getRequestHeaders())
+        .catch(error => {
+            return this.handleError(error, () => this.getpublicationGlobalSearchEndpoint(ataChapterId, ataSubChapterId, airCraftId, modelId, dashNumberId, pageNumber, pageSize));
+        });
+}
+
 }

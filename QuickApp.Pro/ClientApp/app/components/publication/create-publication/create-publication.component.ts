@@ -22,6 +22,8 @@ import { DashNumberService } from '../../../services/dash-number/dash-number.ser
 import { AtaSubChapter1Service } from '../../../services/atasubchapter1.service';
 import { EmployeeService } from '../../../services/employee.service';
 import * as moment from 'moment';
+import { getValueFromArrayOfObjectById } from '../../../generic/autocomplete';
+
 @Component({
   selector: 'app-create-publication',
   templateUrl: './create-publication.component.html',
@@ -29,6 +31,7 @@ import * as moment from 'moment';
 })
 /** Create-publication component*/
 export class CreatePublicationComponent implements OnInit {
+  publicationType: any;
   activeMenuItem: number = 1;
   revision: boolean = false;
   currentTab: string = 'General';
@@ -38,7 +41,7 @@ export class CreatePublicationComponent implements OnInit {
   pubType: string;
   uploadedFiles: any[] = [];
   private isSaving: boolean;
-  private isEditMode: boolean;
+  isEditMode: boolean;
   selectedFile: File = null;
   publicationId: number;
 
@@ -102,6 +105,7 @@ export class CreatePublicationComponent implements OnInit {
   ataSubChapterList: { label: string; value: number }[];
   searchATAParams: string = '';
   isDisabledSteps = false;
+  attachmentList: any[] = [];
   // dropdown
 
   publicationTypes = [
@@ -147,7 +151,11 @@ export class CreatePublicationComponent implements OnInit {
     { field: 'dashNumber', header: 'Dash Numbers' },
     { field: 'memo', header: 'Memo' }
   ];
+  headersforAttachment = [
+    { field: 'fileName', header: 'File Name' },
+];
   first: number = 0;
+
   ngOnInit() {
     // this.itemMasterId = this._actRoute.snapshot.params['id'];
     this.getAllEmployeeList();
@@ -207,7 +215,15 @@ export class CreatePublicationComponent implements OnInit {
          verifiedDate: new Date(x.verifiedDate)
         }
       });
-      this.sourcePublication = tempsourcepub[0];
+      //this.sourcePublication = tempsourcepub[0];
+      const tempSourcePublication = tempsourcepub.map(x => {
+        return {
+          ...x,
+        publicationType: getValueFromArrayOfObjectById('label', 'value', x.publicationTypeId.toString(), this.publicationTypes),
+        }
+      });
+      this.sourcePublication = tempSourcePublication[0];
+      this.attachmentList = this.sourcePublication.attachmentDetails;
       
       console.log(this.sourcePublication);
     })
@@ -338,8 +354,10 @@ export class CreatePublicationComponent implements OnInit {
       this.formData.append(file.name, file);
   }
 
-  editItemCloseModel() {
+  saveGeneralInfo() {
     const data = this.sourcePublication;
+    this.publicationType = getValueFromArrayOfObjectById('label', 'value', this.sourcePublication.publicationTypeId.toString(), this.publicationTypes);
+    console.log(this.publicationType);
     // entryDate: new Date(),
     // PublicationId: '',
     // description: '',
@@ -380,6 +398,7 @@ export class CreatePublicationComponent implements OnInit {
 
     if (this.sourcePublication.PublicationId != '' && this.publicationRecordId == null) {
       this.generalInformationDetails = this.sourcePublication;
+      console.log(this.sourcePublication);
 
       {
         this.sourcePublication.PublicationId = this.sourcePublication.PublicationId;
@@ -679,7 +698,18 @@ export class CreatePublicationComponent implements OnInit {
     }
     this.publicationService
       .aircraftInformationSearch(this.searchParams, this.publicationRecordId)
-      .subscribe(res => { });
+      .subscribe(res => { 
+        const responseData: any = res;
+        this.aircraftList = responseData.map(x => {
+          return {
+            ...x,
+            aircraft: x.aircraftType,
+            model: x.aircraftModel,
+            dashNumber: x.dashNumber,
+            memo: x.memo
+          };
+        })
+      });
   }
 
   // get atachapter by publication id
@@ -837,4 +867,15 @@ export class CreatePublicationComponent implements OnInit {
         });
     })
   }
+
+//   getValueFromArrayOfObjectById(field: string, idField: string, id: string, originalData: any) {
+//     if ((field !== '' || field !== undefined) && (idField !== '' || idField !== undefined) && (id !== '' || id !== undefined) && (originalData !== undefined)) {
+//         const data = originalData.filter(x => {
+//             if (x[idField] === id) {
+//                 return x[field];
+//             }
+//         })
+//         return data;
+//     }
+// }
 }
