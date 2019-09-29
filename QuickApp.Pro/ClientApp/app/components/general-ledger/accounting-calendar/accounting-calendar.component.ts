@@ -350,7 +350,7 @@ export class AccountingCalendarComponent implements OnInit {
                     description: this.currentCalendarObj.description,
                     createdBy: this.userName,
                     updatedBy: this.userName,
-                    isAdjustPeriod: this.currentCalendarObj.isAdjustPeriod,
+                    isAdjustPeriod: false,
                     legalEntityId: this.currentCalendarObj.legalEntityId
 
                 }
@@ -375,7 +375,7 @@ export class AccountingCalendarComponent implements OnInit {
                 description: this.currentCalendarObj.description,
                 createdBy: this.userName,
                 updatedBy: this.userName,
-                isAdjustPeriod: this.currentCalendarObj.isAdjustPeriod,
+                isAdjustPeriod:false,
                 legalEntityId: this.currentCalendarObj.legalEntityId
 
             }
@@ -392,10 +392,12 @@ export class AccountingCalendarComponent implements OnInit {
         if (selectedObj.isAdjustPeriod == true) {
             selectedObj.fiscalName = months[13];
             selectedObj.periodName = selectedObj.fiscalName + ' - ' + this.currentCalendarObj.fiscalYear;
+            this.calendarArray[selectedIndex].isAdjustPeriod = selectedObj.isAdjustPeriod;
         }
         else {
             selectedObj.fiscalName = months[0];
             selectedObj.periodName = "";
+            this.calendarArray[selectedIndex].isAdjustPeriod = false;
         }
         
     }
