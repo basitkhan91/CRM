@@ -33,6 +33,8 @@ namespace DAL.Models
         [Key]
         public long WorkflowId { get; set; }
 
+        public string WorkFlowName { get; set; }
+
         //[Required(ErrorMessage = "Workflow Description is required")]
         public string WorkflowDescription { get; set; }
 

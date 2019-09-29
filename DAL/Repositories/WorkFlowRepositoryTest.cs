@@ -8,17 +8,6 @@ using DAL.Models;
 using DAL.Repositories.Interfaces;
 namespace DAL.Repositories
 {
-    //internal class WorkFlowRepositoryTest : Repository<WorkFlowTable> , IWorkFlowRepositoryTest
-    //{
-    //    public Application_appContext ReachContext { 
-    //        get { return _appContext as ReachContext; } 
-    //    }
-
-    //    public WorkFlowRepositoryTest(ReachContext _context)
-    //        :base(_context){
-
-    //    }
-
     public class WorkFlowRepositoryTest : Repository<DAL.Models.Workflow>, IWorkFlowRepositoryTest
     {
         public WorkFlowRepositoryTest(ApplicationDbContext context) : base(context)
@@ -26,12 +15,11 @@ namespace DAL.Repositories
 
         public Workflow getCompleteWorkFlowEntity(int WorkflowId)
         {
-
             var workFlow = _appContext.Set<Workflow>().Include("ItemMaster").Include("WorkScope").Include("Customer").Where(x => x.WorkflowId == WorkflowId).FirstOrDefault();
 
-            if(workFlow != null)
+            if (workFlow != null)
             {
-                workFlow.Charges = _appContext.Set<WorkflowChargesList>().Where(x => x.WorkflowId == WorkflowId && (x.IsDelete == null  || x.IsDelete != true) ).OrderBy(x => x.WorkflowChargesListId).ToList();
+                workFlow.Charges = _appContext.Set<WorkflowChargesList>().Where(x => x.WorkflowId == WorkflowId && (x.IsDelete == null || x.IsDelete != true)).OrderBy(x => x.WorkflowChargesListId).ToList();
                 workFlow.Directions = _appContext.Set<WorkFlowDirection>().Where(x => x.WorkflowId == WorkflowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowDirectionId).ToList();
                 workFlow.Equipments = _appContext.Set<WorkflowEquipmentList>().Where(x => x.WorkflowId == WorkflowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowEquipmentListId).ToList();
                 workFlow.Exclusions = _appContext.Set<WorkFlowExclusion>().Where(x => x.WorkflowId == WorkflowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowExclusionId).ToList();
@@ -39,17 +27,15 @@ namespace DAL.Repositories
                 workFlow.MaterialList = _appContext.Set<WorkflowMaterial>().Where(x => x.WorkflowId == WorkflowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowActionId).ToList();
                 workFlow.Measurements = _appContext.Set<WorkflowMeasurement>().Where(x => x.WorkflowId == WorkflowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowMeasurementId).ToList();
                 workFlow.Publication = _appContext.Set<Publications>().Where(x => x.WorkflowId == WorkflowId && (x.IsDeleted == null || x.IsDeleted.Value != true)).OrderBy(x => x.Id).ToList();
-                workFlow.Publication.ForEach(publ => {
+                workFlow.Publication.ForEach(publ =>
+                {
                     publ.WorkflowPublicationDashNumbers = _appContext.WorkflowPublicationDashNumber.Where(x => x.PublicationsId == publ.Id && x.WorkflowId == publ.WorkflowId).ToList();
                 });
-
             }
             else
             {
                 return null;
             }
-
-           
             return workFlow;
         }
 
@@ -58,8 +44,19 @@ namespace DAL.Repositories
             return _appContext.Workflow.Include("ItemMaster").Include("WorkScope").Include("Customer").Where(workflow => workflow.IsDelete == null || workflow.IsDelete != true).OrderByDescending(x => x.WorkflowId).ToList();
         }
 
+        public Workflow getWorkFlowWithMaterialList(int WorkflowId)
+        {
+            var workFlow = _appContext.Set<Workflow>().Include("ItemMaster").Include("WorkScope").Include("Customer").Where(x => x.WorkflowId == WorkflowId).FirstOrDefault();
+
+            if (workFlow == null)
+            {
+                return null;
+            }
+
+            workFlow.MaterialList = _appContext.Set<WorkflowMaterial>().Where(x => x.WorkflowId == WorkflowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowActionId).ToList();
+            return workFlow;
+        }
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
     }
 }
-    

@@ -128,6 +128,11 @@ export class ActionService {
             this.actionEndpoint.getWorkFlow<any>(workflowid));
     }
 
+    getWorkFlowWithMaterialList(workflowid: string) {
+        return Observable.forkJoin(
+            this.actionEndpoint.getWorkFlowWithMaterialList<any>(workflowid));
+    }
+
     toggleState(workflowId: number) {
         return Observable.forkJoin(
             this.actionEndpoint.toggleState<any>(workflowId));
