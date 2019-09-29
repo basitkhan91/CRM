@@ -64,6 +64,7 @@ export class CustomerContactsComponent implements OnInit {
 	customerCode: any;
 	customerName: any;
 	emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{3,}";
+	sourceViewforContact: any;
 
 
 	constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public customerService: CustomerService,
@@ -148,6 +149,10 @@ export class CustomerContactsComponent implements OnInit {
 	// 	})
 	// 	return data[0];
 	// }
+
+	viewSelectedRow(rowData){
+    this.sourceViewforContact = rowData;
+	}
 	editCustomerContact(rowData) {
 		this.ediData = { ...rowData };
 		this.isEditButton = true;

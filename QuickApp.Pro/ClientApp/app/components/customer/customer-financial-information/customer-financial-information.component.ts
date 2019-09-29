@@ -27,7 +27,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     // creditTermList: import("c:/Users/Jyotsna/source/repos/PAS_DEV/QuickApp.Pro/ClientApp/app/models/credit-terms.model").CreditTerms[][];
     // discountList: import("c:/Users/Jyotsna/source/repos/PAS_DEV/QuickApp.Pro/ClientApp/app/models/discountvalue").DiscountValue[][];
     // markUpList: import("c:/Users/Jyotsna/source/repos/PAS_DEV/QuickApp.Pro/ClientApp/app/models/markUpPercentage.model").MarkUpPercentage[][];
-    state_taxRateList: any = [];
+    taxRatesList: any = [];
     creditTermList: any;
     discountList: any;
     markUpList: any;
@@ -56,6 +56,9 @@ export class CustomerFinancialInformationComponent implements OnInit {
     allCurrencyInfo: any;
     customerCode: any;
     customerName: any;
+    selectedTaxRates = [];
+    selectedTaxType: any;
+    taxTypeRateMapping: any = [] ;
     // discountNew = {
 
 
@@ -185,6 +188,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
         // }
 
     }
+    // taxType
+    taxtypesList= [];
 
 
     ngOnInit(): void {
@@ -218,7 +223,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
     generateValue() {
         for (var i = 1; i <= 100; i++) {
-            this.state_taxRateList.push(i);
+            this.taxRatesList.push( { label : `${i}%`, value: `${i}%` });
 
 
         }
@@ -292,9 +297,29 @@ export class CustomerFinancialInformationComponent implements OnInit {
     }
     getAllTaxList() {
         this.taxRateService.getTaxRateList().subscribe(res => {
-            this.taxrateList = res[0];
+            // this.taxrateList = res[0];
+            const responseData = res[0];
+            this.taxtypesList = responseData.map(x => {
+                return {
+                    label: x.taxTypeId, value: x.taxTypeId
+                }
+            })
 
         })
+    }
+
+    mapTaxTypeandRate(){
+        let i = 0;
+     const data  = this.selectedTaxRates.map(x => {
+         i++;
+        this.taxTypeRateMapping.push({
+             id: i,
+             taxType: this.selectedTaxType,
+             taxRate: x
+         })
+     })
+     this.selectedTaxRates = [];
+     this.taxTypeRateMapping = undefined;
     }
 
 

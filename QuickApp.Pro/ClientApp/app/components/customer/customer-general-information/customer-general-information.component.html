@@ -133,9 +133,22 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Phone <span class="clr-red">*</span></label>
-                                                    <input type="text" id="phone" name="phone" pInputText pKeyFilter="num" #mobPattern="ngModel" minlength=10 maxlength=13 class="form-control" ng-pattern="phoneNumbr" [(ngModel)]="generalInformation.customerPhone" required>
-                                                    <div *ngIf="mobPattern.errors" [ngClass]="'error'">
+                                                    <div class="col-md-12">
+                                                        <div class="col-md-0">
+                                                                <input type="text" id="phone"  name="phone" pInputText pKeyFilter="num" #mobPattern="ngModel" minlength=10 maxlength=13 class="form-control" ng-pattern="phoneNumbr" [(ngModel)]="generalInformation.customerPhone" required>
+                                                                <div *ngIf="mobPattern.errors" [ngClass]="'error'">
+                                                                </div>
+                                                        </div>
+                                                        
+                                                        <div class="col-md-2">
+                                                                <input type="text"  name="phoneExt" pInputText pKeyFilter="num" maxlength="3" [(ngModel)]="generalInformation.customerPhoneExt" required>
+                                                        </div>
+
                                                     </div>
+                                                   
+                                                  
+                                                    
+                                                   
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Email <span class="clr-red">*</span></label>
@@ -225,9 +238,13 @@
                                                         <span class="pull-left">Customer Classification</span> <span class="clr-red">*</span>
                                                         <span style="margin-left:3px;cursor:pointer;"><a  class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClassification" ></a></span>
                                                     </label>
-                                                    <select [(ngModel)]="generalInformation.customerClassificationId" name="customerClassificationId" required>
+                                                   
+                                                    <p-multiSelect [options]="allcustomerclassificationInfo" [(ngModel)]="generalInformation.customerClassificationIds"  name="customerClassificationId" required>
+
+                                                    </p-multiSelect>
+                                                    <!-- <select [(ngModel)]="generalInformation.customerClassificationId" name="customerClassificationId" required>
                                                         <option *ngFor="let classificationName of allcustomerclassificationInfo" [ngValue]="classificationName.customerClassificationId">{{classificationName.description}}</option>
-                                                    </select>
+                                                    </select> -->
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Contract Ref</label>
@@ -249,7 +266,7 @@
                                                         <i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#memo-popup" pTooltip="{{generalInformation.pbhCustomerMemo}}" tooltipPosition="top" (click)="onClickPBHCustomer('PBHCustomer')"></i>
                                                     </div>
                                                 </div>
-                                                <div class="form-group" style="margin-top: 15px;clear: both;">
+                                                <!-- <div class="form-group" style="margin-top: 15px;clear: both;">
                                                     <div class="label-cstm">Restrict PMA</div>
                                                     <span class="checkbox-cstm">
                                                         <label style="width: 20px;">
@@ -257,10 +274,10 @@
                                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                                         </label>
                                                     </span>
-                                                    <div class="rpma-input memo-popup-cstm" *ngIf="generalInformation.restrictPMA">
+                                                     <div class="rpma-input memo-popup-cstm" *ngIf="generalInformation.restrictPMA">
                                                         <span pTooltip="{{generalInformation.restrictPMAMemo}}" tooltipPosition="top"><input type="text" name="restrictPMA" pInputText class="form-control" value="{{generalInformation.restrictPMAMemo}}" disabled /></span>
                                                         <i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#memo-popup" pTooltip="{{generalInformation.restrictPMAMemo}}" tooltipPosition="top" (click)="onClickPBHCustomer('restrictPMA')"></i>
-                                                    </div>
+                                                    </div> 
                                                 </div>
                                                 <div class="form-group" style="margin-top: 15px;clear: both;">
                                                     <div class="label-cstm">Restrict DER</div>
@@ -274,7 +291,7 @@
                                                         <span pTooltip="{{generalInformation.restrictBERMemo}}" tooltipPosition="top"><input type="text" name="restrictBERMemo" pInputText class="form-control" value="{{generalInformation.restrictBERMemo}}" disabled /></span>
                                                         <i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#memo-popup" pTooltip="{{generalInformation.restrictBERMemo}}" tooltipPosition="top" (click)="onClickPBHCustomer('restrictBER')"></i>
                                                     </div>
-                                                </div>
+                                                </div> -->
                                                 <div class="form-group">
                                                     <label>
                                                         <span class="pull-left">Integration With</span>
@@ -287,8 +304,22 @@
                                                 </div>
                                                 <div class="form-group" style="clear: both;">
                                                     <label>URL to Customer site</label>
-                                                    <input class="form-control " type="text" id="customerURL" name="customerURL" [(ngModel)]="generalInformation.customerURL">
+                                                    <input class="form-control " type="text" id="customerURL" #url="ngModel"  [pattern]="urlPattern" name="customerURL" [(ngModel)]="generalInformation.customerURL">
+                                                    <div *ngIf="url.errors" [ngClass]="'error'">
+                                                            <div *ngIf="url.errors.pattern">
+                                                                <span style="color:red">URL not valid</span>
+                                                            </div>
+                                                        </div>
                                                 </div>
+                                                <div class="form-group" style="margin-top: 15px;">
+                                                        <div class="label-cstm">Is this Customer also a Vendor</div>
+                                                        <span class="checkbox-cstm">
+                                                            <label style="width: 20px;">
+                                                                <input type="checkbox" name="isCustomerAlsoVendor" [(ngModel)]="generalInformation.isCustomerAlsoVendor">
+                                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                            </label>
+                                                        </span>
+                                                    </div>
 
                                                 <!--<div class="form-group">
                 <label>Annual Revenue Potential</label>
@@ -301,7 +332,120 @@
 
                                             </div>
                                             <div class="col-md-3">
-                                                <div class="form-group" style="margin-top: 15px;">
+                                                    
+                                                    <div class="form-group" style="margin-top: 15px;clear: both;">
+                                                            <div class="label-cstm">Restrict PMA</div>
+
+                                                                <span class="checkbox-cstm">
+                                                                        <label style="width: 20px;">
+                                                                            <input type="checkbox" id="rpma" name="rpma" [(ngModel)]="generalInformation.restrictPMA">
+                                                                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                                        </label>
+                                                                    </span>
+
+                                                            <div class="table-small" *ngIf="generalInformation.restrictPMA">
+
+                                                                    
+                                                                    <p-multiSelect 
+                                                                    name="isRestrict"
+
+                                                                     [(ngModel)]="generalInformation.restictPMAIds"
+                                                                     [options]="partList" 
+                                                                     [filter]="true"
+                                                                     itemSize="30"
+                                                                    ></p-multiSelect>
+                                                                    <span style="margin-left:3px;cursor:pointer;"><a  class="fa fa-plus-circle fa-lg" (click)="addRestrictPMA()" ></a></span>
+
+                                                                    <p-table [value]="restrictsPMAList">
+                                                                            <ng-template pTemplate="header">
+                                                                                <tr>
+                                                                                    <th>PN</th>
+                                                                                    <th>Description</th>
+                                                                                    <th>Actions</th>
+ 
+                                                                                </tr>
+                                                                            </ng-template>
+                                                                            <ng-template pTemplate="body" let-car>
+                                                                                <tr>
+                                                                                    <td></td>
+                                                                                    <td></td>
+                                                                                    <td>
+                                                                                    <button class="btn-delete" mat-icon-button matTooltip="Delete" >
+                                                                                        <mat-icon color="warn">delete</mat-icon>
+                                                                                    </button>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </ng-template>
+                                                                        </p-table>
+        
+                                                        </div>
+                                                           
+
+                                                            
+                                                        <!-- <p-autoComplete 
+                                                        
+                                                        field="partNumber" 
+                                                         [multiple]="true"
+                                                         [forceSelection]="true"
+                                                         (onSelect)="selectedPartForPMA($event)"
+                                                        name="partList" [suggestions]="partList"
+                                                        (completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1"
+                                                        [dropdown]="true" class="autocomplete-customer">
+                                           
+                                                        </p-autoComplete> -->
+                                                        
+
+                                                            
+                                                    </div>
+
+                                                    <div class="form-group" style="margin-top: 15px;clear: both;">
+                                                            <div class="label-cstm">Restrict DER</div>
+                                                            <span class="checkbox-cstm">
+                                                                <label style="width: 20px;">
+                                                                    <input type="checkbox" id="rber" name="rber" [(ngModel)]="generalInformation.restrictBER">
+                                                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                                </label>
+                                                            </span>
+
+                                                            <div class="table-small" *ngIf="generalInformation.restrictBER">
+
+                                                                    
+                                                                    <p-multiSelect 
+                                                                    name="isRestrict"
+
+                                                                     [(ngModel)]="generalInformation.restictBERIds"
+                                                                     [options]="partList" 
+                                                                     [filter]="true"
+                                                                     itemSize="30"
+                                                                    ></p-multiSelect>
+                                                                    <span style="margin-left:3px;cursor:pointer;"><a  class="fa fa-plus-circle fa-lg" (click)="addRestrictBER()" ></a></span>
+
+                                                                    <p-table [value]="restrictBERList">
+                                                                            <ng-template pTemplate="header">
+                                                                                <tr>
+                                                                                    <th>PN</th>
+                                                                                    <th>Description</th>
+                                                                                    <th>Actions</th>
+ 
+                                                                                </tr>
+                                                                            </ng-template>
+                                                                            <ng-template pTemplate="body" let-car>
+                                                                                <tr>
+                                                                                    <td></td>
+                                                                                    <td></td>
+                                                                                    <td>
+                                                                                    <button class="btn-delete" mat-icon-button matTooltip="Delete" >
+                                                                                        <mat-icon color="warn">delete</mat-icon>
+                                                                                    </button>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </ng-template>
+                                                                        </p-table>
+        
+                                                        </div>
+                                                            
+                                                    </div>
+                                                <!-- <div class="form-group" style="margin-top: 15px;">
                                                     <div class="label-cstm">Scan Documents</div>
                                                     <span class="checkbox-cstm">
                                                         <label style="width: 20px;">
@@ -309,17 +453,9 @@
                                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                                         </label>
                                                     </span>
-                                                </div>
-                                                <div class="form-group" style="margin-top: 15px;">
-                                                    <div class="label-cstm">Is this Customer also a Vendor</div>
-                                                    <span class="checkbox-cstm">
-                                                        <label style="width: 20px;">
-                                                            <input type="checkbox" name="isCustomerAlsoVendor" [(ngModel)]="generalInformation.isCustomerAlsoVendor">
-                                                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                        </label>
-                                                    </span>
-                                                </div>
-                                                <div class="form-group" style="margin-top: 15px;">
+                                                </div> -->
+                                                
+                                                <!-- <div class="form-group" style="margin-top: 15px;">
                                                     <div class="label-cstm">EDI</div>
                                                     <span class="checkbox-cstm">
                                                         <label style="width: 20px;">
@@ -342,7 +478,7 @@
                                                     <div class="aeroxchange-input" *ngIf="generalInformation.isAeroExchange">
                                                         <input type="text" id="tax" class="form-control" name="aeroExchangeDescription" [(ngModel)]="generalInformation.aeroExchangeDescription">
                                                     </div>
-                                                </div>
+                                                </div> -->
                                             </div>
                                         </div>
                                         <div class="form-row pull-right">

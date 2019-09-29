@@ -223,6 +223,9 @@ export class CustomerStepsPrimengComponent {
 		} else if (value === 'Warnings') {
 			this.currentTab = 'Warnings';
 			this.activeMenuItem = 9;
+		} else if (value === 'Documents') {
+			this.currentTab = 'Documents';
+			this.activeMenuItem = 10;
 		}
 	}
 	generalInformationData(data) {

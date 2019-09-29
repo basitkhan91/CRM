@@ -229,8 +229,8 @@ export class UnitOfMeasureComponent implements OnInit {
     }
 
     changeStatus(rowData) {
-        console.log(rowData);
-        const data = { ...rowData, isActive: rowData.isActive === true ? false : true }
+        console.log(rowData.isActive);
+        const data = { ...rowData }
         this.unitofmeasureService.updateUnitOfMeasure(data).subscribe(() => {
             this.getUOMList();
             this.alertService.showMessage(
