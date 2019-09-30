@@ -703,7 +703,7 @@ namespace DAL
             get
             {
                 if (_unitOfMeasureRepository == null)
-                    _unitOfMeasureRepository = new UnitOfMeasureRepository(_context);
+                    _unitOfMeasureRepository = new UnitOfMeasureRepository(_context, _appSettings);
                 return _unitOfMeasureRepository;
 
             }

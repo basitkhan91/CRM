@@ -206,8 +206,8 @@ export class WorkflowListComponent implements OnInit {
         }
     }
 
-    onAccordTabClick1() {
-        this.displayAccord1 = true;
+    onAccordTabClick1(task: any) {
+        task.selected = !task.selected;
     }
 
     onViewWFDetails(rowData): void {
