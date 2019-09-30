@@ -19,8 +19,8 @@ namespace DAL.Models
         public bool IsDelete { get; set; }
         public bool IsActive { get; set; }
 
-        [ForeignKey("AssetAttributeType")]
-        public long? AssetAttributeTypeId { get; set; }
-        public virtual AssetAttributeType AssetAttributeType { get; set; }
+        //[ForeignKey("AssetAttributeType")]
+        //public long? AssetAttributeTypeId { get; set; }
+        //public virtual AssetAttributeType AssetAttributeType { get; set; }
     }
 }
