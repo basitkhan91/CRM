@@ -58,7 +58,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     customerName: any;
     selectedTaxRates = [];
     selectedTaxType: any;
-    taxTypeRateMapping: any = [] ;
+    taxTypeRateMapping: any = [];
     // discountNew = {
 
 
@@ -189,7 +189,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
     }
     // taxType
-    taxtypesList= [];
+    taxtypesList = [];
 
 
     ngOnInit(): void {
@@ -223,7 +223,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
     generateValue() {
         for (var i = 1; i <= 100; i++) {
-            this.taxRatesList.push( { label : `${i}%`, value: `${i}%` });
+            this.taxRatesList.push({ label: `${i}%`, value: `${i}%` });
 
 
         }
@@ -308,18 +308,18 @@ export class CustomerFinancialInformationComponent implements OnInit {
         })
     }
 
-    mapTaxTypeandRate(){
+    mapTaxTypeandRate() {
         let i = 0;
-     const data  = this.selectedTaxRates.map(x => {
-         i++;
-        this.taxTypeRateMapping.push({
-             id: i,
-             taxType: this.selectedTaxType,
-             taxRate: x
-         })
-     })
-     this.selectedTaxRates = [];
-     this.taxTypeRateMapping = undefined;
+        const data = this.selectedTaxRates.map(x => {
+            i++;
+            this.taxTypeRateMapping.push({
+                id: i,
+                taxType: this.selectedTaxType,
+                taxRate: x
+            })
+        })
+        this.selectedTaxRates = [];
+        this.selectedTaxType = undefined;
     }
 
 
