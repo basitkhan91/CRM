@@ -31,22 +31,17 @@ namespace QuickApp.Pro.Controllers
         }
 
 
-        [HttpGet("auditHistoryById/{id}")]
-        [Produces(typeof(List<AuditHistory>))]
-        public IActionResult GetAuditHostoryById(long id)
+        [HttpGet("unitofmeasureauditdetails/{unitOfMeasureId}")]
+        [Produces(typeof(List<UnitOfMeasureAudit>))]
+        public IActionResult GetAuditHostoryById(long unitOfMeasureId)
         {
-            var result = _unitOfWork.AuditHistory.GetAllHistory("UnitOfMeasure", id); //.GetAllCustomersData();
-
-
             try
             {
-                var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
-
-                return Ok(resul1);
+                var result = _unitOfWork.UnitOfMeasure.GetUnitOfMeasureAuditDetails(unitOfMeasureId);
+                return Ok(result);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
                 throw;
             }
         }
@@ -334,6 +329,13 @@ namespace QuickApp.Pro.Controllers
             {
                 string x = "";
             }
+        }
+
+        [HttpPost("uploaduomcustomdata")]
+        public IActionResult UploadUOMCustomData()
+        {
+          var result =  _unitOfWork.UnitOfMeasure.UploadUOMCustomData(Request.Form.Files[0]);
+            return Ok(result);    
         }
 
     }
