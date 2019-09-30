@@ -81,6 +81,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     partListOriginal: any;
     restrictsPMAList: any;
     restrictBERList: any;
+    restictPMAIds: any = [];
     // editData: any;
 
     // selectedCustomerCodeData: any;
@@ -382,18 +383,19 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
         if (this.isEdit) {
             this.customerService.getCustomerdataById(this.id).subscribe(response => {
-                 console.log(response);
+                console.log(response);
 
                 const res = response[0][0]
 
-                this.editGeneralInformation.emit(res );
+                this.editGeneralInformation.emit(res);
                 this.editData = res;
-                this.generalInformation = { ...this.editData,
+                this.generalInformation = {
+                    ...this.editData,
                     name: getObjectByValue('name', res.name, this.customerListOriginal),
                     country: getObjectByValue('nice_name', res.country, this.countryListOriginal),
                     customerParentName: getObjectByValue('name', res.customerParentName, this.customerListOriginal),
                     customerCode: getObjectByValue('customerCode', res.customerCode, this.customerListOriginal),
-             };
+                };
                 // this.editData = {
                 //     addressId: res.addressId,
                 //     isAddressForBilling: res.t.isAddressForBilling,
@@ -457,16 +459,15 @@ export class CustomerGeneralInformationComponent implements OnInit {
     //             );
     // }
 
-    getAllPartList()
-    {
-        this.itemService.getPrtnumberslistList().subscribe(res  => {
+    getAllPartList() {
+        this.itemService.getPrtnumberslistList().subscribe(res => {
             // this.partListOriginal
-           const data  = res[0];
-           this.partList = data.map(x => {
-           return {
-            label: x.partNumber, value: x.itemMasterId
-           }
-           })
+            const data = res[0];
+            this.partList = data.map(x => {
+                return {
+                    // label: x.partNumber, value: {x.itemMasterId, }
+                }
+            })
         })
     }
     getAllIntegrations() {
@@ -504,9 +505,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
             const responseData = res[0];
             this.allcustomerclassificationInfo = responseData.map(x => {
                 return {
-                    label: x.description, value:x.customerClassificationId
+                    label: x.description, value: x.customerClassificationId
                 }
-            // console.log(this.allcustomerclassificationInfo);
+                // console.log(this.allcustomerclassificationInfo);
                 // if (x.isActive === true) {
                 //     return x;
                 // }
@@ -514,7 +515,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
         })
     }
-    selectedPartForPMA(event){
+    selectedPartForPMA(event) {
         console.log(event)
 
     }
@@ -527,22 +528,22 @@ export class CustomerGeneralInformationComponent implements OnInit {
     //     })] 
     // }
 
-    addRestrictPMA(){
-    //   this.restictPMAIds
+    addRestrictPMA() {
+        //   this.restictPMAIds
 
-      this.restrictsPMAList = this.generalInformation.restictPMAIds.reduce((x,y) => {
-        return  x.filter( item =>  {
-            console.log(item.value)
-            // if(item.value == y ){
-            //     return item;
-            // }
-        })
-      }, this.partList)
-      console.log(this.restrictsPMAList);
+        //   this.restrictsPMAList = this.generalInformation.restictPMAIds.reduce((x,y) => {
+        //     return  x.filter( item =>  {
+        //         console.log(item.value)
+        //         // if(item.value == y ){
+        //         //     return item;
+        //         // }
+        //     })
+        //   }, this.partList)
+        console.log(this.restrictsPMAList);
     }
 
-    addRestrictBER(){
-   
+    addRestrictBER() {
+
     }
 
 

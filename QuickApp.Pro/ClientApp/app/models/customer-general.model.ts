@@ -26,7 +26,7 @@ export class CustomerGeneralInformation {
     isPBHCustomer: boolean;
     pbhCustomerMemo: string;
     restrictPMA: boolean;
-    restictPMAIds: any
+    // restictPMAIds: any
     // restrictPMAMemo: string;
     restrictBER: boolean;
     restictBERIds : any;
@@ -71,7 +71,7 @@ export class CustomerGeneralInformation {
         this.isPBHCustomer = false;
         this.pbhCustomerMemo = '';
         this.restrictPMA = false;
-        this.restictPMAIds = [];
+        // this.restictPMAIds = [];
         // this.restrictPMAMemo = '';
         this.restrictBER = false;
         this.restictBERIds = [];
