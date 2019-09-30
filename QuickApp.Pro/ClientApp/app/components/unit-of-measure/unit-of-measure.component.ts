@@ -12,6 +12,7 @@ import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { validateRecordExistsOrNot, editValueAssignByCondition, getObjectById } from '../../generic/autocomplete';
 import { Table } from 'primeng/table';
+import * as $ from 'jquery';
 
 @Component({
     selector: 'app-unit-of-measure',
@@ -52,6 +53,7 @@ export class UnitOfMeasureComponent implements OnInit {
         { field: 'memo', header: 'Memo' },
     ]
     selectedColumns = this.uomHeaders;
+    formData = new FormData()
     // paginationBoolean: string = 'true';
 
     // {"description":"",
@@ -101,6 +103,7 @@ export class UnitOfMeasureComponent implements OnInit {
     @ViewChild('dt')
     private table: Table;
     auditHistory: any[] = [];
+    existingRecordsResponse: Object;
 
     constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private alertService: AlertService, public unitofmeasureService: UnitOfMeasureService) {
         // this.displayedColumns.push('action');
@@ -142,6 +145,8 @@ export class UnitOfMeasureComponent implements OnInit {
     // private isDelete: boolean = false;
     // uomEditTempInfo: any = {};
 
+
+
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
@@ -151,6 +156,30 @@ export class UnitOfMeasureComponent implements OnInit {
     refreshList() {
         this.table.reset();
         this.getUOMList();
+    }
+
+    customExcelUpload(file) {
+
+        console.log(file)
+        if (file.length > 0) {
+
+            this.formData.append('file', file[0])
+            this.unitofmeasureService.UOMFileUpload(this.formData).subscribe(res => {
+                this.formData = new FormData();
+                this.existingRecordsResponse = res;
+                this.getUOMList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+
+                // $('#duplicateRecords').modal('show');
+                // document.getElementById('duplicateRecords').click();
+
+            })
+        }
+
     }
 
     getUOMList() {
