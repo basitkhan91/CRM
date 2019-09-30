@@ -91,6 +91,7 @@ namespace QuickApp.Pro.ViewModels
         public bool? IsActive { get; internal set; }
 
 		public string CustomerPhone { get; set; }
+        public string CustomerPhoneExt { get; set; }
 
         public string CustomerClarifiacationName { get; set; }
     }

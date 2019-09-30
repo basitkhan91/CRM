@@ -107,6 +107,7 @@ namespace DAL.Repositories
                                 t.Email,
                                 t.IsActive,
                                 t.CustomerPhone,
+                                t.CustomerPhoneExt,
                                 Address1 = ad.Line1,
                                 Address2 = ad.Line2,
                                 Address3 = ad.Line3,

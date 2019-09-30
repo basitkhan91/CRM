@@ -494,4 +494,13 @@ export class CustomerService {
         return this.customerEndpoint.deleteAircraftInvetoryById(id);
     }
 
+    documentUploadAction (action: any) {
+        return this.customerEndpoint.getDocumentUploadEndpoint<any>(action);
+    }
+
+    deleteDocumentAction(actionId: any) {
+    return this.customerEndpoint.getDeleteDocumentEndpoint(actionId);
+}
+
+
 }

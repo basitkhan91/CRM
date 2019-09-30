@@ -106,7 +106,8 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _deleteATAMapped: string = '/api/Customer/DeleteCustomerATAMapping';
     private readonly _deleteAircraftMappedInventory: string = '/api/Customer/DeleteCustomerAircraftMappint';
     private readonly _addShipViaDetails : string ='/api/Customer/addShipViaDetails';
-
+    private readonly _addDocumentDetails: string = '/api/Customer/customerDocumentUpload';
+    private readonly _addRemoveDetails: string = '/api/Customer/customerDocumentDelete';
 
 
 
@@ -177,6 +178,24 @@ export class CustomerEndpoint extends EndpointFactory {
         .catch(error => {
             return this.handleError(error, () => this.postDomesticShipVia(postData));
         });
+    }
+
+
+    getDocumentUploadEndpoint<T>(file: any): Observable<T> {
+        const headers = new Headers({ 'Content-Type': 'multipart/form-data' });
+        return this.http.post<T>(`${this._addDocumentDetails}`, file);
+    }
+
+    getDeleteDocumentEndpoint<T>(actionId: number): Observable<T> {
+        let endpointUrl = `${this._addDocumentDetails}/${actionId}`;
+
+        return this.http
+            .delete<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () =>
+                    this.getDeleteDocumentEndpoint(actionId)
+                );
+            });
     }
 
     //getcustomerEndpoint<T>(): Observable<T> {

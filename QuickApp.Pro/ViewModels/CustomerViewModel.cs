@@ -20,7 +20,8 @@ namespace QuickApp.Pro.ViewModels
         public long CustomerId { get; set; }
 
         public string Name { get; set; }
-
+        public int? CsrId { get; set; }
+        public int? SaId { get; set; }
 
         public string CustomerCode { get; set; }
 
@@ -136,7 +137,8 @@ namespace QuickApp.Pro.ViewModels
 
 
         public string CustomerPhone { get; set; }
-
+        public string CustomerPhoneExt { get; set; }
+        
 
         public string CSRName { get; set; }
 
