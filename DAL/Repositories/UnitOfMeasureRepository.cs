@@ -48,7 +48,8 @@ namespace DAL.Repositories
 
         public IEnumerable<DAL.Models.UnitOfMeasureAudit> GetUnitOfMeasureAuditDetails(long unitOfMeasureId)
         {
-            return _appContext.UnitOfMeasureAudit.Where(c => c.UnitOfMeasureId == unitOfMeasureId).ToList();
+			return _appContext.UnitOfMeasureAudit.Where(c => c.UnitOfMeasureId == unitOfMeasureId).OrderByDescending(p => p.UpdatedDate).ToList();
+				
         }
 
         public IEnumerable<UnitOfMeasure> UploadUOMCustomData(IFormFile file) 

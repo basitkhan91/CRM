@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { FormBuilder } from '@angular/forms';
 import { fadeInOut } from '../../services/animations';
@@ -11,6 +11,8 @@ import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { validateRecordExistsOrNot, editValueAssignByCondition, getObjectById } from '../../generic/autocomplete';
+import { Table } from 'primeng/table';
+import * as $ from 'jquery';
 
 @Component({
     selector: 'app-unit-of-measure',
@@ -45,12 +47,13 @@ export class UnitOfMeasureComponent implements OnInit {
     pageSize: number = 10;
     totalPages: number;
     uomHeaders = [
+        { field: 'description', header: 'Unit Of Measure' },
+        { field: 'shortName', header: 'Short Name' },
         { field: 'standard', header: 'Standard' },
-        { field: 'description', header: 'Description' },
-        { field: 'shortName', header: 'ShortName' },
         { field: 'memo', header: 'Memo' },
     ]
     selectedColumns = this.uomHeaders;
+    formData = new FormData()
     // paginationBoolean: string = 'true';
 
     // {"description":"",
@@ -97,6 +100,11 @@ export class UnitOfMeasureComponent implements OnInit {
 
     // isSaving: boolean;
 
+    @ViewChild('dt')
+    private table: Table;
+    auditHistory: any[] = [];
+    existingRecordsResponse: Object;
+
     constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private alertService: AlertService, public unitofmeasureService: UnitOfMeasureService) {
         // this.displayedColumns.push('action');
         // this.dataSource = new MatTableDataSource();
@@ -137,8 +145,41 @@ export class UnitOfMeasureComponent implements OnInit {
     // private isDelete: boolean = false;
     // uomEditTempInfo: any = {};
 
+
+
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    }
+    columnsChanges() {
+        this.refreshList();
+    }
+    refreshList() {
+        this.table.reset();
+        this.getUOMList();
+    }
+
+    customExcelUpload(file) {
+
+        console.log(file)
+        if (file.length > 0) {
+
+            this.formData.append('file', file[0])
+            this.unitofmeasureService.UOMFileUpload(this.formData).subscribe(res => {
+                this.formData = new FormData();
+                this.existingRecordsResponse = res;
+                this.getUOMList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+
+                // $('#duplicateRecords').modal('show');
+                // document.getElementById('duplicateRecords').click();
+
+            })
+        }
+
     }
 
     getUOMList() {
@@ -155,7 +196,7 @@ export class UnitOfMeasureComponent implements OnInit {
     changePage(event: { first: any; rows: number }) {
         console.log(event);
         const pageIndex = (event.first / event.rows);
-        this.pageIndex = pageIndex;
+        // this.pageIndex = pageIndex;
         this.pageSize = event.rows;
         this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
     }
@@ -230,7 +271,7 @@ export class UnitOfMeasureComponent implements OnInit {
 
     changeStatus(rowData) {
         console.log(rowData);
-        const data = { ...rowData, isActive: rowData.isActive === true ? false : true }
+        const data = { ...rowData }
         this.unitofmeasureService.updateUnitOfMeasure(data).subscribe(() => {
             this.getUOMList();
             this.alertService.showMessage(
@@ -241,8 +282,12 @@ export class UnitOfMeasureComponent implements OnInit {
         })
 
     }
-    openView(rowData) {
+    viewSelectedRow(rowData) {
+        console.log(rowData);
         this.viewRowData = rowData;
+    }
+    resetViewData() {
+        this.viewRowData = undefined;
     }
     delete(rowData) {
         this.selectedRowforDelete = rowData;
@@ -263,6 +308,12 @@ export class UnitOfMeasureComponent implements OnInit {
         } else {
             this.selectedRowforDelete = undefined;
         }
+    }
+
+    getAuditHistoryById(rowData) {
+        this.unitofmeasureService.getUnitOfWorkAuditDetails(rowData.unitOfMeasureId).subscribe(res => {
+            this.auditHistory = res;
+        })
     }
     // ngAfterViewInit() {
     //     this.dataSource.paginator = this.paginator;

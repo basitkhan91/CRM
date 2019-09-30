@@ -11,13 +11,13 @@
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
                         </div>
-                        <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="uomData" [first]="pageIndex" [rows]="pageSize" [paginator]="true" [pageLinks]="3"
-                            [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple"     (onLazyLoad)="changePage($event)" 
-                            [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" [totalRecords]="totalRecords" scrollHeight="450px">
+                        <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="uomData" [first]="0" [rows]="pageSize" [paginator]="true" [pageLinks]="3"
+                            [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple"     (onPage)="changePage($event)" 
+                            [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" [totalRecords]="totalRecords" scrollHeight="450px" >
                             <ng-template pTemplate="caption">
                                 <div style="text-align: right;margin-left:-6px !important;">
                                     <p-multiSelect  [maxSelectedLabels]="2" [options]="uomHeaders"  optionLabel="header" [(ngModel)]="selectedColumns"  
-                                        [style]="{minWidth: '200px'}"  style="float:left" ></p-multiSelect>
+                                        [style]="{minWidth: '200px'}"  style="float:left" (onChange)="columnsChanges()"  ></p-multiSelect>
                                     <!-- 
 									<div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
 										<i class="fa fa-search"></i>
@@ -28,9 +28,12 @@
                                         iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
                                     <button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
                                         iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button> 
+                                        <!-- <button class="btn btn-primary-cstm" (click)="refreshList()">
+                                            <i class="fa fa-refresh" aria-hidden="true"  pTooltip="refresh" ></i>
+                                        </button> -->
                                      
                                     <div class="excel-upload  excel-upload-cstm">
-                                        <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected"
+                                        <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event.target.files)"   class="uploaddoc upload-file" data-multiple-caption="{count} files selected"
                                             accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                                         <label for="upload">
                                             <span matTooltip="Upload Data (Excel)">
@@ -38,12 +41,13 @@
                                             </span>
                                         </label>
                                     </div>
+
                                 </div>
                             </ng-template>
                          
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
-                                    <th  style="width:120px" *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                    <th  style="width:120px" *ngFor="let col of columns"  pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                         {{col.header}}
                                         <p-sortIcon [field]="col.field"></p-sortIcon>
                                     </th>
@@ -56,9 +60,9 @@
                                     <th  style="width:200px;position:sticky"></th>
                                 </tr>
                             </ng-template>
-                            <ng-template  pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-                                <tr    [pSelectableRow]="rowData" pReorderableRowHandle >
-                                    <td style="width:120px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                            <ng-template  pTemplate="body" let-rowData let-columns="columns"  >
+                                <tr    [pSelectableRow]="rowData" pReorderableRowHandle  >
+                                    <td style="width:120px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle data-toggle="modal" data-target="#view" (dblclick)="viewSelectedRow(rowData)">
                                         {{col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?
                                         (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                     </td>
@@ -66,7 +70,7 @@
                                         <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}" (onChange)="changeStatus(rowData)"></p-inputSwitch>
 
                                         <span data-toggle="modal" data-target="#view">
-                                            <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(rowData)" data-target="#view" data-toggle="modal">
+                                            <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewSelectedRow(rowData)" data-target="#view" data-toggle="modal">
                                                 <i class="fa fa-eye"></i>
                                             </a>
                                         </span>
@@ -77,7 +81,7 @@
                                         <button class="btn-delete" mat-icon-button matTooltip="Delete"  data-target="#delete" data-toggle="modal"  (click)="delete(rowData)">
                                             <mat-icon color="warn">delete</mat-icon>
                                         </button>
-                                        <button class="btn-history" mat-icon-button matTooltip="History" >
+                                        <button class="btn-history" mat-icon-button matTooltip="History" data-target="#contentHist" data-toggle="modal" (click)="getAuditHistoryById(rowData)" >
                                             <mat-icon color="green">history</mat-icon>
                                         </button>
                                     </td>
@@ -90,7 +94,8 @@
                             </ng-template>
                             <ng-template pTemplate="summary" id="footer">
                                 <label id="footer" class="footer">No'of records:</label>
-                                <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                                <!-- <p>{{uomData.length}}</p> -->
+                                <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp; 
                                 <label id="footer" class="footer1">Pages Count:</label>
                                 <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" /> 
                             </ng-template>
@@ -328,7 +333,7 @@
     </div>
 </div>  -->
 
-<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
+<!-- <ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
     <div class="modal-header">
         <h4 class="modal-title">History of Unit of Measurre</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
@@ -362,7 +367,7 @@
     <div class="modal-footer">
         <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
     </div>
-</ng-template>
+</ng-template> -->
 <!--<ng-template #view class="modal fade " id="view" role="dialog">
 
                             <div class="modal-content">
@@ -389,60 +394,171 @@
                                 </div>
 
                         </ng-template>-->
+
+
+                        <div *ngIf="existingRecordsResponse" id="duplicateRecords" #duplicateRecords class="modal fade" role="dialog" >
+                            <div class="modal-dialog modal-lg">
+                          
+                              <!-- Modal content-->
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                  <h4 class="modal-title">Duplicate Records</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="table-responsive rro-table-cstm">
+                                        <table class="table table-bordered"  >
+                                            <thead>
+                                                <tr>
+                                                    <!-- <th>UMID</th> -->
+                                                    <th>UOM</th>
+                                                    <th>Short Name</th>
+                                                    <th>Standard</th>
+                                                    <th>Memo</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody *ngIf="existingRecordsResponse.length> 0" >
+                                                    <tr *ngFor="let ext of existingRecordsResponse; let i = index;">
+                                      
+                                                            <!-- <td >{{audit.unitOfMeasureAuditId}}</td> -->
+                                                            <td >{{ext.description}}</td>
+                                                            <td>{{ext.shortName}}</td>
+                                                            <td >{{ext.standard}}</td>
+                                                            <td >{{ext.memo}}</td>
+                                                        </tr>
+                                            </tbody>
+                                            
+
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                                </div>
+                              </div>
+                          
+                            </div>
+                          </div>
+
+                          <div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" >
+                            <div class="modal-dialog modal-lg">
+                          
+                              <!-- Modal content-->
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                  <h4 class="modal-title">History of Unit of Measurre</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="table-responsive rro-table-cstm">
+                                        <table class="table table-bordered" *ngIf="auditHistory.length> 0 else noDatavailable" >
+                                            <thead>
+                                                <tr>
+                                                    <!-- <th>UMID</th> -->
+                                                    <th>UOM</th>
+                                                    <th>Short Name</th>
+                                                    <th>Standard</th>
+                                                    <th>Memo</th>
+                                                    <th>IsActive</th>
+                                                    <th>Updated By</th>
+                                                    <th>Updated Time</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody *ngIf="auditHistory.length> 0" >
+                                                    <tr *ngFor="let audit of auditHistory; let i = index;">
+                                      
+                                                            <!-- <td >{{audit.unitOfMeasureAuditId}}</td> -->
+                                                            <td [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].description === audit.description ? 'black' : 'red'  }">{{audit.description}}</td>
+                                                            <td [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].shortName === audit.shortName ? 'black' : 'red'  }">{{audit.shortName}}</td>
+                                                            <td [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].standard === audit.standard ? 'black' : 'red'  }">{{audit.standard}}</td>
+                                                            <td [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].memo === audit.memo ? 'black' : 'red'  }">{{audit.memo}}</td>
+                                                            <td [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].isActive === audit.isActive ? 'black' : 'red'  }">{{audit.isActive}}</td>
+                                                            <td >{{audit.updatedBy}}</td>
+                                                            <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                                                        </tr>
+                                            </tbody>
+                                            
+
+                                        </table>
+                                        <ng-template #noDatavailable>
+                                            <div class="text-center"> 
+                                                    <img src="../../assets/images/binoculars.png" style="height: 100px; width: 100px;">
+                                                    <h4 style="color: #ff5663;">No History Found </h4>
+                                            </div>
+
+                                        </ng-template>  
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                                </div>
+                              </div>
+                          
+                            </div>
+                          </div>
+
+
+
 <div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog">
 <div class="modal-dialog modal-sm">
     <div class="modal-content">
         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" id="" name="">×</button>
+            <button type="button" class="close" data-dismiss="modal" id="" name="" (click)="resetViewData()">×</button>
             <h4 class="modal-title">Unit Of Measure Details</h4>
         </div>
-        <div class="modal-body viewform">
+        <div class="modal-body viewform ">
             <div class="col-sm-12">
                 <p>
-                    <span class="label">
-                        <b>Unit Of Measure: </b>
+                    <span class="label " >
+                        <b class="view-Header">Unit Of Measure: </b>
                     </span>
                     <span class="value">{{ viewRowData.description}}</span>
                 </p>
                 <p>
-                    <span class="label">
-                        <b>ShortName: </b>
+                    <span class="label ">
+                        <b class="view-Header">ShortName: </b>
                     </span>
                     <span class="value">{{ viewRowData.shortName}}</span>
                 </p>
                 <p>
-                    <span class="label">
-                        <b>Standard: </b>
+                    <span class="label ">
+                        <b class="view-Header"> Standard: </b>
                     </span>
                     <span class="value">{{ viewRowData.standard}}</span>
                 </p>
                 <p>
-                    <span class="label">
-                        <b>Memo: </b>
+                    <span class="label ">
+                        <b class="view-Header">Memo: </b>
                     </span>
                     <span class="value">{{viewRowData.memo}}</span>
                 </p>
                 <p>
-                    <span class="label">
-                        <b>Created By: </b>
+                    <span class="label ">
+                        <b class="view-Header">IsActive</b>
+                    </span>
+                    <span class="value">{{viewRowData.isActive}}</span>
+                </p>
+                <p>
+                    <span class="label ">
+                        <b class="view-Header">Created By: </b>
                     </span>
                     <span class="value">{{viewRowData.createdBy }}</span>
                 </p>
                 <p>
-                    <span class="label">
-                        <b>Created Date: </b>
+                    <span class="label ">
+                        <b class="view-Header">Created Date: </b>
                     </span>
                     <span class="value">{{viewRowData.createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
                 </p>
                 <p>
-                    <span class="label">
-                        <b>Updated By: </b>
+                    <span class="label ">
+                        <b class="view-Header">Updated By: </b>
                     </span>
                     <span class="value">{{viewRowData.updatedBy}}</span>
                 </p>
                 <p>
-                    <span class="label">
-                        <b>Updated Date: </b>
+                    <span class="label ">
+                        <b class="view-Header">Updated Date: </b>
                     </span>
                     <span class="value">{{viewRowData.updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
                 </p>
@@ -450,7 +566,7 @@
             <div class="clear"></div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" >Close</button>
+            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="resetViewData()">Close</button>
         </div>
     </div>
 
