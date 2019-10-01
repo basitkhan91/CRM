@@ -1008,6 +1008,27 @@ namespace DAL.Repositories
             }
         }
 
+        public IEnumerable<object> GetPublicationTypes()
+        {
+            try
+            {
+                var result = (from pt in _appContext.PublicationTypes
+                              where pt.IsDeleted == false
+                              select new
+                              {
+                                  pt.Id,
+                                  pt.Name
+                              })
+                              .ToList();
+                return result;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         private List<AttachmentDetails> GetAttachmentDetails(long publicationRecordId)
         {
             List<AttachmentDetails> attachmentDetailsList = new List<AttachmentDetails>();

@@ -7,6 +7,7 @@ using DAL;
 using DAL.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -15,9 +16,11 @@ namespace QuickApp.Pro.Controllers
     public class FileUploadController : Controller
     {
         private IUnitOfWork _unitOfWork;
-        public FileUploadController(IUnitOfWork unitOfWork)
+        private AppSettings AppSettings { get; set; }
+        public FileUploadController(IUnitOfWork unitOfWork, IOptions<AppSettings> settings)
         {
             _unitOfWork = unitOfWork;
+            AppSettings = settings.Value;
         }
 
         [HttpPost]
@@ -66,6 +69,23 @@ namespace QuickApp.Pro.Controllers
             return File(memory, GetContentType(filePath), Path.GetFileName(filePath));
         }
 
+        
+
+        [HttpGet]
+        [Route("downloadsamplefile")]
+        public async Task<IActionResult> DownloadSampleFile(string moduleName, string fileName)
+        {
+            var fileFullPath = Path.Combine(AppSettings.SampleUploadFilePath, moduleName, fileName);
+
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(fileFullPath, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+            return File(memory, GetContentType(fileFullPath), Path.GetFileName(fileFullPath));
+        }
+
         private string GetContentType(string path)
         {
             var types = GetMimeTypes();
@@ -82,7 +102,7 @@ namespace QuickApp.Pro.Controllers
                 {".doc", "application/vnd.ms-word"},
                 {".docx", "application/vnd.ms-word"},
                 {".xls", "application/vnd.ms-excel"},
-                {".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"},  
+                {".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"},
                 {".png", "image/png"},
                 {".jpg", "image/jpeg"},
                 {".jpeg", "image/jpeg"},

@@ -54,11 +54,16 @@ namespace DAL.Repositories
 
         public IEnumerable<UnitOfMeasure> UploadUOMCustomData(IFormFile file) 
         {
+            string description=string.Empty;
+            string shortName = string.Empty;
+            string standard = string.Empty;
+            string memo = string.Empty;
+            List<UnitOfMeasure> unitOfMeasures = new List<UnitOfMeasure>();
+
             try
             {
-
-                List<UnitOfMeasure> unitOfMeasures = new List<UnitOfMeasure>();
                 UnitOfMeasure unitOfMeasure;
+                
                 string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
                 string filePath = Path.Combine(AppSettings.CustomUploadFilePath, Convert.ToString(ModuleEnum.UnitOfMeasure),DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss"));
 
@@ -88,19 +93,21 @@ namespace DAL.Repositories
                                     if (!flag)
                                     {
                                         unitOfMeasure = new UnitOfMeasure();
-                                        unitOfMeasure.Description = worksheet.Cells[row, 1].Value.ToString().Trim();
-                                        unitOfMeasure.ShortName = worksheet.Cells[row, 2].Value.ToString().Trim();
-                                        unitOfMeasure.Standard = worksheet.Cells[row, 3].Value.ToString().Trim();
-                                        unitOfMeasure.Memo = worksheet.Cells[row, 4].Value.ToString().Trim();
+                                        description= unitOfMeasure.Description = worksheet.Cells[row, 1].Value.ToString().Trim();
+                                        shortName= unitOfMeasure.ShortName = worksheet.Cells[row, 2].Value.ToString().Trim();
+                                        standard= unitOfMeasure.Standard = worksheet.Cells[row, 3].Value.ToString().Trim();
+                                        memo= unitOfMeasure.Memo = worksheet.Cells[row, 4].Value.ToString().Trim();
                                         unitOfMeasure.MasterCompanyId = 1;
                                         unitOfMeasure.IsActive = true;
                                         unitOfMeasure.IsDelete = false;
                                         unitOfMeasure.CreatedBy = unitOfMeasure.UpdatedBy = "System";
                                         unitOfMeasure.UpdatedDate = unitOfMeasure.CreatedDate = DateTime.Now;
-
+                                        
 
                                         _appContext.UnitOfMeasure.Add(unitOfMeasure);
                                         _appContext.SaveChanges();
+                                        unitOfMeasure.UploadStatus = "Success";
+                                        unitOfMeasures.Add(unitOfMeasure);
                                     }
                                     else
                                     {
@@ -109,11 +116,9 @@ namespace DAL.Repositories
                                         unitOfMeasure.ShortName = worksheet.Cells[row, 2].Value.ToString().Trim();
                                         unitOfMeasure.Standard = worksheet.Cells[row, 3].Value.ToString().Trim();
                                         unitOfMeasure.Memo = worksheet.Cells[row, 4].Value.ToString().Trim();
-
+                                        unitOfMeasure.UploadStatus = "Duplicate";
                                         unitOfMeasures.Add(unitOfMeasure);
                                     }
-
-
                                 }
                             }
                         }
@@ -122,12 +127,21 @@ namespace DAL.Repositories
 
                 
 
-                return unitOfMeasures;
+                //return unitOfMeasures;
             }
             catch (Exception)
             {
-                throw;
+                UnitOfMeasure unitOfMeasure = new UnitOfMeasure();
+                unitOfMeasure.Description = description;
+                unitOfMeasure.ShortName = shortName;
+                unitOfMeasure.Standard =standard;
+                unitOfMeasure.Memo = memo;
+
+                unitOfMeasure.UploadStatus = "Failed";
+                unitOfMeasures.Add(unitOfMeasure);
+                //throw;
             }
+            return unitOfMeasures;
         }
 
         
