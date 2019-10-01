@@ -387,6 +387,8 @@ namespace DAL
         public DbSet<WorkOrderAddress> WorkOrderAddress { get; set; }
         public DbSet<WorkOrderQuote> WorkOrderQuote { get; set; }
         public DbSet<WorkOrderFreight> WorkOrderFreight { get; set; }
+        public DbSet<PublicationTypes_Audit> PublicationTypes_Audit { get; set; }
+        
 
 
         public DbSet<AssetIntangibleAttributeType> AssetIntangibleAttributeType { get; set; }

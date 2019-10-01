@@ -1,25 +1,16 @@
 ﻿
+using DAL.Common;
 using DAL.Models;
 using DAL.Repositories.Interfaces;
+using ExcelDataReader;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using DAL;
-using DAL.Core.Interfaces;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-
-using System.Threading.Tasks;
-using DAL.Core;
-using System.Net.Http.Headers;
-using Spire.Xls;
-using OfficeOpenXml;
 using System.IO;
-using DAL.Common;
-using Microsoft.Extensions.Options;
+using System.Linq;
+using System.Net.Http.Headers;
 
 namespace DAL.Repositories
 
@@ -34,12 +25,12 @@ namespace DAL.Repositories
 
         public IEnumerable<DAL.Models.UnitOfMeasure> getUnitOfMeasureData()
         {
-            return _appContext.UnitOfMeasure.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.UnitOfMeasureId).ToList();
+            return _appContext.UnitOfMeasure.Include("MasterCompany").Where(c => c.IsDeleted == false || c.IsDeleted == null).OrderByDescending(c => c.UnitOfMeasureId).ToList();
         }
 
         public IQueryable<DAL.Models.UnitOfMeasure> GetPaginationData()
         {
-            return _appContext.UnitOfMeasure.Where(c => (c.IsDelete == false || c.IsDelete == null))
+            return _appContext.UnitOfMeasure.Where(c => (c.IsDeleted == false || c.IsDeleted == null))
                 .OrderByDescending(c => c.UnitOfMeasureId).ToList().AsQueryable();
         }
 
@@ -48,24 +39,24 @@ namespace DAL.Repositories
 
         public IEnumerable<DAL.Models.UnitOfMeasureAudit> GetUnitOfMeasureAuditDetails(long unitOfMeasureId)
         {
-			return _appContext.UnitOfMeasureAudit.Where(c => c.UnitOfMeasureId == unitOfMeasureId).OrderByDescending(p => p.UpdatedDate).ToList();
-				
+            return _appContext.UnitOfMeasureAudit.Where(c => c.UnitOfMeasureId == unitOfMeasureId).OrderByDescending(p => p.UpdatedDate).ToList();
+
         }
 
-        public IEnumerable<UnitOfMeasure> UploadUOMCustomData(IFormFile file) 
+        public IEnumerable<UnitOfMeasure> UploadUOMCustomData(IFormFile file)
         {
-            string description=string.Empty;
+            string description = string.Empty;
             string shortName = string.Empty;
             string standard = string.Empty;
             string memo = string.Empty;
             List<UnitOfMeasure> unitOfMeasures = new List<UnitOfMeasure>();
-
+            int count = 0;
             try
             {
                 UnitOfMeasure unitOfMeasure;
-                
+
                 string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-                string filePath = Path.Combine(AppSettings.CustomUploadFilePath, Convert.ToString(ModuleEnum.UnitOfMeasure),DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss"));
+                string filePath = Path.Combine(AppSettings.CustomUploadFilePath, Convert.ToString(ModuleEnum.UnitOfMeasure), DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss"));
 
                 if (!Directory.Exists(filePath))
                 {
@@ -73,78 +64,73 @@ namespace DAL.Repositories
                 }
 
                 string fullPath = Path.Combine(filePath, fileName);
+                
 
-                if (Path.GetExtension(fileName).Equals(".xlsx"))
+                using (var stream = File.Open(fullPath, FileMode.Create))
                 {
-                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    file.CopyTo(stream);
                     {
-                        file.CopyTo(stream);
+                        using (var reader = ExcelReaderFactory.CreateReader(stream))
                         {
-                            using (var package = new ExcelPackage(stream))
+                            do
                             {
-                                ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
-                                var rowCount = worksheet.Dimension.Rows;
-
-                                for (int row = 2; row <= rowCount; row++)
+                                while (reader.Read())
                                 {
-
-                                    var flag = _appContext.UnitOfMeasure.Any(p => p.Description == worksheet.Cells[row, 1].Value.ToString().Trim() || p.ShortName == worksheet.Cells[row, 2].Value.ToString().Trim());
-
-                                    if (!flag)
+                                    if(count>0)
                                     {
-                                        unitOfMeasure = new UnitOfMeasure();
-                                        description= unitOfMeasure.Description = worksheet.Cells[row, 1].Value.ToString().Trim();
-                                        shortName= unitOfMeasure.ShortName = worksheet.Cells[row, 2].Value.ToString().Trim();
-                                        standard= unitOfMeasure.Standard = worksheet.Cells[row, 3].Value.ToString().Trim();
-                                        memo= unitOfMeasure.Memo = worksheet.Cells[row, 4].Value.ToString().Trim();
-                                        unitOfMeasure.MasterCompanyId = 1;
-                                        unitOfMeasure.IsActive = true;
-                                        unitOfMeasure.IsDelete = false;
-                                        unitOfMeasure.CreatedBy = unitOfMeasure.UpdatedBy = "System";
-                                        unitOfMeasure.UpdatedDate = unitOfMeasure.CreatedDate = DateTime.Now;
-                                        
+                                        var flag = _appContext.UnitOfMeasure.Any(p => p.Description == reader.GetString(0).Trim() || p.ShortName == reader.GetString(1).Trim());
+                                        if (!flag)
+                                        {
+                                            unitOfMeasure = new UnitOfMeasure();
+                                            description = unitOfMeasure.Description = reader.GetString(0).Trim();
+                                            shortName = unitOfMeasure.ShortName = reader.GetString(1).Trim();
+                                            standard = unitOfMeasure.Standard = reader.GetString(2).Trim().Trim();
+                                            memo = unitOfMeasure.Memo = reader.GetString(3).Trim().Trim();
+                                            unitOfMeasure.MasterCompanyId = 1;
+                                            unitOfMeasure.IsActive = true;
+                                            unitOfMeasure.IsDeleted = false;
+                                            unitOfMeasure.CreatedBy = unitOfMeasure.UpdatedBy = "System";
+                                            unitOfMeasure.UpdatedDate = unitOfMeasure.CreatedDate = DateTime.Now;
 
-                                        _appContext.UnitOfMeasure.Add(unitOfMeasure);
-                                        _appContext.SaveChanges();
-                                        unitOfMeasure.UploadStatus = "Success";
-                                        unitOfMeasures.Add(unitOfMeasure);
+                                            _appContext.UnitOfMeasure.Add(unitOfMeasure);
+                                            _appContext.SaveChanges();
+                                            unitOfMeasure.UploadStatus = "Success";
+                                            unitOfMeasures.Add(unitOfMeasure);
+                                        }
+                                        else
+                                        {
+                                            unitOfMeasure = new UnitOfMeasure();
+                                            unitOfMeasure.Description = reader.GetString(0).Trim();
+                                            unitOfMeasure.ShortName = reader.GetString(1).Trim();
+                                            unitOfMeasure.Standard = reader.GetString(2).Trim().Trim();
+                                            unitOfMeasure.Memo = reader.GetString(3).Trim().Trim();
+                                            unitOfMeasure.UploadStatus = "Duplicate";
+                                            unitOfMeasures.Add(unitOfMeasure);
+                                        }
                                     }
-                                    else
-                                    {
-                                        unitOfMeasure = new UnitOfMeasure();
-                                        unitOfMeasure.Description = worksheet.Cells[row, 1].Value.ToString().Trim();
-                                        unitOfMeasure.ShortName = worksheet.Cells[row, 2].Value.ToString().Trim();
-                                        unitOfMeasure.Standard = worksheet.Cells[row, 3].Value.ToString().Trim();
-                                        unitOfMeasure.Memo = worksheet.Cells[row, 4].Value.ToString().Trim();
-                                        unitOfMeasure.UploadStatus = "Duplicate";
-                                        unitOfMeasures.Add(unitOfMeasure);
-                                    }
+                                    count++;
                                 }
-                            }
+                            } while (reader.NextResult());
+
                         }
                     }
                 }
-
-                
-
-                //return unitOfMeasures;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 UnitOfMeasure unitOfMeasure = new UnitOfMeasure();
                 unitOfMeasure.Description = description;
                 unitOfMeasure.ShortName = shortName;
-                unitOfMeasure.Standard =standard;
+                unitOfMeasure.Standard = standard;
                 unitOfMeasure.Memo = memo;
 
                 unitOfMeasure.UploadStatus = "Failed";
                 unitOfMeasures.Add(unitOfMeasure);
-                //throw;
             }
             return unitOfMeasures;
         }
 
-        
+
 
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
