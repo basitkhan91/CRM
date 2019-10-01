@@ -311,7 +311,7 @@
                 </div>
 
                 <p-accordion [multiple]="true" class="p-accordion-cstm">
-                    <p-accordionTab *ngFor="let task of addedTasks" header="{{task.Name}}" (click)="onAccordTabClick1()">
+                    <p-accordionTab *ngFor="let task of addedTasks" [selected]="task.selected" header="{{task.Name}}" (click)="onAccordTabClick1(task)">
                         <div *ngIf="task.publication.length > 0">
                             <h5 class="po-head">Publications</h5>
                             <div class="table-responsive">

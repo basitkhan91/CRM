@@ -74,4 +74,7 @@ export class UnitOfMeasureService {
         return Observable.forkJoin(
             this.unitofmeasureEndpoint.getUnitOfMeasurePages<any[]>(serverSidePagesData));
     }
+    UOMFileUpload(file){
+        return this.unitofmeasureEndpoint.UOMCustomUpload(file);
+    }
 }

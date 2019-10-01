@@ -134,13 +134,13 @@
                                                 <div class="form-group">
                                                     <label>Phone <span class="clr-red">*</span></label>
                                                     <div class="col-md-12">
-                                                        <div class="col-md-0">
+                                                        <div class="col-md-8">
                                                                 <input type="text" id="phone"  name="phone" pInputText pKeyFilter="num" #mobPattern="ngModel" minlength=10 maxlength=13 class="form-control" ng-pattern="phoneNumbr" [(ngModel)]="generalInformation.customerPhone" required>
                                                                 <div *ngIf="mobPattern.errors" [ngClass]="'error'">
                                                                 </div>
                                                         </div>
                                                         
-                                                        <div class="col-md-2">
+                                                        <div class="col-md-4">
                                                                 <input type="text"  name="phoneExt" pInputText pKeyFilter="num" maxlength="3" [(ngModel)]="generalInformation.customerPhoneExt" required>
                                                         </div>
 
@@ -345,38 +345,43 @@
 
                                                             <div class="table-small" *ngIf="generalInformation.restrictPMA">
 
-                                                                    
+                                                                    <div class="col-sm-12">  
+                                                                        <div class="col-sm-9">     
                                                                     <p-multiSelect 
                                                                     name="isRestrict"
 
-                                                                     [(ngModel)]="restictPMAIds"
+                                                                     [(ngModel)]="restictPMAtempList"
                                                                      [options]="partList" 
                                                                      [filter]="true"
                                                                      itemSize="30"
                                                                     ></p-multiSelect>
+                                                                </div>
+                                                                <div class="col-sm-3">
                                                                     <span style="margin-left:3px;cursor:pointer;"><a  class="fa fa-plus-circle fa-lg" (click)="addRestrictPMA()" ></a></span>
+                                                                </div>
+                                                                </div>
+                                                                    <p-table class="table-responsive" [value]="generalInformation.restrictsPMAList"  [paginator]="true" [rows]="3" [columns]="restrictHeaders">
+                                                                        <ng-template pTemplate="header" let-columns>
+                                                                            <tr>
+                                                                                <th *ngFor="let col of columns">
+                                                                                    {{col.header}}
+                                                                                </th>
+                                                                                <th>Actions</th>
+                                                                            </tr>
+                                                                        </ng-template>
+                                                                        <ng-template pTemplate="body" let-car let-columns="columns"  let-i="rowIndex">
+                                                                            <tr>
+                                                                                <td *ngFor="let col of columns">
+                                                                                        {{car[col.field]}}
+                                                                                </td>
+                                                                                <button class="btn-delete"  (click)="deleteRestirctPMA(i)" mat-icon-button matTooltip="Delete" >
+                                                                                    <mat-icon color="warn">delete</mat-icon>
+                                                                                </button>
+                                                                            </tr>
+                                                                        </ng-template>
+                                                                    </p-table>
 
-                                                                    <p-table [value]="restrictsPMAList">
-                                                                            <ng-template pTemplate="header">
-                                                                                <tr>
-                                                                                    <th>PN</th>
-                                                                                    <th>Description</th>
-                                                                                    <th>Actions</th>
- 
-                                                                                </tr>
-                                                                            </ng-template>
-                                                                            <ng-template pTemplate="body" let-car>
-                                                                                <tr>
-                                                                                    <td></td>
-                                                                                    <td></td>
-                                                                                    <td>
-                                                                                    <button class="btn-delete" mat-icon-button matTooltip="Delete" >
-                                                                                        <mat-icon color="warn">delete</mat-icon>
-                                                                                    </button>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </ng-template>
-                                                                        </p-table>
+
         
                                                         </div>
                                                            
@@ -409,38 +414,40 @@
 
                                                             <div class="table-small" *ngIf="generalInformation.restrictBER">
 
-                                                                    
+                                                                    <div class="col-sm-12">  
+                                                                            <div class="col-sm-9">    
                                                                     <p-multiSelect 
                                                                     name="isRestrict"
-
-                                                                     [(ngModel)]="generalInformation.restictBERIds"
+                                                                     [(ngModel)]="restictBERtempList"
                                                                      [options]="partList" 
                                                                      [filter]="true"
                                                                      itemSize="30"
                                                                     ></p-multiSelect>
+                                                                    </div>
+                                                                    <div class="col-sm-3">
                                                                     <span style="margin-left:3px;cursor:pointer;"><a  class="fa fa-plus-circle fa-lg" (click)="addRestrictBER()" ></a></span>
-
-                                                                    <p-table [value]="restrictBERList">
-                                                                            <ng-template pTemplate="header">
-                                                                                <tr>
-                                                                                    <th>PN</th>
-                                                                                    <th>Description</th>
-                                                                                    <th>Actions</th>
- 
-                                                                                </tr>
-                                                                            </ng-template>
-                                                                            <ng-template pTemplate="body" let-car>
-                                                                                <tr>
-                                                                                    <td></td>
-                                                                                    <td></td>
-                                                                                    <td>
-                                                                                    <button class="btn-delete" mat-icon-button matTooltip="Delete" >
-                                                                                        <mat-icon color="warn">delete</mat-icon>
-                                                                                    </button>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </ng-template>
-                                                                        </p-table>
+                                                                </div>  
+                                                                </div>
+                                                                    <p-table class="table-responsive" [value]="generalInformation.restrictBERList"  [paginator]="true" [rows]="3" [columns]="restrictHeaders">
+                                                                        <ng-template pTemplate="header" let-columns>
+                                                                            <tr>
+                                                                                <th *ngFor="let col of columns">
+                                                                                    {{col.header}}
+                                                                                </th>
+                                                                                <th>Actions</th>
+                                                                            </tr>
+                                                                        </ng-template>
+                                                                        <ng-template pTemplate="body" let-car let-columns="columns"  let-i="rowIndex">
+                                                                            <tr>
+                                                                                <td *ngFor="let col of columns">
+                                                                                        {{car[col.field]}}
+                                                                                </td>
+                                                                                <button class="btn-delete"  (click)="deleteRestirctBER(i)" mat-icon-button matTooltip="Delete" >
+                                                                                    <mat-icon color="warn">delete</mat-icon>
+                                                                                </button>
+                                                                            </tr>
+                                                                        </ng-template>
+                                                                    </p-table>
         
                                                         </div>
                                                             

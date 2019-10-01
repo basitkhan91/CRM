@@ -13,18 +13,18 @@
       <div class="shadow-Box">
         <div class="col-sm-12">
           <h4 class="float-left">Search ATA chapters</h4>
-          <h4 class="float-right">
+          <!-- <h4 class="float-right">
             Add ATA Information
             <a class="plusicon-cstm" data-toggle="modal" data-target="#ATAADD"
               ><i class="fa fa-plus-circle fa-lg"></i
             ></a>
-          </h4>
+          </h4> -->
         </div>
         <div class="col-md-3">
           <div class="form-group ">
             <label class="fs12">ATA Chapter</label>
             <p-multiSelect
-              [options]="add_ataChapterList"
+              [options]="search_ataChapterList"
               name="atasearch"
               [(ngModel)]="search_SelectedATA"
               (onChange)="getSubChapterByATAChapter()"
@@ -122,9 +122,9 @@
             <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveAircraftInformation(); changeOfTab('AircraftInfo');" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
             <button class="btn btn-primary-cstm float-right" pButton (click)="movePurchaseInformation(); changeOfTab('PurchaseSales');" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step" style="padding: 0 !important;"></button>
         </div> -->
-<div id="ATAADD" class="modal fade custom-popup" role="dialog">
+<!-- <div id="ATAADD" class="modal fade custom-popup" role="dialog">
   <div class="modal-dialog modal-full">
-    <!-- Modal content-->
+  
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">×</button>
@@ -197,4 +197,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->

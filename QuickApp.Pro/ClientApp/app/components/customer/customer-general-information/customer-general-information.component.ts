@@ -79,9 +79,15 @@ export class CustomerGeneralInformationComponent implements OnInit {
     editData: any;
     partList: any;
     partListOriginal: any;
-    restrictsPMAList: any;
-    restrictBERList: any;
-    restictPMAIds: any = [];
+    // restrictsPMAList: any;
+    // restrictBERList: any;
+    restictBERtempList : any = []
+    restictPMAtempList: any = [];
+    restrictHeaders = [
+        {field: 'partNumber' , header: 'PN'},
+        {field: 'memo' , header: 'Description'},
+
+    ]
     // editData: any;
 
     // selectedCustomerCodeData: any;
@@ -465,7 +471,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
             const data = res[0];
             this.partList = data.map(x => {
                 return {
-                    // label: x.partNumber, value: {x.itemMasterId, }
+                    label: x.partNumber, value: { itemMasterId: x.itemMasterId, partNumber: x.partNumber, memo: x.memo }
                 }
             })
         })
@@ -529,21 +535,18 @@ export class CustomerGeneralInformationComponent implements OnInit {
     // }
 
     addRestrictPMA() {
-        //   this.restictPMAIds
 
-        //   this.restrictsPMAList = this.generalInformation.restictPMAIds.reduce((x,y) => {
-        //     return  x.filter( item =>  {
-        //         console.log(item.value)
-        //         // if(item.value == y ){
-        //         //     return item;
-        //         // }
-        //     })
-        //   }, this.partList)
-        console.log(this.restrictsPMAList);
+    this.generalInformation.restrictsPMAList = this.restictPMAtempList
+    }
+    deleteRestirctPMA(i){
+        this.generalInformation.restrictsPMAList.splice(i, 1);
     }
 
     addRestrictBER() {
-
+     this.generalInformation.restrictBERList = this.restictBERtempList;
+    }
+    deleteRestrictBER(i){
+        this.generalInformation.restrictBERList.splice(i, 1);
     }
 
 

@@ -14,9 +14,10 @@ export class UnitOfMeasureEndpoint extends EndpointFactory {
     private readonly _actionsUrl: string = "/api/UnitOfMeasure/Get";
     private readonly _actionsUrlNew: string = "/api/UnitOfMeasure/unitofmeasure";
     private readonly _actionsUrlAuditHistory: string = "/api/UnitOfMeasure/auditHistoryById";
-    private readonly _auditsUrl: string = "/api/UnitOfMeasure/audits";
+    private readonly _auditsUrl: string = "/api/UnitOfMeasure/unitofmeasureauditdetails";
     private readonly _actionUrlAll: string = "/api/UnitOfMeasure/getAll"
     private readonly getUnitOfMeasure: string = "/api/UnitOfMeasure/pagination";
+    private readonly excelUpload: string ="/api/UnitofMeasure/uploaduomcustomdata";
 
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
     get paginate() { return this.configurations.baseUrl + this.getUnitOfMeasure; }
@@ -90,7 +91,7 @@ export class UnitOfMeasureEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getUnitOfWorkAuditDetails(Id));
             });
     }
-    
+
     getUnitOfMeasurePages<T>(paginationOption: any): Observable<T> {
         let endpointUrl = this.paginate;
         //let endpointUrl = `${this.getPaginationData}/${data}`;
@@ -99,7 +100,13 @@ export class UnitOfMeasureEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getUnitOfMeasurePages(paginationOption));
             });
     }
-   
+
+    UOMCustomUpload(file){
+        return this.http.post( `${this.configurations.baseUrl}${this.excelUpload}`, file)
+        
+        
+    }
+
 
 }
 

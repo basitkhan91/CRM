@@ -233,18 +233,18 @@ export class MaterialListCreateComponent implements OnInit {
     calculateExtendedCost(material): void {
         if (material.quantity != "" && material.unitCost) {
             material.extendedCost = material.quantity * material.unitCost;
-
-            this.calculateExtendedCostSummation();
-            // this.calculateCost()
         }
+        else {
+            material.extendedCost = "";
+        }
+        this.calculateExtendedCostSummation();
     }
     // sum of extended cost
     calculateExtendedCostSummation() {
         this.workFlow.materialExtendedCostSummation = this.workFlow.materialList.reduce((acc, x) => {
-            return acc +  parseFloat(x.extendedCost == undefined || x.extendedCost === '' ? 0 : x.extendedCost)
+            return acc + parseFloat(x.extendedCost == undefined || x.extendedCost === '' ? 0 : x.extendedCost)
         }, 0);
         this.workFlow.totalMaterialCostValue = this.workFlow.materialExtendedCostSummation;
-
     }
 
     // sum of the qty
