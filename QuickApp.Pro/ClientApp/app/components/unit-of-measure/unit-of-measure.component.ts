@@ -10,7 +10,7 @@ import { AuthService } from '../../services/auth.service';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
-import { validateRecordExistsOrNot, editValueAssignByCondition, getObjectById } from '../../generic/autocomplete';
+import { validateRecordExistsOrNot, editValueAssignByCondition, getObjectById, selectedValueValidate, getObjectByValue } from '../../generic/autocomplete';
 import { Table } from 'primeng/table';
 import * as $ from 'jquery';
 
@@ -39,7 +39,7 @@ export class UnitOfMeasureComponent implements OnInit {
             unitName: ''
         }
     addNewUOM = { ...this.newUOM };
-    disableSave: boolean = false;
+    disableSaveForUOM: boolean = false;
     uomList: any;
     isEdit: boolean = false;
     totalRecords: any;
@@ -104,6 +104,9 @@ export class UnitOfMeasureComponent implements OnInit {
     private table: Table;
     auditHistory: any[] = [];
     existingRecordsResponse: Object;
+    selectedRecordForEdit: any;
+    disableSaveForShortName: boolean = false;
+    shortNameList: any;
 
     constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private alertService: AlertService, public unitofmeasureService: UnitOfMeasureService) {
         // this.displayedColumns.push('action');
@@ -158,13 +161,16 @@ export class UnitOfMeasureComponent implements OnInit {
         this.getUOMList();
     }
 
-    customExcelUpload(file) {
+    customExcelUpload(event) {
+        const file = event.target.files;
 
-        console.log(file)
+          console.log(file);
         if (file.length > 0) {
 
             this.formData.append('file', file[0])
             this.unitofmeasureService.UOMFileUpload(this.formData).subscribe(res => {
+                event.target.value = '';
+         
                 this.formData = new FormData();
                 this.existingRecordsResponse = res;
                 this.getUOMList();
@@ -180,6 +186,11 @@ export class UnitOfMeasureComponent implements OnInit {
             })
         }
 
+    }
+    sampleExcelDownload(){
+        this.unitofmeasureService.downloadSampleExcel().subscribe(res => {
+            
+        })
     }
 
     getUOMList() {
@@ -203,15 +214,12 @@ export class UnitOfMeasureComponent implements OnInit {
 
 
     checkUOMExists(field, value) {
-        value = value.trim();
-        const exists = validateRecordExistsOrNot(field, value, this.uomData);
-
-        // console.log(exists);
+        const   exists = validateRecordExistsOrNot(field, value, this.uomData , this.selectedRecordForEdit);
         if (exists.length > 0) {
-            this.disableSave = true;
+            this.disableSaveForUOM = true;
         }
         else {
-            this.disableSave = false;
+            this.disableSaveForUOM = false;
         }
 
     }
@@ -223,13 +231,41 @@ export class UnitOfMeasureComponent implements OnInit {
         })]
         this.uomList = UOMData;
     }
-    selectedUOM() {
-        this.disableSave = true;
+    selectedUOM(object) {
+        const exists = selectedValueValidate( 'description' , object , this.selectedRecordForEdit  )
+
+        this.disableSaveForUOM = !exists;
+    }
+
+    checkShortNameExists(field, value) {
+        console.log(this.selectedRecordForEdit);
+        const   exists = validateRecordExistsOrNot(field, value, this.uomData , this.selectedRecordForEdit);
+        if (exists.length > 0) {
+            this.disableSaveForShortName = true;
+        }
+        else {
+            this.disableSaveForShortName = false;
+        }
+
+    }
+    filterShortName(event) {
+        this.shortNameList = this.uomData;
+
+        const shortNameData = [...this.uomData.filter(x => {
+            return x.shortName.toLowerCase().includes(event.query.toLowerCase())
+        })]
+        this.shortNameList = shortNameData;
+    }
+    selectedShortName(object) {
+        const exists = selectedValueValidate( 'shortName' , object , this.selectedRecordForEdit  )
+
+        this.disableSaveForShortName = !exists;
     }
 
     saveUOM() {
         const data = {
             ...this.addNewUOM, createdBy: this.userName, updatedBy: this.userName,
+            shortName : editValueAssignByCondition('shortName', this.addNewUOM.shortName),
             description: editValueAssignByCondition('description', this.addNewUOM.unitName),
             unitName: editValueAssignByCondition('description', this.addNewUOM.unitName)
         };
@@ -245,6 +281,7 @@ export class UnitOfMeasureComponent implements OnInit {
             })
         } else {
             this.unitofmeasureService.updateUnitOfMeasure(data).subscribe(() => {
+                this.selectedRecordForEdit = undefined;
                 this.isEdit = false;
                 this.resetUOMForm();
                 this.getUOMList();
@@ -259,6 +296,7 @@ export class UnitOfMeasureComponent implements OnInit {
 
     resetUOMForm() {
         this.isEdit = false;
+        this.selectedRecordForEdit = undefined;
         this.addNewUOM = { ...this.newUOM };
     }
 
@@ -266,7 +304,15 @@ export class UnitOfMeasureComponent implements OnInit {
     editUOM(rowData) {
         console.log(rowData);
         this.isEdit = true;
-        this.addNewUOM = { ...rowData, unitName: getObjectById('unitOfMeasureId', rowData.unitOfMeasureId, this.uomData) };
+        this.disableSaveForUOM = false;
+        this.disableSaveForShortName = false;
+        // this.addNewUOM = rowData;
+
+       this.addNewUOM = { ...rowData, unitName: getObjectById('unitOfMeasureId', rowData.unitOfMeasureId, this.uomData),
+          shortName: getObjectByValue('shortName', rowData.shortName ,  this.uomData )
+    };
+       this.selectedRecordForEdit = {...this.addNewUOM}
+
     }
 
     changeStatus(rowData) {
