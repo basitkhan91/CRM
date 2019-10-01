@@ -70,7 +70,7 @@ namespace QuickApp.Pro.Controllers
                 unitOfMeasureobject.Memo = unitOfMeasureViewModel.Memo;
                 unitOfMeasureobject.MasterCompanyId = unitOfMeasureViewModel.MasterCompanyId;
                 unitOfMeasureobject.IsActive = unitOfMeasureViewModel.IsActive;
-                unitOfMeasureobject.IsDelete = unitOfMeasureViewModel.IsDelete;
+                unitOfMeasureobject.IsDeleted = unitOfMeasureViewModel.IsDelete;
                 unitOfMeasureobject.CreatedDate = DateTime.Now;
                 unitOfMeasureobject.UpdatedDate = DateTime.Now;
                 unitOfMeasureobject.CreatedBy = unitOfMeasureViewModel.CreatedBy;
@@ -120,7 +120,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult DeleteAction(long id)
         {
             var existingResult = _unitOfWork.UnitOfMeasure.GetSingleOrDefault(c => c.UnitOfMeasureId == id);
-            existingResult.IsDelete = true;
+            existingResult.IsDeleted = true;
             _unitOfWork.UnitOfMeasure.Update(existingResult);
             //_unitOfWork.UnitOfMeasure.Remove(existingResult);
 
@@ -311,7 +311,7 @@ namespace QuickApp.Pro.Controllers
                 columHeaders.Add(columnHeader);
             }
             dynamicGridData.columHeaders = columHeaders;
-            dynamicGridData.ColumnData = _unitOfWork.UnitOfMeasure.GetAll().Where(u => u.IsDelete == false);
+            dynamicGridData.ColumnData = _unitOfWork.UnitOfMeasure.GetAll().Where(u => u.IsDeleted == false);
 			dynamicGridData.TotalRecords = dynamicGridData.ColumnData.Count();
 
 

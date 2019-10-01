@@ -541,7 +541,7 @@ namespace DAL.Repositories
                 getData.TotalRecordsCount = _appContext.Publication
                            .Join(_appContext.PublicationTypes,
                            p => p.PublicationTypeId,
-                           pt => pt.Id,
+                           pt => pt.PublicationTypeId,
                            (p, pt) => new { p, pt })
                             .Where(p => (p.p.IsDeleted == null || p.p.IsDeleted == false)
                                    && p.p.PublicationId.Contains(!String.IsNullOrEmpty(publicationId) ? publicationId : p.p.PublicationId)
@@ -556,7 +556,7 @@ namespace DAL.Repositories
                 var result = _appContext.Publication
                             .Join(_appContext.PublicationTypes,
                             p => p.PublicationTypeId,
-                            pt => pt.Id,
+                            pt => pt.PublicationTypeId,
                             (p, pt) => new { p, pt })
                             .Join(_appContext.Employee,
                             p1 => p1.p.EmployeeId,
@@ -644,7 +644,7 @@ namespace DAL.Repositories
                     var ataresult = _appContext.Publication
                             .Join(_appContext.PublicationTypes,
                             p => p.PublicationTypeId,
-                            pt => pt.Id,
+                            pt => pt.PublicationTypeId,
                             (p, pt) => new { p, pt })
                             .Join(_appContext.PublicationItemMasterMapping,
                             p1 => p1.p.PublicationRecordId,
@@ -676,7 +676,7 @@ namespace DAL.Repositories
                     var aircraftResult = _appContext.Publication
                                 .Join(_appContext.PublicationTypes,
                                 p => p.PublicationTypeId,
-                                pt => pt.Id,
+                                pt => pt.PublicationTypeId,
                                 (p, pt) => new { p, pt })
                                 .Join(_appContext.PublicationItemMasterMapping,
                                 p1 => p1.p.PublicationRecordId,
@@ -768,7 +768,7 @@ namespace DAL.Repositories
                     getData.TotalRecordsCount = _appContext.Publication
                              .Join(_appContext.PublicationTypes,
                              p => p.PublicationTypeId,
-                             pt => pt.Id,
+                             pt => pt.PublicationTypeId,
                              (p, pt) => new { p, pt })
                              .Join(_appContext.PublicationItemMasterMapping,
                              p1 => p1.p.PublicationRecordId,
@@ -792,7 +792,7 @@ namespace DAL.Repositories
                     var ataresult = _appContext.Publication
                             .Join(_appContext.PublicationTypes,
                             p => p.PublicationTypeId,
-                            pt => pt.Id,
+                            pt => pt.PublicationTypeId,
                             (p, pt) => new { p, pt })
                             .Join(_appContext.PublicationItemMasterMapping,
                             p1 => p1.p.PublicationRecordId,
@@ -851,7 +851,7 @@ namespace DAL.Repositories
                     getData.TotalRecordsCount = _appContext.Publication
                                .Join(_appContext.PublicationTypes,
                                p => p.PublicationTypeId,
-                               pt => pt.Id,
+                               pt => pt.PublicationTypeId,
                                (p, pt) => new { p, pt })
                                .Join(_appContext.PublicationItemMasterMapping,
                                p1 => p1.p.PublicationRecordId,
@@ -875,7 +875,7 @@ namespace DAL.Repositories
                     var aircraftResult = _appContext.Publication
                                .Join(_appContext.PublicationTypes,
                                p => p.PublicationTypeId,
-                               pt => pt.Id,
+                               pt => pt.PublicationTypeId,
                                (p, pt) => new { p, pt })
                                .Join(_appContext.PublicationItemMasterMapping,
                                p1 => p1.p.PublicationRecordId,
@@ -949,7 +949,7 @@ namespace DAL.Repositories
                 var result = _appContext.Publication
                      .Join(_appContext.PublicationTypes,
                                 p => p.PublicationTypeId,
-                                pt => pt.Id,
+                                pt => pt.PublicationTypeId,
                                 (p, pt) => new { p, pt })
                       .Join(_appContext.Employee,
                              p1 => p1.p.EmployeeId,
@@ -1016,7 +1016,7 @@ namespace DAL.Repositories
                               where pt.IsDeleted == false
                               select new
                               {
-                                  pt.Id,
+                                  pt.PublicationTypeId,
                                   pt.Name
                               })
                               .ToList();
