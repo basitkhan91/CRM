@@ -13,6 +13,7 @@ import { SingleScreenBreadcrumbService } from "../../services/single-screens-bre
 import { validateRecordExistsOrNot, editValueAssignByCondition, getObjectById, selectedValueValidate, getObjectByValue } from '../../generic/autocomplete';
 import { Table } from 'primeng/table';
 import * as $ from 'jquery';
+import { ConfigurationService } from '../../services/configuration.service';
 
 @Component({
     selector: 'app-unit-of-measure',
@@ -108,7 +109,7 @@ export class UnitOfMeasureComponent implements OnInit {
     disableSaveForShortName: boolean = false;
     shortNameList: any;
 
-    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private alertService: AlertService, public unitofmeasureService: UnitOfMeasureService) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private configurations: ConfigurationService, private authService: AuthService, private alertService: AlertService, public unitofmeasureService: UnitOfMeasureService) {
         // this.displayedColumns.push('action');
         // this.dataSource = new MatTableDataSource();
         // this.sourceAction = new UnitOfMeasure();
@@ -188,15 +189,14 @@ export class UnitOfMeasureComponent implements OnInit {
 
     }
     sampleExcelDownload(){
-        this.unitofmeasureService.downloadSampleExcel().subscribe(res => {
-            
-        })
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=UnitOfMeasure&fileName=uom.xlsx`;
+
+            window.location.assign(url);
     }
 
     getUOMList() {
         this.unitofmeasureService.getAllUnitofMeasureList().subscribe(res => {
             const responseData = res[0];
-            console.log(responseData);
             // this.uomHeaders = responseData.columHeaders;
             // this.selectedColumns = responseData.columHeaders;
             this.uomData = responseData.columnData;
@@ -319,7 +319,7 @@ export class UnitOfMeasureComponent implements OnInit {
         console.log(rowData);
         const data = { ...rowData }
         this.unitofmeasureService.updateUnitOfMeasure(data).subscribe(() => {
-            this.getUOMList();
+            // this.getUOMList();
             this.alertService.showMessage(
                 'Success',
                 `Updated Status Successfully  `,

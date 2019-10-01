@@ -108,9 +108,9 @@ export class UnitOfMeasureEndpoint extends EndpointFactory {
         
     }
 
-    sampleExcelDownload(){
-        return this.http.get(  `${this.configurations.baseUrl}${this.sampleExcelFormat}`)
-    }
+    // sampleExcelDownload(){
+    //     return this.http.get(  `${this.configurations.baseUrl}${this.sampleExcelFormat}`)
+    // }
 
 
 }

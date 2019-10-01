@@ -77,7 +77,5 @@ export class UnitOfMeasureService {
     UOMFileUpload(file){
         return this.unitofmeasureEndpoint.UOMCustomUpload(file);
     }
-    downloadSampleExcel(){
-        return this.unitofmeasureEndpoint.sampleExcelDownload();
-    }
+
 }
