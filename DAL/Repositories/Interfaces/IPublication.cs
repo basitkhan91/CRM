@@ -30,6 +30,6 @@ namespace DAL.Repositories.Interfaces
         object PublicationView(long publicationRecordId);
         void PublicationStatus(long publicationRecordId, bool status, string updatedBy);
 
-
+        IEnumerable<object> GetPublicationTypes();
     }
 }
