@@ -31,9 +31,9 @@ namespace QuickApp.Pro.ViewModels
 
         public MasterCompany MasterCompany { get; set; }
 
-        public bool? IsActive { get; set; }
+        public bool IsActive { get; set; }
 
-        public bool? IsDelete { get; set; }
+        public bool IsDelete { get; set; }
     }
 
     public class UnitOfMeasureViewModelValidator : AbstractValidator<UnitOfMeasureViewModel>
