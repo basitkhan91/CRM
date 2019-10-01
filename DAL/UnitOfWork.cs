@@ -202,7 +202,9 @@ namespace DAL
         
         IAssetIntangibleAttributeType _assetIntangibleAttributeType;
         IAssetDepreciationInterval _assetDepreciationInterval;
-        
+
+        IPublicationTypesRepository _publicationTypesRepository;
+
         public UnitOfWork(ApplicationDbContext context, IOptions<AppSettings> appSettings)
         {
             _context = context;
@@ -1740,6 +1742,16 @@ namespace DAL
                 if (_fileUploadRepository == null)
                     _fileUploadRepository = new FileUploadRepository(_context, _appSettings);
                 return _fileUploadRepository;
+            }
+        }
+
+        public IPublicationTypesRepository PublicationTypesRepository
+        {
+            get
+            {
+                if (_publicationTypesRepository == null)
+                    _publicationTypesRepository = new PublicationTypesRepository(_context,_appSettings);
+                return _publicationTypesRepository;
             }
         }
     }

@@ -60,9 +60,9 @@ namespace DAL
 
             if (!await _context.PublicationTypes.AnyAsync())
             {
-                _context.PublicationTypes.Add(new PublicationType { Id = 1, Name = "CMM" });
-                _context.PublicationTypes.Add(new PublicationType { Id = 2, Name = "AD" });
-                _context.PublicationTypes.Add(new PublicationType { Id = 3, Name = "SB" });
+                _context.PublicationTypes.Add(new PublicationType { PublicationTypeId = 1, Name = "CMM" });
+                _context.PublicationTypes.Add(new PublicationType { PublicationTypeId = 2, Name = "AD" });
+                _context.PublicationTypes.Add(new PublicationType { PublicationTypeId = 3, Name = "SB" });
             }
 
             if (!await _context.PublicationModels.AnyAsync())
