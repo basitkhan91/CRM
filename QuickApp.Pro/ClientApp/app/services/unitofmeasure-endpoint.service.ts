@@ -18,6 +18,7 @@ export class UnitOfMeasureEndpoint extends EndpointFactory {
     private readonly _actionUrlAll: string = "/api/UnitOfMeasure/getAll"
     private readonly getUnitOfMeasure: string = "/api/UnitOfMeasure/pagination";
     private readonly excelUpload: string ="/api/UnitofMeasure/uploaduomcustomdata";
+    private readonly sampleExcelFormat: string = "/api/FileUpload/downloadsamplefile?moduleName=UnitOfMeasure&fileName=uom.xlsx"
 
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
     get paginate() { return this.configurations.baseUrl + this.getUnitOfMeasure; }
@@ -106,6 +107,10 @@ export class UnitOfMeasureEndpoint extends EndpointFactory {
         
         
     }
+
+    // sampleExcelDownload(){
+    //     return this.http.get(  `${this.configurations.baseUrl}${this.sampleExcelFormat}`)
+    // }
 
 
 }

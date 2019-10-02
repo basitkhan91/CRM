@@ -32,15 +32,33 @@
                                             <i class="fa fa-refresh" aria-hidden="true"  pTooltip="refresh" ></i>
                                         </button> -->
                                      
+                                    
+
                                     <div class="excel-upload  excel-upload-cstm">
-                                        <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event.target.files)"   class="uploaddoc upload-file" data-multiple-caption="{count} files selected"
-                                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                                        
+                                        <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)"   class="uploaddoc upload-file" 
+                                        accept=".xlsx, .xls, .csv">
                                         <label for="upload">
                                             <span matTooltip="Upload Data (Excel)">
                                                 <i class="fa fa-upload"></i>
                                             </span>
                                         </label>
+                                        &nbsp; &nbsp;
+                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()" >Sample File Download</button>
+                                        <!-- <a href="" style="color: blue !important; font-size: 12px"  > Sample File</a> -->
+                                       
+                                        <!-- <label for="download">
+                                                <span (click)="sampleExcelDownload()" pTooltip="Download Sample Excel" >
+                                                    <i class="fa fa-download"></i>
+                                                </span>
+                                            </label> -->
                                     </div>
+                                    
+
+
+                                    <!-- <div class="excel-upload  excel-upload-cstm"   >
+                                           
+                                    </div> -->
 
                                 </div>
                             </ng-template>
@@ -163,24 +181,24 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">{{isEdit ? 'Edit' : 'Add' }} Unit Of Measure </h4>
+          <h4 class="modal-title">{{isEdit ? 'Edit' : 'Add' }} Unit Of Measure  </h4>
         </div>
         <div class="modal-body">
             <form #UOM="ngForm" >
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="col-sm-4">
-                            <label for="description" class="control-label">Unit Of Measure
+                            <label for="description" class="control-label">Unit Of Measure   
                                 <span class="clr-red">*</span>
                             </label>
                         </div>
                         <div class="col-sm-5">
-                            <p-autoComplete field="description" [(ngModel)]="addNewUOM.unitName" (onSelect)="selectedUOM()" (onKeyUp)="checkUOMExists('description', $event.target.value)" name="uom"
+                            <p-autoComplete field="description" [(ngModel)]="addNewUOM.unitName" (onSelect)="selectedUOM($event)" (onKeyUp)="checkUOMExists('description', $event.target.value)" name="uom"
                                 [suggestions]="uomList" (completeMethod)="filterUnitOfMeasures($event)" [size]="30" [minLength]="1"
                                 [dropdown]="true" class="p-autoComplete-ctsm" required>
            
                             </p-autoComplete>
-                            <div *ngIf="disableSave" class="clr-red">Already Exists</div>
+                            <div *ngIf="disableSaveForUOM" class="clr-red">Already Exists</div>
                             <div class="clear"></div>
                         </div>
                     </div>
@@ -191,7 +209,15 @@
                             </label>
                         </div>
                         <div class="col-sm-5">
-                            <input type="text"  name="shortName" class="form-control" #shortName="ngModel" [(ngModel)]="addNewUOM.shortName" required>
+                                <p-autoComplete field="shortName" [(ngModel)]="addNewUOM.shortName" (onSelect)="selectedShortName($event)" (onKeyUp)="checkShortNameExists('shortName', $event.target.value)" 
+                                name="shortName"
+                                [suggestions]="shortNameList" (completeMethod)="filterShortName($event)" [size]="30" [minLength]="1"
+                                [dropdown]="true" class="p-autoComplete-ctsm" required>
+           
+                            </p-autoComplete>
+                            <div *ngIf="disableSaveForShortName" class="clr-red">Already Exists</div>
+                            <div class="clear"></div>
+                            <!-- <input type="text"  name="shortName" class="form-control" #shortName="ngModel" [(ngModel)]="addNewUOM.shortName" required> -->
                              <!-- <div *ngIf="shortName.dirty && shortName.errors?.required && shortName.errors" class="invalid-form-error-message">
                                 Short Name required.
                             </div>  -->
@@ -235,10 +261,11 @@
                         </div>
                     </div>
                 </div>
+                
            </form>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-primary-cstm"  data-dismiss="modal" [disabled]="UOM.invalid || disableSave" (click)="saveUOM();"> {{isEdit ? 'Update' : 'Save' }}</button>
+            <button class="btn btn-primary-cstm"  data-dismiss="modal" [disabled]="UOM.invalid || disableSaveForUOM && disableSaveForShortName " (click)="saveUOM();"> {{isEdit ? 'Update' : 'Save' }}</button>
             <button type="button" class="btn btn-danger-cstm"  data-dismiss="modal" (click)="resetUOMForm()">Close</button>
     
         </div>
@@ -447,7 +474,7 @@
                               <div class="modal-content">
                                 <div class="modal-header">
                                   <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                  <h4 class="modal-title">History of Unit of Measurre</h4>
+                                  <h4 class="modal-title">History of Unit of Measure</h4>
                                 </div>
                                 <div class="modal-body">
                                     <div class="table-responsive rro-table-cstm">
