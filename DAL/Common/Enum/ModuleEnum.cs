@@ -7,6 +7,7 @@
         Vendor,
         Employee,
         Publication,
-        UnitOfMeasure
+        UnitOfMeasure,
+        Manufacturer
     }
 }
