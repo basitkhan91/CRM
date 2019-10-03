@@ -78,7 +78,7 @@ namespace DAL.Repositories
                             {
                                 while (reader.Read())
                                 {
-                                    if (count > 0)
+                                    if (count > 0) 
                                     {
                                         var flag = _appContext.Manufacturer.Any(p => p.Name == reader.GetString(0).Trim());
                                         if (!flag)

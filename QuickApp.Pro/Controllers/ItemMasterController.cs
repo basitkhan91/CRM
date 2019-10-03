@@ -163,7 +163,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult warnTypeGet(WarningViewModel warningViewModel)
         {
             var allcustomertype = _unitOfWork.warning.GetAllData(); //.GetAllCustomersData();
-            return Ok(allcustomertype);
+            return Ok(allcustomertype); 
 
         }
 
