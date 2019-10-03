@@ -195,12 +195,12 @@ export class CreateJournelComponent implements OnInit
     filterfirstName(event) {
         this.firstCollection = [];
         for (let i = 0; i < this.allEmployeeinfo.length; i++) {
-            let firstName = this.allEmployeeinfo[i].firstName;
+            let firstName = this.allEmployeeinfo[i].firstName ;
             if (firstName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                 this.EmployeeNamecoll.push([{
                     "employeeId": this.allEmployeeinfo[i].employeeId,
                     "employeeName": firstName
-                }]),
+                }]) ,
                 this.firstCollection.push(firstName);
             }
         }

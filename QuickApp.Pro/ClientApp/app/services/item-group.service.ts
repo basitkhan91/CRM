@@ -42,7 +42,7 @@ export class ItemGroupService {
 
     getWorkFlows() {
         return Observable.forkJoin(
-            this.ItemgroupEndpoint.getItemgroupEndpoint<Itemgroup[]>());
+            this.ItemgroupEndpoint.getItemgroupEndpoint<any>());
     }
 
     newAction(itemgroup: any) {
@@ -53,7 +53,7 @@ export class ItemGroupService {
         return this.ItemgroupEndpoint.getEditActionEndpoint<Itemgroup>(actionId);
     }
 
-    updateAction(action: Itemgroup) {
+    updateAction(action) {
         return this.ItemgroupEndpoint.getUpdateActionEndpoint(action, action.itemGroupId);
     }
 
