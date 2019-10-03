@@ -223,15 +223,18 @@ namespace DAL.Repositories
                             {
                                 while (reader.Read())
                                 {
-                                    if (count > 0)
+                                    if (count > 0 && !string.IsNullOrEmpty(reader.GetString(0)))
                                     {
-                                        var flag = _appContext.PublicationType.Any(p => p.Name == reader.GetString(0).Trim());
+                                        var flag = _appContext.PublicationType.Any(p => p.Name == reader.GetString(0).Trim() && p.IsDeleted == false);
                                         if (!flag)
                                         {
                                             publicationType = new PublicationType();
-                                            name = publicationType.Name = reader.GetString(0).Trim();
-                                            description = publicationType.Description = reader.GetString(1).Trim();
-                                            memo = publicationType.Memo = reader.GetString(2).Trim();
+                                            if (!string.IsNullOrEmpty(reader.GetString(0)))
+                                                name = publicationType.Name = reader.GetString(0).Trim();
+                                            if (!string.IsNullOrEmpty(reader.GetString(1)))
+                                                description = publicationType.Description = reader.GetString(1).Trim();
+                                            if (!string.IsNullOrEmpty(reader.GetString(2)))
+                                                memo = publicationType.Memo = reader.GetString(2).Trim();
                                             publicationType.MasterCompanyId = 1;
                                             publicationType.IsActive = true;
                                             publicationType.IsDeleted = false;
@@ -246,9 +249,12 @@ namespace DAL.Repositories
                                         else
                                         {
                                             publicationType = new PublicationType();
-                                            publicationType.Name = reader.GetString(0).Trim();
-                                            publicationType.Description = reader.GetString(1).Trim();
-                                            publicationType.Memo = reader.GetString(2).Trim();
+                                            if (!string.IsNullOrEmpty(reader.GetString(0)))
+                                                publicationType.Name = reader.GetString(0).Trim();
+                                            if (!string.IsNullOrEmpty(reader.GetString(1)))
+                                                publicationType.Description = reader.GetString(1).Trim();
+                                            if (!string.IsNullOrEmpty(reader.GetString(2)))
+                                                publicationType.Memo = reader.GetString(2).Trim();
                                             publicationType.UploadStatus = "Duplicate";
                                             publicationTypes.Add(publicationType);
                                         }

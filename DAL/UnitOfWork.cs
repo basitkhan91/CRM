@@ -616,7 +616,7 @@ namespace DAL
             get
             {
                 if (_itemclassfifcation == null)
-                    _itemclassfifcation = new ItemClassificationRepository(_context);
+                    _itemclassfifcation = new ItemClassificationRepository(_context,_appSettings);
                 return _itemclassfifcation;
             }
         }

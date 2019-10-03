@@ -78,14 +78,16 @@ namespace DAL.Repositories
                             {
                                 while (reader.Read())
                                 {
-                                    if (count > 0) 
+                                    if (count > 0 && !string.IsNullOrEmpty(reader.GetString(0))) 
                                     {
-                                        var flag = _appContext.Manufacturer.Any(p => p.Name == reader.GetString(0).Trim());
+                                        var flag = _appContext.Manufacturer.Any(p => p.Name == reader.GetString(0).Trim() && p.IsDeleted == false);
                                         if (!flag)
                                         {
                                             manufacturer = new Manufacturer();
-                                            name = manufacturer.Name = reader.GetString(0).Trim();
-                                            comments = manufacturer.Comments = reader.GetString(1).Trim();
+                                            if (!string.IsNullOrEmpty(reader.GetString(0)))
+                                                name = manufacturer.Name = reader.GetString(0).Trim();
+                                            if (!string.IsNullOrEmpty(reader.GetString(1)))
+                                                comments = manufacturer.Comments = reader.GetString(1).Trim();
                                             manufacturer.MasterCompanyId = 1;
                                             manufacturer.IsActive = true;
                                             manufacturer.IsDeleted = false;
@@ -100,8 +102,10 @@ namespace DAL.Repositories
                                         else
                                         {
                                             manufacturer = new Manufacturer();
-                                            name = manufacturer.Name = reader.GetString(0).Trim();
-                                            comments = manufacturer.Comments = reader.GetString(1).Trim();
+                                            if (!string.IsNullOrEmpty(reader.GetString(0)))
+                                                name = manufacturer.Name = reader.GetString(0).Trim();
+                                            if (!string.IsNullOrEmpty(reader.GetString(1)))
+                                                comments = manufacturer.Comments = reader.GetString(1).Trim();
                                             manufacturer.MasterCompanyId = 1;
                                             manufacturer.IsActive = true;
                                             manufacturer.IsDeleted = false;
