@@ -8,7 +8,7 @@
                             <h3 class="po-head lead">Provision</h3>
                             &nbsp;&nbsp;
                             <a class="plusicon-cstm new-margin" pTooltip="Add Provision" tooltipPosition="right"
-                                data-target="#addManufacturer" data-toggle="modal">
+                                data-target="#addProvision" data-toggle="modal">
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
                         </div>
@@ -23,10 +23,10 @@
                                         optionLabel="header" [(ngModel)]="selectedColumns" [style]="{minWidth: '200px'}"
                                         style="float:left" (onChange)="columnsChanges()"></p-multiSelect>
 
-                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected"
+                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download Selected"
                                         tooltipPosition="top" pButton icon="fa-download" iconPos="left"
                                         label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data"
+                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download All Data"
                                         tooltipPosition="top" pButton icon="fa-download" iconPos="left"
                                         label="Export Selection Only"
                                         (click)="dt.exportCSV({selectionOnly:true})"></button>
@@ -86,8 +86,8 @@
                                                 <i class="fa fa-eye"></i>
                                             </a>
                                         </span>
-                                        <button class="btn-edit" mat-icon-button (click)="editManufacturer(rowData)"
-                                            data-target="#addManufacturer" data-toggle="modal" matTooltip="Edit">
+                                        <button class="btn-edit" mat-icon-button (click)="editProvision(rowData)"
+                                            data-target="#addProvision" data-toggle="modal" matTooltip="Edit">
                                             <mat-icon>edit</mat-icon>
                                         </button>
 
@@ -156,18 +156,18 @@
 </div>
 
 
-<div #addManufacturer id="addManufacturer" class="modal fade" role="dialog">
+<div #addProvision id="addProvision" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" (click)="resetManufacuterForm()"
+                <button type="button" class="close" (click)="resetProvisionForm()"
                     data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">{{isEdit ? 'Edit' : 'Add' }} Manufacturer </h4>
+                <h4 class="modal-title">{{isEdit ? 'Edit' : 'Add' }} Provision </h4>
             </div>
             <div class="modal-body">
-                <form #Manufacturer="ngForm">
+                <form #provision="ngForm">
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="col-sm-4">
@@ -183,7 +183,7 @@
                                     [size]="30" [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
 
                                 </p-autoComplete>
-                                <div *ngIf="disableSaveForUOM" class="clr-red">Already Exists</div>
+                                <div *ngIf="disableSaveForProvision" class="clr-red">Already Exists</div>
                                 <div class="clear"></div>
                             </div>
                         </div>
@@ -215,11 +215,10 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary-cstm" data-dismiss="modal"
-                    [disabled]="Manufacturer.invalid || disableSaveForUOM  " (click)="saveManufacturer();">
+                    [disabled]="provision.invalid || disableSaveForProvision " (click)="saveProvision();">
                     {{isEdit ? 'Update' : 'Save' }}</button>
                 <button type="button" class="btn btn-danger-cstm" data-dismiss="modal"
-                    (click)="resetManufacuterForm()">Close</button>
-
+                    (click)="resetProvisionForm()">Close</button>
             </div>
         </div>
 
@@ -243,7 +242,7 @@
                         <thead>
                             <tr>
                                 <!-- <th>UMID</th> -->
-                                <th>Manufacturer Name</th> >
+                                <th>Provision Name</th> >
                                 <th>Memo</th>
                             </tr>
                         </thead>
@@ -251,8 +250,8 @@
                             <tr *ngFor="let ext of existingRecordsResponse; let i = index;">
 
                                 <!-- <td >{{audit.unitOfMeasureAuditId}}</td> -->
-                                <td>{{ext.name}}</td>
-                                <td>{{ext.comments}}</td>
+                                <td>{{ext.description}}</td>
+                                <td>{{ext.memo}}</td>
                             </tr>
                         </tbody>
 
@@ -275,7 +274,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">History of Manufacturer</h4>
+                <h4 class="modal-title">History of Provision</h4>
             </div>
             <div class="modal-body">
                 <div class="table-responsive rro-table-cstm">
@@ -283,7 +282,7 @@
                         <thead>
                             <tr>
                                 <!-- <th>UMID</th> -->
-                                <th>Manufacturer</th>
+                                <th>Provision Name</th>
                                 <th>Memo</th>
                                 <th>IsActive</th>
                                 <th>Updated By</th>
@@ -294,11 +293,11 @@
                             <tr *ngFor="let audit of auditHistory; let i = index;">
 
                                 <td
-                                    [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].name === audit.name ? 'black' : 'red'  }">
-                                    {{audit.name}}</td>
+                                    [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].description === audit.description ? 'black' : 'red'  }">
+                                    {{audit.description}}</td>
                                 <td
-                                    [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].memo === audit.comments ? 'black' : 'red'  }">
-                                    {{audit.comments}}</td>
+                                    [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].memo === audit.memo ? 'black' : 'red'  }">
+                                    {{audit.memo}}</td>
                                 <td
                                     [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].isActive === audit.isActive ? 'black' : 'red'  }">
                                     {{audit.isActive}}</td>
@@ -334,7 +333,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" id="" name=""
                     (click)="resetViewData()">×</button>
-                <h4 class="modal-title">Manufacture Details</h4>
+                <h4 class="modal-title">Provision Details</h4>
             </div>
             <div class="modal-body viewform ">
                 <div class="col-sm-12">
