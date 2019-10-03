@@ -8,6 +8,7 @@
         Employee,
         Publication,
         UnitOfMeasure,
-        Manufacturer
+        Manufacturer,
+        ItemClassfication
     }
 }
