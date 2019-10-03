@@ -52,8 +52,8 @@ export class ProvisionService {
         return this.provisionEndpoint.getEditProvisionEndpoint<Provision>(provisionId);
     }
 
-    updateProvision(provision: Provision) {
-        return this.provisionEndpoint.getUpdateProvisionEndpoint(provision, provision.provisionId);
+    updateProvision(provisionId: number) {
+        return this.provisionEndpoint.getUpdateProvisionEndpoint(provisionId);
     }
 
     deleteProvision(provisionId: number) {
