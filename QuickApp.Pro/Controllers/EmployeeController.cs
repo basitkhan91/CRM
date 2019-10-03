@@ -32,6 +32,7 @@ namespace QuickApp.Pro.Controllers
             _context = context;
         }
 
+
         // GET: api/values
         [HttpGet("Get")]
         [Produces(typeof(List<EmployeeViewModel>))]

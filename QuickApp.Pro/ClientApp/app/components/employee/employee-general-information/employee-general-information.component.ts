@@ -32,6 +32,7 @@ import * as moment from 'moment'
 import { CalendarModule } from 'primeng/calendar';
 import { LegalEntityService } from '../../../services/legalentity.service';
 import { EmployeeLeaveType } from '../../../models/EmployeeLeaveTypeModel';
+//import { EmployeeAddService } from '../../../services/employee.Add.Service';
 
 @Component({
 	selector: 'app-employee-general-information',
@@ -85,7 +86,8 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     disableJobTitle: boolean;
     disableExpTitle: boolean;
     display: boolean = false;
-    modelValue: boolean = false;
+	modelValue: boolean = false;
+
 
 	ngOnInit(): void {
 		this.employeeService.currentUrl = '/employeesmodule/employeepages/app-employee-general-information';
@@ -143,7 +145,10 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 	Active: string = "Active";
     allAircraftManufacturer: any[] = [];
     sourceEmployee: any = {};
-    updateMode: boolean = false;
+	updateMode: boolean = false;
+	showMsg: boolean = false;
+	showTitle: string;
+	sourceEmpFirst: any;
 
 	constructor(private translationService: AppTranslationService, private router: Router, public workFlowtService: JobTitleService, private empservice: EmployeeExpertiseService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private route: Router, private alertService: AlertService, public employeeService: EmployeeService, public workFlowtService1: LegalEntityService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.displayedColumns.push('action');
@@ -179,6 +184,8 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 				this.hourly = true
 			}
 
+
+
 			if (this.sourceEmployee.isHourly == false) {
 				this.sourceEmployee.yearlypayType = "Yearly";
 				this.yearly = true
@@ -187,7 +194,40 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 		this.translationService.closeCmpny = false;
 
 
+    }
+
+    onSubmit() {
+		this.sourceEmployee.firstName;
+	
+		//console.log(this.sourceEmpFirst.firstName);
+
+		//console.log(this.selectedFirstName);
+
+		
+		this.employeeService.newAddEmployee(this.sourceEmployee).subscribe(
+			results => this.empAdd(this.sourceEmployee),
+            
+          error => this.onDataLoadFailed(error)
+       );
 	}
+
+	empAdd(obj: any) {
+
+		this.showMsg = true;
+		//this.sourceEmployee.reser
+
+
+		this.showTitle = 'Employee Added Sucessfully';
+
+		///this.sourceEmployee.reset();
+		this.alertService.showMessage("Success", this.showTitle, MessageSeverity.success);
+		this.sourceEmpFirst = null;
+		//window.location.reload();
+
+		this.loadData();
+	}
+
+
 
 	singleClick(click) {
 		if (click == 'single') {
@@ -1044,11 +1084,17 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     }
     onKeyUpFirstNames(event) {
         if (event.target.value != "") {
-            let value = event.target.value.toLowerCase();
-            if (this.selectedFirstName) {
+			let value = event.target.value.toLowerCase();
+			console.log(this.sourceEmployee.firstName);
+			console.log(value);
+			this.sourceEmployee.firstName = value;
+			console.log(this.sourceEmployee.firstName);
+			if (this.selectedFirstName) {
+
+			
                 if (value == this.selectedFirstName.toLowerCase()) {
                     this.disableSaveFirstName = true;
-
+			
                 }
                 else {
                     this.disableSaveFirstName = false;
@@ -1057,7 +1103,14 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             }
 
         }
-    }
+	}
+	handlePayType(evt) {
+		var target = evt.target.value;
+		
+		this.sourceEmployee.hourlyPay = null;
+	
+
+	}
 
     onSelectFirstName(event) {
         if (this.allEmployeeinfo) {
@@ -1106,7 +1159,8 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
     onKeyUpLastNames(event) {
         if (event.target.value != "") {
-            let value = event.target.value.toLowerCase();
+			let value = event.target.value.toLowerCase();
+			this.sourceEmployee.lastName = value;
             if (this.disableSaveName) {
                 if (value == this.disableSaveName.toLowerCase()) {
                     this.disableSaveLastName = true;
