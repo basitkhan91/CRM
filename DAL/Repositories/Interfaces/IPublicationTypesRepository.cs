@@ -7,12 +7,12 @@ namespace DAL.Repositories.Interfaces
 {
     public interface IPublicationTypesRepository : IRepository<PublicationType>
     {
-        GetData<PublicationType> GetPublicationTypesList(string name, int pageNumber, int pageSize);
+        GetData<PublicationType> GetPublicationTypesList(string name, string description, string memo, int pageNumber, int pageSize);
         long CreatePublicationType(PublicationType publicationType);
         object GetPublicationTypeById(long publicationTypeId);
         void DeletePublicationType(long publicationTypeId, string updatedBy);
         void PublicationTypeStatus(long publicationTypeId, bool status, string updatedBy);
-        IEnumerable<PublicationTypes_Audit> PublicationTypeHistory(long publicationTypeId);
+        IEnumerable<PublicationTypeAudit> PublicationTypeHistory(long publicationTypeId);
         IEnumerable<PublicationType> UploadCustomData(IFormFile file);
     }
 }

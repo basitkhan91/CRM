@@ -616,7 +616,7 @@ namespace DAL
             get
             {
                 if (_itemclassfifcation == null)
-                    _itemclassfifcation = new ItemClassificationRepository(_context);
+                    _itemclassfifcation = new ItemClassificationRepository(_context,_appSettings);
                 return _itemclassfifcation;
             }
         }
@@ -953,7 +953,7 @@ namespace DAL
             get
             {
                 if (_manufacturerRepository == null)
-                    _manufacturerRepository = new ManufacturerRepository(_context);
+                    _manufacturerRepository = new ManufacturerRepository(_context,_appSettings);
                 return _manufacturerRepository;
             }
         }

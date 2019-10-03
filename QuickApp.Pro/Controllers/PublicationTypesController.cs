@@ -23,9 +23,9 @@ namespace QuickApp.Pro.Controllers
 
         // GET: api/values
         [HttpGet("publicationtypeslist")]
-        public IActionResult GetPublicationTypesList(string name = "", int pageNumber = 0, int pageSize = 10)
+        public IActionResult GetPublicationTypesList(string name = "",string description="",string memo="", int pageNumber = 0, int pageSize = 10)
         {
-            var allpublicationinfo = _unitOfWork.PublicationTypesRepository.GetPublicationTypesList(name, pageNumber, pageSize);
+            var allpublicationinfo = _unitOfWork.PublicationTypesRepository.GetPublicationTypesList(name, description,memo, pageNumber, pageSize);
 
             return Ok((allpublicationinfo));
 
@@ -60,7 +60,7 @@ namespace QuickApp.Pro.Controllers
                 dbResult = _unitOfWork.CommonRepository.UpdateEntity(publicationType, dbResult, ref keyValuePairs);
                 if (keyValuePairs != null && keyValuePairs.Count > 0)
                 {
-                    _context.PublicationTypes.Attach(dbResult);
+                    _context.PublicationType.Attach(dbResult);
                     foreach (var item in keyValuePairs)
                     {
                         _context.Entry(dbResult).Property(item.Key).IsModified = true;

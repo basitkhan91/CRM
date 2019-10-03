@@ -2021,7 +2021,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     removeTask(workFlow: any): void {
         var index = this.workFlowList.indexOf(workFlow);
         this.workFlowList.splice(index, 1);
-        this.currenttaskId =  this.workFlowList[index - 1].taskId;
+        
         if (index == 0) {
             this.currenttaskId = "0";
         }

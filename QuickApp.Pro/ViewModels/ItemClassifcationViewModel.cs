@@ -29,10 +29,11 @@ namespace QuickApp.Pro.ViewModels
 
         public DateTime UpdatedDate { get; set; }
 
-        public bool? IsActive { get; set; }
+        public bool IsActive { get; set; }
 
         public virtual MasterCompany MasterCompany { get; set; }
 
-        public bool? IsDelete { get; set; }
+        public bool IsDeleted { get; set; }
+        public string UploadStatus { get; set; }
     }
 }
