@@ -428,6 +428,47 @@ namespace QuickApp.Pro.Controllers
 
         #endregion
 
+        #region Work Order Freight
+
+        [HttpPost("createworkorderfreight")]
+        public IActionResult CreateWorkOrderFreight(WorkOrderFreight workOrderFreight)
+        {
+            if (ModelState.IsValid)
+            {
+                workOrderFreight.WorkOrderFreightId = unitOfWork.WorkOrderRepository.CreateWorkOrderFreight(workOrderFreight);
+                return Ok(workOrderFreight);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpPost("updateworkorderfreight")]
+        public IActionResult UpdateWorkOrderFreight(WorkOrderFreight workOrderFreight)
+        {
+            if (ModelState.IsValid)
+            {
+                unitOfWork.WorkOrderRepository.UpdateWorkOrderFreight(workOrderFreight);
+                return Ok(workOrderFreight);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpGet("getworkflowworkorderfreightlist")]
+        public IActionResult GetWorkFlowWorkOrderFreightList(long wfwoId = 0, long workOrderId = 0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkFlowWorkOrderFreightList(wfwoId, workOrderId);
+            return Ok(result);
+        }
+
+        #endregion
+
 
         [HttpGet("createworkflowWorkorder1")]
         public IActionResult CreateWorkFlowWorkOrder1(long workFlowId)

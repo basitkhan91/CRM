@@ -1,6 +1,5 @@
 ﻿using DAL.Common;
 using DAL.Repositories.Interfaces;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using System;
@@ -151,6 +150,7 @@ namespace DAL.Repositories
 
         }
 
+       
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }
 }

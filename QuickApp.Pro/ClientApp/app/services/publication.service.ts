@@ -42,9 +42,9 @@ export class PublicationService {
     private publicationEndpoint: PublicationEndpointService
   ) {}
 
-  getWorkFlows() {
+  getWorkFlows(pageIndex, pageSize) {
     return Observable.forkJoin(
-      this.publicationEndpoint.getpublicationEndpoint<Publication[]>()
+      this.publicationEndpoint.getpublicationListEndpoint<Publication[]>(pageIndex, pageSize)
     );
   }
 
@@ -202,6 +202,18 @@ export class PublicationService {
     return this.publicationEndpoint.searchgetAtaMappedByMultiSubChapterID<any>(
       searchUrl,
       PublicationID
+    );
+  }
+
+  getpublicationbyIdView(id) {
+    return Observable.forkJoin(
+        this.publicationEndpoint.getpublicationbyIdViewEndpoint<any>(id)
+    );
+  }
+
+  getpublicationGlobalSearch(ataChapterId, ataSubChapterId, airCraftId, modelId, dashNumberId, pageNumber, pageSize) {
+    return Observable.forkJoin(
+        this.publicationEndpoint.getpublicationGlobalSearchEndpoint<any>(ataChapterId, ataSubChapterId, airCraftId, modelId, dashNumberId, pageNumber, pageSize)
     );
   }
 }

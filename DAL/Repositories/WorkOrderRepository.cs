@@ -1498,6 +1498,88 @@ namespace DAL.Repositories
 
         #endregion
 
+        #region Work Order Freight
+
+        public long CreateWorkOrderFreight(WorkOrderFreight workOrderFreight)
+        {
+            try
+            {
+                workOrderFreight.CreatedDate = workOrderFreight.UpdatedDate = DateTime.Now;
+                workOrderFreight.IsActive = true;
+                workOrderFreight.IsDeleted = false;
+
+                _appContext.WorkOrderFreight.Add(workOrderFreight);
+                _appContext.SaveChanges();
+                return workOrderFreight.WorkOrderFreightId;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void UpdateWorkOrderFreight(WorkOrderFreight workOrderFreight)
+        {
+            try
+            {
+                workOrderFreight.UpdatedDate = DateTime.Now;
+                workOrderFreight.IsActive = true;
+                workOrderFreight.IsDeleted = false;
+
+                _appContext.WorkOrderFreight.Update(workOrderFreight);
+                _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<WorkOrderFreight> GetWorkFlowWorkOrderFreightList(long wfwoId = 0, long workOrderId = 0)
+        {
+            List<WorkOrderFreight> workOrderFreightList = new List<WorkOrderFreight>();
+            WorkOrderFreight workOrderFreight;
+
+            try
+            {
+                var result = (from wf in _appContext.WorkOrderFreight
+                              join car in _appContext.ShippingVia on wf.CarrierId equals car.ShippingViaId
+                              join sv in _appContext.ShippingVia on wf.ShipViaId equals sv.ShippingViaId
+                              where wf.IsDeleted == false && (wf.WorkFlowWorkOrderId == wfwoId || wf.WorkOrderId == workOrderId)
+                              select new
+                              {
+                                  WorkOrderFreight=wf,
+                                  ShipViaName = sv.Name,
+                                  CarrierName = car.Name
+                              }).ToList();
+
+                if (result!=null && result.Count>0)
+                {
+                    foreach (var item in result)
+                    {
+                        workOrderFreight = new WorkOrderFreight();
+                        workOrderFreight = item.WorkOrderFreight;
+                        workOrderFreight.CarrierName = item.CarrierName;
+                        workOrderFreight.ShipViaName = item.ShipViaName;
+
+                        workOrderFreightList.Add(workOrderFreight);
+                    }
+
+                }
+                return workOrderFreightList;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+        #endregion
+
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
 

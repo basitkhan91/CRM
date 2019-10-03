@@ -465,14 +465,13 @@ namespace QuickApp.Pro.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
-                {
+
                     var existingResult = _context.PublicationItemMasterMapping.Where(c => c.PublicationItemMasterMappingId == id).FirstOrDefault();
                     existingResult.UpdatedDate = DateTime.Now;
                     existingResult.IsDeleted = true;
                     _unitOfWork.Repository<PublicationItemMasterMapping>().Update(existingResult);
                     _unitOfWork.SaveChanges();
-                }
+     
             }
             catch (Exception ex)
             {
@@ -536,6 +535,14 @@ namespace QuickApp.Pro.Controllers
         {
             _unitOfWork.Publication.PublicationStatus(publicationRecordId,status,updatedBy);
             return Ok();
+
+        }
+
+        [HttpGet("getpublicationtypes")]
+        public IActionResult GetPublicationTypes()
+        {
+          var result=  _unitOfWork.Publication.GetPublicationTypes();
+            return Ok(result);
 
         }
     }

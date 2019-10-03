@@ -258,6 +258,7 @@ namespace DAL
         IAssetIntangibleAttributeType AssetIntangibleAttributeType { get; }
         IAssetDepreciationInterval AssetDepreciationInterval { get; }
 
+        IPublicationTypesRepository PublicationTypesRepository { get; }
         void SaveChanges(Employee employeeobject);
     }
 }

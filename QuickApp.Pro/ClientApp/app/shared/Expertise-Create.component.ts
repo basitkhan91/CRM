@@ -92,82 +92,62 @@ export class ExpertiseCreateComponent implements OnInit, OnChanges {
         }
         this.calculateEstimatedHoursSummation();
         this.calculateLabourDirectCost();
-
     }
+
     // sum of the estimated Hrs
     calculateEstimatedHoursSummation() {
         this.workFlow.sumofestimatedhrs = this.workFlow.expertise.reduce((acc, x) => {
             return acc + parseFloat(x.estimatedHours === undefined || x.estimatedHours === '' ? 0 : x.estimatedHours)
         }, 0);
     }
+
     // sum of labour direct cost 
     calculateLabourDirectCost() {
         this.workFlow.sumofLabourDirectCost = this.workFlow.expertise.reduce((acc, x) => {
             return acc + parseFloat(x.directLaborRate === undefined || x.directLaborRate === '' ? 0 : x.directLaborRate)
         }, 0);
-
+        
     }
 
     calculateOHCost(expertise): void {
         const percentageCal = parseFloat((((expertise.directLaborRate) * (expertise.overheadBurden)) / 100).toFixed(2));
         if (percentageCal > 0) {
             expertise.overheadCost = percentageCal;
-
-            this.calculateLabourOHCost(expertise);
-            this.calculateOHCostSummation();
-        } else {
+        }
+        else {
             expertise.overheadCost = '';
         }
 
+        this.calculateLabourOHCost(expertise);
+        this.calculateOHCostSummation();
     }
+
     calculateOHCostSummation() {
         this.workFlow.sumOfOHCost = this.workFlow.expertise.reduce((acc, x) => {
             return acc + parseFloat(x.overheadCost === undefined || x.overheadCost === '' ? 0 : x.overheadCost)
-        }, 0)
+        }, 0);
+
         this.workFlow.sumOfOHCost = parseFloat((this.workFlow.sumOfOHCost).toFixed(2));
     }
+
     // used to calculate the LabourOH cost 
     calculateLabourOHCost(expertise): void {
-        console.log(expertise);
-        const sumOfLabourOHCost = parseFloat((expertise.directLaborRate + Number(expertise.overheadCost)).toFixed(2));
+        const sumOfLabourOHCost = parseFloat((expertise.directLaborRate + Number(expertise.overheadCost)));
         if (sumOfLabourOHCost > 0) {
-            expertise.laborOverheadCost = sumOfLabourOHCost;
-            this.calculateLabourOHCostSummation();
-        } else {
+            expertise.laborOverheadCost = sumOfLabourOHCost.toFixed(2);
+        }
+        else {
             expertise.laborOverheadCost = '';
         }
+
+        this.calculateLabourOHCostSummation();
     }
     calculateLabourOHCostSummation() {
         this.workFlow.totalExpertiseCost = this.workFlow.expertise.reduce((acc, x) => {
             return acc + parseFloat(x.laborOverheadCost === undefined || x.laborOverheadCost === '' ? 0 : x.laborOverheadCost)
-        }, 0)
+        }, 0);
+
         this.workFlow.totalExpertiseCost = parseFloat((this.workFlow.totalExpertiseCost).toFixed(2));
     }
-
-
-    // calculateLabourOHCost(expertise): void {
-    //     var value = Number.parseFloat(expertise.overheadBurden) * Number.parseFloat(expertise.overheadCost);
-    //     if (value > 0) {
-    //         expertise.laborOverheadCost = Number.parseFloat(expertise.overheadBurden) * Number.parseFloat(expertise.overheadCost);
-    //         // this.calculateTotalExpertiseCost();
-    //     }
-    //     else {
-    //         expertise.laborOverheadCost = "";
-    //     }
-    // }
-
-    // calculateTotalExpertiseCost() {
-    //     this.workFlow.totalExpertiseCost = 0;
-    //     for (let expertise of this.workFlow.expertise) {
-    //         var value = Number.parseFloat(expertise.directLaborRate) + Number.parseFloat(expertise.laborOverheadCost);
-    //         if (value > 0) {
-    //             this.workFlow.totalExpertiseCost += value;
-    //         }
-    //         else {
-    //             this.workFlow.totalExpertiseCost = 0;
-    //         }
-
-    //     }
-    // }
 
 }

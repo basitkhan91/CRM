@@ -31,7 +31,10 @@ namespace QuickApp.Pro.ViewModels
     {
         public List<ColumHeader> columHeaders { get; set; }
         public IEnumerable<T> ColumnData { get; set; }
-    } 
+
+		public int TotalRecords { get; set;  }
+
+	} 
     #endregion
 
     public class PaginateViewModel
@@ -446,6 +449,35 @@ namespace QuickApp.Pro.ViewModels
         public string AssetDepreciationMemo { get; set; }
         public Int32 MasterCompanyId { get; set; }
         public bool? IsActive { get; set; }
+    }
+
+    public class AssetDepreciationMethodSPModel
+    {
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string DepreciationMethod { get; set; }
+        public string Memo { get; set; }
+        public long? AssetDepreciationMethodId { get; set; }
+        public Int32 MasterCompanyId { get; set; }
+
+        public bool? IsActive { get; set; }
+
+        public bool? IsDelete { get; set; }
+
+        public virtual MasterCompany MasterCompany { get; set; }
+
+        public DateTime CreatedDate { get; set;}
+        public string CreatedBy { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public string UpdatedBy { get; set; }
+    }
+
+    public class AssetDepreciationMethodColModel
+    {
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string DepreciationMethod { get; set; }
+        public string Memo { get; set; }       
     }
     #endregion
 

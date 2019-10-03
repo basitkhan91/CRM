@@ -31,22 +31,17 @@ namespace QuickApp.Pro.Controllers
         }
 
 
-        [HttpGet("auditHistoryById/{id}")]
-        [Produces(typeof(List<AuditHistory>))]
-        public IActionResult GetAuditHostoryById(long id)
+        [HttpGet("unitofmeasureauditdetails/{unitOfMeasureId}")]
+        [Produces(typeof(List<UnitOfMeasureAudit>))]
+        public IActionResult GetAuditHostoryById(long unitOfMeasureId)
         {
-            var result = _unitOfWork.AuditHistory.GetAllHistory("UnitOfMeasure", id); //.GetAllCustomersData();
-
-
             try
             {
-                var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
-
-                return Ok(resul1);
+                var result = _unitOfWork.UnitOfMeasure.GetUnitOfMeasureAuditDetails(unitOfMeasureId);
+                return Ok(result);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
                 throw;
             }
         }
@@ -75,7 +70,7 @@ namespace QuickApp.Pro.Controllers
                 unitOfMeasureobject.Memo = unitOfMeasureViewModel.Memo;
                 unitOfMeasureobject.MasterCompanyId = unitOfMeasureViewModel.MasterCompanyId;
                 unitOfMeasureobject.IsActive = unitOfMeasureViewModel.IsActive;
-                unitOfMeasureobject.IsDelete = unitOfMeasureViewModel.IsDelete;
+                unitOfMeasureobject.IsDeleted = unitOfMeasureViewModel.IsDeleted;
                 unitOfMeasureobject.CreatedDate = DateTime.Now;
                 unitOfMeasureobject.UpdatedDate = DateTime.Now;
                 unitOfMeasureobject.CreatedBy = unitOfMeasureViewModel.CreatedBy;
@@ -125,7 +120,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult DeleteAction(long id)
         {
             var existingResult = _unitOfWork.UnitOfMeasure.GetSingleOrDefault(c => c.UnitOfMeasureId == id);
-            existingResult.IsDelete = true;
+            existingResult.IsDeleted = true;
             _unitOfWork.UnitOfMeasure.Update(existingResult);
             //_unitOfWork.UnitOfMeasure.Remove(existingResult);
 
@@ -316,8 +311,11 @@ namespace QuickApp.Pro.Controllers
                 columHeaders.Add(columnHeader);
             }
             dynamicGridData.columHeaders = columHeaders;
-            dynamicGridData.ColumnData = _unitOfWork.UnitOfMeasure.GetAll().Where(u => u.IsDelete == false);
-            return Ok(dynamicGridData);
+            dynamicGridData.ColumnData = _unitOfWork.UnitOfMeasure.GetAll().Where(u => u.IsDeleted == false);
+			dynamicGridData.TotalRecords = dynamicGridData.ColumnData.Count();
+
+
+			return Ok(dynamicGridData);
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
@@ -331,6 +329,13 @@ namespace QuickApp.Pro.Controllers
             {
                 string x = "";
             }
+        }
+
+        [HttpPost("uploaduomcustomdata")]
+        public IActionResult UploadUOMCustomData()
+        {
+          var result =  _unitOfWork.UnitOfMeasure.UploadUOMCustomData(Request.Form.Files[0]);
+            return Ok(result);    
         }
 
     }

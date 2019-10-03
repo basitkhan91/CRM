@@ -48,8 +48,8 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
             //{ field: 'provisionId', header: 'Provison Id' },
             { field: 'description', header: 'Provision Name' },
             { field: 'memo', header: 'Memo' },
-            { field: 'createdBy', header: 'Created By' },
-            { field: 'updatedBy', header: 'Updated By' },
+            // { field: 'createdBy', header: 'Created By' },
+            // { field: 'updatedBy', header: 'Updated By' },
             // { field: 'updatedDate', header: 'Updated Date' },
             // { field: 'createdDate', header: 'Created Date' }
         ];
@@ -357,7 +357,7 @@ export class ProvisionComponent implements OnInit, AfterViewInit {
 
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.provisionName = this.editValueAssignByCondition('description',this.sourceAction.provisionName)
-            //this.sourceAction.description = this.sourceAction.provisionName;            
+            this.sourceAction.description = this.sourceAction.provisionName;            
             this.sourceAction.masterCompanyId = 1;
             this.provisionService.updateProvision(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),

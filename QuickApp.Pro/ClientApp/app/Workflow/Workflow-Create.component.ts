@@ -1803,6 +1803,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             this.actionService.addWorkFlowHeader(this.sourceWorkFlow).subscribe(result => {
                 this.alertService.showMessage(this.title, "Work Flow header added successfully.", MessageSeverity.success);
                 this.sourceWorkFlow.workflowId = result.workflowId;
+                this.sourceWorkFlow.workOrderNumber = result.workOrderNumber;
                 this.UpdateMode = true;
             });
 
@@ -2018,7 +2019,19 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     }
 
     removeTask(workFlow: any): void {
-        this.workFlowList.splice(this.workFlowList.indexOf(workFlow), 1);
+        var index = this.workFlowList.indexOf(workFlow);
+        this.workFlowList.splice(index, 1);
+        
+        if (index == 0) {
+            this.currenttaskId = "0";
+        }
+        else {
+            this.currenttaskId = this.workFlowList[index - 1].taskId;
+            this.onActionChange();
+            this.SetCurrectTab(this.currenttaskId, index - 1);
+        }
+
+        this.selectedItems = [];
     }
 
     dismissModel() {

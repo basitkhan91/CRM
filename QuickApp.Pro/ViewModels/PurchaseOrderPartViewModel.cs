@@ -36,15 +36,15 @@ namespace QuickApp.Pro.ViewModels
         public Nullable<long> SalesOrderId { get; set; }
         public long GeneralLedgerAccounId { get; set; }
         public string Memo { get; set; }
-        public Nullable<short> POPartSplitUserTypeId { get; set; }
-        public long? POPartSplitUserId { get; set; }
-        public string POPartSplitAddress1 { get; set; }
-        public string POPartSplitAddress2 { get; set; }
-        public string POPartSplitAddress3 { get; set; }
-        public string POPartSplitCity { get; set; }
-        public string POPartSplitState { get; set; }
-        public string POPartSplitPostalCode { get; set; }
-        public string POPartSplitCountry { get; set; }
+        //public Nullable<short> POPartSplitUserTypeId { get; set; }
+        //public long? POPartSplitUserId { get; set; }
+        //public string POPartSplitAddress1 { get; set; }
+        //public string POPartSplitAddress2 { get; set; }
+        //public string POPartSplitAddress3 { get; set; }
+        //public string POPartSplitCity { get; set; }
+        //public string POPartSplitState { get; set; }
+        //public string POPartSplitPostalCode { get; set; }
+        //public string POPartSplitCountry { get; set; }
         public Nullable<long> ManagementStructureId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
@@ -58,7 +58,7 @@ namespace QuickApp.Pro.ViewModels
 		//public Array partListObj { get; set; }
 		//public Array childList { get; set; }
 
+        public PurchaseOrderPartSplit[] PurchaseOrderPartSplits { get; set; }
 
-
-	}
+    }
 }

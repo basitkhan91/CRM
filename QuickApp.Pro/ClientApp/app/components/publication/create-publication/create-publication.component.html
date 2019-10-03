@@ -139,16 +139,51 @@
 
           <div class="form-group">
             <label for="fileupload">File Upload </label>
-            <input #file type="file" name="gFileupload" multiple (change)="upload(file.files)" />
-            <!-- <p-fileUpload name="myfile[]"  url="./upload.php"   multiple="multiple"
-              [showCancelButton]="false" customUpload="true" (uploadHandler)="publicationFileUpload($event)"></p-fileUpload> -->
+            <!-- <input #file type="file" name="gFileupload" multiple (change)="upload(file.files)" /> -->
+             <p-fileUpload name="gFileupload[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUpload($event)"></p-fileUpload> <!--(uploadHandler)="publicationFileUpload($event)" url="./upload.php"-->
               
           </div>
+
+          <div *ngIf="isEditMode && attachmentList">
+              <h4 class="panel-title" style="padding-left: 10px;">Attachment Details</h4>
+              <p-table
+                [columns]="headersforAttachment"
+                [value]="attachmentList"
+                [paginator]="true"
+                [rows]="10"
+                [first]="first"
+              >
+                <ng-template pTemplate="header" let-columns>
+                  <tr>
+                    <th>Sl.No</th>
+                    <th *ngFor="let col of columns">
+                      {{ col.header }}
+                    </th>
+                   <!-- <th>Action</th> -->
+                  </tr>
+                </ng-template>
+                <ng-template
+                  pTemplate="body"
+                  let-rowData
+                  let-columns="columns"
+                  let-rowIndex="rowIndex"
+                >
+                  <tr>
+                    <td>{{ rowIndex + 1 }}</td>
+                    <td *ngFor="let col of columns">
+                      {{ rowData[col.field] }}
+                    </td>
+                    <!-- <td><a routerLink="/{{rowData.link}}" class="btn btn-primary-cstm" download>Download</a></td> -->
+                  </tr>
+                  
+                </ng-template>
+              </p-table>
+            </div>
         </div>
       </div>
   
       <div class="pull-right">
-          <button class="btn btn-primary-cstm  button-save" [disabled]="!generalInfoForm.valid" type="submit" (click)="editItemCloseModel(); ">
+          <button class="btn btn-primary-cstm  button-save" [disabled]="!generalInfoForm.valid" type="submit" (click)="saveGeneralInfo(); ">
             Save & Next
           </button>
         </div>               
@@ -179,7 +214,7 @@
                 <div  class="col-md-4">
                   <p class="fs12">
                     <label class="control-label labels-font-header" style="width: auto; ">Publication Type</label>
-                    <span class="span-header-red"> {{this.sourcePublication.publicationTypeId}} </span></p>
+                    <span class="span-header-red"> {{isEditMode ? this.sourcePublication.publicationType : publicationType}} </span></p>
                 </div>                              
               </div>
           <div class="col-md-12">
