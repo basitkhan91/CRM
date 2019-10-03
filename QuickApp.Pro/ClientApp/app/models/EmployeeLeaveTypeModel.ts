@@ -7,7 +7,7 @@ export class EmployeeLeaveType {
 		) {
 		this.employeeLeaveTypeId = employeeLeaveTypeId;
 		this.description = description;
-		this.isActive = isActive;
+        this.isActive = isActive;
 		
 	}
 

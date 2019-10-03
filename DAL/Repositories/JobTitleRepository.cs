@@ -19,7 +19,8 @@ namespace DAL.Repositories
 
         public IEnumerable<DAL.Models.JobTitle> GetAllJobTitles()
         {
-            return _appContext.JobTitle.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.JobTitleId).ToList();
+            //return _appContext.JobTitle.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.JobTitleId).ToList();
+            return _appContext.JobTitle.Include("MasterCompany").Where(c => c.IsActive == true && c.IsDelete != null ).OrderByDescending(c => c.JobTitleId).ToList();
         }
 
 
