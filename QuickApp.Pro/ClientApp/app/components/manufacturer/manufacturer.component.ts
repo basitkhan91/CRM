@@ -575,32 +575,32 @@ export class ManufacturerComponent implements OnInit {
         this.getManufacturerList();
     }
 
-    // customExcelUpload(event) {
-    //     const file = event.target.files;
+    customExcelUpload(event) {
+        const file = event.target.files;
 
-    //     console.log(file);
-    //     if (file.length > 0) {
+        console.log(file);
+        if (file.length > 0) {
 
-    //         this.formData.append('file', file[0])
-    //         this.unitofmeasureService.UOMFileUpload(this.formData).subscribe(res => {
-    //             event.target.value = '';
+            this.formData.append('file', file[0])
+            this.manufacturerService.ManufacturerFileUpload(this.formData).subscribe(res => {
+                event.target.value = '';
 
-    //             this.formData = new FormData();
-    //             this.existingRecordsResponse = res;
-    //             this.getUOMList();
-    //             this.alertService.showMessage(
-    //                 'Success',
-    //                 `Successfully Uploaded  `,
-    //                 MessageSeverity.success
-    //             );
+                this.formData = new FormData();
+                this.existingRecordsResponse = res;
+                this.getManufacturerList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
 
-    //             // $('#duplicateRecords').modal('show');
-    //             // document.getElementById('duplicateRecords').click();
+                $('#duplicateRecords').modal('show');
+                document.getElementById('duplicateRecords').click();
 
-    //         })
-    //     }
+            })
+        }
 
-    // }
+    }
     sampleExcelDownload() {
         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=Manufacturer&fileName=uom.xlsx`;
 
