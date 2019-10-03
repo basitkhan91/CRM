@@ -23,13 +23,13 @@ namespace DAL.Repositories
 
         public IEnumerable<Models.Manufacturer> GetAllManufacturerData()
         {
-            return _appContext.Manufacturer.Include("MasterCompany").Where(a => a.IsDeleted == false || a.IsDeleted == null).OrderByDescending(a => a.ManufacturerId).ToList();
+            return _appContext.Manufacturer.Include("MasterCompany").Where(a => a.IsDeleted == false).OrderByDescending(a => a.ManufacturerId).ToList();
 
         }
         override
        public IQueryable<DAL.Models.Manufacturer> GetPaginationData()
         {
-            return _appContext.Manufacturer.Where(c => (c.IsDeleted == false || c.IsDeleted == null))
+            return _appContext.Manufacturer.Where(c => c.IsDeleted == false)
                 .OrderByDescending(c => c.ManufacturerId).ToList().AsQueryable();
         }
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
