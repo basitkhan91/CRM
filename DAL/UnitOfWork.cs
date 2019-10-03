@@ -953,7 +953,7 @@ namespace DAL
             get
             {
                 if (_manufacturerRepository == null)
-                    _manufacturerRepository = new ManufacturerRepository(_context);
+                    _manufacturerRepository = new ManufacturerRepository(_context,_appSettings);
                 return _manufacturerRepository;
             }
         }
