@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DAL.Models
 {
-    public class PublicationTypes_Audit
+    public class PublicationTypeAudit
     {
         [Key]
         public long PublicationTypeAuditId { get; set; }

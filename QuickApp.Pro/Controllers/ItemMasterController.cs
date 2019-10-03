@@ -163,7 +163,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult warnTypeGet(WarningViewModel warningViewModel)
         {
             var allcustomertype = _unitOfWork.warning.GetAllData(); //.GetAllCustomersData();
-            return Ok(allcustomertype);
+            return Ok(allcustomertype); 
 
         }
 
@@ -173,7 +173,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetManfacturerDetails()
         {
 
-            var obj = _context.Manufacturer.OrderByDescending(c => c.ManufacturerId).Where(c => c.IsDelete == false || c.IsDelete == null).ToList();
+            var obj = _context.Manufacturer.OrderByDescending(c => c.ManufacturerId).Where(c => c.IsDeleted == false).ToList();
             return Ok(obj);
         }
 
