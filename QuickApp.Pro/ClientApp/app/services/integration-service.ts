@@ -52,7 +52,7 @@ export class IntegrationService {
         return this.integrationEndpointService.getEditActionEndpoint<Integration>(actionId);
     }
 
-    updateAction(action: Integration) {
+    updateAction(action) {
         return this.integrationEndpointService.getUpdateActionEndpoint(action, action.integrationPortalId);
     }
 
