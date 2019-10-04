@@ -14,7 +14,10 @@ export function getObjectByValue(field: string, value: string, originalData: any
 export function getObjectById(field: string, id: any, originalData: any) {
     if ((field !== '' || field !== undefined) && (id !== '' || id !== undefined) && (originalData !== undefined)) {
         const data = originalData.filter(x => {
+
             if (parseInt(x[field]) === parseInt(id)) {
+
+
                 return x;
             }
         })

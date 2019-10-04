@@ -7,7 +7,8 @@ namespace DAL.Models
     public class TaxType : IAudit
     {
         [Key]
-        public byte TaxTypeId { get; set; }
+		[DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+		public byte TaxTypeId { get; set; }
 
         public string Description { get; set; }
         public string Memo { get; set; }

@@ -41,7 +41,7 @@ export class TaxTypeService {
 		return Observable.forkJoin(this.taxTypeEndpoint.getHistoryTaxTypeEndpoint<AuditHistory[]>(actionId));
 	}
 
-	newAction(action: TaxType) {
+	newAction(action) {
 		return this.taxTypeEndpoint.getNewTaxTypeEndpoint<TaxType>(action);
 	}
 
@@ -49,7 +49,7 @@ export class TaxTypeService {
 		return this.taxTypeEndpoint.getEditTaxTypeEndpoint<TaxType>(actionId);
 	}
 
-	updateAction(action: TaxType) {
+	updateAction(action) {
 		return this.taxTypeEndpoint.getUpdateTaxTypeEndpoint(action, action.taxTypeId);
 	}
 

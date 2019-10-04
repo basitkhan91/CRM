@@ -24,7 +24,7 @@ import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem, LazyLoadEvent } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
-import { validateRecordExistsOrNot, selectedValueValidate, editValueAssignByCondition, getObjectByValue } from '../../generic/autocomplete';
+import { validateRecordExistsOrNot, selectedValueValidate, editValueAssignByCondition, getObjectByValue, getObjectById } from '../../generic/autocomplete';
 import { ConfigurationService } from '../../services/configuration.service';
 
 @Component({
@@ -272,7 +272,7 @@ export class GlCashFlowClassificationComponent implements OnInit {
 
         this.addNew = {
             ...rowData,
-            glClassFlowClassificationName: getObjectByValue('glClassFlowClassificationName', rowData.glClassFlowClassificationName, this.originalData),
+            glClassFlowClassificationName: getObjectById('glClassFlowClassificationId', rowData.glClassFlowClassificationId, this.originalData),
         };
         this.selectedRecordForEdit = { ...this.addNew }
 

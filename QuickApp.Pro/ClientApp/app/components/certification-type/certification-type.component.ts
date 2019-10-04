@@ -24,7 +24,7 @@ import { MasterComapnyService } from '../../services/mastercompany.service';
 import { CertificationtypeService } from '../../services/certificationtype.service';
 import { CertificationType } from '../../models/certificationtype.model';
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
-import { getObjectByValue, validateRecordExistsOrNot, selectedValueValidate, editValueAssignByCondition } from '../../generic/autocomplete';
+import { getObjectByValue, validateRecordExistsOrNot, selectedValueValidate, editValueAssignByCondition, getObjectById } from '../../generic/autocomplete';
 import { ConfigurationService } from '../../services/configuration.service';
 
 @Component({
@@ -315,7 +315,7 @@ export class CertificationTypeComponent implements OnInit {
 
 		this.addNew = {
 			...rowData,
-			description: getObjectByValue('description', rowData.description, this.originalData),
+			description: getObjectById('employeeLicenseTypeId', rowData.employeeLicenseTypeId, this.originalData),
 		};
 		this.selectedRecordForEdit = { ...this.addNew }
 
