@@ -447,6 +447,48 @@ namespace QuickApp.Pro.ViewModels
         public Int32 MasterCompanyId { get; set; }
         public bool? IsActive { get; set; }
     }
+
+    #endregion
+
+    #region AssetDisposalType
+    public class AssetDisposalTypeModel : PasBase
+    {
+        public long? AssetDisposalTypeId { get; set; }
+        public string AssetDisposalTypeName { get; set; }
+
+        public string AssetDisposalTypeCode { get; set; }
+        public string AssetDisposalTypeBasis { get; set; }
+        public string AssetDisposalTypeMemo { get; set; }
+        public Int32 MasterCompanyId { get; set; }
+        public bool? IsActive { get; set; }
+    }
+    public class AssetDisposalTypeColModel
+    {
+        
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string Memo { get; set; }
+    }
+
+    public class AssetDisposalTypeSPModel : AssetDisposalTypeColModel
+    {
+        //public string AssetDisposalCode { get; set; }
+        //public string AssetDisposalName { get; set; }
+        //public string AssetDisposalMemo { get; set; }
+        public long? AssetDisposalTypeId { get; set; }             
+        public Int32 MasterCompanyId { get; set; }
+
+        public bool? IsActive { get; set; }
+
+        public bool? IsDelete { get; set; }
+
+        public virtual MasterCompany MasterCompany { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public string UpdatedBy { get; set; }
+    }
     #endregion
 
     #region ATAChapter

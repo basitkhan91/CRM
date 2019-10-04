@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using DAL;
 using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -32,8 +33,42 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getAll")]
         public IActionResult getAll()
         {
-            var disposalTypes = unitOfWork.Repository<AssetDisposalType>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AssetDisposalTypeId);
-            return Ok(disposalTypes);
+            List<ColumHeader> columHeaders = new List<ColumHeader>();
+            PropertyInfo[] propertyInfos = typeof(AssetDisposalTypeColModel).GetProperties();
+            ColumHeader columnHeader;
+            DynamicGridData<dynamic> dynamicGridData = new DynamicGridData<dynamic>();
+            foreach (PropertyInfo property in propertyInfos)
+            {
+                columnHeader = new ColumHeader();
+                columnHeader.field = char.ToLower(property.Name[0]) + property.Name.Substring(1);//FirstCharToUpper(property.Name);
+                // columnHeader.field = property.Name;
+                columnHeader.header = property.Name;
+                columHeaders.Add(columnHeader);
+            }
+            dynamicGridData.columHeaders = columHeaders;
+            List<AssetDisposalTypeSPModel> assetDisposalMethods = new List<AssetDisposalTypeSPModel>();
+            AssetDisposalTypeSPModel assetDisposalType = null;
+            var gLAccounts = unitOfWork.Repository<AssetDisposalType>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AssetDisposalTypeId);
+            foreach (var item in gLAccounts)
+            {
+                assetDisposalType = new AssetDisposalTypeSPModel();
+
+                assetDisposalType.Code = item.AssetDisposalCode;
+                assetDisposalType.Name = item.AssetDisposalName;
+                assetDisposalType.Memo = item.AssetDisposalMemo;
+                assetDisposalType.AssetDisposalTypeId = item.AssetDisposalTypeId;
+                assetDisposalType.CreatedDate = item.CreatedDate;
+                assetDisposalType.CreatedBy = item.CreatedBy;
+                assetDisposalType.UpdatedDate = item.UpdatedDate;
+                assetDisposalType.UpdatedBy = item.UpdatedBy;
+                assetDisposalType.IsActive = item.IsActive;
+                assetDisposalMethods.Add(assetDisposalType);
+            }
+            dynamicGridData.ColumnData = assetDisposalMethods;
+            return Ok(dynamicGridData);
+
+            //var disposalTypes = unitOfWork.Repository<AssetDisposalType>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AssetDisposalTypeId);
+            //return Ok(disposalTypes);
         }
 
         [HttpGet("getById/{id}")]
@@ -52,7 +87,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     disposalType.CreatedDate = DateTime.Now;
                     disposalType.UpdatedDate = DateTime.Now;
-                    disposalType.IsActive = true;
+                    disposalType.IsActive = disposalType.IsActive;
                     disposalType.MasterCompanyId = 1;
                     unitOfWork.Repository<AssetDisposalType>().Add(disposalType);
                     unitOfWork.SaveChanges();
