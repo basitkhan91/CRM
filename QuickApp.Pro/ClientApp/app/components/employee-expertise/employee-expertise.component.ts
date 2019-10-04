@@ -8,7 +8,7 @@ import { AuthService } from '../../services/auth.service';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { EmployeeExpertiseService } from '../../services/employeeexpertise.service';
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
-import { getObjectByValue, validateRecordExistsOrNot, selectedValueValidate, editValueAssignByCondition } from '../../generic/autocomplete';
+import { getObjectByValue, validateRecordExistsOrNot, selectedValueValidate, editValueAssignByCondition, getObjectById } from '../../generic/autocomplete';
 import { Table } from 'primeng/table';
 import { ConfigurationService } from '../../services/configuration.service';
 
@@ -216,7 +216,7 @@ export class EmployeeExpertiseComponent implements OnInit {
 
         this.addNew = {
             ...rowData,
-            description: getObjectByValue('description', rowData.description, this.originalData),
+            description: getObjectById('employeeExpertiseId', rowData.employeeExpertiseId, this.originalData),
         };
         this.selectedRecordForEdit = { ...this.addNew }
 
