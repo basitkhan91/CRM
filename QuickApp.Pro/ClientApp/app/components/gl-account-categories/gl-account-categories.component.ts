@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+﻿import { Component, ViewChild, OnInit } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { fadeInOut } from '../../services/animations';
@@ -14,7 +14,7 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { MasterCompany } from '../../models/mastercompany.model';
 import { GLAccountCategoryService } from '../../services/glaccount-category.service';
 import { DataTableModule } from 'primeng/datatable';
-import { TableModule } from 'primeng/table'
+import { TableModule, Table } from 'primeng/table'
 import { ButtonModule } from 'primeng/button'
 import { SelectButtonModule } from 'primeng/selectbutton'
 import { InputTextModule } from 'primeng/inputtext'
@@ -24,6 +24,8 @@ import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
+import { ConfigurationService } from '../../services/configuration.service';
+import { validateRecordExistsOrNot, selectedValueValidate, editValueAssignByCondition, getObjectByValue, getObjectById } from '../../generic/autocomplete';
 
 @Component({
     selector: 'app-glaccount-category',
@@ -32,8 +34,41 @@ import { SingleScreenAuditDetails } from '../../models/single-screen-audit-detai
     animations: [fadeInOut]
 })
 /** ActionsAttribute component*/
-export class GLAccountCategoryComponent implements OnInit, AfterViewInit {
-    disableSave: boolean;
+export class GLAccountCategoryComponent implements OnInit {
+
+    originalData: any;
+    isEdit: boolean = false;
+    totalRecords: any;
+    pageIndex: number = 0;
+    pageSize: number = 10;
+    totalPages: number;
+    headers = [
+        { field: 'glAccountCategoryName', header: 'GL Account Category Name' },
+        { field: 'memo', header: 'Memo' },
+    ]
+    selectedColumns = this.headers;
+    formData = new FormData()
+    @ViewChild('dt')
+
+    private table: Table;
+    auditHistory: any[] = [];
+    disableSaveGLAccCatName: boolean = false;
+    glAccCatNameList: any;
+
+    new = {
+        glAccountCategoryName: "",
+        masterCompanyId: 1,
+        isActive: true,
+        memo: "",
+    }
+    addNew = { ...this.new };
+    selectedRecordForEdit: any;
+    viewRowData: any;
+    selectedRowforDelete: any;
+    existingRecordsResponse = []
+
+
+    /*disableSave: boolean;
     selectedGLAccountCategoryName: any;
     actionamecolle: any[] = [];
     auditHisory: any[];
@@ -54,7 +89,6 @@ export class GLAccountCategoryComponent implements OnInit, AfterViewInit {
     id: number;
     errorMessage: any;
     modal: NgbModalRef;
-    /** Actions ctor */
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
 
@@ -66,32 +100,226 @@ export class GLAccountCategoryComponent implements OnInit, AfterViewInit {
     disablecategory: boolean;
     secelectcategory: any;
     categoryViewFileds: any = {};
-    AuditDetails: SingleScreenAuditDetails[];
+    AuditDetails: SingleScreenAuditDetails[];*/
 
-    constructor(private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: GLAccountCategoryService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public glAccountCatService: GLAccountCategoryService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private breadCrumb: SingleScreenBreadcrumbService, private configurations: ConfigurationService) {
 
-        this.dataSource = new MatTableDataSource();
+        //this.dataSource = new MatTableDataSource();
 
 
     }
     ngOnInit(): void {
 
-        this.loadData();
-        this.cols = [
-            //{ field: 'actionAttributeId', header: 'ACID' },
-            { field: 'glAccountCategoryName', header: 'Expenditure Type' },
-            //{ field: 'gLCID', header: 'GLCID' },
-            { field: 'createdBy', header: 'Created By' },
-            { field: 'updatedBy', header: 'Updated By' },
-            //{ field: 'createdDate', header: 'Created Date' },
-            //{ field: 'updatedDate', header: 'Updated Date' }
+        this.getList();
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-item-group';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
+
+        // this.loadData();
+        // this.cols = [
+        //     //{ field: 'actionAttributeId', header: 'ACID' },
+        //     { field: 'glAccountCategoryName', header: 'Expenditure Type' },
+        //     //{ field: 'gLCID', header: 'GLCID' },
+        //     { field: 'createdBy', header: 'Created By' },
+        //     { field: 'updatedBy', header: 'Updated By' },
+        //     //{ field: 'createdDate', header: 'Created Date' },
+        //     //{ field: 'updatedDate', header: 'Updated Date' }
 
 
-        ];
+        // ];
 
-        this.selectedColumns = this.cols;
+        // this.selectedColumns = this.cols;
     }
-    ngAfterViewInit() {
+
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    }
+    columnsChanges() {
+        this.refreshList();
+    }
+    refreshList() {
+        this.table.reset();
+        this.getList();
+    }
+
+    customExcelUpload(event) {
+        // const file = event.target.files;
+
+        // console.log(file);
+        // if (file.length > 0) {
+
+        //     this.formData.append('file', file[0])
+        //     this.unitofmeasureService.UOMFileUpload(this.formData).subscribe(res => {
+        //         event.target.value = '';
+
+        //         this.formData = new FormData();
+        //         this.existingRecordsResponse = res;
+        //         this.getList();
+        //         this.alertService.showMessage(
+        //             'Success',
+        //             `Successfully Uploaded  `,
+        //             MessageSeverity.success
+        //         );
+
+        //     })
+        // }
+
+    }
+    sampleExcelDownload() {
+        // const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=GlAccountCategory&fileName=glaccountcategory.xlsx`;
+
+        // window.location.assign(url);
+    }
+
+    getList() {
+        this.glAccountCatService.getWorkFlows().subscribe(res => {
+            const responseData = res[0];
+            this.originalData = responseData;
+            this.totalRecords = responseData.length;
+            this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+        })
+    }
+    changePage(event: { first: any; rows: number }) {
+        console.log(event);
+        const pageIndex = (event.first / event.rows);
+        this.pageSize = event.rows;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+    }
+
+
+    checkGLAccCatNameExists(field, value) {
+        const exists = validateRecordExistsOrNot(field, value, this.originalData, this.selectedRecordForEdit);        
+        if (exists.length > 0) {
+            this.disableSaveGLAccCatName = true;
+        }
+        else {
+            this.disableSaveGLAccCatName = false;
+        }
+
+    }
+    filterGLAccCatName(event) {
+        this.glAccCatNameList = this.originalData;
+
+        const glAccCatNameData = [...this.originalData.filter(x => {
+            return x.glAccountCategoryName.toLowerCase().includes(event.query.toLowerCase())
+        })]
+        this.glAccCatNameList = glAccCatNameData;
+    }
+    selectedGLAccCatName(object) {
+        const exists = selectedValueValidate('glAccountCategoryName', object, this.selectedRecordForEdit)
+
+        this.disableSaveGLAccCatName = !exists;
+    }
+
+    save() {
+        const data = {
+            ...this.addNew, createdBy: this.userName, updatedBy: this.userName,
+            glAccountCategoryName: editValueAssignByCondition('glAccountCategoryName', this.addNew.glAccountCategoryName)
+        };
+        if (!this.isEdit) {
+            this.glAccountCatService.newGLAccountCategory(data).subscribe(() => {
+                this.resetForm();
+                this.getList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Added  New GL Account Category Successfully`,
+                    MessageSeverity.success
+                );
+            })
+        } else {
+            this.glAccountCatService.updateGLAccountCategory(data).subscribe(() => {
+                this.selectedRecordForEdit = undefined;
+                this.isEdit = false;
+                this.resetForm();
+                this.getList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Updated GL Account Category Successfully`,
+                    MessageSeverity.success
+                );
+            })
+        }
+    }
+
+    resetForm() {
+        this.isEdit = false;
+        this.disableSaveGLAccCatName = false;
+        this.selectedRecordForEdit = undefined;
+        this.addNew = { ...this.new };
+    }
+
+
+    edit(rowData) {
+        console.log(rowData);
+        this.isEdit = true;
+        this.disableSaveGLAccCatName = false;
+
+        this.addNew = {
+            ...rowData,
+            glAccountCategoryName: getObjectById('glAccountCategoryId', rowData.glAccountCategoryId, this.originalData),
+        };
+        this.selectedRecordForEdit = { ...this.addNew }
+
+    }
+
+    changeStatus(rowData) {
+        console.log(rowData);
+        const data = { ...rowData }
+        this.glAccountCatService.updateGLAccountCategory(data).subscribe(() => {
+            this.alertService.showMessage(
+                'Success',
+                `Updated Status Successfully`,
+                MessageSeverity.success
+            );
+        })
+
+    }
+    viewSelectedRow(rowData) {
+        console.log(rowData);
+        this.viewRowData = rowData;
+    }
+    resetViewData() {
+        this.viewRowData = undefined;
+    }
+    delete(rowData) {
+        this.selectedRowforDelete = rowData;
+
+    }
+    deleteConformation(value) {
+        if (value === 'Yes') {
+            this.glAccountCatService.deleteGLAccountCategory(this.selectedRowforDelete.glAccountCategoryId).subscribe(() => {
+                this.getList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Deleted GL Account Category Successfully`,
+                    MessageSeverity.success
+                );
+            })
+        } else {
+            this.selectedRowforDelete = undefined;
+        }
+    }
+
+    getAuditHistoryById(rowData) {
+        this.glAccountCatService.historyGLAccountCategory(rowData.glAccountCategoryId).subscribe(res => {
+            this.auditHistory = res;
+        })
+    }
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
+
+
+
+
+    /*ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
     }
@@ -99,7 +327,7 @@ export class GLAccountCategoryComponent implements OnInit, AfterViewInit {
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getWorkFlows().subscribe(
+        this.glAccountCatService.getWorkFlows().subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -201,7 +429,7 @@ export class GLAccountCategoryComponent implements OnInit, AfterViewInit {
 
         this.sourceGLAccountCatrgory = row;
 
-        this.workFlowtService.historyGLAccountCategory(this.sourceGLAccountCatrgory.GLAccountCategoryId).subscribe(
+        this.glAccountCatService.historyGLAccountCategory(this.sourceGLAccountCatrgory.GLAccountCategoryId).subscribe(
             results => this.onHistoryLoadSuccessful(results[0], content),
             error => this.saveFailedHelper(error));
     }
@@ -211,7 +439,7 @@ export class GLAccountCategoryComponent implements OnInit, AfterViewInit {
             this.sourceGLAccountCatrgory.updatedBy = this.userName;
             this.Active = "In Active";
             this.sourceGLAccountCatrgory.isActive == false;
-            this.workFlowtService.updateGLAccountCategory(this.sourceGLAccountCatrgory).subscribe(
+            this.glAccountCatService.updateGLAccountCategory(this.sourceGLAccountCatrgory).subscribe(
                 response => this.saveCompleted(this.sourceGLAccountCatrgory),
                 error => this.saveFailedHelper(error));
             //alert(e);
@@ -221,7 +449,7 @@ export class GLAccountCategoryComponent implements OnInit, AfterViewInit {
             this.sourceGLAccountCatrgory.updatedBy = this.userName;
             this.Active = "Active";
             this.sourceGLAccountCatrgory.isActive == true;
-            this.workFlowtService.updateGLAccountCategory(this.sourceGLAccountCatrgory).subscribe(
+            this.glAccountCatService.updateGLAccountCategory(this.sourceGLAccountCatrgory).subscribe(
                 response => this.saveCompleted(this.sourceGLAccountCatrgory),
                 error => this.saveFailedHelper(error));
             //alert(e);
@@ -320,7 +548,7 @@ export class GLAccountCategoryComponent implements OnInit, AfterViewInit {
             this.sourceGLAccountCatrgory.updatedBy = this.userName;
             this.sourceGLAccountCatrgory.masterCompanyId = 1;
             this.sourceGLAccountCatrgory.glAccountCategoryName = this.glAccountCategoryName;
-            this.workFlowtService.newGLAccountCategory(this.sourceGLAccountCatrgory).subscribe(
+            this.glAccountCatService.newGLAccountCategory(this.sourceGLAccountCatrgory).subscribe(
                 role => this.saveSuccessHelper(role),
                 error => this.saveFailedHelper(error));
         }
@@ -329,7 +557,7 @@ export class GLAccountCategoryComponent implements OnInit, AfterViewInit {
             this.sourceGLAccountCatrgory.updatedBy = this.userName;
             this.sourceGLAccountCatrgory.gLAccountCategoryName = this.glAccountCategoryName;
             this.sourceGLAccountCatrgory.masterCompanyId = 1;
-            this.workFlowtService.updateGLAccountCategory(this.sourceGLAccountCatrgory).subscribe(
+            this.glAccountCatService.updateGLAccountCategory(this.sourceGLAccountCatrgory).subscribe(
                 response => this.saveCompleted(this.sourceGLAccountCatrgory),
                 error => this.saveFailedHelper(error));
         }
@@ -341,7 +569,7 @@ export class GLAccountCategoryComponent implements OnInit, AfterViewInit {
     deleteItemAndCloseModel() {
         this.isSaving = true;
         this.sourceGLAccountCatrgory.updatedBy = this.userName;
-        this.workFlowtService.deleteGLAccountCategory(this.sourceGLAccountCatrgory.glAccountCategoryId).subscribe(
+        this.glAccountCatService.deleteGLAccountCategory(this.sourceGLAccountCatrgory.glAccountCategoryId).subscribe(
             response => this.saveCompleted(this.sourceGLAccountCatrgory),
             error => this.saveFailedHelper(error));
         this.modal.close();
@@ -420,13 +648,13 @@ export class GLAccountCategoryComponent implements OnInit, AfterViewInit {
 
     getGLAccountCategoryAudiitDetails(Id: number): void {
         this.AuditDetails = [];
-        this.workFlowtService.getGLAccountCategoryAudiitDetails(Id).subscribe(audits => {
+        this.glAccountCatService.getGLAccountCategoryAudiitDetails(Id).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
                 this.AuditDetails[0].ColumnsToAvoid = ["glAccountCategoryAuditId", "glAccountCategoryId", "glcid", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
         });
-    }
+    }*/
 
 }
 

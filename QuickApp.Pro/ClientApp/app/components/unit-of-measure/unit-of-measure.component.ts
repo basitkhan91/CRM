@@ -196,7 +196,7 @@ export class UnitOfMeasureComponent implements OnInit {
                 this.getUOMList();
                 this.alertService.showMessage(
                     'Success',
-                    `Added  New Unit of Measurment  Successfully  `,
+                    `Added  New Unit of Measurment Successfully`,
                     MessageSeverity.success
                 );
             })
@@ -208,7 +208,7 @@ export class UnitOfMeasureComponent implements OnInit {
                 this.getUOMList();
                 this.alertService.showMessage(
                     'Success',
-                    `Added  New Unit of Measurment  Successfully  `,
+                    `Updated Unit of Measurment Successfully`,
                     MessageSeverity.success
                 );
             })
@@ -233,7 +233,7 @@ export class UnitOfMeasureComponent implements OnInit {
 
         this.addNewUOM = {
             ...rowData, unitName: getObjectById('unitOfMeasureId', rowData.unitOfMeasureId, this.uomData),
-            shortName: getObjectByValue('shortName', rowData.shortName, this.uomData)
+            shortName: getObjectById('unitOfMeasureId', rowData.unitOfMeasureId, this.uomData)
         };
         this.selectedRecordForEdit = { ...this.addNewUOM }
 
