@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+﻿import { Component, ViewChild, OnInit } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { fadeInOut } from '../../services/animations';
@@ -14,7 +14,7 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { MasterCompany } from '../../models/mastercompany.model';
 import { GlCashFlowClassificationService } from '../../services/gl-cash-flow-classification.service';
 import { DataTableModule } from 'primeng/datatable';
-import { TableModule } from 'primeng/table'
+import { TableModule, Table } from 'primeng/table'
 import { ButtonModule } from 'primeng/button'
 import { SelectButtonModule } from 'primeng/selectbutton'
 import { InputTextModule } from 'primeng/inputtext'
@@ -24,6 +24,8 @@ import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem, LazyLoadEvent } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
+import { validateRecordExistsOrNot, selectedValueValidate, editValueAssignByCondition, getObjectByValue } from '../../generic/autocomplete';
+import { ConfigurationService } from '../../services/configuration.service';
 
 @Component({
     selector: 'app-gl-cash-flow-classification',
@@ -32,77 +34,307 @@ import { SingleScreenAuditDetails } from '../../models/single-screen-audit-detai
 	animations: [fadeInOut]
 })
 /** gl-cash-flow-classification component*/
-export class GlCashFlowClassificationComponent implements OnInit, AfterViewInit {
-    glAccountClassification = [];
-    updatedByInputFieldValue: any;
-    createdByInputFieldValue: any;
-    glClassFlowClassificationNameInputFieldValue: any;
-    matvhMode: any;
-    field: any;
-    event: any;
-    paginator: MatPaginator;
-    sort: MatSort;    
-	disableSave: boolean;
-	selectedGLClassFlowClassificationName: any;
-	auditHisory: any[];
-	dataSource: MatTableDataSource<any>;	
-	glcashflowcoll: any[] = [];		
-	createdBy: any = "";
-	updatedBy: any = "";
-	createddate: any = "";
-	updatedDate: any = "";
-	GLClassFlowClassificationNamecolle: any[] = [];
-	cols: any[];
-	selectedColumns: any[]=[];
-	selectedColumn: any[];
-	displayedColumns = ['glcid', 'glClassFlowClassificationName', 'createdDate', 'companyName'];
-	allComapnies: MasterCompany[] = [];
-	private isSaving: boolean;
-	private bodyText: string;
-	loadingIndicator: boolean;
-	closeResult: string;
-	glClassFlowClassificationName: string;	
-	title: string = "Create";
+export class GlCashFlowClassificationComponent implements OnInit {
+	originalData: any;
+    isEdit: boolean = false;
+    totalRecords: any;
+    pageIndex: number = 0;
+    pageSize: number = 10;
+    totalPages: number;
+    headers = [
+        { field: 'glClassFlowClassificationName', header: 'GL Cash Flow Classification Name' },
+        { field: 'memo', header: 'Memo' },
+    ];
+    selectedColumns = this.headers;
+    formData = new FormData()
+    @ViewChild('dt')
 
-	id: number;
-	errorMessage: any;
-	modal: NgbModalRef;	
-	Active: string = "Active";
-	length: number;
-	localCollection: any[] = [];	
-	allGlCashflow: any[] = [];
-	//allGLcashflow: any[];
-	isEditMode: boolean = false;
-	isDeleteMode: boolean = false;
-	public sourceglcashflowclassification: any = {}
-	GLClassFlowClassificationName: string;
-   // allGLcashflow: any[];
-    cashflowViewFileds: any = {};
-    AuditDetails: SingleScreenAuditDetails[];
+    private table: Table;
+    auditHistory: any[] = [];
+    disableSaveGLCFName: boolean = false;
+    glCashFlowList: any;
+    descriptionList: any;
 
-    pageSearch: { query: any; field: any; };
-    first: number;
-    rows: number;
-    paginatorState: any;
+    new = {
+        glClassFlowClassificationName: "",
+        masterCompanyId: 1,
+        isActive: true,
+        memo: "",
+    }
+    addNew = { ...this.new };
+    selectedRecordForEdit: any;
+    viewRowData: any;
+    selectedRowforDelete: any;
+    existingRecordsResponse = []
 
-    glCashFlowClassificationPagination: GlCashFlowClassification[];//added
-    totalRecords: number;
-    loading: boolean;
+
+//     glAccountClassification = [];
+//     updatedByInputFieldValue: any;
+//     createdByInputFieldValue: any;
+//     glClassFlowClassificationNameInputFieldValue: any;
+//     matvhMode: any;
+//     field: any;
+//     event: any;
+//     paginator: MatPaginator;
+//     sort: MatSort;    
+// 	disableSave: boolean;
+// 	selectedGLClassFlowClassificationName: any;
+// 	auditHisory: any[];
+// 	dataSource: MatTableDataSource<any>;	
+// 	glcashflowcoll: any[] = [];		
+// 	createdBy: any = "";
+// 	updatedBy: any = "";
+// 	createddate: any = "";
+// 	updatedDate: any = "";
+// 	GLClassFlowClassificationNamecolle: any[] = [];
+// 	cols: any[];
+// 	selectedColumns: any[]=[];
+// 	selectedColumn: any[];
+// 	displayedColumns = ['glcid', 'glClassFlowClassificationName', 'createdDate', 'companyName'];
+// 	allComapnies: MasterCompany[] = [];
+// 	private isSaving: boolean;
+// 	private bodyText: string;
+// 	loadingIndicator: boolean;
+// 	closeResult: string;
+// 	glClassFlowClassificationName: string;	
+// 	title: string = "Create";
+
+// 	id: number;
+// 	errorMessage: any;
+// 	modal: NgbModalRef;	
+// 	Active: string = "Active";
+// 	length: number;
+// 	localCollection: any[] = [];	
+// 	allGlCashflow: any[] = [];
+// 	//allGLcashflow: any[];
+// 	isEditMode: boolean = false;
+// 	isDeleteMode: boolean = false;
+// 	public sourceglcashflowclassification: any = {}
+// 	GLClassFlowClassificationName: string;
+//    // allGLcashflow: any[];
+//     cashflowViewFileds: any = {};
+//     AuditDetails: SingleScreenAuditDetails[];
+
+//     pageSearch: { query: any; field: any; };
+//     first: number;
+//     rows: number;
+//     paginatorState: any;
+
+//     glCashFlowClassificationPagination: GlCashFlowClassification[];//added
+//     totalRecords: number;
+//     loading: boolean;
 	
-	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private glCashFlowClassificationService:GlCashFlowClassificationService) {
-		this.displayedColumns.push('action');
+	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private glCashFlowClassificationService:GlCashFlowClassificationService, private configurations: ConfigurationService) {
+		/*this.displayedColumns.push('action');
 		this.dataSource = new MatTableDataSource();
-		this.sourceglcashflowclassification = new GlCashFlowClassification();
+		this.sourceglcashflowclassification = new GlCashFlowClassification();*/
 	}
 	ngOnInit() {
-		this.loadData();
-		
+		this.getList();
+
 		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-gl-cash-flow-classification';
 		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
-		
 
+		/*this.loadData();
+				
+		*/
 	}
-	private loadData() {
+
+	get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    }
+    columnsChanges() {
+        this.refreshList();
+    }
+    refreshList() {
+        this.table.reset();
+
+        // this.table.sortOrder = 0;
+        // this.table.sortField = '';
+
+        this.getList();
+    }
+
+    customExcelUpload(event) {
+        // const file = event.target.files;
+
+        // console.log(file);
+        // if (file.length > 0) {
+
+        //     this.formData.append('file', file[0])
+        //     this.unitofmeasureService.UOMFileUpload(this.formData).subscribe(res => {
+        //         event.target.value = '';
+
+        //         this.formData = new FormData();
+        //         this.existingRecordsResponse = res;
+        //         this.getList();
+        //         this.alertService.showMessage(
+        //             'Success',
+        //             `Successfully Uploaded  `,
+        //             MessageSeverity.success
+        //         );
+
+        //     })
+        // }
+
+    }
+    sampleExcelDownload() {
+         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=CashFlow&fileName=cashflow.xlsx`;
+
+         window.location.assign(url);
+    }
+
+    getList() {
+        this.glCashFlowClassificationService.getWorkFlows().subscribe(res => {
+            const responseData = res[0];
+            // this.uomHeaders = responseData.columHeaders;
+            // this.selectedColumns = responseData.columHeaders;
+            this.originalData = responseData;
+            this.totalRecords = responseData.length;
+            this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+        })
+    }
+    changePage(event: { first: any; rows: number }) {
+        console.log(event);
+        const pageIndex = (event.first / event.rows);
+        // this.pageIndex = pageIndex;
+        this.pageSize = event.rows;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+    }
+
+
+    checkGLCFNameExists(field, value) {
+        const exists = validateRecordExistsOrNot(field, value, this.originalData, this.selectedRecordForEdit);
+        if (exists.length > 0) {
+            this.disableSaveGLCFName = true;
+        }
+        else {
+            this.disableSaveGLCFName = false;
+        }
+
+    }
+    filterGLCFName(event) {
+        this.glCashFlowList = this.originalData;
+
+        const glCashFlowData = [...this.originalData.filter(x => {
+            return x.glClassFlowClassificationName.toLowerCase().includes(event.query.toLowerCase())
+        })]
+        this.glCashFlowList = glCashFlowData;
+    }
+    selectedGLCFName(object) {
+        const exists = selectedValueValidate('glClassFlowClassificationName', object, this.selectedRecordForEdit)
+        this.disableSaveGLCFName = !exists;
+    }
+
+    save() {
+        const data = {
+            ...this.addNew, createdBy: this.userName, updatedBy: this.userName,
+            glClassFlowClassificationName: editValueAssignByCondition('glClassFlowClassificationName', this.addNew.glClassFlowClassificationName),
+        };
+        if (!this.isEdit) {
+            this.glCashFlowClassificationService.newGlCashFlowClassification(data).subscribe(() => {
+                this.resetForm();
+                this.getList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Added New GL Cash Flow Classification Successfully`,
+                    MessageSeverity.success
+                );
+            })
+        } else {
+            this.glCashFlowClassificationService.updateCashFlowClassification(data).subscribe(() => {
+                this.selectedRecordForEdit = undefined;
+                this.isEdit = false;
+                this.resetForm();
+                this.getList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Updated GL Cash Flow Classification Successfully`,
+                    MessageSeverity.success
+                );
+            })
+		}
+		
+    }
+
+    resetForm() {
+        this.isEdit = false;
+        this.selectedRecordForEdit = undefined;
+		this.addNew = { ...this.new };
+		this.disableSaveGLCFName = false;
+    }
+
+
+    edit(rowData) {
+        console.log(rowData);
+        this.isEdit = true;
+        this.disableSaveGLCFName = false;
+
+        this.addNew = {
+            ...rowData,
+            glClassFlowClassificationName: getObjectByValue('glClassFlowClassificationName', rowData.glClassFlowClassificationName, this.originalData),
+        };
+        this.selectedRecordForEdit = { ...this.addNew }
+
+    }
+
+    changeStatus(rowData) {
+        console.log(rowData);
+        const data = { ...rowData }
+        this.glCashFlowClassificationService.updateCashFlowClassification(data).subscribe(() => {
+            // this.getUOMList();
+            this.alertService.showMessage(
+                'Success',
+                `Updated Status Successfully`,
+                MessageSeverity.success
+            );
+        })
+
+    }
+    viewSelectedRow(rowData) {
+        console.log(rowData);
+        this.viewRowData = rowData;
+    }
+    resetViewData() {
+        this.viewRowData = undefined;
+    }
+    delete(rowData) {
+        this.selectedRowforDelete = rowData;
+
+    }
+    deleteConformation(value) {
+        if (value === 'Yes') {
+            this.glCashFlowClassificationService.deleteCashFlowClassification(this.selectedRowforDelete.glClassFlowClassificationId).subscribe(() => {
+                this.getList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Deleted ItemGroup Successfully  `,
+                    MessageSeverity.success
+                );
+            })
+        } else {
+            this.selectedRowforDelete = undefined;
+        }
+    }
+
+    getAuditHistoryById(rowData) {
+        this.glCashFlowClassificationService.historyGlCashFlowClassification(rowData.glClassFlowClassificationId).subscribe(res => {
+            this.auditHistory = res;
+        })
+    }
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
+
+	/*private loadData() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
 		this.glCashFlowClassificationService.getWorkFlows().subscribe(
@@ -494,7 +726,7 @@ export class GlCashFlowClassificationComponent implements OnInit, AfterViewInit 
         }
         else {
         }
-    }
+    }*/
 
 }
 
