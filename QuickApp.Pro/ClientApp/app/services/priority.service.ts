@@ -43,7 +43,7 @@ export class PriorityService {
             this.priorityEndpoint.getPriorityEndpoint<Priority[]>());
     }
 
-    newPriority(priority: Priority) {
+    newPriority(priority) {
         return this.priorityEndpoint.getNewPriorityEndpoint<Priority>(priority);
     }
 
@@ -51,7 +51,7 @@ export class PriorityService {
         return this.priorityEndpoint.getEditPriorityEndpoint<Priority>(priorityId);
     }
 
-    updatePriority(priority: Priority) {
+    updatePriority(priority) {
         return this.priorityEndpoint.getUpdatePriorityEndpoint(priority, priority.priorityId);
     }
 
