@@ -37,7 +37,7 @@ export class ProvisionComponent implements OnInit{
             memo: "",
           
         }
-    addnewProvision = this.newProvision;
+    addnewProvision = {...this.newProvision};
     disableSaveForProvision: boolean = false;
     provisionList: any;
     isEdit: boolean = false;
@@ -67,11 +67,8 @@ export class ProvisionComponent implements OnInit{
     ngOnInit(): void {
         this.getProvisionData();
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-provision';
-
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
     }
-
-
-
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
@@ -189,6 +186,7 @@ export class ProvisionComponent implements OnInit{
 
     resetProvisionForm() {
         this.isEdit = false;
+        this.disableSaveForProvision = false;       
         this.selectedRecordForEdit = undefined;
         this.addnewProvision = { ...this.newProvision };
     }
@@ -197,8 +195,7 @@ export class ProvisionComponent implements OnInit{
     editProvision(rowData) {
         console.log(rowData);
         this.isEdit = true;
-        this.disableSaveForProvision = false;
-        this.disableSaveForShortName = false;
+        this.disableSaveForProvision = false;       
         // this.addNewUOM = rowData;
 
         this.addnewProvision = {

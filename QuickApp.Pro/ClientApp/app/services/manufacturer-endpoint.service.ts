@@ -92,8 +92,7 @@ export class ManufacturerEndpoint extends EndpointFactory {
             });
     }
     ManufacturerCustomUpload(file){
-        return this.http.post( `${this.configurations.baseUrl}${this.excelUpload}`, file)
-        
+        return this.http.post( `${this.configurations.baseUrl}${this.excelUpload}`, file)       
         
     }
 

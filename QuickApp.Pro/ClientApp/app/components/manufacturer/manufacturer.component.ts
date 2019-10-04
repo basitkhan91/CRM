@@ -559,6 +559,7 @@ export class ManufacturerComponent implements OnInit {
     ngOnInit(): void {
         this.getManufacturerList();
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-manufacturer';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
 
     }
 
@@ -602,10 +603,11 @@ export class ManufacturerComponent implements OnInit {
 
     }
     sampleExcelDownload() {
-        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=Manufacturer&fileName=uom.xlsx`;
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=Manufacturer&fileName=manufacturer.xlsx`;
 
         window.location.assign(url);
     }
+
 
     getManufacturerList() {
         this.manufacturerService.getWorkFlows().subscribe(res => {

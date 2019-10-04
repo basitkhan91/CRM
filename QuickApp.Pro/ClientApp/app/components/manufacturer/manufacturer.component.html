@@ -7,7 +7,7 @@
                         <div class="inline-block display-flex">
                             <h3 class="po-head lead">Manufacturer</h3>
                             &nbsp;&nbsp;
-                            <a class="plusicon-cstm new-margin" pTooltip="Add Manufacturer" tooltipPosition="right"
+                            <a class="plusicon-cstm new-margin" pTooltip="Add Manufacturer" tooltipPosition="right" (click)="resetManufacuterForm()"
                                 data-target="#addManufacturer" data-toggle="modal">
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
@@ -353,7 +353,7 @@
                         <span class="label ">
                             <b class="view-Header">IsActive</b>
                         </span>
-                        <span class="value">{{viewRowData.isActive}}</span>
+                        <span class="value">{{viewRowData.isActive === true ? 'Yes' : 'No'}}</span>
                     </p>
                     <p>
                         <span class="label ">
