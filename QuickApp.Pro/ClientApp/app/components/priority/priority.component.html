@@ -8,7 +8,7 @@
                             <h3 class="po-head lead">Priority</h3>
                             &nbsp;&nbsp;
                             <a class="plusicon-cstm new-margin" pTooltip="Add Priority" tooltipPosition="right"
-                                data-target="#addPriority" data-toggle="modal">
+                                data-target="#addPriority" data-toggle="modal" (click)="resetPriorityForm()">
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
                         </div>
@@ -354,7 +354,7 @@
                         <span class="label ">
                             <b class="view-Header">IsActive</b>
                         </span>
-                        <span class="value">{{viewRowData.isActive}}</span>
+                        <span class="value">{{viewRowData.isActive === true ? 'Yes' : 'No'}}</span>
                     </p>
                     <p>
                         <span class="label ">
