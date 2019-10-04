@@ -16,7 +16,7 @@ import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem, LazyLoadEvent } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
-import { selectedValueValidate, validateRecordExistsOrNot, getObjectByValue, editValueAssignByCondition } from '../../generic/autocomplete';
+import { selectedValueValidate, validateRecordExistsOrNot, getObjectByValue, editValueAssignByCondition, getObjectById } from '../../generic/autocomplete';
 import { Table } from 'primeng/table';
 import { ConfigurationService } from '../../services/configuration.service';
 
@@ -38,7 +38,6 @@ export class CurrencyComponent implements OnInit {
         { field: 'displayName', header: 'Currency Name' },
         { field: 'code', header: 'Currency Code' },
         { field: 'symbol', header: 'Currency Symbol' },
-        { field: 'country', header: 'Country' },        
         { field: 'memo', header: 'Memo' }
     ];
     selectedColumns = this.headers;
@@ -299,10 +298,13 @@ export class CurrencyComponent implements OnInit {
 
         this.addNew = {
             ...rowData,
-            displayName: getObjectByValue('displayName', rowData.displayName, this.originalData),
-            code: getObjectByValue('code', rowData.code, this.originalData),
-            symbol: getObjectByValue('symbol', rowData.symbol, this.originalData),
-        };
+            displayName: getObjectById('currencyId', rowData.currencyId, this.originalData),
+            code: getObjectById('currencyId', rowData.currencyId, this.originalData),
+            symbol: getObjectById('currencyId', rowData.currencyId, this.originalData),
+        //     displayName: getObjectByValue('displayName', rowData.displayName, this.originalData),
+        //     code: getObjectByValue('code', rowData.code, this.originalData),
+        //     symbol: getObjectByValue('symbol', rowData.symbol, this.originalData),
+         };
         this.selectedRecordForEdit = { ...this.addNew }
     }
 
