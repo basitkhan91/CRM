@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+﻿import { Component, OnInit, ViewChild } from '@angular/core';
 import { fadeInOut } from '../../services/animations';
 import { PageHeaderComponent } from '../../shared/page-header.component';
 
@@ -16,6 +16,9 @@ import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem, LazyLoadEvent } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
+import { selectedValueValidate, validateRecordExistsOrNot, getObjectByValue, editValueAssignByCondition } from '../../generic/autocomplete';
+import { Table } from 'primeng/table';
+import { ConfigurationService } from '../../services/configuration.service';
 
 @Component({
     selector: 'app-currency',
@@ -24,103 +27,384 @@ import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-scre
     animations: [fadeInOut]
 })
 /** Currency component*/
-export class CurrencyComponent implements OnInit, AfterViewInit {
-    curreencyPaginationList: any[] = [];
-    totelPages
-    event: any;
-    currency = [];
-    updatedByInputFieldValue: any;
-    createdByInputFieldValue: any;
-    memoInputFieldValue: any;
-    displayNameInputFieldValue: any;
-    symbolInputFieldValue: any;
-    matvhMode: any;
-    field: any;
-    display: boolean;
-    modelValue: boolean;
-    codeInputFieldValue: any;
-    currency_Name: any = "";
-    symbol: any =  "";
-    displayName: any = "";
-    memo: any = "";
-    createdBy: any = "";
-    updatedBy: any = "";
-    createdDate: any = "";
-    updatedDate: any = "";
-    selectedActionName: any;
-    disableSave: boolean;
-    actionamecolle: any[] = [];
-    AuditDetails: SingleScreenAuditDetails[];
-
-    auditHisory: AuditHistory[];
-    Active: string = "Active";
-    /** Currency ctor */
-   
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
-
-    displayedColumns = ['currencyId', 'code', 'symbol', 'displayName', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
-    dataSource: MatTableDataSource<Currency>;
-    allCurrencyInfo: Currency[] = [];
-    sourceAction: Currency;
-
-    loadingIndicator: boolean;
-   
-    actionForm: FormGroup;
-    title: string = "Create";
-    id: number;
-    errorMessage: any;
-    cols: any[];
-    selectedColumns: any[];
-    private isEditMode: boolean = false;
-    private isDeleteMode: boolean = false;
-    allComapnies: MasterCompany[];
-    private isSaving: boolean;
-    modal: NgbModalRef;
-    selectedColumn: Currency[];
-    currencyName: string;
-    filteredBrands: any[];
-    localCollection: any[] = [];
-    /** Currency ctor */
-
-    pageSearch: { query: any; field: any; };
-    first: number;
-    rows: number;
-    paginatorState: any;
-
-    currencyPagination: Currency[];//added
+export class CurrencyComponent implements OnInit {
+    
     totalRecords: number;
-    loading: boolean;
+    originalData:any[] = [];
+    totalPages: number;
+    pageIndex: number = 0;
+    pageSize: number = 10;
+    headers = [
+        { field: 'displayName', header: 'Currency Name' },
+        { field: 'code', header: 'Currency Code' },
+        { field: 'symbol', header: 'Currency Symbol' },
+        { field: 'country', header: 'Country' },        
+        { field: 'memo', header: 'Memo' }
+    ];
+    selectedColumns = this.headers;
+    new = {
+        code: "",
+        displayName: "",
+        isActive: true,
+        masterCompanyId: 1,
+        memo: "",
+        symbol: "",        
+    }
+    addNew = { ...this.new };
+    disableSaveCurrencyCode: boolean = false;
+    disableSaveCurrencyName: boolean = false;
+    disableSaveCurrencySymbol: boolean = false;
+    selectedRecordForEdit: any;
+    currencyCodeList: any[];
+    currencyNameList: any[];
+    currencySymbolList: any[];
+    viewRowData: any;
+    isEdit: boolean = false;
+    selectedRowforDelete: any;
+    private table: Table;
+    auditHistory: any[] = [];
+    existingRecordsResponse: Object;
 
-	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, private masterComapnyService: MasterComapnyService, private modalService: NgbModal, public currencyService: CurrencyService, private dialog: MatDialog) {
-        this.displayedColumns.push('action');
-        this.dataSource = new MatTableDataSource();
+    // curreencyPaginationList: any[] = [];
+    // totelPages
+    // event: any;
+    // currency = [];
+    // updatedByInputFieldValue: any;
+    // createdByInputFieldValue: any;
+    // memoInputFieldValue: any;
+    // displayNameInputFieldValue: any;
+    // symbolInputFieldValue: any;
+    // matvhMode: any;
+    // field: any;
+    // display: boolean;
+    // modelValue: boolean;
+    // codeInputFieldValue: any;
+    // currency_Name: any = "";
+    // symbol: any =  "";
+    // displayName: any = "";
+    // memo: any = "";
+    // createdBy: any = "";
+    // updatedBy: any = "";
+    // createdDate: any = "";
+    // updatedDate: any = "";
+    // selectedActionName: any;
+    // disableSave: boolean;
+    // actionamecolle: any[] = [];
+    // AuditDetails: SingleScreenAuditDetails[];
+
+    // auditHisory: AuditHistory[];
+    // Active: string = "Active";
+    // /** Currency ctor */
+   
+    // @ViewChild(MatPaginator) paginator: MatPaginator;
+    // @ViewChild(MatSort) sort: MatSort;
+
+    // displayedColumns = ['currencyId', 'code', 'symbol', 'displayName', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
+    // dataSource: MatTableDataSource<Currency>;
+    // allCurrencyInfo: Currency[] = [];
+    // sourceAction: Currency;
+
+    // loadingIndicator: boolean;
+   
+    // actionForm: FormGroup;
+    // title: string = "Create";
+    // id: number;
+    // errorMessage: any;
+    // cols: any[];
+    // selectedColumns: any[];
+    // private isEditMode: boolean = false;
+    // private isDeleteMode: boolean = false;
+    // allComapnies: MasterCompany[];
+    // private isSaving: boolean;
+    // modal: NgbModalRef;
+    // selectedColumn: Currency[];
+    // currencyName: string;
+    // filteredBrands: any[];
+    // localCollection: any[] = [];
+    // /** Currency ctor */
+
+    // pageSearch: { query: any; field: any; };
+    // first: number;
+    // rows: number;
+    // paginatorState: any;
+
+    // currencyPagination: Currency[];//added
+    // totalRecords: number;
+    // loading: boolean;
+
+	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, private masterComapnyService: MasterComapnyService, private modalService: NgbModal, public currencyService: CurrencyService, private dialog: MatDialog, private configurations: ConfigurationService) {
+        // this.displayedColumns.push('action');
+        // this.dataSource = new MatTableDataSource();
 
     }
     ngOnInit(): void {
-        this.loadData();
-        this.cols = [
-            //{ field: 'currencyId', header: 'Currency ID' },
-            { field: 'code', header: 'CurrencyCode' },
-            { field: 'symbol', header: 'Currency Symbol' },
-            { field: 'displayName', header: ' Currency Name' },
-            { field: 'memo', header: 'Memo' },
-            { field: 'createdBy', header: 'Created By' },
-            { field: 'updatedBy', header: 'Updated By' },
-            //{ field: 'updatedDate', header: 'Updated Date' },
-           //{ field: 'createdDate', header: 'Created Date' }
-		];
-		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-currency';
-		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
-        this.selectedColumns = this.cols;
+        this.getList();
+        // this.cols = [
+        //     //{ field: 'currencyId', header: 'Currency ID' },
+        //     { field: 'code', header: 'CurrencyCode' },
+        //     { field: 'symbol', header: 'Currency Symbol' },
+        //     { field: 'displayName', header: ' Currency Name' },
+        //     { field: 'memo', header: 'Memo' },
+        //     { field: 'createdBy', header: 'Created By' },
+        //     { field: 'updatedBy', header: 'Updated By' },
+        //     //{ field: 'updatedDate', header: 'Updated Date' },
+        //    //{ field: 'createdDate', header: 'Created Date' }
+		// ];
+		 this.breadCrumb.currentUrl = '/singlepages/singlepages/app-currency';
+		 this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
+        // this.selectedColumns = this.cols;
 
     }
-    ngAfterViewInit() {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+    /*ngAfterViewInit() {
+         this.dataSource.paginator = this.paginator;
+         this.dataSource.sort = this.sort;
+    }*/
+
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
 
-    private loadData() {
+    getList() {
+        this.currencyService.getCurrencyList().subscribe(res => {
+            const responseData = res[0];
+            this.originalData = responseData;
+            console.log(this.originalData);
+            this.totalRecords = responseData.length;
+            this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+        })
+    }
+    changePage(event: { first: any; rows: number }) {
+        console.log(event);
+        const pageIndex = (event.first / event.rows);
+        // this.pageIndex = pageIndex;
+        this.pageSize = event.rows;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+    }
+
+    selectedCurrencyCode(object) {
+        const exists = selectedValueValidate('code', object, this.selectedRecordForEdit)
+        this.disableSaveCurrencyCode = !exists;
+    }
+    checkCurrencyCodeExists(field, value) {
+        const exists = validateRecordExistsOrNot(field, value, this.originalData, this.selectedRecordForEdit);
+        if (exists.length > 0) {
+            this.disableSaveCurrencyCode = true;
+        }
+        else {
+            this.disableSaveCurrencyCode = false;
+        }
+    }
+    filterCurrencyCode(event) {
+        this.currencyCodeList = this.originalData;
+        const currencyData = [...this.originalData.filter(x => {
+            return x.code.toLowerCase().includes(event.query.toLowerCase())
+        })]
+        this.currencyCodeList = currencyData;
+    }
+
+    selectedCurrencyName(object) {
+        const exists = selectedValueValidate('displayName', object, this.selectedRecordForEdit)
+        this.disableSaveCurrencyName = !exists;
+    }
+    checkCurrencyNameExists(field, value) {
+        const exists = validateRecordExistsOrNot(field, value, this.originalData, this.selectedRecordForEdit);
+        if (exists.length > 0) {
+            this.disableSaveCurrencyName = true;
+        }
+        else {
+            this.disableSaveCurrencyName = false;
+        }
+    }
+    filterCurrencyName(event) {
+        this.currencyNameList = this.originalData;
+        const currencyData = [...this.originalData.filter(x => {
+            return x.displayName.toLowerCase().includes(event.query.toLowerCase())
+        })]
+        this.currencyNameList = currencyData;
+    }
+
+    selectedCurrencySymbol(object) {
+        const exists = selectedValueValidate('symbol', object, this.selectedRecordForEdit)
+        this.disableSaveCurrencySymbol = !exists;
+    }
+    checkCurrencySymbolExists(field, value) {
+        const exists = validateRecordExistsOrNot(field, value, this.originalData, this.selectedRecordForEdit);
+        if (exists.length > 0) {
+            this.disableSaveCurrencySymbol = true;
+        }
+        else {
+            this.disableSaveCurrencySymbol = false;
+        }
+    }
+    filterCurrencySymbol(event) {
+        this.currencySymbolList = this.originalData;
+        const currencyData = [...this.originalData.filter(x => {
+            return x.symbol.toLowerCase().includes(event.query.toLowerCase())
+        })]
+        this.currencySymbolList = currencyData;
+    }
+
+    save() {
+        const data = {
+            ...this.addNew, createdBy: this.userName, updatedBy: this.userName,
+            displayName: editValueAssignByCondition('displayName', this.addNew.displayName),
+            code: editValueAssignByCondition('code', this.addNew.code),
+            symbol: editValueAssignByCondition('symbol', this.addNew.symbol),
+        };
+        if (!this.isEdit) {
+            this.currencyService.newAddcurrency(data).subscribe(() => {
+                this.resetForm();
+                this.getList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Added New Currency Successfully`,
+                    MessageSeverity.success
+                );
+            })
+        } else {
+            this.currencyService.updatecurrency(data).subscribe(() => {
+                this.selectedRecordForEdit = undefined;
+                this.isEdit = false;
+                this.resetForm();
+                this.getList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Updated Currency Successfully`,
+                    MessageSeverity.success
+                );
+            })
+        }
+    }
+
+    resetForm() {
+        this.isEdit = false;
+        this.selectedRecordForEdit = undefined;
+        this.addNew = { ...this.new };
+        this.disableSaveCurrencyCode = false;
+        this.disableSaveCurrencyName = false;
+        this.disableSaveCurrencySymbol = false;
+    }
+
+    viewSelectedRow(rowData) {
+        console.log(rowData);
+        this.viewRowData = rowData;
+    }
+
+    edit(rowData) {
+        console.log(rowData);
+        this.isEdit = true;
+        this.disableSaveCurrencyName = false;
+        this.disableSaveCurrencyCode = false;
+        this.disableSaveCurrencySymbol = false;
+
+        this.addNew = {
+            ...rowData,
+            displayName: getObjectByValue('displayName', rowData.displayName, this.originalData),
+            code: getObjectByValue('code', rowData.code, this.originalData),
+            symbol: getObjectByValue('symbol', rowData.symbol, this.originalData),
+        };
+        this.selectedRecordForEdit = { ...this.addNew }
+    }
+
+    resetViewData() {
+        this.viewRowData = undefined;
+    }
+    delete(rowData) {
+        this.selectedRowforDelete = rowData;
+    }
+
+    columnsChanges() {
+        this.refreshList();
+    }
+    refreshList() {
+        this.table.reset();
+        this.getList();
+    }
+    changeStatus(rowData) {
+        console.log(rowData);
+        const data = { ...rowData }
+        this.currencyService.updatecurrency(data).subscribe(() => {
+            this.alertService.showMessage(
+                'Success',
+                `Updated Status Successfully  `,
+                MessageSeverity.success
+            );
+        })
+    }
+    deleteConformation(value) {
+        if (value === 'Yes') {
+            this.currencyService.deletecurrency(this.selectedRowforDelete.currencyId).subscribe(() => {
+                this.getList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Deleted Currency Successfully  `,
+                    MessageSeverity.success
+                );
+            })
+        } else {
+            this.selectedRowforDelete = undefined;
+        }
+    }
+
+    getAuditHistoryById(rowData) {
+        this.currencyService.historycurrency(rowData.currencyId).subscribe(res => {
+            this.auditHistory = res;
+        })
+    }
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
+
+    customExcelUpload(event) {
+        // const file = event.target.files;
+
+        // console.log(file);
+        // if (file.length > 0) {
+
+        //     this.formData.append('file', file[0])
+        //     this.unitofmeasureService.UOMFileUpload(this.formData).subscribe(res => {
+        //         event.target.value = '';
+
+        //         this.formData = new FormData();
+        //         this.existingRecordsResponse = res;
+        //         this.getList();
+        //         this.alertService.showMessage(
+        //             'Success',
+        //             `Successfully Uploaded  `,
+        //             MessageSeverity.success
+        //         );
+
+        //     })
+        // }
+
+    }
+    sampleExcelDownload() {
+         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=Currency&fileName=currency.xlsx`;
+
+         window.location.assign(url);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*private loadData() {
         // debugger;
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -566,5 +850,5 @@ export class CurrencyComponent implements OnInit, AfterViewInit {
         }
         else {
         }
-    }
+    }*/
 }
