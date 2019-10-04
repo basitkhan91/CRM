@@ -20,7 +20,7 @@ namespace DAL.Repositories
         public IEnumerable<DAL.Models.EmployeeExpertise> getAllEmployeeExpertiseInfo()
         {
             //return _appContext.EmployeeExpertise.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.EmployeeExpertiseId).ToList();
-            return _appContext.EmployeeExpertise.Include("MasterCompany").Where(c => c.IsActive == true && c.IsDelete != null).OrderByDescending(c => c.EmployeeExpertiseId).ToList();
+            return _appContext.EmployeeExpertise.Include("MasterCompany").Where(c =>  c.IsDelete == false).OrderByDescending(c => c.EmployeeExpertiseId).ToList();
         }
 
 

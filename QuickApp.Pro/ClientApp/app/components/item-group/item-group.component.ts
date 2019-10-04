@@ -17,6 +17,7 @@ import { SingleScreenBreadcrumbService } from "../../services/single-screens-bre
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 import { getObjectByValue, validateRecordExistsOrNot, selectedValueValidate, editValueAssignByCondition, getObjectById } from '../../generic/autocomplete';
 import { Table } from 'primeng/table';
+import { ConfigurationService } from '../../services/configuration.service';
 
 @Component({
     selector: 'app-item-group',
@@ -74,7 +75,9 @@ export class ItemGroupComponent implements OnInit {
         private activeModal: NgbActiveModal,
         private _fb: FormBuilder,
         private alertService: AlertService,
-        public itemGroupService: ItemGroupService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+        public itemGroupService: ItemGroupService,
+        private configurations: ConfigurationService,
+        private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         // this.displayedColumns.push('action');
         // this.dataSource = new MatTableDataSource();
         // this.sourceAction = new Itemgroup();
@@ -139,9 +142,9 @@ export class ItemGroupComponent implements OnInit {
 
     }
     sampleExcelDownload() {
-        // const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=UnitOfMeasure&fileName=uom.xlsx`;
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=itemGroup&fileName=itemGroup.xlsx`;
 
-        // window.location.assign(url);
+        window.location.assign(url);
     }
 
     getList() {
@@ -246,6 +249,8 @@ export class ItemGroupComponent implements OnInit {
 
     resetForm() {
         this.isEdit = false;
+        this.disableSaveGroupId = false;
+        this.disableSaveForDescription = false;
         this.selectedRecordForEdit = undefined;
         this.addNew = { ...this.new };
     }
