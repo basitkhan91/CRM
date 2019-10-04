@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using DAL;
 using DAL.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using QuickApp.Pro.Helpers;
 using QuickApp.Pro.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -735,7 +733,7 @@ namespace QuickApp.Pro.Controllers
                             actionobject.DiscountPerUnit = poViewModel.DiscountPerUnit;
 
                             actionobject.POPartSplitUserTypeId = poPartSplit.POPartSplitUserTypeId;
-                            actionobject.POPartSplitUserId = poPartSplit.POPartSplitUserId;                            
+                            actionobject.POPartSplitUserId = poPartSplit.POPartSplitUserId;
                             actionobject.POPartSplitAddress1 = poPartSplit.POPartSplitAddress1;
                             actionobject.POPartSplitAddress2 = poPartSplit.POPartSplitAddress2;
                             actionobject.POPartSplitAddress3 = poPartSplit.POPartSplitAddress3;
@@ -791,7 +789,7 @@ namespace QuickApp.Pro.Controllers
                             actionobject.DiscountPerUnit = poViewModel.DiscountPerUnit;
 
                             actionobject.POPartSplitUserTypeId = poPartSplit.POPartSplitUserTypeId;
-                            actionobject.POPartSplitUserId = poPartSplit.POPartSplitUserId;                            
+                            actionobject.POPartSplitUserId = poPartSplit.POPartSplitUserId;
                             actionobject.POPartSplitAddress1 = poPartSplit.POPartSplitAddress1;
                             actionobject.POPartSplitAddress2 = poPartSplit.POPartSplitAddress2;
                             actionobject.POPartSplitAddress3 = poPartSplit.POPartSplitAddress3;
@@ -821,7 +819,6 @@ namespace QuickApp.Pro.Controllers
             {
 
                 if (_context.RepairOrder.Any(o => o.RepairOrderId == poViewModel.RepairOrderId))
-
                 {
                     if (poViewModel == null)
                         return BadRequest($"{nameof(poViewModel)} cannot be null");
@@ -866,8 +863,7 @@ namespace QuickApp.Pro.Controllers
                     actionobject.UpdatedDate = DateTime.Now;
                     actionobject.CreatedBy = "admin";
                     actionobject.UpdatedBy = "admin";
-                    _context.RepairOrder.Update(actionobject);
-                    _unitOfWork.SaveChanges();
+                    _context.SaveChanges();
                     return Ok(actionobject);
                 }
                 else

@@ -208,10 +208,10 @@
                         <th>WO</th>
                         <th>SO</th>
                         <th>Sub-WO</th>
-                        <th>CO</th>
-                        <th>BU</th>
+                        <th colspan="4" style="text-align: center;">Management Structure</th>
+                        <!-- <th>BU</th>
                         <th>Div</th>
-                        <th>Dep</th>
+                        <th>Dep</th> -->
                         <th>Site</th>
                         <th>Warehouse</th>
                         <th>Location</th>
@@ -247,31 +247,35 @@
                         <td>discount</td>
                         <td>extended cost</td>
                         <td>
-                            <select class="form-control" [disabled]="rpoEditPF">
+                            <input type="text" class="form-control" value="WO-45450" [disabled]="rpoEditPF">
+                            <!-- <select class="form-control" [disabled]="rpoEditPF">
                                 <option value="">WO-45450</option>
-                            </select>
+                            </select> -->
                         </td>
                         <td>
-                            <select class="form-control" [disabled]="rpoEditPF">
+                            <input type="text" class="form-control" value="SO-45450" [disabled]="rpoEditPF">
+                            <!-- <select class="form-control" [disabled]="rpoEditPF">
                                 <option value="">SO-45450</option>
                                 <option value="">SO-45451</option>
                                 <option value="">SO-45452</option>
                                 <option value="">SO-45453</option>
                                 <option value="">SO-45454</option>
                                 <option value="">SO-45455</option>
-                            </select>
+                            </select> -->
                         </td>
                         <td>
-                            <select class="form-control" [disabled]="rpoEditPF">
+                            <input type="text" class="form-control" value="SWO-45450" [disabled]="rpoEditPF">
+                            <!-- <select class="form-control" [disabled]="rpoEditPF">
                                 <option value="">SWO-45450</option>
                                 <option value="">SWO-45451</option>
                                 <option value="">SWO-45452</option>
                                 <option value="">SWO-45453</option>
                                 <option value="">SWO-45454</option>
                                 <option value="">SWO-45455</option>
-                            </select>
+                            </select> -->
                         </td>
                         <td>
+                            <label style="width:90px;">Company:</label>
                             <select class="form-control" [disabled]="rpoEditPF">
                                 <option value="">Adso</option>
                                 <option value="">Aerospace</option>
@@ -282,6 +286,7 @@
                             </select>
                         </td>
                         <td>
+                            <label style="width:90px;">BU:</label>
                             <select class="form-control" [disabled]="rpoEditPF">
                                 <option value="">Adso</option>
                                 <option value="">Aerospace</option>
@@ -292,6 +297,7 @@
                             </select>
                         </td>
                         <td>
+                                <label style="width:90px;">Division:</label>
                             <select class="form-control" [disabled]="rpoEditPF">
                                 <option value="">Designing</option>
                                 <option value="">Development</option>
@@ -299,6 +305,7 @@
                             </select>
                         </td>
                         <td>
+                                <label style="width:90px;">Dept:</label>
                             <select class="form-control" [disabled]="rpoEditPF">
                                 <option value="">.net</option>
                                 <option value="">HTML</option>
@@ -373,10 +380,10 @@
                         <th>Core SO</th>
                         <th>GL Account</th>
                         <th>Time Life</th>
-                        <th>CO</th>
-                        <th>BU</th>
+                        <th colspan="4" style="text-align: center;">Management Structure</th>
+                        <!-- <th>BU</th>
                         <th>Div</th>
-                        <th>Dep</th>
+                        <th>Dep</th> -->
                         <th>Site</th>
                         <th>Warehouse</th>
                         <th>Location</th>
@@ -410,34 +417,37 @@
                         <td> $400.00 </td>
                         <td>RO-55577</td>
                         <td>
-                            <select class="form-control" [disabled]="rpoEditCF">
+                                <input type="text" class="form-control" value="WO-45450" [disabled]="rpoEditCF">
+                            <!-- <select class="form-control" [disabled]="rpoEditCF">
                                 <option value="">WO-45450</option>
                                 <option value="">WO-45451</option>
                                 <option value="">WO-45452</option>
                                 <option value="">WO-45453</option>
                                 <option value="">WO-45454</option>
                                 <option value="">WO-45455</option>
-                            </select>
+                            </select> -->
                         </td>
                         <td>
-                            <select class="form-control" [disabled]="rpoEditCF">
+                                <input type="text" class="form-control" value="SO-45450" [disabled]="rpoEditCF">
+                            <!-- <select class="form-control" [disabled]="rpoEditCF">
                                 <option value="">SO-45450</option>
                                 <option value="">SO-45451</option>
                                 <option value="">SO-45452</option>
                                 <option value="">SO-45453</option>
                                 <option value="">SO-45454</option>
                                 <option value="">SO-45455</option>
-                            </select>
+                            </select> -->
                         </td>
                         <td>
-                            <select class="form-control" [disabled]="rpoEditCF">
+                                <input type="text" class="form-control" value="SWO-45450" [disabled]="rpoEditCF">
+                            <!-- <select class="form-control" [disabled]="rpoEditCF">
                                 <option value="">SWO-45450</option>
                                 <option value="">SWO-45451</option>
                                 <option value="">SWO-45452</option>
                                 <option value="">SWO-45453</option>
                                 <option value="">SWO-45454</option>
                                 <option value="">SWO-45455</option>
-                            </select>
+                            </select> -->
                         </td>
                         <td>
                             <select id="" name="" class="form-control disabled2 owner-selection" (change)="onOwnerChange($event)" [disabled]="rpoEditCF">
@@ -615,6 +625,7 @@
                             </div>
                         </td>
                         <td>
+                                <label style="width:90px;">Company:</label>
                             <select class="form-control" [disabled]="rpoEditCF">
                                 <option value="">Adso</option>
                                 <option value="">Aerospace</option>
@@ -625,6 +636,7 @@
                             </select>
                         </td>
                         <td>
+                                <label style="width:90px;">BU:</label>
                             <select class="form-control" [disabled]="rpoEditCF">
                                 <option value="">Adso</option>
                                 <option value="">Aerospace</option>
@@ -635,6 +647,7 @@
                             </select>
                         </td>
                         <td>
+                                <label style="width:90px;">Division:</label>
                             <select class="form-control" [disabled]="rpoEditCF">
                                 <option value="">Designing</option>
                                 <option value="">Development</option>
@@ -642,6 +655,7 @@
                             </select>
                         </td>
                         <td>
+                                <label style="width:90px;">Dept:</label>
                             <select class="form-control" [disabled]="rpoEditCF">
                                 <option value="">.net</option>
                                 <option value="">HTML</option>
