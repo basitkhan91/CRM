@@ -204,6 +204,7 @@ namespace DAL
         IAssetDepreciationInterval _assetDepreciationInterval;
 
         IPublicationTypesRepository _publicationTypesRepository;
+        ICommunicationRepository _communicationRepository;
 
         public UnitOfWork(ApplicationDbContext context, IOptions<AppSettings> appSettings)
         {
@@ -1752,6 +1753,16 @@ namespace DAL
                 if (_publicationTypesRepository == null)
                     _publicationTypesRepository = new PublicationTypesRepository(_context,_appSettings);
                 return _publicationTypesRepository;
+            }
+        }
+
+        public ICommunicationRepository CommunicationRepository
+        {
+            get
+            {
+                if (_communicationRepository == null)
+                    _communicationRepository = new CommunicationRepository(_context, _appSettings);
+                return _communicationRepository;
             }
         }
     }

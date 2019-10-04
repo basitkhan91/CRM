@@ -259,6 +259,7 @@ namespace DAL
         IAssetDepreciationInterval AssetDepreciationInterval { get; }
 
         IPublicationTypesRepository PublicationTypesRepository { get; }
+        ICommunicationRepository CommunicationRepository { get; }
         void SaveChanges(Employee employeeobject);
     }
 }

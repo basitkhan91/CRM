@@ -9,6 +9,7 @@
         Publication,
         UnitOfMeasure,
         Manufacturer,
-        ItemClassfication
+        ItemClassfication,
+        Memo
     }
 }

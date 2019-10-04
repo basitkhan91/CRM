@@ -388,7 +388,15 @@ namespace DAL
         public DbSet<WorkOrderQuote> WorkOrderQuote { get; set; }
         public DbSet<WorkOrderFreight> WorkOrderFreight { get; set; }
         public DbSet<PublicationTypeAudit> PublicationTypeAudit { get; set; }
-        
+        public DbSet<Memo> Memo { get; set; }
+        public DbSet<MemoAudit> MemoAudit { get; set; }
+        public DbSet<Email> Email { get; set; }
+        public DbSet<EmailAudit> EmailAudit { get; set; }
+        public DbSet<CommunicationContact> CommunicationContact { get; set; }
+        public DbSet<CommunicationContactAudit> CommunicationContactAudit { get; set; }
+        public DbSet<CommunicationChat> CommunicationChat { get; set; }
+        public DbSet<CommunicationChatAudit> CommunicationChatAudit { get; set; }
+
 
 
         public DbSet<AssetIntangibleAttributeType> AssetIntangibleAttributeType { get; set; }
