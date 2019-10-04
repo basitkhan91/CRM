@@ -7,7 +7,7 @@
                         <div class="inline-block display-flex">
                             <h3 class="po-head lead">Unit Of Measure</h3>
                             &nbsp;&nbsp;
-                            <a class="plusicon-cstm new-margin" pTooltip="Add Unit of Measure" tooltipPosition="right"  data-target="#addUOM" data-toggle="modal">
+                            <a class="plusicon-cstm new-margin" pTooltip="Add Unit of Measure" tooltipPosition="right" (click)="resetUOMForm()" data-target="#addUOM" data-toggle="modal">
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
                         </div>
@@ -210,7 +210,7 @@
            </form>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-primary-cstm"  data-dismiss="modal" [disabled]="UOM.invalid || disableSaveForUOM && disableSaveForShortName " (click)="saveUOM();"> {{isEdit ? 'Update' : 'Save' }}</button>
+            <button class="btn btn-primary-cstm"  data-dismiss="modal" [disabled]="UOM.invalid || disableSaveForUOM || disableSaveForShortName " (click)="saveUOM();"> {{isEdit ? 'Update' : 'Save' }}</button>
             <button type="button" class="btn btn-danger-cstm"  data-dismiss="modal" (click)="resetUOMForm()">Close</button>
     
         </div>
@@ -359,7 +359,7 @@
                     <span class="label ">
                         <b class="view-Header">IsActive</b>
                     </span>
-                    <span class="value">{{viewRowData.isActive}}</span>
+                    <span class="value">{{viewRowData.isActive === true ? 'Yes' : 'No'}}</span>
                 </p>
                 <p>
                     <span class="label ">

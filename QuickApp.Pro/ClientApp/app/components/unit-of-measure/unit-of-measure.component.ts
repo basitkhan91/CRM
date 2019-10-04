@@ -65,6 +65,7 @@ export class UnitOfMeasureComponent implements OnInit {
     ngOnInit(): void {
         this.getUOMList();
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-unit-of-measure';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
     }
 
     get userName(): string {
@@ -216,6 +217,8 @@ export class UnitOfMeasureComponent implements OnInit {
 
     resetUOMForm() {
         this.isEdit = false;
+        this.disableSaveForUOM = false;
+        this.disableSaveForShortName = false;
         this.selectedRecordForEdit = undefined;
         this.addNewUOM = { ...this.newUOM };
     }
