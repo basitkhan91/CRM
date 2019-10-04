@@ -9,6 +9,7 @@ using QuickApp.Pro.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -2716,6 +2717,53 @@ namespace QuickApp.Pro.Controllers
             _context.SaveChanges();
             return Ok(deleterecord);
 
+        }
+
+        [HttpPost("pagination")]
+        public IActionResult GetVendor([FromBody]VendorRepairOrderSearchViewModel paginate)
+        {
+            var getData = new GetData();
+            var vendorRepairOrderList = new List<VendorRepairOrderSearchViewModel>();
+            var repairOrders = _context.RepairOrder.OrderByDescending(c => c.RepairOrderId).ToList();
+
+            foreach (var repairOrder in repairOrders)
+            {
+                var vendorRepairOrder = new VendorRepairOrderSearchViewModel
+                {
+                    RONumber = repairOrder.RepairOrderNumber,
+                    RequestedBy = repairOrder.RequestedBy,
+                    DateApproval = repairOrder.DateApprovied,
+                    DateRequested = repairOrder.DateRequested,
+                    Approvar = repairOrder.Approver,
+                    CreatedBy = repairOrder.CreatedBy,
+                    UpdatedBy = repairOrder.UpdatedBy
+                };
+
+                vendorRepairOrderList.Add(vendorRepairOrder);
+            }
+
+            getData.TotalRecordsCount = vendorRepairOrderList.Count();
+
+            var queryable = paginate.sortField != null
+                            ? vendorRepairOrderList.AsQueryable().OrderBy(paginate.sortField)
+                            : vendorRepairOrderList.AsQueryable();
+
+            if (paginate != null)
+            {
+                var pageListPerPage = paginate.rows;
+                var pageIndex = paginate.first;
+                var pageCount = (pageIndex / pageListPerPage) + 1;
+                getData.VendorRepairOrderList = DAL.Common.PaginatedList<VendorRepairOrderSearchViewModel>.Create(queryable, pageCount, pageListPerPage);
+                return Ok(getData);
+            }
+            else
+                return BadRequest(new Exception("Error Occured while fetching vendor repair order specific details."));
+        }
+
+        public class GetData
+        {
+            public int TotalRecordsCount { get; set; }
+            public List<VendorRepairOrderSearchViewModel> VendorRepairOrderList { get; set; }
         }
 
         #region Capes

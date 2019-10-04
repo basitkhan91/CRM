@@ -129,7 +129,8 @@ export class VendorEndpointService extends EndpointFactory {
     private readonly _capesdata: string = "/api/Vendor/GetVendorCapesDatawithMasterId"; 
     private readonly _mancapPost: string = "/api/Vendor/VendorMancapespost";
 	private readonly _aircraftmodelsPost: string = "/api/Vendor/Aircraftpost";
-	private readonly _vendorContactsGetByID: string = "/api/Common/vendorcontacts";    
+	private readonly _vendorContactsGetByID: string = "/api/Common/vendorcontacts"; 
+    private readonly getVendor: string = "/api/vendor/pagination";
 
 	get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
 	get vendorlistsUrl() { return this.configurations.baseUrl + this._vendrUrl; }
@@ -178,6 +179,8 @@ export class VendorEndpointService extends EndpointFactory {
 
     get actionsUrlCaps() { return this.configurations.baseUrl + this._actionsCapsUrl; }
     get capesdata() { return this.configurations.baseUrl + this._capesdata; }
+
+    get paginate() { return this.configurations.baseUrl + this.getVendor; }
   
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
