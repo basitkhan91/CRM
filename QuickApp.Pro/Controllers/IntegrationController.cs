@@ -74,6 +74,7 @@ namespace QuickApp.Pro.Controllers
                 integrationobj.PortalUrl = integrationViewModel.PortalUrl;
                 integrationobj.Memo = integrationViewModel.Memo;
                 integrationobj.IsActive = integrationViewModel.IsActive;
+                integrationobj.IsDelete = false;
                 integrationobj.CreatedDate = DateTime.Now;
                 integrationobj.UpdatedDate = DateTime.Now;
                 integrationobj.CreatedBy = integrationViewModel.CreatedBy;
