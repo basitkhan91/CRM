@@ -96,6 +96,33 @@ namespace QuickApp.Pro.ViewModels
     }
     #endregion
 
+    #region Vendor
+
+    public class VendorRepairOrderSearchViewModel:  VendorRepairOrderModel, IPaginateViewModel,ISortedViewModel
+    {
+        public int first { get; set; }
+        public int page { get; set; }
+        public int pageCount { get; set; }
+        public int rows { get; set; }
+        public int limit { get; set; }
+        public string sortField { get; set; }
+        public int sortOrder { get; set; }
+        public int totalRecords { get; set; }
+    }
+
+    public class VendorRepairOrderModel
+    {
+        public string RONumber { get; set; }
+        public string RequestedBy { get; set; }
+        public  DateTime? DateApproval { get; set; }
+        public  DateTime DateRequested { get; set; }
+        public string Approvar { get; set; }
+        public string CreatedBy { get; set; }
+        public  string UpdatedBy { get; set; }
+    }
+
+    #endregion
+
     #region unitOfMeasure
     public class UnitOfMeasureSearchViewModel : UnitOfMeasureModel, IPaginateViewModel
     {
