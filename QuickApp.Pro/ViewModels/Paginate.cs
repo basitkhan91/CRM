@@ -478,6 +478,68 @@ namespace QuickApp.Pro.ViewModels
         public string AssetDepreciationIntervalMemo { get; set; }
     }
     #endregion
+
+    #region AssetIntangibleTypeSingleScreen
+   
+    public class AssetIntangibleTypeSingleScreenColModel
+    {
+
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string Memo { get; set; }
+    }
+
+    public class AssetIntangibleTypeSingleScreenSPModel
+    {
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string Memo { get; set; }
+        public long? AssetIntangibleTypeId { get; set; }
+        public Int32 MasterCompanyId { get; set; }
+
+        public bool? IsActive { get; set; }
+
+        public bool? IsDelete { get; set; }
+
+        public virtual MasterCompany MasterCompany { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public string UpdatedBy { get; set; }
+    }
+
+    #endregion
+
+    #region AssetDepConventionType
+
+    public class AssetDepConvensionColModel
+    {
+
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string Memo { get; set; }
+    }
+
+    public class AssetDepConvensionSPModel : AssetDepConvensionColModel
+    {
+        public long? AssetDepConventionId { get; set; }
+        public Int32 MasterCompanyId { get; set; }
+
+        public bool? IsActive { get; set; }
+
+        public bool? IsDelete { get; set; }
+
+        public virtual MasterCompany MasterCompany { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public string UpdatedBy { get; set; }
+    }
+
+    #endregion
+
     #region Credit Terms
     public class CreditTermsModel
     {
