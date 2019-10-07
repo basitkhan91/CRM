@@ -449,6 +449,45 @@ namespace QuickApp.Pro.ViewModels
     }
     #endregion
 
+    #region AssetDepConvension
+
+    public class AssetDepConvension : PasBase
+    {
+        public long? AssetDepConventionId { get; set; }     
+        public string AssetDepConventionCode { get; set; }
+        public string AssetDepConventionName { get; set; }
+        public string AssetDepConventionMemo { get; set; }
+        public Int32 MasterCompanyId { get; set; }
+        public bool? IsActive { get; set; }
+        public bool? IsDelete { get; set; }
+    }
+    public class AssetDepConvensionColModel
+    {
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string Memo { get; set; }
+    }
+
+    public class AssetDepConvensionSPModel : AssetDepConvensionColModel
+    {
+        
+            public long? AssetDepConventionId { get; set; }
+            public Int32 MasterCompanyId { get; set; }
+
+            public bool? IsActive { get; set; }
+
+            public bool? IsDelete { get; set; }
+
+            public virtual MasterCompany MasterCompany { get; set; }
+
+            public DateTime CreatedDate { get; set; }
+            public string CreatedBy { get; set; }
+            public DateTime? UpdatedDate { get; set; }
+            public string UpdatedBy { get; set; }
+    }
+    #endregion
+
+
     #region ATAChapter
     public class ATAChapterPaginationViewModel : ATAChapter, IPaginateViewModel
     {

@@ -39,7 +39,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getAll")]
         public IActionResult getAll()
         {
-            var assets = unitOfWork.Repository<AssetDepConventionType>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AssetDepConventionTypeId);
+            var assets = unitOfWork.Repository<AssetDepConventionType>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AssetDepConventionId);
             return Ok(assets);
         }
 
@@ -103,7 +103,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("removeById/{id}")]
         public IActionResult removeAssetDepById(long id)
         {
-            var assetDep = unitOfWork.Repository<AssetDepConventionType>().Find(x => x.AssetDepConventionTypeId == id).FirstOrDefault();
+            var assetDep = unitOfWork.Repository<AssetDepConventionType>().Find(x => x.AssetDepConventionId == id).FirstOrDefault();
             if (assetDep != null)
             {
                 assetDep.IsDelete = true;
