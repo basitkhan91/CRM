@@ -97,19 +97,7 @@ export class ConditionsComponent implements OnInit {
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
     }
 
-
-
-    private loadData() {
-        // debugger;
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-
-        this.conditionService.getConditionList().subscribe(
-            results => this.onDataLoadSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-
-    }
+       
     columnsChanges() {
         this.refreshList();
     }
@@ -130,9 +118,7 @@ export class ConditionsComponent implements OnInit {
         this.addNewCondition = { ...this.newCondition };
     }
 
-    public applyFilter(filterValue: string) {
-       // this.dataSource.filter = filterValue;
-    }
+   
     filterConditions(event) {
         this.conditionList = this.conditionData;
 
@@ -158,32 +144,13 @@ export class ConditionsComponent implements OnInit {
         this.disableSaveForCondition = !exists;
     }
 
-    private onDataLoadSuccessful(getConditionList: Condition[]) {
-        // alert('success');
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        //this.dataSource.data = getConditionList;
-
-        this.allConditionInfo = getConditionList;
-        this.totalRecords = this.allConditionInfo.length;
-    }
+   
     refreshList() {
        // this.table.reset();
         this.getConditionList();
     }
-    private onDataLoadFailed(error: any) {
-        // alert(error);
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-
-    }
-    private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
-        // alert('success');
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.allComapnies = allComapnies;
-
-    }
+   
+   
 
 
     delete(rowData) {
@@ -205,27 +172,7 @@ export class ConditionsComponent implements OnInit {
         }
     }
 
-    private loadMasterCompanies() {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-
-        this.masterComapnyService.getMasterCompanies().subscribe(
-            results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-
-    }
-    openHist(content, row) {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-        this.sourceAction = row;
-        this.isSaving = true;
-        this.conditionService.historyCondition(this.sourceAction.conditionId).subscribe(
-            results => this.onHistoryLoadSuccessful(results[0], content),
-            error => this.saveFailedHelper(error));
-
-
-    }
+  
     viewSelectedRow(rowData) {
         console.log(rowData);
         this.viewRowData = rowData;
@@ -272,11 +219,7 @@ export class ConditionsComponent implements OnInit {
             })
         }
     }
-
-
-
-
-
+          
 
     openHelpText(content) {
         this.modal = this.modalService.open(content, { size: 'sm' });
@@ -294,86 +237,12 @@ export class ConditionsComponent implements OnInit {
             this.localCollection = conditionName;
         }
     }
-    private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
-
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.auditHisory = auditHistory;
-        this.modal = this.modalService.open(content, { size: 'lg' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-
-
-    }
-    handleChange(rowData, e) {
-        if (e.checked == false) {
-            this.sourceAction = rowData;
-            this.sourceAction.updatedBy = this.userName;
-            this.Active = "In Active";
-            this.sourceAction.isActive == false;
-            this.conditionService.updateCondition(this.sourceAction).subscribe(
-                response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));
-            //alert(e);
-        }
-        else {
-            this.sourceAction = rowData;
-            this.sourceAction.updatedBy = this.userName;
-            this.Active = "Active";
-            this.sourceAction.isActive == true;
-            this.conditionService.updateCondition(this.sourceAction).subscribe(
-                response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));
-            //alert(e);
-        }
-    }
-
-    private saveCompleted(user?: Condition) {
-        this.isSaving = false;
-
-        if (this.isDeleteMode == true) {
-            this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
-            this.isDeleteMode = false;
-        }
-        else {
-            this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
-
-        }
-
-        this.loadData();
-    }
-
-    private saveSuccessHelper(role?: Condition) {
-        this.isSaving = false;
-        this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
-
-        this.loadData();
-
-    }
+    
 
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
 
-    private saveFailedHelper(error: any) {
-        this.isSaving = false;
-        this.alertService.stopLoadingMessage();
-        this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
-        this.alertService.showStickyMessage(error, null, MessageSeverity.error);
-    }
-
-    private getDismissReason(reason: any): string {
-        if (reason === ModalDismissReasons.ESC) {
-            return 'by pressing ESC';
-        } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-            return 'by clicking on a backdrop';
-        } else {
-            return `with: ${reason}`;
-        }
-    }
-
- 
 
     getAuditHistoryById(rowData) {
         this.conditionService.getConditionAudit(rowData.conditionId).subscribe(res => {
