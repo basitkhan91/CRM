@@ -110,5 +110,14 @@ namespace QuickApp.Pro.Controllers
                 {".csv", "text/csv"}
             };
         }
+
+        [HttpPost]
+        [Route("uploadcustomfile")]
+        public IActionResult UploadCustomFile()
+        {
+            _unitOfWork.FileUploadRepository.UploadCustomFile(Convert.ToString(Request.Form["ModuleName"]), Request.Form.Files[0]);
+            return Ok();
+
+        }
     }
 }

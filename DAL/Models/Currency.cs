@@ -13,11 +13,11 @@ namespace DAL.Models
 
         public string Code { get; set; }
 
-        public string Memo { get; set; }
-
         public string Symbol { get; set; }
 
         public string DisplayName { get; set; }
+
+        public string Memo { get; set; }
 
         // public Int32 MasterCompanyId { get; set; }
 

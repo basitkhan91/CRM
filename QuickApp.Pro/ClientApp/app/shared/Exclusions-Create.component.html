@@ -19,7 +19,7 @@
         <tr  [hidden]="exclusion.isDelete" *ngFor="let exclusion of workFlow.exclusions; let i = index">
                 <td>{{(currentPage - 1) * itemsPerPage + i + 1}}</td>
             <td>
-                <p-autoComplete (onSelect)="onPartSelect($event,exclusion)"
+                <p-autoComplete (onSelect)="onPartSelect($event, exclusion)"
                                 [suggestions]="partCollection"
                                 (completeMethod)="filterpartItems($event)"
                                 [size]="30"

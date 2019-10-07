@@ -32,7 +32,7 @@
             <tr class="material-tr" [hidden]="material.isDelete" *ngFor="let material of workFlow.materialList;let i = index">
                 <td>{{(currentPage - 1) * itemsPerPage + i + 1}}</td>
                 <td>
-                    <p-autoComplete (onSelect)="onPartSelect($event,material)" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [(ngModel)]="material.partNumber"
+                    <p-autoComplete (onSelect)="onPartSelect($event, material)" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [(ngModel)]="material.partNumber"
                                     [minLength]="1" [dropdown]="true" class="workflow-measurement-select">
                         <ng-template let-partName pTemplate="part">
                             <div class="ui-helper-clearfix">{{partName}}</div>
