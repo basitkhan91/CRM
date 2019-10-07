@@ -17,7 +17,8 @@ import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 import { Router } from '@angular/router';
-import { validateRecordExistsOrNot, getObjectByValue, editValueAssignByCondition } from '../../generic/autocomplete';
+import { Table } from 'primeng/table';
+import { validateRecordExistsOrNot, getObjectById, getObjectByValue, selectedValueValidate, editValueAssignByCondition } from '../../generic/autocomplete';
 @Component({
     selector: 'app-conditions',
     templateUrl: './conditions.component.html',
@@ -25,17 +26,10 @@ import { validateRecordExistsOrNot, getObjectByValue, editValueAssignByCondition
     animations: [fadeInOut]
 })
 /** Conditions component*/
-export class ConditionsComponent implements OnInit, AfterViewInit {
+export class ConditionsComponent implements OnInit {
     selectedActionName: any;
-    disableSave: boolean;
     actionamecolle: any[] = [];
-    condition_Name: any = "";
-    description: any = "";
-    memo: any = "";
-    createdBy: any = "";
-    updatedBy: any = "";
-    createdDate: any = "";
-    updatedDate: any = "";
+
     AuditDetails: SingleScreenAuditDetails[];
     auditHisory: AuditHistory[];
     /** Conditions ctor */
@@ -44,8 +38,8 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
     selectedColumns: any[];
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
-    displayedColumns = ['conditionId', 'discription', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
-    dataSource: MatTableDataSource<Condition>;
+
+ 
     allConditionInfo: Condition[] = [];
     sourceAction: Condition;
     loadingIndicator: boolean;
@@ -62,34 +56,48 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
     filteredBrands: any[];
     localCollection: any[] = [];
     Active: string = "Active";
-    totalRecords: number;
+
+    viewRowData: any;
+    auditHistory: any;
+    selectedRowforDelete: any;
+    
+    conditionData: any;
+    conditionList: any;
+    conditionHeaders = [
+        
+            { field: 'description', header: 'Condition Name' },
+            { field: 'memo', header: 'Memo' },
+
+        ];
+    totalRecords: any;
+    pageIndex: number = 0;
+    pageSize: number = 10;
+    totalPages: number;
+    private table: Table;
+    selectedRecordForEdit: any;
+    newCondition =
+        {
+            description: "",
+            masterCompanyId: 1,
+            isActive: true,
+            isDelete: false,
+            memo: ""
+        };
+    addNewCondition= {...this.newCondition};
+    disableSaveForCondition: boolean;
     /** Currency ctor */
     constructor(public router: Router, private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, private masterComapnyService: MasterComapnyService, private modalService: NgbModal, public conditionService: ConditionService, private dialog: MatDialog) {
-        this.displayedColumns.push('action');
-        this.dataSource = new MatTableDataSource();
+         
 
     }
     ngOnInit(): void {
-        this.loadData();
-        this.cols = [
-            //{ field: 'conditionId', header: 'Condition ID' },
-
-            { field: 'description', header: 'Condition Name' },
-            { field: 'memo', header: 'Memo' },
-            { field: 'createdBy', header: 'Created By' },
-            { field: 'updatedBy', header: 'Updated By' },
-            // { field: 'updatedDate', header: 'Updated Date' },
-            //{ field: 'createdDate', header: 'Created Date' }
-        ];
+        this.selectedColumns = this.conditionHeaders;
+        this.getConditionList();
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-conditions';
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
-        this.selectedColumns = this.cols;
     }
 
-    ngAfterViewInit() {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-    }
+
 
     private loadData() {
         // debugger;
@@ -102,24 +110,67 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
         );
 
     }
-    public applyFilter(filterValue: string) {
-        this.dataSource.filter = filterValue;
+    columnsChanges() {
+        this.refreshList();
+    }
+    private getConditionList() {
+        this.conditionService.getAllConditionList().subscribe(res => {
+            const respData = res[0];
+            this.conditionData = respData.columnData;
+            this.totalRecords = respData.totalRecords;
+            this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+        });
     }
 
-    private refresh() {
-        // Causes the filter to refresh there by updating with recently added data.
-        this.applyFilter(this.dataSource.filter);
+    resetConditionForm() {
+        this.isEditMode = false;
+        this.disableSaveForCondition = false;
+     
+        this.selectedRecordForEdit = undefined;
+        this.addNewCondition = { ...this.newCondition };
     }
+
+    public applyFilter(filterValue: string) {
+       // this.dataSource.filter = filterValue;
+    }
+    filterConditions(event) {
+        this.conditionList = this.conditionData;
+
+        const CONDITIONData = [...this.conditionData.filter(x => {
+            return x.description.toLowerCase().includes(event.query.toLowerCase())
+        })]
+        this.conditionList = CONDITIONData;
+    }
+
+    checkConditionExists(field, value) {
+        const exists = validateRecordExistsOrNot(field, value, this.conditionData, this.selectedRecordForEdit);
+        if (exists.length > 0) {
+            this.disableSaveForCondition = true;
+        }
+        else {
+            this.disableSaveForCondition = false;
+        }
+
+    }
+    selectedCondition(object) {
+        const exists = selectedValueValidate('description', object, this.selectedRecordForEdit)
+
+        this.disableSaveForCondition = !exists;
+    }
+
     private onDataLoadSuccessful(getConditionList: Condition[]) {
         // alert('success');
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.dataSource.data = getConditionList;
+        //this.dataSource.data = getConditionList;
 
         this.allConditionInfo = getConditionList;
         this.totalRecords = this.allConditionInfo.length;
     }
-
+    refreshList() {
+       // this.table.reset();
+        this.getConditionList();
+    }
     private onDataLoadFailed(error: any) {
         // alert(error);
         this.alertService.stopLoadingMessage();
@@ -135,32 +186,25 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
     }
 
 
-    open(content) {
-        this.disableSave = false;
-        this.isEditMode = false;
-        this.isDeleteMode = false;
-        this.isSaving = true;
-        this.loadMasterCompanies();
-        this.sourceAction = new Condition();
-        this.sourceAction.isActive = true;
-        this.sourceAction.description = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+    delete(rowData) {
+        this.selectedRowforDelete = rowData;
+
+    }
+    deleteConformation(value) {
+        if (value === 'Yes') {
+            this.conditionService.deleteCondition(this.selectedRowforDelete.conditionId).subscribe(() => {
+                this.getConditionList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Deleted Condition Successfully  `,
+                    MessageSeverity.success
+                );
+            })
+        } else {
+            this.selectedRowforDelete = undefined;
+        }
     }
 
-
-    openDelete(content, row) {
-        this.isEditMode = false;
-        this.isDeleteMode = true;
-        this.sourceAction = row;
-        this.condition_Name = row.description;
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
     private loadMasterCompanies() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -171,20 +215,6 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
         );
 
     }
-    openEdit(content, row) {
-        this.isEditMode = true;
-        this.disableSave = false;
-        this.isSaving = true;
-        this.loadMasterCompanies();
-        this.sourceAction = {...row};
-        this.sourceAction.description = getObjectByValue('description', row.description, this.allConditionInfo);
-        this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
-
     openHist(content, row) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -196,42 +226,65 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
 
 
     }
-    openView(content, row) {
-
-        this.sourceAction = row;
-        this.condition_Name = row.description;
-        this.memo = row.memo;
-        this.createdBy = row.createdBy;
-        this.updatedBy = row.updatedBy;
-        this.createdDate = row.createdDate;
-        this.updatedDate = row.updatedDate;
-        this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+    viewSelectedRow(rowData) {
+        console.log(rowData);
+        this.viewRowData = rowData;
     }
+
+    resetViewData() {
+        this.viewRowData = undefined;
+    }
+    edit(rowData) {
+        console.log(rowData);
+        this.isEditMode = true;
+        this.disableSaveForCondition = false;
+        this.addNewCondition = { ...rowData, description: getObjectById('conditionId', rowData.conditionId, this.conditionData) };
+        this.selectedRecordForEdit = { ...this.addNewCondition }
+        console.log(this.addNewCondition);
+    }
+
+    saveCondition() {
+         const data = {
+            ...this.addNewCondition, createdBy: this.userName, updatedBy: this.userName,
+            description: editValueAssignByCondition('description', this.addNewCondition.description)
+        };
+        if (!this.isEditMode) {
+            this.conditionService.newAddCondition(data).subscribe(() => {
+                this.resetConditionForm();
+                this.getConditionList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Added  New Condition Successfully`,
+                    MessageSeverity.success
+                );
+            })
+        } else {
+            this.conditionService.updateCondition(data).subscribe(() => {
+                this.selectedRecordForEdit = undefined;
+                this.isEditMode = false;
+                this.resetConditionForm();
+                this.getConditionList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Updated Condition Successfully`,
+                    MessageSeverity.success
+                );
+            })
+        }
+    }
+
+
+
+
+
+
     openHelpText(content) {
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-    eventHandler(field, value) {
-        value = value.trim();
-        const exists = validateRecordExistsOrNot(field, value, this.allConditionInfo);
-        // console.log(exists);
-        if (exists.length > 0) {
-            this.disableSave = true;
-        }
-        else {
-            this.disableSave = false;
-        }
-    }
-    ConditionId(event) {
-        //debugger;
-       this.disableSave = true;
-    }
+   
     filterconditions(event) {
         this.localCollection = this.allConditionInfo;
         if (event.query !== undefined && event.query !== null) {
@@ -274,46 +327,6 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
                 error => this.saveFailedHelper(error));
             //alert(e);
         }
-    }
-    SaveandEditCondition() {
-        // debugger;
-        this.isSaving = true;
-
-        if (this.isEditMode == false) {
-            this.sourceAction.createdBy = this.userName;
-            this.sourceAction.updatedBy = this.userName;
-            //this.sourceAction.description = this.description;
-            this.sourceAction.masterCompanyId = 1;
-            this.conditionService.newAddCondition(this.sourceAction).subscribe(
-                role => this.saveSuccessHelper(role),
-                error => this.saveFailedHelper(error));
-        }
-        else {
-
-            this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.masterCompanyId = 1;
-            this.sourceAction.description = editValueAssignByCondition('description', this.sourceAction.description);
-            this.conditionService.updateCondition(this.sourceAction).subscribe(
-                response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));
-        }
-
-        this.modal.close();
-    }
-
-    deleteItemAndCloseModel() {
-        this.isSaving = true;
-        this.sourceAction.updatedBy = this.userName;
-        this.conditionService.deleteCondition(this.sourceAction.conditionId).subscribe(
-            response => this.saveCompleted(this.sourceAction),
-            error => this.saveFailedHelper(error));
-        this.modal.close();
-    }
-
-    dismissModel() {
-        this.isDeleteMode = false;
-        this.isEditMode = false;
-        this.modal.close();
     }
 
     private saveCompleted(user?: Condition) {
@@ -360,19 +373,24 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
         }
     }
 
-    showAuditPopup(template, id): void {
-        this.auditCondition(id);
-        this.modal = this.modalService.open(template, { size: 'sm' });
-    }
+ 
 
-    auditCondition(conditionId: number): void {
-        this.AuditDetails = [];
-        this.conditionService.getConditionAudit(conditionId).subscribe(audits => {
-            if (audits.length > 0) {
-                this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["conditionAuditId", "conditionId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
-            }
-        });
+    getAuditHistoryById(rowData) {
+        this.conditionService.getConditionAudit(rowData.conditionId).subscribe(res => {
+            this.auditHistory = res;
+        })
     }
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
+  
 
 }
