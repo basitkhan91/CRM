@@ -49,6 +49,7 @@ export class ActionEndpoint extends EndpointFactory {
 	private AddMeasurementURL: string = "api/workflow/addMeasurement";
 	private AddPublicationURL: string = "api/workflow/addPublication";
     private getWorkFlowURL: string = "api/workflow/getworkflow";
+    private getWorkFlowWithMaterialURL: string = "api/workflow/getWorkFlowWithMaterialList";
     private toggleStateURL: string = "api/workflow/toggleState";
 
 	private UpdateChargesURL: string = "api/workflow/updateCharges";
@@ -77,14 +78,20 @@ export class ActionEndpoint extends EndpointFactory {
     }
 
 	getWorkFlow<T>(workflowid:any): Observable<T> {
-		//let endpointurl = this.getWorkFlowURL
-
 		let endpointUrl = `${this.getWorkFlowURL}/${workflowid}`;
 		return this.http.get<T>(endpointUrl, this.getRequestHeaders())
 			.catch(error => {
 				return this.handleError(error, () => this.getWorkFlow(workflowid));
 			});
-	}
+    } 
+
+    getWorkFlowWithMaterialList<T>(workflowid: any): Observable<T> {
+        let endpointUrl = `${this.getWorkFlowWithMaterialURL}/${workflowid}`;
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getWorkFlowWithMaterialList(workflowid));
+            });
+    }
 
     removeWorkFlow<T>(workFlowId: number): Observable<T> {
         let endpointUrl = `${this.RemoveWorkFlowURL}/${workFlowId}`;

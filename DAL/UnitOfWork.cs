@@ -202,7 +202,9 @@ namespace DAL
         
         IAssetIntangibleAttributeType _assetIntangibleAttributeType;
         IAssetDepreciationInterval _assetDepreciationInterval;
-        
+
+        IPublicationTypesRepository _publicationTypesRepository;
+
         public UnitOfWork(ApplicationDbContext context, IOptions<AppSettings> appSettings)
         {
             _context = context;
@@ -614,7 +616,7 @@ namespace DAL
             get
             {
                 if (_itemclassfifcation == null)
-                    _itemclassfifcation = new ItemClassificationRepository(_context);
+                    _itemclassfifcation = new ItemClassificationRepository(_context,_appSettings);
                 return _itemclassfifcation;
             }
         }
@@ -703,7 +705,7 @@ namespace DAL
             get
             {
                 if (_unitOfMeasureRepository == null)
-                    _unitOfMeasureRepository = new UnitOfMeasureRepository(_context);
+                    _unitOfMeasureRepository = new UnitOfMeasureRepository(_context, _appSettings);
                 return _unitOfMeasureRepository;
 
             }
@@ -951,7 +953,7 @@ namespace DAL
             get
             {
                 if (_manufacturerRepository == null)
-                    _manufacturerRepository = new ManufacturerRepository(_context);
+                    _manufacturerRepository = new ManufacturerRepository(_context,_appSettings);
                 return _manufacturerRepository;
             }
         }
@@ -1740,6 +1742,16 @@ namespace DAL
                 if (_fileUploadRepository == null)
                     _fileUploadRepository = new FileUploadRepository(_context, _appSettings);
                 return _fileUploadRepository;
+            }
+        }
+
+        public IPublicationTypesRepository PublicationTypesRepository
+        {
+            get
+            {
+                if (_publicationTypesRepository == null)
+                    _publicationTypesRepository = new PublicationTypesRepository(_context,_appSettings);
+                return _publicationTypesRepository;
             }
         }
     }

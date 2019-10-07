@@ -40,7 +40,7 @@ export class WorkScopeService {
         return Observable.forkJoin(
             this.workscopeEndpoint.getWorkScopeEndpoint<WorkScope[]>());
     }
-    newWorkScope(workscope: WorkScope) {
+    newWorkScope(workscope) {
         return this.workscopeEndpoint.getNewWorkScopeEndpoint<WorkScope>(workscope);
     }
 
@@ -52,7 +52,7 @@ export class WorkScopeService {
         return this.workscopeEndpoint.getEditWorkScopeEndpoint<WorkScope>(workScopeId);
     }
 
-    updateWorkScope(workscope: WorkScope) {
+    updateWorkScope(workscope) {
         return this.workscopeEndpoint.getUpdateWorkScopeEndpoint(workscope, workscope.workScopeId);
     }
 

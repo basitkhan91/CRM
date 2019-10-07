@@ -16,7 +16,7 @@ namespace DAL.Models
         [Required(ErrorMessage = "Name Is Required.")]
         public string AssetDepreciationMethodName { get; set; }
 
-        //public string AssetDepreciationBasis { get; set; }
+        public string AssetDepreciationMethodCode { get; set; }
         public string AssetDepreciationMethodBasis { get; set; }
         public string AssetDepreciationMemo { get; set; }
 

@@ -53,7 +53,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     depricationMethod.CreatedDate = DateTime.Now;
                     depricationMethod.UpdatedDate = DateTime.Now;
-                    depricationMethod.IsActive = true;
+                    depricationMethod.IsActive = depricationMethod.IsActive;
                     depricationMethod.MasterCompanyId = 1;
                     unitOfWork.Repository<AssetDepreciationMethod>().Add(depricationMethod);
                     unitOfWork.SaveChanges();
@@ -132,32 +132,35 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetAll()
         {
             List<ColumHeader> columHeaders = new List<ColumHeader>();
-            PropertyInfo[] propertyInfos = typeof(AssetDepreciationMethodModel).GetProperties();
+            PropertyInfo[] propertyInfos = typeof(AssetDepreciationMethodColModel).GetProperties();
             ColumHeader columnHeader;
-            DynamicGridData<AssetDepreciationMethodModel> dynamicGridData = new DynamicGridData<AssetDepreciationMethodModel>();
+            DynamicGridData<dynamic> dynamicGridData = new DynamicGridData<dynamic>();
             foreach (PropertyInfo property in propertyInfos)
             {
                 columnHeader = new ColumHeader();
-                columnHeader.field = property.Name;
+                columnHeader.field = char.ToLower(property.Name[0]) + property.Name.Substring(1);//FirstCharToUpper(property.Name);
+                // columnHeader.field = property.Name;
                 columnHeader.header = property.Name;
                 columHeaders.Add(columnHeader);
             }
             dynamicGridData.columHeaders = columHeaders;
-            List<AssetDepreciationMethodModel> assetDepreciationMethods = new List<AssetDepreciationMethodModel>();
-            AssetDepreciationMethodModel assetDepreciationMethod = null;
+            List<AssetDepreciationMethodSPModel> assetDepreciationMethods = new List<AssetDepreciationMethodSPModel>();
+            AssetDepreciationMethodSPModel assetDepreciationMethod = null;
             var gLAccounts = unitOfWork.Repository<AssetDepreciationMethod>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AssetDepreciationMethodId);
             foreach (var item in gLAccounts)
             {
-                assetDepreciationMethod = new AssetDepreciationMethodModel();
+                assetDepreciationMethod = new AssetDepreciationMethodSPModel();
+
+                assetDepreciationMethod.Code = item.AssetDepreciationMethodCode;
+                assetDepreciationMethod.Name = item.AssetDepreciationMethodName;
+                assetDepreciationMethod.DepreciationMethod = item.AssetDepreciationMethodBasis;
+                assetDepreciationMethod.Memo = item.AssetDepreciationMemo;
                 assetDepreciationMethod.AssetDepreciationMethodId = item.AssetDepreciationMethodId;
-                assetDepreciationMethod.AssetDepreciationMethodName = item.AssetDepreciationMethodName;
-                //assetDepreciationMethod.AssetDepreciationMethodCode = item.AssetDepreciationMethodCode;
-                assetDepreciationMethod.AssetDepreciationMethodBasis = item.AssetDepreciationMethodBasis;
                 assetDepreciationMethod.CreatedDate = item.CreatedDate;
                 assetDepreciationMethod.CreatedBy = item.CreatedBy;
                 assetDepreciationMethod.UpdatedDate = item.UpdatedDate;
                 assetDepreciationMethod.UpdatedBy = item.UpdatedBy;
-                //currency.IsActive = item.IsActive;
+                assetDepreciationMethod.IsActive = item.IsActive;
                 assetDepreciationMethods.Add(assetDepreciationMethod);
             }
             dynamicGridData.ColumnData = assetDepreciationMethods;

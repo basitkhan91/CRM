@@ -241,8 +241,7 @@ namespace DAL
         public DbSet<MaterialMandatory> MaterialMandatories { get; set; }
         public DbSet<MaterialUOM> MaterialUOMs { get; set; }
 
-        public DbSet<PublicationType> PublicationTypes { get; set; }
-        public DbSet<PublicationAircraftManufacturer> PublicationAircraftManufacturers { get; set; }
+        public DbSet<PublicationType> PublicationType { get; set; }
         public DbSet<PublicationModel> PublicationModels { get; set; }
         public DbSet<PublicationStatus> PublicationStatuses { get; set; }
         public DbSet<ExclusionEstimatedOccurance> ExclusionEstimatedOccurances { get; set; }
@@ -377,6 +376,20 @@ namespace DAL
         public DbSet<RestrictedParts> RestrictedParts { get; set; }
         public DbSet<MasterParts> MasterParts { get; set; }
         public DbSet<Nha_Tla_Alt_Equ_ItemMapping> Nha_Tla_Alt_Equ_ItemMapping { get; set; }
+
+        public DbSet<WorkFlowWorkOrder> WorkFlowWorkOrder { get; set; }
+        public DbSet<WorkOrderLaborHeader> WorkOrderLaborHeader { get; set; }
+        public DbSet<WorkOrderCharges> WorkOrderCharges { get; set; }
+        public DbSet<WorkOrderAssets> WorkOrderAssets { get; set; }
+        public DbSet<WorkOrderExclusions> WorkOrderExclusions { get; set; }
+        public DbSet<WorkOrderMaterials> WorkOrderMaterials { get; set; }
+        public DbSet<WorkOrderDocuments> WorkOrderDocuments { get; set; }
+        public DbSet<WorkOrderAddress> WorkOrderAddress { get; set; }
+        public DbSet<WorkOrderQuote> WorkOrderQuote { get; set; }
+        public DbSet<WorkOrderFreight> WorkOrderFreight { get; set; }
+        public DbSet<PublicationTypeAudit> PublicationTypeAudit { get; set; }
+        
+
 
         public DbSet<AssetIntangibleAttributeType> AssetIntangibleAttributeType { get; set; }
 

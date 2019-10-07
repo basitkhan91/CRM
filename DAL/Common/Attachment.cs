@@ -20,7 +20,7 @@ namespace DAL.Common
         public string UpdatedBy { get; set; }
         public DateTime UpdatedDate { get; set; }
         public bool IsActive { get; set; }
-        public bool IsDelete { get; set; }
+        public bool IsDeleted { get; set; }
 
         public List<AttachmentDetails> AttachmentDetails { get; set; }
     }

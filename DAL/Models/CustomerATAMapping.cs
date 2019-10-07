@@ -14,7 +14,6 @@ namespace DAL.Models
         public long CustomerId { get; set; }
         public long ATAChapterId { get; set; }
         public long ATASubChapterId { get; set; }
-        public string PartNumber { get; set; }
         public int ATAChapterCode { get; set; }
         public string ATAChapterName { get; set; }
         public string ATASubChapterDescription { get; set; }

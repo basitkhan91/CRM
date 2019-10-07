@@ -1,4 +1,5 @@
 ﻿using DAL.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,8 @@ namespace DAL.Repositories.Interfaces
     {
         IEnumerable<DAL.Models.ItemClassfication> getItemClassification();
         new IQueryable<ItemClassfication> GetPaginationData();
+
+        IEnumerable<ItemClassfication> UploadCustomData(IFormFile file);
 
         //  void CreateAction(DAL.Models.Action action);
 

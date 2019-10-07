@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DAL.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -11,46 +12,37 @@ namespace DAL.Models
 
         [Key]
         public long PublicationRecordId { get; set; }
+        public DateTime EntryDate { get; set; }
         public string  PublicationId { get; set; }
-
-        
-        public string Memo { get; set; }
-
         public string Description { get; set; }
-
-        public string Platform { get; set; }
+        [Required(ErrorMessage = "Please select Publication Type")]
+        public int PublicationTypeId { get; set; }
+        public string ASD { get; set; }
+        public string Sequence { get; set; }
+        public string Publishby { get; set; }
+        public string Location { get; set; }
+        public DateTime RevisionDate { get; set; }
+        public DateTime ExpirationDate { get; set; }
+        public DateTime NextReviewDate { get; set; }
+        [Required(ErrorMessage = "Please select Employee")]
+        public long EmployeeId { get; set; }
+        public string VerifiedBy { get; set; }
+        public Nullable<DateTime> VerifiedDate { get; set; }
 
         [ForeignKey("MasterCompanyId")]
         public Int32 MasterCompanyId { get; set; }
-
         public string CreatedBy { get; set; }
-
         public string UpdatedBy { get; set; }
-
         public DateTime CreatedDate { get; set; }
-
         public DateTime UpdatedDate { get; set; }
-
-        public DateTime EntryDate { get; set; }
-
         public bool? IsActive { get; set; }
-
-        public virtual MasterCompany MasterCompany { get; set; }
-
         public bool? IsDeleted { get; set; }
-
-        public DateTime revisionDate { get; set; }
-        public DateTime nextreviewDate { get; set; }
-
-        public string ASD { get; set; }
-        public string publishby { get; set; }
-        public string location { get; set; }
-        public string revision { get; set; }
-
-        public string verifiedby { get; set; }
-        public Nullable<DateTime> verifieddate { get; set; }
-        public string employee { get; set; }
-        public string docpath { get; set; }
+        
+        [NotMapped]
+        public long AttachmentId { get; set; }
+        
+        [NotMapped]
+        public List<AttachmentDetails> AttachmentDetails { get; set; }
     }
 }
 

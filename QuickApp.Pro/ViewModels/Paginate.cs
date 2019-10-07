@@ -31,7 +31,10 @@ namespace QuickApp.Pro.ViewModels
     {
         public List<ColumHeader> columHeaders { get; set; }
         public IEnumerable<T> ColumnData { get; set; }
-    } 
+
+		public int TotalRecords { get; set;  }
+
+	} 
     #endregion
 
     public class PaginateViewModel
@@ -91,6 +94,33 @@ namespace QuickApp.Pro.ViewModels
 
         public string CustomerClarifiacationName { get; set; }
     }
+    #endregion
+
+    #region Vendor
+
+    public class VendorRepairOrderSearchViewModel:  VendorRepairOrderModel, IPaginateViewModel,ISortedViewModel
+    {
+        public int first { get; set; }
+        public int page { get; set; }
+        public int pageCount { get; set; }
+        public int rows { get; set; }
+        public int limit { get; set; }
+        public string sortField { get; set; }
+        public int sortOrder { get; set; }
+        public int totalRecords { get; set; }
+    }
+
+    public class VendorRepairOrderModel
+    {
+        public string RONumber { get; set; }
+        public string RequestedBy { get; set; }
+        public  DateTime? DateApproval { get; set; }
+        public  DateTime DateRequested { get; set; }
+        public string Approvar { get; set; }
+        public string CreatedBy { get; set; }
+        public  string UpdatedBy { get; set; }
+    }
+
     #endregion
 
     #region unitOfMeasure
@@ -438,14 +468,43 @@ namespace QuickApp.Pro.ViewModels
     #region AssetDepreciationMethod
     public class AssetDepreciationMethodModel : PasBase
     {
-        public long? AssetDepreciationMethodId { get; set; }
+       public long? AssetDepreciationMethodId { get; set; }
         public string AssetDepreciationMethodName { get; set; }
 
         public string AssetDepreciationMethodCode { get; set; }
         public string AssetDepreciationMethodBasis { get; set; }
         public string AssetDepreciationMemo { get; set; }
         public Int32 MasterCompanyId { get; set; }
-        //public bool? IsActive { get; set; }
+        public bool? IsActive { get; set; }
+    }
+
+    public class AssetDepreciationMethodSPModel
+    {
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string DepreciationMethod { get; set; }
+        public string Memo { get; set; }
+        public long? AssetDepreciationMethodId { get; set; }
+        public Int32 MasterCompanyId { get; set; }
+
+        public bool? IsActive { get; set; }
+
+        public bool? IsDelete { get; set; }
+
+        public virtual MasterCompany MasterCompany { get; set; }
+
+        public DateTime CreatedDate { get; set;}
+        public string CreatedBy { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public string UpdatedBy { get; set; }
+    }
+
+    public class AssetDepreciationMethodColModel
+    {
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string DepreciationMethod { get; set; }
+        public string Memo { get; set; }       
     }
     #endregion
 

@@ -117,7 +117,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult DeleteAction(long id)
         {
             var existingResult = _unitOfWork.Manufacturer.GetSingleOrDefault(c => c.ManufacturerId == id);
-            existingResult.IsDelete = true;
+            existingResult.IsDeleted = true;
             _unitOfWork.Manufacturer.Update(existingResult);
 
             //_unitOfWork.ActionAttribute.Remove(existingResult);
@@ -130,19 +130,9 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("audits/{Id}")]
         public IActionResult GetManufacturerAuditDetails(long Id)
         {
-            var audits = _unitOfWork.Repository<ManufacturerAudit>()
-                .Find(x => x.ManufacturerId == Id)
-                .OrderByDescending(x => x.ManufacturerAuditId).ToList();
-            var auditResult = new List<AuditResult<ManufacturerAudit>>();
+            var audits = _unitOfWork.Manufacturer.GetManufacturerHistory(Id);
 
-            auditResult.Add(new AuditResult<ManufacturerAudit>
-            {
-                AreaName = "Manufacturer",
-                Memo = "",
-                Result = audits
-            });
-
-            return Ok(auditResult);
+            return Ok(audits);
         }
         
 
@@ -263,6 +253,13 @@ namespace QuickApp.Pro.Controllers
             }
             dynamicGridData.ColumnData = manufacturerList;
             return Ok(dynamicGridData);
+        }
+
+        [HttpPost("uploadmanufacturercustomdata")]
+        public IActionResult UploadCustomData()
+        {
+            var result = _unitOfWork.Manufacturer.UploadCustomData(Request.Form.Files[0]);
+            return Ok(result);
         }
         #endregion
     }

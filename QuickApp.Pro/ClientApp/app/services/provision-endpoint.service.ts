@@ -3,7 +3,6 @@ import { Injectable, Injector } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-
 import { EndpointFactory } from './endpoint-factory.service';
 import { ConfigurationService } from './configuration.service';
 
@@ -60,7 +59,7 @@ export class ProvisionEndpoint extends EndpointFactory {
             });
     }
 
-    getUpdateProvisionEndpoint<T>(roleObject: any, provisionId: number): Observable<T> {
+    getUpdateProvisionEndpoint<T>(roleObject: any, provisionId: number): Observable<T> { 
         let endpointUrl = `${this._actionsUrlNew}/${provisionId}`;
 
         return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
@@ -86,6 +85,7 @@ export class ProvisionEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getProvisionAuditById(provisionId));
             });
     }
+ 
 
 
 }

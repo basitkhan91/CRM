@@ -228,46 +228,113 @@ namespace DAL.Repositories
                             // select new { t, ad, vt }).ToList();
                             select new
                             {
-                                t.CreditTermsId,
-                                t.CurrencyId,
-                                ad,
-                                t.PrimarySalesPersonFirstName,
-                                t.CustomerId,
-                                t,
-                                // cc,
-                                creditTerms,
-                                currency,
-                                currency.Symbol,
-                                //creditTerms.Name,
-                                t.Email,
-                                t.IsActive,
-                                Address1 = ad.Line1,
-                                Address2 = ad.Line2,
-                                Address3 = ad.Line3,
-                                t.CustomerCode,
-                                t.DoingBuinessAsName,
-                                t.Parent,
-                                t.RestrictPMAMemo,
-                                t.PBHCustomerMemo,
-                                t.ContractReference,
-                                t.CustomerURL,
-                                t.Name,
-                                ad.City,
-                                ad.StateOrProvince,
-                                vt.description,
-                                t.CreatedDate,
-                                t.CreatedBy,
-                                t.UpdatedBy,
-                                t.UpdatedDate,
-                                ad.AddressId,
-                                ad.Country,
-                                ad.PostalCode,
-                                vt.CustomerAffiliationId,
-                                cc.CustomerClassificationId,
-                                mup.MarkUpValue,
-                                CreditTermName = creditTerms.Name,
-                                //cc.Description
-                            }).OrderByDescending(a => a.UpdatedDate).ToList();
+
+								addressId = t.AddressId,
+								isAddressForBilling = t.IsAddressForBilling,
+								isAddressForShipping = t.IsAddressForShipping,
+								customerAffiliationId = vt.CustomerAffiliationId,
+								customerTypeId = t.CustomerTypeId,
+								name = t.Name,
+								customerPhone = t.CustomerPhone,
+								email = t.Email,
+								address1 = ad.Line1,
+								address2 = ad.Line2,
+								address3 = ad.Line3,
+								city = ad.City,
+								stateOrProvince = ad.StateOrProvince,
+								postalCode = ad.PostalCode,
+								country = ad.Country,
+								customerCode = t.CustomerCode,
+								doingBuinessAsName = t.DoingBuinessAsName,
+								parent = t.Parent,
+								customerParentName = t.CustomerParentName,
+								customerURL = t.CustomerURL,
+								generalCurrencyId = t.GeneralCurrencyId,
+								customerClassificationId = t.CustomerClassificationId,
+								contractReference = t.ContractReference,
+								isPBHCustomer = t.IsPBHCustomer,
+								pbhCustomerMemo = t.PBHCustomerMemo,
+								restrictPMA = t.RestrictPMA,
+								restrictPMAMemo = t.RestrictPMAMemo,
+								restrictBER = t.RestrictBER,
+								restrictBERMemo = t.RestrictBERMemo,
+								scanDocuments = t.ScanDocuments,
+								isCustomerAlsoVendor = t.IsCustomerAlsoVendor,
+								edi = t.EDI,
+								ediDescription = t.EDIDescription,
+								isAeroExchange = t.IsAeroExchange,
+								aeroExchangeDescription = t.AeroExchangeDescription,
+								createdBy = t.CreatedBy,
+								updatedBy = t.UpdatedBy,
+								UpdatedDate = t.UpdatedDate,
+								CreatedDate = t.CreatedDate,
+								masterCompanyId = t.MasterCompanyId,
+								isActive = t.IsActive,
+								markUpPercentageId = t.MarkUpPercentageId,
+								creditLimit = t.CreditLimit,
+								creditTermsId = t.CreditTermsId,
+								discountId = t.DiscountId,
+								allowNettingOfAPAR = t.AllowNettingOfAPAR,
+								isTaxExempt = t.IsTaxExempt,
+								taxRateStateOrProvince = t.TaxRateStateOrProvince,
+								taxRateOther = t.TaxRateOther,
+								taxTypeId = t.TaxTypeId,
+								allowPartialBilling = t.AllowPartialBilling,
+								allowProformaBilling = t.AllowProformaBilling,
+								customerId = t.CustomerId,
+								primarySalesPersonId = t.PrimarySalesPersonId,
+							    csrName = t.CSRName,
+								secondarySalesPersonId = t.SecondarySalesPersonId,
+								annualQuota = t.AnnualQuota,
+								annualRevenuePotential = t.AnnualRevenuePotential,
+								AgentName = t.AgentName
+								
+
+
+
+
+			
+
+								//t.CreditTermsId,
+								//t.CurrencyId,
+								//ad,
+								//t.PrimarySalesPersonFirstName,
+								//t.CustomerId,
+								//t,
+								//// cc,
+								//creditTerms,
+								//currency,
+								//currency.Symbol,
+								////creditTerms.Name,
+								//t.Email,
+								//t.IsActive,
+								//Address1 = ad.Line1,
+								//Address2 = ad.Line2,
+								//Address3 = ad.Line3,
+								//t.CustomerCode,
+								//t.DoingBuinessAsName,
+								//t.Parent,
+								//t.RestrictPMAMemo,
+								//t.PBHCustomerMemo,
+								//t.ContractReference,
+								//t.CustomerURL,
+								//t.Name,
+								//ad.City,
+								//ad.StateOrProvince,
+								//vt.description,
+								//t.CreatedDate,
+								//t.CreatedBy,
+								//t.UpdatedBy,
+								//t.UpdatedDate,
+								//ad.AddressId,
+								//ad.Country,
+								//ad.PostalCode,
+								//vt.CustomerAffiliationId,
+								//cc.CustomerClassificationId,
+								//mup.MarkUpValue,
+								//CreditTermName = creditTerms.Name,
+								////cc.Description
+							}).OrderByDescending(a => a.UpdatedDate).ToList();
                 return data;
 
             }
@@ -322,7 +389,7 @@ namespace DAL.Repositories
                                 ca.ATAChapterId,
                                 ca.ATAChapterCode,
                                 ca.ATAChapterName,
-                                ca.PartNumber,
+       
                                 ca.ATASubChapterId,
                                 ca.ATASubChapterDescription
 
@@ -450,6 +517,7 @@ namespace DAL.Repositories
                 model.InternationalShippingId = id;
                 model.UpdatedDate = DateTime.Now;
                 model.IsActive = status;
+                model.UpdatedBy = updatedBy;
 
                 _appContext.CustomerInternationalShipping.Attach(model);
 
@@ -474,9 +542,9 @@ namespace DAL.Repositories
             var totalRecords = 0;
             try
             {
-                var pageNumber = (model.first / model.rows) + 1;
-                var take = model.rows;
-                var skip = take * (pageNumber - 1);
+                var pageNumber = 0;//(model.first / model.rows) + 1;
+                var take = 0;// model.rows;
+                var skip = 0;// take * (pageNumber - 1);
 
                 totalRecords = _appContext.CustomerInternationalShipping
                  .Join(_appContext.Countries,
@@ -561,7 +629,7 @@ namespace DAL.Repositories
                            cis => cis.ShipToCountryId,
                            c => c.countries_id,
                            (cis, c) => new { cis, c })
-                 .Where(p => p.cis.IsDeleted == false)
+                 .Where(p => p.cis.IsDeleted == false && p.cis.CustomerId == customerId)
                  .Count();
 
                 var result = _appContext.CustomerInternationalShipping
@@ -569,6 +637,7 @@ namespace DAL.Repositories
                            cis => cis.ShipToCountryId,
                            c => c.countries_id,
                            (cis, c) => new { cis, c })
+                 .Where(p => p.cis.IsDeleted == false && p.cis.CustomerId == customerId)
                  .Select(p => new
                  {
                      InternationalShippingId = p.cis.InternationalShippingId,
@@ -585,7 +654,7 @@ namespace DAL.Repositories
                      IsDeleted = p.cis.IsDeleted,
                      UpdatedDate = p.cis.UpdatedDate
                  })
-                 .Where(p => p.IsDeleted == false && p.CustomerId == customerId)
+                 
                  .OrderByDescending(p => p.UpdatedDate)
                  .Skip(skip)
                  .Take(take)
@@ -674,6 +743,8 @@ namespace DAL.Repositories
                     intShipping.IsPrimary = result.IsPrimary;
                     intShipping.ShipToCountry = result.ShipToCountry;
                     intShipping.StartDate = result.StartDate;
+                    intShipping.IsDeleted = result.IsDeleted;
+                    intShipping.ShipToCountryId = result.ShipToCountryId;
                 }
 
                 
@@ -811,7 +882,7 @@ namespace DAL.Repositories
                 var take = pageSize;
                 var skip = take * (pageNumber - 1);
 
-                getData.TotalRecordsCount = _appContext.ShippingViaDetails.Where(p => p.IsDeleted == false)
+                getData.TotalRecordsCount = _appContext.ShippingViaDetails.Where(p => p.IsDeleted == false && p.InternationalShippingId == internationalShippingId)
                  .OrderByDescending(p => p.UpdatedDate)
                  .Count();
 
@@ -850,6 +921,131 @@ namespace DAL.Repositories
             }
         }
 
+
+
+
+
+
+		public IEnumerable<object> searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID(long CustomerId, string AircraftTypeId, string AircraftModelId, string DashNumberId)
+        {
+            long[] myAircraftTypeId = null;
+            long[] myAircraftModelId = null;
+            long[] myDashNumberId = null;
+            if (AircraftTypeId != null && AircraftTypeId != "")
+                myAircraftTypeId = AircraftTypeId.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
+            if (AircraftModelId != null && AircraftModelId != "")
+                myAircraftModelId = AircraftModelId.Split(',').Select(y => Convert.ToInt64(y)).ToArray();
+            if (DashNumberId != null && DashNumberId != "")
+                myDashNumberId = DashNumberId.Split(',').Select(x => Convert.ToInt64(x)).ToArray();
+            if (AircraftTypeId != null && AircraftModelId != null && myDashNumberId != null)
+            {
+                var data = (from cam in _appContext.CustomerAircraftMapping
+                            where cam.CustomerId == CustomerId && myAircraftTypeId.Contains(cam.AircraftTypeId) && myAircraftModelId.Contains(cam.AircraftModelId) && myDashNumberId.Contains(cam.DashNumberId) && cam.IsDeleted != true
+                            select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
+            }
+            else if (AircraftTypeId != null && AircraftModelId != null && myDashNumberId == null)
+            {
+                var data = (from cam in _appContext.CustomerAircraftMapping
+                            where cam.CustomerId == CustomerId && myAircraftTypeId.Contains(cam.AircraftTypeId) && myAircraftModelId.Contains(cam.AircraftModelId) && cam.IsDeleted != true
+                            select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
+            }
+            else if (AircraftTypeId != null && myAircraftModelId == null && myDashNumberId == null)
+            {
+                var data = (from cam in _appContext.CustomerAircraftMapping
+                            where cam.CustomerId == CustomerId && myAircraftTypeId.Contains(cam.AircraftTypeId) && cam.IsDeleted != true
+                            select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
+            }
+            else if (AircraftTypeId != null && myAircraftModelId == null && myDashNumberId != null)
+            {
+                var data = (from cam in _appContext.CustomerAircraftMapping
+                            where cam.CustomerId == CustomerId && myAircraftTypeId.Contains(cam.AircraftTypeId) && myDashNumberId.Contains(cam.DashNumberId) && cam.IsDeleted != true
+                            select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
+            }
+            else if (AircraftTypeId == null && AircraftModelId != null && myDashNumberId != null)
+            {
+                var data = (from cam in _appContext.CustomerAircraftMapping
+                            where cam.CustomerId == CustomerId && myAircraftModelId.Contains(cam.AircraftModelId) && myDashNumberId.Contains(cam.DashNumberId) && cam.IsDeleted != true
+                            select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
+            }
+            else if (AircraftTypeId == null && AircraftModelId != null && myDashNumberId == null)
+            {
+                var data = (from cam in _appContext.CustomerAircraftMapping
+                            where cam.CustomerId == CustomerId && myAircraftModelId.Contains(cam.AircraftModelId) && cam.IsDeleted != true
+                            select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
+            }
+            else if (AircraftTypeId == null && myAircraftModelId == null && myDashNumberId != null)
+            {
+                var data = (from cam in _appContext.CustomerAircraftMapping
+                            where cam.CustomerId == CustomerId && myDashNumberId.Contains(cam.DashNumberId) && cam.IsDeleted != true
+                            select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
+            }
+            else
+            {
+                var data = (from cam in _appContext.CustomerAircraftMapping
+                            where cam.CustomerId == CustomerId && cam.IsDeleted != true
+                            select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
+            }
+        }
+        public IEnumerable<object> searchgetCustomerATAMappingDataByMultiTypeIdATAIDATASUBID(long CustomerId, string ATAChapterId, string ATASubChapterID)
+        {
+            long[] myATAChapterId = null;
+            long[] myATASubChapterID = null;
+            if (ATAChapterId != null && ATAChapterId != "")
+                myATAChapterId = ATAChapterId.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
+            if (ATASubChapterID != null && ATASubChapterID != "")
+                myATASubChapterID = ATASubChapterID.Split(',').Select(y => Convert.ToInt64(y)).ToArray();
+            if (ATAChapterId != null && ATASubChapterID != null)
+            {
+                var data = (from cATA in _appContext.CustomerATAMapping
+                            where cATA.CustomerId == CustomerId && myATAChapterId.Contains(cATA.ATAChapterId) && myATASubChapterID.Contains(cATA.ATASubChapterId) && cATA.IsDeleted != true
+                            select new { cATA.CustomerATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
+                return uniquedata;
+            }
+            else if (ATAChapterId != null && ATASubChapterID == null)
+            {
+                var data = (from cATA in _appContext.CustomerATAMapping
+                            where cATA.CustomerId == CustomerId && myATAChapterId.Contains(cATA.ATAChapterId) && cATA.IsDeleted != true
+                            select new { cATA.CustomerATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
+                return uniquedata;
+
+            }
+            else if (ATAChapterId == null && ATASubChapterID != null)
+            {
+                var data = (from cATA in _appContext.CustomerATAMapping
+                            where cATA.CustomerId == CustomerId && myATASubChapterID.Contains(cATA.ATASubChapterId) && cATA.IsDeleted != true
+                            select new { cATA.CustomerATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
+                return uniquedata;
+
+            }
+            else
+            {
+                var data = (from cATA in _appContext.CustomerATAMapping
+                            where cATA.CustomerId == CustomerId && cATA.IsDeleted != true
+                            select new { cATA.CustomerATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
+                return uniquedata;
+
+            }
+        }
 
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

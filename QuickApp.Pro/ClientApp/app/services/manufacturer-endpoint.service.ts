@@ -14,6 +14,7 @@ export class ManufacturerEndpoint extends EndpointFactory {
     private readonly _manufacturerUrlNew: string = "/api/Manufacturer/manufacturerpost";
     private readonly _manufacturerUrlAuditHistory: string = "/api/Manufacturer/auditHistoryById";
     private readonly _auditUrl: string = '/api/Manufacturer/audits';
+    private readonly excelUpload: string ="/api/Manufacturer/uploadmanufacturercustomdata";
     private readonly getManufacturer: string = "/api/Manufacturer/pagination";
 
     get glaccountclassUrl() { return this.configurations.baseUrl + this._manufacturerUrl; }
@@ -90,6 +91,9 @@ export class ManufacturerEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getManufacturerRecords(paginationOption));
             });
     }
-
+    ManufacturerCustomUpload(file){
+        return this.http.post( `${this.configurations.baseUrl}${this.excelUpload}`, file)       
+        
+    }
 
 }

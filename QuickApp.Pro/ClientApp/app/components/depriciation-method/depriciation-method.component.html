@@ -14,108 +14,99 @@
                         <div class="inline-block display-flex">
                             <h3 class="po-head lead">Depreciation Method</h3>
                             &nbsp;&nbsp;
-                            <a class="plusicon-cstm new-margin" href="#" id="btnAdddepriciationMethod" pTooltip="Add New" tooltipPosition="right" title="Add" *ngIf="!this.updateMode"  data-toggle="modal" data-target="#Modaladd"><i class="fa fa-plus-circle fa-lg"></i></a>
-                                                  </div> 
+                            <a class="plusicon-cstm new-margin" pTooltip="Add Depreciation Method" tooltipPosition="right" (click)="open(contentEdit)">
+                                <i class="fa fa-plus-circle fa-lg"></i>
+                            </a>
+                        </div>
                         <div class="form-row col-row col-row1">
-                            <div class="col-md-2">
-                                <label class="control-label">Code <strong class="clr-red">*</strong></label>
-                                <p-autoComplete [(ngModel)]="currentDepriciationmethod.assetDepreciationId"
-                                                [ngModelOptions]="{standalone: true}"
-                                                [size]="30" [minLength]="1"
-                                                [dropdown]="true" class="autocomplete-customer">
-                                    <ng-template let-partName pTemplate="part">
-                                        <div class="ui-helper-clearfix">{{partName}}</div>
-                                    </ng-template>
-                                </p-autoComplete>
-                            </div>
-                            <div class="col-md-2">
-                                <label class="control-label">Name <strong class="clr-red">*</strong></label>
-                                <p-autoComplete [(ngModel)]="currentDepriciationmethod.assetDepreciationMethodName"
-                                                [ngModelOptions]="{standalone: true}"
-                                                [size]="30" [minLength]="1"
-                                                [dropdown]="true" class="autocomplete-customer">
-                                    <ng-template let-partName pTemplate="part">
-                                        <div class="ui-helper-clearfix">{{partName}}</div>
-                                    </ng-template>
-                                </p-autoComplete>
-                            </div>
-                            <div class="col-md-2">
-                                <label class="control-label">
-                                    Depreciation Basis<strong class="clr-red">*</strong>&nbsp;
-                                </label>
-                                <input type="text" [(ngModel)]="currentDepriciationmethod.assetDepreciationBasis"  class="form-control" id="cmname" name="" autocomplete="off">
-                            </div>
-                            <div class="col-md-2">
-                                <label class="control-label">
-                                    Memo<strong class="clr-red">*</strong>&nbsp;
-                                    <i class="fa memo fa-info-circle fa-lg" pTooltip="{{memoNotes}}" tooltipPosition="top" data-toggle="modal" data-target="#rro-memo" NTE></i>
-                                </label>
-                                <span pTooltip="{{memoNotes}}" tooltipPosition="top">
-                                    <input type="text" [disabled]="true" [(ngModel)]="currentDepriciationmethod.assetDepreciationMemo" class="form-control" id="cmname" name="" placeholder="{{memoNotes}}" autocomplete="off">
-                                </span>
-
-                            </div>
                             <div class="col-md-4 display-flex inline-block" style="margin-top: 25px;">
                                 <div>
-                                    <button type="button" id="btnFilterdepriciationMethod" name="" pTooltip="Search Data" tooltipPosition="bottom" class="btn btn-warning nobg  btn-cstm" data-toggle="tooltip" data-original-title="Filter"><i class="fa fa-search"></i></button>
-                                    <button type="button" id="btnUpdatedepriciationMethod" *ngIf="this.updateMode" (click)="updatedepriciationmethod()" name="" class="btn btn-success nobg btn-cstm" data-toggle="tooltip" data-original-title="Update"><i class="fa fa-edit"></i></button>
+                                   <button type="button" id="btnUpdatedepriciationMethod" *ngIf="this.updateMode" (click)="updatedepriciationmethod()" name="" class="btn btn-success nobg btn-cstm" data-toggle="tooltip" data-original-title="Update"><i class="fa fa-edit"></i></button>
                                     <button type="button" id="btnResetdepriciationMethod" *ngIf="this.updateMode" (click)="resetdepriciationmethod()" name="" class="btn btn-default nobg btn-cstm" data-toggle="tooltip" data-original-title="Reset"><i class="fa fa-edit"></i></button>
-                                </div>
-                                <div class="excel-upload excel-upload-cstm">
-                                    <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                                    <label for="upload">
-                                        <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
-                                    </label>
                                 </div>
                             </div>
                         </div>
 
-                        <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="depriciationMethodList" [rows]="10"
-                                 [paginator]="true"
-                                 [rowsPerPageOptions]="[10,20,30]"
-                                 [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumns"
+                        <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="depriciationMethodList" [metaKeySelection]="true" [totalRecords]="totalRecords" [rows]="10" [paginator]="true" [pageLinks]="3"
+                                 [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn"
                                  [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
+                            <ng-template pTemplate="caption">
+                               
+                                    <div style="text-align: right;margin-left:-6px !important;">
+                                        <p-multiSelect [maxSelectedLabels]="2" [options]="selectedData" optionLabel="header" [(ngModel)]="selectedColumns"
+                                                       [style]="{minWidth: '200px'}" style="float:left"></p-multiSelect>
+                                         <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
+                                                iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+                                        <button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
+                                                iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                        <div class="excel-upload  excel-upload-cstm">
+                                            <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected"
+                                                   accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                                            <label for="upload">
+                                                <span matTooltip="Upload Data (Excel)">
+                                                    <i class="fa fa-upload"></i>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                            </ng-template>
+
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
-                                    <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                    <th style="width:120px" *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                         {{col.header}}
                                         <p-sortIcon [field]="col.field"></p-sortIcon>
                                     </th>
-                                    <th style="width:150px;position:sticky">Action</th>
+                                    <th style="width:200px;position:sticky"></th>
+                                </tr>
+                                <tr>
+                                    <th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                        <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field,'contains')">
+                                    </th>
+                                    <th style="width:200px;position:sticky"></th>
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="body" let-rowData let-columns="columns">
                                 <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openEdits(rowData)">
-                                    <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-                                        {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                                    <td style="width:120px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                                        {{
+col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?
+                                        (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]
+                                        }}
                                     </td>
-                                    <td style="width:150px">
-                                        <p-inputSwitch *ngIf="depriciationMethod['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(depriciationMethod,$event)" [(ngModel)]="depriciationMethod['isActive']"></p-inputSwitch>
-                                        <p-inputSwitch *ngIf="depriciationMethod['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(depriciationMethod,$event)" [(ngModel)]="depriciationMethod['isActive']"></p-inputSwitch>
-                                        <p-inputSwitch *ngIf="depriciationMethod['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(depriciationMethod,$event)" [(ngModel)]="depriciationMethod['isActive']"></p-inputSwitch>
+                                    <td style="width:200px">
+                                        <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)"
+                                                       [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)"
+                                                       [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)"
+                                                       [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <span data-toggle="modal" data-target="#view">
+                                            <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                        </span>
+                                        <button class="btn-edit" mat-icon-button (click)="openEdit(contentEdit,rowData)" matTooltip="Edit">
+                                            <mat-icon>edit</mat-icon>
+                                        </button>
 
-                                        <span (click)="setdepriciationmethodToUpdate(editAssetTypes,depriciationMethod.assetDepreciationMethodId)" data-toggle="modal" data-target="#edit">
-                                            <a data-toggle="tooltip" title="" class="btn btn-primary nobg" data-original-title="" edit="">
-                                                <i class="fa fa-edit"></i>
-                                            </a>
-                                        </span>
-                                        <span data-toggle="modal" data-target="#history">
-                                            <a data-toggle="tooltip" (click)="showAuditPopup(auditContent,depriciationMethod.assetDepreciationMethodId)" title="" class="btn btn-success nobg" data-original-title="History">
-                                                <i class="fa fa-history"></i>
-                                            </a>
-                                        </span>
-                                        <span (click)="openDelete(content,depriciationMethod)" data-toggle="modal" data-target="#data">
-                                            <a class="btn btn-danger nobg" data-toggle="tooltip" title="" data-original-title="Delete">
-                                                <i class="fa fa-trash"></i>
-                                            </a>
-                                        </span>
+                                        <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="openDelete(content,rowData)">
+                                            <mat-icon color="warn">delete</mat-icon>
+                                        </button>
+                                        <button class="btn-history" mat-icon-button matTooltip="History" (click)="showAuditPopup(auditContent,rowData.shelfId)">
+                                            <mat-icon color="green">history</mat-icon>
+                                        </button>
                                     </td>
                                 </tr>
+                            </ng-template>
+                            <ng-template #auditContent let-c="close" let-d="dismiss">
+                                <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
+                                    <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+                                </div>
                             </ng-template>
                             <ng-template pTemplate="summary" id="footer">
                                 <label id="footer" class="footer">No'of records:</label> <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" />
                                 &nbsp;&nbsp;
-                                <label id="footer" class="footer1">Pages Count:</label> <input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" />
                             </ng-template>
                         </p-table>
                     </div>
@@ -124,151 +115,183 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="rro-memo" role="dialog">
-    <div class="modal-dialog modal-sm" style="max-width: 400px !important;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Edit Memo</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>Memo</label>
-                    <textarea class="form-control" [(ngModel)]="memoPopupText">{{memoNotes}}</textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success-cstm" data-dismiss="modal">Save</button>
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
+<ng-template #view class="modal fade " id="view" role="dialog">
 
-<div class="modal fade" id="Modaladd" role="dialog">
-    <div class="modal-dialog modal-sm" style="max-width: 400px !important;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Add Depreciation Method</h4>
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
+            <h4 class="modal-title">Depreciation Method Details</h4>
+        </div>
+        <div class="modal-body viewform">
+            <div class="col-sm-12">
+                <p>
+                    <span class="label">
+                        <b>Depreciation Code: </b>
+                    </span>
+                    <span class="value">{{code}}</span>
+                </p>
+                <p>
+                    <span class="label">
+                        <b>Depreciation Name: </b>
+                    </span>
+                    <span class="value">{{name}}</span>
+                </p>
+                <p>
+                    <span class="label">
+                        <b>Depreciation Basis </b>
+                    </span>
+                    <span class="value">{{depreciationMethod}}</span>
+                </p>
+                <p>
+                    <span class="label">
+                        <b>Depreciation Memo: </b>
+                    </span>
+                    <span class="value">{{memo}}</span>
+                </p>
+                <p>
+                    <span class="label">
+                        <b>Created By: </b>
+                    </span>
+                    <span class="value">{{createdBy}}</span>
+                </p>
+                <p>
+                    <span class="label">
+                        <b>Created Date: </b>
+                    </span>
+                    <span class="value">{{createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
+                </p>
+                <p>
+                    <span class="label">
+                        <b>Updated By: </b>
+                    </span>
+                    <span class="value">{{updatedBy}}</span>
+                </p>
+                <p>
+                    <span class="label">
+                        <b>Updated Date: </b>
+                    </span>
+                    <span class="value">{{updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
+                </p>
             </div>
-            <div class="modal-body">
-                <div class="form-row col-row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="control-label">Code</label>
-                            <label class="control-label">Name</label>
-                            <label class="control-label">
-                                Depreciation Basis<strong class="clr-red">*</strong>&nbsp;
-                            </label>
-                            <label class="control-label">Memo</label>
-                        </div>                       
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <p-autoComplete [(ngModel)]="currentDepriciationmethod.assetDepreciationId"
-                                            [ngModelOptions]="{standalone: true}"
-                                            [size]="30" [minLength]="1"
-                                            [dropdown]="true" class="autocomplete-customer">
-                                <ng-template let-partName pTemplate="part">
-                                    <div class="ui-helper-clearfix">{{partName}}</div>
-                                </ng-template>
-                            </p-autoComplete>
-                            <p-autoComplete [(ngModel)]="currentDepriciationmethod.assetDepreciationMethodName"
-                                            [ngModelOptions]="{standalone: true}"
-                                            [size]="30" [minLength]="1"
-                                            [dropdown]="true" class="autocomplete-customer">
-                                <ng-template let-partName pTemplate="part">
-                                    <div class="ui-helper-clearfix">{{partName}}</div>
-                                </ng-template>
-                            </p-autoComplete>
-                            <span >
-                                <input type="text" style="width:93%;margin-bottom: 5px !important;" [(ngModel)]="currentDepriciationmethod.assetDepreciationBasis" class="form-control" id="cmname" name="" autocomplete="off">
-                            </span>
-                            <br/>
-                            <span>
-                                <textarea style="width:93%" class="input-field-value" rows="3" cols="10"></textarea>
-                            </span>
-                            
-                        </div>
-                    </div>
-                </div>               
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success-cstm" (click)="adddepriciationmethod()" data-dismiss="modal">Save</button>
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
-            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
         </div>
     </div>
-</div>
+
+</ng-template>
+
 <ng-template #content let-c="close" let-d="dismiss">
     <div class="modal-header">
-        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+        <h4 class="modal-title">Are You Sure Want to Delete ?</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-
+    <div class="modal-body">
+        <strong>
+            Depreciation Method Code:
+            <span class="new-label">{{code_Name}}</span>
+        </strong>
+    </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-success" (click)="removedepriciationmethod()">Yes</button>
-        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+        <button type="button" class="btn btn-primary-cstm" (click)="deleteItemAndCloseModel()">Yes</button>
+        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">No</button>
     </div>
 </ng-template>
 
-<ng-template #auditContent let-c="close" let-d="dismiss">
-    <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
-        <app-audit [Data]="AuditDetails" [Modal]="modal" title='Asset Depreciation Method Audit Details'></app-audit>
+<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
+    <div class="modal-header">
+        <h4 class="modal-title" *ngIf="isEditMode">Edit Depreciation Method</h4>
+        <h4 class="modal-title" *ngIf="!isEditMode">Add Depreciation Method</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="SaveandEditDepreciaionMethod()">
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="col-sm-4">
+                        <label for="description" class="control-label">
+                            Depreciation Method Code
+                            <span class="clr-red">*</span>
+                        </label>
+                    </div>
+                    <div class="col-sm-5">
+                        <!--<p-autoComplete field="code" [(ngModel)]="codeName" (onSelect)="partnmId($event)" (onKeyUp)="eventHandler('code', $event.target.value)" name="code"
+                                        [suggestions]="localCollection" (completeMethod)="filterDepreciationMethod($event)" [size]="30" [minLength]="1"
+                                        [dropdown]="true" class="p-autoComplete-ctsm" required>-->
+                        <p-autoComplete [(ngModel)]="codeName" name="code" (onSelect)="partnmId($event)" (onKeyUp)="eventHandler($event)" [suggestions]="localCollection" (completeMethod)="filterDepreciationMethod($event)" [size]="30"
+                                        [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
+                            <ng-template let-codeName pTemplate="item">
+                                 <div class="ui-helper-clearfix">{{codeName}}</div>
+                            </ng-template>
+
+                        </p-autoComplete>
+                        <div *ngIf="disableSave" class="clr-red">Already Exists</div>
+                            <div class="clear"></div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="col-sm-4">
+                        <label for="shortName" class="control-label">
+                            Name
+                            <span class="clr-red">*</span>
+                        </label>
+                    </div>
+                    <div class="col-sm-5">
+                        <input type="text" name="assetDepreciationMethodName" class="form-control" #Name="ngModel" [(ngModel)]="sourceAction.name" required>
+                        <div *ngIf="Name.dirty && Name.errors?.required && Name.errors" class="invalid-form-error-message">
+                            Depreciation Name required.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="col-sm-4">
+                        <label for="standard" class="control-label">
+                            Depreciation Method
+                            <span class="clr-red">*</span>
+                        </label>
+                    </div>
+                    <div class="col-sm-5">
+                        <input type="text" name="assetDepreciationBasis" class="form-control" #depreciationMethod="ngModel" [(ngModel)]="sourceAction.depreciationMethod" required>
+                        <div *ngIf="depreciationMethod.dirty && depreciationMethod.errors?.required && depreciationMethod.errors" class="invalid-form-error-message">
+                            Depreciation Method required.
+                        </div>
+                        <div *ngIf="depreciationMethod.dirty && depreciationMethod.errors?.minlength && depreciationMethod.errors" class="invalid-form-error-message">
+                            Depreciation Method must be at least 2 characters long.
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="col-sm-4">
+                        <label for="description" class="control-label">Memo</label>
+                    </div>
+                    <div class="col-sm-5">
+                        <textarea class="text-item" #memo="ngModel" id="memo" name="assetDepreciationMemo" [(ngModel)]="sourceAction.memo" minlength="2"></textarea>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-6">
+                    <div class="checkbox-cstm check-value">
+                        <label>
+                            <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input trigger2" checked id="isActive" [(ngModel)]="sourceAction.isActive" [ngModelOptions]="{standalone: true}">
+                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                            Active
+                        </label>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary-cstm" [disabled]="!userForm.valid || disableSave" (click)="SaveandEditDepreciationMethod()">Save</button>
+        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
     </div>
 </ng-template>
-
-<ng-template #editAssetTypes let-c="close" let-d="dismiss">
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" (click)="dismissModel()" class="close" data-dismiss="modal">×</button>
-            <h4 class="modal-title"> Edit {{depriciationToUpdate.assetDepreciationId}} Depriciation </h4>
-        </div>
-        <div class="modal-body">
-            <p>
-                <span class="col-sm-3"><b>ID: <span style="color:red">*</span> </b></span> <span class="col-sm-6">
-                    <input type="text" [(ngModel)]="depriciationToUpdate.assetDepreciationId" class="form-control">
-                </span>
-            </p>
-            <hr>
-            <p>
-                <span class="col-sm-3"><b>Name: <span style="color:red">*</span> </b></span> <span class="col-sm-6">
-                    <input type="text" [(ngModel)]="depriciationToUpdate.assetDepreciationMethodName" class="form-control">
-                </span>
-            </p>
-            <hr>
-            <p>
-                <span class="col-sm-3"><b>Basis: <span style="color:red">*</span> </b></span> <span class="col-sm-6">
-                    <input type="text" [(ngModel)]="depriciationToUpdate.assetDepreciationBasis" class="form-control">
-                </span>
-            </p>
-            <hr>
-            <p>
-                <span class="col-sm-3"><b>Memo: <span style="color:red">*</span> </b></span> <span class="col-sm-6">
-                    <textarea [(ngModel)]="depriciationToUpdate.assetDepreciationMemo" class="form-control"></textarea>
-                </span>
-            </p>
-
-        </div>
-        <div class="modal-footer">
-            <button type="button" (click)="updatedepriciationmethod()" class="btn btn-success" data-dismiss="modal">Update</button>
-            <button type="button" class="btn btn-danger" (click)="dismissModel()" data-dismiss="modal">Close</button>
-        </div>
-    </div>
-
-</ng-template>
-
-<p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
-          [width]="350" [minWidth]="200" [responsive]="true"
-          [minY]="1050" [baseZIndex]="1100000">
-    <h5 [ngStyle]="{'color':'red'}">
-        Please Enter (*) Mandatory Fields
-    </h5>
-    <p-footer>
-        <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
-    </p-footer>
-
-</p-dialog>

@@ -45,8 +45,8 @@ export class ItemClassificationService {
             this.itemclassificationEndpoint.getitemclassificationEndpoint<ItemClassificationModel[]>());
     }
 
-    newAction(action: ItemClassificationModel) {
-        return this.itemclassificationEndpoint.getNewitemclassificationEndpoint<ItemClassificationModel>(action);
+    newAction(action: any) {
+        return this.itemclassificationEndpoint.getNewitemclassificationEndpoint<any>(action);
     }
 
     getAction(actionId?: number) {

@@ -143,23 +143,23 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         var value = Number.parseFloat(charge.quantity) * Number.parseFloat(charge.unitCost);
         if (value > 0) {
             charge.extendedCost = value;
-            this.calculateExtendedCostSummation();
+            
         }
         else {
             charge.extendedCost = "";
         }
-
+        this.calculateExtendedCostSummation();
     }
     // calculate row wise extended price
     calculateExtendedPrice(charge) {
         var value = Number.parseFloat(charge.quantity) * Number.parseFloat(charge.unitPrice);
         if (value > 0) {
             charge.extendedPrice = value;
-            this.calculateExtendedPriceSummation()
         }
         else {
             charge.extendedPrice = "";
         }
+        this.calculateExtendedPriceSummation();
     }
 
     // sum of the qty

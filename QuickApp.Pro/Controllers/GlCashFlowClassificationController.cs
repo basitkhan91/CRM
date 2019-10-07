@@ -19,6 +19,7 @@ namespace QuickApp.Pro.Controllers
         readonly ILogger _logger;
         readonly IEmailer _emailer;
         private readonly ApplicationDbContext _context;
+
         public GlCashFlowClassificationController(ApplicationDbContext context, IUnitOfWork unitOfWork, ILogger<GlCashFlowClassificationController> logger, IEmailer emailer)
         {
             _unitOfWork = unitOfWork;
@@ -27,6 +28,7 @@ namespace QuickApp.Pro.Controllers
             _context = context;
 
         }
+
         [HttpGet("Get")]
         [Produces(typeof(List<GlCashFlowClassificationViewModel>))]
         public IActionResult Get()
@@ -92,6 +94,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+
         [HttpPut("glcashflowpost/{id}")]
         public IActionResult UpdateAction(long id, [FromBody] GlCashFlowClassificationViewModel GlCashFlowClassificationViewModel)
         {
@@ -121,7 +124,8 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
-        [HttpDelete("glcashflowpost/{id}")]
+
+        [HttpDelete("glcashflowDeletepost/{id}")]
         [Produces(typeof(GlCashFlowClassificationViewModel))]
         public IActionResult DeleteAction(long id)
         {
@@ -163,7 +167,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(data);
         }
 
-        [HttpPost("pagination")]
+        [HttpPost("pagination2")]
         public IActionResult GetGlCashFlowClassification([FromBody]GlClassFlowClassificationPaginationViewModel paginate)
         {
             IQueryable<GlClassFlowClassificationPaginationViewModel> queryable = null;

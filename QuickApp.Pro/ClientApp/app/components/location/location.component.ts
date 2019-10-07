@@ -380,8 +380,9 @@ export class LocationComponent implements OnInit, AfterViewInit {
 
         this.cols1 = [
             { field: 'code', header: 'Code' },
-            { field: 'description', header: 'Description' },
-            { field: 'legalEntityId', header: 'ID' },
+			{ field: 'name', header: 'Name' },
+			{ field: 'description', header: 'Description' },
+            // { field: 'legalEntityId', header: 'ID' },
         ];
     }
 
@@ -574,7 +575,7 @@ export class LocationComponent implements OnInit, AfterViewInit {
 		this.isDeleteMode = true;
 		this.sourceLocation = row;
 		this.location_Name = row.name;
-		this.modal = this.modalService.open(content, { size: 'lg' });
+		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -716,6 +717,7 @@ export class LocationComponent implements OnInit, AfterViewInit {
 			this.sourceLocation.masterCompanyId = 1;
 			this.sourceLocation.name = this.name;
             this.workFlowtService.newLocation(this.sourceLocation).subscribe(data => {
+				this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
                 if (data != null) {
                     this.saveManagement(data.locationId, this.selectedNodeTest); //pushing Site Management Need Site Value so after getting SiteId we are calling
 

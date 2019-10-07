@@ -121,8 +121,8 @@ namespace DAL.Models
         [ForeignKey("PriorityId")]
         public long? PriorityId { get; set; }
 
-        [ForeignKey("IntegrationPortalId")]
-        public int? IntegrationPortalId { get; set; }
+        //[ForeignKey("IntegrationPortalId")]
+        //public int? IntegrationPortalId { get; set; }
 
         [ForeignKey("WarningId")]
         public long? WarningId { get; set; }

@@ -56,48 +56,42 @@
       General Information
     </div>
   <div class="card-body">
+    <form #generalInfoForm="ngForm">
       <div class="form-row">
         <div class="col-md-3">
           <div class="form-group">
-            <label for="workflowid">Entry Date</label>
-            <p-calendar [showIcon]="true" [ngModelOptions]="{ standalone: true }"
-              [(ngModel)]="sourcePublication.entryDate" dateFormat="dd/mm/yy"></p-calendar>
+            <label for="workflowid">Entry Date <span class="clr-red">*</span></label>
+            <p-calendar [showIcon]="true" name="gEntryDate" [(ngModel)]="sourcePublication.entryDate" dateFormat="dd/mm/yy" required></p-calendar>
           </div>
           <div class="form-group">
-            <label for="publicationid">Publication ID</label>
-            <input class="form-control" #pubID="ngModel" type="text" [ngModelOptions]="{ standalone: true }"
-              [(ngModel)]="sourcePublication.PublicationId" />
+            <label for="publicationid">Publication ID <span class="clr-red">*</span></label>
+            <input class="form-control" #pubID="ngModel" type="text" name="gPublicationid" [(ngModel)]="sourcePublication.publicationId"  required/>
           </div>
 
           <div class="form-group">
-            <label for="PublicationDescription">Publication Description</label>
+            <label for="PublicationDescription">Publication Description <span class="clr-red">*</span></label>
             <textarea pInputTextarea class="form-control" #pubDescription="ngModel" type="text"
-              [ngModelOptions]="{ standalone: true }" [(ngModel)]="sourcePublication.description"></textarea>
+              name="gDescription" [(ngModel)]="sourcePublication.description" required></textarea>
           </div>
 
           <div class="form-group">
-            <label for="Publicationtype">Publication Type</label>
-            <p-dropdown class="pub-type-select" #pubType="ngModel"
-            [options]="publicationTypes"
-              [(ngModel)]="sourcePublication.pubType"></p-dropdown>
+            <label for="Publicationtype">Publication Type <span class="clr-red">*</span></label>
+            <p-dropdown name="gPubType" class="pub-type-select" #pubType="ngModel" [options]="publicationTypes" [(ngModel)]="sourcePublication.publicationTypeId" required></p-dropdown>
           </div>
 
 
           <div class="form-group">
             <label for="asd">Author/Source/Directive</label>
-            <input class="form-control" #pubID="ngModel" type="text" [ngModelOptions]="{ standalone: true }"
-              [(ngModel)]="sourcePublication.ASD" />
+            <input class="form-control" #pubID="ngModel" type="text" name="gAsd" [(ngModel)]="sourcePublication.asd" />
           </div>
 
           <div class="form-group">
             <label for="sequence">Sequence</label>
-            <input class="form-control" #pubID="ngModel" type="text" [ngModelOptions]="{ standalone: true }"
-              [(ngModel)]="sourcePublication.sequence" />
+            <input name="gSequence" class="form-control" #pubID="ngModel" type="text" [(ngModel)]="sourcePublication.sequence" />
           </div>
           <div class="form-group">
-            <label for="Publicationby">Published By</label>
-            <input class="form-control" #pubID="ngModel" type="text" [ngModelOptions]="{ standalone: true }"
-              [(ngModel)]="sourcePublication.publishby" />
+            <label for="Publishedby">Published By</label>
+            <input class="form-control" #pubID="ngModel" type="text" name="gPublishBy" [(ngModel)]="sourcePublication.publishby" />
           </div>
 
 
@@ -106,36 +100,37 @@
         <div class="col-md-3">
 
           <div class="form-group">
-            <label for="Publicationby">Location</label>
-            <input class="form-control" #pubID="ngModel" type="text" [ngModelOptions]="{ standalone: true }"
-              [(ngModel)]="sourcePublication.location" />
+            <label>Location</label>
+            <input class="form-control" #pubID="ngModel" type="text" name="gLocation" [(ngModel)]="sourcePublication.location" />
           </div>
           <div class="form-group">
-            <label for="workflowid">Revision Date</label>
-            <p-calendar [showIcon]="true" [ngModelOptions]="{ standalone: true }"
-              [(ngModel)]="sourcePublication.revisionDate" dateFormat="dd/mm/yy"></p-calendar>
+            <label>Revision Date</label>
+            <p-calendar [showIcon]="true" name="gRevisionDate" [(ngModel)]="sourcePublication.revisionDate" dateFormat="dd/mm/yy"></p-calendar>
           </div>
 
 
           <div class="form-group">
-            <label for="workflowid">Expiration Date</label>
-            <p-calendar [showIcon]="true" [(ngModel)]="sourcePublication.expirationDate" dateFormat="dd/mm/yy"></p-calendar>
+            <label>Expiration Date</label>
+            <p-calendar [showIcon]="true" name="gExpirationDate" [(ngModel)]="sourcePublication.expirationDate" dateFormat="dd/mm/yy"></p-calendar>
           </div>
 
           <div class="form-group">
-            <label for="workflowid">Next Review Date</label>
-            <p-calendar [showIcon]="true" [ngModelOptions]="{ standalone: true }"
-              [(ngModel)]="sourcePublication.nextreviewDate" dateFormat="dd/mm/yy"></p-calendar>
+            <label>Next Review Date</label>
+            <p-calendar [showIcon]="true" name="gNextreviewDate" [(ngModel)]="sourcePublication.nextReviewDate" dateFormat="dd/mm/yy"></p-calendar>
           </div>
 
           <div class="form-group">
-            <label for="workflowid">Employee</label>
-            <p-dropdown [options]="employeeList" class="pub-type-select" [(ngModel)]="sourcePublication.employee"  #pubID="ngModel"     ></p-dropdown>
+            <label>Employee <span class="clr-red">*</span></label>
+            <p-dropdown [options]="employeeList" name="gEmployee" class="pub-type-select" [(ngModel)]="sourcePublication.employeeId" #pubID="ngModel" required></p-dropdown>
 
           </div>
           <div class="form-group">
-            <label for="workflowid">Verified By</label>
-            <input pInputText type="text" [(ngModel)]="sourcePublication.verifiedby" />
+            <label>Verified By</label>
+            <input pInputText type="text" name="gVerifiedby" [(ngModel)]="sourcePublication.verifiedBy" />
+          </div>
+          <div class="form-group">
+            <label>Verified Date</label>
+            <p-calendar [showIcon]="true" name="gVerifiedDate" [(ngModel)]="sourcePublication.verifiedDate" dateFormat="dd/mm/yy"></p-calendar>
           </div>
 
         </div>
@@ -143,29 +138,58 @@
         <div class="col-md-6">
 
           <div class="form-group">
-            <label for="workflowid">File Upload </label>
-            <p-fileUpload name="myfile[]"    multiple="multiple"
-              [showCancelButton]="false"></p-fileUpload>
+            <label for="fileupload">File Upload </label>
+            <!-- <input #file type="file" name="gFileupload" multiple (change)="upload(file.files)" /> -->
+             <p-fileUpload name="gFileupload[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUpload($event)"></p-fileUpload> <!--(uploadHandler)="publicationFileUpload($event)" url="./upload.php"-->
+              
           </div>
 
-
+          <div *ngIf="isEditMode && attachmentList">
+              <h4 class="panel-title" style="padding-left: 10px;">Attachment Details</h4>
+              <p-table
+                [columns]="headersforAttachment"
+                [value]="attachmentList"
+                [paginator]="true"
+                [rows]="10"
+                [first]="first"
+              >
+                <ng-template pTemplate="header" let-columns>
+                  <tr>
+                    <th>Sl.No</th>
+                    <th *ngFor="let col of columns">
+                      {{ col.header }}
+                    </th>
+                   <!-- <th>Action</th> -->
+                  </tr>
+                </ng-template>
+                <ng-template
+                  pTemplate="body"
+                  let-rowData
+                  let-columns="columns"
+                  let-rowIndex="rowIndex"
+                >
+                  <tr>
+                    <td>{{ rowIndex + 1 }}</td>
+                    <td *ngFor="let col of columns">
+                      {{ rowData[col.field] }}
+                    </td>
+                    <!-- <td><a routerLink="/{{rowData.link}}" class="btn btn-primary-cstm" download>Download</a></td> -->
+                  </tr>
+                  
+                </ng-template>
+              </p-table>
+            </div>
         </div>
-
       </div>
-
   
       <div class="pull-right">
-          <button class="btn btn-primary-cstm  button-save" type="submit" (click)="editItemCloseModel(); ">
+          <button class="btn btn-primary-cstm  button-save" [disabled]="!generalInfoForm.valid" type="submit" (click)="saveGeneralInfo(); ">
             Save & Next
           </button>
         </div>               
-
-
-
-
-      
+ 
   
-   
+      </form>
   </div>
   </div>
      <div  [ngClass]="{hideTab : currentTab !== 'PnMap'}">
@@ -180,17 +204,17 @@
                 <div class="col-md-4" >
                   <p class="fs12">
                     <label class="control-label labels-font-header" style="width: auto; ">Publication ID:  </label>
-               <span class="span-header-red"> {{this.generalInformationDetails.PublicationId }} </span> </p>
+               <span class="span-header-red"> {{this.sourcePublication.publicationId }} </span> </p>
                 </div>
                 <div class="col-md-4">
                   <p class="fs12">
                     <label class="control-label labels-font-header" style="width: auto; ">Publication Description:  </label>
-                    <span class="span-header-red"> {{this.generalInformationDetails.description }} </span> </p>
+                    <span class="span-header-red"> {{this.sourcePublication.description }} </span> </p>
                 </div>  
                 <div  class="col-md-4">
                   <p class="fs12">
                     <label class="control-label labels-font-header" style="width: auto; ">Publication Type</label>
-                    <span class="span-header-red"> {{this.generalInformationDetails.pubType}} </span></p>
+                    <span class="span-header-red"> {{isEditMode ? this.sourcePublication.publicationType : publicationType}} </span></p>
                 </div>                              
               </div>
           <div class="col-md-12">
@@ -250,7 +274,7 @@
                       <!-- <a class="btn btn-primary nobg">
                         <i class="fa fa-edit"></i>
                       </a> -->
-                      <a class="btn btn-danger nobg">
+                      <a class="btn btn-danger nobg" (click)="onDeletePNMappingRow(rowData, rowIndex)">
                         <i class="fa fa-trash"></i>
                       </a>
                     </td>
@@ -356,7 +380,7 @@
                     <th *ngFor="let col of columns">
                       {{ col.header }}
                     </th>
-                    <th>Actions</th>
+                    <th *ngIf="!isEditMode">Actions</th>
                   </tr>
                 </ng-template>
                 <ng-template
@@ -370,7 +394,7 @@
                     <td *ngFor="let col of columns">
                       {{ rowData[col.field] }}
                     </td>
-                    <td>
+                    <td *ngIf="!isEditMode">
                       <a class="btn btn-primary nobg">
                         <i class="fa fa-edit"></i>
                       </a>
@@ -459,7 +483,7 @@
                     <th *ngFor="let col of columns">
                       {{ col.header }}
                     </th>
-                    <th>Actions</th>
+                    <th *ngIf="!isEditMode">Actions</th>
                   </tr>
                 </ng-template>
                 <ng-template
@@ -473,7 +497,7 @@
                     <td *ngFor="let col of columns">
                       {{ rowData[col.field] }}
                     </td>
-                    <td>
+                    <td *ngIf="!isEditMode">
                       <a class="btn btn-primary nobg">
                         <i class="fa fa-edit"></i>
                       </a>

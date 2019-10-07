@@ -48,7 +48,7 @@
                             </ng-template>
                             <ng-template pTemplate="body" ngFor let-model [ngForOf]="aircraftModelsPagination">
                                 <tr>
-                                    <td>{{model.aircraftModelId}}</td>
+                                    
                                     <td>{{model.aircraftType.description}}</td>
                                     <td>{{model.modelName}}</td>
                                     <td>{{model.memo}}</td>
@@ -80,7 +80,7 @@
                             <ng-template pTemplate="summary" id="footer">
                                 <label id="footer" class="footer">No'of records:</label> <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" />
                                 &nbsp;&nbsp;
-                                <label id="footer" class="footer1">Pages Count:</label> <input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" />
+                                <!-- <label id="footer" class="footer1">Pages Count:</label> <input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" /> -->
                             </ng-template>
                         </p-table>
                     </div>
@@ -106,12 +106,7 @@
                                                 <h4 class="modal-title">Aircraft Model Details</h4>
                                             </div>
                                             <div class="modal-body viewform">
-                                                 <p>
-                                                    <span class="label">
-                                                        <b>Aircraft Model Id: </b>
-                                                    </span>
-                                                    <span class="value">{{aircraftModelTypeToView.aircraftModelId}}</span>
-                                                </p>
+                                                
                                                 <p>
                                                     <span class="label">
                                                         <b>Manufacutrer Name: </b>
@@ -188,7 +183,9 @@
                                             <div class="form-group">
                                                 <div class="col-sm-12">
                                                     <div class="col-sm-4">
-                                                        <label class="control-label">Aircraft Manufacturer:</label>
+                                                        <label class="control-label">Aircraft Manufacturer:
+                                                            <span class="clr-red">*</span>
+                                                        </label>
                                                     </div>
                                                     <div class="col-sm-5">
                                                         <select [(ngModel)]="aircraftModelTypeToUpdate.aircraftTypeId" name="aircraftid" required>
@@ -198,7 +195,9 @@
                                                 </div>
                                                 <div class="col-sm-12">
                                                     <div class="col-sm-4">
-                                                       <label class="control-label">Model Name: </label>
+                                                       <label class="control-label">Model Name: 
+                                                            <span class="clr-red">*</span>
+                                                       </label>
                                                     </div>
                                                     <div class="col-sm-5">
                                                         <p-autoComplete [(ngModel)]="aircraftModelTypeToUpdate.modelName" (onSelect)="model($event)" (onKeyUp)=eventHandler($event) name="description"  [suggestions]="localCollection" (completeMethod)="filterModelName($event)" [size]="30"

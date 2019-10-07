@@ -13,11 +13,11 @@ namespace DAL.Models
 
         public long? AssetDepreciationMethodId { get; set; }
 
-        public string AssetDepreciationId { get; set; }
+        //public string AssetDepreciationId { get; set; }
 
         public string AssetDepreciationMethodName { get; set; }
 
-        public string AssetDepreciationBasis { get; set; }
+        public string AssetDepreciationMethodBasis { get; set; }
 
         public string AssetDepreciationMemo { get; set; }
 

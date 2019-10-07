@@ -27,7 +27,10 @@ namespace QuickApp.Pro.ViewModels
         public long EmployeeLicenseTypeId { get; set; }
         public string CertifyingInstitution { get; set; }
         public DateTime CertificationDate { get; set; }
-       // public DateTime ExpirationDate { get; set; }
+        public DateTime ExpirationDate { get; set; }
+
+        public int IsExpirationDate { get; set; }
+        // public DateTime ExpirationDate { get; set; }
         public bool IsLicenseInForce { get; set; }
         [ForeignKey("MasterCompanyId")]
         public Int32 MasterCompanyId { get; set; }
@@ -37,6 +40,8 @@ namespace QuickApp.Pro.ViewModels
         public System.DateTime CreatedDate { get; set; }
         public System.DateTime UpdatedDate { get; set; }
         public virtual MasterCompany MasterCompany { get; set; }
+        //public System.DateTime IsExpirationDate { get; set; }
+
         public class EmployeeLicensureViewModelValidator : AbstractValidator<EmployeeLicensureViewModel>
         {
             public EmployeeLicensureViewModelValidator()

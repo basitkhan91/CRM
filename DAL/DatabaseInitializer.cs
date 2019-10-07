@@ -58,18 +58,13 @@ namespace DAL
                 _logger.LogInformation("Inbuilt account generation completed");
             }
 
-            if (!await _context.PublicationTypes.AnyAsync())
+            if (!await _context.PublicationType.AnyAsync())
             {
-                _context.PublicationTypes.Add(new PublicationType { Id = 1, Name = "CMM" });
-                _context.PublicationTypes.Add(new PublicationType { Id = 2, Name = "AD" });
-                _context.PublicationTypes.Add(new PublicationType { Id = 3, Name = "SB" });
+                _context.PublicationType.Add(new PublicationType { PublicationTypeId = 1, Name = "CMM" });
+                _context.PublicationType.Add(new PublicationType { PublicationTypeId = 2, Name = "AD" });
+                _context.PublicationType.Add(new PublicationType { PublicationTypeId = 3, Name = "SB" });
             }
 
-            if (!await _context.PublicationAircraftManufacturers.AnyAsync())
-            {
-                _context.PublicationAircraftManufacturers.Add(new PublicationAircraftManufacturer { Id = 1, Name = "AirBus" });
-                _context.PublicationAircraftManufacturers.Add(new PublicationAircraftManufacturer { Id = 2, Name = "Beoing" });
-            }
             if (!await _context.PublicationModels.AnyAsync())
             {
 

@@ -61,6 +61,8 @@ export class AircraftManufacturerComponent implements OnInit {
     disableSave: boolean = false;
     manufacturer: string;
     //adding for Pagination End
+    selectedColumns : any[];
+    selectedColumn : AircraftType[];
 
     constructor(private breadCrumb: SingleScreenBreadcrumbService,
         private aircraftManufacurerService: AircraftManufacturerService, private masterComapnyService: MasterComapnyService, private alertService: AlertService, private modalService: NgbModal, private authService: AuthService, ) {
@@ -112,6 +114,7 @@ export class AircraftManufacturerComponent implements OnInit {
             { field: 'description', header: 'Aircraft Manufacturer Name' },
             { field: 'memo', header: 'Memo' },
         ];
+        this.selectedColumns = this.cols;
         this.loading = true;
         //P-table Code End
     }
@@ -253,6 +256,7 @@ export class AircraftManufacturerComponent implements OnInit {
         })[0]);;
         console.log(this.aircraftManufacturertoview);
         this.modal = this.modalService.open(viewData, { size: 'sm' });
+        
     }
     updateStatus(rowData){
         const data = {
@@ -292,7 +296,8 @@ export class AircraftManufacturerComponent implements OnInit {
             this.sourceAction.isActive == false;
            this.aircraftManufacurerService.updateActive(this.sourceAction).subscribe(
                data =>{
-                   console.log(data);
+                  // console.log(data);
+                   this.alertService.showMessage("Success", 'Aircraft manufacturer updated successfully.', MessageSeverity.success);
                }
            )
             //alert(e);

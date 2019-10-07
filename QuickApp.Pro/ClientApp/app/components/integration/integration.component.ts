@@ -17,6 +17,8 @@ import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
+import { getObjectByValue, validateRecordExistsOrNot, selectedValueValidate, editValueAssignByCondition, getObjectById } from '../../generic/autocomplete';
+import { Table } from 'primeng/table';
 @Component({
     selector: 'app-integration',
     templateUrl: './integration.component.html',
@@ -24,388 +26,255 @@ import { SingleScreenAuditDetails } from '../../models/single-screen-audit-detai
     animations: [fadeInOut]
 })
 /** Actions component*/
-export class IntegrationComponent implements OnInit, AfterViewInit {
-    selectedActionName: any;
-    disableSave: boolean;
-    actionamecolle: any[] = [];
-    integration_Name: any = "";
-    portalURL: any = "";
-    memo: any = "";
-    createdBy: any = "";
-    updatedBy: any = "";
-    createdDate: any = "";
-    updatedDate: any = "";
-    AuditDetails: SingleScreenAuditDetails[];
-    Active: string = "Active";
-	auditHisory: AuditHistory[];
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
-    selectedColumns: any[];
-    cols: any[];
-    displayedColumns = ['IntegrationPortalId', 'description', 'Portalurl'];
-    dataSource: MatTableDataSource<Integration>;
-    allIntegrationInfo: Integration[] = [];
-    allComapnies: MasterCompany[] = [];
-    private isSaving: boolean;
-	public sourceAction: any = {};
-    private bodyText: string;
-    loadingIndicator: boolean;
-    closeResult: string;
-    selectedColumn: Integration[];
-    title: string = "Create";
-    id: number;
-    errorMessage: any;
-    modal: NgbModalRef;
+export class IntegrationComponent implements OnInit {
 
-    integrationName: string;
-    filteredBrands: any[];
-    localCollection: any[] = [];
-    /** Actions ctor */
+    originalData: any;
+    isEdit: boolean = false;
+    totalRecords: any;
+    pageIndex: number = 0;
+    pageSize: number = 10;
+    totalPages: number;
+    headers = [
+        
+        { field: 'description', header: 'Integration' },
+        { field: 'portalUrl', header: 'Website URL' },
+        { field: 'memo', header: 'Memo' },
+    ]
+    selectedColumns = this.headers;
+    formData = new FormData()
+    @ViewChild('dt')
 
-    private isEditMode: boolean = false;
-    private isDeleteMode: boolean = false;
+    private table: Table;
+    auditHistory: any[] = [];
+    disableSaveGroupId: boolean = false;
+    PortalList: any;
+    disableSaveForDescription: boolean = false;
+    descriptionList: any;
 
-	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: IntegrationService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
-        this.displayedColumns.push('action');
-        this.dataSource = new MatTableDataSource();
-        //this.sourceAction = new Integration();
-
+    new = {
+        portalUrl: "",
+        description: "",
+        masterCompanyId: 1,
+        isActive: true,
+        memo: "",
     }
-    ngOnInit(): void {
-        this.cols = [           
-            { field: 'portalUrl', header: 'Website Url' },
-            { field: 'description', header: 'Integration' },
-            { field: 'memo', header: 'Memo' },
-            { field: 'createdBy', header: 'Created By' },
-            { field: 'updatedBy', header: 'Updated By' },         
-		];
-		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-integration';
-		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
-        this.selectedColumns = this.cols;
-        this.loadData();
-    }
-    ngAfterViewInit() {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-    }
-    public allWorkFlows: Integration[] = [];
-
-    private loadData() {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-        this.workFlowtService.getWorkFlows().subscribe(
-            results => this.onDataLoadSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-
-    }
-
-
-    private loadMasterCompanies() {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-
-        this.masterComapnyService.getMasterCompanies().subscribe(
-            results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-
-    }
-
-    public applyFilter(filterValue: string) {
-        this.dataSource.filter = filterValue;
-    }
-
-    private refresh() {
-        // Causes the filter to refresh there by updating with recently added data.
-        this.applyFilter(this.dataSource.filter);
-    }
-    private onDataLoadSuccessful(allWorkFlows: Integration[]) {
+    addNew = { ...this.new };
+    selectedRecordForEdit: any;
+    viewRowData: any;
+    selectedRowforDelete: any;  
+    existingRecordsResponse = []
+    constructor(private breadCrumb: SingleScreenBreadcrumbService,
+        private authService: AuthService,
+        private modalService: NgbModal,
+        private activeModal: NgbActiveModal,
+        private _fb: FormBuilder,
+        private alertService: AlertService,
+        public integrationService: IntegrationService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
        
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.dataSource.data = allWorkFlows;
-        this.allIntegrationInfo = allWorkFlows;
-    }
-
-    private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
-        // alert('success');
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.allComapnies = allComapnies;
-
-    }
-
-    private onDataLoadFailed(error: any) {
-        // alert(error);
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-
-    }
-    open(content) {
-		this.sourceAction = {};
-        this.isEditMode = false;
-        this.isDeleteMode = false;
-		this.disableSave = false;
-        this.isSaving = true;
-        this.loadMasterCompanies();
-		//this.sourceAction = new Integration();
-		this.sourceAction.isActive = true;
-		this.portalURL = "";
-		this.integrationName = "";
-		this.sourceAction.description = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
     }
 
 
-    openDelete(content, row) {
-
-        this.isEditMode = false;
-        this.isDeleteMode = true;       
-        this.sourceAction = row;
-        this.integration_Name = row.portalUrl;
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
-
-    openEdit(content, row) {
-
-        this.isEditMode = true;
-		this.isSaving = true;
-		this.disableSave = false;
-        this.loadMasterCompanies();
-        this.sourceAction = row;
-		this.integrationName = this.sourceAction.description;
-		this.portalURL = row.portalUrl;
-        this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
-    eventHandler(event) {
-        let value = event.target.value.toLowerCase();
-        if (this.selectedActionName) {
-            if (value == this.selectedActionName.toLowerCase()) {
-               
-                this.disableSave = true;
-            }
-            else {
-                this.disableSave = false;
-            }
-        }
-
-    }
-    partnmId(event) {
-        //debugger;
-        for (let i = 0; i < this.actionamecolle.length; i++) {
-            if (event == this.actionamecolle[i][0].integrationName) {
-                //alert("Action Name already Exists");
-                this.disableSave = true;
-                this.selectedActionName = event;
-            }
-        }
+    ngOnInit(): void {
+        this.getList();
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-integration';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
+   
     }
 
 
-    filterintegrations(event) {
-        this.localCollection = [];
-        for (let i = 0; i < this.allIntegrationInfo.length; i++) {
-            let integrationName = this.allIntegrationInfo[i].description;
-            if (integrationName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                this.actionamecolle.push([{
-                    "chargeId": this.allIntegrationInfo[i].integrationPortalId,
-                    "integrationName": integrationName
-                }]),
-                this.localCollection.push(integrationName);
-            }
-        }
-    }
-
-	openHist(content, row) {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
-
-
-		this.sourceAction = row;
-
-
-
-		this.isSaving = true;
-
-		this.workFlowtService.historyintegration(this.sourceAction.integrationPortalId).subscribe(
-			results => this.onHistoryLoadSuccessful(results[0], content),
-			error => this.saveFailedHelper(error));
-
-
-    }
-    openView(content, row) {
-
-        this.sourceAction = row;
-        this.integration_Name = row.description;
-        this.portalURL = row.portalURL;   
-        this.memo = row.memo;
-        this.createdBy = row.createdBy;
-        this.updatedBy = row.updatedBy;
-        this.createdDate = row.createdDate;
-        this.updatedDate = row.updatedDate;
-        this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
-    openHelpText(content) {
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
-
-
-	private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
-
-
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-
-		this.auditHisory = auditHistory;
-
-
-		this.modal = this.modalService.open(content, { size: 'lg' });
-
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-
-
-	}
-    handleChange(rowData, e) {
-        if (e.checked == false) {
-            this.sourceAction = rowData;
-            this.sourceAction.updatedBy = this.userName;
-            this.Active = "In Active";
-            this.sourceAction.isActive == false;
-            this.workFlowtService.updateAction(this.sourceAction).subscribe(
-                response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));
-            //alert(e);
-        }
-        else {
-            this.sourceAction = rowData;
-            this.sourceAction.updatedBy = this.userName;
-            this.Active = "Active";
-            this.sourceAction.isActive == true;
-            this.workFlowtService.updateAction(this.sourceAction).subscribe(
-                response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));
-            //alert(e);
-        }
-
-    }
-
-    editItemAndCloseModel() {
-
-        this.isSaving = true;
-
-        if (this.isEditMode == false) {
-            this.sourceAction.createdBy = this.userName;
-            this.sourceAction.updatedBy = this.userName;
-            //this.sourceAction.description = this.integrationName;
-			this.sourceAction.portalURL = this.portalURL;
-            this.workFlowtService.newAction(this.sourceAction).subscribe(
-                role => this.saveSuccessHelper(role),
-                error => this.saveFailedHelper(error));
-        }
-        else {
-
-            this.sourceAction.updatedBy = this.userName;
-			this.sourceAction.description = this.integrationName;
-			this.sourceAction.portalURL = this.portalURL;
-            this.workFlowtService.updateAction(this.sourceAction).subscribe(
-                response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));
-        }
-
-        this.modal.close();
-    }
-
-    deleteItemAndCloseModel() {
-        this.isSaving = true;
-        this.sourceAction.updatedBy = this.userName;
-		this.workFlowtService.deleteAcion(this.sourceAction.integrationPortalId).subscribe(
-            response => this.saveCompleted(this.sourceAction),
-            error => this.saveFailedHelper(error));
-        this.modal.close();
-    }
-
-    dismissModel() {
-        this.isDeleteMode = false;
-        this.isEditMode = false;
-        this.modal.close();
-    }
-
-    private saveCompleted(user?: Integration) {
-        this.isSaving = false;
-
-        if (this.isDeleteMode == true) {
-            this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
-            this.isDeleteMode = false;
-        }
-        else {
-            this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
-
-        }
-
-        this.loadData();
-    }
-
-    private saveSuccessHelper(role?: Integration) {
-        this.isSaving = false;
-        this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
-
-        this.loadData();
-
-    }
 
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
+    columnsChanges() {
+        this.refreshList();
+    }
+    refreshList() {
+        this.table.reset();
 
-    private saveFailedHelper(error: any) {
-        this.isSaving = false;
-        this.alertService.stopLoadingMessage();
-        this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
-        this.alertService.showStickyMessage(error, null, MessageSeverity.error);
+        // this.table.sortOrder = 0;
+        // this.table.sortField = '';
+
+        this.getList();
     }
 
-    private getDismissReason(reason: any): string {
-        if (reason === ModalDismissReasons.ESC) {
-            return 'by pressing ESC';
-        } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-            return 'by clicking on a backdrop';
+    customExcelUpload(event) {
+        // const file = event.target.files;
+
+        // console.log(file);
+        // if (file.length > 0) {
+
+        //     this.formData.append('file', file[0])
+        //     this.unitofmeasureService.UOMFileUpload(this.formData).subscribe(res => {
+        //         event.target.value = '';
+
+        //         this.formData = new FormData();
+        //         this.existingRecordsResponse = res;
+        //         this.getList();
+        //         this.alertService.showMessage(
+        //             'Success',
+        //             `Successfully Uploaded  `,
+        //             MessageSeverity.success
+        //         );
+
+        //     })
+        // }
+
+    }
+    sampleExcelDownload() {
+        // const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=UnitOfMeasure&fileName=uom.xlsx`;
+
+        // window.location.assign(url);
+    }
+
+    getList() {
+        this.integrationService.getWorkFlows().subscribe(res => {
+            const responseData = res[0];            
+            this.originalData = responseData;
+            this.totalRecords = responseData.length;
+            this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+        })
+    }
+    changePage(event: { first: any; rows: number }) {
+        console.log(event);
+        const pageIndex = (event.first / event.rows);
+       
+        this.pageSize = event.rows;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+    }
+
+
+    checkGroupDescriptionExists(field, value) {
+        console.log(this.selectedRecordForEdit);
+        const exists = validateRecordExistsOrNot(field, value, this.originalData, this.selectedRecordForEdit);
+        if (exists.length > 0) {
+            this.disableSaveForDescription = true;
+        }
+        else {
+            this.disableSaveForDescription = false;
+        }
+
+    }
+    filterDescription(event) {
+        this.descriptionList = this.originalData;
+
+        const descriptionData = [...this.originalData.filter(x => {
+            return x.description.toLowerCase().includes(event.query.toLowerCase())
+        })]
+        this.descriptionList = descriptionData;
+    }
+    selectedDescription(object) {
+        const exists = selectedValueValidate('description', object, this.selectedRecordForEdit)
+
+        this.disableSaveForDescription = !exists;
+    }
+
+    save() {
+        const data = {
+            ...this.addNew, createdBy: this.userName, updatedBy: this.userName,           
+            description: editValueAssignByCondition('description', this.addNew.description),           
+            portalUrl: editValueAssignByCondition('portalUrl',this.addNew.portalUrl)
+        };
+        if (!this.isEdit) {
+            this.integrationService.newAction(data).subscribe(() => {
+                this.resetForm();
+                this.getList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Added  New Integration Successfully  `,
+                    MessageSeverity.success
+                );
+            })
         } else {
-            return `with: ${reason}`;
+            this.integrationService.updateAction(data).subscribe(() => {
+                this.selectedRecordForEdit = undefined;
+                this.isEdit = false;
+                this.resetForm();
+                this.getList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Added  New Integration Successfully  `,
+                    MessageSeverity.success
+                );
+            })
         }
     }
-    showAuditPopup(template, integrationPortalId): void {
-        this.auditIntegration(integrationPortalId);
-        this.modal = this.modalService.open(template, { size: 'sm' });
+
+    resetForm() {
+        this.isEdit = false;
+        this.selectedRecordForEdit = undefined;
+        this.addNew = { ...this.new };
     }
 
-    auditIntegration(integrationPortalId: number): void {
-        this.AuditDetails = [];
-        this.workFlowtService.getAudit(integrationPortalId).subscribe(audits => {
-            if (audits.length > 0) {
-                this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["integrationPortalAuditId", "integrationPortalId", "createdBy", "createdDate", "updatedDate","masterCompanyId",];
+
+    edit(rowData) {
+        console.log(rowData);
+        this.isEdit = true;
+        this.disableSaveGroupId = false;
+        this.disableSaveForDescription = false;
+
+
+        this.addNew = {
+            ...rowData,        
+            description: getObjectByValue('description', rowData.description, this.originalData),
+        };
+        this.selectedRecordForEdit = { ...this.addNew }
+
+    }
+
+    changeStatus(rowData) {
+        console.log(rowData);
+        const data = { ...rowData }
+        this.integrationService.updateAction(data).subscribe(() => {
+          
+            this.alertService.showMessage(
+                'Success',
+                `Updated Status Successfully  `,
+                MessageSeverity.success
+            );
+        })
+
+    }
+    viewSelectedRow(rowData) {
+        console.log(rowData);
+        this.viewRowData = rowData;
+    }
+    resetViewData() {
+        this.viewRowData = undefined;
+    }
+    delete(rowData) {
+        this.selectedRowforDelete = rowData;
+
+    }
+    deleteConformation(value) {
+        if (value === 'Yes') {
+            this.integrationService.deleteAcion(this.selectedRowforDelete.integrationPortalId).subscribe(() => {
+                this.getList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Deleted ItemGroup Successfully  `,
+                    MessageSeverity.success
+                );
+            })
+        } else {
+            this.selectedRowforDelete = undefined;
+        }
+    }
+
+    getAuditHistoryById(rowData) {
+        this.integrationService.getAudit(rowData.integrationPortalId).subscribe(res => {
+            this.auditHistory = res;
+        })
+    }
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
             }
-        });
+        }
     }
-
 }
