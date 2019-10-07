@@ -14,7 +14,7 @@
         <tr   *ngFor="let eqp of workFlow.equipments; let i = index">
                 <td>{{(currentPage - 1) * itemsPerPage + i + 1}}</td>
             <td>
-                <p-autoComplete (onSelect)="onPartSelect($event,eqp)" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [(ngModel)]="eqp.partNumber"
+                <p-autoComplete (onSelect)="onPartSelect($event, eqp)" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [(ngModel)]="eqp.partNumber"
                                 [minLength]="1" [dropdown]="true" class="workflow-equip-select">
                     <ng-template let-assetId pTemplate="asset">
                         <div class="ui-helper-clearfix">{{assetId}}</div>

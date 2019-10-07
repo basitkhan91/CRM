@@ -473,15 +473,15 @@ namespace QuickApp.Pro.Controllers
                 if (workFlow.WorkflowId > 0)
                 {
                     //update workflow header
-                    workFlow.CreatedDate = DateTime.Now;
+                    var wf = UnitOfWork.Repository<Workflow>().Get(workFlow.WorkflowId);
+                    workFlow.CreatedBy = wf.CreatedBy;
                     workFlow.UpdatedDate = DateTime.Now;
-                    workFlow.CreatedBy = "admin";
                     workFlow.UpdatedBy = "admin";
                     workFlow.MasterCompanyId = 1;
                     workFlow.IsActive = true;
+                    workFlow.WorkOrderNumber = "ACC" + workFlow.WorkflowId.ToString();
+                    wf = null;
                     UnitOfWork.Repository<Workflow>().Update(workFlow);
-
-
                 }
                 else
                 {

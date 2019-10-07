@@ -18,9 +18,9 @@
         <tr class="charge-tr" [hidden]="charge.isDelete" *ngFor="let charge of workFlow.charges; let i = index">
             <td>{{(currentPage - 1) * itemsPerPage + i + 1}}</td>
             <td>
-                <select class="form-control custom-select wf-pub-id" id='dllChargesType' (change)="onChargeTypeChange(charge)" [(ngModel)]="charge.workflowChargeTypeId" style="width: 130px;">
-                    <option value="">Select</option>
-                    <option value={{ctype.id}} *ngFor="let ctype of chargesTypes">{{ctype.name}}</option>
+                <select class="form-control custom-select wf-pub-id" id='dllChargesType' (change)="onChargeTypeChange($event, charge)" [(ngModel)]="charge.workflowChargeTypeId" style="width: 130px;">
+                    <option [value]="0">Select</option>
+                    <option [value]="ctype.id" *ngFor="let ctype of chargesTypes">{{ctype.name}}</option>
                 </select>
             </td>
             <td>
