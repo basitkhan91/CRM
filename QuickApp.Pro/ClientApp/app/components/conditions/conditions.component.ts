@@ -32,19 +32,7 @@ export class ConditionsComponent implements OnInit {
 
     AuditDetails: SingleScreenAuditDetails[];
     auditHisory: AuditHistory[];
-    /** Conditions ctor */
-
-    cols: any[];
     selectedColumns: any[];
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
-
- 
-    allConditionInfo: Condition[] = [];
-    sourceAction: Condition;
-    loadingIndicator: boolean;
-    actionForm: FormGroup;
-    title: string = "Create";
     id: number;
     errorMessage: any;
     private isEditMode: boolean = false;
@@ -73,6 +61,7 @@ export class ConditionsComponent implements OnInit {
     pageIndex: number = 0;
     pageSize: number = 10;
     totalPages: number;
+    @ViewChild('dt')
     private table: Table;
     selectedRecordForEdit: any;
     newCondition =
@@ -146,13 +135,10 @@ export class ConditionsComponent implements OnInit {
 
    
     refreshList() {
-       // this.table.reset();
+        this.table.reset();
         this.getConditionList();
     }
    
-   
-
-
     delete(rowData) {
         this.selectedRowforDelete = rowData;
 
@@ -171,8 +157,7 @@ export class ConditionsComponent implements OnInit {
             this.selectedRowforDelete = undefined;
         }
     }
-
-  
+      
     viewSelectedRow(rowData) {
         console.log(rowData);
         this.viewRowData = rowData;
@@ -228,15 +213,7 @@ export class ConditionsComponent implements OnInit {
         }, () => { console.log('Backdrop click') })
     }
    
-    filterconditions(event) {
-        this.localCollection = this.allConditionInfo;
-        if (event.query !== undefined && event.query !== null) {
-            const conditionName = [...this.allConditionInfo.filter(x => {
-                return x.description.toLowerCase().includes(event.query.toLowerCase())
-            })]
-            this.localCollection = conditionName;
-        }
-    }
+
     
 
     get userName(): string {

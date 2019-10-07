@@ -17,13 +17,8 @@
                                  scrollHeight="450px">
                             <ng-template pTemplate="caption">
                                 <div style="text-align: right; margin-left: -6px">
-                                    <p-multiSelect [options]="conditionHeaders" [(ngModel)]="selectedColumns" optionLabel="header" (onChange)="columnsChanges()"
-                                                   [style]="{minWidth: '200px'}" style="float:left"></p-multiSelect>
-                                    <!-- <div class="inner-addon right-addon w200 inline-block  g-filter-search-cstm">
-                                        <i class="fa fa-search"></i>
-                                        <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (blur)="inputGlobalFiledFilter($event.target.value, 'contains')"
-                                            placeholder="Global Filter">
-                                    </div> -->
+                                    <p-multiSelect [options]="conditionHeaders" [(ngModel)]="selectedColumns" optionLabel="header" 
+                                                   [style]="{minWidth: '200px'}" style="float:left" (onChange)="columnsChanges()" ></p-multiSelect>
                                     <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" pTooltip="Download All Data" tooltipPosition="top" (click)="dt.exportCSV()"></button>
                                     <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only" pTooltip="Download Selected" tooltipPosition="top"
                                             (click)="dt.exportCSV({selectionOnly:true})"></button>
@@ -67,7 +62,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                         (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]
                                         }}
                                     </td>
-                                    <td style="width:150px">
+                                    <td style="width:150px" *ngIf="selectedColumns.length> 0">
                                         <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)"
                                                        [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                         <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)"
