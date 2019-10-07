@@ -9,5 +9,7 @@ namespace DAL.Repositories.Interfaces
         long UploadFiles(IFormFileCollection files, long? referenceId, int moduleId, string moduleName, string uploadedBy, int? masterCompanyId);
         List<AttachmentDetails> GetAttachmentDetails(long attachmentId, long? referenceId, int moduleId);
         void DeleteAttachement(List<long> attachmentDetailIds, string deletedBy);
+
+        void UploadCustomFile(string moduleName, IFormFile file);
     }
 }
