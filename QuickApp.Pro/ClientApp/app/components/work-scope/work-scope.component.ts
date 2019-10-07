@@ -256,7 +256,7 @@ export class WorkScopeComponent implements OnInit {
                 this.getList();
                 this.alertService.showMessage(
                     'Success',
-                    `Deleted ItemGroup Successfully  `,
+                    `Deleted Work Scope Successfully  `,
                     MessageSeverity.success
                 );
             })
