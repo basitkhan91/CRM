@@ -10,11 +10,11 @@ namespace DAL.Models
     {  
         [Key]
         public long ItemGroupId { get; set; }
-        public string Memo { get; set; }
-
+        
         public string ItemGroupCode { get; set; }
 
         public string Description { get; set; }
+        public string Memo { get; set; }
 
         [ForeignKey("MasterCompanyId")]
         public Int32 MasterCompanyId { get; set; }

@@ -62,6 +62,7 @@ export class AircraftManufacturerComponent implements OnInit {
     manufacturer: string;
     //adding for Pagination End
     selectedColumns : any[];
+    selectedColumn : AircraftType[];
 
     constructor(private breadCrumb: SingleScreenBreadcrumbService,
         private aircraftManufacurerService: AircraftManufacturerService, private masterComapnyService: MasterComapnyService, private alertService: AlertService, private modalService: NgbModal, private authService: AuthService, ) {
@@ -255,6 +256,7 @@ export class AircraftManufacturerComponent implements OnInit {
         })[0]);;
         console.log(this.aircraftManufacturertoview);
         this.modal = this.modalService.open(viewData, { size: 'sm' });
+        
     }
     updateStatus(rowData){
         const data = {

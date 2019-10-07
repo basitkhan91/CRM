@@ -42,8 +42,8 @@ export class CustomerGeneralInformation {
 
 
 
-        this.isAddressForBilling = false;
-        this.isAddressForShipping = false;
+        this.isAddressForBilling = true;
+        this.isAddressForShipping = true;
         this.customerAffiliationId = 2;
         this.customerTypeId = null;
         this.name = '';
@@ -79,7 +79,7 @@ export class CustomerGeneralInformation {
         this.createdBy = '';
         this.updatedBy = '';
         this.masterCompanyId = null;
-        this.isActive = false;
+        this.isActive = true;
     }
 
 

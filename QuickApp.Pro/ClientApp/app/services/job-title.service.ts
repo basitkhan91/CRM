@@ -43,7 +43,7 @@ export class JobTitleService {
             this.jobTitleEndpoint.getJobtitleEndpoint<JobTitle[]>());
     }
 
-    newAction(action: JobTitle) {
+    newAction(action) {
         return this.jobTitleEndpoint.getNewjobtitleEndpoint<JobTitle>(action);
     }
 
@@ -51,7 +51,7 @@ export class JobTitleService {
         return this.jobTitleEndpoint.getEditJobTitleEndpoint<JobTitle>(actionId);
     }
 
-    updateAction(action: JobTitle) {     
+    updateAction(action) {     
         return this.jobTitleEndpoint.getUpdateJobtitleEndpoint(action, action.jobTitleId);
     }
 

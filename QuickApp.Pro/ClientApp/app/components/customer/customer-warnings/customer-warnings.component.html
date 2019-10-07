@@ -1,17 +1,17 @@
-﻿<div [@fadeInOut] class="page-content">
+﻿
 	<div class="right_col" role="main">
-		<div class="x_panel" style="">
+		<div  style="">
             <div class="x_content">
                 <div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
                     <p class="fs10">
                         <label class="control-label w100">Customer Name:</label>
-                        {{local?.name}}
+                        {{customerName}}
                     </p>
                 </div>
                 <div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
                     <p class="fs10">
                         <label class="control-label w100">Customer Code:</label>
-                        {{local?.customerCode}}
+                        {{customerCode}}
                     </p>
                 </div>
                 <!--<nav aria-label="breadcrumb">
@@ -28,7 +28,7 @@
 
                 <div>
                     <div class="col-md-12" style="margin-bottom: -10px;">
-                        <h3 class="po-head pull-left" style="padding: 0 6px;">Warnings Message</h3>
+                        <!-- <h3 class="po-head pull-left" style="padding: 0 6px;">Warnings Message</h3> -->
                     </div>
                     <div class="clear"></div>
                     <hr />
@@ -47,23 +47,32 @@
                                             <thead>
                                                 <tr align="center">
                                                     <th></th>
-                                                    <th>Allow <input type="checkbox" [ngModelOptions]="{standalone: true}" [disabled]="sourePerformReceiving.isRestrict" [(ngModel)]="sourePerformReceiving.isAllow" (change)="isAllEnable()" class="form-control" /></th>
-                                                    <th>Warning <input type="checkbox" [disabled]="sourePerformReceiving.isRestrict" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourePerformReceiving.isWarning" (change)="isAllwarningEnable(sourcewarningAll.warning?'A':'B')" class="form-control" /></th>
-                                                    <th>Restrict <input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourePerformReceiving.isRestrict" (change)="isAllrestrictEnable(sourcerestrictall.restrict?'A':'B')" class="form-control" /> </th>
+                                                    <th>Allow <input type="checkbox" name="allowAll"  [disabled]="isWarning" (change)="allowAll($event.target.checked)" class="form-control" /></th>
+                                                    <th>Warning <input type="checkbox" name="warningAll"   [disabled]="isWarning"  (change)="warningAll($event.target.checked)"  class="form-control" /></th>
+                                                    <th>Restrict <input type="checkbox" name="RestrictAll"   (change)="restrictAll($event.target.checked)"  class="form-control"  /> </th>
                                                     <th>Warning Msg</th>
                                                     <th>Restrict Msg</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr align="center">
+                                                    <tr align="center" *ngFor="let w of warningMessages; let i=index">
+                                                            <td>{{w.sourceModule}}</td>
+                                                          
+                                                            <td><input type="checkbox" name="allow{{i}}"  [(ngModel)]="w.allow"  [disabled]="w.restrict" class="form-control" /></td>
+                                                            <td><input type="checkbox" name="warning{{i}}"  [(ngModel)]="w.warning" [disabled]="w.restrict" class="form-control" /></td>
+                                                            <td><input type="checkbox" name="restrict{{i}}" [(ngModel)]="w.restrict"  class="form-control" /></td>
+                                                            <td><textarea class="form-control" name="warningMessage{{i}}" [(ngModel)]="w.warningMessage" [disabled]="!w.warning" ></textarea></td>
+                                                            <td><textarea class="form-control" name="restrictMessage{{i}}"[(ngModel)]="w.restrictMessage"  [disabled]="!w.restrict"  ></textarea></td>
+                                                        </tr>
+                                                <!-- <tr align="center">
                                                     <td>Perform Receiving</td>
                                                     <td><input type="checkbox" [ngModelOptions]="{standalone: true}" [disabled]="sourePerformReceiving.restrict" [(ngModel)]="sourePerformReceiving.allow" class="form-control" /></td>
                                                     <td><input type="checkbox" [ngModelOptions]="{standalone: true}" [disabled]="sourePerformReceiving.restrict" [(ngModel)]="sourePerformReceiving.warning" (click)="isEnable(sourePerformReceiving.warning?'A':'B')" class="form-control" /></td>
                                                     <td><input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourePerformReceiving.restrict" (click)="isCheck(sourePerformReceiving.restrict?'A':'B')" class="form-control" /></td>
                                                     <td><textarea class="form-control" [ngModelOptions]="{standalone: true}" [disabled]="isReadOnly" [(ngModel)]="sourePerformReceiving.warningMessage"></textarea></td>
                                                     <td><textarea class="form-control" [ngModelOptions]="{standalone: true}" [disabled]="isOnly" [(ngModel)]="sourePerformReceiving.restrictMessage"></textarea></td>
-                                                </tr>
-                                                <tr align="center">
+                                                </tr> -->
+                                                <!-- <tr align="center">
                                                     <td>Quoting</td>
                                                     <td><input type="checkbox" [ngModelOptions]="{standalone: true}" [disabled]="sourceQuoting.restrict" [(ngModel)]="sourceQuoting.allow" class="form-control" /></td>
                                                     <td><input type="checkbox" [ngModelOptions]="{standalone: true}" [disabled]="sourceQuoting.restrict" [(ngModel)]="sourceQuoting.warning" (click)="isEnabled(sourceQuoting.warning?'A':'B')" class="form-control" /></td>
@@ -168,7 +177,7 @@
                                                     <td><input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceWarranty.restrict" (click)="warrenty(sourceWarranty.restrict?'A':'B')" class="form-control" /></td>
                                                     <td><textarea class="form-control" [ngModelOptions]="{standalone: true}" [disabled]="isWarrenable" [(ngModel)]="sourceWarranty.warningMessage"></textarea></td>
                                                     <td><textarea class="form-control" [ngModelOptions]="{standalone: true}" [disabled]="isWarrdisable" [(ngModel)]="sourceWarranty.restrictMessage"></textarea></td>
-                                                </tr>
+                                                </tr> -->
 
                                             </tbody>
                                         </table>
@@ -178,7 +187,7 @@
                             </div>
                             <div class="clear"></div>
                         </div>
-                        <button type="submit" class="btn btn-primary-cstm pull-right submit-btn" (click)="saveDetails()">Save</button>
+                        <button type="submit" class="btn btn-primary-cstm pull-right submit-btn" (click)="saveWarnings()">Save</button>
                         <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="backClick()">Previous</button>
                     </div>
                 </form>
@@ -197,4 +206,4 @@
 			</div>
 		</div>
 	</div>
-</div>
+

@@ -93,7 +93,8 @@ export class AccountingCalendarComponent implements OnInit {
                     else {
                         var fiscalYear = Number(this.currentCalendarObj.fiscalYear);
                     }
-                    var fromdate = new Date(fiscalYear + '-' + '0' + month + '-' + '01');
+                    //  var fromdate = new Date(fiscalYear + '-' + '0' + month + '-' + '01');
+                    var fromdate = new Date('0' + month + '-' + '01' + '-' + fiscalYear);
                     var date = new Date(fromdate);
                     if (this.isBoolean) {
                         var year = date.getFullYear() + 1;
@@ -103,17 +104,24 @@ export class AccountingCalendarComponent implements OnInit {
                     }
                     var year = date.getFullYear();
                     var lastmonth = date.getMonth();
-                    var lastday = new Date(year, lastmonth + 1, 0).getDate();
-                    var toDate = new Date(year + '-' + '0' + month + '-' + lastday);
+                    //var lastday = new Date(year, lastmonth + 1, 0).getDate();
+                    //var toDate = new Date(year + '-' + '0' + month + '-' + lastday);
+
+                    var lastday = new Date(year,lastmonth + 1, 0).getDate();
+                    var toDate = new Date('0' + month + '-' + lastday + '-' + year);
 
                 }
                 else {
-                    var fromdate = new Date(this.currentCalendarObj.fiscalYear + '-' + month + '-' + '01');
+                 //   var fromdate = new Date(this.currentCalendarObj.fiscalYear + '-' + month + '-' + '01');
+                    var fromdate = new Date( month + '-' + '01' + '-' + this.currentCalendarObj.fiscalYear);
                     var date = new Date(fromdate);
                     var year = date.getFullYear();
                     var lastmonth = date.getMonth();
-                    var lastday = new Date(year, lastmonth + 1, 0).getDate();
-                    var toDate = new Date(year + '-' + month + '-' + lastday);
+                    //var lastday = new Date(year, lastmonth + 1, 0).getDate();
+                    //var toDate = new Date(year + '-' + month + '-' + lastday);
+
+                    var lastday = new Date(year,lastmonth + 1, 0).getDate();
+                    var toDate = new Date( month + '-' + lastday + '-' + year);
                 }
 
                 let defualtCalendarObj = {
@@ -129,7 +137,8 @@ export class AccountingCalendarComponent implements OnInit {
                     description: this.currentCalendarObj.description,
                     createdBy: this.userName,
                     updatedBy: this.userName,
-                    legalEntityId:this.currentCalendarObj.legalEntityId
+                    isAdjustPeriod: false,
+                    legalEntityId: this.currentCalendarObj.legalEntityId
                 }
                 this.period++;
                 return defualtCalendarObj;
@@ -138,21 +147,28 @@ export class AccountingCalendarComponent implements OnInit {
                 let month = selectedMonth + 1;
                 if (month <= 9) {
 
-                    var fromdate = new Date(this.currentCalendarObj.fiscalYear + '-' + '0' + month + '-' + '01');
+                 //   var fromdate = new Date(this.currentCalendarObj.fiscalYear + '-' + '0' + month + '-' + '01');
+                    var fromdate = new Date('0' + month + '-' + '01' + '-' + this.currentCalendarObj.fiscalYear);
                     var date = new Date(fromdate);
                     var year = date.getFullYear();
                     var lastmonth = date.getMonth();
-                    var lastday = new Date(year, lastmonth + 1, 0).getDate();
-                    var toDate = new Date(year + '-' + '0' + month + '-' + lastday);
+                    //var lastday = new Date(year, lastmonth + 1, 0).getDate();
+                    //var toDate = new Date(year + '-' + '0' + month + '-' + lastday);
+                    var lastday = new Date(year,lastmonth + 1, 0).getDate();
+                    var toDate = new Date('0' + month + '-' + lastday + '-' + year);
 
                 }
                 else {
-                    var fromdate = new Date(this.currentCalendarObj.fiscalYear + '-' + month + '-' + '01');
+                   // var fromdate = new Date(this.currentCalendarObj.fiscalYear + '-' + month + '-' + '01');
+                    var fromdate = new Date(month + '-' + '01' + '-' + this.currentCalendarObj.fiscalYear);
                     var date = new Date(fromdate);
                     var year = date.getFullYear();
                     var lastmonth = date.getMonth();
-                    var lastday = new Date(year, lastmonth + 1, 0).getDate();
-                    var toDate = new Date(year + '-' + month + '-' + lastday);
+                    //var lastday = new Date(year, lastmonth + 1, 0).getDate();
+                    //var toDate = new Date(year + '-' + month + '-' + lastday);
+
+                    var lastday = new Date(year,lastmonth + 1, 0).getDate();
+                    var toDate = new Date(month + '-' + lastday + '-' + year);
                 }
 
                 let defualtCalendarObj = {
@@ -200,7 +216,8 @@ export class AccountingCalendarComponent implements OnInit {
                 else {
                     var fiscalYear = Number(this.currentCalendarObj.fiscalYear);
                 }
-                var fromdate = new Date(fiscalYear + '-' + '0' + month + '-' + '01');
+               // var fromdate = new Date(fiscalYear + '-' + '0' + month + '-' + '01');
+                var fromdate = new Date('0' + month + '-' + '01' + '-' + fiscalYear);
                 var date = new Date(fromdate);
                 if (this.isBoolean) {
                     var year = date.getFullYear() + 1;
@@ -210,17 +227,24 @@ export class AccountingCalendarComponent implements OnInit {
                 }
                 var year = date.getFullYear();
                 var lastmonth = date.getMonth();
-                var lastday = new Date(year, lastmonth + 1, 0).getDate();
-                var toDate = new Date(year + '-' + '0' + month + '-' + lastday);
+                //var lastday = new Date(year, lastmonth + 1, 0).getDate();
+                //var toDate = new Date(year + '-' + '0' + month + '-' + lastday);
+                var lastday = new Date(year,lastmonth + 1, 0).getDate();
+                var toDate = new Date('0' + month + '-' + lastday + '-' + year);
+
 
             }
             else {
-                var fromdate = new Date(this.currentCalendarObj.fiscalYear + '-' + month + '-' + '01');
+               // var fromdate = new Date(this.currentCalendarObj.fiscalYear + '-' + month + '-' + '01');
+                var fromdate = new Date( month + '-' + '01' + '-' + this.currentCalendarObj.fiscalYear);
                 var date = new Date(fromdate);
                 var year = date.getFullYear();
                 var lastmonth = date.getMonth();
-                var lastday = new Date(year, lastmonth + 1, 0).getDate();
-                var toDate = new Date(year + '-' + month + '-' + lastday);
+                //var lastday = new Date(year, lastmonth + 1, 0).getDate();
+                //var toDate = new Date(year + '-' + month + '-' + lastday);
+
+                var lastday = new Date(year,lastmonth + 1, 0).getDate();
+                var toDate = new Date(month + '-' + lastday + '-' + year);
             }
 
             if (this.calendarArray.length == 3) {
@@ -284,8 +308,8 @@ export class AccountingCalendarComponent implements OnInit {
                     createdBy: this.userName,
                     updatedBy: this.userName,
                     adjusting: 'yes',
-                    isAdjustPeriod: true,
-                 
+                    isAdjustPeriod: true
+
 
                 }
                 this.period++;
@@ -326,6 +350,7 @@ export class AccountingCalendarComponent implements OnInit {
                     description: this.currentCalendarObj.description,
                     createdBy: this.userName,
                     updatedBy: this.userName,
+                    isAdjustPeriod: false,
                     legalEntityId: this.currentCalendarObj.legalEntityId
 
                 }
@@ -350,6 +375,7 @@ export class AccountingCalendarComponent implements OnInit {
                 description: this.currentCalendarObj.description,
                 createdBy: this.userName,
                 updatedBy: this.userName,
+                isAdjustPeriod:false,
                 legalEntityId: this.currentCalendarObj.legalEntityId
 
             }
@@ -366,10 +392,12 @@ export class AccountingCalendarComponent implements OnInit {
         if (selectedObj.isAdjustPeriod == true) {
             selectedObj.fiscalName = months[13];
             selectedObj.periodName = selectedObj.fiscalName + ' - ' + this.currentCalendarObj.fiscalYear;
+            this.calendarArray[selectedIndex].isAdjustPeriod = selectedObj.isAdjustPeriod;
         }
         else {
             selectedObj.fiscalName = months[0];
             selectedObj.periodName = "";
+            this.calendarArray[selectedIndex].isAdjustPeriod = false;
         }
         
     }
@@ -458,7 +486,7 @@ export class AccountingCalendarComponent implements OnInit {
         this.calendarArray.splice(index, 1);
     }
     setMonthDate() {
-        this.currentCalendarObj.fromDate = new Date(this.currentCalendarObj.fiscalYear + '-' + '01-01');
+        this.currentCalendarObj.fromDate = new Date('01-01' + '-' + this.currentCalendarObj.fiscalYear );
         this.currentCalendarObj.toDate = "";
     }
     saveCalendar() {

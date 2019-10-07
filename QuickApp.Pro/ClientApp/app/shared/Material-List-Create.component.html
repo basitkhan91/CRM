@@ -32,7 +32,7 @@
             <tr class="material-tr" [hidden]="material.isDelete" *ngFor="let material of workFlow.materialList;let i = index">
                 <td>{{(currentPage - 1) * itemsPerPage + i + 1}}</td>
                 <td>
-                    <p-autoComplete (onSelect)="onPartSelect($event,material)" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [(ngModel)]="material.partNumber"
+                    <p-autoComplete (onSelect)="onPartSelect($event, material)" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [(ngModel)]="material.partNumber"
                                     [minLength]="1" [dropdown]="true" class="workflow-measurement-select">
                         <ng-template let-partName pTemplate="part">
                             <div class="ui-helper-clearfix">{{partName}}</div>
@@ -66,7 +66,7 @@
                     </select>
                 </td>
                 <td style="width: 200px">
-                    <input type="text" maxlength="10" pInputText pKeyFilter="pnum" class="form-control" value="{{material.quantity}}" (input)="calculateExtendedCost(material);calculateQtySummation(); " [(ngModel)]="material.quantity" />
+                    <input type="text" maxlength="10" pInputText pKeyFilter="pnum" class="form-control" value="{{material.quantity}}" (input)="calculateQtySummation();calculateExtendedCost(material);" [(ngModel)]="material.quantity" />
                 </td>
                 <td>
                     <select class="form-control custom-select wf-pub-id" id="ddlMaterialUOM" [(ngModel)]="material.unitOfMeasureId">

@@ -86,7 +86,6 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
     customerVfinanceiewFeilds: any = {};
     customerClassificationId: any;
     exportLicenseNumber: any;
-    tempCustomerType: any;
     ngOnInit(): void {
 
         this.loadData(); //it is need to not show steps in customer List
@@ -138,18 +137,6 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
         this.dataSource = new MatTableDataSource();
         this.activeIndex = 0;
         this.workFlowtService.listCollection = null;
-
-
-        this.workFlowtService.financeCollection = undefined;
-        this.workFlowtService.paymentCollection = undefined;
-        this.workFlowtService.salesCollection = undefined;
-        this.workFlowtService.shippingCollection = undefined;
-        this.workFlowtService.generalCollection = undefined;
-        this.workFlowtService.auditServiceCollection = {};
-        this.workFlowtService.contactCollection = undefined;
-        this.workFlowtService.customergeneralcollection = undefined;
-
-
         //this.sourceCustomer = new Customer();
 
     }
@@ -179,7 +166,6 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
             { field: 'email', header: 'Customer Email' },
             { field: 'city', header: 'City' },
             { field: 'stateOrProvince', header: 'StateOrProvince' },
-            { field: 'customerPhone', header: 'Customer Phone' },
             { field: 'primarySalesPersonFirstName', header: 'Primary Sales Person' },
             { field: 'createdBy', header: 'Created By' },
             { field: 'updatedBy', header: 'Updated By' },
@@ -330,17 +316,20 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
     }
 
     openEdits(row) {
+        const { customerId } = row;
+        this._route.navigateByUrl(`customersmodule/customerpages/app-customer-edit/${customerId}`);
         //  debugger
-        this.isEditMode = true;
-        this.workFlowtService.isEditMode = true;
-        this.isSaving = true;
+        // this.isEditMode = true;
+        // this.workFlowtService.isEditMode = true;
+        // this.isSaving = true;
         //this.sourceVendor = row;
-        this.loadMasterCompanies();
-        this.workFlowtService.getCustomerdataById(row.customerId).subscribe(results => {
-            this.workFlowtService.listCollection = results[0][0];
-            this.workFlowtService.enableExternal = true;
-            this._route.navigateByUrl('customersmodule/customerpages/app-customer-general-information');
-        });
+        // this.loadMasterCompanies();
+        // this.workFlowtService.getCustomerdataById(row.customerId).subscribe(results =>
+        // {
+        //     // this.workFlowtService.listCollection = results[0][0];
+        //     // this.workFlowtService.enableExternal = true;
+
+        //     });
 
         //this.workFlowtService.listCollection = row;
         //this.workFlowtService.enableExternal = true;
@@ -354,26 +343,7 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
             this.sourceCustomer.updatedBy = this.userName;
             this.Active = "In Active";
             this.sourceCustomer.isActive == false;
-            this.tempCustomerType;
-
-
-
-            if (this.sourceCustomer.customerType === 'Lead') {
-                this.tempCustomerType = { customerTypeId: 1, description: "Lead" }
-            } else
-                if (this.sourceCustomer.customerType === "Prospect") {
-                    this.tempCustomerType = { customerTypeId: 2, description: "Prospect" }
-                } else
-                    if (this.sourceCustomer.customerType === "Customer") {
-                        this.tempCustomerType = { customerTypeId: 3, description: "Customer" }
-                    } else
-                        if (this.sourceCustomer.customerType === "Opportunity") {
-                            this.tempCustomerType = { customerTypeId: 4, description: "Opportunity" }
-                        }
-
-
-
-            this.workFlowtService.updateActionforActive({ ...this.sourceCustomer, customerType: this.tempCustomerType }).subscribe(
+            this.workFlowtService.updateActionforActive(this.sourceCustomer).subscribe(
                 response => this.saveCompleted(this.sourceCustomer),
                 error => this.saveFailedHelper(error));
             //alert(e);
@@ -383,29 +353,14 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
             this.sourceCustomer.updatedBy = this.userName;
             this.Active = "Active";
             this.sourceCustomer.isActive == true;
-
-            if (this.sourceCustomer.customerType === 'Lead') {
-                this.tempCustomerType = { customerTypeId: 1, description: "Lead" }
-            } else
-                if (this.sourceCustomer.customerType === "Prospect") {
-                    this.tempCustomerType = { customerTypeId: 2, description: "Prospect" }
-                } else
-                    if (this.sourceCustomer.customerType === "Customer") {
-                        this.tempCustomerType = { customerTypeId: 3, description: "Customer" }
-                    } else
-                        if (this.sourceCustomer.customerType === "Opportunity") {
-                            this.tempCustomerType = { customerTypeId: 4, description: "Opportunity" }
-                        }
-
-            this.tempCustomerType
-            this.workFlowtService.updateActionforActive({ ...this.sourceCustomer, customerType: this.tempCustomerType }).subscribe(
+            this.workFlowtService.updateActionforActive(this.sourceCustomer).subscribe(
                 response => this.saveCompleted(this.sourceCustomer),
                 error => this.saveFailedHelper(error));
             //alert(e);
         }
 
     }
-    // for commit
+
 
     deleteItemAndCloseModel() {
         this.isSaving = true;
@@ -832,12 +787,9 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
             })
             this.workFlowtService.getGlobalSearch(this.globalCustomers[this.globalCustomers.length - 1]).subscribe( //we are sending event details to service
                 pages => {
-
                     this.customersList = pages;
-                    console.log(pages)
                     this.customerPagination = this.customersList[0].customerList;
                     this.totalRecords = this.customersList[0].totalRecordsCount;
-                    console.log(this.totalRecords)
                 });
         }
     }

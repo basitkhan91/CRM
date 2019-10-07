@@ -17,6 +17,7 @@ import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 import { Router } from '@angular/router';
+import { validateRecordExistsOrNot, getObjectByValue, editValueAssignByCondition } from '../../generic/autocomplete';
 @Component({
     selector: 'app-conditions',
     templateUrl: './conditions.component.html',
@@ -27,7 +28,7 @@ import { Router } from '@angular/router';
 export class ConditionsComponent implements OnInit, AfterViewInit {
     selectedActionName: any;
     disableSave: boolean;
-    actionamecolle: any[]=[];
+    actionamecolle: any[] = [];
     condition_Name: any = "";
     description: any = "";
     memo: any = "";
@@ -38,12 +39,12 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
     AuditDetails: SingleScreenAuditDetails[];
     auditHisory: AuditHistory[];
     /** Conditions ctor */
-   
+
     cols: any[];
     selectedColumns: any[];
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
-    displayedColumns = ['conditionId', 'discription',  'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
+    displayedColumns = ['conditionId', 'discription', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
     dataSource: MatTableDataSource<Condition>;
     allConditionInfo: Condition[] = [];
     sourceAction: Condition;
@@ -72,16 +73,16 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
         this.loadData();
         this.cols = [
             //{ field: 'conditionId', header: 'Condition ID' },
-           
-			{ field: 'description', header: 'Condition Name' },
-			{ field: 'memo', header: 'Memo' },
+
+            { field: 'description', header: 'Condition Name' },
+            { field: 'memo', header: 'Memo' },
             { field: 'createdBy', header: 'Created By' },
             { field: 'updatedBy', header: 'Updated By' },
-           // { field: 'updatedDate', header: 'Updated Date' },
+            // { field: 'updatedDate', header: 'Updated Date' },
             //{ field: 'createdDate', header: 'Created Date' }
-		];
-		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-conditions';
-		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
+        ];
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-conditions';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
         this.selectedColumns = this.cols;
     }
 
@@ -114,7 +115,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = getConditionList;
-    
+
         this.allConditionInfo = getConditionList;
         this.totalRecords = this.allConditionInfo.length;
     }
@@ -134,22 +135,17 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
     }
 
 
-	open(content) {
-		this.disableSave = false;
+    open(content) {
+        this.disableSave = false;
         this.isEditMode = false;
         this.isDeleteMode = false;
-
         this.isSaving = true;
         this.loadMasterCompanies();
-		this.sourceAction = new Condition();
-		this.sourceAction.isActive = true;
-        this.description = "";
-
+        this.sourceAction = new Condition();
+        this.sourceAction.isActive = true;
+        this.sourceAction.description = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
-
-
-
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
@@ -176,13 +172,12 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
 
     }
     openEdit(content, row) {
-
-		this.isEditMode = true;
-		this.disableSave = false;
+        this.isEditMode = true;
+        this.disableSave = false;
         this.isSaving = true;
         this.loadMasterCompanies();
-        this.sourceAction = row;
-        this.description = this.sourceAction.description;
+        this.sourceAction = {...row};
+        this.sourceAction.description = getObjectByValue('description', row.description, this.allConditionInfo);
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -205,7 +200,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
 
         this.sourceAction = row;
         this.condition_Name = row.description;
-       this.memo = row.memo;
+        this.memo = row.memo;
         this.createdBy = row.createdBy;
         this.updatedBy = row.updatedBy;
         this.createdDate = row.createdDate;
@@ -222,54 +217,36 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-    eventHandler(event) {
-        let value = event.target.value.toLowerCase();
-        if (this.selectedActionName) {
-            if (value == this.selectedActionName.toLowerCase()) {
-                //alert("Action Name already Exists");
-                this.disableSave = true;
-            }
-            else {
-                this.disableSave = false;
-            }
+    eventHandler(field, value) {
+        value = value.trim();
+        const exists = validateRecordExistsOrNot(field, value, this.allConditionInfo);
+        // console.log(exists);
+        if (exists.length > 0) {
+            this.disableSave = true;
+        }
+        else {
+            this.disableSave = false;
         }
     }
-    partnmId(event) {
+    ConditionId(event) {
         //debugger;
-		for (let i = 0; i < this.allConditionInfo.length; i++) {
-			if (event == this.allConditionInfo[i].description) {
-                //alert("Action Name already Exists");
-                this.disableSave = true;
-                this.selectedActionName = event;
-            }
-        }
+       this.disableSave = true;
     }
     filterconditions(event) {
-
-        this.localCollection = [];
-        for (let i = 0; i < this.allConditionInfo.length; i++) {
-            let description = this.allConditionInfo[i].description;
-            if (description.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                this.actionamecolle.push([{
-                    "chargeId": this.allConditionInfo[i].conditionId,
-                    "description": description
-                }]),
-
-                this.localCollection.push(description);
-            }
+        this.localCollection = this.allConditionInfo;
+        if (event.query !== undefined && event.query !== null) {
+            const conditionName = [...this.allConditionInfo.filter(x => {
+                return x.description.toLowerCase().includes(event.query.toLowerCase())
+            })]
+            this.localCollection = conditionName;
         }
     }
     private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
 
-
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-
         this.auditHisory = auditHistory;
-
-
         this.modal = this.modalService.open(content, { size: 'lg' });
-
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -297,21 +274,16 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
                 error => this.saveFailedHelper(error));
             //alert(e);
         }
-
     }
-
-
-    editItemAndCloseModel() {
-
+    SaveandEditCondition() {
         // debugger;
-
         this.isSaving = true;
 
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.description;
-              this.sourceAction.masterCompanyId= 1;
+            //this.sourceAction.description = this.description;
+            this.sourceAction.masterCompanyId = 1;
             this.conditionService.newAddCondition(this.sourceAction).subscribe(
                 role => this.saveSuccessHelper(role),
                 error => this.saveFailedHelper(error));
@@ -319,8 +291,8 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
         else {
 
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.description;
-              this.sourceAction.masterCompanyId= 1;
+            this.sourceAction.masterCompanyId = 1;
+            this.sourceAction.description = editValueAssignByCondition('description', this.sourceAction.description);
             this.conditionService.updateCondition(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));

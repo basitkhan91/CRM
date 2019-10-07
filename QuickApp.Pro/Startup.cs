@@ -53,6 +53,11 @@ namespace QuickApp.Pro
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSession(so =>
+            {
+                so.IdleTimeout = TimeSpan.FromMinutes(60);
+            });
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"], b => b.MigrationsAssembly("QuickApp.Pro")));
 
@@ -274,7 +279,7 @@ namespace QuickApp.Pro
                 c.ConfigureOAuth2(IdentityServerConfig.SwaggerClientID, "", "", "Swagger UI");
             });
 
-
+            app.UseSession();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

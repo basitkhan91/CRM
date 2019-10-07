@@ -1,42 +1,64 @@
-﻿<div [@fadeInOut] class="page-content">
-	<div class="right_col" role="main">
-		<div class="x_panel" style="">
-            <div class="x_content">
-                <div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
-                    <p class="fs10">
-                        <label class="control-label w100">Customer Name:</label>
-                        {{local?.name}}
-                    </p>
-                </div>
-                <div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
-                    <p class="fs10">
-                        <label class="control-label w100">Customer Code:</label>
-                        {{local?.customerCode}}
-                    </p>
-                </div>
+﻿<div class="right_col" role="main">
+  <div style="">
+    <div class="x_content">
+      <div
+        class="form-group col-sm-4 Customer-details-heading"
+        style="display: inline-block;margin: 10px 5px 0 5px;"
+      >
+        <p class="fs10">
+          <label class="control-label w100">Customer Name:</label>
+          {{ customerName }}
+        </p>
+      </div>
+      <div
+        class="form-group col-sm-4 Customer-details-heading"
+        style="display: inline-block;margin: 10px 5px 0 5px;"
+      >
+        <p class="fs10">
+          <label class="control-label w100">Customer Code:</label>
+          {{ customerCode }}
+        </p>
+      </div>
 
-                <div class="clear"></div>
+      <div class="clear"></div>
 
-                <form #salesPersonForm="ngForm" class="form-horizontal">
-                    <div class="col-md-12" style="margin-bottom: -10px;">
-                        <h3 class="po-head pull-left" style="padding: 0 6px;">Sales Person/Agent Information</h3>
-                    </div>
-                    <div class="clear"></div>
-                    <hr />
-                    <div class="clear"></div>
-                    <div class="col-md-12">
-                        <div class="form-row">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Primary Sales Person <span class="clr-red">*</span></label>
-                                    <p-autoComplete class="autocomp-customer-cstm" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [(ngModel)]="sourceCustomer.primarySalesPersonFirstName" 
-                                    name="primarySalesPersonFirstName" [size]="30" [minLength]="1" [dropdown]="true" required >
+      <form #salesPersonForm="ngForm" class="form-horizontal">
+        <div class="col-md-12" style="margin-bottom: -10px;">
+          <!-- <h3 class="po-head pull-left" style="padding: 0 6px;">Sales Person/Agent Information</h3> -->
+        </div>
+        <div class="clear"></div>
+        <hr />
+        <div class="clear"></div>
+        <div class="col-md-12">
+          <div class="form-row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label
+                  >Primary Sales Person <span class="clr-red">*</span></label
+                >
+
+                <p-autoComplete
+                  class="autocomp-customer-cstm"
+                  name="primarySalesPersonFirstName"
+                  [(ngModel)]="salesInfo.primarySalesPersonId"
+                  [suggestions]="employeeList"
+                  [forceSelection]="true"
+                  emptyMessage="No Match Found"
+                  field="firstName"
+                  (completeMethod)="filteremployee($event)"
+                  [size]="30"
+                  [minLength]="1"
+                  [dropdown]="true"
+                  required
+                >
+                </p-autoComplete>
+                <!-- <p-autoComplete class="autocomp-customer-cstm" [(ngModel)]="sourceCustomer.primarySalesPersonFirstName" name="primarySalesPersonFirstName" [size]="30" [minLength]="1" [dropdown]="true" required>
                                         <ng-template let-primarySalesPerson pTemplate="item">
                                             <div class="ui-helper-clearfix">{{primarySalesPerson}}</div>
                                         </ng-template>
-                                    </p-autoComplete>
-                                </div>
-                                <!--<div class="form-group">
+                                    </p-autoComplete> -->
+              </div>
+              <!--<div class="form-group">
                                     <label>Primary Sales Person Id <span class="clr-red">*</span></label>
                                     <p-autoComplete class="autocomp-customer-cstm" [(ngModel)]="sourceCustomer.primarySalesPersonId" name="primarySalesPersonId" [size]="30" [minLength]="1" [dropdown]="true" required>
                                         <ng-template let-primarySalesPersonId pTemplate="item">
@@ -44,15 +66,31 @@
                                         </ng-template>
                                     </p-autoComplete>
                                 </div>-->
-                                <div class="form-group">
-                                    <label>Secondary Sales Person</label>
-                                    <p-autoComplete class="autocomp-customer-cstm" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [(ngModel)]="sourceCustomer.secondarySalesPersonName" name="secondarySalesPersonName" [size]="30" [minLength]="1" [dropdown]="true">
+              <div class="form-group">
+                <label>Secondary Sales Person</label>
+                <!-- <p-autoComplete class="autocomp-customer-cstm" [(ngModel)]="sourceCustomer.secondarySalesPersonName" name="secondarySalesPersonName" [size]="30" [minLength]="1" [dropdown]="true">
                                         <ng-template let-secondarySalesPerson pTemplate="item">
                                             <div class="ui-helper-clearfix">{{secondarySalesPerson}}</div>
                                         </ng-template>
-                                    </p-autoComplete>
-                                </div>
-                                <!--<div class="form-group">
+                                    </p-autoComplete> -->
+
+                <p-autoComplete
+                  class="autocomp-customer-cstm"
+                  name="secondarySalesPersonName"
+                  [forceSelection]="true"
+                  emptyMessage="No Match Found"
+                  [(ngModel)]="salesInfo.secondarySalesPersonId"
+                  [suggestions]="employeeList"
+                  field="firstName"
+                  (completeMethod)="filteremployee($event)"
+                  [size]="30"
+                  [minLength]="1"
+                  [dropdown]="true"
+                  required
+                >
+                </p-autoComplete>
+              </div>
+              <!--<div class="form-group">
                                     <label>Secondary Sales Person Id</label>
                                     <p-autoComplete class="autocomp-customer-cstm" [(ngModel)]="sourceCustomer.secondarySalesPersonId" name="secondarySalesPersonId" [size]="30" [minLength]="1" [dropdown]="true">
                                         <ng-template let-secondarySalesPersonId pTemplate="item">
@@ -60,48 +98,103 @@
                                         </ng-template>
                                     </p-autoComplete>
                                 </div>-->
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Customer Service Rep Name</label>
-                                    <p-autoComplete class="autocomp-customer-cstm" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [(ngModel)]="sourceCustomer.csrName" name="csrName" [size]="30" [minLength]="1" [dropdown]="true">
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Customer Service Rep Name</label>
+
+                <p-autoComplete
+                  class="autocomp-customer-cstm"
+                  name="csrName"
+                  [(ngModel)]="salesInfo.csrName"
+                  [suggestions]="employeeList"
+                  [forceSelection]="true"
+                  emptyMessage="No Match Found"
+                  field="firstName"
+                  (completeMethod)="filteremployee($event)"
+                  [size]="30"
+                  [minLength]="1"
+                  [dropdown]="true"
+                  required
+                >
+                </p-autoComplete>
+                <!-- <p-autoComplete class="autocomp-customer-cstm" [(ngModel)]="sourceCustomer.csrName" name="csrName" [size]="30" [minLength]="1" [dropdown]="true">
                                         <ng-template let-csrName pTemplate="item">
                                             <div class="ui-helper-clearfix">{{csrName}}</div>
                                         </ng-template>
-                                    </p-autoComplete>
-                                </div>
-                                <div class="form-group">
-                                    <label>Agent</label>
-                                    <p-autoComplete class="autocomp-customer-cstm" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [(ngModel)]="sourceCustomer.agentName" name="agentName" [size]="30" [minLength]="1" [dropdown]="true">
+                                    </p-autoComplete> -->
+              </div>
+              <div class="form-group">
+                <label>Agent</label>
+                <p-autoComplete
+                  class="autocomp-customer-cstm"
+                  name="agentName"
+                  [(ngModel)]="salesInfo.agentName"
+                  [suggestions]="employeeList"
+                  field="firstName"
+                  [forceSelection]="true"
+                  emptyMessage="No Match Found"
+                  (completeMethod)="filteremployee($event)"
+                  [size]="30"
+                  [minLength]="1"
+                  [dropdown]="true"
+                  required
+                >
+                </p-autoComplete>
+                <!-- <p-autoComplete class="autocomp-customer-cstm" [(ngModel)]="sourceCustomer.agentName" name="agentName" [size]="30" [minLength]="1" [dropdown]="true">
                                         <ng-template let-agentName pTemplate="item">
                                             <div class="ui-helper-clearfix">{{agentName}}</div>
                                         </ng-template>
-                                    </p-autoComplete>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Annual Revenue Potential</label>
-                                    <input class="form-control" id="cspostal" type="text" name="annualRevenuePotential" [(ngModel)]="sourceCustomer.annualRevenuePotential">
-                                </div>
-                                <div class="form-group">
-                                    <label>Annual Quota</label>
-                                    <input class="form-control" id="cspostal" type="text" name="annualQuota" [(ngModel)]="sourceCustomer.annualQuota">
-                                </div>
-                            </div>
-                        </div>
-                        <!--<div class="form-row pull-left" style="margin-left: 0;">
+                                    </p-autoComplete> -->
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Annual Revenue Potential</label>
+                <input
+                  class="form-control"
+                  id="cspostal"
+                  type="text"
+                  name="annualRevenuePotential"
+                  pattern="^[0-9]*$"
+                  [(ngModel)]="salesInfo.annualRevenuePotential"
+                />
+              </div>
+              <div class="form-group">
+                <label>Annual Quota</label>
+                <input
+                  class="form-control"
+                  id="cspostal"
+                  type="text"
+                  name="annualQuota"
+                  [(ngModel)]="salesInfo.annualQuota"
+                />
+              </div>
+            </div>
+          </div>
+          <!--<div class="form-row pull-left" style="margin-left: 0;">
                             <button type="submit" class="btn btn-primary-cstm pull-right submit-btn" (click)="editItemAndCloseModel()">Save</button>
                         </div>-->
-                    </div>
-                    <button type="submit" class="btn btn-primary-cstm pull-right" [disabled]="!salesPersonForm.valid" (click)="nextClick()">Save & Next</button>
-                    <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="backClick()">Previous</button>
-                </form>
-            </div>
-		</div>
-		
-	</div>
-	<div class="modal fade success-msg" id="success-popup" role="dialog">
+        </div>
+        <button
+          type="submit"
+          class="btn btn-primary-cstm pull-right"
+          [disabled]="!salesPersonForm.valid"
+          (click)="saveSalesInformation()"
+        >
+          Save & Next
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary-cstm pull-right submit-btn"
+        >
+          Previous
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- <div class="modal fade success-msg" id="success-popup" role="dialog">
 		<div class="modal-dialog modal-sm popup-timeout">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -110,9 +203,4 @@
 				</div>
 			</div>
 		</div>
-	</div>
-</div>
-
-
-
-
+	</div> -->

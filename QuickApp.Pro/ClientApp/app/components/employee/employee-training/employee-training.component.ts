@@ -22,7 +22,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { CheckboxModule } from 'primeng/checkbox';
 import { EmployeeService } from '../../../services/employee.service';
 import { AppTranslationService } from '../../../services/app-translation.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { UnitOfMeasureService } from '../../../services/unitofmeasure.service';
 
 
@@ -79,12 +79,17 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
     localCollection: any[] = [];
     sourceEmployee: any = {};
     public allWorkFlows: any[] = [];
+
+    public empId: any;
+    public firstName: any;
+    public lastName: any;
+
     /** Actions ctor */
 
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
     Active: string = "Active";
-	constructor(private translationService: AppTranslationService, public unitService: UnitOfMeasureService, public authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, private router: Router, public employeeService: EmployeeService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(private route: ActivatedRoute,private translationService: AppTranslationService, public unitService: UnitOfMeasureService, public authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, private router: Router, public employeeService: EmployeeService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.displayedColumns.push('action');
 		this.dataSource = new MatTableDataSource();
 		if (this.employeeService.generalCollection) {
@@ -99,6 +104,17 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
     }
     
     ngAfterViewInit() {
+
+        this.route.queryParams
+            .filter(params => params.order)
+            .subscribe(params => {
+                console.log(params); // {order: "popular"}
+                //  console.log(params.order);
+                this.empId = params.order;
+                this.firstName = params.firstname;
+                this.lastName = params.lastname;
+                console.log(this.empId);
+            });
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
     }
@@ -307,6 +323,17 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
             error => this.saveFailedHelper(error));
 
 
+    }
+
+    savetrainigSection() {
+        this.sourceEmployee.createdBy = this.userName;
+        this.sourceEmployee.updatedBy = this.userName;
+        this.sourceEmployee.masterCompanyId = 1;
+        this.sourceEmployee.isActive = true;
+        this.sourceEmployee.employeeId = this.empId;
+        this.employeeService.newAddTraining(this.sourceEmployee).subscribe(
+            role => this.saveSuccessHelper(role),
+            error => this.saveFailedHelper(error));
     }
 
 

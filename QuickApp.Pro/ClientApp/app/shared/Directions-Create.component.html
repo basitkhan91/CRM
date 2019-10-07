@@ -20,7 +20,7 @@
                     <input type="text" pInputText value="{{direction.description}}" [(ngModel)]="direction.description" class="form-control">
                 
             </td>
-            <td class="text-center"><input type="text"  pInputText pKeyFilter="int" value="{{direction.sequence}}" maxlength="5" [(ngModel)]="direction.sequence" class="form-control" style="width: 50px;"></td>
+            <td class="text-center"><input type="text" maxlength="10" pInputText pKeyFilter="pnum" (input)="checkDuplicateSequence($event, direction);" value="{{direction.sequence}}" maxlength="5" [(ngModel)]="direction.sequence" class="form-control" style="width: 50px;"></td>
             <td>
                 <textarea style="height: 25px; margin-top: 5px;" class="form-control" [(ngModel)]="direction.memo" value="{{direction.memo}}"></textarea>
             </td>

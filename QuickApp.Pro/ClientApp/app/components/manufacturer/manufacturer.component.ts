@@ -8,7 +8,7 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { MasterCompany } from '../../models/mastercompany.model';
 import { ManufacturerService } from '../../services/manufacturer.service';
 import { DataTableModule } from 'primeng/datatable';
-import { TableModule } from 'primeng/table'
+import { TableModule, Table } from 'primeng/table'
 import { ButtonModule } from 'primeng/button'
 import { SelectButtonModule } from 'primeng/selectbutton'
 import { InputTextModule } from 'primeng/inputtext'
@@ -24,6 +24,8 @@ import { AlertService, MessageSeverity } from '../../services/alert.service';
 import { MasterComapnyService } from '../../services/mastercompany.service';
 import { Manufacturer } from '../../models/manufacturer.model';
 import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
+import { getObjectByValue, validateRecordExistsOrNot, selectedValueValidate, editValueAssignByCondition } from '../../generic/autocomplete';
+import { ConfigurationService } from '../../services/configuration.service';
 
 
 @Component({
@@ -34,403 +36,383 @@ import { SingleScreenAuditDetails } from '../../models/single-screen-audit-detai
 
 })
 /** manufacturer1 component*/
-export class ManufacturerComponent implements OnInit, AfterViewInit {
-    manufacturerPaginationList: any[] = [];
-    totelPages: number;
-    manufacturer = [];
-    updatedByInputFieldValue: any;
-    createdByInputFieldValue: any;
-    nameInputFieldValue: any;
-    commentsInputFieldValue: any;
-    matvhMode: any;
-    field: any;
-    event: any;
-    auditHisory: any[];
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
-    cols: any[];
-    selectedColumns: any[];
-    displayedColumns = ['name', 'comments', 'createdDate', 'companyName'];
-    dataSource: MatTableDataSource<any>;
-    allComapnies: MasterCompany[] = [];
-    private isSaving: boolean;
-    public sourcemanufacturer: any = {}
-    private bodyText: string;
-    loadingIndicator: boolean;
-    closeResult: string;
-    title: string = "Create";
-    id: number;
-    namecolle: any[] = [];
-    actionamecolle: any[] = [];
-    errorMessage: any;
-    modal: NgbModalRef;
-    /** Actions ctor */
-    private isEditMode: boolean = false;
-    private isDeleteMode: boolean = false;
-    filteredBrands: any[];
-    localCollection: any[] = [];
-    selectedColumn: any[];
-    Active: string = "Active";
-    allManufacturer: any[];
-    manufacturerId: any;
-    name: string = "";
-    sourceAction: any;
-    integrationName: any;
-    selectedManufacturer: any;
-    //disablesave: boolean=false;
-    allManufacturerInfo: any[] = [];
-    localmanufacturer: any[];
-    comments: any = " ";
-    createdBy: any = "";
-    updatedBy: any = "";
-    createdDate: any = "";
-    updatedDate: any = "";
-    manufactureViewField: any = {};
-    disableSave: boolean = false;
-    AuditDetails: SingleScreenAuditDetails[];
+export class ManufacturerComponent implements OnInit {
+    // manufacturerPaginationList: any[] = [];
+    // totelPages: number;
+    // manufacturer = [];
+    // updatedByInputFieldValue: any;
+    // createdByInputFieldValue: any;
+    // nameInputFieldValue: any;
+    // commentsInputFieldValue: any;
+    // matvhMode: any;
+    // field: any;
+    // event: any;
+    // auditHisory: any[];
+    // @ViewChild(MatPaginator) paginator: MatPaginator;
+    // @ViewChild(MatSort) sort: MatSort;
+    // cols: any[];
+    // selectedColumns: any[];
+    // displayedColumns = ['name', 'comments', 'createdDate', 'companyName'];
+    // dataSource: MatTableDataSource<any>;
+    // allComapnies: MasterCompany[] = [];
+    // private isSaving: boolean;
+    // public sourcemanufacturer: any = {}
+    // private bodyText: string;
+    // loadingIndicator: boolean;
+    // closeResult: string;
+    // title: string = "Create";
+    // id: number;
+    // namecolle: any[] = [];
+    // actionamecolle: any[] = [];
+    // errorMessage: any;
+    // modal: NgbModalRef;
+    // /** Actions ctor */
+    // private isEditMode: boolean = false;
+    // private isDeleteMode: boolean = false;
+    // filteredBrands: any[];
+    // localCollection: any[] = [];
+    // selectedColumn: any[];
+    // Active: string = "Active";
+    // allManufacturer: any[];
+    // manufacturerId: any;
+    // name: string = "";
+    // sourceAction: any;
+    // integrationName: any;
+    // selectedManufacturer: any;
+    // //disablesave: boolean=false;
+    // allManufacturerInfo: any[] = [];
+    // localmanufacturer: any[];
+    // comments: any = " ";
+    // createdBy: any = "";
+    // updatedBy: any = "";
+    // createdDate: any = "";
+    // updatedDate: any = "";
+    // manufactureViewField: any = {};
+    // disableSave: boolean = false;
+    // AuditDetails: SingleScreenAuditDetails[];
 
-    pageSearch: { query: any; field: any; };
-    first: number;
-    rows: number;
-    paginatorState: any;
-    manufacturerPagination: Manufacturer[];//added
-    totalRecords: number;
-    loading: boolean;
-    /** manufacturer1 ctor */
-    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: ManufacturerService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    // pageSearch: { query: any; field: any; };
+    // first: number;
+    // rows: number;
+    // paginatorState: any;
+    // manufacturerPagination: Manufacturer[];//added
+    // totalRecords: number;
+    // loading: boolean;
+    // /** manufacturer1 ctor */
+    // constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: ManufacturerService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 
-    }
-    ngAfterViewInit(): void {
+    // }
+    // ngAfterViewInit(): void {
 
-    }
-    ngOnInit(): void {
+    // }
+    // ngOnInit(): void {
+    //     this.loadData();
+    //     this.cols = [
+    //         { field: 'name', header: 'Manufacturer Name' },
+    //         { field: 'comments', header: 'Memo' },
+    //         // { field: 'createdBy', header: 'Created By' },
+    //         //{ field: 'updatedBy', header: 'Updated By' },
+    //         //{ field: 'createdDate', header: 'Created Date' },
+    //         //{ field: 'updatedDate', header: 'Updated Date' }
+    //     ];
+    //     this.selectedColumns = this.cols;
+    //     this.breadCrumb.currentUrl = '/singlepages/singlepages/app-manufacturer';
+    //     this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
 
-        this.loadData();
+    // }
+    // validateRecordExistsOrNot(field: string, currentInput: any, originalData: any) {
+    //     console.log(field, currentInput, originalData)
+    //     if ((field !== '' || field !== undefined) && (currentInput !== '' || currentInput !== undefined) && (originalData !== undefined)) {
+    //         const data = originalData.filter(x => {
+    //             return x[field].toLowerCase() === currentInput.toLowerCase()
+    //         })
+    //         return data;
+    //     }
+    // }
+    // editValueAssignByCondition(field: any, value: any) {
+    //     console.log(field, value)
+    //     if ((value !== undefined) && (field !== '' || field !== undefined)) {
 
-        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-manufacturer';
-        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
+    //         if (typeof (value) === 'string') {
+    //             return value
+    //         }
+    //         else {
+    //             return this.getValueFromObjectByKey(field, value)
+    //         }
+    //     }
+    // }
+    // getValueFromObjectByKey(field: string, object: any) {
+    //     console.log(field, object)
+    //     if ((field !== '' || field !== undefined) && (object !== undefined)) {
+    //         return object[field];
+    //     }
+    // }
 
-    }
+    // private loadMasterCompanies() {
+    //     this.alertService.startLoadingMessage();
+    //     this.loadingIndicator = true;
+    //     this.masterComapnyService.getMasterCompanies().subscribe(
+    //         results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
+    //         error => this.onDataLoadFailed(error)
+    //     );
 
+    // }
+    // public applyFilter(filterValue: string) {
+    //     this.dataSource.filter = filterValue;
+    // }
+    // private refresh() {
+    //     this.applyFilter(this.dataSource.filter);
+    // }
 
-    private loadMasterCompanies() {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-        this.masterComapnyService.getMasterCompanies().subscribe(
-            results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
+    // open(content) {
+    //     this.disableSave = false;
+    //     this.isEditMode = false;
+    //     this.isDeleteMode = false;
+    //     this.isSaving = true;
+    //     this.loadMasterCompanies();
+    //     this.sourcemanufacturer = new Manufacturer();
+    //     this.sourcemanufacturer.name= "";
+    //     this.sourcemanufacturer.isActive = true;
+    //     this.modal = this.modalService.open(content, { size: 'sm' });
+    //     this.modal.result.then(() => {
+    //         console.log('When user closes');
+    //     }, () => { console.log('Backdrop click') })
+    // }
 
-    }
-    public applyFilter(filterValue: string) {
-        this.dataSource.filter = filterValue;
-    }
-    private refresh() {
-        this.applyFilter(this.dataSource.filter);
-    }
-
-    open(content) {
-        this.disableSave = false;
-        this.isEditMode = false;
-        this.isDeleteMode = false;        
-        this.isSaving = true;
-        this.loadMasterCompanies();
-        this.sourcemanufacturer = new Manufacturer();
-        this.name = "";
-        this.sourcemanufacturer.isActive = true;
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
-
-    openDelete(content, row) {
-        this.isEditMode = false;
-        this.isDeleteMode = true;
-        this.sourcemanufacturer = row;
-        this.manufactureViewField.name = row.name;
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
-
-
-    ManufacturerHandler(event) {
-        if (event.target.value != "") {
-            let value = event.target.value.toLowerCase();
-            if (this.selectedManufacturer) {
-                if (value == this.selectedManufacturer.toLowerCase()) {                  
-                    this.disableSave = true;
-                }
-                else {
-                    this.disableSave = false;
-                }
-            }
-
-        }
-    }
-
-    //ManufacturerHandler(event) {
-    //	let value = event.target.value.toLowerCase();
-    //	if (this.selectedManufacturer) {
-    //		if (value == this.selectedManufacturer.toLowerCase()) {
-    //			//alert("Action Name already Exists");
-    //			this.disableSave = true;
-    //		}
-    //		else {
-    //			this.disableSave = false;
-    //		}
-    //	}
-    //	else {
-    //		for (let i = 0; i < this.actionamecolle.length; i++) {
-    //			if (value == this.actionamecolle[i][0].name.toLowerCase()) {
-    //				//alert("Action Name already Exists");
-    //				this.disableSave = true;
-    //				this.selectedManufacturer = event;
-    //			}
-    //		}
-    //	}
-
-    //}
-    Manufacturerdescription(event) {
-        //
-        if (this.allManufacturerInfo) {
-
-            for (let i = 0; i < this.allManufacturerInfo.length; i++) {
-                if (event == this.allManufacturerInfo[i].name) {
-                    this.sourcemanufacturer.name = this.allManufacturerInfo[i].name;
-                    this.disableSave = true;
-                    this.selectedManufacturer = event;
-                }
-
-            }
-        }
-    }
-    editItemAndCloseModel() {
-
-        this.isSaving = true;
-        if (this.isEditMode == false) {
-            this.sourcemanufacturer.createdBy = this.userName;
-            this.sourcemanufacturer.updatedBy = this.userName;
-            this.sourcemanufacturer.masterCompanyId = 1;
-            //this.sourceglaccountclass.glaccountclassname = this.glAccountclassName;
-            this.workFlowtService.newManufacturer(this.sourcemanufacturer).subscribe(
-                role => this.saveSuccessHelper(role),
-                error => this.saveFailedHelper(error));
-        }
-        else {
-
-            this.sourcemanufacturer.updatedBy = this.userName;
-            //this.sourcemanufacturer.name = this.name;
-            this.sourcemanufacturer.masterCompanyId = 1;
-            this.workFlowtService.updateManufacturer(this.sourcemanufacturer).subscribe(
-                response => this.saveCompleted(this.sourcemanufacturer),
-                error => this.saveFailedHelper(error));
-        }
-
-        this.modal.close();
-    }
-    private saveSuccessHelper(role?: any) {
-        this.isSaving = false;
-        this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
-
-        this.loadData();
-
-    }
-    deleteItemAndCloseModel() {
-        this.isSaving = true;
-        this.sourcemanufacturer.updatedBy = this.userName;
-        this.workFlowtService.deleteManufacturer(this.sourcemanufacturer.manufacturerId).subscribe(
-            response => this.saveCompleted(this.sourcemanufacturer),
-            error => this.saveFailedHelper(error));
-        this.modal.close();
-    }
-    private onmanufacturerSuccessful(allWorkFlows: any[]) {
-
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.totalRecords = allWorkFlows.length;
-        this.allManufacturerInfo = allWorkFlows;
-        //console.log(this.allActions);
-    }
-    filtermanufacturer(event) {
-        this.localCollection = [];
-        for (let i = 0; i < this.allManufacturerInfo.length; i++) {
-            let name = this.allManufacturerInfo[i].name;
-            if (name.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                this.namecolle.push([{
-                    "manufacturerId": this.allManufacturerInfo[i].manufacturerId,
-                    "name": name
-                }]),
-                    this.localCollection.push(name)
-            }
-        }
-    }
-
-    openEdit(content, row) {
-        this.isEditMode = true;
-        this.isSaving = true;
-        this.loadMasterCompanies();
-        this.disableSave = false;
-        this.sourcemanufacturer = row;
-        this.name = this.sourcemanufacturer.name;
-        //this.comments = this.sourcemanufacturer.comments;
-        this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
-    openView(content, row) {
-        this.sourcemanufacturer = row;
-        this.manufactureViewField.name = row.name;
-        this.manufactureViewField.comments = row.comments;
-        this.createdBy = row.createdBy;
-        this.updatedBy = row.updatedBy;
-        this.createdDate = row.createdDate;
-        this.updatedDate = row.updatedDate;
-        this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
-
-    openHist(content, row) {
-        this.sourcemanufacturer = row;
-        this.workFlowtService.historyManufacturer(this.sourcemanufacturer.manufacturerId).subscribe(
-            results => this.onHistoryLoadSuccessful(results[0], content),
-            error => this.saveFailedHelper(error));
-    }
-    private saveFailedHelper(error: any) {
-        this.isSaving = false;
-        this.alertService.stopLoadingMessage();
-        this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
-        this.alertService.showStickyMessage(error, null, MessageSeverity.error);
-    }
-    handleChange(rowData, e) {
-        if (e.checked == false) {
-            this.sourcemanufacturer = rowData;
-            this.sourcemanufacturer.updatedBy = this.userName;
-            this.Active = "In Active";
-            this.sourcemanufacturer.isActive == false;
-            this.loadMasterCompanies();
-            this.sourcemanufacturer.masterCompanyId = 1;         
-
-            this.workFlowtService.updateManufacturer(this.sourcemanufacturer).subscribe(
-
-                response => this.saveCompleted(this.sourcemanufacturer),
-                error => this.saveFailedHelper(error));
-        }
-        else {
-            this.sourcemanufacturer = rowData;
-            this.sourcemanufacturer.updatedBy = this.userName;
-            this.Active = "Active";
-            this.sourcemanufacturer.isActive == true;
-            this.loadMasterCompanies();
-            this.sourcemanufacturer.masterCompanyId = 1;           
-            this.workFlowtService.updateManufacturer(this.sourcemanufacturer).subscribe(
-
-                response => this.saveCompleted(this.sourcemanufacturer),
-                error => this.saveFailedHelper(error));
-            //alert(e);
-        }
-
-    }
-
-    private loadData() {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-        this.workFlowtService.getWorkFlows().subscribe(
-            results => this.onmanufacturerSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-        this.cols = [
-            { field: 'name', header: 'Manufacturer Name' },
-            { field: 'comments', header: 'Comments' },
-            { field: 'createdBy', header: 'Created By' },
-            { field: 'updatedBy', header: 'Updated By' },
-            //{ field: 'createdDate', header: 'Created Date' },
-            //{ field: 'updatedDate', header: 'Updated Date' }
-        ];
-        this.selectedColumns = this.cols;
-    }
-    private onDataLoadSuccessful(allWorkFlows: any[]) {
-        // alert('success');
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        //this.dataSource.data = allWorkFlows;
-        this.allManufacturer = allWorkFlows;
-
-    }
-    private saveCompleted(user?: any) {
-        this.isSaving = false;
-
-        if (this.isDeleteMode == true) {
-            this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
-            this.isDeleteMode = false;
-        }
-        else {
-            this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
-
-        }
-
-        this.loadData();
-    }
-    private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
-
-        // debugger;
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-
-        this.auditHisory = auditHistory;
+    // openDelete(content, row) {
+    //     this.isEditMode = false;
+    //     this.isDeleteMode = true;
+    //     this.sourcemanufacturer = row;
+    //     this.manufactureViewField.name = row.name;
+    //     this.modal = this.modalService.open(content, { size: 'sm' });
+    //     this.modal.result.then(() => {
+    //         console.log('When user closes');
+    //     }, () => { console.log('Backdrop click') })
+    // }
 
 
-        this.modal = this.modalService.open(content, { size: 'lg' });
+    // ManufacturerHandler(field, value) {
+    //     value = value.trim();
+    //     const exists = this.validateRecordExistsOrNot(field, value, this.allManufacturerInfo);
+    //     // console.log(exists);
+    //     if (exists.length > 0) {
+    //         this.disableSave = true;
+    //     }
+    //     else {
+    //         this.disableSave = false;
+    //     }
+    // }
 
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+    // Manufacturerdescription(event) {
+    //     //
+    //     this.disableSave = true;
+    // }
+    // editItemAndCloseModel() {
+
+    //     this.isSaving = true;
+    //     if (this.isEditMode == false) {
+    //         this.sourcemanufacturer.createdBy = this.userName;
+    //         this.sourcemanufacturer.updatedBy = this.userName;
+    //         this.sourcemanufacturer.masterCompanyId = 1;
+    //         this.sourcemanufacturer.name = this.editValueAssignByCondition('name', this.sourcemanufacturer.name);
+    //         this.workFlowtService.newManufacturer(this.sourcemanufacturer).subscribe(
+    //             role => this.saveSuccessHelper(role),
+    //             error => this.saveFailedHelper(error));
+    //     }
+    //     else {
+
+    //         this.sourcemanufacturer.updatedBy = this.userName;
+    //         this.sourcemanufacturer.name = this.editValueAssignByCondition('name', this.sourcemanufacturer.name);
+    //         this.sourcemanufacturer.masterCompanyId = 1;
+    //         this.workFlowtService.updateManufacturer(this.sourcemanufacturer).subscribe(
+    //             response => this.saveCompleted(this.sourcemanufacturer),
+    //             error => this.saveFailedHelper(error));
+    //     }
+
+    //     this.modal.close();
+    // }
+    // private saveSuccessHelper(role?: any) {
+    //     this.isSaving = false;
+    //     this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
+
+    //     this.loadData();
+
+    // }
+    // deleteItemAndCloseModel() {
+    //     this.isSaving = true;
+    //     this.sourcemanufacturer.updatedBy = this.userName;
+    //     this.workFlowtService.deleteManufacturer(this.sourcemanufacturer.manufacturerId).subscribe(
+    //         response => this.saveCompleted(this.sourcemanufacturer),
+    //         error => this.saveFailedHelper(error));
+    //     this.modal.close();
+    // }
+    // private onmanufacturerSuccessful(allWorkFlows: any[]) {
+
+    //     this.alertService.stopLoadingMessage();
+    //     this.loadingIndicator = false;
+    //     this.totalRecords = allWorkFlows.length;
+    //     this.allManufacturerInfo = allWorkFlows;
+    //     //console.log(this.allActions);
+    // }
+    // filtermanufacturer(event) {
+    //     this.localCollection = this.allManufacturerInfo;
+
+    //     if (event.query !== undefined && event.query !== null) {
+    //         const name = [...this.allManufacturerInfo.filter(x => {
+    //             return x.name.toLowerCase().includes(event.query.toLowerCase())
+    //         })]
+    //         this.localCollection = name;
+    //     }
+    // }
+
+    // openEdit(content, row) {
+    //     this.isEditMode = true;
+    //     this.isSaving = true;
+    //     this.loadMasterCompanies();
+    //     this.disableSave = false;
+    //     this.sourcemanufacturer = {...row};
+    //     this.sourcemanufacturer.name = getObjectByValue('name', row.name, this.allManufacturerInfo)
+    //     //this.comments = this.sourcemanufacturer.comments;
+    //     this.loadMasterCompanies();
+    //     this.modal = this.modalService.open(content, { size: 'sm' });
+    //     this.modal.result.then(() => {
+    //         console.log('When user closes');
+    //     }, () => { console.log('Backdrop click') })
+    // }
+    // openView(content, row) {
+    //     this.sourcemanufacturer = row;
+    //     this.manufactureViewField.name = row.name;
+    //     this.manufactureViewField.comments = row.comments;
+    //     this.createdBy = row.createdBy;
+    //     this.updatedBy = row.updatedBy;
+    //     this.createdDate = row.createdDate;
+    //     this.updatedDate = row.updatedDate;
+    //     this.loadMasterCompanies();
+    //     this.modal = this.modalService.open(content, { size: 'sm' });
+    //     this.modal.result.then(() => {
+    //         console.log('When user closes');
+    //     }, () => { console.log('Backdrop click') })
+    // }
+
+    // openHist(content, row) {
+    //     this.sourcemanufacturer = row;
+    //     this.workFlowtService.historyManufacturer(this.sourcemanufacturer.manufacturerId).subscribe(
+    //         results => this.onHistoryLoadSuccessful(results[0], content),
+    //         error => this.saveFailedHelper(error));
+    // }
+    // private saveFailedHelper(error: any) {
+    //     this.isSaving = false;
+    //     this.alertService.stopLoadingMessage();
+    //     this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
+    //     this.alertService.showStickyMessage(error, null, MessageSeverity.error);
+    // }
+    // handleChange(rowData, e) {
+    //     if (e.checked == false) {
+    //         this.sourcemanufacturer = rowData;
+    //         this.sourcemanufacturer.updatedBy = this.userName;
+    //         this.Active = "In Active";
+    //         this.sourcemanufacturer.isActive == false;
+    //         this.loadMasterCompanies();
+    //         this.sourcemanufacturer.masterCompanyId = 1;
+
+    //         this.workFlowtService.updateManufacturer(this.sourcemanufacturer).subscribe(
+
+    //             response => this.saveCompleted(this.sourcemanufacturer),
+    //             error => this.saveFailedHelper(error));
+    //     }
+    //     else {
+    //         this.sourcemanufacturer = rowData;
+    //         this.sourcemanufacturer.updatedBy = this.userName;
+    //         this.Active = "Active";
+    //         this.sourcemanufacturer.isActive == true;
+    //         this.loadMasterCompanies();
+    //         this.sourcemanufacturer.masterCompanyId = 1;
+    //         this.workFlowtService.updateManufacturer(this.sourcemanufacturer).subscribe(
+
+    //             response => this.saveCompleted(this.sourcemanufacturer),
+    //             error => this.saveFailedHelper(error));
+    //         //alert(e);
+    //     }
+
+    // }
+
+    // private loadData() {
+    //     this.alertService.startLoadingMessage();
+    //     this.loadingIndicator = true;
+    //     this.workFlowtService.getWorkFlows().subscribe(
+    //         results => this.onmanufacturerSuccessful(results[0]),
+    //         error => this.onDataLoadFailed(error)
+    //     );
+
+    // }
+
+    // private saveCompleted(user?: any) {
+    //     this.isSaving = false;
+
+    //     if (this.isDeleteMode == true) {
+    //         this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
+    //         this.isDeleteMode = false;
+    //     }
+    //     else {
+    //         this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
+
+    //     }
+
+    //     this.loadData();
+    // }
+    // private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
+
+    //     // debugger;
+    //     this.alertService.stopLoadingMessage();
+    //     this.loadingIndicator = false;
+
+    //     this.auditHisory = auditHistory;
 
 
-    }
-    private onDataLoadFailed(error: any) {
-        // alert(error);
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
+    //     this.modal = this.modalService.open(content, { size: 'lg' });
 
-    }
-    private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
-        // alert('success');
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.allComapnies = allComapnies;
+    //     this.modal.result.then(() => {
+    //         console.log('When user closes');
+    //     }, () => { console.log('Backdrop click') })
 
-    }
-    get userName(): string {
-        return this.authService.currentUser ? this.authService.currentUser.userName : "";
-    }
-    dismissModel() {
-        this.isDeleteMode = false;
-        this.isEditMode = false;
-        this.modal.close();
-    }
 
-    showAuditPopup(template, id): void {
-        debugger;
-        this.getManufacturerAuditDetails(id);
-        this.modal = this.modalService.open(template, { size: 'sm' });
-    }
+    // }
+    // private onDataLoadFailed(error: any) {
+    //     // alert(error);
+    //     this.alertService.stopLoadingMessage();
+    //     this.loadingIndicator = false;
 
-    getManufacturerAuditDetails(Id: number): void {
-        this.workFlowtService.getManufacturerAuditDetails(Id).subscribe(audits => {
-            if (audits.length > 0) {
-                this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["manufacturerAuditId", "manufacturerId","masterCompanyId", "createdBy", "createdDate", "updatedDate"];
-            }
-        });
-    }
+    // }
+    // private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
+    //     // alert('success');
+    //     this.alertService.stopLoadingMessage();
+    //     this.loadingIndicator = false;
+    //     this.allComapnies = allComapnies;
+
+    // }
+    // get userName(): string {
+    //     return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    // }
+    // dismissModel() {
+    //     this.isDeleteMode = false;
+    //     this.isEditMode = false;
+    //     this.modal.close();
+    // }
+
+    // showAuditPopup(template, id): void {
+    //     debugger;
+    //     this.getManufacturerAuditDetails(id);
+    //     this.modal = this.modalService.open(template, { size: 'sm' });
+    // }
+
+    // getManufacturerAuditDetails(Id: number): void {
+    //     this.workFlowtService.getManufacturerAuditDetails(Id).subscribe(audits => {
+    //         if (audits.length > 0) {
+    //             this.AuditDetails = audits;
+    //             this.AuditDetails[0].ColumnsToAvoid = ["manufacturerAuditId", "manufacturerId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
+    //         }
+    //     });
+    // }
 
     // updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
     // {
@@ -487,7 +469,7 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
     //             }
     //         }, 1000);
     //     }
-        
+
     // }
 
     // inputFiledFilter(event, filed, matchMode) {
@@ -531,4 +513,242 @@ export class ManufacturerComponent implements OnInit, AfterViewInit {
     //     else {
     //     }
     // }
+
+    //Fresh changes
+    // uomHeaders: any;
+    ManufactureData: any;
+    // selectedColumns: any = [];
+    viewRowData: any;
+    selectedRowforDelete: any;
+    newManufacturer =
+        {
+            name: "",           
+            masterCompanyId: 1,
+            isActive: true,
+            isDelete: false,
+            comments: "",
+          
+        }
+    addnewManufacturer = { ...this.newManufacturer };
+    disableSaveForUOM: boolean = false;
+    ManufactList: any;
+    isEdit: boolean = false;
+    totalRecords: any;
+    pageIndex: number = 0;
+    pageSize: number = 10;
+    totalPages: number;
+    manufacturerHeader = [
+        { field: 'name', header: 'Manfacturer Name' },
+        { field: 'comments', header: 'Memo' },
+    ]
+    selectedColumns = this.manufacturerHeader;
+    formData = new FormData()
+
+    @ViewChild('dt')
+    private table: Table;
+    auditHistory: any[] = [];
+    existingRecordsResponse: Object;
+    selectedRecordForEdit: any;
+    disableSaveForShortName: boolean = false;
+    manufacturerList: any;
+
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private configurations: ConfigurationService, private authService: AuthService, private alertService: AlertService, public manufacturerService: ManufacturerService) {
+
+
+    }
+    ngOnInit(): void {
+        this.getManufacturerList();
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-manufacturer';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
+
+    }
+
+
+
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    }
+    columnsChanges() {
+        this.refreshList();
+    }
+    refreshList() {
+        this.table.reset();
+        this.getManufacturerList();
+    }
+
+    customExcelUpload(event) {
+        const file = event.target.files;
+
+        console.log(file);
+        if (file.length > 0) {
+
+            this.formData.append('file', file[0])
+            this.manufacturerService.ManufacturerFileUpload(this.formData).subscribe(res => {
+                event.target.value = '';
+
+                this.formData = new FormData();
+                this.existingRecordsResponse = res;
+                this.getManufacturerList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+
+                $('#duplicateRecords').modal('show');
+                document.getElementById('duplicateRecords').click();
+
+            })
+        }
+
+    }
+    sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=Manufacturer&fileName=manufacturer.xlsx`;
+
+        window.location.assign(url);
+    }
+
+
+    getManufacturerList() {
+        this.manufacturerService.getWorkFlows().subscribe(res => {
+            console.log(res,'test1');
+            const responseData = res[0];
+            console.log(responseData,'test2')
+            this.ManufactureData = responseData;
+            this.totalRecords = responseData.length;
+            this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+        })
+    }
+    changePage(event: { first: any; rows: number }) {
+        console.log(event);
+        const pageIndex = (event.first / event.rows);
+        this.pageSize = event.rows;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+    }
+
+
+    checkManufacturerExists(field, value) {
+        const exists = validateRecordExistsOrNot(field, value, this.ManufactureData, this.selectedRecordForEdit);
+        if (exists.length > 0) {
+            this.disableSaveForUOM = true;
+        }
+        else {
+            this.disableSaveForUOM = false;
+        }
+
+    }
+    filterDescription(event) {
+        this.ManufactList = this.ManufactureData;
+
+        const ManufacturerVAlue = [...this.ManufactureData.filter(x => {
+            return x.name.toLowerCase().includes(event.query.toLowerCase())
+        })]
+        this.ManufactList = ManufacturerVAlue;
+    }
+    selectedManufcaturer(object) {
+        const exists = selectedValueValidate('name', object, this.selectedRecordForEdit)
+
+        this.disableSaveForUOM = !exists;
+    }
+
+    
+    saveManufacturer() {
+        const data = {
+            ...this.addnewManufacturer, createdBy: this.userName, updatedBy: this.userName,
+            name: editValueAssignByCondition('name', this.addnewManufacturer.name),
+        };
+        if (!this.isEdit) {
+            this.manufacturerService.newManufacturer(data).subscribe(() => {
+                this.resetManufacuterForm();
+                this.getManufacturerList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Added  New Manufacturer Successfully  `,
+                    MessageSeverity.success
+                );
+            })
+        } else {
+            this.manufacturerService.updateManufacturer(data).subscribe(() => {
+                this.selectedRecordForEdit = undefined;
+                this.isEdit = false;
+                this.resetManufacuterForm();
+                this.getManufacturerList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Updated   Manufacturer  Successfully  `,
+                    MessageSeverity.success
+                );
+            })
+        }
+    }
+
+    resetManufacuterForm() {
+        this.isEdit = false;
+        this.selectedRecordForEdit = undefined;
+        this.addnewManufacturer = { ...this.newManufacturer };
+    }
+
+
+    editManufacturer(rowData) {
+        console.log(rowData);
+        this.isEdit = true;
+        this.disableSaveForUOM = false;
+        this.disableSaveForShortName = false;
+        // this.addNewUOM = rowData;
+
+        this.addnewManufacturer = {
+            ...rowData, name: getObjectByValue('name', rowData.name, this.ManufactureData),
+            
+        };
+        this.selectedRecordForEdit = { ...this.addnewManufacturer }
+
+    }
+
+    changeStatus(rowData) {
+        console.log(rowData);
+        const data = { ...rowData }
+        this.manufacturerService.updateManufacturer(data).subscribe(() => {
+            this.alertService.showMessage(
+                'Success',
+                `Updated Status Successfully  `,
+                MessageSeverity.success
+            );
+        })
+
+    }
+    viewSelectedRow(rowData) {
+        console.log(rowData);
+        this.viewRowData = rowData;
+    }
+    resetViewData() {
+        this.viewRowData = undefined;
+    }
+    delete(rowData) {
+        this.selectedRowforDelete = rowData;
+
+    }
+    deleteConformation(value) {
+        if (value === 'Yes') {
+
+            this.manufacturerService.deleteManufacturer(this.selectedRowforDelete.manufacturerId).subscribe(() => {
+                this.getManufacturerList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Deleted Manufacturer Successfully  `,
+                    MessageSeverity.success
+                );
+            })
+
+        } else {
+            this.selectedRowforDelete = undefined;
+        }
+    }
+
+    getAuditHistoryById(rowData) {
+        this.manufacturerService.getManufacturerAuditDetails(rowData.manufacturerId).subscribe(res => {
+            console.log(res)
+            this.auditHistory = res;
+        })
+    }
+    
 }

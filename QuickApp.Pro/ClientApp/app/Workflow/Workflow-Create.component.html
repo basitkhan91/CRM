@@ -19,7 +19,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="workflowid">Work Flow ID <span class="clr-red">*</span></label>
-                                <input type="text" class="form-control" id="workflowid" value="{{ sourceWorkFlow.workflowId != undefined ? 'ACC' + sourceWorkFlow.workflowId : 'Generating' }}" [disabled]="true">
+                                <input type="text" class="form-control" id="workflowid" value="{{ sourceWorkFlow.workflowId != undefined ? sourceWorkFlow.workOrderNumber : 'Generating' }}" [disabled]="true">
                             </div>
                         </div>
                         <div class="col-md-6">

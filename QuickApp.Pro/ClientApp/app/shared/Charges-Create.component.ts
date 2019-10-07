@@ -38,6 +38,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {
         this.row = this.workFlow.charges[0];
+        this.row.taskId = this.workFlow.taskId;
         this.actionService.getChargesType().subscribe(
             chargesTypes => {
                 this.chargesTypes = chargesTypes;
@@ -56,7 +57,6 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         // summation of all values in edit mode 
         if (this.UpdateMode) {
             this.reCalculate();
-
         }
     }
 
@@ -87,11 +87,13 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         }
     }
 
-    onChargeTypeChange(charge): void {
+    onChargeTypeChange(event, charge): void {
         var isTypeExist = this.workFlow.charges.filter(x => x.workflowChargeTypeId == charge.workflowChargeTypeId && x.taskId == this.workFlow.taskId);
         if (isTypeExist.length > 1) {
-            charge.workflowChargeTypeId = "";
-            this.alertService.showMessage("Workflow", "Type is already in use in Charges List.", MessageSeverity.error);
+            event.target.value = '0';
+            charge.workflowChargeTypeId = "0";
+            this.alertService.showMessage("Work Flow", "Type is already in use in Charges List.", MessageSeverity.error);
+            
         }
     }
 
@@ -131,7 +133,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         newRow.vendorUnitPrice = "";
         newRow.vendorId = "";
         newRow.vendorName = "";
-        newRow.workflowChargeTypeId = "";
+        newRow.workflowChargeTypeId = "0";
         newRow.isDelete = false;
         this.workFlow.charges.push(newRow);
     }
@@ -141,23 +143,23 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         var value = Number.parseFloat(charge.quantity) * Number.parseFloat(charge.unitCost);
         if (value > 0) {
             charge.extendedCost = value;
-            this.calculateExtendedCostSummation();
+            
         }
         else {
             charge.extendedCost = "";
         }
-
+        this.calculateExtendedCostSummation();
     }
     // calculate row wise extended price
     calculateExtendedPrice(charge) {
         var value = Number.parseFloat(charge.quantity) * Number.parseFloat(charge.unitPrice);
         if (value > 0) {
             charge.extendedPrice = value;
-            this.calculateExtendedPriceSummation()
         }
         else {
             charge.extendedPrice = "";
         }
+        this.calculateExtendedPriceSummation();
     }
 
     // sum of the qty
@@ -177,6 +179,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         }, 0);
         //this.workFlow.totalChargesCost = this.workFlow.extendedCostSummation;
     }
+
     // sum of extended price
     calculateExtendedPriceSummation() {
         var charges = this.workFlow.charges.filter(x => x.isDelete != true);

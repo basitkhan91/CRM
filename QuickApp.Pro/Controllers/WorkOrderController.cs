@@ -85,9 +85,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("workorderstatus")]
-        public IActionResult WorkOrderStatus(long workOrderId,bool status)
+        public IActionResult WorkOrderStatus(long workOrderId,bool status,string updatedBy)
         {
-            unitOfWork.WorkOrderRepository.WorkOrderStatus(workOrderId, status);
+            unitOfWork.WorkOrderRepository.WorkOrderStatus(workOrderId, status, updatedBy);
             return Ok(ModelState);
         }
 
@@ -341,6 +341,129 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetWorkFlowWorkOrderDocumentsList(long wfwoId = 0, long workOrderId = 0)
         {
             var result = unitOfWork.WorkOrderRepository.GetWorkFlowWorkOrderDocumentsList(wfwoId, workOrderId);
+            return Ok(result);
+        }
+
+        #endregion
+
+        #region Work Order Address
+
+        [HttpPost("createworkorderaddress")]
+        public IActionResult CreateWorkOrderAddress(WorkOrderAddress workOrderAddress)
+        {
+            if (ModelState.IsValid)
+            {
+                workOrderAddress.WorkOrderAddressId = unitOfWork.WorkOrderRepository.CreateWorkOrderAddress(workOrderAddress);
+                return Ok(workOrderAddress);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpPost("updateworkorderaddress")]
+        public IActionResult UpdateWorkOrderAddress(WorkOrderAddress workOrderAddress)
+        {
+            if (ModelState.IsValid)
+            {
+                unitOfWork.WorkOrderRepository.UpdateWorkOrderAddress(workOrderAddress);
+                return Ok(workOrderAddress);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpGet("getworkflowworkorderaddresslist")]
+        public IActionResult GetWorkFlowWorkOrderAddressList(long wfwoId = 0, long workOrderId = 0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkFlowWorkOrderAddressList(wfwoId, workOrderId);
+            return Ok(result);
+        }
+
+        #endregion
+
+        #region Work Order Quote
+
+        [HttpPost("createworkorderquote")]
+        public IActionResult CreateWorkOrderQuote(WorkOrderQuote workOrderQuote)
+        {
+            if (ModelState.IsValid)
+            {
+                workOrderQuote.WorkOrderQuoteId = unitOfWork.WorkOrderRepository.CreateWorkOrderQuote(workOrderQuote);
+                return Ok(workOrderQuote);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpPost("updateworkorderquote")]
+        public IActionResult UpdateWorkOrderQuote(WorkOrderQuote workOrderQuote)
+        {
+            if (ModelState.IsValid)
+            {
+                unitOfWork.WorkOrderRepository.UpdateWorkOrderQuote(workOrderQuote);
+                return Ok(workOrderQuote);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpGet("getworkflowWorkorderquote")]
+        public IActionResult GetWorkFlowWorkOrderQuote(long wfwoId = 0, long workOrderId = 0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkFlowWorkOrderQuote(wfwoId, workOrderId);
+            return Ok(result);
+        }
+
+        #endregion
+
+        #region Work Order Freight
+
+        [HttpPost("createworkorderfreight")]
+        public IActionResult CreateWorkOrderFreight(WorkOrderFreight workOrderFreight)
+        {
+            if (ModelState.IsValid)
+            {
+                workOrderFreight.WorkOrderFreightId = unitOfWork.WorkOrderRepository.CreateWorkOrderFreight(workOrderFreight);
+                return Ok(workOrderFreight);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpPost("updateworkorderfreight")]
+        public IActionResult UpdateWorkOrderFreight(WorkOrderFreight workOrderFreight)
+        {
+            if (ModelState.IsValid)
+            {
+                unitOfWork.WorkOrderRepository.UpdateWorkOrderFreight(workOrderFreight);
+                return Ok(workOrderFreight);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpGet("getworkflowworkorderfreightlist")]
+        public IActionResult GetWorkFlowWorkOrderFreightList(long wfwoId = 0, long workOrderId = 0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkFlowWorkOrderFreightList(wfwoId, workOrderId);
             return Ok(result);
         }
 
