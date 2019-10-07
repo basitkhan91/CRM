@@ -33,7 +33,8 @@ export class OpenCloseArsubledgerComponent {
             this.completeCalendarData = data[0];
 
             for (let i = 0; i < this.completeCalendarData.length; i++) {
-                if (this.completeCalendarData[i].name == this.currentArledgerObj.ledgerName && this.completeCalendarData[i].fiscalYear == this.currentArledgerObj.fiscalYear && this.completeCalendarData[i].legalEntityId == this.currentArledgerObj.legalEntityId) {
+                //if (this.completeCalendarData[i].name == this.currentArledgerObj.ledgerName && this.completeCalendarData[i].fiscalYear == this.currentArledgerObj.fiscalYear && this.completeCalendarData[i].legalEntityId == this.currentArledgerObj.legalEntityId) {
+                if (this.completeCalendarData[i].fiscalYear == this.currentArledgerObj.fiscalYear && this.completeCalendarData[i].legalEntityId == this.currentArledgerObj.legalEntityId) {
                     this.setFromDate(this.completeCalendarData[i]);
                     this.seToDate(this.completeCalendarData[i]);
                     this.finalCalendarArry.push(this.completeCalendarData[i]);

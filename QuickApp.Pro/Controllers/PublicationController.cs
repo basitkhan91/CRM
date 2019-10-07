@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using AutoMapper;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using QuickApp.Pro.Helpers;
 using QuickApp.Pro.ViewModels;
+using Microsoft.AspNetCore.Http;
 
 
 namespace QuickApp.Pro.Controllers
@@ -40,10 +42,10 @@ namespace QuickApp.Pro.Controllers
         // GET: api/values
         [HttpGet("getpublicationslist")]
         [Produces(typeof(List<PublicationViewModel>))]
-        public IActionResult Get(string publicationId="", string description="", int publicationTypeId=0, string publishedBy="", string employee="", string location="", int pageNumber=0, int pageSize=10)
+        public IActionResult Get(string publicationId="", string description="", int publicationTypeId=0, string publishedBy="", long employeeId=0, string location="", int pageNumber=0, int pageSize=10)
         {
             //var allpublicationinfo = _unitOfWork.Publication.GetPublications(); //.GetAllCustomersData();
-            var allpublicationinfo = _unitOfWork.Publication.GetPublicationsList(publicationId, description, publicationTypeId, publishedBy, employee, location, pageNumber, pageSize); //.GetAllCustomersData();
+            var allpublicationinfo = _unitOfWork.Publication.GetPublicationsList(publicationId, description, publicationTypeId, publishedBy, employeeId, location, pageNumber, pageSize); //.GetAllCustomersData();
 
             return Ok((allpublicationinfo));
 
@@ -84,7 +86,7 @@ namespace QuickApp.Pro.Controllers
 
             try
             {
-
+                var updatedBy = HttpContext.Session.GetString("UserId");
 
                 DAL.Models.Publication publicationobject = new DAL.Models.Publication();
                 if (ModelState.IsValid)
@@ -93,38 +95,33 @@ namespace QuickApp.Pro.Controllers
                     if (Request.Form == null)
                         return BadRequest($"{nameof(publicationobject)} cannot be null");
 
-                    
-
-                    //publicationobject.PublicationRecordId = Request.Form["PublicationRecordId"];
                     publicationobject.PublicationId = Request.Form["PublicationId"];
                     publicationobject.Description = Request.Form["Description"];
-                    publicationobject.Memo = Request.Form["Memo"];
-                    publicationobject.Platform = Request.Form["Platform"];
                     publicationobject.MasterCompanyId =Convert.ToInt32(Request.Form["MasterCompanyId"]);
                     publicationobject.IsActive = true;
                     publicationobject.IsDeleted = false;
                     publicationobject.EntryDate = Request.Form["EntryDate"].ToString()==""? DateTime.Now : DateTime.ParseExact(Request.Form["EntryDate"].ToString(), "dd/MM/yyyy", null);
-                    publicationobject.revisionDate = Request.Form["revisionDate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["revisionDate"].ToString(), "dd/MM/yyyy", null);
-                    publicationobject.nextreviewDate = Request.Form["nextreviewDate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["nextreviewDate"].ToString(), "dd/MM/yyyy", null);
+                    publicationobject.RevisionDate = Request.Form["revisionDate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["revisionDate"].ToString(), "dd/MM/yyyy", null);
+                    publicationobject.NextReviewDate = Request.Form["nextreviewDate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["nextreviewDate"].ToString(), "dd/MM/yyyy", null);
                     publicationobject.ASD = Request.Form["ASD"];
-                    publicationobject.publishby = Request.Form["publishby"];
-                    publicationobject.location = Request.Form["location"];
-                    publicationobject.revision = Request.Form["revision"];
-                    publicationobject.verifiedby = Request.Form["verifiedby"];
-                    publicationobject.verifieddate = Request.Form["verifieddate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["verifieddate"].ToString(), "dd/MM/yyyy", null);
-                    publicationobject.employee = Request.Form["employee"];
-                    publicationobject.docpath = Request.Form["docpath"];
+                    publicationobject.Publishby = Request.Form["publishby"];
+                    publicationobject.Location = Request.Form["location"];
+                    publicationobject.VerifiedBy = Request.Form["verifiedby"];
+                    publicationobject.VerifiedDate = Request.Form["verifieddate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["verifieddate"].ToString(), "dd/MM/yyyy", null);
+                    publicationobject.EmployeeId = Convert.ToInt32(Request.Form["EmployeeId"]);
                     publicationobject.CreatedDate = DateTime.Now;
                     publicationobject.UpdatedDate = DateTime.Now;
                     publicationobject.CreatedBy = Request.Form["CreatedBy"];
                     publicationobject.UpdatedBy = Request.Form["UpdatedBy"];
-                    publicationobject.PublicationTypeId = Request.Form["pubType"].ToString()=="" ? 0 : Convert.ToInt32(Request.Form["pubType"].ToString());
+                    publicationobject.PublicationTypeId = Request.Form["PublicationTypeId"].ToString()=="" ? 0 : Convert.ToInt32(Request.Form["PublicationTypeId"].ToString());
+                    publicationobject.Sequence = Request.Form["Sequence"];
+                    publicationobject.ExpirationDate = Request.Form["ExpirationDate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["ExpirationDate"].ToString(), "dd/MM/yyyy", null);
 
                     _unitOfWork.Publication.Add(publicationobject);
                     _unitOfWork.SaveChanges();
 
 
-                    _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, publicationobject.PublicationRecordId, Convert.ToInt32(ModuleEnum.Publication), Convert.ToString(ModuleEnum.Publication), publicationobject.UpdatedBy, publicationobject.MasterCompanyId);
+                    publicationobject.AttachmentId= _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, publicationobject.PublicationRecordId, Convert.ToInt32(ModuleEnum.Publication), Convert.ToString(ModuleEnum.Publication), publicationobject.UpdatedBy, publicationobject.MasterCompanyId);
 
 
                     return Ok(publicationobject);
@@ -136,7 +133,7 @@ namespace QuickApp.Pro.Controllers
                 throw;
             }
         }
-        [HttpPut("publicationpost/{id}")]
+        [HttpPut("publicationpost")]
         public IActionResult UpdateAction()
         {
 
@@ -145,33 +142,30 @@ namespace QuickApp.Pro.Controllers
                 DAL.Models.Publication publicationobject = new DAL.Models.Publication();
                 if (Request.Form == null)
                     return BadRequest($"{nameof(publicationobject)} cannot be null");
-                //var existingResult = _unitOfWork.Publication.GetSingleOrDefault(c => c.PublicationRecordId == id);
+               // var existingResult = _unitOfWork.Publication.GetSingleOrDefault(c => c.PublicationRecordId == Convert.ToInt64(Request.Form["PublicationRecordId"]));
 
                 publicationobject.PublicationRecordId = Convert.ToInt64(Request.Form["PublicationRecordId"]);
                 publicationobject.PublicationId = Request.Form["PublicationId"];
                 publicationobject.Description = Request.Form["Description"];
-                publicationobject.Memo = Request.Form["Memo"];
-                publicationobject.Platform = Request.Form["Platform"];
                 publicationobject.MasterCompanyId = Convert.ToInt32(Request.Form["MasterCompanyId"]);
                 publicationobject.IsActive = Convert.ToBoolean(Request.Form["IsActive"]);
                 publicationobject.IsDeleted = Convert.ToBoolean(Request.Form["IsDeleted"]); ;
                 publicationobject.EntryDate = Request.Form["EntryDate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["EntryDate"].ToString(), "dd/MM/yyyy", null);
-                publicationobject.revisionDate = Request.Form["revisionDate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["revisionDate"].ToString(), "dd/MM/yyyy", null);
-                publicationobject.nextreviewDate = Request.Form["nextreviewDate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["nextreviewDate"].ToString(), "dd/MM/yyyy", null);
+                publicationobject.RevisionDate = Request.Form["revisionDate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["revisionDate"].ToString(), "dd/MM/yyyy", null);
+                publicationobject.NextReviewDate = Request.Form["nextreviewDate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["nextreviewDate"].ToString(), "dd/MM/yyyy", null);
                 publicationobject.ASD = Request.Form["ASD"];
-                publicationobject.publishby = Request.Form["publishby"];
-                publicationobject.location = Request.Form["location"];
-                publicationobject.revision = Request.Form["revision"];
-                publicationobject.verifiedby = Request.Form["verifiedby"];
-                publicationobject.verifieddate = Request.Form["verifieddate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["verifieddate"].ToString(), "dd/MM/yyyy", null);
-                publicationobject.employee = Request.Form["employee"];
-                publicationobject.docpath = Request.Form["docpath"];
+                publicationobject.Publishby = Request.Form["publishby"];
+                publicationobject.Location = Request.Form["location"];
+                publicationobject.VerifiedBy = Request.Form["verifiedby"];
+                publicationobject.VerifiedDate = Request.Form["verifieddate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["verifieddate"].ToString(), "dd/MM/yyyy", null);
+                publicationobject.EmployeeId =Convert.ToInt32(Request.Form["EmployeeId"]);
                 publicationobject.CreatedDate = Convert.ToDateTime(Request.Form["CreatedDate"]);
                 publicationobject.UpdatedDate = DateTime.Now;
                 publicationobject.CreatedBy = Request.Form["CreatedBy"];
                 publicationobject.UpdatedBy = Request.Form["UpdatedBy"];
-                publicationobject.PublicationTypeId = Request.Form["pubType"].ToString() == "" ? 0 : Convert.ToInt32(Request.Form["pubType"].ToString());
-
+                publicationobject.PublicationTypeId = Request.Form["PublicationTypeId"].ToString() == "" ? 0 : Convert.ToInt32(Request.Form["PublicationTypeId"].ToString());
+                publicationobject.Sequence = Request.Form["Sequence"];
+                publicationobject.ExpirationDate = Request.Form["ExpirationDate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["ExpirationDate"].ToString(), "dd/MM/yyyy", null);
 
                 _unitOfWork.Publication.Update(publicationobject);
                 _unitOfWork.SaveChanges();
@@ -293,12 +287,6 @@ namespace QuickApp.Pro.Controllers
                     {
                         PublicationItemMasterMapping cp = new PublicationItemMasterMapping();
                         cp.ItemMasterId = IMPNMapping[i].ItemMasterId;
-                        cp.PublicationId = IMPNMapping[i].PublicationId;
-						cp.PartNumber = IMPNMapping[i].PartNumber;
-						cp.PartNumberDescription = IMPNMapping[i].PartNumberDescription;
-                        cp.ItemClassification = IMPNMapping[i].ItemClassification;
-                        cp.ItemClassificationId = IMPNMapping[i].ItemClassificationId;
-                        cp.ItemGroupId = IMPNMapping[i].ItemGroupId;
                         cp.PublicationRecordId = IMPNMapping[i].PublicationRecordId;
                         cp.MasterCompanyId = IMPNMapping[i].MasterCompanyId;
                         cp.CreatedBy = IMPNMapping[i].CreatedBy;
@@ -477,14 +465,13 @@ namespace QuickApp.Pro.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
-                {
+
                     var existingResult = _context.PublicationItemMasterMapping.Where(c => c.PublicationItemMasterMappingId == id).FirstOrDefault();
                     existingResult.UpdatedDate = DateTime.Now;
                     existingResult.IsDeleted = true;
                     _unitOfWork.Repository<PublicationItemMasterMapping>().Update(existingResult);
                     _unitOfWork.SaveChanges();
-                }
+     
             }
             catch (Exception ex)
             {
@@ -534,5 +521,29 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        // GET: api/values
+        [HttpGet("publicationview/{publicationRecordId}")]
+        public IActionResult PublicationView(long publicationRecordId)
+        {
+            var allpublicationinfo = _unitOfWork.Publication.PublicationView(publicationRecordId);
+            return Ok((allpublicationinfo));
+
+        }
+
+        [HttpGet("publicationstatus")]
+        public IActionResult PublicationStatus(long publicationRecordId, bool status, string updatedBy)
+        {
+            _unitOfWork.Publication.PublicationStatus(publicationRecordId,status,updatedBy);
+            return Ok();
+
+        }
+
+        [HttpGet("getpublicationtypes")]
+        public IActionResult GetPublicationTypes()
+        {
+          var result=  _unitOfWork.Publication.GetPublicationTypes();
+            return Ok(result);
+
+        }
     }
 }

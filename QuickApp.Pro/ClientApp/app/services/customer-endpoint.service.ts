@@ -1,5 +1,4 @@
-﻿
-import { Injectable, Injector } from '@angular/core';
+﻿import { Injectable, Injector } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
@@ -35,7 +34,7 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _updateBillAddressDetails: string = "/api/Customer/customerBillAddressdetails";
     private readonly _updatshippingAddressDetails: string = "/api/Customer/cusShippingUpdate";
     private readonly _updateStatusCustomerShipping: string = "/api/Customer/updateStatusCustomerShipping";
-    private readonly _saveBillViaDetails: string = "/api/Customer/addShipViaDetails";
+    // private readonly _saveBillViaDetails: string = "/api/Customer/addShipViaDetails";
     private readonly _customerShipViaDetails: string = "/api/Customer/getCustomerShipViaDetails";
     private readonly _updateBillingViaDetails: string = "/api/Customer/customerBillAddressdetails";
     private readonly _deleteBillingCusDettilas: string = "/api/Customer/updateStatusCustomerBilling";
@@ -88,10 +87,29 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly getGlobalCustomer: string = "/api/customer/globalSearch";
 
 
-    private readonly _getAircraftMapped: string = "/api/Customer/getAircraftMapped";
+    private readonly _getAircraftMapped: string = "/api/Customer/getCustomerAircraftMapped";
     private readonly _CustomerAircraftPostUrl: string = "/api/Customer/CustomerAircraftPost";
+    private readonly _CustomerAircraftSearchUrl: string = '/api/Customer/searchGetCustomerAirMappedByMultiTypeIDModelIDDashID';
     private readonly _CustomerATAPostUrl: string = "/api/Customer/CustomerATAPost";
-    private readonly _getATAMapped: string = "/api/Customer/getATAMapped";
+    private readonly _getATAMapped: string = "/api/Customer/getCustomerATAMapped";
+    private readonly _CustomerAtaSearchUrl: string = '/api/Customer/searchGetCustomerATAMappedByMultiATAIDATASubID';
+
+    private readonly _internationalshippingpost: string = '/api/Customer/createinternationalshipping'
+    private readonly _internationalshippingget: string = '/api/Customer/internationalshippingdetaillist'
+    private readonly _internationalstatus: string = '/api/Customer/internationalshippingdetailsstatus'
+    private readonly _internationalShippingDelete: string = '/api/Customer/deleteinternationalshipping';
+    private readonly _internationalshippingdetailsbyid: string = '/api/Customer/internationalshippingdetailsbyid';
+    private readonly _updateinternationalshipping: string = '/api/Customer/updateinternationalshipping';
+    private readonly _createinternationalshippingviadetails: string = '/api/Customer/createshippingviadetails';
+    private readonly _internationalShipViaList: string = '/api/Customer/getshippingviadetails';
+    private readonly _updateshippingviadetails: string = '/api/Customer/updateshippingviadetails';
+    private readonly _deleteATAMapped: string = '/api/Customer/DeleteCustomerATAMapping';
+    private readonly _deleteAircraftMappedInventory: string = '/api/Customer/DeleteCustomerAircraftMappint';
+    private readonly _addShipViaDetails : string ='/api/Customer/addShipViaDetails';
+
+
+
+
 
     get globalSearch() { return this.configurations.baseUrl + this.getGlobalCustomer; }
     get paginate() { return this.configurations.baseUrl + this.getCustomer; }
@@ -133,9 +151,32 @@ export class CustomerEndpoint extends EndpointFactory {
 
     get getCustomerAircrafPosttUrl() { return this.configurations.baseUrl + this._CustomerAircraftPostUrl }
     get getCustomerATAPosttUrl() { return this.configurations.baseUrl + this._CustomerATAPostUrl }
+    get InternationalShippingPost() { return this.configurations.baseUrl + this._internationalshippingpost }
+    get InternationalShippingList() { return this.configurations.baseUrl + this._internationalshippingget }
+    get InternationalShippingStatus() { return this.configurations.baseUrl + this._internationalstatus }
+    get InternationalShippingDelete() { return this.configurations.baseUrl + this._internationalShippingDelete }
+    get InternationalShippingById() { return this.configurations.baseUrl + this._internationalshippingdetailsbyid }
+    get UpdateInternationalshipping() { return this.configurations.baseUrl + this._updateinternationalshipping }
+    get InternationalShipVia() { return this.configurations.baseUrl + this._createinternationalshippingviadetails }
+    get ShipViaByInternationalShippingId() { return this.configurations.baseUrl + this._internationalShipViaList }
+    get UpdateShipViaInternational() { return this.configurations.baseUrl + this._updateshippingviadetails }
+    get CustomerAircraftSearchUrl() { return this.configurations.baseUrl + this._CustomerAircraftSearchUrl }
+    get CustomerATASearchUrl() { return this.configurations.baseUrl + this._CustomerAtaSearchUrl }
+    get deleteATAMapped() { return this.configurations.baseUrl + this._deleteATAMapped }
+    get deleteAircraftInvetory() { return this.configurations.baseUrl + this._deleteAircraftMappedInventory }
+    get domesticShipVia() { return this.configurations.baseUrl + this._addShipViaDetails }
+
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
         super(http, configurations, injector);
+    }
+
+    postDomesticShipVia<T>(postData){ 
+        
+        return this.http.post<T>(this.domesticShipVia, JSON.stringify(postData), this.getRequestHeaders())
+        .catch(error => {
+            return this.handleError(error, () => this.postDomesticShipVia(postData));
+        });
     }
 
     //getcustomerEndpoint<T>(): Observable<T> {
@@ -146,10 +187,120 @@ export class CustomerEndpoint extends EndpointFactory {
     //        });
     //}
 
+    deleteAircraftInvetoryById<T>(id) {
+        let endpointUrl = `${this.deleteAircraftInvetory}/${id}`;
+
+        return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.deleteAircraftInvetoryById(id));
+            });
+    }
+
+    deleteATAMappedDataById<T>(id) {
+        let endpointUrl = `${this.deleteATAMapped}/${id}`;
+
+        return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.deleteATAMappedDataById(id));
+            });
+    }
+
+    searchATAMappedByMultiATAIDATASUBIDByCustomerId<T>(customerId: number, searchUrl: string) {
+        console.log(customerId, searchUrl)
+        let endpointUrl = `${this.CustomerATASearchUrl}/${customerId}?${searchUrl}`;
+
+        return this.http
+            .get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.searchATAMappedByMultiATAIDATASUBIDByCustomerId(customerId, searchUrl));
+            });
+    }
+    searchAirMappedByMultiTypeIDModelIDDashIDByCustomerId<T>(customerId: number, searchUrl: string) {
+        let endpointUrl = `${this.CustomerAircraftSearchUrl}/${customerId}?${searchUrl}`;
+
+        return this.http
+            .get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.searchAirMappedByMultiTypeIDModelIDDashIDByCustomerId(customerId, searchUrl));
+            });
+    }
+
+
+    updateShipViaInternational<T>(postData) {
+
+        return this.http.post<T>(this.UpdateShipViaInternational, JSON.stringify(postData), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.updateShipViaInternational(postData));
+            });
+    }
+    getShipViaByInternationalShippingId<T>(id, pageIndex, pageSize) {
+        return this.http.get<T>(`${this.ShipViaByInternationalShippingId}?internationalShippingId=${id}&pageNumber=${pageIndex}&pageSize=${pageSize}`)
+            .catch(error => {
+                return this.handleError(error, () => this.getShipViaByInternationalShippingId(id, pageIndex, pageSize));
+            });
+    }
+    postInternationalShipVia<T>(postData) {
+
+        return this.http.post<T>(this.InternationalShipVia, JSON.stringify(postData), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.postInternationalShipVia(postData));
+            });
+    }
+
+    updateInternationalShipping<T>(postData) {
+
+        return this.http.post<T>(this.UpdateInternationalshipping, JSON.stringify(postData), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.updateInternationalShipping(postData));
+            });
+    }
+
+    getInternationalShippingById<T>(id) {
+        return this.http.get<T>(`${this.InternationalShippingById}?id=${id}`)
+            .catch(error => {
+                return this.handleError(error, () => this.getInternationalShippingById(id));
+            });
+    }
+
+    deleteInternationalShipping<T>(id, updatedBy) {
+        return this.http.get<T>(`${this.InternationalShippingDelete}?id=${id}&updatedBy=${updatedBy}`)
+            .catch(error => {
+                return this.handleError(error, () => this.deleteInternationalShipping(id, updatedBy));
+            });
+    }
+
+    updateStatusForInternationalShipping<T>(id, status, updatedBy) {
+        return this.http.get<T>(`${this.InternationalShippingStatus}?id=${id}&status=${status}&updatedBy=${updatedBy}`)
+            .catch(error => {
+                return this.handleError(error, () => this.updateStatusForInternationalShipping(id, status, updatedBy));
+            });
+    }
+
+    getInternationalShippingByCustomerId<T>(customerId, pageIndex, pageSize) {
+        return this.http.get<T>(`${this.InternationalShippingList}?customerId=${customerId}&pageNumber=${pageIndex}&pageSize=${pageSize}`)
+            .catch(error => {
+                return this.handleError(error, () => this.getInternationalShippingByCustomerId(customerId, pageIndex, pageSize));
+            });
+    }
+
+    postInternationalShippingPost<T>(postData) {
+        return this.http.post<T>(this.InternationalShippingPost, JSON.stringify(postData), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.postInternationalShippingPost(postData));
+            });
+    }
+
     postCustomerAircraft<T>(postData) {
         return this.http.post<T>(this.getCustomerAircrafPosttUrl, JSON.stringify(postData), this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.postCustomerAircraft(postData));
+            });
+    }
+
+    postCustomerATA<T>(postData) {
+        return this.http.post<T>(this.getCustomerATAPosttUrl, JSON.stringify(postData), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.postCustomerATA(postData));
             });
     }
 
@@ -555,18 +706,18 @@ export class CustomerEndpoint extends EndpointFactory {
             });
     }
 
-    saveBillViaDetails<T>(param: any): Observable<T> {
+    // saveBillViaDetails<T>(param: any): Observable<T> {
 
-        let body = JSON.stringify(param);
-        let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
-        //let options = new RequestOptions({ headers: headers });  // create a request option
+    //     let body = JSON.stringify(param);
+    //     let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+    //     //let options = new RequestOptions({ headers: headers });  // create a request option
 
-        // post request to create new book
-        return this.http
-            .post(this._saveBillViaDetails, body, this.getRequestHeaders())
-            .map((res: Response) => res)
-            .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
-    }
+    //     // post request to create new book
+    //     return this.http
+    //         .post(this._saveBillViaDetails, body, this.getRequestHeaders())
+    //         .map((res: Response) => res)
+    //         .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+    // }
 
     getCustomerShipViaDetails<T>(roleObject: any): Observable<T> {
         let endpointUrl = `${this.customerShipViaDetails}/${roleObject.customerShippingAddressId}`;
@@ -669,18 +820,18 @@ export class CustomerEndpoint extends EndpointFactory {
     }
 
 
-    saveShipViaDetails<T>(param: any): Observable<T> {
+    // saveShipViaDetails<T>(param: any): Observable<T> {
 
-        let body = JSON.stringify(param);
-        let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
-        //let options = new RequestOptions({ headers: headers });  // create a request option
+    //     let body = JSON.stringify(param);
+    //     let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+    //     //let options = new RequestOptions({ headers: headers });  // create a request option
 
-        // post request to create new book
-        return this.http
-            .post(this._saveShipViaDetails, body, this.getRequestHeaders())
-            .map((res: Response) => res)
-            .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
-    }
+    //     // post request to create new book
+    //     return this.http
+    //         .post(this._saveShipViaDetails, body, this.getRequestHeaders())
+    //         .map((res: Response) => res)
+    //         .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+    // }
     updateShippingViainfo<T>(roleObject: any, CustomerId: any): Observable<T> {
         let endpointUrl = `${this._updateShippingViaDetails}/${CustomerId}`;
         return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
@@ -755,11 +906,11 @@ export class CustomerEndpoint extends EndpointFactory {
 
             }).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
     }
-    updateCustomerWarnings<T>(roleObject: any): Observable<T> {
-        let endpointUrl = `${this._CustomerwarningUrl}/${roleObject.customerWarningId}`;
+    updateCustomerWarnings<T>(roleObject: any, customerWarningId): Observable<T> {
+        let endpointUrl = `${this._CustomerwarningUrl}/${customerWarningId}`;
         return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.updateCustomerWarnings(roleObject));
+                return this.handleError(error, () => this.updateCustomerWarnings(roleObject, customerWarningId));
             });
     }
     //getcustomeraircrafttypeEndpoint<T>(roleObject: any): Observable<T> {

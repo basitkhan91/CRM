@@ -10,7 +10,7 @@ namespace QuickApp.Pro.ViewModels
 {
     public class EmployeeViewModel
     {
-        public long? EmployeeId { get; set; }      
+        public long? EmployeeId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string MiddleName { get; set; }

@@ -23,6 +23,7 @@ namespace QuickApp.Pro.Controllers
         readonly IEmailer _emailer;
         private readonly ApplicationDbContext _context;
         private const string GetActionByIdActionName = "GetActionById";
+
         public ItemMasterController(IUnitOfWork unitOfWork, ILogger<ItemMasterController> logger, IEmailer emailer, ApplicationDbContext context)
         {
             _unitOfWork = unitOfWork;
@@ -128,6 +129,7 @@ namespace QuickApp.Pro.Controllers
 
 
         }
+
         [HttpGet("GetItemStocklist")]
         [Produces(typeof(List<ItemMasterViewModel>))]
         public IActionResult itemstocklist(ItemMasterViewModel itemMasterViewModel)
@@ -161,7 +163,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult warnTypeGet(WarningViewModel warningViewModel)
         {
             var allcustomertype = _unitOfWork.warning.GetAllData(); //.GetAllCustomersData();
-            return Ok(allcustomertype);
+            return Ok(allcustomertype); 
 
         }
 
@@ -171,7 +173,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetManfacturerDetails()
         {
 
-            var obj = _context.Manufacturer.OrderByDescending(c => c.ManufacturerId).Where(c => c.IsDelete == false || c.IsDelete == null).ToList();
+            var obj = _context.Manufacturer.OrderByDescending(c => c.ManufacturerId).Where(c => c.IsDeleted == false).ToList();
             return Ok(obj);
         }
 
@@ -468,6 +470,8 @@ namespace QuickApp.Pro.Controllers
             }
             return Ok();
         }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
         public void saveItemcapes(long returnid, long itemid)
         {
             ItemMasterCapes imc = new ItemMasterCapes();
@@ -673,10 +677,10 @@ namespace QuickApp.Pro.Controllers
                     {
                         itemmaserObj.PriorityId = null;
                     }
-                    if (itemMasterViewModel.IntegrationPortalId == null)
-                    {
-                        itemmaserObj.IntegrationPortalId = null;
-                    }
+                    //if (itemMasterViewModel.IntegrationPortalId == null)
+                    //{
+                    //    itemmaserObj.IntegrationPortalId = null;
+                    //}
                     if (itemMasterViewModel.WarningId == null)
                     {
                         itemmaserObj.WarningId = null;
@@ -786,123 +790,28 @@ namespace QuickApp.Pro.Controllers
                 if (itemMasterViewModel == null)
                     return BadRequest($"{nameof(itemMasterViewModel)} cannot be null");
                 var itemmaserObj = _unitOfWork.itemMaster.GetSingleOrDefault(c => c.ItemMasterId == id);
-                itemMasterViewModel.MasterCompanyId = 1;
-                itemmaserObj.PartNumber = itemMasterViewModel.PartNumber;
-                itemmaserObj.oemPNId = itemMasterViewModel.oemPNId;
-                itemmaserObj.ItemTypeId = itemMasterViewModel.ItemTypeId;
-                itemmaserObj.PartDescription = itemMasterViewModel.Partdescription;
-                itemmaserObj.ExchangeListPrice = itemMasterViewModel.ExchangeListPrice;
-                itemmaserObj.OverheadCost = itemMasterViewModel.OverheadCost;
-                itemmaserObj.IsAlternatePartChecked = itemMasterViewModel.IsAlternatePartChecked;
-                itemmaserObj.TurnTimeOverhaulHours = itemMasterViewModel.TurnTimeOverhaulHours;
-                itemmaserObj.TurnTimeRepairHours = itemMasterViewModel.TurnTimeRepairHours;
-                itemmaserObj.IsSerialized = itemMasterViewModel.IsSerialized;
-                itemmaserObj.ItemGroupId = itemMasterViewModel.ItemGroupId;
-                itemmaserObj.ItemClassificationId = itemMasterViewModel.ItemClassificationId;
-                itemmaserObj.IsAcquiredMethodBuy = itemMasterViewModel.IsAcquiredMethodBuy;
-                itemmaserObj.IsHazardousMaterial = itemMasterViewModel.IsHazardousMaterial;
-                itemmaserObj.IsExpirationDateAvailable = itemMasterViewModel.IsExpirationDateAvailable;
-                itemmaserObj.ExpirationDate = itemMasterViewModel.ExpirationDate;
-                itemmaserObj.IsReceivedDateAvailable = itemMasterViewModel.IsReceivedDateAvailable;
-                itemmaserObj.DaysReceived = itemMasterViewModel.DaysReceived;
-                itemmaserObj.IsManufacturingDateAvailable = itemMasterViewModel.IsManufacturingDateAvailable;
-                itemmaserObj.ManufacturingDays = itemMasterViewModel.ManufacturingDays;
-                itemmaserObj.IsTagDateAvailable = itemMasterViewModel.IsTagDateAvailable;
-                itemmaserObj.TagDays = itemMasterViewModel.TagDays;
-                itemmaserObj.IsOpenDateAvailable = itemMasterViewModel.IsOpenDateAvailable;
-                itemmaserObj.OpenDays = itemMasterViewModel.OpenDays;
-                itemmaserObj.IsShippedDateAvailable = itemMasterViewModel.IsShippedDateAvailable;
-                itemmaserObj.ShippedDays = itemMasterViewModel.ShippedDays;
-                itemmaserObj.IsOtherDateAvailable = itemMasterViewModel.IsOtherDateAvailable;
-                itemmaserObj.OtherDays = itemMasterViewModel.OtherDays;
-                itemmaserObj.ShelfLife = itemMasterViewModel.ShelfLife;
-                itemmaserObj.ProvisionId = itemMasterViewModel.ProvisionId;
-                itemmaserObj.ManufacturerId = itemMasterViewModel.ManufacturerId;
-                itemmaserObj.PurchaseLastListPriceDate = itemMasterViewModel.PurchaseLastListPriceDate;
-                itemmaserObj.SalesLastSalePriceDate = itemMasterViewModel.SalesLastSalePriceDate;
-                itemmaserObj.PurchaseLastDiscountPercentDate = itemMasterViewModel.PurchaseLastDiscountPercentDate;
-                itemmaserObj.PurchaseLastListPriceAfterDiscountDate = itemMasterViewModel.PurchaseLastListPriceAfterDiscountDate;
-                itemmaserObj.SalesLastMarkUpPercentOnListPriceDate = itemMasterViewModel.SalesLastMarkUpPercentOnListPriceDate;
-                itemmaserObj.SalesLastMakUpPercentOnListPriceAfterDiscDate = itemMasterViewModel.SalesLastMakUpPercentOnListPriceAfterDiscDate;
-                itemmaserObj.SalesLastBaselineSalesPriceDate = itemMasterViewModel.SalesLastBaselineSalesPriceDate;
-                itemmaserObj.SalesLastSalesDiscountPercentDate = itemMasterViewModel.SalesLastSalesDiscountPercentDate;
-                itemmaserObj.PMA = itemMasterViewModel.PMA;
-                itemmaserObj.DER = itemMasterViewModel.DER;
-                itemmaserObj.ATAChapterId = itemMasterViewModel.ATAChapterId;
-                itemmaserObj.ATASubChapterId = itemMasterViewModel.ATASubChapterId;
-                itemmaserObj.NationalStockNumber = itemMasterViewModel.NationalStockNumber;
-                itemmaserObj.IsSchematic = itemMasterViewModel.IsSchematic;
-                itemmaserObj.SalesIsFixedPrice = itemMasterViewModel.SalesIsFixedPrice;
-                itemmaserObj.OverhaulHours = itemMasterViewModel.OverhaulHours;
-                itemmaserObj.RPHours = itemMasterViewModel.RPHours;
-                itemmaserObj.SalesPrice = itemMasterViewModel.SalesPrice;
-                itemmaserObj.SalesCurrencyId = itemMasterViewModel.SalesCurrencyId;
-                itemmaserObj.TestHours = itemMasterViewModel.TestHours;
-                itemmaserObj.CSE = itemMasterViewModel.CSE;
-                itemmaserObj.RFQTracking = itemMasterViewModel.RFQTracking;
-                itemmaserObj.GLAccountId = itemMasterViewModel.GLAccountId;
-                itemmaserObj.PurchaseUnitOfMeasureId = itemMasterViewModel.PurchaseUnitOfMeasureId;
-                itemmaserObj.ExportUomId = itemMasterViewModel.ExportUomId;
-                itemmaserObj.StockUnitOfMeasureId = itemMasterViewModel.StockUnitOfMeasureId;
-                itemmaserObj.ConsumeUnitOfMeasureId = itemMasterViewModel.ConsumeUnitOfMeasureId;
-                itemmaserObj.SoldUnitOfMeasureId = itemMasterViewModel.SoldUnitOfMeasureId;
-                itemmaserObj.LeadTimeDays = itemMasterViewModel.LeadTimeDays;
-                itemmaserObj.LeadTimeHours = itemMasterViewModel.LeadTimeHours;
-                itemmaserObj.ReorderQuantiy = itemMasterViewModel.ReorderQuantiy;
-                itemmaserObj.ReorderPoint = itemMasterViewModel.ReorderPoint;
-                itemmaserObj.MinimumOrderQuantity = itemMasterViewModel.MinimumOrderQuantity;
-                itemmaserObj.IsExchangeInfoAvailable = itemMasterViewModel.IsExchangeInfoAvailable;
-                itemmaserObj.CoreValue = itemMasterViewModel.CoreValue;
-                itemmaserObj.OverheadCost = itemMasterViewModel.OverheadCost;
-                itemmaserObj.PartListPrice = itemMasterViewModel.PartListPrice;
-                itemmaserObj.POCoreCharge = itemMasterViewModel.POCoreCharge;
-                itemmaserObj.SOCoreCharge = itemMasterViewModel.SOCoreCharge;
-                itemmaserObj.PriorityId = itemMasterViewModel.PriorityId;
-                itemmaserObj.WarningId = itemMasterViewModel.WarningId;
-                itemmaserObj.Memo = itemMasterViewModel.Memo;
-                itemmaserObj.ExportCountryId = itemMasterViewModel.ExportCountryId;
-                itemmaserObj.ExportValue = itemMasterViewModel.ExportValue;
-                itemmaserObj.ExportCurrencyId = itemMasterViewModel.ExportCurrencyId;
-                itemmaserObj.ExportWeight = itemMasterViewModel.ExportWeight;
-                itemmaserObj.ExportWeightUnit = itemMasterViewModel.ExportWeightUnit;
-                itemmaserObj.ExportSizeLength = itemMasterViewModel.ExportSizeLength;
-                itemmaserObj.ExportSizeWidth = itemMasterViewModel.ExportSizeWidth;
-                itemmaserObj.ExportSizeHeight = itemMasterViewModel.ExportSizeHeight;
-                itemmaserObj.ExportSizeUnit = itemMasterViewModel.ExportSizeUnit;
-                itemmaserObj.ExportClassificationId = itemMasterViewModel.ExportClassificationId;
-                itemmaserObj.PurchaseDiscountOffListPrice = itemMasterViewModel.PurchaseDiscountOffListPrice;
-                itemmaserObj.PurchaseListPriceAfterDiscount = itemMasterViewModel.PurchaseListPriceAfterDiscount;
-                itemmaserObj.PurchaseCurrencyId = itemMasterViewModel.PurchaseCurrencyId;
-                itemmaserObj.SalesMarkUpOnPurchaseListPriceActive = itemMasterViewModel.SalesMarkUpOnPurchaseListPriceActive;
-                itemmaserObj.SalesMarkUpOnListPrice = itemMasterViewModel.SalesMarkUpOnListPrice;
-                itemmaserObj.SalesDiscountPercent = itemMasterViewModel.SalesDiscountPercent;
-                itemmaserObj.SalesMarkUpOnPurchaseListPriceActive = itemMasterViewModel.SalesMarkUpOnPurchaseListPriceActive;
-                itemmaserObj.SalesMarkUpOnListPriceAfterDisc = itemMasterViewModel.SalesMarkUpOnListPriceAfterDisc;
-                itemmaserObj.SalesBaselineSalesPrice = itemMasterViewModel.SalesBaselineSalesPrice;
-                itemmaserObj.SalesBaselineSalesPrice = itemMasterViewModel.SalesBaselineSalesPrice;
-                itemmaserObj.SalesIsFixedPrice = itemMasterViewModel.SalesIsFixedPrice;
-                itemmaserObj.SalesDiscountPercent = itemMasterViewModel.SalesDiscountPercent;
-                itemmaserObj.SalesCurrencyId = itemMasterViewModel.SalesCurrencyId;
-                itemmaserObj.StandAloneEquipment = itemMasterViewModel.StandAloneEquipment;
-                itemmaserObj.ComponentEquipment = itemMasterViewModel.ComponentEquipment;
-                itemmaserObj.MasterCompanyId = itemMasterViewModel.MasterCompanyId;
-                itemmaserObj.IsTimeLife = itemMasterViewModel.IsTimeLife;
-                itemmaserObj.ListPrice = itemMasterViewModel.ListPrice;
-                itemmaserObj.PriceDate = itemMasterViewModel.PriceDate;
-                itemmaserObj.UnitCost = itemMasterViewModel.UnitCost;
-                itemmaserObj.DiscountPurchasePercent = itemMasterViewModel.DiscountPurchasePercent;
-                itemmaserObj.ItemNonStockClassificationId = itemMasterViewModel.ItemNonStockClassificationId;
-                itemmaserObj.StockLevel = itemMasterViewModel.StockLevel;
-                itemmaserObj.ShelfLifeAvailable = itemMasterViewModel.ShelfLifeAvailable;
-                itemmaserObj.isPma = itemMasterViewModel.isPma;
-                itemmaserObj.mfgHours = itemMasterViewModel.mfgHours;
-                itemmaserObj.turnTimeMfg = itemMasterViewModel.turnTimeMfg;
-                itemmaserObj.turnTimeBenchTest = itemMasterViewModel.turnTimeBenchTest;
-                itemmaserObj.IsExportUnspecified = itemMasterViewModel.IsExportUnspecified;
-                itemmaserObj.IsExportNONMilitary = itemMasterViewModel.IsExportNONMilitary;
-                itemmaserObj.IsExportMilitary = itemMasterViewModel.IsExportMilitary;
-                itemmaserObj.IsExportDual = itemMasterViewModel.IsExportDual;
-                //itemmaserObj.PartAlternatePartId = itemMasterViewModel.PartAlternatePartId;
+
+                itemMasterViewModel.IsActive = itemmaserObj.IsActive;
+
+                IDictionary<string, object> keyValuePairs = new Dictionary<string, object>();
+                itemmaserObj = _unitOfWork.CommonRepository.UpdateEntity(itemMasterViewModel, itemmaserObj, ref keyValuePairs);
+
+                if (keyValuePairs != null && keyValuePairs.Count > 0)
+                {
+                    _context.ItemMaster.Attach(itemmaserObj);
+                    foreach (var item in keyValuePairs)
+                    {
+                        _context.Entry(itemmaserObj).Property(item.Key).IsModified = true;
+                    }
+
+                    itemmaserObj.UpdatedDate = DateTime.Now;
+                    itemmaserObj.UpdatedBy = HttpContext.Session.GetString("UserId");
+
+                    _context.Entry(itemmaserObj).Property(x => x.UpdatedDate).IsModified = true;
+                    _context.Entry(itemmaserObj).Property(x=>x.UpdatedBy).IsModified = true;
+
+                    _context.SaveChanges();
+                }
 
                 if (itemMasterViewModel.AircraftTypeId != null)
                 {
@@ -951,78 +860,8 @@ namespace QuickApp.Pro.Controllers
                         }
                     }
                 }
-                itemmaserObj.CreatedDate = DateTime.Now;
-                itemmaserObj.UpdatedDate = DateTime.Now;
-                itemmaserObj.CreatedBy = itemMasterViewModel.CreatedBy;
-                itemmaserObj.UpdatedBy = itemMasterViewModel.UpdatedBy;
-                if (itemMasterViewModel.ATAChapterId == null)
-                {
-                    itemmaserObj.ATAChapterId = null;
-                }
-
-                if (itemMasterViewModel.StockUnitOfMeasureId == null)
-                {
-                    itemmaserObj.StockUnitOfMeasureId = null;
-                }
-                if (itemMasterViewModel.PurchaseUnitOfMeasureId == null)
-                {
-                    itemmaserObj.PurchaseUnitOfMeasureId = null;
-                }
-                if (itemMasterViewModel.ExportUomId == null)
-                {
-                    itemmaserObj.ExportUomId = null;
-                }
-                if (itemMasterViewModel.ConsumeUnitOfMeasureId == null)
-                {
-                    itemmaserObj.ConsumeUnitOfMeasureId = null;
-                }
-                if (itemMasterViewModel.PriorityId == null)
-                {
-                    itemmaserObj.PriorityId = null;
-                }
-                if (itemMasterViewModel.IntegrationPortalId == null)
-                {
-                    itemmaserObj.IntegrationPortalId = null;
-                }
-                if (itemMasterViewModel.WarningId == null)
-                {
-                    itemmaserObj.WarningId = null;
-                }
-                if (itemMasterViewModel.ExportCountryId == null)
-                {
-                    itemmaserObj.ExportCountryId = null;
-                }
-                if (itemMasterViewModel.ExportCurrencyId == null)
-                {
-                    itemmaserObj.ExportCurrencyId = null;
-                }
-                if (itemMasterViewModel.ExportClassificationId == null)
-                {
-                    itemmaserObj.ExportClassificationId = null;
-                }
-                if (itemMasterViewModel.PurchaseCurrencyId == null)
-                {
-                    itemmaserObj.PurchaseCurrencyId = null;
-                }
-                if (itemMasterViewModel.SalesCurrencyId == null)
-                {
-                    itemmaserObj.SalesCurrencyId = null;
-                }
-
-                if (itemMasterViewModel.MasterCompanyId == null)
-                {
-                    itemmaserObj.MasterCompanyId = null;
-                }
-                if (itemMasterViewModel.CurrencyId == null)
-                {
-                    itemmaserObj.CurrencyId = null;
-                }
-
-                if (itemMasterViewModel.ProvisionId == null)
-                {
-                    itemmaserObj.ProvisionId = null;
-                }
-
+                
+                
                 /*Master Item Parts */
                 MasterParts masterParts = new MasterParts();
                 masterParts.MasterPartId = itemmaserObj.MasterPartId;
@@ -1039,8 +878,7 @@ namespace QuickApp.Pro.Controllers
 
                 _unitOfWork.CommonRepository.UpdateMasterParts(masterParts);
 
-                _unitOfWork.itemMaster.Update(itemmaserObj);
-                _unitOfWork.SaveChanges();
+               
 
                 return Ok(itemmaserObj);
             }
@@ -1703,6 +1541,7 @@ namespace QuickApp.Pro.Controllers
             return Ok();
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpPost]
         public IActionResult CreateNhaTlaAltEquItemMapping(Nha_Tla_Alt_Equ_ItemMapping model)
         {
@@ -1716,6 +1555,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpPost]
         public IActionResult UpdateNhaTlaAltEquItemMapping(Nha_Tla_Alt_Equ_ItemMapping model)
         {
@@ -1729,6 +1569,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpGet]
         public IActionResult DeleteNhaTlaAltEquItemMapping(long id,string updatedBy)
         {
@@ -1736,6 +1577,7 @@ namespace QuickApp.Pro.Controllers
             return Ok();
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpGet]
         public IActionResult NhaTlaAltEquItemMappingStatus(long id,bool status, string updatedBy)
         {
@@ -1743,6 +1585,7 @@ namespace QuickApp.Pro.Controllers
             return Ok();
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpGet]
         public IActionResult NhaTlaAltEquItemMappingList(int mappingType, int pageNumber, int pageSize)
         {
@@ -1750,6 +1593,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpGet]
         public IActionResult NhaTlaAltEquItemMappingById(long itemMappingId, int mappingType)
         {

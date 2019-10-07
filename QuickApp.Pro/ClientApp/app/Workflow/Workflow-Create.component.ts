@@ -228,6 +228,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         this.ptnumberlistdata();
         this.getMaterialMandatory();
         this.loadUOMData();
+        this.sourceWorkFlow.workflowCreateDate = new Date();
         this.sourceWorkFlow.version = "V-1";
         if (!this.sourceWorkFlow.workFlowId) {
             this.sourceWorkFlow.workOrderNumber = 'Creating';
@@ -769,6 +770,10 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             })[0];
             this.sourceWorkFlow.itemMasterId = part.partId;
             this.sourceWorkFlow.partNumberDescription = part.description;
+
+            if (this.workFlow != undefined) {
+                this.workFlow.partNumber = part.partId;
+            }
         }
     }
 
@@ -1098,6 +1103,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     currentActiveTab: string;
     setCurrentPanel(itemName, id): void {
         this.currentPanelId = id;
+        this.workFlow.partNumber = this.sourceWorkFlow.itemMasterId;
         itemName = itemName.replace(" ", "_");
 
         var list = document.getElementsByClassName('pan');
@@ -1122,10 +1128,10 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             this.selectedSideTabIndex = index;
         }
 
-
         this.workFlow = this.workFlowList.filter(x => x.taskId == this.currenttaskId)[0];
+        
         //var workflow = this.workFlow;
-
+        
         var list = document.getElementsByClassName('actrmv');
 
         for (var i = 0; i < list.length; i++) {
@@ -1138,14 +1144,14 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
         document.getElementById('tab_' + taskId).classList.add('active');
 
-        if (this.workFlow.selectedItems == undefined || this.workFlow.selectedItems.length == 0) {
+        if (this.workFlow.selectedItems != undefined || this.workFlow.selectedItems.length > 0) {
             this.setSelectedItems(this.workFlow);
         }
 
-        this.selectedItems = this.workFlow.selectedItems
+        this.selectedItems = this.workFlow.selectedItems;
 
-        if (this.selectedItems != undefined && this.selectedItems.length > 0)
-            this.setCurrentPanel(this.selectedItems[0].Name, this.selectedItems[0].Id);
+        //if (this.selectedItems != undefined && this.selectedItems.length > 0)
+        //    this.setCurrentPanel(this.selectedItems[0].Name, this.selectedItems[0].Id);
 
         //if (this.workFlow.selectedItems != undefined && this.workFlow.selectedItems != undefined) {
         //    const sortByOrder = this.workFlow.selectedItems.sort((a, b) => {
@@ -1754,25 +1760,32 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     }
 
     onActionChange(): void {
-        var currentWF = undefined;
-        if (this.workFlowList != undefined) {
-            currentWF = this.workFlowList.filter(x => x.taskId == this.currenttaskId);
+        if (this.currenttaskId == "0" && this.workFlowList.length == 0) {
+            this.showActionAttribute = false;
+            return;
         }
 
-        this.showActionAttribute = this.currenttaskId != "0";
-
-        if (currentWF == undefined || currentWF.length == 0) {
-            if (this.workFlowList == undefined) {
-                this.workFlowList = [];
+        if (this.currenttaskId != "0") {
+            var currentWF = undefined;
+            if (this.workFlowList != undefined) {
+                currentWF = this.workFlowList.filter(x => x.taskId == this.currenttaskId);
             }
-            var currentWorkFlow = this.GetWorkFlow();
-            currentWorkFlow.selectedItems = [];
-            this.workFlowList.push(currentWorkFlow);
-            currentWF = this.workFlowList.filter(x => x.taskId == this.currenttaskId);
-        }
 
-        this.workFlow = currentWF[0];
-        this.selectedItems = currentWF[0].selectedItems;
+            this.showActionAttribute = true;
+
+            if (currentWF == undefined || currentWF.length == 0) {
+                if (this.workFlowList == undefined) {
+                    this.workFlowList = [];
+                }
+                var currentWorkFlow = this.GetWorkFlow();
+                currentWorkFlow.selectedItems = [];
+                this.workFlowList.push(currentWorkFlow);
+                currentWF = this.workFlowList.filter(x => x.taskId == this.currenttaskId);
+            }
+
+            this.workFlow = currentWF[0];
+            this.selectedItems = currentWF[0].selectedItems;
+        }
     }
 
     addAction(): void {
@@ -1785,10 +1798,45 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         );
     }
 
+    validateWorkFlowHeader(): boolean {
+        if (this.sourceWorkFlow.partNumber == undefined || this.sourceWorkFlow.partNUmber == '') {
+            this.alertService.showMessage(this.title, 'Part Number is required', MessageSeverity.error);
+            return false;
+        }
+
+        if (this.sourceWorkFlow.partNumberDescription == undefined || this.sourceWorkFlow.partNumberDescription == '') {
+            this.alertService.showMessage(this.title, 'Part Number Description is required', MessageSeverity.error);
+            return false;
+        }
+
+        if (this.sourceWorkFlow.workScopeId == undefined || this.sourceWorkFlow.workScopeId == '') {
+            this.alertService.showMessage(this.title, 'Work Scope is required', MessageSeverity.error);
+            return false;
+        }
+        
+        if (this.sourceWorkFlow.currencyId == undefined || this.sourceWorkFlow.currencyId == '') {
+            this.alertService.showMessage(this.title, 'Currency is required', MessageSeverity.error);
+            return false;
+        }
+
+        if (this.workFlow.materialList != undefined) {
+            for (let material of this.workFlow.materialList) {
+                if (material.partNumber == this.sourceWorkFlow.partNumber) {
+                    this.alertService.showMessage(this.title, 'Material List can not have Master Part Number', MessageSeverity.error);
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     addWorkFlow(isHeaderUpdate: boolean): void {
         this.sourceWorkFlow.workflowId = undefined;
-        // this.sourceWorkFlow.berThresholdAmount = (Math.min((this.sourceWorkFlow.fixedAmount == undefined ? Infinity : this.sourceWorkFlow.fixedAmount), (this.sourceWorkFlow.percentOfNew == undefined ? Infinity : this.sourceWorkFlow.percentOfNew), (this.sourceWorkFlow.percentOfReplacement == undefined ? Infinity : this.sourceWorkFlow.percentOfReplaceMent)));
-
+        if (!this.validateWorkFlowHeader() || !this.calculateTotalWorkFlowCost()) {
+            return;
+        }
+        
         this.SaveWorkFlow();
         if (isHeaderUpdate) {
             this.sourceWorkFlow.charges = [];
@@ -1803,6 +1851,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             this.actionService.addWorkFlowHeader(this.sourceWorkFlow).subscribe(result => {
                 this.alertService.showMessage(this.title, "Work Flow header added successfully.", MessageSeverity.success);
                 this.sourceWorkFlow.workflowId = result.workflowId;
+                this.sourceWorkFlow.workOrderNumber = result.workOrderNumber;
                 this.UpdateMode = true;
             });
 
@@ -1835,7 +1884,10 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     title: string = "Work Flow";
 
     updateWorkFlow(isHeaderUpdate: boolean): void {
-        // this.sourceWorkFlow.berThresholdAmount = (Math.min(this.sourceWorkFlow.fixedAmount, this.sourceWorkFlow.percentOfReplacement, this.sourceWorkFlow.percentOfNew));
+
+        if (!this.validateWorkFlowHeader() || !this.calculateTotalWorkFlowCost()) {
+            return;
+        }
 
         this.SaveWorkFlow();
         if (isHeaderUpdate) {
@@ -2018,7 +2070,20 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     }
 
     removeTask(workFlow: any): void {
-        this.workFlowList.splice(this.workFlowList.indexOf(workFlow), 1);
+        var index = this.workFlowList.indexOf(workFlow);
+        this.workFlowList.splice(index, 1);
+        if (index == 0 && this.workFlowList.length == 0) {
+            this.currenttaskId = "0";
+            this.selectedItems = [];
+        }
+        else {
+            this.workFlow = this.workFlowList[0];
+            this.currenttaskId = this.workFlowList[0].taskId;
+            
+            this.SetCurrectTab(this.currenttaskId, 0);
+            this.setSelectedItems(this.workFlow);
+        }
+        this.onActionChange();
     }
 
     dismissModel() {
@@ -2075,22 +2140,37 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
     Total: number;
     PercentBERThreshold: number;
-    calculateTotalWorkFlowCost(): void {
+    calculateTotalWorkFlowCost(): boolean {
+        if (this.sourceWorkFlow.berThresholdAmount == undefined || this.sourceWorkFlow.berThresholdAmount == 0) {
+            this.alertService.showMessage(this.title, 'Please enter BER Determination values', MessageSeverity.error);
+            return;
+        }
+
         this.MaterialCost = 0;
         this.TotalCharges = 0;
         this.TotalExpertiseCost = 0;
 
-        for (let wf of this.workFlowList) {
-            this.MaterialCost += wf.totalMaterialCostValue != undefined ? wf.totalMaterialCostValue : 0;
-            this.TotalCharges += wf.extendedCostSummation != undefined ? wf.extendedCostSummation : 0;
-            this.TotalExpertiseCost += wf.totalExpertiseCost != undefined ? wf.totalExpertiseCost : 0;
+        if (this.workFlowList != undefined && this.workFlowList.length > 0) {
+            for (let wf of this.workFlowList) {
+                this.MaterialCost += wf.totalMaterialCostValue != undefined ? wf.totalMaterialCostValue : 0;
+                this.TotalCharges += wf.extendedCostSummation != undefined ? wf.extendedCostSummation : 0;
+                this.TotalExpertiseCost += wf.totalExpertiseCost != undefined ? wf.totalExpertiseCost : 0;
+            }
         }
-
+        
         this.MaterialCost = parseFloat((this.MaterialCost).toFixed(2));
         this.TotalCharges = parseFloat((this.TotalCharges).toFixed(2));
         this.TotalExpertiseCost = parseFloat((this.TotalExpertiseCost).toFixed(2));
         this.Total = parseFloat((this.MaterialCost + this.TotalCharges + this.TotalExpertiseCost + parseFloat(((this.sourceWorkFlow.otherCost == undefined || this.sourceWorkFlow.otherCost == '') ? 0 : this.sourceWorkFlow.otherCost).toFixed(2))).toFixed(2));
         this.PercentBERThreshold = parseFloat((this.Total / this.sourceWorkFlow.berThresholdAmount).toFixed(2));
+
+        if (this.Total > this.sourceWorkFlow.berThresholdAmount) {
+            this.alertService.showMessage(this.title, 'Work Flow total cost can not exceed the BER Threshold Amount', MessageSeverity.error);
+            return false;
+        }
+
+        return true;
+
     }
 
 }

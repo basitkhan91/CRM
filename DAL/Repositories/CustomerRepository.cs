@@ -228,46 +228,113 @@ namespace DAL.Repositories
                             // select new { t, ad, vt }).ToList();
                             select new
                             {
-                                t.CreditTermsId,
-                                t.CurrencyId,
-                                ad,
-                                t.PrimarySalesPersonFirstName,
-                                t.CustomerId,
-                                t,
-                                // cc,
-                                creditTerms,
-                                currency,
-                                currency.Symbol,
-                                //creditTerms.Name,
-                                t.Email,
-                                t.IsActive,
-                                Address1 = ad.Line1,
-                                Address2 = ad.Line2,
-                                Address3 = ad.Line3,
-                                t.CustomerCode,
-                                t.DoingBuinessAsName,
-                                t.Parent,
-                                t.RestrictPMAMemo,
-                                t.PBHCustomerMemo,
-                                t.ContractReference,
-                                t.CustomerURL,
-                                t.Name,
-                                ad.City,
-                                ad.StateOrProvince,
-                                vt.description,
-                                t.CreatedDate,
-                                t.CreatedBy,
-                                t.UpdatedBy,
-                                t.UpdatedDate,
-                                ad.AddressId,
-                                ad.Country,
-                                ad.PostalCode,
-                                vt.CustomerAffiliationId,
-                                cc.CustomerClassificationId,
-                                mup.MarkUpValue,
-                                CreditTermName = creditTerms.Name,
-                                //cc.Description
-                            }).OrderByDescending(a => a.UpdatedDate).ToList();
+
+								addressId = t.AddressId,
+								isAddressForBilling = t.IsAddressForBilling,
+								isAddressForShipping = t.IsAddressForShipping,
+								customerAffiliationId = vt.CustomerAffiliationId,
+								customerTypeId = t.CustomerTypeId,
+								name = t.Name,
+								customerPhone = t.CustomerPhone,
+								email = t.Email,
+								address1 = ad.Line1,
+								address2 = ad.Line2,
+								address3 = ad.Line3,
+								city = ad.City,
+								stateOrProvince = ad.StateOrProvince,
+								postalCode = ad.PostalCode,
+								country = ad.Country,
+								customerCode = t.CustomerCode,
+								doingBuinessAsName = t.DoingBuinessAsName,
+								parent = t.Parent,
+								customerParentName = t.CustomerParentName,
+								customerURL = t.CustomerURL,
+								generalCurrencyId = t.GeneralCurrencyId,
+								customerClassificationId = t.CustomerClassificationId,
+								contractReference = t.ContractReference,
+								isPBHCustomer = t.IsPBHCustomer,
+								pbhCustomerMemo = t.PBHCustomerMemo,
+								restrictPMA = t.RestrictPMA,
+								restrictPMAMemo = t.RestrictPMAMemo,
+								restrictBER = t.RestrictBER,
+								restrictBERMemo = t.RestrictBERMemo,
+								scanDocuments = t.ScanDocuments,
+								isCustomerAlsoVendor = t.IsCustomerAlsoVendor,
+								edi = t.EDI,
+								ediDescription = t.EDIDescription,
+								isAeroExchange = t.IsAeroExchange,
+								aeroExchangeDescription = t.AeroExchangeDescription,
+								createdBy = t.CreatedBy,
+								updatedBy = t.UpdatedBy,
+								UpdatedDate = t.UpdatedDate,
+								CreatedDate = t.CreatedDate,
+								masterCompanyId = t.MasterCompanyId,
+								isActive = t.IsActive,
+								markUpPercentageId = t.MarkUpPercentageId,
+								creditLimit = t.CreditLimit,
+								creditTermsId = t.CreditTermsId,
+								discountId = t.DiscountId,
+								allowNettingOfAPAR = t.AllowNettingOfAPAR,
+								isTaxExempt = t.IsTaxExempt,
+								taxRateStateOrProvince = t.TaxRateStateOrProvince,
+								taxRateOther = t.TaxRateOther,
+								taxTypeId = t.TaxTypeId,
+								allowPartialBilling = t.AllowPartialBilling,
+								allowProformaBilling = t.AllowProformaBilling,
+								customerId = t.CustomerId,
+								primarySalesPersonId = t.PrimarySalesPersonId,
+							    csrName = t.CSRName,
+								secondarySalesPersonId = t.SecondarySalesPersonId,
+								annualQuota = t.AnnualQuota,
+								annualRevenuePotential = t.AnnualRevenuePotential,
+								AgentName = t.AgentName
+								
+
+
+
+
+			
+
+								//t.CreditTermsId,
+								//t.CurrencyId,
+								//ad,
+								//t.PrimarySalesPersonFirstName,
+								//t.CustomerId,
+								//t,
+								//// cc,
+								//creditTerms,
+								//currency,
+								//currency.Symbol,
+								////creditTerms.Name,
+								//t.Email,
+								//t.IsActive,
+								//Address1 = ad.Line1,
+								//Address2 = ad.Line2,
+								//Address3 = ad.Line3,
+								//t.CustomerCode,
+								//t.DoingBuinessAsName,
+								//t.Parent,
+								//t.RestrictPMAMemo,
+								//t.PBHCustomerMemo,
+								//t.ContractReference,
+								//t.CustomerURL,
+								//t.Name,
+								//ad.City,
+								//ad.StateOrProvince,
+								//vt.description,
+								//t.CreatedDate,
+								//t.CreatedBy,
+								//t.UpdatedBy,
+								//t.UpdatedDate,
+								//ad.AddressId,
+								//ad.Country,
+								//ad.PostalCode,
+								//vt.CustomerAffiliationId,
+								//cc.CustomerClassificationId,
+								//mup.MarkUpValue,
+								//CreditTermName = creditTerms.Name,
+								////cc.Description
+							}).OrderByDescending(a => a.UpdatedDate).ToList();
                 return data;
 
             }
@@ -322,7 +389,7 @@ namespace DAL.Repositories
                                 ca.ATAChapterId,
                                 ca.ATAChapterCode,
                                 ca.ATAChapterName,
-                                ca.PartNumber,
+       
                                 ca.ATASubChapterId,
                                 ca.ATASubChapterDescription
 
@@ -854,7 +921,12 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID(long CustomerId, string AircraftTypeId, string AircraftModelId, string DashNumberId)
+
+
+
+
+
+		public IEnumerable<object> searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID(long CustomerId, string AircraftTypeId, string AircraftModelId, string DashNumberId)
         {
             long[] myAircraftTypeId = null;
             long[] myAircraftModelId = null;

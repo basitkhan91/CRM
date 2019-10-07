@@ -20,6 +20,7 @@ namespace QuickApp.Pro.Controllers
         readonly ILogger _logger;
         readonly IEmailer _emailer;
         private readonly ApplicationDbContext _context;
+
         public SiteController(IUnitOfWork unitOfWork, ILogger<SiteController> logger, IEmailer emailer, ApplicationDbContext context)
         {
             _unitOfWork = unitOfWork;
@@ -81,6 +82,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult AddAddress(SiteViewModel siteViewModel)
         {
             Address address = new Address();
@@ -103,7 +105,6 @@ namespace QuickApp.Pro.Controllers
             siteViewModel.AddressId = address.AddressId.Value;
             return Ok(ModelState);
         }
-
 
         [HttpPost("managementSitesPost")]
         //[Authorize(Authorization.Policies.ManageAllRolesPolicy)]
@@ -137,6 +138,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+
         [HttpPut("sitesUpdate/{id}")]
         public IActionResult UpdateAction(long id,[FromBody] SiteViewModel siteViewModel)
         {
@@ -184,7 +186,6 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-
         [HttpPut("managementSitesPost/{id}")]
         public IActionResult UpdateMnagamentSiteAction(long id, [FromBody] ManagementSiteViewModel managementSiteViewModel)
         {
@@ -218,7 +219,6 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-
         [HttpDelete("sitesDelete/{id}")]
         [Produces(typeof(SiteViewModel))]
         public IActionResult DeleteAction(long id)
@@ -232,7 +232,6 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(id);
         }
-
 
         [HttpDelete("managementSitesPost/{id}")]
         [Produces(typeof(ManagementSiteViewModel))]

@@ -163,7 +163,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                 icon: 'fa fa-fw fa-group',
                 items: [
                     { label: 'Customers List', routerLink: '/customersmodule/customerpages/app-customers-list' },
-                    { label: 'Create Customer', routerLink: '/customersmodule/customerpages/app-customer-general-information' },
+                    { label: 'Create Customer', routerLink: '/customersmodule/customerpages/app-customer-create' },
                     { label: 'Classification', routerLink: '/singlepages/singlepages/app-customer-classification' },
                     {
                         label: 'Invoice', items: [

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DAL.Models
 {
-    public class RepairOrder:PasBase
+    public class RepairOrder
     {
         [Key]
         public long RepairOrderId { get; set; }

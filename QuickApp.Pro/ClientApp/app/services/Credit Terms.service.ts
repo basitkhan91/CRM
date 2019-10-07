@@ -42,7 +42,7 @@ export class CreditTermsService {
     }
 
 
-    newAddcreditterms(action: CreditTerms) {
+    newAddcreditterms(action) {
         return this.CreditTermsEndpoint.getNewCreditermEndpoint<CreditTerms>(action);
     }
     updatecreditterms(action: CreditTerms) {

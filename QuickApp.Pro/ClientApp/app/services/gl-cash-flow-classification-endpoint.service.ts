@@ -16,7 +16,7 @@ export class GlCashFlowClassificationEndpoint extends EndpointFactory {
     private readonly _glCashFlowClassificationsUrlAuditHistory: string = "/api/GlCashFlowClassification/auditHistoryById";
     private readonly _auditUrl: string = '/api/GlCashFlowClassification/audits';
     private readonly getGlCashFlowClassification: string = "/api/GlCashFlowClassification/pagination";
-
+private readonly GlDelete : string = '/api/GlCashFlowClassification/glcashflowDeletepost'
     get paginate() { return this.configurations.baseUrl + this.getGlCashFlowClassification; }
     get glCashFlowClassificationsUrl() { return this.configurations.baseUrl + this._glCashFlowClassificationUrl; }
 
@@ -70,7 +70,7 @@ export class GlCashFlowClassificationEndpoint extends EndpointFactory {
     }
 
     getDeleteGlCashFlowClassificationEndpoint<T>(glclassflowclassificationId: number): Observable<T> {
-        let endpointUrl = `${this._glCashFlowClassificationUrlNew}/${glclassflowclassificationId}`;
+        let endpointUrl = `${this.GlDelete}/${glclassflowclassificationId}`;
 
         return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {

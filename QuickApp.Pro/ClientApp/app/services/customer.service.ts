@@ -1,7 +1,4 @@
-﻿// ===============================
-// info@ebenmonney.com
-// www.ebenmonney.com/quickapp-pro
-// ===============================
+﻿
 
 import { Injectable } from '@angular/core';
 import { Router, NavigationExtras } from "@angular/router";
@@ -92,6 +89,7 @@ export class CustomerService {
     //    return Observable.forkJoin(
     //        this.customerEndpoint.getcustomerEndpoint<any[]>());
     //}
+
     getWorkFlows() {
         return Observable.forkJoin(
             this.customerEndpoint.getcustomerEndpoint<any[]>());
@@ -301,7 +299,7 @@ export class CustomerService {
 
     newShippingViaAdd(action: any) {
 
-        return this.customerEndpoint.saveBillViaDetails<any>(action);
+        return this.customerEndpoint.postDomesticShipVia<any>(action);
     }
     getCustomerShipViaDetails(rowData) {
         return Observable.forkJoin(
@@ -356,8 +354,8 @@ export class CustomerService {
 
         return this.customerEndpoint.saveCustomerWarningdata<any>(action);
     }
-    updateCustomerWarnings(action: any) {
-        return this.customerEndpoint.updateCustomerWarnings(action);
+    updateCustomerWarnings(action: any, customerWarningId) {
+        return this.customerEndpoint.updateCustomerWarnings(action, customerWarningId);
     }
     Addcustomeraircrafttype(action: any) {
         return this.customerEndpoint.getcustomeraircrafttypeEndpoint<any>(action);
@@ -370,7 +368,7 @@ export class CustomerService {
     }
 
 
-    newAddDiscount(action: DiscountValue) {
+    newAddDiscount(action) {
         return this.customerEndpoint.getNewDiscount<DiscountValue>(action);
     }
 
@@ -441,12 +439,59 @@ export class CustomerService {
     postCustomerAircrafts(data) {
         return Observable.forkJoin(this.customerEndpoint.postCustomerAircraft<any>(data));
     }
+    postCustomerATAs(data) {
+        return Observable.forkJoin(this.customerEndpoint.postCustomerATA<any>(data));
+    }
 
     newItemMasterAircarftClass(action: any) {
         return this.customerEndpoint.getNewitemAircraftEndpoint<any>(action);
     }
     newItemMasterATAClass(action: any) {
         return this.customerEndpoint.getNewitemATAEndpoint<any>(action);
+    }
+
+    postInternationalShippingPost(data) {
+        return this.customerEndpoint.postInternationalShippingPost(data);
+    }
+    getInternationalShippingByCustomerId(customerId, pageIndex, pageSize) {
+        return this.customerEndpoint.getInternationalShippingByCustomerId(customerId, pageIndex, pageSize);
+    }
+    updateStatusForInternationalShippings(id, status, updatedBy) {
+        return this.customerEndpoint.updateStatusForInternationalShipping(id, status, updatedBy)
+    }
+
+    deleteInternationalShipping(id, updatedBy) {
+        return this.customerEndpoint.deleteInternationalShipping(id, updatedBy)
+    }
+    getInternationalShippingById(id) {
+        return this.customerEndpoint.getInternationalShippingById(id);
+    }
+    updateInternationalShipping(data) {
+        return this.customerEndpoint.updateInternationalShipping(data);
+    }
+    postInternationalShipVia(data) {
+        return this.customerEndpoint.postInternationalShipVia(data);
+    }
+
+    getShipViaByInternationalShippingId(id, pageIndex, pageSize) {
+        return this.customerEndpoint.getShipViaByInternationalShippingId(id, pageIndex, pageSize);
+    }
+
+    updateShipViaInternational(data) {
+        return this.customerEndpoint.updateShipViaInternational(data);
+    }
+    searchAirMappedByMultiTypeIDModelIDDashIDByCustomerId(customerId, searchUrl) {
+        return this.customerEndpoint.searchAirMappedByMultiTypeIDModelIDDashIDByCustomerId<any>(customerId, searchUrl);
+    }
+    searchATAMappedByMultiATAIDATASUBIDByCustomerId(customerId, searchUrl) {
+        return this.customerEndpoint.searchATAMappedByMultiATAIDATASUBIDByCustomerId<any>(customerId, searchUrl);
+    }
+
+    deleteATAMappings(id) {
+        return this.customerEndpoint.deleteATAMappedDataById(id);
+    }
+    deleteAircraftInvetoryById(id) {
+        return this.customerEndpoint.deleteAircraftInvetoryById(id);
     }
 
 }

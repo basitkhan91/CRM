@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace QuickApp.Pro.Controllers
 {
 
-    [Route("api/AssetType")]
+    [Route("api/AssetAttributeType")]
     public class AssetAttributeTypeController : Controller
     {
         #region Private Members
