@@ -12,18 +12,19 @@ namespace QuickApp.Pro.ViewModels
         public string PurchaseOrderNumber { get; set; }
         public string ReferenceId { get; set; }
         public Nullable<long> PriorityId { get; set; }
-        public string RequestedBy { get; set; }
+        public long RequestedBy { get; set; }
         public System.DateTime DateRequested { get; set; }
-        public string Approver { get; set; }
-        public Nullable<System.DateTime> DateApprovied { get; set; }
+        public long ApproverId { get; set; }
+        public Nullable<System.DateTime> DateApproved { get; set; }
         public Nullable<System.DateTime> NeedByDate { get; set; }
         public Nullable<short> StatusId { get; set; }
-        public string EmployeeId { get; set; }
+        public long EmployeeId { get; set; }
         public Nullable<long> VendorId { get; set; }
         public Nullable<long> VendorContactId { get; set; }
         public Nullable<int> ShipToCompanyId { get; set; }
         public Nullable<int> ShipViaAccountId { get; set; }
         public string Terms { get; set; }
+        public Int16? CreditTermsId{get;set;}
         public Nullable<short> CreditLimit { get; set; }
         public string Notes { get; set; }
         public Nullable<long> SiteId { get; set; }
@@ -45,8 +46,8 @@ namespace QuickApp.Pro.ViewModels
         public System.DateTime UpdatedDate { get; set; }
         public Int16? ShipToUserType { get; set; }
         public Int16? BillToUserType { get; set; }
-        public string ShipToUserName { get; set; }
-        public string BillToUserName { get; set; }
+        public long ShipToUserId { get; set; }
+        public long BillToUserId { get; set; }
         public bool DeferredReceiver { get; set; }
         public bool Resale { get; set; }
         public Nullable<bool> IsActive { get; set; }
