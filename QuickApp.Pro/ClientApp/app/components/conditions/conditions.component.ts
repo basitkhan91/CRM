@@ -107,6 +107,19 @@ export class ConditionsComponent implements OnInit {
         this.addNewCondition = { ...this.newCondition };
     }
 
+    changeStatus(rowData) {
+        console.log(rowData);
+        const data = { ...rowData }
+        this.conditionService.updateCondition(data).subscribe(() => {
+            // this.getUOMList();
+            this.alertService.showMessage(
+                'Success',
+                `Updated Status Successfully  `,
+                MessageSeverity.success
+            );
+        })
+
+    }
    
     filterConditions(event) {
         this.conditionList = this.conditionData;
