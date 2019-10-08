@@ -520,6 +520,34 @@ namespace QuickApp.Pro.Controllers
         }
 
 
+        //[HttpPost("employeecertifi")]
+        //public IActionResult CreateCertificationAction([FromBody] EmployeeLicensureViewModel employeeLicensureViewModel)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        if (employeeLicensureViewModel == null)
+        //            return BadRequest($"{nameof(employeeLicensureViewModel)} cannot be null");
+        //        DAL.Models.EmployeeLicensure employeeobject = new DAL.Models.EmployeeLicensure();
+
+        //        employeeobject.MasterCompanyId = 1;
+        //        employeeobject.IsActive = true;
+        //        employeeobject.EmployeeId = employeeLicensureViewModel.EmployeeId;
+        //        employeeobject.CertificationDate = employeeLicensureViewModel.CertificationDate;
+        //        employeeobject.CertifyingInstitution = employeeLicensureViewModel.CertifyingInstitution;
+        //        employeeobject.LicenseNumber = employeeLicensureViewModel.LicenseNumber;
+        //        employeeobject.EmployeeId = employeeLicensureViewModel.EmployeeId;
+        //        employeeobject.IsLicenseInForce = employeeLicensureViewModel.IsLicenseInForce;
+        //        employeeLicensureViewModel.EmployeeLicenseTypeId = employeeLicensureViewModel.EmployeeLicenseTypeId;
+        //        employeeobject.CreatedDate = DateTime.Now;
+        //        employeeobject.UpdatedDate = DateTime.Now;
+        //        employeeobject.UpdatedBy = employeeLicensureViewModel.UpdatedBy;
+        //        _unitOfWork.employeeLicensure.Add(employeeobject);
+        //        _unitOfWork.SaveChanges();
+        //        return Ok(employeeobject);
+        //    }
+        //    return Ok(ModelState);
+        //}
+
         [HttpPost("employeecertifi")]
         public IActionResult CreateCertificationAction([FromBody] EmployeeLicensureViewModel employeeLicensureViewModel)
         {
@@ -537,10 +565,16 @@ namespace QuickApp.Pro.Controllers
                 employeeobject.LicenseNumber = employeeLicensureViewModel.LicenseNumber;
                 employeeobject.EmployeeId = employeeLicensureViewModel.EmployeeId;
                 employeeobject.IsLicenseInForce = employeeLicensureViewModel.IsLicenseInForce;
-                employeeLicensureViewModel.EmployeeLicenseTypeId = employeeLicensureViewModel.EmployeeLicenseTypeId;
+                employeeobject.EmployeeLicenseTypeId = employeeLicensureViewModel.EmployeeLicenseTypeId;
+                //  employeeobject.EmployeeLicenseTypeId = 10;
+                employeeobject.CreatedBy = employeeLicensureViewModel.UpdatedBy;
+                employeeobject.CreatedBy = employeeLicensureViewModel.UpdatedBy;
                 employeeobject.CreatedDate = DateTime.Now;
                 employeeobject.UpdatedDate = DateTime.Now;
                 employeeobject.UpdatedBy = employeeLicensureViewModel.UpdatedBy;
+                // employeeobject.ExpirationDate = DateTime.Now;
+                employeeobject.IsExpirationDate = false;
+
                 _unitOfWork.employeeLicensure.Add(employeeobject);
                 _unitOfWork.SaveChanges();
                 return Ok(employeeobject);

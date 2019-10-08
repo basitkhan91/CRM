@@ -17,13 +17,14 @@ namespace QuickApp.Pro.ViewModels
         public string Approver { get; set; }
         public Nullable<System.DateTime> ApprovedDate { get; set; }
         public Nullable<System.DateTime> NeedByDate { get; set; }
-        public Nullable<long> POPartSplitAddressId { get; set; }
+        
         public long ManufacturerId { get; set; }
         public string Status { get; set; }
         public string Trace { get; set; }
         public string ConditionCode { get; set; }
         public Nullable<long> UOMId { get; set; }
         public Nullable<short> QuantityOrdered { get; set; }
+        public Nullable<short> QuantityBackOrdered { get; set; }
         public Nullable<decimal> UnitCost { get; set; }
         public Nullable<short> DiscountPerUnit { get; set; }
         public Nullable<short> DiscountCostPerUnit { get; set; }
@@ -38,6 +39,7 @@ namespace QuickApp.Pro.ViewModels
         public string Memo { get; set; }
         //public Nullable<short> POPartSplitUserTypeId { get; set; }
         //public long? POPartSplitUserId { get; set; }
+        //public Nullable<long> POPartSplitAddressId { get; set; }
         //public string POPartSplitAddress1 { get; set; }
         //public string POPartSplitAddress2 { get; set; }
         //public string POPartSplitAddress3 { get; set; }

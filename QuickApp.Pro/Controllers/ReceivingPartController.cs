@@ -39,7 +39,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getAll")]
         public IActionResult getAll()
         {
-            var assets = unitOfWork.Repository<AssetDepConventionType>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AssetDepConventionTypeId);
+            var assets = unitOfWork.Repository<AssetDepConventionType>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AssetDepConventionId);
             return Ok(assets);
         }
 

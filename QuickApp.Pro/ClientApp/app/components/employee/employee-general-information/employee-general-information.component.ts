@@ -25,7 +25,7 @@ import { JobTitle } from '../../../models/jobtitle.model';
 import { JobTitleService } from '../../../services/job-title.service';
 import { EmployeeExpertiseService } from '../../../services/employeeexpertise.service';
 import { EmployeeExpertise } from '../../../models/employeeexpertise.model';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { AppTranslationService } from '../../../services/app-translation.service';
 import * as moment from 'moment'
@@ -86,10 +86,16 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     disableJobTitle: boolean;
     disableExpTitle: boolean;
     display: boolean = false;
-	modelValue: boolean = false;
+    modelValue: boolean = false;
+
+    public empId: any;
+    public firstName: any;
+    public lastName: any;
 
 
-	ngOnInit(): void {
+    ngOnInit(): void {
+
+
 		this.employeeService.currentUrl = '/employeesmodule/employeepages/app-employee-general-information';
 		this.employeeService.bredcrumbObj.next(this.employeeService.currentUrl);
 		this.employeeService.ShowPtab = true;
@@ -104,7 +110,8 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 		this.EmployeeTrainingType();
 		this.shift();
 		this.Countries();
-		this.EmployeeLeaveType();
+        this.EmployeeLeaveType();
+        
 	}
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
@@ -148,9 +155,12 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 	updateMode: boolean = false;
 	showMsg: boolean = false;
 	showTitle: string;
-	sourceEmpFirst: any;
+    sourceEmpFirst: {
+        firstName: any;};
+    sourceEmpLast: {
+        lastName: any; };
 
-	constructor(private translationService: AppTranslationService, private router: Router, public workFlowtService: JobTitleService, private empservice: EmployeeExpertiseService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private route: Router, private alertService: AlertService, public employeeService: EmployeeService, public workFlowtService1: LegalEntityService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(private Actroute: ActivatedRoute,private translationService: AppTranslationService, private router: Router, public workFlowtService: JobTitleService, private empservice: EmployeeExpertiseService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private route: Router, private alertService: AlertService, public employeeService: EmployeeService, public workFlowtService1: LegalEntityService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.displayedColumns.push('action');
 
 
@@ -158,7 +168,9 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
         console.log(control.errors);
 
-		this.dataSource = new MatTableDataSource();
+        this.dataSource = new MatTableDataSource();
+        console.log("hiix")
+        console.log(this.employeeService.listCollection);
 		if (this.employeeService.listCollection != null && this.employeeService.isEditMode == true) {
 		
             this.sourceEmployee = this.employeeService.listCollection;
@@ -191,9 +203,50 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 				this.yearly = true
 			}
 		}
-		this.translationService.closeCmpny = false;
+        this.translationService.closeCmpny = false;
+
+        this.Actroute.queryParams
+            .filter(params => params.order)
+            .subscribe(params => {
+                console.log(params); // {order: "popular"}
+                //  console.log(params.order);
+                this.empId = params.order;
+                this.firstName = params.firstname;
+                this.lastName = params.lastname;
+                console.log(params.order);
+
+                if (this.empId != undefined || this.empId != null) {
+                    console.log("haviing emp Id value");
+                    this.employeeService.getEmployeeListforView(this.empId).subscribe(
+                        results => this.getEmpInfo(results),
+
+                        error => this.onDataLoadFailed(error)
+                    );
 
 
+                }
+              
+            });
+
+        //new code
+
+
+     
+
+    }
+
+    getEmpInfo(res: any) {
+        console.log("getEmpInfo");
+        console.log(res[0][0]);
+      
+        this.sourceEmployee = res[0][0];
+   
+        console.log(res[0][0].firstName);
+        this.sourceEmpFirst.firstName = res[0][0].firstName;
+        console.log(res[0][0].firstName);
+        console.log(this.sourceEmpFirst.firstName);
+        this.sourceEmpLast.lastName = res[0][0].lastName;
+        
     }
 
     onSubmit() {
@@ -205,22 +258,28 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
 		
 		this.employeeService.newAddEmployee(this.sourceEmployee).subscribe(
-			results => this.empAdd(this.sourceEmployee),
+            results => this.empAdd(this.sourceEmployee, results),
             
           error => this.onDataLoadFailed(error)
        );
 	}
 
-	empAdd(obj: any) {
+    empAdd(obj: any, res: any) {
 
 		this.showMsg = true;
 		//this.sourceEmployee.reser
 
+        this.empId = res.employeeId;
+        console.log(res.employeeId);
+        this.firstName = res.firstName;
+        this.lastName = res.lastName;
 
+        console.log(this.empId);
 		this.showTitle = 'Employee Added Sucessfully';
 
 		///this.sourceEmployee.reset();
-		this.alertService.showMessage("Success", this.showTitle, MessageSeverity.success);
+        this.alertService.showMessage("Success", this.showTitle, MessageSeverity.success);
+        this.nextClick();
 		this.sourceEmpFirst = null;
 		//window.location.reload();
 
@@ -1016,13 +1075,32 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 			error => this.onDataLoadFailed(error)
 		);
 	}
-	nextClick() {
-		this.employeeService.listCollection = this.local;
-		this.activeIndex = 1;
-		this.employeeService.indexObj.next(this.activeIndex);
-		this.route.navigateByUrl('/employeesmodule/employeepages/app-employee-certification');
+//	nextClick() {
+		//this.employeeService.listCollection = this.local;
+		//this.activeIndex = 1;
+		//this.employeeService.indexObj.next(this.activeIndex);
+	//	this.route.navigateByUrl('/employeesmodule/employeepages/app-employee-certification');
+//
+	//}
+    nextClick() {
 
-	}
+        console.log("next Click")
+
+        console.log(this.local);
+
+    
+
+        console.log(this.employeeService.listCollection);
+        this.employeeService.listCollection = this.local;
+
+        console.log(this.employeeService.listCollection);
+        console.log(this.local);
+        console.log(this.empId);
+        this.activeIndex = 1;
+        this.employeeService.indexObj.next(this.activeIndex);
+        this.route.navigate(['/employeesmodule/employeepages/app-employee-certification'], { queryParams: { order: this.empId, 'firstName': this.firstName, 'lastName': this.lastName } });
+
+    }
 	public AddLeavedata(imObj) {
 		for (let i = 0; i < this.selectedLeaveValues.length; i++) {
 			imObj.employeeLeaveTypeId = this.selectedLeaveValues[i];

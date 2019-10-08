@@ -21,7 +21,7 @@ import { InputTextModule } from 'primeng/inputtext';
 
 import { CheckboxModule } from 'primeng/checkbox';
 import { EmployeeService } from '../../../services/employee.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AppTranslationService } from '../../../services/app-translation.service';
 import { CertificationtypeService } from '../../../services/certificationtype.service';
 import { CertificationType } from '../../../models/certificationtype.model';
@@ -29,113 +29,172 @@ import { CertificationType } from '../../../models/certificationtype.model';
 
 
 @Component({
-	selector: 'app-employee-certification',
-	templateUrl: './employee-certification.component.html',
-	styleUrls: ['./employee-certification.component.scss'],
-	animations: [fadeInOut]
+    selector: 'app-employee-certification',
+    templateUrl: './employee-certification.component.html',
+    styleUrls: ['./employee-certification.component.scss'],
+    animations: [fadeInOut]
 })
 
 export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
-	activeIndex: number;
-	data: any;
+    activeIndex: number;
+    data: any;
     disablesave: boolean;
-	selecteddescription: any;
-	allCertification: any[];
-	descriptioncolle: any[] = [];
+    selecteddescription: any;
+    allCertification: any[];
+    descriptioncolle: any[] = [];
     description: any;
     certificationtypeCollection: any[];
     display: boolean;
     modelValue: boolean;
     employeeLicenseTypeId: any;
-    certificationTypeId: any;	
-	@ViewChild(MatPaginator) paginator: MatPaginator;
-	@ViewChild(MatSort) sort: MatSort;
+    certificationTypeId: any;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
 
-	displayedColumns = ['employeeId', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
-	dataSource: MatTableDataSource<any>;
-	allEmployeeinfo: any[] = [];
-	allComapnies: MasterCompany[] = [];
-	private isSaving: boolean;
-	public sourceAction: any = {};
-	public auditHisory: AuditHistory[] = [];
-	private bodyText: string;
-	loadingIndicator: boolean;
-	closeResult: string;
-	selectedColumn: any[];
-	selectedColumns: any[];
-	cols: any[];
-	title: string = "Create";
-	id: number;
-	errorMessage: any;
-	local: any;
-	modal: NgbModalRef;
-	employeeName: string;
-	filteredBrands: any[];
-	localCollection: any[] = [];
-	/** Actions ctor */
+    displayedColumns = ['employeeId', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
+    dataSource: MatTableDataSource<any>;
+    allEmployeeinfo: any[] = [];
+    allComapnies: MasterCompany[] = [];
+    private isSaving: boolean;
+    public sourceAction: any = {};
+    public auditHisory: AuditHistory[] = [];
+    private bodyText: string;
+    loadingIndicator: boolean;
+    closeResult: string;
+    selectedColumn: any[];
+    selectedColumns: any[];
+    cols: any[];
+    title: string = "Create";
+    id: number;
+    errorMessage: any;
+    local: any;
+    modal: NgbModalRef;
+    employeeName: string;
+    filteredBrands: any[];
+    localCollection: any[] = [];
+    /** Actions ctor */
 
-	private isEditMode: boolean = false;
-	private isDeleteMode: boolean = false;
+    private isEditMode: boolean = false;
+    private isDeleteMode: boolean = false;
     Active: string = "Active";
+    public empId: any;
+    public firstName: any;
+    public lastName: any;
     public allWorkFlows: any[] = [];
-	constructor(private translationService: AppTranslationService, public certificationser: CertificationtypeService, private router: Router, public authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public employeeService: EmployeeService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
-		this.displayedColumns.push('action');
-		this.dataSource = new MatTableDataSource();
+    constructor(private route: ActivatedRoute, private translationService: AppTranslationService, public certificationser: CertificationtypeService, private router: Router, public authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public employeeService: EmployeeService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+        this.displayedColumns.push('action');
+        this.dataSource = new MatTableDataSource();
 
+        console.log(this.employeeService.generalCollection);
+        console.log(this.local);
+        if (this.employeeService.generalCollection) {
 
-		if (this.employeeService.generalCollection) {
+            this.local = this.employeeService.generalCollection;
 
-			this.local = this.employeeService.generalCollection;
-		}
-		if (this.employeeService.listCollection && this.employeeService.isEditMode == true) {
-			//debugger;
-			this.sourceEmployee = this.employeeService.listCollection;
-			this.local = this.employeeService.listCollection;
-			this.sourceEmployee.certificationDate = new Date();
-			this.getwithemployeeLicensureId();
-		}
-		
-	}
-		sourceEmployee: any = {};
-		ngAfterViewInit() {
-			this.dataSource.paginator = this.paginator;
-			this.dataSource.sort = this.sort;
-		}
-    
+        }
+        if (this.employeeService.listCollection && this.employeeService.isEditMode == true) {
+            //debugger;
+            this.sourceEmployee = this.employeeService.listCollection;
+            this.local = this.employeeService.listCollection;
+            this.sourceEmployee.certificationDate = new Date();
+            this.getwithemployeeLicensureId();
+        }
+
+    }
+    sourceEmployee: any = {};
+    ngAfterViewInit() {
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+    }
+
     ngOnInit(): void {
         this.employeeService.currentUrl = '/employeesmodule/employeepages/app-employee-certification';
+        console.log('Passing Params');
+        this.route.queryParams
+            .filter(params => params.order)
+            .subscribe(params => {
+                console.log(params); // {order: "popular"}
+                //  console.log(params.order);
+                this.empId = params.order;
+                this.firstName = params.firstname;
+                this.lastName = params.lastname;
+                console.log(this.empId);
+            });
+
+
         this.employeeService.bredcrumbObj.next(this.employeeService.currentUrl);
         this.employeeService.ShowPtab = true;
         this.employeeService.alertObj.next(this.employeeService.ShowPtab); //steps
+        this.loadDataforCertification();
         if (this.local) {
             this.loadData();
-            this.loadDataforCertification();
+         // this.loadDataforCertification();
+        }
+    }
+
+    saveCertificateData() {
+        console.log(this.sourceEmployee);
+        this.isSaving = true;
+        if (!this.sourceEmployee.employeeLicensureId) {
+            console.log("save Date Route");
+            this.sourceEmployee.createdBy = this.userName;
+            this.sourceEmployee.updatedBy = this.userName;
+            this.sourceEmployee.isActive = true;
+            this.sourceEmployee.masterCompanyId = 1;
+            this.sourceEmployee.employeeId = this.empId;
+            this.employeeService.newAddCertification(this.sourceEmployee).subscribe(
+                data => {
+
+                    console.log(data);
+                    this.alertService.showMessage('Employee Certification Added successfully.');
+                    this.localCollection = data;
+                    this.employeeService.generalCollection = this.local;
+                })
+
+            response => this.saveCompleted(this.sourceEmployee)
+            this.activeIndex = 1;
+            this.employeeService.indexObj.next(this.activeIndex);
+
+        }
+        else {
+
+            this.sourceEmployee.updatedBy = this.userName;
+            this.sourceEmployee.masterCompanyId = 1;
+            this.employeeService.updateCertificationDetails(this.sourceEmployee).subscribe(data => {
+                this.alertService.showMessage('Employee Certification updated successfully.');
+                this.employeeService.generalCollection = this.local;
+            })
+
+            response => this.saveCompleted(this.sourceEmployee)
+            this.activeIndex = 1;
+            this.employeeService.indexObj.next(this.activeIndex);
+
         }
     }
     // Load Employee lcience data//
-	private getwithemployeeLicensureId() {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
-		this.employeeService.getCertificationList(this.local.employeeId).subscribe(
-			results => this.onCertifywithEmpId(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
+    private getwithemployeeLicensureId() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.employeeService.getCertificationList(this.local.employeeId).subscribe(
+            results => this.onCertifywithEmpId(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
 
-		this.cols = [
-			{ field: 'licenseNumber', header: 'Certification' },
-			{ field: 'employeeLicenseTypeId', header: 'Certification Type' },
-			{ field: 'certifyingInstitution', header: 'Certification Institution' },
-			{ field: 'certificationDate', header: 'certification Date' },
-			{ field: 'isLicenseInForce', header: 'Certification In Force' },
-			{ field: 'createdBy', header: 'Created By' },
-			{ field: 'updatedBy', header: 'Updated By' },
-			{ field: 'updatedDate', header: 'Updated Date' },
-			{ field: 'createdDate', header: 'Created Date' }
-		];
+        this.cols = [
+            { field: 'licenseNumber', header: 'Certification' },
+            { field: 'employeeLicenseTypeId', header: 'Certification Type' },
+            { field: 'certifyingInstitution', header: 'Certification Institution' },
+            { field: 'certificationDate', header: 'certification Date' },
+            { field: 'isLicenseInForce', header: 'Certification In Force' },
+            { field: 'createdBy', header: 'Created By' },
+            { field: 'updatedBy', header: 'Updated By' },
+            { field: 'updatedDate', header: 'Updated Date' },
+            { field: 'createdDate', header: 'Created Date' }
+        ];
 
-		this.selectedColumns = this.cols;
+        this.selectedColumns = this.cols;
 
-	}
+    }
 
     // Load Emp list
     private loadData() {
@@ -174,37 +233,39 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = getCertificationList;
-		this.allEmployeeinfo = getCertificationList;
-		
-	}
-	private loadDataforCertification() {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
-		this.certificationser.getWorkFlows().subscribe(
-			results => this.onDataLoadSuccessfulforCertification(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
-	}
+        this.allEmployeeinfo = getCertificationList;
 
-	private onDataLoadSuccessfulforCertification(allWorkFlows: any[]) {
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.allCertification = allWorkFlows;
+    }
+    private loadDataforCertification() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.certificationser.getWorkFlows().subscribe(
+            results => this.onDataLoadSuccessfulforCertification(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
 
-	}
+    private onDataLoadSuccessfulforCertification(allWorkFlows: any[]) {
+        console.log(allWorkFlows);
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allCertification = allWorkFlows;
+        console.log(this.allCertification);
+
+    }
 
 
-	private onCertifywithEmpId(certfilist: any) {
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.dataSource.data = certfilist;
-		this.data = certfilist;
-		if (this.data.length>0) {
-			this.sourceEmployee = this.data[0].t;
-			this.sourceEmployee.certificationDate = new Date(this.sourceEmployee.certificationDate);
-		}
-	}
- 
+    private onCertifywithEmpId(certfilist: any) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = certfilist;
+        this.data = certfilist;
+        if (this.data.length > 0) {
+            this.sourceEmployee = this.data[0].t;
+            this.sourceEmployee.certificationDate = new Date(this.sourceEmployee.certificationDate);
+        }
+    }
+
 
     private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
         this.alertService.stopLoadingMessage();
@@ -239,7 +300,7 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
             this.employeeService.updateEmployee(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
-           
+
         }
         else {
             this.sourceAction = rowData;
@@ -249,7 +310,7 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
             this.employeeService.updateEmployee(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
-          
+
         }
 
     }
@@ -278,7 +339,7 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
         }, () => { console.log('Backdrop click') })
     }
 
-      openEdit(content, row) {
+    openEdit(content, row) {
 
         this.isEditMode = true;
 
@@ -292,7 +353,7 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-    
+
     openHelpText(content) {
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -313,40 +374,40 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
 
     }
 
-   
+
     editItemAndCloseModel() {
         this.isSaving = true;
-		if (!this.sourceEmployee.employeeLicensureId) {			
-				this.sourceEmployee.createdBy = this.userName;
-				this.sourceEmployee.updatedBy = this.userName;
-				this.sourceEmployee.isActive = true;
-				this.sourceEmployee.masterCompanyId = 1;
-				this.sourceEmployee.employeeId = this.local.employeeId;
-				this.employeeService.newAddCertification(this.sourceEmployee).subscribe(
-                    data => {
-                        this.alertService.showMessage('Employee Certification Added successfully.');
-						this.localCollection = data;
-						this.employeeService.generalCollection = this.local;
+        if (!this.sourceEmployee.employeeLicensureId) {
+            this.sourceEmployee.createdBy = this.userName;
+            this.sourceEmployee.updatedBy = this.userName;
+            this.sourceEmployee.isActive = true;
+            this.sourceEmployee.masterCompanyId = 1;
+            this.sourceEmployee.employeeId = this.local.employeeId;
+            this.employeeService.newAddCertification(this.sourceEmployee).subscribe(
+                data => {
+                    this.alertService.showMessage('Employee Certification Added successfully.');
+                    this.localCollection = data;
+                    this.employeeService.generalCollection = this.local;
                 })
 
             response => this.saveCompleted(this.sourceEmployee)
-				this.activeIndex = 1;
-				this.employeeService.indexObj.next(this.activeIndex);
-			
-		}
+            this.activeIndex = 1;
+            this.employeeService.indexObj.next(this.activeIndex);
+
+        }
         else {
 
             this.sourceEmployee.updatedBy = this.userName;
-			this.sourceEmployee.masterCompanyId = 1;
+            this.sourceEmployee.masterCompanyId = 1;
             this.employeeService.updateCertificationDetails(this.sourceEmployee).subscribe(data => {
                 this.alertService.showMessage('Employee Certification updated successfully.');
-				this.employeeService.generalCollection = this.local;
+                this.employeeService.generalCollection = this.local;
             })
 
             response => this.saveCompleted(this.sourceEmployee)
-			this.activeIndex = 1;
-			this.employeeService.indexObj.next(this.activeIndex);
-			
+            this.activeIndex = 1;
+            this.employeeService.indexObj.next(this.activeIndex);
+
         }
     }
 
@@ -416,105 +477,109 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
         } else {
             return `with: ${reason}`;
         }
-	}
-	nextClick() {
-		this.employeeService.listCollection = this.local;
-		this.activeIndex = 2;
-		this.employeeService.indexObj.next(this.activeIndex);
-		this.router.navigateByUrl('/employeesmodule/employeepages/app-employee-training');
+    }
+    nextClick() {
+        this.employeeService.listCollection = this.local;
+        this.activeIndex = 2;
+        this.employeeService.indexObj.next(this.activeIndex);
+       // this.router.navigateByUrl('/employeesmodule/employeepages/app-employee-training');
 
-	}
-	previousClick() {
-		this.employeeService.listCollection = this.local;
-		this.activeIndex = 0;
-		this.employeeService.indexObj.next(this.activeIndex);
-		this.router.navigateByUrl('/employeesmodule/employeepages/app-employee-general-information');
+        this.router.navigate(['/employeesmodule/employeepages/app-employee-training'], { queryParams: { order: this.empId, 'firstName': this.firstName, 'lastName': this.lastName } });
 
-	}
-	certificationType(event) {
-		
-		if (this.allCertification) {
+    }
+    previousClick() {
+        console.log(this.local);
+        this.employeeService.listCollection = this.local;
+        this.activeIndex = 0;
+        this.employeeService.indexObj.next(this.activeIndex);
+        this.router.navigate(['/employeesmodule/employeepages/app-employee-general-information'], { queryParams: { order: this.empId, 'firstName': this.firstName, 'lastName': this.lastName  } });
+       // this.router.navigateByUrl('/employeesmodule/employeepages/app-employee-general-information');
 
-			for (let i = 0; i < this.allCertification.length; i++) {
+    }
+    certificationType(event) {
+
+        if (this.allCertification) {
+
+            for (let i = 0; i < this.allCertification.length; i++) {
                 if (event == this.allCertification[i].description) {
-					this.disablesave = true;
-					this.selecteddescription = event;
-				}
+                    this.disablesave = true;
+                    this.selecteddescription = event;
+                }
 
-			}
-		}
-	}
-	certificationHandlerHandler(event) {
-		if (event.target.value != "") {
-			let value = event.target.value.toLowerCase();
-			if (this.selecteddescription) {
-				if (value == this.selecteddescription.toLowerCase()) {
-					this.disablesave = true;
+            }
+        }
+    }
+    certificationHandlerHandler(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selecteddescription) {
+                if (value == this.selecteddescription.toLowerCase()) {
+                    this.disablesave = true;
 
-				}
-				else {
-					this.disablesave = false;
+                }
+                else {
+                    this.disablesave = false;
 
-				}
-			}
+                }
+            }
 
-		}
-	}
-	filtercertificationType(event) {
-		
-		this.certificationtypeCollection = [];
-		for (let i = 0; i < this.allCertification.length; i++) {
-			let description = this.allCertification[i].description;
-			if (description.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-				this.descriptioncolle.push([{
-					"employeeLicensureId": this.allCertification[i].employeeLicensureId,
-					"description": description
-				}]),
-					this.certificationtypeCollection.push(description);
-			}
-		}
-	}
-	saveCertification() {
-	    this.isSaving = true;
-		if (this.isEditMode == false) {
-			this.sourceEmployee.createdBy = this.userName;
-			this.sourceEmployee.updatedBy = this.userName;
-			this.sourceEmployee.description = this.description;
-			this.sourceEmployee.masterCompanyId = 1;
-			this.certificationser.newCertificationtype(this.sourceEmployee).subscribe(data => {
-				this.loadDataforCertification();
+        }
+    }
+    filtercertificationType(event) {
 
-				this.sourceEmployee.employeeLicensureId = data.employeeLicensureId;
+        this.certificationtypeCollection = [];
+        for (let i = 0; i < this.allCertification.length; i++) {
+            let description = this.allCertification[i].description;
+            if (description.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.descriptioncolle.push([{
+                    "employeeLicensureId": this.allCertification[i].employeeLicensureId,
+                    "description": description
+                }]),
+                    this.certificationtypeCollection.push(description);
+            }
+        }
+    }
+    saveCertification() {
+        this.isSaving = true;
+        if (this.isEditMode == false) {
+            this.sourceEmployee.createdBy = this.userName;
+            this.sourceEmployee.updatedBy = this.userName;
+            this.sourceEmployee.description = this.description;
+            this.sourceEmployee.masterCompanyId = 1;
+            this.certificationser.newCertificationtype(this.sourceEmployee).subscribe(data => {
+                this.loadDataforCertification();
 
-			});
-		}
-			else {
+                this.sourceEmployee.employeeLicensureId = data.employeeLicensureId;
 
-				this.sourceEmployee.updatedBy = this.userName;
-				this.sourceEmployee.description = this.description;
-				this.sourceEmployee.masterCompanyId = 1;
-				this.certificationser.updateCertificationtype(this.sourceEmployee).subscribe(
-					response => this.saveCompleted(this.sourceEmployee),
-					error => this.saveFailedHelper(error));
-			}
+            });
+        }
+        else {
 
-			this.modal.close();
-		}
-	
-	openCertification(content) {
-		this.disablesave = false;
-		this.isEditMode = false;
-		this.isDeleteMode = false;
-		this.disablesave = false;
-		this.isSaving = true;
-		this.loadMasterCompanies();
-		this.description = "";
-		this.sourceEmployee.isActive = true;
-		this.modal = this.modalService.open(content, { size: 'sm' });
-		this.modal.result.then(() => {
+            this.sourceEmployee.updatedBy = this.userName;
+            this.sourceEmployee.description = this.description;
+            this.sourceEmployee.masterCompanyId = 1;
+            this.certificationser.updateCertificationtype(this.sourceEmployee).subscribe(
+                response => this.saveCompleted(this.sourceEmployee),
+                error => this.saveFailedHelper(error));
+        }
+
+        this.modal.close();
+    }
+
+    openCertification(content) {
+        this.disablesave = false;
+        this.isEditMode = false;
+        this.isDeleteMode = false;
+        this.disablesave = false;
+        this.isSaving = true;
+        this.loadMasterCompanies();
+        this.description = "";
+        this.sourceEmployee.isActive = true;
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
             console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-	}
+        }, () => { console.log('Backdrop click') })
+    }
 
 
 }

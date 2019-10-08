@@ -1,8 +1,8 @@
 ﻿import { MasterCompany } from './mastercompany.model';
 
-export class AssetStatus {
+export class AssetDepConvention {
     constructor(masterCompany?: MasterCompany,
-        assetStatusId?: number,
+        assetDepConventionId?: number,
         Code?: string,
         Name?: string,
         Memo?: string,
@@ -13,7 +13,7 @@ export class AssetStatus {
         updatedDate?: Date,
         isDelete?: boolean,
         isActive?: boolean) {
-        this.assetStatusId = assetStatusId;
+        this.assetDepConventionId = assetDepConventionId;
         this.code = Code;
         this.name = Name;
         this.memo = Memo;
@@ -24,9 +24,8 @@ export class AssetStatus {
         this.updatedDate = updatedDate;
         this.isDelete = isDelete;
         this.isActive = isActive;
-
     }
-    public assetStatusId: number;
+    public assetDepConventionId: number;
     public code: string;
     public name: string;
     public memo: string;
@@ -36,7 +35,5 @@ export class AssetStatus {
     public createdDate: Date;
     public updatedDate: Date;
     public isDelete: boolean;
-    public isActive: boolean;   
-
-
+    public isActive: boolean;
 }
