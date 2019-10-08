@@ -206,6 +206,7 @@ export class PurchaseSetupComponent {
 	employeesList: any[];
 	newPNList = [];
 	newPartsList: CreatePOPartsList;
+	splitVendorNames: any[];
 
 	/** po-approval ctor */
 	constructor(public siteService: SiteService, public warehouseService: WarehouseService, private masterComapnyService: MasterComapnyService, public cusservice: CustomerService, private itemser: ItemMasterService, private modalService: NgbModal, private route: Router, public legalEntityService: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public vendorService: VendorService, public priority: PriorityService, private alertService: AlertService ,public glAccountService: GlAccountService, private authService: AuthService) {
@@ -534,7 +535,8 @@ export class PurchaseSetupComponent {
     }
 
 	savePurchaseOrder() {
-		console.log(this.sourcePoApproval);		
+		console.log(this.sourcePoApproval);	
+			
 		this.sourcePoApprovalObj = {
 			purchaseOrderNumber: this.sourcePoApproval.purchaseOrderNumber,
 				openDate: new Date(this.sourcePoApproval.openDate),
@@ -549,23 +551,23 @@ export class PurchaseSetupComponent {
 				creditLimit: this.sourcePoApproval.creditLimit,
 				creditTermsId: this.sourcePoApproval.creditTermsId.creditTermsId,
 				requisitionerId: this.sourcePoApproval.requisitionerId.employeeId,
-				approverId: this.sourcePoApproval.approverId.employeeId,
-				approvedDate: new Date(this.sourcePoApproval.approvedDate),
+				approverId: this.sourcePoApproval.approverId.employeeId ? this.sourcePoApproval.approverId.employeeId : null,
+				dateApproved: new Date(this.sourcePoApproval.approvedDate),
 				statusId: this.sourcePoApproval.statusId,
 				resale: this.sourcePoApproval.resale ? this.sourcePoApproval.resale : false,
 				managementStructureId: this.sourcePoApproval.managementStructureId,
 				poMemo: this.sourcePoApproval.poMemo,
-				shipToUserTypeId: this.sourcePoApproval.shipToUserTypeId,
+				shipToUserTypeId: parseInt(this.sourcePoApproval.shipToUserTypeId),
 				shipToUserId: this.sourcePoApproval.shipToUserId ? this.getShipToBillToUserId(this.sourcePoApproval.shipToUserId) : null,
 				shipToAddressId: this.sourcePoApproval.shipToAddressId,
 				shipToContactId: this.sourcePoApproval.shipToContactId.contactId,
 				shipViaId: null,
-				shippingCost: '',
-				handlingCost: '',
+				shippingCost: null,
+				handlingCost: null,
 				shippingId: null,
 				shippingURL: '',
 				shipToMemo: this.sourcePoApproval.shipToMemo,
-				billToUserTypeId: this.sourcePoApproval.billToUserTypeId,
+				billToUserType: parseInt(this.sourcePoApproval.billToUserTypeId),
 				billToUserId: this.sourcePoApproval.billToUserId ? this.getShipToBillToUserId(this.sourcePoApproval.billToUserId) : null,
 				billToAddressId: this.sourcePoApproval.billToAddressId,
 				billToContactId: this.sourcePoApproval.billToContactId.contactId,
@@ -583,8 +585,8 @@ export class PurchaseSetupComponent {
 		else {
 			//this.userName = 'admin';
 		// this.sourcePoApproval.vendorId = this.tempVendorId;
-		this.sourcePoApproval.createdBy = this.userName;
-		this.sourcePoApproval.updatedBy = this.userName;
+		//this.sourcePoApproval.createdBy = this.userName;
+		//this.sourcePoApproval.updatedBy = this.userName;
 		// this.sourcePoApproval.masterCompanyId = 1;
 
 		/*if (!this.sourcePoApproval.deferredReceiver) {
@@ -1087,20 +1089,34 @@ export class PurchaseSetupComponent {
 	}
 
 
-	getVendorPartyNames(part, event): void {
-		if (this.allActions && this.allActions.length > 0) {
-			var vendors = this.allActions.filter(function (vendor) {
-				return vendor.vendorName.toLowerCase().indexOf(event.query.toLowerCase()) == 0;
-			});
-			part.vendors = [];
-			vendors.forEach(vendor => {
-				part.vendors.push({
-					"vendorId": vendor.vendorId,
-					"vendorName": vendor.vendorName
-				});
-			});
+	// getVendorPartyNames(part, event): void {
+	// 	if (this.allActions && this.allActions.length > 0) {
+	// 		var vendors = this.allActions.filter(function (vendor) {
+	// 			return vendor.vendorName.toLowerCase().indexOf(event.query.toLowerCase()) == 0;
+	// 		});
+	// 		part.vendors = [];
+	// 		vendors.forEach(vendor => {
+	// 			part.vendors.push({
+	// 				"vendorId": vendor.vendorId,
+	// 				"vendorName": vendor.vendorName
+	// 			});
+	// 		});
 
+	// 	}
+	// }
+	filterSplitVendorNames(event) {
+		this.splitVendorNames = this.allActions;
+
+		if (event.query !== undefined && event.query !== null) {
+			const vendorNames = [...this.allActions.filter(x => {
+				return x.vendorName.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.splitVendorNames = vendorNames;
 		}
+	}
+	onSelectSplitUserType(part) {
+		part.addressData = [];
+		part.partListUserId = {};
 	}
 
 

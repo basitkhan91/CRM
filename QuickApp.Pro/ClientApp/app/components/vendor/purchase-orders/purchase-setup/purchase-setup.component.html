@@ -557,7 +557,7 @@
                                 <td>{{partList.partNumber}}</td>
                                 <td>{{partList.partDescription}}</td>
                                 <td>
-                                    <select name="partListUserType{{row_no}}" [(ngModel)]="partChildList.partListUserTypeId" #pUserType="ngModel" required>
+                                    <select name="partListUserType{{row_no}}" [(ngModel)]="partChildList.partListUserTypeId" #pUserType="ngModel" (change)="onSelectSplitUserType(partChildList)" required>
                                         <option value="1">Customer</option>
                                         <option value="2">Vendor</option>
                                         <option value="3">Company</option>
@@ -594,18 +594,22 @@
                                     </div>
                                     <div class="inner-addon right-addon autosuggesions-add inline-block w175" *ngIf="partChildList.partListUserTypeId==2">
                                         <div class="col-sm-11">
-                                            <p-autoComplete field="vendorName"
+                                                <p-autoComplete field="vendorName" class="pautocomp-cstm" 
+                                                [(ngModel)]="partChildList.partListUserId" name="splitVendorNames" [suggestions]="splitVendorNames" (completeMethod)="filterSplitVendorNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" #cVendorName="ngModel" errorMessage="Records not found" [forceSelection]="true" (onSelect)="onVendorNameChange(partChildList,$event)" required>
+                                            </p-autoComplete>
+                                               
+                                            <!-- <p-autoComplete field="vendorName"
                                                             name="cVendorName{{row_no}}"
                                                             (onSelect)="onVendorNameChange(partChildList,$event)"
                                                             (onKeyUp)=vendoreventHandler($event)
                                                             [(ngModel)]="partChildList.partListUserId"
                                                             [suggestions]="partChildList.vendors"
-                                                            (completeMethod)="getVendorPartyNames(partChildList,$event)" 
+                                                            (completeMethod)="filterSplitVendorNames(partChildList,$event)" 
                                                             errorMessage="Records not found" [forceSelection]="true"
                                                             [size]="30"
                                                             [minLength]="1" [dropdown]="true" #cVendorName="ngModel" required>
     
-                                            </p-autoComplete>
+                                            </p-autoComplete> -->
                                             <div *ngIf="cVendorName.invalid && (cVendorName.dirty || cVendorName.touched)" class="alert alert-danger alert-danger-cstm">
                                                     <div *ngIf="cVendorName.errors.required">
                                                         <small> Vendor Name is required </small>

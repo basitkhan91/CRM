@@ -22,13 +22,13 @@ export class AssetDepConventionTypeService {
         );
     }
 
-    add(assetDepConventionType: AssetDepConvention) {
-        return this.assetDepConventionTypeEndpointService.addAssetDep<AssetDepConvention>(assetDepConventionType);
-    }
+    // add(assetDepConventionType: AssetDepConvention) {
+    //     return this.assetDepConventionTypeEndpointService.addAssetDep<AssetDepConvention>(assetDepConventionType);
+    // }
 
-    update(assetDepConventionType: AssetDepConvention) {
-        return this.assetDepConventionTypeEndpointService.updateAssetDep<AssetDepConvention>(assetDepConventionType);
-    }
+    // update(assetDepConventionType: AssetDepConvention) {
+    //     return this.assetDepConventionTypeEndpointService.updateAssetDep<AssetDepConvention>(assetDepConventionType);
+    // }
 
     remove(assetDepConventionTypeId: number) {
         return this.assetDepConventionTypeEndpointService.removeAssetDepById(assetDepConventionTypeId);

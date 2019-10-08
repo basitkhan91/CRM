@@ -316,15 +316,15 @@ export class AssetDepConventionTypeComponent implements OnInit {
             masterCompanyId: 1
         };
         if (this.isEditMode == false) {
-            this.assetDepConventionTypeService.add(params).subscribe(
+            /*this.assetDepConventionTypeService.add(params).subscribe(
                 role => this.saveSuccessHelper(role),
-                error => this.saveFailedHelper(error));
+                error => this.saveFailedHelper(error));*/
         }
         else {
             params.AssetDepConventionId = this.sourceAction.assetDepConventionId;
-            this.assetDepConventionTypeService.update(params).subscribe(
+            /*this.assetDepConventionTypeService.update(params).subscribe(
                 response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));
+                error => this.saveFailedHelper(error));*/
         }
 
         this.modal.close();
@@ -379,15 +379,15 @@ export class AssetDepConventionTypeComponent implements OnInit {
         };
         if (e.checked == false) {
             this.Active = "In Active";
-            this.assetDepConventionTypeService.update(params).subscribe(
+            /*this.assetDepConventionTypeService.update(params).subscribe(
                 response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));
+                error => this.saveFailedHelper(error));*/
         }
         else {
             this.Active = "Active";
-            this.assetDepConventionTypeService.update(params).subscribe(
+            /*this.assetDepConventionTypeService.update(params).subscribe(
                 response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));
+                error => this.saveFailedHelper(error));*/
         }
 
     }
