@@ -219,7 +219,7 @@ namespace DAL.Repositories
                                 pop.PurchaseOrderPartRecordId,
                                 po.ShipToUserType,
                                 po.ShipToUserId,
-                                po.ShipToContactName,
+                                po.ShipToContactId,
                                 po.ShipToMemo,
                                 po.BillToUserType,
                                 po.BillToUserId,

@@ -21,11 +21,13 @@ namespace QuickApp.Pro.ViewModels
         public long EmployeeId { get; set; }
         public Nullable<long> VendorId { get; set; }
         public Nullable<long> VendorContactId { get; set; }
+        public string VendorContactPhone { get; set; }
+        public string PoMemo { get; set; }
         public Nullable<int> ShipToCompanyId { get; set; }
         public Nullable<int> ShipViaAccountId { get; set; }
         public string Terms { get; set; }
-        public Int16? CreditTermsId{get;set;}
-        public Nullable<short> CreditLimit { get; set; }
+        public Int16? CreditTermsId { get; set; }
+        public Nullable<decimal> CreditLimit { get; set; }
         public string Notes { get; set; }
         public Nullable<long> SiteId { get; set; }
         public Nullable<long> WarehouseId { get; set; }
@@ -34,7 +36,8 @@ namespace QuickApp.Pro.ViewModels
         public string IssuedToContactName { get; set; }
         public string IssuedToMemo { get; set; }
         public Nullable<long> ShipToAddressId { get; set; }
-        public string ShipToContactName { get; set; }
+        public long ShipToContactId { get; set; }
+        public long ShipViaId { get; set; }
         public string ShipToMemo { get; set; }
         public Nullable<long> BillToAddressId { get; set; }
         public string BillToContactName { get; set; }
@@ -53,6 +56,13 @@ namespace QuickApp.Pro.ViewModels
         public Nullable<bool> IsActive { get; set; }
 
         public int ManagementStructureId { get; set; }
+        public decimal ShippingCost { get; set; }
+        public decimal HandlingCost { get; set; }
+        public long ShippingId { get; set; }
+        public string ShippingURL{get;set;}
+        public long BillToContactId { get; set; }
+
+
     }
 }
 

@@ -569,6 +569,9 @@ namespace QuickApp.Pro.Controllers
                     //// DAL.Models.PurchaseOrder actionobject = new DAL.Models.PurchaseOrder();
                     ////vt.VendorTypeId = 1;
                     ////poViewModel.MasterCompanyId = 1;
+                    ///
+                    poViewModel.PurchaseOrderNumber = Guid.NewGuid().ToString();
+                    poViewModel.MasterCompanyId = 1;
                     MapPOVMToEntity(poViewModel, actionobject);
 
                     _context.PurchaseOrder.Update(actionobject);
@@ -580,9 +583,9 @@ namespace QuickApp.Pro.Controllers
                     if (poViewModel == null)
                         return BadRequest($"{nameof(poViewModel)} cannot be null");
                     DAL.Models.PurchaseOrder actionobject = new DAL.Models.PurchaseOrder();
-
+                    poViewModel.PurchaseOrderNumber = Guid.NewGuid().ToString();
                     //vt.VendorTypeId = 1;
-                    poViewModel.MasterCompanyId = 1;
+                    poViewModel.MasterCompanyId =1;
 
                     MapPOVMToEntity(poViewModel, actionobject);
 
@@ -636,7 +639,7 @@ namespace QuickApp.Pro.Controllers
             actionobject.Terms = poViewModel.Terms;
             actionobject.Notes = poViewModel.Notes;
             actionobject.ShipToCompanyId = poViewModel.ShipToCompanyId;
-            actionobject.ShipToContactName = poViewModel.ShipToContactName;
+            actionobject.ShipToContactId = poViewModel.ShipToContactId;
 
             actionobject.IsActive = true;
             actionobject.ShipViaAccountId = poViewModel.ShipViaAccountId;
@@ -674,7 +677,7 @@ namespace QuickApp.Pro.Controllers
             actionobject.NonInventory = poViewModel.NonInventory;
             actionobject.RequisitionedBy = poViewModel.RequisitionedBy;
             actionobject.RequisitionedDate = poViewModel.RequisitionedDate;
-            actionobject.POPartSplitAddressId = poViewModel.POPartSplitAddressId;
+            //actionobject.POPartSplitAddressId = poViewModel.POPartSplitAddressId;
             actionobject.MasterCompanyId = poViewModel.MasterCompanyId;
 
             actionobject.NeedByDate = poViewModel.NeedByDate;
@@ -717,7 +720,17 @@ namespace QuickApp.Pro.Controllers
             actionobject.UpdatedBy = poViewModel.UpdatedBy;
             actionobject.IsActive = true;
         }
-
+        private void MapAddress(PurchaseOrderPartSplit poSplit)
+        {
+           var address = _context.Address.Where(a => a.AddressId == poSplit.POPartSplitAddressId).FirstOrDefault();
+            poSplit.POPartSplitAddress1 = (address.PoBox +" " + address.Line1).Trim();
+            poSplit.POPartSplitAddress2 = address.Line2;
+            poSplit.POPartSplitAddress3 = address.Line3;
+            poSplit.POPartSplitCity = address.City;
+            poSplit.POPartSplitState = address.StateOrProvince;
+            poSplit.POPartSplitCountry = address.Country;
+            poSplit.POPartSplitPostalCode = address.PostalCode;
+        }
 
         [HttpPost("saveVendorpurchasespart")]
         public IActionResult saveVendorpurchasespart([FromBody] IEnumerable<PurchaseOrderPartViewModel> poViewModels)//, Address address, VendorType vt)
@@ -732,7 +745,7 @@ namespace QuickApp.Pro.Controllers
                             if (poViewModel == null)
                                 return BadRequest($"{nameof(poViewModel)} cannot be null");
                             var actionobject = _context.PurchaseOrderPart.Where(a => a.PurchaseOrderPartRecordId == poViewModel.PurchaseOrderPartRecordId).SingleOrDefault();
-
+                            MapAddress(poPartSplit);
                             MapPOPVMtoEntity(poViewModel, poPartSplit, actionobject);
 
                             _context.PurchaseOrderPart.Update(actionobject);
@@ -748,7 +761,7 @@ namespace QuickApp.Pro.Controllers
                             poViewModel.CreatedBy = "admin";
                             poViewModel.UpdatedBy = "admin";
                             poViewModel.IsActive = true;
-
+                            MapAddress(poPartSplit);
                             MapPOPVMtoEntity(poViewModel, poPartSplit, actionobject);
 
                             _context.PurchaseOrderPart.Add(actionobject);
