@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Linq;
 using DAL;
 using DAL.Models;
@@ -31,14 +32,26 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getAll")]
         public IActionResult getAll()
         {
-            var assets = unitOfWork.Repository<AssetStatus>().GetAll().Where(x => x.IsDeleted != true).OrderByDescending(x => x.Id);
-            return Ok(assets);
-        }
+            List<ColumHeader> columHeaders = new List<ColumHeader>();
+            PropertyInfo[] propertyInfos = typeof(AssetStatusSPModel).GetProperties();
+            ColumHeader columnHeader;
+            DynamicGridData<dynamic> dynamicGridData = new DynamicGridData<dynamic>();
+            foreach (PropertyInfo property in propertyInfos)
+            {
+                columnHeader = new ColumHeader();
+                columnHeader.field = char.ToLower(property.Name[0]) + property.Name.Substring(1);//FirstCharToUpper(property.Name);
+                columnHeader.header = property.Name;
+                columHeaders.Add(columnHeader);
+            }
+            dynamicGridData.columHeaders = columHeaders;
+            dynamicGridData.ColumnData = unitOfWork.Repository<AssetStatus>().GetAll().Where(x => x.IsDeleted != true).OrderByDescending(x => x.AssetStatusId); ;
+            return Ok(dynamicGridData);
+        }               
 
         [HttpGet("getById/{id}")]
         public IActionResult getAssetById(long id)
         {
-            var asset = unitOfWork.Repository<AssetStatus>().Find(x => x.Id == id && x.IsDeleted != true);
+            var asset = unitOfWork.Repository<AssetStatus>().Find(x => x.AssetStatusId == id && x.IsDeleted != true);
             return Ok(asset);
         }
 
@@ -51,7 +64,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     asset.IsActive = true;
                     asset.CreatedDate = DateTime.Now;
-                    asset.UpdatedDate =null;
+                    asset.UpdatedDate = DateTime.Now;
                     asset.MasterCompanyId = 1;
                     unitOfWork.Repository<AssetStatus>().Add(asset);
                     unitOfWork.SaveChanges();
@@ -98,7 +111,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("removeById/{id}")]
         public IActionResult removeAssetById(long id)
         {
-            var asset = unitOfWork.Repository<AssetStatus>().Find(x => x.Id == id).FirstOrDefault();
+            var asset = unitOfWork.Repository<AssetStatus>().Find(x => x.AssetStatusId == id).FirstOrDefault();
             if (asset != null)
             {
                 asset.UpdatedDate = DateTime.Now;
@@ -120,7 +133,7 @@ namespace QuickApp.Pro.Controllers
             {
                 if (asset != null)
                 {
-                    var existingResult = unitOfWork.Repository<AssetStatus>().Find(x => x.Id == id).FirstOrDefault();
+                    var existingResult = unitOfWork.Repository<AssetStatus>().Find(x => x.AssetStatusId == id).FirstOrDefault();
                     asset.UpdatedDate = DateTime.Now;
                     existingResult.IsActive = asset.IsActive;
                     unitOfWork.Repository<AssetStatus>().Update(asset);

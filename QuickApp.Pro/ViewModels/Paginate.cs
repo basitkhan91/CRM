@@ -154,6 +154,15 @@ namespace QuickApp.Pro.ViewModels
     }
     #endregion
 
+    #region AssetStatus
+    public class AssetStatusSPModel
+    {
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string Memo { get; set; }
+    }
+    #endregion
+
     #region Itemgroup
     public class ItemGroupViewModel : Itemgroup, IPaginateViewModel
     {
