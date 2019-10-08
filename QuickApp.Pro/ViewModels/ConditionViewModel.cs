@@ -33,6 +33,12 @@ namespace QuickApp.Pro.ViewModels
 
     }
 
+    public class ConditionSPModel
+    {
+        public string Memo { get; set; }
+        public string Description { get; set; }
+    }
+
     public class ConditionViewModelValidator : AbstractValidator<ConditionViewModel>
     {
         public ConditionViewModelValidator()
