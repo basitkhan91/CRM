@@ -101,8 +101,8 @@ namespace QuickApp.Pro.Controllers
                     ataMainobject.ATAChapterCode = ataMainViewModel.ATAChapterCode;
                     ataMainobject.Memo = ataMainViewModel.Memo;
                     ataMainobject.MasterCompanyId = 1;
-                    ataMainobject.IsActive = ataMainViewModel.IsActive;
-                    ataMainobject.IsDelete = ataMainViewModel.IsDelete;
+                    ataMainobject.IsActive = true;
+                    ataMainobject.IsDelete = false;
                     ataMainobject.CreatedDate = DateTime.Now;
                     ataMainobject.UpdatedDate = DateTime.Now;
                     ataMainobject.CreatedBy = ataMainViewModel.CreatedBy;
