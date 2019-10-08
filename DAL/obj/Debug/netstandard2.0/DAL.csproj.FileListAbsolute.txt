@@ -24,3 +24,12 @@ D:\PAS_DEV\DAL\obj\Debug\netstandard2.0\DAL.AssemblyInfoInputs.cache
 D:\PAS_DEV\DAL\obj\Debug\netstandard2.0\DAL.AssemblyInfo.cs
 D:\PAS_DEV\DAL\obj\Debug\netstandard2.0\DAL.dll
 D:\PAS_DEV\DAL\obj\Debug\netstandard2.0\DAL.pdb
+C:\Users\mural\Source\Repos\projectpas\PAS_DEV\DAL\bin\Debug\netstandard2.0\DAL.deps.json
+C:\Users\mural\Source\Repos\projectpas\PAS_DEV\DAL\bin\Debug\netstandard2.0\DAL.dll
+C:\Users\mural\Source\Repos\projectpas\PAS_DEV\DAL\bin\Debug\netstandard2.0\DAL.pdb
+C:\Users\mural\Source\Repos\projectpas\PAS_DEV\DAL\obj\Debug\netstandard2.0\DAL.csprojAssemblyReference.cache
+C:\Users\mural\Source\Repos\projectpas\PAS_DEV\DAL\obj\Debug\netstandard2.0\DAL.csproj.CoreCompileInputs.cache
+C:\Users\mural\Source\Repos\projectpas\PAS_DEV\DAL\obj\Debug\netstandard2.0\DAL.AssemblyInfoInputs.cache
+C:\Users\mural\Source\Repos\projectpas\PAS_DEV\DAL\obj\Debug\netstandard2.0\DAL.AssemblyInfo.cs
+C:\Users\mural\Source\Repos\projectpas\PAS_DEV\DAL\obj\Debug\netstandard2.0\DAL.dll
+C:\Users\mural\Source\Repos\projectpas\PAS_DEV\DAL\obj\Debug\netstandard2.0\DAL.pdb
