@@ -12,19 +12,22 @@ namespace QuickApp.Pro.ViewModels
         public string PurchaseOrderNumber { get; set; }
         public string ReferenceId { get; set; }
         public Nullable<long> PriorityId { get; set; }
-        public string RequestedBy { get; set; }
+        public long RequestedBy { get; set; }
         public System.DateTime DateRequested { get; set; }
-        public string Approver { get; set; }
-        public Nullable<System.DateTime> DateApprovied { get; set; }
+        public long ApproverId { get; set; }
+        public Nullable<System.DateTime> DateApproved { get; set; }
         public Nullable<System.DateTime> NeedByDate { get; set; }
         public Nullable<short> StatusId { get; set; }
-        public string EmployeeId { get; set; }
+        public long EmployeeId { get; set; }
         public Nullable<long> VendorId { get; set; }
         public Nullable<long> VendorContactId { get; set; }
+        public string VendorContactPhone { get; set; }
+        public string PoMemo { get; set; }
         public Nullable<int> ShipToCompanyId { get; set; }
         public Nullable<int> ShipViaAccountId { get; set; }
         public string Terms { get; set; }
-        public Nullable<short> CreditLimit { get; set; }
+        public Int16? CreditTermsId { get; set; }
+        public Nullable<decimal> CreditLimit { get; set; }
         public string Notes { get; set; }
         public Nullable<long> SiteId { get; set; }
         public Nullable<long> WarehouseId { get; set; }
@@ -33,7 +36,8 @@ namespace QuickApp.Pro.ViewModels
         public string IssuedToContactName { get; set; }
         public string IssuedToMemo { get; set; }
         public Nullable<long> ShipToAddressId { get; set; }
-        public string ShipToContactName { get; set; }
+        public long ShipToContactId { get; set; }
+        public long ShipViaId { get; set; }
         public string ShipToMemo { get; set; }
         public Nullable<long> BillToAddressId { get; set; }
         public string BillToContactName { get; set; }
@@ -45,13 +49,20 @@ namespace QuickApp.Pro.ViewModels
         public System.DateTime UpdatedDate { get; set; }
         public Int16? ShipToUserType { get; set; }
         public Int16? BillToUserType { get; set; }
-        public string ShipToUserName { get; set; }
-        public string BillToUserName { get; set; }
+        public long ShipToUserId { get; set; }
+        public long BillToUserId { get; set; }
         public bool DeferredReceiver { get; set; }
         public bool Resale { get; set; }
         public Nullable<bool> IsActive { get; set; }
 
         public int ManagementStructureId { get; set; }
+        public decimal ShippingCost { get; set; }
+        public decimal HandlingCost { get; set; }
+        public long ShippingId { get; set; }
+        public string ShippingURL{get;set;}
+        public long BillToContactId { get; set; }
+
+
     }
 }
 

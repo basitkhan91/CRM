@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace QuickApp.Pro.ViewModels
 {
-    public class PurchaseOrderPartSplit
+    public class PurchaseOrderPartSplitBase
     {
 
         public long PurchaseOrderPartRecordId { get; set; }
@@ -19,6 +19,14 @@ namespace QuickApp.Pro.ViewModels
 
         public Nullable<short> POPartSplitUserTypeId { get; set; }
         public long? POPartSplitUserId { get; set; }
+        
+        
+        public Nullable<System.DateTime> NeedByDate { get; set; }
+        public Nullable<long> POPartSplitAddressId { get; set; }
+
+    }
+    public class PurchaseOrderPartSplit: PurchaseOrderPartSplitBase
+    {
         public string POPartSplitAddress1 { get; set; }
         public string POPartSplitAddress2 { get; set; }
         public string POPartSplitAddress3 { get; set; }
@@ -26,9 +34,5 @@ namespace QuickApp.Pro.ViewModels
         public string POPartSplitState { get; set; }
         public string POPartSplitPostalCode { get; set; }
         public string POPartSplitCountry { get; set; }
-        
-        public Nullable<System.DateTime> NeedByDate { get; set; }
-        public Nullable<long> POPartSplitAddressId { get; set; }
-
     }
 }
