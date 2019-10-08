@@ -103,7 +103,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("removeById/{id}")]
         public IActionResult removeAssetDepById(long id)
         {
-            var assetDep = unitOfWork.Repository<AssetDepConventionType>().Find(x => x.AssetDepConventionId == id).FirstOrDefault();
+            var assetDep = unitOfWork.Repository<AssetDepConventionType>().Find(x => x.AssetDepConventionTypeId == id).FirstOrDefault();
             if (assetDep != null)
             {
                 assetDep.IsDelete = true;
