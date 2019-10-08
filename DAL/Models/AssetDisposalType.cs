@@ -10,7 +10,7 @@ namespace DAL.Models
         public long? AssetDisposalTypeId { get; set; }
 
         [Required(ErrorMessage = "Id Is Required.")]
-        public string AssetDisposalId { get; set; }
+        public string AssetDisposalCode { get; set; }
 
         [Required(ErrorMessage = "Name Is Required.")]
         public string AssetDisposalName { get; set; }
