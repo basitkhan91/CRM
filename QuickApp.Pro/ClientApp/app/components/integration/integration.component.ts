@@ -252,7 +252,7 @@ export class IntegrationComponent implements OnInit {
                 this.getList();
                 this.alertService.showMessage(
                     'Success',
-                    `Deleted ItemGroup Successfully  `,
+                    `Deleted Integration Successfully  `,
                     MessageSeverity.success
                 );
             })

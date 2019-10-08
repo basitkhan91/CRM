@@ -20,7 +20,7 @@ export class AssetStatusService {
 
     getAll() {
         return Observable.forkJoin(
-            this.assetStatusEndpoint.getAllAssets<AssetStatus[]>());
+            this.assetStatusEndpoint.getAllAssets<any>());
     }
 
     getById(assetStatusId: number) {

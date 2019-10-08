@@ -20,7 +20,7 @@ export class DisposalTypeService {
 
     getAll() {
         return Observable.forkJoin(
-            this.disposalTypeEndpoint.getAllDisposalType<DisposalType[]>());
+            this.disposalTypeEndpoint.getAllDisposalType<any>());
     }
 
     getById(assetDisposalTypeId: number) {
