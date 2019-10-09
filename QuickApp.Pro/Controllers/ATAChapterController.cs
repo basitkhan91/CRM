@@ -196,6 +196,13 @@ namespace QuickApp.Pro.Controllers
             var result = _unitOfWork.ATAChapter.GetMultiATASUBS(ChapterID);
             return Ok(result);
         }
+
+        [HttpGet("atachapterhistory")]
+        public IActionResult GetATAChapterHistory(long ataChapterId)
+        {
+            var result = _unitOfWork.ATAChapter.GetATAChapterHistory(ataChapterId);//getting List Here
+            return Ok(result);
+        }
     }
 
 

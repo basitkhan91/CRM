@@ -145,7 +145,12 @@ namespace QuickApp.Pro.Controllers
             return Ok(auditResult);
         }
 
-
+        [HttpGet("priorityhistory")]
+        public IActionResult GetPriorityHistory(long priorityId)
+        {
+            var reult = _unitOfWork.Priority.GetPriorityHistory(priorityId);
+            return Ok(reult);
+        }
 
 
     }

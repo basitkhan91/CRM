@@ -1,14 +1,9 @@
-﻿using DAL.Repositories.Interfaces;
+﻿using DAL.Models;
+using DAL.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
-using Microsoft.EntityFrameworkCore;
-
-using System.Threading.Tasks;
-using DAL.Core;
-using System.Collections;
 
 namespace DAL.Repositories
 {
@@ -141,6 +136,19 @@ namespace DAL.Repositories
         {
             return _appContext.AircraftModel.Include("AircraftType").Where(c => (c.IsDeleted == false || c.IsDeleted == null))
                 .OrderByDescending(c => c.AircraftModelId).ToList().AsQueryable();
+        }
+
+        public IEnumerable<AircraftModelAudit> GetAircraftModelHistory(long aircraftModelId)
+        {
+            try
+            {
+                return _appContext.AircraftModelAudit.Where(p => p.AircraftModelId == aircraftModelId).OrderByDescending(p => p.UpdatedDate).ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

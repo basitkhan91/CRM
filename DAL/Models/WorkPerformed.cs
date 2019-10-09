@@ -10,10 +10,9 @@ namespace DAL.Models
     {
         [Key]
         public long WorkPerformedId { get; set; }
+        public string WorkPerformedCode { get; set; }
 
         public string Description { get; set; }
-
-        public string WorkPerformedCode { get; set; }
 
         public string Memo { get; set; }
 

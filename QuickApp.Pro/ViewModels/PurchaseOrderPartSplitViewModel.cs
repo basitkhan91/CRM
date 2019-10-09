@@ -9,19 +9,20 @@ namespace QuickApp.Pro.ViewModels
     {
 
         public long PurchaseOrderPartRecordId { get; set; }
+        public long AssetId { get; set; }
+        public long PartNumberId { get; set; }
         public long PurchaseOrderId { get; set; }
         public long ItemMasterId { get; set; }
-        public string SerialNumber { get; set; }
-
+        //public string SerialNumber { get; set; }
+        public DateTime? NeedByDate { get; set; }
         public Nullable<long> UOMId { get; set; }
         public Nullable<short> QuantityOrdered { get; set; }
         public Nullable<long> ManagementStructureId { get; set; }
 
         public Nullable<short> POPartSplitUserTypeId { get; set; }
         public long? POPartSplitUserId { get; set; }
+               
         
-        
-        public Nullable<System.DateTime> NeedByDate { get; set; }
         public Nullable<long> POPartSplitAddressId { get; set; }
 
     }

@@ -1,4 +1,5 @@
-﻿using DAL.Repositories.Interfaces;
+﻿using DAL.Models;
+using DAL.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,19 @@ namespace DAL.Repositories
         {
             return _appContext.AircraftType.Where(c => (c.IsDeleted == false || c.IsDeleted == null))
                 .OrderByDescending(c => c.AircraftTypeId).ToList().AsQueryable();
+        }
+
+        public IEnumerable<AircraftTypeAudit> GetAircraftTypeHistory(long aircraftId)
+        {
+            try
+            {
+                return _appContext.AircraftTypeAudit.Where(p => p.AircraftTypeId == aircraftId).OrderByDescending(p => p.UpdatedDate).ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);

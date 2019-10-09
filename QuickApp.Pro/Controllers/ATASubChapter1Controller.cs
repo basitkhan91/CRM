@@ -35,7 +35,22 @@ namespace QuickApp.Pro.Controllers
         public IActionResult Get()
         {
             //var result = _unitOfWork.ATASubChapter1s.GetAllATAMainnData(); //.GetAllCustomersData();
-            var result = _context.ATASubChapter.Where(a => a.IsDelete == false || a.IsDelete == null).OrderByDescending(c => c.ATASubChapterId).ToList();
+            //var result = _context.ATASubChapter.Where(a => a.IsDelete == false || a.IsDelete == null).OrderByDescending(c => c.ATASubChapterId).ToList();
+            var result = (from asc in _context.ATASubChapter
+                          join ac in _context.ATAChapter on asc.ATAChapterId equals ac.ATAChapterId
+                          where asc.IsDelete == false || asc.IsDelete == null
+                          select new
+                          {
+                              asc.ATASubChapterId,
+                              asc.ATASubChapterCode,
+                              asc.Description,
+                              asc.Memo,
+                              asc.UpdatedDate,
+                              asc.IsActive,
+                              ac.ATAChapterName,
+                              ac.ATAChapterCode,
+                              ac.ATAChapterCategory
+                          }).OrderByDescending(p => p.ATASubChapterId);
             return Ok(result);
 
             //try

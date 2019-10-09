@@ -35,7 +35,7 @@ export class ConditionsComponent implements OnInit {
     selectedColumns: any[];
     id: number;
     errorMessage: any;
-    private isEditMode: boolean = false;
+    isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
     allComapnies: MasterCompany[];
     private isSaving: boolean;
@@ -250,6 +250,13 @@ export class ConditionsComponent implements OnInit {
             }
         }
     }
-  
+
+    changePage(event: { first: any; rows: number }) {
+        console.log(event);
+        const pageIndex = (event.first / event.rows);
+        // this.pageIndex = pageIndex;
+        this.pageSize = event.rows;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+    }
 
 }
