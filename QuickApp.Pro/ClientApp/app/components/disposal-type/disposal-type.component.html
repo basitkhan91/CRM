@@ -29,7 +29,7 @@
 
                         <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="disposalTypeList" [metaKeySelection]="true" [totalRecords]="totalRecords" [rows]="10" [paginator]="true" [pageLinks]="3"
 
-                                 [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" (onPage)="changePage($event)" [(selection)]="selectedColumns"
+                                 [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple"  (onPage)="changePage($event)"
 
                                  [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
                             <ng-template pTemplate="caption">
