@@ -12,10 +12,10 @@ namespace QuickApp.Pro.ViewModels
         public string PurchaseOrderNumber { get; set; }
         public string ReferenceId { get; set; }
         public Nullable<long> PriorityId { get; set; }
-        public long RequestedBy { get; set; }
-        public System.DateTime DateRequested { get; set; }
+        public long RequisitionerId { get; set; }
+        public System.DateTime OpenDate { get; set; }
         public long ApproverId { get; set; }
-        public Nullable<System.DateTime> DateApproved { get; set; }
+        public Nullable<System.DateTime> ApprovedDate { get; set; }
         public Nullable<System.DateTime> NeedByDate { get; set; }
         public Nullable<short> StatusId { get; set; }
         public long EmployeeId { get; set; }
@@ -47,8 +47,8 @@ namespace QuickApp.Pro.ViewModels
         public string UpdatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public System.DateTime UpdatedDate { get; set; }
-        public Int16? ShipToUserType { get; set; }
-        public Int16? BillToUserType { get; set; }
+        public Int16? ShipToUserTypeId { get; set; }
+        public Int16? BillToUserTypeId { get; set; }
         public long ShipToUserId { get; set; }
         public long BillToUserId { get; set; }
         public bool DeferredReceiver { get; set; }
