@@ -544,15 +544,15 @@ export class PurchaseSetupComponent {
 				priorityId: this.sourcePoApproval.priorityId.priorityId,
 				deferredReceiver: this.sourcePoApproval.deferredReceiver ? this.sourcePoApproval.deferredReceiver : false,
 				vendorId: this.sourcePoApproval.vendorId.vendorId,
-				vendorName: this.sourcePoApproval.vendorId.vendorName,
-				vendorCode: this.sourcePoApproval.vendorCode.vendorId,
+				//vendorName: this.sourcePoApproval.vendorId.vendorName,
+				//vendorCode: this.sourcePoApproval.vendorCode.vendorId,
 				vendorContactId: this.sourcePoApproval.vendorContactId.vendorId,
 				vendorContactPhone: this.sourcePoApproval.vendorContactPhone.vendorPhone,
 				creditLimit: this.sourcePoApproval.creditLimit,
 				creditTermsId: this.sourcePoApproval.creditTermsId.creditTermsId,
 				requisitionerId: this.sourcePoApproval.requisitionerId.employeeId,
 				approverId: this.sourcePoApproval.approverId.employeeId ? this.sourcePoApproval.approverId.employeeId : null,
-				dateApproved: new Date(this.sourcePoApproval.approvedDate),
+				approvedDate: new Date(this.sourcePoApproval.approvedDate),
 				statusId: this.sourcePoApproval.statusId,
 				resale: this.sourcePoApproval.resale ? this.sourcePoApproval.resale : false,
 				managementStructureId: this.sourcePoApproval.managementStructureId,
@@ -887,8 +887,8 @@ export class PurchaseSetupComponent {
 							//let childobj
 							this.childObject = {
 								purchaseOrderId: purId,
-								isParent: false,
-								serialNumber: j+1,
+								//isParent: false,
+								//serialNumber: j+1,
 								itemMasterId: this.partListData[i].itemMasterId,
 								assetId: this.partListData[i].assetId,
 								partNumberId: this.partListData[i].itemMasterId,
@@ -911,7 +911,7 @@ export class PurchaseSetupComponent {
 					this.parentObject = {
 						purchaseOrderId: purId,
 						isParent: true,
-						serialNumber: i+1,
+						//serialNumber: i+1,
 						itemMasterId: this.partListData[i].itemMasterId,
 						assetId: this.partListData[i].assetId,
 						partNumberId: this.partListData[i].itemMasterId,
@@ -938,7 +938,7 @@ export class PurchaseSetupComponent {
 						masterCompanyId: 1,
 						createdBy: this.userName,
 						updatedBy: this.userName,
-						childobj: this.childObjectArray,
+						poPartSplits: this.childObjectArray,
 					}
 					this.parentObjectArray.push(this.parentObject)	
 					console.log(this.parentObjectArray);	
