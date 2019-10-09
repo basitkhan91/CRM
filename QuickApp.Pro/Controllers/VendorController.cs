@@ -720,16 +720,23 @@ namespace QuickApp.Pro.Controllers
             actionobject.UpdatedBy = poViewModel.UpdatedBy;
             actionobject.IsActive = true;
         }
+        private string IsNull(string val)
+        {
+            return string.IsNullOrEmpty(val) ? string.Empty : val;
+        }
         private void MapAddress(PurchaseOrderPartSplit poSplit)
         {
-           var address = _context.Address.Where(a => a.AddressId == poSplit.POPartSplitAddressId).FirstOrDefault();
-            poSplit.POPartSplitAddress1 = (address.PoBox +" " + address.Line1).Trim();
-            poSplit.POPartSplitAddress2 = address.Line2;
-            poSplit.POPartSplitAddress3 = address.Line3;
-            poSplit.POPartSplitCity = address.City;
-            poSplit.POPartSplitState = address.StateOrProvince;
-            poSplit.POPartSplitCountry = address.Country;
-            poSplit.POPartSplitPostalCode = address.PostalCode;
+            var address = _context.Address.Where(a => a.AddressId == poSplit.POPartSplitAddressId).FirstOrDefault();
+            if (address != null)
+            {
+                poSplit.POPartSplitAddress1 = (IsNull(address?.PoBox) + " " + IsNull(address.Line1)).Trim();
+                poSplit.POPartSplitAddress2 = address.Line2;
+                poSplit.POPartSplitAddress3 = address.Line3;
+                poSplit.POPartSplitCity = address.City;
+                poSplit.POPartSplitState = address.StateOrProvince;
+                poSplit.POPartSplitCountry = address.Country;
+                poSplit.POPartSplitPostalCode = address.PostalCode;
+            }
         }
 
         [HttpPost("saveVendorpurchasespart")]
