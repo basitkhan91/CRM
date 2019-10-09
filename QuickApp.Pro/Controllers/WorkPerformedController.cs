@@ -34,8 +34,6 @@ namespace QuickApp.Pro.Controllers
         public IActionResult Get()
         {
             var result = _unitOfWork.WorkPerformed.GetAllWorkPerformedData(); //.GetAllCustomersData();
-
-
             try
             {
                 var resul1 = Mapper.Map<IEnumerable<WorkPerformedViewModel>>(result);
@@ -57,8 +55,6 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetAuditHostoryById(long id)
         {
             var result = _unitOfWork.AuditHistory.GetAllHistory("WorkPerformed", id); //.GetAllCustomersData();
-
-
             try
             {
                 var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
@@ -70,9 +66,6 @@ namespace QuickApp.Pro.Controllers
 
                 throw;
             }
-
-
-
         }
         [HttpPost("workperformed")]
         //[Authorize(Authorization.Policies.ManageAllRolesPolicy)]
@@ -90,6 +83,7 @@ namespace QuickApp.Pro.Controllers
                 workperformedobject.Memo = workPerformedViewModel.Memo;
                 workperformedobject.MasterCompanyId = workPerformedViewModel.MasterCompanyId;
                 workperformedobject.IsActive = workPerformedViewModel.IsActive;
+                workperformedobject.IsDeleted = false;
                 workperformedobject.CreatedDate = DateTime.Now;
                 workperformedobject.UpdatedDate = DateTime.Now;
                 workperformedobject.CreatedBy = workPerformedViewModel.CreatedBy;
@@ -140,7 +134,7 @@ namespace QuickApp.Pro.Controllers
         {
             var existingResult = _unitOfWork.WorkPerformed.GetSingleOrDefault(c => c.WorkPerformedId == id);
 
-            existingResult.IsDelete = true;
+            existingResult.IsDeleted = true;
             _unitOfWork.WorkPerformed.Update(existingResult);
 
             //_unitOfWork.WorkPerformed.Remove(existingResult);
