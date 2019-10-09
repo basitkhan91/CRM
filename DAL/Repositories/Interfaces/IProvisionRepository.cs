@@ -8,5 +8,6 @@ namespace DAL.Repositories.Interfaces
     public interface IProvisionRepository : IRepository<Provision>
     {
         IEnumerable<Provision> GetAllProvisionData();
+        IEnumerable<ProvisionAudit> GetProvisionHistory(long provisionId);  
     }
 }

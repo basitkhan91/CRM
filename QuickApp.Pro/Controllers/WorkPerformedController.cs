@@ -164,6 +164,13 @@ namespace QuickApp.Pro.Controllers
             return Ok(auditResult);
         }
 
+        [HttpGet("workperformedhistory")]
+        public IActionResult GetWorkPerformedHistory(long workPerformedId)
+        {
+            var reult = _unitOfWork.WorkPerformed.GetWorkPerformedHistory(workPerformedId);
+            return Ok(reult);
+        }
+
         #region
         [HttpGet("getAll")]
         public IActionResult GetAll()

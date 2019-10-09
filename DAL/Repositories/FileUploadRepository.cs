@@ -210,6 +210,19 @@ namespace DAL.Repositories
                     UploadPublicationType(BindCustomData<PublicationType>(file, "PublicationTypeId", moduleName));
                     break;
 
+                case "WorkPerformed":
+                    UploadWorkPerformed(BindCustomData<WorkPerformed>(file, "WorkPerformedId", moduleName));
+                    break;
+
+                case "AircraftModel":
+                    UploadAircraftModel(BindCustomData<AircraftModel>(file, "AircraftModelId,AircraftTypeId", moduleName));
+                    break;
+
+                case "ATAChapter":
+                    UploadATAChapter(BindCustomData<ATAChapter>(file, "ATAChapterId", moduleName));
+                    break;
+
+
                 default:
                     break;
             }
@@ -279,7 +292,7 @@ namespace DAL.Repositories
                                                 {
                                                     property.SetValue(model, DateTime.Now);
                                                 }
-                                                else if (!property.Name.Equals(primaryKeyColumn)
+                                                else if (!primaryKeyColumn.Contains(property.Name)
                                                          && !property.Name.Equals("UploadStatus")
                                                          && reader.GetValue(propCount) != null)
                                                 {
@@ -485,6 +498,53 @@ namespace DAL.Repositories
                 if (!flag)
                 {
                     _appContext.PublicationType.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+
+        private void UploadWorkPerformed(List<WorkPerformed> workPerformedList)
+        {
+            foreach (var item in workPerformedList)
+            {
+                var flag = _appContext.WorkPerformed.Any(p => p.IsDelete == false && p.WorkPerformedCode.ToLower() == item.WorkPerformedCode.Trim().ToLower());
+                if (!flag)
+                {
+                    _appContext.WorkPerformed.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+
+        private void UploadAircraftModel(List<AircraftModel> aircraftModelList)
+        {
+            var aircraftTypes = _appContext.AircraftType.Where(p => p.IsDeleted == false).ToList();
+            foreach (var item in aircraftModelList)
+            {
+                var aircraftType = aircraftTypes.Where(p => p.Description.ToLower() == item.AircraftTypeName.ToLower()).FirstOrDefault();
+                if (aircraftType != null && aircraftType.AircraftTypeId > 0)
+                {
+                    item.AircraftTypeId =Convert.ToInt32(aircraftType.AircraftTypeId);
+                    var flag = _appContext.AircraftModel.Any(p => p.IsDeleted == false && p.ModelName.ToLower() == item.ModelName.Trim().ToLower() && p.AircraftTypeId==item.AircraftTypeId);
+                    if (!flag)
+                    {
+                        _appContext.AircraftModel.Add(item);
+                        _appContext.SaveChanges();
+                    }
+                }
+            }
+        }
+
+        private void UploadATAChapter(List<ATAChapter> ataChapterList)
+        {
+            
+            foreach (var item in ataChapterList)
+            {
+                
+                var flag = _appContext.ATAChapter.Any(p => p.IsDelete == false && p.ATAChapterName.ToLower() == item.ATAChapterName.Trim().ToLower());
+                if (!flag)
+                {
+                    _appContext.ATAChapter.Add(item);
                     _appContext.SaveChanges();
                 }
             }
