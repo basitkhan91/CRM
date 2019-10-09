@@ -21,17 +21,19 @@ export class CustomerGeneralInformation {
     customerParentName: string;
     customerURL: string;
     generalCurrencyId: number;
-    customerClassificationId: any;
+    customerClassificationIds: any;
     contractReference: string;
     isPBHCustomer: boolean;
     pbhCustomerMemo: string;
     restrictPMA: boolean;
-    restictPMAIds: any
+    restrictsPMAList: Array<any>;
+    restrictBERList: Array<any>;
+    // restictPMAIds: any
     // restrictPMAMemo: string;
     restrictBER: boolean;
-    restictBERIds : any;
+    // restictBERIds : any;
     // restrictBERMemo: string;
-    scanDocuments: boolean;
+    // scanDocuments: boolean;
     isCustomerAlsoVendor: boolean;
     // edi: boolean;
     // ediDescription: string;
@@ -66,17 +68,19 @@ export class CustomerGeneralInformation {
         this.customerParentName = '';
         this.customerURL = '';
         this.generalCurrencyId = null;
-        this.customerClassificationId = [];
+        this.customerClassificationIds = [];
         this.contractReference = '';
         this.isPBHCustomer = false;
         this.pbhCustomerMemo = '';
         this.restrictPMA = false;
-        this.restictPMAIds = [];
+        this.restrictsPMAList = []
+        // this.restictPMAIds = [];
         // this.restrictPMAMemo = '';
         this.restrictBER = false;
-        this.restictBERIds = [];
+        this.restrictBERList = [];
+        // this.restictBERIds = [];
         // this.restrictBERMemo = '';
-        this.scanDocuments = false;
+        // this.scanDocuments = false;
         this.isCustomerAlsoVendor = false;
         // this.edi = false;
         // this.ediDescription = '';

@@ -172,6 +172,7 @@
         <app-customer-contacts
           [savedGeneralInformationData]="savedGeneralInformationData"
           [editMode]="editMode"
+          [add_ataChapterList]="add_ataChapterList"
           [editGeneralInformationData]="editGeneralInformationData"
           (tab)="changeOfTab($event)"
         ></app-customer-contacts>
@@ -191,6 +192,7 @@
       <div *ngIf="savedGeneralInformationData || editGeneralInformationData">
         <app-customer-ata
           [editMode]="editMode"
+          [search_ataChapterList]="search_ataChapterList"
           [editGeneralInformationData]="editGeneralInformationData"
           [savedGeneralInformationData]="savedGeneralInformationData"
           (tab)="changeOfTab($event)"
