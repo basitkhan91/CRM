@@ -40,6 +40,19 @@ namespace DAL.Repositories
 
         }
 
+        public IEnumerable<WorkPerformedAudit> GetWorkPerformedHistory(long workPerformedId)
+        {
+            try
+            {
+                return _appContext.WorkPerformedAudit.Where(p => p.WorkPerformedId == workPerformedId).OrderByDescending(p => p.UpdatedDate).ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
     }

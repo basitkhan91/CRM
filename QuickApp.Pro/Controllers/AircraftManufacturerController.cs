@@ -157,6 +157,14 @@ namespace QuickApp.Pro.Controllers
             return Ok(data);
         }
 
+        [HttpGet("aircraftmanufacturerhistory")]
+        public IActionResult GetAircraftTypeHistory(long aircraftId)
+        {
+            var result = unitOfWork.aircraftType.GetAircraftTypeHistory(aircraftId);
+            return Ok(result);
+        }
+
+
         #endregion Public Methods
 
         #region Private Methods
