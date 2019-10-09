@@ -6,13 +6,14 @@ import 'rxjs/add/operator/map';
 
 import { EndpointFactory } from './endpoint-factory.service';
 import { ConfigurationService } from './configuration.service';
+import { error } from '../../../node_modules/@angular/compiler/src/util';
 
 @Injectable()
 export class WorkPerformedEndpointService extends EndpointFactory {
 
 
     private readonly _actionsUrl: string = "/api/WorkPerformed/Get";
-    private readonly _actionsUrlNew: string = "/api/WorkPerformed/workperformed";
+    private readonly _actionsUrlNew: string = "/api/WorkPerformed/workperformed";  
     private readonly _actionsUrlAuditHistory: string = "/api/WorkPerformed/auditHistoryById";
     private readonly workPerformedDataAuditById: string = "/api/WorkPerformed/audits";
 
@@ -25,7 +26,7 @@ export class WorkPerformedEndpointService extends EndpointFactory {
 
     getWorkPerformedEndpoint<T>(): Observable<T> {
 
-        return this.http.get<T>(this.actionsUrl, this.getRequestHeaders())
+        return this.http.get<T>(this._actionsUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getWorkPerformedEndpoint());
             });
@@ -37,6 +38,10 @@ export class WorkPerformedEndpointService extends EndpointFactory {
                 return this.handleError(error, () => this.getNewWorkPerformedEndpoint(userObject));
             });
     }
+    
+
+
+  
 
     getHistoryWorkPerformedEndpoint<T>(workPerformedId: number): Observable<T> {
         let endpointUrl = `${this._actionsUrlAuditHistory}/${workPerformedId}`;
