@@ -616,15 +616,15 @@ namespace QuickApp.Pro.Controllers
         private void MapPOVMToEntity(PurchaseOrderViewModel poViewModel, PurchaseOrder actionobject)
         {
             actionobject.PriorityId = poViewModel.PriorityId;
-            actionobject.DateRequested = poViewModel.DateRequested;
+            actionobject.DateRequested = poViewModel.OpenDate;
 
             actionobject.PurchaseOrderNumber = poViewModel.PurchaseOrderNumber;
-            actionobject.RequestedBy = poViewModel.RequestedBy;
+            actionobject.RequestedBy = poViewModel.RequisitionerId;
             actionobject.ApproverId = poViewModel.ApproverId;
             actionobject.MasterCompanyId = poViewModel.MasterCompanyId;
             actionobject.BillToContactName = poViewModel.BillToContactName;
 
-            actionobject.DateApproved = poViewModel.DateApproved;
+            actionobject.DateApproved = poViewModel.ApprovedDate;
             actionobject.NeedByDate = poViewModel.NeedByDate;
             actionobject.StatusId = poViewModel.StatusId;
 
@@ -654,8 +654,8 @@ namespace QuickApp.Pro.Controllers
             actionobject.BillToAddressId = poViewModel.BillToAddressId;
 
             actionobject.BillToMemo = poViewModel.BillToMemo;
-            actionobject.ShipToUserType = poViewModel.ShipToUserType;
-            actionobject.BillToUserType = poViewModel.BillToUserType;
+            actionobject.ShipToUserType = poViewModel.ShipToUserTypeId;
+            actionobject.BillToUserType = poViewModel.BillToUserTypeId;
             actionobject.ShipToUserId = poViewModel.ShipToUserId;
             actionobject.BillToUserId = poViewModel.BillToUserId;
             actionobject.DeferredReceiver = poViewModel.DeferredReceiver;
@@ -673,34 +673,34 @@ namespace QuickApp.Pro.Controllers
         {
             actionobject.PurchaseOrderId = poViewModel.PurchaseOrderId;
             actionobject.ItemMasterId = poViewModel.ItemMasterId;
-            actionobject.SerialNumber = poViewModel.SerialNumber;
-            actionobject.NonInventory = poViewModel.NonInventory;
-            actionobject.RequisitionedBy = poViewModel.RequisitionedBy;
-            actionobject.RequisitionedDate = poViewModel.RequisitionedDate;
+            //actionobject.SerialNumber = poViewModel.SerialNumber;
+            //actionobject.NonInventory = poViewModel.NonInventory;
+            //actionobject.RequisitionedBy = poViewModel.RequisitionedBy;
+            //actionobject.RequisitionedDate = poViewModel.RequisitionedDate;
             //actionobject.POPartSplitAddressId = poViewModel.POPartSplitAddressId;
             actionobject.MasterCompanyId = poViewModel.MasterCompanyId;
 
             actionobject.NeedByDate = poViewModel.NeedByDate;
-            actionobject.Approver = poViewModel.Approver;
-            actionobject.ApprovedDate = poViewModel.ApprovedDate;
+            //actionobject.Approver = poViewModel.Approver;
+            //actionobject.ApprovedDate = poViewModel.ApprovedDate;
             actionobject.NeedByDate = poViewModel.NeedByDate;
             actionobject.ManufacturerId = poViewModel.ManufacturerId;
-            actionobject.Status = poViewModel.Status;
-            actionobject.Trace = poViewModel.Trace;
-            actionobject.ConditionCode = poViewModel.ConditionCode;
+            //actionobject.Status = poViewModel.Status;
+            //actionobject.Trace = poViewModel.Trace;
+            actionobject.ConditionId = poViewModel.ConditionId;
             actionobject.isParent = poViewModel.isParent;
             actionobject.QuantityOrdered = poViewModel.QuantityOrdered;
             actionobject.UnitCost = poViewModel.UnitCost;
-            actionobject.DiscountCostPerUnit = poViewModel.DiscountCostPerUnit;
+            actionobject.DiscountCostPerUnit = poViewModel.DiscountAmount;
             actionobject.DiscountPerUnit = poViewModel.DiscountPerUnit;
             actionobject.ExtendedCost = poViewModel.ExtendedCost;
-            actionobject.TransactionalCurrencyId = poViewModel.TransactionalCurrencyId;
+            actionobject.TransactionalCurrencyId = poViewModel.ReportCurrencyId;
             actionobject.FunctionalCurrencyId = poViewModel.FunctionalCurrencyId;
             actionobject.ForeignExchangeRate = poViewModel.ForeignExchangeRate;
             actionobject.WorkOrderId = poViewModel.WorkOrderId;
             actionobject.RepairOrderId = poViewModel.RepairOrderId;
             actionobject.SalesOrderId = poViewModel.SalesOrderId;
-            actionobject.GeneralLedgerAccounId = poViewModel.GeneralLedgerAccounId;
+            actionobject.GeneralLedgerAccounId = poViewModel.GLAccounId;
             actionobject.Memo = poViewModel.Memo;
             actionobject.DiscountPerUnit = poViewModel.DiscountPerUnit;
 
@@ -745,7 +745,7 @@ namespace QuickApp.Pro.Controllers
             if (ModelState.IsValid)
             {
                 foreach (var poViewModel in poViewModels)
-                    foreach (var poPartSplit in poViewModel.PurchaseOrderPartSplits)
+                    foreach (var poPartSplit in poViewModel.POPartSplits)
                         if (_context.PurchaseOrderPart.Any(o => o.PurchaseOrderPartRecordId == poViewModel.PurchaseOrderPartRecordId))
 
                         {
