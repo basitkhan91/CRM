@@ -59,6 +59,11 @@ export class AssetDepConventionTypeComponent implements OnInit {
     private isDelete: boolean = false;
     codeName: string = "";
 
+    isEdit: boolean = false;
+    pageIndex: number = 0;
+    pageSize: number = 10;
+    totalPages: number;
+
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     /** DepConvension ctor */
@@ -101,6 +106,15 @@ export class AssetDepConventionTypeComponent implements OnInit {
             ];
             this.selectedData = this.selectedColumns
         });
+    }
+
+
+    changePage(event: { first: any; rows: number }) {
+        console.log(event);
+        const pageIndex = (event.first / event.rows);
+        // this.pageIndex = pageIndex;
+        this.pageSize = event.rows;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
     }
 
     private loadMasterCompanies() {

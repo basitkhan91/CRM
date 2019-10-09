@@ -168,6 +168,13 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(auditResult);
         }
+
+        [HttpGet("workscopehistory")]
+        public IActionResult GetWorkScopeHistory(long workScopeId)
+        {
+            var reult = _unitOfWork.WorkScope.GetWorkScopeHistory(workScopeId);
+            return Ok(reult);
+        }
     }
 
 

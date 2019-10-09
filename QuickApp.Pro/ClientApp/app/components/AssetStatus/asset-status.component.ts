@@ -62,6 +62,11 @@ export class AssetStatusComponent implements OnInit {
     codeName: string = "";
     allreasn: any[] = [];
     loadingIndicator: boolean;
+
+    isEdit: boolean = false;
+    pageIndex: number = 0;
+    pageSize: number = 10;
+    totalPages: number;
     displayedColumns = ['Code', 'Name', 'Memo'];
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -115,6 +120,15 @@ export class AssetStatusComponent implements OnInit {
             ];
             this.selectedData = this.selectedColumns
         });
+    }
+
+
+    changePage(event: { first: any; rows: number }) {
+        console.log(event);
+        const pageIndex = (event.first / event.rows);
+        // this.pageIndex = pageIndex;
+        this.pageSize = event.rows;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
     }
 
     private loadMasterCompanies() {
