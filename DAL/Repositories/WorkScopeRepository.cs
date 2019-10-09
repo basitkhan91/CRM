@@ -40,6 +40,19 @@ namespace DAL.Repositories
 
         }
 
+        public IEnumerable<WorkScopeAudit> GetWorkScopeHistory(long workScopeId)
+        {
+            try
+            {
+                return _appContext.WorkScopeAudit.Where(p => p.WorkScopeId == workScopeId).OrderByDescending(p => p.UpdatedDate).ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
     }

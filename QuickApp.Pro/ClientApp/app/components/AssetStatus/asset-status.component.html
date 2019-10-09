@@ -31,8 +31,8 @@
                         </div>
 
                         <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="assetStatusList" [metaKeySelection]="true" [totalRecords]="totalRecords" [rows]="10" [paginator]="true" [pageLinks]="3"
-                                 [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn"
-                                 [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
+                                 [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" (onPage)="changePage($event)" 
+                                 [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px" >
                             <ng-template pTemplate="caption">
 
                                 <div style="text-align: right;margin-left:-6px !important;">

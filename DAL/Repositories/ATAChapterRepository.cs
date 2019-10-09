@@ -1,14 +1,8 @@
-﻿using DAL.Repositories.Interfaces;
+﻿using DAL.Models;
+using DAL.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
-using Microsoft.EntityFrameworkCore;
-
-using System.Threading.Tasks;
-using DAL.Core;
-
 
 namespace DAL.Repositories
 {
@@ -68,6 +62,19 @@ namespace DAL.Repositories
                         }).ToList();
             return data;
             throw new NotImplementedException();
+        }
+
+        public IEnumerable<ATAChapterAudit> GetATAChapterHistory(long ataChapterId)
+        {
+            try
+            {
+                return _appContext.ATAChapterAudit.Where(p => p.ATAChapterId == ataChapterId).OrderByDescending(p => p.UpdatedDate).ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

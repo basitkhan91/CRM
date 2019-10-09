@@ -40,6 +40,20 @@ namespace DAL.Repositories
 
         }
 
+
+        public IEnumerable<ProvisionAudit> GetProvisionHistory(long provisionId)
+        {
+            try
+            {
+                return _appContext.ProvisionAudit.Where(p => p.ProvisionId == provisionId).OrderByDescending(p => p.UpdatedDate).ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
     }
