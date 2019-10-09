@@ -54,7 +54,7 @@
                             <ng-template pTemplate="body" let-rowData let-columns="columns">
                                 <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openEdit(rowData)">
                                     <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-                                        {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                                        {{col.field == 'workflowExpirationDate'?  (rowData[col.field] | date: 'MM/dd/yyyy') : rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                     </td>
 
                                     <td>
@@ -67,7 +67,7 @@
                                                 <i class="fa fa-eye"></i>
                                             </a>
                                         </span>
-                                        <span data-toggle="modal" data-target="#view-material-lists">
+                                        <span data-toggle="modal" data-target="#view-material-lists" (click)="onViewMaterialList(rowData)">
                                             <a data-toggle="tooltip" pTooltip="View Material Lists" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="">
                                                 <i class="fa fa-list"></i>
                                             </a>
@@ -116,7 +116,7 @@
         <div class="modal-content" *ngIf="sourceWorkFlow != undefined">
             <div class="modal-header">
                 <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-                <h4 class="modal-title">Work Flow Details of ACC{{ sourceWorkFlow.workflowId}} for PN-{{sourceWorkFlow.itemMaster.partNumber}} and Scope {{sourceWorkFlow.workScope.description}}</h4>
+                <h4 class="modal-title">Work Flow Details of {{ sourceWorkFlow.workOrderNumber}} for PN-{{sourceWorkFlow.itemMaster.partNumber}} and Scope {{sourceWorkFlow.workScope.description}}</h4>
             </div>
             <div class="modal-body">
                 <div class="card">
@@ -311,7 +311,7 @@
                 </div>
 
                 <p-accordion [multiple]="true" class="p-accordion-cstm">
-                    <p-accordionTab *ngFor="let task of addedTasks" header="{{task.Name}}" (click)="onAccordTabClick1()">
+                    <p-accordionTab *ngFor="let task of addedTasks" [selected]="task.selected" header="{{task.Name}}" (click)="onAccordTabClick1(task)">
                         <div *ngIf="task.publication.length > 0">
                             <h5 class="po-head">Publications</h5>
                             <div class="table-responsive">
@@ -332,7 +332,6 @@
                                             <th>Location</th>
                                             <th>Verified By</th>
                                             <th>Verified Date</th>
-                                            <th>Status</th>
                                             <th>Image</th>
                                         </tr>
                                     </thead>
@@ -625,32 +624,28 @@
                             </div>
                         </div>
                     </p-accordionTab>
-                    </p-accordion>
-                            <!--<p-accordion [multiple]="true" class="p-accordion-cstm">
-                                <p-accordionTab header="Assemble" [selected]="displayAccord1" (click)="onAccordTabClick1()">
-                                  
-                                    
-                                    
-                                    <h5>Total Cost for Assemble Action : $220.00</h5>
-                                </p-accordionTab>
-                               
-                            </p-accordion>-->
-                            
-                <!--<h5>Total Cost for the Work Flow : $660.00</h5>-->
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
-                        </div>
+                </p-accordion>
+                <!--<p-accordion [multiple]="true" class="p-accordion-cstm">
+                    <p-accordionTab header="Assemble" [selected]="displayAccord1" (click)="onAccordTabClick1()">
+                        <h5>Total Cost for Assemble Action : $220.00</h5>
+                    </p-accordionTab>
+                </p-accordion>-->
+
+                <h5>Total Cost for the Work Flow : $ {{Total}}</h5>
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
+            </div>
+        </div>
     </div>
 </div>
 
 <div class="modal fade bd-example-modal-lg" tabindex="-1" id="view-material-lists" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content">
+        <div class="modal-content" *ngIf="sourceWorkFlow != undefined">
             <div class="modal-header">
                 <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-                <h4 class="modal-title">Material list of Work Flow "ACC123" for PN "PN15245" and Scope "OVH"</h4>
+                <h4 class="modal-title">Material list of Work Flow "{{ sourceWorkFlow.workOrderNumber}}" for "PN{{sourceWorkFlow.itemMaster.partNumber}}" and Scope "{{sourceWorkFlow.workScope.description}}"</h4>
             </div>
             <div class="modal-body">
                 <div class="form-horizontal wf-popup-form">
@@ -659,17 +654,17 @@
                             <div class="form-row">
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Part No: </label>PN45854
+                                        <label>Part No: </label>PN{{sourceWorkFlow.itemMaster.partNumber}}
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Work Flow ID: </label>ACC123
+                                        <label>Work Flow ID: </label>{{sourceWorkFlow.workOrderNumber}}
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Scope: </label>OVH
+                                        <label>Scope: </label>{{sourceWorkFlow.workScope.description}}
                                     </div>
                                 </div>
                             </div>
@@ -681,7 +676,6 @@
                         <table class="table table-bordered table-fixed wfl-table-popup-cstm">
                             <thead>
                                 <tr>
-                                    <th style="width: 90px;"></th>
                                     <th>S.No</th>
                                     <th>PN</th>
                                     <th>Description</th>
@@ -698,490 +692,44 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td><h5 class="po-head-wfl">Assemble</h5></td>
-                                    <td colspan="13"></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>1.</td>
-                                    <td>3433</td>
-                                    <td>Description</td>
-                                    <td>New</td>
-                                    <td>Mandatory</td>
-                                    <td></td>
-                                    <td>2</td>
-                                    <td></td>
-                                    <td>23</td>
-                                    <td>23</td>
-                                    <td>23</td>
-                                    <td>Memo Description</td>
-                                    <td>
-                                        <div class="checkbox-cstm">
-                                            <label style="width: 50px;">
-                                                <input type="checkbox" disabled="disabled">
-                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td><b>Total</b></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>0</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-
-                                <tr>
-                                    <td><h5 class="po-head-wfl">Cleaning</h5></td>
-                                    <td colspan="13"></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>1.</td>
-                                    <td>3433</td>
-                                    <td>Description</td>
-                                    <td>New</td>
-                                    <td>Mandatory</td>
-                                    <td></td>
-                                    <td>2</td>
-                                    <td></td>
-                                    <td>23</td>
-                                    <td>23</td>
-                                    <td>23</td>
-                                    <td>Memo Description</td>
-                                    <td>
-                                        <div class="checkbox-cstm">
-                                            <label style="width: 50px;">
-                                                <input type="checkbox" disabled="disabled">
-                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td><b>Total</b></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>0</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-
-                                <tr>
-                                    <td><h5 class="po-head-wfl">DER</h5></td>
-                                    <td colspan="13"></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>1.</td>
-                                    <td>3433</td>
-                                    <td>Description</td>
-                                    <td>New</td>
-                                    <td>Mandatory</td>
-                                    <td></td>
-                                    <td>2</td>
-                                    <td></td>
-                                    <td>23</td>
-                                    <td>23</td>
-                                    <td>23</td>
-                                    <td>Memo Description</td>
-                                    <td>
-                                        <div class="checkbox-cstm">
-                                            <label style="width: 50px;">
-                                                <input type="checkbox" disabled="disabled">
-                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td><b>Total</b></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>0</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-
-                                <tr>
-                                    <td><h5 class="po-head-wfl">Disassemble</h5></td>
-                                    <td colspan="13"></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>1.</td>
-                                    <td>3433</td>
-                                    <td>Description</td>
-                                    <td>New</td>
-                                    <td>Mandatory</td>
-                                    <td></td>
-                                    <td>2</td>
-                                    <td></td>
-                                    <td>23</td>
-                                    <td>23</td>
-                                    <td>23</td>
-                                    <td>Memo Description</td>
-                                    <td>
-                                        <div class="checkbox-cstm">
-                                            <label style="width: 50px;">
-                                                <input type="checkbox" disabled="disabled">
-                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td><b>Total</b></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>0</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-
-                                <tr>
-                                    <td><h5 class="po-head-wfl">Evaluate</h5></td>
-                                    <td colspan="13"></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>1.</td>
-                                    <td>3433</td>
-                                    <td>Description</td>
-                                    <td>New</td>
-                                    <td>Mandatory</td>
-                                    <td></td>
-                                    <td>2</td>
-                                    <td></td>
-                                    <td>23</td>
-                                    <td>23</td>
-                                    <td>23</td>
-                                    <td>Memo Description</td>
-                                    <td>
-                                        <div class="checkbox-cstm">
-                                            <label style="width: 50px;">
-                                                <input type="checkbox" disabled="disabled">
-                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td><b>Total</b></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>0</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-
-                                <tr>
-                                    <td><h5 class="po-head-wfl">Inspect</h5></td>
-                                    <td colspan="13"></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>1.</td>
-                                    <td>3433</td>
-                                    <td>Description</td>
-                                    <td>New</td>
-                                    <td>Mandatory</td>
-                                    <td></td>
-                                    <td>2</td>
-                                    <td></td>
-                                    <td>23</td>
-                                    <td>23</td>
-                                    <td>23</td>
-                                    <td>Memo Description</td>
-                                    <td>
-                                        <div class="checkbox-cstm">
-                                            <label style="width: 50px;">
-                                                <input type="checkbox" disabled="disabled">
-                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td><b>Total</b></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>0</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-
-                                <tr>
-                                    <td><h5 class="po-head-wfl">Part Out</h5></td>
-                                    <td colspan="13"></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>1.</td>
-                                    <td>3433</td>
-                                    <td>Description</td>
-                                    <td>New</td>
-                                    <td>Mandatory</td>
-                                    <td></td>
-                                    <td>2</td>
-                                    <td></td>
-                                    <td>23</td>
-                                    <td>23</td>
-                                    <td>23</td>
-                                    <td>Memo Description</td>
-                                    <td>
-                                        <div class="checkbox-cstm">
-                                            <label style="width: 50px;">
-                                                <input type="checkbox" disabled="disabled">
-                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td><b>Total</b></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>0</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-
-                                <tr>
-                                    <td><h5 class="po-head-wfl">QC</h5></td>
-                                    <td colspan="13"></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>1.</td>
-                                    <td>3433</td>
-                                    <td>Description</td>
-                                    <td>New</td>
-                                    <td>Mandatory</td>
-                                    <td></td>
-                                    <td>2</td>
-                                    <td></td>
-                                    <td>23</td>
-                                    <td>23</td>
-                                    <td>23</td>
-                                    <td>Memo Description</td>
-                                    <td>
-                                        <div class="checkbox-cstm">
-                                            <label style="width: 50px;">
-                                                <input type="checkbox" disabled="disabled">
-                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td><b>Total</b></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>0</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-
-                                <tr>
-                                    <td><h5 class="po-head-wfl">Receive</h5></td>
-                                    <td colspan="13"></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>1.</td>
-                                    <td>3433</td>
-                                    <td>Description</td>
-                                    <td>New</td>
-                                    <td>Mandatory</td>
-                                    <td></td>
-                                    <td>2</td>
-                                    <td></td>
-                                    <td>23</td>
-                                    <td>23</td>
-                                    <td>23</td>
-                                    <td>Memo Description</td>
-                                    <td>
-                                        <div class="checkbox-cstm">
-                                            <label style="width: 50px;">
-                                                <input type="checkbox" disabled="disabled">
-                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td><b>Total</b></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>0</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-
-                                <tr>
-                                    <td><h5 class="po-head-wfl">Shipping</h5></td>
-                                    <td colspan="13"></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>1.</td>
-                                    <td>3433</td>
-                                    <td>Description</td>
-                                    <td>New</td>
-                                    <td>Mandatory</td>
-                                    <td></td>
-                                    <td>2</td>
-                                    <td></td>
-                                    <td>23</td>
-                                    <td>23</td>
-                                    <td>23</td>
-                                    <td>Memo Description</td>
-                                    <td>
-                                        <div class="checkbox-cstm">
-                                            <label style="width: 50px;">
-                                                <input type="checkbox" disabled="disabled">
-                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td><b>Total</b></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>0</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-
-                                <tr>
-                                    <td><h5 class="po-head-wfl">Teardown</h5></td>
-                                    <td colspan="13"></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>1.</td>
-                                    <td>3433</td>
-                                    <td>Description</td>
-                                    <td>New</td>
-                                    <td>Mandatory</td>
-                                    <td></td>
-                                    <td>2</td>
-                                    <td></td>
-                                    <td>23</td>
-                                    <td>23</td>
-                                    <td>23</td>
-                                    <td>Memo Description</td>
-                                    <td>
-                                        <div class="checkbox-cstm">
-                                            <label style="width: 50px;">
-                                                <input type="checkbox" disabled="disabled">
-                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td><b>Total</b></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>0</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-
+                                <ng-container *ngFor="let task of addedTasks">
+                                    <tr *ngIf="task.materialList.length > 0">
+                                        <td><h5 class="po-head-wfl">{{task.Name}}</h5></td>
+                                        <td colspan="13"></td>
+                                    </tr>
+                                    <tr  *ngFor="let material of task.materialList;let i = index">
+                                        <td>{{(i+1)}}</td>
+                                        <td>{{material.partNumber}}</td>
+                                        <td>{{material.partDescription}}</td>
+                                        <td>{{material.conditionName}}</td>
+                                        <td>{{material.mandatoryOrSupplementalName}}</td>
+                                        <td>{{material.itemClassificationName}}</td>
+                                        <td>{{material.quantity}}</td>
+                                        <td>{{material.uomName}}</td>
+                                        <td>{{material.unitCost}}</td>
+                                        <td>{{material.extendedCost}}</td>
+                                        <td>{{material.price}}</td>
+                                        <td>{{material.memo}}</td>
+                                        <td>
+                                            <input type="checkbox" disabled="disabled" [checked]="material.isDeferred" class="form-control names ui-autocomplete-input">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Total</b></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>{{task.materialTotalQty}}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>{{task.materialTotalExtendedCost}}</td>
+                                        <td>{{task.materialTotalPrice}}</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </ng-container>
                             </tbody>
                         </table>
                     </div>

@@ -8,5 +8,6 @@ namespace DAL.Repositories.Interfaces
     public interface IConditionRepository : IRepository<Condition>
     {
         IEnumerable<Condition> GetAllConditionData();
+        IEnumerable<DAL.Models.ConditionAudit > GetAuditDetails(long conditionId);
     }
 }

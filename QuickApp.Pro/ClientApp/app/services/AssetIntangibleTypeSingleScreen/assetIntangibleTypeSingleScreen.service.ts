@@ -13,7 +13,7 @@ export class AssetIntangibleTypeSingleScreenService {
     // get all Asset
     getAll() {
         return Observable.forkJoin(
-            this.assetIntangibleTypeSingleScreenEndpointService.getAllAssetIntangible<AssetIntangibleTypeSingleScreen[]>());
+            this.assetIntangibleTypeSingleScreenEndpointService.getAllAssetIntangible<any>());
     }
 
     getById(assetIntangibleTypeSingleId: number) {

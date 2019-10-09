@@ -11,7 +11,7 @@ namespace QuickApp.Pro.ViewModels
     public class UnitOfMeasureViewModel
     {
         public Int16 UnitOfMeasureId { get; set; }
-        public string Memo { get; set; }
+        public string Memo { get; set; } 
 
         public string Description { get; set; }
 
@@ -31,9 +31,10 @@ namespace QuickApp.Pro.ViewModels
 
         public MasterCompany MasterCompany { get; set; }
 
-        public bool? IsActive { get; set; }
+        public bool IsActive { get; set; }
 
-        public bool? IsDelete { get; set; }
+        public bool IsDeleted { get; set; }
+        public string UploadStatus { get; set; }
     }
 
     public class UnitOfMeasureViewModelValidator : AbstractValidator<UnitOfMeasureViewModel>

@@ -8,7 +8,8 @@ namespace DAL.Repositories.Interfaces
 {
   public interface  IAircraftType : IRepository<AircraftType>
     {
-        IEnumerable<AircraftType> getAircraftTypeData();
+        IEnumerable<AircraftType> getAircraftTypeData(); 
         IQueryable<AircraftType> GetPaginationData();
+        IEnumerable<AircraftTypeAudit> GetAircraftTypeHistory(long aircraftId);
     }
 }

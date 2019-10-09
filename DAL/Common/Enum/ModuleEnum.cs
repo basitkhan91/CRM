@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DAL.Common
+﻿namespace DAL.Common
 {
     public enum ModuleEnum
     {
@@ -10,6 +6,9 @@ namespace DAL.Common
         CustomerContact,
         Vendor,
         Employee,
-        Publication
+        Publication,
+        UnitOfMeasure,
+        Manufacturer,
+        ItemClassfication
     }
 }

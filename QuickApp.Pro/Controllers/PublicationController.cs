@@ -537,5 +537,13 @@ namespace QuickApp.Pro.Controllers
             return Ok();
 
         }
+
+        [HttpGet("getpublicationtypes")]
+        public IActionResult GetPublicationTypes()
+        {
+          var result=  _unitOfWork.Publication.GetPublicationTypes();
+            return Ok(result);
+
+        }
     }
 }

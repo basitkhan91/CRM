@@ -14138,6 +14138,9 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .cus-contact-table tr td {
     padding: 4px !important;
 }
+.p-autoComplete-ctsm.ng-dirty.ng-invalid > .ui-autocomplete > .ui-inputtext {
+    border-color: #212121 !important;
+}
 // .ro-grid-form-cstm .ng-invalid {
 //     border: 1px solid red;
 // }
@@ -14175,4 +14178,6 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .rounder-corners-cstm {
     border-radius: 5px !important
 }
-
+.view-Header {
+  color: #4298ff !important;
+}

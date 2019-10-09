@@ -4,14 +4,15 @@
         <div class="x_panel">
             <div class="x_content">
                 <!--<nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a routerLink="/">Dashboard</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Employee Setup</li>
-                    </ol>
-                </nav>-->
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a routerLink="/">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Employee Setup</li>
+                </ol>
+            </nav>-->
                 <h4 class="page-heading clr-green">Employee Setup</h4>
                 <div class="clear"></div><br>
                 <form action="#" method="post" #empform="ngForm" class="form-horizontal add-custustomer" novalidate>
+                    <!-- sourceAction | json-->
                     <div class="employee-setup">
                         <div class="col-12 employer-block">
                             <div class="col-12">
@@ -26,19 +27,18 @@
                                                         <div class="col-sm-7">
                                                             <div class="inner-addon right-addon inline-block">
                                                                 <!--<p-autoComplete #sourceEmployee="ngModel" [(ngModel)]="sourceEmployee.firstName" (onKeyUp)=onKeyUpFirstNames($event) (onSelect)="onSelectFirstName($event)" [ngModelOptions]="{standalone: true}" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
-                    [minLength]="1" [dropdown]="true" required
-                    [class.is-invalid]="sourceEmployee.invalid && sourceEmployee.touched"
-                    pattern="^[a-zA-Z][a-zA-Z ]+"
-                    minlength="3">
-        <ng-template let-firstName pTemplate="item">
-            <div class="ui-helper-clearfix">{{firstName}}</div>
-        </ng-template>
-    </p-autoComplete>-->
-                                                                <p-autoComplete #sourceEmpFirst="ngModel" [(ngModel)]="sourceEmpFirst.firstName" (onKeyUp)=onKeyUpFirstNames($event) (onSelect)="onSelectFirstName($event)" [ngModelOptions]="{standalone: true}" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
+                                        [minLength]="1" [dropdown]="true" required
+                                        [class.is-invalid]="sourceEmployee.invalid && sourceEmployee.touched"
+                                        pattern="^[a-zA-Z][a-zA-Z ]+"
+                                        minlength="3">
+                            <ng-template let-firstName pTemplate="item">
+                                <div class="ui-helper-clearfix">{{firstName}}</div>
+                            </ng-template>
+                        </p-autoComplete>-->
+                                                                <p-autoComplete #sourceEmpFirst="ngModel" [(ngModel)]="sourceEmployee.firstName" name="firstName" (onKeyUp)=onKeyUpFirstNames($event) (onSelect)="onSelectFirstName($event)" [ngModelOptions]="{standalone: true}" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
                                                                                 [minLength]="3" [dropdown]="true" required
                                                                                 [class.is-invalid]="sourceEmpFirst.invalid && sourceEmpFirst.touched"
-                                                                                pattern="^[a-zA-Z0-9][a-zA-Z0-9 ]+"
-                                                                                >
+                                                                                pattern="^[a-zA-Z0-9][a-zA-Z0-9 ]+">
                                                                     <ng-template let-firstName pTemplate="item">
                                                                         <div class="ui-helper-clearfix">{{firstName}}</div>
                                                                     </ng-template>
@@ -50,8 +50,8 @@
                                                                 </div>
 
                                                                 <!--<div *ngIf="sourceEmployee.firstName.errors.required">
-                                                                            First Name is required.
-                                                            </div>-->
+                                        First Name is required.
+                        </div>-->
                                                             </div>
                                                             <div *ngIf="disableSaveFirstName" style="color:red">Already Exist</div>
                                                         </div>
@@ -74,7 +74,7 @@
                                                         <label class="control-label col-sm-4">Last Name<span style="color:red">*</span>: </label>
                                                         <div class="col-sm-7">
                                                             <div class="inner-addon right-addon inline-block">
-                                                                <p-autoComplete #sourceEmpLast="ngModel" [(ngModel)]="sourceEmpLast.lastName" (onKeyUp)=onKeyUpLastNames($event) (onSelect)="onSelectLastName($event)" [ngModelOptions]="{standalone: true}" [suggestions]="lastNameCollection" (completeMethod)="filterlastName($event)" [size]="30"
+                                                                <p-autoComplete #sourceEmpLast="ngModel" [(ngModel)]="sourceEmployee.lastName" (onKeyUp)=onKeyUpLastNames($event) (onSelect)="onSelectLastName($event)" [ngModelOptions]="{standalone: true}" [suggestions]="lastNameCollection" (completeMethod)="filterlastName($event)" [size]="30"
                                                                                 [minLength]="3" [dropdown]="true" required
                                                                                 [class.is-invalid]="sourceEmpLast.invalid && sourceEmpLast.touched"
                                                                                 pattern="^[a-zA-Z0-9][a-zA-Z0-9 ]+">
@@ -96,7 +96,7 @@
                                                     <div class="form-group col-sm-12">
                                                         <label class="control-label col-sm-4">Emp ID<span style="color:red">*</span></label>
                                                         <div class="col-sm-7">
-                                                            <input #sourceEmpID="ngModel" class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmpID.employeeId" readonly required
+                                                            <input #sourceEmpID="ngModel" class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeId" readonly required
                                                                    [class.is-invalid]="sourceEmpID.invalid && sourceEmpID.touched"
                                                                    pattern="^[a-zA-Z0-9][a-zA-Z0-9 ]+">
                                                         </div>
@@ -111,7 +111,7 @@
                                                         <div class="col-sm-7">
                                                             <input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeIdAsPerPayroll">
                                                         </div>
-                                                        
+
 
                                                     </div>
                                                     <div class="form-group col-sm-12">
@@ -127,7 +127,7 @@
                                                         </div>
                                                         <div *ngIf="sourceJobTitle.errors && (sourceJobTitle.valid || sourceJobTitle.touched)">
                                                             <small class="text-danger" *ngIf="sourceJobTitle.errors.required">Job Title is required</small>
-                                                            
+
                                                         </div>
                                                     </div>
 
@@ -150,7 +150,7 @@
                                                         <label class="control-label col-sm-4">Job Type<span style="color:red">*</span></label>
                                                         <div class="inner-addon col-sm-7 inline-block display-flex">
                                                             <select #sourceJobType="ngModel" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceJobType.JobTitleId" required
-                                                                    [class.is-invalid]="sourceJobTitle.invalid && sourceJobTitle.touched"
+                                                                    [class.is-invalid]="sourceJobType.invalid && sourceJobType.touched"
                                                                     pattern="^[a-zA-Z0-9][a-zA-Z0-9 ]+">
                                                                 <option *ngFor="let employeeName of allEmployeeExpertiseInfo" [ngValue]="employeeName.employeeExpertiseId">{{employeeName.description}}</option>
                                                             </select>
@@ -171,7 +171,7 @@
                                                 </div>
                                                 <div class="col-sm-6 w400">
                                                     <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Company<span style="color:red">*</span></label>
+                                                        <label class="form-group control-label col-sm-4">Company<span style="color:red">*</span></label>
                                                         <div class="col-sm-7">
                                                             <select #sourceCompany="ngModel" [(ngModel)]="sourceCompany.companyId" [ngModelOptions]="{standalone: true}" (change)="getBUList(sourceCompany.companyId)" required
                                                                     [class.is-invalid]="sourceCompany.invalid && sourceCompany.touched"
@@ -292,9 +292,9 @@
                                                     <label class="control-label col-sm-4">Shift</label>
                                                     <div class="col-sm-7">
                                                         <!--<label class="radio-inline"><input type="radio" name="shift" id="shiftsingle" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.singleShift">Single Shift</label>
-                                                        <label class="radio-inline"><input type="radio" name="shift" id="shiftmultiple" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.multiShift">Multiple shifts</label>-->
-                                                        <label class="radio-inline"><input type="radio" name="shift" id="shiftsingle" value="singleShift" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.singleShift" (click)="singleClick('single')">Single Shift</label>
-                                                        <label class="radio-inline"><input type="radio" name="shift" id="shiftmultiple" value="multiShift" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.multiShift" (click)="singleClick('multiple')">Multiple shifts</label>
+                <label class="radio-inline"><input type="radio" name="shift" id="shiftmultiple" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.multiShift">Multiple shifts</label>-->
+                                                        <label class="radio-inline"><input type="radio" name="shift" id="shiftsingle" value="singleShift" (change)="handlePayType($event)" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.singleShift" (click)="singleClick('single')">Single Shift</label>
+                                                        <label class="radio-inline"><input type="radio" name="shift" id="shiftmultiple" value="multiShift" (change)="handlePayType($event)" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.multiShift" (click)="singleClick('multiple')">Multiple shifts</label>
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-sm-12 shiftmultiple-block" *ngIf="showMultiple">
@@ -332,8 +332,8 @@
                                                 <div class="form-group col-sm-12">
                                                     <label class="control-label col-sm-4">Pay Type<span style="color:red">*</span></label>
                                                     <div class="col-sm-7">
-                                                        <label class="radio-inline"><input type="radio" name="paytype" id="hourpay" value="Hourly"  [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.hourlypayType" (click)="paytypeclick('hourly')">Hourly</label>
-                                                        <label class="radio-inline"><input type="radio" name="paytype" id="salarypay" value="Yearly" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.yearlypayType" (click)="paytypeclick('yearly')">Yearly</label>
+                                                        <label class="radio-inline"><input type="radio" (change)="handlePayType($event)" name="paytype" id="hourpay" value="Hourly" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.hourlypayType" (click)="paytypeclick('hourly')">Hourly</label>
+                                                        <label class="radio-inline"><input type="radio" name="paytype" id="salarypay" (change)="handlePayType($event)" value="Yearly" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.yearlypayType" (click)="paytypeclick('yearly')">Yearly</label>
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-sm-12 hourpay-block" *ngIf="hourly">
@@ -356,8 +356,8 @@
                                                     </div>
                                                     <div class="col-sm-2">
                                                         <!--<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeLeaveTypeId">
-                                                            <option *ngFor="let employeeName of allLeaves" [ngValue]="employeeName.employeeLeaveTypeId">{{employeeName.description}}</option>
-                                                        </select>-->
+                    <option *ngFor="let employeeName of allLeaves" [ngValue]="employeeName.employeeLeaveTypeId">{{employeeName.description}}</option>
+                </select>-->
                                                         <a href="#" data-toggle="modal" data-target="#addJobTitle" class="add-icon" (click)="openLeaveType(contentleave)"><i class="fa fa-plus"></i></a>
                                                     </div>
 
@@ -370,7 +370,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Supervisor Name<span style="color:red">*</span></label>
+                                                    <label class="control-label col-sm-4">Supervisor Name</label>
                                                     <div class="inner-addon col-sm-7 inline-block display-flex">
                                                         <p-autoComplete [(ngModel)]="sourceEmployee.supervisorName" [ngModelOptions]="{standalone: true}" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
                                                                         [minLength]="1" [dropdown]="true">
@@ -387,7 +387,8 @@
                                             </div>
                                             <div class="clear"></div>
                                             <hr class="hr-light-grey" />
-                                            <button type="button" class="btn btn-success pull-right submit-btn" [disabled]="disableSaveFirstName || disableSaveMiddleName || disableSaveLastName" (click)="editItemAndCloseModel()">Save</button>
+                                            <!--<button type="button" (click)="onSubmit()" class="btn btn-success pull-right submit-btn">Save</button>-->
+                                            <!--<button type="button" class="btn btn-success pull-right submit-btn" [disabled]="disableSaveFirstName || disableSaveMiddleName || disableSaveLastName" (click)="editItemAndCloseModel()">Save</button>-->
 
 
                                         </div>
@@ -581,7 +582,8 @@
 
 
         </div>
-        <button type="button" class="btn btn-success pull-right submit-btn" (click)="nextClick()">Next</button>
+        <!-- <button type="button" class="btn btn-success pull-right submit-btn" (click)="nextClick()">Next</button>-->
+        <button type="button" class="btn btn-success pull-right submit-btn" (click)="onSubmit()">Save & Next</button>
     </div>
 
 </div>
@@ -654,7 +656,7 @@
                 <div class="clear"></div>
             </div>
 
-
+            
             <div class="modal-footer">
 
                 <button class="btn btn-success" [disabled]="disableJobTitle">Save</button>

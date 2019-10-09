@@ -103,10 +103,10 @@ export class EquipmentCreateComponent implements OnInit, OnChanges {
 
             if (anyEquipment.length > 1) {
                 equipment.assetId = "";
-                equipment.partNumber = "";
+                equipment.partNumber = "Select";
                 equipment.assetDescription = "";
                 equipment.assetTypeId = "";
-                
+                event = "";
                 this.alertService.showMessage("Workflow", "Asset Id is already in use in Equipment List", MessageSeverity.error);
             }
             else {
@@ -129,6 +129,15 @@ export class EquipmentCreateComponent implements OnInit, OnChanges {
         this.itemclaColl = [];
         if (this.allPartnumbersInfo) {
             if (this.allPartnumbersInfo.length > 0) {
+                this.partCollection.push("Select");
+
+                this.itemclaColl.push([{
+                    "assetRecordId": "",
+                    "assetId": "Select",
+                    "assetTypeId": "",
+                    "assetTypeName": "",
+                    "description": ""
+                }]);
 
                 for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
                     let assetId = this.allPartnumbersInfo[i].assetId;

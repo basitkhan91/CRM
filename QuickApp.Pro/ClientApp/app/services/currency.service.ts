@@ -40,10 +40,10 @@ export class CurrencyService {
         return Observable.forkJoin(
             this.currencyEndpoint.getCurrencyEndpoint<Currency[]>());
     }
-    newAddcurrency(action: Currency) {
+    newAddcurrency(action: any) {
         return this.currencyEndpoint.getNewCurrencyEndpoint<Currency>(action);
     }
-    updatecurrency(action: Currency) {
+    updatecurrency(action: any) {
         return this.currencyEndpoint.getUpdatecurrencyEndpoint(action, action.currencyId);
     }
     deletecurrency(actionId: number) {

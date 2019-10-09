@@ -241,7 +241,7 @@ namespace DAL
         public DbSet<MaterialMandatory> MaterialMandatories { get; set; }
         public DbSet<MaterialUOM> MaterialUOMs { get; set; }
 
-        public DbSet<PublicationType> PublicationTypes { get; set; }
+        public DbSet<PublicationType> PublicationType { get; set; }
         public DbSet<PublicationModel> PublicationModels { get; set; }
         public DbSet<PublicationStatus> PublicationStatuses { get; set; }
         public DbSet<ExclusionEstimatedOccurance> ExclusionEstimatedOccurances { get; set; }
@@ -274,6 +274,7 @@ namespace DAL
         public DbSet<AssetDisposalType> AssetDisposalType { get; set; }
         public DbSet<AssetDepreciationIntervalType> AssetDepreciationIntervalType { get; set; }
         public DbSet<AssetDepConventionType> AssetDepConventionType { get; set; }
+        public DbSet<AssetDepConvention> AssetDepConvention { get; set; }
         public DbSet<AssetIntangibleTypeSingleScreen> AssetIntangibleTypeSingleScreen { get; set; }
 
         public DbSet<AssetType> AssetType { get; set; }
@@ -387,6 +388,8 @@ namespace DAL
         public DbSet<WorkOrderAddress> WorkOrderAddress { get; set; }
         public DbSet<WorkOrderQuote> WorkOrderQuote { get; set; }
         public DbSet<WorkOrderFreight> WorkOrderFreight { get; set; }
+        public DbSet<PublicationTypeAudit> PublicationTypeAudit { get; set; }
+        
 
 
         public DbSet<AssetIntangibleAttributeType> AssetIntangibleAttributeType { get; set; }

@@ -19,5 +19,6 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<AircraftModel> GetAllAircraftModel();
 
         new IQueryable<AircraftModel> GetPaginationData();
+        IEnumerable<AircraftModelAudit> GetAircraftModelHistory(long aircraftModelId); 
     }
 }

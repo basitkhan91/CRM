@@ -3,10 +3,10 @@
 export class DepriciationMethod {
     constructor(masterCompany?: MasterCompany,
         assetDepreciationMethodId?: number,
-        assetDepreciationMethodName?: string,
-        assetDepreciationBasis?: string,
-        assetDepreciationMemo?: string,
-        assetDepreciationId?: string,
+        Code?: string,
+        Name?: string,        
+        DepreciationMethod?: string,
+        Memo?: string,
         masterCompanyId?: number,
         createdBy?: string,
         updatedBy?: string,
@@ -15,10 +15,10 @@ export class DepriciationMethod {
         isDelete?: boolean,
         isActive?: boolean) {
         this.assetDepreciationMethodId = assetDepreciationMethodId;
-        this.assetDepreciationMethodName = assetDepreciationMethodName;
-        this.assetDepreciationBasis = assetDepreciationBasis;
-        this.assetDepreciationMemo = assetDepreciationMemo;
-        this.assetDepreciationId = assetDepreciationId;
+        this.code = Code;
+        this.name = Name;
+        this.depreciationMethod = DepreciationMethod;
+        this.memo = Memo;
         this.masterCompanyId = masterCompanyId;
         this.createdBy = createdBy;
         this.updatedBy = updatedBy;
@@ -28,11 +28,11 @@ export class DepriciationMethod {
         this.isActive = isActive;
     }
 
-    public assetDepreciationMethodId: number;
-    public assetDepreciationMethodName: string;
-    public assetDepreciationBasis: string;
-    public assetDepreciationMemo: string;
-    public assetDepreciationId: string;
+    public assetDepreciationMethodId: number;    
+    public code: string;
+    public name: string;
+    public depreciationMethod: string;
+    public memo: string;
     public masterCompanyId: number;
     public createdBy: string;
     public updatedBy: string;

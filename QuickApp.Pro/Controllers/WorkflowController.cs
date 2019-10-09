@@ -1,27 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using DAL;
+﻿using DAL;
+using System;
 using DAL.Models;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using QuickApp.Pro.Helpers;
-using QuickApp.Pro.ViewModels;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using System.Collections.Generic;
 
 namespace QuickApp.Pro.Controllers
 {
 
     [Route("api/[controller]")]
-    //[ApiController]
     public class WorkflowController : ControllerBase
     {
         private IUnitOfWork UnitOfWork;
         private readonly ApplicationDbContext _context;
-
+        private int masterCompanyId = 1;
+        private string userName = "admin";
 
         public WorkflowController(IUnitOfWork _unitOfWork, ApplicationDbContext context)
         {
@@ -59,13 +52,24 @@ namespace QuickApp.Pro.Controllers
 
                 if (workFlow.Charges != null && workFlow.Charges.Count > 0)
                 {
+
                     var currentIds = workFlow.Charges.Select(x => x.WorkflowChargesListId).ToList();
                     List<WorkflowChargesList> itemsToRemove = new List<WorkflowChargesList>();
 
+                    workFlow.Charges.ForEach(x =>
+                    {
+                        x.MasterCompanyId = masterCompanyId;
+                        x.CreatedBy = userName;
+                        x.CreatedDate = DateTime.Now;
+                        x.UpdatedBy = userName;
+                        x.UpdatedDate = DateTime.Now;
+                    });
+
                     if (workFlow.WorkflowId > 0)
                     {
+
                         itemsToRemove = UnitOfWork.Repository<WorkflowChargesList>()
-                        .Find(x => x.WorkflowId == workFlow.Charges.FirstOrDefault().WorkflowId &&
+                        .Find(x => x.WorkflowId == workFlow.WorkflowId &&
                         x.IsDelete == false && !currentIds.Contains(x.WorkflowChargesListId)
                         ).ToList();
 
@@ -75,14 +79,9 @@ namespace QuickApp.Pro.Controllers
                         }
 
                         workFlow.Charges.AddRange(itemsToRemove);
+
                     }
 
-                    foreach (var charge in workFlow.Charges)
-                    {
-                        charge.CreatedDate = DateTime.Now;
-                        charge.CreatedBy = "admin";
-                        charge.MasterCompanyId = 1;
-                    }
                 }
                 else
                 {
@@ -93,10 +92,12 @@ namespace QuickApp.Pro.Controllers
                                                 x.IsDelete == false
                                             ).ToList();
 
-                        foreach (var item in workFlow.Charges)
+                        workFlow.Charges.ForEach(x =>
                         {
-                            item.IsDelete = true;
-                        }
+                            x.UpdatedBy = userName;
+                            x.UpdatedDate = DateTime.Now;
+                            x.IsDelete = true;
+                        });
                     }
                 }
 
@@ -105,10 +106,19 @@ namespace QuickApp.Pro.Controllers
                     var currentIds = workFlow.Directions.Select(x => x.WorkflowDirectionId).ToList();
                     List<WorkFlowDirection> itemsToRemove = new List<WorkFlowDirection>();
 
+                    workFlow.Directions.ForEach(x =>
+                    {
+                        x.MasterCompanyId = masterCompanyId;
+                        x.CreatedBy = userName;
+                        x.CreatedDate = DateTime.Now;
+                        x.UpdatedBy = userName;
+                        x.UpdaedDate = DateTime.Now;
+                    });
+
                     if (workFlow.WorkflowId > 0)
                     {
                         itemsToRemove = UnitOfWork.Repository<WorkFlowDirection>()
-                        .Find(x => x.WorkflowId == workFlow.Directions.FirstOrDefault().WorkflowId &&
+                        .Find(x => x.WorkflowId == workFlow.WorkflowId &&
                         x.IsDelete == false && !currentIds.Contains(x.WorkflowDirectionId)
                         ).ToList();
 
@@ -116,15 +126,7 @@ namespace QuickApp.Pro.Controllers
                         {
                             item.IsDelete = true;
                         }
-
                         workFlow.Directions.AddRange(itemsToRemove);
-                    }
-
-                    foreach (var item in workFlow.Directions)
-                    {
-                        item.CreatedDate = DateTime.Now;
-                        item.CreatedBy = "admin";
-                        item.MasterCompanyId = 1;
                     }
                 }
                 else
@@ -136,10 +138,12 @@ namespace QuickApp.Pro.Controllers
                                             && x.IsDelete == false
                                             ).ToList();
 
-                        foreach (var item in workFlow.Directions)
+                        workFlow.Directions.ForEach(x =>
                         {
-                            item.IsDelete = true;
-                        }
+                            x.UpdatedBy = userName;
+                            x.UpdaedDate = DateTime.Now;
+                            x.IsDelete = true;
+                        });
                     }
                 }
 
@@ -148,10 +152,19 @@ namespace QuickApp.Pro.Controllers
                     var currentIds = workFlow.Equipments.Select(x => x.WorkflowEquipmentListId).ToList();
                     List<WorkflowEquipmentList> itemsToRemove = new List<WorkflowEquipmentList>();
 
+                    workFlow.Equipments.ForEach(x =>
+                    {
+                        x.MasterCompanyId = masterCompanyId;
+                        x.CreatedBy = userName;
+                        x.CreatedDate = DateTime.Now;
+                        x.UpdatedBy = userName;
+                        x.UpdatedDate = DateTime.Now;
+                    });
+
                     if (workFlow.WorkflowId > 0)
                     {
                         itemsToRemove = UnitOfWork.Repository<WorkflowEquipmentList>()
-                        .Find(x => x.WorkflowId == workFlow.Equipments.FirstOrDefault().WorkflowId &&
+                        .Find(x => x.WorkflowId == workFlow.WorkflowId &&
                         x.IsDelete == false && !currentIds.Contains(x.WorkflowEquipmentListId)
                         ).ToList();
 
@@ -159,17 +172,8 @@ namespace QuickApp.Pro.Controllers
                         {
                             item.IsDelete = true;
                         }
-
                         workFlow.Equipments.AddRange(itemsToRemove);
                     }
-
-                    foreach (var item in workFlow.Equipments)
-                    {
-                        item.CreatedDate = DateTime.Now;
-                        item.CreatedBy = "admin";
-                        item.MasterCompanyId = 1;
-                    }
-
                 }
                 else
                 {
@@ -179,11 +183,12 @@ namespace QuickApp.Pro.Controllers
                                             .Find(x => x.WorkflowId == workFlow.WorkflowId
                                                 && x.IsDelete == false
                                             ).ToList();
-
-                        foreach (var item in workFlow.Equipments)
+                        workFlow.Equipments.ForEach(x =>
                         {
-                            item.IsDelete = true;
-                        }
+                            x.UpdatedBy = userName;
+                            x.UpdatedDate = DateTime.Now;
+                            x.IsDelete = true;
+                        });
                     }
                 }
 
@@ -192,10 +197,19 @@ namespace QuickApp.Pro.Controllers
                     var currentIds = workFlow.Exclusions.Select(x => x.WorkflowExclusionId).ToList();
                     List<WorkFlowExclusion> itemsToRemove = new List<WorkFlowExclusion>();
 
+                    workFlow.Exclusions.ForEach(x =>
+                    {
+                        x.MasterCompanyId = masterCompanyId;
+                        x.CreatedBy = userName;
+                        x.CreatedDate = DateTime.Now;
+                        x.UpdatedBy = userName;
+                        x.UpdatedDate = DateTime.Now;
+                    });
+
                     if (workFlow.WorkflowId > 0)
                     {
                         itemsToRemove = UnitOfWork.Repository<WorkFlowExclusion>()
-                        .Find(x => x.WorkflowId == workFlow.Exclusions.FirstOrDefault().WorkflowId &&
+                        .Find(x => x.WorkflowId == workFlow.WorkflowId &&
                         x.IsDelete == false && !currentIds.Contains(x.WorkflowExclusionId)
                         ).ToList();
 
@@ -207,13 +221,6 @@ namespace QuickApp.Pro.Controllers
                         workFlow.Exclusions.AddRange(itemsToRemove);
                     }
 
-                    foreach (var item in workFlow.Exclusions)
-                    {
-                        item.CreatedDate = DateTime.Now;
-                        item.CreatedBy = "admin";
-                        item.MasterCompanyId = 1;
-                    }
-
                 }
                 else
                 {
@@ -223,11 +230,12 @@ namespace QuickApp.Pro.Controllers
                                             .Find(x => x.WorkflowId == workFlow.WorkflowId
                                                 && x.IsDelete == false
                                             ).ToList();
-
-                        foreach (var item in workFlow.Exclusions)
-                        {
-                            item.IsDelete = true;
-                        }
+                        workFlow.Exclusions.ForEach(x =>
+                         {
+                             x.UpdatedBy = userName;
+                             x.UpdatedDate = DateTime.Now;
+                             x.IsDelete = true;
+                         });
                     }
                 }
 
@@ -236,10 +244,19 @@ namespace QuickApp.Pro.Controllers
                     var currentIds = workFlow.Expertise.Select(x => x.WorkflowExpertiseListId).ToList();
                     List<WorkflowExpertiseList> itemsToRemove = new List<WorkflowExpertiseList>();
 
+                    workFlow.Expertise.ForEach(x =>
+                    {
+                        x.MasterCompanyId = masterCompanyId;
+                        x.CreatedBy = userName;
+                        x.CreatedDate = DateTime.Now;
+                        x.UpdatedBy = userName;
+                        x.UpdatedDate = DateTime.Now;
+                    });
+
                     if (workFlow.WorkflowId > 0)
                     {
                         itemsToRemove = UnitOfWork.Repository<WorkflowExpertiseList>()
-                        .Find(x => x.WorkflowId == workFlow.Expertise.FirstOrDefault().WorkflowId &&
+                        .Find(x => x.WorkflowId == workFlow.WorkflowId &&
                         x.IsDelete == false && !currentIds.Contains(x.WorkflowExpertiseListId)
                         ).ToList();
 
@@ -250,28 +267,22 @@ namespace QuickApp.Pro.Controllers
 
                         workFlow.Expertise.AddRange(itemsToRemove);
                     }
-
-                    foreach (var item in workFlow.Expertise)
-                    {
-                        item.CreatedDate = DateTime.Now;
-                        item.CreatedBy = "admin";
-                        item.MasterCompanyId = 1;
-                    }
-
                 }
                 else
                 {
                     if (workFlow.WorkflowId > 0)
                     {
                         workFlow.Expertise = UnitOfWork.Repository<WorkflowExpertiseList>()
-                                            .Find(x => x.WorkflowId == workFlow.Expertise.FirstOrDefault().WorkflowId
+                                            .Find(x => x.WorkflowId == workFlow.WorkflowId
                                                 && x.IsDelete == false
                                             ).ToList();
 
-                        foreach (var item in workFlow.Expertise)
+                        workFlow.Expertise.ForEach(x =>
                         {
-                            item.IsDelete = true;
-                        }
+                            x.UpdatedBy = userName;
+                            x.UpdatedDate = DateTime.Now;
+                            x.IsDelete = true;
+                        });
                     }
                 }
 
@@ -280,10 +291,19 @@ namespace QuickApp.Pro.Controllers
                     var currentIds = workFlow.MaterialList.Select(x => x.WorkflowMaterialListId).ToList();
                     List<WorkflowMaterial> itemsToRemove = new List<WorkflowMaterial>();
 
+                    workFlow.MaterialList.ForEach(x =>
+                    {
+                        x.MasterCompanyId = masterCompanyId;
+                        x.CreatedBy = userName;
+                        x.CreatedDate = DateTime.Now;
+                        x.UpdatedBy = userName;
+                        x.UpdatedDate = DateTime.Now;
+                    });
+
                     if (workFlow.WorkflowId > 0)
                     {
                         itemsToRemove = UnitOfWork.Repository<WorkflowMaterial>()
-                        .Find(x => x.WorkflowId == workFlow.Expertise.FirstOrDefault().WorkflowId &&
+                        .Find(x => x.WorkflowId == workFlow.WorkflowId &&
                         x.IsDelete == false && !currentIds.Contains(x.WorkflowMaterialListId)
                         ).ToList();
 
@@ -293,13 +313,6 @@ namespace QuickApp.Pro.Controllers
                         }
 
                         workFlow.MaterialList.AddRange(itemsToRemove);
-                    }
-
-                    foreach (var item in workFlow.MaterialList)
-                    {
-                        item.CreatedDate = DateTime.Now;
-                        item.CreatedBy = "admin";
-                        item.MasterCompanyId = 1;
                     }
 
                 }
@@ -312,10 +325,12 @@ namespace QuickApp.Pro.Controllers
                                                 && x.IsDelete == false
                                             ).ToList();
 
-                        foreach (var item in workFlow.MaterialList)
+                        workFlow.MaterialList.ForEach(x =>
                         {
-                            item.IsDelete = true;
-                        }
+                            x.UpdatedBy = userName;
+                            x.UpdatedDate = DateTime.Now;
+                            x.IsDelete = true;
+                        });
                     }
                 }
 
@@ -324,10 +339,19 @@ namespace QuickApp.Pro.Controllers
                     var currentIds = workFlow.Measurements.Select(x => x.WorkflowMeasurementId).ToList();
                     List<WorkflowMeasurement> itemsToRemove = new List<WorkflowMeasurement>();
 
+                    workFlow.Measurements.ForEach(x =>
+                    {
+                        x.MasterCompanyId = masterCompanyId;
+                        x.CreatedBy = userName;
+                        x.CreatedDate = DateTime.Now;
+                        x.UpdatedBy = userName;
+                        x.UpdatedDate = DateTime.Now;
+                    });
+
                     if (workFlow.WorkflowId > 0)
                     {
                         itemsToRemove = UnitOfWork.Repository<WorkflowMeasurement>()
-                        .Find(x => x.WorkflowId == workFlow.Measurements.FirstOrDefault().WorkflowId &&
+                        .Find(x => x.WorkflowId == workFlow.WorkflowId &&
                         x.IsDelete == false && !currentIds.Contains(x.WorkflowMeasurementId)
                         ).ToList();
 
@@ -335,17 +359,8 @@ namespace QuickApp.Pro.Controllers
                         {
                             item.IsDelete = true;
                         }
-
                         workFlow.Measurements.AddRange(itemsToRemove);
                     }
-
-                    foreach (var item in workFlow.Measurements)
-                    {
-                        item.CreatedDate = DateTime.Now;
-                        item.CreatedBy = "admin";
-                        item.MasterCompanyId = 1;
-                    }
-
                 }
                 else
                 {
@@ -355,11 +370,12 @@ namespace QuickApp.Pro.Controllers
                                             .Find(x => x.WorkflowId == workFlow.WorkflowId
                                                 && x.IsDelete == false
                                             ).ToList();
-
-                        foreach (var item in workFlow.Measurements)
+                        workFlow.Measurements.ForEach(x =>
                         {
-                            item.IsDelete = true;
-                        }
+                            x.UpdatedBy = userName;
+                            x.UpdatedDate = DateTime.Now;
+                            x.IsDelete = true;
+                        });
                     }
                 }
 
@@ -368,19 +384,28 @@ namespace QuickApp.Pro.Controllers
                 {
                     var currentids = workFlow.Publication.Select(x => x.Id).ToList();
 
-                    var itemsToRemove = UnitOfWork.Repository<Publications>()
-                        .Find(x => x.WorkflowId == workFlow.Publication.FirstOrDefault().WorkflowId
-                        && x.TaskId == workFlow.Publication.FirstOrDefault().TaskId
-                        && !currentids.Contains(x.Id)
-                        && x.IsDeleted == false
-                        );
-
-                    foreach (var publication in itemsToRemove)
+                    workFlow.Publication.ForEach(x =>
                     {
-                        publication.IsDeleted = true;
-                    }
+                        x.MasterCompanyId = masterCompanyId;
+                        x.CreatedBy = userName;
+                        x.CreatedDate = DateTime.Now;
+                        x.UpdatedBy = userName;
+                        x.UpdatedDate = DateTime.Now;
+                    });
+                    if (workFlow.WorkflowId > 0)
+                    {
+                        var itemsToRemove = UnitOfWork.Repository<Publications>()
+                        .Find(x => x.WorkflowId == workFlow.WorkflowId
+                        && x.IsDeleted == false && !currentids.Contains(x.Id)
+                        ).ToList();
 
-                    workFlow.Publication.AddRange(itemsToRemove);
+                        foreach (var publication in itemsToRemove)
+                        {
+                            publication.IsDeleted = true;
+                        }
+
+                        workFlow.Publication.AddRange(itemsToRemove);
+                    }
 
                     List<long> ids = new List<long>();
                     foreach (var publication in workFlow.Publication)
@@ -403,10 +428,6 @@ namespace QuickApp.Pro.Controllers
                         {
                             UnitOfWork.Repository<WorkflowPublicationDashNumber>().Remove(item);
                         }
-
-                        publication.CreatedDate = DateTime.Now;
-                        publication.CreatedBy = "admin";
-                        publication.MasterCompanyId = 1;
                     }
                 }
                 else
@@ -418,33 +439,35 @@ namespace QuickApp.Pro.Controllers
                             && x.IsDeleted == false
                          ).ToList();
 
-                        foreach (var item in workFlow.Publication)
+                        workFlow.Publication.ForEach(x =>
                         {
-                            item.IsDeleted = true;
-                        }
+                            x.UpdatedBy = userName;
+                            x.UpdatedDate = DateTime.Now;
+                            x.IsDeleted = true;
+                        });
                     }
                 }
-                ////var existingWorkflow = UnitOfWork.Repository<Workflow>().Find(workflow => workflow.WorkflowId == workFlow.WorkflowId).FirstOrDefault();
-
                 if (workFlow != null && workFlow.WorkflowId > 0)
                 {
                     workFlow.CreatedDate = DateTime.Now;
                     workFlow.UpdatedDate = DateTime.Now;
-                    workFlow.CreatedBy = "admin";
-                    workFlow.UpdatedBy = "admin";
-                    workFlow.MasterCompanyId = 1;
+                    workFlow.CreatedBy = userName;
+                    workFlow.UpdatedBy = userName;
+                    workFlow.MasterCompanyId = masterCompanyId;
                     workFlow.IsActive = true;
+                    workFlow.WorkOrderNumber = "ACC" + workFlow.WorkflowId.ToString();
                     UnitOfWork.Repository<Workflow>().Update(workFlow);
                     UnitOfWork.SaveChanges();
                     return Ok(workFlow);
                 }
                 else
                 {
-                    workFlow.MasterCompanyId = 1;
                     workFlow.CreatedDate = DateTime.Now;
                     workFlow.UpdatedDate = DateTime.Now;
+                    workFlow.CreatedBy = userName;
+                    workFlow.UpdatedBy = userName;
+                    workFlow.MasterCompanyId = masterCompanyId;
                     workFlow.IsActive = true;
-                    workFlow.MasterCompanyId = 1;
                     UnitOfWork.Repository<Workflow>().Add(workFlow);
                     UnitOfWork.SaveChanges();
 
@@ -473,20 +496,22 @@ namespace QuickApp.Pro.Controllers
                 if (workFlow.WorkflowId > 0)
                 {
                     //update workflow header
-                    workFlow.CreatedDate = DateTime.Now;
+                    var wf = UnitOfWork.Repository<Workflow>().Get(workFlow.WorkflowId);
+                    workFlow.CreatedBy = wf.CreatedBy;
                     workFlow.UpdatedDate = DateTime.Now;
-                    workFlow.CreatedBy = "admin";
                     workFlow.UpdatedBy = "admin";
                     workFlow.MasterCompanyId = 1;
                     workFlow.IsActive = true;
+                    workFlow.WorkOrderNumber = "ACC" + workFlow.WorkflowId.ToString();
+                    wf = null;
                     UnitOfWork.Repository<Workflow>().Update(workFlow);
-
-
                 }
                 else
                 {
                     // add workflow header
-                    workFlow.MasterCompanyId = 1;
+                    workFlow.MasterCompanyId = masterCompanyId;
+                    workFlow.CreatedBy = userName;
+                    workFlow.UpdatedBy = userName;
                     workFlow.CreatedDate = DateTime.Now;
                     workFlow.UpdatedDate = DateTime.Now;
                     workFlow.IsActive = true;
@@ -541,6 +566,13 @@ namespace QuickApp.Pro.Controllers
                 return BadRequest(new Exception("Workflow does not exist."));
             }
             return Ok();
+        }
+
+        [HttpGet("getWorkFlowWithMaterialList/{id:int}")]
+        public IActionResult getWorkFlowWithMaterialList(int id)
+        {
+            var workFlow = UnitOfWork.workFlowRepositoryTest.getWorkFlowWithMaterialList(id);
+            return Ok(workFlow);
         }
 
         #region Private Methods

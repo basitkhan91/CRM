@@ -40,10 +40,14 @@ export class ConditionService {
         return Observable.forkJoin(
             this.conditionEndpoint.getConditionEndpoint<Condition[]>());
     }
-    newAddCondition(action: Condition) {
+    getAllConditionList() {
+        return Observable.forkJoin(
+            this.conditionEndpoint.getAllConditionEndpoint<any>());
+    }
+    newAddCondition(action) {
         return this.conditionEndpoint.getNewConditionEndpoint<Condition>(action);
     }
-    updateCondition(action: Condition) {
+    updateCondition(action) {
         return this.conditionEndpoint.getUpdateConditionEndpoint(action, action.conditionId);
     }
     deleteCondition(actionId: number) {

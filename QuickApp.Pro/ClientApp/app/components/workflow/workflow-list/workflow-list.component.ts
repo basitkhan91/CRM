@@ -105,13 +105,12 @@ export class WorkflowListComponent implements OnInit {
         );
 
         this.gridColumns = [
-            { field: 'status', header: 'Status' },
-            { field: 'workflowId', header: 'Work Flow ID' },
+            { field: 'workOrderNumber', header: 'Work Flow ID' },
             { field: 'partNumber', header: 'Part Number' },
             { field: 'partDescription', header: 'PN Description' },
             { field: 'description', header: 'Work Scope' },
             { field: 'name', header: 'Customer Name' },
-            { field: 'createdDate', header: 'Created Date' },
+            { field: 'workflowCreateDate', header: 'Created Date' },
             { field: 'workflowExpirationDate', header: 'Expiration Date' },
 
         ];
@@ -207,11 +206,12 @@ export class WorkflowListComponent implements OnInit {
         }
     }
 
-    onAccordTabClick1() {
-        this.displayAccord1 = true;
+    onAccordTabClick1(task: any) {
+        task.selected = !task.selected;
     }
 
-    onViewWFDetails(rowData) {
+    onViewWFDetails(rowData): void {
+        this.sourceWorkFlow = undefined;
         this.actionService.getWorkFlow(rowData.workflowId).subscribe(
             workflow => {
                 this.sourceWorkFlow = workflow[0];
@@ -219,8 +219,19 @@ export class WorkflowListComponent implements OnInit {
                 this.calculatePercentOfReplacement(workflow[0].costOfReplacement, workflow[0].percentageOfReplacement);
                 this.loadcustomerData();
                 this.loadCurrencyData();
-                //this.LoadChargesDropDownValues();
                 this.calculateTotalWorkFlowCost();
+                this.getAllTasks();
+            },
+            error => {
+            });
+    }
+
+    onViewMaterialList(rowData): void {
+        this.sourceWorkFlow = undefined;
+        this.actionService.getWorkFlowWithMaterialList(rowData.workflowId).subscribe(
+            workflow => {
+                this.sourceWorkFlow = workflow[0];
+                this.calculateWorkFlowTotalMaterialCost();
                 this.getAllTasks();
             },
             error => {
@@ -339,6 +350,17 @@ export class WorkflowListComponent implements OnInit {
         this.PercentBERThreshold = parseFloat((this.Total / this.sourceWorkFlow.berThresholdAmount).toFixed(2));
     }
 
+    private calculateWorkFlowTotalMaterialCost(): void {
+        this.MaterialCost = 0;
+
+        for (let material of this.sourceWorkFlow.materialList) {
+            this.MaterialCost += material.extendedCost != undefined ? material.extendedCost : 0;
+        }
+
+        this.MaterialCost = parseFloat((this.MaterialCost).toFixed(2));
+    }
+
+
     private getUniqueTask(): any[] {
         var tasks = [];
 
@@ -442,11 +464,11 @@ export class WorkflowListComponent implements OnInit {
 
         return tasks;
     }
-
+    55
     private getAllTasks(): void {
+
         this.actionService.getActions().subscribe(
             actions => {
-
                 this.tasks = [];
                 for (let attr of actions) {
                     this.tasks.push({ Id: attr.taskId, Name: attr.description, Description: "", Memo: "" })
@@ -532,9 +554,9 @@ export class WorkflowListComponent implements OnInit {
                     this.loadUOMData(x);
                     this.loadMaterialMandatoryData(x);
                     this.loadItemClassification(x);
-                    materialTotalQty += x.quantity == undefined && x.quantity == '' ? 0 : x.quantity;
-                    materialTotalExtendedCost += x.extendedCost == undefined && x.extendedCost == '' ? 0 : x.extendedCosts;
-                    materialTotalPrice += x.price == undefined && x.price == '' ? 0 : x.price;
+                    materialTotalQty += x.quantity == undefined || x.quantity == '' ? 0 : x.quantity;
+                    materialTotalExtendedCost += x.extendedCost == undefined || x.extendedCost == '' ? 0 : x.extendedCost;
+                    materialTotalPrice += x.price == undefined || x.price == '' ? 0 : x.price;
                 }
                 return x.taskId == task.Id;
             });

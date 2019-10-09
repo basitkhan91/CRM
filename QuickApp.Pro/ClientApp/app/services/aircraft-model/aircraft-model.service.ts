@@ -29,13 +29,13 @@ export class AircraftModelService {
     );
   }
 
-  add(aircraftModel: AircraftModel) {
+  add(aircraftModel) {
     return this.aircraftModelEndpoint.addAircraftModel<AircraftModel>(
       aircraftModel
     );
   }
 
-  update(aircraftModel: AircraftModel) {
+  update(aircraftModel) {
     return this.aircraftModelEndpoint.updateAircraftModel<AircraftModel>(
       aircraftModel
     );
