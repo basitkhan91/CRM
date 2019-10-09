@@ -31,9 +31,16 @@ export class CreatePOPartsList {
     ifSplitShip: boolean;
     purchaseOrderPartRecordId: number;
     companyId: number;
-    partBusinessUnitId: number;
-    partDivisionId: number;
-    partDepartmentId: number;
+    //partBusinessUnitId: number;
+    //partDivisionId: number;
+    //partDepartmentId: number;
+    parentBulist: any[];
+    parentDivisionlist: any[];
+    parentDepartmentlist: any[];
+    parentCompanyId: number;
+    parentbuId: number;
+    parentDivisionId: number;
+    parentDeptId: number;
 
     constructor() {
         this.purchaseOrderId = null;
@@ -67,9 +74,16 @@ export class CreatePOPartsList {
         this.ifSplitShip = false;
         this.purchaseOrderPartRecordId = null;
         this.companyId = null;
-        this.partBusinessUnitId = null;
-        this.partDivisionId = null;
-        this.partDepartmentId = null;
+        //this.partBusinessUnitId = null;
+        //this.partDivisionId = null;
+        //this.partDepartmentId = null;
+        this.parentBulist = [];
+        this.parentDivisionlist = [];
+        this.parentDepartmentlist = [];
+        this.parentCompanyId = 0;
+        this.parentbuId = 0;
+        this.parentDivisionId = 0;
+        this.parentDeptId = 0;
     }
 }
 
@@ -88,6 +102,13 @@ export class PartDetails {
         needByDate: Date;
         managementStructureId: number;
         masterCompanyId: number;
+        childBulist: any[];
+        childDivisionlist: any[];
+        childDepartmentlist: any[];
+        childCompanyId: number;
+        childbuId: number;
+        childDivisionId: number;
+        childDeptId: number;
 
         constructor() {
             this.purchaseOrderId = null;
@@ -104,6 +125,13 @@ export class PartDetails {
             this.needByDate = new Date();
             this.managementStructureId = null;
             this.masterCompanyId = 1;
+            this.childBulist = [];
+            this.childDivisionlist = [];
+            this.childDepartmentlist = [];
+            this.childCompanyId = 0;
+            this.childbuId = 0;
+            this.childDivisionId = 0;
+            this.childDeptId = 0;
         }   
 }
 
