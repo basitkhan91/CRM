@@ -53,28 +53,18 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        [HttpGet("auditHistoryById/{id}")]
-        [Produces(typeof(List<AuditHistory>))]
-        public IActionResult GetAuditHostoryById(long id)
+ 
+
+        [HttpGet("audits/{id}")]
+        [Produces(typeof(List<CreditTermsAudit>))]
+        public IActionResult AuditDetails(long id)
         {
-            var result = _unitOfWork.AuditHistory.GetAllHistory("CreditTerms", id); //.GetAllCustomersData();
 
-
-            try
-            {
-                var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
-
-                return Ok(resul1);
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
-
-
-
+            var result = _unitOfWork.CreditTerms.GetAuditDetails(id);
+            return Ok(result);
         }
+
+
         [HttpPost("Creditermspost")]
         //[Authorize(Authorization.Policies.ManageAllRolesPolicy)]
         public IActionResult CreateAction([FromBody] CreditTermsViewModel credittermviewmodel)
@@ -149,19 +139,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(id);
         }
 
-        [HttpGet("audits/{id}")]
-        public IActionResult AuditDetails(long id)
-        {
-            var audits = _unitOfWork.Repository<CreditTermsAudit>()
-                .Find(x => x.CreditTermsId == id)
-                .OrderByDescending(x => x.CreditTermsAuditId);
-
-            var auditResult = new List<AuditResult<CreditTermsAudit>>();
-
-            auditResult.Add(new AuditResult<CreditTermsAudit> { AreaName = "Credit terms ", Result = audits.ToList() });
-
-            return Ok(auditResult);
-        }
+       
         #region
         [HttpGet("getAll")]
         public IActionResult GetAll()
