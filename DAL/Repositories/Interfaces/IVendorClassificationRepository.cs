@@ -9,5 +9,6 @@ namespace DAL.Repositories.Interfaces
     {
         IEnumerable<VendorClassification> GetAllVendorClassificationData();
         IEnumerable<VendorClassification> GetAllActiveVendorClassificationData();
+        IEnumerable<DAL.Models.VendorClassificationAudit> GetVendorClassificationAuditDetails(long vendorClassificationId);
     }
 }

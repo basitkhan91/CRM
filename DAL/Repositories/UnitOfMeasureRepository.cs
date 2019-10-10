@@ -30,7 +30,7 @@ namespace DAL.Repositories
 
         public IQueryable<DAL.Models.UnitOfMeasure> GetPaginationData()
         {
-            return _appContext.UnitOfMeasure.Where(c => (c.IsDeleted == false || c.IsDeleted == null))
+            return _appContext.UnitOfMeasure.Where(c => (c.IsDeleted == false))
                 .OrderByDescending(c => c.UnitOfMeasureId).ToList().AsQueryable();
         }
 

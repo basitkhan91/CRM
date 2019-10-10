@@ -12,15 +12,17 @@ namespace DAL.Models
         public long VendorClassificationId { get; set; }
 
         public string ClassificationName { get; set; }
+        public string Memo { get; set; }
 
         [ForeignKey("MasterCompanyId")]
         public Int32 MasterCompanyId { get; set; }
-        public string Memo { get; set; }
 
-        public bool? IsActive { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsDeleted { get; set; }
+        [NotMapped]
+        public string UploadStatus { get; set; }
 
         public virtual MasterCompany MasterCompany { get; set; }
-        public bool? IsDelete { get; set; }
 
     }
 }

@@ -20,38 +20,40 @@ namespace DAL.Repositories
     {
         public VendorClassificationRepository(ApplicationDbContext context) : base(context)
         { }
-
-
+        
         public IEnumerable<VendorClassification> GetAllVendorClassificationData()
         {
             try
             {
-                var result = _appContext.VendorClassification.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null).OrderBy(c => c.ClassificationName).ToList();
+                var result = _appContext.VendorClassification.Include("MasterCompany").Where(c => c.IsDeleted == false).OrderBy(c => c.ClassificationName).ToList();
                 return result;
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
-
-
         }
+
         public IEnumerable<VendorClassification> GetAllActiveVendorClassificationData()
         {
             try
             {
-                var result = _appContext.VendorClassification.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null && c.IsActive==true).OrderBy(c => c.ClassificationName).ToList();
+                var result = _appContext.VendorClassification.Include("MasterCompany").Where(c => c.IsDeleted == false && c.IsActive==true).OrderBy(c => c.ClassificationName).ToList();
                 return result;
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
+        }
 
+
+        public IEnumerable<DAL.Models.VendorClassificationAudit> GetVendorClassificationAuditDetails(long vendorClassificationId)
+        {
+            return _appContext.VendorClassificationAudit.Where(c => c.VendorClassificationId == vendorClassificationId).OrderByDescending(p => p.UpdatedDate).ToList();
 
         }
+
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }
 }
