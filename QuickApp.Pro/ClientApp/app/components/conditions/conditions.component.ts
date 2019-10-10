@@ -35,7 +35,9 @@ export class ConditionsComponent implements OnInit {
     selectedColumns: any[];
     id: number;
     errorMessage: any;
-    isEditMode: boolean = false;
+
+    public isEditMode: boolean = false;
+
     private isDeleteMode: boolean = false;
     allComapnies: MasterCompany[];
     private isSaving: boolean;
