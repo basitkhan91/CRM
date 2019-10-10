@@ -585,7 +585,7 @@ namespace QuickApp.Pro.Controllers
                     DAL.Models.PurchaseOrder actionobject = new DAL.Models.PurchaseOrder();
                     poViewModel.PurchaseOrderNumber = Guid.NewGuid().ToString();
                     //vt.VendorTypeId = 1;
-                    poViewModel.MasterCompanyId =1;
+                    poViewModel.MasterCompanyId = 1;
 
                     MapPOVMToEntity(poViewModel, actionobject);
 
@@ -612,6 +612,7 @@ namespace QuickApp.Pro.Controllers
         {
             return _context.CreditTerms.Where(x => x.CreditTermsId == (int)creditTermsId).FirstOrDefault()?.Memo;
         }
+
 
         private void MapPOVMToEntity(PurchaseOrderViewModel poViewModel, PurchaseOrder actionobject)
         {
@@ -669,7 +670,21 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        private void MapPOPVMtoEntity(PurchaseOrderPartViewModel poViewModel, PurchaseOrderPartSplit poPartSplit, PurchaseOrderPart actionobject)
+        private void MapPOPSplitVMtoEntity(PurchaseOrderPartSplit poPartSplit, PurchaseOrderPartViewModel poViewModel, PurchaseOrderPart actionobject)
+        {
+            MapPOPVMtoEntity(poViewModel, actionobject);
+            actionobject.POPartSplitUserTypeId = poPartSplit.POPartSplitUserTypeId;
+            actionobject.POPartSplitUserId = poPartSplit.POPartSplitUserId;
+            actionobject.POPartSplitAddress1 = poPartSplit.POPartSplitAddress1;
+            actionobject.POPartSplitAddress2 = poPartSplit.POPartSplitAddress2;
+            actionobject.POPartSplitAddress3 = poPartSplit.POPartSplitAddress3;
+            actionobject.POPartSplitCity = poPartSplit.POPartSplitCity;
+            actionobject.POPartSplitCountry = poPartSplit.POPartSplitCountry;
+            actionobject.POPartSplitPostalCode = poPartSplit.POPartSplitPostalCode;
+            actionobject.ManagementStructureId = poPartSplit.ManagementStructureId;
+        }
+
+        private void MapPOPVMtoEntity(PurchaseOrderPartViewModel poViewModel, PurchaseOrderPart actionobject)
         {
             actionobject.PurchaseOrderId = poViewModel.PurchaseOrderId;
             actionobject.ItemMasterId = poViewModel.ItemMasterId;
@@ -688,7 +703,7 @@ namespace QuickApp.Pro.Controllers
             //actionobject.Status = poViewModel.Status;
             //actionobject.Trace = poViewModel.Trace;
             actionobject.ConditionId = poViewModel.ConditionId;
-            actionobject.isParent = poViewModel.isParent;
+            //actionobject.isParent = poViewModel.isParent;
             actionobject.QuantityOrdered = poViewModel.QuantityOrdered;
             actionobject.UnitCost = poViewModel.UnitCost;
             actionobject.DiscountCostPerUnit = poViewModel.DiscountAmount;
@@ -704,15 +719,7 @@ namespace QuickApp.Pro.Controllers
             actionobject.Memo = poViewModel.Memo;
             actionobject.DiscountPerUnit = poViewModel.DiscountPerUnit;
 
-            actionobject.POPartSplitUserTypeId = poPartSplit.POPartSplitUserTypeId;
-            actionobject.POPartSplitUserId = poPartSplit.POPartSplitUserId;
-            actionobject.POPartSplitAddress1 = poPartSplit.POPartSplitAddress1;
-            actionobject.POPartSplitAddress2 = poPartSplit.POPartSplitAddress2;
-            actionobject.POPartSplitAddress3 = poPartSplit.POPartSplitAddress3;
-            actionobject.POPartSplitCity = poPartSplit.POPartSplitCity;
-            actionobject.POPartSplitCountry = poPartSplit.POPartSplitCountry;
-            actionobject.POPartSplitPostalCode = poPartSplit.POPartSplitPostalCode;
-            actionobject.ManagementStructureId = poPartSplit.ManagementStructureId;
+            
             actionobject.UOMId = poViewModel.UOMId;
             actionobject.CreatedDate = poViewModel.CreatedDate;
             actionobject.UpdatedDate = DateTime.Now;
@@ -720,6 +727,8 @@ namespace QuickApp.Pro.Controllers
             actionobject.UpdatedBy = poViewModel.UpdatedBy;
             actionobject.IsActive = true;
         }
+
+
         private string IsNull(string val)
         {
             return string.IsNullOrEmpty(val) ? string.Empty : val;
@@ -745,36 +754,53 @@ namespace QuickApp.Pro.Controllers
             if (ModelState.IsValid)
             {
                 foreach (var poViewModel in poViewModels)
+                {
+                    var actionobject = _context.PurchaseOrderPart.Where(o => o.PurchaseOrderPartRecordId == poViewModel.PurchaseOrderPartRecordId).FirstOrDefault();
+                    if (actionobject !=null)
+                    {
+                        if (poViewModel == null)
+                            return BadRequest($"{nameof(poViewModel)} cannot be null");
+                        actionobject.isParent = poViewModel.isParent;
+                        MapPOPVMtoEntity(poViewModel, actionobject);
+                        
+                        _context.PurchaseOrderPart.Update(actionobject);
+                        _unitOfWork.SaveChanges();                        
+                    }
+                    else
+                    {
+                        actionobject = new DAL.Models.PurchaseOrderPart();
+                        actionobject.isParent = poViewModel.isParent;
+                        poViewModel.CreatedDate = DateTime.Now;
+                        poViewModel.CreatedBy = "admin";
+                        poViewModel.UpdatedBy = "admin";
+                        poViewModel.IsActive = true;
+                        MapPOPVMtoEntity(poViewModel, actionobject);                                            
+
+                        _context.PurchaseOrderPart.Add(actionobject);
+                        _unitOfWork.SaveChanges();
+                        
+                    }
                     foreach (var poPartSplit in poViewModel.POPartSplits)
-                        if (_context.PurchaseOrderPart.Any(o => o.PurchaseOrderPartRecordId == poViewModel.PurchaseOrderPartRecordId))
-
+                    {
+                        var popSplitEnt = _context.PurchaseOrderPart.Where(o => o.PurchaseOrderPartRecordId == poPartSplit.PurchaseOrderPartRecordId).FirstOrDefault();
+                        if(popSplitEnt==null)
                         {
-                            if (poViewModel == null)
-                                return BadRequest($"{nameof(poViewModel)} cannot be null");
-                            var actionobject = _context.PurchaseOrderPart.Where(a => a.PurchaseOrderPartRecordId == poViewModel.PurchaseOrderPartRecordId).SingleOrDefault();
+                            popSplitEnt = new PurchaseOrderPart();
+                            popSplitEnt.isParent = false;
                             MapAddress(poPartSplit);
-                            MapPOPVMtoEntity(poViewModel, poPartSplit, actionobject);
-
-                            _context.PurchaseOrderPart.Update(actionobject);
-                            _unitOfWork.SaveChanges();
-                            return Ok(actionobject);
+                            MapPOPSplitVMtoEntity(poPartSplit, poViewModel, popSplitEnt);
+                            _context.PurchaseOrderPart.Add(popSplitEnt);
                         }
-
                         else
                         {
-                            DAL.Models.PurchaseOrderPart actionobject = new DAL.Models.PurchaseOrderPart();
-
-                            poViewModel.CreatedDate = DateTime.Now;
-                            poViewModel.CreatedBy = "admin";
-                            poViewModel.UpdatedBy = "admin";
-                            poViewModel.IsActive = true;
                             MapAddress(poPartSplit);
-                            MapPOPVMtoEntity(poViewModel, poPartSplit, actionobject);
-
-                            _context.PurchaseOrderPart.Add(actionobject);
-                            _unitOfWork.SaveChanges();
-                            return Ok(actionobject);
+                            popSplitEnt.isParent = false;
+                            MapPOPSplitVMtoEntity(poPartSplit, poViewModel, popSplitEnt);
+                            _context.PurchaseOrderPart.Update(actionobject);                            
                         }
+                        _unitOfWork.SaveChanges();
+                    }
+                }
             }
             return Ok(ModelState);
         }

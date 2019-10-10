@@ -32,6 +32,7 @@ namespace DAL.Repositories
                      .Select(z => new
                      {
                          ContactId = z.con.ContactId,
+                         VendorContactId = z.vc1.vc.VendorContactId,
                          WorkPhone = z.con.WorkPhone,
                          CustomerCode = z.vc1.v.VendorCode,
                          ContractReference = z.vc1.v.VendorContractReference,
@@ -39,7 +40,8 @@ namespace DAL.Repositories
                          CreditLimt = z.vc1.v.CreditLimit,
                          CreditTermId = z.vc1.v.CreditTermsId,
                          CSR = z.con.FirstName + " " +z.con.LastName,
-                         Email = z.vc1.v.VendorEmail
+                         Email = z.vc1.v.VendorEmail,
+                         IsDefaultContact = z.vc1.vc.IsDefaultContact
                      }).ToList();
 
                 if (contacts != null && contacts.Count > 0)
@@ -48,14 +50,16 @@ namespace DAL.Repositories
                     {
                         objContact = new VendorContactList();
                         objContact.ContactId = item.ContactId;
+                        objContact.VendorContactId = item.VendorContactId;
                         objContact.ContractReference = item.ContractReference;
                         objContact.CreditLimt = item.CreditLimt;
                         objContact.CreditTermId = item.CreditTermId;
-                        objContact.CSR = item.CSR;
+                        objContact.CSRName = item.CSR;
                         objContact.VendorCode = item.CustomerCode;
                         objContact.VendorReference = item.Reference;
                         objContact.WorkPhone = item.WorkPhone;
                         objContact.Email = item.Email;
+                        objContact.IsDefaultContact = item.IsDefaultContact;
                         vendorContacts.Add(objContact);
                     }
                 }
@@ -103,6 +107,7 @@ namespace DAL.Repositories
                      .Select(z => new
                      {
                          ContactId = z.con.ContactId,
+                         CustomerContactId = z.cc1.cc.CustomerContactId,
                          WorkPhone = z.con.WorkPhone,
                          CustomerCode = z.cc1.cust.CustomerCode,
                          ContractReference = z.cc1.cust.ContractReference,
@@ -110,6 +115,7 @@ namespace DAL.Repositories
                          CreditLimt = z.cc1.cust.CreditLimit,
                          CreditTermId = z.cc1.cust.CreditTermsId,
                          CSR = z.cc1.cust.CSRName,
+                         IsDefaultContact = z.cc1.cc.IsDefaultContact,
                          Email = z.cc1.cust.Email
                      }).ToList();
 
@@ -119,6 +125,7 @@ namespace DAL.Repositories
                     {
                         objContact = new CustomerContactList();
                         objContact.ContactId = item.ContactId;
+                        objContact.CustomerContactId = item.CustomerContactId;
                         objContact.ContractReference = item.ContractReference;
                         objContact.CreditLimt = item.CreditLimt;
                         objContact.CreditTermId = item.CreditTermId;
@@ -127,6 +134,7 @@ namespace DAL.Repositories
                         objContact.CustomerReference = item.Reference;
                         objContact.WorkPhone = item.WorkPhone;
                         objContact.Email = item.Email;
+                        objContact.IsDefaultContact = item.IsDefaultContact;
                         customerContacts.Add(objContact);
                     }
                 }
