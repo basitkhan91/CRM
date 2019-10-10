@@ -118,8 +118,6 @@ export class UnitOfMeasureComponent implements OnInit {
     getUOMList() {
         this.unitofmeasureService.getAllUnitofMeasureList().subscribe(res => {
             const responseData = res[0];
-            // this.uomHeaders = responseData.columHeaders;
-            // this.selectedColumns = responseData.columHeaders;
             this.uomData = responseData.columnData;
             this.totalRecords = responseData.totalRecords;
             this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
@@ -128,7 +126,6 @@ export class UnitOfMeasureComponent implements OnInit {
     changePage(event: { first: any; rows: number }) {
         console.log(event);
         const pageIndex = (event.first / event.rows);
-        // this.pageIndex = pageIndex;
         this.pageSize = event.rows;
         this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
     }

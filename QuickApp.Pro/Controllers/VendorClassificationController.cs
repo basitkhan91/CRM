@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
 using DAL;
@@ -20,6 +21,7 @@ namespace QuickApp.Pro.Controllers
         private IUnitOfWork _unitOfWork;
         readonly ILogger _logger;
         readonly IEmailer _emailer;
+
         public VendorClassificationController(IUnitOfWork unitOfWork, ILogger<VendorClassificationController> logger, IEmailer emailer)
         {
             _unitOfWork = unitOfWork;
@@ -37,18 +39,14 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var resul1 = Mapper.Map<IEnumerable<VendorClassificationViewModel>>(result);
-
                 return Ok(resul1);
             }
             catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
-
-
-
         }
+
         [HttpGet("GetActive")]
         [Produces(typeof(List<VendorClassificationViewModel>))]
         public IActionResult GetActive()
@@ -57,41 +55,30 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var resul1 = Mapper.Map<IEnumerable<VendorClassificationViewModel>>(result);
-
                 return Ok(resul1);
             }
             catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
-
-
-
         }
 
         [HttpGet("auditHistoryById/{id}")]
         [Produces(typeof(List<AuditHistory>))]
         public IActionResult GetAuditHostoryById(long id)
         {
-            var result = _unitOfWork.AuditHistory.GetAllHistory("VendorClassification", id); //.GetAllCustomersData();
-
-
+            var result = _unitOfWork.AuditHistory.GetAllHistory("VendorClassification", id);
             try
             {
                 var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
-
                 return Ok(resul1);
             }
             catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
-
-
-
         }
+
         [HttpPost("vendorclassification")]
         //[Authorize(Authorization.Policies.ManageAllRolesPolicy)]
         public IActionResult CreateAction([FromBody] VendorClassificationViewModel vendorClassificationViewModel)
@@ -106,6 +93,7 @@ namespace QuickApp.Pro.Controllers
                 vendorClassificationobject.MasterCompanyId = vendorClassificationViewModel.MasterCompanyId;
                 vendorClassificationobject.Memo = vendorClassificationViewModel.Memo;
                 vendorClassificationobject.IsActive = vendorClassificationViewModel.IsActive;
+                vendorClassificationobject.IsDeleted = vendorClassificationViewModel.IsDeleted;
                 vendorClassificationobject.CreatedDate = DateTime.Now;
                 vendorClassificationobject.UpdatedDate = DateTime.Now;
                 vendorClassificationobject.CreatedBy = vendorClassificationViewModel.CreatedBy;
@@ -115,23 +103,19 @@ namespace QuickApp.Pro.Controllers
                 return Ok(vendorClassificationobject);
 
             }
-
             return Ok(ModelState);
         }
 
         [HttpPut("vendorclassification/{id}")]
         public IActionResult UpdateAction(long id, [FromBody] VendorClassificationViewModel vendorClassificationViewModel)
         {
-
+            Console.WriteLine("Hi");
             if (ModelState.IsValid)
             {
                 if (vendorClassificationViewModel == null)
                     return BadRequest($"{nameof(vendorClassificationViewModel)} cannot be null");
 
                 var existingResult = _unitOfWork.VendorClassifications.GetSingleOrDefault(c => c.VendorClassificationId == id);
-                // DAL.Models.Action updateObject = new DAL.Models.Action();
-
-
                 existingResult.UpdatedDate = DateTime.Now;
                 existingResult.UpdatedBy = vendorClassificationViewModel.UpdatedBy;
                 existingResult.Memo = vendorClassificationViewModel.Memo;
@@ -141,41 +125,56 @@ namespace QuickApp.Pro.Controllers
 
                 _unitOfWork.VendorClassifications.Update(existingResult);
                 _unitOfWork.SaveChanges();
-
             }
-
-
             return Ok(ModelState);
         }
-
 
         [HttpDelete("vendorclassification/{id}")]
         [Produces(typeof(VendorClassificationViewModel))]
         public IActionResult DeleteAction(long id)
         {
             var existingResult = _unitOfWork.VendorClassifications.GetSingleOrDefault(c => c.VendorClassificationId == id);
-            existingResult.IsDelete = true;
+            existingResult.IsDeleted = true;
             _unitOfWork.VendorClassifications.Update(existingResult);
-            //_unitOfWork.VendorClassifications.Remove(existingResult);
-
             _unitOfWork.SaveChanges();
-
             return Ok(id);
         }
-
 
         [HttpGet("audits/{id}")]
         public IActionResult AuditDetails(long id)
         {
-            var audits = _unitOfWork.Repository<VendorClassificationAudit>()
-                .Find(x => x.VendorClassificationId == id)
-                .OrderByDescending(x => x.VendorClassificationAuditId);
+            try
+            {
+                var result = _unitOfWork.VendorClassifications.GetVendorClassificationAuditDetails(id);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
-            var auditResult = new List<AuditResult<VendorClassificationAudit>>();
 
-            auditResult.Add(new AuditResult<VendorClassificationAudit> { AreaName = "Vendor Classification", Result = audits.ToList() });
+        [HttpGet("getAll")]
+        public IActionResult GetAll()
+        {
+            List<ColumHeader> columHeaders = new List<ColumHeader>();
+            PropertyInfo[] propertyInfos = typeof(VendorClassificationSPModel).GetProperties();
+            ColumHeader columnHeader;
+            DynamicGridData<dynamic> dynamicGridData = new DynamicGridData<dynamic>();
+            foreach (PropertyInfo property in propertyInfos)
+            {
+                columnHeader = new ColumHeader();
+                columnHeader.field = char.ToLower(property.Name[0]) + property.Name.Substring(1);//FirstCharToUpper(property.Name);
+                columnHeader.header = property.Name;
+                columHeaders.Add(columnHeader);
+            }
+            dynamicGridData.columHeaders = columHeaders;
+            dynamicGridData.ColumnData = _unitOfWork.VendorClassifications.GetAll().Where(u => u.IsDeleted == false);
+            dynamicGridData.TotalRecords = dynamicGridData.ColumnData.Count();
 
-            return Ok(auditResult);
+
+            return Ok(dynamicGridData);
         }
     }
 
