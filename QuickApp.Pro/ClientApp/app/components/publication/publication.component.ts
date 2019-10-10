@@ -141,7 +141,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
 
     }
     ngOnInit(): void {
-        this.loadData();
+        //this.loadData();
         this.employeedata();
 
         this.cols = [
@@ -409,23 +409,18 @@ export class PublicationComponent implements OnInit, AfterViewInit {
     //         console.log('When user closes');
     //     }, () => { console.log('Backdrop click') })
     // }
-    openEdit(content, row) {
-        const { publicationRecordId } = row;
-
-        // this.router.navigateByUrl(`/singlepages/singlepages/app-publication/app-create-publication/edit/${publicationRecordId}`);
-
-
-
-
-        this.disableSave = false;
-        this.isEditMode = true;
-        this.isSaving = true;
-        this.loadMasterCompanies();
-        this.sourceAction = row;
-        console.log(this.sourceAction);
-        this.publicationName = this.sourceAction.publicationId;
-        this.loadMasterCompanies();
-        this.router.navigateByUrl(`/singlepages/singlepages/app-create-publication/edit/${publicationRecordId}`);
+    openEdit(row) {
+         const { publicationRecordId } = row;
+         this.router.navigateByUrl(`/singlepages/singlepages/app-create-publication/edit/${publicationRecordId}`);
+        // // this.router.navigateByUrl(`/singlepages/singlepages/app-publication/app-create-publication/edit/${publicationRecordId}`);
+        // this.disableSave = false;
+        // this.isEditMode = true;
+        // this.isSaving = true;
+        // this.loadMasterCompanies();
+        // this.sourceAction = row;
+        // console.log(this.sourceAction);
+        // this.publicationName = this.sourceAction.publicationId;
+        // this.loadMasterCompanies();        
         // this.modal = this.modalService.open(content, { size: 'sm' });
         // this.modal.result.then(() => {
         //     console.log('When user closes');
@@ -483,7 +478,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
 
     }
 
-    editItemAndCloseModel() {
+    /*editItemAndCloseModel() {
 
         this.isSaving = true;
 
@@ -506,7 +501,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         }
 
         this.modal.close();
-    }
+    }*/
 
     deleteItemAndCloseModel() {
         this.isSaving = true;
@@ -563,13 +558,13 @@ export class PublicationComponent implements OnInit, AfterViewInit {
     }
 
 
-    private saveSuccessHelper(role?: Publication) {
-        this.isSaving = false;
-        this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
+    // private saveSuccessHelper(role?: Publication) {
+    //     this.isSaving = false;
+    //     this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 
-        this.loadData();
+    //     this.loadData();
 
-    }
+    // }
 
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
@@ -793,6 +788,15 @@ export class PublicationComponent implements OnInit, AfterViewInit {
                 this.totalRecords = results[0]['totalRecordsCount'];
             })
           }
-      }      
+      }
+      
+      downloadFileUpload(rowData) {
+          console.log(rowData)
+          const url = "C:/DevFiles/UplodFiles/Publication/162/cs.png";
+          window.location.assign(url);
+        //const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=itemGroup&fileName=itemGroup.xlsx`;
+
+        //window.location.assign(url);
+    }
       
 }

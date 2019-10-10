@@ -359,7 +359,7 @@ export class CreatePublicationComponent implements OnInit {
 
   saveGeneralInfo() {
     const data = this.sourcePublication;
-    this.publicationType = getValueFromArrayOfObjectById('label', 'value', this.sourcePublication.publicationTypeId.toString(), this.publicationTypes);
+    this.publicationType = getValueFromArrayOfObjectById('name', 'publicationTypeId', this.sourcePublication.publicationTypeId.toString(), this.publicationTypes);
     console.log(this.publicationType);
     // entryDate: new Date(),
     // PublicationId: '',
@@ -869,9 +869,7 @@ deleteConformation(value) {
               PartNumberDescription: x.partNumberDescription,
               ItemClassification: x.itemClassification
             };
-          });    
-        this.getAircraftInformationByPublicationId();
-        this.getAtaChapterByPublicationId();    
+          });               
         });
           this.alertService.showMessage(
               'Success',
