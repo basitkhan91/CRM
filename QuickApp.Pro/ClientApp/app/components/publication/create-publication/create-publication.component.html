@@ -274,7 +274,7 @@
                       <!-- <a class="btn btn-primary nobg">
                         <i class="fa fa-edit"></i>
                       </a> -->
-                      <a class="btn btn-danger nobg" (click)="onDeletePNMappingRow(rowData, rowIndex)">
+                      <a class="btn btn-danger nobg" (click)="onDeletePNMappingRow(rowData)" matTooltip="Delete"  data-target="#delete" data-toggle="modal">
                         <i class="fa fa-trash"></i>
                       </a>
                     </td>
@@ -307,7 +307,7 @@
 
     <!-- Aircraft Information  -->
 
-    <div  [ngClass]="{hideTab : currentTab !== 'Aircraft'}">
+    <div [ngClass]="{hideTab : currentTab !== 'Aircraft'}">
       <div class="card-header header-text ">
         Aircraft Information
       </div>
@@ -379,8 +379,7 @@
                     <th>ID</th>
                     <th *ngFor="let col of columns">
                       {{ col.header }}
-                    </th>
-                    <th *ngIf="!isEditMode">Actions</th>
+                    </th>                    
                   </tr>
                 </ng-template>
                 <ng-template
@@ -393,14 +392,6 @@
                     <td>{{ rowIndex + 1 }}</td>
                     <td *ngFor="let col of columns">
                       {{ rowData[col.field] }}
-                    </td>
-                    <td *ngIf="!isEditMode">
-                      <a class="btn btn-primary nobg">
-                        <i class="fa fa-edit"></i>
-                      </a>
-                      <a class="btn btn-danger nobg">
-                        <i class="fa fa-trash"></i>
-                      </a>
                     </td>
                   </tr>
                 </ng-template>
@@ -483,7 +474,6 @@
                     <th *ngFor="let col of columns">
                       {{ col.header }}
                     </th>
-                    <th *ngIf="!isEditMode">Actions</th>
                   </tr>
                 </ng-template>
                 <ng-template
@@ -496,14 +486,6 @@
                     <td>{{ rowIndex + 1 }}</td>
                     <td *ngFor="let col of columns">
                       {{ rowData[col.field] }}
-                    </td>
-                    <td *ngIf="!isEditMode">
-                      <a class="btn btn-primary nobg">
-                        <i class="fa fa-edit"></i>
-                      </a>
-                      <a class="btn btn-danger nobg">
-                        <i class="fa fa-trash"></i>
-                      </a>
                     </td>
                   </tr>
                 </ng-template>
@@ -518,6 +500,12 @@
             (click)="changeOfTab('Aircraft')"
           >
             Previous
+          </button>
+          <button
+            class="btn btn-primary-cstm pull-right"
+            type="button"
+            [routerLink]="['/singlepages/singlepages/app-publication']">
+            Next
           </button>
 
           <!-- <button
@@ -610,5 +598,26 @@
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>
+  </div>
+</div>
+
+<div  *ngIf="selectedRowforDelete" #delete id="delete"  class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Are You Sure Want to Delete ?</h4>
+      </div>
+      <div class="modal-body">
+        <strong>PN Mapping:
+          <span class="new-label">{{selectedRowforDelete.partNumber}}</span>
+      </strong>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
+          <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
+      </div>
+    </div>
+
   </div>
 </div>

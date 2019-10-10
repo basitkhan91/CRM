@@ -106,14 +106,15 @@ export class CreatePublicationComponent implements OnInit {
   searchATAParams: string = '';
   isDisabledSteps = false;
   attachmentList: any[] = [];
+  publicationTypes: any[] = [{ label: 'Select Publication Type', value: null }];
   // dropdown
 
-  publicationTypes = [
-    { label: 'Select Publication Type', value: null },
-    { label: 'CMM', value: '2' },
-    { label: 'AD', value: '3' },
-    { label: 'SB', value: '4' }
-  ];
+  // publicationTypes = [
+  //   { label: 'Select Publication Type', value: null },
+  //   { label: 'CMM', value: '2' },
+  //   { label: 'AD', value: '3' },
+  //   { label: 'SB', value: '4' }
+  // ];
 
   // table columns for ata
 
@@ -127,6 +128,7 @@ export class CreatePublicationComponent implements OnInit {
     { label: 'In-Active', value: 'In-Active' }
   ];
   formData = new FormData();
+  selectedRowforDelete: any;
   /** Create-publication ctor */
   constructor(
     private publicationService: PublicationService,
@@ -159,6 +161,7 @@ export class CreatePublicationComponent implements OnInit {
   ngOnInit() {
     // this.itemMasterId = this._actRoute.snapshot.params['id'];
     this.getAllEmployeeList();
+    this.getPublicationTypes();
     this.publicationRecordId = this._actRoute.snapshot.params['id'];
     console.log(this.publicationRecordId);
     if(this.publicationRecordId) {
@@ -356,7 +359,7 @@ export class CreatePublicationComponent implements OnInit {
 
   saveGeneralInfo() {
     const data = this.sourcePublication;
-    this.publicationType = getValueFromArrayOfObjectById('label', 'value', this.sourcePublication.publicationTypeId.toString(), this.publicationTypes);
+    this.publicationType = getValueFromArrayOfObjectById('name', 'publicationTypeId', this.sourcePublication.publicationTypeId.toString(), this.publicationTypes);
     console.log(this.publicationType);
     // entryDate: new Date(),
     // PublicationId: '',
@@ -489,6 +492,8 @@ export class CreatePublicationComponent implements OnInit {
       };
     });
     this.selectedPartNumbers = [];
+    console.log(mapData);
+    
 
     // PNMapping Save
     this.publicationService.postMappedPartNumbers(mapData).subscribe(res => {
@@ -847,15 +852,16 @@ export class CreatePublicationComponent implements OnInit {
       });
   }
 
-  onDeletePNMappingRow(rowData, rowIndex) {
-    console.log(rowData)
-    console.log(rowIndex)
-    this.publicationService.deleteItemMasterMapping(rowData.publicationItemMasterMappingId).subscribe(res => {
-      console.log(res);
-      this.publicationService
+  onDeletePNMappingRow(rowData) {
+    this.selectedRowforDelete = rowData;
+}
+
+deleteConformation(value) {
+  if (value === 'Yes') {
+      this.publicationService.deleteItemMasterMapping(this.selectedRowforDelete.publicationItemMasterMappingId).subscribe(() => {
+        this.publicationService
         .getPublicationPNMapping(this.publicationRecordId)
         .subscribe(res => {
-          console.log(res);
           this.pnMappingList = res.map(x => {
             return {
               ...x,
@@ -863,10 +869,52 @@ export class CreatePublicationComponent implements OnInit {
               PartNumberDescription: x.partNumberDescription,
               ItemClassification: x.itemClassification
             };
-          });        
+          });               
         });
-    })
+          this.alertService.showMessage(
+              'Success',
+              `Deleted PN Mapping Successfully`,
+              MessageSeverity.success
+          );
+      })
+  } else {
+      this.selectedRowforDelete = undefined;
   }
+}
+
+  // onDeletePNMappingRow(rowData) {
+  //   console.log(rowData)
+  //   console.log(rowIndex)
+  //   this.publicationService.deleteItemMasterMapping(rowData.publicationItemMasterMappingId).subscribe(res => {
+  //     console.log(res);
+  //     this.publicationService
+  //       .getPublicationPNMapping(this.publicationRecordId)
+  //       .subscribe(res => {
+  //         console.log(res);
+  //         this.pnMappingList = res.map(x => {
+  //           return {
+  //             ...x,
+  //             PartNumber: x.partNumber,
+  //             PartNumberDescription: x.partNumberDescription,
+  //             ItemClassification: x.itemClassification
+  //           };
+  //         });        
+  //       });
+  //   })
+  // }
+
+  getPublicationTypes() {
+    this.publicationService.getPublicationTypes().subscribe(response => {
+       response[0].map(x => {
+        const pubType = {
+          label: x.name,
+          value: x.publicationTypeId
+        }        
+        this.publicationTypes.push(pubType);
+      })            
+    })
+}
+
 
 //   getValueFromArrayOfObjectById(field: string, idField: string, id: string, originalData: any) {
 //     if ((field !== '' || field !== undefined) && (idField !== '' || idField !== undefined) && (id !== '' || id !== undefined) && (originalData !== undefined)) {
