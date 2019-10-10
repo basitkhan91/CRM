@@ -681,6 +681,11 @@ namespace QuickApp.Pro.Controllers
             actionobject.POPartSplitCity = poPartSplit.POPartSplitCity;
             actionobject.POPartSplitCountry = poPartSplit.POPartSplitCountry;
             actionobject.POPartSplitPostalCode = poPartSplit.POPartSplitPostalCode;
+            actionobject.UOMId = poPartSplit.UOMId;
+            actionobject.NeedByDate = poPartSplit.NeedByDate;
+            actionobject.QuantityOrdered = poPartSplit.QuantityOrdered;
+            actionobject.ItemMasterId = poPartSplit.ItemMasterId;
+
             actionobject.ManagementStructureId = poPartSplit.ManagementStructureId;
         }
 
