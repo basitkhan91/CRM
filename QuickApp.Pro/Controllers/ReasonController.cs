@@ -121,7 +121,7 @@ namespace QuickApp.Pro.Controllers
                 existingResult.ReasonCode = reasonViewModel.ReasonCode;
                 existingResult.Memo = reasonViewModel.Memo;
                 existingResult.IsActive = reasonViewModel.IsActive;
-                existingResult.MasterCompanyId = reasonViewModel.MasterCompanyId;
+                
 
                 _unitOfWork.Reasons.Update(existingResult);
                 _unitOfWork.SaveChanges();
@@ -207,14 +207,7 @@ namespace QuickApp.Pro.Controllers
                     ReasonList = ReasonList.Where(c => c.Memo != null && c.Memo.ToUpper().Contains(paginate.Memo.ToUpper().Trim())).ToList();
                 }
 
-                if (!string.IsNullOrEmpty(paginate.CreatedBy))
-                {
-                    ReasonList = ReasonList.Where(c => c.CreatedBy != null && c.CreatedBy.ToUpper().Contains(paginate.CreatedBy.ToUpper().Trim())).ToList();
-                }
-                if (!string.IsNullOrEmpty(paginate.UpdatedBy))
-                {
-                    ReasonList = ReasonList.Where(c => c.UpdatedBy != null && c.UpdatedBy.ToUpper().Contains(paginate.UpdatedBy.ToUpper().Trim())).ToList();
-                }
+               
                 getData.TotalRecordsCount = ReasonList.Count();
             }
             else

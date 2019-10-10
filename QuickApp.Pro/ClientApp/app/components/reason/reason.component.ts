@@ -51,7 +51,7 @@ export class ReasonComponent {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     Active: string = "Active";
-    displayedColumns = ['reasonId', 'reasonForRemoval', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
+    displayedColumns = ['reasonCode', 'reasonForRemoval', 'memo'];
     dataSource: MatTableDataSource<Reason>;
     allReasonsInfo: Reason[] = [];
     private isSaving: boolean;
@@ -101,9 +101,9 @@ export class ReasonComponent {
             //{ field: 'reasonId', header: 'Reason Id' },
             { field: 'reasonCode', header: 'Reason Code'},
             { field: 'reasonForRemoval', header: 'Reason For Removal' },
-            { field: 'memo', header: 'Memo' },
-            { field: 'createdBy', header: 'Created By' },
-            { field: 'updatedBy', header: 'Updated By' },
+            { field: 'memo', header: 'Memo' }
+            //{ field: 'createdBy', header: 'Created By' },
+            //{ field: 'updatedBy', header: 'Updated By' },
             //{ field: 'updatedDate', header: 'Updated Date' },
            // { field: 'createdDate', header: 'Created Date' }
 		];
@@ -128,7 +128,6 @@ export class ReasonComponent {
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
-
     }
     private loadMasterCompanies() {
         this.alertService.startLoadingMessage();
@@ -275,6 +274,7 @@ export class ReasonComponent {
 
     filterReasons(event) {
 
+       
         this.localCollection = [];
         for (let i = 0; i < this.allReasonsInfo.length; i++) {
             let reasonName = this.allReasonsInfo[i].reasonCode;
@@ -355,7 +355,10 @@ export class ReasonComponent {
             this.Active = "In Active";
             this.sourceAction.isActive == false;
             this.reasonService.updateReason(this.sourceAction).subscribe(
-                response => this.saveCompleted(this.sourceAction),
+                response => this.alertService.showMessage(
+                    'Success',
+                    `Updated Status Successfully  `,
+                    MessageSeverity.success),
                 error => this.saveFailedHelper(error));
             //alert(e);
         }
@@ -365,7 +368,11 @@ export class ReasonComponent {
             this.Active = "Active";
             this.sourceAction.isActive == true;
             this.reasonService.updateReason(this.sourceAction).subscribe(
-                response => this.saveCompleted(this.sourceAction),
+                //response => this.changeStatusCompleted(this.sourceAction),
+                response => this.alertService.showMessage(
+                    'Success',
+                    `Updated Status Successfully  `,
+                    MessageSeverity.success),
                 error => this.saveFailedHelper(error));
             //alert(e);
         }
@@ -403,6 +410,8 @@ export class ReasonComponent {
 
         this.updatePaginatorState();
     }
+
+
 
     private saveSuccessHelper(role?: Reason) {
         this.isSaving = false;
@@ -464,6 +473,9 @@ export class ReasonComponent {
         this.loading = true;
         this.rows = event.rows;
         this.first = event.first;
+        //alert(event.sortOrder);//yes
+        //alert(event.sortField);//yes
+        //event.sortFunction;//undefined
         if (this.field)
         {
             this.reason.push({
@@ -514,6 +526,7 @@ export class ReasonComponent {
         this.field = filed;
         this.matvhMode = matchMode;
 
+        //alert(filed);
         if (filed == 'reasonCode') {
             this.reasonCodeInputFieldValue = event;
         }
@@ -523,18 +536,18 @@ export class ReasonComponent {
         if (filed == 'memo') {
             this.memoInputFieldValue = event;
         }
-        if (filed == 'createdBy') {
-            this.createdByInputFieldValue = event;
-        }
-        if (filed == 'updatedBy') {
-            this.updatedByInputFieldValue = event;
-        }
+        //if (filed == 'createdBy') {
+        //    this.createdByInputFieldValue = event;
+        //}
+        //if (filed == 'updatedBy') {
+        //    this.updatedByInputFieldValue = event;
+        //}
         this.reason.push({
             ReasonCode: this.reasonCodeInputFieldValue,
             ReasonForRemoval: this.reasonForRemovalInputFieldValue,
             Memo: this.memoInputFieldValue,
-            CreatedBy: this.createdByInputFieldValue,
-            UpdatedBy: this.updatedByInputFieldValue,
+            //CreatedBy: this.createdByInputFieldValue,
+            //UpdatedBy: this.updatedByInputFieldValue,
             first: this.first,
             page: 10,
             pageCount: 10,
