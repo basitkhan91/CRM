@@ -514,7 +514,7 @@ namespace QuickApp.Pro.Controllers
         // GET: api/values
         [HttpGet("publicationsglobalsearch")]
         [Produces(typeof(List<Publication>))]
-        public IActionResult PublicationsGlobalSearch(long? ataChapterId, long? ataSubChapterId, long? airCraftId, long? modelId, long? dashNumberId, int pageNumber, int pageSize)
+        public IActionResult PublicationsGlobalSearch(long? ataChapterId=0, long? ataSubChapterId=0, long? airCraftId=0, long? modelId=0, long? dashNumberId=0, int pageNumber=0, int pageSize=10)
         {
             var allpublicationinfo = _unitOfWork.Publication.PublicationsGlobalSearch(ataChapterId, ataSubChapterId, airCraftId, modelId, dashNumberId, pageNumber, pageSize); 
             return Ok((allpublicationinfo));

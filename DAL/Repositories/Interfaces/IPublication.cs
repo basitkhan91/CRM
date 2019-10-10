@@ -25,7 +25,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> searchgetAircraftMappingDataByMultiTypeIdModelIDDashID(long PublicationId, string aircraftTypeID, string aircraftModelID, string dashNumberId);
         IEnumerable<object> searchGetATAMappingDataByMultiATAIdSUBATAID(long PublicationId, string ATAChapterID, string SubATAChapterID);
 
-        GetData<PublicationsList> GetPublicationsList(string publicationId, string description, int? publicationTypeId, string publishedBy, long employeeId, string location, int pageNumber, int pageSize);
+        GetData<PublicationsList> GetPublicationsList(string publicationId, string description, long publicationTypeId, string publishedBy, long employeeId, string location, int pageNumber, int pageSize);
         GetData<PublicationsList> PublicationsGlobalSearch(long? ataChapterId, long? ataSubChapterId, long? airCraftId, long? modelId, long? dashNumberId, int pageNumber, int pageSize);
         object PublicationView(long publicationRecordId);
         void PublicationStatus(long publicationRecordId, bool status, string updatedBy);
