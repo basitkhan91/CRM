@@ -358,9 +358,9 @@
                             <th>Disc./unit</th>
                             <th>Disc. Amount</th> <!--Disc. Cost/unit-->
                             <th>Ext Cost <span class="clr-red">*</span></th>
-                            <th>Functional CUR</th>
-                            <th>FX Rate</th>
-                            <th>Report CUR</th>
+                            <th>Functional CUR <span class="clr-red">*</span></th>
+                            <th>FX Rate <span class="clr-red">*</span></th>
+                            <th>Report CUR <span class="clr-red">*</span></th>
                             <th>WO</th>
                             <th>RO</th>
                             <th>SO</th>
@@ -480,17 +480,16 @@
                                 <td><input type="text" class="form-control" [(ngModel)]="partList.extendedCost" name="extendedCost{{row_index}}" pKeyFilter="pint" disabled required></td>
                                 <td>
                                     <p-autoComplete field="symbol" class="pautocomp-cstm"
-                                    [(ngModel)]="partList.functionalCurrencyId" name="functionalCurrencyId{{row_index}}" [suggestions]="functionalCurrList" (completeMethod)="filterFunctionalCurrency($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" 
-                                    >                                       
+                                    [(ngModel)]="partList.functionalCurrencyId" name="functionalCurrencyId{{row_index}}" [suggestions]="functionalCurrList" (completeMethod)="filterFunctionalCurrency($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" required>
                                     </p-autoComplete> 
                                     <!-- <select class="form-control" [(ngModel)]="partList.functionalCurrencyId" name="functionalCurrencyId">
                                         <option *ngFor="let currencyName of allCurrencyData" [ngValue]="currencyName.currencyId">  {{currencyName.symbol}}</option>
                                     </select> -->
                                 </td>
-                                <td><input type="text" class="form-control" [(ngModel)]="partList.foreignExchangeRate" name="foreignExchangeRate{{row_index}}" pKeyFilter="pint"></td>
+                                <td><input type="text" class="form-control" [(ngModel)]="partList.foreignExchangeRate" name="foreignExchangeRate{{row_index}}" pKeyFilter="pint" required></td>
                                 <td>
-                                    <p-autoComplete field="symbol" class="pautocomp-cstm" [(ngModel)]="partList.reportCurrencyId" name="reportCurrencyId{{row_index}}" [suggestions]="functionalTransList" (completeMethod)="filterTransCurrency($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" [disabled]=true
-                                    >                                       
+                                    <p-autoComplete field="symbol" class="pautocomp-cstm" [(ngModel)]="partList.reportCurrencyId" name="reportCurrencyId{{row_index}}" [suggestions]="functionalTransList" (completeMethod)="filterTransCurrency($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" required
+                                    > <!--[disabled]=true-->          
                                     </p-autoComplete> 
                                     <!-- <select class="form-control" [(ngModel)]="partList.transactionalCurrencyId" name="transactionalCurrencyId">
                                         <option *ngFor="let currencyName of allCurrencyData" [ngValue]="currencyName.currencyId">  {{currencyName.symbol}}</option>
@@ -542,13 +541,13 @@
                                 <th><i class="fa fa-plus btn btn-success btn-cstm btn-xs" pTooltip="Split Shipment" style="padding: 4px 8px !important;" (click)="addRow(partList)"></i></th>
                                 <th>PN</th>
                                 <th>PN Description</th>
-                                <th>User Type <span class="clr-red">*</span></th>
-                                <th>Name <span class="clr-red">*</span></th>
+                                <th>User Type</th>
+                                <th>Name</th>
                                 <th colspan="5">Select Address</th>
                                 <th>UOM</th>
                                 <th>Order Qty</th>
                                 <th>Need By</th>
-                                <th colspan="4">Management Structure</th>
+                                <th colspan="4">Management Structure <span class="clr-red">*</span></th>
                                 <th colspan="9"></th>
                             </tr>
                             <tr class="child-data splitship-child" *ngFor="let partChildList of partList.childList; let row_no = index"  >
@@ -559,7 +558,7 @@
                                 <td>{{partList.partNumber}}</td>
                                 <td>{{partList.partDescription}}</td>
                                 <td>
-                                    <select name="partListUserType{{row_no}}" [(ngModel)]="partChildList.partListUserTypeId" #pUserType="ngModel" (change)="onSelectSplitUserType(partChildList)" required>
+                                    <select name="partListUserType{{row_no}}" [(ngModel)]="partChildList.partListUserTypeId" #pUserType="ngModel" (change)="onSelectSplitUserType(partChildList)">
                                         <option value="1">Customer</option>
                                         <option value="2">Vendor</option>
                                         <option value="3">Company</option>
@@ -580,14 +579,14 @@
                                                             (onKeyUp)=customereventHandler($event)
                                                             [suggestions]="partChildList.customers"
                                                             (completeMethod)="getPartyNames(partChildList,$event)"
-                                                            [size]="30" [minLength]="1" errorMessage="Records not found" [forceSelection]="true" [dropdown]="true" #cCustomerName="ngModel" required>
+                                                            [size]="30" [minLength]="1" errorMessage="Records not found" [forceSelection]="true" [dropdown]="true"> <!--#cCustomerName="ngModel" required-->
     
                                             </p-autoComplete>
-                                            <div *ngIf="cCustomerName.invalid && (cCustomerName.dirty || cCustomerName.touched)" class="alert alert-danger alert-danger-cstm">
+                                            <!-- <div *ngIf="cCustomerName.invalid && (cCustomerName.dirty || cCustomerName.touched)" class="alert alert-danger alert-danger-cstm">
                                                     <div *ngIf="cCustomerName.errors.required">
                                                         <small> Customer Name is required </small>
                                                     </div>
-                                            </div> 
+                                            </div>  -->
                                         </div>
                                         <div class="col-sm-1">
                                             <div class="child-add-icon"><a target="_blank" 
@@ -597,7 +596,7 @@
                                     <div class="inner-addon right-addon autosuggesions-add inline-block w175" *ngIf="partChildList.partListUserTypeId==2">
                                         <div class="col-sm-11">
                                                 <p-autoComplete field="vendorName" class="pautocomp-cstm" 
-                                                [(ngModel)]="partChildList.partListUserId" name="splitVendorNames" [suggestions]="splitVendorNames" (completeMethod)="filterSplitVendorNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" #cVendorName="ngModel" errorMessage="Records not found" [forceSelection]="true" (onSelect)="onVendorNameChange(partChildList,$event)" required>
+                                                [(ngModel)]="partChildList.partListUserId" name="splitVendorNames" [suggestions]="splitVendorNames" (completeMethod)="filterSplitVendorNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="onVendorNameChange(partChildList,$event)" > <!--required #cVendorName="ngModel"-->
                                             </p-autoComplete>
                                                
                                             <!-- <p-autoComplete field="vendorName"
@@ -612,11 +611,11 @@
                                                             [minLength]="1" [dropdown]="true" #cVendorName="ngModel" required>
     
                                             </p-autoComplete> -->
-                                            <div *ngIf="cVendorName.invalid && (cVendorName.dirty || cVendorName.touched)" class="alert alert-danger alert-danger-cstm">
+                                            <!-- <div *ngIf="cVendorName.invalid && (cVendorName.dirty || cVendorName.touched)" class="alert alert-danger alert-danger-cstm">
                                                     <div *ngIf="cVendorName.errors.required">
                                                         <small> Vendor Name is required </small>
                                                     </div>
-                                            </div> 
+                                            </div>  -->
                                         </div>
                                         <div class="col-sm-1">
                                             <div class="child-add-icon"><a target="_blank" 
@@ -625,12 +624,12 @@
                                     </div>
                                     <div class="inner-addon right-addon autosuggesions-add inline-block w100" *ngIf="partChildList.partListUserTypeId==3">
                                         <i class="fa fa-search"></i>
-                                         <input type="text" [(ngModel)]="partChildList.partListUserId" class="form-control names ui-autocomplete-input" name="cCompanyName{{row_no}}" autocomplete="off" #cCompanyName="ngModel" required> <!-- poPartSplitId -->
-                                        <div *ngIf="cCompanyName.invalid && (cCompanyName.dirty || cCompanyName.touched)" class="alert alert-danger alert-danger-cstm">
+                                         <input type="text" [(ngModel)]="partChildList.partListUserId" class="form-control names ui-autocomplete-input" name="cCompanyName{{row_no}}" autocomplete="off" > <!-- #cCompanyName="ngModel" required -->
+                                        <!-- <div *ngIf="cCompanyName.invalid && (cCompanyName.dirty || cCompanyName.touched)" class="alert alert-danger alert-danger-cstm">
                                                 <div *ngIf="cCompanyName.errors.required">
                                                     <small> Company Name is required </small>
                                                 </div>
-                                        </div> 
+                                        </div>  -->
                                     </div>
                                 </td>
                                 <td colspan="5">
@@ -657,7 +656,7 @@
                                     <select class="inner-addon right-addon autosuggesions-add inline-block mw400"
                                             name="companyName{{row_no}}"
                                             [(ngModel)]="partChildList.childCompanyId"
-                                            (change)="getChildBUList(partChildList)">
+                                            (change)="getChildBUList(partChildList)" required>
                                         <option value="0">select</option>
                                         <option *ngFor="let company of maincompanylist" value="{{company.managementStructureId}}">{{company.code}}</option>
                                     </select>

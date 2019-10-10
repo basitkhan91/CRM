@@ -59,7 +59,8 @@
                             </div>
                             <button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
                             <button type="button" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
-                            <a (click)="open(contentEdit)" matTooltip="Add Publication" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>
+                            <!-- <a (click)="open(contentEdit)" matTooltip="Add Publication" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a> -->
+                            <a [routerLink]="['/singlepages/singlepages/app-create-publication']" matTooltip="Add Publication" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>
                             <div class="excel-upload">
                                 <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                                 <label for="upload">

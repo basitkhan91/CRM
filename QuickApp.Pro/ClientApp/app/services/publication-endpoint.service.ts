@@ -60,7 +60,8 @@ export class PublicationEndpointService extends EndpointFactory {
     private readonly _publicationStatus: string =
         '/api/Publication/publicationstatus';
     private readonly _publicationGetByIdViewUrl: string = '/api/Publication/publicationview';
-    private readonly _publicationGlobalSearchUrl: string = '/api/Publication/publicationsglobalsearch';        
+    private readonly _publicationGlobalSearchUrl: string = '/api/Publication/publicationsglobalsearch';  
+    private readonly _publicationTypes: string = '/api/Publication/getpublicationtypes';  
 
 
 
@@ -477,10 +478,18 @@ getpublicationListEndpoint<T>(pageIndex, pageSize): Observable<T> {
 
   getpublicationGlobalSearchEndpoint<T>(ataChapterId, ataSubChapterId, airCraftId, modelId, dashNumberId, pageNumber, pageSize): Observable<T> {
     return this.http
-        .get<T>(`${this._publicationGlobalSearchUrl}/${ataChapterId}`, this.getRequestHeaders())
+        .get<T>(`${this._publicationGlobalSearchUrl}/?ataChapterId=${ataChapterId}&ataSubChapterId=${ataSubChapterId}&airCraftId=${airCraftId}&modelId=${modelId}&dashNumberId=${dashNumberId}&pageNumber=${pageNumber}&pageSize=${pageSize}`, this.getRequestHeaders())
         .catch(error => {
             return this.handleError(error, () => this.getpublicationGlobalSearchEndpoint(ataChapterId, ataSubChapterId, airCraftId, modelId, dashNumberId, pageNumber, pageSize));
         });
+}
+
+getpublicationTypesEndpoint<T>(): Observable<T> {
+  return this.http
+      .get<T>(`${this._publicationTypes}`, this.getRequestHeaders())
+      .catch(error => {
+          return this.handleError(error, () => this.getpublicationTypesEndpoint());
+      });
 }
 
 }
