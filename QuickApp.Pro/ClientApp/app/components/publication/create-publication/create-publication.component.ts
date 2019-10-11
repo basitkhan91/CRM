@@ -217,9 +217,7 @@ export class CreatePublicationComponent implements OnInit {
          nextReviewDate: new Date(x.nextReviewDate),
          verifiedDate: new Date(x.verifiedDate)
         }
-      });
-      console.log(this.publicationTypes);
-      
+      });      
       //this.sourcePublication = tempsourcepub[0];
       const tempSourcePublication = tempsourcepub.map(x => {
         return {
@@ -359,11 +357,9 @@ export class CreatePublicationComponent implements OnInit {
       this.formData.append(file.name, file);
   }
 
-  saveGeneralInfo() {
-    console.log(this.publicationTypes);
-    
+  saveGeneralInfo() {    
     const data = this.sourcePublication;
-    this.publicationType = getValueFromArrayOfObjectById('label', 'value', this.sourcePublication.publicationTypeId.toString(), this.publicationTypes);
+    this.publicationType = getValueFromArrayOfObjectById('name', 'publicationTypeId', this.sourcePublication.publicationTypeId.toString(), this.publicationTypes);
     console.log(this.publicationType);
     // entryDate: new Date(),
     // PublicationId: '',
