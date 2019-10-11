@@ -218,6 +218,8 @@ export class CreatePublicationComponent implements OnInit {
          verifiedDate: new Date(x.verifiedDate)
         }
       });
+      console.log(this.publicationTypes);
+      
       //this.sourcePublication = tempsourcepub[0];
       const tempSourcePublication = tempsourcepub.map(x => {
         return {
@@ -358,8 +360,10 @@ export class CreatePublicationComponent implements OnInit {
   }
 
   saveGeneralInfo() {
+    console.log(this.publicationTypes);
+    
     const data = this.sourcePublication;
-    this.publicationType = getValueFromArrayOfObjectById('name', 'publicationTypeId', this.sourcePublication.publicationTypeId.toString(), this.publicationTypes);
+    this.publicationType = getValueFromArrayOfObjectById('label', 'value', this.sourcePublication.publicationTypeId.toString(), this.publicationTypes);
     console.log(this.publicationType);
     // entryDate: new Date(),
     // PublicationId: '',
