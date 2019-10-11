@@ -8,6 +8,7 @@ import { SingleScreenBreadcrumbService } from "../../services/single-screens-bre
 
 import { Table } from 'primeng/table';
 import { ConditionService } from '../../services/condition.service';
+import { PercentageService } from '../../services/percentage.service';
 import { validateRecordExistsOrNot, getObjectById, getObjectByValue, selectedValueValidate, editValueAssignByCondition } from '../../generic/autocomplete';
 
 @Component({
@@ -66,13 +67,15 @@ export class CreditTermsComponent implements OnInit {
     addNewCreditTerm= { ...this.newCreditTerm };
     disableSaveForCreditTerm: boolean;
     /** credit terms ctor */
-    constructor( private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private alertService: AlertService,  public conditionService: ConditionService, public creditTermService: CreditTermsService) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private alertService: AlertService,
+        public percentageService: PercentageService, public creditTermService: CreditTermsService) {
 
 
     }
     ngOnInit(): void {
         this.selectedColumns = this.creditTermHeaders;
         this.getCreditTermList();
+        this.getPercentageList();
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-credit-terms';
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
     }
@@ -88,6 +91,12 @@ export class CreditTermsComponent implements OnInit {
             //TODO: THIS NEEDS TO BE FIXED
             this.totalRecords = 1;//respData.totalRecords;
             this.totalPages = 1;//Math.ceil(this.totalRecords / this.pageSize);
+        });
+    }
+
+    private getPercentageList() {
+        this.percentageService.getPercentageList().subscribe(res => {
+            const respData = res[0];
         });
     }
 
