@@ -1,6 +1,7 @@
 ﻿using DAL.Common;
 using DAL.Models;
 using DAL.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -465,6 +466,21 @@ namespace DAL.Repositories
             }
 
             return dbModel;
+        }
+
+
+        public IEnumerable<object> BindDropdowns(string tableName,string primaryColumn,string textColumn)
+        {
+            try
+            {
+               var result= _appContext.Dropdowns.FromSql("BindDropdowns @p0,@p1,@p2", tableName, primaryColumn, textColumn).ToList();
+                return result;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         private static PropertyInfo[] GetProperties(object obj)
