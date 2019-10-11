@@ -389,7 +389,9 @@ namespace DAL
         public DbSet<WorkOrderQuote> WorkOrderQuote { get; set; }
         public DbSet<WorkOrderFreight> WorkOrderFreight { get; set; }
         public DbSet<PublicationTypeAudit> PublicationTypeAudit { get; set; }
+        public DbSet<Dropdowns> Dropdowns { get; set; }
         
+
 
 
         public DbSet<AssetIntangibleAttributeType> AssetIntangibleAttributeType { get; set; }
