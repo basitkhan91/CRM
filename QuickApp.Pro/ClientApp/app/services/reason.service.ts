@@ -69,5 +69,10 @@ export class ReasonService {
         return Observable.forkJoin(
             this.reasonEndpoint.getReasonRecords<Reason[]>(serverSidePagesData));
     }
+
+    getAllReasonsList() {
+        return Observable.forkJoin(
+            this.reasonEndpoint.getAllReasonsEndpoint<any>());
+    }
 }
 

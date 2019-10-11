@@ -27,6 +27,7 @@ import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-scre
 export class ReasonComponent {
     reasonPaginationList: any[] = [];
     totelPages: number;
+    pageSize: number = 10;
     reason = [];
     updatedByInputFieldValue: any;
     createdByInputFieldValue: any;
@@ -85,7 +86,7 @@ export class ReasonComponent {
     rows: number;
     paginatorState: any;
 
-    reasonPagination: Reason[];//added
+    reasonPagination: any;//added
     totalRecords: number;
     loading: boolean;
     /** Actions ctor */
@@ -96,7 +97,7 @@ export class ReasonComponent {
     }
     
     ngOnInit(): void {
-        this.loadData();
+        this.getReasonList();
         this.cols = [
             //{ field: 'reasonId', header: 'Reason Id' },
             { field: 'reasonCode', header: 'Reason Code'},
@@ -332,18 +333,29 @@ export class ReasonComponent {
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.reasonCode = this.reasonName;
             this.sourceAction.masterCompanyId = 1;
-            this.reasonService.newReason(this.sourceAction).subscribe(
-                role => this.saveSuccessHelper(role),
-                error => this.saveFailedHelper(error));
+            this.reasonService.newReason(this.sourceAction).subscribe(() => {
+                this.getReasonList();
+                this.alertService.showMessage(
+                    'Success',
+                    'Added  New Reason Successfully',
+                    MessageSeverity.success
+                );
+            });
         }
         else {
 
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.reasonCode = this.reasonName;
             this.sourceAction.masterCompanyId = 1;
-            this.reasonService.updateReason(this.sourceAction).subscribe(
-                response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));
+            this.reasonService.updateReason(this.sourceAction).subscribe(() => {
+                this.getReasonList();
+                this.alertService.showMessage(
+                    'Success',
+                    'Updated Reason Successfully',
+                    MessageSeverity.success
+                );
+
+            });
         }
 
         this.modal.close();
@@ -384,9 +396,17 @@ export class ReasonComponent {
     deleteItemAndCloseModel() {
         this.isSaving = true;
         this.sourceAction.updatedBy = this.userName;
-        this.reasonService.deleteReason(this.sourceAction.reasonId).subscribe(
-            response => this.saveCompleted(this.sourceAction),
-            error => this.saveFailedHelper(error));
+        this.reasonService.deleteReason(this.sourceAction.reasonId).subscribe(() => {
+
+            this.getReasonList();
+            this.alertService.showMessage(
+                'Success',
+                'Deleted Reason Successfully',
+                MessageSeverity.success
+            );
+
+        });
+            
         this.modal.close();
     }
 
@@ -400,24 +420,21 @@ export class ReasonComponent {
         this.isSaving = false;
 
         if (this.isDeleteMode == true) {
-            this.alertService.showMessage("Success", `Reason was deleted successfully`, MessageSeverity.success);
+            this.alertService.showMessage("Success", "Reason was deleted successfully", MessageSeverity.success);
             this.isDeleteMode = false;
         }
         else {
-            this.alertService.showMessage("Success", `Reason was edited successfully`, MessageSeverity.success);
+            this.alertService.showMessage("Success", "Reason was edited successfully", MessageSeverity.success);
 
         }
-
-        this.updatePaginatorState();
     }
 
 
 
     private saveSuccessHelper(role?: Reason) {
         this.isSaving = false;
-        this.alertService.showMessage("Success", `Reason was created successfully`, MessageSeverity.success);
+        this.alertService.showMessage("Success", "Reason was created successfully", MessageSeverity.success);
 
-        this.updatePaginatorState();
 
     }
 
@@ -565,6 +582,17 @@ export class ReasonComponent {
         }
         else {
         }
+    }
+
+    getReasonList() {
+        this.reasonService.getAllReasonsList().subscribe(res => {
+            const responseData = res[0];
+            // this.uomHeaders = responseData.columHeaders;
+            // this.selectedColumns = responseData.columHeaders;
+            this.reasonPagination = responseData.columnData;
+            this.totalRecords = responseData.totalRecords;
+            this.totelPages = Math.ceil(this.totalRecords / this.pageSize);
+        })
     }
 
 }
