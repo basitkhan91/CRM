@@ -1,29 +1,17 @@
-﻿
-import { NgModule } from "@angular/core";
+﻿import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { AuditComponent } from "../components/Audit/audit.component";
+import { AppSiteAuditComponent } from "../components/Audit/AppSiteAudit/app-site-audit.component";
 
 @NgModule({
-	declarations: [
-		AuditComponent
-    ],
+  declarations: [AuditComponent, AppSiteAuditComponent],
 
-    imports: [
-        CommonModule
-    ],
+  imports: [CommonModule],
 
-    exports: [
-        AuditComponent
-    ],
+  exports: [AuditComponent, AppSiteAuditComponent],
 
-    providers: [
-    ],
+  providers: [],
 
-    bootstrap: [
-        AuditComponent
-    ],
-
+  bootstrap: [AuditComponent]
 })
-export class AuditModule {
-
-}
+export class AuditModule {}

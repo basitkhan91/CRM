@@ -686,8 +686,8 @@ export class SiteComponent implements OnInit, AfterViewInit {
 		this.AuditDetails = [];
 		this.workFlowtService.getSiteAudit(siteId).subscribe(audits => {
 			if (audits.length > 0) {
-				this.AuditDetails = audits;
-				this.AuditDetails[0].ColumnsToAvoid = ["siteAuditId", "siteId", "createdBy", "createdDate", "updatedDate"];
+				this.AuditDetails = audits[0].result;
+				//this.AuditDetails[0].ColumnsToAvoid = ["siteAuditId", "siteId", "createdBy", "createdDate", "updatedDate"];
 			}
 		});
 	}
