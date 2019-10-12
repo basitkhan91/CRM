@@ -165,17 +165,20 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                     </label>
                                 </div>
                                 <div class="col-sm-5">
-                               	   <select [(ngModel)]="addNewCreditTerm.percentage" [ngModelOptions]="{standalone: true}" required >
-                                        <option *ngFor="let per of percentageList" [ngValue]="per.value">{{per.value}}</option>
+                               	   <select [(ngModel)]="addNewCreditTerm.percentage" name="percentage" required >
+                                        <option *ngFor="let per of percentageList" [ngValue]="per.value">{{per.name}}</option>
                                    </select>
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="days" class="control-label">Days</label>
+                                    <label for="days" class="control-label">
+                                        Days
+                                        <span class="clr-red">*</span>
+                                    </label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <select [(ngModel)]="addNewCreditTerm.days" [ngModelOptions]="{standalone: true}" required >
+                                    <select [(ngModel)]="addNewCreditTerm.days" name="days" required >
                                         <option *ngFor="let d of dayList" [ngValue]="d">{{d}}</option>
                                    </select>
                                 </div>
@@ -183,10 +186,13 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
 
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="netdays" class="control-label">Net Days</label>
+                                    <label for="netdays" class="control-label">
+                                        Net Days
+                                        <span class="clr-red">*</span>
+                                    </label>
                                 </div>
                                 <div class="col-sm-5">
-                                   <select [(ngModel)]="addNewCreditTerm.netDays" [ngModelOptions]="{standalone: true}" required >
+                                   <select [(ngModel)]="addNewCreditTerm.netDays" name="netdays" required >
                                         <option *ngFor="let nd of netDayList" [ngValue]="nd">{{nd}}</option>
                                    </select>
                                 </div>
@@ -217,7 +223,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="!userForm.valid || disableSaveForCreditTerm" (click)="saveCreditTerms();">Save</button>
-                            <button type="button" class="btn btn-danger-cstm" (click)="resetCreditTermsForm()">Close</button>
+                            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetCreditTermsForm()">Close</button>
                         </div>
                     </form>
                 </div>
