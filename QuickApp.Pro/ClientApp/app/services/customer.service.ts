@@ -133,6 +133,11 @@ export class CustomerService {
     getMappedATADetails(customerId: number) {
         return this.customerEndpoint.getATAMappingEndpoint<any>(customerId);
     }
+    getMappedTaxTypeRateDetails(customerId: number) {
+        return this.customerEndpoint.getTaxTypeRateMappingEndpoint<any>(customerId);
+    }
+
+
     getFinalObj() {
         return Observable.forkJoin(
             this.customerEndpoint.getFinalrobj<any>());
@@ -442,7 +447,9 @@ export class CustomerService {
     postCustomerATAs(data) {
         return Observable.forkJoin(this.customerEndpoint.postCustomerATA<any>(data));
     }
-
+    postCustomerTaxTypeRate(data) {
+        return Observable.forkJoin(this.customerEndpoint.postCustomerTaxTypeRate<any>(data));
+    }
     newItemMasterAircarftClass(action: any) {
         return this.customerEndpoint.getNewitemAircraftEndpoint<any>(action);
     }
@@ -493,7 +500,9 @@ export class CustomerService {
     deleteAircraftInvetoryById(id) {
         return this.customerEndpoint.deleteAircraftInvetoryById(id);
     }
-
+    deleteCustomerTaxTypeRateById(id) {
+        return this.customerEndpoint.deleteTaxTypeRateMappedDataById(id);
+    }
     documentUploadAction (action: any) {
         return this.customerEndpoint.getDocumentUploadEndpoint<any>(action);
     }

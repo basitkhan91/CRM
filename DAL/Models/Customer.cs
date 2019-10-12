@@ -195,6 +195,9 @@ namespace DAL.Models
         public List<RestrictedParts> RestrictedPMAParts { get; set; }
         public List<RestrictedParts> RestrictedDERParts { get; set; }
 
+        public List<RestrictsPMAList> RestrictsPmaLists { get; set;}
+        public List<RestrictsBERList> RestrictsDerLists { get; set; }
+
         [NotMapped]
         public long AttachmentId { get; set; }
 

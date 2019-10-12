@@ -12,6 +12,7 @@ using QuickApp.Pro.ViewModels;
 using System.Linq.Dynamic.Core;
 using DAL.Common;
 using Microsoft.AspNetCore.Http;
+using Spire.Pdf.Exporting.XPS.Schema;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -300,7 +301,7 @@ namespace QuickApp.Pro.Controllers
                 actionobject.EDIDescription = customerViewModel.EDIDescription;
                 // actionobject.IntegrationPortalId = customerViewModel.IntegrationPortalId;
                 actionobject.RestrictBERMemo = customerViewModel.RestrictBERMemo;
-                actionobject.CustomerClassificationId = customerViewModel.CustomerClassificationId;
+                actionobject.CustomerClassificationId = customerViewModel.CustomerClassificationIds[0];
                 actionobject.CustomerTypeId = customerViewModel.CustomerTypeId;
                 actionobject.CustomerType = customerViewModel.CustomerType;
                 actionobject.IsCustomerAlsoVendor = customerViewModel.IsCustomerAlsoVendor;
@@ -370,11 +371,22 @@ namespace QuickApp.Pro.Controllers
                 //}
 
 
-                List<AttachmentDetails> attachmentDetails = new List<AttachmentDetails>();
 
                 _unitOfWork.CommonRepository.CreateRestrictedParts(actionobject.RestrictedPMAParts, actionobject.CustomerId);
                 _unitOfWork.CommonRepository.CreateRestrictedParts(actionobject.RestrictedDERParts, actionobject.CustomerId);
-                _unitOfWork.CommonRepository.CreateClassificationMappings(actionobject.CustomerClassificationMapping, actionobject.CustomerId);
+
+
+
+                actionobject.RestrictsPmaLists = customerViewModel.RestrictsPmaList;
+                _unitOfWork.CommonRepository.CreateRestrictPmaList(actionobject.RestrictsPmaLists, actionobject.CustomerId);
+
+                actionobject.RestrictsDerLists = customerViewModel.restrictBERList;
+                _unitOfWork.CommonRepository.CreateRestrictDerList(actionobject.RestrictsDerLists, actionobject.CustomerId);
+
+                List<ClassificationMapping> listofEClassificationMappings = customerViewModel.CustomerClassificationIds
+                    .Select(item => new ClassificationMapping() { ClasificationId = item.Value}
+                ).ToList();
+                _unitOfWork.CommonRepository.CreateClassificationMappings(listofEClassificationMappings, actionobject.CustomerId);
 
                 // _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, attachmentDetails, actionobject.CustomerId,Convert.ToInt32(DAL.Common.ModuleEnum.Customer), Convert.ToString(DAL.Common.ModuleEnum.Customer), actionobject.CreatedBy, actionobject.MasterCompanyId);
 
@@ -408,7 +420,7 @@ namespace QuickApp.Pro.Controllers
             actionobject.RestrictPMA = customerViewModel.RestrictPMA;
             // actionobject.IntegrationPortalId = customerViewModel.IntegrationPortalId;
             actionobject.RestrictBER = customerViewModel.RestrictBER;
-            actionobject.CustomerClassificationId = customerViewModel.CustomerClassificationId;
+            actionobject.CustomerClassificationId = customerViewModel.CustomerClassificationIds[0];
             actionobject.CustomerTypeId = customerViewModel.CustomerTypeId;
             actionobject.CustomerType = customerViewModel.CustomerType;
             actionobject.IsCustomerAlsoVendor = customerViewModel.IsCustomerAlsoVendor;
@@ -502,7 +514,20 @@ namespace QuickApp.Pro.Controllers
 
             _unitOfWork.CommonRepository.UpdateRestrictedParts(actionobject.RestrictedPMAParts, actionobject.CustomerId);
             _unitOfWork.CommonRepository.UpdateRestrictedParts(actionobject.RestrictedDERParts, actionobject.CustomerId);
-            _unitOfWork.CommonRepository.UpdateClassificationMappings(actionobject.CustomerClassificationMapping, actionobject.CustomerId);
+            _unitOfWork.CommonRepository.UpdateRestrictPmaList(actionobject.RestrictsPmaLists, actionobject.CustomerId);
+
+
+            actionobject.RestrictsPmaLists = customerViewModel.RestrictsPmaList;
+            _unitOfWork.CommonRepository.UpdateRestrictPmaList(actionobject.RestrictsPmaLists, actionobject.CustomerId);
+
+            actionobject.RestrictsDerLists = customerViewModel.restrictBERList;
+            _unitOfWork.CommonRepository.UpdateRestrictDerList(actionobject.RestrictsDerLists, actionobject.CustomerId);
+
+            List<ClassificationMapping> listofEClassificationMappings = customerViewModel.CustomerClassificationIds
+                .Select(item => new ClassificationMapping() { ClasificationId = item.Value }
+                ).ToList();
+
+            _unitOfWork.CommonRepository.UpdateClassificationMappings(listofEClassificationMappings, actionobject.CustomerId);
             return Ok(actionobject);
 
 
@@ -617,6 +642,7 @@ namespace QuickApp.Pro.Controllers
                 contactObj.AlternatePhone = contactViewModel.AlternatePhone;
                 contactObj.Email = contactViewModel.Email;
                 contactObj.Fax = contactViewModel.Fax;
+                contactObj.Tag = contactViewModel.Tag;
                 contactObj.FirstName = contactViewModel.FirstName;
                 contactObj.LastName = contactViewModel.LastName;
                 contactObj.MiddleName = contactViewModel.MiddleName;
@@ -1732,6 +1758,117 @@ namespace QuickApp.Pro.Controllers
 
         #endregion
 
+        #region Customer Contact ATA Mapping
+        [HttpGet("getCustomerATAMapped/{customerId}")]
+        [Produces(typeof(List<CustomerContactATAMapping>))]
+        public IActionResult ataContactMapped(long customerId)
+        {
+            var result = _unitOfWork.Customer.GetATAContactMapped(customerId);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+
+        }
+
+        [HttpPost("CustomerContactATAPost")]
+        public IActionResult InsertCustomerContactATA([FromBody] CustomerContactATAMapping[] customerContactATAMapping)
+        {
+            if (ModelState.IsValid)
+            {
+                foreach (var customerContactAtaMapping in customerContactATAMapping)
+                {
+                    _unitOfWork.Repository<CustomerContactATAMapping>().Add(customerContactAtaMapping);
+                    _unitOfWork.SaveChanges();
+                }
+            }
+            else
+            {
+                return BadRequest($"{nameof(customerContactATAMapping)} cannot be null");
+            }
+
+            return Ok(ModelState);
+
+        }
+
+        [HttpDelete("DeleteCustomerContactATAMapping/{id}")]
+        public IActionResult DeleteCustomerContactATA(long id)
+        {
+            var existingResult = _unitOfWork.Repository<CustomerContactATAMapping>().GetSingleOrDefault(c => c.CustomerContactATAMappingId == id);
+            existingResult.IsDeleted = true;
+            _unitOfWork.Repository<CustomerContactATAMapping>().Update(existingResult);
+            _unitOfWork.SaveChanges();
+            return Ok(id);
+        }
+
+
+        #endregion
+
+        #region TaxTypeRateMapped
+
+        [HttpGet("getCustomerTaxTypeRateMapped/{customerId}")]
+        [Produces(typeof(List<CustomerTaxTypeRateMapping>))]
+        public IActionResult TaxTypeRateMapped(long customerId)
+        {
+            var result = _unitOfWork.Customer.GetTaxTypeRateMapped(customerId);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+
+        [HttpPost("CustomerTaxTypeRatePost")]
+        [Produces(typeof(CustomerTaxTypeRateMapping[]))]
+        public IActionResult InsertCustomerTaxTypeRateInfo([FromBody] CustomerTaxTypeRateMappingViewModel[] customerTaxTypeRateMappingVM)
+        {
+            if (ModelState.IsValid)
+            {
+                for (int i = 0; i < customerTaxTypeRateMappingVM.Length; i++)
+                {
+                    CustomerTaxTypeRateMapping customerAircraftMapping = new CustomerTaxTypeRateMapping
+                    {
+                        TaxType = customerTaxTypeRateMappingVM[i].TaxType,
+                        TaxRate = customerTaxTypeRateMappingVM[i].TaxRate,
+                        CustomerId = customerTaxTypeRateMappingVM[i].CustomerId,
+                        MasterCompanyId = customerTaxTypeRateMappingVM[i].MasterCompanyId,
+                        CreatedBy = customerTaxTypeRateMappingVM[i].CreatedBy,
+                        UpdatedBy = customerTaxTypeRateMappingVM[i].UpdatedBy,
+                        CreatedDate = System.DateTime.Now,
+                        UpdatedDate = System.DateTime.Now,
+                        IsDeleted = customerTaxTypeRateMappingVM[i].IsDeleted,
+
+                    };
+                    _unitOfWork.Repository<CustomerTaxTypeRateMapping>().Add(customerAircraftMapping);
+                    _unitOfWork.SaveChanges();
+                }
+            }
+            else
+            {
+                return BadRequest($"{nameof(customerTaxTypeRateMappingVM)} cannot be null");
+            }
+            return Ok(ModelState);
+        }
+
+        [HttpDelete("DeleteCustomerTaxTypeRateMappint/{id}")]
+        public IActionResult DeleteCustomerTaxTypeRate(long id)
+        {
+            var existingResult = _unitOfWork.Repository<CustomerTaxTypeRateMapping>().GetSingleOrDefault(c => c.CustomerTaxTypeRateMappingId == id);
+            existingResult.IsDeleted = true;
+            _unitOfWork.Repository<CustomerTaxTypeRateMapping>().Update(existingResult);
+            _unitOfWork.SaveChanges();
+            return Ok(id);
+        }
+
+        #endregion
+
         [HttpPut("customerSalesPost/{id}")]
         public IActionResult UpdateSales(long id, [FromBody] CustomerViewModel customerViewModel)
         {
@@ -2267,6 +2404,19 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("getRestrictsPmaList")]
+        public IActionResult GetRestrictsPmaList(int itemMasterId, long? customerId)
+        {
+            var result = _unitOfWork.CommonRepository.GetRestrictPmaList(itemMasterId, customerId);
+            return Ok(result);
+        }
+
+        [HttpGet("getRestrictsBerList")]
+        public IActionResult GetRestrictsBerList(int itemMasterId, long? customerId)
+        {
+            var result = _unitOfWork.CommonRepository.GetRestrictDerList(itemMasterId, customerId);
+            return Ok(result);
+        }
 
         public class GetData
         {
