@@ -34,7 +34,9 @@ export class CreditTermsComponent implements OnInit {
     viewRowData: any;
     auditHistory: any;
     selectedRowforDelete: any;
-
+    percentageList:any[];
+    dayList:number[]=[];
+    netDayList:number[]=[];
     creditTermData: any;
     creditTermsList: any;
     creditTermHeaders = [
@@ -58,7 +60,7 @@ export class CreditTermsComponent implements OnInit {
             name: "",
             percentage: 0,
             days: 0,
-            netdays:0,
+            netDays:0,
             masterCompanyId: 1,
             isActive: true,
             isDelete: false,
@@ -76,6 +78,7 @@ export class CreditTermsComponent implements OnInit {
         this.selectedColumns = this.creditTermHeaders;
         this.getCreditTermList();
         this.getPercentageList();
+        this.setDays();
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-credit-terms';
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
     }
@@ -87,17 +90,25 @@ export class CreditTermsComponent implements OnInit {
     private getCreditTermList() {
         this.creditTermService.getCreditTermsList().subscribe(res => {
             const respData = res[0];
-            this.creditTermData = respData;
-            //TODO: THIS NEEDS TO BE FIXED
-            this.totalRecords = 1;//respData.totalRecords;
-            this.totalPages = 1;//Math.ceil(this.totalRecords / this.pageSize);
+            this.creditTermData = respData.columnData;
+            this.totalRecords = respData.totalRecords;
+            this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
         });
     }
 
     private getPercentageList() {
         this.percentageService.getPercentageList().subscribe(res => {
             const respData = res[0];
+            this.percentageList= respData;
         });
+    }
+    private setDays(){
+        const DAYCOUNT=360;
+        for(var i = 0; i <= DAYCOUNT; i++){
+            this.dayList.push(i);
+            this.netDayList.push(i);
+
+         }
     }
 
     resetCreditTermsForm() {
@@ -131,7 +142,7 @@ export class CreditTermsComponent implements OnInit {
         this.creditTermsList = CREDITTERMDATA;
     }
 
-    checkConditionExists(field, value) {
+    checkCreditTermExists(field, value) {
         const exists = validateRecordExistsOrNot(field, value, this.creditTermData, this.selectedRecordForEdit);
         if (exists.length > 0) {
             this.disableSaveForCreditTerm = true;
@@ -141,7 +152,7 @@ export class CreditTermsComponent implements OnInit {
         }
 
     }
-    selectedCondition(object) {
+    selectedCreditTerm(object) {
         const exists = selectedValueValidate('name', object, this.selectedRecordForEdit)
 
         this.disableSaveForCreditTerm = !exists;
@@ -163,7 +174,7 @@ export class CreditTermsComponent implements OnInit {
                 this.getCreditTermList();
                 this.alertService.showMessage(
                     'Success',
-                    `Deleted Condition Successfully  `,
+                    `Deleted Credit Term Successfully  `,
                     MessageSeverity.success
                 );
             })
@@ -213,7 +224,7 @@ export class CreditTermsComponent implements OnInit {
                 this.getCreditTermList();
                 this.alertService.showMessage(
                     'Success',
-                    `Updated Condition Successfully`,
+                    `Updated Credit Term Successfully`,
                     MessageSeverity.success
                 );
             })

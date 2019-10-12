@@ -149,7 +149,8 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                                     [(ngModel)]="addNewCreditTerm.name"
                                                     [suggestions]="creditTermsList"
                                                     (completeMethod)="filterCreditTerms($event)"
-                                                    (onKeyUp)="checkConditionExists('name', $event.target.value)"
+                                                    (onSelect)="selectedCreditTerm($event)"
+                                                    (onKeyUp)="checkCreditTermExists('name', $event.target.value)"
                                                     name="name" [size]="30" [minLength]="1" [dropdown]="true"
                                                     class="p-autoComplete-ctsm" required>
                                     </p-autoComplete>
@@ -164,12 +165,30 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                     </label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <input type="number" id="percentage" name="percentage" [(ngModel)]="addNewCreditTerm.percentage" required />
-                                    <p-dropdown [options]="manufacturerData"
-                                                name="percentage"
-                                                class="p-dropdown-custom "
-                                                [(ngModel)]="addNewCreditTerm.percentage"
-                                                ></p-dropdown>
+                               	   <select [(ngModel)]="addNewCreditTerm.percentage" [ngModelOptions]="{standalone: true}" required >
+                                        <option *ngFor="let per of percentageList" [ngValue]="per.value">{{per.value}}</option>
+                                   </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="days" class="control-label">Days</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <select [(ngModel)]="addNewCreditTerm.days" [ngModelOptions]="{standalone: true}" required >
+                                        <option *ngFor="let d of dayList" [ngValue]="d">{{d}}</option>
+                                   </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="netdays" class="control-label">Net Days</label>
+                                </div>
+                                <div class="col-sm-5">
+                                   <select [(ngModel)]="addNewCreditTerm.netDays" [ngModelOptions]="{standalone: true}" required >
+                                        <option *ngFor="let nd of netDayList" [ngValue]="nd">{{nd}}</option>
+                                   </select>
                                 </div>
                             </div>
                             <div class="col-sm-12">
@@ -180,23 +199,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                     <textarea #memo="ngModel" id="memo" name="memo" [(ngModel)]="addNewCreditTerm.memo"></textarea>
                                 </div>
                             </div>
-                            <div class="col-sm-12">
-                                <div class="col-sm-4">
-                                    <label for="days" class="control-label">Days</label>
-                                </div>
-                                <div class="col-sm-5">
-                                    <input type="number" id="days" name="days" [(ngModel)]="addNewCreditTerm.days" />
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12">
-                                <div class="col-sm-4">
-                                    <label for="netdays" class="control-label">Net Days</label>
-                                </div>
-                                <div class="col-sm-5">
-                                    <input type="number" id="netdays" name="netdays" [(ngModel)]="addNewCreditTerm.netDays" />
-                                </div>
-                            </div>
+                          
                         </div>
                         <div class="form-group">
                             <div class="col-sm-6">
@@ -213,8 +216,8 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                             <div class="clear"></div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="!userForm.valid || disableSaveForCondition" (click)="saveCreditTerms();">Save</button>
-                            <button type="button" class="btn btn-danger-cstm" (click)="resetConditionForm()">Close</button>
+                            <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="!userForm.valid || disableSaveForCreditTerm" (click)="saveCreditTerms();">Save</button>
+                            <button type="button" class="btn btn-danger-cstm" (click)="resetCreditTermsForm()">Close</button>
                         </div>
                     </form>
                 </div>

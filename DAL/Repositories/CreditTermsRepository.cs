@@ -32,7 +32,7 @@ namespace DAL.Repositories
 
         public IEnumerable<CreditTermsAudit> GetAuditDetails(long id)
         {
-            return _appContext.CreditTermsAudit.Where(c=> c.CreditTermsId== id).ToList();
+            return _appContext.CreditTermsAudit.Where(c=> c.CreditTermsId== id).OrderByDescending(c=>c.CreatedDate).ToList();
         }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

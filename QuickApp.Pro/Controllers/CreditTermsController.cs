@@ -34,20 +34,24 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<CreditTermsViewModel>))]
         public IActionResult Get()
         {
-            var result = _unitOfWork.CreditTerms.GetAllCreditTermsData(); //.GetAllCustomersData();
+            var result = _unitOfWork.CreditTerms.GetAllCreditTermsData();
 
-
-            try
+            List<ColumHeader> columHeaders = new List<ColumHeader>();
+            PropertyInfo[] propertyInfos = typeof(CreditTermsViewModel).GetProperties();
+            ColumHeader columnHeader;
+            DynamicGridData<dynamic> dynamicGridData = new DynamicGridData<dynamic>();
+            foreach (PropertyInfo property in propertyInfos)
             {
-                var resul1 = Mapper.Map<IEnumerable<CreditTermsViewModel>>(result);
-
-                return Ok(resul1);
+                columnHeader = new ColumHeader();
+                columnHeader.field = char.ToLower(property.Name[0]) + property.Name.Substring(1);//FirstCharToUpper(property.Name);
+                columnHeader.header = property.Name;
+                columHeaders.Add(columnHeader);
             }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
+            dynamicGridData.columHeaders = columHeaders;
+            dynamicGridData.ColumnData = Mapper.Map<IEnumerable<CreditTermsViewModel>>(result);
+            dynamicGridData.TotalRecords = dynamicGridData.ColumnData.Count();
+            return Ok(dynamicGridData);
+           
 
 
 
@@ -102,9 +106,6 @@ namespace QuickApp.Pro.Controllers
                     return BadRequest($"{nameof(credittermviewmodel)} cannot be null");
 
                 var existingResult = _unitOfWork.CreditTerms.GetSingleOrDefault(c => c.CreditTermsId == id);
-                // DAL.Models.Action updateObject = new DAL.Models.Action();
-
-
                 existingResult.UpdatedDate = DateTime.Now;
                 existingResult.UpdatedBy = credittermviewmodel.UpdatedBy;
                 existingResult.Memo = credittermviewmodel.Memo;
