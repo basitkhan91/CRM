@@ -93,7 +93,9 @@ export class SiteComponent implements OnInit, AfterViewInit {
 	disableSaveManufacturer: boolean;
 	selectedSite: any;
 	siteNamecolle: any;
-	AuditDetails: SingleScreenAuditDetails[];
+	AuditDetails: any[];
+	HasAuditDetails: boolean;
+	AuditHistoryTitle: string = 'History of Site'
 	totelPages: number;
 	ngOnInit(): void {
 		//This Headers will Place in Html
@@ -116,6 +118,7 @@ export class SiteComponent implements OnInit, AfterViewInit {
 		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-site';
 		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
 		this.selectedColumns = this.cols;
+		this.HasAuditDetails = false;
 	}
 
 	ngAfterViewInit() {
@@ -683,11 +686,12 @@ export class SiteComponent implements OnInit, AfterViewInit {
 	}
 
 	auditAssetStatus(siteId: number): void {
-		this.AuditDetails = [];
+		this.AuditDetails  = [];
+		this.HasAuditDetails = this.AuditDetails.length > 0;
 		this.workFlowtService.getSiteAudit(siteId).subscribe(audits => {
 			if (audits.length > 0) {
 				this.AuditDetails = audits[0].result;
-				//this.AuditDetails[0].ColumnsToAvoid = ["siteAuditId", "siteId", "createdBy", "createdDate", "updatedDate"];
+				this.HasAuditDetails = this.AuditDetails.length > 0;
 			}
 		});
 	}

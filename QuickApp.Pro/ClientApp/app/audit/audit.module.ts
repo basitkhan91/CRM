@@ -2,13 +2,22 @@
 import { CommonModule } from "@angular/common";
 import { AuditComponent } from "../components/Audit/audit.component";
 import { AppSiteAuditComponent } from "../components/Audit/AppSiteAudit/app-site-audit.component";
+import { AppSiteAuditNoHistoryComponent } from "../components/Audit/AuditNoHistory/app-site-audit-no-history.component";
 
 @NgModule({
-  declarations: [AuditComponent, AppSiteAuditComponent],
+  declarations: [
+    AuditComponent,
+    AppSiteAuditComponent,
+    AppSiteAuditNoHistoryComponent
+  ],
 
   imports: [CommonModule],
 
-  exports: [AuditComponent, AppSiteAuditComponent],
+  exports: [
+    AuditComponent,
+    AppSiteAuditComponent,
+    AppSiteAuditNoHistoryComponent
+  ],
 
   providers: [],
 

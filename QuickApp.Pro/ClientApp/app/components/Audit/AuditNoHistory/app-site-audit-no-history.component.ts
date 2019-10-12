@@ -3,24 +3,19 @@ import { fadeInOut } from "../../../services/animations";
 import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
-  selector: "app-site-audit",
-  templateUrl: "./app-site-audit.component.html",
+  selector: "app-site-audit-no-history",
+  templateUrl: "./app-site-audit-no-history.component.html",
   styleUrls: [],
   animations: [fadeInOut]
 })
-export class AppSiteAuditComponent implements OnInit {
-  @Input() Data: any[];
+export class AppSiteAuditNoHistoryComponent implements OnInit {
+  @Input() Title: string;
   @Input() Modal: NgbModalRef;
-  auditDetails: any[] = [];
-  ngOnInit(): void {
-    this.auditDetails = [];
-    this.auditDetails = this.Data;
-  }
+  ngOnInit(): void {}
 
   dismissModel(): void {
     if (this.Modal != undefined) {
       this.Modal.close();
-      this.auditDetails = [];
     }
   }
 }

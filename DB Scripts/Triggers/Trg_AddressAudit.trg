@@ -55,7 +55,7 @@ BEGIN
 	,UpdatedBy
 	,CreatedDate
 	,UpdatedDate
-	,IsActive
+	,ISNULL(IsActive,0)
  FROM INSERTED  
   
  SET NOCOUNT ON;  

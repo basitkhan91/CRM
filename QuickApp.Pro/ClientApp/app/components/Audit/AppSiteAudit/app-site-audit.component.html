@@ -15,7 +15,7 @@
     <div class="table-responsive rro-table-cstm">
       <table
         class="table table-bordered"
-        *ngIf="auditDetails && auditDetails.length > 0; else noDatavailable"
+        *ngIf="auditDetails && auditDetails.length > 0"
       >
         <thead>
           <tr>
@@ -26,9 +26,8 @@
             <th>Updated Time</th>
           </tr>
         </thead>
-        <tbody *ngIf="auditDetails && auditDetails.length > 0">
+        <tbody>
           <tr *ngFor="let audit of auditDetails; let i = index">
-            <!-- <td >{{audit.unitOfMeasureAuditId}}</td> -->
             <td
               [ngStyle]="{
                 color:
@@ -64,25 +63,16 @@
           </tr>
         </tbody>
       </table>
-      <ng-template #noDatavailable>
-        <div class="text-center">
-          <img
-            src="../../../assets/images/binoculars.png"
-            style="height: 100px; width: 100px;"
-          />
-          <h4 style="color: #ff5663;">No History Found</h4>
-        </div>
-      </ng-template>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-danger-cstm"
+          data-dismiss="modal"
+          (click)="dismissModel()"
+        >
+          Close
+        </button>
+      </div>
     </div>
-  </div>
-  <div class="modal-footer">
-    <button
-      type="button"
-      class="btn btn-danger-cstm"
-      data-dismiss="modal"
-      (click)="dismissModel()"
-    >
-      Close
-    </button>
   </div>
 </div>
