@@ -588,7 +588,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Charges', routerLink: '/singlepages/singlepages/app-charges' },
                             { label: 'Reasons', routerLink: '/singlepages/singlepages/app-reason' },
                             { label: 'Findings', routerLink: '/#' },
-                            { label: 'Work Performed', routerLink: '/#' },
+                            { label: 'Work Performed', routerLink: '/singlepages/singlepages/app-work-performed' },
                         ]
                     },
                     {

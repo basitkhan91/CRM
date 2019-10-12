@@ -25,5 +25,7 @@ namespace DAL.Repositories.Interfaces
         List<ClassificationMapping> GetVendorClassificationMappings(int moduleId, int referenceId);
 
         dynamic UpdateEntity(dynamic uiModel, dynamic dbModel, ref IDictionary<string, object> keyValuePairs);
+
+        IEnumerable<object> BindDropdowns(string tableName, string primaryColumn, string textColumn);
     }
 }

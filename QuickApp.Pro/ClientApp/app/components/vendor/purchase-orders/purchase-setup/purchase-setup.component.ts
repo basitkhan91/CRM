@@ -203,10 +203,13 @@ export class PurchaseSetupComponent {
 	childObjectArray: any[] = [];
 	parentObjectArray: any[] = [];
 	tempParentData: any;
-	employeesList: any[];
+	requisitionerList: any[];
+	approverList: any[];
 	newPNList = [];
 	newPartsList: CreatePOPartsList;
 	splitVendorNames: any[];
+	parentManagementInfo: any[] = [];
+	childManagementInfo: any[] = [];
 
 	/** po-approval ctor */
 	constructor(public siteService: SiteService, public warehouseService: WarehouseService, private masterComapnyService: MasterComapnyService, public cusservice: CustomerService, private itemser: ItemMasterService, private modalService: NgbModal, private route: Router, public legalEntityService: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public vendorService: VendorService, public priority: PriorityService, private alertService: AlertService ,public glAccountService: GlAccountService, private authService: AuthService) {
@@ -394,10 +397,10 @@ export class PurchaseSetupComponent {
 		this.ptnumberlistdata();
 		this.loadcustomerData();
 		this.glAccountData();
-		this.sourcePoApproval.masterCompanyId = 0;
-		this.sourcePoApproval.buid1 = 0;
-		this.sourcePoApproval.divid1 = 0;
-		this.sourcePoApproval.depid1 = 0;
+		this.sourcePoApproval.companyId = 0;
+		this.sourcePoApproval.buId = 0;
+		this.sourcePoApproval.divisionId = 0;
+		this.sourcePoApproval.departmentId = 0;
 		if (this.sourcePoApproval.purchaseOrderNumber == "" || this.sourcePoApproval.purchaseOrderNumber == undefined) {
 			this.sourcePoApproval.purchaseOrderNumber = 'Creating';
 		}
@@ -421,9 +424,10 @@ export class PurchaseSetupComponent {
 
 		console.log(this.sourcePoApproval);
 		this.sourcePoApproval.statusId = 1;
+		this.sourcePoApproval.openDate = new Date()
 		this.sourcePoApproval.dateRequested = new Date();
-		this.sourcePoApproval.shipToUserType = 3;
-		this.sourcePoApproval.billToUserType = 3;
+		this.sourcePoApproval.shipToUserTypeId = 3;
+		this.sourcePoApproval.billToUserTypeId = 3;
 		//grid childlist disable on load
 		if(!this.isEditMode) {
 			for (let i = 0; i < this.partListData.length; i++) {
@@ -541,37 +545,39 @@ export class PurchaseSetupComponent {
 			purchaseOrderNumber: this.sourcePoApproval.purchaseOrderNumber,
 				openDate: new Date(this.sourcePoApproval.openDate),
 				needByDate: new Date(this.sourcePoApproval.needByDate),
-				priorityId: this.sourcePoApproval.priorityId.priorityId,
-				deferredReceiver: this.sourcePoApproval.deferredReceiver ? this.sourcePoApproval.deferredReceiver : false,
-				vendorId: this.sourcePoApproval.vendorId.vendorId,
-				vendorName: this.sourcePoApproval.vendorId.vendorName,
-				vendorCode: this.sourcePoApproval.vendorCode.vendorId,
-				vendorContactId: this.sourcePoApproval.vendorContactId.vendorId,
-				vendorContactPhone: this.sourcePoApproval.vendorContactPhone.vendorPhone,
-				creditLimit: this.sourcePoApproval.creditLimit,
-				creditTermsId: this.sourcePoApproval.creditTermsId.creditTermsId,
-				requisitionerId: this.sourcePoApproval.requisitionerId.employeeId,
-				approverId: this.sourcePoApproval.approverId.employeeId ? this.sourcePoApproval.approverId.employeeId : null,
-				dateApproved: new Date(this.sourcePoApproval.approvedDate),
-				statusId: this.sourcePoApproval.statusId,
+				priorityId: this.sourcePoApproval.priorityId.priorityId ? this.sourcePoApproval.priorityId.priorityId : 0,
+				deferredReceiver: this.sourcePoApproval.deferredReceiver ? this.sourcePoApproval.deferredReceiver : false,				
+				//vendorId: this.sourcePoApproval.vendorId.vendorId ? this.sourcePoApproval.vendorId.vendorId : 0,
+				vendorId: 671,
+				//vendorName: this.sourcePoApproval.vendorId.vendorName,
+				//vendorCode: this.sourcePoApproval.vendorCode.vendorId,
+				//vendorContactId: this.sourcePoApproval.vendorContactId.vendorId ? this.sourcePoApproval.vendorContactId.vendorId : 0,
+				vendorContactId: 200,
+				vendorContactPhone: this.sourcePoApproval.vendorContactPhone.vendorPhone ? this.sourcePoApproval.vendorContactPhone.vendorPhone : '',
+				creditLimit: this.sourcePoApproval.creditLimit ? this.sourcePoApproval.creditLimit : '',
+				creditTermsId: this.sourcePoApproval.creditTermsId.creditTermsId ? this.sourcePoApproval.creditTermsId.creditTermsId : 0,
+				requisitionerId: this.sourcePoApproval.requisitionerId.employeeId ? this.sourcePoApproval.requisitionerId.employeeId : 0,
+				approverId: this.sourcePoApproval.approverId ? this.getApproverId(this.sourcePoApproval.approverId) : 0,
+				approvedDate: new Date(this.sourcePoApproval.approvedDate),
+				statusId: this.sourcePoApproval.statusId ? this.sourcePoApproval.statusId : 0,
 				resale: this.sourcePoApproval.resale ? this.sourcePoApproval.resale : false,
-				managementStructureId: this.sourcePoApproval.managementStructureId,
-				poMemo: this.sourcePoApproval.poMemo,
-				shipToUserTypeId: parseInt(this.sourcePoApproval.shipToUserTypeId),
-				shipToUserId: this.sourcePoApproval.shipToUserId ? this.getShipToBillToUserId(this.sourcePoApproval.shipToUserId) : null,
-				shipToAddressId: this.sourcePoApproval.shipToAddressId,
-				shipToContactId: this.sourcePoApproval.shipToContactId.contactId,
-				shipViaId: null,
-				shippingCost: null,
-				handlingCost: null,
-				shippingId: null,
+				managementStructureId: this.sourcePoApproval.managementStructureId ? this.sourcePoApproval.managementStructureId : 0,
+				poMemo: this.sourcePoApproval.poMemo ? this.sourcePoApproval.poMemo : '',
+				shipToUserTypeId: this.sourcePoApproval.shipToUserTypeId ? parseInt(this.sourcePoApproval.shipToUserTypeId) : 0,
+				shipToUserId: this.sourcePoApproval.shipToUserId ? this.getShipToBillToUserId(this.sourcePoApproval.shipToUserId) : 0,
+				shipToAddressId: this.sourcePoApproval.shipToAddressId ? this.sourcePoApproval.shipToAddressId : 0,
+				shipToContactId: this.sourcePoApproval.shipToContactId ? this.getShipBillContactId(this.sourcePoApproval.shipToContactId) : 0,
+				shipViaId: 0,
+				shippingCost: 0,
+				handlingCost: 0,
+				shippingId: 0,
 				shippingURL: '',
-				shipToMemo: this.sourcePoApproval.shipToMemo,
-				billToUserType: parseInt(this.sourcePoApproval.billToUserTypeId),
-				billToUserId: this.sourcePoApproval.billToUserId ? this.getShipToBillToUserId(this.sourcePoApproval.billToUserId) : null,
-				billToAddressId: this.sourcePoApproval.billToAddressId,
-				billToContactId: this.sourcePoApproval.billToContactId.contactId,
-				billToMemo: this.sourcePoApproval.billToMemo,
+				shipToMemo: this.sourcePoApproval.shipToMemo ? this.sourcePoApproval.shipToMemo : '',
+				billToUserTypeId: this.sourcePoApproval.billToUserTypeId ? parseInt(this.sourcePoApproval.billToUserTypeId) : 0,
+				billToUserId: this.sourcePoApproval.billToUserId ? this.getShipToBillToUserId(this.sourcePoApproval.billToUserId) : 0,
+				billToAddressId: this.sourcePoApproval.billToAddressId ? this.sourcePoApproval.billToAddressId : 0,
+				billToContactId: this.sourcePoApproval.billToContactId ? this.getShipBillContactId(this.sourcePoApproval.billToContactId) : 0,
+				billToMemo: this.sourcePoApproval.billToMemo ? this.sourcePoApproval.billToMemo : '',
 				createdBy: this.userName,
 				updatedBy: this.userName
 		}
@@ -884,23 +890,22 @@ export class PurchaseSetupComponent {
 						console.log(childDataList);
 						
 						for (let j = 0; j < childDataList.length; j++) {
-							//let childobj
 							this.childObject = {
 								purchaseOrderId: purId,
-								isParent: false,
-								serialNumber: j+1,
-								itemMasterId: this.partListData[i].itemMasterId,
-								assetId: this.partListData[i].assetId,
-								partNumberId: this.partListData[i].itemMasterId,
-								poPartSplitUserTypeId: childDataList[j].partListUserTypeId,
-								poPartSplitUserId: childDataList[j].partListUserId ? this.getIdByObject(childDataList[j].partListUserId) : null,
-								poPartSplitAddressId: childDataList[j].partListAddressId,
-								UOMId: this.partListData[i].UOMId,
-								quantityOrdered: childDataList[j].quantityOrdered,
+								//isParent: false,
+								//serialNumber: j+1,
+								itemMasterId: this.partListData[i].itemMasterId ? this.partListData[i].itemMasterId : 0,
+								assetId: this.partListData[i].assetId ? this.partListData[i].assetId : 0,
+								partNumberId: this.partListData[i].itemMasterId ? this.partListData[i].itemMasterId : 0,
+								poPartSplitUserTypeId: childDataList[j].partListUserTypeId ? childDataList[j].partListUserTypeId : 0,
+								poPartSplitUserId: childDataList[j].partListUserId ? this.getIdByObject(childDataList[j].partListUserId) : 0,
+								poPartSplitAddressId: childDataList[j].partListAddressId ? childDataList[j].partListAddressId : 0,
+								UOMId: this.partListData[i].UOMId ? this.partListData[i].UOMId : 0,
+								quantityOrdered: childDataList[j].quantityOrdered ? childDataList[j].quantityOrdered : 0,
 								needByDate: childDataList[j].needByDate,
-								managementStructureId: childDataList[j].managementStructureId,
-								createdBy: this.userName,
-								updatedBy: this.userName,
+								managementStructureId: childDataList[j].managementStructureId ? childDataList[j].managementStructureId : 0,
+								//createdBy: this.userName,
+								//updatedBy: this.userName,
 							}
 														
 							this.childObjectArray.push(this.childObject)	
@@ -911,34 +916,35 @@ export class PurchaseSetupComponent {
 					this.parentObject = {
 						purchaseOrderId: purId,
 						isParent: true,
-						serialNumber: i+1,
-						itemMasterId: this.partListData[i].itemMasterId,
-						assetId: this.partListData[i].assetId,
-						partNumberId: this.partListData[i].itemMasterId,
-						altPartNumberId: this.partListData[i].altPartNumberId,
-						itemTypeId: this.partListData[i].itemTypeId,
-						manufacturerId: this.partListData[i].manufacturerId,
-						glAccountId: this.partListData[i].glAccountId,
-						UOMId: this.partListData[i].UOMId,
+						//serialNumber: i+1,
+						itemMasterId: this.partListData[i].itemMasterId ? this.partListData[i].itemMasterId : 0,
+						assetId: this.partListData[i].assetId ? this.partListData[i].assetId : 0,
+						partNumberId: this.partListData[i].itemMasterId ? this.partListData[i].itemMasterId : 0,
+						altPartNumberId: this.partListData[i].altPartNumberId ? this.partListData[i].altPartNumberId : 0,
+						itemTypeId: this.partListData[i].itemTypeId ? this.partListData[i].itemTypeId : 0,
+						manufacturerId: this.partListData[i].manufacturerId ? this.partListData[i].manufacturerId : 0,
+						glAccounId: this.partListData[i].glAccountId ? this.partListData[i].glAccountId : 0,
+						UOMId: this.partListData[i].UOMId ? this.partListData[i].UOMId : 0,
 						needByDate: this.partListData[i].needByDate,
-						conditionId: this.partListData[i].conditionId ? this.getConditionIdByObject(this.partListData[i].conditionId) : null,
-						quantityOrdered: this.partListData[i].quantityOrdered,
-						unitCost: this.partListData[i].unitCost,
-						discountPerUnit: this.partListData[i].discountPerUnit,
-						discountAmount: this.partListData[i].discountAmount,
-						extendedCost: this.partListData[i].extendedCost,
-						functionalCurrencyId: this.partListData[i].functionalCurrencyId ? this.getCurrencyIdByObject(this.partListData[i].functionalCurrencyId) : null,
-						foreignExchangeRate: this.partListData[i].foreignExchangeRate,
-						reportCurrencyId: this.partListData[i].reportCurrencyId,
-						workOrderId: this.partListData[i].workOrderId,
-						repairOrderId: this.partListData[i].repairOrderId,
-						salesOrderId: this.partListData[i].salesOrderId,
-						managementStructureId: this.partListData[i].managementStructureId,
+						conditionId: this.partListData[i].conditionId ? this.getConditionIdByObject(this.partListData[i].conditionId) : 0,
+						quantityOrdered: this.partListData[i].quantityOrdered ? this.partListData[i].quantityOrdered : 0,
+						unitCost: this.partListData[i].unitCost ? this.partListData[i].unitCost : 0,
+						discountPerUnit: this.partListData[i].discountPerUnit ? this.partListData[i].discountPerUnit : 0,
+						discountAmount: this.partListData[i].discountAmount ? this.partListData[i].discountAmount : 0,
+						extendedCost: this.partListData[i].extendedCost ? this.partListData[i].extendedCost : 0,
+						functionalCurrencyId: this.partListData[i].functionalCurrencyId ? this.getCurrencyIdByObject(this.partListData[i].functionalCurrencyId) : 1,
+						foreignExchangeRate: this.partListData[i].foreignExchangeRate ? this.partListData[i].foreignExchangeRate : 0,
+						//reportCurrencyId: this.partListData[i].reportCurrencyId ? this.partListData[i].reportCurrencyId : 1,
+						reportCurrencyId: this.partListData[i].reportCurrencyId ? this.getCurrencyIdByObject(this.partListData[i].reportCurrencyId) : 1,
+						workOrderId: this.partListData[i].workOrderId ? this.partListData[i].workOrderId : 0,
+						repairOrderId: this.partListData[i].repairOrderId ? this.partListData[i].repairOrderId : 0,
+						salesOrderId: this.partListData[i].salesOrderId ? this.partListData[i].salesOrderId : 0,
+						managementStructureId: this.partListData[i].managementStructureId ? this.partListData[i].managementStructureId : 0,
 						memo: this.partListData[i].memo,
 						masterCompanyId: 1,
 						createdBy: this.userName,
 						updatedBy: this.userName,
-						childobj: this.childObjectArray,
+						poPartSplits: this.childObjectArray,
 					}
 					this.parentObjectArray.push(this.parentObject)	
 					console.log(this.parentObjectArray);	
@@ -1363,7 +1369,177 @@ export class PurchaseSetupComponent {
 		this.allManagementSiteData = managementSiteData;
 	}
 
-	private onManagemtntdataLoad(getAtaMainList: any[]) {
+	private onManagemtntdataLoad(managementInfo: any[]) {
+		console.log(managementInfo);
+		this.allManagemtninfo = managementInfo;
+		this.parentManagementInfo = managementInfo;
+		this.childManagementInfo = managementInfo;
+		for (let i = 0; i < this.allManagemtninfo.length; i++) {
+			if (this.allManagemtninfo[i].parentId == null) {
+				this.bulist = [];
+				this.divisionlist = [];
+				this.departmentList = [];				
+				this.maincompanylist.push(this.allManagemtninfo[i]);
+			}
+		}
+	}
+
+	getBUList(companyId) {
+		this.sourcePoApproval.managementStructureId = companyId;
+		this.bulist = [];
+		this.divisionlist = [];
+		this.departmentList = [];
+		for (let i = 0; i < this.allManagemtninfo.length; i++) {
+			if (this.allManagemtninfo[i].parentId == companyId) {
+				this.bulist.push(this.allManagemtninfo[i]);
+			}
+		}
+		for (let i = 0; i < this.partListData.length; i++) {
+			this.partListData[i].parentCompanyId = companyId;
+			this.getParentBUList(this.partListData[i]);
+			if(this.partListData[i].childList) {
+			for (let j = 0; j < this.partListData[i].childList.length; j++) {	
+				this.partListData[i].childList[j].childCompanyId = companyId;			
+				this.getChildBUList(this.partListData[i].childList[j]);
+			}
+		} 
+		}
+		
+	}
+
+	getDivisionlist(buId) {
+		this.sourcePoApproval.managementStructureId = buId;
+		this.divisionlist = [];
+		this.departmentList = [];		
+		for (let i = 0; i < this.allManagemtninfo.length; i++) {
+			if (this.allManagemtninfo[i].parentId == buId) {
+				this.divisionlist.push(this.allManagemtninfo[i]);
+			}
+		}
+		for (let i = 0; i < this.partListData.length; i++) {
+			this.partListData[i].parentbuId = buId;
+			this.getParentDivisionlist(this.partListData[i]);
+			if(this.partListData[i].childList) {
+			for (let j = 0; j < this.partListData[i].childList.length; j++) {	
+				this.partListData[i].childList[j].childbuId = buId;			
+				this.getChildDivisionlist(this.partListData[i].childList[j]);
+			}
+		} 
+		}
+	}
+
+	getDepartmentlist(divisionId) {
+		this.sourcePoApproval.managementStructureId = divisionId;
+		this.departmentList = [];		
+		for (let i = 0; i < this.allManagemtninfo.length; i++) {
+			if (this.allManagemtninfo[i].parentId == divisionId) {
+				this.departmentList.push(this.allManagemtninfo[i]);
+			}
+		}
+		for (let i = 0; i < this.partListData.length; i++) {
+			this.partListData[i].parentDivisionId = divisionId;
+			this.getParentDeptlist(this.partListData[i]);
+			if(this.partListData[i].childList) {
+			for (let j = 0; j < this.partListData[i].childList.length; j++) {	
+				this.partListData[i].childList[j].childDivisionId = divisionId;			
+				this.getChildDeptlist(this.partListData[i].childList[j]);
+			}
+		} 
+		}
+	}
+
+	getDepartmentId(departmentId) {
+		this.sourcePoApproval.managementStructureId = departmentId;
+		for (let i = 0; i < this.partListData.length; i++) {
+			this.partListData[i].parentDeptId = departmentId;
+		}
+		for (let i = 0; i < this.partListData.length; i++) {
+			this.partListData[i].parentDeptId = departmentId;
+			this.getParentDeptId(this.partListData[i]);
+			if(this.partListData[i].childList) {
+			for (let j = 0; j < this.partListData[i].childList.length; j++) {	
+				this.partListData[i].childList[j].childDeptId = departmentId;			
+				this.getChildDeptId(this.partListData[i].childList[j]);
+			}
+		} 
+		}
+	}
+
+	getParentBUList(partList) {
+		partList.managementStructureId = partList.parentCompanyId;
+		partList.parentBulist = []
+		partList.parentDivisionlist = [];
+		partList.parentDepartmentlist = [];
+		for (let i = 0; i < this.parentManagementInfo.length; i++) {
+			if (this.parentManagementInfo[i].parentId == partList.parentCompanyId) {
+				partList.parentBulist.push(this.parentManagementInfo[i]);
+			}
+		}
+	}
+
+	getParentDivisionlist(partList) {
+		partList.managementStructureId = partList.parentbuId;
+		partList.parentDivisionlist = [];
+		partList.parentDepartmentlist = [];	
+		for (let i = 0; i < this.parentManagementInfo.length; i++) {
+			if (this.parentManagementInfo[i].parentId == partList.parentbuId) {
+				partList.parentDivisionlist.push(this.parentManagementInfo[i]);
+			}
+		}
+	}
+
+	getParentDeptlist(partList) {
+		partList.managementStructureId = partList.parentDivisionId;
+		partList.parentDepartmentlist = [];	
+		for (let i = 0; i < this.parentManagementInfo.length; i++) {
+			if (this.parentManagementInfo[i].parentId == partList.parentDivisionId) {
+				partList.parentDepartmentlist.push(this.parentManagementInfo[i]);
+			}
+		}
+	}
+
+	getParentDeptId(partList) {
+		partList.managementStructureId = partList.parentDeptId;
+	}
+
+	getChildBUList(partChildList) {
+		partChildList.managementStructureId = partChildList.childCompanyId;
+		partChildList.childBulist = [];
+		partChildList.childDivisionlist = [];
+		partChildList.childDepartmentlist = [];
+		for (let i = 0; i < this.childManagementInfo.length; i++) {
+			if (this.childManagementInfo[i].parentId == partChildList.childCompanyId) {
+				partChildList.childBulist.push(this.childManagementInfo[i]);
+			}
+		}
+	}
+
+	getChildDivisionlist(partChildList) {
+		partChildList.managementStructureId = partChildList.childbuId;
+		partChildList.childDivisionlist = [];
+		partChildList.childDepartmentlist = [];	
+		for (let i = 0; i < this.childManagementInfo.length; i++) {
+			if (this.childManagementInfo[i].parentId == partChildList.childbuId) {
+				partChildList.childDivisionlist.push(this.childManagementInfo[i]);
+			}
+		}
+	}
+
+	getChildDeptlist(partChildList) {
+		partChildList.managementStructureId = partChildList.childDivisionId;
+		partChildList.childDepartmentlist = [];	
+		for (let i = 0; i < this.childManagementInfo.length; i++) {
+			if (this.childManagementInfo[i].parentId == partChildList.childDivisionId) {
+				partChildList.childDepartmentlist.push(this.childManagementInfo[i]);
+			}
+		}
+	}
+
+	getChildDeptId(partChildList) {
+		partChildList.managementStructureId = partChildList.childDeptId;
+	}
+
+	/*private onManagemtntdataLoad(getAtaMainList: any[]) {
 
 
 		this.allManagemtninfo = getAtaMainList;
@@ -1509,7 +1685,7 @@ export class PurchaseSetupComponent {
 			this.partListData[i].partDepartmentId = depid;
 			this.onPartDepartmentChange(this.partListData[i]);
 		}
-	}
+	}*/
 	private onprioritySuccessful(getPriorityList: any[]) {
 
 		this.allPriorityInfo = getPriorityList;
@@ -1538,7 +1714,7 @@ export class PurchaseSetupComponent {
 		this.issuedToAddress = data;
 		console.log(data);
 	}
-	getPartValue(parentdata, data) {
+	/*getPartValue(parentdata, data) {
 		this.partWithId = [];
 		this.itemTypeId = 1;
 		this.vendorService.getPartDetailsWithid(data).subscribe(
@@ -1593,7 +1769,7 @@ export class PurchaseSetupComponent {
 		}
 
 		console.log(this.partWithId);
-    }
+    }*/
 
 	private loadConditionData() {
 
@@ -1693,6 +1869,38 @@ export class PurchaseSetupComponent {
 					this.partListData[i].childList = [];
 				}
 			}
+			if(this.sourcePoApproval.companyId) {
+				for (let i = 0; i < this.partListData.length; i++) {
+					if(i == this.partListData.length-1) {
+						this.partListData[i].parentCompanyId = this.sourcePoApproval.companyId;
+						this.getParentBUList(this.partListData[i]);	
+					}								
+				}
+			}
+			if(this.sourcePoApproval.buId) {
+				for (let i = 0; i < this.partListData.length; i++) {
+					if(i == this.partListData.length-1) {
+						this.partListData[i].parentbuId = this.sourcePoApproval.buId;
+						this.getParentDivisionlist(this.partListData[i]);	
+					}				
+				}
+			}
+			if(this.sourcePoApproval.divisionId) {
+				for (let i = 0; i < this.partListData.length; i++) {
+					if(i == this.partListData.length-1) {
+						this.partListData[i].parentDivisionId = this.sourcePoApproval.divisionId;
+						this.getParentDeptlist(this.partListData[i]);	
+					}				
+				}
+			}
+			if(this.sourcePoApproval.departmentId) {
+				for (let i = 0; i < this.partListData.length; i++) {
+					if(i == this.partListData.length-1) {
+						this.partListData[i].parentDeptId = this.sourcePoApproval.departmentId;
+						this.getParentDeptId(this.partListData[i]);	
+					}				
+				}
+			}	
 		}
 		
 	}
@@ -2556,14 +2764,25 @@ export class PurchaseSetupComponent {
 	// 	}
 	// }
 
-	filterEmployees(event) {
-		this.employeesList = this.allEmployeeinfo;
+	filterRequisitioner(event) {
+		this.requisitionerList = this.allEmployeeinfo;
 
 		if (event.query !== undefined && event.query !== null) {
 			const empFirstName = [...this.allEmployeeinfo.filter(x => {
 				return x.firstName;
 			})]
-			this.employeesList = empFirstName;
+			this.requisitionerList = empFirstName;
+		}
+	}
+
+	filterApprover(event) {
+		this.approverList = this.allEmployeeinfo;
+
+		if (event.query !== undefined && event.query !== null) {
+			const empFirstName = [...this.allEmployeeinfo.filter(x => {
+				return x.firstName;
+			})]
+			this.approverList = empFirstName;
 		}
 	}
 
@@ -2925,6 +3144,22 @@ export class PurchaseSetupComponent {
 		}
 		if(obj.customerId) {
 			return obj.customerId;
+		}
+	}
+
+	getApproverId(obj) {		
+		if(obj.employeeId) {
+			return obj.employeeId;
+		} else {
+			return 0;
+		}
+	}
+
+	getShipBillContactId(obj) {
+		if(obj.contactId) {
+			return obj.contactId;
+		} else {
+			return 0;
 		}
 	}
 

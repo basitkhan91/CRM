@@ -15,6 +15,7 @@ export class VendorClassificationEndpoint extends EndpointFactory {
     private readonly _actionsUrlNew: string = "/api/VendorClassification/vendorclassification";
     private readonly _actionsUrlAuditHistory: string = "/api/VendorClassification/auditHistoryById";
     private readonly getVendorClassificationAuditById: string = "/api/VendorClassification/audits";
+    private readonly _actionUrlAll: string = "/api/VendorClassification/getAll"
 
 
     // private readonly _workflowActionsNewUrl: string = "/api/WorkflowAction/Get";
@@ -33,11 +34,19 @@ export class VendorClassificationEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getVendorClassificationEndpoint());
             });
     }
+
     getActiveVendorClassificationEndpoint<T>(): Observable<T> {
 
         return this.http.get<T>(this.actionsUrl+"Active", this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getActiveVendorClassificationEndpoint());
+            });
+    }
+
+    getAllVendorClassificationEndpoint<T>(): Observable<T> {
+        return this.http.get<T>(this._actionUrlAll, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAllVendorClassificationEndpoint());
             });
     }
 
@@ -50,7 +59,7 @@ export class VendorClassificationEndpoint extends EndpointFactory {
     }
 
     getHistoryVendorClassificationEndpoint<T>(vendorclassificationId: number): Observable<T> {
-        let endpointUrl = `${this._actionsUrlAuditHistory}/${vendorclassificationId}`;
+        let endpointUrl = `${this.getVendorClassificationAuditById}/${vendorclassificationId}`;
 
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {

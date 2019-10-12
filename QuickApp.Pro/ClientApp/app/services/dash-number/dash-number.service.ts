@@ -24,13 +24,13 @@ export class DashNumberService {
     );
   }
 
-  add(DashNumber: AircraftDashNumber) {
+  add(DashNumber) {
     return this.dashNumberEndpoint.addDashNumber<AircraftDashNumber>(
       DashNumber
     );
   }
 
-  update(DashNumber: AircraftDashNumber) {
+  update(DashNumber) {
     return this.dashNumberEndpoint.updateDashNumber<AircraftDashNumber>(
       DashNumber
     );

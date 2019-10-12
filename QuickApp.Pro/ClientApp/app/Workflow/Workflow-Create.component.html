@@ -186,7 +186,7 @@
                                             <label class="w70">Percent:</label>
                                             <select [(ngModel)]="sourceWorkFlow.percentageOfNew" class="form-control w70" (change)="onPercentOfNew(sourceWorkFlow.costOfNew,sourceWorkFlow.percentageOfNew);">
                                                 <option value="">Select</option>
-                                                <option *ngFor="let i of totalPercent" [ngValue]="i">{{i}}%</option>
+                                                <option *ngFor="let percent of totalPercent" [ngValue]="percent.percentValue">{{percent.percentValue}}%</option>
                                             </select>
                                         </div>
                                         <div class="col-sm-4">
@@ -224,7 +224,7 @@
                                             <div style="float:left;">
                                                 <select [(ngModel)]="sourceWorkFlow.percentageOfReplacement" class="form-control w70" (change)="onPercentOfReplcaement(sourceWorkFlow.costOfReplacement,sourceWorkFlow.percentageOfReplacement); ">
                                                     <option value="">Select</option>
-                                                    <option *ngFor="let i of totalPercent" [ngValue]="i">{{i}}%</option>
+                                                    <option *ngFor="let percent of totalPercent" [ngValue]="percent.percentValue">{{percent.percentValue}}%</option>
                                                 </select>
                                             </div>
                                         </div>

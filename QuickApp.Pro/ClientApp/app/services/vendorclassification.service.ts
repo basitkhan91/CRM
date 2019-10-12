@@ -38,13 +38,20 @@ export class VendorClassificationService {
 
     getVendorClassificationEndpointList() {
         return Observable.forkJoin(
-            this.vendorclassificationEndpoint.getVendorClassificationEndpoint<VendorClassification[]>());
+            this.vendorclassificationEndpoint.getVendorClassificationEndpoint<any>());
     }
+
     getActiveVendorClassificationEndpointList() {
         return Observable.forkJoin(
-            this.vendorclassificationEndpoint.getActiveVendorClassificationEndpoint<VendorClassification[]>());
+            this.vendorclassificationEndpoint.getActiveVendorClassificationEndpoint<any>());
     }
-    newVendorClassification(vendorclassification: VendorClassification) {
+
+    getAllVendorClassificationList() {
+        return Observable.forkJoin(
+            this.vendorclassificationEndpoint.getAllVendorClassificationEndpoint<any>());
+    }
+
+    newVendorClassification(vendorclassification) {
         return this.vendorclassificationEndpoint.getNewVendorClassificationEndpoint<VendorClassification>(vendorclassification);
     }
 
@@ -56,7 +63,7 @@ export class VendorClassificationService {
         return this.vendorclassificationEndpoint.getEditVendorClassificationEndpoint<VendorClassification>(vendorclassificationId);
     }
 
-    updateVendorClassification(vendorclassification: VendorClassification) {
+    updateVendorClassification(vendorclassification) {
         return this.vendorclassificationEndpoint.getUpdateVendorClassificationEndpoint(vendorclassification, vendorclassification.vendorClassificationId);
     }
 

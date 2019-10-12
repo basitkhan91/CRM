@@ -270,7 +270,7 @@ namespace QuickApp.Pro.ViewModels
         public string ReasonCode { get; set; }
         public string ReasonForRemoval { get; set; }
         public string Memo { get; set; }
-        //public bool? IsActive { get; set; }
+        public bool? IsActive { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
@@ -709,4 +709,32 @@ namespace QuickApp.Pro.ViewModels
         public string Memo { get; set; }
     }
     #endregion
+
+    #region VendorClassification
+    public class VendorClassificationSearchViewModel : VendorClassificationModel, IPaginateViewModel
+    {
+        public int first { get; set; }
+        public int page { get; set; }
+        public int pageCount { get; set; }
+        public int rows { get; set; }
+        public int limit { get; set; }
+    }
+    public class VendorClassificationModel
+    {
+        public long VendorClassificationId { get; set; }
+        public string ClassificationName { get; set; }
+        public string Memo { get; set; }
+        public string CreatedBy { get; set; }
+        public string UpdatedBy { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public bool? IsActive { get; set; }
+    }
+    public class VendorClassificationSPModel
+    {
+        public string ClassificationName { get; set; }
+        public string Memo { get; set; }
+    }
+    #endregion
+
 }

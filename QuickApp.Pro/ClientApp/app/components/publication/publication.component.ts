@@ -113,7 +113,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
     attachmentList: any[] = [];
     showModelAircraftModel: boolean = false;
     selectedAircraftModel: any;
-    selectedDashNumbers = [];
+    selectedDashNumbers: any;
     selectAircraftManfacturer: any;
     selectedATAchapter: any;
     selectedATASubChapter: any;
@@ -141,7 +141,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
 
     }
     ngOnInit(): void {
-        this.loadData();
+        //this.loadData();
         this.employeedata();
 
         this.cols = [
@@ -177,8 +177,6 @@ export class PublicationComponent implements OnInit, AfterViewInit {
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        console.log(this.pageIndex)
-        console.log(this.pagesize)
         this.publicationService.getWorkFlows(this.pageIndex, this.pagesize).subscribe(
             results => {
                 this.onDataLoadSuccessful(results[0]['paginationList']);
@@ -290,25 +288,25 @@ export class PublicationComponent implements OnInit, AfterViewInit {
 
     }
 
-    open(content) {
+    // open(content) {
 
-        this.isEditMode = false;
-        this.isDeleteMode = false;
+    //     this.isEditMode = false;
+    //     this.isDeleteMode = false;
 
-        this.isSaving = true;
-        this.loadMasterCompanies();
-        this.disableSave = false;
-        this.sourceAction = new Publication();
-        this.sourceAction.isActive = true;
-        this.publicationName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
+    //     this.isSaving = true;
+    //     this.loadMasterCompanies();
+    //     this.disableSave = false;
+    //     this.sourceAction = new Publication();
+    //     this.sourceAction.isActive = true;
+    //     this.publicationName = "";
+    //     this.modal = this.modalService.open(content, { size: 'sm' });
+    //     this.modal.result.then(() => {
 
 
 
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
+    //         console.log('When user closes');
+    //     }, () => { console.log('Backdrop click') })
+    // }
 
 
     openDelete(content, row) {
@@ -411,23 +409,18 @@ export class PublicationComponent implements OnInit, AfterViewInit {
     //         console.log('When user closes');
     //     }, () => { console.log('Backdrop click') })
     // }
-    openEdit(content, row) {
-        const { publicationRecordId } = row;
-
-        // this.router.navigateByUrl(`/singlepages/singlepages/app-publication/app-create-publication/edit/${publicationRecordId}`);
-
-
-
-
-        this.disableSave = false;
-        this.isEditMode = true;
-        this.isSaving = true;
-        this.loadMasterCompanies();
-        this.sourceAction = row;
-        console.log(this.sourceAction);
-        this.publicationName = this.sourceAction.publicationId;
-        this.loadMasterCompanies();
-        this.router.navigateByUrl(`/singlepages/singlepages/app-create-publication/edit/${publicationRecordId}`);
+    openEdit(row) {
+         const { publicationRecordId } = row;
+         this.router.navigateByUrl(`/singlepages/singlepages/app-create-publication/edit/${publicationRecordId}`);
+        // // this.router.navigateByUrl(`/singlepages/singlepages/app-publication/app-create-publication/edit/${publicationRecordId}`);
+        // this.disableSave = false;
+        // this.isEditMode = true;
+        // this.isSaving = true;
+        // this.loadMasterCompanies();
+        // this.sourceAction = row;
+        // console.log(this.sourceAction);
+        // this.publicationName = this.sourceAction.publicationId;
+        // this.loadMasterCompanies();        
         // this.modal = this.modalService.open(content, { size: 'sm' });
         // this.modal.result.then(() => {
         //     console.log('When user closes');
@@ -485,7 +478,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
 
     }
 
-    editItemAndCloseModel() {
+    /*editItemAndCloseModel() {
 
         this.isSaving = true;
 
@@ -508,7 +501,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         }
 
         this.modal.close();
-    }
+    }*/
 
     deleteItemAndCloseModel() {
         this.isSaving = true;
@@ -565,13 +558,13 @@ export class PublicationComponent implements OnInit, AfterViewInit {
     }
 
 
-    private saveSuccessHelper(role?: Publication) {
-        this.isSaving = false;
-        this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
+    // private saveSuccessHelper(role?: Publication) {
+    //     this.isSaving = false;
+    //     this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 
-        this.loadData();
+    //     this.loadData();
 
-    }
+    // }
 
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
@@ -680,8 +673,8 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         // construct url from array
         //await this.searchByFieldUrlCreateforAircraftInformation();
         // reset the dropdowns
-        this.selectedAircraftModel = []
-        this.selectedDashNumbers = []
+        this.selectedAircraftModel = null
+        this.selectedDashNumbers = null
         this.aircraftModelList = [
             { label: 'Select Aircraft Model', value: null }
         ];
@@ -711,7 +704,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         // construct url from array
         //await this.searchByFieldUrlCreateforAircraftInformation();
         // reset dropdown
-        this.selectedDashNumbers = []
+        this.selectedDashNumbers = null
         this.dashNumberList = [
             { label: 'Select DashNumber', value: null }
         ];
@@ -781,11 +774,29 @@ export class PublicationComponent implements OnInit, AfterViewInit {
       }
 
       onSearchAircraftInfoAtaChapter() {
+          console.log(this.selectedATAchapter, this.selectedATASubChapter, this.selectAircraftManfacturer, this.selectedAircraftModel, this.selectedDashNumbers, this.pageIndex, this.pagesize);   
+          this.selectedATAchapter = this.selectedATAchapter ? this.selectedATAchapter : 0;       
+          this.selectedATASubChapter = this.selectedATASubChapter ? this.selectedATASubChapter : 0;       
+          this.selectAircraftManfacturer = this.selectAircraftManfacturer ? this.selectAircraftManfacturer : 0;       
+          this.selectedAircraftModel = this.selectedAircraftModel ? this.selectedAircraftModel : 0;       
+          this.selectedDashNumbers = this.selectedDashNumbers ? this.selectedDashNumbers : 0;   
+          console.log(this.selectedATAchapter, this.selectedATASubChapter, this.selectAircraftManfacturer, this.selectedAircraftModel, this.selectedDashNumbers, this.pageIndex, this.pagesize);     
           if(this.selectAircraftManfacturer !== undefined || this.selectedATAchapter !== undefined) {
-            this.publicationService.getpublicationGlobalSearch(this.selectedATAchapter, this.ataSubChapterList, this.selectAircraftManfacturer, this.selectedAircraftModel, this.selectedDashNumbers, this.pageIndex, this.pagesize).subscribe(res => {
-                console.log(res);
+            this.publicationService.getpublicationGlobalSearch(this.selectedATAchapter, this.selectedATASubChapter, this.selectAircraftManfacturer, this.selectedAircraftModel, this.selectedDashNumbers, this.pageIndex, this.pagesize).subscribe(results => {
+                console.log(results);
+                this.onDataLoadSuccessful(results[0]['paginationList']);
+                this.totalRecords = results[0]['totalRecordsCount'];
             })
           }
       }
+      
+      downloadFileUpload(rowData) {
+          console.log(rowData)
+          const url = "C:/DevFiles/UplodFiles/Publication/162/cs.png";
+          window.location.assign(url);
+        //const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=itemGroup&fileName=itemGroup.xlsx`;
+
+        //window.location.assign(url);
+    }
       
 }

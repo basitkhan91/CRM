@@ -27,16 +27,15 @@ namespace QuickApp.Pro.ViewModels
 
         public MasterCompany MasterCompany { get; set; }
 
-        public bool? IsActive { get; set; }
+        public bool IsActive { get; set; }
 
-        public bool? IsDelete { get; set; }
+        public bool IsDeleted { get; set; }
+        public string UploadStatus { get; set; }
     }
     public class VendorClassificationViewModelValidator : AbstractValidator<VendorClassificationViewModel>
     {
         public VendorClassificationViewModelValidator()
         {
-            // RuleFor(register => register.Name).NotEmpty().WithMessage("Workflow Action name cannot be empty");
-            //  RuleFor(register => register.Gender).NotEmpty().WithMessage("Gender cannot be empty");
         }
     }
 }

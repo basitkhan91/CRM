@@ -389,11 +389,15 @@ namespace DAL
         public DbSet<WorkOrderQuote> WorkOrderQuote { get; set; }
         public DbSet<WorkOrderFreight> WorkOrderFreight { get; set; }
         public DbSet<PublicationTypeAudit> PublicationTypeAudit { get; set; }
+        public DbSet<Dropdowns> Dropdowns { get; set; }
+        
+
         public DbSet<Percentage> Percentage { get; set; }
         
 
 
         public DbSet<AssetIntangibleAttributeType> AssetIntangibleAttributeType { get; set; }
+        public DbSet<Percent> Percent { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {

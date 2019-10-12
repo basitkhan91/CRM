@@ -16,7 +16,7 @@ namespace DAL.Models
         public string  PublicationId { get; set; }
         public string Description { get; set; }
         [Required(ErrorMessage = "Please select Publication Type")]
-        public int PublicationTypeId { get; set; }
+        public long PublicationTypeId { get; set; }
         public string ASD { get; set; }
         public string Sequence { get; set; }
         public string Publishby { get; set; }
