@@ -85,6 +85,7 @@ namespace QuickApp.Pro.Controllers
                 credittermsobj.MasterCompanyId = credittermviewmodel.MasterCompanyId;
                 credittermsobj.Memo = credittermviewmodel.Memo;
                 credittermsobj.IsActive = credittermviewmodel.IsActive;
+                credittermsobj.IsDelete = credittermviewmodel.IsDelete;
                 credittermsobj.CreatedDate = DateTime.Now;
                 credittermsobj.UpdatedDate = DateTime.Now;
                 credittermsobj.CreatedBy = credittermviewmodel.CreatedBy;
