@@ -419,7 +419,6 @@ namespace QuickApp.Pro.Controllers
 
                         var itemsToDelete = UnitOfWork.Repository<WorkflowPublicationDashNumber>()
                             .Find(x =>
-                            workFlow.WorkflowId == x.WorkflowId &&
                             x.PublicationsId == publication.Id &&
                             !ids.Contains(x.WorkflowPublicationDashNumberId)
                             );

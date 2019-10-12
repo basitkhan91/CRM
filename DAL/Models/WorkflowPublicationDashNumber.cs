@@ -11,16 +11,10 @@ namespace DAL.Models
         [Key]
         public long WorkflowPublicationDashNumberId { get; set; }
 
+        [ForeignKey("PublicationsId")]
         public long PublicationsId { get; set; }
-
-        [ForeignKey("WorkflowId")]
-        public long WorkflowId { get; set; }
 
         [ForeignKey("AircraftDashNumberId")]
         public long AircraftDashNumberId { get; set; }
-
-        [ForeignKey("TaskId")]
-        public long TaskId { get; set; }
-
     }
 }

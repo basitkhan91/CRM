@@ -62,12 +62,22 @@ export class PublicationEndpointService extends EndpointFactory {
     private readonly _publicationGetByIdViewUrl: string = '/api/Publication/publicationview';
     private readonly _publicationGlobalSearchUrl: string = '/api/Publication/publicationsglobalsearch';  
     private readonly _publicationTypes: string = '/api/Publication/getpublicationtypes';  
+    private readonly _publicationForWorkflowURL: string = '/api/Publication/GetPublicationDropdownData';
+    private readonly _publicationURL: string = '/api/Publication/getPublicationForWorkFlowById';
 
 
+    get getCodeUrl() {
+        return this.configurations.baseUrl + this._publicationGetUrl;
+    }
 
-  get getCodeUrl() {
-    return this.configurations.baseUrl + this._publicationGetUrl;
-  }
+    get getPublicationForWorkFlowURL() {
+        return this.configurations.baseUrl + this._publicationForWorkflowURL;
+    }
+
+    get getPublicationURL() {
+        return this.configurations.baseUrl + this._publicationURL;
+    }
+
 
   constructor(
     http: HttpClient,
@@ -490,6 +500,22 @@ getpublicationTypesEndpoint<T>(): Observable<T> {
       .catch(error => {
           return this.handleError(error, () => this.getpublicationTypesEndpoint());
       });
-}
+    }
+
+    getAllPublicationsDropdownEndPoint<T>(): Observable<T> {
+        return this.http
+            .get<T>(this.getPublicationForWorkFlowURL, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAllPublicationsDropdownEndPoint());
+            });
+    }
+
+    getPublicationForWorkFlowEndpoint<T>(publicationId: number): Observable<T> {
+        return this.http.get<T>(`${this.getPublicationURL}/${publicationId}`, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getPublicationForWorkFlowEndpoint(publicationId));
+            });
+    }
+
 
 }

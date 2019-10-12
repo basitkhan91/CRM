@@ -30,6 +30,8 @@ import { forEach } from "@angular/router/src/utils/collection";
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ChargesCreateComponent } from "../shared/Charges-Create.component";
+import { Percent } from "../models/Percent.model";
+import { PercentService } from "../services/percent.service";
 
 @Component({
     selector: 'wf-create',
@@ -142,7 +144,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         { visible: false, selected: false, label: "Measurements" }
     ];
 
-    totalPercent: number[];
+    totalPercent: Percent[];
     currentPanelId: any;
     todaydate = new Date();
     toggle_wf_header: boolean = true;
@@ -153,11 +155,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
     @ViewChild(ChargesCreateComponent) chargesCreateComponent: ChargesCreateComponent;
 
-    constructor(private actionService: ActionService, private router: ActivatedRoute, private route: Router, private expertiseService: EmployeeExpertiseService, private cusservice: CustomerService, public workscopeService: WorkScopeService, public currencyService: CurrencyService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService, private conditionService: ConditionService, private _workflowService: WorkFlowtService, private itemser: ItemMasterService, private vendorService: VendorService, private alertService: AlertService, private modalService: NgbModal) {
-        this.totalPercent = [];
-        for (var i = 0; i <= 100; i++) {
-            this.totalPercent.push(i);
-        }
+    constructor(private actionService: ActionService, private router: ActivatedRoute, private route: Router, private expertiseService: EmployeeExpertiseService, private cusservice: CustomerService, public workscopeService: WorkScopeService, public currencyService: CurrencyService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService, private conditionService: ConditionService, private _workflowService: WorkFlowtService, private itemser: ItemMasterService, private vendorService: VendorService, private alertService: AlertService, private modalService: NgbModal, private percentService: PercentService) {
     }
 
     public ngOnDestroy() {
@@ -168,7 +166,6 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
 
     GetChildData(): void {
-
     }
 
     setSelectedItems(workFlow: any): void {
@@ -262,8 +259,20 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         };
 
         this.loadWorkFlow();
-
+        this.getAllPercentages();
     }
+
+    private getAllPercentages(): void {
+        this.percentService.getPercentages().subscribe(
+            result => {
+                this.totalPercent = result[0];
+            },
+            error => {
+                this.alertService.showDialog(this.title, 'Something went wrong while loading Percentages.');
+            }
+        );
+    }
+
 
     berDetermination(): any {
         if (this.sourceWorkFlow.fixedAmount !== undefined) {

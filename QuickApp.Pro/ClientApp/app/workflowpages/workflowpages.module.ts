@@ -69,6 +69,8 @@ import { SpinnerModule } from 'primeng/spinner';
 import { ToolbarModule } from 'primeng/toolbar';
 import { KeyFilterModule } from 'primeng/keyfilter';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { PercentService } from '../services/percent.service';
+import { PercentEndpoint } from '../services/percent-endpoint.service';
 
 @NgModule({
   imports: [
@@ -139,7 +141,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
     ExclusionsCreateComponent,
     MeasurementCreateComponent
   ],
-  providers: [ActionService, ActionEndpoint, AssetService, AssetEndpoint],
+  providers: [ActionService, ActionEndpoint, AssetService, AssetEndpoint, PercentService, PercentEndpoint, PercentService, PercentEndpoint],
   entryComponents: []
 })
 export class WorkFlowPagesModule {}
