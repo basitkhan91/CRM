@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DAL.Models
 {
@@ -14,5 +13,14 @@ namespace DAL.Models
         public string EmployeeName { get; set; }
         public string Location { get; set; }
         public bool? IsActive { get; set; }
+        public DateTime RevisionDate { get; set; }
+        public long PublicationTypeId { get; set; }
+        public string Sequence { get; set; }
+        public string VerifiedBy { get; set; }
+        public DateTime? VerifiedDate { get; set; }
+        public string ASD { get; set; }
+        public DateTime UpdatedDate { get; set; }
+        public long ItemMasterId { get; set; }
+        public List<ItemMasterAircraftMapping> ItemMasterAircraftMapping { get; set; }
     }
 }
