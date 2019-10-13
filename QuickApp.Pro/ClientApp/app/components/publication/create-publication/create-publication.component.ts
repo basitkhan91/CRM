@@ -377,7 +377,7 @@ export class CreatePublicationComponent implements OnInit {
       this.formData.append(file.name, file);
   }
 
-  saveGeneralInfo() {
+  saveGeneralInfo() {    
     const data = this.sourcePublication;
     this.publicationType = getValueFromArrayOfObjectById('label', 'value', this.sourcePublication.publicationTypeId.toString(), this.publicationTypes);
     console.log(this.publicationType);

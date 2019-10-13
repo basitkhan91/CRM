@@ -769,7 +769,9 @@ namespace QuickApp.Pro.Controllers
                         MapPOPVMtoEntity(poViewModel, actionobject);
                         
                         _context.PurchaseOrderPart.Update(actionobject);
-                        _unitOfWork.SaveChanges();                        
+                        _unitOfWork.SaveChanges();
+
+                       
                     }
                     else
                     {
@@ -783,7 +785,9 @@ namespace QuickApp.Pro.Controllers
 
                         _context.PurchaseOrderPart.Add(actionobject);
                         _unitOfWork.SaveChanges();
-                        
+
+                       
+
                     }
                     foreach (var poPartSplit in poViewModel.POPartSplits)
                     {
@@ -795,6 +799,7 @@ namespace QuickApp.Pro.Controllers
                             MapAddress(poPartSplit);
                             MapPOPSplitVMtoEntity(poPartSplit, poViewModel, popSplitEnt);
                             _context.PurchaseOrderPart.Add(popSplitEnt);
+
                         }
                         else
                         {
@@ -803,8 +808,12 @@ namespace QuickApp.Pro.Controllers
                             MapPOPSplitVMtoEntity(poPartSplit, poViewModel, popSplitEnt);
                             _context.PurchaseOrderPart.Update(actionobject);                            
                         }
+
+                        
                         _unitOfWork.SaveChanges();
                     }
+
+                    return Ok(actionobject);
                 }
             }
             return Ok(ModelState);
