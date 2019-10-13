@@ -108,8 +108,9 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 	disableSaveManufacturer: boolean = false;
     selectedWareHouse: any;
     warehouseName: any;
-    AuditDetails: SingleScreenAuditDetails[];
-
+	AuditDetails: any[];
+	HasAuditDetails: boolean;
+	AuditHistoryTitle: string = 'History of Ware House'
 	ngOnInit(): void
 	{
 		this.cols = [
@@ -776,11 +777,13 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
     }
 
     auditWarehouse(warehouseId: number): void {
-        this.AuditDetails = [];
+        this.AuditDetails  = [];
+		this.HasAuditDetails = this.AuditDetails.length > 0;
+
         this.workFlowtService.getWarehouseAudit(warehouseId).subscribe(audits => {
             if (audits.length > 0) {
-                this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["warehouseAuditId", "warehouseId", "lastModifiedBy", "createdBy", "createdDate", "updatedDate"];
+				this.AuditDetails = audits[0].result;
+				this.HasAuditDetails = this.AuditDetails.length > 0;
             }
         });
     }

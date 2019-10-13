@@ -3,12 +3,14 @@ import { CommonModule } from "@angular/common";
 import { AuditComponent } from "../components/Audit/audit.component";
 import { AppSiteAuditComponent } from "../components/Audit/AppSiteAudit/app-site-audit.component";
 import { AppSiteAuditNoHistoryComponent } from "../components/Audit/AuditNoHistory/app-site-audit-no-history.component";
+import { WareHouseAuditComponent } from "../components/Audit/WareHouseAudit/warehouse-audit.component";
 
 @NgModule({
   declarations: [
     AuditComponent,
     AppSiteAuditComponent,
-    AppSiteAuditNoHistoryComponent
+    AppSiteAuditNoHistoryComponent,
+    WareHouseAuditComponent
   ],
 
   imports: [CommonModule],
@@ -16,7 +18,8 @@ import { AppSiteAuditNoHistoryComponent } from "../components/Audit/AuditNoHisto
   exports: [
     AuditComponent,
     AppSiteAuditComponent,
-    AppSiteAuditNoHistoryComponent
+    AppSiteAuditNoHistoryComponent,
+    WareHouseAuditComponent
   ],
 
   providers: [],
