@@ -221,5 +221,17 @@ export class PublicationService {
     return Observable.forkJoin(
       this.publicationEndpoint.getpublicationTypesEndpoint<any>()
     );
-  }
+    }
+
+    getAllPublicationsDropdown() {
+        return Observable.forkJoin(
+            this.publicationEndpoint.getAllPublicationsDropdownEndPoint<any[]>()
+        );
+    }
+
+    getPublicationForWorkFlow(publicationId: number) {
+        return Observable.forkJoin(
+            this.publicationEndpoint.getPublicationForWorkFlowEndpoint<any>(publicationId)
+        );
+    }
 }

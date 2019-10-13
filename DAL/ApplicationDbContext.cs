@@ -395,6 +395,7 @@ namespace DAL
 
 
         public DbSet<AssetIntangibleAttributeType> AssetIntangibleAttributeType { get; set; }
+        public DbSet<Percent> Percent { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {

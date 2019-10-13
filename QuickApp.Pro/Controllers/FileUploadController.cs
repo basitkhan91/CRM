@@ -85,8 +85,23 @@ namespace QuickApp.Pro.Controllers
             memory.Position = 0;
             return File(memory, GetContentType(fileFullPath), Path.GetFileName(fileFullPath));
         }
+		[HttpGet]
+		[Route("downloadattachedfile")]
+		public async Task<IActionResult> DownloadAttachedFile(string filePath)
+		{
 
-        private string GetContentType(string path)
+
+			var memory = new MemoryStream();
+			using (var stream = new FileStream(filePath, FileMode.Open))
+			{
+				await stream.CopyToAsync(memory);
+			}
+			memory.Position = 0;
+			return File(memory, GetContentType(filePath), Path.GetFileName(filePath));
+		}
+
+
+		private string GetContentType(string path)
         {
             var types = GetMimeTypes();
             var ext = Path.GetExtension(path).ToLowerInvariant();
