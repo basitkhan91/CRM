@@ -576,7 +576,9 @@ namespace QuickApp.Pro.Controllers
 
                     _context.PurchaseOrder.Update(actionobject);
                     _unitOfWork.SaveChanges();
-                    return Ok(actionobject);
+                    poViewModel.PurchaseOrderId = actionobject.PurchaseOrderId != null ? (long)actionobject.PurchaseOrderId : 0;
+                    poViewModel.PurchaseOrderNumber = actionobject.PurchaseOrderNumber;
+                    return Ok(poViewModel);
                 }
                 else
                 {
@@ -597,8 +599,12 @@ namespace QuickApp.Pro.Controllers
                         exists.PurchaseOrderNumber = "PO" + actionobject.PurchaseOrderId;
                         _context.PurchaseOrder.Update(exists);
                         _context.SaveChanges();
+                        poViewModel.PurchaseOrderNumber = exists.PurchaseOrderNumber;
+
                     }
-                    return Ok(actionobject);
+                    poViewModel.PurchaseOrderId = actionobject.PurchaseOrderId != null ? (long)actionobject.PurchaseOrderId : 0;
+                    poViewModel.PurchaseOrderNumber = actionobject.PurchaseOrderNumber;
+                    return Ok(poViewModel);
 
                 }
             }
@@ -724,7 +730,7 @@ namespace QuickApp.Pro.Controllers
             actionobject.Memo = poViewModel.Memo;
             actionobject.DiscountPerUnit = poViewModel.DiscountPerUnit;
 
-            
+
             actionobject.UOMId = poViewModel.UOMId;
             actionobject.CreatedDate = poViewModel.CreatedDate;
             actionobject.UpdatedDate = DateTime.Now;
@@ -761,17 +767,15 @@ namespace QuickApp.Pro.Controllers
                 foreach (var poViewModel in poViewModels)
                 {
                     var actionobject = _context.PurchaseOrderPart.Where(o => o.PurchaseOrderPartRecordId == poViewModel.PurchaseOrderPartRecordId).FirstOrDefault();
-                    if (actionobject !=null)
+                    if (actionobject != null)
                     {
                         if (poViewModel == null)
                             return BadRequest($"{nameof(poViewModel)} cannot be null");
                         actionobject.isParent = poViewModel.isParent;
                         MapPOPVMtoEntity(poViewModel, actionobject);
-                        
-                        _context.PurchaseOrderPart.Update(actionobject);
-                        _unitOfWork.SaveChanges();
 
-                       
+                        _context.PurchaseOrderPart.Update(actionobject);
+                        _unitOfWork.SaveChanges();                        
                     }
                     else
                     {
@@ -781,39 +785,39 @@ namespace QuickApp.Pro.Controllers
                         poViewModel.CreatedBy = "admin";
                         poViewModel.UpdatedBy = "admin";
                         poViewModel.IsActive = true;
-                        MapPOPVMtoEntity(poViewModel, actionobject);                                            
+                        MapPOPVMtoEntity(poViewModel, actionobject);
 
                         _context.PurchaseOrderPart.Add(actionobject);
-                        _unitOfWork.SaveChanges();
-
-                       
-
+                        _unitOfWork.SaveChanges();                        
                     }
+                    poViewModel.PurchaseOrderPartRecordId = actionobject.PurchaseOrderPartRecordId;
                     foreach (var poPartSplit in poViewModel.POPartSplits)
                     {
                         var popSplitEnt = _context.PurchaseOrderPart.Where(o => o.PurchaseOrderPartRecordId == poPartSplit.PurchaseOrderPartRecordId).FirstOrDefault();
-                        if(popSplitEnt==null)
+                        if (popSplitEnt == null)
                         {
                             popSplitEnt = new PurchaseOrderPart();
                             popSplitEnt.isParent = false;
+
                             MapAddress(poPartSplit);
                             MapPOPSplitVMtoEntity(poPartSplit, poViewModel, popSplitEnt);
                             _context.PurchaseOrderPart.Add(popSplitEnt);
-
+                            
                         }
                         else
                         {
                             MapAddress(poPartSplit);
                             popSplitEnt.isParent = false;
                             MapPOPSplitVMtoEntity(poPartSplit, poViewModel, popSplitEnt);
-                            _context.PurchaseOrderPart.Update(actionobject);                            
+                            _context.PurchaseOrderPart.Update(actionobject);
+                            
                         }
 
-                        
                         _unitOfWork.SaveChanges();
+                        poPartSplit.PurchaseOrderPartRecordId = popSplitEnt.PurchaseOrderPartRecordId;
                     }
 
-                    return Ok(actionobject);
+                    return Ok(poViewModels);
                 }
             }
             return Ok(ModelState);
