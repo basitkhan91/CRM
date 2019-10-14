@@ -200,6 +200,8 @@ import { PanelMenuModule } from 'primeng/panelmenu';
 import { WorkOrderService } from './services/work-order/work-order.service';
 import { PercentageService } from './services/percentage.service';
 import { PercentageEndpoint } from './services/percentage-endpoint.service';
+import { PercentEndpoint } from './services/percent-endpoint.service';
+import { PercentService } from './services/percent.service';
 //import { AuditComponent } from "./components/Audit/audit.component";
 
 @NgModule({
@@ -404,14 +406,17 @@ import { PercentageEndpoint } from './services/percentage-endpoint.service';
     CompanyService,
     CompanyEndpoint,
     WorkOrderService,
-      PercentageService,
-    PercentageEndpoint
+    PercentageService,
+    PercentageEndpoint,
+    PercentService,
+    PercentEndpoint
+
   ],
   entryComponents: [LoginDialogComponent, AddTaskDialogComponent],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AppModule {}
+export class AppModule { }
 
 export function getBaseUrl() {
   return document.getElementsByTagName('base')[0].href;
