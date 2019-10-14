@@ -32,6 +32,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     discountList: any;
     markUpList: any;
     taxrateList: any;
+    state_taxRateList: any;
     id: number;
     intergationNew = {
         allowPartialBilling: true,
