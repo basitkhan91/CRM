@@ -396,6 +396,8 @@ namespace DAL
         public DbSet<Dropdowns> Dropdowns { get; set; }
         
 
+        public DbSet<Percentage> Percentage { get; set; }
+        
 
 
         public DbSet<AssetIntangibleAttributeType> AssetIntangibleAttributeType { get; set; }

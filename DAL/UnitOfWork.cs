@@ -204,6 +204,7 @@ namespace DAL
         IAssetDepreciationInterval _assetDepreciationInterval;
 
         IPublicationTypesRepository _publicationTypesRepository;
+        IPercentageRepository _percentageRepository;
 
         public UnitOfWork(ApplicationDbContext context, IOptions<AppSettings> appSettings)
         {
@@ -1752,6 +1753,18 @@ namespace DAL
                 if (_publicationTypesRepository == null)
                     _publicationTypesRepository = new PublicationTypesRepository(_context,_appSettings);
                 return _publicationTypesRepository;
+            }
+        }
+
+        public IPercentageRepository PercentageRepository
+        {
+            get
+            {
+                if(_percentageRepository==null)
+                {
+                    _percentageRepository = new PercentageRepository(_context,_appSettings);
+                }
+                return _percentageRepository;
             }
         }
     }

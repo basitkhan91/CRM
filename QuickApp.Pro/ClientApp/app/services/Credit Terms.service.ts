@@ -38,14 +38,14 @@ export class CreditTermsService {
 
     getCreditTermsList() {
         return Observable.forkJoin(
-            this.CreditTermsEndpoint.getCreditTermsEndpoint<CreditTerms[]>());
+            this.CreditTermsEndpoint.getCreditTermsEndpoint<any>());
     }
 
 
     newAddcreditterms(action) {
         return this.CreditTermsEndpoint.getNewCreditermEndpoint<CreditTerms>(action);
     }
-    updatecreditterms(action: CreditTerms) {
+    updatecreditterms(action: any) {
         return this.CreditTermsEndpoint.getUpdatecredittermsEndpoint(action, action.creditTermsId);
     }
     deletecreditterms(actionId: number) {
@@ -56,7 +56,7 @@ export class CreditTermsService {
     historycreditterms(actionId: number) {
         return Observable.forkJoin(this.CreditTermsEndpoint.getHistorycredittermsEndpoint<AuditHistory[]>(actionId));
     }
-    getCreaditTermsAudit(credittermId: number) {
+    getCreditTermsAudit(credittermId: number) {
         return this.CreditTermsEndpoint.getCreaditTermsAuditById<any>(credittermId);
     }
 

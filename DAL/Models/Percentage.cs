@@ -6,30 +6,20 @@ using System.Text;
 
 namespace DAL.Models
 {
-   public class CreditTerms:PasBase,IAudit
+    /// <summary>
+    /// Class representing percentage
+    /// </summary>
+    public  class Percentage : PasBase
     {
         [Key]
-        public Int16 CreditTermsId { get; set; }
-
+        public long PercentageId { get; set; }
         public string Name { get; set; }
+        public decimal Value { get; set; }
         public string Memo { get; set; }
-
-        public decimal Percentage { get; set; }
-
-        public byte? Days { get; set; }
-
-        public byte? NetDays { get; set; }
-
+        public bool? IsActive { get; set; }
         [ForeignKey("MasterCompanyId")]
         public Int32 MasterCompanyId { get; set; }
-
-        public bool? IsActive { get; set; }
-
         public virtual MasterCompany MasterCompany { get; set; }
-        public bool? IsDelete { get; set; }
-
-
-
+        public bool? IsDeleted { get; set; }
     }
-
 }
