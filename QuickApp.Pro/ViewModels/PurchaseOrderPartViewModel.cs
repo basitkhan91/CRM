@@ -10,7 +10,7 @@ namespace QuickApp.Pro.ViewModels
         public long PurchaseOrderPartRecordId { get; set; }
         public long PurchaseOrderId { get; set; }
         public long ItemMasterId { get; set; }
-        //public string SerialNumber { get; set; }
+        public string SerialNumber { get; set; }
         public int AssetId { get; set; }
         public long PartNumberId { get; set; }
         public long AltPartNumberId { get; set; }

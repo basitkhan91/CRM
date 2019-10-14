@@ -679,6 +679,8 @@ namespace QuickApp.Pro.Controllers
         private void MapPOPSplitVMtoEntity(PurchaseOrderPartSplit poPartSplit, PurchaseOrderPartViewModel poViewModel, PurchaseOrderPart actionobject)
         {
             MapPOPVMtoEntity(poViewModel, actionobject);
+            actionobject.isParent = false;
+            actionobject.SerialNumber = poPartSplit.SerialNumber;
             actionobject.POPartSplitUserTypeId = poPartSplit.POPartSplitUserTypeId;
             actionobject.POPartSplitUserId = poPartSplit.POPartSplitUserId;
             actionobject.POPartSplitAddress1 = poPartSplit.POPartSplitAddress1;
@@ -699,7 +701,7 @@ namespace QuickApp.Pro.Controllers
         {
             actionobject.PurchaseOrderId = poViewModel.PurchaseOrderId;
             actionobject.ItemMasterId = poViewModel.ItemMasterId;
-            //actionobject.SerialNumber = poViewModel.SerialNumber;
+            actionobject.SerialNumber = poViewModel.SerialNumber;
             //actionobject.NonInventory = poViewModel.NonInventory;
             //actionobject.RequisitionedBy = poViewModel.RequisitionedBy;
             //actionobject.RequisitionedDate = poViewModel.RequisitionedDate;
