@@ -88,6 +88,7 @@ export class ReasonComponent {
 
     reasonPagination: any;//added
     totalRecords: number;
+    totalPages: number;
     loading: boolean;
     /** Actions ctor */
 	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal,   private masterComapnyService: MasterComapnyService,private _fb: FormBuilder, private alertService: AlertService, public reasonService: ReasonService, private dialog: MatDialog) {
@@ -114,6 +115,12 @@ export class ReasonComponent {
     }
 
 
+    changePage(event: { first: any; rows: number }) {
+        console.log(event);
+        const pageIndex = (event.first / event.rows);
+        this.pageSize = event.rows;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+    }
 
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
