@@ -1,4 +1,290 @@
-﻿
+﻿<div [@fadeInOut] class="page-content">
+    <div class="right_col" role="main">
+        <div class="x_panel">
+            <div class="x_content">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="inline-block display-flex">
+                            <h3 class="po-head lead">Nodes</h3>
+                            &nbsp;&nbsp;
+                            <a class="plusicon-cstm new-margin" pTooltip="Add Nodes" tooltipPosition="right" (click)="resetForm()" data-target="#add"
+                                data-toggle="modal">
+                                <i class="fa fa-plus-circle fa-lg"></i>
+                            </a>
+                        </div>
+                        <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="originalData" [first]="0" [rows]="pageSize" [paginator]="true"
+                            [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple"
+                            (onPage)="changePage($event)" [resizableColumns]="true" [reorderableColumns]="true" [totalRecords]="totalRecords"
+                            scrollHeight="450px">
+                            <ng-template pTemplate="caption">
+                                <div style="text-align: right;margin-left:-6px !important;">
+                                    <p-multiSelect [maxSelectedLabels]="2" [options]="headers" optionLabel="header" [(ngModel)]="selectedColumns" [style]="{minWidth: '200px'}"
+                                        style="float:left" (onChange)="columnsChanges()"></p-multiSelect>
+                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
+                                        iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
+                                        iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                    <div class="excel-upload  excel-upload-cstm">
+
+                                        <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file" accept=".xlsx, .xls, .csv">
+                                        <label for="upload">
+                                            <span matTooltip="Upload Data (Excel)">
+                                                <i class="fa fa-upload"></i>
+                                            </span>
+                                        </label>
+                                        &nbsp; &nbsp;
+                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()">Sample File Download</button>
+                                    </div>
+
+                                </div>
+                            </ng-template>
+
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th style="width:250px" *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                        {{col.header}}
+                                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                                    </th>
+                                    <th style="width:200px;position:sticky" *ngIf="selectedColumns.length> 0"> Actions</th>
+
+
+                                </tr>
+                                <tr>
+                                    <th style="width:250px" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                        <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field,'contains')">
+                                    </th>
+                                    <th style="width:200px;position:sticky"></th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                <tr [pSelectableRow]="rowData" pReorderableRowHandle>
+                                    <td style="width:250px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle data-toggle="modal"
+                                        data-target="#view" (dblclick)="viewSelectedRow(rowData)">
+                                        {{col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?
+                                        (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                                    </td>
+                                    <td style="width:200px" *ngIf="selectedColumns.length> 0">
+                                        <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}" (onChange)="changeStatus(rowData)"></p-inputSwitch>
+
+                                        <span data-toggle="modal" data-target="#view">
+                                            <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewSelectedRow(rowData)" data-target="#view"
+                                                data-toggle="modal">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                        </span>
+                                        <button class="btn-edit" mat-icon-button (click)="edit(rowData)" data-target="#add" data-toggle="modal" matTooltip="Edit">
+                                            <mat-icon>edit</mat-icon>
+                                        </button>
+
+                                        <button class="btn-delete" mat-icon-button matTooltip="Delete" data-target="#delete" data-toggle="modal" (click)="delete(rowData)">
+                                            <mat-icon color="warn">delete</mat-icon>
+                                        </button>
+                                        <button class="btn-history" mat-icon-button matTooltip="History" data-target="#contentHist" data-toggle="modal" (click)="getAuditHistoryById(rowData)">
+                                            <mat-icon color="green">history</mat-icon>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template #auditContent let-c="close" let-d="dismiss">
+                                <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
+                                    <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="summary" id="footer">
+                                <label id="footer" class="footer">No'of records:</label>
+                                <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                                <label id="footer" class="footer1">Pages Count:</label>
+                                <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" />
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="selectedRowforDelete" #delete id="delete" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Are You Sure Want to Delete ?</h4>
+            </div>
+            <div class="modal-body">
+                <strong>Node Name:
+                    <span class="new-label">{{selectedRowforDelete.nodeName}}</span>
+                </strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
+                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" id="" name="" (click)="resetViewData()">×</button>
+                <h4 class="modal-title">Node Details</h4>
+            </div>
+            <div class="modal-body viewform ">
+                <div class="col-sm-12">
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header">Ledger Name: </b>
+                        </span>
+                        <span class="value">{{ viewRowData.ledgerName}}</span>
+                    </p>
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header">Node Code: </b>
+                        </span>
+                        <span class="value">{{viewRowData.nodeCode}}</span>
+                    </p>
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header">Node Name: </b>
+                        </span>
+                        <span class="value">{{viewRowData.nodeName}}</span>
+                    </p>
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header">Node Description: </b>
+                        </span>
+                        <span class="value">{{viewRowData.description}}</span>
+                    </p>
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header">Leaf Node: </b>
+                        </span>
+                        <span class="value">{{viewRowData.leafNodeCheck}}</span>
+                    </p>
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header">Parent Node: </b>
+                        </span>
+                        <span class="value">{{viewRowData.parentNode?.nodeCode}}</span>
+                    </p>
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header">Node Type: </b>
+                        </span>
+                        <span class="value">{{viewRowData.fsType}}</span>
+                    </p>
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header">IsActive</b>
+                        </span>
+                        <span class="value">{{viewRowData.isActive === true ? 'Yes' : 'No'}}</span>
+                    </p>
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header">Created By: </b>
+                        </span>
+                        <span class="value">{{viewRowData.createdBy }}</span>
+                    </p>
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header">Created Date: </b>
+                        </span>
+                        <span class="value">{{viewRowData.createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
+                    </p>
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header">Updated By: </b>
+                        </span>
+                        <span class="value">{{viewRowData.updatedBy}}</span>
+                    </p>
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header">Updated Date: </b>
+                        </span>
+                        <span class="value">{{viewRowData.updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
+                    </p>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="resetViewData()">Close</button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<!-- 
+<div #add id="add" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <!-- <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{isEdit ? 'Edit' : 'Add' }} Percent</h4>
+            </div>
+            <div class="modal-body">
+                <form #create="ngForm">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="col-sm-5">
+                                <label for="description" class="control-label">Ledger Name
+                                    <span class="clr-red">*</span>
+                                </label>
+                            </div>
+                            <div class="col-sm-5">
+                                <select name="aircraftType" [(ngModel)]="addNew.code" #aircraftTypeId="ngModel" required>
+                                    <option>-- Select --</option>
+                                    <option *ngFor="let object of maincompanylist" [ngValue]="object.code">{{object.code}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="col-sm-5">
+                                <label for="description" class="control-label">Share with the Other Entities
+                                    <span class="clr-red">*</span>
+                                </label>
+                            </div>
+                            <div class="col-sm-5">
+                                <p-multiSelect [options]="mainCompanylistMultiSelectData" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentNodeSetup.selectedCompanysData"
+                                style="float:left" [style]="{minWidth: '200px'}"></p-multiSelect>
+
+                            </div>
+                        </div>
+                    
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                            <div class="checkbox-cstm">
+                                <label>
+                                    <input type="checkbox" name="isActive" [(ngModel)]="addNew.isActive">
+                                    <span class="cr">
+                                        <i class="cr-icon pi pi-check"></i>
+                                    </span>
+                                    Active
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="create.invalid || disableSaveGroupId && disableSaveForDescription "
+                    (click)="save();">
+                    {{isEdit ? 'Update' : 'Save' }}</button>
+                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetForm()">Close</button>
+
+            </div>
+        </div>
+
+    </div>
+</div> --> -->
+
+
 <div [@fadeInOut] class="page-content">
     <div class="right_col" role="main">
         <div class="x_panel">
@@ -41,10 +327,17 @@
                                 <td>{{nodeSetup?.parentNode?.nodeCode}}</td>
                                 <td>{{nodeSetup.fsType}}</td>
                                 <td>
-                                    <p-inputSwitch *ngIf="nodeSetup['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(nodeSetup,$event)" [(ngModel)]="nodeSetup['isActive']"></p-inputSwitch>
-                                    <p-inputSwitch *ngIf="nodeSetup['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(nodeSetup,$event)" [(ngModel)]="nodeSetup['isActive']"></p-inputSwitch>
-                                    <p-inputSwitch *ngIf="nodeSetup['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(nodeSetup,$event)" [(ngModel)]="nodeSetup['isActive']"></p-inputSwitch>
-                                    <span (click)="showViewData(contentView,nodeSetup)" data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" title="" data-original-title="View" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+                                    <p-inputSwitch *ngIf="nodeSetup['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(nodeSetup,$event)"
+                                        [(ngModel)]="nodeSetup['isActive']"></p-inputSwitch>
+                                    <p-inputSwitch *ngIf="nodeSetup['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(nodeSetup,$event)"
+                                        [(ngModel)]="nodeSetup['isActive']"></p-inputSwitch>
+                                    <p-inputSwitch *ngIf="nodeSetup['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(nodeSetup,$event)"
+                                        [(ngModel)]="nodeSetup['isActive']"></p-inputSwitch>
+                                    <span (click)="showViewData(contentView,nodeSetup)" data-toggle="modal" data-target="#view">
+                                        <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" title="" data-original-title="View" matTooltip="View">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                    </span>
                                     <span (click)="setNodeSetupToUpdate(nodeSetup.glAccountNodeId,contentEdit)" data-toggle="modal" data-target="#edit">
                                         <a data-toggle="tooltip" title="" class="btn btn-primary nobg" data-original-title="" edit="">
                                             <i class="fa fa-edit"></i>
@@ -77,6 +370,11 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
+    <div class="modal-body">
+        <strong>Ledger Name:
+            <span class="new-label">{{selectedRowforDelete.ledgerName}}</span>
+        </strong>
+    </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
         <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
@@ -94,7 +392,9 @@
     <div class="modal-body">
         <form #userForm="ngForm" class="form-horizontal">
             <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Ledger Name <span class="clr-red">*</span></label>
+                <label class="control-label col-sm-4">Ledger Name
+                    <span class="clr-red">*</span>
+                </label>
                 <div class="col-sm-7">
                     <select [(ngModel)]="currentNodeSetup.ledgerName" [ngModelOptions]="{standalone: true}">
                         <option *ngFor="let company of maincompanylist" [ngValue]="company.code">{{company.code}}</option>
@@ -104,14 +404,17 @@
             <div class="form-group col-sm-12">
                 <label class="control-label col-sm-4">Share with the Other Entities</label>
                 <div class="col-sm-7">
-                    <p-multiSelect [options]="mainCompanylistMultiSelectData" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentNodeSetup.selectedCompanysData" [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
+                    <p-multiSelect [options]="mainCompanylistMultiSelectData" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentNodeSetup.selectedCompanysData"
+                        [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
                 </div>
             </div>
             <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Node Code <span class="clr-red">*</span> </label>
+                <label class="control-label col-sm-4">Node Code
+                    <span class="clr-red">*</span>
+                </label>
                 <div class="col-sm-7">
-                    <p-autoComplete (onSelect)="codeSelect($event)" (onKeyUp)=codeHandler($event) [(ngModel)]="currentNodeSetup.nodeCode" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filterCodes($event)" [size]="30"
-                                    [minLength]="1" [dropdown]="true">
+                    <p-autoComplete (onSelect)="codeSelect($event)" (onKeyUp)=codeHandler($event) [(ngModel)]="currentNodeSetup.nodeCode" [ngModelOptions]="{standalone: true}"
+                        [suggestions]="localCollection" (completeMethod)="filterCodes($event)" [size]="30" [minLength]="1" [dropdown]="true">
                         <ng-template let-nodeCode pTemplate="item">
                             <div class="ui-helper-clearfix">{{nodeCode}}</div>
                         </ng-template>
@@ -121,7 +424,9 @@
                 </div>
             </div>
             <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Node Name<span class="clr-red">*</span></label>
+                <label class="control-label col-sm-4">Node Name
+                    <span class="clr-red">*</span>
+                </label>
                 <div class="col-sm-7">
                     <input class="form-control" type="text" [(ngModel)]="currentNodeSetup.nodeName" [ngModelOptions]="{standalone: true}">
                 </div>
@@ -129,8 +434,9 @@
             <div class="form-group col-sm-12">
                 <label class="control-label col-sm-4">Parent Node</label>
                 <div class="col-sm-7">
-                    <p-autoComplete (onSelect)="parentCodeNodeSelect($event)" (onKeyUp)=parentCodeNodeHandler($event) [(ngModel)]="parentNode" [ngModelOptions]="{standalone: true}" [suggestions]="parentCodeCollection" (completeMethod)="filterParentNodeCodes($event)" [size]="30"
-                                    [minLength]="1" [dropdown]="true">
+                    <p-autoComplete (onSelect)="parentCodeNodeSelect($event)" (onKeyUp)=parentCodeNodeHandler($event) [(ngModel)]="parentNode"
+                        [ngModelOptions]="{standalone: true}" [suggestions]="parentCodeCollection" (completeMethod)="filterParentNodeCodes($event)"
+                        [size]="30" [minLength]="1" [dropdown]="true">
                     </p-autoComplete>
                 </div>
             </div>
@@ -141,7 +447,9 @@
                 </div>
             </div>
             <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Node Type<span class="clr-red">*</span></label>
+                <label class="control-label col-sm-4">Node Type
+                    <span class="clr-red">*</span>
+                </label>
                 <div class="col-sm-7">
                     <select [(ngModel)]="currentNodeSetup.glAccountNodeType" [ngModelOptions]="{standalone: true}">
                         <option *ngFor="let glAccountClass of allGLAccountClassData" [ngValue]="glAccountClass.glAccountClassName">{{glAccountClass.glAccountClassName}}</option>
@@ -149,7 +457,9 @@
                 </div>
             </div>
             <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">F/S Type<span class="clr-red">*</span></label>
+                <label class="control-label col-sm-4">F/S Type
+                    <span class="clr-red">*</span>
+                </label>
                 <div class="col-sm-7">
                     <select [(ngModel)]="currentNodeSetup.fsType" [ngModelOptions]="{standalone: true}">
                         <option value="incomeStatement">Income Statement</option>
@@ -211,12 +521,37 @@
             <h4 class="modal-title">Action Details</h4>
         </div>
         <div class="modal-body viewform">
-            <p><span class="label"><b>Action Name: </b></span><span class="value">{{action_name}}</span></p>
-            <p><span class="label"><b>Memo: </b></span><span class="value">{{memo}}</span></p>
-            <p><span class="label"><b>Created By: </b></span><span class="value">{{createdBy}}</span></p>
-            <p><span class="label"><b>Created Date: </b></span><span class="value">{{createddate | date: 'MM/dd/yyyy'}}</span></p>
-            <p><span class="label"><b>Updated By: </b></span><span class="value">{{updatedBy}}</span></p>
-            <p><span class="label"><b>Updated Date: </b></span><span class="value">{{updatedDate | date: 'MM/dd/yyyy'}}</span></p>
+            <p>
+                <span class="label">
+                    <b>Action Name: </b>
+                </span>
+                <span class="value">{{action_name}}</span>
+            </p>
+          
+            <p>
+                <span class="label">
+                    <b>Created By: </b>
+                </span>
+                <span class="value">{{createdBy}}</span>
+            </p>
+            <p>
+                <span class="label">
+                    <b>Created Date: </b>
+                </span>
+                <span class="value">{{createddate | date: 'MM/dd/yyyy'}}</span>
+            </p>
+            <p>
+                <span class="label">
+                    <b>Updated By: </b>
+                </span>
+                <span class="value">{{updatedBy}}</span>
+            </p>
+            <p>
+                <span class="label">
+                    <b>Updated Date: </b>
+                </span>
+                <span class="value">{{updatedDate | date: 'MM/dd/yyyy'}}</span>
+            </p>
             <div class="clear"></div>
         </div>
         <div class="modal-footer">
@@ -226,8 +561,7 @@
 </ng-template>
 
 <p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
-          [width]="350" [minWidth]="200" [responsive]="true"
-          [minY]="1050" [baseZIndex]="1100000">
+    [width]="350" [minWidth]="200" [responsive]="true" [minY]="1050" [baseZIndex]="1100000">
     <h5 [ngStyle]="{'color':'red'}">
         Please Enter (*) Mandatory Fields
     </h5>
@@ -246,14 +580,49 @@
         <div class="modal-body viewform">
             <div class="panel-body">
                 <div class="col-sm-6">
-                    <p><span class="label"><b>Ledger Name: </b></span><span class="value">{{nodeSetupViewData.oldAccountCode}}</span></p>
-                    <p><span class="label"><b>Node Code: </b></span><span class="value">{{nodeSetupViewData.nodeCode}}</span></p>
-                    <p><span class="label"><b>Node Description: </b></span><span class="value">{{nodeSetupViewData.description}}</span></p>
+                    <p>
+                        <span class="label">
+                            <b>Ledger Name: </b>
+                        </span>
+                        <span class="value">{{nodeSetupViewData.oldAccountCode}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Node Code: </b>
+                        </span>
+                        <span class="value">{{nodeSetupViewData.nodeCode}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Node Description: </b>
+                        </span>
+                        <span class="value">{{nodeSetupViewData.description}}</span>
+                    </p>
 
-                    <p><span class="label"><b>Parent Node: </b></span><span class="value">{{nodeSetupViewData.parentNodeId}}</span></p>
-                    <p><span class="label"><b>Leaf Node: </b></span><span class="value">{{nodeSetupViewData.leafNodeCheck}}</span></p>
-                    <p><span class="label"><b>Node Type: </b></span><span class="value">{{nodeSetupViewData.glAccountNodeType}}</span></p>
-                    <p><span class="label"><b>F/S Type: </b></span><span class="value">{{nodeSetupViewData.fsType}}</span></p>
+                    <p>
+                        <span class="label">
+                            <b>Parent Node: </b>
+                        </span>
+                        <span class="value">{{nodeSetupViewData.parentNodeId}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Leaf Node: </b>
+                        </span>
+                        <span class="value">{{nodeSetupViewData.leafNodeCheck}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Node Type: </b>
+                        </span>
+                        <span class="value">{{nodeSetupViewData.glAccountNodeType}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>F/S Type: </b>
+                        </span>
+                        <span class="value">{{nodeSetupViewData.fsType}}</span>
+                    </p>
 
                 </div>
             </div>
@@ -263,4 +632,3 @@
         </div>
     </div>
 </ng-template>
-

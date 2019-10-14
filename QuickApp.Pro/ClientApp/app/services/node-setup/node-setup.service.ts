@@ -34,14 +34,14 @@ export class NodeSetupService {
         );
     }
 
-    add(assetStatus: GLAccountNodeSetup) {
+    add(assetStatus) {
         return this.nodeSetupEndpoint.addNode<GLAccountNodeSetup>(assetStatus);
     }
     addGLAccountNodeShareWithEntityMapper(data: any) {
         return this.nodeSetupEndpoint.addGLAccountNodeShareWithEntityMapper<any>(data);
     }
 
-    update(assetStatus: GLAccountNodeSetup) {
+    update(assetStatus) {
         return this.nodeSetupEndpoint.updateNode<GLAccountNodeSetup>(assetStatus);
     }
 
