@@ -97,8 +97,8 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-3">
-                                            <div class="form-group">
+                                        <div class="col-md-2">
+                                            <!-- <div class="form-group">
                                                 <label>
                                                     <span class="pull-left">Tax Rate - State/Prov</span>
                                                     <span style="margin-left:3px;cursor:pointer;"><a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addTaxRateStateProv" ></a></span>
@@ -118,7 +118,7 @@
                                                 <select name="taxTypeId" [(ngModel)]="savedGeneralInformationData.taxTypeId" *ngIf="savedGeneralInformationData.taxRateOther">
                                                     <option *ngFor="let taxRate of taxrateList" [ngValue]="taxRate.taxTypeId">{{taxRate.taxTypeId}}</option>
                                                 </select>
-                                            </div>
+                                            </div> -->
                                             
                                             <div class="form-group" style="margin-top: 15px;">
                                                 <div class="label-cstm">Allow Partial Billing</div>
@@ -139,17 +139,70 @@
                                                 </span>
                                             </div>
                                         </div>
+
+                                        <div class="col-md-7">
+                                            <div class="col-md-4">
+                                                    <div class="form-group">
+                                                            <label class="fs12"
+                                                                             >TAX Type
+                                                                           </label><span style="margin-left:3px;cursor:pointer;"><a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#taxtype" ></a></span>
+                                                                           <p-dropdown class="p-dropdown-custom-2" [options]="taxtypesList" placeholder="Select TaxType" name="taxType" [(ngModel)]="selectedTaxType"></p-dropdown>
+                                                           </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                    <div class="form-group">
+                                                            <label class="fs12"
+                                                            >TAX Rate
+                                                    </label>
+                                                    <span style="margin-left:3px;cursor:pointer;"><a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#taxtype" ></a></span>
+                                                                
+                                                            <p-multiSelect class="p-Multiselect-cstm" [options]="taxRatesList" name="taxRates" [(ngModel)]="selectedTaxRates"></p-multiSelect>
+                                                    </div>
+                                            </div>
+                                                
+                                                
+                                               <div class="form-group">
+                                                    <button class="btn btn-primary mtop20" (click)="mapTaxTypeandRate()">
+                                                            Add
+                                                          </button>
+                                                </div>
+
+                                                <p-table [value]="taxTypeRateMapping"  [paginator]="true" [rows]="3" *ngIf="taxTypeRateMapping.length>0">
+                                                        <ng-template pTemplate="header">
+                                                            <tr>
+                                                                <th>S.No</th>
+                                                                <th>TaxType</th>
+                                                                <th>TaxRate</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </ng-template>
+                                                        <ng-template pTemplate="body" let-t>
+                                                            <tr>
+                                                                    <!-- {{($index + 1) + (currentPage - 1) * itemsPerPage}} -->
+                                                                  <td>  {{(0 + 1) + (1 - 1) * 3}} </td>
+                                                                <td>{{t.taxType}}</td>
+                                                                <td>{{t.taxRate}}</td>
+                                                            <td>
+                                                                    <button class="btn-delete" mat-icon-button matTooltip="Delete" >
+                                                                            <mat-icon color="warn">delete</mat-icon>
+                                                                        </button>
+                                                            </td>
+                                                            </tr>
+                                                        </ng-template>
+                                                    </p-table>
+                                        </div>
+                                        </div>
                                     </div>
 
                                 </div>
                                 <button type="button" class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!financialInfoForm.valid" (click)="saveFinancialInformation();">Save & Next</button>
                                 <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="backClick()">Previous</button>
-                            </div>
                         </div>
+                      
                     </form>
-                </div>
             </div>
         </div>
+</div>
 
 
         <div class="modal fade success-msg" id="success-popup" role="dialog">

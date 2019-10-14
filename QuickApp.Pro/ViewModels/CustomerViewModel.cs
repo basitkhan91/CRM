@@ -20,7 +20,8 @@ namespace QuickApp.Pro.ViewModels
         public long CustomerId { get; set; }
 
         public string Name { get; set; }
-
+        public int? CsrId { get; set; }
+        public int? SaId { get; set; }
 
         public string CustomerCode { get; set; }
 
@@ -34,7 +35,9 @@ namespace QuickApp.Pro.ViewModels
 
         public long? Parent { get; set; }
 
-        public long? CustomerClassificationId { get; set; }
+        public long? CustomerClassificationId{ get; set; }
+
+        public long?[] CustomerClassificationIds { get; set; }
 
         // public int? IntegrationPortalId { get; set; }
         public string Discount { get; set; }
@@ -136,7 +139,8 @@ namespace QuickApp.Pro.ViewModels
 
 
         public string CustomerPhone { get; set; }
-
+        public string CustomerPhoneExt { get; set; }
+        
 
         public string CSRName { get; set; }
 
@@ -191,8 +195,8 @@ namespace QuickApp.Pro.ViewModels
         public virtual CustomerShipping CustomerShipping { get; set; }
         public virtual CustomerType CustomerType { get; set; }
 
-
-
+        public virtual List<RestrictsPMAList> RestrictsPmaList { get; set; }
+        public virtual List<RestrictsBERList> restrictBERList { get; set; }
 
 
 

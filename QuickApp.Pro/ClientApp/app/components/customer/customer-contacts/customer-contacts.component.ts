@@ -23,7 +23,8 @@ import { MasterComapnyService } from '../../../services/mastercompany.service';
 import { CustomerService } from '../../../services/customer.service';
 import { CustomerContactModel } from '../../../models/customer-contact.model';
 import { MatDialog } from '@angular/material';
-import { getObjectByValue, getObjectById, getValueFromObjectByKey } from '../../../generic/autocomplete';
+import { getObjectByValue, getObjectById, getValueFromObjectByKey, editValueAssignByCondition } from '../../../generic/autocomplete';
+import { AtaSubChapter1Service } from '../../../services/atasubchapter1.service';
 
 
 @Component({
@@ -36,6 +37,7 @@ export class CustomerContactsComponent implements OnInit {
 	@Input() savedGeneralInformationData;
 	@Input() editMode;
 	@Input() editGeneralInformationData;
+	@Input() add_ataChapterList;
 	@Output() tab = new EventEmitter<any>();
 	contactsListOriginal: any;
 	firstNamesList: any;
@@ -44,6 +46,7 @@ export class CustomerContactsComponent implements OnInit {
 	contactInformation = new CustomerContactModel()
 	customerContacts: any = [];
 	customerContactsColumns = [
+		{ field: 'tag', header: 'TAG' },
 		{ field: 'firstName', header: 'First Name' },
 		{ field: 'lastName', header: 'Last Name' },
 		{ field: 'contactTitle', header: 'Contact Title' },
@@ -64,10 +67,20 @@ export class CustomerContactsComponent implements OnInit {
 	customerCode: any;
 	customerName: any;
 	emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{3,}";
+	sourceViewforContact: any;
+	add_SelectedId: any;
+	add_SelectedModels: any;
+	add_ataSubChapterList: any;
+	selectedContact: any;
+	ataHeaders = [
+        { field: 'ataChapterName', header: 'ATA Chapter' },
+        { field: 'ataSubChapterDescription', header: 'ATA Sub-Chapter' }
+	]
+	ataListDataValues = []
 
 
 	constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public customerService: CustomerService,
-		private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+		private dialog: MatDialog,private atasubchapter1service: AtaSubChapter1Service,private masterComapnyService: MasterComapnyService) {
 	}
 
 	ngOnInit() {
@@ -131,12 +144,19 @@ export class CustomerContactsComponent implements OnInit {
 
 			this.customerService.newAddCustomerContact(
 				{ ...responseForCustomerCreate, CustomerId: this.id }).subscribe(res => {
+
+
+					this.contactInformation = new CustomerContactModel()
+					// get all contacts
+					// this.getAllContacts();
+					// get Customer Contatcs 
+					this.getAllCustomerContact();
+					this.alertService.showMessage(
+						'Success',
+						`Sucessfully Created Contact`,
+						MessageSeverity.success
+					);
 				})
-			this.contactInformation = new CustomerContactModel()
-			// get all contacts
-			// this.getAllContacts();
-			// get Customer Contatcs 
-			this.getAllCustomerContact();
 		})
 	}
 
@@ -148,6 +168,10 @@ export class CustomerContactsComponent implements OnInit {
 	// 	})
 	// 	return data[0];
 	// }
+
+	viewSelectedRow(rowData) {
+		this.sourceViewforContact = rowData;
+	}
 	editCustomerContact(rowData) {
 		this.ediData = { ...rowData };
 		this.isEditButton = true;
@@ -169,14 +193,18 @@ export class CustomerContactsComponent implements OnInit {
 		const data = {
 			...this.contactInformation,
 			masterCompanyId: 1,
-			firstName: (typeof this.contactInformation.firstName) === 'string' ? this.contactInformation.firstName : getValueFromObjectByKey('firstName', this.contactInformation.firstName),
-			middleName: (typeof this.contactInformation.middleName) === 'string' ? this.contactInformation.middleName : getValueFromObjectByKey('middleName', this.contactInformation.middleName),
-			lastName: (typeof this.contactInformation.lastName) === 'string' ? this.contactInformation.lastName : getValueFromObjectByKey('lastName', this.contactInformation.lastName)
+			firstName: editValueAssignByCondition('firstName', this.contactInformation.firstName),
+			middleName: editValueAssignByCondition('middleName', this.contactInformation.middleName),
+			lastName: editValueAssignByCondition('lastName', this.contactInformation.lastName)
 
 		}
-
 		this.customerService.updateContactinfo(data).subscribe(res => {
 			this.getAllCustomerContact();
+			this.alertService.showMessage(
+				'Success',
+				`Sucessfully Updated Contact`,
+				MessageSeverity.success
+			);
 		});
 	}
 
@@ -188,22 +216,94 @@ export class CustomerContactsComponent implements OnInit {
 		})
 	}
 
-	handleChange(rowData, e) {
-		if (e.checked == false) {
-			const data = { ...rowData, updatedBy: this.userName, isActive: false };
+	handleChange(rowData) {
+		// if (e.checked == false) {
+		const data = { ...rowData, updatedBy: this.userName };
 
-			this.customerService.updateContactinfo(data).subscribe(res => {
-				this.getAllCustomerContact();
-			});
-		}
-		else {
-			const data = { ...rowData, updatedBy: this.userName, isActive: true };
-			this.customerService.updateContactinfo(data).subscribe(res => {
-				this.getAllCustomerContact();
-			});
-		}
+		this.customerService.updateContactinfo(data).subscribe(res => {
+
+			this.getAllCustomerContact();
+			this.alertService.showMessage(
+				'Success',
+				`Sucessfully Updated Status`,
+				MessageSeverity.success
+			);
+		});
+		// }
+		// else {
+		// 	const data = { ...rowData, updatedBy: this.userName, isActive: true };
+		// 	this.customerService.updateContactinfo(data).subscribe(res => {
+		// 		this.getAllCustomerContact();
+		// 	});
+		// }
 
 	}
+	deleteContact(id) {
+		this.customerService.deleteContact(id).subscribe(res => {
+			this.getAllCustomerContact()
+
+			this.alertService.showMessage(
+				'Success',
+				`Sucessfully Deleted Customer Contact`,
+				MessageSeverity.success
+			);
+		})
+	}
+
+	addATAChapter(rowData){
+     this.selectedContact = rowData;
+	}
+
+
+
+	
+    // get subchapter by Id in the add ATA Mapping
+    getATASubChapterByATAChapter() {
+        const selectedATAId = getValueFromObjectByKey('ataChapterId', this.add_SelectedId)
+        this.atasubchapter1service.getATASubChapterListByATAChapterId(selectedATAId).subscribe(atasubchapter => {
+            const responseData = atasubchapter[0];
+            this.add_ataSubChapterList = responseData.map(x => {
+                return {
+                    label: x.description,
+                    value: x
+                }
+            })
+        })
+    }
+    // post the ata Mapping 
+    async addATAMapping() {
+        // const id = this.savedGeneralInformationData.customerId;
+        const ataMappingData = this.add_SelectedModels.map(x => {
+            return {
+				CustomerId: this.id,
+				CustomerContactId : this.selectedContact.contactId,
+                ATAChapterId: getValueFromObjectByKey('ataChapterId', this.add_SelectedId),
+                ATASubChapterId: x.ataSubChapterId,
+                ATAChapterCode: getValueFromObjectByKey('ataChapterCode', this.add_SelectedId),
+                ATAChapterName: getValueFromObjectByKey('ataChapterName', this.add_SelectedId),
+                ATASubChapterDescription: x.description,
+                MasterCompanyId: x.masterCompanyId,
+                CreatedBy: this.userName,
+                UpdatedBy: this.userName,
+                CreatedDate: new Date(),
+                UpdatedDate: new Date(),
+                IsDeleted: false,
+            }
+        })
+
+        this.customerService.postCustomerATAs(ataMappingData).subscribe(res => {
+            this.add_SelectedModels = undefined;
+            this.add_SelectedId = undefined;
+            this.alertService.showMessage(
+                'Success',
+                'Saved ATA Mapped Data Successfully ',
+                MessageSeverity.success
+            );
+    
+        })
+
+	}
+	
 	nextClick() {
 		this.tab.emit('AircraftInfo');
 
