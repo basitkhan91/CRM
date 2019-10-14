@@ -1759,7 +1759,7 @@ namespace QuickApp.Pro.Controllers
         #endregion
 
         #region Customer Contact ATA Mapping
-        [HttpGet("getCustomerATAMapped/{customerId}")]
+        [HttpGet("getCustomerContactATAMapped/{customerId}")]
         [Produces(typeof(List<CustomerContactATAMapping>))]
         public IActionResult ataContactMapped(long customerId)
         {
