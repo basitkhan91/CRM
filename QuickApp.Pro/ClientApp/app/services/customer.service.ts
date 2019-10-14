@@ -130,11 +130,23 @@ export class CustomerService {
     getMappedAirCraftDetails(customerId: number) {
         return this.customerEndpoint.getAircraftMappingEndpoint<any>(customerId);
     }
-    getMappedATADetails(customerId: number) {
-        return this.customerEndpoint.getATAMappingEndpoint<any>(customerId);
+
+    getATAMappedByCustomerId(contactId: number) {
+        return this.customerEndpoint.getATAMappingByCustomerId<any>(contactId)
     }
+
+
+    getATAMappedByContactId(customerId: number) {
+        return this.customerEndpoint.getATAMappingByContactId<any>(customerId);
+    }
+
+
     getMappedTaxTypeRateDetails(customerId: number) {
         return this.customerEndpoint.getTaxTypeRateMappingEndpoint<any>(customerId);
+    }
+
+    deleteATAMappedByContactId(contactId) {
+        return this.customerEndpoint.deleteATAMappedByContactId(contactId);
     }
 
 
@@ -494,22 +506,22 @@ export class CustomerService {
         return this.customerEndpoint.searchATAMappedByMultiATAIDATASUBIDByCustomerId<any>(customerId, searchUrl);
     }
 
-    deleteATAMappings(id) {
-        return this.customerEndpoint.deleteATAMappedDataById(id);
-    }
+    // deleteATAMappings(id) {
+    //     return this.customerEndpoint.deleteATAMappedDataById(id);
+    // }
     deleteAircraftInvetoryById(id) {
         return this.customerEndpoint.deleteAircraftInvetoryById(id);
     }
     deleteCustomerTaxTypeRateById(id) {
         return this.customerEndpoint.deleteTaxTypeRateMappedDataById(id);
     }
-    documentUploadAction (action: any) {
+    documentUploadAction(action: any) {
         return this.customerEndpoint.getDocumentUploadEndpoint<any>(action);
     }
 
     deleteDocumentAction(actionId: any) {
-    return this.customerEndpoint.getDeleteDocumentEndpoint(actionId);
-}
+        return this.customerEndpoint.getDeleteDocumentEndpoint(actionId);
+    }
 
 
 }

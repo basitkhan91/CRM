@@ -451,7 +451,7 @@
         >
           <ng-template pTemplate="header" let-columns>
             <tr>
-              <th>Id</th>
+              <!-- <th>Id</th> -->
               <th *ngFor="let col of ataHeaders">
                 {{ col.header }}
               </th>
@@ -465,13 +465,14 @@
             let-columns="columns"
           >
             <tr>
-              <td>{{ i + 1 }}</td>
+              <!-- <td>{{ i + 1 }}</td> -->
               <td *ngFor="let col of ataHeaders">
                 {{ rowData[col.field] }}
               </td>
               <td>
                 <button
                   class="btn btn-danger nobg"
+                  (click)="deleteATAMapped(rowData)"
                 >
                   <i class="fa fa-trash"></i>
                 </button>

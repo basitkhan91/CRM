@@ -658,7 +658,7 @@ namespace QuickApp.Pro.Controllers
                 contactObj.UpdatedDate = DateTime.Now;
                 contactObj.CreatedBy = contactViewModel.CreatedBy;
                 contactObj.UpdatedBy = contactViewModel.UpdatedBy;
-                customercontactViewModel.IsDefaultContact = customercontactViewModel.IsDefaultContact;
+				customercontactViewModel.IsDefaultContact = customercontactViewModel.IsDefaultContact;
                 contactObj.WorkPhoneExtn = contactObj.WorkPhoneExtn;
                 _unitOfWork.ContactRepository.Add(contactObj);
                 _unitOfWork.SaveChanges();
@@ -1665,32 +1665,34 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
-                for (int i = 0; i < customerAircraftMappingVM.Length; i++)
-                {
-                    CustomerAircraftMapping customerAircraftMapping = new CustomerAircraftMapping
-                    {
-                        AircraftType = customerAircraftMappingVM[i].AircraftType,
-                        AircraftModel = customerAircraftMappingVM[i].AircraftModel,
-                        DashNumber = customerAircraftMappingVM[i].DashNumber,
-                        ModelNumber = customerAircraftMappingVM[i].ModelNumber,
-                        AircraftModelId = customerAircraftMappingVM[i].AircraftModelId,
-                        DashNumberId = customerAircraftMappingVM[i].DashNumberId,
-                        Memo = customerAircraftMappingVM[i].Memo,
-                        MasterCompanyId = customerAircraftMappingVM[i].MasterCompanyId,
-                        CreatedBy = customerAircraftMappingVM[i].CreatedBy,
-                        UpdatedBy = customerAircraftMappingVM[i].UpdatedBy,
-                        CustomerId = customerAircraftMappingVM[i].CustomerId,
-                        CreatedDate =  System.DateTime.Now,
-                        UpdatedDate =  System.DateTime.Now,
-                        IsDeleted = customerAircraftMappingVM[i].IsDeleted,
-                        Inventory = customerAircraftMappingVM[i].Inventory,
-                        AircraftTypeId = customerAircraftMappingVM[i].AircraftTypeId
-                };
-                    _unitOfWork.Repository<CustomerAircraftMapping>().Add(customerAircraftMapping);
-                    _unitOfWork.SaveChanges();
-                }
-            }
-            else
+
+
+				for (int i = 0; i < customerAircraftMappingVM.Length; i++)
+				{
+					CustomerAircraftMapping customerAircraftMapping = new CustomerAircraftMapping
+					{
+						AircraftType = customerAircraftMappingVM[i].AircraftType,
+						AircraftModel = customerAircraftMappingVM[i].AircraftModel,
+						DashNumber = customerAircraftMappingVM[i].DashNumber,
+						ModelNumber = customerAircraftMappingVM[i].ModelNumber,
+						AircraftModelId = customerAircraftMappingVM[i].AircraftModelId,
+						DashNumberId = customerAircraftMappingVM[i].DashNumberId,
+						Memo = customerAircraftMappingVM[i].Memo,
+						MasterCompanyId = customerAircraftMappingVM[i].MasterCompanyId,
+						CreatedBy = customerAircraftMappingVM[i].CreatedBy,
+						UpdatedBy = customerAircraftMappingVM[i].UpdatedBy,
+						CustomerId = customerAircraftMappingVM[i].CustomerId,
+						CreatedDate = System.DateTime.Now,
+						UpdatedDate = System.DateTime.Now,
+						IsDeleted = customerAircraftMappingVM[i].IsDeleted,
+						Inventory = customerAircraftMappingVM[i].Inventory,
+						AircraftTypeId = customerAircraftMappingVM[i].AircraftTypeId
+					};
+					_unitOfWork.Repository<CustomerAircraftMapping>().Add(customerAircraftMapping);
+					_unitOfWork.SaveChanges();
+				}
+			}
+			else
             {
                 return BadRequest($"{nameof(customerAircraftMappingVM)} cannot be null");
             }
@@ -1746,24 +1748,24 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        [HttpDelete("DeleteCustomerATAMapping/{id}")]
-        public IActionResult DeleteCustomerATA(long id)
-        {
-            var existingResult = _unitOfWork.Repository<CustomerATAMapping>().GetSingleOrDefault(c => c.CustomerATAMappingId == id);
-            existingResult.IsDeleted = true;
-            _unitOfWork.Repository<CustomerATAMapping>().Update(existingResult);
-            _unitOfWork.SaveChanges();
-            return Ok(id);
-        }
+        //[HttpDelete("DeleteCustomerATAMapping/{id}")]
+        //public IActionResult DeleteCustomerATA(long id)
+        //{
+        //    var existingResult = _unitOfWork.Repository<CustomerATAMapping>().GetSingleOrDefault(c => c.CustomerATAMappingId == id);
+        //    existingResult.IsDeleted = true;
+        //    _unitOfWork.Repository<CustomerATAMapping>().Update(existingResult);
+        //    _unitOfWork.SaveChanges();
+        //    return Ok(id);
+        //}
 
         #endregion
 
         #region Customer Contact ATA Mapping
-        [HttpGet("getCustomerContactATAMapped/{customerId}")]
+        [HttpGet("getCustomerContactATAMapped/{contactId}")]
         [Produces(typeof(List<CustomerContactATAMapping>))]
-        public IActionResult ataContactMapped(long customerId)
+        public IActionResult ataContactMapped(long contactId)
         {
-            var result = _unitOfWork.Customer.GetATAContactMapped(customerId);
+            var result = _unitOfWork.Customer.GetATAContactMapped(contactId);
             if (result == null)
             {
                 return BadRequest();
@@ -1795,22 +1797,22 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        [HttpDelete("DeleteCustomerContactATAMapping/{id}")]
-        public IActionResult DeleteCustomerContactATA(long id)
-        {
-            var existingResult = _unitOfWork.Repository<CustomerContactATAMapping>().GetSingleOrDefault(c => c.CustomerContactATAMappingId == id);
-            existingResult.IsDeleted = true;
-            _unitOfWork.Repository<CustomerContactATAMapping>().Update(existingResult);
-            _unitOfWork.SaveChanges();
-            return Ok(id);
-        }
+		[HttpDelete("DeleteCustomerContactATAMapping/{id}")]
+		public IActionResult DeleteCustomerContactATA(long id)
+		{
+			var existingResult = _unitOfWork.Repository<CustomerContactATAMapping>().GetSingleOrDefault(c => c.CustomerContactATAMappingId == id);
+			existingResult.IsDeleted = true;
+			_unitOfWork.Repository<CustomerContactATAMapping>().Update(existingResult);
+			_unitOfWork.SaveChanges();
+			return Ok(id);
+		}
 
 
-        #endregion
+		#endregion
 
-        #region TaxTypeRateMapped
+		#region TaxTypeRateMapped
 
-        [HttpGet("getCustomerTaxTypeRateMapped/{customerId}")]
+		[HttpGet("getCustomerTaxTypeRateMapped/{customerId}")]
         [Produces(typeof(List<CustomerTaxTypeRateMapping>))]
         public IActionResult TaxTypeRateMapped(long customerId)
         {
@@ -2424,10 +2426,10 @@ namespace QuickApp.Pro.Controllers
             public List<CustomerSearchViewModel> CustomerList { get; set; }
         }
 
-        [HttpGet("searchGetCustomerATAMappedByMultiATAIDATASubID/{CustomerId}")]
-        public IActionResult CustomerATAMappedList(long CustomerId, string ATAChapterId, string ATASubChapterID)
+        [HttpGet("searchGetCustomerATAMappedByMultiATAIDATASubID")]
+        public IActionResult CustomerATAMappedList(long contactId, string ATAChapterId, string ATASubChapterID)
         {
-            var result = _unitOfWork.Customer.searchgetCustomerATAMappingDataByMultiTypeIdATAIDATASUBID(CustomerId, ATAChapterId, ATASubChapterID);
+            var result = _unitOfWork.Customer.searchgetCustomerATAMappingDataByMultiTypeIdATAIDATASUBID(contactId, ATAChapterId, ATASubChapterID);
 
             if (result == null)
             {
