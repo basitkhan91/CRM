@@ -15,11 +15,11 @@ namespace QuickApp.Pro.ViewModels
 
         public string Name { get; set; }
 
-        public byte Percentage { get; set; }
+        public decimal  Percentage { get; set; }
 
-        public byte Days { get; set; }
+        public byte? Days { get; set; }
 
-        public byte NetDays { get; set; }
+        public byte? NetDays { get; set; }
 
         public Int32 MasterCompanyId { get; set; }
 

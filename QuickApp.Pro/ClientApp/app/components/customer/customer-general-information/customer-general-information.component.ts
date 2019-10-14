@@ -18,6 +18,7 @@ import { Currency } from '../../../models/currency.model';
 import { CurrencyService } from '../../../services/currency.service';
 import { CustomerGeneralInformation } from '../../../models/customer-general.model';
 import { getValueFromObjectByKey, getObjectByValue, validateRecordExistsOrNot, editValueAssignByCondition, getObjectById } from '../../../generic/autocomplete';
+import { ItemMasterService } from '../../../services/itemMaster.service';
 
 @Component({
     selector: 'app-customer-general-information',
@@ -44,7 +45,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     customerCodes: { customerId: any; name: any; }[];
     // countryListOriginal: any[];
     countrycollection: any[];
-    allcustomerclassificationInfo: CustomerClassification[];
+    allcustomerclassificationInfo;
     integrationOriginalList = [
 
     ];
@@ -54,6 +55,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     isCustomerNameAlreadyExists: boolean = false;
     isCustomerCodeAlreadyExists: boolean = false;
     emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{3,}";
+    urlPattern = "^((ht|f)tp(s?))\://([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(/\S*)?$";
 
     classificationNew = {
         description: '',
@@ -75,6 +77,17 @@ export class CustomerGeneralInformationComponent implements OnInit {
     isEdit: any = false;
     id: number;
     editData: any;
+    partList: any;
+    partListOriginal: any;
+    // restrictsPMAList: any;
+    // restrictBERList: any;
+    restictBERtempList : any = []
+    restictPMAtempList: any = [];
+    restrictHeaders = [
+        {field: 'partNumber' , header: 'PN'},
+        {field: 'memo' , header: 'Description'},
+
+    ]
     // editData: any;
 
     // selectedCustomerCodeData: any;
@@ -314,7 +327,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
 
     constructor(public integrationService: IntegrationService, public customerClassificationService: CustomerClassificationService, public ataservice: AtaMainService, private authService: AuthService, private alertService: AlertService,
-        public customerService: CustomerService, public vendorser: VendorService, private currencyService: CurrencyService) {
+        public customerService: CustomerService, public itemService: ItemMasterService, public vendorser: VendorService, private currencyService: CurrencyService) {
 
 
         //     this.dataSource = new MatTableDataSource();
@@ -366,6 +379,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
 
         this.getAllCustomerTypes();
+        this.getAllPartList();
         //this.getAllCustomers();
 
         this.getAllCustomerClassification();
@@ -375,18 +389,19 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
         if (this.isEdit) {
             this.customerService.getCustomerdataById(this.id).subscribe(response => {
-                 console.log(response);
+                console.log(response);
 
                 const res = response[0][0]
 
-                this.editGeneralInformation.emit(res );
+                this.editGeneralInformation.emit(res);
                 this.editData = res;
-                this.generalInformation = { ...this.editData,
+                this.generalInformation = {
+                    ...this.editData,
                     name: getObjectByValue('name', res.name, this.customerListOriginal),
                     country: getObjectByValue('nice_name', res.country, this.countryListOriginal),
                     customerParentName: getObjectByValue('name', res.customerParentName, this.customerListOriginal),
                     customerCode: getObjectByValue('customerCode', res.customerCode, this.customerListOriginal),
-             };
+                };
                 // this.editData = {
                 //     addressId: res.addressId,
                 //     isAddressForBilling: res.t.isAddressForBilling,
@@ -449,6 +464,18 @@ export class CustomerGeneralInformationComponent implements OnInit {
     //                 }
     //             );
     // }
+
+    getAllPartList() {
+        this.itemService.getPrtnumberslistList().subscribe(res => {
+            // this.partListOriginal
+            const data = res[0];
+            this.partList = data.map(x => {
+                return {
+                    label: x.partNumber, value: { itemMasterId: x.itemMasterId, partNumber: x.partNumber, memo: x.memo }
+                }
+            })
+        })
+    }
     getAllIntegrations() {
         this.integrationService.getWorkFlows().subscribe(res => {
             const responseData = res[0]
@@ -482,12 +509,44 @@ export class CustomerGeneralInformationComponent implements OnInit {
     async getAllCustomerClassification() {
         await this.customerClassificationService.getCustomerClassificationList().subscribe(res => {
             const responseData = res[0];
-            this.allcustomerclassificationInfo = responseData.filter(x => {
-                if (x.isActive === true) {
-                    return x;
+            this.allcustomerclassificationInfo = responseData.map(x => {
+                return {
+                    label: x.description, value: x.customerClassificationId
                 }
+                // console.log(this.allcustomerclassificationInfo);
+                // if (x.isActive === true) {
+                //     return x;
+                // }
             })
+
         })
+    }
+    selectedPartForPMA(event) {
+        console.log(event)
+
+    }
+    // filterpartItems(event){
+    //     this.partList = this.partListOriginal;
+
+
+    //     this.partList = [...this.partListOriginal.filter(x => {
+    //         return x.partNumber.toLowerCase().includes(event.query.toLowerCase())
+    //     })] 
+    // }
+
+    addRestrictPMA() {
+
+    this.generalInformation.restrictsPMAList = this.restictPMAtempList
+    }
+    deleteRestirctPMA(i){
+        this.generalInformation.restrictsPMAList.splice(i, 1);
+    }
+
+    addRestrictBER() {
+     this.generalInformation.restrictBERList = this.restictBERtempList;
+    }
+    deleteRestrictBER(i){
+        this.generalInformation.restrictBERList.splice(i, 1);
     }
 
 
@@ -536,12 +595,12 @@ export class CustomerGeneralInformationComponent implements OnInit {
         if (value == 'PBHCustomer') {
             this.memoPopupContent = this.generalInformation.pbhCustomerMemo;
         }
-        if (value == 'restrictPMA') {
-            this.memoPopupContent = this.generalInformation.restrictPMAMemo;
-        }
-        if (value == 'restrictBER') {
-            this.memoPopupContent = this.generalInformation.restrictBERMemo;
-        }
+        // if (value == 'restrictPMA') {
+        //     this.memoPopupContent = this.generalInformation.restrictPMAMemo;
+        // }
+        // if (value == 'restrictBER') {
+        //     this.memoPopupContent = this.generalInformation.restrictBERMemo;
+        // }
         this.memoPopupValue = value;
     }
 
@@ -550,12 +609,12 @@ export class CustomerGeneralInformationComponent implements OnInit {
         if (this.memoPopupValue == 'PBHCustomer') {
             this.generalInformation.pbhCustomerMemo = this.memoPopupContent;
         }
-        if (this.memoPopupValue == 'restrictPMA') {
-            this.generalInformation.restrictPMAMemo = this.memoPopupContent;
-        }
-        if (this.memoPopupValue == 'restrictBER') {
-            this.generalInformation.restrictBERMemo = this.memoPopupContent;
-        }
+        // if (this.memoPopupValue == 'restrictPMA') {
+        //     this.generalInformation.restrictPMAMemo = this.memoPopupContent;
+        // }
+        // if (this.memoPopupValue == 'restrictBER') {
+        //     this.generalInformation.restrictBERMemo = this.memoPopupContent;
+        // }
         this.memoPopupContent = '';
     }
     selectedCustomerName() {
@@ -662,7 +721,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 MessageSeverity.success
             );
 
-            this.generalInformation.customerClassificationId = res.customerClassificationId;
+            // this.generalInformation.customerClassificationId = res.customerClassificationId;
 
         })
 

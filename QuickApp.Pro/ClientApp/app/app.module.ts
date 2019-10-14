@@ -198,6 +198,8 @@ import { SpinnerComponent } from './shared/spinner/spinner.component';
 import { CardModule } from 'primeng/card';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { WorkOrderService } from './services/work-order/work-order.service';
+import { PercentageService } from './services/percentage.service';
+import { PercentageEndpoint } from './services/percentage-endpoint.service';
 //import { AuditComponent } from "./components/Audit/audit.component";
 
 @NgModule({
@@ -401,7 +403,9 @@ import { WorkOrderService } from './services/work-order/work-order.service';
     RolesGuardService,
     CompanyService,
     CompanyEndpoint,
-    WorkOrderService
+    WorkOrderService,
+      PercentageService,
+    PercentageEndpoint
   ],
   entryComponents: [LoginDialogComponent, AddTaskDialogComponent],
   bootstrap: [AppComponent],

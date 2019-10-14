@@ -17,16 +17,17 @@ export class CustomerATAInformationComponent implements OnInit {
     @Input() savedGeneralInformationData;
     @Input() editGeneralInformationData;
     @Input() editMode;
+    @Input() search_ataChapterList;
     @Output() tab = new EventEmitter();
     // LoadAtachapter: any = [];
     // ataMainchapter: any;
     // atasubchapter: any;
-    add_ataSubChapterList: any;
+    // add_ataSubChapterList: any;
     ataChapter: any;
     atasubchapterValues: any;
     ataChapterList: { value: any; label: string; }[];
-    add_SelectedModels: any;
-    add_SelectedId: any;
+    // add_SelectedModels: any;
+    // add_SelectedId: any;
     search_SelectedATA = []
     search_SelectedATASubChapter = []
     ataHeaders = [
@@ -37,7 +38,7 @@ export class CustomerATAInformationComponent implements OnInit {
     ataChapterIdUrl: string;
     ataSubchapterIdUrl: any;
     search_ataSubChapterList: any;
-    add_ataChapterList: { value: number; label: string; }[];
+    // search_ataChapterList: { value: number; label: string; }[];
     id: number;
     searchATAParams: string;
     customerName: any;
@@ -64,7 +65,7 @@ export class CustomerATAInformationComponent implements OnInit {
             this.customerName = this.savedGeneralInformationData.name;
         }
 
-        this.getAllATAChapter();
+        // this.getAllATAChapter();
         this.getAllATASubChapter();
 
         // this.ataChapter = this.LoadAtachapter;
@@ -75,33 +76,26 @@ export class CustomerATAInformationComponent implements OnInit {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
 
-    getAllATAChapter() {
-        this.atamain.getAtaMainList().subscribe(res => {
-            const responseData = res[0];
-            // used to get the complete object in the value 
-            this.ataChapterList = responseData.map(x => {
-                return {
-                    value: x,
-                    label: x.ataChapterName
-                }
+    // getAllATAChapter() {
+    //     this.atamain.getAtaMainList().subscribe(res => {
+    //         const responseData = res[0];
+    //         // used to get the complete object in the value 
+    //         this.ataChapterList = responseData.map(x => {
+    //             return {
+    //                 value: x,
+    //                 label: x.ataChapterName
+    //             }
 
-            })
-            // used to get the id for the value 
-            this.add_ataChapterList = responseData.map(x => {
-                return {
-                    value: x.ataChapterId,
-                    label: x.ataChapterName
-                }
-            })
-            // this.add_AtaChapterList = ataList;
-            // this.ataMainchapter = Atachapter[0];
-            // for (let i = 0; i < this.ataMainchapter.length; i++) {
-            //     this.LoadAtachapter.push(
-            //         { value: this.ataMainchapter[i].ataChapterId, label: this.ataMainchapter[i].ataChapterName },
-            //     );
-            // }
-        });
-    }
+    //         })
+    //         // used to get the id for the value 
+    //         this.search_ataChapterList = responseData.map(x => {
+    //             return {
+    //                 value: x.ataChapterId,
+    //                 label: x.ataChapterName
+    //             }
+    //         })
+    //     });
+    // }
 
     // get all subchapters
     getAllATASubChapter() {
@@ -113,58 +107,58 @@ export class CustomerATAInformationComponent implements OnInit {
                 }
             })
             // making copy for the subchapters in both add and seach 
-            this.add_ataSubChapterList = ataSubChapter;
+            // this.add_ataSubChapterList = ataSubChapter;
             this.search_ataSubChapterList = ataSubChapter;
         })
 
 
     }
 
-    // get subchapter by Id in the add ATA Mapping
-    getATASubChapterByATAChapter() {
-        const selectedATAId = getValueFromObjectByKey('ataChapterId', this.add_SelectedId)
-        this.atasubchapter1service.getATASubChapterListByATAChapterId(selectedATAId).subscribe(atasubchapter => {
-            const responseData = atasubchapter[0];
-            this.add_ataSubChapterList = responseData.map(x => {
-                return {
-                    label: x.description,
-                    value: x
-                }
-            })
-        })
-    }
-    // post the ata Mapping 
-    async addATAMapping() {
-        // const id = this.savedGeneralInformationData.customerId;
-        const ataMappingData = this.add_SelectedModels.map(x => {
-            return {
-                CustomerId: this.id,
-                ATAChapterId: getValueFromObjectByKey('ataChapterId', this.add_SelectedId),
-                ATASubChapterId: x.ataSubChapterId,
-                ATAChapterCode: getValueFromObjectByKey('ataChapterCode', this.add_SelectedId),
-                ATAChapterName: getValueFromObjectByKey('ataChapterName', this.add_SelectedId),
-                ATASubChapterDescription: x.description,
-                MasterCompanyId: x.masterCompanyId,
-                CreatedBy: this.userName,
-                UpdatedBy: this.userName,
-                CreatedDate: new Date(),
-                UpdatedDate: new Date(),
-                IsDeleted: false,
-            }
-        })
+    // // get subchapter by Id in the add ATA Mapping
+    // getATASubChapterByATAChapter() {
+    //     const selectedATAId = getValueFromObjectByKey('ataChapterId', this.add_SelectedId)
+    //     this.atasubchapter1service.getATASubChapterListByATAChapterId(selectedATAId).subscribe(atasubchapter => {
+    //         const responseData = atasubchapter[0];
+    //         this.add_ataSubChapterList = responseData.map(x => {
+    //             return {
+    //                 label: x.description,
+    //                 value: x
+    //             }
+    //         })
+    //     })
+    // }
+    // // post the ata Mapping 
+    // async addATAMapping() {
+    //     // const id = this.savedGeneralInformationData.customerId;
+    //     const ataMappingData = this.add_SelectedModels.map(x => {
+    //         return {
+    //             CustomerId: this.id,
+    //             ATAChapterId: getValueFromObjectByKey('ataChapterId', this.add_SelectedId),
+    //             ATASubChapterId: x.ataSubChapterId,
+    //             ATAChapterCode: getValueFromObjectByKey('ataChapterCode', this.add_SelectedId),
+    //             ATAChapterName: getValueFromObjectByKey('ataChapterName', this.add_SelectedId),
+    //             ATASubChapterDescription: x.description,
+    //             MasterCompanyId: x.masterCompanyId,
+    //             CreatedBy: this.userName,
+    //             UpdatedBy: this.userName,
+    //             CreatedDate: new Date(),
+    //             UpdatedDate: new Date(),
+    //             IsDeleted: false,
+    //         }
+    //     })
 
-        this.customerService.postCustomerATAs(ataMappingData).subscribe(res => {
-            this.add_SelectedModels = undefined;
-            this.add_SelectedId = undefined;
-            this.alertService.showMessage(
-                'Success',
-                'Saved ATA Mapped Data Successfully ',
-                MessageSeverity.success
-            );
-            this.getMappedATAByCustomerId();
-        })
+    //     this.customerService.postCustomerATAs(ataMappingData).subscribe(res => {
+    //         this.add_SelectedModels = undefined;
+    //         this.add_SelectedId = undefined;
+    //         this.alertService.showMessage(
+    //             'Success',
+    //             'Saved ATA Mapped Data Successfully ',
+    //             MessageSeverity.success
+    //         );
+    //         this.getMappedATAByCustomerId();
+    //     })
 
-    }
+    // }
     // get mapped ata by customer id 
     getMappedATAByCustomerId() {
         // const id = this.savedGeneralInformationData.customerId;
