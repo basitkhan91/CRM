@@ -210,6 +210,7 @@ export class PurchaseSetupComponent {
 	splitVendorNames: any[];
 	parentManagementInfo: any[] = [];
 	childManagementInfo: any[] = [];
+	vendorContactList: any[];
 
 	/** po-approval ctor */
 	constructor(public siteService: SiteService, public warehouseService: WarehouseService, private masterComapnyService: MasterComapnyService, public cusservice: CustomerService, private itemser: ItemMasterService, private modalService: NgbModal, private route: Router, public legalEntityService: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public vendorService: VendorService, public priority: PriorityService, private alertService: AlertService ,public glAccountService: GlAccountService, private authService: AuthService) {
@@ -547,13 +548,11 @@ export class PurchaseSetupComponent {
 				needByDate: new Date(this.sourcePoApproval.needByDate),
 				priorityId: this.sourcePoApproval.priorityId.priorityId ? this.sourcePoApproval.priorityId.priorityId : 0,
 				deferredReceiver: this.sourcePoApproval.deferredReceiver ? this.sourcePoApproval.deferredReceiver : false,				
-				//vendorId: this.sourcePoApproval.vendorId.vendorId ? this.sourcePoApproval.vendorId.vendorId : 0,
-				vendorId: 671,
-				//vendorName: this.sourcePoApproval.vendorId.vendorName,
-				//vendorCode: this.sourcePoApproval.vendorCode.vendorId,
-				//vendorContactId: this.sourcePoApproval.vendorContactId.vendorId ? this.sourcePoApproval.vendorContactId.vendorId : 0,
-				vendorContactId: 200,
-				vendorContactPhone: this.sourcePoApproval.vendorContactPhone.vendorPhone ? this.sourcePoApproval.vendorContactPhone.vendorPhone : '',
+				vendorId: this.sourcePoApproval.vendorId.vendorId ? this.sourcePoApproval.vendorId.vendorId : 0,
+				//vendorId: 671,
+				vendorContactId: this.sourcePoApproval.vendorContactId ? this.getVendorContactId(this.sourcePoApproval.vendorContactId) : 0,
+				//vendorContactId: 200,
+				vendorContactPhone: this.sourcePoApproval.vendorContactPhone ? this.getVendorContactPhone(this.sourcePoApproval.vendorContactPhone) : '',
 				creditLimit: this.sourcePoApproval.creditLimit ? this.sourcePoApproval.creditLimit : '',
 				creditTermsId: this.sourcePoApproval.creditTermsId.creditTermsId ? this.sourcePoApproval.creditTermsId.creditTermsId : 0,
 				requisitionerId: this.sourcePoApproval.requisitionerId.employeeId ? this.sourcePoApproval.requisitionerId.employeeId : 0,
@@ -566,7 +565,8 @@ export class PurchaseSetupComponent {
 				shipToUserTypeId: this.sourcePoApproval.shipToUserTypeId ? parseInt(this.sourcePoApproval.shipToUserTypeId) : 0,
 				shipToUserId: this.sourcePoApproval.shipToUserId ? this.getShipToBillToUserId(this.sourcePoApproval.shipToUserId) : 0,
 				shipToAddressId: this.sourcePoApproval.shipToAddressId ? this.sourcePoApproval.shipToAddressId : 0,
-				shipToContactId: this.sourcePoApproval.shipToContactId ? this.getShipBillContactId(this.sourcePoApproval.shipToContactId) : 0,
+				//shipToContactId: this.sourcePoApproval.shipToContactId ? this.getShipBillContactId(this.sourcePoApproval.shipToContactId) : 0,
+				shipToContactId: 2,
 				shipViaId: 0,
 				shippingCost: 0,
 				handlingCost: 0,
@@ -576,7 +576,8 @@ export class PurchaseSetupComponent {
 				billToUserTypeId: this.sourcePoApproval.billToUserTypeId ? parseInt(this.sourcePoApproval.billToUserTypeId) : 0,
 				billToUserId: this.sourcePoApproval.billToUserId ? this.getShipToBillToUserId(this.sourcePoApproval.billToUserId) : 0,
 				billToAddressId: this.sourcePoApproval.billToAddressId ? this.sourcePoApproval.billToAddressId : 0,
-				billToContactId: this.sourcePoApproval.billToContactId ? this.getShipBillContactId(this.sourcePoApproval.billToContactId) : 0,
+				//billToContactId: this.sourcePoApproval.billToContactId ? this.getShipBillContactId(this.sourcePoApproval.billToContactId) : 0,
+				billToContactId: 2,
 				billToMemo: this.sourcePoApproval.billToMemo ? this.sourcePoApproval.billToMemo : '',
 				createdBy: this.userName,
 				updatedBy: this.userName
@@ -903,7 +904,7 @@ export class PurchaseSetupComponent {
 								UOMId: this.partListData[i].UOMId ? this.partListData[i].UOMId : 0,
 								quantityOrdered: childDataList[j].quantityOrdered ? childDataList[j].quantityOrdered : 0,
 								needByDate: childDataList[j].needByDate,
-								managementStructureId: childDataList[j].managementStructureId ? childDataList[j].managementStructureId : 0,
+								managementStructureId: 109 //childDataList[j].managementStructureId ? childDataList[j].managementStructureId : 0,
 								//createdBy: this.userName,
 								//updatedBy: this.userName,
 							}
@@ -1699,14 +1700,14 @@ export class PurchaseSetupComponent {
 	private loadCreditTermsData() {
 
 		this.CreditTermsService.getCreditTermsList().subscribe(
-			results => this.onCreditTermsdata(results[0]),
+			results => {
+				this.onCreditTermsdata(results[0].columnData)
+			},
 			error => this.onDataLoadFailed(error)
 		);
 
 	}
 	private onCreditTermsdata(getCreditTermsList: any[]) {
-
-
 		this.allcreditTermInfo = getCreditTermsList;
 	}
 
@@ -1836,8 +1837,7 @@ export class PurchaseSetupComponent {
 			}
 		} else {
 			partList.childList = [];
-		}
-		
+		}		
 	}
 
 	addAvailableParts() {
@@ -1908,7 +1908,56 @@ export class PurchaseSetupComponent {
 	addRow(partList) {
 		//if (partList["isParent"])
 		partList.childList.push(new PartDetails());
+		partList.childList.map(x => {
+			return {
+				...x,
+				childCompanyId: this.getAddRowCompanyId(partList),
+				childbuId: this.getAddRowBUId(partList),
+				childDivisionId: this.getAddRowDivisionId(partList),
+				childDeptId: this.getAddRowDeptId(partList),
+				managementStructureId: partList.managementStructureId
+			}
+		})
+		console.log(partList.childList);
 	}
+	
+
+	getAddRowCompanyId(partList) {
+		for(let i=0; i < partList.childList.length; i++) {
+			if(i == partList.childList.length-1) {
+				partList.childList[i].childCompanyId = partList.parentCompanyId;
+				this.getChildBUList(partList.childList[i]);	
+			}											
+		}
+	}
+
+	getAddRowBUId(partList) {
+		for(let i=0; i < partList.childList.length; i++) {
+			if(i == partList.childList.length-1) {
+				partList.childList[i].childbuId = partList.parentbuId;
+				this.getChildDivisionlist(partList.childList[i]);	
+			}											
+		}
+	}
+
+	getAddRowDivisionId(partList) {
+		for(let i=0; i < partList.childList.length; i++) {
+			if(i == partList.childList.length-1) {
+				partList.childList[i].childDivisionId = partList.parentDivisionId;
+				this.getChildDeptlist(partList.childList[i]);	
+			}				
+		}
+	}
+
+	getAddRowDeptId(partList) {
+		for(let i=0; i < partList.childList.length; i++) {
+			if(i == partList.childList.length-1) {
+				partList.childList[i].childDeptId = partList.parentDeptId;
+				this.getChildDeptId(partList.childList[i]);
+			}				
+		}
+	}
+
 	/*private defaultPartListObj(isParent = true, parentObj = null) {
 		let partListObj = {
 			ifSplitShip: false,
@@ -2144,7 +2193,13 @@ export class PurchaseSetupComponent {
 		}
 	}
 
-
+	getSelectedContactObjectById() {
+	//  return this.vendorContactList.filter(x => {
+    //     if(x.isDefaultContact === true){
+	// 		return x;
+	// 	}
+	//  })
+	}
 
 	filterVendorNames(event) {
 		this.vendorNames = this.allActions;
@@ -2214,34 +2269,43 @@ export class PurchaseSetupComponent {
 
 	selectedVendorName(value) {
 		console.log(value);
+		this.vendorContactList = [];
+		this.getVendorContactsListByID(value.vendorId);
 		this.sourcePoApproval.vendorName = value.vendorName;
 		this.sourcePoApproval.vendorCode = getObjectById('vendorId', value.vendorId, this.allActions);
-		//this.sourcePoApproval.firstName = this.getVendorContactsListByID(value.vendorId);
-		this.sourcePoApproval.vendorContactPhone = getObjectById('vendorId', value.vendorId, this.allActions);
-		this.sourcePoApproval.vendorContactId = getObjectById('vendorId', value.vendorId, this.allActions);
 		this.sourcePoApproval.creditLimit = value.creditLimit;
-		this.sourcePoApproval.creditTermsId = getObjectById('creditTermsId', value.creditTermsId, this.allcreditTermInfo);		
-		
+		this.sourcePoApproval.creditTermsId = getObjectById('creditTermsId', value.creditTermsId, this.allcreditTermInfo);				
 	}
 
+	// filterVendorContacts(event) {
+	// 	console.log(this.allActions)
+	// 	this.vendorContactsHeader = this.allActions;
+
+	// 	if (event.query !== undefined && event.query !== null) {
+	// 		const vendorFilter = [...this.allActions.filter(x => {
+	// 			return x.vendorContact.toLowerCase().includes(event.query.toLowerCase())
+	// 		})]
+	// 		this.vendorContactsHeader = vendorFilter;
+	// 	}
+	// }
+
 	filterVendorContacts(event) {
-		console.log(this.allActions)
-		this.vendorContactsHeader = this.allActions;
+		this.vendorContactsHeader = this.vendorContactList;
 
 		if (event.query !== undefined && event.query !== null) {
-			const vendorFilter = [...this.allActions.filter(x => {
-				return x.vendorContact.toLowerCase().includes(event.query.toLowerCase())
+			const vendorFilter = [...this.vendorContactList.filter(x => {
+				return x.csrName.toLowerCase().includes(event.query.toLowerCase())
 			})]
 			this.vendorContactsHeader = vendorFilter;
 		}
 	}
 
 	filterVendorPhone(event) {
-		this.vendorPhoneNum = this.allActions;
+		this.vendorPhoneNum = this.vendorContactList;
 
 		if (event.query !== undefined && event.query !== null) {
-			const vendorPhone = [...this.allActions.filter(x => {
-				return x.vendorPhone;
+			const vendorPhone = [...this.vendorContactList.filter(x => {
+				return x.workPhone;
 			})]
 			this.vendorPhoneNum = vendorPhone;
 			console.log(this.vendorPhoneNum)
@@ -3084,11 +3148,20 @@ export class PurchaseSetupComponent {
 		}
 	}
 
-	getVendorContactsListByID(vendorId) {
-		this.vendorService.getVendorContactsListByID(vendorId).subscribe(data => {
+	async getVendorContactsListByID(vendorId) {
+		await this.vendorService.getVendorContactsListByID(vendorId).subscribe(data => {
 			console.log(data)
-			return data[0][0].contactId;
+			this.vendorContactList = data[0];
+			const isDefaultContact =  this.vendorContactList.filter(x => {
+				if(x.isDefaultContact === true){
+					return x;
+				}
+			 })
+			 this.sourcePoApproval.vendorContactId = isDefaultContact[0];
+			 this.sourcePoApproval.vendorContactPhone = isDefaultContact[0];			 
 		})
+
+
 	}
 
 	onChangeAddAllMultiPN(event) {
@@ -3158,6 +3231,22 @@ export class PurchaseSetupComponent {
 	getShipBillContactId(obj) {
 		if(obj.contactId) {
 			return obj.contactId;
+		} else {
+			return 0;
+		}
+	}
+
+	getVendorContactId(obj) {
+		if(obj.vendorContactId) {
+			return obj.vendorContactId;
+		} else {
+			return 0;
+		}
+	}
+
+	getVendorContactPhone(obj) {
+		if(obj.vendorPhone) {
+			return obj.vendorPhone;
 		} else {
 			return 0;
 		}
