@@ -360,7 +360,7 @@
                                                                     <span style="margin-left:3px;cursor:pointer;"><a  class="fa fa-plus-circle fa-lg" (click)="addRestrictPMA()" ></a></span>
                                                                 </div>
                                                                 </div>
-                                                                    <p-table class="table-responsive" [value]="generalInformation.restrictsPMAList"  [paginator]="true" [rows]="3" [columns]="restrictHeaders">
+                                                                    <p-table class="table-responsive" [value]="generalInformation.restrictedPMAParts"  [paginator]="true" [rows]="3" [columns]="restrictHeaders">
                                                                         <ng-template pTemplate="header" let-columns>
                                                                             <tr>
                                                                                 <th *ngFor="let col of columns">
@@ -428,7 +428,7 @@
                                                                     <span style="margin-left:3px;cursor:pointer;"><a  class="fa fa-plus-circle fa-lg" (click)="addRestrictBER()" ></a></span>
                                                                 </div>  
                                                                 </div>
-                                                                    <p-table class="table-responsive" [value]="generalInformation.restrictBERList"  [paginator]="true" [rows]="3" [columns]="restrictHeaders">
+                                                                    <p-table class="table-responsive" [value]="generalInformation.restrictedDERParts"  [paginator]="true" [rows]="3" [columns]="restrictHeaders">
                                                                         <ng-template pTemplate="header" let-columns>
                                                                             <tr>
                                                                                 <th *ngFor="let col of columns">

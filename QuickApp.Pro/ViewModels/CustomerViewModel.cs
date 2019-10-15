@@ -195,8 +195,12 @@ namespace QuickApp.Pro.ViewModels
         public virtual CustomerShipping CustomerShipping { get; set; }
         public virtual CustomerType CustomerType { get; set; }
 
-        public virtual List<RestrictsPMAList> RestrictsPmaList { get; set; }
-        public virtual List<RestrictsBERList> restrictBERList { get; set; }
+		public virtual List<RestrictedParts> RestrictedPMAParts { get; set; }
+		public virtual List<RestrictedParts> RestrictedDERParts { get; set; }
+
+
+		//public virtual List<RestrictsPMAList> RestrictsPmaList { get; set; }
+  //      public virtual List<RestrictsBERList> restrictBERList { get; set; }
 
 
 

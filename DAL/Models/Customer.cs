@@ -22,8 +22,8 @@ namespace DAL.Models
         public long CustomerId { get; set; }
 
         public string Name { get; set; }
-        public int? CsrId { get; set; }
-        public int? SaId { get; set; }
+        public long? CsrId { get; set; }
+        public long? SaId { get; set; }
 
 
         public string CustomerCode { get; set; }

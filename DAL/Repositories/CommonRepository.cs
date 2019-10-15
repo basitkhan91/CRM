@@ -9,7 +9,7 @@ using System.Reflection;
 
 namespace DAL.Repositories
 {
-    public class CommonRepository : Repository<Contact>, ICommonRepository
+    public class CommonRepository : Repository<RestrictedParts>, ICommonRepository
     {
         public CommonRepository(ApplicationDbContext context) : base(context)
         {
@@ -238,15 +238,38 @@ namespace DAL.Repositories
             }
         }
 
-        public void CreateRestrictedParts(List<RestrictedParts> restrictedParts, long? referenceId)
+        public void CreateRestrictedParts(List<RestrictedParts> restrictedParts, long? referenceId,int moduleId)
         {
             try
             {
                 if (restrictedParts != null && restrictedParts.Count > 0)
                 {
-                    restrictedParts.ForEach(p => p.ReferenceId = referenceId);
-                    _appContext.RestrictedParts.AddRange(restrictedParts);
-                    _appContext.SaveChanges();
+					foreach(var item in restrictedParts)
+					{
+						RestrictedParts restrictedPart = new RestrictedParts();
+						
+						restrictedPart.ModuleId = 1;
+						restrictedPart.ReferenceId = 28;
+						restrictedPart.MasterPartId = 726;
+						restrictedPart.PartType = "DER";
+						restrictedPart.CreatedDate = DateTime.Now;
+						restrictedPart.CreatedBy = "admin";
+						restrictedPart.UpdatedDate = DateTime.Now;
+						restrictedPart.UpdatedBy = "admin";
+						restrictedPart.IsActive = true;
+						restrictedPart.IsDeleted = false;
+
+						_appContext.RestrictedParts.Add(restrictedPart);
+						_appContext.SaveChanges();
+
+						
+					}
+
+					//               restrictedParts.ForEach(p => p.ReferenceId = referenceId);
+					//restrictedParts.ForEach(p => p.ModuleId = moduleId);
+					//_appContext.RestrictedParts.AddRange(restrictedParts);
+
+					
                 }
             }
             catch (Exception)
@@ -256,7 +279,34 @@ namespace DAL.Repositories
             }
         }
 
-        public void UpdateRestrictedParts(List<RestrictedParts> restrictedParts, long? referenceId)
+		public void CreateRestrictedParts()
+		{
+			try
+			{
+						RestrictedParts restrictedPart = new RestrictedParts();
+
+						restrictedPart.ModuleId = 1;
+						restrictedPart.ReferenceId = 28;
+						restrictedPart.MasterPartId = 726;
+						restrictedPart.PartType = "DER";
+						restrictedPart.CreatedDate = DateTime.Now;
+						restrictedPart.CreatedBy = "admin";
+						restrictedPart.UpdatedDate = DateTime.Now;
+						restrictedPart.UpdatedBy = "admin";
+						restrictedPart.IsActive = true;
+						restrictedPart.IsDeleted = false;
+
+						_appContext.RestrictedParts.Add(restrictedPart);
+						_appContext.SaveChanges();
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+		}
+
+		public void UpdateRestrictedParts(List<RestrictedParts> restrictedParts, long? referenceId)
         {
             try
             {

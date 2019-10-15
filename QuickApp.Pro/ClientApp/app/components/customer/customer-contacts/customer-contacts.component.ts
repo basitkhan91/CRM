@@ -67,6 +67,7 @@ export class CustomerContactsComponent implements OnInit {
 	customerCode: any;
 	customerName: any;
 	emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{3,}";
+	urlPattern = "^((ht|f)tp(s?))\://([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(/\S*)?$";
 	sourceViewforContact: any;
 	add_SelectedId: any;
 	add_SelectedModels: any;
