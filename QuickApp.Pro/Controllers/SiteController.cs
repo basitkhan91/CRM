@@ -175,11 +175,11 @@ namespace QuickApp.Pro.Controllers
                 address.UpdatedBy = siteViewModel.UpdatedBy;
                 address.CreatedDate = DateTime.Now;
                 address.UpdatedDate = DateTime.Now;
-                //
+
                 _unitOfWork.Address.Update(address);
-                _unitOfWork.SaveChanges();
                 _unitOfWork.Sites.Update(existingResult);
                 _unitOfWork.SaveChanges();
+
                 return Ok(existingResult);
             }
 
