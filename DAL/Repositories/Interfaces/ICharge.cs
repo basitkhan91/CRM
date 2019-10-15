@@ -9,10 +9,8 @@ namespace DAL.Repositories.Interfaces
     public interface ICharge : IRepository<Charge>
     {
         IEnumerable<object> GetAllChargeData();
-        IEnumerable<object> getCurrencyData();
+  
         IEnumerable<object> getPurchaseOrderNumbers();
-        IEnumerable<object> getVendorNmaes();
-        IEnumerable<object> IntegrationPortal();
         new IQueryable<Charge> GetPaginationData();
 
         //  void CreateAction(DAL.Models.Action action);

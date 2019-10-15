@@ -145,7 +145,10 @@ export class VendorService {
 			this.actionEndpoint.getDefault<any>(vendorId));
 	}
 
-
+	getVendorsBasic() {
+		return Observable.forkJoin(
+			this.actionEndpoint.getvendorBasicEndpoint<any[]>());
+	}
 	getVendorshipViaDetails() {
 		return Observable.forkJoin(
 			this.actionEndpoint.getVendorShipvia<any[]>());

@@ -32,11 +32,11 @@ namespace DAL.Repositories
                                   ch.Description,
                                   ch.CurrencyId,
                                   ch.Cost,
-                                  ch.MarkUp,
+                                  ch.MarkUpPercentage,
                                   ch.PurchaseOrderId,
                                   ch.VendorId,
                                   ch.IntegrationPortalId,
-                                  ch.GeneralLedgerId,
+                                  ch.GLAccountId,
                                   ch.Memo,
                                   ch.IsActive,
                                   ch.ManagementStructureId,
@@ -107,54 +107,14 @@ namespace DAL.Repositories
 
         }
 
-        public IEnumerable<object> getVendorNmaes()
-        {
-            try
-            {
-                var result = (from vo in _appContext.Vendor
 
-                              select new
-                              {
-                                  vo.VendorId,
-                                  vo.VendorName
 
-                              }).ToList();
-                return result;
-            }
-            catch (Exception ex)
-            {
 
-                return null;
-            }
-
-        }
-
-        public IEnumerable<object> IntegrationPortal()
-        {
-            try
-            {
-                var result = (from ip in _appContext.IntegrationPortal
-
-                              select new
-                              {
-                                  ip.IntegrationPortalId,
-                                  ip.Description
-
-                              }).ToList();
-                return result;
-            }
-            catch (Exception ex)
-            {
-
-                return null;
-            }
-
-        }
 
         override
        public IQueryable<DAL.Models.Charge> GetPaginationData()
         {
-            return _appContext.Charge.Where(c => (c.IsDelete == false || c.IsDelete == null))
+            return _appContext.Charge.Where(c => (c.IsDeleted == false || c.IsDeleted == null))
                 .OrderByDescending(c => c.ChargeId).ToList().AsQueryable();
         }
 

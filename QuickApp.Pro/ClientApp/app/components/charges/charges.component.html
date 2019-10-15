@@ -1,469 +1,466 @@
-﻿<div [@fadeInOut] class="page-content">
-	<div class="right_col" role="main">
-		<div class="x_panel">
-			<div class="x_content">
-				<div class="card">
-					<div class="card-body">
-						<div class="inline-block display-flex">
-							<h3 class="po-head lead">Charges</h3>
-							&nbsp;&nbsp;
-							<a class="plusicon-cstm new-margin" pTooltip="Add Charges" tooltipPosition="right" (click)="open(contentEdit)">
-								<i class="fa fa-plus-circle fa-lg"></i>
-							</a>
-						</div>
-						<p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="chargePagination" [lazy]="true" (onLazyLoad)="loadCharge($event)"
-						 [rows]="20" [metaKeySelection]="true" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]" [columns]="selectedColumns"
-						 selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true"
-						 scrollHeight="450px">
-							<ng-template pTemplate="caption">
-								<div style="text-align: right">
-									<p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" selectedItemsLabel="{0} columns selected"
-									 [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-									<div class="inner-addon right-addon w200 inline-block  g-filter-search-cstm">
-										<i class="fa fa-search"></i>
-										<input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (blur)="inputGlobalFiledFilter($event.target.value, 'contains')"
-										 placeholder="Global Filter">
-									</div>
-									<button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-									<button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only"
-									 (click)="dt.exportCSV({selectionOnly:true})"></button>
-									<div class="excel-upload excel-upload-cstm">
-										<input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected"
-										 accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-										<label for="upload">
-											<span matTooltip="Upload Data (Excel)">
-												<i class="fa fa-upload"></i>
-											</span>
-										</label>
-									</div>
-								</div>
-							</ng-template>
-							<ng-template pTemplate="colgroup" let-columns>
-								<colgroup>
-									<col *ngFor="let col of columns" style="width:140px">
-								</colgroup>
-							</ng-template>
-							<ng-template pTemplate="header" let-columns>
-								<tr>
-									<th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
-										{{col.header}}
-										<p-sortIcon [field]="col.field"></p-sortIcon>
-									</th>
-									<th style="width:150px;position:sticky"></th>
-								</tr>
-								<tr>
-									<th *ngFor="let col of columns" [ngSwitch]="col.field">
-										<input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
-									</th>
-									<th style="width:150px;position:sticky"></th>
-								</tr>
+﻿
+<div [@fadeInOut] class="page-content">
+    <div class="right_col" role="main">
+        <div class="x_panel">
+            <div class="x_content">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="inline-block display-flex">
+                            <h3 class="po-head lead">Charges</h3>
+                            &nbsp;&nbsp;
+                            <a class="plusicon-cstm new-margin" pTooltip="Add Charge" tooltipPosition="right" (click)="resetChargeForm()" data-target="#addCharge" data-toggle="modal">
+                                <i class="fa fa-plus-circle fa-lg"></i>
+                            </a>
+                        </div>
+                        <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="chargeData" [first]="0" [rows]="pageSize" [paginator]="true" [pageLinks]="3"
+                                 [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" (onPage)="changePage($event)"
+                                 [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" [totalRecords]="totalRecords" scrollHeight="450px">
+                            <ng-template pTemplate="caption">
+                                <div style="text-align: right;margin-left:-6px !important;">
+                                    <p-multiSelect [maxSelectedLabels]="2" [options]="uomHeaders" optionLabel="header" [(ngModel)]="selectedColumns"
+                                                   [style]="{minWidth: '200px'}" style="float:left" (onChange)="columnsChanges()"></p-multiSelect>
+                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
+                                            iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
+                                            iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                    <div class="excel-upload  excel-upload-cstm">
 
-							</ng-template>
-							<ng-template pTemplate="body" let-rowData let-columns="columns">
-								<tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openEdits(rowData)">
-									<td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-										{{col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?
-										(rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
-									</td>
-									<td style="width:150px">
-										<p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)"
-										 [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-										<p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)"
-										 [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-										<p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)"
-										 [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-										<span data-toggle="modal" data-target="#view">
-											<a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View">
-												<i class="fa fa-eye"></i>
-											</a>
-										</span>
-										<button class="btn-edit" mat-icon-button (click)="openEdit(contentEdit,rowData)" matTooltip="edit">
-											<mat-icon>edit</mat-icon>
-										</button>
-										<button class="btn-delete" mat-icon-button matTooltip="delete" (click)="openDelete(content,rowData)">
-											<mat-icon color="warn">delete</mat-icon>
-										</button>
-										<button class="btn-history" mat-icon-button matTooltip="history" (click)="openHist(contentHist,rowData)">
-											<mat-icon color="green">history</mat-icon>
-										</button>
-									</td>
-								</tr>
-							</ng-template>
-							<ng-template pTemplate="summary" id="footer">
-								<label id="footer" class="footer">No'of records:</label>
-								<input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
-								<label id="footer" class="footer1">Pages Count:</label>
-								<input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" />
-							</ng-template>
-						</p-table>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+                                        <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file"
+                                               accept=".xlsx, .xls, .csv">
+                                        <label for="upload">
+                                            <span matTooltip="Upload Data (Excel)">
+                                                <i class="fa fa-upload"></i>
+                                            </span>
+                                        </label>
+                                        &nbsp; &nbsp;
+                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()">Sample File Download</button>
+                                    </div>
+
+                                </div>
+                            </ng-template>
+
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th style="width:120px" *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                        {{col.header}}
+                                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                                    </th>
+                                    <th style="width:200px;position:sticky" *ngIf="selectedColumns.length> 0"> Actions</th>
+                                </tr>
+                                <tr>
+                                    <th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                        <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field,'contains')">
+                                    </th>
+                                    <th style="width:200px;position:sticky"></th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                <tr [pSelectableRow]="rowData" pReorderableRowHandle>
+                                    <td style="width:120px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle data-toggle="modal" data-target="#view" (dblclick)="viewSelectedRow(rowData)">
+                                        {{
+col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?
+                                        (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]
+                                        }}
+                                    </td>
+                                    <td style="width:200px" *ngIf="selectedColumns.length> 0">
+                                        <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}" (onChange)="changeStatus(rowData)"></p-inputSwitch>
+
+                                        <span data-toggle="modal" data-target="#view">
+                                            <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewSelectedRow(rowData)" data-target="#view" data-toggle="modal">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                        </span>
+                                        <button class="btn-edit" mat-icon-button (click)="editUOM(rowData)" data-target="#addUOM" data-toggle="modal" matTooltip="Edit">
+                                            <mat-icon>edit</mat-icon>
+                                        </button>
+
+                                        <button class="btn-delete" mat-icon-button matTooltip="Delete" data-target="#delete" data-toggle="modal" (click)="delete(rowData)">
+                                            <mat-icon color="warn">delete</mat-icon>
+                                        </button>
+                                        <button class="btn-history" mat-icon-button matTooltip="History" data-target="#contentHist" data-toggle="modal" (click)="getAuditHistoryById(rowData)">
+                                            <mat-icon color="green">history</mat-icon>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template #auditContent let-c="close" let-d="dismiss">
+                                <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
+                                    <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="summary" id="footer">
+                                <label id="footer" class="footer">No'of records:</label>
+                                <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                                <label id="footer" class="footer1">Pages Count:</label>
+                                <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" />
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
-<!-- Delete Contact Modal -->
-<ng-template #content let-c="close" let-d="dismiss">
-	<div class="modal-header">
-		<h4 class="modal-title">Are You Sure Want to Delete ?</h4>
-		<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-			<span aria-hidden="true">&times;</span>
-		</button>
-	</div>
-
-	<div class="modal-footer">
-		<button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
-		<button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
-	</div>
+<ng-template #auditContent let-c="close" let-d="dismiss">
+    <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
+        <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+    </div>
 </ng-template>
 
 
-<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
-	<div class="modal-header">
-		<h4 class="modal-title" *ngIf="isEditMode">Edit Charges</h4>
-		<h4 class="modal-title" *ngIf="!isEditMode">Add Charges</h4>
-		<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-			<span aria-hidden="true">&times;</span>
-		</button>
-	</div>
-	<div class="modal-body">
-		<form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemAndCloseModel()">
-			<div class="form-group">
-				<div class="col-sm-12">
-					<div class="col-sm-4">
-						<label for="chargeName" class="control-label">Charges
-							<span class="clr-red">*</span>
-						</label>
-					</div>
-					<div class="col-sm-5">
-						<p-autoComplete (onSelect)="partnmId($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="chargeName" name="charge" [suggestions]="localCollection"
-						 (completeMethod)="filterCharges($event)" [size]="30" [minLength]="1" class="p-autoComplete-ctsm" [dropdown]="true">
-							<ng-template let-chargeName pTemplate="item">
-								<div class="ui-helper-clearfix">{{chargeName}}</div>
-							</ng-template>
-						</p-autoComplete>
-						<div *ngIf="disableSave" style="color:red">Already Exist</div>
-					</div>
-				</div>
-				<div class="col-sm-12">
-					<div class="col-sm-4">
-						<label for="quantity" class="control-label">QTY</label>
-					</div>
-					<div class="col-sm-5">
-						<input name="quantity" class="form-control" type="number" #quantity="ngModel" id="quantity" [(ngModel)]="sourceAction.quantity">
-					</div>
-				</div>
-				<div class="col-sm-12">
-					<div class="col-sm-4">
-						<label for="description" class="control-label">Description</label>
-					</div>
-					<div class="col-sm-5">
-						<input type="text" class="form-control" name="description" #description="ngModel" id="description" [(ngModel)]="sourceAction.description">
-					</div>
-				</div>
-				<div class="col-sm-12">
-					<div class="col-sm-4">
-						<label class="control-label">Currency</label>
-					</div>
-					<div class="col-sm-5">
-						<select [(ngModel)]="sourceAction.currencyId">
-							<option *ngFor="let currency of allCurrencyinfo" [ngValue]="currency.currencyId">{{currency.symbol}}</option>
-						</select>
-					</div>
-				</div>
-				<div class="col-sm-12">
-					<div class="col-sm-4">
-						<label for="cost" class="control-label">Cost</label>
-					</div>
-					<div class="col-sm-5">
-						<input name="cost" class="form-control" type="number" #cost="ngModel" id="cost" [(ngModel)]="sourceAction.cost">
-					</div>
-				</div>
-				<div class="col-sm-12">
-					<div class="col-sm-4">
-						<label for="markUp" class="control-label">Mark Up</label>
-					</div>
-					<div class="col-sm-5">
-						<select name="markup" [(ngModel)]="sourceAction.markUp">
-							<option *ngFor="let number of itemQuantity" value="{{number}}">{{number}}</option>
-						</select>
-					</div>
-				</div>
-				<div class="col-sm-12">
-					<div class="col-sm-4">
-						<label for="cost" class="control-label">Billable Amount:</label>
-					</div>
-					<div class="col-sm-5">
-						<input type="text" class="form-control" name="amount" #cost="ngModel" id="cost" [(ngModel)]="sourceAction.billableAmount">
-					</div>
-				</div>
-				<div class="col-sm-12">
-					<div class="col-sm-4">
-						<label for="purchaseOrderId" class="control-label">PO</label>
-					</div>
-					<div class="col-sm-5">
-						<select [(ngModel)]="sourceAction.purchaseOrderId">
-							<option *ngFor="let po of allPOinfo" [ngValue]="po.purchaseOrderId">{{po.purchaseOrderNumber}}</option>
-						</select>
-					</div>
-				</div>
-				<div class="col-sm-12">
-					<div class="col-sm-4">
-						<label for="vendorId" class="control-label">Vendor Name</label>
-					</div>
-					<div class="col-sm-5">
-						<select [(ngModel)]="sourceAction.vendorId">
-							<option *ngFor="let vendor of allVendorinfo" [ngValue]="vendor.vendorId">{{vendor.vendorName}}</option>
-						</select>
-					</div>
-				</div>
-				<div class="col-sm-12">
-					<div class="col-sm-4">
-						<label for="integrationPortalId" class="control-label">Integration</label>
-					</div>
-					<div class="col-sm-5">
-						<select [(ngModel)]="sourceAction.integrationPortalId">
-							<option *ngFor="let integration of copyOfAllIntegrationInfo" [ngValue]="integration.integrationPortalId">{{integration.description}}</option>
-						</select>
-					</div>
-				</div>
-				<div class="col-sm-12">
-					<div class="col-sm-4">
-						<label for="generalLedgerId" class="control-label">GL Acct</label>
-					</div>
-					<div class="col-sm-5">
-						<input name="generalLedgerId" class="form-control" type="number" #generalLedgerId="ngModel" id="generalLedgerId" [(ngModel)]="sourceAction.generalLedgerId">
-					</div>
-				</div>
-				<div class="col-sm-12">
-					<div class="col-sm-4">
-						<label for="description" class="control-label">Memo</label>
-					</div>
-					<div class="col-sm-5">
-						<textarea type="text" name="description" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo"></textarea>
-					</div>
-				</div>
-			</div>
-			<div class="col-sm-12">
-				<div class="col-sm-4">
+<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" id="" name="" (click)="resetViewData()">×</button>
+                <h4 class="modal-title">Charge Details</h4>
+            </div>
+            <div class="modal-body viewform ">
+                <div class="col-sm-12">
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header">Charge: </b>
+                        </span>
+                        <span class="value">{{ viewRowData.description}}</span>
+                    </p>
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header">ShortName: </b>
+                        </span>
+                        <span class="value">{{ viewRowData.shortName}}</span>
+                    </p>
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header"> Standard: </b>
+                        </span>
+                        <span class="value">{{ viewRowData.standard}}</span>
+                    </p>
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header">Memo: </b>
+                        </span>
+                        <span class="value">{{viewRowData.memo}}</span>
+                    </p>
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header">IsActive</b>
+                        </span>
+                        <span class="value">{{viewRowData.isActive === true ? 'Yes' : 'No'}}</span>
+                    </p>
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header">Created By: </b>
+                        </span>
+                        <span class="value">{{viewRowData.createdBy }}</span>
+                    </p>
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header">Created Date: </b>
+                        </span>
+                        <span class="value">{{viewRowData.createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
+                    </p>
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header">Updated By: </b>
+                        </span>
+                        <span class="value">{{viewRowData.updatedBy}}</span>
+                    </p>
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header">Updated Date: </b>
+                        </span>
+                        <span class="value">{{viewRowData.updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
+                    </p>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="resetViewData()">Close</button>
+            </div>
+        </div>
 
-				</div>
-				<div class="col-sm-5">
+    </div>
 
-				</div>
-			</div>
-			<div class="col-sm-12">
-				<div class="col-sm-4">
+</div>
 
-				</div>
-				<div class="col-sm-5">
+<div #addCharge id="addCharge" class="modal fade" role="dialog">
+    <div class="modal-dialog">
 
-				</div>
-			</div>
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{isEdit ? 'Edit' : 'Add' }} Charge  </h4>
+            </div>
+            <div class="modal-body">
+                <form #charge="ngForm">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="col-sm-4">
+                                <label for="description" class="control-label">
+                                    Charge:
+                                    <span class="clr-red">*</span>
+                                </label>
+                            </div>
+                            <div class="col-sm-5">
+                                <p-autoComplete field="description" [(ngModel)]="addNewCharge.chargeName" (onSelect)="selectedCharge($event)" (onKeyUp)="checkUOMExists('description', $event.target.value)" name="uom"
+                                                [suggestions]="uomList" (completeMethod)="filterUnitOfMeasures($event)" [size]="30" [minLength]="1"
+                                                [dropdown]="true" class="p-autoComplete-ctsm" required>
+
+                                </p-autoComplete>
+                                <div *ngIf="disableSaveForUOM" class="clr-red">Already Exists</div>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="col-sm-4">
+                                <label for="quantity" class="control-label">
+                                    Quantity:
+                                    <span class="clr-red">*</span>
+                                </label>
+                            </div>
+                            <div class="col-sm-5">
+                                <input type="number" name="quantity" class="form-control" #standard="ngModel" [(ngModel)]="addNewCharge.quantity" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="col-sm-4">
+                                <label for="description" class="control-label">
+                                    Description:
+                
+                                </label>
+                            </div>
+                            <div class="col-sm-5">
+                                    <input type="text" name="description" class="form-control" #standard="ngModel" [(ngModel)]="addNewCharge.description" required>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="col-sm-4">
+                                <label for="currency" class="control-label">
+                                    CUR:
+                                    <span class="clr-red">*</span>
+                                </label>
+                            </div>
+                            <div class="col-sm-5">
+                                <select name="currency"  [(ngModel)]="addNewCharge.currencyId" required>
+                                    <option *ngFor="let cur of currencyList" [ngValue]="cur.currencyId">{{cur.symbol}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="cost" class="control-label">
+                                        Cost:
+                                        <span class="clr-red">*</span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <input type="number" name="cost" class="form-control" #standard="ngModel" [(ngModel)]="addNewCharge.cost" required>
+                                </div>
+                            </div>
+                        <div class="col-sm-12">
+                            <div class="col-sm-4">
+                                <label for="markUp" class="control-label">
+                                    Mark Up (%):
+                                    <span class="clr-red">*</span>
+                                </label>
+                            </div>
+                            <div class="col-sm-5">
+                                    <select name="markUp"  [(ngModel)]="addNewCharge.markUp" required>
+                                        </select>
+                                
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="billableAmount" class="control-label">
+                                        Billable Amount:
+                                        <span class="clr-red">*</span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-5">
+                                        <input type="number" name="billableAmount" class="form-control" #standard="ngModel" [(ngModel)]="addNewCharge.billableAmount" required />
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                    <div class="col-sm-4">
+                                        <label for="functionalCurrency" class="control-label">
+                                            Functional CUR:
+                                            <span class="clr-red">*</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <select name="functionalCurrency"  [(ngModel)]="addNewCharge.functionalCurrencyId" required>
+                                            <option *ngFor="let cur of currencyList" [ngValue]="cur.currencyId">{{cur.symbol}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                        <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="purchaseOrderId" class="control-label">
+                                        Purchase order number:
+                                       
+                                    </label>
+                                </div>
+                                <div class="col-sm-5">
+                                        <p-autoComplete field="purchaseOrderId" [(ngModel)]="addNewCharge.purchaseOrderId" (onSelect)="selectedShortName($event)" (onKeyUp)="checkShortNameExists('shortName', $event.target.value)"
+                                        name="purchaseOrderId"
+                                        [suggestions]="shortNameList" (completeMethod)="filterShortName($event)" [size]="30" [minLength]="1"
+                                        [dropdown]="true" class="p-autoComplete-ctsm" >
+
+                                        </p-autoComplete>
+                                </div>
+                         </div>
+                         <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="vendorId" class="control-label">
+                                        Vendor Name:
+                                     </label>
+                                </div>
+                                <div class="col-sm-5">
+                                        <p-autoComplete field="vendorName" [(ngModel)]="addNewCharge.vendorId"  
+                                        name="vendorId"
+                                        [suggestions]="filteredVendorList" (completeMethod)="filterVendor($event)"  [forceSelection]="true" 
+                                         [size]="30" [minLength]="1"
+                                        [dropdown]="true" class="p-autoComplete-ctsm" >
+
+                                        </p-autoComplete>
+                                </div>
+                         </div>
+                         <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="integrationPortalId" class="control-label">
+                                        Integration Name:
+                                    </label>
+                                </div>
+                                <div class="col-sm-5">
+                                        <p-autoComplete field="description" [(ngModel)]="addNewCharge.integrationPortalId" 
+                                         name="integrationPortalId"
+                                        [suggestions]="filteredIntegrationList" (completeMethod)="filterIntegration($event)" [forceSelection]="true" 
+                                         [size]="30" [minLength]="1"
+                                        [dropdown]="true" class="p-autoComplete-ctsm" >
+
+                                        </p-autoComplete>
+                                </div>
+                         </div>
+                         <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="glAccountId" class="control-label">
+                                        GL Account:
+                                        <span class="clr-red">*</span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-5">
+                                        <p-autoComplete field="glAccountId" [(ngModel)]="addNewCharge.glAccountId" (onSelect)="selectedShortName($event)" (onKeyUp)="checkShortNameExists('shortName', $event.target.value)"
+                                        name="glAccountId"
+                                        [suggestions]="shortNameList" (completeMethod)="filterShortName($event)" [size]="30" [minLength]="1"
+                                        [dropdown]="true" class="p-autoComplete-ctsm" required>
+
+                                        </p-autoComplete>
+                                </div>
+                         </div>
+                         <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="quantity" class="control-label">
+                                        Mgmt Structure:
+                                        <span class="clr-red">*</span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <input type="number" name="mgmtStructureId" class="form-control" #standard="ngModel" [(ngModel)]="addNewCharge.mgmtStructureId" required>
+                                </div>
+                            </div>
+                        <div class="col-sm-12">
+                            <div class="col-sm-4">
+                                <label for="memo" class="control-label">Memo</label>
+                            </div>
+                            <div class="col-sm-5">
+                                <textarea class="text-item" #memo="ngModel" id="memo" name="memodescription" [(ngModel)]="addNewCharge.memo" minlength="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                            <div class="checkbox-cstm">
+                                <label>
+                                    <input type="checkbox" name="isActive" [(ngModel)]="addNewCharge.isActive">
+                                    <span class="cr">
+                                        <i class="cr-icon pi pi-check"></i>
+                                    </span>
+                                    Active
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="charge.invalid || disableSaveForUOM || disableSaveForShortName " (click)="saveCharge();"> {{isEdit ? 'Update' : 'Save' }}</button>
+                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetChargeForm()">Close</button>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div *ngIf="selectedRowforDelete" #delete id="delete" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Are You Sure Want to Delete ?</h4>
+            </div>
+            <div class="modal-body">
+                <strong>
+                    Charge:
+                    <span class="new-label">{{selectedRowforDelete.chargeName}}</span>
+                </strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="deleteConfirmation('Yes')">Yes</button>
+                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="deleteConfirmation('No')">No</button>
+            </div>
+        </div>
+
+    </div>
+</div>
 
 
-			<!-- 
-		<div class="col-md-6">
-			<div class="form-group col-sm-12" *ngIf="showManagement">
-				<p-treeTable [value]="gridData" [columns]="cols1" [metaKeySelection]="true" selectionMode="multiple" [(selection)]="selectedNode">
-
-					<ng-template pTemplate="header" let-columns>
-						<tr>
-							<th *ngFor="let col of columns">
-								{{col.header}}
-							</th>
-
-						</tr>
-					</ng-template>
-					<ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
-
-						<tr [ttSelectableRow]="rowNode">
-							<td *ngFor="let col of columns; let i = index">
-								<p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
-								{{rowData[col.field]}}
-							</td>
-						</tr>
-					</ng-template>
-				</p-treeTable>
-			</div>
-		</div> -->
 
 
-			<div class="form-group">
-				<div class="col-sm-6">
-					<label class="form-check-label" for="isActive">
-						<input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive"> Active
-					</label>
-				</div>
-				<div class="clear"></div>
-			</div>
-			<div class="modal-footer">
-				<button class="btn btn-primary-cstm" [disabled]="disableSave">Save</button>
-				<button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
-			</div>
-		</form>
-	</div>
-
-</ng-template>
 
 
-<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
-	<div class="modal-header">
-		<h4 class="modal-title">History of Charges</h4>
-		<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-			<span aria-hidden="true">&times;</span>
-		</button>
-	</div>
-	<div class="modal-body">
-		<div class="table-responsive">
-			<table class="table table-bordered">
-				<thead>
-					<tr>
-						<th>AID</th>
-						<th>Charges Description</th>
-						<th>Previous Value</th>
-						<th>New Value</th>
-						<th>Last Updated By</th>
-						<th>Last Updated Time</th>
-					</tr>
-				</thead>
-				<tr *ngFor="let audit of auditHisory">
-					<td>{{audit.auditHistoryId}}</td>
-					<td>{{audit.columnName}}</td>
-					<td>{{audit.previousValue}}</td>
-					<td>{{audit.newValue}}</td>
-					<td>{{audit.updatedBy}}</td>
-					<td>{{audit.updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</td>
-				</tr>
-			</table>
-		</div>
-	</div>
-	<div class="modal-footer">
-		<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-	</div>
-</ng-template>
 
-<ng-template #view class="modal fade" id="view" role="dialog">
-	<div class="modal-content">
-		<div class="modal-header">
-			<button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-			<h4 class="modal-title">Charges Details</h4>
-		</div>
-		<div class="modal-body viewform">
-			<div class="col-md-6">
-				<p>
-					<span class="label">
-						<b>Charge Name: </b>
-					</span>
-					<span class="value">{{charge_Name}}</span>
-				</p>
-				<p>
-					<span class="label">
-						<b>Quantity: </b>
-					</span>
-					<span class="value">{{quantity}}</span>
-				</p>
-				<p>
-					<span class="label">
-						<b>Description: </b>
-					</span>
-					<span class="value">{{description}}</span>
-				</p>
-				<p>
-					<span class="label">
-						<b>Currency: </b>
-					</span>
-					<span class="value">{{currencySymbol}}</span>
-				</p>
-				<p>
-					<span class="label">
-						<b>Cost: </b>
-					</span>
-					<span class="value">{{cost}}</span>
-				</p>
-				<p>
-					<span class="label">
-						<b>Mark Up (%): </b>
-					</span>
-					<span class="value">{{markUp}}</span>
-				</p>
-				<p>
-					<span class="label">
-						<b>Billable Amount: </b>
-					</span>
-					<span class="value">{{billableAmount}}</span>
-				</p>
-				<p>
-					<span class="label">
-						<b>PO : </b>
-					</span>
-					<span class="value">{{purchaseOrderNumber}}</span>
-				</p>
-				<p>
-					<span class="label">
-						<b>Vendor Name: </b>
-					</span>
-					<span class="value">{{vendorName}}</span>
-				</p>
-			</div>
-			<div class="col-md-6">
-				<p>
-					<span class="label">
-						<b>IntegrationPortalId: </b>
-					</span>
-					<span class="value">{{integrationPortalDescription}}</span>
-				</p>
-				<p>
-					<span class="label">
-						<b>GeneralLedger Account: </b>
-					</span>
-					<span class="value">{{generalLedgerId}}</span>
-				</p>
-				<p>
-					<span class="label">
-						<b>Memo: </b>
-					</span>
-					<span class="value">{{memo}}</span>
-				</p>
-				<p>
-					<span class="label">
-						<b>Status: </b>
-					</span>
-					<span class="value">{{isActive}}</span>
-				</p>
-			</div>
 
-			<div class="clear"></div>
-		</div>
-		<div class="modal-footer">
-			<button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
-		</div>
-	</div>
 
-</ng-template>
 
-<ng-template #helpText class="modal fade" id="help-popup" role="dialog">
-	<div class="modal-content">
-		<div class="modal-header">
-			<button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-			<h4 class="modal-title">Help text about the page</h4>
-		</div>
-		<div class="modal-body">
-			<p>Sample Point 1 about Page Description</p>
-			<p>Sample Point 2 about Page Description</p>
-			<p>Sample Point 3 about Page Description</p>
-			<p>Sample Point 4 about Page Description</p>
-			<p>Sample Point 5 about Page Description</p>
-			<p>
-				<b>Excell format to upload the Data -
-					<a href="documents/action-table-format.xlsx" class="clr-red">Download</a>
-				</b>
-			</p>
-		</div>
-		<div class="modal-footer">
-			<button type="button" class="btn btn-success" data-dismiss="modal" (click)="dismissModel()">Close</button>
-		</div>
-	</div>
-</ng-template>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

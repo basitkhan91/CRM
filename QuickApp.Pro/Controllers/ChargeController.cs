@@ -51,23 +51,7 @@ namespace QuickApp.Pro.Controllers
             }
         }
 
-        [HttpGet("GetCurrency")]
-        [Produces(typeof(List<ChargeViewModel>))]
-        public IActionResult getCurrencyData()
-        {
-            try
-            {
-                var result = _unitOfWork.Charge.getCurrencyData(); 
-               
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
-        }
 
         [HttpGet("GetPurchaseOrder")]
         [Produces(typeof(List<ChargeViewModel>))]
@@ -87,41 +71,7 @@ namespace QuickApp.Pro.Controllers
             }
         }
 
-        [HttpGet("GetVendorNames")]
-        [Produces(typeof(List<ChargeViewModel>))]
-        public IActionResult getVendorNmaes()
-        {
-            try
-            {
-                var result = _unitOfWork.Charge.getVendorNmaes(); 
 
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
-        }
-
-        [HttpGet("GetIntegrationPortalNames")]
-        [Produces(typeof(List<ChargeViewModel>))]
-        public IActionResult IntegrationPortal()
-        {
-            try
-            {
-                var result = _unitOfWork.Charge.IntegrationPortal(); 
-
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
-        }
 
 
 
@@ -163,7 +113,7 @@ namespace QuickApp.Pro.Controllers
                 curreobj.Description = chargeViewModel.Description;
                 curreobj.BillableAmount = chargeViewModel.BillableAmount;
                 curreobj.CurrencyId = chargeViewModel.CurrencyId;
-                curreobj.GeneralLedgerId = chargeViewModel.GeneralLedgerId;
+                curreobj.GLAccountId = chargeViewModel.GeneralLedgerId;
                 curreobj.IntegrationPortalId = chargeViewModel.IntegrationPortalId;
                 curreobj.PurchaseOrderId = chargeViewModel.PurchaseOrderId;
                 curreobj.Quantity = chargeViewModel.Quantity;
@@ -171,7 +121,7 @@ namespace QuickApp.Pro.Controllers
                 curreobj.ManagementStructureId = chargeViewModel.ManagementStructureId;
                 curreobj.Memo = chargeViewModel.Memo;
                 curreobj.IsActive = chargeViewModel.IsActive;
-                curreobj.MarkUp = chargeViewModel.MarkUp; 
+                curreobj.MarkUpPercentage = chargeViewModel.MarkUp; 
                 curreobj.CreatedDate = DateTime.Now;
                 curreobj.UpdatedDate = DateTime.Now;
                 curreobj.CreatedBy = chargeViewModel.CreatedBy;
@@ -206,13 +156,13 @@ namespace QuickApp.Pro.Controllers
                 existingResult.Description = chargeViewModel.Description;
                 existingResult.FunctionalCurrencyId = chargeViewModel.FunctionalCurrencyId;
                 existingResult.CurrencyId = chargeViewModel.CurrencyId;
-                existingResult.GeneralLedgerId = chargeViewModel.GeneralLedgerId;
+                existingResult.GLAccountId = chargeViewModel.GeneralLedgerId;
                 existingResult.IntegrationPortalId = chargeViewModel.IntegrationPortalId;
                 existingResult.PurchaseOrderId = chargeViewModel.PurchaseOrderId;
                 existingResult.Quantity = chargeViewModel.Quantity;
                 existingResult.VendorId = chargeViewModel.VendorId;
                 existingResult.Memo = chargeViewModel.Memo;
-                existingResult.MarkUp = chargeViewModel.MarkUp;
+                existingResult.MarkUpPercentage = chargeViewModel.MarkUp;
                 existingResult.IsActive = chargeViewModel.IsActive;
                 existingResult.ManagementStructureId = chargeViewModel.ManagementStructureId;
 
@@ -229,7 +179,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult DeleteAction(long id)
         {
             var existingResult = _unitOfWork.Charge.GetSingleOrDefault(c => c.ChargeId == id);
-            existingResult.IsDelete = true;
+            existingResult.IsDeleted = true;
             _unitOfWork.Charge.Update(existingResult);
 
             //_unitOfWork.Charge.Remove(existingResult);
@@ -263,7 +213,7 @@ namespace QuickApp.Pro.Controllers
             if (!string.IsNullOrEmpty(Convert.ToString(paginate.ChargeId))
                 || !string.IsNullOrEmpty(paginate.ChargeName)
                 || !string.IsNullOrEmpty(Convert.ToString(paginate.Cost))
-                || !string.IsNullOrEmpty(Convert.ToString(paginate.MarkUp))
+                || !string.IsNullOrEmpty(Convert.ToString(paginate.MarkUpPercentage))
                 || !string.IsNullOrEmpty(Convert.ToString(paginate.BillableAmount))
                 || !string.IsNullOrEmpty(Convert.ToString(paginate.Quantity))
                 || !string.IsNullOrEmpty(paginate.Description)
@@ -288,11 +238,11 @@ namespace QuickApp.Pro.Controllers
                                    ch.Description,
                                    ch.CurrencyId,
                                    ch.Cost,
-                                   ch.MarkUp,
+                                   ch.MarkUpPercentage,
                                    ch.PurchaseOrderId,
                                    ch.VendorId,
                                    ch.IntegrationPortalId,
-                                   ch.GeneralLedgerId,
+                                   ch.GLAccountId,
                                    ch.Memo,
                                    ch.IsActive,
                                    ch.ManagementStructureId,
@@ -316,18 +266,17 @@ namespace QuickApp.Pro.Controllers
                     charge.Description = item.Description;
                     charge.CurrencyId = item.CurrencyId;
                     charge.Cost = item.Cost;
-                    charge.MarkUp = item.MarkUp;
+                    charge.MarkUpPercentage = item.MarkUpPercentage;
                     charge.PurchaseOrderId = item.PurchaseOrderId;
                     charge.VendorId = item.VendorId;
-                    charge.GeneralLedgerId = item.GeneralLedgerId;
+                    charge.GLAccountId = item.GLAccountId;
                     charge.Memo = item.Memo;
                     charge.IsActive = item.IsActive;
                     charge.BillableAmount = item.BillableAmount;
                     charge.Quantity = item.Quantity;
                     charge.Description = item.Description;
                     charge.Memo = item.Memo;
-                    charge.IntegrationPortalId = item.MarkUp;
-                    charge.GeneralLedgerId = item.MarkUp;
+                    charge.IntegrationPortalId = item.IntegrationPortalId;
                     charge.CreatedDate = item.CreatedDate;
                     charge.CreatedBy = item.CreatedBy;
                     charge.UpdatedDate = item.UpdatedDate;
@@ -347,9 +296,9 @@ namespace QuickApp.Pro.Controllers
                 {
                     chargeList = chargeList.Where(c => c.Cost != null && (c.Cost == paginate.Cost)).ToList();
                 }
-                if (paginate.MarkUp != null)
+                if (paginate.MarkUpPercentage != null)
                 {
-                    chargeList = chargeList.Where(c => c.MarkUp != null && (c.MarkUp == paginate.MarkUp)).ToList();
+                    chargeList = chargeList.Where(c => c.MarkUpPercentage != null && (c.MarkUpPercentage == paginate.MarkUpPercentage)).ToList();
                 }
                 if (paginate.BillableAmount != null)
                 {
@@ -390,11 +339,11 @@ namespace QuickApp.Pro.Controllers
                                    ch.Description,
                                    ch.CurrencyId,
                                    ch.Cost,
-                                   ch.MarkUp,
+                                   ch.MarkUpPercentage,
                                    ch.PurchaseOrderId,
                                    ch.VendorId,
                                    ch.IntegrationPortalId,
-                                   ch.GeneralLedgerId,
+                                   ch.GLAccountId,
                                    ch.Memo,
                                    ch.IsActive,
                                    ch.ManagementStructureId,
@@ -418,18 +367,17 @@ namespace QuickApp.Pro.Controllers
                     charge.Description = item.Description;
                     charge.CurrencyId = item.CurrencyId;
                     charge.Cost = item.Cost;
-                    charge.MarkUp = item.MarkUp;
+                    charge.MarkUpPercentage = item.MarkUpPercentage;
                     charge.PurchaseOrderId = item.PurchaseOrderId;
                     charge.VendorId = item.VendorId;
-                    charge.GeneralLedgerId = item.GeneralLedgerId;
+                    charge.GLAccountId = item.GLAccountId;
                     charge.Memo = item.Memo;
                     charge.IsActive = item.IsActive;
                     charge.BillableAmount = item.BillableAmount;
                     charge.Quantity = item.Quantity;
                     charge.Description = item.Description;
                     charge.Memo = item.Memo;
-                    charge.IntegrationPortalId = item.MarkUp;
-                    charge.GeneralLedgerId = item.MarkUp;
+                    charge.IntegrationPortalId = item.IntegrationPortalId;
                     charge.CreatedDate = item.CreatedDate;
                     charge.CreatedBy = item.CreatedBy;
                     charge.UpdatedDate = item.UpdatedDate;

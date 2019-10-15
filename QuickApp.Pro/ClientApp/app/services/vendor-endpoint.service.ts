@@ -14,7 +14,8 @@ export class VendorEndpointService extends EndpointFactory {
     localCollection: Response;
 
 
-    private readonly _vendorUrl: string = "/api/Vendor/Get";
+	private readonly _vendorUrl: string = "/api/Vendor/Get";
+	private readonly _vendorLiteUrl: string="/api/Vendor/basic"
     private readonly _vendorCapabilityUrl: string = "/api/Vendor/getVendorCapabilityList";
     private readonly _vendorUrlNew: string = "/api/Vendor/vendor";
 
@@ -134,6 +135,7 @@ export class VendorEndpointService extends EndpointFactory {
 
 	get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
 	get vendorlistsUrl() { return this.configurations.baseUrl + this._vendrUrl; }
+	get vendorBasicListUrl(){return this.configurations.baseUrl+ this._vendorLiteUrl}
 	get vendorListWithId() { return this.configurations.baseUrl + this._vendorsWithId; }
     get vendorattributesUrl() { return this.configurations.baseUrl + this._vendorUrl; }
     get vendorCapabilityListsUrl() { return this.configurations.baseUrl + this._vendorCapabilityUrl; }
@@ -254,6 +256,12 @@ export class VendorEndpointService extends EndpointFactory {
             });
 	}
 
+    getvendorBasicEndpoint<T>(): Observable<T> {
+        return this.http.get<T>(this.vendorBasicListUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getvendorBasicEndpoint());
+            });
+	}
 	
 	getCapabilityTypeListEndpoint<T>(): Observable<T> {
 		return this.http.get<T>(this.capabilityTypeListUrl, this.getRequestHeaders())
