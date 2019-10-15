@@ -47,16 +47,15 @@ namespace DAL.Models
 
         public string PartNumber { get; set; }
 
-        //[Required(ErrorMessage = "Part Number Descrption is required")]
         public string PartNumberDescription { get; set; }
 
-        //[Required(ErrorMessage = "Changed Part Number is required")]
-        public string ChangedPartNumber { get; set; }
+        [ForeignKey("ChangedPartNumberId")]
+        public long? ChangedPartNumberId { get; set; }
 
-        //[Required(ErrorMessage = "Changed Part Number Description is required")]
+        //public string ChangedPartNumber { get; set; }
+
         public string ChangedPartNumberDescription { get; set; }
 
-        //[Required(ErrorMessage = "Customer Name is required")]
         [ForeignKey("CustomerId")]
         public Nullable<long> CustomerId { get; set; }
 
@@ -117,6 +116,8 @@ namespace DAL.Models
         public virtual WorkScope WorkScope { get; set; }
 
         public virtual ItemMaster ItemMaster { get; set; }
+
+        public virtual ItemMaster ChangedPartNumber { get; set; }
 
         public virtual List<WorkflowChargesList> Charges { get; set; }
 
