@@ -813,10 +813,9 @@ namespace QuickApp.Pro.Controllers
                         }
                         _unitOfWork.SaveChanges();
                         poPartSplit.PurchaseOrderPartRecordId = popSplitEnt.PurchaseOrderPartRecordId;
-                    }
-
-                    return Ok(poViewModels);
+                    }                   
                 }
+                return Ok(poViewModels);
             }
             return Ok(ModelState);
         }
