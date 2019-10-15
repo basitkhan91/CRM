@@ -42,7 +42,6 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
 
 
     ngOnInit(): void {
-        debugger;
         this.dropdownSettings = {
             singleSelection: false,
             idField: 'dashNumberId',
@@ -74,38 +73,10 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
             },
             error => this.errorMessage = <any>error()
         );
-
-        //this.actionService.GetPublicationAircraftManufacturer().subscribe(
-        //    aircraftManufacturer => {
-        //        this.publicationAircraftManufacturers = aircraftManufacturer;
-        //    },
-        //    error => this.errorMessage = <any>error
-        //);
-
-        //this.actionService.getLocations().subscribe(
-        //    location => {
-        //        this.locations = location;
-        //    },
-        //    error => this.errorMessage = <any>error
-        //);
-
-        //this.actionService.GetPublicationStatus().subscribe(
-        //    status => {
-        //        this.publicationStatuses = status;
-        //    },
-        //    error => this.errorMessage = <any>error
-        //);
-        //this.employeeService.getEmployeeList().subscribe(
-
-        //    data => {
-        //        this.allEmployeeinfo = data[0]
-        //    });
-
     }
 
     Browse(): void {
         var brws = document.getElementById("myFile");
-        //brws.disabled = true;
     }
 
     ngOnChanges(): void {
@@ -166,7 +137,10 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
     }
 
     private onPublicationChange(event, wfPublication) {
-
+        if (wfPublication.publicationId == 0) {
+            this.setPublicationData(null, wfPublication);
+            return;
+        }
         if (this.publications != undefined) {
             var selectedPublication = this.publications.filter(function (publication) {
                 return publication.publicationRecordId == wfPublication.publicationId;
@@ -175,7 +149,6 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
                 this.loadPublicationById(wfPublication, true);
             }
             else {
-                this.filterUniqueCombination(selectedPublication[0]);
                 this.setPublicationData(selectedPublication[0], wfPublication);
             }
         }
@@ -185,27 +158,79 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
         }
     }
 
+    private getUniqueAircraft(aircraftMapping: any[]): any[] {
+        var aircraft = [];
+        var distinctAircraftIds = [];
+
+        for (var i = 0; i < aircraftMapping.length; i++) {
+            if (aircraftMapping[i].aircraftTypeId != undefined && distinctAircraftIds.indexOf(aircraftMapping[i].aircraftTypeId) == -1) {
+                aircraft.push(aircraftMapping[i]);
+                distinctAircraftIds.push(aircraftMapping[i].aircraftTypeId);
+            }
+        }
+
+        return aircraft;
+    }
+
+    private getUniqueAircraftModels(publication: any): any[] {
+        var aircraftModels = [];
+        var distinctAircraftModelIds = [];
+
+        for (var i = 0; i < publication.itemMasterAircraftMapping.length; i++) {
+            if (publication.itemMasterAircraftMapping[i].aircraftModelId != undefined &&
+                publication.itemMasterAircraftMapping[i].aircraftTypeId == publication.aircraftManufacturer &&
+                distinctAircraftModelIds.indexOf(publication.itemMasterAircraftMapping[i].aircraftModelId) == -1) {
+                aircraftModels.push(publication.itemMasterAircraftMapping[i]);
+                distinctAircraftModelIds.push(publication.itemMasterAircraftMapping[i].aircraftModelId);
+            }
+        }
+
+        return aircraftModels;
+    }
+
+    private getUniqueAircraftDashNumbers(publication: any): any[] {
+        var aircraftDashNumbers = [];
+        var distinctAircraftaircraftDashNumbersIds = [];
+
+        for (var i = 0; i < publication.itemMasterAircraftMapping.length; i++) {
+            if (publication.itemMasterAircraftMapping[i].dashNumberId != undefined &&
+                publication.itemMasterAircraftMapping[i].aircraftTypeId == publication.aircraftManufacturer &&
+                publication.itemMasterAircraftMapping[i].aircraftModelId == publication.model &&
+
+                distinctAircraftaircraftDashNumbersIds.indexOf(publication.itemMasterAircraftMapping[i].dashNumberId) == -1) {
+                aircraftDashNumbers.push(publication.itemMasterAircraftMapping[i]);
+                distinctAircraftaircraftDashNumbersIds.push(publication.itemMasterAircraftMapping[i].aircraftTypeId);
+            }
+        }
+
+        return aircraftDashNumbers;
+    }
+
     private loadPublicationById(wfPublication: any, isDropdownChange: boolean) {
         this.publicationService.getPublicationForWorkFlow(wfPublication.publicationId).subscribe(
             result => {
                 if (result[0] != undefined && result[0] != null) {
                     this.publications.push(result[0]);
-                    this.filterUniqueCombination(result[0]);
+                    if (wfPublication.publicationId == result[0].publicationRecordId) {
+                        wfPublication.itemMasterAircraftMapping = result[0].itemMasterAircraftMapping;
 
-                    for (var pub of this.workFlow.publication) {
-                        if (pub.publicationId == result[0].publicationRecordId) {
-                            pub.aircraft = result[0].itemMasterAircraftMapping;
-                            pub.aircraftModels = pub.aircraft.filter(x => x.aircraftTypeId == pub.aircraftManufacturer);
-                            pub.allDashNumbers = pub.aircraft.filter(x => x.aircraftModelId == pub.model);
-                            if (pub.allDashNumbers.length == 0) {
-                                pub.workflowPublicationDashNumbers = [];
-                            }
-                            if (isDropdownChange) {
-                                this.setPublicationData(result[0], pub);
-                            }
+                        wfPublication.aircraft = this.getUniqueAircraft(result[0].itemMasterAircraftMapping);
+
+                        if (!isDropdownChange) {
+                            wfPublication.aircraftModels = this.getUniqueAircraftModels(wfPublication);
+                            wfPublication.allDashNumbers = this.getUniqueAircraftDashNumbers(wfPublication);
+                            
+                        }
+                        else {
+                            wfPublication.aircraftModels = [];
+                            wfPublication.allDashNumbers = [];
+                            wfPublication.workflowPublicationDashNumbers = [];
+                        }
+
+                        if (isDropdownChange) {
+                            this.setPublicationData(result[0], wfPublication);
                         }
                     }
-
                 }
             }
         );
@@ -230,19 +255,20 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
 
     private setPublicationData(selectedPublication: any, row: any) {
         if (selectedPublication != null) {
-            row.publicationDescription = selectedPublication.description;
-            row.revisionDate = selectedPublication.revisionDate;
-            row.publicationType = selectedPublication.publicationTypeId;
-            row.sequence = selectedPublication.sequence;
+            row.publicationDescription = selectedPublication.description != null ? selectedPublication.description : '';
+            row.revisionDate = selectedPublication.revisionDate != null ? new Date(selectedPublication.revisionDate).toLocaleDateString() : '';
+            row.publicationType = selectedPublication.publicationTypeId != null ? selectedPublication.publicationTypeId : '';
+            row.sequence = selectedPublication.sequence != null ? selectedPublication.sequence : '';
             row.aircraftManufacturer = '0';
-            row.aircraft = selectedPublication.itemMasterAircraftMapping;
-            row.source = selectedPublication.asd;
+            row.itemMasterAircraftMapping = selectedPublication.itemMasterAircraftMapping;
+            row.aircraft = this.getUniqueAircraft(selectedPublication.itemMasterAircraftMapping);
+            row.source = selectedPublication.asd != null ? selectedPublication.asd : '';
             row.model = '0';
             row.aircraftModels = [];
             row.allDashNumbers = [];
-            row.location = selectedPublication.location;
-            row.verifiedBy = selectedPublication.verifiedBy;
-            row.status = selectedPublication.isActive;
+            row.location = selectedPublication.location != null ? selectedPublication.location : '';
+            row.verifiedBy = selectedPublication.verifiedBy != null ? selectedPublication.verifiedBy : '';
+            row.status = selectedPublication.isActive != null ? selectedPublication.isActive : '';
             row.verifiedDate = selectedPublication.verifiedDate != undefined ? new Date(selectedPublication.verifiedDate).toLocaleDateString() : '';
         }
         else {
@@ -254,6 +280,7 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
             row.aircraft = [];
             row.source = '';
             row.model = '0';
+            row.itemMasterAircraftMapping = [];
             row.aircraftModels = [];
             row.allDashNumbers = [];
             row.location = '';
@@ -264,7 +291,7 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
     }
 
     public getAircraftModels(publication) {
-        publication.aircraftModels = publication.aircraft.filter(x => x.aircraftTypeId == publication.aircraftManufacturer);
+        publication.aircraftModels = this.getUniqueAircraftModels(publication);// publication.aircraft.filter(x => x.aircraftTypeId == publication.aircraftManufacturer);
         publication.model = '0';
         publication.workflowPublicationDashNumbers = [];
         publication.allDashNumbers = [];
@@ -280,7 +307,8 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
             this.alertService.showMessage('Publication', 'Same combination is already in use, try other combination', MessageSeverity.error);
             return;
         }
-        publication.allDashNumbers = publication.aircraft.filter(x => x.aircraftModelId == publication.model);
+
+        publication.allDashNumbers = this.getUniqueAircraftDashNumbers(publication);// publication.aircraft.filter(x => x.aircraftModelId == publication.model);
     }
 
 

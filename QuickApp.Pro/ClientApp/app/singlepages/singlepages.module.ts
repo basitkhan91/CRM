@@ -127,6 +127,8 @@ import { PaginationService } from "../services/pagination/pagination.service";
 import { TooltipModule } from "primeng/tooltip";
 import { KeyFilterModule } from 'primeng/keyfilter';
 import { PercentComponent } from "../components/percent/percent.component";
+import { PercentService } from "../services/percent.service";
+import { PercentEndpoint } from "../services/percent-endpoint.service";
 
 @NgModule({
 	imports: [
@@ -214,6 +216,8 @@ import { PercentComponent } from "../components/percent/percent.component";
         PaginationComponent
     ],
     providers: [
+        PercentService,
+        PercentEndpoint,
         SingleScreenBreadcrumbService,
         AssetStatusService,
         AssetStatusEndpointService,

@@ -453,7 +453,7 @@ namespace DAL.Repositories
         private WorkFlowWorkOrder BIndWorkFlowWorkOrderDetails(WorkFlowWorkOrder workFlowWorkOrder, Workflow workFlow)
         {
             workFlowWorkOrder.BERThresholdAmount = workFlow.BERThresholdAmount;
-            workFlowWorkOrder.ChangedPartNumber = workFlow.ChangedPartNumber;
+            //workFlowWorkOrder.ChangedPartNumber = workFlow.ChangedPartNumber;
             workFlowWorkOrder.ChangedPartNumberDescription = workFlow.ChangedPartNumberDescription;
             workFlowWorkOrder.CostOfNew = workFlow.CostOfNew;
             workFlowWorkOrder.CostOfReplacement = workFlow.CostOfReplacement;

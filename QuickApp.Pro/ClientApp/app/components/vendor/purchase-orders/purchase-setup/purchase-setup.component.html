@@ -103,11 +103,16 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label>Vendor Contact</label>
+                                <label>Vendor Contact <span class="clr-red">*</span></label>
                                 <div class="inner-addon right-addon inline-block">
-                                    <p-autoComplete field="vendorContact" class="pautocomp-cstm" 
+                                    <p-autoComplete field="csrName" class="pautocomp-cstm" 
                                     [(ngModel)]="sourcePoApproval.vendorContactId" name="vendorContact" [suggestions]="vendorContactsHeader" 
-                                    (completeMethod)="filterVendorContacts($event)"  [size]="30" [minLength]="1" [dropdown]="true"  errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
+                                    (completeMethod)="filterVendorContacts($event)"  [size]="30" [minLength]="1" [dropdown]="true"  errorMessage="Records not found" [forceSelection]="true" [disabled]="vendorName.invalid" #vendorContact="ngModel" required></p-autoComplete>
+                                    <div *ngIf="vendorContact.invalid && (vendorContact.dirty || vendorContact.touched)" class="alert alert-danger alert-danger-cstm">
+                                        <div *ngIf="vendorContact.errors.required">
+                                            <small> Vendor Contact is required </small>
+                                        </div>
+                                    </div>
                                     <!-- <i class="fa fa-search"></i>
                                     <input type="text" class="form-control names ui-autocomplete-input" name="vendor contact" [(ngModel)]="sourcePoApproval.firstName" autocomplete="off"> 
                                     <p-autoComplete field="vendorContact" class="pautocomp-cstm" 
@@ -121,9 +126,9 @@
                                 <label>Contact Phone</label>
                                 <!-- <input class="form-control" type="text" name="contact phone" [(ngModel)]="sourcePoApproval.workPhone"> -->
                                 <div class="inner-addon right-addon inline-block">
-                                    <p-autoComplete field="vendorPhone" class="pautocomp-cstm" 
+                                    <p-autoComplete field="workPhone" class="pautocomp-cstm" 
                                     [(ngModel)]="sourcePoApproval.vendorContactPhone" name="vendorContactPhone" [suggestions]="vendorPhoneNum" 
-                                    (completeMethod)="filterVendorPhone($event)" [size]="30" [minLength]="1" [dropdown]="true"  errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
+                                    (completeMethod)="filterVendorPhone($event)" [size]="30" [minLength]="1" [dropdown]="true"  errorMessage="Records not found" [forceSelection]="true" [disabled]="vendorName.invalid"></p-autoComplete>
                                     <!-- <p-autoComplete field="vendorPhone" class="pautocomp-cstm" [(ngModel)]="sourcePoApproval.vendorContactPhone" name="vendorContactPhone" [suggestions]="vendorPhoneNum" (completeMethod)="filterVendorPhone($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true">
                                     </p-autoComplete> -->
                                 </div>
@@ -132,7 +137,7 @@
                                 <label>Credit Limit &amp; Terms</label>
                                 <div class="form-row">
                                     <div class="col-sm-5">
-                                        <input class="form-control" type="text" placeholder="limit" name="creditLimit" [(ngModel)]="sourcePoApproval.creditLimit">
+                                        <input class="form-control" type="text" placeholder="limit" name="creditLimit" [(ngModel)]="sourcePoApproval.creditLimit" disabled>
                                     </div>
                                     <div class="col-sm-7">
                                             <p-autoComplete field="name" class="pautocomp-cstm" [(ngModel)]="sourcePoApproval.creditTermsId" name="creditTermsId" [suggestions]="creditTermsList" (completeMethod)="filtercreditTerms($event)" errorMessage="Records not found" [forceSelection]="true" [size]="30" [minLength]="1" [dropdown]="true" [disabled]=true>
@@ -458,7 +463,7 @@
                                             </div>
                                     </div>     
                                 </td>
-                                <td><input type="text" class="form-control" [(ngModel)]="partList.quantityOrdered" name="quantityOrdered{{row_index}}" pKeyFilter="pint" #qtyOrdered="ngModel" required>
+                                <td><input type="text" class="form-control" [(ngModel)]="partList.quantityOrdered" name="parentQtyOrdered{{row_index}}" pKeyFilter="pint" #qtyOrdered="ngModel" required>
                                     <div *ngIf="qtyOrdered.invalid && (qtyOrdered.dirty || qtyOrdered.touched)" class="alert alert-danger alert-danger-cstm">
                                             <div *ngIf="qtyOrdered.errors.required">
                                                 <small> Order Qty is required </small>
@@ -500,7 +505,7 @@
                                 <td><input type="text" class="form-control" [(ngModel)]="partList.salesOrderId" name="salesOrderId{{row_index}}"></td>
                                 <td style="min-width: 90px;">
                                     <label style="width:90px;">Company:</label>
-                                    <select class="form-control" [(ngModel)]="partList.parentCompanyId" name="companyName{{row_index}}" (change)="getParentBUList(partList)" #pcompanyName required>
+                                    <select class="form-control" [(ngModel)]="partList.parentCompanyId" name="parentCompanyName{{row_index}}" (change)="getParentBUList(partList)" #pcompanyName required>
                                         <option value="0">Select</option>
                                         <option *ngFor="let company of maincompanylist" value="{{company.managementStructureId}}">{{company.code}}</option>
                                     </select>
@@ -514,21 +519,21 @@
                                 </td>
                                 <td style="min-width: 90px;">
                                     <label style="width:90px;">BU:</label>
-                                    <select class="form-control" [(ngModel)]="partList.parentbuId" name="BU{{row_index}}" (change)="getParentDivisionlist(partList)">
+                                    <select class="form-control" [(ngModel)]="partList.parentbuId" name="parentBU{{row_index}}" (change)="getParentDivisionlist(partList)">
                                         <option value="0">Select</option>
                                         <option *ngFor="let businessUnit of partList.parentBulist" value="{{businessUnit.managementStructureId}}">{{businessUnit.code}}</option>
                                     </select>
                                 </td>
                                 <td style="min-width: 90px;">
                                     <label style="width:90px;">Division:</label>
-                                    <select class="form-control" [(ngModel)]="partList.parentDivisionId" name="division{{row_index}}" (change)="getParentDeptlist(partList)">
+                                    <select class="form-control" [(ngModel)]="partList.parentDivisionId" name="parentDivision{{row_index}}" (change)="getParentDeptlist(partList)">
                                         <option value="0">Select</option>
                                         <option *ngFor="let division of partList.parentDivisionlist" value="{{division.managementStructureId}}">{{division.code}}</option>
                                     </select>
                                 </td>
                                 <td style="min-width: 90px;">
                                     <label style="width:90px;">Dept:</label>
-                                    <select class="form-control" [(ngModel)]="partList.parentDeptId" name="dept{{row_index}}" (change)="getParentDeptId(partList)">
+                                    <select class="form-control" [(ngModel)]="partList.parentDeptId" name="parentDept{{row_index}}" (change)="getParentDeptId(partList)">
                                         <option value="0">Select</option>
                                         <option *ngFor="let department of partList.parentDepartmentlist " value="{{department.managementStructureId}}">{{department.code}}</option>
                                     </select>
@@ -649,12 +654,12 @@
                                     </div>
                                 </td>
                                 <td>{{partList.UOMShortName}}</td>
-                                <td><input class="form-control" type="text" pKeyFilter="pint" [(ngModel)]="partChildList.quantityOrdered" name="quantityOrdered{{row_no}}" /></td>
+                                <td><input class="form-control" type="text" pKeyFilter="pint" [(ngModel)]="partChildList.quantityOrdered" name="childQtyOrdered{{row_no}}" /></td>
                                 <td><p-calendar class="pcal-cpo-grid" [showIcon]="true" [(ngModel)]="partChildList.needByDate" name="needByDate{{row_no}}"></p-calendar></td>
                                 <td>
                                     <label style="width:90px;">Company:</label>
                                     <select class="inner-addon right-addon autosuggesions-add inline-block mw400"
-                                            name="companyName{{row_no}}"
+                                            name="childCompanyName{{row_no}}"
                                             [(ngModel)]="partChildList.childCompanyId"
                                             (change)="getChildBUList(partChildList)" required>
                                         <option value="0">select</option>
@@ -665,7 +670,7 @@
                                 <td>
                                     <label style="width:90px;">BU:</label>
                                     <select class="inner-addon right-addon autosuggesions-add inline-block mw400"
-                                            name="BU{{row_no}}"
+                                            name="childBU{{row_no}}"
                                             [(ngModel)]="partChildList.childbuId"
                                             (change)="getChildDivisionlist(partChildList)">
                                         <option value="0">select</option>
@@ -675,7 +680,7 @@
                                 <td>
                                     <label style="width:90px;">Division:</label>
                                     <select class="inner-addon right-addon autosuggesions-add inline-block mw400"
-                                            name="division{{row_no}}"
+                                            name="childDivision{{row_no}}"
                                             [(ngModel)]="partChildList.childDivisionId"
                                             (change)="getChildDeptlist(partChildList)">
                                         <option value="0">select</option>
@@ -688,7 +693,7 @@
                                 <td>
                                     <label style="width:90px;">Dept:</label>
                                     <select class="inner-addon right-addon autosuggesions-add inline-block mw400"
-                                            name="dept{{row_no}}"
+                                            name="childDept{{row_no}}"
                                             [(ngModel)]="partChildList.childDeptId"
                                             (change)="getChildDeptId(partChildList)">
                                         <option value="0">select</option>
@@ -908,7 +913,7 @@
                     <div class="form-group" *ngIf="sourcePoApproval.shipToUserTypeId==1">
                         <label>Contact Name <span class="clr-red">*</span></label>
                         <p-autoComplete field="firstName" class="pautocomp-cstm" 
-                        [(ngModel)]="sourcePoApproval.shipToContactId" name="shipToCustomerContactName" [suggestions]="firstNamesShipTo" (completeMethod)="filterCustomerContactsForShipTo($event)"  [size]="30" [minLength]="1" [dropdown]="true" #shipCusContactName="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
+                        [(ngModel)]="sourcePoApproval.shipToContactId" name="shipToCustomerContactName" [suggestions]="firstNamesShipTo" (completeMethod)="filterCustomerContactsForShipTo($event)"  [size]="30" [minLength]="1" [dropdown]="true" #shipCusContactName="ngModel" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
                         <!--<p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourcePoApproval.shipToContactId" name="shipToCustomerContactName" [suggestions]="firstNamesShipTo" (completeMethod)="filterFirstNamesforshipto($event)" [size]="30" [minLength]="1" [dropdown]="true" #shipCusContactName="ngModel" errorMessage="Records not found" [forceSelection]="true" required>
                             <ng-template let-firstName pTemplate="item">
                                 <div class="ui-helper-clearfix">{{firstName}}</div>
@@ -1095,7 +1100,7 @@
                     </div>
                     <div class="form-group" *ngIf="sourcePoApproval.billToUserTypeId==1">
                         <label>Contact Name <span class="clr-red">*</span></label>
-                        <p-autoComplete field="firstName" class="pautocomp-cstm" [(ngModel)]="sourcePoApproval.billToContactId" name="customerContactsForBillTo" [suggestions]="firstNamesbillTo" (completeMethod)="filterCustomerContactsForBillTo($event)" [size]="30" errorMessage="Records not found" [forceSelection]="true" [minLength]="1" [dropdown]="true" #billCusContactName="ngModel" required>
+                        <p-autoComplete field="firstName" class="pautocomp-cstm" [(ngModel)]="sourcePoApproval.billToContactId" name="customerContactsForBillTo" [suggestions]="firstNamesbillTo" (completeMethod)="filterCustomerContactsForBillTo($event)" [size]="30" errorMessage="Records not found" [forceSelection]="true" [minLength]="1" [dropdown]="true" #billCusContactName="ngModel">
                             <!--<ng-template let-firstName pTemplate="item">
                                 <div class="ui-helper-clearfix">{{firstName}}</div>
                             </ng-template>-->
