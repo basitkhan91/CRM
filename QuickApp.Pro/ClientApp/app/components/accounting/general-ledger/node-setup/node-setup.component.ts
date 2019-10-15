@@ -1,12 +1,12 @@
-﻿import { OnInit, Component } from "@angular/core";
+﻿import { OnInit, Component, ViewChild } from "@angular/core";
 import { fadeInOut } from "../../../../services/animations";
-import { AlertService } from "../../../../services/alert.service";
+import { AlertService, MessageSeverity } from "../../../../services/alert.service";
 import { GLAccountNodeSetup } from "../../../../models/node-setup.model";
 import { NodeSetupService } from "../../../../services/node-setup/node-setup.service";
 import { LegalEntityService } from "../../../../services/legalentity.service";
 import { GLAccountClassService } from "../../../../services/glaccountclass.service";
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { TableModule } from 'primeng/table';
+import { TableModule, Table } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { InputTextModule } from 'primeng/inputtext';
@@ -16,6 +16,8 @@ import { MenuItem } from 'primeng/api';//bread crumb
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { AuthService } from "../../../../services/auth.service";
+import { SingleScreenBreadcrumbService } from "../../../../services/single-screens-breadcrumb.service";
+import { ConfigurationService } from "../../../../services/configuration.service";
 @Component({
     selector: 'app-node-setup',
     templateUrl: './node-setup.component.html',
@@ -24,6 +26,55 @@ import { AuthService } from "../../../../services/auth.service";
 })
 /** node-setup component*/
 export class NodeSetupComponent implements OnInit {
+    originalData: any;
+    isEdit: boolean = false;
+    totalRecords: any;
+    pageIndex: number = 0;
+    pageSize: number = 10;
+    totalPages: number;
+    headers = [
+        { field: 'ledgerName', header: 'Ledger Name' },
+        { field: 'companyCodes', header: 'Share with the Other Entities' },
+        { field: 'nodeCode', header: 'Node Code' },
+        { field: 'nodeName', header: 'Node Name' },
+        { field: 'description', header: 'Description' },
+        { field: 'parentNode.nodeCode', header: 'Parent Node' },
+        { field: 'leafNodeCheck', header: 'Leaf Node' },
+        { field: 'fsType', header: 'Node Type' },
+
+    ]
+    selectedColumns = this.headers;
+    formData = new FormData()
+    @ViewChild('dt')
+
+    private table: Table;
+    auditHistory: any[] = [];
+    disableSaveGroupId: boolean = false;
+    PortalList: any;
+    disableSaveForDescription: boolean = false;
+    descriptionList: any;
+
+    new = {
+        ledgerName: "",
+        nodeCode: "",
+        nodeName: "",
+        description: "",
+        companyCodes: "",
+        parentNode: "",
+        leafNodeCheck: "",
+        fsType: "",
+        masterCompanyId: 1,
+        isActive: true,
+
+    }
+    addNew = { ...this.new };
+    selectedRecordForEdit: any;
+    viewRowData: any;
+    selectedRowforDelete: any;
+    existingRecordsResponse = []
+    ledgerList: any;
+
+
     nodeSetupViewData: any;
     parentNode: string;
     parentCodeCollection: any[];
@@ -49,25 +100,181 @@ export class NodeSetupComponent implements OnInit {
     disablesave: boolean;
     localCollection: any[];
     codeCollection: any;
-    constructor(private modalService: NgbModal, public glAccountService: GLAccountClassService, public legalEntityService: LegalEntityService, private alertService: AlertService, private nodeSetupService: NodeSetupService, private authService: AuthService) {
+    constructor(private modalService: NgbModal,
+        private configurations: ConfigurationService,
+        public glAccountService: GLAccountClassService,
+        public legalEntityService: LegalEntityService,
+        private alertService: AlertService,
+        private nodeSetupService: NodeSetupService,
+        private authService: AuthService,
+        public breadCrumb: SingleScreenBreadcrumbService) {
     }
 
     ngOnInit(): void {
         this.loadManagementdata();
-
         this.setManagementDesctoList();
-
         this.currentNodeSetup = new GLAccountNodeSetup();
-
         this.loadGlAccountClassData();
+        this.getList();
+
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-node-setup';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
     }
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
+   save(){
+       
+   }
+    getList() {
+        this.nodeSetupService.getAll().subscribe(res => {
+            const responseData = res[0];
+            this.nodeSetupList = responseData;
+            this.originalData = responseData;
+            // this.originalData = responseData.map(x => {
+            //     return {
+            //         ledgerName: x.ledgerName,
+            //         nodeCode: x.nodeCode,
+            //         nodeName: x.nodeName,
+            //         description: x.description,
+            //         parentNode: x.parentNode !== null ? x.parentNode.nodeCode : ' ',
+            //         leafNodeCheck: x.leafNodeCheck,
+            //         fsType: x.fsType,
+            //         isActive: x.isActive,
+            //         glAccountNodeId: x.glAccountNodeId,
+            //         companyCodes: x.comapnycodes,
+            //         parentNodeId: x.parentNodeId
+            //     }
+
+
+            // });
+            this.parentNodeList;
+
+            for (let i = 0; i < this.nodeSetupList.length; i++) {
+                if (this.nodeSetupList[i].leafNodeCheck == false) {
+                    this.parentNodeList.push(this.nodeSetupList[i]);
+                }
+            }
+            if (this.originalData) {
+                for (let nlength = 0; nlength < this.originalData.length; nlength++) {
+
+                    this.nodeSetupService.getShareWithOtherEntitysData(this.originalData[nlength].glAccountNodeId).subscribe(msData => {
+                        let companyCodes = [];
+                        let string = '';
+                        let companyIds = [];
+
+                        if (msData[0].length) {
+                            for (let j = 0; j < msData[0].length; j++) {
+                                if (msData[0][j]) {
+                                    companyCodes.push(msData[0][j].code);
+                                    companyIds.push(msData[0][j].managementStructureId);
+                                    string = companyCodes.join(',');
+                                }
+                                this.originalData[nlength].companyCodes = string;
+                                this.originalData[nlength].selectedCompanysData = companyIds;
+
+                            }
+                        }
+
+                    })
+                }
+            }
+            this.totalRecords = responseData.length;
+            this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+        })
+    }
+    changePage(event: { first: any; rows: number }) {
+        console.log(event);
+
+        this.pageSize = event.rows;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+    }
+    changeStatus(rowData) {
+        console.log(rowData);
+        const data = { ...rowData }
+        this.nodeSetupService.update(data).subscribe(() => {
+            this.alertService.showMessage(
+                'Success',
+                `Updated Status Successfully  `,
+                MessageSeverity.success
+            );
+        })
+    }
+    delete(rowData) {
+        this.selectedRowforDelete = rowData;
+
+    }
+    deleteConformation(value) {
+        if (value === 'Yes') {
+            this.nodeSetupService.remove(this.selectedRowforDelete.glAccountNodeId).subscribe(() => {
+                this.getList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Deleted Record Successfully  `,
+                    MessageSeverity.success
+                );
+            })
+        } else {
+            this.selectedRowforDelete = undefined;
+        }
+    }
+    viewSelectedRow(rowData) {
+        console.log(rowData);
+        this.viewRowData = rowData;
+    }
+    columnsChanges() {
+        this.refreshList();
+    }
+    refreshList() {
+        this.table.reset();
+
+        // this.table.sortOrder = 0;
+        // this.table.sortField = '';
+
+        this.getList();
+    }
+    sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=DashNumber&fileName=dashnumber.xlsx`;
+
+        window.location.assign(url);
+    }
+    resetForm() {
+        this.isEdit = false;
+        this.selectedRecordForEdit = undefined;
+        this.addNew = { ...this.new };
+        this.ledgerName();
+    }
+    ledgerName() {
+        this.nodeSetupService.getAll().subscribe((data) => {
+            console.log(data);
+            const responseValue = data[0];
+            this.ledgerList = responseValue.map(x => {
+                return {
+                   
+                    ledgerName: x.ledgerName
+                }
+
+            })
+        })
+    }
+    edit(rowData) {
+        console.log(rowData);
+        this.ledgerName();
+        this.isEdit = true;
+        this.disableSaveGroupId = false;
+        this.disableSaveForDescription = false;
+        this.addNew = {
+            ...rowData,
+            //ataChapterName: getObjectByValue('ataChapterName', rowData.ataChapterName, this.originalData),
+        };
+        this.selectedRecordForEdit = { ...this.addNew }
+
+    }
     setManagementDesctoList() {
         this.nodeSetupService.getAll().subscribe(nodes => {
-            this.nodeSetupList = nodes[0];
+
             this.nodeSetupListData = nodes[0];
+            this.nodeSetupList = nodes[0];
             this.parentNodeList;
             for (let i = 0; i < this.nodeSetupList.length; i++) {
 
@@ -84,12 +291,10 @@ export class NodeSetupComponent implements OnInit {
 
                         if (msData[0].length) {
                             for (let j = 0; j < msData[0].length; j++) {
-
                                 if (msData[0][j]) {
                                     companyCodes.push(msData[0][j].code);
                                     companyIds.push(msData[0][j].managementStructureId);
                                     string = companyCodes.join(',');
-
                                 }
                                 this.nodeSetupListData[nlength].comapnycodes = string;
                                 this.nodeSetupListData[nlength].selectedCompanysData = companyIds;
@@ -173,6 +378,7 @@ export class NodeSetupComponent implements OnInit {
         this.currentNodeSetup.isActive = !this.currentNodeSetup.isActive;
     }
 
+
     resetNodeSetup(): void {
         this.updateMode = false;
         this.currentNodeSetup = new GLAccountNodeSetup();
@@ -190,9 +396,9 @@ export class NodeSetupComponent implements OnInit {
     }
 
     private onManagemtntdataLoadDataList(getAtaMainList: any[]) {
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.allManagemtninfoData = getAtaMainList;
+        this.legalEntityService.getManagemententity().subscribe( getAtaMainList =>{
+            this.allManagemtninfoData = getAtaMainList;
+        });     
 
         for (let i = 0; i < this.allManagemtninfoData.length; i++) {
             if (this.allManagemtninfoData[i].parentId == null) {
