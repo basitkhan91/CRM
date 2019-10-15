@@ -104,6 +104,8 @@ namespace DAL
         IAuditHistoryRepository AuditHistory { get; }
 
         IJobTitle JobTitle { get; }
+
+        IJobType JobType { get; }
         IDocument Document { get; }
 
         ICharge Charge { get; }
