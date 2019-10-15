@@ -554,7 +554,13 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("GetPublicationDropdownData")]
         public IActionResult GetPublicationDropdownData()
         {
-            var result = _unitOfWork.Publication.getPublicationDropdownData();
+            var result = _unitOfWork.Publication.getPublicationDropdownData().Select(x =>
+            new
+            {
+                PublicationRecordId = x.PublicationRecordId,
+                PublicationId = x.PublicationId
+            });
+            
             return Ok(result);
         }
 
