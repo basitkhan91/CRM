@@ -137,7 +137,10 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
     }
 
     private onPublicationChange(event, wfPublication) {
-
+        if (wfPublication.publicationId == 0) {
+            this.setPublicationData(null, wfPublication);
+            return;
+        }
         if (this.publications != undefined) {
             var selectedPublication = this.publications.filter(function (publication) {
                 return publication.publicationRecordId == wfPublication.publicationId;
@@ -252,20 +255,20 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
 
     private setPublicationData(selectedPublication: any, row: any) {
         if (selectedPublication != null) {
-            row.publicationDescription = selectedPublication.description;
-            row.revisionDate = selectedPublication.revisionDate;
-            row.publicationType = selectedPublication.publicationTypeId;
-            row.sequence = selectedPublication.sequence;
+            row.publicationDescription = selectedPublication.description != null ? selectedPublication.description : '';
+            row.revisionDate = selectedPublication.revisionDate != null ? new Date(selectedPublication.revisionDate).toLocaleDateString() : '';
+            row.publicationType = selectedPublication.publicationTypeId != null ? selectedPublication.publicationTypeId : '';
+            row.sequence = selectedPublication.sequence != null ? selectedPublication.sequence : '';
             row.aircraftManufacturer = '0';
             row.itemMasterAircraftMapping = selectedPublication.itemMasterAircraftMapping;
             row.aircraft = this.getUniqueAircraft(selectedPublication.itemMasterAircraftMapping);
-            row.source = selectedPublication.asd;
+            row.source = selectedPublication.asd != null ? selectedPublication.asd : '';
             row.model = '0';
             row.aircraftModels = [];
             row.allDashNumbers = [];
-            row.location = selectedPublication.location;
-            row.verifiedBy = selectedPublication.verifiedBy;
-            row.status = selectedPublication.isActive;
+            row.location = selectedPublication.location != null ? selectedPublication.location : '';
+            row.verifiedBy = selectedPublication.verifiedBy != null ? selectedPublication.verifiedBy : '';
+            row.status = selectedPublication.isActive != null ? selectedPublication.isActive : '';
             row.verifiedDate = selectedPublication.verifiedDate != undefined ? new Date(selectedPublication.verifiedDate).toLocaleDateString() : '';
         }
         else {
