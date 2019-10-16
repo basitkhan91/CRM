@@ -222,6 +222,8 @@ export class PurchaseSetupComponent {
 	tempMultiplePN = {};
 	parentQty: any;
 	newData: any = [];
+	childOrderQtyArray: any = [];
+	childOrderQtyTotal: any;
 
 	/** po-approval ctor */
 	constructor(public siteService: SiteService, public warehouseService: WarehouseService, private masterComapnyService: MasterComapnyService, public cusservice: CustomerService, private itemser: ItemMasterService, private modalService: NgbModal, private route: Router, public legalEntityService: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public vendorService: VendorService, public priority: PriorityService, private alertService: AlertService ,public glAccountService: GlAccountService, private authService: AuthService , private commonService : CommonService) {
@@ -3325,12 +3327,26 @@ export class PurchaseSetupComponent {
 		}
 	}
 
-	onChangeParentQtyOrdered(event, partList) {
-		console.log(event, partList);		
+	onChangeParentQtyOrdered(event) {
 		this.parentQty = event.target.value;
 	}
-	onChangeChildQtyOrdered(event, partList) {
-
+	onChangeChildQtyOrdered(partList) {
+		this.childOrderQtyArray = [];
+		console.log(partList.childList);
+		for(let i=0; i < partList.childList.length; i++) {	
+			if(partList.childList[i].quantityOrdered === null || partList.childList[i].quantityOrdered === undefined) {
+				partList.childList[i].quantityOrdered = 0;
+			}
+			this.childOrderQtyArray.push(parseInt(partList.childList[i].quantityOrdered));
+			this.childOrderQtyTotal = this.childOrderQtyArray.reduce((acc, val) => acc + val,0); 
+			console.log(this.childOrderQtyTotal);
+			if(this.childOrderQtyTotal > this.parentQty) {
+				partList.childList[i].quantityOrdered = 0;
+			}
+		}
+		if(this.childOrderQtyTotal > this.parentQty) {
+			alert('Total Child Order Quantity exceeded the Parent Quantity!');
+		}
 	}
 
 }
