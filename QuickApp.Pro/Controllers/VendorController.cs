@@ -707,6 +707,7 @@ namespace QuickApp.Pro.Controllers
             //actionobject.RequisitionedDate = poViewModel.RequisitionedDate;
             //actionobject.POPartSplitAddressId = poViewModel.POPartSplitAddressId;
             actionobject.MasterCompanyId = poViewModel.MasterCompanyId;
+            actionobject.ManagementStructureId = poViewModel.ManagementStructureId;
 
             actionobject.NeedByDate = poViewModel.NeedByDate;
             //actionobject.Approver = poViewModel.Approver;
