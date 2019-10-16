@@ -95,7 +95,7 @@
                                             add
                                             </i>
                                         </button>
-                                    <button class="btn-history" mat-icon-button matTooltip="history" (click)="openHist(contentHist,rowData)">
+                                    <button class="btn-history" mat-icon-button matTooltip="history" data-toggle="modal" data-target="#contentHist" (click)="getAuditHistoryById(rowData)">
                                         <mat-icon color="green">history</mat-icon>
                                     </button>
 
@@ -141,7 +141,77 @@
 
 
 
-<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
+    <div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" >
+        <div class="modal-dialog modal-lg">
+      
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">History of Customer Contact</h4>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive rro-table-cstm">
+                    <table class="table table-bordered" *ngIf="auditHistory.length> 0 else noDatavailable" >
+                        <thead>
+                            <tr>
+
+                  
+                                <th>TAG</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Contact Title</th>
+                                <th>Email</th>
+                                <th>Work Phone</th>
+                                <th>Mobile Phone</th>
+                                <th>Fax</th>
+                                <th>Primary Contact</th>
+                                <th>Memo</th>
+                                <th>Status</th>
+                                <th>Updated By</th>
+                                <th>Updated Date</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="auditHistory.length> 0" >
+                                <tr *ngFor="let audit of auditHistory; let i = index;">
+                                    <!-- auditHistory[i>0 ? i-1 : i] -->          
+                                        <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'tag', audit.tag)  ? 'black' : 'red'  }">{{audit.tag}}</td>
+                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'firstName', audit.firstName)  ? 'black' : 'red'  }">{{audit.firstName}}</td>
+                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'lastName', audit.lastName)  ? 'black' : 'red'  }">{{audit.lastName}}</td>
+                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'contactTitle', audit.contactTitle)  ? 'black' : 'red'  }">{{audit.contactTitle}}</td>
+                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'email', audit.email)  ? 'black' : 'red'  }">{{audit.email}}</td>
+
+                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'workPhone', audit.workPhone)  ? 'black' : 'red'  }">{{audit.workPhone}}</td>
+                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'mobilePhone', audit.mobilePhone)  ? 'black' : 'red'  }">{{audit.mobilePhone}}</td>
+                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'fax', audit.fax)  ? 'black' : 'red'  }">{{audit.fax}}</td>
+                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isDefaultContact', audit.isDefaultContact)  ? 'black' : 'red'  }">{{audit.isDefaultContact}}</td>
+                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'notes', audit.notes)  ? 'black' : 'red'  }">{{audit.notes}}</td>
+                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
+                                        <td >{{audit.updatedBy}}</td>
+                                        <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                                    </tr>
+                        </tbody>
+                        
+
+                    </table>
+                    <ng-template #noDatavailable>
+                        <div class="text-center"> 
+                                <!-- <img src="../../assets/images/binoculars.png" style="height: 100px; width: 100px;"> -->
+                                <h4 style="color: #ff5663;">No History Found </h4>
+                        </div>
+
+                    </ng-template>  
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+      
+        </div>
+      </div>
+
+<!-- <ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
 	<div class="modal-header">
 
 		<h4 class="modal-title">History of Action</h4>
@@ -179,7 +249,7 @@
 	<div class="modal-footer">
 		<button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
 	</div>
-</ng-template>
+</ng-template> -->
 
 <div class="modal fade" id="addContactDetails" role="dialog">
     <div class="modal-dialog modal-sm">

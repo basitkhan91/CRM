@@ -78,6 +78,7 @@ export class CustomerContactsComponent implements OnInit {
 		{ field: 'ataSubChapterDescription', header: 'ATA Sub-Chapter' }
 	]
 	ataListDataValues = []
+	auditHistory: any[] = [];
 
 
 	constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public customerService: CustomerService,
@@ -316,19 +317,34 @@ export class CustomerContactsComponent implements OnInit {
 		})
 	}
 
-	deleteATAMapped(rowData){
-      this.customerService.deleteATAMappedByContactId(rowData.customerContactATAMappingId).subscribe(res => {
-		  this.getATACustomerContactMapped();
-		this.alertService.showMessage(
-			'Success',
-			'Deleted ATA Mapped  Successfully ',
-			MessageSeverity.success
-		);
-	  })
+	deleteATAMapped(rowData) {
+		this.customerService.deleteATAMappedByContactId(rowData.customerContactATAMappingId).subscribe(res => {
+			this.getATACustomerContactMapped();
+			this.alertService.showMessage(
+				'Success',
+				'Deleted ATA Mapped  Successfully ',
+				MessageSeverity.success
+			);
+		})
 
 	}
 
-
+	getAuditHistoryById(rowData) {
+		this.customerService.getCustomerContactAuditDetails(rowData.customerContactId).subscribe(res => {
+			this.auditHistory = res;
+		})
+	}
+	getColorCodeForHistory(i, field, value) {
+		const data = this.auditHistory;
+		const dataLength = data.length;
+		if (i >= 0 && i <= dataLength) {
+			if ((i + 1) === dataLength) {
+				return true;
+			} else {
+				return data[i + 1][field] === value
+			}
+		}
+	}
 
 	nextClick() {
 		this.tab.emit('AircraftInfo');
@@ -337,6 +353,8 @@ export class CustomerContactsComponent implements OnInit {
 	backClick() {
 		this.tab.emit('General');
 	}
+
+
 
 
 

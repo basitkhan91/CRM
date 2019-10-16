@@ -113,6 +113,7 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _addShipViaDetails: string = '/api/Customer/addShipViaDetails';
     private readonly _addDocumentDetails: string = '/api/Customer/customerDocumentUpload';
     private readonly _addRemoveDetails: string = '/api/Customer/customerDocumentDelete';
+    private readonly _customerContactHistory: string = '/api/Customer/customercontactauditdetails'
 
 
 
@@ -205,6 +206,14 @@ export class CustomerEndpoint extends EndpointFactory {
                     this.getDeleteDocumentEndpoint(actionId)
                 );
             });
+    }
+
+
+
+    getCustomerContactAuditDetails<T>(customerContactId) {
+
+
+        return this.http.get<T>(`${this.configurations.baseUrl}${this._customerContactHistory}/${customerContactId}`, this.getRequestHeaders())
     }
 
     //getcustomerEndpoint<T>(): Observable<T> {

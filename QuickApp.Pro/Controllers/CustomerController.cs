@@ -278,7 +278,7 @@ namespace QuickApp.Pro.Controllers
 				ct.CustomerTypeId = 1;
 				customerViewModel.MasterCompanyId = 1;
 				actionobject.IsActive = true;
-				actionobject.IsDelete = false;
+				actionobject.IsDeleted = false;
 				actionobject.CustomerAffiliationId = customerViewModel.CustomerAffiliationId;
 				actionobject.CurrencyId = customerViewModel.CurrencyId;
 				actionobject.CreditTermsId = customerViewModel.CreditTermsId;
@@ -664,8 +664,10 @@ namespace QuickApp.Pro.Controllers
 				customercontactViewModel.IsDefaultContact = customercontactViewModel.IsDefaultContact;
 				contactObj.WorkPhoneExtn = contactObj.WorkPhoneExtn;
 				_unitOfWork.ContactRepository.Add(contactObj);
+				
 				_unitOfWork.SaveChanges();
-				return Ok(contactObj);
+				contactViewModel.ContactId = contactObj.ContactId;
+				return Ok(contactViewModel);
 			}
 
 			return Ok(ModelState);
@@ -745,6 +747,23 @@ namespace QuickApp.Pro.Controllers
 
 			}
 			return Ok(contactViewModel);
+		}
+
+
+
+
+		[HttpGet("customercontactauditdetails/{customercontactId}")]
+		public IActionResult GetAuditHistoryById(long customercontactId)
+		{
+			try
+			{
+				var result = _unitOfWork.CustomerContact.GetCustomerContactAuditDetails(customercontactId);
+				return Ok(result);
+			}
+			catch (Exception)
+			{
+				throw;
+			}
 		}
 
 		[HttpGet("getContactHistroty/{id}", Name = "getContactHistrotyById")]
@@ -832,7 +851,7 @@ namespace QuickApp.Pro.Controllers
 			var CustomerObj = _unitOfWork.Repository<Customer>().Find(x => x.CustomerId == id).FirstOrDefault();
 			if (CustomerObj != null)
 			{
-				CustomerObj.IsDelete = true;
+				CustomerObj.IsDeleted = true;
 				CustomerObj.UpdatedDate = DateTime.Now;
 				_unitOfWork.Repository<Customer>().Update(CustomerObj);
 				_unitOfWork.SaveChanges();
@@ -2095,7 +2114,7 @@ namespace QuickApp.Pro.Controllers
 								 join ad in _context.Address on t.AddressId equals ad.AddressId
 								 join ct in _context.CustomerType on t.CustomerTypeId equals ct.CustomerTypeId
 								 join cc in _context.CustomerClassification on t.CustomerClassificationId equals cc.CustomerClassificationId
-								 where t.IsDelete == false || t.IsDelete == null
+								 where t.IsDeleted == false || t.IsDeleted == null
 								 select new
 								 {
 									 ct.Description,
@@ -2201,7 +2220,7 @@ namespace QuickApp.Pro.Controllers
 								 join ad in _context.Address on t.AddressId equals ad.AddressId
 								 join ct in _context.CustomerType on t.CustomerTypeId equals ct.CustomerTypeId
 								 join cc in _context.CustomerClassification on t.CustomerClassificationId equals cc.CustomerClassificationId
-								 where t.IsDelete == false || t.IsDelete == null
+								 where t.IsDeleted == false || t.IsDeleted == null
 								 select new
 								 {
 									 ct.Description,
@@ -2279,12 +2298,12 @@ namespace QuickApp.Pro.Controllers
 			IQueryable<Customer> queryable = null;
 			if (!string.IsNullOrEmpty(paginate.GlobalSearchString))
 			{
-				queryable = _context.Customer.Where(c => (c.IsDelete == false || c.IsDelete == null))
+				queryable = _context.Customer.Where(c => (c.IsDeleted == false || c.IsDeleted == null))
 					.OrderByDescending(c => c.CustomerId).ToList().AsQueryable();
 				// queryable = _context.Customer.Where(c => new[] { c.CustomerCode, c.Name, c.Email, c.PrimarySalesPersonFirstName }.Any(s => s.Contains(paginate.GlobalSearchString))).ToList().AsQueryable();
 			}
 			else
-				queryable = _context.Customer.Where(c => (c.IsDelete == false || c.IsDelete == null))
+				queryable = _context.Customer.Where(c => (c.IsDeleted == false || c.IsDeleted == null))
 					.OrderByDescending(c => c.CustomerId).ToList().AsQueryable();
 			if (paginate != null)
 			{

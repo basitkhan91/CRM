@@ -85,7 +85,7 @@ namespace QuickApp.Pro.Controllers
                 credittermsobj.MasterCompanyId = credittermviewmodel.MasterCompanyId;
                 credittermsobj.Memo = credittermviewmodel.Memo;
                 credittermsobj.IsActive = credittermviewmodel.IsActive;
-                credittermsobj.IsDelete = credittermviewmodel.IsDelete;
+                credittermsobj.IsDeleted = credittermviewmodel.IsDeleted;
                 credittermsobj.CreatedDate = DateTime.Now;
                 credittermsobj.UpdatedDate = DateTime.Now;
                 credittermsobj.CreatedBy = credittermviewmodel.CreatedBy;
@@ -131,7 +131,7 @@ namespace QuickApp.Pro.Controllers
         {
             var existingResult = _unitOfWork.CreditTerms.GetSingleOrDefault(c => c.CreditTermsId == id);
 
-            existingResult.IsDelete = true;
+            existingResult.IsDeleted = true;
             _unitOfWork.CreditTerms.Update(existingResult);
 
             //_unitOfWork.CreditTerms.Remove(existingResult);
@@ -158,7 +158,7 @@ namespace QuickApp.Pro.Controllers
                 columHeaders.Add(columnHeader);
             }
             dynamicGridData.columHeaders = columHeaders;
-            dynamicGridData.ColumnData = _unitOfWork.CreditTerms.GetAll().Where(u => u.IsDelete == false);
+            dynamicGridData.ColumnData = _unitOfWork.CreditTerms.GetAll().Where(u => u.IsDeleted == false);
             return Ok(dynamicGridData);
         }
         #endregion

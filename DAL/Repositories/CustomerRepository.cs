@@ -29,7 +29,7 @@ namespace DAL.Repositories
 
         public IEnumerable<Customer> getAllCustomer()
         {
-            return _appContext.Customer.Include("CustomerContact").Where(x => x.IsDelete == null || x.IsDelete == false).ToList();
+            return _appContext.Customer.Include("CustomerContact").Where(x => x.IsDeleted == null || x.IsDeleted == false).ToList();
 
         }
 
@@ -43,7 +43,7 @@ namespace DAL.Repositories
                         join creditTerms in _appContext.CreditTerms on t.CreditTermsId equals creditTerms.CreditTermsId into cre
                         from creditTerms in cre.DefaultIfEmpty()
                         join cc in _appContext.CustomerClassification on t.CustomerClassificationId equals cc.CustomerClassificationId
-                        where t.IsDelete == false || t.IsDelete == null
+                        where t.IsDeleted == false || t.IsDeleted == null
                         // select new { t, ad, vt }).ToList();
                         select new
                         {
@@ -469,7 +469,7 @@ namespace DAL.Repositories
 
         public IEnumerable<Customer> getAllCustomersInfo()
         {
-            return _appContext.Customer.Where(x => x.IsActive == true && x.IsDelete == false)
+            return _appContext.Customer.Where(x => x.IsActive == true && x.IsDeleted == false)
                 .Select(x =>
                     new Customer
                     {
@@ -486,7 +486,7 @@ namespace DAL.Repositories
         override
        public IQueryable<DAL.Models.Customer> GetPaginationData()
         {
-            return _appContext.Customer.Where(c => (c.IsDelete == false || c.IsDelete == null))
+            return _appContext.Customer.Where(c => (c.IsDeleted == false || c.IsDeleted == null))
                 .OrderByDescending(c => c.CustomerId).ToList().AsQueryable();
         }
 

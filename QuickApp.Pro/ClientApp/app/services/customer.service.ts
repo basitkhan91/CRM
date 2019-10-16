@@ -523,5 +523,9 @@ export class CustomerService {
         return this.customerEndpoint.getDeleteDocumentEndpoint(actionId);
     }
 
+    getCustomerContactAuditDetails(customerContactId) {
+        return this.customerEndpoint.getCustomerContactAuditDetails<any>(customerContactId)
+    }
+
 
 }
