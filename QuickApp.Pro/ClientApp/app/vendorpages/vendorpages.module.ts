@@ -71,6 +71,7 @@ import { RolesGuardService } from "../services/roles-guard.service";
 import { ValidateAccessModule } from "../validateaccess/validateaccess.module";
 import { KeyFilterModule } from "primeng/keyfilter";
 import { TooltipModule } from 'primeng/tooltip';
+import { CommonService } from "../services/common.service";
 
 
 @NgModule({
@@ -133,7 +134,8 @@ import { TooltipModule } from 'primeng/tooltip';
         
 	],
 	providers: [
-        VendorClassificationComponent
+		VendorClassificationComponent,
+		
 	],
     entryComponents: [
         AddActionsDialogComponent

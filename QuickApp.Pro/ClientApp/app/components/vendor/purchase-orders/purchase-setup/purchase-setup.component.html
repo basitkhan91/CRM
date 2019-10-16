@@ -464,7 +464,7 @@
                                             </div>
                                     </div>     
                                 </td>
-                                <td><input type="text" class="form-control" [(ngModel)]="partList.quantityOrdered" name="parentQtyOrdered{{row_index}}" pKeyFilter="pint" #qtyOrdered="ngModel" required>
+                                <td><input type="text" class="form-control" [(ngModel)]="partList.quantityOrdered" name="parentQtyOrdered{{row_index}}" pKeyFilter="pint" #qtyOrdered="ngModel" (keyup)="onChangeParentQtyOrdered($event, partList)" required>
                                     <div *ngIf="qtyOrdered.invalid && (qtyOrdered.dirty || qtyOrdered.touched)" class="alert alert-danger alert-danger-cstm">
                                             <div *ngIf="qtyOrdered.errors.required">
                                                 <small> Order Qty is required </small>
@@ -655,7 +655,7 @@
                                     </div>
                                 </td>
                                 <td>{{partList.UOMShortName}}</td>
-                                <td><input class="form-control" type="text" pKeyFilter="pint" [(ngModel)]="partChildList.quantityOrdered" name="childQtyOrdered{{row_no}}" /></td>
+                                <td><input class="form-control" type="text" pKeyFilter="pint" [(ngModel)]="partChildList.quantityOrdered" name="childQtyOrdered{{row_no}}" (keyup)="onChangeChildQtyOrdered($event, partList)" /></td>
                                 <td><p-calendar class="pcal-cpo-grid" [showIcon]="true" [(ngModel)]="partChildList.needByDate" name="needByDate{{row_no}}"></p-calendar></td>
                                 <td>
                                     <label style="width:90px;">Company:</label>
@@ -2631,7 +2631,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let obj of returnPartsListArray; let row_no=index;">
+                                <tr *ngFor="let obj of newData; let row_no=index;">
                                     <td>
                                         <span class="checkbox-cstm"><!--*ngIf="!multiplePNDetails"-->
                                             <label style="width: 20px;margin-top: 5px;">

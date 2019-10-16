@@ -28,6 +28,7 @@ import { GlAccountService } from '../../../../services/glAccount/glAccount.servi
 import { GlAccount } from '../../../../models/GlAccount.model';
 import { getValueFromObjectByKey, getObjectByValue, getValueFromArrayOfObjectById, getObjectById } from '../../../../generic/autocomplete';
 import { AuthService } from '../../../../services/auth.service';
+import { CommonService } from '../../../../services/common.service';
 
 @Component({
 	selector: 'app-purchase-setup',
@@ -55,7 +56,7 @@ export class PurchaseSetupComponent {
 	vendorSelected: any[] = [];
 	billToCusData: any[] = [];
 	array: any[];
-	returnPartsListArray: any[];
+	returnPartsListArray: any = [];
 	allCustomers: any[];
 	customerNames: any[];
 	allSelectedParts: any[] = [];
@@ -205,7 +206,7 @@ export class PurchaseSetupComponent {
 	tempParentData: any;
 	requisitionerList: any[];
 	approverList: any[];
-	newPNList = [];
+	newPNList : any = [];
 	newPartsList: CreatePOPartsList;
 	splitVendorNames: any[];
 	parentManagementInfo: any[] = [];
@@ -216,9 +217,14 @@ export class PurchaseSetupComponent {
 	splitUserTypeAddress: any = {};
 	shipToShipViaDetails: any = {};
 	tempMultiplePNArray: any[];
+	partNumberNames: any[];
+	tempPartListData: any[];
+	tempMultiplePN = {};
+	parentQty: any;
+	newData: any = [];
 
 	/** po-approval ctor */
-	constructor(public siteService: SiteService, public warehouseService: WarehouseService, private masterComapnyService: MasterComapnyService, public cusservice: CustomerService, private itemser: ItemMasterService, private modalService: NgbModal, private route: Router, public legalEntityService: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public vendorService: VendorService, public priority: PriorityService, private alertService: AlertService ,public glAccountService: GlAccountService, private authService: AuthService) {
+	constructor(public siteService: SiteService, public warehouseService: WarehouseService, private masterComapnyService: MasterComapnyService, public cusservice: CustomerService, private itemser: ItemMasterService, private modalService: NgbModal, private route: Router, public legalEntityService: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public vendorService: VendorService, public priority: PriorityService, private alertService: AlertService ,public glAccountService: GlAccountService, private authService: AuthService , private commonService : CommonService) {
 
 		//this.loadcustomerData();
 		//this.loadData();
@@ -335,6 +341,7 @@ export class PurchaseSetupComponent {
 		this.ptnumberlistdata();
 		this.loadcustomerData();
 		this.glAccountData();
+		//this.getAllPartNumbers();
 		this.sourcePoApproval.companyId = 0;
 		this.sourcePoApproval.buId = 0;
 		this.sourcePoApproval.divisionId = 0;
@@ -376,6 +383,12 @@ export class PurchaseSetupComponent {
 		}
 
 	}
+
+	/*getAllPartNumbers() {
+		this.commonService.smartDropDownList('ItemMaster', 'ItemMasterId', 'partnumber').subscribe(res => {
+			console.log(res);			
+		})
+	}*/
 
 	makeNestedObj(arr, parent) {
 		var out = []
@@ -741,9 +754,7 @@ export class PurchaseSetupComponent {
 								"partName": partName
 							}]),
 
-								this.partCollection.push(partName);
-								console.log(this.partCollection);
-								
+								this.partCollection.push(partName);								
 						}
 					}
 				}
@@ -1789,20 +1800,22 @@ export class PurchaseSetupComponent {
 	}
 
 	addAvailableParts() {
-		//this.partListData.splice(0, 1);
 		console.log(this.returnPartsListArray);
 		console.log(this.partListData)
-
-		for (let i = 0; i < this.returnPartsListArray.length; i++) {
-			if (this.returnPartsListArray[i].addAllMultiPNRows) {
-				this.partListData.push(this.returnPartsListArray[i]);
+		// this.tempPartListData = this.returnPartsListArray;
+		// this.tempPartListData.map(x => {
+		// 	partNumberId: x.partNumberId
+		// })
+		// for (let i = 0; i < this.returnPartsListArray.length; i++) {
+		// 	if (this.returnPartsListArray[i].addAllMultiPNRows) {
+		// 		this.partListData.push(this.returnPartsListArray[i]);
 				
-				//this.partListData.push(this.defaultPartListObj(true));
-			//this.getMultiplParts(this.partListData[i], this.returnPartsListArray[i])
-			}			
-		}
+		// 		//this.partListData.push(this.defaultPartListObj(true));
+		// 	//this.getMultiplParts(this.partListData[i], this.returnPartsListArray[i])
+		// 	}			
+		// }
 		this.partNumbers = null;
-		this.returnPartsListArray = [];
+		// this.returnPartsListArray = [];
 		this.addAllMultiPN = false;
 		this.array = [];
 		//this.modal.close();
@@ -1828,83 +1841,52 @@ export class PurchaseSetupComponent {
 
 	onAddMultParts() {
 		this.partNumbers = null;
-		this.returnPartsListArray = [];
+		// this.returnPartsListArray = [];
 		this.array = [];
 		this.newPNList = [];
 		this.addAllMultiPN = false;
 	}
 
-	getAllparts() {
+	async getAllparts() {
 
 		//let partsArray = [];
-		this.returnPartsListArray = [];
+		// this.returnPartsListArray = [];
 		this.newPNList = [];
 		this.array = this.partNumbers.split(',');
+
+
+       
+        // const tempData = []
 		if (this.array.length > 0) {
 			for (let i = 0; i < this.array.length; i++) {
-
-			this.vendorService.getPartDetailsWithid(this.array[i]).subscribe(returndata => {
-					this.tempMultiplePNArray = [];
-					console.log(returndata[0]);
-					this.tempMultiplePNArray = returndata[0].map(x => {
-						//this.multiplePNDetails = true;
-						// if (x.partDescription === null && x.itemTypeId === null && x.isHazardousMaterial === null && x.manufacturerId === null && x.priorityId === null) {
-						// 	this.multiplePNDetails = true;
-						// }
-						return {
+				await this.vendorService.getPartDetailsWithid(this.array[i]).subscribe(data => {
+					const responseData = data[0].map(x => {
+						this.newData.push({
 							...x,
-							manufacturerId: x.manufacturerId,
-							priorityId: x.priorityId,
 							addAllMultiPNRows: false
-						};
-					});
-					console.log(this.tempMultiplePNArray);
+						});
+					})
+					console.log(this.newData);
 
-
-					/*if (mulAlParts.length > 0) {
-						console.log(mulAlParts);
-						for (let k = 0; k < mulAlParts.length; k++) {
-							this.returnPartsListArray.push(mulAlParts[k]);
-							//for (let j = 0; j < this.array.length; j++) {
-							//	if (this.array[j] == returndata[0][k].partNumber) {
-							//		this.array.splice(j, 1)
-							//	}
-							//	else {
-							//		//this.returnPartsListArray.push({ "partNumber": this.array[j] });
-							//	}
-							//}
-						}
-
-					} 
-					else {
-						 //return this.array;
-					}*/
-				// 	console.log(this.array)
-				// console.log(mulAlParts)
-				// for(let i=0; i < mulAlParts.length; i++) {
-				// 	for(let j=0; j<this.array.length; j++) {
-				// 		if (mulAlParts[i].partNumber.toLowerCase() !== this.array[j].toLowerCase()) {
-				// 			if (this.newPNList.indexOf(this.array[j]) === -1) {
-				// 				this.newPNList.push(this.array[j]);
-				// 			console.log(this.newPNList)
-				// 			}
-							
-				// 		}
-				// 	}
-				// }
-				for(let i=0; i < this.tempMultiplePNArray.length; i++) {
-					this.returnPartsListArray.push(this.tempMultiplePNArray[i]);
-				}				
-				console.log(this.returnPartsListArray);
-				
-			});
-			for (let k = 0; k < this.part.length; k++) {
-
+					// this.returnPartsListArray.push( {...responseData, addAllMultiPNRows: false } );
+				});				
 			}
-								
-			}
+			console.log(this.newData , this.array);
+			
+				this.newPNList = [...this.array.reduce((acc,x) => {
+					console.log(acc,  x)
+					 return acc.filter(y => y.partNumber.toLowerCase() !== x.toLowerCase())  
+					 
+					//  .x.partNumber.toLowerCase() !== x.toLowerCase()
+				}, this.newData)]
+		
+
+	
+			console.log(this.newPNList);
 		}
-		//console.log(this.partNumbers);
+
+
+		
 	}
 
 	addPartNumber() {
@@ -3341,6 +3323,14 @@ export class PurchaseSetupComponent {
 		if (value === 'EditComSiteName') {
 			this.addressSiteNameHeader = 'Edit Bill To Company Details';
 		}
+	}
+
+	onChangeParentQtyOrdered(event, partList) {
+		console.log(event, partList);		
+		this.parentQty = event.target.value;
+	}
+	onChangeChildQtyOrdered(event, partList) {
+
 	}
 
 }
