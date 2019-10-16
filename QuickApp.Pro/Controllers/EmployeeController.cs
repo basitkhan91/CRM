@@ -176,9 +176,12 @@ namespace QuickApp.Pro.Controllers
                 employeeobject.MiddleName = employeeViewModel.MiddleName;
                 employeeobject.MobilePhone = employeeViewModel.MobilePhone;
                 employeeobject.JobTitleId = employeeViewModel.JobTitleId;
+                employeeobject.JobTypeId = employeeViewModel.JobTypeId;
                 employeeobject.EmployeeIdAsPerPayroll = employeeViewModel.EmployeeIdAsPerPayroll;
                 employeeobject.StationId = employeeViewModel.StationId;
                 employeeobject.EmployeeExpertiseId = employeeViewModel.EmployeeExpertiseId;
+                employeeobject.CompanyId = employeeViewModel.CompanyId;
+                
                 employeeobject.DateOfBirth = employeeViewModel.DateOfBirth;
                 employeeobject.OriginatingCountryId = employeeViewModel.OriginatingCountryId;
                 employeeobject.NationalityCountryId = employeeViewModel.NationalityCountryId;
@@ -191,18 +194,26 @@ namespace QuickApp.Pro.Controllers
                 employeeobject.AllowDoubleTime = employeeViewModel.AllowDoubleTime;
                 employeeobject.AllowOvertime = employeeViewModel.AllowOvertime;
                 employeeobject.InMultipleShifts = employeeViewModel.InMultipleShifts;
+                employeeobject.SupervisorId = employeeViewModel.SupervisorId;               
                 employeeobject.IsHourly = employeeViewModel.IsHourly;
+                employeeobject.HourlyPay = employeeViewModel.HourlyPay;
                 employeeobject.SupervisorId = employeeViewModel.SupervisorId;
                 employeeobject.EmployeeCertifyingStaff = employeeViewModel.EmployeeCertifyingStaff;
                 employeeobject.CreatedDate = DateTime.Now;
                 employeeobject.UpdatedDate = DateTime.Now;
+                employeeobject.CreatedBy = employeeViewModel.CreatedBy;
                 employeeobject.UpdatedBy = employeeViewModel.UpdatedBy;
                 _unitOfWork.employee.Add(employeeobject);
+                _unitOfWork.SaveChanges();
+
+            
+
+                //   var empId = employeeobject.EmployeeId;
 
                 if (employeeViewModel.EmployeeLeaveTypeId != null)
                 {
                     var integrationList = _unitOfWork.EmployeeLeaveTypeMappingRepository.GetAllData().ToList();
-                    _unitOfWork.SaveChanges();
+                  //  _unitOfWork.SaveChanges();
                     foreach (string s in employeeViewModel.EmployeeLeaveTypeId)
                     {
                         if (s != "")
@@ -210,10 +221,13 @@ namespace QuickApp.Pro.Controllers
                             var integrationTypes = new EmployeeLeaveTypeMapping();
                             integrationTypes.EmployeeLeaveTypeId = Convert.ToByte(s);
                             integrationTypes.MasterCompanyId = 1;
+                           // integrationTypes.EmployeeId = empId;
+                            integrationTypes.EmployeeId = employeeobject.EmployeeId;
                             integrationTypes.CreatedBy = employeeViewModel.CreatedBy;
                             integrationTypes.UpdatedBy = employeeViewModel.UpdatedBy;
                             integrationTypes.CreatedDate = DateTime.Now;
                             integrationTypes.UpdatedDate = DateTime.Now;
+                            
                             integrationTypes.IsActive = true;
                             _unitOfWork.EmployeeLeaveTypeMappingRepository.Add(integrationTypes);
                             _unitOfWork.SaveChanges();
@@ -244,7 +258,14 @@ namespace QuickApp.Pro.Controllers
                     }
                 }
 
+                var existingResult = _unitOfWork.employee.GetSingleOrDefault(c => c.EmployeeId == employeeobject.EmployeeId);
+
+                existingResult.EmployeeCode = "EMP" + employeeobject.EmployeeId; ;
+                _unitOfWork.employee.Update(existingResult);
+
                 _unitOfWork.SaveChanges();
+
+
 
                 return Ok(employeeobject);
             }
@@ -286,6 +307,7 @@ namespace QuickApp.Pro.Controllers
                 existingResult.SupervisorId = employeeViewModel.SupervisorId;
                 existingResult.EmployeeCertifyingStaff = employeeViewModel.EmployeeCertifyingStaff;
                 existingResult.MasterCompanyId = 1;
+                existingResult.CompanyId = employeeViewModel.CompanyId;
 
                 if (employeeViewModel.EmployeeLeaveTypeId != null)
                 {
@@ -561,6 +583,8 @@ namespace QuickApp.Pro.Controllers
                 employeeobject.IsActive = true;
                 employeeobject.EmployeeId = employeeLicensureViewModel.EmployeeId;
                 employeeobject.CertificationDate = employeeLicensureViewModel.CertificationDate;
+                employeeobject.ExpirationDate = employeeLicensureViewModel.ExpirationDate;
+                employeeobject.IsExpirationDate = employeeLicensureViewModel.IsExpirationDate;
                 employeeobject.CertifyingInstitution = employeeLicensureViewModel.CertifyingInstitution;
                 employeeobject.LicenseNumber = employeeLicensureViewModel.LicenseNumber;
                 employeeobject.EmployeeId = employeeLicensureViewModel.EmployeeId;
@@ -573,7 +597,7 @@ namespace QuickApp.Pro.Controllers
                 employeeobject.UpdatedDate = DateTime.Now;
                 employeeobject.UpdatedBy = employeeLicensureViewModel.UpdatedBy;
                 // employeeobject.ExpirationDate = DateTime.Now;
-                employeeobject.IsExpirationDate = false;
+              //  employeeobject.IsExpirationDate = false;
 
                 _unitOfWork.employeeLicensure.Add(employeeobject);
                 _unitOfWork.SaveChanges();
@@ -634,6 +658,8 @@ namespace QuickApp.Pro.Controllers
                 employeeobject.IndustryCode = employeeTrainingViewModel.IndustryCode;
                 employeeobject.ExpirationDate = employeeTrainingViewModel.ExpirationDate;
                 employeeobject.UnitOfMeasureId = employeeTrainingViewModel.UnitOfMeasureId;
+                employeeobject.CreatedBy = employeeTrainingViewModel.CreatedBy;
+                
                 employeeobject.CreatedDate = DateTime.Now;
                 employeeobject.UpdatedDate = DateTime.Now;
 

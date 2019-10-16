@@ -296,7 +296,6 @@ namespace QuickApp.Pro.Controllers
                 //
 
                 //_unitOfWork.Address.Update(address);
-                _unitOfWork.SaveChanges();
                 _unitOfWork.Locations.Update(existingResult);
                 _unitOfWork.SaveChanges();
                 return Ok(existingResult);

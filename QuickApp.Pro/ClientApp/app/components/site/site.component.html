@@ -106,10 +106,9 @@
 </div>
 
 <ng-template #auditContent let-c="close" let-d="dismiss">
-	<div>
-		<!-- <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit> -->
+	<div class="audit-template-launcher">
 		<app-site-audit [Data]="AuditDetails" [Modal]="modal" *ngIf= "HasAuditDetails"></app-site-audit>
-		<app-site-audit-no-history [Modal]="modal" [Title]="AuditHistoryTitle" *ngIf="!HasAuditDetails"></app-site-audit-no-history>
+		<audit-no-history [Modal]="modal" [Title]="AuditHistoryTitle" *ngIf="!HasAuditDetails"></audit-no-history>
 	</div>
 </ng-template>
 
