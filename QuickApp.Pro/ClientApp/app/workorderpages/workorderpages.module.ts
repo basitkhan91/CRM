@@ -50,6 +50,7 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { WorkOrderAssetsComponent } from '../components/work-order/work-order-setup/work-order-assets/work-order-assets.component';
 import { WorkOrderAddressesComponent } from '../components/work-order/work-order-setup/work-order-addresses/work-order-addresses.component';
 import { TooltipModule } from 'primeng/tooltip';
+import { CommonService } from '../services/common.service';
 @NgModule({
   imports: [
     FormsModule,
@@ -100,7 +101,8 @@ import { TooltipModule } from 'primeng/tooltip';
     WorkOrderService,
     WorkOrderEndpointService,
     WorkOrderPartNumberService,
-    WorkOrderPartNumberEndpointService
+    WorkOrderPartNumberEndpointService,
+    CommonService
   ]
 })
-export class WorkOrderPagesModule {}
+export class WorkOrderPagesModule { }
