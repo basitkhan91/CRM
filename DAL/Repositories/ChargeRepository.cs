@@ -62,55 +62,6 @@ namespace DAL.Repositories
             
         }
 
-        public IEnumerable<object> getCurrencyData()
-        {
-            try
-            {
-                var result = (from cu in _appContext.Currency
-                              
-
-                              select new
-                              {
-                                  cu.CurrencyId,
-                                  cu.Code,
-                                  cu.Symbol
-                              }).ToList();
-                return result;
-            }
-            catch (Exception ex)
-            {
-
-                return null;
-            }
-
-        }
-
-        public IEnumerable<object> getPurchaseOrderNumbers()
-        {
-            try
-            {
-                var result = (from po in _appContext.PurchaseOrder
-
-                              select new
-                              {
-                                  po.PurchaseOrderId,
-                                  po.PurchaseOrderNumber
-                                 
-                              }).ToList();
-                return result;
-            }
-            catch (Exception ex)
-            {
-
-                return null;
-            }
-
-        }
-
-
-
-
-
         override
        public IQueryable<DAL.Models.Charge> GetPaginationData()
         {

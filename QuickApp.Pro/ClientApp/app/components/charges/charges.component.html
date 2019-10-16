@@ -306,9 +306,10 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                     </label>
                                 </div>
                                 <div class="col-sm-5">
-                                        <p-autoComplete field="purchaseOrderId" [(ngModel)]="addNewCharge.purchaseOrderId" (onSelect)="selectedShortName($event)" (onKeyUp)="checkShortNameExists('shortName', $event.target.value)"
+                                        <p-autoComplete field="purchaseOrderNumber" [(ngModel)]="addNewCharge.purchaseOrderId" 
                                         name="purchaseOrderId"
-                                        [suggestions]="shortNameList" (completeMethod)="filterShortName($event)" [size]="30" [minLength]="1"
+                                        [suggestions]="filteredPurchaseOrderList" (completeMethod)="filterPurchaseOrder($event)" [forceSelection]="true" 
+                                        [size]="30" [minLength]="1"
                                         [dropdown]="true" class="p-autoComplete-ctsm" >
 
                                         </p-autoComplete>
@@ -354,8 +355,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                     </label>
                                 </div>
                                 <div class="col-sm-5">
-                                        <p-autoComplete field="glAccountId" [(ngModel)]="addNewCharge.glAccountId" (onSelect)="selectedShortName($event)" (onKeyUp)="checkShortNameExists('shortName', $event.target.value)"
-                                        name="glAccountId"
+                                        <p-autoComplete field="glAccountId" [(ngModel)]="addNewCharge.glAccountId"                                         name="glAccountId"
                                         [suggestions]="shortNameList" (completeMethod)="filterShortName($event)" [size]="30" [minLength]="1"
                                         [dropdown]="true" class="p-autoComplete-ctsm" required>
 

@@ -1,4 +1,5 @@
-﻿using DAL.Repositories.Interfaces;
+﻿using DAL.Models;
+using DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,13 @@ namespace DAL.Repositories
                 }
             });
 
+            return purchaseOrderList;
+        }
+
+        public IEnumerable<DAL.Models.PurchaseOrder> GetPurchaseOrderListLite()
+        {
+            var purchaseOrderList = _appContext.PurchaseOrder.Where(c=> c.IsActive==true).OrderByDescending(c => c.PurchaseOrderId)
+                .Select(c=>new PurchaseOrder { PurchaseOrderId=c.PurchaseOrderId, PurchaseOrderNumber=c.PurchaseOrderNumber }).ToList();
             return purchaseOrderList;
         }
 

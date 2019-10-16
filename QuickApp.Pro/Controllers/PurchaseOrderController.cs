@@ -38,6 +38,19 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        /// <summary>
+        /// Method that gets basic info namely id and name only
+        /// </summary>
+        /// <returns>List with basic info</returns>
+        [HttpGet("basic")]
+        [Produces(typeof(List<PurchaseOrderBaseViewModel>))]
+        public IActionResult GetBasicList()
+        {
+            var basicPOList = _unitOfWork.purchaseOrder.GetPurchaseOrderListLite();
+            var mappedList = Mapper.Map<IEnumerable<PurchaseOrderBaseViewModel>>(basicPOList);
+            return Ok(mappedList);
+        }
+
         [HttpGet("auditHistoryById/{id}")]
         [Produces(typeof(List<AuditHistory>))]
         public IActionResult GetAuditHostoryById(long id)

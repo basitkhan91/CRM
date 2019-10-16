@@ -11,6 +11,7 @@ import { SingleScreenBreadcrumbService } from "../../services/single-screens-bre
 import { validateRecordExistsOrNot, editValueAssignByCondition, getObjectById, selectedValueValidate, getObjectByValue } from '../../generic/autocomplete';
 import { Table } from 'primeng/table';
 import { ConfigurationService } from '../../services/configuration.service';
+import { PurchaseOrderService} from '../../services/purchase-order.service';
 
 import { Charge } from '../../models/charge.model';
 
@@ -53,12 +54,15 @@ export class ChargesComponent implements OnInit {
     viewRowData: any;
     vendorList:any[];
     integrationList:any[];
+    purchaseOrderList:any[];
     filteredVendorList:any[];
     filteredIntegrationList:any[];
     currencyList:any[];
+    filteredPurchaseOrderList: any[];
     constructor(private breadCrumb: SingleScreenBreadcrumbService, private configurations: ConfigurationService,
         private authService: AuthService, private alertService: AlertService, public chargeService: ChargeService ,
-        public vendorService:VendorService , public currencyService:CurrencyService, public integrationService:IntegrationService) {
+        public vendorService:VendorService , public currencyService:CurrencyService, public integrationService:IntegrationService,
+        public purchaseOrderService: PurchaseOrderService) {
 
 
     }
@@ -67,6 +71,7 @@ export class ChargesComponent implements OnInit {
         this.loadVendorData();
         this.loadCurrencyData();
         this.loadIntegrationData();
+        this.loadPurchaseOrderData();
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-charges';
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
     }
@@ -95,6 +100,11 @@ export class ChargesComponent implements OnInit {
         this.currencyService.getCurrencyList().subscribe(res=>{
             this.currencyList=res[0];
         })
+    }
+    loadPurchaseOrderData():void{
+        this.purchaseOrderService.getPurchaseOrdersBasic().subscribe(res=>{
+            this.purchaseOrderList=res[0];
+        });
     }
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
@@ -155,7 +165,7 @@ export class ChargesComponent implements OnInit {
     checkChargeExists(rowData):void{
 
     }
-    filterVendor(event) {
+    filterVendor(event):void {
         this.filteredVendorList = this.vendorList;
         //const VENDORDATA =[...this.vendorList]
         const VENDORDATA = [...this.vendorList.filter(x => {
@@ -163,12 +173,19 @@ export class ChargesComponent implements OnInit {
         })]
         this.filteredVendorList = VENDORDATA;
     }
-    filterIntegration(event) {
+    filterIntegration(event) :void {
         this.filteredIntegrationList = this.integrationList;
         const INTDATA = [...this.integrationList.filter(x => {
             return x.description.toLowerCase().includes(event.query.toLowerCase())
         })]
         this.filteredIntegrationList = INTDATA;
+    }
+    filterPurchaseOrder(event):void{
+        this.filteredPurchaseOrderList=this.purchaseOrderList;
+        const PODATA = [...this.purchaseOrderList.filter(x => {
+            return x.purchaseOrderNumber.toLowerCase().includes(event.query.toLowerCase())
+        })]
+        this.filteredPurchaseOrderList = PODATA;
     }
 }
 

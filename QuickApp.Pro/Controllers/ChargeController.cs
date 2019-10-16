@@ -34,53 +34,17 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<ChargeViewModel>))]
         public IActionResult Get()
         {
-           
-
-
-            try
-            {
+          
                 var result = _unitOfWork.Charge.GetAllChargeData();
-               
-
                 return Ok(result);
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
+  
         }
-
-
-
-        [HttpGet("GetPurchaseOrder")]
-        [Produces(typeof(List<ChargeViewModel>))]
-        public IActionResult getPurchaseOrderNumbers()
-        {
-            try
-            {
-                var result = _unitOfWork.Charge.getPurchaseOrderNumbers(); 
-
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
-        }
-
-
-
-
 
         [HttpGet("auditHistoryById/{id}")]
         [Produces(typeof(List<AuditHistory>))]
         public IActionResult GetAuditHostoryById(long id)
         {
             var result = _unitOfWork.AuditHistory.GetAllHistory("Charge", id); //.GetAllCustomersData();
-
 
             try
             {
