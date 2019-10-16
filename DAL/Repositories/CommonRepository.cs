@@ -1,6 +1,7 @@
 ﻿using DAL.Common;
 using DAL.Models;
 using DAL.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -298,13 +299,144 @@ namespace DAL.Repositories
             }
         }
 
+
+        #region RestrictsPMAList
+
+        public void CreateRestrictPmaList(List<RestrictsPMAList> restrictedPmaLists, long customerId)
+        {
+            try
+            {
+                if (restrictedPmaLists != null && restrictedPmaLists.Count > 0)
+                {
+                    restrictedPmaLists.ForEach(p => p.CustomerId = customerId);
+                    _appContext.RestrictsPMAList.AddRange(restrictedPmaLists);
+                    _appContext.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void UpdateRestrictPmaList(List<RestrictsPMAList> restrictedPmaLists, long customerId)
+        {
+            try
+            {
+                if (restrictedPmaLists != null && restrictedPmaLists.Count > 0)
+                {
+                    foreach (var item in restrictedPmaLists)
+                    {
+                        if (item.RestrictedPMAId > 0)
+                        {
+                            _appContext.RestrictsPMAList.Update(item);
+                        }
+                        else
+                        {
+                            item.CustomerId = customerId;
+                            _appContext.RestrictsPMAList.Add(item);
+                        }
+                        _appContext.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public List<RestrictsPMAList> GetRestrictPmaList(int itemMasterId, long? customerId)
+        {
+            try
+            {
+                return _appContext.RestrictsPMAList.Where(p => p.IsDeleted == false && p.ItemMasterId == itemMasterId && p.CustomerId == customerId)
+                                                   .OrderBy(p => p.RestrictedPMAId)
+                                                   .ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        #endregion
+
+        #region RestrictsBERList
+
+        public void CreateRestrictDerList(List<RestrictsBERList> restrictedBerLists, long customerId)
+        {
+            try
+            {
+                if (restrictedBerLists != null && restrictedBerLists.Count > 0)
+                {
+                    restrictedBerLists.ForEach(p => p.CustomerId = customerId);
+                    _appContext.RestrictsBERList.AddRange(restrictedBerLists);
+                    _appContext.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void UpdateRestrictDerList(List<RestrictsBERList> restrictedBerLists, long customerId)
+        {
+            try
+            {
+                if (restrictedBerLists != null && restrictedBerLists.Count > 0)
+                {
+                    foreach (var item in restrictedBerLists)
+                    {
+                        if (item.RestrictedBERId > 0)
+                        {
+                            _appContext.RestrictsBERList.Update(item);
+                        }
+                        else
+                        {
+                            item.CustomerId = customerId;
+                            _appContext.RestrictsBERList.Add(item);
+                        }
+                        _appContext.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public List<RestrictsBERList> GetRestrictDerList(int itemMasterId, long? customerId)
+        {
+            try
+            {
+                return _appContext.RestrictsBERList.Where(p => p.IsDeleted == false && p.ItemMasterId == itemMasterId && p.CustomerId == customerId)
+                                                   .OrderBy(p => p.RestrictedBERId)
+                                                   .ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        #endregion
+
         public void CreateClassificationMappings(List<ClassificationMapping> classificationMappings, long referenceId)
         {
             try
             {
                 if (classificationMappings != null && classificationMappings.Count > 0)
                 {
-                    classificationMappings.ForEach(p => p.ReferenceId = referenceId);
+                    classificationMappings.ForEach(p => p.CustomerId = referenceId);
                     _appContext.ClassificationMapping.AddRange(classificationMappings);
                     _appContext.SaveChanges();
                 }
@@ -330,7 +462,7 @@ namespace DAL.Repositories
                         }
                         else
                         {
-                            item.ReferenceId = referenceId;
+                            item.CustomerId = referenceId;
                             _appContext.ClassificationMapping.Add(item);
                         }
                         _appContext.SaveChanges();
@@ -355,12 +487,12 @@ namespace DAL.Repositories
                              cm => cm.ClasificationId,
                              cc => cc.CustomerClassificationId,
                              (cm, cc) => new { cm, cc })
-                             .Where(p => p.cm.IsDeleted == false && p.cm.ModuleId == moduleId && p.cm.ReferenceId == referenceId)
+                             .Where(p => p.cm.IsDeleted == false && p.cm.ModuleId == moduleId && p.cm.CustomerId == referenceId)
                              .Select(p => new
                              {
-                                 ClassificationMappingId = p.cm.ClassificationMappingId,
-                                 ClasificationId = p.cm.ClasificationId,
-                                 Description = p.cc.Description
+                                 p.cm.ClassificationMappingId,
+                                 p.cm.ClasificationId,
+                                 p.cc.Description
                              })
                              .ToList();
 
@@ -465,6 +597,21 @@ namespace DAL.Repositories
             }
 
             return dbModel;
+        }
+
+
+        public IEnumerable<object> BindDropdowns(string tableName,string primaryColumn,string textColumn)
+        {
+            try
+            {
+               var result= _appContext.Dropdowns.FromSql("BindDropdowns @p0,@p1,@p2", tableName, primaryColumn, textColumn).ToList();
+                return result;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         private static PropertyInfo[] GetProperties(object obj)

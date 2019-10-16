@@ -842,6 +842,18 @@ export class SingleComponent {
                     { label: 'Single Screens' },
                     { label: 'Aircraft Manufacturer' }
                 ];
+			}
+			else if (this.currentUrl == '/singlepages/singlepages/app-dashNumber') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Dash Number' }
+                ];
+			}
+			else if (this.currentUrl == '/singlepages/singlepages/app-node-setup') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Nodes' }
+                ];
             }
 		}
 	}

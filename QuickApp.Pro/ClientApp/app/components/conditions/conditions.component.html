@@ -140,6 +140,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                     <p-autoComplete field="description"
                                                     [(ngModel)]="addNewCondition.description"
                                                     [suggestions]="conditionList"
+                                                    (onSelect)="selectedCondition($event)"
                                                     (completeMethod)="filterConditions($event)"
                                                     (onKeyUp)="checkConditionExists('description', $event.target.value)"
                                                     name="description" [size]="30" [minLength]="1" [dropdown]="true"
@@ -265,7 +266,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                     <!-- <th>UMID</th> -->
                                     <th>Condition Name</th>
                                     <th>Memo</th>
-                                    <th>IsActive</th>
+                                    <th>Is Active</th>
                                     <th>Updated By</th>
                                     <th>Updated Time</th>
                                 </tr>

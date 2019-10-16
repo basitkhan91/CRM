@@ -175,11 +175,11 @@ export class DashnumberComponent implements OnInit {
             const responseValue = dashNumbers[0];
             this.aircraftModelsList = responseValue.map(x => {
                 return {
-                    label: x.modelName,
-                    value: x.aircraftModelId
+                    aircraftModel: x.modelName,
+                    aircraftModelId: x.aircraftModelId
                 }
             })
-            console.log(this.aircraftModelsList);
+            //console.log(this.aircraftModelsList);
         });
     }
     getDashNumberByManfacturerandModel() {
@@ -190,8 +190,8 @@ export class DashnumberComponent implements OnInit {
             console.log(this.alldashnumberInfo)
             this.dashnumbers = respData.map(x => {
                 return {
-                    label: x.dashNumber,
-                    value: x.dashNumberId
+                    dashNumber: x.dashNumber,
+                    dashNumberId: x.dashNumberId
                 }
             })
 
@@ -199,7 +199,7 @@ export class DashnumberComponent implements OnInit {
     }
     checkGroupDescriptionExists(field, value) {
         console.log(this.selectedRecordForEdit);
-        const exists = validateRecordExistsOrNot(field, value, this.originalData, this.selectedRecordForEdit);
+        const exists = validateRecordExistsOrNot(field, value, this.dashnumbers, this.selectedRecordForEdit);
         if (exists.length > 0) {
             this.disableSaveForDescription = true;
         }
@@ -209,9 +209,9 @@ export class DashnumberComponent implements OnInit {
 
     }
     filterDescription(event) {
-        this.descriptionList = this.originalData;
+        this.descriptionList = this.dashnumbers;
 
-        const descriptionData = [...this.originalData.filter(x => {
+        const descriptionData = [...this.dashnumbers.filter(x => {
             return x.dashNumber.toLowerCase().includes(event.query.toLowerCase())
         })]
         this.descriptionList = descriptionData;
@@ -227,13 +227,13 @@ export class DashnumberComponent implements OnInit {
         const data = {
             ...this.addNew, createdBy: this.userName, updatedBy: this.userName,
             dashNumber: editValueAssignByCondition('dashNumber', this.addNew.dashNumber)
-            
         };
         console.log(data);
         if (!this.isEdit) {
             this.dashNumberService.add(data).subscribe(() => {
                 this.resetForm();
                 this.getList();
+
                 this.alertService.showMessage(
                     'Success',
                     `Added  New Dash Number Successfully  `,
@@ -260,20 +260,21 @@ export class DashnumberComponent implements OnInit {
         this.isEdit = false;
         this.selectedRecordForEdit = undefined;
         this.addNew = { ...this.new };
+        this.aircraftModelsList = [];
+        this.dashnumbers = [];
     }
 
 
-    edit(rowData) {
+    async edit(rowData) {
         console.log(rowData);
         this.isEdit = true;
         this.disableSaveGroupId = false;
         this.disableSaveForDescription = false;
+        await this.aircraftManufacturerChange(rowData.aircraftTypeId);      
+
         this.addNew = {
             ...rowData,
-            // aircraftTypeId: getObjectById('aircraftTypeID',rowData.aircraftTypeId,this.originalData)
-            aircraftModel: getObjectByValue('aircraftModel', rowData.aircraftModel, this.originalData),
             dashNumber: getObjectById('dashNumber', rowData.dashNumber, this.originalData),
-
         };
         this.selectedRecordForEdit = { ...this.addNew }
 

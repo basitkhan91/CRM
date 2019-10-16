@@ -419,7 +419,6 @@ namespace QuickApp.Pro.Controllers
 
                         var itemsToDelete = UnitOfWork.Repository<WorkflowPublicationDashNumber>()
                             .Find(x =>
-                            workFlow.WorkflowId == x.WorkflowId &&
                             x.PublicationsId == publication.Id &&
                             !ids.Contains(x.WorkflowPublicationDashNumberId)
                             );
@@ -496,14 +495,14 @@ namespace QuickApp.Pro.Controllers
                 if (workFlow.WorkflowId > 0)
                 {
                     //update workflow header
-                    var wf = UnitOfWork.Repository<Workflow>().Get(workFlow.WorkflowId);
-                    workFlow.CreatedBy = wf.CreatedBy;
+                    //var wf = UnitOfWork.Repository<Workflow>().Get(workFlow.WorkflowId);
+                    //workFlow.CreatedBy = wf.CreatedBy;
                     workFlow.UpdatedDate = DateTime.Now;
                     workFlow.UpdatedBy = "admin";
                     workFlow.MasterCompanyId = 1;
                     workFlow.IsActive = true;
                     workFlow.WorkOrderNumber = "ACC" + workFlow.WorkflowId.ToString();
-                    wf = null;
+                    //wf = null;
                     UnitOfWork.Repository<Workflow>().Update(workFlow);
                 }
                 else

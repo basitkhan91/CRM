@@ -971,6 +971,52 @@ namespace DAL.Repositories
             }
         }
 
+        public IEnumerable<PublicationsList> getPublicationDropdownData()
+        {
+            var aircraftResult = (from p in _appContext.Publication
+                                  where (p.IsDeleted == null || p.IsDeleted == false)
+                                  select new PublicationsList
+                                  {
+                                      PublicationRecordId = p.PublicationRecordId,
+                                      PublicationId = p.PublicationId,
+                                  }).OrderByDescending(x => x.UpdatedDate).ToList();
+
+            return aircraftResult;
+
+        }
+
+        public PublicationsList GetPublicationForWorkFlow(long publicationRecordId)
+        {
+            var aircraftResult = (from p in _appContext.Publication
+                                  where p.PublicationRecordId == publicationRecordId && (p.IsDeleted == null || p.IsDeleted == false)
+
+                                  select new PublicationsList
+                                  {
+                                      PublicationRecordId = p.PublicationRecordId,
+                                      PublicationId = p.PublicationId,
+                                      Description = p.Description,
+                                      PublicationTypeId = p.PublicationTypeId,
+                                      PublishedBy = p.Publishby,
+                                      Location = p.Location,
+                                      IsActive = p.IsActive,
+                                      UpdatedDate = p.UpdatedDate,
+                                      Sequence = p.Sequence,
+                                      RevisionDate = p.RevisionDate,
+                                      VerifiedBy = p.VerifiedBy,
+                                      VerifiedDate = p.VerifiedDate,
+                                      ASD = p.ASD,
+                                      ItemMasterAircraftMapping = (from iam in _appContext.ItemMasterAircraftMapping
+                                                                   join pim in _appContext.PublicationItemMasterMapping on iam.ItemMasterId equals pim.ItemMasterId
+                                                                   where pim.PublicationRecordId == p.PublicationRecordId && iam.IsDeleted == false && pim.IsDeleted == false
+                                                                   select iam).ToList()
+
+                                  })
+                                 .FirstOrDefault();
+
+            return aircraftResult;
+
+        }
+
         private List<AttachmentDetails> GetAttachmentDetails(long publicationRecordId)
         {
             List<AttachmentDetails> attachmentDetailsList = new List<AttachmentDetails>();

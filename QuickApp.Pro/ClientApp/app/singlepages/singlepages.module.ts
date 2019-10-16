@@ -128,6 +128,8 @@ import { TooltipModule } from "primeng/tooltip";
 import { KeyFilterModule } from 'primeng/keyfilter';
 import { PercentComponent } from "../components/percent/percent.component";
 import { JobTypeComponent } from '../components/job-type/job-type.component';
+import { PercentService } from "../services/percent.service";
+import { PercentEndpoint } from "../services/percent-endpoint.service";
 
 @NgModule({
 	imports: [
@@ -217,6 +219,8 @@ import { JobTypeComponent } from '../components/job-type/job-type.component';
        
     ],
     providers: [
+        PercentService,
+        PercentEndpoint,
         SingleScreenBreadcrumbService,
         AssetStatusService,
         AssetStatusEndpointService,

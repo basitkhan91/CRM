@@ -369,6 +369,8 @@ namespace DAL
 
         public DbSet<CustomerAircraftMapping> CustomerAircraftMapping { get; set; }
         public DbSet<CustomerATAMapping> CustomerATAMapping { get; set; }
+        public DbSet<CustomerContactATAMapping> CustomerContactATAMapping { get; set; }
+        public DbSet<CustomerTaxTypeRateMapping> CustomerTaxTypeRateMapping { get; set; }
         public DbSet<AssetCapes> AssetCapes { get; set; }
         public DbSet<AssetCapesAudit> AssetCapesAudit { get; set; }
 
@@ -378,6 +380,8 @@ namespace DAL
         public DbSet<AttachmentDetails> AttachmentDetails { get; set; }
         public DbSet<ClassificationMapping> ClassificationMapping { get; set; }
         public DbSet<RestrictedParts> RestrictedParts { get; set; }
+        public DbSet<RestrictsPMAList> RestrictsPMAList { get; set; }
+        public DbSet<RestrictsBERList> RestrictsBERList { get; set; }
         public DbSet<MasterParts> MasterParts { get; set; }
         public DbSet<Nha_Tla_Alt_Equ_ItemMapping> Nha_Tla_Alt_Equ_ItemMapping { get; set; }
 
@@ -392,10 +396,15 @@ namespace DAL
         public DbSet<WorkOrderQuote> WorkOrderQuote { get; set; }
         public DbSet<WorkOrderFreight> WorkOrderFreight { get; set; }
         public DbSet<PublicationTypeAudit> PublicationTypeAudit { get; set; }
+        public DbSet<Dropdowns> Dropdowns { get; set; }
+        
+
+        public DbSet<Percentage> Percentage { get; set; }
         
 
 
         public DbSet<AssetIntangibleAttributeType> AssetIntangibleAttributeType { get; set; }
+        public DbSet<Percent> Percent { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {

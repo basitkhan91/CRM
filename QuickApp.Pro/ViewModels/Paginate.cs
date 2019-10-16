@@ -90,7 +90,8 @@ namespace QuickApp.Pro.ViewModels
         public long CustomerId { get; internal set; }
         public bool? IsActive { get; internal set; }
 
-        public string CustomerPhone { get; set; }
+		public string CustomerPhone { get; set; }
+        public string CustomerPhoneExt { get; set; }
 
         public string CustomerClarifiacationName { get; set; }
     }
@@ -270,7 +271,7 @@ namespace QuickApp.Pro.ViewModels
         public string ReasonCode { get; set; }
         public string ReasonForRemoval { get; set; }
         public string Memo { get; set; }
-        //public bool? IsActive { get; set; }
+        public bool? IsActive { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime CreatedDate { get; set; }

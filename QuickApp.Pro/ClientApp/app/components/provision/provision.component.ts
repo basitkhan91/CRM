@@ -248,8 +248,8 @@ export class ProvisionComponent implements OnInit{
 
     getAuditHistoryById(rowData) {
         this.provisionService.getProvisionAudit(rowData.provisionId).subscribe(res => {
-            console.log(res)
-            this.auditHistory = res;
+
+            this.auditHistory = res[0].result;
         })
     }
     

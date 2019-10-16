@@ -107,6 +107,7 @@ namespace DAL.Repositories
                                 t.Email,
                                 t.IsActive,
                                 t.CustomerPhone,
+                                t.CustomerPhoneExt,
                                 Address1 = ad.Line1,
                                 Address2 = ad.Line2,
                                 Address3 = ad.Line3,
@@ -395,6 +396,48 @@ namespace DAL.Repositories
 
 
                             }).ToList();
+                return data;
+            }
+        }
+
+        public IEnumerable<object> GetATAContactMapped(long customerId)
+        {
+            {
+
+                var data = (from ca in _appContext.CustomerContactATAMapping
+                    where ca.CustomerId == customerId && ca.IsDeleted == false
+                    select new
+                    {
+                        ca.CustomerContactATAMappingId,
+                        ca.CustomerId,
+                        ca.ATAChapterId,
+                        ca.ATAChapterCode,
+                        ca.ATAChapterName,
+
+                        ca.ATASubChapterId,
+                        ca.ATASubChapterDescription
+
+
+                    }).ToList();
+                return data;
+            }
+        }
+
+        public IEnumerable<object> GetTaxTypeRateMapped(long customerId)
+        {
+            {
+
+                var data = (from c in _appContext.CustomerTaxTypeRateMapping
+                    where c.CustomerId == customerId && c.IsDeleted == false
+                    select new
+                    {
+                        c.CustomerTaxTypeRateMappingId,
+                        c.CustomerId,
+                        c.TaxType,
+                        c.TaxRate,
+                        c.CreatedBy,
+                        c.MasterCompanyId
+                    }).ToList();
                 return data;
             }
         }

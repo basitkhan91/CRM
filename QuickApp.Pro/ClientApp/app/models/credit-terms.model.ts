@@ -1,7 +1,7 @@
 ﻿import { MasterCompany } from './mastercompany.model';
 
 export class CreditTerms {
-	constructor(masterCompany?: MasterCompany, creditTermsId?: number, isActive?: boolean, name?: string, percentage?: number, days?: number, netDays?: number, masterCompanyId?: number, createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string, memo?: string) {
+	constructor(masterCompany?: MasterCompany, creditTermsId?: number, isActive?: boolean, isDelete?:boolean, name?: string, percentage?: number, days?: number, netDays?: number, masterCompanyId?: number, createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string, memo?: string) {
 
         this.creditTermsId = creditTermsId;
         this.name = name;
@@ -14,6 +14,7 @@ export class CreditTerms {
         this.createdDate = createdDate;
         this.updatedDate = updatedDate;
         this.isActive = isActive;
+        this.isDelete= isDelete;
 		this.memo = memo;
     }
 
@@ -28,6 +29,7 @@ export class CreditTerms {
     public updatedBy: string;
     public createdDate: Date;
     public updatedDate: Date;
-	public isActive?: boolean;
+  public isActive?: boolean;
+  public isDelete?:boolean;
 	public memo: string;
 }
