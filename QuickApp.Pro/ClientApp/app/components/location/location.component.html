@@ -91,7 +91,7 @@
 							</ng-template>
 							<ng-template #auditContent let-c="close" let-d="dismiss">
 									<div class="audit-template-launcher">
-										<warehouse-audit [Data]="AuditDetails" [Modal]="modal" *ngIf= "HasAuditDetails"></warehouse-audit>
+										<location-audit [Data]="AuditDetails" [Modal]="modal" *ngIf= "HasAuditDetails"></location-audit>
 										<audit-no-history [Modal]="modal" [Title]="AuditHistoryTitle" *ngIf="!HasAuditDetails"></audit-no-history>
 									</div>
 								</ng-template>
