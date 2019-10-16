@@ -409,7 +409,7 @@ import { PercentService } from './services/percent.service';
     CompanyEndpoint,
     WorkOrderService,
     JobTypeService,   
-    JobTypeEndpontService 
+    JobTypeEndpontService,
     PercentageService,
     PercentageEndpoint,
     PercentService,
