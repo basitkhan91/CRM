@@ -127,22 +127,16 @@ namespace DAL.Repositories
             var data = (from PublicationItemMaster in _appContext.PublicationItemMasterMapping
                         join it in _appContext.ItemMasterAircraftMapping on PublicationItemMaster.ItemMasterId equals it.ItemMasterId
                         join pub in _appContext.Publication on PublicationItemMaster.PublicationRecordId equals pub.PublicationRecordId
-                        where PublicationItemMaster.PublicationRecordId == PublicationID
+                        where it.IsDeleted==false && PublicationItemMaster.PublicationRecordId == PublicationID
 
                         select new
                         {
-                            PublicationItemMaster.ItemMasterId,
-                            pub.PublicationId,
-                            it.PartNumber,
-                            it.AircraftTypeId,
-                            it.AircraftModelId,
-                            it.DashNumberId,
                             it.DashNumber,
                             it.AircraftType,
-                            it.AircraftModel,
-                            it.Memo,
-                            it.MasterCompanyId
-                        }).ToList();
+                            it.AircraftModel
+                            
+                        }).Distinct()
+                        .ToList();
             return data;
             throw new NotImplementedException();
         }
@@ -151,19 +145,13 @@ namespace DAL.Repositories
             var data = (from PublicationItemMaster in _appContext.PublicationItemMasterMapping
                         join it in _appContext.ItemMasterATAMapping on PublicationItemMaster.ItemMasterId equals it.ItemMasterId
                         join pub in _appContext.Publication on PublicationItemMaster.PublicationRecordId equals pub.PublicationRecordId
-                        where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true
+                        where it.IsDeleted==false && PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true
                         select new
                         {
-                            PublicationItemMaster.ItemMasterId,
-                            pub.PublicationId,
-                            it.PartNumber,
-                            it.ATAChapterId,
-                            it.ATAChapterCode,
                             it.ATAChapterName,
-                            it.ATASubChapterId,
                             it.ATASubChapterDescription,
-                            it.MasterCompanyId
-                        }).ToList();
+                        }).Distinct()
+                        .ToList();
             return data;
         }
         public IEnumerable<object> GetAircraftMappingDataByMultiTypeId(long PublicationID, string AircraftTypeId)
