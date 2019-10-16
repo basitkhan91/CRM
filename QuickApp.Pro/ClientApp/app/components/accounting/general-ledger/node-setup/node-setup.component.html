@@ -33,7 +33,7 @@
                                             </span>
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()">Sample File Download</button>
+                                        <button class="btn btn-primary-cstm" matTooltip="Sample File Download" (click)="sampleExcelDownload()">Sample File Download</button>
                                     </div>
 
                                 </div>
@@ -64,10 +64,10 @@
                                         (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                     </td>
                                     <td style="width:200px" *ngIf="selectedColumns.length> 0">
-                                        <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}" (onChange)="changeStatus(rowData)"></p-inputSwitch>
+                                        <p-inputSwitch [(ngModel)]="rowData['isActive']" matTooltip="Update" name="isActive{{rowIndex}}" (onChange)="changeStatus(rowData)"></p-inputSwitch>
 
                                         <span data-toggle="modal" data-target="#view">
-                                            <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewSelectedRow(rowData)" data-target="#view"
+                                            <a class="btn btn-info boxed-float-btn nobg" matTooltip="View" data-toggle="tooltip" (click)="viewSelectedRow(rowData)" data-target="#view"
                                                 data-toggle="modal">
                                                 <i class="fa fa-eye"></i>
                                             </a>
@@ -216,15 +216,15 @@
     </div>
 
 </div>
-<!-- 
+
 <div #add id="add" class="modal fade" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-sm">
 
         <!-- Modal content-->
-        <!-- <div class="modal-content">
+        <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">{{isEdit ? 'Edit' : 'Add' }} Percent</h4>
+                <h4 class="modal-title">{{isEdit ? 'Edit' : 'Add' }} Nodes </h4>
             </div>
             <div class="modal-body">
                 <form #create="ngForm">
@@ -236,7 +236,7 @@
                                 </label>
                             </div>
                             <div class="col-sm-5">
-                                <select name="aircraftType" [(ngModel)]="addNew.code" #aircraftTypeId="ngModel" required>
+                                <select name="aircraftType" [(ngModel)]="addNew.ledgerName" #ledgerNameMgmStructureId="ngModel" required>
                                     <option>-- Select --</option>
                                     <option *ngFor="let object of maincompanylist" [ngValue]="object.code">{{object.code}}</option>
                                 </select>
@@ -245,16 +245,102 @@
                         <div class="col-sm-12">
                             <div class="col-sm-5">
                                 <label for="description" class="control-label">Share with the Other Entities
+                                  
+                                </label>
+                            </div>
+                            <div class="col-sm-5">
+                                <p-multiSelect [options]="mainCompanylistMultiSelectData" class="imstock-pmselect" name="multidata" [(ngModel)]="addNew.selectedCompanysData"
+                                    style="float:left" [style]="{minWidth: '188px'}"></p-multiSelect>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="col-sm-5">
+                                <label for="description" class="control-label">Node Code
                                     <span class="clr-red">*</span>
                                 </label>
                             </div>
                             <div class="col-sm-5">
-                                <p-multiSelect [options]="mainCompanylistMultiSelectData" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentNodeSetup.selectedCompanysData"
-                                style="float:left" [style]="{minWidth: '200px'}"></p-multiSelect>
-
+                                <p-autoComplete (onSelect)="codeSelect($event)" (onKeyUp)=codeHandler($event) [(ngModel)]="addNew.nodeCode" name="nodecode"
+                                    [suggestions]="localCollection" class="p-autoComplete-ctsm" (completeMethod)="filterCodes($event)"
+                                    [size]="30" [minLength]="1" [dropdown]="true">
+                                    <ng-template let-nodeCode pTemplate="item">
+                                        <div class="ui-helper-clearfix">{{nodeCode}}</div>
+                                    </ng-template>
+                                </p-autoComplete>
+                                <div *ngIf="disablesave" class="clr-red">Already Exists</div>
                             </div>
                         </div>
-                    
+                        <div class="col-sm-12">
+                            <div class="col-sm-5">
+                                <label for="description" class="control-label">Node Name                                   
+                                </label>
+                            </div>
+                            <div class="col-sm-5">
+                                <input class="form-control" type="text" [(ngModel)]="addNew.nodeName" name="nodename">
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="col-sm-5">
+                                <label for="description" class="control-label">Parent Node                                   
+                                </label>
+                            </div>
+                            <div class="col-sm-5">
+                                <p-autoComplete (onSelect)="parentCodeNodeSelect($event)" class="p-autoComplete-ctsm" (onKeyUp)=parentCodeNodeHandler($event) [(ngModel)]="addNew.parentNodeId"
+                                    name="parentNode" [suggestions]="parentCodeCollection" (completeMethod)="filterParentNodeCodes($event)"
+                                    [size]="30" [minLength]="1" [dropdown]="true">
+                                </p-autoComplete>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <div class="col-sm-5">
+                                <label for="description" class="control-label">Leaf Node
+                                   
+                                </label>
+                            </div>
+                            <div class="col-sm-5 checkbox-cstm">
+                                <label>
+                                    <input type="checkbox" name="leafNodeCheck" [(ngModel)]="addNew.leafNodeCheck">
+                                    <span class="cr">
+                                        <i class="cr-icon pi pi-check"></i>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <div class="col-sm-5">
+                                <label for="description" class="control-label">Node Type                                    
+                                </label>
+                            </div>
+                            <div class="col-sm-5">
+                                <select [(ngModel)]="addNew.glAccountNodeType" name="glAccountNodeId">
+                                    <option *ngFor="let glAccountClass of allGLAccountClassData" [ngValue]="glAccountClass.glAccountClassName">{{glAccountClass.glAccountClassName}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <div class="col-sm-5">
+                                <label for="description" class="control-label">F/s Type
+                                    <span class="clr-red">*</span>
+                                </label>
+                            </div>
+                            <div class="col-sm-5">
+                                <select [(ngModel)]="addNew.fsType" name="fsType">
+                                    <option value="incomeStatement">Income Statement</option>
+                                    <option value="balanceSheet">Balance Sheet</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="col-sm-5">
+                                <label for="description" class="control-label">Node Description
+                                    <span class="clr-red">*</span>
+                                </label>
+                            </div>
+                            <div class="col-sm-5">
+                                <textarea [(ngModel)]="addNew.description" name="description"></textarea>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="form-group">
                         <div class="col-sm-6">
@@ -277,15 +363,13 @@
                     (click)="save();">
                     {{isEdit ? 'Update' : 'Save' }}</button>
                 <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetForm()">Close</button>
-
             </div>
         </div>
-
     </div>
-</div> --> -->
+</div>
 
 
-<div [@fadeInOut] class="page-content">
+<!-- <div [@fadeInOut] class="page-content">
     <div class="right_col" role="main">
         <div class="x_panel">
             <div class="x_content">
@@ -362,7 +446,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 <ng-template #content let-c="close" let-d="dismiss">
     <div class="modal-header">
         <h4 class="modal-title">Are You Sure Want to Delete ?</h4>
@@ -527,7 +611,7 @@
                 </span>
                 <span class="value">{{action_name}}</span>
             </p>
-          
+
             <p>
                 <span class="label">
                     <b>Created By: </b>
