@@ -91,6 +91,9 @@ namespace DAL
         public DbSet<EmployeeExpertise> EmployeeExpertise { get; set; }
 
         public DbSet<JobTitle> JobTitle { get; set; }
+
+        public DbSet<JobType> JobType { get; set; }
+
         public DbSet<GLAccountClass> GLAccountClass { get; set; }
 
         public DbSet<CertificationType> CertificationType { get; set; }

@@ -17,8 +17,8 @@ import { AuthService } from './auth.service';
 import { User } from '../models/user.model';
 import { Role } from '../models/role.model';
 
-import { JobTitleEndpontService } from './job-title-endpoint.service';
-import { JobTitle } from '../models/jobtitle.model';
+import { JobTypeEndpontService } from './job-type-endpoint.service';
+
 import { JobType } from '../models/jobtype.model';
 import { AuditHistory } from '../models/audithistory.model';
 
@@ -26,7 +26,7 @@ export type RolesChangedOperation = "add" | "delete" | "modify";
 export type RolesChangedEventArg = { roles: Role[] | string[], operation: RolesChangedOperation };
 
 @Injectable()
-export class JobTitleService {
+export class JobTypeService {
     public static readonly roleAddedOperation: RolesChangedOperation = "add";
     public static readonly roleDeletedOperation: RolesChangedOperation = "delete";
     public static readonly roleModifiedOperation: RolesChangedOperation = "modify";
@@ -37,47 +37,34 @@ export class JobTitleService {
         private router: Router,
         private http: HttpClient,
         private authService: AuthService,
-        private jobTitleEndpoint: JobTitleEndpontService) { }
+        private jobTypeEndpoint: JobTypeEndpontService) { }
 
-    getWorkFlows() {
-        return Observable.forkJoin(
-            this.jobTitleEndpoint.getJobtitleEndpoint<JobTitle[]>());
-    }
+  
+
 
     getjobTypeWorkFlows() {
         return Observable.forkJoin(
-            this.jobTitleEndpoint.getJobtypeEndpoint<JobType[]>());
+            this.jobTypeEndpoint.getJobtypeEndpoint<JobType[]>());
     }
-    newAction(action: JobTitle) {
-        return this.jobTitleEndpoint.getNewjobtitleEndpoint<JobTitle>(action);
-    }
-
-    newAction2(action: JobType) {
-        return this.jobTitleEndpoint.getNewjobtitleEndpoint2<JobType>(action);
+    addjobPoint(action: JobType) {
+        return this.jobTypeEndpoint.addNewJobtype<JobType>(action);
     }
 
-    getAction(actionId?: number) {
-        return this.jobTitleEndpoint.getEditJobTitleEndpoint<JobTitle>(actionId);
-    }
 
-    updateAction(action: JobTitle) {     
-        return this.jobTitleEndpoint.getUpdateJobtitleEndpoint(action, action.jobTitleId);
+    updateAction(action: JobType) {
+        return this.jobTypeEndpoint.updateJobType(action, action.jobTypeId);
     }
 
     deleteAcion(actionId: number) {
 
-		return this.jobTitleEndpoint.getDeleteJobTitleEndpoint(actionId);
+        return this.jobTypeEndpoint.getDeleteJobTypeEndpoint(actionId);
 
     }
 
-	historyJobTitle(actionId: number) {
-		return Observable.forkJoin(this.jobTitleEndpoint.getHistoryJobTitleEndpoint<AuditHistory[]>(actionId));
-    }
+ 
 
-    
-    getJobTitleAudit(jobTitleId: number) {
-        return this.jobTitleEndpoint.getJobTitleAuditById<any>(jobTitleId);
-    }
+   
+
 
 
 }

@@ -72,6 +72,7 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
     employeeName: string;
     filteredBrands: any[];
     localCollection: any[] = [];
+    public nextbuttonEnable = false;
     /** Actions ctor */
 
     private isEditMode: boolean = false;
@@ -95,6 +96,11 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
         if (this.employeeService.listCollection && this.employeeService.isEditMode == true) {
             //debugger;
             this.sourceEmployee = this.employeeService.listCollection;
+            console.log("this.sourceemployee")
+            console.log(this.sourceEmployee);
+            this.empId = this.sourceEmployee.employeeId;
+            this.firstName = this.sourceEmployee.firstName;
+            this.lastName = this.sourceEmployee.lastName;
             this.local = this.employeeService.listCollection;
             this.sourceEmployee.certificationDate = new Date();
             this.getwithemployeeLicensureId();
@@ -103,9 +109,42 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
     }
     sourceEmployee: any = {};
     ngAfterViewInit() {
+
+        this.loadCerertifcationByempId();
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
     }
+
+    loadCerertifcationByempId() {
+        console.log(this.empId)
+
+        this.employeeService.getEmployeeCertifications(this.empId).subscribe(
+            data => {
+                this.bindData(data);
+            })
+    }
+
+    bindData(data: any) {
+
+        var newData: any = console.log(data[0]);
+   
+
+        
+        console.log(newData);
+
+        console.log("bind data");
+
+        console.log(data[0].t.isExpirationDate);
+        console.log(data[0].t.expirationDate);
+        this.sourceEmployee.ExpirationDate = new Date(this.sourceEmployee.expirationDate);
+        this.sourceEmployee.IsExpirationDate = data[0].t.isExpirationDate;
+     
+
+        console.log(this.sourceEmployee);
+        
+
+    }
+   
 
     ngOnInit(): void {
         this.employeeService.currentUrl = '/employeesmodule/employeepages/app-employee-certification';
@@ -115,7 +154,21 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
             .subscribe(params => {
                 console.log(params); // {order: "popular"}
                 //  console.log(params.order);
+               // var decodeString = atob(params.order);
+
+             //   var myNewObj = JSON.parse(decodeString);
+
+            //    console.log(myNewObj);
                 this.empId = params.order;
+
+                if (this.empId) {
+                    this.nextbuttonEnable = true;
+
+                }
+                else {
+                    console.log('no buttion')
+                }
+                //this.nextEnable();
                 this.firstName = params.firstname;
                 this.lastName = params.lastname;
                 console.log(this.empId);
@@ -148,6 +201,7 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
                     console.log(data);
                     this.alertService.showMessage('Employee Certification Added successfully.');
                     this.localCollection = data;
+                    this.nextClick();
                     this.employeeService.generalCollection = this.local;
                 })
 

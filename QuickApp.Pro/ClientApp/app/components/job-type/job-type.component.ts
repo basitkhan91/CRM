@@ -17,20 +17,26 @@ import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { JobTitle } from '../../models/jobtitle.model';
-import { JobTitleService } from '../../services/job-title.service';
+import { JobType } from '../../models/jobtype.model';
+import { JobTypeService } from '../../services/job-type.service';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 import { getObjectByValue } from '../../generic/autocomplete';
+
+import { LocalStoreManager } from '../../services/local-store-manager.service';
+//import { EmployeeAddService } from '../../../services/employee.Add.Service';
+import { DBkeys } from '../../services/db-Keys';
+
+import { User } from '../../models/user.model';
 @Component({
-    selector: 'app-job-title',
-    templateUrl: './job-title.component.html',
-    styleUrls: ['./job-title.component.scss'],
+    selector: 'app-job-type',
+    templateUrl: './job-type.component.html',
+    styleUrls: ['./job-type.component.scss'],
     animations: [fadeInOut]
 })
 /** Actions component*/
-export class JobTitleComponent implements OnInit, AfterViewInit {
+export class JobTypeComponent implements OnInit, AfterViewInit {
     allreasn: any[] = [];
     selectedreason: any;
     job_Name: any = "";
@@ -47,8 +53,8 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
     ngOnInit(): void {
         this.cols = [
             //{ field: 'jobTitleId', header: 'Job Title Id' },
-            { field: 'description', header: 'Job Titles' },
-            { field: 'memo', header: 'Memo' },
+            { field: 'jobType', header: 'Job Type' },
+            { field: 'description', header: 'Description' },
             // { field: 'createdBy', header: 'Created By' },
             // { field: 'updatedBy', header: 'Updated By' },
             //{ field: 'updatedDate', header: 'Updated Date' },
@@ -64,8 +70,8 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
 
     Active: string = "Active";
     displayedColumns = ['jobTitleId', 'companyName', 'description', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
-    dataSource: MatTableDataSource<JobTitle>;
-    allJobTitlesinfo: JobTitle[] = [];
+    dataSource: MatTableDataSource<JobType>;
+    allJobTitlesinfo: JobType[] = [];
     allComapnies: MasterCompany[] = [];
     private isSaving: boolean;
     public sourceAction: any;
@@ -79,20 +85,36 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
     id: number;
     errorMessage: any;
     modal: NgbModalRef;
-    selectedColumn: JobTitle[];
+    selectedColumn: JobType[];
     jobName: any;
     filteredBrands: any[];
     localCollection: any[] = [];
     isDelete: boolean = false;
+    public jobTypeName: any;
+    public jobTypeDescription: any;
     /** Actions ctor */
 
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
+    public userA: any;
+    public jobTypeIdEdit: any;
+    public jobTypeNameEdit: any;
+    public jobTypeDescriptionEdit: any;
+    public isActiveEdit: any;
+    public jobTypeIdDelete: any;
+    
 
-    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: JobTitleService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(private localStorage: LocalStoreManager,private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: JobTypeService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
-        this.sourceAction = new JobTitle();
+        this.sourceAction = new JobType();
+
+
+        let user = this.localStorage.getDataObject<User>(DBkeys.CURRENT_USER);
+
+        console.log("user:" + user.userName)
+
+        this.userA = user.userName;
 
     }
     validateRecordExistsOrNot(field: string, currentInput: any, originalData: any) {
@@ -103,6 +125,38 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
             })
             return data;
         }
+    }
+
+    editJobType(obj: any) {
+
+        this.jobTypeIdEdit = obj.jobTypeId;
+
+        this.jobTypeNameEdit = obj.jobTypeName;
+        this.jobTypeDescriptionEdit = obj.jobTypeDescription;
+        this.isActiveEdit = obj.isActive;
+
+
+        console.log(obj);
+
+        console.log(obj);
+
+    }
+    deleteJobType(obj: any) {
+        console.log("Delete job")
+
+        this.jobTypeIdDelete = obj.jobTypeId;
+
+        this.workFlowtService.deleteAcion(this.jobTypeIdDelete).subscribe(data => {
+            this.loadData()
+            var showTitle = 'job Type Deleted Successfully';
+            //    this.loadjobtypesData();
+
+            ///this.sourceEmployee.reset();
+            this.alertService.showMessage("Success", showTitle, MessageSeverity.success);
+        })
+
+       
+
     }
     editValueAssignByCondition(field: any, value: any) {
         console.log(field, value)
@@ -126,12 +180,13 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
     }
-    public allWorkFlows: JobTitle[] = [];
+    public allWorkFlows: JobType[] = [];
 
     private loadData() {
+        console.log("hxty")
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getWorkFlows().subscribe(
+        this.workFlowtService.getjobTypeWorkFlows().subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -157,7 +212,9 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
         // Causes the filter to refresh there by updating with recently added data.
         this.applyFilter(this.dataSource.filter);
     }
-    private onDataLoadSuccessful(allWorkFlows: JobTitle[]) {
+    private onDataLoadSuccessful(allWorkFlows: JobType[]) {
+        console.log("Work Flows");
+        console.log(allWorkFlows);
         // alert('success');
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
@@ -169,17 +226,90 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
         console.log(this.totalPages);
 
     }
+
+    updateJobType() {
+
+        console.log(this.jobTypeIdEdit);
+        console.log(this.jobTypeNameEdit);
+        console.log(this.jobTypeDescriptionEdit);
+        console.log(this.isActiveEdit)
+
+        this.sourceAction.updatedBy = this.userA;
+        this.sourceAction.jobTypeName = this.jobTypeNameEdit;
+        this.sourceAction.jobTypeDescription = this.jobTypeDescriptionEdit;
+        this.sourceAction.isActive = this.isActiveEdit;
+        this.sourceAction.jobTypeId = this.jobTypeIdEdit;
+        console.log("source")
+
+        console.log(this.sourceAction);
+
+        this.workFlowtService.updateAction(this.sourceAction).subscribe(data => {
+            this.loadData()
+            var showTitle = 'job Type Updated Sucessfully';
+            //    this.loadjobtypesData();
+
+            ///this.sourceEmployee.reset();
+            this.alertService.showMessage("Success", showTitle, MessageSeverity.success);
+        })
+
+       
+
+
+
+    }
+
+    saveJobType() {
+
+        console.log(this.jobTypeName);
+    
+
+
+        if (this.jobTypeName) {
+
+            this.sourceAction.createdBy = this.userA;
+            this.sourceAction.updatedBy = this.userA;
+            this.sourceAction.jobTypeName = this.jobTypeName;
+            this.sourceAction.jobTypeDescription = this.jobTypeDescription;
+
+            console.log(this.sourceAction);
+            this.sourceAction.description = this.jobName;
+
+            this.workFlowtService.addjobPoint(this.sourceAction).subscribe(data => {
+                this.loadData()
+           var showTitle = 'job Type Added Sucessfully';
+            //    this.loadjobtypesData();
+
+                ///this.sourceEmployee.reset();
+                this.alertService.showMessage("Success", showTitle, MessageSeverity.success);
+            })
+            console.log(this.jobTypeName);
+            console.log(this.jobTypeDescription)
+
+        }
+        else {
+            var showTitle = 'Job Type Title Required';
+            this.alertService.showMessage("Failure", showTitle, MessageSeverity.error);
+        }
+
+        // if (this.jobTypeName == null || this.jobTypeName == undefined) {
+
+
+        // }
+        //else {
+
+        //  }
+
+
+
+
+    }
     openHist(content, row) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         this.sourceAction = row;
         //this.isSaving = true;
         // debugger;
-        this.workFlowtService.historyJobTitle(this.sourceAction.jobTitleId).subscribe(data => {
-            console.log(data);
-            results => this.onHistoryLoadSuccessful(results[0], content)
-            error => this.saveFailedHelper(error)
-        });
+      
     }
     private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
         // alert('success');
@@ -211,7 +341,7 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
         this.isDeleteMode = false;
         this.isSaving = true;
         this.loadMasterCompanies();
-        this.sourceAction = new JobTitle();
+        this.sourceAction = new JobType();
         this.disableSave = false;
         this.sourceAction.isActive = true;
         this.sourceAction.jobName = "";
@@ -284,75 +414,18 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
         this.disableSave = true;
     }
 
-    filterJobs(event) {
 
-        this.localCollection = this.allJobTitlesinfo;
 
-        if (event.query !== undefined && event.query !== null) {
-            const jobTitle = [...this.allJobTitlesinfo.filter(x => {
-                return x.description.toLowerCase().includes(event.query.toLowerCase())
-            })]
-            this.localCollection = jobTitle;
-        }
-    }
-    handleChange(rowData, e) {
-        if (e.checked == false) {
-            this.sourceAction = rowData;
-            this.sourceAction.updatedBy = this.userName;
-            this.Active = "In Active";
-            this.sourceAction.isActive == false;
-            this.workFlowtService.updateAction(this.sourceAction).subscribe(
-                response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));
-            //alert(e);
-        }
-        else {
-            this.sourceAction = rowData;
-            this.sourceAction.updatedBy = this.userName;
-            this.Active = "Active";
-            this.sourceAction.isActive == true;
-            this.workFlowtService.updateAction(this.sourceAction).subscribe(
-                response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));
-            //alert(e);
-        }
-
-    }
 
     editItemAndCloseModel() {
 
-        this.isSaving = true;
-        if (this.isEditMode == false) {
-            this.sourceAction.createdBy = this.userName;
-            this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.sourceAction.jobName;
-            this.sourceAction.masterCompanyId = 1;
-            this.sourceAction.isDelete = false;
-            this.workFlowtService.newAction(this.sourceAction).subscribe(
-                role => this.saveSuccessHelper(role),
-                error => this.saveFailedHelper(error));
-        }
-        else {
-
-            this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.jobName = this.editValueAssignByCondition('description', this.sourceAction.jobName)
-            this.sourceAction.description = this.sourceAction.jobName;
-            this.sourceAction.masterCompanyId = 1;
-            this.sourceAction.isDelete = false;
-            this.workFlowtService.updateAction(this.sourceAction).subscribe(
-                response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));
-        }
-
-        this.modal.close();
+  
     }
 
     deleteItemAndCloseModel() {
         this.isSaving = true;
         this.sourceAction.updatedBy = this.userName;
-        this.workFlowtService.deleteAcion(this.sourceAction.jobTitleId).subscribe(
-            response => this.saveCompleted(this.sourceAction),
-            error => this.saveFailedHelper(error));
+     
         this.modal.close();
     }
 
@@ -362,7 +435,7 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
         this.modal.close();
     }
 
-    private saveCompleted(user?: JobTitle) {
+    private saveCompleted(user?: JobType) {
         this.isSaving = false;
 
         if (this.isDeleteMode == true) {
@@ -377,7 +450,7 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
         this.loadData();
     }
 
-    private saveSuccessHelper(role?: JobTitle) {
+    private saveSuccessHelper(role?: JobType) {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 
@@ -413,11 +486,6 @@ export class JobTitleComponent implements OnInit, AfterViewInit {
 
     auditJobTitle(jobTitleId: number): void {
         this.AuditDetails = [];
-        this.workFlowtService.getJobTitleAudit(jobTitleId).subscribe(audits => {
-            if (audits.length > 0) {
-                this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["jobTitleAuditId", "jobTitleId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
-            }
-        });
+      
     }
 }
