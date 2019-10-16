@@ -95,7 +95,11 @@ export class EmployeesListComponent implements OnInit{
 		this.router.navigateByUrl('/employeesmodule/employeepages/app-employee-general-information')
 
 	}
-	openEdit(row) {
+    openEdit(row) {
+
+        console.log(row);
+
+        console.log("row");
 
 		//this.isEditMode = true;
 		this.empService.isEditMode = true;

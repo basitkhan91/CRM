@@ -62,6 +62,7 @@ namespace DAL
         IWorkScopeRepository _workScopeRepository;
         IEmployeeExpertiseRepository _employeeExpertiseRepository;
         IJobTitle _jobTitle;
+        IJobType _jobType;
         IExpenditureCategory _expenditureCategory;
         IDefaultMessage _defaultMessage;
         IDocument _document;
@@ -741,6 +742,17 @@ namespace DAL
                 return _jobTitle;
             }
         }
+
+        public IJobType JobType
+        {
+            get
+            {
+                if (_jobType == null)
+                    _jobType = new JobTypeRepository(_context);
+                return _jobType;
+            }
+        }
+
 
         public IExpenditureCategory ExpenditureCategory
         {
