@@ -5,6 +5,7 @@ import { AppSiteAuditComponent } from "../components/Audit/AppSiteAudit/app-site
 import { AppSiteAuditNoHistoryComponent } from "../components/Audit/AuditNoHistory/app-site-audit-no-history.component";
 import { WareHouseAuditComponent } from "../components/Audit/WareHouseAudit/warehouse-audit.component";
 import { AuditNoHistoryComponent } from "../components/Audit/AuditNoHistory/audit-no-history.component";
+import { LocationAuditComponent } from "../components/Audit/LocationAudit/location-audit.component";
 
 @NgModule({
   declarations: [
@@ -12,7 +13,8 @@ import { AuditNoHistoryComponent } from "../components/Audit/AuditNoHistory/audi
     AuditNoHistoryComponent,
     AppSiteAuditComponent,
     AppSiteAuditNoHistoryComponent,
-    WareHouseAuditComponent
+    WareHouseAuditComponent,
+    LocationAuditComponent
   ],
 
   imports: [CommonModule],
@@ -22,7 +24,8 @@ import { AuditNoHistoryComponent } from "../components/Audit/AuditNoHistory/audi
     AuditNoHistoryComponent,
     AppSiteAuditComponent,
     AppSiteAuditNoHistoryComponent,
-    WareHouseAuditComponent
+    WareHouseAuditComponent,
+    LocationAuditComponent
   ],
 
   providers: [],
