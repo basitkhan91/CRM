@@ -366,50 +366,7 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        [HttpGet("GetpartdetailsWithid/{partid}")]
-        public Object getPartwithid(string partid)
-        {
-
-
-            var data = (from IM in _context.ItemMaster
-
-                            //join PT in _context.Part on IM.PartId equals PT.PartId into pt
-
-                            //from PT in pt.DefaultIfEmpty()
-                        join MF in _context.Manufacturer on IM.ManufacturerId equals MF.ManufacturerId into mfg
-
-                        from MF in mfg.DefaultIfEmpty()
-
-                            //join PS in _context.Item on IM.AddressId equals PS.AddressId into pro
-
-                            //from PS in pro.DefaultIfEmpty()
-                        where (
-
-                        IM.PartNumber.Contains(partid)
-
-                        )
-                        select new
-                        {
-
-                            IM.PartNumber,
-                            IM.PartAlternatePartId,
-                            IM.PartDescription,
-                            //it.Description,
-                            IM.ManufacturerId,
-                            MF.Name,
-                            IM.ReorderQuantiy,
-                            IM.ItemTypeId,
-                            IM.ItemMasterId,
-                            //MF.Name
-                            // PT.PartId,
-                            IM.IsHazardousMaterial,
-                            IM.PriorityId
-
-                        }).ToList();
-            return data;
-
-
-        }
+        
 
 
 
