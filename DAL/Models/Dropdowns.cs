@@ -6,6 +6,6 @@ namespace DAL.Models
     {
         [Key]
         public long Value { get; set; }
-        public string Text { get; set; }
+        public string Label { get; set; }
     }
 }

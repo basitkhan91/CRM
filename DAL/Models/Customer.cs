@@ -192,7 +192,10 @@ namespace DAL.Models
         public virtual CustomerType CustomerType { get; set; }
 
         public List<ClassificationMapping> CustomerClassificationMapping { get; set; }
+
+        [NotMapped]
         public List<RestrictedParts> RestrictedPMAParts { get; set; }
+        [NotMapped]
         public List<RestrictedParts> RestrictedDERParts { get; set; }
 
         public List<RestrictsPMAList> RestrictsPmaLists { get; set;}

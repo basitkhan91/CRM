@@ -40,7 +40,7 @@ namespace DAL.Repositories
                          Reference = string.Empty,
                          CreditLimt = z.vc1.v.CreditLimit,
                          CreditTermId = z.vc1.v.CreditTermsId,
-                         CSR = z.con.FirstName + " " +z.con.LastName,
+                         CSR = z.con.FirstName + " " + z.con.LastName,
                          Email = z.vc1.v.VendorEmail,
                          IsDefaultContact = z.vc1.vc.IsDefaultContact
                      }).ToList();
@@ -202,7 +202,7 @@ namespace DAL.Repositories
             }
         }
 
-        public void MasterPartsStatus(long masterPartId,bool status, string updatedBy)
+        public void MasterPartsStatus(long masterPartId, bool status, string updatedBy)
         {
             try
             {
@@ -238,38 +238,15 @@ namespace DAL.Repositories
             }
         }
 
-        public void CreateRestrictedParts(List<RestrictedParts> restrictedParts, long? referenceId,int moduleId)
+        public void CreateRestrictedParts(List<RestrictedParts> restrictedParts, long referenceId, int moduleId)
         {
             try
             {
                 if (restrictedParts != null && restrictedParts.Count > 0)
                 {
-					foreach(var item in restrictedParts)
-					{
-						RestrictedParts restrictedPart = new RestrictedParts();
-						
-						restrictedPart.ModuleId = 1;
-						restrictedPart.ReferenceId = 28;
-						restrictedPart.MasterPartId = 726;
-						restrictedPart.PartType = "DER";
-						restrictedPart.CreatedDate = DateTime.Now;
-						restrictedPart.CreatedBy = "admin";
-						restrictedPart.UpdatedDate = DateTime.Now;
-						restrictedPart.UpdatedBy = "admin";
-						restrictedPart.IsActive = true;
-						restrictedPart.IsDeleted = false;
-
-						_appContext.RestrictedParts.Add(restrictedPart);
-						_appContext.SaveChanges();
-
-						
-					}
-
-					//               restrictedParts.ForEach(p => p.ReferenceId = referenceId);
-					//restrictedParts.ForEach(p => p.ModuleId = moduleId);
-					//_appContext.RestrictedParts.AddRange(restrictedParts);
-
-					
+                    restrictedParts.ForEach(p => { p.ReferenceId = referenceId; p.ModuleId = moduleId; p.IsDeleted = false; p.IsActive = true;p.CreatedDate = p.UpdatedDate = DateTime.Now; });
+                    _appContext.RestrictedParts.AddRange(restrictedParts);
+                    _appContext.SaveChanges();
                 }
             }
             catch (Exception)
@@ -279,34 +256,7 @@ namespace DAL.Repositories
             }
         }
 
-		public void CreateRestrictedParts()
-		{
-			try
-			{
-						RestrictedParts restrictedPart = new RestrictedParts();
-
-						restrictedPart.ModuleId = 1;
-						restrictedPart.ReferenceId = 28;
-						restrictedPart.MasterPartId = 726;
-						restrictedPart.PartType = "DER";
-						restrictedPart.CreatedDate = DateTime.Now;
-						restrictedPart.CreatedBy = "admin";
-						restrictedPart.UpdatedDate = DateTime.Now;
-						restrictedPart.UpdatedBy = "admin";
-						restrictedPart.IsActive = true;
-						restrictedPart.IsDeleted = false;
-
-						_appContext.RestrictedParts.Add(restrictedPart);
-						_appContext.SaveChanges();
-			}
-			catch (Exception)
-			{
-
-				throw;
-			}
-		}
-
-		public void UpdateRestrictedParts(List<RestrictedParts> restrictedParts, long? referenceId)
+        public void UpdateRestrictedParts(List<RestrictedParts> restrictedParts, long referenceId,int moduleId)
         {
             try
             {
@@ -321,6 +271,11 @@ namespace DAL.Repositories
                         else
                         {
                             item.ReferenceId = referenceId;
+                            item.ModuleId = moduleId;
+                            item.IsActive = true;
+                            item.IsDeleted = false;
+                            item.CreatedDate = item.UpdatedDate = DateTime.Now;
+                            
                             _appContext.RestrictedParts.Add(item);
                         }
                         _appContext.SaveChanges();
@@ -608,7 +563,7 @@ namespace DAL.Repositories
             }
         }
 
-        public dynamic UpdateEntity(dynamic uiModel, dynamic dbModel,ref IDictionary<string, object> keyValuePairs)
+        public dynamic UpdateEntity(dynamic uiModel, dynamic dbModel, ref IDictionary<string, object> keyValuePairs)
         {
 
             uiModel.MasterCompanyId = dbModel.MasterCompanyId;
@@ -642,7 +597,7 @@ namespace DAL.Repositories
                     {
                         break;
                     }
-                        
+
                 }
             }
 
@@ -650,11 +605,11 @@ namespace DAL.Repositories
         }
 
 
-        public IEnumerable<object> BindDropdowns(string tableName,string primaryColumn,string textColumn)
+        public IEnumerable<object> BindDropdowns(string tableName, string primaryColumn, string textColumn,long count)
         {
             try
             {
-               var result= _appContext.Dropdowns.FromSql("BindDropdowns @p0,@p1,@p2", tableName, primaryColumn, textColumn).ToList();
+                var result = _appContext.Dropdowns.FromSql("BindDropdowns @p0,@p1,@p2,@p3", tableName, primaryColumn, textColumn,count).ToList();
                 return result;
             }
             catch (Exception)

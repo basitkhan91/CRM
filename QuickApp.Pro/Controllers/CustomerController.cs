@@ -331,8 +331,8 @@ namespace QuickApp.Pro.Controllers
 				{
 					customerViewModel.IntegrationPortalId = null;
 				}
-				//_unitOfWork.Customer.Add(actionobject);
-				//_unitOfWork.SaveChanges();
+				_unitOfWork.Customer.Add(actionobject);
+				_unitOfWork.SaveChanges();
 
 				//if (actionobject.IsCustomerAlsoVendor)
 				//{
@@ -369,21 +369,9 @@ namespace QuickApp.Pro.Controllers
 				//    _unitOfWork.SaveChanges();
 				//    return Ok(vendorobject);
 				//}
-				_unitOfWork.CommonRepository.CreateRestrictedParts();
 
 				if (actionobject.RestrictPMA == true)
-				{
-					//if (customerViewModel.RestrictedPMAParts != null && customerViewModel.RestrictedPMAParts.Count > 0)
-					//{
-					//	customerViewModel.RestrictedPMAParts.ForEach(p => p.ReferenceId = actionobject.CustomerId);
-					//	customerViewModel.RestrictedPMAParts.ForEach(p => p.ModuleId = Convert.ToInt32(ModuleEnum.Customer));
-					//	_context.RestrictedParts.AddRange(customerViewModel.RestrictedPMAParts);
-					//	_context.SaveChanges();
-					//}
-
 					_unitOfWork.CommonRepository.CreateRestrictedParts(customerViewModel.RestrictedPMAParts, actionobject.CustomerId, Convert.ToInt32(ModuleEnum.Customer));
-				}
-				//_unitOfWork.CommonRepository.CreateRestrictedParts(customerViewModel.RestrictedPMAParts, actionobject.CustomerId,Convert.ToInt32(ModuleEnum.Customer));
 				if (actionobject.RestrictBER == true)
 					_unitOfWork.CommonRepository.CreateRestrictedParts(customerViewModel.RestrictedDERParts, actionobject.CustomerId, Convert.ToInt32(ModuleEnum.Customer));
 
@@ -526,9 +514,10 @@ namespace QuickApp.Pro.Controllers
 			_unitOfWork.Customer.Update(actionobject);
 			_unitOfWork.SaveChanges();
 
-			_unitOfWork.CommonRepository.UpdateRestrictedParts(actionobject.RestrictedPMAParts, actionobject.CustomerId);
-			_unitOfWork.CommonRepository.UpdateRestrictedParts(actionobject.RestrictedDERParts, actionobject.CustomerId);
-			_unitOfWork.CommonRepository.UpdateRestrictPmaList(actionobject.RestrictsPmaLists, actionobject.CustomerId);
+			_unitOfWork.CommonRepository.UpdateRestrictedParts(customerViewModel.RestrictedPMAParts, actionobject.CustomerId, Convert.ToInt32(ModuleEnum.Customer));
+			_unitOfWork.CommonRepository.UpdateRestrictedParts(customerViewModel.RestrictedDERParts, actionobject.CustomerId, Convert.ToInt32(ModuleEnum.Customer));
+
+            //_unitOfWork.CommonRepository.UpdateRestrictPmaList(actionobject.RestrictsPmaLists, actionobject.CustomerId);
 
 
 			//actionobject.RestrictsPmaLists = customerViewModel.RestrictsPmaList;
