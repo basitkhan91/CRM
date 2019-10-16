@@ -4,10 +4,12 @@ import { AuditComponent } from "../components/Audit/audit.component";
 import { AppSiteAuditComponent } from "../components/Audit/AppSiteAudit/app-site-audit.component";
 import { AppSiteAuditNoHistoryComponent } from "../components/Audit/AuditNoHistory/app-site-audit-no-history.component";
 import { WareHouseAuditComponent } from "../components/Audit/WareHouseAudit/warehouse-audit.component";
+import { AuditNoHistoryComponent } from "../components/Audit/AuditNoHistory/audit-no-history.component";
 
 @NgModule({
   declarations: [
     AuditComponent,
+    AuditNoHistoryComponent,
     AppSiteAuditComponent,
     AppSiteAuditNoHistoryComponent,
     WareHouseAuditComponent
@@ -17,6 +19,7 @@ import { WareHouseAuditComponent } from "../components/Audit/WareHouseAudit/ware
 
   exports: [
     AuditComponent,
+    AuditNoHistoryComponent,
     AppSiteAuditComponent,
     AppSiteAuditNoHistoryComponent,
     WareHouseAuditComponent
