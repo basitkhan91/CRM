@@ -215,6 +215,7 @@ export class PurchaseSetupComponent {
 	addressSiteName: any = {};
 	splitUserTypeAddress: any = {};
 	shipToShipViaDetails: any = {};
+	tempMultiplePNArray: any[];
 
 	/** po-approval ctor */
 	constructor(public siteService: SiteService, public warehouseService: WarehouseService, private masterComapnyService: MasterComapnyService, public cusservice: CustomerService, private itemser: ItemMasterService, private modalService: NgbModal, private route: Router, public legalEntityService: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public vendorService: VendorService, public priority: PriorityService, private alertService: AlertService ,public glAccountService: GlAccountService, private authService: AuthService) {
@@ -319,6 +320,63 @@ export class PurchaseSetupComponent {
 		this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-purchase-setup';
 		this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
 	}
+
+	ngOnInit() {
+		this.priorityData();
+		this.loadCreditTermsData();
+		this.loadManagementdata();
+		//this.getAddresses();
+		this.loadData();
+		//this.loadPartData();
+		this.loadCurrencyData();
+		this.loadConditionData();
+		this.loadUOMData();
+		this.employeedata();
+		this.ptnumberlistdata();
+		this.loadcustomerData();
+		this.glAccountData();
+		this.sourcePoApproval.companyId = 0;
+		this.sourcePoApproval.buId = 0;
+		this.sourcePoApproval.divisionId = 0;
+		this.sourcePoApproval.departmentId = 0;
+		if (this.sourcePoApproval.purchaseOrderNumber == "" || this.sourcePoApproval.purchaseOrderNumber == undefined) {
+			this.sourcePoApproval.purchaseOrderNumber = 'Creating';
+		}
+
+		this.vendorCapesCols = [
+			{ field: 'vcid', header: 'VCID' },
+			{ field: 'ranking', header: 'Ranking' },
+			{ field: 'pn', header: 'PN' },
+			{ field: 'pnDescription', header: 'PN Description' },
+			{ field: 'capabilityType', header: 'Capability Type' },
+			{ field: 'cost', header: 'Cost' },
+			{ field: 'tat', header: 'TAT' },
+			{ field: 'pnMfg', header: 'PN Mfg' },
+			{ field: 'updatedDate', header: 'Updated Date' },
+		];
+		this.vendorCapesInfo = [
+			{ 'vcid': 1, 'ranking': 11 },
+			{ 'vcid': 2, 'ranking': 11 },
+			{ 'vcid': 3, 'ranking': 11 },
+		];
+
+		console.log(this.sourcePoApproval);
+		this.sourcePoApproval.statusId = 1;
+		this.sourcePoApproval.openDate = new Date()
+		this.sourcePoApproval.dateRequested = new Date();
+		this.sourcePoApproval.shipToUserTypeId = 3;
+		this.sourcePoApproval.billToUserTypeId = 3;
+		//grid childlist disable on load
+		if(!this.isEditMode) {
+			for (let i = 0; i < this.partListData.length; i++) {
+				if(!this.partListData[i].ifSplitShip) {
+					this.partListData[i].childList = [];
+				}
+			}
+		}
+
+	}
+
 	makeNestedObj(arr, parent) {
 		var out = []
 		/*for (var i in arr)*/for (let i = 0; i < arr.length; i++) {
@@ -388,61 +446,7 @@ export class PurchaseSetupComponent {
 
 	}
 
-	ngOnInit() {
-		this.priorityData();
-		this.loadCreditTermsData();
-		this.loadManagementdata();
-		//this.getAddresses();
-		this.loadData();
-		//this.loadPartData();
-		this.loadCurrencyData();
-		this.loadConditionData();
-		this.loadUOMData();
-		this.employeedata();
-		this.ptnumberlistdata();
-		this.loadcustomerData();
-		this.glAccountData();
-		this.sourcePoApproval.companyId = 0;
-		this.sourcePoApproval.buId = 0;
-		this.sourcePoApproval.divisionId = 0;
-		this.sourcePoApproval.departmentId = 0;
-		if (this.sourcePoApproval.purchaseOrderNumber == "" || this.sourcePoApproval.purchaseOrderNumber == undefined) {
-			this.sourcePoApproval.purchaseOrderNumber = 'Creating';
-		}
-
-		this.vendorCapesCols = [
-			{ field: 'vcid', header: 'VCID' },
-			{ field: 'ranking', header: 'Ranking' },
-			{ field: 'pn', header: 'PN' },
-			{ field: 'pnDescription', header: 'PN Description' },
-			{ field: 'capabilityType', header: 'Capability Type' },
-			{ field: 'cost', header: 'Cost' },
-			{ field: 'tat', header: 'TAT' },
-			{ field: 'pnMfg', header: 'PN Mfg' },
-			{ field: 'updatedDate', header: 'Updated Date' },
-		];
-		this.vendorCapesInfo = [
-			{ 'vcid': 1, 'ranking': 11 },
-			{ 'vcid': 2, 'ranking': 11 },
-			{ 'vcid': 3, 'ranking': 11 },
-		];
-
-		console.log(this.sourcePoApproval);
-		this.sourcePoApproval.statusId = 1;
-		this.sourcePoApproval.openDate = new Date()
-		this.sourcePoApproval.dateRequested = new Date();
-		this.sourcePoApproval.shipToUserTypeId = 3;
-		this.sourcePoApproval.billToUserTypeId = 3;
-		//grid childlist disable on load
-		if(!this.isEditMode) {
-			for (let i = 0; i < this.partListData.length; i++) {
-				if(!this.partListData[i].ifSplitShip) {
-					this.partListData[i].childList = [];
-				}
-			}
-		}
-
-	}
+	
 	private priorityData() {
 
 		this.priority.getPriorityList().subscribe(
@@ -474,69 +478,7 @@ export class PurchaseSetupComponent {
 	// 			console.log(data);
 	// 			this.vendorSiteAddress = data[0];
 	// 		});
-	// }
-
-	getAllparts() {
-
-		//let partsArray = [];
-		this.returnPartsListArray = [];
-		this.newPNList = [];
-		this.array = this.partNumbers.split(',');
-		if (this.array.length > 0) {
-			for (let i = 0; i < this.array.length; i++) {
-
-				this.vendorService.getPartDetailsWithid(this.array[i]).subscribe(returndata => {
-					//console.log(returndata[0]);
-					const mulAlParts = returndata[0].map(x => {
-						
-						if (x.partDescription === null && x.itemTypeId === null && x.isHazardousMaterial === null && x.manufacturerId === null && x.priorityId === null) {
-							this.multiplePNDetails = true;
-						}
-						return {...x, addAllMultiPNRows: false};
-					});
-
-
-					if (mulAlParts.length > 0) {
-						console.log(mulAlParts);
-						for (let k = 0; k < mulAlParts.length; k++) {
-							this.returnPartsListArray.push(mulAlParts[k]);
-							//for (let j = 0; j < this.array.length; j++) {
-							//	if (this.array[j] == returndata[0][k].partNumber) {
-							//		this.array.splice(j, 1)
-							//	}
-							//	else {
-							//		//this.returnPartsListArray.push({ "partNumber": this.array[j] });
-							//	}
-							//}
-						}
-
-					} 
-					else {
-						 //return this.array;
-					}
-					console.log(this.array)
-				console.log(mulAlParts)
-				for(let i=0; i < mulAlParts.length; i++) {
-					for(let j=0; j<this.array.length; j++) {
-						if (mulAlParts[i].partNumber.toLowerCase() !== this.array[j].toLowerCase()) {
-							if (this.newPNList.indexOf(this.array[j]) === -1) {
-								this.newPNList.push(this.array[j]);
-							console.log(this.newPNList)
-							}
-							
-						}
-					}
-				}
-
-				});
-				
-
-			}
-		}
-
-
-		//console.log(this.partNumbers);
-	}
+	// }	
 
 	get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
@@ -800,6 +742,7 @@ export class PurchaseSetupComponent {
 							}]),
 
 								this.partCollection.push(partName);
+								console.log(this.partCollection);
 								
 						}
 					}
@@ -1864,6 +1807,106 @@ export class PurchaseSetupComponent {
 		this.array = [];
 		//this.modal.close();
 	}
+
+	onChangeAddAllMultiPN(event) {
+		if (event.target.checked) {
+			if (this.returnPartsListArray) {
+				for (let i=0; i < this.returnPartsListArray.length; i++) {
+					this.returnPartsListArray[i].addAllMultiPNRows = true;
+				}
+			}
+			//this.addAllMultiPNRows = true;
+		} else {
+			if (this.returnPartsListArray) {
+				for (let i=0; i < this.returnPartsListArray.length; i++) {
+					this.returnPartsListArray[i].addAllMultiPNRows = false;
+				}
+			}
+			//this.addAllMultiPNRows = false;
+		}
+	}
+
+	onAddMultParts() {
+		this.partNumbers = null;
+		this.returnPartsListArray = [];
+		this.array = [];
+		this.newPNList = [];
+		this.addAllMultiPN = false;
+	}
+
+	getAllparts() {
+
+		//let partsArray = [];
+		this.returnPartsListArray = [];
+		this.newPNList = [];
+		this.array = this.partNumbers.split(',');
+		if (this.array.length > 0) {
+			for (let i = 0; i < this.array.length; i++) {
+
+			this.vendorService.getPartDetailsWithid(this.array[i]).subscribe(returndata => {
+					this.tempMultiplePNArray = [];
+					console.log(returndata[0]);
+					this.tempMultiplePNArray = returndata[0].map(x => {
+						//this.multiplePNDetails = true;
+						// if (x.partDescription === null && x.itemTypeId === null && x.isHazardousMaterial === null && x.manufacturerId === null && x.priorityId === null) {
+						// 	this.multiplePNDetails = true;
+						// }
+						return {
+							...x,
+							manufacturerId: x.manufacturerId,
+							priorityId: x.priorityId,
+							addAllMultiPNRows: false
+						};
+					});
+					console.log(this.tempMultiplePNArray);
+
+
+					/*if (mulAlParts.length > 0) {
+						console.log(mulAlParts);
+						for (let k = 0; k < mulAlParts.length; k++) {
+							this.returnPartsListArray.push(mulAlParts[k]);
+							//for (let j = 0; j < this.array.length; j++) {
+							//	if (this.array[j] == returndata[0][k].partNumber) {
+							//		this.array.splice(j, 1)
+							//	}
+							//	else {
+							//		//this.returnPartsListArray.push({ "partNumber": this.array[j] });
+							//	}
+							//}
+						}
+
+					} 
+					else {
+						 //return this.array;
+					}*/
+				// 	console.log(this.array)
+				// console.log(mulAlParts)
+				// for(let i=0; i < mulAlParts.length; i++) {
+				// 	for(let j=0; j<this.array.length; j++) {
+				// 		if (mulAlParts[i].partNumber.toLowerCase() !== this.array[j].toLowerCase()) {
+				// 			if (this.newPNList.indexOf(this.array[j]) === -1) {
+				// 				this.newPNList.push(this.array[j]);
+				// 			console.log(this.newPNList)
+				// 			}
+							
+				// 		}
+				// 	}
+				// }
+				for(let i=0; i < this.tempMultiplePNArray.length; i++) {
+					this.returnPartsListArray.push(this.tempMultiplePNArray[i]);
+				}				
+				console.log(this.returnPartsListArray);
+				
+			});
+			for (let k = 0; k < this.part.length; k++) {
+
+			}
+								
+			}
+		}
+		//console.log(this.partNumbers);
+	}
+
 	addPartNumber() {
 		//this.itemTypeId=0;		
 		if (this.vendorService.isEditMode == false) {
@@ -1906,8 +1949,7 @@ export class PurchaseSetupComponent {
 					}				
 				}
 			}	
-		}
-		
+		}		
 	}
 
 	addRow(partList) {
@@ -3144,32 +3186,6 @@ export class PurchaseSetupComponent {
 		})
 
 
-	}
-
-	onChangeAddAllMultiPN(event) {
-		if (event.target.checked) {
-			if (this.returnPartsListArray) {
-				for (let i=0; i < this.returnPartsListArray.length; i++) {
-					this.returnPartsListArray[i].addAllMultiPNRows = true;
-				}
-			}
-			//this.addAllMultiPNRows = true;
-		} else {
-			if (this.returnPartsListArray) {
-				for (let i=0; i < this.returnPartsListArray.length; i++) {
-					this.returnPartsListArray[i].addAllMultiPNRows = false;
-				}
-			}
-			//this.addAllMultiPNRows = false;
-		}
-	}
-
-	onAddMultParts() {
-		this.partNumbers = null;
-		this.returnPartsListArray = [];
-		this.array = [];
-		this.newPNList = [];
-		this.addAllMultiPN = false;
 	}
 
 	getConditionIdByObject(obj) {

@@ -2633,7 +2633,7 @@
                             <tbody>
                                 <tr *ngFor="let obj of returnPartsListArray; let row_no=index;">
                                     <td>
-                                        <span class="checkbox-cstm" *ngIf="!multiplePNDetails">
+                                        <span class="checkbox-cstm"><!--*ngIf="!multiplePNDetails"-->
                                             <label style="width: 20px;margin-top: 5px;">
                                                 <input type="checkbox" name="addAllMultiPNRows{{row_no}}" [(ngModel)]="obj.addAllMultiPNRows">
                                                 <span class="cr"><i class="cr-icon pi pi-check"></i></span>
