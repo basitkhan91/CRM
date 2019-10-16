@@ -4,15 +4,12 @@ import { ChargeService } from '../../services/charge.service';
 import {VendorService} from '../../services/vendor.service';
 import {CurrencyService} from '../../services/currency.service';
 import {IntegrationService} from '../../services/integration-service';
-import { MasterComapnyService } from '../../services/mastercompany.service';
 import { AlertService, MessageSeverity } from '../../services/alert.service';
 import { AuthService } from '../../services/auth.service';
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
-import { validateRecordExistsOrNot, editValueAssignByCondition, getObjectById, selectedValueValidate, getObjectByValue } from '../../generic/autocomplete';
-import { Table } from 'primeng/table';
 import { ConfigurationService } from '../../services/configuration.service';
 import { PurchaseOrderService} from '../../services/purchase-order.service';
-
+import {GLAccountService} from '../../services/glAccount.service';
 import { Charge } from '../../models/charge.model';
 
 import { AuditHistory } from '../../models/audithistory.model';
@@ -55,14 +52,16 @@ export class ChargesComponent implements OnInit {
     vendorList:any[];
     integrationList:any[];
     purchaseOrderList:any[];
+    glAccountList:any[];
     filteredVendorList:any[];
     filteredIntegrationList:any[];
     currencyList:any[];
     filteredPurchaseOrderList: any[];
+    filteredGLAccountList:any[];
     constructor(private breadCrumb: SingleScreenBreadcrumbService, private configurations: ConfigurationService,
         private authService: AuthService, private alertService: AlertService, public chargeService: ChargeService ,
         public vendorService:VendorService , public currencyService:CurrencyService, public integrationService:IntegrationService,
-        public purchaseOrderService: PurchaseOrderService) {
+        public purchaseOrderService: PurchaseOrderService, public glAccountService:GLAccountService) {
 
 
     }
@@ -72,6 +71,7 @@ export class ChargesComponent implements OnInit {
         this.loadCurrencyData();
         this.loadIntegrationData();
         this.loadPurchaseOrderData();
+        this.loadGLAccountData();
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-charges';
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
     }
@@ -104,6 +104,11 @@ export class ChargesComponent implements OnInit {
     loadPurchaseOrderData():void{
         this.purchaseOrderService.getPurchaseOrdersBasic().subscribe(res=>{
             this.purchaseOrderList=res[0];
+        });
+    }
+    loadGLAccountData():void{
+        this.glAccountService.getGlAccountBasic().subscribe(res=>{
+            this.glAccountList=res[0];
         });
     }
     get userName(): string {
@@ -186,6 +191,13 @@ export class ChargesComponent implements OnInit {
             return x.purchaseOrderNumber.toLowerCase().includes(event.query.toLowerCase())
         })]
         this.filteredPurchaseOrderList = PODATA;
+    }
+    filterGLAccount(event):void{
+        this.filteredGLAccountList=this.glAccountList;
+        const GLADATA = [...this.glAccountList.filter(x => {
+            return x.accountName.toLowerCase().includes(event.query.toLowerCase())
+        })]
+        this.filteredGLAccountList = GLADATA;
     }
 }
 

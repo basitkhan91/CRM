@@ -355,8 +355,8 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                     </label>
                                 </div>
                                 <div class="col-sm-5">
-                                        <p-autoComplete field="glAccountId" [(ngModel)]="addNewCharge.glAccountId"                                         name="glAccountId"
-                                        [suggestions]="shortNameList" (completeMethod)="filterShortName($event)" [size]="30" [minLength]="1"
+                                        <p-autoComplete field="accountName" [(ngModel)]="addNewCharge.glAccountId"   name="glAccountId"                                      name="glAccountId"
+                                        [suggestions]="filteredGLAccountList" (completeMethod)="filterGLAccount($event)" [forceSelection]="true"  [size]="30" [minLength]="1"
                                         [dropdown]="true" class="p-autoComplete-ctsm" required>
 
                                         </p-autoComplete>
