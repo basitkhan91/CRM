@@ -32,7 +32,7 @@ namespace QuickApp.Pro.Controllers
             [HttpGet("getAll")]
             public IActionResult getAllAircraftManufacturer()
             {
-                var aircraftManufacturer = unitOfWork.Repository<AircraftType>().GetAll().Where(x => (x.IsDeleted == false && x.IsActive==true)).OrderBy(x => x.AircraftTypeId);
+                var aircraftManufacturer = unitOfWork.Repository<AircraftType>().GetAll().Where(x => x.IsDeleted == false ).OrderBy(x => x.AircraftTypeId);
                 return Ok(aircraftManufacturer);
             }
 
@@ -156,6 +156,14 @@ namespace QuickApp.Pro.Controllers
             var data = DAL.Common.PaginatedList<AircraftType>.Create(unitOfWork.aircraftType.GetPaginationData(), pageCount, pageListPerPage);
             return Ok(data);
         }
+
+        [HttpGet("aircraftmanufacturerhistory")]
+        public IActionResult GetAircraftTypeHistory(long aircraftId)
+        {
+            var result = unitOfWork.aircraftType.GetAircraftTypeHistory(aircraftId);
+            return Ok(result);
+        }
+
 
         #endregion Public Methods
 

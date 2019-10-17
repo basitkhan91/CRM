@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Reflection;
 using DAL;
 using DAL.Models;
 using Microsoft.AspNetCore.Http;
@@ -34,19 +35,50 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getAll")]
         public IActionResult getAll()
         {
-            var assetIntangibleTypeSingleScreen = unitOfWork.Repository<AssetIntangibleTypeSingleScreen>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AssetIntangibleTypeSingleId);
-            return Ok(assetIntangibleTypeSingleScreen);
+            List<ColumHeader> columHeaders = new List<ColumHeader>();
+            PropertyInfo[] propertyInfos = typeof(AssetIntangibleTypeSingleScreenColModel).GetProperties();
+            ColumHeader columnHeader;
+            DynamicGridData<dynamic> dynamicGridData = new DynamicGridData<dynamic>();
+            foreach (PropertyInfo property in propertyInfos)
+            {
+                columnHeader = new ColumHeader();
+                columnHeader.field = char.ToLower(property.Name[0]) + property.Name.Substring(1);//FirstCharToUpper(property.Name);
+                // columnHeader.field = property.Name;
+                columnHeader.header = property.Name;
+                columHeaders.Add(columnHeader);
+            }
+            dynamicGridData.columHeaders = columHeaders;
+            List<AssetIntangibleTypeSingleScreenSPModel> assetIntangibleTypes = new List<AssetIntangibleTypeSingleScreenSPModel>();
+            AssetIntangibleTypeSingleScreenSPModel assetIntangibleType = null;
+            var assetIntangibleTypeSingleScreen = unitOfWork.Repository<AssetIntangibleType>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AssetIntangibleTypeId);
+            foreach (var item in assetIntangibleTypeSingleScreen)
+            {
+                assetIntangibleType = new AssetIntangibleTypeSingleScreenSPModel();
+
+                assetIntangibleType.Code = item.AssetIntangibleCode;
+                assetIntangibleType.Name = item.AssetIntangibleName;
+                assetIntangibleType.Memo = item.AssetIntangibleMemo;
+                assetIntangibleType.AssetIntangibleTypeId = item.AssetIntangibleTypeId;
+                assetIntangibleType.CreatedDate = item.CreatedDate;
+                assetIntangibleType.CreatedBy = item.CreatedBy;
+                assetIntangibleType.UpdatedDate = item.UpdatedDate;
+                assetIntangibleType.UpdatedBy = item.UpdatedBy;
+                assetIntangibleType.IsActive = item.IsActive;
+                assetIntangibleTypes.Add(assetIntangibleType);
+            }
+            dynamicGridData.ColumnData = assetIntangibleTypes;
+            return Ok(dynamicGridData);
         }
 
         [HttpGet("getById/{id}")]
         public IActionResult getAssetIntangibleById(long id)
         {
-            var assetIntangibleTypeSingleScreen = unitOfWork.Repository<AssetIntangibleTypeSingleScreen>().Find(x => x.AssetIntangibleTypeSingleId == id && x.IsDelete != true);
+            var assetIntangibleTypeSingleScreen = unitOfWork.Repository<AssetIntangibleType>().Find(x => x.AssetIntangibleTypeId == id && x.IsDelete != true);
             return Ok(assetIntangibleTypeSingleScreen);
         }
 
         [HttpPost("add")]
-        public IActionResult addAssetIntangible([FromBody]AssetIntangibleTypeSingleScreen assetIntangibleTypeSingleScreen)
+        public IActionResult addAssetIntangible([FromBody]AssetIntangibleType assetIntangibleTypeSingleScreen)
         {
             if (assetIntangibleTypeSingleScreen != null)
             {
@@ -55,9 +87,8 @@ namespace QuickApp.Pro.Controllers
 
                     assetIntangibleTypeSingleScreen.UpdatedDate = DateTime.Now;
                     assetIntangibleTypeSingleScreen.CreatedDate = DateTime.Now;
-                    assetIntangibleTypeSingleScreen.IsActive = true;
-                    assetIntangibleTypeSingleScreen.MasterCompanyId = 1;
-                    unitOfWork.Repository<AssetIntangibleTypeSingleScreen>().Add(assetIntangibleTypeSingleScreen);
+                      assetIntangibleTypeSingleScreen.MasterCompanyId = 1;
+                    unitOfWork.Repository<AssetIntangibleType>().Add(assetIntangibleTypeSingleScreen);
                     unitOfWork.SaveChanges();
                     return Ok(assetIntangibleTypeSingleScreen);
                 }
@@ -75,16 +106,16 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("update")]
-        public IActionResult updateAssetIntangible([FromBody]AssetIntangibleTypeSingleScreen assetIntangibleTypeSingleScreen)
+        public IActionResult updateAssetIntangible([FromBody]AssetIntangibleType assetIntangibleTypeSingleScreen)
         {
             if (assetIntangibleTypeSingleScreen != null)
             {
                 if (ModelState.IsValid)
                 {
-                    if (assetIntangibleTypeSingleScreen.AssetIntangibleTypeSingleId > 0)
+                    if (assetIntangibleTypeSingleScreen.AssetIntangibleTypeId > 0)
                     {
                         assetIntangibleTypeSingleScreen.UpdatedDate = DateTime.Now;
-                        unitOfWork.Repository<AssetIntangibleTypeSingleScreen>().Update(assetIntangibleTypeSingleScreen);
+                        unitOfWork.Repository<AssetIntangibleType>().Update(assetIntangibleTypeSingleScreen);
                         unitOfWork.SaveChanges();
                         return Ok(assetIntangibleTypeSingleScreen);
                     }
@@ -108,11 +139,11 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("removeById/{id}")]
         public IActionResult removeAssetIntangibleById(long id)
         {
-            var assetIntangibleTypeSingleScreen = unitOfWork.Repository<AssetIntangibleTypeSingleScreen>().Find(x => x.AssetIntangibleTypeSingleId == id).FirstOrDefault();
+            var assetIntangibleTypeSingleScreen = unitOfWork.Repository<AssetIntangibleType>().Find(x => x.AssetIntangibleTypeId == id).FirstOrDefault();
             if (assetIntangibleTypeSingleScreen != null)
             {
                 assetIntangibleTypeSingleScreen.IsDelete = true;
-                unitOfWork.Repository<AssetIntangibleTypeSingleScreen>().Update(assetIntangibleTypeSingleScreen);
+                unitOfWork.Repository<AssetIntangibleType>().Update(assetIntangibleTypeSingleScreen);
                 unitOfWork.SaveChanges();
                 return Ok();
             }

@@ -70,7 +70,7 @@ namespace QuickApp.Pro.Controllers
                 unitOfMeasureobject.Memo = unitOfMeasureViewModel.Memo;
                 unitOfMeasureobject.MasterCompanyId = unitOfMeasureViewModel.MasterCompanyId;
                 unitOfMeasureobject.IsActive = unitOfMeasureViewModel.IsActive;
-                unitOfMeasureobject.IsDeleted = unitOfMeasureViewModel.IsDelete;
+                unitOfMeasureobject.IsDeleted = unitOfMeasureViewModel.IsDeleted;
                 unitOfMeasureobject.CreatedDate = DateTime.Now;
                 unitOfMeasureobject.UpdatedDate = DateTime.Now;
                 unitOfMeasureobject.CreatedBy = unitOfMeasureViewModel.CreatedBy;

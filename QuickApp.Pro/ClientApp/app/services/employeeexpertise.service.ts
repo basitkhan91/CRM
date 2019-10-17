@@ -46,7 +46,7 @@ export class EmployeeExpertiseService {
             this.employeeexpertiseEndpoint.getEmployeeExpertiseEndpoint<EmployeeExpertise[]>());
     }
 
-    newAction(action: EmployeeExpertise) {
+    newAction(action) {
         return this.employeeexpertiseEndpoint.getNewEmployeeExpertiseEndpoint<EmployeeExpertise>(action);
     }
 

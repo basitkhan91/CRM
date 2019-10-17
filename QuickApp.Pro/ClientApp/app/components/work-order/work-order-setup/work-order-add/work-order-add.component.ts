@@ -31,6 +31,7 @@ import {
   WorkOrderLabor,
   AllTasks
 } from '../../../../models/work-order-labor.modal';
+import { CommonService } from '../../../../services/common.service';
 
 @Component({
   selector: 'app-work-order-add',
@@ -46,7 +47,7 @@ export class WorkOrderAddComponent implements OnInit {
   workOrderStatus: WorkOrderStatus[];
   workScopes: WorkScope[];
   workOrderStages: WorkOrderStage[];
-  creditTerms: CreditTerms[];
+  creditTerms: any;
   customers: Customer[];
   selectedCustomer: Customer;
   selectedEmployee: any;
@@ -135,7 +136,8 @@ export class WorkOrderAddComponent implements OnInit {
     private employeeService: EmployeeService,
     private itemMasterService: ItemMasterService,
     private workOrderPartNumberService: WorkOrderPartNumberService,
-    private stocklineService: StocklineService
+    private stocklineService: StocklineService,
+    private commonService: CommonService
   ) {
     this.workOrderPartNumbers = [];
     this.workOrder = new WorkOrder();
@@ -157,7 +159,7 @@ export class WorkOrderAddComponent implements OnInit {
     this.getAllEmployees();
     this.getAllWorkScpoes();
     this.getAllWorkOrderStages();
-    this.getStockLines();
+    // this.getStockLines();
     this.addMPN();
   }
 
@@ -319,18 +321,21 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
   getAllCreditTerms(): void {
-    this.creditTermsService.getCreditTermsList().subscribe(
-      result => {
-        this.creditTerms = result[0];
-      },
-      error => {
-        this.alertService.showMessage(
-          this.moduleName,
-          'Something Went Wrong',
-          MessageSeverity.error
-        );
-      }
-    );
+    this.commonService.smartDropDownList('CreditTerms', 'CreditTermsId', 'Name').subscribe(res => {
+      this.creditTerms = res;
+    })
+    // this.creditTermsService.getCreditTermsList().subscribe(
+    //   result => {
+    //     this.creditTerms = result[0];
+    //   },
+    //   error => {
+    //     this.alertService.showMessage(
+    //       this.moduleName,
+    //       'Something Went Wrong',
+    //       MessageSeverity.error
+    //     );
+    //   }
+    // );
   }
 
   getAllCustomers(): void {

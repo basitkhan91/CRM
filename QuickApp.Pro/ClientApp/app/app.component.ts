@@ -517,6 +517,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                 items: [
                     { label: 'Employee List', routerLink: '/employeesmodule/employeepages/app-employees-list' },
                     { label: 'Create Employee', routerLink: '/employeesmodule/employeepages/app-employee-general-information' },
+                    
                     {
                         label: 'Expense Reports', items: [
                             { label: 'Expense List', routerLink: '/#' },
@@ -588,7 +589,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Charges', routerLink: '/singlepages/singlepages/app-charges' },
                             { label: 'Reasons', routerLink: '/singlepages/singlepages/app-reason' },
                             { label: 'Findings', routerLink: '/#' },
-                            { label: 'Work Performed', routerLink: '/#' },
+                            { label: 'Work Performed', routerLink: '/singlepages/singlepages/app-work-performed' },
                         ]
                     },
                     {
@@ -662,6 +663,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                     {
                         label: 'Employees', items: [
                             { label: 'Job Titles', routerLink: '/singlepages/singlepages/app-job-title' },
+                            { label: 'Job Type', routerLink: '/singlepages/singlepages/app-job-type' },
                             { label: 'Employee Expertise', routerLink: '/singlepages/singlepages/app-employee-expertise' },
                             { label: 'Certification Type', routerLink: '/singlepages/singlepages/app-certification-type' },
                         ]

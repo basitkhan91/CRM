@@ -42,7 +42,7 @@ export class AtaSubChapter1Service {
 			this.ataSubChapter1Endpoint.getATASubChapter1Endpoint<ATASubChapter[]>());
 	}
 
-	newATASubChapter1(ataSubChapter: ATASubChapter) {
+	newATASubChapter1(ataSubChapter) {
 		return this.ataSubChapter1Endpoint.getNewATASubChapter1Endpoint<ATASubChapter>(ataSubChapter);
 	}
 
@@ -54,7 +54,7 @@ export class AtaSubChapter1Service {
 		return this.ataSubChapter1Endpoint.getEditATASubChapter1Endpoint<ATASubChapter>(ataSubChapterId);
 	}
 
-	updateATASubChapter1(atasubchapter: ATASubChapter) {
+	updateATASubChapter1(atasubchapter) {
 		return this.ataSubChapter1Endpoint.getUpdateATASubChapter1Endpoint(atasubchapter, atasubchapter.ataSubChapterId);
 	}
 

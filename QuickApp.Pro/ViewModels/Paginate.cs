@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,9 +32,9 @@ namespace QuickApp.Pro.ViewModels
         public List<ColumHeader> columHeaders { get; set; }
         public IEnumerable<T> ColumnData { get; set; }
 
-		public int TotalRecords { get; set;  }
+        public int TotalRecords { get; set; }
 
-	} 
+    }
     #endregion
 
     public class PaginateViewModel
@@ -58,11 +58,11 @@ namespace QuickApp.Pro.ViewModels
     public interface ISortedViewModel
     {
         int sortOrder { get; set; }
-        string sortField { get; set;}
+        string sortField { get; set; }
     }
 
     #region Customer List
-    public class CustomerSearchViewModel : CustomerModel, IPaginateViewModel,ISortedViewModel
+    public class CustomerSearchViewModel : CustomerModel, IPaginateViewModel, ISortedViewModel
     {
         public int first { get; set; }
         public int page { get; set; }
@@ -91,9 +91,37 @@ namespace QuickApp.Pro.ViewModels
         public bool? IsActive { get; internal set; }
 
 		public string CustomerPhone { get; set; }
+        public string CustomerPhoneExt { get; set; }
 
         public string CustomerClarifiacationName { get; set; }
     }
+    #endregion
+
+    #region Vendor
+
+    public class VendorRepairOrderSearchViewModel : VendorRepairOrderModel, IPaginateViewModel, ISortedViewModel
+    {
+        public int first { get; set; }
+        public int page { get; set; }
+        public int pageCount { get; set; }
+        public int rows { get; set; }
+        public int limit { get; set; }
+        public string sortField { get; set; }
+        public int sortOrder { get; set; }
+        public int totalRecords { get; set; }
+    }
+
+    public class VendorRepairOrderModel
+    {
+        public string RONumber { get; set; }
+        public string RequestedBy { get; set; }
+        public DateTime? DateApproval { get; set; }
+        public DateTime DateRequested { get; set; }
+        public string Approvar { get; set; }
+        public string CreatedBy { get; set; }
+        public string UpdatedBy { get; set; }
+    }
+
     #endregion
 
     #region unitOfMeasure
@@ -124,6 +152,15 @@ namespace QuickApp.Pro.ViewModels
         public string ShortName { get; set; }
         public string Memo { get; set; }
         public string Standard { get; set; }
+    }
+    #endregion
+
+    #region AssetStatus
+    public class AssetStatusSPModel
+    {
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string Memo { get; set; }
     }
     #endregion
 
@@ -202,7 +239,7 @@ namespace QuickApp.Pro.ViewModels
         public string UpdatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
-       // public bool? IsActive { get; set; }
+        // public bool? IsActive { get; set; }
     }
     #endregion
 
@@ -234,7 +271,7 @@ namespace QuickApp.Pro.ViewModels
         public string ReasonCode { get; set; }
         public string ReasonForRemoval { get; set; }
         public string Memo { get; set; }
-        //public bool? IsActive { get; set; }
+        public bool? IsActive { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
@@ -252,7 +289,7 @@ namespace QuickApp.Pro.ViewModels
         public int limit { get; set; }
     }
 
-    public class CurrencyModel 
+    public class CurrencyModel
     {
         public Int32 CurrencyId { get; set; }
 
@@ -389,9 +426,9 @@ namespace QuickApp.Pro.ViewModels
         public int rows { get; set; }
         public int limit { get; set; }
 
-		public string Memo { get; set; }
-		public string Link { get; set; }
-	}
+        public string Memo { get; set; }
+        public string Link { get; set; }
+    }
     #endregion
 
     #region DefaultMessage
@@ -441,7 +478,7 @@ namespace QuickApp.Pro.ViewModels
     #region AssetDepreciationMethod
     public class AssetDepreciationMethodModel : PasBase
     {
-       public long? AssetDepreciationMethodId { get; set; }
+        public long? AssetDepreciationMethodId { get; set; }
         public string AssetDepreciationMethodName { get; set; }
 
         public string AssetDepreciationMethodCode { get; set; }
@@ -458,6 +495,7 @@ namespace QuickApp.Pro.ViewModels
         public string DepreciationMethod { get; set; }
         public string Memo { get; set; }
         public long? AssetDepreciationMethodId { get; set; }
+
         public Int32 MasterCompanyId { get; set; }
 
         public bool? IsActive { get; set; }
@@ -466,7 +504,8 @@ namespace QuickApp.Pro.ViewModels
 
         public virtual MasterCompany MasterCompany { get; set; }
 
-        public DateTime CreatedDate { get; set;}
+
+        public DateTime CreatedDate { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public string UpdatedBy { get; set; }
@@ -477,9 +516,90 @@ namespace QuickApp.Pro.ViewModels
         public string Code { get; set; }
         public string Name { get; set; }
         public string DepreciationMethod { get; set; }
-        public string Memo { get; set; }       
+        public string Memo { get; set; }
+    }
+
+    #endregion
+
+    #region AssetDisposalType
+    public class AssetDisposalTypeModel : PasBase
+    {
+        public long? AssetDisposalTypeId { get; set; }
+        public string AssetDisposalTypeName { get; set; }
+
+        public string AssetDisposalTypeCode { get; set; }
+        public string AssetDisposalTypeBasis { get; set; }
+        public string AssetDisposalTypeMemo { get; set; }
+        public Int32 MasterCompanyId { get; set; }
+        public bool? IsActive { get; set; }
+    }
+    public class AssetDisposalTypeColModel
+    {
+
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string Memo { get; set; }
+    }
+
+    public class AssetDisposalTypeSPModel : AssetDisposalTypeColModel
+    {
+        public long? AssetDisposalTypeId { get; set; }
+        public Int32 MasterCompanyId { get; set; }
+
+        public bool? IsActive { get; set; }
+
+        public bool? IsDelete { get; set; }
+
+        public virtual MasterCompany MasterCompany { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public string UpdatedBy { get; set; }
+    }
+
+   
+
+    #endregion
+
+    #region AssetDepConvension
+
+    public class AssetDepConvension : PasBase
+    {
+        public long? AssetDepConventionId { get; set; }     
+        public string AssetDepConventionCode { get; set; }
+        public string AssetDepConventionName { get; set; }
+        public string AssetDepConventionMemo { get; set; }
+        public Int32 MasterCompanyId { get; set; }
+        public bool? IsActive { get; set; }
+        public bool? IsDelete { get; set; }
+    }
+    public class AssetDepConvensionColModel
+    {
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string Memo { get; set; }
+    }
+
+    public class AssetDepConvensionSPModel : AssetDepConvensionColModel
+    {
+        
+            public long? AssetDepConventionId { get; set; }
+            public Int32 MasterCompanyId { get; set; }
+
+            public bool? IsActive { get; set; }
+
+            public bool? IsDelete { get; set; }
+
+            public virtual MasterCompany MasterCompany { get; set; }
+
+            public DateTime CreatedDate { get; set; }
+            public string CreatedBy { get; set; }
+            public DateTime? UpdatedDate { get; set; }
+            public string UpdatedBy { get; set; }
     }
     #endregion
+
 
     #region ATAChapter
     public class ATAChapterPaginationViewModel : ATAChapter, IPaginateViewModel
@@ -493,7 +613,7 @@ namespace QuickApp.Pro.ViewModels
     #endregion
 
     #region AssetIntangibleAttributeType
-    public class AssetIntangibleAttributeTypeModel 
+    public class AssetIntangibleAttributeTypeModel
     {
         public long AssetIntangibleAttributeTypeId { get; set; }
         public int IntangibleLife { get; set; }
@@ -510,6 +630,39 @@ namespace QuickApp.Pro.ViewModels
         public string AssetDepreciationIntervalMemo { get; set; }
     }
     #endregion
+
+    #region AssetIntangibleTypeSingleScreen
+   
+    public class AssetIntangibleTypeSingleScreenColModel
+    {
+
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string Memo { get; set; }
+    }
+
+    public class AssetIntangibleTypeSingleScreenSPModel
+    {
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string Memo { get; set; }
+        public long? AssetIntangibleTypeId { get; set; }
+        public Int32 MasterCompanyId { get; set; }
+
+        public bool? IsActive { get; set; }
+
+        public bool? IsDelete { get; set; }
+
+        public virtual MasterCompany MasterCompany { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public string UpdatedBy { get; set; }
+    }
+
+    #endregion
+
     #region Credit Terms
     public class CreditTermsModel
     {
@@ -532,7 +685,7 @@ namespace QuickApp.Pro.ViewModels
     #endregion
 
     #region Work Performed
-    public class WorkPerformedModel 
+    public class WorkPerformedModel
     {
         public string Description { get; set; }
         public string WorkPerformedCode { get; set; }
@@ -550,11 +703,39 @@ namespace QuickApp.Pro.ViewModels
     }
     #endregion
     #region Expenditure Category
-    public class ExpenditureCategoryModel 
+    public class ExpenditureCategoryModel
     {
         public long ExpenditureCategoryId { get; set; }
         public string Description { get; set; }
         public string Memo { get; set; }
     }
     #endregion
+
+    #region VendorClassification
+    public class VendorClassificationSearchViewModel : VendorClassificationModel, IPaginateViewModel
+    {
+        public int first { get; set; }
+        public int page { get; set; }
+        public int pageCount { get; set; }
+        public int rows { get; set; }
+        public int limit { get; set; }
+    }
+    public class VendorClassificationModel
+    {
+        public long VendorClassificationId { get; set; }
+        public string ClassificationName { get; set; }
+        public string Memo { get; set; }
+        public string CreatedBy { get; set; }
+        public string UpdatedBy { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public bool? IsActive { get; set; }
+    }
+    public class VendorClassificationSPModel
+    {
+        public string ClassificationName { get; set; }
+        public string Memo { get; set; }
+    }
+    #endregion
+
 }

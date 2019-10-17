@@ -6,9 +6,9 @@ namespace DAL.Models
   public class AssetIntangibleTypeSingleScreen:PasBase, IAudit
     {
         [Key]
-        public long? AssetIntangibleTypeSingleId { get; set; }
+        public long? AssetIntangibleTypeId { get; set; }
         [Required(ErrorMessage = "Id Is Required.")]
-        public string AssetIntangibleSingleId { get; set; }
+        public string AssetIntangibleCode { get; set; }
 
         [Required(ErrorMessage = "Name Is Required.")]
         public string AssetIntangibleName { get; set; }
@@ -17,4 +17,5 @@ namespace DAL.Models
         public bool IsDelete { get; set; }
         public bool IsActive { get; set; }
     }
+   
 }

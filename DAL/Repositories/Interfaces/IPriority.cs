@@ -1,8 +1,7 @@
 ﻿
 
-using System;
+using DAL.Models;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DAL.Repositories.Interfaces
 {
@@ -11,7 +10,7 @@ namespace DAL.Repositories.Interfaces
     public interface IPriority : IRepository<DAL.Models.Priority>
     {
         IEnumerable<DAL.Models.Priority> GetPriorities();
-
+        IEnumerable<PriorityAudit> GetPriorityHistory(long priorityId); 
 
         //  void CreateAction(DAL.Models.Action action);
 

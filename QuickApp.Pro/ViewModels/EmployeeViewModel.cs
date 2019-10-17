@@ -17,8 +17,11 @@ namespace QuickApp.Pro.ViewModels
         public string EmployeeIdAsPerPayroll { get; set; }
         public string StationId { get; set; }
         public Int16? JobTitleId { get; set; }
+        public Int16? JobTypeId { get; set; }
         public Int16? EmployeeExpertiseId { get; set; }
-        public DateTime DateOfBirth { get; set; }
+
+        public string EmployeeCode { get; set; }
+        public  DateTime? DateOfBirth { get; set; }
         public Int16? OriginatingCountryId { get; set; }
         public Int16? NationalityCountryId { get; set; }
         public DateTime StartDate { get; set; }
@@ -34,6 +37,8 @@ namespace QuickApp.Pro.ViewModels
         public decimal? HourlyPay { get; set; }
         public bool? EmployeeCertifyingStaff { get; set; }
         public long? SupervisorId { get; set; }
+
+        public  int CompanyId { get; set; }
 
         [ForeignKey("MasterCompanyId")]
         public Int32 MasterCompanyId { get; set; }

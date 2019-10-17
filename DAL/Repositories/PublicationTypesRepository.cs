@@ -21,7 +21,7 @@ namespace DAL.Repositories
             AppSettings = settings.Value;
         }
 
-        public GetData<PublicationType> GetPublicationTypesList(string name, int pageNumber, int pageSize)
+        public GetData<PublicationType> GetPublicationTypesList(string name,string description,string memo, int pageNumber, int pageSize)
         {
             try
             {
@@ -33,9 +33,11 @@ namespace DAL.Repositories
                 var take = pageSize;
                 var skip = take * (pageNumber - 1);
 
-                getData.TotalRecordsCount = (from pt in _appContext.PublicationTypes
+                getData.TotalRecordsCount = (from pt in _appContext.PublicationType
                                              where pt.IsDeleted == false
                                                    && pt.Name.Contains(!String.IsNullOrEmpty(name) ? name : pt.Name)
+                                                   && pt.Description.Contains(!String.IsNullOrEmpty(description) ? description : pt.Description)
+                                                   && pt.Memo.Contains(!String.IsNullOrEmpty(memo) ? memo : pt.Memo)
                                              select new
                                              {
                                                  pt.PublicationTypeId
@@ -44,13 +46,18 @@ namespace DAL.Repositories
 
 
 
-                var result = (from pt in _appContext.PublicationTypes
+                var result = (from pt in _appContext.PublicationType
                               where pt.IsDeleted == false
                                     && pt.Name.Contains(!String.IsNullOrEmpty(name) ? name : pt.Name)
+                                    && pt.Name.Contains(!String.IsNullOrEmpty(name) ? name : pt.Name)
+                                    && pt.Description.Contains(!String.IsNullOrEmpty(description) ? description : pt.Description)
+                                    && pt.Memo.Contains(!String.IsNullOrEmpty(memo) ? memo : pt.Memo)
                               select new
                               {
                                   pt.PublicationTypeId,
                                   pt.Name,
+                                  pt.Description,
+                                  pt.Memo,
                                   pt.IsActive,
                                   pt.CreatedDate,
                                   pt.CreatedBy,
@@ -69,6 +76,8 @@ namespace DAL.Repositories
                         publicationType = new PublicationType();
                         publicationType.PublicationTypeId = item.PublicationTypeId;
                         publicationType.Name = item.Name;
+                        publicationType.Description = item.Description;
+                        publicationType.Memo = item.Memo;
                         publicationType.IsActive = item.IsActive;
                         publicationType.CreatedDate = item.CreatedDate;
                         publicationType.CreatedBy = item.CreatedBy;
@@ -92,7 +101,7 @@ namespace DAL.Repositories
                 publicationType.CreatedDate = publicationType.UpdatedDate = DateTime.Now;
                 publicationType.IsDeleted = false;
                 publicationType.IsActive = true;
-                _appContext.PublicationTypes.Add(publicationType);
+                _appContext.PublicationType.Add(publicationType);
                 _appContext.SaveChanges();
                 return publicationType.PublicationTypeId;
             }
@@ -107,7 +116,7 @@ namespace DAL.Repositories
         {
             try
             {
-                var result = (from pt in _appContext.PublicationTypes
+                var result = (from pt in _appContext.PublicationType
                               where pt.PublicationTypeId == publicationTypeId
                               select new
                               {
@@ -169,11 +178,11 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<PublicationTypes_Audit> PublicationTypeHistory(long publicationTypeId)
+        public IEnumerable<PublicationTypeAudit> PublicationTypeHistory(long publicationTypeId)
         {
             try
             {
-                return _appContext.PublicationTypes_Audit.Where(c => c.PublicationTypeId == publicationTypeId).OrderByDescending(p => p.UpdatedDate).ToList();
+                return _appContext.PublicationTypeAudit.Where(c => c.PublicationTypeId == publicationTypeId).OrderByDescending(p => p.UpdatedDate).ToList();
             }
             catch (Exception)
             {
@@ -185,6 +194,9 @@ namespace DAL.Repositories
         public IEnumerable<PublicationType> UploadCustomData(IFormFile file)
         {
             string name = string.Empty;
+            string description = string.Empty;
+            string memo = string.Empty;
+
             List<PublicationType> publicationTypes = new List<PublicationType>();
             int count = 0;
             try
@@ -211,20 +223,25 @@ namespace DAL.Repositories
                             {
                                 while (reader.Read())
                                 {
-                                    if (count > 0)
+                                    if (count > 0 && !string.IsNullOrEmpty(reader.GetString(0)))
                                     {
-                                        var flag = _appContext.PublicationTypes.Any(p => p.Name == reader.GetString(0).Trim());
+                                        var flag = _appContext.PublicationType.Any(p => p.Name == reader.GetString(0).Trim() && p.IsDeleted == false);
                                         if (!flag)
                                         {
                                             publicationType = new PublicationType();
-                                            name = publicationType.Name = reader.GetString(0).Trim();
+                                            if (!string.IsNullOrEmpty(reader.GetString(0)))
+                                                name = publicationType.Name = reader.GetString(0).Trim();
+                                            if (!string.IsNullOrEmpty(reader.GetString(1)))
+                                                description = publicationType.Description = reader.GetString(1).Trim();
+                                            if (!string.IsNullOrEmpty(reader.GetString(2)))
+                                                memo = publicationType.Memo = reader.GetString(2).Trim();
                                             publicationType.MasterCompanyId = 1;
                                             publicationType.IsActive = true;
                                             publicationType.IsDeleted = false;
                                             publicationType.CreatedBy = publicationType.UpdatedBy = "System";
                                             publicationType.UpdatedDate = publicationType.CreatedDate = DateTime.Now;
 
-                                            _appContext.PublicationTypes.Add(publicationType);
+                                            _appContext.PublicationType.Add(publicationType);
                                             _appContext.SaveChanges();
                                             publicationType.UploadStatus = "Success";
                                             publicationTypes.Add(publicationType);
@@ -232,7 +249,12 @@ namespace DAL.Repositories
                                         else
                                         {
                                             publicationType = new PublicationType();
-                                            publicationType.Name = reader.GetString(0).Trim();
+                                            if (!string.IsNullOrEmpty(reader.GetString(0)))
+                                                publicationType.Name = reader.GetString(0).Trim();
+                                            if (!string.IsNullOrEmpty(reader.GetString(1)))
+                                                publicationType.Description = reader.GetString(1).Trim();
+                                            if (!string.IsNullOrEmpty(reader.GetString(2)))
+                                                publicationType.Memo = reader.GetString(2).Trim();
                                             publicationType.UploadStatus = "Duplicate";
                                             publicationTypes.Add(publicationType);
                                         }
@@ -249,6 +271,8 @@ namespace DAL.Repositories
             {
                 PublicationType publicationType = new PublicationType();
                 publicationType.Name = name;
+                publicationType.Description = description;
+                publicationType.Memo = memo;
                 publicationType.UploadStatus = "Failed";
                 publicationTypes.Add(publicationType);
             }

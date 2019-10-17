@@ -6,6 +6,7 @@ export class CustomerGeneralInformation {
     customerTypeId: number;
     name: string;
     customerPhone: string;
+    customerPhoneExt: string;
     email: string;
     address1: string;
     address2: string;
@@ -20,20 +21,24 @@ export class CustomerGeneralInformation {
     customerParentName: string;
     customerURL: string;
     generalCurrencyId: number;
-    customerClassificationId: number;
+    customerClassificationIds: any;
     contractReference: string;
     isPBHCustomer: boolean;
     pbhCustomerMemo: string;
     restrictPMA: boolean;
-    restrictPMAMemo: string;
+    restrictedPMAParts: Array<any>;
+    restrictedDERParts: Array<any>;
+    // restictPMAIds: any
+    // restrictPMAMemo: string;
     restrictBER: boolean;
-    restrictBERMemo: string;
-    scanDocuments: boolean;
+    // restictBERIds : any;
+    // restrictBERMemo: string;
+    // scanDocuments: boolean;
     isCustomerAlsoVendor: boolean;
-    edi: boolean;
-    ediDescription: string;
-    isAeroExchange: boolean;
-    aeroExchangeDescription: string;
+    // edi: boolean;
+    // ediDescription: string;
+    // isAeroExchange: boolean;
+    // aeroExchangeDescription: string;
     createdBy: string;
     updatedBy: string;
     masterCompanyId: number;
@@ -48,6 +53,7 @@ export class CustomerGeneralInformation {
         this.customerTypeId = null;
         this.name = '';
         this.customerPhone = '';
+        this.customerPhoneExt = '';
         this.email = '';
         this.address1 = '';
         this.address2 = '';
@@ -62,20 +68,25 @@ export class CustomerGeneralInformation {
         this.customerParentName = '';
         this.customerURL = '';
         this.generalCurrencyId = null;
-        this.customerClassificationId = null;
+        this.customerClassificationIds = [];
         this.contractReference = '';
         this.isPBHCustomer = false;
         this.pbhCustomerMemo = '';
         this.restrictPMA = false;
-        this.restrictPMAMemo = '';
+        // this.restrictsPMAList = []
+        // this.restictPMAIds = [];
+        // this.restrictPMAMemo = '';
         this.restrictBER = false;
-        this.restrictBERMemo = '';
-        this.scanDocuments = false;
+        this.restrictedPMAParts = []
+        this.restrictedDERParts = []
+        // this.restictBERIds = [];
+        // this.restrictBERMemo = '';
+        // this.scanDocuments = false;
         this.isCustomerAlsoVendor = false;
-        this.edi = false;
-        this.ediDescription = '';
-        this.isAeroExchange = false;
-        this.aeroExchangeDescription = '';
+        // this.edi = false;
+        // this.ediDescription = '';
+        // this.isAeroExchange = false;
+        // this.aeroExchangeDescription = '';
         this.createdBy = '';
         this.updatedBy = '';
         this.masterCompanyId = null;

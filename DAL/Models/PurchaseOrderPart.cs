@@ -23,13 +23,13 @@ namespace DAL.Models
         public long ManufacturerId { get; set; }
         public string Status { get; set; }
         public string Trace { get; set; }
-        public string ConditionCode { get; set; }
+        public long ConditionId { get; set; }
         public Nullable<long> UOMId { get; set; }
         public Nullable<short> QuantityOrdered { get; set; }
         public Nullable<short> QuantityBackOrdered { get; set; }
         public Nullable<decimal> UnitCost { get; set; }
         public Nullable<short> DiscountPerUnit { get; set; }
-        public Nullable<short> DiscountCostPerUnit { get; set; }
+        public Nullable<decimal> DiscountCostPerUnit { get; set; }
         public Nullable<decimal> ExtendedCost { get; set; }
         public Nullable<int> TransactionalCurrencyId { get; set; }
         public Nullable<int> FunctionalCurrencyId { get; set; }

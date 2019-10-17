@@ -10,10 +10,9 @@ namespace DAL.Models
     {
         [Key]
         public long WorkPerformedId { get; set; }
+        public string WorkPerformedCode { get; set; }
 
         public string Description { get; set; }
-
-        public string WorkPerformedCode { get; set; }
 
         public string Memo { get; set; }
 
@@ -23,7 +22,7 @@ namespace DAL.Models
         public bool? IsActive { get; set; }
 
         public virtual MasterCompany MasterCompany { get; set; }
-        public bool? IsDelete { get; set; }
+        public bool? IsDeleted { get; set; }
 
     }
 }

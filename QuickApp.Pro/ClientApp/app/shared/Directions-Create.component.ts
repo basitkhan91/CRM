@@ -2,6 +2,7 @@ import { Component, Input, OnInit, OnChanges, EventEmitter, Output } from "@angu
 import { IWorkFlow } from "../Workflow/WorkFlow";
 import { ActionService } from "../Workflow/ActionService";
 import { IDirections } from "../Workflow/Directions";
+import { AlertService, MessageSeverity } from "../services/alert.service";
 
 @Component({
     selector: 'grd-directions',
@@ -9,6 +10,7 @@ import { IDirections } from "../Workflow/Directions";
     styleUrls: ['./Directions-Create.component.css']
 })
 export class DirectionsCreateComponent implements OnInit, OnChanges {
+    
     @Input() workFlow: IWorkFlow;
     @Input() UpdateMode: boolean;
     @Output() notify: EventEmitter<IWorkFlow> =
@@ -18,9 +20,13 @@ export class DirectionsCreateComponent implements OnInit, OnChanges {
     currentPage : number = 1;
     itemsPerPage : number = 10;
 
+    constructor(private alertService: AlertService) {
+
+    }
+
     ngOnInit(): void {
-        //debugger;
         this.row = this.workFlow.directions[0];
+        this.row.taskId = this.workFlow.taskId;
     }
 
     ngOnChanges(): void {
@@ -47,6 +53,18 @@ export class DirectionsCreateComponent implements OnInit, OnChanges {
         }
         else {
             this.workFlow.directions[index].isDelete = true;
+        }
+    }
+
+    checkDuplicateSequence(event, direction: any): void {
+
+        if (this.workFlow.directions != undefined && this.workFlow.directions.length > 0) {
+            var duplicate = this.workFlow.directions.filter(d => d.sequence == direction.sequence && direction.taskId == this.workFlow.taskId);
+            if (duplicate.length > 1) {
+                this.alertService.showMessage('Work Flow', 'Duplicate Sequence are not allowed Direction.', MessageSeverity.error);
+                direction.sequence = '';
+                event.target.value = '';
+            }
         }
     }
 

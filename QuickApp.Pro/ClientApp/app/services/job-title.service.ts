@@ -19,6 +19,7 @@ import { Role } from '../models/role.model';
 
 import { JobTitleEndpontService } from './job-title-endpoint.service';
 import { JobTitle } from '../models/jobtitle.model';
+import { JobType } from '../models/jobtype.model';
 import { AuditHistory } from '../models/audithistory.model';
 
 export type RolesChangedOperation = "add" | "delete" | "modify";
@@ -43,8 +44,16 @@ export class JobTitleService {
             this.jobTitleEndpoint.getJobtitleEndpoint<JobTitle[]>());
     }
 
+    getjobTypeWorkFlows() {
+        return Observable.forkJoin(
+            this.jobTitleEndpoint.getJobtypeEndpoint<JobType[]>());
+    }
     newAction(action: JobTitle) {
         return this.jobTitleEndpoint.getNewjobtitleEndpoint<JobTitle>(action);
+    }
+
+    newAction2(action: JobType) {
+        return this.jobTitleEndpoint.getNewjobtitleEndpoint2<JobType>(action);
     }
 
     getAction(actionId?: number) {

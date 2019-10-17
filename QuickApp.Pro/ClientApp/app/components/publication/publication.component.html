@@ -53,13 +53,14 @@
                         <div style="text-align: right">
                             <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
                                            selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-                            <div class="inner-addon right-addon w200 inline-block">
+                            <!-- <div class="inner-addon right-addon w200 inline-block">
                                 <i class="fa fa-search"></i>
                                 <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter">
-                            </div>
+                            </div> -->
                             <button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
                             <button type="button" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
-                            <a (click)="open(contentEdit)" matTooltip="Add Publication" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>
+                            <!-- <a (click)="open(contentEdit)" matTooltip="Add Publication" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a> -->
+                            <a [routerLink]="['/singlepages/singlepages/app-create-publication']" matTooltip="Add Publication" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>
                             <div class="excel-upload">
                                 <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                                 <label for="upload">
@@ -98,7 +99,7 @@
                                 <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                 <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
 
-                                <button class="btn-edit" mat-icon-button (click)="openEdit(contentEdit,rowData)" matTooltip="edit">
+                                <button class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="edit">
                                     <mat-icon>edit</mat-icon>
                                 </button>
 
@@ -144,7 +145,7 @@
 
 </ng-template>
 
-<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
+<!--<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Publication</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Publication</h4>
@@ -157,7 +158,7 @@
 			<div class="form-group">
 				<label for="name" class="control-label">Publication Id</label>
 				<div class="inner-addon right-addon inline-block">
-					<!--<div class="control-data">
+					<div class="control-data">
 			<input type="text" name="code" class="form-control" required minlength="5" #publicationId="ngModel" [(ngModel)]="sourceAction.publicationId">
 			<div *ngIf="publicationId.dirty && publicationId.errors?.required && publicationId.errors" class="invalid-form-error-message">
 				Name required.
@@ -165,7 +166,7 @@
 			<div *ngIf="publicationId.dirty && publicationId.errors?.minlength && publicationId.errors" class="invalid-form-error-message">
 				Name must be at least 5 characters long.
 			</div>
-		</div>-->
+		</div>
 					<p-autoComplete [(ngModel)]="publicationName" [ngModelOptions]="{standalone: true}" (onSelect)="publicationId($event)" (onKeyUp)="eventHandler($event)" [suggestions]="localCollection" (completeMethod)="filterpublications($event)" [size]="30"
 									[minLength]="1" [dropdown]="true">
 						<ng-template let-publicationName pTemplate="item">
@@ -281,7 +282,7 @@
 					</div>
 					<div class="clear"></div>
 				</div>
-				<!--<div class="form-group">
+				<div class="form-group">
 		<label for="masterCompanyId" class="control-label">Company</label>
 		<div class="">
 			<select name="masterCompanyId" class="form-control form-control-lg w150" required #masterCompanyId="ngModel" id="masterCompanyId" [(ngModel)]="sourceAction.masterCompanyId">
@@ -292,7 +293,7 @@
 			Master company required.
 		</div>
 		<div class="clear"></div>
-	</div>-->
+	</div>
 				<div class="form-group">
 					<div class="col-sm-6">
 						<label class="form-check-label" for="isActive">
@@ -311,7 +312,7 @@
 </form>
     </div>
 
-</ng-template>
+</ng-template>-->
 
 <ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
     <div class="modal-header">
@@ -352,268 +353,255 @@
         <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
     </div>
 </ng-template>
-<ng-template #view class="modal fade " id="view" role="dialog">
-        <div class="modal-header">
-                <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-                <h4 class="modal-title">Publication Details</h4>
 
+
+
+<div id="view" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+      
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+                    <button type="button" class="close"  data-dismiss="modal" >×</button>
+                    <h4 class="modal-title">Publication Details</h4>
             </div>
-        <div class="modal-body viewform">
-                <div id="adminsearchlocationajax" class="table-responsive default-bg clear">
+            <div class="modal-body">
+                    <div id="adminsearchlocationajax" class="table-responsive default-bg clear">
                     
-                    <!--<a href="#" class="btn btn-primary openall">open all</a> <a href="#" class="btn btn-warning closeall">close all</a>-->
-                    <div class="panel-group" id="accordion">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step1">General Information</a> </h4>
-                            </div>
-                            <div id="step1" class="panel-collapse collapse in" *ngIf="generalInfo">
-                                <div class="panel-body">
-                                    <div class="modal-content">
-                                        <div class="table-responsive default-bg clear">
-                                            <div class="col-sm-4">
-                                                <p><span class="label"><b>Entry Date: </b></span><span class="value">{{generalInfo.entryDate | date: 'dd/MM/yyyy'}}</span></p>
-                                                <p><span class="label"><b>Publication ID: </b></span><span class="value">{{generalInfo.publicationId ? generalInfo.publicationId : '-'}}</span></p>
-                                                <p><span class="label"><b>Publication Description: </b></span><span class="value">{{generalInfo.description ? generalInfo.description : '-'}}</span></p>
-                                                <p><span class="label"><b>Publication Type: </b></span><span class="value">{{generalInfo.publicationType ? generalInfo.publicationType : '-'}}</span></p>
-                                                <p><span class="label"><b>Author / Source / Directive: </b></span><span class="value">{{generalInfo.asd ? generalInfo.asd : '-'}}</span></p>                                                                                         
-                                            </div>
-                                            <div class="col-sm-4">
-                                                    <p><span class="label"><b>Sequence: </b></span><span class="value">{{generalInfo.sequence ? generalInfo.sequence : '-'}}</span></p>
-                                                    <p><span class="label"><b>Published By: </b></span><span class="value">{{generalInfo.publishby ? generalInfo.publishby : '-'}}</span></p>
-                                                    <p><span class="label"><b>Location: </b></span><span class="value">{{generalInfo.location ? generalInfo.location : '-'}}</span></p>
-                                                    <p><span class="label"><b>Revision Date: </b></span><span class="value">{{generalInfo.revisionDate | date: 'dd/MM/yyyy'}}</span></p>
-                                                    <p><span class="label"><b>Expiration Date: </b></span><span class="value">{{generalInfo.expirationDate | date: 'dd/MM/yyyy'}}</span></p>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                    <p><span class="label"><b>Next Review Date: </b></span><span class="value">{{generalInfo.nextReviewDate | date: 'dd/MM/yyyy'}}</span></p>
-                                                    <p><span class="label"><b>Employee: </b></span><span class="value">{{generalInfo.employeeName ? generalInfo.employeeName : '-'}}</span></p>
-                                                    <p><span class="label"><b>Verified By: </b></span><span class="value">{{generalInfo.verifiedBy ? generalInfo.verifiedBy : '-'}}</span></p>
-                                                    <p><span class="label"><b>Status: </b></span><span class="value">{{isActive}}</span></p>
-                                                
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <h4 class="panel-title" style="padding-left: 10px;">Attachment Details:</h4>
-                                            <p-table
-                                              [columns]="headersforAttachment"
-                                              [value]="attachmentList"
-                                              [paginator]="true"
-                                              [rows]="10"
-                                              [first]="first"
-                                            >
-                                              <ng-template pTemplate="header" let-columns>
-                                                <tr>
-                                                  <th>Sl.No</th>
-                                                  <th *ngFor="let col of columns">
-                                                    {{ col.header }}
-                                                  </th>
-                                                  <th>Action</th>
-                                                </tr>
-                                              </ng-template>
-                                              <ng-template
-                                                pTemplate="body"
-                                                let-rowData
-                                                let-columns="columns"
-                                                let-rowIndex="rowIndex"
-                                              >
-                                                <tr>
-                                                  <td>{{ rowIndex + 1 }}</td>
-                                                  <td *ngFor="let col of columns">
-                                                    {{ rowData[col.field] }}
-                                                  </td>
-                                                  <td><a class="btn btn-primary-cstm" download>Download</a></td> <!--routerLink="/{{rowData.link}}"-->
-                                                </tr>
-                                                
-                                              </ng-template>
-                                            </p-table>
-                                          </div>
+                    
+                            <!--<a href="#" class="btn btn-primary openall">open all</a> <a href="#" class="btn btn-warning closeall">close all</a>-->
+                            <div class="panel-group" id="accordion">
+                                <div class="panel panel-default">
+                                    <div>
+                                        <button type="button" class="btn btn-primary-cstm" data-toggle="collapse" (click)="openAllCollapse()" >Open All</button>
+                                        <button type="button" class="btn btn-primary-cstm collapsed" data-toggle="collapse" (click)="closeAllCollapse()" >Close All</button>
+                                        <hr />
                                     </div>
-
-                                </div>
-                            </div>
-
-                             <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step2">PN Mapping</a> </h4>
-                                </div>
-                                <div id="step2" class="panel-collapse collapse">
-                                    <div class="panel-body">
-                                        <div class="col-sm-12">
-                                            <div class="shadow-Box">
-                                              <p-table
-                                                [columns]="headersforPNMapping"
-                                                [value]="pnMappingList"
-                                                [paginator]="true"
-                                                [rows]="10"
-                                                [first]="first"
-                                              >
-                                                <ng-template pTemplate="header" let-columns>
-                                                  <tr>
-                                                    <th>Sl.No</th>
-                                                    <th *ngFor="let col of columns">
-                                                      {{ col.header }}
-                                                    </th>
-                                                  </tr>
-                                                </ng-template>
-                                                <ng-template
-                                                  pTemplate="body"
-                                                  let-rowData
-                                                  let-columns="columns"
-                                                  let-rowIndex="rowIndex"
-                                                >
-                                                  <tr>
-                                                    <td>{{ rowIndex + 1 }}</td>
-                                                    <td *ngFor="let col of columns">
-                                                      {{ rowData[col.field] }}
-                                                    </td>
-                                                  </tr>
-                                                </ng-template>
-                                              </p-table>
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step1" >General Information</a> </h4>
+                                    </div>
+                                    <div id="step1" class="panel-collapse  collapse" *ngIf="generalInfo">
+                                        <div class="panel-body">
+                                            <div class="modal-content">
+                                                <div class="table-responsive default-bg clear">
+                                                    <div class="col-sm-4">
+                                                        <p><span class="label"><b>Entry Date: </b></span><span class="value">{{generalInfo.entryDate | date: 'dd/MM/yyyy'}}</span></p>
+                                                        <p><span class="label"><b>Publication ID: </b></span><span class="value">{{generalInfo.publicationId ? generalInfo.publicationId : '-'}}</span></p>
+                                                        <p><span class="label"><b>Publication Description: </b></span><span class="value">{{generalInfo.description ? generalInfo.description : '-'}}</span></p>
+                                                        <p><span class="label"><b>Publication Type: </b></span><span class="value">{{generalInfo.publicationType ? generalInfo.publicationType : '-'}}</span></p>
+                                                        <p><span class="label"><b>Author / Source / Directive: </b></span><span class="value">{{generalInfo.asd ? generalInfo.asd : '-'}}</span></p>                                                                                         
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                            <p><span class="label"><b>Sequence: </b></span><span class="value">{{generalInfo.sequence ? generalInfo.sequence : '-'}}</span></p>
+                                                            <p><span class="label"><b>Published By: </b></span><span class="value">{{generalInfo.publishby ? generalInfo.publishby : '-'}}</span></p>
+                                                            <p><span class="label"><b>Location: </b></span><span class="value">{{generalInfo.location ? generalInfo.location : '-'}}</span></p>
+                                                            <p><span class="label"><b>Revision Date: </b></span><span class="value">{{generalInfo.revisionDate | date: 'dd/MM/yyyy'}}</span></p>
+                                                            <p><span class="label"><b>Expiration Date: </b></span><span class="value">{{generalInfo.expirationDate | date: 'dd/MM/yyyy'}}</span></p>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                            <p><span class="label"><b>Next Review Date: </b></span><span class="value">{{generalInfo.nextReviewDate | date: 'dd/MM/yyyy'}}</span></p>
+                                                            <p><span class="label"><b>Employee: </b></span><span class="value">{{generalInfo.employeeName ? generalInfo.employeeName : '-'}}</span></p>
+                                                            <p><span class="label"><b>Verified By: </b></span><span class="value">{{generalInfo.verifiedBy ? generalInfo.verifiedBy : '-'}}</span></p>
+                                                            <p><span class="label"><b>Status: </b></span><span class="value">{{isActive}}</span></p>
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <h4 class="panel-title" style="padding-left: 10px;">Attachment Details:</h4>
+                                                    <p-table
+                                                      [columns]="headersforAttachment"
+                                                      [value]="attachmentList"
+                                                      [paginator]="true"
+                                                      [rows]="10"
+                                                      [first]="first"
+                                                    >
+                                                      <ng-template pTemplate="header" let-columns>
+                                                        <tr>
+                                                          <th>Sl.No</th>
+                                                          <th *ngFor="let col of columns">
+                                                            {{ col.header }}
+                                                          </th>
+                                                          <th>Action</th>
+                                                        </tr>
+                                                      </ng-template>
+                                                      <ng-template
+                                                        pTemplate="body"
+                                                        let-rowData
+                                                        let-columns="columns"
+                                                        let-rowIndex="rowIndex"
+                                                      >
+                                                        <tr>
+                                                          <td>{{ rowIndex + 1 }}</td>
+                                                          <td *ngFor="let col of columns">
+                                                            {{ rowData[col.field] }}
+                                                          </td>
+                                                          <td><a class="btn btn-primary-cstm" (click)="downloadFileUpload(rowData)" download>Download</a></td> <!--routerLink="/{{rowData.link}}"-->
+                                                        </tr>
+                                                        
+                                                      </ng-template>
+                                                    </p-table>
+                                                  </div>
                                             </div>
-                                          </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#step3">Aircraft Information</a> </h4>
-                                </div>
-                                <div id="step3" class="panel-collapse collapse">
-                                    <div class="panel-body">
-                                        <div class="col-sm-12">
-                                            <div class="shadow-Box">
-                                                <p-table
-                                                  [columns]="aircraftInformationCols"
-                                                  [value]="aircraftList"
-                                                  [paginator]="true"
-                                                  [rows]="10"
-                                                  [first]="first"
-                                                >
-                                                  <ng-template pTemplate="header" let-columns>
-                                                    <tr>
-                                                      <th>ID</th>
-                                                      <th *ngFor="let col of columns">
-                                                        {{ col.header }}
-                                                      </th>
-                                                    </tr>
-                                                  </ng-template>
-                                                  <ng-template
-                                                    pTemplate="body"
-                                                    let-rowData
-                                                    let-columns="columns"
-                                                    let-rowIndex="rowIndex"
-                                                  >
-                                                    <tr>
-                                                      <td>{{ rowIndex + 1 }}</td>
-                                                      <td *ngFor="let col of columns">
-                                                        {{ rowData[col.field] }}
-                                                      </td>
-                                                    </tr>
-                                                  </ng-template>
-                                                </p-table>
-                                              </div>
-                                          </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#step4">ATA Chapter</a></h4>
-                                </div>
-                                <div id="step4" class="panel-collapse collapse">
-                                    <div class="panel-body">
-                                        <div class="col-sm-12">
-                                            <div class="shadow-Box">
-                                                <p-table
-                                                  [columns]="atacols"  
-                                                  [value]="ataList"             
-                                                  [paginator]="true"
-                                                  [rows]="10"
-                                                  [first]="first"
-                                                >
-                                                  <ng-template pTemplate="header" let-columns>
-                                                    <tr>
-                                                      <th>ID</th>
-                                                      <th *ngFor="let col of columns">
-                                                        {{ col.header }}
-                                                      </th>
-                                                    </tr>
-                                                  </ng-template>
-                                                  <ng-template
-                                                    pTemplate="body"
-                                                    let-rowData
-                                                    let-columns="columns"
-                                                    let-rowIndex="rowIndex"
-                                                  >
-                                                    <tr>
-                                                      <td>{{ rowIndex + 1 }}</td>
-                                                      <td *ngFor="let col of columns">
-                                                        {{ rowData[col.field] }}
-                                                      </td>
-                                                    </tr>
-                                                  </ng-template>
-                                                </p-table>
-                                              </div>
-                                          </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                           <!-- <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step3">Export Information</a> </h4>
-                                </div>
-                                <div id="step3" class="panel-collapse collapse">
-                                    <div class="panel-body">
-                                        <div class="col-sm-4">
-                                            <p><span class="label"><b>CountryId: </b></span><span class="value">{{viewItemMaster.exportCountryId}}</span></p>
-                                            <p><span class="label"><b>Value: </b></span><span class="value">{{viewItemMaster.exportValue}}</span></p>
-                                            <p><span class="label"><b>Weight: </b></span><span class="value">{{viewItemMaster.exportWeight}}</span></p>
-                                            <p><span class="label"><b>Size(L,W,H): </b></span><span class="value">{{viewItemMaster.exportSizeLength}} , {{viewItemMaster.exportSizeWidth}} , {{viewItemMaster.exportSizeHeight}}</span></p>
-                                            <p><span class="label"><b>Classification: </b></span><span class="value">{{viewItemMaster.exportClassificationId}}</span></p>
+        
                                         </div>
                                     </div>
+        
+                                     <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step2">PN Mapping</a> </h4>
+                                        </div>
+                                        <div id="step2" class="panel-collapse  collapse">
+                                            <div class="panel-body">
+                                                <div class="col-sm-12">
+                                                    <div class="shadow-Box">
+                                                      <p-table
+                                                        [columns]="headersforPNMapping"
+                                                        [value]="pnMappingList"
+                                                        [paginator]="true"
+                                                        [rows]="10"
+                                                        [first]="first"
+                                                      >
+                                                        <ng-template pTemplate="header" let-columns>
+                                                          <tr>
+                                                            <th>Sl.No</th>
+                                                            <th *ngFor="let col of columns">
+                                                              {{ col.header }}
+                                                            </th>
+                                                          </tr>
+                                                        </ng-template>
+                                                        <ng-template
+                                                          pTemplate="body"
+                                                          let-rowData
+                                                          let-columns="columns"
+                                                          let-rowIndex="rowIndex"
+                                                        >
+                                                          <tr>
+                                                            <td>{{ rowIndex + 1 }}</td>
+                                                            <td *ngFor="let col of columns">
+                                                              {{ rowData[col.field] }}
+                                                            </td>
+                                                          </tr>
+                                                        </ng-template>
+                                                      </p-table>
+                                                    </div>
+                                                  </div>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#step3">Aircraft Information</a> </h4>
+                                        </div>
+                                        <div id="step3" class="panel-collapse  collapse">
+                                            <div class="panel-body">
+                                                <div class="col-sm-12">
+                                                    <div class="shadow-Box">
+                                                        <p-table
+                                                          [columns]="aircraftInformationCols"
+                                                          [value]="aircraftList"
+                                                          [paginator]="true"
+                                                          [rows]="10"
+                                                          [first]="first"
+                                                        >
+                                                          <ng-template pTemplate="header" let-columns>
+                                                            <tr>
+                                                              <th>ID</th>
+                                                              <th *ngFor="let col of columns">
+                                                                {{ col.header }}
+                                                              </th>
+                                                            </tr>
+                                                          </ng-template>
+                                                          <ng-template
+                                                            pTemplate="body"
+                                                            let-rowData
+                                                            let-columns="columns"
+                                                            let-rowIndex="rowIndex"
+                                                          >
+                                                            <tr>
+                                                              <td>{{ rowIndex + 1 }}</td>
+                                                              <td *ngFor="let col of columns">
+                                                                {{ rowData[col.field] }}
+                                                              </td>
+                                                            </tr>
+                                                          </ng-template>
+                                                        </p-table>
+                                                      </div>
+                                                  </div>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#step4">ATA Chapter</a></h4>
+                                        </div>
+                                        <div id="step4" class="panel-collapse  collapse">
+                                            <div class="panel-body">
+                                                <div class="col-sm-12">
+                                                    <div class="shadow-Box">
+                                                        <p-table
+                                                          [columns]="atacols"  
+                                                          [value]="ataList"             
+                                                          [paginator]="true"
+                                                          [rows]="10"
+                                                          [first]="first"
+                                                        >
+                                                          <ng-template pTemplate="header" let-columns>
+                                                            <tr>
+                                                              <th>ID</th>
+                                                              <th *ngFor="let col of columns">
+                                                                {{ col.header }}
+                                                              </th>
+                                                            </tr>
+                                                          </ng-template>
+                                                          <ng-template
+                                                            pTemplate="body"
+                                                            let-rowData
+                                                            let-columns="columns"
+                                                            let-rowIndex="rowIndex"
+                                                          >
+                                                            <tr>
+                                                              <td>{{ rowIndex + 1 }}</td>
+                                                              <td *ngFor="let col of columns">
+                                                                {{ rowData[col.field] }}
+                                                              </td>
+                                                            </tr>
+                                                          </ng-template>
+                                                        </p-table>
+                                                      </div>
+                                                  </div>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                   <!-- <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step3">Export Information</a> </h4>
+                                        </div>
+                                        <div id="step3" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                <div class="col-sm-4">
+                                                    <p><span class="label"><b>CountryId: </b></span><span class="value">{{viewItemMaster.exportCountryId}}</span></p>
+                                                    <p><span class="label"><b>Value: </b></span><span class="value">{{viewItemMaster.exportValue}}</span></p>
+                                                    <p><span class="label"><b>Weight: </b></span><span class="value">{{viewItemMaster.exportWeight}}</span></p>
+                                                    <p><span class="label"><b>Size(L,W,H): </b></span><span class="value">{{viewItemMaster.exportSizeLength}} , {{viewItemMaster.exportSizeWidth}} , {{viewItemMaster.exportSizeHeight}}</span></p>
+                                                    <p><span class="label"><b>Classification: </b></span><span class="value">{{viewItemMaster.exportClassificationId}}</span></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> -->
                                 </div>
-                            </div> -->
+                            </div>
                         </div>
-                    </div>
-                </div>
-    
             </div>
-
-    <!-- <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-            <h4 class="modal-title">Publication Details</h4>
-        </div>
-        <div class="modal-body viewform">
-            <div class="col-sm-6">
-                <p><span class="label"><b>Publication Name: </b></span><span class="value">{{ publication_Name}}</span></p>
-                <p><span class="label"><b>Description : </b></span><span class="value">{{ description}}</span></p>
-                <p><span class="label"><b>Part Number: </b></span><span class="value">{{ partNumber}}</span></p>
-                <p><span class="label"><b>Model: </b></span><span class="value">{{  model}}</span></p>
-                <p><span class="label"><b>Ata Main: </b></span><span class="value">{{ ataMain}}</span></p>
-                <p><span class="label"><b>AtaSub Chapter: </b></span><span class="value">{{ ataSubChapter}}</span></p>
-                <p><span class="label"><b>AtaPosition Zone: </b></span><span class="value">{{ ataPositionZone}}</span></p>
-                <p><span class="label"><b>Platform: </b></span><span class="value">{{ platform}}</span></p>
-                <p><span class="label"><b>Memo: </b></span><span class="value">{{memo}}</span></p>
-                <p><span class="label"><b>Created By: </b></span><span class="value">{{createdBy}}</span></p>
-                <p><span class="label"><b>Created Date: </b></span><span class="value">{{createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span></p>
-                <p><span class="label"><b>Updated By: </b></span><span class="value">{{updatedBy}}</span></p>
-                <p><span class="label"><b>Updated Date: </b></span><span class="value">{{updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span></p>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
             </div>
-
-            <div class="clear"></div>
+          </div>
+      
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
-        </div>
-    </div> -->
-
-</ng-template>
+      </div>
 
 <!-- <ng-template #helpText class="modal fade" id="help-popup" role="dialog">
 

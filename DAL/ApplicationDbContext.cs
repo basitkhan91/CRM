@@ -20,7 +20,10 @@ namespace DAL
     {
         // Test Changes....
         public string CurrentUserId { get; set; }
-        public DbSet<ShippingReference> ShippingReference { get; set; }
+
+		public DbSet<CustomerContactAudit> CustomerContactAudit { get; set; }
+
+		public DbSet<ShippingReference> ShippingReference { get; set; }
         public DbSet<ShippingVia> ShippingVia { get; set; }
         public DbSet<ShippingAccount> ShippingAccount { get; set; }
         public DbSet<ItemMasterAircraftMapping> ItemMasterAircraftMapping { get; set; }
@@ -91,6 +94,9 @@ namespace DAL
         public DbSet<EmployeeExpertise> EmployeeExpertise { get; set; }
 
         public DbSet<JobTitle> JobTitle { get; set; }
+
+        public DbSet<JobType> JobType { get; set; }
+
         public DbSet<GLAccountClass> GLAccountClass { get; set; }
 
         public DbSet<CertificationType> CertificationType { get; set; }
@@ -241,7 +247,7 @@ namespace DAL
         public DbSet<MaterialMandatory> MaterialMandatories { get; set; }
         public DbSet<MaterialUOM> MaterialUOMs { get; set; }
 
-        public DbSet<PublicationType> PublicationTypes { get; set; }
+        public DbSet<PublicationType> PublicationType { get; set; }
         public DbSet<PublicationModel> PublicationModels { get; set; }
         public DbSet<PublicationStatus> PublicationStatuses { get; set; }
         public DbSet<ExclusionEstimatedOccurance> ExclusionEstimatedOccurances { get; set; }
@@ -274,6 +280,7 @@ namespace DAL
         public DbSet<AssetDisposalType> AssetDisposalType { get; set; }
         public DbSet<AssetDepreciationIntervalType> AssetDepreciationIntervalType { get; set; }
         public DbSet<AssetDepConventionType> AssetDepConventionType { get; set; }
+        public DbSet<AssetDepConvention> AssetDepConvention { get; set; }
         public DbSet<AssetIntangibleTypeSingleScreen> AssetIntangibleTypeSingleScreen { get; set; }
 
         public DbSet<AssetType> AssetType { get; set; }
@@ -365,6 +372,8 @@ namespace DAL
 
         public DbSet<CustomerAircraftMapping> CustomerAircraftMapping { get; set; }
         public DbSet<CustomerATAMapping> CustomerATAMapping { get; set; }
+        public DbSet<CustomerContactATAMapping> CustomerContactATAMapping { get; set; }
+        public DbSet<CustomerTaxTypeRateMapping> CustomerTaxTypeRateMapping { get; set; }
         public DbSet<AssetCapes> AssetCapes { get; set; }
         public DbSet<AssetCapesAudit> AssetCapesAudit { get; set; }
 
@@ -374,6 +383,8 @@ namespace DAL
         public DbSet<AttachmentDetails> AttachmentDetails { get; set; }
         public DbSet<ClassificationMapping> ClassificationMapping { get; set; }
         public DbSet<RestrictedParts> RestrictedParts { get; set; }
+        public DbSet<RestrictsPMAList> RestrictsPMAList { get; set; }
+        public DbSet<RestrictsBERList> RestrictsBERList { get; set; }
         public DbSet<MasterParts> MasterParts { get; set; }
         public DbSet<Nha_Tla_Alt_Equ_ItemMapping> Nha_Tla_Alt_Equ_ItemMapping { get; set; }
 
@@ -387,11 +398,16 @@ namespace DAL
         public DbSet<WorkOrderAddress> WorkOrderAddress { get; set; }
         public DbSet<WorkOrderQuote> WorkOrderQuote { get; set; }
         public DbSet<WorkOrderFreight> WorkOrderFreight { get; set; }
-        public DbSet<PublicationTypes_Audit> PublicationTypes_Audit { get; set; }
+        public DbSet<PublicationTypeAudit> PublicationTypeAudit { get; set; }
+        public DbSet<Dropdowns> Dropdowns { get; set; }
+        
+
+        public DbSet<Percentage> Percentage { get; set; }
         
 
 
         public DbSet<AssetIntangibleAttributeType> AssetIntangibleAttributeType { get; set; }
+        public DbSet<Percent> Percent { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {

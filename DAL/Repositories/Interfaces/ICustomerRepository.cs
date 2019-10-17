@@ -19,7 +19,9 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetCustomerWithid(long customerId);
 
         IEnumerable<object> GetAircraftMapped(long customerId);
+        IEnumerable<object> GetTaxTypeRateMapped(long customerId);
         IEnumerable<object> GetATAMapped(long customerId);
+        IEnumerable<object> GetATAContactMapped(long contactId);
 
         //IEnumerable <object> GetCustomerBynameList(string name);
         IEnumerable<object> GetCustomerBynameList(string name);
@@ -48,7 +50,7 @@ namespace DAL.Repositories.Interfaces
         GetData<ShippingViaDetails> GetShippingViaDetails(long internationalShippingId, int pageNumber, int pageSize);
         ShippingViaDetails GetShippingViaDetailsById(long id);
         IEnumerable<object> searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID(long CustomerId, string AircraftTypeId, string AircraftModelId, string DashNumberId);
-        IEnumerable<object> searchgetCustomerATAMappingDataByMultiTypeIdATAIDATASUBID(long CustomerId, string ATAChapterId, string ATASubChapterID);
+        IEnumerable<object> searchgetCustomerATAMappingDataByMultiTypeIdATAIDATASUBID(long contactId, string ATAChapterId, string ATASubChapterID);
 
     }
 }

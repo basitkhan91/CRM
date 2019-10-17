@@ -130,9 +130,26 @@ export class CustomerService {
     getMappedAirCraftDetails(customerId: number) {
         return this.customerEndpoint.getAircraftMappingEndpoint<any>(customerId);
     }
-    getMappedATADetails(customerId: number) {
-        return this.customerEndpoint.getATAMappingEndpoint<any>(customerId);
+
+    getATAMappedByCustomerId(contactId: number) {
+        return this.customerEndpoint.getATAMappingByCustomerId<any>(contactId)
     }
+
+
+    getATAMappedByContactId(customerId: number) {
+        return this.customerEndpoint.getATAMappingByContactId<any>(customerId);
+    }
+
+
+    getMappedTaxTypeRateDetails(customerId: number) {
+        return this.customerEndpoint.getTaxTypeRateMappingEndpoint<any>(customerId);
+    }
+
+    deleteATAMappedByContactId(contactId) {
+        return this.customerEndpoint.deleteATAMappedByContactId(contactId);
+    }
+
+
     getFinalObj() {
         return Observable.forkJoin(
             this.customerEndpoint.getFinalrobj<any>());
@@ -442,7 +459,9 @@ export class CustomerService {
     postCustomerATAs(data) {
         return Observable.forkJoin(this.customerEndpoint.postCustomerATA<any>(data));
     }
-
+    postCustomerTaxTypeRate(data) {
+        return Observable.forkJoin(this.customerEndpoint.postCustomerTaxTypeRate<any>(data));
+    }
     newItemMasterAircarftClass(action: any) {
         return this.customerEndpoint.getNewitemAircraftEndpoint<any>(action);
     }
@@ -487,11 +506,26 @@ export class CustomerService {
         return this.customerEndpoint.searchATAMappedByMultiATAIDATASUBIDByCustomerId<any>(customerId, searchUrl);
     }
 
-    deleteATAMappings(id) {
-        return this.customerEndpoint.deleteATAMappedDataById(id);
-    }
+    // deleteATAMappings(id) {
+    //     return this.customerEndpoint.deleteATAMappedDataById(id);
+    // }
     deleteAircraftInvetoryById(id) {
         return this.customerEndpoint.deleteAircraftInvetoryById(id);
     }
+    deleteCustomerTaxTypeRateById(id) {
+        return this.customerEndpoint.deleteTaxTypeRateMappedDataById(id);
+    }
+    documentUploadAction(action: any) {
+        return this.customerEndpoint.getDocumentUploadEndpoint<any>(action);
+    }
+
+    deleteDocumentAction(actionId: any) {
+        return this.customerEndpoint.getDeleteDocumentEndpoint(actionId);
+    }
+
+    getCustomerContactAuditDetails(customerContactId) {
+        return this.customerEndpoint.getCustomerContactAuditDetails<any>(customerContactId)
+    }
+
 
 }

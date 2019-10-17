@@ -25,6 +25,13 @@ export class CompanyEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getCustomerEndpoint(companyid));
             });
     }
+    getallCompanyData<T>(): Observable<T> {
+
+        return this.http.get<T>(this.getCompanyUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getallCompanyData());
+            });
+    }
     
 }
 

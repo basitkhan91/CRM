@@ -35,7 +35,26 @@ namespace QuickApp.Pro.Controllers
         public IActionResult Get()
         {
             //var result = _unitOfWork.ATASubChapter1s.GetAllATAMainnData(); //.GetAllCustomersData();
-            var result = _context.ATASubChapter.Where(a => a.IsDelete == false || a.IsDelete == null).OrderByDescending(c => c.ATASubChapterId).ToList();
+            //var result = _context.ATASubChapter.Where(a => a.IsDelete == false || a.IsDelete == null).OrderByDescending(c => c.ATASubChapterId).ToList();
+            var result = (from asc in _context.ATASubChapter
+                          join ac in _context.ATAChapter on asc.ATAChapterId equals ac.ATAChapterId
+                          where asc.IsDelete == false || asc.IsDelete == null
+                          select new
+                          {
+                              asc.ATASubChapterId,
+                              asc.ATASubChapterCode,
+                              asc.Description,
+                              asc.Memo,
+                              asc.UpdatedDate,
+                              asc.IsActive,
+                              ac.ATAChapterId,
+                              ac.ATAChapterName,
+                              ac.ATAChapterCode,
+                              ac.ATAChapterCategory,
+                              asc.CreatedBy,
+                              asc.CreatedDate,
+                              asc.UpdatedBy
+                          }).OrderByDescending(p => p.ATASubChapterId);
             return Ok(result);
 
             //try
@@ -93,6 +112,7 @@ namespace QuickApp.Pro.Controllers
                 ataSubChapter1object.MasterCompanyId = 1;
                 ataSubChapter1object.ATAChapterId = ataSubChapter1ViewModel.ATAChapterId;
                 ataSubChapter1object.IsActive = ataSubChapter1ViewModel.IsActive;
+                ataSubChapter1object.IsDelete = false;
                 ataSubChapter1object.CreatedDate = DateTime.Now;
                 ataSubChapter1object.UpdatedDate = DateTime.Now;
                 ataSubChapter1object.CreatedBy = ataSubChapter1ViewModel.CreatedBy;

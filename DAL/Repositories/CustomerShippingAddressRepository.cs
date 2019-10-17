@@ -49,7 +49,8 @@ namespace DAL.Repositories
                             c.CreatedDate,
                             c.UpdatedDate,
                             c.CustomerId,
-                            c.IsActive
+                            c.IsActive,
+                            c.IsPrimary
 
 
                         }).ToList();

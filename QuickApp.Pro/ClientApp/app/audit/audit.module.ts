@@ -8,6 +8,7 @@ import { LocationAuditComponent } from "../components/Audit/LocationAudit/locati
 import { ShelfAuditComponent } from "../components/Audit/ShelfAudit/shelf-audit.component";
 import { BinAuditComponent } from "../components/Audit/BinAudit/bin-audit.component";
 import { AuditNoHistoryComponent } from "../components/Audit/AuditNoHistory/audit-no-history.component";
+import { LocationAuditComponent } from "../components/Audit/LocationAudit/location-audit.component";
 
 @NgModule({
   declarations: [

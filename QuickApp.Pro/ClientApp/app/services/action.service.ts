@@ -45,7 +45,7 @@ export class ActionService {
         return Observable.forkJoin(this.actionEndpoint.getHistoryActionEndpoint<any>(actionId));
     }
 
-    newAction(action: Action) {
+    newAction(action) {
         return this.actionEndpoint.getNewActionEndpoint<Action>(action);
     }
 
@@ -53,7 +53,7 @@ export class ActionService {
         return this.actionEndpoint.getEditActionEndpoint<Action>(actionId);
     }
 
-    updateAction(action: Action) {     
+    updateAction(action) {     
             return this.actionEndpoint.getUpdateActionEndpoint(action, action.taskId);
     }
 

@@ -9,6 +9,7 @@ namespace DAL.Models
     {
         [Key]
         public long? ContactId { get; set; }
+        public string Tag { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string MiddleName { get; set; }
@@ -30,6 +31,11 @@ namespace DAL.Models
         public System.DateTime UpdatedDate { get; set; }
         public Nullable<bool> IsActive { get; set; }
 
-        public virtual MasterCompany MasterCompany { get; set; }
+
+
+
+
+
+		public virtual MasterCompany MasterCompany { get; set; }
     }
 }

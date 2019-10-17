@@ -40,7 +40,7 @@ export class WorkPerformedService {
         return Observable.forkJoin(
             this.workperformedEndpoint.getWorkPerformedEndpoint<WorkPerformed[]>());
     }
-    newWorkPerformed(workperformed: WorkPerformed) {
+    newWorkPerformed(workperformed) {
         return this.workperformedEndpoint.getNewWorkPerformedEndpoint<WorkPerformed>(workperformed);
     }
 
@@ -52,7 +52,7 @@ export class WorkPerformedService {
         return this.workperformedEndpoint.getEditWorkPerformedEndpoint<WorkPerformed>(workPerformedId);
     }
 
-    updateWorkPerformed(workperformed: WorkPerformed) {
+    updateWorkPerformed(workperformed) {
         return this.workperformedEndpoint.getUpdateWorkPerformedEndpoint(workperformed, workperformed.workPerformedId);
     }
 

@@ -103,8 +103,9 @@ namespace QuickApp.Pro.Controllers
                 existingResult.Description = employeeLicenseTypeViewModel.Description;
                 existingResult.IsActive = employeeLicenseTypeViewModel.IsActive;
                 existingResult.MasterCompanyId = employeeLicenseTypeViewModel.MasterCompanyId;
+				existingResult.Memo = employeeLicenseTypeViewModel.Memo;
 
-                _unitOfWork.employeeLicenseType.Update(existingResult);
+				_unitOfWork.employeeLicenseType.Update(existingResult);
                 _unitOfWork.SaveChanges();
 
             }

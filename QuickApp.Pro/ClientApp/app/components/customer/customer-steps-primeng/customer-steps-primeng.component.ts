@@ -2,6 +2,7 @@
 import { Router, ActivatedRoute } from '@angular/router';
 import { CustomerService } from '../../../services/customer.service';
 import { EmployeeService } from '../../../services/employee.service';
+import { AtaMainService } from '../../../services/atamain.service';
 
 @Component({
 	selector: 'app-customer-create',
@@ -20,6 +21,8 @@ export class CustomerStepsPrimengComponent {
 	editGeneralInformationData: any;
 	employeeListOriginal: any[];
 	isDisabledSteps: boolean = false;
+	search_ataChapterList: any;
+	add_ataChapterList: any;
 	// ifvalue: boolean;
 	// generalcollection: any;
 	// collection: any;
@@ -36,6 +39,7 @@ export class CustomerStepsPrimengComponent {
 	constructor(private customerService: CustomerService,
 		private acRouter: ActivatedRoute,
 		public employeeService: EmployeeService,
+		private atamain: AtaMainService,
 	) {
 		// let currentUrl = this.route.url;
 		// this.customerService.alertChangeObject$.subscribe(value => {
@@ -58,6 +62,7 @@ export class CustomerStepsPrimengComponent {
 		this.getAllCountries();
 		this.getAllCustomers();
 		this.getAllEmployees();
+		this.getAllATAChapter();
 
 		// 	this.showComponentPTab = this.customerService.ShowPtab;
 		// 	this.currentUrl = this.route.url;
@@ -223,6 +228,9 @@ export class CustomerStepsPrimengComponent {
 		} else if (value === 'Warnings') {
 			this.currentTab = 'Warnings';
 			this.activeMenuItem = 9;
+		} else if (value === 'Documents') {
+			this.currentTab = 'Documents';
+			this.activeMenuItem = 10;
 		}
 	}
 	generalInformationData(data) {
@@ -249,6 +257,29 @@ export class CustomerStepsPrimengComponent {
 			this.employeeListOriginal = res[0];
 		})
 	}
+	
+
+	
+    getAllATAChapter() {
+        this.atamain.getAtaMainList().subscribe(res => {
+            const responseData = res[0];
+            // used to get the complete object in the value 
+            this.add_ataChapterList = responseData.map(x => {
+                return {
+                    value: x,
+                    label: x.ataChapterName
+                }
+
+            })
+            // used to get the id for the value 
+            this.search_ataChapterList = responseData.map(x => {
+                return {
+                    value: x.ataChapterId,
+                    label: x.ataChapterName
+                }
+            })
+        });
+    }
 }
 //{
 //	label: 'Emails',

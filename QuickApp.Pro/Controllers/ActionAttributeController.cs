@@ -72,6 +72,7 @@ namespace QuickApp.Pro.Controllers
                 actionattributeobject.Memo = actionAttributeViewModel.Memo;
                 actionattributeobject.MasterCompanyId = actionAttributeViewModel.MasterCompanyId;
                 actionattributeobject.IsActive = actionAttributeViewModel.IsActive;
+                actionattributeobject.IsDelete = false;
                 actionattributeobject.CreatedDate = DateTime.Now;
                 actionattributeobject.UpdatedDate = DateTime.Now;
                 actionattributeobject.CreatedBy = actionAttributeViewModel.CreatedBy;

@@ -9,7 +9,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import { EndpointFactory } from '../endpoint-factory.service';
 import { ConfigurationService } from '../configuration.service';
-import { AssetDepConventionType } from '../../models/assetDepConventionType.model';
+import { AssetDepConvention } from '../../models/assetDepConvention.model';
 
 @Injectable()
 export class AssetDepConventionTypeEndpointService extends EndpointFactory {
@@ -51,7 +51,7 @@ export class AssetDepConventionTypeEndpointService extends EndpointFactory {
             });
     }
 
-    addAssetDep<T>(asset: AssetDepConventionType): Observable<T> {
+    addAssetDep<T>(asset: AssetDepConvention): Observable<T> {
         let endpointUrl = this.add;
 
         return this.http.post<T>(endpointUrl, JSON.stringify(asset), this.getRequestHeaders())
@@ -60,7 +60,7 @@ export class AssetDepConventionTypeEndpointService extends EndpointFactory {
             });
     }
 
-    updateAssetDep<T>(assetDepConventionType: AssetDepConventionType): Observable<T> {
+    updateAssetDep<T>(assetDepConventionType: AssetDepConvention): Observable<T> {
         let endpointUrl = this.update;
 
         return this.http.post<T>(endpointUrl, JSON.stringify(assetDepConventionType), this.getRequestHeaders())

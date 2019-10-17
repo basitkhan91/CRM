@@ -25,4 +25,8 @@ export class CompanyService {
         return Observable.forkJoin(
             this.companyEndpoint.getCustomerEndpoint<Company>(companyId));
     }
+    getallCompanyData() {
+        return Observable.forkJoin(
+            this.companyEndpoint.getallCompanyData<Company>());
+    }
 }

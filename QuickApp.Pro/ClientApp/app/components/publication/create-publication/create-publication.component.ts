@@ -41,7 +41,7 @@ export class CreatePublicationComponent implements OnInit {
   pubType: string;
   uploadedFiles: any[] = [];
   private isSaving: boolean;
-  isEditMode: boolean;
+  isEditMode: boolean = false;
   selectedFile: File = null;
   publicationId: number;
 
@@ -106,14 +106,15 @@ export class CreatePublicationComponent implements OnInit {
   searchATAParams: string = '';
   isDisabledSteps = false;
   attachmentList: any[] = [];
+  publicationTypes: any[] = [];
   // dropdown
 
-  publicationTypes = [
-    { label: 'Select Publication Type', value: null },
-    { label: 'CMM', value: '2' },
-    { label: 'AD', value: '3' },
-    { label: 'SB', value: '4' }
-  ];
+  // publicationTypes = [
+  //   { label: 'Select Publication Type', value: null },
+  //   { label: 'CMM', value: '2' },
+  //   { label: 'AD', value: '3' },
+  //   { label: 'SB', value: '4' }
+  // ];
 
   // table columns for ata
 
@@ -127,6 +128,7 @@ export class CreatePublicationComponent implements OnInit {
     { label: 'In-Active', value: 'In-Active' }
   ];
   formData = new FormData();
+  selectedRowforDelete: any;
   /** Create-publication ctor */
   constructor(
     private publicationService: PublicationService,
@@ -149,19 +151,20 @@ export class CreatePublicationComponent implements OnInit {
     { field: 'aircraft', header: 'Aircraft' },
     { field: 'model', header: 'Model' },
     { field: 'dashNumber', header: 'Dash Numbers' },
-    { field: 'memo', header: 'Memo' }
+    // { field: 'memo', header: 'Memo' }
   ];
   headersforAttachment = [
     { field: 'fileName', header: 'File Name' },
-];
+  ];
   first: number = 0;
 
   ngOnInit() {
     // this.itemMasterId = this._actRoute.snapshot.params['id'];
-    this.getAllEmployeeList();
     this.publicationRecordId = this._actRoute.snapshot.params['id'];
-    console.log(this.publicationRecordId);
-    if(this.publicationRecordId) {
+    this.getAllEmployeeList();
+    this.getPublicationTypes();
+
+    if (this.publicationRecordId) {
       this.isEditMode = true;
       this.isDisabledSteps = true;
       this.getPublicationDataonEdit();
@@ -178,17 +181,15 @@ export class CreatePublicationComponent implements OnInit {
               partDescription: x.partDescription,
               itemClassification: x.itemClassification
             };
-          });        
+          });
         });
 
-        //get aircraft info edit mode
-        this.getAircraftInformationByPublicationId();
+      //get aircraft info edit mode
+      this.getAircraftInformationByPublicationId();
 
-        //get atachapter edit mode
-        this.getAtaChapterByPublicationId();
+      //get atachapter edit mode
+      this.getAtaChapterByPublicationId();
 
-    } else {
-        this.isEditMode = false;
     }
 
   }
@@ -199,33 +200,55 @@ export class CreatePublicationComponent implements OnInit {
       : '';
   }
 
-  async getPublicationDataonEdit(){
-   await  this.publicationService.getAllbyIdPublications(this.publicationRecordId).subscribe(res => {   
-      console.log(res[0]);
+  getPublicationTypes() {
+    this.publicationService.getPublicationTypes().subscribe(response => {
+      this.publicationTypes = response[0].map(x => {
+        return {
+          label: x.name,
+          value: x.publicationTypeId
+        }
+        // this.publicationTypes.push(pubType);
+      })
+    })
+
+
+  }
+
+
+  async getPublicationDataonEdit() {
+    await this.publicationService.getAllbyIdPublications(this.publicationRecordId).subscribe(res => {
+
       const responseData = res;
       //this.sourcePublication = res[0];
       const tempsourcepub =  //responseData[0]
-      responseData.map(x => {
-        return{
-          ...x,
-          entryDate: new Date(x.entryDate),
-         revisionDate: new Date(x.revisionDate),
-         expirationDate: new Date(x.expirationDate),
-         nextReviewDate: new Date(x.nextReviewDate),
-         verifiedDate: new Date(x.verifiedDate)
-        }
-      });
+        responseData.map(x => {
+          return {
+            ...x,
+            entryDate: new Date(x.entryDate),
+            revisionDate: new Date(x.revisionDate),
+            expirationDate: new Date(x.expirationDate),
+            nextReviewDate: new Date(x.nextReviewDate),
+            verifiedDate: new Date(x.verifiedDate)
+          }
+        });
       //this.sourcePublication = tempsourcepub[0];
-      const tempSourcePublication = tempsourcepub.map(x => {
-        return {
-          ...x,
-        publicationType: getValueFromArrayOfObjectById('label', 'value', x.publicationTypeId.toString(), this.publicationTypes),
-        }
-      });
-      this.sourcePublication = tempSourcePublication[0];
+      // const tempSourcePublication = tempsourcepub.map(x => {
+      //   return {
+      //     ...x,
+      //     publicationType: getValueFromArrayOfObjectById('label', 'value', x.publicationTypeId.toString(), this.publicationTypes),
+      //   }
+      // });
+
+
+      this.sourcePublication = tempsourcepub[0];
+
+
+      this.publicationType = getValueFromArrayOfObjectById('label', 'value', this.sourcePublication.publicationTypeId, this.publicationTypes);
+
+
       this.attachmentList = this.sourcePublication.attachmentDetails;
-      
-      console.log(this.sourcePublication);
+
+
     })
   }
 
@@ -354,7 +377,7 @@ export class CreatePublicationComponent implements OnInit {
       this.formData.append(file.name, file);
   }
 
-  saveGeneralInfo() {
+  saveGeneralInfo() {    
     const data = this.sourcePublication;
     this.publicationType = getValueFromArrayOfObjectById('label', 'value', this.sourcePublication.publicationTypeId.toString(), this.publicationTypes);
     console.log(this.publicationType);
@@ -373,28 +396,28 @@ export class CreatePublicationComponent implements OnInit {
     // verifiedby: '',
     // masterCompanyId: 1,
     // const files: Array<File> = this.uploadedFiles;
-    
 
-    this.formData.append('entryDate',  moment(data.entryDate).format('DD/MM/YYYY'));
+
+    this.formData.append('entryDate', moment(data.entryDate).format('DD/MM/YYYY'));
     this.formData.append('publicationId', data.publicationId);
     this.formData.append('description', data.description);
-    this.formData.append('publicationTypeId',data.publicationTypeId);
+    this.formData.append('publicationTypeId', data.publicationTypeId);
     this.formData.append('asd', data.asd);
     this.formData.append('sequence', data.sequence);
     this.formData.append('publishby', data.publishby);
     this.formData.append('location', data.location);
-    this.formData.append('revisionDate', moment(data.revisionDate).format('DD/MM/YYYY') );
-    this.formData.append('expirationDate',  moment(data.expirationDate).format('DD/MM/YYYY'));
+    this.formData.append('revisionDate', moment(data.revisionDate).format('DD/MM/YYYY'));
+    this.formData.append('expirationDate', moment(data.expirationDate).format('DD/MM/YYYY'));
     this.formData.append('nextReviewDate', moment(data.nextReviewDate).format('DD/MM/YYYY'));
     this.formData.append('employeeId', data.employeeId);
     this.formData.append('verifiedBy', data.verifiedBy);
     this.formData.append('verifiedDate', moment(data.verifiedDate).format('DD/MM/YYYY'));
     this.formData.append('masterCompanyId', data.masterCompanyId);
-    this.formData.append('CreatedBy',this.userName);
-    this.formData.append('UpdatedBy',this.userName);
+    this.formData.append('CreatedBy', this.userName);
+    this.formData.append('UpdatedBy', this.userName);
     this.formData.append('IsActive', 'true');
     this.formData.append('IsDeleted', 'false');
-    
+
 
     if (this.sourcePublication.PublicationId != '' && this.publicationRecordId == null) {
       this.generalInformationDetails = this.sourcePublication;
@@ -404,13 +427,13 @@ export class CreatePublicationComponent implements OnInit {
         this.sourcePublication.PublicationId = this.sourcePublication.PublicationId;
         this.publicationService
           .newAction(this.formData
-          //   {
-          //   ...this.sourcePublication, CreatedBy: this.userName,
-          //   UpdatedBy: this.userName,
-          //   IsActive: true,
-          //   IsDeleted: false,
-          // }
-          
+            //   {
+            //   ...this.sourcePublication, CreatedBy: this.userName,
+            //   UpdatedBy: this.userName,
+            //   IsActive: true,
+            //   IsDeleted: false,
+            // }
+
           )
           .subscribe(res => {
             const { publicationRecordId } = res;
@@ -427,23 +450,23 @@ export class CreatePublicationComponent implements OnInit {
       this.changeOfTab('PnMap');
     }
 
-    if(this.isEditMode) {
+    if (this.isEditMode) {
       console.log(data)
       this.formData.append('publicationRecordId', this.publicationRecordId);
-      
+
       this.publicationService
-          .updateAction(this.formData)
-          .subscribe(res => {
-            // const { publicationRecordId } = res;
-            // this.publicationRecordId = publicationRecordId;
-            // console.log(this.publicationRecordId)
-            console.log(res);
-            this.changeOfTab('PnMap'),
+        .updateAction(this.formData)
+        .subscribe(res => {
+          // const { publicationRecordId } = res;
+          // this.publicationRecordId = publicationRecordId;
+          // console.log(this.publicationRecordId)
+          console.log(res);
+          this.changeOfTab('PnMap'),
             this.formData = new FormData(),
-              this.alertService.showMessage("Success", `Publication Updated Successfully`, MessageSeverity.success),
-              role => this.saveSuccessHelper(role),
-              error => this.saveFailedHelper(error);
-          });
+            this.alertService.showMessage("Success", `Publication Updated Successfully`, MessageSeverity.success),
+            role => this.saveSuccessHelper(role),
+            error => this.saveFailedHelper(error);
+        });
     }
 
 
@@ -489,6 +512,8 @@ export class CreatePublicationComponent implements OnInit {
       };
     });
     this.selectedPartNumbers = [];
+    console.log(mapData);
+
 
     // PNMapping Save
     this.publicationService.postMappedPartNumbers(mapData).subscribe(res => {
@@ -504,8 +529,8 @@ export class CreatePublicationComponent implements OnInit {
               itemClassification: x.itemClassification
             };
           });
-            this.alertService.showMessage("Success", `PN Mapping Done Successfully`, MessageSeverity.success);
-          
+          this.alertService.showMessage("Success", `PN Mapping Done Successfully`, MessageSeverity.success);
+
         });
 
       this.getAircraftInformationByPublicationId();
@@ -698,7 +723,7 @@ export class CreatePublicationComponent implements OnInit {
     }
     this.publicationService
       .aircraftInformationSearch(this.searchParams, this.publicationRecordId)
-      .subscribe(res => { 
+      .subscribe(res => {
         const responseData: any = res;
         this.aircraftList = responseData.map(x => {
           return {
@@ -847,35 +872,67 @@ export class CreatePublicationComponent implements OnInit {
       });
   }
 
-  onDeletePNMappingRow(rowData, rowIndex) {
-    console.log(rowData)
-    console.log(rowIndex)
-    this.publicationService.deleteItemMasterMapping(rowData.publicationItemMasterMappingId).subscribe(res => {
-      console.log(res);
-      this.publicationService
-        .getPublicationPNMapping(this.publicationRecordId)
-        .subscribe(res => {
-          console.log(res);
-          this.pnMappingList = res.map(x => {
-            return {
-              ...x,
-              PartNumber: x.partNumber,
-              PartNumberDescription: x.partNumberDescription,
-              ItemClassification: x.itemClassification
-            };
-          });        
-        });
-    })
+  onDeletePNMappingRow(rowData) {
+    this.selectedRowforDelete = rowData;
   }
 
-//   getValueFromArrayOfObjectById(field: string, idField: string, id: string, originalData: any) {
-//     if ((field !== '' || field !== undefined) && (idField !== '' || idField !== undefined) && (id !== '' || id !== undefined) && (originalData !== undefined)) {
-//         const data = originalData.filter(x => {
-//             if (x[idField] === id) {
-//                 return x[field];
-//             }
-//         })
-//         return data;
-//     }
-// }
+  deleteConformation(value) {
+    if (value === 'Yes') {
+      this.publicationService.deleteItemMasterMapping(this.selectedRowforDelete.publicationItemMasterMappingId).subscribe(() => {
+        this.publicationService
+          .getPublicationPNMapping(this.publicationRecordId)
+          .subscribe(res => {
+            this.pnMappingList = res.map(x => {
+              return {
+                ...x,
+                PartNumber: x.partNumber,
+                PartNumberDescription: x.partNumberDescription,
+                ItemClassification: x.itemClassification
+              };
+            });
+          });
+        this.alertService.showMessage(
+          'Success',
+          `Deleted PN Mapping Successfully`,
+          MessageSeverity.success
+        );
+      })
+    } else {
+      this.selectedRowforDelete = undefined;
+    }
+  }
+
+  // onDeletePNMappingRow(rowData) {
+  //   console.log(rowData)
+  //   console.log(rowIndex)
+  //   this.publicationService.deleteItemMasterMapping(rowData.publicationItemMasterMappingId).subscribe(res => {
+  //     console.log(res);
+  //     this.publicationService
+  //       .getPublicationPNMapping(this.publicationRecordId)
+  //       .subscribe(res => {
+  //         console.log(res);
+  //         this.pnMappingList = res.map(x => {
+  //           return {
+  //             ...x,
+  //             PartNumber: x.partNumber,
+  //             PartNumberDescription: x.partNumberDescription,
+  //             ItemClassification: x.itemClassification
+  //           };
+  //         });        
+  //       });
+  //   })
+  // }
+
+
+
+  //   getValueFromArrayOfObjectById(field: string, idField: string, id: string, originalData: any) {
+  //     if ((field !== '' || field !== undefined) && (idField !== '' || idField !== undefined) && (id !== '' || id !== undefined) && (originalData !== undefined)) {
+  //         const data = originalData.filter(x => {
+  //             if (x[idField] === id) {
+  //                 return x[field];
+  //             }
+  //         })
+  //         return data;
+  //     }
+  // }
 }

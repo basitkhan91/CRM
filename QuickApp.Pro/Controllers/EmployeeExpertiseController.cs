@@ -72,6 +72,7 @@ namespace QuickApp.Pro.Controllers
                 employeeexpertiseobject.Description = employeeexpertiseViewModel.Description;
                 employeeexpertiseobject.MasterCompanyId = employeeexpertiseViewModel.MasterCompanyId;
                 employeeexpertiseobject.IsActive = employeeexpertiseViewModel.IsActive;
+				employeeexpertiseobject.IsDelete = false;
                 employeeexpertiseobject.Memo = employeeexpertiseViewModel.Memo;
                 employeeexpertiseobject.CreatedDate = DateTime.Now;
                 employeeexpertiseobject.UpdatedDate = DateTime.Now;
@@ -96,7 +97,8 @@ namespace QuickApp.Pro.Controllers
                 existingResult.Description = EmployeeExpertiseViewModel.Description;
                 existingResult.Memo = EmployeeExpertiseViewModel.Memo;
                 existingResult.IsActive = EmployeeExpertiseViewModel.IsActive;
-                existingResult.MasterCompanyId = EmployeeExpertiseViewModel.MasterCompanyId;
+				existingResult.IsDelete = EmployeeExpertiseViewModel.IsDelete;
+				existingResult.MasterCompanyId = EmployeeExpertiseViewModel.MasterCompanyId;
                _unitOfWork.EmployeeExpertise.Update(existingResult);
                _unitOfWork.SaveChanges();
 
