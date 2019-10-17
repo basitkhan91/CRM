@@ -1,4 +1,4 @@
-﻿// ===============================
+// ===============================
 // info@ebenmonney.com
 // www.ebenmonney.com/quickapp-pro
 // ===============================
@@ -20,6 +20,7 @@ export class DepriciationMethodEndpointService extends EndpointFactory {
     private readonly updateURL: string = "/api/depreciationMethod/update";
     private readonly removeByIdURL: string = "/api/depreciationMethod/removeById";
     private readonly audits: string = "/api/depreciationMethod/audits";
+    private readonly excelUpload: string = "/api/DepreciationMethod/UploadDepMethodCustomData";
 
 
     get getAll() { return this.configurations.baseUrl + this.getAllURL; }
@@ -85,6 +86,11 @@ export class DepriciationMethodEndpointService extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.removedepriciationMethodById(assetDepreciationMethodId));
             });
+    }
+
+    DepMethodCustomUpload(file) {
+        return this.http.post(`${this.configurations.baseUrl}${this.excelUpload}`, file)
+
     }
 
 }

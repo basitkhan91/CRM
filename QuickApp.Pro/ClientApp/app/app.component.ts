@@ -628,7 +628,8 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Asset Status', routerLink: '/singlepages/singlepages/asset-status' },
                             { label: 'Asset Type', routerLink: '/singlepages/singlepages/app-asset-type-single-screen' },
                             { label: 'Intagible Type', routerLink: '/singlepages/singlepages/app-asset-intangible-type-single-screen' },
-                            { label: 'Depreciation Convension', routerLink: '/singlepages/singlepages/app-asset-dep-convention-type' },]
+                            { label: 'Depreciation Convension', routerLink: '/singlepages/singlepages/app-asset-dep-convention-type' },
+                            { label: 'Depreciation Intervals', routerLink: '/singlepages/singlepages/app-depreciation-intervals' },]
                     },
                     {
                         label: 'Asset Attributes', items: [

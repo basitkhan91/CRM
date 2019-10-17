@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -48,7 +48,7 @@ namespace QuickApp.Pro.Controllers
             dynamicGridData.columHeaders = columHeaders;
             List<AssetDepConvensionSPModel> assetdepConvensionMethods = new List<AssetDepConvensionSPModel>();
             AssetDepConvensionSPModel assetDepConvension = null;
-            var assets = unitOfWork.Repository<AssetDepConvention>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AssetDepConventionId);
+            var assets = unitOfWork.Repository<AssetDepConvention>().GetAll().Where(x => x.IsDeleted != true).OrderByDescending(x => x.AssetDepConventionId);
             foreach (var item in assets)
             {
                 assetDepConvension = new AssetDepConvensionSPModel();
@@ -71,7 +71,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getById/{id}")]
         public IActionResult getAssetDepById(long id)
         {
-            var assetDep = unitOfWork.Repository<AssetDepConvention>().Find(x => x.AssetDepConventionId == id && x.IsDelete != true);
+            var assetDep = unitOfWork.Repository<AssetDepConvention>().Find(x => x.AssetDepConventionId == id && x.IsDeleted != true);
             return Ok(assetDep);
         }
 
@@ -134,7 +134,7 @@ namespace QuickApp.Pro.Controllers
             var assetDep = unitOfWork.Repository<AssetDepConvention>().Find(x => x.AssetDepConventionId == id).FirstOrDefault();
             if (assetDep != null)
             {
-                assetDep.IsDelete = true;
+                assetDep.IsDeleted = true;
                 unitOfWork.Repository<AssetDepConvention>().Update(assetDep);
                 unitOfWork.SaveChanges();
                 return Ok();
@@ -148,15 +148,23 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("audits/{id}")]
         public IActionResult AuditDetails(long id)
         {
-            var audits = unitOfWork.Repository<AssetDepConventionTypeAudit>()
-                .Find(x => x.AssetDepConventionTypeId == id)
-                .OrderByDescending(x => x.AssetDepConventionTypeAuditId);
+            var audits = unitOfWork.Repository<AssetDepConventionAudit>()
+                .Find(x => x.AssetDepConventionId == id)
+                .OrderByDescending(x => x.AssetDepConventionAuditId);
 
-            var auditResult = new List<AuditResult<AssetDepConventionTypeAudit>>();
+            var auditResult = new List<AuditResult<AssetDepConventionAudit>>();
 
-            auditResult.Add(new AuditResult<AssetDepConventionTypeAudit> { AreaName = "Intangible", Result = audits.ToList() });
+            auditResult.Add(new AuditResult<AssetDepConventionAudit> { AreaName = "Depreciation Convention", Memo = "Depreciation Convention", Result = audits.ToList() });
 
             return Ok(auditResult);
+        }
+
+        [HttpPost("UploadAssetDepConvCustomData")]
+        public IActionResult UploadAssetDepConvCustomData()
+        {
+
+            unitOfWork.FileUploadRepository.UploadCustomFile(Convert.ToString("DepreciationConvention"), Request.Form.Files[0]);
+            return Ok();
         }
 
         #endregion Public Methods

@@ -1,4 +1,4 @@
-﻿import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/operator/do';
@@ -22,13 +22,13 @@ export class AssetDepConventionTypeService {
         );
     }
 
-    // add(assetDepConventionType: AssetDepConvention) {
-    //     return this.assetDepConventionTypeEndpointService.addAssetDep<AssetDepConvention>(assetDepConventionType);
-    // }
+     add(assetDepConventionType: AssetDepConvention) {
+         return this.assetDepConventionTypeEndpointService.addAssetDep<AssetDepConvention>(assetDepConventionType);
+     }
 
-    // update(assetDepConventionType: AssetDepConvention) {
-    //     return this.assetDepConventionTypeEndpointService.updateAssetDep<AssetDepConvention>(assetDepConventionType);
-    // }
+     update(assetDepConventionType: AssetDepConvention) {
+         return this.assetDepConventionTypeEndpointService.updateAssetDep<AssetDepConvention>(assetDepConventionType);
+     }
 
     remove(assetDepConventionTypeId: number) {
         return this.assetDepConventionTypeEndpointService.removeAssetDepById(assetDepConventionTypeId);
@@ -36,5 +36,9 @@ export class AssetDepConventionTypeService {
 
     getAudit(assetDepConventionTypeId: number) {
         return this.assetDepConventionTypeEndpointService.getDepAudit<any[]>(assetDepConventionTypeId);
+    }
+
+    AssetDepConvCustomUpload(file) {
+        return this.assetDepConventionTypeEndpointService.AssetDepConvCustomUpload(file);
     }
 }

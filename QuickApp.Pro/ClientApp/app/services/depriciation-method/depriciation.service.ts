@@ -1,4 +1,4 @@
-﻿// ===============================
+// ===============================
 // info@ebenmonney.com
 // www.ebenmonney.com/quickapp-pro
 // ===============================
@@ -43,5 +43,9 @@ export class DepriciationMethodService {
 
     getAssetDepriciationMethodAudits(assetDepriciationMethodId: number) {
         return this.depriciationMethodEndpointService.getAssetDepreciationAudits<any[]>(assetDepriciationMethodId);
+    }
+
+    DepMethodCustomUpload(file) {
+        return this.depriciationMethodEndpointService.DepMethodCustomUpload(file);
     }
 }

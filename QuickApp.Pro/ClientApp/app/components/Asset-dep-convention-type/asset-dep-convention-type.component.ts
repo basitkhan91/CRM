@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { fadeInOut } from "../../services/animations";
 import { AlertService, MessageSeverity } from '../../services/alert.service';
 import { AssetDepConvention } from "../../models/assetDepConvention.model";
@@ -11,6 +11,7 @@ import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { AuditHistory } from '../../models/audithistory.model';
 import { MasterCompany } from '../../models/mastercompany.model';
 import { MasterComapnyService } from '../../services/mastercompany.service';
+import { ConfigurationService } from '../../services/configuration.service';
 
 @Component({
     selector: 'app-asset-dep-convention-type',
@@ -27,6 +28,8 @@ export class AssetDepConventionTypeComponent implements OnInit {
     assetDepConventionToUpdate: AssetDepConvention;
     updateMode: boolean;
     selectedData: any;
+    formData = new FormData();
+    existingRecordsResponse: Object;
     public auditHisory: AuditHistory[] = [];
     private isDeleteMode: boolean = false;
     private isEditMode: boolean = false;
@@ -54,6 +57,7 @@ export class AssetDepConventionTypeComponent implements OnInit {
     allunitData: any;
     code_Name: any = "";
     localCollection: any[] = [];
+    auditHistory: any[] = [];
     disableSave: boolean = false;
     isSaving: boolean;
     private isDelete: boolean = false;
@@ -75,7 +79,7 @@ export class AssetDepConventionTypeComponent implements OnInit {
     loading: boolean;
     disposalTypePagination: AssetDepConvention[];
 
-    constructor(private breadCrumb: SingleScreenBreadcrumbService, private alertService: AlertService, private assetDepConventionTypeService: AssetDepConventionTypeService, private modalService: NgbModal, private authService: AuthService, private masterComapnyService: MasterComapnyService) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private alertService: AlertService, private assetDepConventionTypeService: AssetDepConventionTypeService, private modalService: NgbModal, private authService: AuthService, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
         this.sourceAction = new AssetDepConvention();
@@ -100,11 +104,13 @@ export class AssetDepConventionTypeComponent implements OnInit {
             this.assetDepList = data[0].columnData;
             console.log(this.assetDepList);
             this.totalRecords = this.assetDepList.length;
+            this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
             this.cols = [
                 console.log(this.allunitData),
                 this.selectedColumns = this.allunitData
             ];
             this.selectedData = this.selectedColumns
+            this.alertService.stopLoadingMessage();
         });
     }
 
@@ -214,62 +220,6 @@ export class AssetDepConventionTypeComponent implements OnInit {
         }
     }
 
-    //addAssetDepConventionType(): void {
-    //    if (!(this.currentAssetDep.assetDepConventionId && this.currentAssetDep.assetDepConventionName && this.currentAssetDep.assetDepConventionMemo)) {
-    //        this.display = true;
-    //        this.modelValue = true;
-    //    }
-    //    if ((this.currentAssetDep.assetDepConventionId && this.currentAssetDep.assetDepConventionName && this.currentAssetDep.assetDepConventionMemo)) {
-    //        this.currentAssetDep.updatedBy = this.userName;
-    //        this.currentAssetDep.createdBy = this.userName;
-    //        this.assetDepConventionTypeService.add(this.currentAssetDep).subscribe(assetDep => {
-    //            this.currentAssetDep = assetDep;
-    //            this.alertService.showMessage('Asset Dep Convention added successfully.');
-    //            this.assetDepConventionTypeService.getAll().subscribe(assetDeps => {
-    //                this.assetDepList = assetDeps[0];
-    //            });
-    //            this.resetAssetDepConventionType();
-    //        });
-    //    }
-    //}
-    
-    //setAssetDepConventionTypeToUpdate(editassetConvention: any, id: number): void {
-    //    this.assetDepConventionToUpdate = Object.assign({}, this.assetDepList.filter(function (assetConvention) {
-    //        return assetConvention.assetDepConventionTypeId == id;
-    //    })[0]);
-    //    this.modal = this.modalService.open(editassetConvention, { size: 'sm' });
-    //}
-
-    //updateAssetDepConventionType(): void {
-    //    if (!(this.assetDepConventionToUpdate.assetDepConventionId && this.assetDepConventionToUpdate.assetDepConventionName && this.assetDepConventionToUpdate.assetDepConventionMemo)) {
-    //        this.display = true;
-    //        this.modelValue = true;
-    //    }
-    //    else {
-    //        this.currentAssetDep.updatedBy = this.userName;
-    //        this.assetDepConventionTypeService.update(this.assetDepConventionToUpdate).subscribe(assetDep => {
-    //            this.alertService.showMessage('Asset Dep Convention updated successfully.');
-    //            this.assetDepConventionTypeService.getAll().subscribe(assetDep => {
-    //                this.assetDepList = assetDep[0];
-    //            });
-    //            this.updateMode = false;
-    //            this.resetAssetDepConventionType();
-    //            this.dismissModel();
-    //        });
-    //    }
-    //}
-
-    //removeAssetDepConventionType(): void {
-    //    this.assetDepConventionTypeService.remove(this.currentAssetDep.assetDepConventionTypeId).subscribe(response => {
-    //        this.alertService.showMessage("Asset Dep Convention removed successfully.");
-    //        this.assetDepConventionTypeService.getAll().subscribe(assetDeps => {
-    //            this.assetDepList = assetDeps[0];
-    //            this.modal.close();
-    //        });
-    //    });
-
-    //}
-   
     resetAssetDepConventionType(): void {
         this.updateMode = false;
         this.currentAssetDep = new AssetDepConvention();
@@ -326,19 +276,19 @@ export class AssetDepConventionTypeComponent implements OnInit {
             AssetDepConventionMemo: this.sourceAction.memo,
 
             IsActive: this.sourceAction.isActive,
-            IsDelete: this.isDelete,
+            IsDeleted: this.isDelete,
             masterCompanyId: 1
         };
         if (this.isEditMode == false) {
-            /*this.assetDepConventionTypeService.add(params).subscribe(
+            this.assetDepConventionTypeService.add(params).subscribe(
                 role => this.saveSuccessHelper(role),
-                error => this.saveFailedHelper(error));*/
+                error => this.saveFailedHelper(error));
         }
         else {
             params.AssetDepConventionId = this.sourceAction.assetDepConventionId;
-            /*this.assetDepConventionTypeService.update(params).subscribe(
+            this.assetDepConventionTypeService.update(params).subscribe(
                 response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));*/
+                error => this.saveFailedHelper(error));
         }
 
         this.modal.close();
@@ -357,6 +307,7 @@ export class AssetDepConventionTypeComponent implements OnInit {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
         this.loadData();
+        this.alertService.stopLoadingMessage();
     }
 
     private saveFailedHelper(error: any) {
@@ -388,7 +339,7 @@ export class AssetDepConventionTypeComponent implements OnInit {
             AssetDepConventionName: rowData.name,
             AssetDepConventionMemo: rowData.memo,
             isActive: rowData.isActive,
-            IsDelete: false,
+            IsDeleted: false,
             masterCompanyId: 1
         };
         if (e.checked == false) {
@@ -434,55 +385,62 @@ export class AssetDepConventionTypeComponent implements OnInit {
         }, () => { console.log('Backdrop click') })
     }
 
-    //openDelete(content, row) {
-
-    //    this.isEditMode = false;
-    //    this.isDeleteMode = true;
-    //    this.currentAssetDep = row;
-    //    this.modal = this.modalService.open(content, { size: 'sm' });
-    //    this.modal.result.then(() => {
-    //        console.log('When user closes');
-    //    }, () => { console.log('Backdrop click') })
+    //showAuditPopup(template, id): void {
+    //    this.auditDepConvention(id);
+    //    this.modal = this.modalService.open(template, { size: 'sm' });
     //}
 
-    //toggleIsActive(assetDepConventions: any, e) {
-    //    if (e.checked == false) {
-    //        this.assetDepConventionToUpdate = assetDepConventions;
-    //        this.Active = "In Active";
-    //        this.assetDepConventionToUpdate.isActive == false;
-    //        this.assetDepConventionTypeService.update(this.assetDepConventionToUpdate).subscribe(asset => {
-    //            this.alertService.showMessage('Asset Dep Convention updated successfully.');
-    //            this.assetDepConventionTypeService.getAll().subscribe(assets => {
-    //                this.assetDepList = assets[0];
-    //            });
-
-    //        })
-    //    }
-    //    else {
-    //        this.assetDepConventionToUpdate = assetDepConventions;
-    //        this.Active = "Active";
-    //        this.assetDepConventionToUpdate.isActive == true;
-    //        this.assetDepConventionTypeService.update(this.assetDepConventionToUpdate).subscribe(asset => {
-    //            this.alertService.showMessage('Asset Dep Convention updated successfully.');
-    //            this.assetDepConventionTypeService.getAll().subscribe(assets => {
-    //                this.assetDepList = assets[0];
-    //            });
-    //        })
-    //    }
+    //auditDepConvention(assetDepConventionTypeId: number): void {
+    //    this.AuditDetails = [];
+    //    this.assetDepConventionTypeService.getAudit(assetDepConventionTypeId).subscribe(audits => {
+    //        if (audits.length > 0) {
+    //            this.AuditDetails = audits;
+    //            this.AuditDetails[0].ColumnsToAvoid = ["assetDepConventionTypeAuditId", "assetDepConventionTypeId", "createdBy", "createdDate", "updatedDate", "masterCompanyId"];
+    //        }
+    //    });
     //}
 
-    showAuditPopup(template, id): void {
-        this.auditDepConvention(id);
-        this.modal = this.modalService.open(template, { size: 'sm' });
+    getAuditHistoryById(rowData) {
+        this.assetDepConventionTypeService.getAudit(rowData.assetDepConventionId).subscribe(res => {
+            this.auditHistory = res;
+        })
     }
 
-    auditDepConvention(assetDepConventionTypeId: number): void {
-        this.AuditDetails = [];
-        this.assetDepConventionTypeService.getAudit(assetDepConventionTypeId).subscribe(audits => {
-            if (audits.length > 0) {
-                this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["assetDepConventionTypeAuditId", "assetDepConventionTypeId", "createdBy", "createdDate", "updatedDate", "masterCompanyId"];
-            }
-        });
+    sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=DepreciationConvention&fileName=AssetDepConvention.xlsx`;
+
+        window.location.assign(url);
+    }
+
+    customExcelUpload(event) {
+        const file = event.target.files;
+
+        console.log(file);
+        if (file.length > 0) {
+
+            this.formData.append('file', file[0])
+            this.assetDepConventionTypeService.AssetDepConvCustomUpload(this.formData).subscribe(res => {
+                event.target.value = '';
+
+                this.formData = new FormData();
+                this.existingRecordsResponse = res;
+                this.getAssetDepConvList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+
+                // $('#duplicateRecords').modal('show');
+                // document.getElementById('duplicateRecords').click();
+
+            })
+        }
+
+    }
+
+    getAssetDepConvList() {
+
+        this.loadData();
     }
 }

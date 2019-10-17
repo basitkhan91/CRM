@@ -278,9 +278,12 @@ namespace DAL
         public DbSet<AssetDepreciationMethod> AssetDepreciationMethod { get; set; }
         public DbSet<AssetDepreciationMethodAudit> AssetDepreciationMethodAudit { get; set; }
         public DbSet<AssetDisposalType> AssetDisposalType { get; set; }
-        public DbSet<AssetDepreciationIntervalType> AssetDepreciationIntervalType { get; set; }
+        //public DbSet<AssetDepreciationIntervalType> AssetDepreciationIntervalType { get; set; }
+        public DbSet<AssetDepreciationInterval> AssetDepreciationInterval { get; set; }
+        public DbSet<AssetDepreciationIntervalAudit> AssetDepreciationIntervalAudit { get; set; }
         public DbSet<AssetDepConventionType> AssetDepConventionType { get; set; }
         public DbSet<AssetDepConvention> AssetDepConvention { get; set; }
+        public DbSet<AssetDepConventionAudit> AssetDepConventionAudit { get; set; }
         public DbSet<AssetIntangibleTypeSingleScreen> AssetIntangibleTypeSingleScreen { get; set; }
 
         public DbSet<AssetType> AssetType { get; set; }

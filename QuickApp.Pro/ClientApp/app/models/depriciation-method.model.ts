@@ -1,4 +1,4 @@
-﻿import { MasterCompany } from './mastercompany.model';
+import { MasterCompany } from './mastercompany.model';
 
 export class DepriciationMethod {
     constructor(masterCompany?: MasterCompany,
@@ -12,7 +12,7 @@ export class DepriciationMethod {
         updatedBy?: string,
         createdDate?: Date,
         updatedDate?: Date,
-        isDelete?: boolean,
+        isDeleted?: boolean,
         isActive?: boolean) {
         this.assetDepreciationMethodId = assetDepreciationMethodId;
         this.code = Code;
@@ -24,7 +24,7 @@ export class DepriciationMethod {
         this.updatedBy = updatedBy;
         this.createdDate = createdDate;
         this.updatedDate = updatedDate;
-        this.isDelete = isDelete;
+        this.isDeleted = isDeleted;
         this.isActive = isActive;
     }
 
@@ -38,7 +38,7 @@ export class DepriciationMethod {
     public updatedBy: string;
     public createdDate: Date;
     public updatedDate: Date;
-    public isDelete: boolean;
+    public isDeleted: boolean;
     public isActive: boolean;
 
 }

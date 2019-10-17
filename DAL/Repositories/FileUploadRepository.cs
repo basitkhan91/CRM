@@ -1,4 +1,4 @@
-﻿using DAL.Common;
+using DAL.Common;
 using DAL.Models;
 using DAL.Repositories.Interfaces;
 using ExcelDataReader;
@@ -222,6 +222,25 @@ namespace DAL.Repositories
                     UploadATAChapter(BindCustomData<ATAChapter>(file, "ATAChapterId", moduleName));
                     break;
 
+                case "DisposalType":
+                    UploadDisposalType(BindCustomData<AssetDisposalType>(file, "AssetDisposalTypeId", moduleName));
+                    break;
+
+                case "DepreciationMethod":
+                    UploadDepreciationMethod(BindCustomData<AssetDepreciationMethod>(file, "AssetDepreciationMethodId", moduleName));
+                    break;
+
+                case "AssetStatus":
+                    UploadAssetStatus(BindCustomData<AssetStatus>(file, "AssetStatusId", moduleName));
+                    break;
+
+                case "DepreciationConvention":
+                    UploadAssetDepConv(BindCustomData<AssetDepConvention>(file, "AssetDepConventionId", moduleName));
+                    break;
+
+                case "DepreciationInterval":
+                    UploadDepInterval(BindCustomData<AssetDepreciationInterval>(file, "AssetDepreciationIntervalId", moduleName));
+                    break;
 
                 default:
                     break;
@@ -545,6 +564,90 @@ namespace DAL.Repositories
                 if (!flag)
                 {
                     _appContext.ATAChapter.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+        private void UploadDisposalType(List<AssetDisposalType> assetDispTypeList)
+        {
+
+            foreach (var item in assetDispTypeList)
+            {
+
+                var flag = _appContext.AssetDisposalType.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.AssetDisposalCode)
+                && !string.IsNullOrEmpty(p.AssetDisposalName) && 
+                p.AssetDisposalCode.ToLower() == item.AssetDisposalCode.Trim().ToLower());
+                if (!flag)
+                {
+                    _appContext.AssetDisposalType.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+
+        private void UploadDepreciationMethod(List<AssetDepreciationMethod> assetDepMethodList)
+        {
+
+            foreach (var item in assetDepMethodList)
+            {
+
+                var flag = _appContext.AssetDepreciationMethod.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.AssetDepreciationMethodCode)
+                && !string.IsNullOrEmpty(p.AssetDepreciationMethodName) &&
+                p.AssetDepreciationMethodCode.ToLower() == item.AssetDepreciationMethodCode.Trim().ToLower());
+                if (!flag)
+                {
+                    _appContext.AssetDepreciationMethod.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+
+        private void UploadAssetStatus(List<AssetStatus> assetStatusList)
+        {
+
+            foreach (var item in assetStatusList)
+            {
+
+                var flag = _appContext.AssetStatus.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.Code)
+                && !string.IsNullOrEmpty(p.Name) &&
+                p.Code.ToLower() == item.Code.Trim().ToLower());
+                if (!flag)
+                {
+                    _appContext.AssetStatus.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+
+        private void UploadAssetDepConv(List<AssetDepConvention> assetDepConvList)
+        {
+
+            foreach (var item in assetDepConvList)
+            {
+
+                var flag = _appContext.AssetDepConvention.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.AssetDepConventionCode)
+                && !string.IsNullOrEmpty(p.AssetDepConventionName) &&
+                p.AssetDepConventionCode.ToLower() == item.AssetDepConventionCode.Trim().ToLower());
+                if (!flag)
+                {
+                    _appContext.AssetDepConvention.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+
+        private void UploadDepInterval(List<AssetDepreciationInterval> assetDepIntList)
+        {
+
+            foreach (var item in assetDepIntList)
+            {
+
+                var flag = _appContext.AssetDepreciationInterval.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.AssetDepreciationIntervalCode)
+                && !string.IsNullOrEmpty(p.AssetDepreciationIntervalName) &&
+                p.AssetDepreciationIntervalCode.ToLower() == item.AssetDepreciationIntervalCode.Trim().ToLower());
+                if (!flag)
+                {
+                    _appContext.AssetDepreciationInterval.Add(item);
                     _appContext.SaveChanges();
                 }
             }
