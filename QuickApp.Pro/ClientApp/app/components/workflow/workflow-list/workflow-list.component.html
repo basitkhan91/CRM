@@ -152,7 +152,7 @@
                                                 <label>Expiration Date: </label>{{sourceWorkFlow.workflowExpirationDate}}
                                             </div>
                                             <div class="form-group">
-                                                <label>Currency: </label> {{sourceWorkFlow.currencySymbol}}
+                                                <label>Currency: </label> {{sourceWorkFlow.currencySymbol + ' (' + sourceWorkFlow.currencyText + ')'}}
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -281,7 +281,7 @@
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label>Other: </label>${{sourceWorkFlow.otherCost}}
+                                                <label>Other: </label>${{sourceWorkFlow.otherCost != undefined && sourceWorkFlow.otherCost != null && sourceWorkFlow.otherCost > 0 ? '$' + sourceWorkFlow.otherCost.toString() : 0 }}
                                             </div>
                                         </div>
                                     </div>
@@ -321,7 +321,6 @@
                                             <th>S.No</th>
                                             <th>Pub ID</th>
                                             <th>Pub Desc</th>
-                                            <th>Revision</th>
                                             <th>Revision Date</th>
                                             <th>Pub Type</th>
                                             <th>Sequence</th>
@@ -332,6 +331,7 @@
                                             <th>Location</th>
                                             <th>Verified By</th>
                                             <th>Verified Date</th>
+                                            <th>Status</th>
                                             <th>Image</th>
                                         </tr>
                                     </thead>
@@ -340,19 +340,18 @@
                                             <td>{{(i+1)}}</td>
                                             <td>{{publication.publicationId}}</td>
                                             <td>{{publication.publicationDescription}}</td>
-                                            <td>{{publication.revision}}</td>
-                                            <td>{{publication.RrevisionDate}}</td>
-                                            <td>{{publication.publicationType}}</td>
+                                            <td>{{publication.revisionDate}}</td>
+                                            <td>{{publication.publicationTypeName}}</td>
                                             <td>{{publication.sequence}}</td>
                                             <td>{{publication.source}}</td>
-                                            <td>{{publication.aircraftManufacturer}}</td>
-                                            <td>{{publication.model}}</td>
-                                            <td></td>
+                                            <td>{{publication.aircraftManufacturerName}}</td>
+                                            <td>{{publication.modelName}}</td>
+                                            <td>{{publication.allDashNumbers}}</td>
                                             <td>{{publication.location}}</td>
                                             <td>{{publication.verifiedBy}}</td>
                                             <td>{{publication.verifiedDate}}</td>
-                                            <td>{{publication.status}}</td>
-                                            <td><img src="" class="img-responsive" alt="" /></td>
+                                            <td>{{publication.status ? 'Active': 'In Active' }}</td>
+                                            <td><a href="{{publication.attachmentURL}}" class="img-responsive" alt="">View</a></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -602,7 +601,7 @@
                                             <td>{{material.extendedCost}}</td>
                                             <td>{{material.price}}</td>
                                             <td>{{material.memo}}</td>
-                                            <td>{{material.isDeferred}}</td>
+                                            <td>{{material.isDeferred != null || material.isDeferred != ''  ? material.isDeferred : false }}</td>
                                         </tr>
                                         <tr>
                                             <td><b>Total</b></td>

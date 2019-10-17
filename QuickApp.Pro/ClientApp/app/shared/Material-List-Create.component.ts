@@ -52,30 +52,31 @@ export class MaterialListCreateComponent implements OnInit {
     defaultMaterialMandatory: string;
 
     ngOnInit(): void {
+        //if (this.workFlow.materialList.length > 0) {
+            this.row = this.workFlow.materialList[0];
+            this.row.taskId = this.workFlow.taskId;
+            this.actionService.GetMaterialMandatory().subscribe(
+                mandatory => {
+                    this.materialMandatory = mandatory;
+                    this.defaultMaterialMandatory = 'Mandatory';
+                    if (this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') {
+                        this.workFlow.materialList[0].mandatoryOrSupplemental = this.defaultMaterialMandatory;
+                    }
+                },
+                error => this.errorMessage = <any>error
+            );
 
-        this.row = this.workFlow.materialList[0];
+            this.loadConditionData();
+            this.loadItemClassData();
+            this.loadPartData();
+            this.loadUOMData();
+            this.ptnumberlistdata();
 
-        this.actionService.GetMaterialMandatory().subscribe(
-            mandatory => {
-                this.materialMandatory = mandatory;
-                this.defaultMaterialMandatory = 'Mandatory';
-                if (this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') {
-                    this.workFlow.materialList[0].mandatoryOrSupplemental = this.defaultMaterialMandatory;
-                }
-            },
-            error => this.errorMessage = <any>error
-        );
+            if (this.UpdateMode) {
+                this.reCalculate();
 
-        this.loadConditionData();
-        this.loadItemClassData();
-        this.loadPartData();
-        this.loadUOMData();
-        this.ptnumberlistdata();
-
-        if (this.UpdateMode) {
-            this.reCalculate();
-
-        }
+            }
+        //}
     }
 
     reCalculate() {

@@ -30,6 +30,7 @@ namespace DAL.Repositories
                 workFlow.Publication.ForEach(publ =>
                 {
                     publ.WorkflowPublicationDashNumbers = _appContext.WorkflowPublicationDashNumber.Where(x => x.PublicationsId == publ.Id).ToList();
+                    
                 });
             }
             else
