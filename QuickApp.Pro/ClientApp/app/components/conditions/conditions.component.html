@@ -174,7 +174,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="!userForm.valid || disableSaveForCondition" (click)="saveCondition();">Save</button>
-                            <button type="button" class="btn btn-danger-cstm" (click)="resetConditionForm()">Close</button>
+                            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetConditionForm()">Close</button>
                         </div>
                     </form>
                 </div>
