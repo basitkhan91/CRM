@@ -311,7 +311,7 @@ export class CustomersListComponent implements OnInit, AfterViewInit {
         //this.workFlowtService.listCollection = [];
         this.workFlowtService.isEditMode = false;
         this.workFlowtService.enableExternal = false;
-        this._route.navigateByUrl('customersmodule/customerpages/app-customer-general-information');
+        this._route.navigateByUrl('customersmodule/customerpages/app-customer-create');
 
     }
 

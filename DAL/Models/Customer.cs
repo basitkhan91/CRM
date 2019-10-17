@@ -22,8 +22,8 @@ namespace DAL.Models
         public long CustomerId { get; set; }
 
         public string Name { get; set; }
-        public int? CsrId { get; set; }
-        public int? SaId { get; set; }
+        public long? CsrId { get; set; }
+        public long? SaId { get; set; }
 
 
         public string CustomerCode { get; set; }
@@ -164,7 +164,7 @@ namespace DAL.Models
 
 
         public bool? IsActive { get; set; }
-        public bool? IsDelete { get; set; }
+        public bool? IsDeleted { get; set; }
         public Int32? MarkUpPercentageId { get; set; }
         public long? GeneralCurrencyId { get; set; }
 
@@ -192,7 +192,10 @@ namespace DAL.Models
         public virtual CustomerType CustomerType { get; set; }
 
         public List<ClassificationMapping> CustomerClassificationMapping { get; set; }
+
+        [NotMapped]
         public List<RestrictedParts> RestrictedPMAParts { get; set; }
+        [NotMapped]
         public List<RestrictedParts> RestrictedDERParts { get; set; }
 
         public List<RestrictsPMAList> RestrictsPmaLists { get; set;}

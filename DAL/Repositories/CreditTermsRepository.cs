@@ -18,7 +18,7 @@ namespace DAL.Repositories
         {
             try
             {
-                var result = _appContext.CreditTerms.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.CreditTermsId).ToList();
+                var result = _appContext.CreditTerms.Include("MasterCompany").Where(c => c.IsDeleted == false || c.IsDeleted == null).OrderByDescending(c => c.CreditTermsId).ToList();
                 return result;
             }
             catch (Exception ex)

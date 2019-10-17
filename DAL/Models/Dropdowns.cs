@@ -7,5 +7,6 @@ namespace DAL.Models
         [Key]
         public string Label { get; set; }
         public long Value { get; set; }
+
     }
 }

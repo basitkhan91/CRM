@@ -67,20 +67,22 @@ export class CustomerContactsComponent implements OnInit {
 	customerCode: any;
 	customerName: any;
 	emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{3,}";
+	urlPattern = "^((ht|f)tp(s?))\://([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(/\S*)?$";
 	sourceViewforContact: any;
 	add_SelectedId: any;
 	add_SelectedModels: any;
 	add_ataSubChapterList: any;
 	selectedContact: any;
 	ataHeaders = [
-        { field: 'ataChapterName', header: 'ATA Chapter' },
-        { field: 'ataSubChapterDescription', header: 'ATA Sub-Chapter' }
+		{ field: 'ataChapterName', header: 'ATA Chapter' },
+		{ field: 'ataSubChapterDescription', header: 'ATA Sub-Chapter' }
 	]
 	ataListDataValues = []
+	auditHistory: any[] = [];
 
 
 	constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public customerService: CustomerService,
-		private dialog: MatDialog,private atasubchapter1service: AtaSubChapter1Service,private masterComapnyService: MasterComapnyService) {
+		private dialog: MatDialog, private atasubchapter1service: AtaSubChapter1Service, private masterComapnyService: MasterComapnyService) {
 	}
 
 	ngOnInit() {
@@ -250,60 +252,100 @@ export class CustomerContactsComponent implements OnInit {
 		})
 	}
 
-	addATAChapter(rowData){
-     this.selectedContact = rowData;
+	addATAChapter(rowData) {
+		this.selectedContact = rowData;
+		this.ataListDataValues = [];
+		this.getATACustomerContactMapped();
+
 	}
 
 
 
-	
-    // get subchapter by Id in the add ATA Mapping
-    getATASubChapterByATAChapter() {
-        const selectedATAId = getValueFromObjectByKey('ataChapterId', this.add_SelectedId)
-        this.atasubchapter1service.getATASubChapterListByATAChapterId(selectedATAId).subscribe(atasubchapter => {
-            const responseData = atasubchapter[0];
-            this.add_ataSubChapterList = responseData.map(x => {
-                return {
-                    label: x.description,
-                    value: x
-                }
-            })
-        })
-    }
-    // post the ata Mapping 
-    async addATAMapping() {
-        // const id = this.savedGeneralInformationData.customerId;
-        const ataMappingData = this.add_SelectedModels.map(x => {
-            return {
+
+	// get subchapter by Id in the add ATA Mapping
+	getATASubChapterByATAChapter() {
+		const selectedATAId = getValueFromObjectByKey('ataChapterId', this.add_SelectedId)
+		this.atasubchapter1service.getATASubChapterListByATAChapterId(selectedATAId).subscribe(atasubchapter => {
+			const responseData = atasubchapter[0];
+			this.add_ataSubChapterList = responseData.map(x => {
+				return {
+					label: x.description,
+					value: x
+				}
+			})
+		})
+	}
+	// post the ata Mapping 
+	async addATAMapping() {
+		// const id = this.savedGeneralInformationData.customerId;
+		const ataMappingData = this.add_SelectedModels.map(x => {
+			return {
 				CustomerId: this.id,
-				CustomerContactId : this.selectedContact.contactId,
-                ATAChapterId: getValueFromObjectByKey('ataChapterId', this.add_SelectedId),
-                ATASubChapterId: x.ataSubChapterId,
-                ATAChapterCode: getValueFromObjectByKey('ataChapterCode', this.add_SelectedId),
-                ATAChapterName: getValueFromObjectByKey('ataChapterName', this.add_SelectedId),
-                ATASubChapterDescription: x.description,
-                MasterCompanyId: x.masterCompanyId,
-                CreatedBy: this.userName,
-                UpdatedBy: this.userName,
-                CreatedDate: new Date(),
-                UpdatedDate: new Date(),
-                IsDeleted: false,
-            }
-        })
+				CustomerContactId: this.selectedContact.contactId,
+				ATAChapterId: getValueFromObjectByKey('ataChapterId', this.add_SelectedId),
+				ATASubChapterId: x.ataSubChapterId,
+				ATAChapterCode: getValueFromObjectByKey('ataChapterCode', this.add_SelectedId),
+				ATAChapterName: getValueFromObjectByKey('ataChapterName', this.add_SelectedId),
+				ATASubChapterDescription: x.description,
+				MasterCompanyId: x.masterCompanyId,
+				CreatedBy: this.userName,
+				UpdatedBy: this.userName,
+				CreatedDate: new Date(),
+				UpdatedDate: new Date(),
+				IsDeleted: false,
+			}
+		})
 
-        this.customerService.postCustomerATAs(ataMappingData).subscribe(res => {
-            this.add_SelectedModels = undefined;
-            this.add_SelectedId = undefined;
-            this.alertService.showMessage(
-                'Success',
-                'Saved ATA Mapped Data Successfully ',
-                MessageSeverity.success
-            );
-    
-        })
+		this.customerService.postCustomerATAs(ataMappingData).subscribe(res => {
+			this.add_SelectedModels = undefined;
+			this.add_SelectedId = undefined;
+			this.alertService.showMessage(
+				'Success',
+				'Saved ATA Mapped Data Successfully ',
+				MessageSeverity.success
+			);
+
+			this.getATACustomerContactMapped();
+
+		})
 
 	}
-	
+
+	getATACustomerContactMapped() {
+		this.customerService.getATAMappedByContactId(this.selectedContact.contactId).subscribe(res => {
+			this.ataListDataValues = res;
+		})
+	}
+
+	deleteATAMapped(rowData) {
+		this.customerService.deleteATAMappedByContactId(rowData.customerContactATAMappingId).subscribe(res => {
+			this.getATACustomerContactMapped();
+			this.alertService.showMessage(
+				'Success',
+				'Deleted ATA Mapped  Successfully ',
+				MessageSeverity.success
+			);
+		})
+
+	}
+
+	getAuditHistoryById(rowData) {
+		this.customerService.getCustomerContactAuditDetails(rowData.customerContactId).subscribe(res => {
+			this.auditHistory = res;
+		})
+	}
+	getColorCodeForHistory(i, field, value) {
+		const data = this.auditHistory;
+		const dataLength = data.length;
+		if (i >= 0 && i <= dataLength) {
+			if ((i + 1) === dataLength) {
+				return true;
+			} else {
+				return data[i + 1][field] === value
+			}
+		}
+	}
+
 	nextClick() {
 		this.tab.emit('AircraftInfo');
 
@@ -311,6 +353,8 @@ export class CustomerContactsComponent implements OnInit {
 	backClick() {
 		this.tab.emit('General');
 	}
+
+
 
 
 

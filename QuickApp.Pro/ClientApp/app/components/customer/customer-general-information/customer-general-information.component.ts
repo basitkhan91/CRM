@@ -81,11 +81,11 @@ export class CustomerGeneralInformationComponent implements OnInit {
     partListOriginal: any;
     // restrictsPMAList: any;
     // restrictBERList: any;
-    restictBERtempList : any = []
+    restictBERtempList: any = []
     restictPMAtempList: any = [];
     restrictHeaders = [
-        {field: 'partNumber' , header: 'PN'},
-        {field: 'memo' , header: 'Description'},
+        { field: 'partNumber', header: 'PN' },
+        { field: 'memo', header: 'Description' },
 
     ]
     // editData: any;
@@ -471,7 +471,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
             const data = res[0];
             this.partList = data.map(x => {
                 return {
-                    label: x.partNumber, value: { itemMasterId: x.itemMasterId, partNumber: x.partNumber, memo: x.memo }
+                    label: x.partNumber, value: { masterPartId: x.itemMasterId, partNumber: x.partNumber, memo: x.memo, createdBy: this.userName, updatedBy: this.userName }
                 }
             })
         })
@@ -536,17 +536,17 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     addRestrictPMA() {
 
-    this.generalInformation.restrictsPMAList = this.restictPMAtempList
+        this.generalInformation.restrictedPMAParts = this.restictPMAtempList
     }
-    deleteRestirctPMA(i){
-        this.generalInformation.restrictsPMAList.splice(i, 1);
+    deleteRestirctPMA(i) {
+        this.generalInformation.restrictedPMAParts.splice(i, 1);
     }
 
     addRestrictBER() {
-     this.generalInformation.restrictBERList = this.restictBERtempList;
+        this.generalInformation.restrictedDERParts = this.restictBERtempList;
     }
-    deleteRestrictBER(i){
-        this.generalInformation.restrictBERList.splice(i, 1);
+    deleteRestrictBER(i) {
+        this.generalInformation.restrictedDERParts.splice(i, 1);
     }
 
 
@@ -645,11 +645,15 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     }
     saveGeneralInformation() {
+
+
+
         if (!this.isEdit) {
             this.customerService.newAction({
                 ...this.generalInformation,
                 country: getValueFromObjectByKey('nice_name', this.generalInformation.country),
-
+                restrictedDERParts: this.generalInformation.restrictedDERParts.map(x => { return { ...x, partType: 'DER' } }),
+                restrictedPMAParts: this.generalInformation.restrictedPMAParts.map(x => { return { ...x, partType: 'PMA' } }),
                 customerParentName: getValueFromObjectByKey('name', this.generalInformation.customerParentName),
                 createdBy: this.userName, updatedBy: this.userName, masterCompanyId: 1
             }).subscribe(res => {
@@ -665,11 +669,12 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 this.isEdit = true;
             })
         } else {
-
             this.customerService.updateAction({
                 ...this.generalInformation,
                 addressId: this.editData.addressId,
                 customerId: this.id,
+                restrictedDERParts: this.generalInformation.restrictedDERParts.map(x => { return { ...x, partType: 'DER' } }),
+                restrictedPMAParts: this.generalInformation.restrictedPMAParts.map(x => { return { ...x, partType: 'PMA' } }),
                 name: editValueAssignByCondition('name', this.generalInformation.name),
                 customerCode: editValueAssignByCondition('customerCode', this.generalInformation.customerCode),
                 country: getValueFromObjectByKey('nice_name', this.generalInformation.country),

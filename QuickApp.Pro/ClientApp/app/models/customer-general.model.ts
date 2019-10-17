@@ -26,8 +26,8 @@ export class CustomerGeneralInformation {
     isPBHCustomer: boolean;
     pbhCustomerMemo: string;
     restrictPMA: boolean;
-    restrictsPMAList: Array<any>;
-    restrictBERList: Array<any>;
+    restrictedPMAParts: Array<any>;
+    restrictedDERParts: Array<any>;
     // restictPMAIds: any
     // restrictPMAMemo: string;
     restrictBER: boolean;
@@ -73,11 +73,12 @@ export class CustomerGeneralInformation {
         this.isPBHCustomer = false;
         this.pbhCustomerMemo = '';
         this.restrictPMA = false;
-        this.restrictsPMAList = []
+        // this.restrictsPMAList = []
         // this.restictPMAIds = [];
         // this.restrictPMAMemo = '';
         this.restrictBER = false;
-        this.restrictBERList = [];
+        this.restrictedPMAParts = []
+        this.restrictedDERParts = []
         // this.restictBERIds = [];
         // this.restrictBERMemo = '';
         // this.scanDocuments = false;
