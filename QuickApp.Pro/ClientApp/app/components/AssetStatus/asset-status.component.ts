@@ -1,4 +1,4 @@
-﻿import { fadeInOut } from "../../services/animations";
+import { fadeInOut } from "../../services/animations";
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AlertService, MessageSeverity } from "../../services/alert.service";
 import { AssetStatus } from "../../models/asset-status.model";
@@ -13,6 +13,7 @@ import { SingleScreenBreadcrumbService } from "../../services/single-screens-bre
 import { MasterCompany } from '../../models/mastercompany.model';
 import { MasterComapnyService } from '../../services/mastercompany.service';
 import { AuditHistory } from '../../models/audithistory.model';
+import { ConfigurationService } from '../../services/configuration.service';
 
 @Component({
     selector: 'asset-status',
@@ -30,6 +31,7 @@ export class AssetStatusComponent implements OnInit {
     assetStatusAuditList: AssetStatusAudit[];
     updateMode: boolean;
     selectedData: any;
+    formData = new FormData();
     public auditHisory: AuditHistory[] = [];
     private isDeleteMode: boolean = false;
     private isEditMode: boolean = false;
@@ -61,8 +63,9 @@ export class AssetStatusComponent implements OnInit {
     private isDelete: boolean = false;
     codeName: string = "";
     allreasn: any[] = [];
+    existingRecordsResponse: Object;
     loadingIndicator: boolean;
-
+    auditHistory: any[] = [];
     isEdit: boolean = false;
     pageIndex: number = 0;
     pageSize: number = 10;
@@ -81,7 +84,7 @@ export class AssetStatusComponent implements OnInit {
     disposalTypePagination: AssetStatus[];
 
 
-    constructor(private alertService: AlertService, private assetStatusService: AssetStatusService, private modalService: NgbModal, private authService: AuthService, private breadCrumb: SingleScreenBreadcrumbService, private masterComapnyService: MasterComapnyService) {
+    constructor(private alertService: AlertService, private assetStatusService: AssetStatusService, private modalService: NgbModal, private authService: AuthService, private breadCrumb: SingleScreenBreadcrumbService, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
         this.sourceAction = new AssetStatus();
@@ -92,13 +95,6 @@ export class AssetStatusComponent implements OnInit {
         this.loadData();
         this.breadCrumb.currentUrl = '/singlepages/singlepages/asset-status';
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
-        //this.assetStatusService.getAll().subscribe(assets => {
-        //    this.assetStatusList = assets[0];
-        //    this.assetStatusList.forEach(function (assetStatus) {
-        //        assetStatus.isActive = assetStatus.isActive == false ? false : true;
-        //    });
-        //});
-        //this.currentAssetStatus = new AssetStatus();
     }
 
     ngAfterViewInit() {
@@ -114,11 +110,13 @@ export class AssetStatusComponent implements OnInit {
             this.assetStatusList = data[0].columnData;
             console.log(this.assetStatusList);
             this.totalRecords = this.assetStatusList.length;
+            this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
             this.cols = [
                 console.log(this.allunitData),
                 this.selectedColumns = this.allunitData
             ];
             this.selectedData = this.selectedColumns
+            this.alertService.stopLoadingMessage();
         });
     }
 
@@ -314,6 +312,7 @@ export class AssetStatusComponent implements OnInit {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
         this.loadData();
+        this.alertService.stopLoadingMessage();
     }
 
     private saveFailedHelper(error: any) {
@@ -390,56 +389,7 @@ export class AssetStatusComponent implements OnInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-    //addAssetStatus(): void {
-    //    if (!(this.currentAssetStatus.identification && this.currentAssetStatus.name && this.currentAssetStatus.memo)) {
-    //        this.display = true;
-    //        return;
-    //    }
-    //    this.currentAssetStatus.createdBy = this.userName;
-    //    this.currentAssetStatus.updatedBy = this.userName;
-    //    this.assetStatusService.add(this.currentAssetStatus).subscribe(asset => {
-    //        this.alertService.showMessage('Asset Status added successfully.');
-    //        this.assetStatusService.getAll().subscribe(assets => {
-    //            this.assetStatusList = assets[0];
-    //        });
-    //        this.resetAddAssetStatus();
-    //    });
-
-    //}
-    //onAddMemoToPopup() {
-    //    this.memoPopupText = this.memoNotes;
-    //}
-    //setAssetStatusToUpdate(editAssetStatusPopup: any, id: number): void {
-    //    this.assetStatusToUpdate = Object.assign({}, this.assetStatusList.filter(function (asset) {
-    //        return asset.id == id;
-    //    })[0]);
-    //    this.modal = this.modalService.open(editAssetStatusPopup, { size: 'sm' });
-    //}
-    //onSaveMemo() {
-    //    this.memoNotes = this.memoPopupText;
-    //}
-    //updateAssetStatus(): void {
-    //    this.currentAssetStatus.updatedBy = this.userName;
-    //    this.assetStatusService.update(this.assetStatusToUpdate).subscribe(asset => {
-    //        this.alertService.showMessage('Asset Status updated successfully.');
-    //        this.assetStatusService.getAll().subscribe(assets => {
-    //            this.assetStatusList = assets[0];
-    //        });
-    //        this.resetUpdateAssetStatus();
-    //        this.dismissModel();
-    //    });
-    //}
-
-    //removeAssetStatus(): void {
-    //    this.assetStatusService.remove(this.assetStatusToRemove.id).subscribe(response => {
-    //        this.alertService.showMessage("Asset Status removed successfully.");
-    //        this.assetStatusService.getAll().subscribe(assets => {
-    //            this.assetStatusList = assets[0];
-    //            this.modal.close();
-    //        });
-    //    });
-
-    //}
+    
      resetAddAssetStatus(): void {
         this.currentAssetStatus = new AssetStatus();
     }
@@ -454,31 +404,62 @@ export class AssetStatusComponent implements OnInit {
         this.modal.close();
     }
 
-    //confirmDelete(content, id): void {
-    //    this.assetStatusToRemove = Object.assign({}, this.assetStatusList.filter(function (asset) {
-    //        return asset.id == id;
-    //    })[0]);;
-    //    this.modal = this.modalService.open(content, { size: 'sm' });
+    //showAuditPopup(template, id): void {
+    //    this.auditAssetStatus(id);
+    //    this.modal = this.modalService.open(template, { size: 'sm' });
     //}
 
-    //toggleIsActive(assetStatus: any, event): void {
-    //    this.assetStatusToUpdate = assetStatus;
-    //    this.assetStatusToUpdate.isActive = event.checked == false ? false : true;
-    //    this.updateAssetStatus();
+    //auditAssetStatus(assetStatusId: number): void {
+    //    this.AuditDetails = [];
+    //    this.assetStatusService.getAssetAudit(assetStatusId).subscribe(audits => {
+    //        if (audits.length > 0) {
+    //            this.AuditDetails = audits;
+    //            this.AuditDetails[0].ColumnsToAvoid = ["assetStatusAuditId", "id", "createdBy", "createdDate", "updatedDate"];
+    //        }
+    //    });
     //}
 
-    showAuditPopup(template, id): void {
-        this.auditAssetStatus(id);
-        this.modal = this.modalService.open(template, { size: 'sm' });
+    getAuditHistoryById(rowData) {
+        this.assetStatusService.getAssetAudit(rowData.assetStatusId).subscribe(res => {
+            this.auditHistory = res;
+        })
     }
 
-    auditAssetStatus(assetStatusId: number): void {
-        this.AuditDetails = [];
-        this.assetStatusService.getAssetAudit(assetStatusId).subscribe(audits => {
-            if (audits.length > 0) {
-                this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["assetStatusAuditId", "id", "createdBy", "createdDate", "updatedDate"];
-            }
-        });
+    sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=AssetStatus&fileName=AssetStatus.xlsx`;
+
+        window.location.assign(url);
+    }
+
+    customExcelUpload(event) {
+        const file = event.target.files;
+
+        console.log(file);
+        if (file.length > 0) {
+
+            this.formData.append('file', file[0])
+            this.assetStatusService.AssetStatusCustomUpload(this.formData).subscribe(res => {
+                event.target.value = '';
+
+                this.formData = new FormData();
+                this.existingRecordsResponse = res;
+                this.getAssetStatusList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+
+                // $('#duplicateRecords').modal('show');
+                // document.getElementById('duplicateRecords').click();
+
+            })
+        }
+
+    }
+
+    getAssetStatusList() {
+
+        this.loadData();
     }
 }

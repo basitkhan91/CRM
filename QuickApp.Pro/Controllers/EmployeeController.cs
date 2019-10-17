@@ -899,5 +899,14 @@ namespace QuickApp.Pro.Controllers
 
         //        return Ok(id);
         //    }
+
+
+        [HttpGet("employeedata/{employeeId}")]
+        public IActionResult GetEmployeeData(long employeeId)
+        {
+            var result = _unitOfWork.employee.GetEmployeeData(employeeId);
+            return Ok(result);
+
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿// ===============================
+// ===============================
 // info@ebenmonney.com
 // www.ebenmonney.com/quickapp-pro
 // ===============================
@@ -45,5 +45,9 @@ export class AssetStatusService {
     }
     getAssetAudit(assetId:number) {
         return this.assetStatusEndpoint.getAssetStatusAuditById<any>(assetId);
+    }
+    
+    AssetStatusCustomUpload(file) {
+        return this.assetStatusEndpoint.AssetStatusCustomUpload(file);
     }
 }

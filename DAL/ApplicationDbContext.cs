@@ -278,9 +278,12 @@ namespace DAL
         public DbSet<AssetDepreciationMethod> AssetDepreciationMethod { get; set; }
         public DbSet<AssetDepreciationMethodAudit> AssetDepreciationMethodAudit { get; set; }
         public DbSet<AssetDisposalType> AssetDisposalType { get; set; }
-        public DbSet<AssetDepreciationIntervalType> AssetDepreciationIntervalType { get; set; }
+        //public DbSet<AssetDepreciationIntervalType> AssetDepreciationIntervalType { get; set; }
+        public DbSet<AssetDepreciationInterval> AssetDepreciationInterval { get; set; }
+        public DbSet<AssetDepreciationIntervalAudit> AssetDepreciationIntervalAudit { get; set; }
         public DbSet<AssetDepConventionType> AssetDepConventionType { get; set; }
         public DbSet<AssetDepConvention> AssetDepConvention { get; set; }
+        public DbSet<AssetDepConventionAudit> AssetDepConventionAudit { get; set; }
         public DbSet<AssetIntangibleTypeSingleScreen> AssetIntangibleTypeSingleScreen { get; set; }
 
         public DbSet<AssetType> AssetType { get; set; }
@@ -400,14 +403,11 @@ namespace DAL
         public DbSet<WorkOrderFreight> WorkOrderFreight { get; set; }
         public DbSet<PublicationTypeAudit> PublicationTypeAudit { get; set; }
         public DbSet<Dropdowns> Dropdowns { get; set; }
-        
-
         public DbSet<Percentage> Percentage { get; set; }
-        
-
-
         public DbSet<AssetIntangibleAttributeType> AssetIntangibleAttributeType { get; set; }
         public DbSet<Percent> Percent { get; set; }
+        public DbSet<PurchaseOrderApprover> PurchaseOrderApprover { get; set; }
+        public DbSet<PurchaseOrderApproverList> PurchaseOrderApproverList { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {

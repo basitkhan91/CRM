@@ -36,15 +36,17 @@ export class EquipmentCreateComponent implements OnInit, OnChanges {
     }
 
     ngOnInit(): void {
-        this.row = this.workFlow.equipments[0];
-
-        this.actionService.getEquipmentAssetType().subscribe(
-            equipmentAssetType => {
-                this.equipmentAssetType = equipmentAssetType;
-            },
-            error => this.errorMessage = <any>error
-        );
-        this.ptnumberlistdata();
+       // if (this.workFlow.equipments.length > 0) {
+            this.row = this.workFlow.equipments[0];
+            this.row.taskId = this.workFlow.taskId;
+            this.actionService.getEquipmentAssetType().subscribe(
+                equipmentAssetType => {
+                    this.equipmentAssetType = equipmentAssetType;
+                },
+                error => this.errorMessage = <any>error
+            );
+            this.ptnumberlistdata();
+        //}        
     }
 
     ngOnChanges(): void {
@@ -86,11 +88,11 @@ export class EquipmentCreateComponent implements OnInit, OnChanges {
     }
 
 
-    deleteRow(index): void {	   
-        if (this.workFlow.equipments[index].workflowEquipmentListid == "0" || this.workFlow.equipments[index].workflowEquipmentListid == "") {	
-             this.workFlow.equipments.splice(index, 1);	           
-        }	
-         else {	
+    deleteRow(index): void {
+        if (this.workFlow.equipments[index].workflowEquipmentListid == undefined || this.workFlow.equipments[index].workflowEquipmentListid == "0" || this.workFlow.equipments[index].workflowEquipmentListid == "") {
+            this.workFlow.equipments.splice(index, 1);
+        }
+        else {	
             this.workFlow.equipments[index].isDelete = true;	
         }	
     }

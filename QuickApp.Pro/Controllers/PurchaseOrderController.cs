@@ -61,6 +61,42 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [HttpPost("createpoapprover")]
+        public IActionResult CreatePOApprovers([FromBody] PurchaseOrderApprover poApprover)
+        {
+            if (ModelState.IsValid)
+            {
+                poApprover.POApproverId = _unitOfWork.purchaseOrder.CreatePOApprovers(poApprover);
+                return Ok(poApprover);
+            }
+            return BadRequest(ModelState);
+        }
+
+        [HttpPost("updatepoapprover")]
+        public IActionResult UpdatePOApprovers([FromBody] PurchaseOrderApprover poApprover)
+        {
+            if (ModelState.IsValid)
+            {
+                _unitOfWork.purchaseOrder.UpdatePOApprovers(poApprover);
+                return Ok(poApprover);
+            }
+            return BadRequest(ModelState);
+        }
+
+        [HttpGet("updatepoapproverstatus")]
+        public IActionResult UpdatePOApproversStatus(long poApproverListId, int statusId, string updatedBy)
+        {
+            _unitOfWork.purchaseOrder.UpdatePOApproversStatus(poApproverListId, statusId, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("poapproverslist")]
+        public IActionResult GetPoApproversList(long purchaseOrderId)
+        {
+           var result= _unitOfWork.purchaseOrder.GetPoApproversList(purchaseOrderId);
+            return Ok(result);
+        }
+
     }
 
 }

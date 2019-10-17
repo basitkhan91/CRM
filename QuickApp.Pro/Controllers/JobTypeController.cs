@@ -102,7 +102,7 @@ namespace QuickApp.Pro.Controllers
         {
             var existingResult = _unitOfWork.JobType.GetSingleOrDefault(c => c.JobTypeId == id);
 
-            existingResult.IsDelete = true;
+            existingResult.IsDeleted = true;
             _unitOfWork.JobType.Update(existingResult);
             _unitOfWork.SaveChanges();
 

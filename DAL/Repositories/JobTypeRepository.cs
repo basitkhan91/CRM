@@ -20,7 +20,7 @@ namespace DAL.Repositories
 
         public IEnumerable<DAL.Models.JobType> GetAllJobTypes()
         {
-            return _appContext.JobType.Where(c => c.IsActive == true && c.IsDelete == null).OrderByDescending(c => c.JobTypeId).ToList();
+            return _appContext.JobType.Where(c => c.IsActive == true && c.IsDeleted == false).OrderByDescending(c => c.JobTypeId).ToList();
         }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

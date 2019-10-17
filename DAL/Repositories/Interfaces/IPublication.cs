@@ -46,7 +46,7 @@ namespace DAL.Repositories.Interfaces
         
         IEnumerable<object> GetPublicationTypes();
         
-        PublicationsList GetPublicationForWorkFlow(long publicationRecordId);
+        object GetPublicationForWorkFlow(long publicationRecordId);
         
         IEnumerable<PublicationsList> getPublicationDropdownData();
     }

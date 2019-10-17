@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -48,7 +48,7 @@ namespace QuickApp.Pro.Controllers
             dynamicGridData.columHeaders = columHeaders;
             List<AssetDisposalTypeSPModel> assetDisposalMethods = new List<AssetDisposalTypeSPModel>();
             AssetDisposalTypeSPModel assetDisposalType = null;
-            var gLAccounts = unitOfWork.Repository<AssetDisposalType>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AssetDisposalTypeId);
+            var gLAccounts = unitOfWork.Repository<AssetDisposalType>().GetAll().Where(x => x.IsDeleted != true).OrderByDescending(x => x.AssetDisposalTypeId);
             foreach (var item in gLAccounts)
             {
                 assetDisposalType = new AssetDisposalTypeSPModel();
@@ -74,7 +74,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getById/{id}")]
         public IActionResult getdisposalTypeById(long id)
         {
-            var disposalType = unitOfWork.Repository<AssetDisposalType>().Find(x => x.AssetDisposalTypeId == id && x.IsDelete != true);
+            var disposalType = unitOfWork.Repository<AssetDisposalType>().Find(x => x.AssetDisposalTypeId == id && x.IsDeleted != true);
             return Ok(disposalType);
         }
 
@@ -137,7 +137,7 @@ namespace QuickApp.Pro.Controllers
             var disposalType = unitOfWork.Repository<AssetDisposalType>().Find(x => x.AssetDisposalTypeId == id).FirstOrDefault();
             if (disposalType != null)
             {
-                disposalType.IsDelete = true;
+                disposalType.IsDeleted = true;
                 unitOfWork.Repository<AssetDisposalType>().Update(disposalType);
                 unitOfWork.SaveChanges();
                 return Ok();
@@ -167,5 +167,13 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(auditResult);
         }
+        [HttpPost("UploadDispTypeCustomData")]
+        public IActionResult UploadDispTypeCustomData()
+        {
+
+            unitOfWork.FileUploadRepository.UploadCustomFile(Convert.ToString("DisposalType"), Request.Form.Files[0]);
+            return Ok();
+        }
+
     }
 }
