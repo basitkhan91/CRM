@@ -92,8 +92,10 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _getTaxTypeRateMapped: string = "/api/Customer/getCustomerTaxTypeRateMapped";
     private readonly _CustomerTaxTypeRatePostUrl: string = "/api/Customer/CustomerTaxTypeRatePost";
     private readonly _CustomerAircraftSearchUrl: string = '/api/Customer/searchGetCustomerAirMappedByMultiTypeIDModelIDDashID';
-    private readonly _CustomerATAPostUrl: string = "/api/Customer/CustomerATAPost";
-    private readonly _getATAMapped: string = "/api/Customer/getCustomerATAMapped";
+    private readonly _CustomerATAPostUrl: string = "/api/Customer/CustomerContactATAPost";
+    private readonly _getATAMappedByContactId: string = "/api/Customer/getCustomerContactATAMapped";
+    private readonly _getATAMappedByCustomerId: string = "/api/Customer/getCustomerATAMapped";
+    private readonly _deleteATAMappedByContactId: string = "/api/Customer/DeleteCustomerContactATAMapping"
     private readonly _CustomerAtaSearchUrl: string = '/api/Customer/searchGetCustomerATAMappedByMultiATAIDATASubID';
 
     private readonly _internationalshippingpost: string = '/api/Customer/createinternationalshipping'
@@ -108,9 +110,12 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _deleteATAMapped: string = '/api/Customer/DeleteCustomerATAMapping';
     private readonly _deleteAircraftMappedInventory: string = '/api/Customer/DeleteCustomerAircraftMappint';
     private readonly _deleteTaxTypeRateMapped: string = '/api/Customer/DeleteCustomerTaxTypeRateMappint';
-    private readonly _addShipViaDetails : string ='/api/Customer/addShipViaDetails';
+    private readonly _addShipViaDetails: string = '/api/Customer/addShipViaDetails';
     private readonly _addDocumentDetails: string = '/api/Customer/customerDocumentUpload';
     private readonly _addRemoveDetails: string = '/api/Customer/customerDocumentDelete';
+    private readonly _customerContactHistory: string = '/api/Customer/customercontactauditdetails'
+
+
 
 
 
@@ -177,12 +182,12 @@ export class CustomerEndpoint extends EndpointFactory {
         super(http, configurations, injector);
     }
 
-    postDomesticShipVia<T>(postData){ 
-        
+    postDomesticShipVia<T>(postData) {
+
         return this.http.post<T>(this.domesticShipVia, JSON.stringify(postData), this.getRequestHeaders())
-        .catch(error => {
-            return this.handleError(error, () => this.postDomesticShipVia(postData));
-        });
+            .catch(error => {
+                return this.handleError(error, () => this.postDomesticShipVia(postData));
+            });
     }
 
 
@@ -203,6 +208,14 @@ export class CustomerEndpoint extends EndpointFactory {
             });
     }
 
+
+
+    getCustomerContactAuditDetails<T>(customerContactId) {
+
+
+        return this.http.get<T>(`${this.configurations.baseUrl}${this._customerContactHistory}/${customerContactId}`, this.getRequestHeaders())
+    }
+
     //getcustomerEndpoint<T>(): Observable<T> {
 
     //    return this.http.get<T>(this.customersUrl, this.getRequestHeaders())
@@ -220,14 +233,14 @@ export class CustomerEndpoint extends EndpointFactory {
             });
     }
 
-    deleteATAMappedDataById<T>(id) {
-        let endpointUrl = `${this.deleteATAMapped}/${id}`;
+    // deleteATAMappedDataById<T>(id) {
+    //     let endpointUrl = `${this.deleteATAMapped}/${id}`;
 
-        return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.deleteATAMappedDataById(id));
-            });
-    }
+    //     return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
+    //         .catch(error => {
+    //             return this.handleError(error, () => this.deleteATAMappedDataById(id));
+    //         });
+    // }
     deleteTaxTypeRateMappedDataById<T>(id) {
         let endpointUrl = `${this.deleteTaxTypeRateMapped}/${id}`;
 
@@ -676,14 +689,34 @@ export class CustomerEndpoint extends EndpointFactory {
             });
     }
 
-    getATAMappingEndpoint<T>(customerId: number): Observable<T> {
-        let endpointUrl = `${this._getATAMapped}/${customerId}`;
+    getATAMappingByCustomerId<T>(customerId: number): Observable<T> {
+        let endpointUrl = `${this._getATAMappedByCustomerId}/${customerId}`;
 
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getATAMappingEndpoint(customerId));
+                return this.handleError(error, () => this.getATAMappingByCustomerId(customerId));
             });
     }
+
+    getATAMappingByContactId<T>(contactId: number): Observable<T> {
+        let endpointUrl = `${this._getATAMappedByContactId}/${contactId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getATAMappingByContactId(contactId));
+            });
+    }
+
+    deleteATAMappedByContactId(contactId) {
+
+        return this.http.delete(`${this.configurations.baseUrl}${this._deleteATAMappedByContactId}/${contactId}`, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.deleteATAMappedByContactId(contactId));
+            });
+    }
+
+
+
 
     getTaxTypeRateMappingEndpoint<T>(customerId: number): Observable<T> {
         let endpointUrl = `${this._getTaxTypeRateMapped}/${customerId}`;

@@ -500,7 +500,7 @@ namespace QuickApp.Pro.ViewModels
 
         public bool? IsActive { get; set; }
 
-        public bool? IsDelete { get; set; }
+        public bool? IsDeleted { get; set; }
 
         public virtual MasterCompany MasterCompany { get; set; }
 
@@ -624,15 +624,32 @@ namespace QuickApp.Pro.ViewModels
     #region AssetDepreciationInterval
     public class AssetDepreciationIntervalModel
     {
-        public long AssetDepreciationIntervalId { get; set; }
-        public string AssetDepreciationIntervalCode { get; set; }
-        public string AssetDepreciationIntervalName { get; set; }
-        public string AssetDepreciationIntervalMemo { get; set; }
+        //public long AssetDepreciationIntervalId { get; set; }
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string Memo { get; set; }
+    }
+
+    public class AssetDepreciationIntervalSPModel : AssetDepreciationIntervalModel
+    {
+        public long? AssetDepreciationIntervalId { get; set; }
+        public Int32 MasterCompanyId { get; set; }
+
+        public bool? IsActive { get; set; }
+
+        public bool? IsDelete { get; set; }
+
+        public virtual MasterCompany MasterCompany { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public string UpdatedBy { get; set; }
     }
     #endregion
 
     #region AssetIntangibleTypeSingleScreen
-   
+
     public class AssetIntangibleTypeSingleScreenColModel
     {
 

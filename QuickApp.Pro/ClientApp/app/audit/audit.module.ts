@@ -4,7 +4,10 @@ import { AuditComponent } from "../components/Audit/audit.component";
 import { AppSiteAuditComponent } from "../components/Audit/AppSiteAudit/app-site-audit.component";
 import { AppSiteAuditNoHistoryComponent } from "../components/Audit/AuditNoHistory/app-site-audit-no-history.component";
 import { WareHouseAuditComponent } from "../components/Audit/WareHouseAudit/warehouse-audit.component";
+//import { LocationAuditComponent } from "../components/Audit/LocationAudit/location-audit.component";
+import { ShelfAuditComponent } from "../components/Audit/ShelfAudit/shelf-audit.component";
 import { AuditNoHistoryComponent } from "../components/Audit/AuditNoHistory/audit-no-history.component";
+
 
 @NgModule({
   declarations: [
@@ -12,7 +15,9 @@ import { AuditNoHistoryComponent } from "../components/Audit/AuditNoHistory/audi
     AuditNoHistoryComponent,
     AppSiteAuditComponent,
     AppSiteAuditNoHistoryComponent,
-    WareHouseAuditComponent
+    WareHouseAuditComponent,
+    LocationAuditComponent,
+    ShelfAuditComponent
   ],
 
   imports: [CommonModule],
@@ -22,7 +27,9 @@ import { AuditNoHistoryComponent } from "../components/Audit/AuditNoHistory/audi
     AuditNoHistoryComponent,
     AppSiteAuditComponent,
     AppSiteAuditNoHistoryComponent,
-    WareHouseAuditComponent
+    WareHouseAuditComponent,
+    LocationAuditComponent,
+    ShelfAuditComponent
   ],
 
   providers: [],

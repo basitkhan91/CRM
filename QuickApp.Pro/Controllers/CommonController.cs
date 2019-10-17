@@ -57,9 +57,9 @@ namespace QuickApp.Pro.Controllers
 
         [HttpGet]
         [Route("binddropdowns")]
-        public IActionResult BindDropdowns(string tableName, string primaryColumn, string textColumn)
+        public IActionResult BindDropdowns(string tableName, string primaryColumn, string textColumn,long count=0)
         {
-            var result = _unitOfWork.CommonRepository.BindDropdowns(tableName, primaryColumn, textColumn);
+            var result = _unitOfWork.CommonRepository.BindDropdowns(tableName, primaryColumn, textColumn,count);
             return Ok(result);
 
         }

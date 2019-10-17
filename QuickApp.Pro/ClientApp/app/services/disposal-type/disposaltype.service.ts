@@ -1,14 +1,14 @@
-﻿// ===============================
+// ===============================
 // info@ebenmonney.com
 // www.ebenmonney.com/quickapp-pro
 // ===============================
 
 
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs/Observable';
 import { DisposalType } from '../../models/disposal-type.model';
 import { DisposalTypeEndpointService } from './disposaltype-endpoint.service';
 
@@ -45,4 +45,7 @@ export class DisposalTypeService {
         return this.disposalTypeEndpoint.getDisposalAudit<any[]>(assetDisposalTypeId);
     }
 
+    DispTypeCustomUpload(file) {
+        return this.disposalTypeEndpoint.DispTypeCustomUpload(file);
+    }
 }

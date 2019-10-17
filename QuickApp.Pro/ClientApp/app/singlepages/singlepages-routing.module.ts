@@ -339,7 +339,7 @@ const singlePagesRoutes: Routes = [
       {
         path: "app-depriciation-method",
         component: DepriciationMethodComponent,
-        data: { title: "Certification Type" }
+          data: { title: "Depreciation Method" }
       },
       {
         path: "app-disposal-type",

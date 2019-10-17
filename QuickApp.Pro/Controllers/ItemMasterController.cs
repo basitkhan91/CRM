@@ -37,8 +37,9 @@ namespace QuickApp.Pro.Controllers
         {
             //var item = _unitOfWork.Repository<ItemMaster>().getItemMasterData(itemMasterId);
             var item = _unitOfWork.itemMaster.getByID(itemMasterId);
-            
-            if (item == null) {
+
+            if (item == null)
+            {
                 return BadRequest();
             }
 
@@ -163,7 +164,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult warnTypeGet(WarningViewModel warningViewModel)
         {
             var allcustomertype = _unitOfWork.warning.GetAllData(); //.GetAllCustomersData();
-            return Ok(allcustomertype); 
+            return Ok(allcustomertype);
 
         }
 
@@ -501,7 +502,7 @@ namespace QuickApp.Pro.Controllers
                     itemmaserObj.IsActive = true;
                     itemmaserObj.PartNumber = itemMasterViewModel.PartNumber;
 
-                    itemmaserObj.oemPNId= itemMasterViewModel.oemPNId;
+                    itemmaserObj.oemPNId = itemMasterViewModel.oemPNId;
                     itemmaserObj.PartDescription = itemMasterViewModel.Partdescription;
                     itemmaserObj.ItemTypeId = itemMasterViewModel.ItemTypeId;
                     part.ParentPartId = itemMasterViewModel.ParentPartId;
@@ -732,13 +733,13 @@ namespace QuickApp.Pro.Controllers
                     masterParts.IsActive = true;
                     masterParts.IsDeleted = false;
 
-                    var masterPartId=  _unitOfWork.CommonRepository.CreateMasterParts(masterParts);
+                    var masterPartId = _unitOfWork.CommonRepository.CreateMasterParts(masterParts);
                     itemmaserObj.MasterPartId = masterPartId;
 
                     _unitOfWork.itemMaster.Add(itemmaserObj);
                     _unitOfWork.SaveChanges();
 
-                    
+
 
                     try
                     {
@@ -771,7 +772,7 @@ namespace QuickApp.Pro.Controllers
                     itemmaserObj.Manufacturer.Name = MfgName.Name;
                     return Ok(itemmaserObj);
                 }
-                
+
                 // return Ok(ModelState);
             }
             catch (Exception ex)
@@ -808,7 +809,7 @@ namespace QuickApp.Pro.Controllers
                     itemmaserObj.UpdatedBy = HttpContext.Session.GetString("UserId");
 
                     _context.Entry(itemmaserObj).Property(x => x.UpdatedDate).IsModified = true;
-                    _context.Entry(itemmaserObj).Property(x=>x.UpdatedBy).IsModified = true;
+                    _context.Entry(itemmaserObj).Property(x => x.UpdatedBy).IsModified = true;
 
                     _context.SaveChanges();
                 }
@@ -860,8 +861,8 @@ namespace QuickApp.Pro.Controllers
                         }
                     }
                 }
-                
-                
+
+
                 /*Master Item Parts */
                 MasterParts masterParts = new MasterParts();
                 masterParts.MasterPartId = itemmaserObj.MasterPartId;
@@ -878,7 +879,7 @@ namespace QuickApp.Pro.Controllers
 
                 _unitOfWork.CommonRepository.UpdateMasterParts(masterParts);
 
-               
+
 
                 return Ok(itemmaserObj);
             }
@@ -902,7 +903,7 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.itemMaster.Update(itemmaserObj);
                 _unitOfWork.SaveChanges();
 
-               
+
             }
 
 
@@ -1172,11 +1173,12 @@ namespace QuickApp.Pro.Controllers
                 }
                 else
                 {
-	
-				
-					return BadRequest($"{nameof(itemMasterPurchaseSale)} cannot be null");
+
+
+                    return BadRequest($"{nameof(itemMasterPurchaseSale)} cannot be null");
                 }
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -1216,52 +1218,52 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("ExportInfoPostBy_IMastID/{id}")]
         public IActionResult ExportInfoupdate(long id, [FromBody] ItemMasterViewModel itemMasterViewModel)
         {
-			try
-			{
-				if (ModelState.IsValid)
-				{
-					if (_context.ItemMaster.Any(o => o.ItemMasterId == itemMasterViewModel.ItemMasterId))
-					{
-						var existingresule = _context.ItemMaster.Where(c => c.ItemMasterId == itemMasterViewModel.ItemMasterId).FirstOrDefault();
-						existingresule.UpdatedDate = DateTime.Now;
-						existingresule.ExportCountryId=itemMasterViewModel.ExportCountryId;
-						existingresule.ITARNumber= itemMasterViewModel.ITARNumber;
-						existingresule.ExportSizeHeight= itemMasterViewModel.ExportSizeHeight;
-						existingresule.ExportSizeLength = itemMasterViewModel.ExportSizeLength;
-						existingresule.ExportSizeUnit = itemMasterViewModel.ExportSizeUnit;
-						existingresule.ExportSizeWidth = itemMasterViewModel.ExportSizeWidth;
-						existingresule.ExportUomId = itemMasterViewModel.ExportUomId;
-						existingresule.ExportValue = itemMasterViewModel.ExportValue;
-						existingresule.ExportECCN = itemMasterViewModel.ExportECCN;
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (_context.ItemMaster.Any(o => o.ItemMasterId == itemMasterViewModel.ItemMasterId))
+                    {
+                        var existingresule = _context.ItemMaster.Where(c => c.ItemMasterId == itemMasterViewModel.ItemMasterId).FirstOrDefault();
+                        existingresule.UpdatedDate = DateTime.Now;
+                        existingresule.ExportCountryId = itemMasterViewModel.ExportCountryId;
+                        existingresule.ITARNumber = itemMasterViewModel.ITARNumber;
+                        existingresule.ExportSizeHeight = itemMasterViewModel.ExportSizeHeight;
+                        existingresule.ExportSizeLength = itemMasterViewModel.ExportSizeLength;
+                        existingresule.ExportSizeUnit = itemMasterViewModel.ExportSizeUnit;
+                        existingresule.ExportSizeWidth = itemMasterViewModel.ExportSizeWidth;
+                        existingresule.ExportUomId = itemMasterViewModel.ExportUomId;
+                        existingresule.ExportValue = itemMasterViewModel.ExportValue;
+                        existingresule.ExportECCN = itemMasterViewModel.ExportECCN;
                         //existingresule.ExportClassification = itemMasterViewModel.ExportClassification;
                         existingresule.ExportWeight = itemMasterViewModel.ExportWeight;
-                        existingresule.ExportWeightUnit= itemMasterViewModel.ExportWeightUnit;
+                        existingresule.ExportWeightUnit = itemMasterViewModel.ExportWeightUnit;
                         existingresule.ExportCurrencyId = itemMasterViewModel.ExportCurrencyId;
-                        existingresule.ExportClassificationId= itemMasterViewModel.ExportClassificationId;
-						existingresule.IsExportUnspecified = itemMasterViewModel.IsExportUnspecified;
-						existingresule.IsExportNONMilitary = itemMasterViewModel.IsExportNONMilitary;
-						existingresule.IsExportMilitary = itemMasterViewModel.IsExportMilitary;
-						existingresule.IsExportDual = itemMasterViewModel.IsExportDual;
-						existingresule.UpdatedBy = itemMasterViewModel.UpdatedBy;
-						_unitOfWork.Repository<ItemMaster>().Update(existingresule);
-						_unitOfWork.SaveChanges();
-						return Ok(itemMasterViewModel);
-					}
-					else
-					{
-						return BadRequest($"{nameof(itemMasterViewModel)} cannot be null");
-					}
+                        existingresule.ExportClassificationId = itemMasterViewModel.ExportClassificationId;
+                        existingresule.IsExportUnspecified = itemMasterViewModel.IsExportUnspecified;
+                        existingresule.IsExportNONMilitary = itemMasterViewModel.IsExportNONMilitary;
+                        existingresule.IsExportMilitary = itemMasterViewModel.IsExportMilitary;
+                        existingresule.IsExportDual = itemMasterViewModel.IsExportDual;
+                        existingresule.UpdatedBy = itemMasterViewModel.UpdatedBy;
+                        _unitOfWork.Repository<ItemMaster>().Update(existingresule);
+                        _unitOfWork.SaveChanges();
+                        return Ok(itemMasterViewModel);
+                    }
+                    else
+                    {
+                        return BadRequest($"{nameof(itemMasterViewModel)} cannot be null");
+                    }
 
-				}
-				else
-				{
-					return BadRequest($"{nameof(itemMasterViewModel)} cannot be null");
-				}
-			}
-			catch(Exception ex)
-			{
-				throw;
-			}
+                }
+                else
+                {
+                    return BadRequest($"{nameof(itemMasterViewModel)} cannot be null");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
         //updates
         [HttpPut("ItemMasterAircraftUpdate/{id}")]
@@ -1332,7 +1334,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
         [HttpPut("ItemMasterPurcSaleUpdate/{id}")]
-        public IActionResult UpdateItemmasterPurcSale([FromBody] ItemMasterPurchaseSale[] itemMasterPurchaseSale, long id,long itemMasterPurchaseSaleId)
+        public IActionResult UpdateItemmasterPurcSale([FromBody] ItemMasterPurchaseSale[] itemMasterPurchaseSale, long id, long itemMasterPurchaseSaleId)
         {
             if (ModelState.IsValid)
             {
@@ -1377,10 +1379,10 @@ namespace QuickApp.Pro.Controllers
                         }
                         else
                         {
-                           
-                                _unitOfWork.Repository<ItemMasterPurchaseSale>().Add(itemMasterPurchaseSale[i]);
-                                _unitOfWork.SaveChanges();
-                            
+
+                            _unitOfWork.Repository<ItemMasterPurchaseSale>().Add(itemMasterPurchaseSale[i]);
+                            _unitOfWork.SaveChanges();
+
                         }
                     }
                     return Ok(itemMasterPurchaseSale);
@@ -1571,7 +1573,7 @@ namespace QuickApp.Pro.Controllers
 
         [ApiExplorerSettings(IgnoreApi = true)]
         [HttpGet]
-        public IActionResult DeleteNhaTlaAltEquItemMapping(long id,string updatedBy)
+        public IActionResult DeleteNhaTlaAltEquItemMapping(long id, string updatedBy)
         {
             _unitOfWork.itemMaster.DeleteNhaTlaAltEquItemMapping(id, updatedBy);
             return Ok();
@@ -1579,7 +1581,7 @@ namespace QuickApp.Pro.Controllers
 
         [ApiExplorerSettings(IgnoreApi = true)]
         [HttpGet]
-        public IActionResult NhaTlaAltEquItemMappingStatus(long id,bool status, string updatedBy)
+        public IActionResult NhaTlaAltEquItemMappingStatus(long id, bool status, string updatedBy)
         {
             _unitOfWork.itemMaster.NhaTlaAltEquItemMappingStatus(id, status, updatedBy);
             return Ok();
@@ -1599,6 +1601,45 @@ namespace QuickApp.Pro.Controllers
         {
             var result = _unitOfWork.itemMaster.NhaTlaAltEquItemMappingById(itemMappingId, mappingType);
             return Ok(result);
+        }
+
+        [HttpGet("GetpartdetailsWithid/{partid}")]
+        public Object getPartwithid(string partid)
+        {
+            var data = (from IM in _context.ItemMaster
+                        join MF in _context.Manufacturer on IM.ManufacturerId equals MF.ManufacturerId into mfg
+                        from MF in mfg.DefaultIfEmpty()
+                        join IMA in _context.ItemMasterAircraftMapping on IM.ItemMasterId equals IMA.ItemMasterId into imap
+                        from IMA in imap.DefaultIfEmpty()
+                        join AC in _context.AircraftType on IMA.AircraftTypeId equals AC.AircraftTypeId into act
+                        from AC in act.DefaultIfEmpty()
+                        join P in _context.Priority on IM.PriorityId equals P.PriorityId into pir
+                        from P in pir.DefaultIfEmpty()
+                        where (
+                        IM.PartNumber.Contains(partid)
+                        )
+                        select new
+                        {
+                            IM.PartNumber,
+                            IM.PartAlternatePartId,
+                            IM.PartDescription,
+                            IM.ManufacturerId,
+                            Manufacturer = MF.Name,
+                            IM.ReorderQuantiy,
+                            IM.ItemTypeId,
+                            IM.ItemMasterId,
+                            IM.IsHazardousMaterial,
+                            IM.PriorityId,
+                            AircraftTypeId = AC == null ? 0 : AC.AircraftTypeId,
+                            NSN = IM.NationalStockNumber,
+                            Priority = P == null ? "" : P.Description,
+                            AircraftType = AC == null ? "" : AC.Description
+
+
+                        }).Distinct().ToList();
+            return data;
+
+
         }
     }
 

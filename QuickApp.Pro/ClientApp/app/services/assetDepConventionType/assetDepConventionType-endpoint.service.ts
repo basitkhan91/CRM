@@ -1,4 +1,4 @@
-﻿// ===============================
+// ===============================
 // info@ebenmonney.com
 // www.ebenmonney.com/quickapp-pro
 // ===============================
@@ -20,6 +20,7 @@ export class AssetDepConventionTypeEndpointService extends EndpointFactory {
     private readonly updateURL: string = "/api/assetDepConventionType/update";
     private readonly removeByIdURL: string = "/api/assetDepConventionType/removeById";
     private readonly getAuditById: string = "/api/assetDepConventionType/audits";
+    private readonly excelUpload: string = "/api/assetDepConventionType/UploadAssetDepConvCustomData";
 
 
     get getAll() { return this.configurations.baseUrl + this.getAllURL; }
@@ -85,5 +86,10 @@ export class AssetDepConventionTypeEndpointService extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.getDepAudit(assetDepConventionTypeId));
             });
+    }
+
+    AssetDepConvCustomUpload(file) {
+        return this.http.post(`${this.configurations.baseUrl}${this.excelUpload}`, file)
+
     }
 }

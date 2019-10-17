@@ -136,7 +136,9 @@ namespace DAL.Repositories
                     EmployeeId = x.EmployeeId,
                     FirstName = x.FirstName,
                     LastName = x.LastName,
-                    MiddleName = x.MiddleName
+                    MiddleName = x.MiddleName,
+                    EmployeeCode=x.EmployeeCode,
+                    Email=x.Email
                 }
             ).ToList();
             return employees;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
@@ -62,7 +62,7 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    asset.IsActive = true;
+                    asset.IsActive = asset.IsActive;
                     asset.CreatedDate = DateTime.Now;
                     asset.UpdatedDate = DateTime.Now;
                     asset.MasterCompanyId = 1;
@@ -155,6 +155,14 @@ namespace QuickApp.Pro.Controllers
             auditResult.Add(new AuditResult<AssetStatusAudit> { AreaName="Asset Status", Result = audits.ToList() });
             
             return Ok(auditResult);
+        }
+
+        [HttpPost("UploadAssetStatusCustomData")]
+        public IActionResult UploadAssetStatusCustomData()
+        {
+
+            unitOfWork.FileUploadRepository.UploadCustomFile(Convert.ToString("AssetStatus"), Request.Form.Files[0]);
+            return Ok();
         }
 
         #endregion Public Methods
