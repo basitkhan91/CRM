@@ -237,6 +237,8 @@ export class PurchaseSetupComponent {
 	poApproverData:any = {};
 	poApproverList:any = [];
 	approverIds:any = [];
+	multiplePNIdArray:any = [];
+	tempNewPNArray:any = [];
 
 	/** po-approval ctor */
 	constructor(public siteService: SiteService, public warehouseService: WarehouseService, private masterComapnyService: MasterComapnyService, public cusservice: CustomerService, private itemser: ItemMasterService, private modalService: NgbModal, private route: Router, public legalEntityService: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public vendorService: VendorService, public priority: PriorityService, private alertService: AlertService ,public glAccountService: GlAccountService, private authService: AuthService , private commonService : CommonService) {
@@ -1856,8 +1858,37 @@ export class PurchaseSetupComponent {
 	}
 
 	addAvailableParts() {
-		console.log(this.returnPartsListArray);
 		console.log(this.partListData)
+		console.log(this.newData);
+		this.tempNewPNArray = [];
+		if(this.newData) {
+			for(let i=0; i < this.newData.length; i++) {
+				//this.multiplePNIdArray.push(this.newData[i].itemMasterId);
+				if (this.newData[i].addAllMultiPNRows) {
+					this.tempNewPNArray.push(new CreatePOPartsList());
+				}
+				
+			}				
+			this.tempNewPNArray.map(x => {				
+					const pnobj = {
+						...x,
+						//partNumberId: getObjectById('itemMasterId', this.newData[i].itemMasterId, this.allActions)
+					}
+					this.partListData.push(pnobj);
+				
+					
+			
+			})
+		
+			//this.partListData.push(new CreatePOPartsList());
+			//grid childlist disable on load
+			for (let i = 0; i < this.partListData.length; i++) {
+				if(!this.partListData[i].ifSplitShip) {
+					this.partListData[i].childList = [];
+				}
+			}
+		}
+
 		// this.tempPartListData = this.returnPartsListArray;
 		// this.tempPartListData.map(x => {
 		// 	partNumberId: x.partNumberId
@@ -1873,22 +1904,22 @@ export class PurchaseSetupComponent {
 		this.partNumbers = null;
 		// this.returnPartsListArray = [];
 		this.addAllMultiPN = false;
-		this.array = [];
+		//this.array = [];
 		//this.modal.close();
 	}
 
 	onChangeAddAllMultiPN(event) {
 		if (event.target.checked) {
-			if (this.returnPartsListArray) {
-				for (let i=0; i < this.returnPartsListArray.length; i++) {
-					this.returnPartsListArray[i].addAllMultiPNRows = true;
+			if (this.newData) {
+				for (let i=0; i < this.newData.length; i++) {
+					this.newData[i].addAllMultiPNRows = true;
 				}
 			}
 			//this.addAllMultiPNRows = true;
 		} else {
-			if (this.returnPartsListArray) {
-				for (let i=0; i < this.returnPartsListArray.length; i++) {
-					this.returnPartsListArray[i].addAllMultiPNRows = false;
+			if (this.newData) {
+				for (let i=0; i < this.newData.length; i++) {
+					this.newData[i].addAllMultiPNRows = false;
 				}
 			}
 			//this.addAllMultiPNRows = false;
@@ -1898,7 +1929,7 @@ export class PurchaseSetupComponent {
 	onAddMultParts() {
 		this.partNumbers = null;
 		// this.returnPartsListArray = [];
-		this.array = [];
+		//this.array = [];
 		this.newPNList = [];
 		this.newData = [];
 		this.addAllMultiPN = false;
@@ -2007,12 +2038,12 @@ export class PurchaseSetupComponent {
 		if (this.arraySearch.length > 0) {
 				this.itemser.getPartDetailsByid(this.arraySearch).subscribe(data => {
 					console.log(data);
-					this.newData = data.multiParts;
-					//.map(x => {
-					//	return {
-
-					//	}
-					//})
+					this.newData = data.multiParts.map(x => {
+						return {
+							...x,
+							addAllMultiPNRows: false
+						}
+					})
 					this.newPNList = data.partsNotFound;
 				})
 

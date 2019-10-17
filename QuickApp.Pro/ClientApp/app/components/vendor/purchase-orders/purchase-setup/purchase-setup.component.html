@@ -2682,7 +2682,7 @@
                     <p>
                         <span class="col-sm-3"><b>List of PN's (Separated by Comma): </b></span>
                         <span class="col-sm-7 "><textarea class="form-control" name="partNumbers" [(ngModel)]="partNumbers"></textarea></span>
-                        <span class="col-sm-2"><button type="button" class="btn btn-primary height40 black-search-button multiple-pns-search-btn btn-cstm" (click)="getAllparts()"><i class="fa fa-search"></i></button></span>
+                        <span class="col-sm-2"><button type="button" class="btn btn-primary height40 black-search-button multiple-pns-search-btn btn-cstm" (click)="getAllparts()" [disabled]="!partNumbers"><i class="fa fa-search"></i></button></span>
                     </p>
                     <form #addMultiPNTable="ngForm">                   
                     <div class="table-responsive pas-table-cstm">
