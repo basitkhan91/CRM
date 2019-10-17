@@ -620,9 +620,11 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 	deleteItemAndCloseModel() {
 		this.isSaving = true;
 		this.sourceWarehouse.updatedBy = this.userName;
-		this.workFlowtService.deleteWarehouse(this.sourceWarehouse.warehouseId).subscribe(
-			this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success));
-		this.modal.close();
+		this.workFlowtService.deleteWarehouse(this.sourceWarehouse.warehouseId).subscribe(() => {
+			this.alertService.showMessage("Success", `Deleted warehouse successfully`, MessageSeverity.success);
+			this.modal.close();
+			this.loadData();
+		});
 	}
 
 

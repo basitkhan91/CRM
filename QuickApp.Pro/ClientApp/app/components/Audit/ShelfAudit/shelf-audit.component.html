@@ -9,7 +9,7 @@
     >
       &times;
     </button>
-    <h4 class="modal-title">History of Location</h4>
+    <h4 class="modal-title">History of Shelf</h4>
   </div>
   <div class="modal-body">
     <div class="table-responsive rro-table-cstm">
@@ -19,7 +19,7 @@
       >
         <thead>
           <tr>
-            <th>LocationId</th>
+            <th>Shelf Id</th>
             <th>Name</th>
             <th>Memo</th>
             <th>MasterCompanyId</th>
@@ -33,13 +33,12 @@
             <td
               [ngStyle]="{
                 color:
-                  auditDetails[i > 0 ? i - 1 : i].locationId ===
-                  audit.locationId
+                  auditDetails[i > 0 ? i - 1 : i].shelfId === audit.shelfId
                     ? 'black'
                     : 'red'
               }"
             >
-              {{ audit.locationId }}
+              {{ audit.shelfId }}
             </td>
             <td
               [ngStyle]="{
