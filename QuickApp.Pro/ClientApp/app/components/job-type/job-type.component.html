@@ -1,0 +1,315 @@
+﻿<div [@fadeInOut] class="page-content">
+    <div class="right_col" role="main">
+        <div class="x_panel">
+            <div class="x_content">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="inline-block display-flex">
+                            <h3 class="po-head lead">
+                                Add  Job Type
+
+                            </h3>
+                            <a class="plusicon-cstm new-margin" pTooltip="Add JobType" tooltipPosition="right" (click)="resetForm()" data-target="#add" data-toggle="modal">
+                                <i class="fa fa-plus-circle fa-lg"></i>
+                            </a>
+
+                        </div>
+                        <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="jobtitlesData" [first]="0"
+                                 [rows]="pageSize" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]"
+                                 [columns]="selectedColumns" selectionMode="multiple" (onPage)="changePage($event)"
+                                 [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true"
+                                 [totalRecords]="totalRecords" scrollHeight="450px">
+                            <ng-template pTemplate="caption">
+                                <div style="text-align: right;margin-left:-6px !important;">
+                                    <p-multiSelect [maxSelectedLabels]="2" [options]="jobtitleHeader"
+                                                   optionLabel="header" [(ngModel)]="selectedColumns" [style]="{minWidth: '200px'}"
+                                                   style="float:left" (onChange)="columnsChanges()"></p-multiSelect>
+
+                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download Selected"
+                                            tooltipPosition="top" pButton icon="fa-download" iconPos="left"
+                                            label="Export All Data" (click)="dt.exportCSV()"></button>
+                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download All Data"
+                                            tooltipPosition="top" pButton icon="fa-download" iconPos="left"
+                                            label="Export Selection Only"
+                                            (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                    <div class="excel-upload  excel-upload-cstm">
+
+                                        <input type="file" name="upload[]" id="upload"
+                                               (change)="customExcelUpload($event)" class="uploaddoc upload-file"
+                                               accept=".xlsx, .xls, .csv">
+                                        <label for="upload">
+                                            <span matTooltip="Upload Data (Excel)">
+                                                <i class="fa fa-upload"></i>
+                                            </span>
+                                        </label>
+                                        &nbsp; &nbsp;
+                                        <button class="btn btn-primary-cstm" matTooltip="Download Sample file"
+                                                (click)="sampleExcelDownload()">
+                                            Sample File
+                                            Download
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </ng-template>
+
+                            
+
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th style="width:120px" *ngFor="let col of columns" pResizableColumn
+                                        pReorderableColumn [pSortableColumn]="col.field">
+                                        {{col.header}}
+                                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                                    </th>
+                                    <th style="width:200px;position:sticky" *ngIf="selectedColumns.length> 0">
+                                        Actions
+
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                        <input style="width:100%;" pInputText type="text"
+                                               (input)="dt.filter($event.target.value, col.field,'contains')">
+                                    </th>
+                                    <th style="width:200px;position:sticky"></th>
+                                </tr>
+
+                                <tr *ngFor="let jobtype of allJobTitlesinfo">
+                                    <td style="width:200px;position:sticky">
+                                        {{jobtype.jobTypeName}}
+
+                                    </td>
+                                    <td style="width:200px;position:sticky">
+                                        {{jobtype.jobTypeDescription}}
+
+                                    </td>
+                                    <td style="width:200px;position:sticky">
+                                        <button type="button" data-target="#edit" data-toggle="modal" (click)="editJobType(jobtype)">Edit</button>
+                                        <button type="button" (click)="deleteJobType(jobtype)">Delete</button>
+
+                                    </td>
+                                  
+                                       
+
+                                
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-columns="columns">
+
+                                <!--
+
+                                  <tr [pSelectableRow]="rowData" pReorderableRowHandle>
+                                    <td style="width:120px" *ngFor="let col of columns" class="ui-resizable-column"
+                                        pReorderableRowHandle data-toggle="modal" data-target="#view"
+                                        (dblclick)="viewSelectedRow(rowData)">
+                                        {{col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?
+                                        (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                                    </td>
+                                    <td style="width:200px" *ngIf="selectedColumns.length> 0">
+                                        <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}"
+                                            (onChange)="changeStatus(rowData)" matTooltip="Update"></p-inputSwitch>
+
+                                        <span data-toggle="modal" data-target="#view">
+                                            <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip"
+                                                (click)="viewSelectedRow(rowData)" matTooltip="View" data-target="#view"
+                                                data-toggle="modal">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                        </span>
+                                        <button class="btn-edit" mat-icon-button (click)="editJobtitles(rowData)"
+                                            data-target="#addJobtitles" data-toggle="modal" matTooltip="Edit">
+                                            <mat-icon>edit</mat-icon>
+                                        </button>
+
+                                        <button class="btn-delete" mat-icon-button matTooltip="Delete"
+                                            data-target="#delete" data-toggle="modal" (click)="delete(rowData)">
+                                            <mat-icon color="warn">delete</mat-icon>
+                                        </button>
+                                        <button class="btn-history" mat-icon-button matTooltip="History"
+                                            data-target="#contentHist" data-toggle="modal"
+                                            (click)="getAuditHistoryById(rowData)">
+                                            <mat-icon color="green">history</mat-icon>
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                -->
+
+                            </ng-template>
+                            <ng-template #auditContent let-c="close" let-d="dismiss">
+                                <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
+                                    <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="summary" id="footer">
+                                <label id="footer" class="footer">No'of records:</label>
+                                <!-- <p>{{uomData.length}}</p> -->
+                                <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText
+                                       type="text" /> &nbsp;&nbsp;
+                                <label id="footer" class="footer1">Pages Count:</label>
+                                <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText
+                                       type="text" />
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div #edit id="edit" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Edit Job Type   </h4>
+            </div>
+            <div class="modal-body">
+                <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="updateJobType()">
+
+
+                    <div class="form-group">
+                        <label for="description" class="control-label">Job Type<span class="clr-red">*</span></label>
+                        <div class="col-sm-7">
+                            <div class="inner-addon right-addon inline-block">
+                                <input class="form-control" [ngModelOptions]="{standalone: true}" id="memo" [(ngModel)]="jobTypeNameEdit">
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description" class="control-label">Job Type Description</label>
+                        <div class="col-sm-7">
+                            <div class="inner-addon right-addon inline-block">
+                                <input class="form-control" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="jobTypeDescriptionEdit">
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <div class="col-sm-6">
+                            <label class="form-check-label" for="isActive">
+
+                                <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="isActiveEdit"> Active
+                            </label>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+
+
+                    <div class="modal-footer">
+
+                        <button class="btn btn-success">Update</button>
+                        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<div #add id="add" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add Job Type   </h4>
+            </div>
+            <div class="modal-body">
+                <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveJobType()">
+
+
+                    <div class="form-group">
+                        <label for="description" class="control-label">Job Type<span class="clr-red">*</span></label>
+                        <div class="col-sm-7">
+                            <div class="inner-addon right-addon inline-block">
+                                <input class="form-control" [ngModelOptions]="{standalone: true}" id="memo" [(ngModel)]="jobTypeName">
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description" class="control-label">Job Type Description</label>
+                        <div class="col-sm-7">
+                            <div class="inner-addon right-addon inline-block">
+                                <input class="form-control" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="jobTypeDescription">
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <div class="col-sm-6">
+                            <label class="form-check-label" for="isActive">
+                                <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive"> Active
+                            </label>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+
+
+                    <div class="modal-footer">
+
+                        <button class="btn btn-success">Save</button>
+                        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+                    </div>
+                </form>
+            </div>
+          
+        </div>
+
+    </div>
+</div>
+
+
+<ng-template #helpText class="modal fade" id="help-popup" role="dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+
+            <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
+
+            <h4 class="modal-title">Help text about the page</h4>
+        </div>
+        <div class="modal-body">
+            <p>Sample Point 1 about Page Description</p>
+            <p>Sample Point 2 about Page Description</p>
+            <p>Sample Point 3 about Page Description</p>
+            <p>Sample Point 4 about Page Description</p>
+            <p>Sample Point 5 about Page Description</p>
+            <hr />
+            <p>
+                <b>
+                    Excell format to upload the Data -
+                    <a href="documents/action-table-format.xlsx" class="clr-red">Download</a>
+                </b>
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-success" data-dismiss="modal" (click)="dismissModel()">Close</button>
+        </div>
+    </div>
+</ng-template>

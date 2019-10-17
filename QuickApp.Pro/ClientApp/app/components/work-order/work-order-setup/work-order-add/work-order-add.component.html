@@ -222,12 +222,13 @@
                                                     <input type="text" class="form-control"  [(ngModel)]="workOrderGeneralInformation.creditTerms">
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <select [(ngModel)]="workOrderGeneralInformation.creditTermsandLimitId ">
+                                                    <p-dropdown class="p-dropdown-custom-md "  placeholder="Select CreditTerms" [options]="creditTerms" name="creditTerms" [(ngModel)]="workOrderGeneralInformation.creditTermsandLimitId "></p-dropdown>
+                                                    <!-- <select [(ngModel)]="workOrderGeneralInformation.creditTermsandLimitId ">
                                                         <option [ngValue]="0">Select Terms</option>
                                                         <option *ngFor="let creditTerm of creditTerms"
                                                             >{{creditTerm.name}}
                                                         </option>
-                                                    </select>
+                                                    </select> -->
                                                 </div>
                                             </div>
                                         </div>

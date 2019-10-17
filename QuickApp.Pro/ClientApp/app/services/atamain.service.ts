@@ -42,7 +42,7 @@ export class AtaMainService {
       this.ataMainEndpoint.getATAMainEndpoint<ATAChapter[]>());
   }
 
-  newATAMain(ataMain: ATAChapter) {
+  newATAMain(ataMain) {
     return this.ataMainEndpoint.getNewATAMainEndpoint<ATAChapter>(ataMain);
   }
 
@@ -54,7 +54,7 @@ export class AtaMainService {
     return this.ataMainEndpoint.getEditATAMainEndpoint<ATAChapter>(ataMainId);
   }
 
-  updateATAMain(ataMain: ATAChapter) {
+  updateATAMain(ataMain) {
     return this.ataMainEndpoint.getUpdateATAMainEndpoint(ataMain, ataMain.ataChapterId);
   }
 

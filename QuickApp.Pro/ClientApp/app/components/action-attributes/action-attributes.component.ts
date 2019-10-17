@@ -14,7 +14,7 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { MasterCompany } from '../../models/mastercompany.model';
 import { ActionAttributeService } from '../../services/actionattribute.service';
 import { DataTableModule } from 'primeng/datatable';
-import { TableModule } from 'primeng/table'
+import { TableModule, Table } from 'primeng/table'
 import { ButtonModule } from 'primeng/button'
 import { SelectButtonModule } from 'primeng/selectbutton'
 import { InputTextModule } from 'primeng/inputtext'
@@ -24,6 +24,7 @@ import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
+import { validateRecordExistsOrNot, selectedValueValidate, editValueAssignByCondition, getObjectByValue } from '../../generic/autocomplete';
 @Component({
     selector: 'app-action-attributes',
     templateUrl: './action-attributes.component.html',
@@ -31,383 +32,252 @@ import { SingleScreenAuditDetails } from '../../models/single-screen-audit-detai
     animations: [fadeInOut]
 })
 /** ActionsAttribute component*/
-export class ActionAttributesComponent implements OnInit, AfterViewInit {
-    sourceView: any = {};
-    disableSave: boolean;
-    selectedActionName: any;
-    actionamecolle: any[] = [];
-    auditHisory: any[];
+export class ActionAttributesComponent implements OnInit {
+    originalData: any;
+    isEdit: boolean = false;
+    totalRecords: any;
+    pageIndex: number = 0;
+    pageSize: number = 10;
+    totalPages: number;
+    headers = [        
+        { field: 'description', header: 'Task Attribute Name' },
+        { field: 'memo', header: 'Memo' },
+    ]
+    selectedColumns = this.headers;
+    formData = new FormData()
+    @ViewChild('dt')
 
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
-    cols: any[];
-    selectedColumns: any[];
-    displayedColumns = ['actionattributeid', 'description', 'createdDate', 'companyName'];
-    dataSource: MatTableDataSource<ActionAttribute>;
-    allActionAttribute: ActionAttribute[] = [];
-    allComapnies: MasterCompany[] = [];
-    private isSaving: boolean;
-    public sourceAction: ActionAttribute;
-    private bodyText: string;
-    loadingIndicator: boolean;
-    closeResult: string;
-    title: string = "Create";
-    id: number;
-    errorMessage: any;
-    modal: NgbModalRef;
-    /** Actions ctor */
-    private isEditMode: boolean = false;
-    private isDeleteMode: boolean = false;
-    actionAttributeName: string;
-    filteredBrands: any[];
-    localCollection: any[] = [];
-    selectedColumn: ActionAttribute[];
-    Active: string = "Active";
-    description: any;
-    memo: any;
-    updatedBy: any;
-    createdBy: any;
-    updatedDate: any;
-    taId: any;
-    AuditDetails: SingleScreenAuditDetails[];
-    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: ActionAttributeService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
-        this.displayedColumns.push('action');
-        this.dataSource = new MatTableDataSource();
-        this.sourceAction = new ActionAttribute();
-
+    private table: Table;
+    auditHistory: any[] = [];
+    disableSaveGroupId: boolean = false;
+    PortalList: any;
+    disableSaveForDescription: boolean = false;
+    descriptionList: any;
+    ataList: any;
+    new = {
+     
+        description: "",     
+        masterCompanyId: 1,
+        isActive: true,
+        memo: "",
+    }
+    addNew = { ...this.new };
+    selectedRecordForEdit: any;
+    viewRowData: any;
+    selectedRowforDelete: any;
+    existingRecordsResponse = []
+    constructor(private breadCrumb: SingleScreenBreadcrumbService,
+        private authService: AuthService,
+        private modalService: NgbModal,
+        private activeModal: NgbActiveModal,
+        private _fb: FormBuilder,
+        private alertService: AlertService,
+        public actionattributeService: ActionAttributeService,
+        private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
     }
     ngOnInit(): void {
-
-        this.loadData();
-        this.cols = [
-            //{ field: 'actionAttributeId', header: 'ACID' },
-            { field: 'actionAttributeId', header: 'Task Attribute Id' },
-            { field: 'description', header: 'Task Attribute Name' },
-            { field: 'memo', header: 'Memo' },
-            { field: 'createdBy', header: 'Created By' },
-            { field: 'updatedBy', header: 'Updated By' },
-            //{ field: 'createdDate', header: 'Created Date' },
-            //{ field: 'updatedDate', header: 'Updated Date' }
-
-
-        ];
+        this.getList();
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-action-attributes';
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
-        this.selectedColumns = this.cols;
-    }
-    ngAfterViewInit() {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-    }
-    public allWorkFlows: ActionAttribute[] = [];
-    private loadData() {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-        this.workFlowtService.getWorkFlows().subscribe(
-            results => this.onDataLoadSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-    }
-
-
-    private loadMasterCompanies() {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-        this.masterComapnyService.getMasterCompanies().subscribe(
-            results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-
-    }
-    openView(content, row) {
-
-        this.sourceView = row;
-        this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
-
-    public applyFilter(filterValue: string) {
-        this.dataSource.filter = filterValue;
-    }
-
-    private refresh() {
-        // Causes the filter to refresh there by updating with recently added data.
-        this.applyFilter(this.dataSource.filter);
-    }
-
-    private onDataLoadSuccessful(allWorkFlows: ActionAttribute[]) {
-
-        // alert('success');
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.dataSource.data = allWorkFlows;
-        this.allActionAttribute = allWorkFlows;
-
-    }
-
-
-
-    private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
-        // alert('success');
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.allComapnies = allComapnies;
-
-    }
-
-    private onDataLoadFailed(error: any) {
-        // alert(error);
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-
-    }
-    open(content) {
-
-        this.isEditMode = false;
-        this.isDeleteMode = false;
-        this.disableSave = false;
-        this.isSaving = true;
-        this.loadMasterCompanies();
-        this.sourceAction = new ActionAttribute();
-        this.actionAttributeName = "";
-        this.sourceAction.isActive = true;
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-
-
-
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
-
-
-    openDelete(content, row) {
-
-        this.isEditMode = false;
-        this.isDeleteMode = true;
-        this.sourceAction = row;
-        this.description = row.description;
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
-
-    openEdit(content, row) {
-
-        this.isEditMode = true;
-        this.isSaving = true;
-        this.disableSave = false;
-        this.loadMasterCompanies();
-        this.sourceAction = row;
-        this.actionAttributeName = this.sourceAction.description;
-        this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
-
-    openHist(content, row) {
-
-        this.sourceAction = row;
-
-        this.workFlowtService.historyAcion(this.sourceAction.actionAttributeId).subscribe(
-            results => this.onHistoryLoadSuccessful(results[0], content),
-            error => this.saveFailedHelper(error));
-    }
-    handleChange(rowData, e) {
-        if (e.checked == false) {
-            this.sourceAction = rowData;
-            this.sourceAction.updatedBy = this.userName;
-            this.Active = "In Active";
-            this.sourceAction.isActive == false;
-            this.workFlowtService.updateAction(this.sourceAction).subscribe(
-                response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));
-            //alert(e);
-        }
-        else {
-            this.sourceAction = rowData;
-            this.sourceAction.updatedBy = this.userName;
-            this.Active = "Active";
-            this.sourceAction.isActive == true;
-            this.workFlowtService.updateAction(this.sourceAction).subscribe(
-                response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));
-            //alert(e);
-        }
-
-    }
-
-    eventHandler(event) {
-        let value = event.target.value.toLowerCase();
-        if (this.selectedActionName) {
-            if (value == this.selectedActionName.toLowerCase()) {
-                //alert("Action Name already Exists");
-                this.disableSave = true;
-            }
-            else {
-                this.disableSave = false;
-            }
-        }
-        else {
-            for (let i = 0; i < this.actionamecolle.length; i++) {
-                if (value == this.actionamecolle[i][0].actionAttributeName.toLowerCase()) {
-                    //alert("Action Name already Exists");
-                    this.disableSave = true;
-                    this.selectedActionName = event;
-                }
-            }
-        }
-
-    }
-    partnmId(event) {
-        //debugger;
-        for (let i = 0; i < this.actionamecolle.length; i++) {
-            if (event == this.actionamecolle[i][0].actionAttributeName) {
-                //alert("Action Name already Exists");
-                this.disableSave = true;
-                this.selectedActionName = event;
-            }
-        }
-    }
-    filterActionAttributes(event) {
-
-        this.localCollection = [];
-        for (let i = 0; i < this.allActionAttribute.length; i++) {
-            let actionAttributeName = this.allActionAttribute[i].description;
-            if (actionAttributeName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                this.actionamecolle.push([{
-                    "actionAttributeId": this.allActionAttribute[i].actionAttributeId,
-                    "actionAttributeName": actionAttributeName
-                }]),
-                    this.localCollection.push(actionAttributeName)
-
-            }
-        }
-    }
-
-
-    private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
-
-        // debugger;
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-
-        this.auditHisory = auditHistory;
-
-
-        this.modal = this.modalService.open(content, { size: 'lg' });
-
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-
-
-    }
-
-
-    editItemAndCloseModel() {
-
-        this.isSaving = true;
-
-        if (this.isEditMode == false) {
-            this.sourceAction.createdBy = this.userName;
-            this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.masterCompanyId = 1;
-            this.sourceAction.description = this.actionAttributeName;
-            this.workFlowtService.newAction(this.sourceAction).subscribe(
-                role => this.saveSuccessHelper(role),
-                error => this.saveFailedHelper(error));
-        }
-        else {
-
-            this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.actionAttributeName;
-            this.sourceAction.masterCompanyId = 1;
-            this.workFlowtService.updateAction(this.sourceAction).subscribe(
-                response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));
-        }
-
-        this.modal.close();
-    }
-
-    deleteItemAndCloseModel() {
-        this.isSaving = true;
-        this.sourceAction.updatedBy = this.userName;
-        this.workFlowtService.deleteAcion(this.sourceAction.actionAttributeId).subscribe(
-            response => this.saveCompleted(this.sourceAction),
-            error => this.saveFailedHelper(error));
-        this.modal.close();
-    }
-
-    dismissModel() {
-        this.isDeleteMode = false;
-        this.isEditMode = false;
-        this.modal.close();
-    }
-
-    private saveCompleted(user?: ActionAttribute) {
-        this.isSaving = false;
-
-        if (this.isDeleteMode == true) {
-            this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
-            this.isDeleteMode = false;
-        }
-        else {
-            this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
-
-        }
-
-        this.loadData();
-    }
-
-    private saveSuccessHelper(role?: ActionAttribute) {
-        this.isSaving = false;
-        this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
-
-        this.loadData();
-
     }
 
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
+    columnsChanges() {
+        this.refreshList();
+    }
+    refreshList() {
+        this.table.reset();
 
-    private saveFailedHelper(error: any) {
-        this.isSaving = false;
-        this.alertService.stopLoadingMessage();
-        this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
-        this.alertService.showStickyMessage(error, null, MessageSeverity.error);
+        // this.table.sortOrder = 0;
+        // this.table.sortField = '';
+
+        this.getList();
     }
 
-    private getDismissReason(reason: any): string {
-        if (reason === ModalDismissReasons.ESC) {
-            return 'by pressing ESC';
-        } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-            return 'by clicking on a backdrop';
+    customExcelUpload(event) {
+        // const file = event.target.files;
+
+        // console.log(file);
+        // if (file.length > 0) {
+
+        //     this.formData.append('file', file[0])
+        //     this.unitofmeasureService.UOMFileUpload(this.formData).subscribe(res => {
+        //         event.target.value = '';
+
+        //         this.formData = new FormData();
+        //         this.existingRecordsResponse = res;
+        //         this.getList();
+        //         this.alertService.showMessage(
+        //             'Success',
+        //             `Successfully Uploaded  `,
+        //             MessageSeverity.success
+        //         );
+
+        //     })
+        // }
+
+    }
+    sampleExcelDownload() {
+        // const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=UnitOfMeasure&fileName=uom.xlsx`;
+
+        // window.location.assign(url);
+    }
+
+    getList() {
+        this.actionattributeService.getWorkFlows().subscribe(res => {
+            const responseData = res[0];
+            this.originalData = responseData;
+            this.totalRecords = responseData.length;
+            this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+        })
+
+
+    }
+    changePage(event: { first: any; rows: number }) {
+        console.log(event);
+        const pageIndex = (event.first / event.rows);
+
+        this.pageSize = event.rows;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+    }
+
+
+    checkGroupDescriptionExists(field, value) {
+        console.log(this.selectedRecordForEdit);
+        const exists = validateRecordExistsOrNot(field, value, this.originalData, this.selectedRecordForEdit);
+        if (exists.length > 0) {
+            this.disableSaveForDescription = true;
+        }
+        else {
+            this.disableSaveForDescription = false;
+        }
+
+    }
+    filterDescription(event) {
+        this.descriptionList = this.originalData;
+
+        const descriptionData = [...this.originalData.filter(x => {
+            return x.description.toLowerCase().includes(event.query.toLowerCase())
+        })]
+        this.descriptionList = descriptionData;
+    }
+    selectedDescription(object) {
+        const exists = selectedValueValidate('description', object, this.selectedRecordForEdit)
+
+        this.disableSaveForDescription = !exists;
+    }
+
+    save() {
+        const data = {
+            ...this.addNew, createdBy: this.userName, updatedBy: this.userName,
+            description: editValueAssignByCondition('description', this.addNew.description)
+        };
+        console.log(data)
+        if (!this.isEdit) {
+            this.actionattributeService.newAction(data).subscribe(() => {
+                this.resetForm();
+                this.getList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Added  New Task Attribute Successfully  `,
+                    MessageSeverity.success
+                );
+            })
         } else {
-            return `with: ${reason}`;
+
+            this.actionattributeService.updateAction(data).subscribe(() => {
+                this.selectedRecordForEdit = undefined;
+                this.isEdit = false;
+                this.resetForm();
+                this.getList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Added  New Task Attribute Successfully  `,
+                    MessageSeverity.success
+                );
+            })
         }
     }
-    showAuditPopup(templateId, Id): void {
-        this.getTaskAttributeAuditDetails(Id);
-        this.modal = this.modalService.open(templateId, { size: 'sm' });
+
+    resetForm() {
+        this.isEdit = false;
+        this.selectedRecordForEdit = undefined;
+        this.addNew = { ...this.new };
     }
 
-    getTaskAttributeAuditDetails(Id: number): void {
-        this.workFlowtService.getTaskAttributeAuditeDetails(Id).subscribe(audits => {
-            if (audits.length > 0) {
-                this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["actionAttributeAuditId", "actionAttributeId", "masterCompanyId"];
-            }
-        });
+
+    edit(rowData) {
+        console.log(rowData);
+        this.isEdit = true;
+        this.disableSaveGroupId = false;
+        this.disableSaveForDescription = false;
+
+
+        this.addNew = {
+            ...rowData,
+            description: getObjectByValue('description', rowData.description, this.originalData),
+        };
+        this.selectedRecordForEdit = { ...this.addNew }
+
     }
+
+    changeStatus(rowData) {
+        console.log(rowData);
+        const data = { ...rowData }
+        this.actionattributeService.updateAction(data).subscribe(() => {
+            this.alertService.showMessage(
+                'Success',
+                `Updated Status Successfully  `,
+                MessageSeverity.success
+            );
+        })
+
+    }
+    viewSelectedRow(rowData) {
+        console.log(rowData);
+        this.viewRowData = rowData;
+    }
+    resetViewData() {
+        this.viewRowData = undefined;
+    }
+    delete(rowData) {
+        this.selectedRowforDelete = rowData;
+
+    }
+    deleteConformation(value) {
+        if (value === 'Yes') {
+            this.actionattributeService.deleteAcion(this.selectedRowforDelete.actionAttributeId).subscribe(() => {
+                this.getList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Deleted Task Attribute Successfully  `,
+                    MessageSeverity.success
+                );
+            })
+        } else {
+            this.selectedRowforDelete = undefined;
+        }
+    }
+
+    getAuditHistoryById(rowData) {
+        this.actionattributeService.getTaskAttributeAuditeDetails(rowData.actionAttributeId).subscribe(res => {
+            this.auditHistory = res;
+        })
+    }
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
+  
 
 }
 

@@ -24,6 +24,7 @@ namespace DAL.Models
         public System.DateTime UpdatedDate { get; set; }
         public bool? IsActive { get; set; }
         public bool? IsDelete { get; set; }
+        public bool? IsPrimary { get; set; }
 
 
 

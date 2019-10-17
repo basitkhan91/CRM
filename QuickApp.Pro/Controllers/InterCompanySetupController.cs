@@ -115,7 +115,7 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
-                var existingResult = unitOfWork.Repository<AssetStatus>().Find(x => x.Id == id).FirstOrDefault();
+                var existingResult = unitOfWork.Repository<AssetStatus>().Find(x => x.AssetStatusId == id).FirstOrDefault();
                 asset.UpdatedDate = DateTime.Now;
                 existingResult.IsActive = asset.IsActive;
                 unitOfWork.Repository<AssetStatus>().Update(asset);

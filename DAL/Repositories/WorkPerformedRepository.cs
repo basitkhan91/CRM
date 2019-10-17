@@ -28,7 +28,7 @@ namespace DAL.Repositories
         {
             try
             {
-                var result = _appContext.WorkPerformed.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null).OrderBy(c => c.Description).ToList();
+                var result = _appContext.WorkPerformed.Include("MasterCompany").Where(c => c.IsDeleted == false || c.IsDeleted == null).OrderBy(c => c.Description).ToList();
                 return result;
             }
             catch (Exception ex)
@@ -38,6 +38,19 @@ namespace DAL.Repositories
             }
 
 
+        }
+
+        public IEnumerable<WorkPerformedAudit> GetWorkPerformedHistory(long workPerformedId)
+        {
+            try
+            {
+                return _appContext.WorkPerformedAudit.Where(p => p.WorkPerformedId == workPerformedId).OrderByDescending(p => p.UpdatedDate).ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

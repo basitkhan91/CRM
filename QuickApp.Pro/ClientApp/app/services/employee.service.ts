@@ -103,6 +103,9 @@ export class EmployeeService {
     newAddCertification(employee: any) {
         return this.employeeEndpoint.getNewCertification<any>(employee);
     }
+    getEmployeeCertifications(employee: any) {
+        return this.employeeEndpoint.getEmployeeCertifications<any>(employee);
+    }
     AddRolesData(roles: any) {
         return this.employeeEndpoint.addRolesData<any>(roles);
     }

@@ -1,6 +1,7 @@
 ﻿using DAL.Common;
 using DAL.Models;
 using DAL.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Reflection;
 
 namespace DAL.Repositories
 {
-    public class CommonRepository : Repository<Contact>, ICommonRepository
+    public class CommonRepository : Repository<RestrictedParts>, ICommonRepository
     {
         public CommonRepository(ApplicationDbContext context) : base(context)
         {
@@ -32,14 +33,16 @@ namespace DAL.Repositories
                      .Select(z => new
                      {
                          ContactId = z.con.ContactId,
+                         VendorContactId = z.vc1.vc.VendorContactId,
                          WorkPhone = z.con.WorkPhone,
                          CustomerCode = z.vc1.v.VendorCode,
                          ContractReference = z.vc1.v.VendorContractReference,
                          Reference = string.Empty,
                          CreditLimt = z.vc1.v.CreditLimit,
                          CreditTermId = z.vc1.v.CreditTermsId,
-                         CSR = z.con.FirstName + " " +z.con.LastName,
-                         Email = z.vc1.v.VendorEmail
+                         CSR = z.con.FirstName + " " + z.con.LastName,
+                         Email = z.vc1.v.VendorEmail,
+                         IsDefaultContact = z.vc1.vc.IsDefaultContact
                      }).ToList();
 
                 if (contacts != null && contacts.Count > 0)
@@ -48,14 +51,16 @@ namespace DAL.Repositories
                     {
                         objContact = new VendorContactList();
                         objContact.ContactId = item.ContactId;
+                        objContact.VendorContactId = item.VendorContactId;
                         objContact.ContractReference = item.ContractReference;
                         objContact.CreditLimt = item.CreditLimt;
                         objContact.CreditTermId = item.CreditTermId;
-                        objContact.CSR = item.CSR;
+                        objContact.CSRName = item.CSR;
                         objContact.VendorCode = item.CustomerCode;
                         objContact.VendorReference = item.Reference;
                         objContact.WorkPhone = item.WorkPhone;
                         objContact.Email = item.Email;
+                        objContact.IsDefaultContact = item.IsDefaultContact;
                         vendorContacts.Add(objContact);
                     }
                 }
@@ -103,6 +108,7 @@ namespace DAL.Repositories
                      .Select(z => new
                      {
                          ContactId = z.con.ContactId,
+                         CustomerContactId = z.cc1.cc.CustomerContactId,
                          WorkPhone = z.con.WorkPhone,
                          CustomerCode = z.cc1.cust.CustomerCode,
                          ContractReference = z.cc1.cust.ContractReference,
@@ -110,6 +116,7 @@ namespace DAL.Repositories
                          CreditLimt = z.cc1.cust.CreditLimit,
                          CreditTermId = z.cc1.cust.CreditTermsId,
                          CSR = z.cc1.cust.CSRName,
+                         IsDefaultContact = z.cc1.cc.IsDefaultContact,
                          Email = z.cc1.cust.Email
                      }).ToList();
 
@@ -119,6 +126,7 @@ namespace DAL.Repositories
                     {
                         objContact = new CustomerContactList();
                         objContact.ContactId = item.ContactId;
+                        objContact.CustomerContactId = item.CustomerContactId;
                         objContact.ContractReference = item.ContractReference;
                         objContact.CreditLimt = item.CreditLimt;
                         objContact.CreditTermId = item.CreditTermId;
@@ -127,6 +135,7 @@ namespace DAL.Repositories
                         objContact.CustomerReference = item.Reference;
                         objContact.WorkPhone = item.WorkPhone;
                         objContact.Email = item.Email;
+                        objContact.IsDefaultContact = item.IsDefaultContact;
                         customerContacts.Add(objContact);
                     }
                 }
@@ -193,7 +202,7 @@ namespace DAL.Repositories
             }
         }
 
-        public void MasterPartsStatus(long masterPartId,bool status, string updatedBy)
+        public void MasterPartsStatus(long masterPartId, bool status, string updatedBy)
         {
             try
             {
@@ -229,13 +238,13 @@ namespace DAL.Repositories
             }
         }
 
-        public void CreateRestrictedParts(List<RestrictedParts> restrictedParts, long? referenceId)
+        public void CreateRestrictedParts(List<RestrictedParts> restrictedParts, long referenceId, int moduleId)
         {
             try
             {
                 if (restrictedParts != null && restrictedParts.Count > 0)
                 {
-                    restrictedParts.ForEach(p => p.ReferenceId = referenceId);
+                    restrictedParts.ForEach(p => { p.ReferenceId = referenceId; p.ModuleId = moduleId; p.IsDeleted = false; p.IsActive = true;p.CreatedDate = p.UpdatedDate = DateTime.Now; });
                     _appContext.RestrictedParts.AddRange(restrictedParts);
                     _appContext.SaveChanges();
                 }
@@ -247,7 +256,7 @@ namespace DAL.Repositories
             }
         }
 
-        public void UpdateRestrictedParts(List<RestrictedParts> restrictedParts, long? referenceId)
+        public void UpdateRestrictedParts(List<RestrictedParts> restrictedParts, long referenceId,int moduleId)
         {
             try
             {
@@ -262,6 +271,11 @@ namespace DAL.Repositories
                         else
                         {
                             item.ReferenceId = referenceId;
+                            item.ModuleId = moduleId;
+                            item.IsActive = true;
+                            item.IsDeleted = false;
+                            item.CreatedDate = item.UpdatedDate = DateTime.Now;
+                            
                             _appContext.RestrictedParts.Add(item);
                         }
                         _appContext.SaveChanges();
@@ -290,13 +304,144 @@ namespace DAL.Repositories
             }
         }
 
+
+        #region RestrictsPMAList
+
+        public void CreateRestrictPmaList(List<RestrictsPMAList> restrictedPmaLists, long customerId)
+        {
+            try
+            {
+                if (restrictedPmaLists != null && restrictedPmaLists.Count > 0)
+                {
+                    restrictedPmaLists.ForEach(p => p.CustomerId = customerId);
+                    _appContext.RestrictsPMAList.AddRange(restrictedPmaLists);
+                    _appContext.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void UpdateRestrictPmaList(List<RestrictsPMAList> restrictedPmaLists, long customerId)
+        {
+            try
+            {
+                if (restrictedPmaLists != null && restrictedPmaLists.Count > 0)
+                {
+                    foreach (var item in restrictedPmaLists)
+                    {
+                        if (item.RestrictedPMAId > 0)
+                        {
+                            _appContext.RestrictsPMAList.Update(item);
+                        }
+                        else
+                        {
+                            item.CustomerId = customerId;
+                            _appContext.RestrictsPMAList.Add(item);
+                        }
+                        _appContext.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public List<RestrictsPMAList> GetRestrictPmaList(int itemMasterId, long? customerId)
+        {
+            try
+            {
+                return _appContext.RestrictsPMAList.Where(p => p.IsDeleted == false && p.ItemMasterId == itemMasterId && p.CustomerId == customerId)
+                                                   .OrderBy(p => p.RestrictedPMAId)
+                                                   .ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        #endregion
+
+        #region RestrictsBERList
+
+        public void CreateRestrictDerList(List<RestrictsBERList> restrictedBerLists, long customerId)
+        {
+            try
+            {
+                if (restrictedBerLists != null && restrictedBerLists.Count > 0)
+                {
+                    restrictedBerLists.ForEach(p => p.CustomerId = customerId);
+                    _appContext.RestrictsBERList.AddRange(restrictedBerLists);
+                    _appContext.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void UpdateRestrictDerList(List<RestrictsBERList> restrictedBerLists, long customerId)
+        {
+            try
+            {
+                if (restrictedBerLists != null && restrictedBerLists.Count > 0)
+                {
+                    foreach (var item in restrictedBerLists)
+                    {
+                        if (item.RestrictedBERId > 0)
+                        {
+                            _appContext.RestrictsBERList.Update(item);
+                        }
+                        else
+                        {
+                            item.CustomerId = customerId;
+                            _appContext.RestrictsBERList.Add(item);
+                        }
+                        _appContext.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public List<RestrictsBERList> GetRestrictDerList(int itemMasterId, long? customerId)
+        {
+            try
+            {
+                return _appContext.RestrictsBERList.Where(p => p.IsDeleted == false && p.ItemMasterId == itemMasterId && p.CustomerId == customerId)
+                                                   .OrderBy(p => p.RestrictedBERId)
+                                                   .ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        #endregion
+
         public void CreateClassificationMappings(List<ClassificationMapping> classificationMappings, long referenceId)
         {
             try
             {
                 if (classificationMappings != null && classificationMappings.Count > 0)
                 {
-                    classificationMappings.ForEach(p => p.ReferenceId = referenceId);
+                    classificationMappings.ForEach(p => p.CustomerId = referenceId);
                     _appContext.ClassificationMapping.AddRange(classificationMappings);
                     _appContext.SaveChanges();
                 }
@@ -322,7 +467,7 @@ namespace DAL.Repositories
                         }
                         else
                         {
-                            item.ReferenceId = referenceId;
+                            item.CustomerId = referenceId;
                             _appContext.ClassificationMapping.Add(item);
                         }
                         _appContext.SaveChanges();
@@ -347,12 +492,12 @@ namespace DAL.Repositories
                              cm => cm.ClasificationId,
                              cc => cc.CustomerClassificationId,
                              (cm, cc) => new { cm, cc })
-                             .Where(p => p.cm.IsDeleted == false && p.cm.ModuleId == moduleId && p.cm.ReferenceId == referenceId)
+                             .Where(p => p.cm.IsDeleted == false && p.cm.ModuleId == moduleId && p.cm.CustomerId == referenceId)
                              .Select(p => new
                              {
-                                 ClassificationMappingId = p.cm.ClassificationMappingId,
-                                 ClasificationId = p.cm.ClasificationId,
-                                 Description = p.cc.Description
+                                 p.cm.ClassificationMappingId,
+                                 p.cm.ClasificationId,
+                                 p.cc.Description
                              })
                              .ToList();
 
@@ -418,7 +563,7 @@ namespace DAL.Repositories
             }
         }
 
-        public dynamic UpdateEntity(dynamic uiModel, dynamic dbModel,ref IDictionary<string, object> keyValuePairs)
+        public dynamic UpdateEntity(dynamic uiModel, dynamic dbModel, ref IDictionary<string, object> keyValuePairs)
         {
 
             uiModel.MasterCompanyId = dbModel.MasterCompanyId;
@@ -452,11 +597,26 @@ namespace DAL.Repositories
                     {
                         break;
                     }
-                        
+
                 }
             }
 
             return dbModel;
+        }
+
+
+        public IEnumerable<object> BindDropdowns(string tableName, string primaryColumn, string textColumn,long count)
+        {
+            try
+            {
+                var result = _appContext.Dropdowns.FromSql("BindDropdowns @p0,@p1,@p2,@p3", tableName, primaryColumn, textColumn,count).ToList();
+                return result;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         private static PropertyInfo[] GetProperties(object obj)

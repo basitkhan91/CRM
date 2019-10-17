@@ -117,13 +117,14 @@ namespace QuickApp.Pro.Controllers
                     }
 
                     existingResult.UpdatedDate = DateTime.Now;
-                    existingResult.UpdatedBy = HttpContext.Session.GetString("UserId");
+                    existingResult.UpdatedBy = itemclassificationViewModel.UpdatedBy;
 
                     _context.Entry(existingResult).Property(x => x.UpdatedDate).IsModified = true;
                     _context.Entry(existingResult).Property(x => x.UpdatedBy).IsModified = true;
 
                     _context.SaveChanges();
                 }
+                return Ok(existingResult);
             }
             return Ok(ModelState);
         }
@@ -133,7 +134,7 @@ namespace QuickApp.Pro.Controllers
         {
             var existingResult = _unitOfWork.ItemClassification.GetSingleOrDefault(c => c.ItemClassificationId == id);
 
-            existingResult.IsDelete = true;
+            existingResult.IsDeleted = true;
             _unitOfWork.ItemClassification.Update(existingResult);
             //_unitOfWork.ItemClassification.Remove(existingResult);
             _unitOfWork.SaveChanges();
@@ -286,6 +287,13 @@ namespace QuickApp.Pro.Controllers
             }
             dynamicGridData.ColumnData = itemClassificationList;
             return Ok(dynamicGridData);
+        }
+
+        [HttpPost("uploaditemclassificationcustomdata")]
+        public IActionResult UploadCustomData()
+        {
+            var result = _unitOfWork.ItemClassification.UploadCustomData(Request.Form.Files[0]);
+            return Ok(result);
         }
     }
 }

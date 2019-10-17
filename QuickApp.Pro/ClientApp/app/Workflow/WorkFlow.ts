@@ -47,7 +47,7 @@ export interface IWorkFlow {
 
     materialQtySummation: number;
     materialExtendedCostSummation: number;
-
+    partNumber: string;
 
 
 }

@@ -102,6 +102,7 @@
     <None Remove="ClientApp\app\models\atasubchapter2.model.ts" />
     <None Remove="ClientApp\app\models\audithistory.model.ts" />
     <None Remove="ClientApp\app\models\laborandoverheadcostsetup.model.ts" />
+    <None Remove="ClientApp\app\models\percent.model.ts" />
     <None Remove="ClientApp\app\models\site.model.ts" />
     <None Remove="ClientApp\app\models\stockline.model.ts" />
     <None Remove="ClientApp\app\models\taxtype.model.ts" />
@@ -121,6 +122,8 @@
     <None Remove="ClientApp\app\services\gl-cash-flow-classification.service.ts" />
     <None Remove="ClientApp\app\services\itemMaster-endpoint.service.ts" />
     <None Remove="ClientApp\app\services\itemMaster.service.ts" />
+    <None Remove="ClientApp\app\services\percentage-endpoint.service.ts" />
+    <None Remove="ClientApp\app\services\percentage.service.ts" />
     <None Remove="ClientApp\app\services\site-endpoint.service.ts" />
     <None Remove="ClientApp\app\services\site.service.ts" />
     <None Remove="ClientApp\app\services\stockline-endpoint.service.ts" />
@@ -376,6 +379,7 @@
     <TypeScriptCompile Include="ClientApp\app\itemmasterpages\itemmasterpages.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\itemmasterpages\itemmasterpages-routing.module.ts" />
     <TypeScriptCompile Include="ClientApp\app\itemmasterpages\itemmasterpages.module.ts" />
+    <TypeScriptCompile Include="ClientApp\app\models\percent.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\action.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\atasubchapter1.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\atasubchapter2.model.ts" />
@@ -400,6 +404,8 @@
     <TypeScriptCompile Include="ClientApp\app\services\gl-cash-flow-classification.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\itemMaster-endpoint.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\itemMaster.service.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\percentage-endpoint.service.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\percentage.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\site-endpoint.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\site.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\stocklineadjustment.service.ts" />

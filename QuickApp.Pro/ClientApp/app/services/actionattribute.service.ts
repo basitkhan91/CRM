@@ -41,7 +41,7 @@ export class ActionAttributeService {
         return Observable.forkJoin(
             this.actionEndpoint.getActionattributeEndpoint<ActionAttribute[]>());
     }
-    newAction(action: ActionAttribute) {
+    newAction(action) {
         return this.actionEndpoint.getNewGatecodeEndpoint<ActionAttribute>(action);
     }
 
@@ -49,7 +49,7 @@ export class ActionAttributeService {
         return this.actionEndpoint.getEditActionEndpoint<ActionAttribute>(actionId);
     }
 
-    updateAction(action: ActionAttribute) {
+    updateAction(action) {
         return this.actionEndpoint.getUpdateActionEndpoint(action, action.actionAttributeId);
     }
 

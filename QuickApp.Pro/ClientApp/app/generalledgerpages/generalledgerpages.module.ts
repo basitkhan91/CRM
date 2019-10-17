@@ -42,6 +42,7 @@ import { POROCategoryService } from "../services/porocategory/po-ro-category.ser
 import { AuditModule } from "../audit/audit.module";
 import { InterCompanySetupComponent } from "../components/general-ledger/intercompany-setup/intercompany-setup.component";
 import { AutoCompleteModule } from "primeng/autocomplete";
+import { TooltipModule } from "../../../node_modules/primeng/tooltip";
 
 @NgModule({
     imports: [
@@ -59,7 +60,8 @@ import { AutoCompleteModule } from "primeng/autocomplete";
         TreeTableModule,
         TreeModule, DialogModule, CalendarModule, InputSwitchModule,
         AuditModule,
-        AutoCompleteModule
+        AutoCompleteModule,
+        TooltipModule
 
     ],
     declarations: [

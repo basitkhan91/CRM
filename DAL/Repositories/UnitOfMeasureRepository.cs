@@ -30,7 +30,7 @@ namespace DAL.Repositories
 
         public IQueryable<DAL.Models.UnitOfMeasure> GetPaginationData()
         {
-            return _appContext.UnitOfMeasure.Where(c => (c.IsDeleted == false || c.IsDeleted == null))
+            return _appContext.UnitOfMeasure.Where(c => (c.IsDeleted == false))
                 .OrderByDescending(c => c.UnitOfMeasureId).ToList().AsQueryable();
         }
 
@@ -64,7 +64,7 @@ namespace DAL.Repositories
                 }
 
                 string fullPath = Path.Combine(filePath, fileName);
-                
+
 
                 using (var stream = File.Open(fullPath, FileMode.Create))
                 {
@@ -76,16 +76,20 @@ namespace DAL.Repositories
                             {
                                 while (reader.Read())
                                 {
-                                    if(count>0)
+                                    if (count > 0 && reader.GetValue(0) != null && reader.GetValue(1) != null)
                                     {
-                                        var flag = _appContext.UnitOfMeasure.Any(p => p.Description == reader.GetString(0).Trim() || p.ShortName == reader.GetString(1).Trim());
+                                        var flag = _appContext.UnitOfMeasure.Any(p => p.IsDeleted == false && (p.Description == Convert.ToString(reader.GetValue(0)).Trim() || p.ShortName == Convert.ToString(reader.GetValue(1)).Trim()));
                                         if (!flag)
                                         {
                                             unitOfMeasure = new UnitOfMeasure();
-                                            description = unitOfMeasure.Description = reader.GetString(0).Trim();
-                                            shortName = unitOfMeasure.ShortName = reader.GetString(1).Trim();
-                                            standard = unitOfMeasure.Standard = reader.GetString(2).Trim().Trim();
-                                            memo = unitOfMeasure.Memo = reader.GetString(3).Trim().Trim();
+                                            if (reader.GetValue(0)!=null)
+                                                description = unitOfMeasure.Description =Convert.ToString(reader.GetValue(0));
+                                            if (reader.GetValue(1) != null)
+                                                shortName = unitOfMeasure.ShortName = Convert.ToString(reader.GetValue(1));
+                                            if (reader.GetValue(2) != null)
+                                                standard = unitOfMeasure.Standard = Convert.ToString(reader.GetValue(2));
+                                            if (reader.GetValue(3) != null)
+                                                memo = unitOfMeasure.Memo = Convert.ToString(reader.GetValue(3));
                                             unitOfMeasure.MasterCompanyId = 1;
                                             unitOfMeasure.IsActive = true;
                                             unitOfMeasure.IsDeleted = false;
@@ -100,10 +104,14 @@ namespace DAL.Repositories
                                         else
                                         {
                                             unitOfMeasure = new UnitOfMeasure();
-                                            unitOfMeasure.Description = reader.GetString(0).Trim();
-                                            unitOfMeasure.ShortName = reader.GetString(1).Trim();
-                                            unitOfMeasure.Standard = reader.GetString(2).Trim().Trim();
-                                            unitOfMeasure.Memo = reader.GetString(3).Trim().Trim();
+                                            if (reader.GetValue(0) != null)
+                                                unitOfMeasure.Description = Convert.ToString(reader.GetValue(0));
+                                            if (reader.GetValue(1) != null)
+                                                unitOfMeasure.ShortName = Convert.ToString(reader.GetValue(1));
+                                            if (reader.GetValue(2) != null)
+                                                unitOfMeasure.Standard = Convert.ToString(reader.GetValue(2));
+                                            if (reader.GetValue(3) != null)
+                                                unitOfMeasure.Memo = Convert.ToString(reader.GetValue(3));
                                             unitOfMeasure.UploadStatus = "Duplicate";
                                             unitOfMeasures.Add(unitOfMeasure);
                                         }

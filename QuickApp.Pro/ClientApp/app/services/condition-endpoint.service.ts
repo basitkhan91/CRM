@@ -16,14 +16,20 @@ export class ConditionEndpoint extends EndpointFactory {
     private readonly _conditionPosturl: string = "/api/Condition/ConditionPost";
     private readonly _actionsUrlNewAuditHistory: string = "/api/Condition/auditHistoryById";
     private readonly getConditionDataAuditById: string = "/api/Condition/audits";
-
+    private readonly _actionUrlAll: string = "/api/Condition/getAll"
     get ConditionUrl() { return this.configurations.baseUrl + this._conditionurl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
         super(http, configurations, injector);
     }
-
+    
+    getAllConditionEndpoint<T>(): Observable<T> {
+        return this.http.get<T>(this._actionUrlAll, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAllConditionEndpoint());
+            });
+    }
     getConditionEndpoint<T>(): Observable<T> {
 
         return this.http.get<T>(this.ConditionUrl, this.getRequestHeaders())

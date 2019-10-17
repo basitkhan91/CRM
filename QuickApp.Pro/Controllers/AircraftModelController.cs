@@ -81,6 +81,9 @@ namespace QuickApp.Pro.Controllers
                 if (ModelState.IsValid)
                 {
                     aircraftModel.UpdatedDate = DateTime.Now;
+                    aircraftModel.IsActive = aircraftModel.IsActive;
+                    aircraftModel.IsDeleted = false;
+                    aircraftModel.MasterCompanyId = 1;
                     unitOfWork.Repository<AircraftModel>().Update(aircraftModel);
                     unitOfWork.SaveChanges();
                     return Ok(aircraftModel);
@@ -124,9 +127,10 @@ namespace QuickApp.Pro.Controllers
                 if (aircraftModel != null)
                 {
                     var existingResult = unitOfWork.Repository<AircraftModel>().Find(x => x.AircraftModelId == id).FirstOrDefault();
-                    aircraftModel.UpdatedDate = DateTime.Now;
+                    existingResult.UpdatedDate = DateTime.Now;
                     existingResult.IsActive = aircraftModel.IsActive;
-                    unitOfWork.Repository<AircraftModel>().Update(aircraftModel);
+                    existingResult.IsDeleted = false;
+                    unitOfWork.Repository<AircraftModel>().Update(existingResult);
                     unitOfWork.SaveChanges();
                     return Ok();
                 }
@@ -174,6 +178,13 @@ namespace QuickApp.Pro.Controllers
             var aircraftModels = unitOfWork.aircraftModel.GetAllAircraftModel();//getting List Here
             var data = aircraftModels.Skip(0).Take(10).OrderByDescending(c => c.AircraftModelId).ToList();
             return Ok(data);
+        }
+
+        [HttpGet("aircraftmodelhistory")]
+        public IActionResult GetAircraftModelHistory(long aircraftModelId)
+        {
+            var result = unitOfWork.aircraftModel.GetAircraftModelHistory(aircraftModelId);//getting List Here
+            return Ok(result);
         }
 
         #endregion Public Methods

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
 using DAL;
@@ -83,6 +84,7 @@ namespace QuickApp.Pro.Controllers
                 conditionObj.Description = conditionViewModel.Description;
                 conditionObj.MasterCompanyId = conditionViewModel.MasterCompanyId;
                 conditionObj.IsActive = conditionViewModel.IsActive;
+                conditionObj.IsDelete = conditionViewModel.IsDelete;
                 conditionObj.Memo = conditionViewModel.Memo;
                 conditionObj.CreatedDate = DateTime.Now;
                 conditionObj.UpdatedDate = DateTime.Now;
@@ -107,7 +109,7 @@ namespace QuickApp.Pro.Controllers
                 var existingResult = _unitOfWork.Conditions.GetSingleOrDefault(c => c.ConditionId == id);
                 // DAL.Models.Action updateObject = new DAL.Models.Action();
 
-
+                existingResult.IsDelete = conditionViewModel.IsDelete;
                 existingResult.UpdatedDate = DateTime.Now;
                 existingResult.UpdatedBy = conditionViewModel.UpdatedBy;
                 existingResult.Description = conditionViewModel.Description;
@@ -139,19 +141,34 @@ namespace QuickApp.Pro.Controllers
             return Ok(id);
         }
         [HttpGet("audits/{id}")]
+        [Produces(typeof(List<ConditionAudit>))]
         public IActionResult AuditDetails(long id)
         {
-            var audits = _unitOfWork.Repository<ConditionAudit>()
-                .Find(x => x.ConditionId == id)
-                .OrderByDescending(x => x.ConditionAuditId);
-
-            var auditResult = new List<AuditResult<ConditionAudit>>();
-
-            auditResult.Add(new AuditResult<ConditionAudit> { AreaName = "Condition", Result = audits.ToList() });
-
-            return Ok(auditResult);
+     
+            var result = _unitOfWork.Conditions.GetAuditDetails(id);
+            return Ok(result);
         }
+        [HttpGet("getAll")]
+        public IActionResult GetAll()
+        {
+            List<ColumHeader> columHeaders = new List<ColumHeader>();
+            PropertyInfo[] propertyInfos = typeof(ConditionSPModel).GetProperties();
+            ColumHeader columnHeader;
+            DynamicGridData<dynamic> dynamicGridData = new DynamicGridData<dynamic>();
+            foreach (PropertyInfo property in propertyInfos)
+            {
+                columnHeader = new ColumHeader();
+                columnHeader.field = char.ToLower(property.Name[0]) + property.Name.Substring(1);//FirstCharToUpper(property.Name);
+                columnHeader.header = property.Name;
+                columHeaders.Add(columnHeader);
+            }
+            dynamicGridData.columHeaders = columHeaders;
+            dynamicGridData.ColumnData = _unitOfWork.Conditions.GetAll().Where(u => u.IsDelete == false);
+            dynamicGridData.TotalRecords = dynamicGridData.ColumnData.Count();
 
+
+            return Ok(dynamicGridData);
+        }
 
     }
 

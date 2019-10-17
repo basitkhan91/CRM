@@ -7,6 +7,7 @@ import { WareHouseAuditComponent } from "../components/Audit/WareHouseAudit/ware
 import { LocationAuditComponent } from "../components/Audit/LocationAudit/location-audit.component";
 import { ShelfAuditComponent } from "../components/Audit/ShelfAudit/shelf-audit.component";
 import { AuditNoHistoryComponent } from "../components/Audit/AuditNoHistory/audit-no-history.component";
+import { LocationAuditComponent } from "../components/Audit/LocationAudit/location-audit.component";
 
 @NgModule({
   declarations: [

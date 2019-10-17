@@ -28,11 +28,11 @@ export class AircraftManufacturerService {
         );
     }
 
-    add(aircraftManufacturer: AircraftType) {
+    add(aircraftManufacturer) {
         return this.aircraftManufacturerEndpoint.addAircraftManufacturer<AircraftType>(aircraftManufacturer);
     }
 
-    update(aircraftManufacturer: AircraftType) {
+    update(aircraftManufacturer) {
         return this.aircraftManufacturerEndpoint.updateAircraftManufacturer<AircraftType>(aircraftManufacturer);
     }
 

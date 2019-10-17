@@ -162,6 +162,13 @@ namespace QuickApp.Pro.Controllers
             
         }
 
+        [HttpGet("provisionhistory")]
+        public IActionResult GetProvisionHistory(long provisionId)
+        {
+            var reult = _unitOfWork.Provisions.GetProvisionHistory(provisionId);
+            return Ok(reult);
+        }
+
     }
 
 

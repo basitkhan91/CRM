@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 namespace QuickApp.Pro.ViewModels
 {
     public class ContactViewModel
-    {
+	{
         public long? ContactId { get; set; }
+        public string Tag { get; set; }
         public string FirstName { get; set; }
         public string Prefix { get; set; }
         public string Suffix { get; set; }

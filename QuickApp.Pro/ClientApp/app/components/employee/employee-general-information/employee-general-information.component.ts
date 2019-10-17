@@ -1,6 +1,6 @@
 ﻿import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
-import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { NgForm, FormBuilder, FormGroup, Validators, FormControl, ValidatorFn, AbstractControl } from '@angular/forms';
 import { fadeInOut } from '../../../services/animations';
 import { PageHeaderComponent } from '../../../shared/page-header.component';
 import { ActionService } from '../../../services/action.service';
@@ -22,16 +22,28 @@ import { InputTextModule } from 'primeng/inputtext';
 import { CheckboxModule } from 'primeng/checkbox';
 import { EmployeeService } from '../../../services/employee.service';
 import { JobTitle } from '../../../models/jobtitle.model';
+import { JobType } from '../../../models/jobtype.model';
 import { JobTitleService } from '../../../services/job-title.service';
+import { JobTypeService } from '../../../services/job-type.service';
 import { EmployeeExpertiseService } from '../../../services/employeeexpertise.service';
 import { EmployeeExpertise } from '../../../models/employeeexpertise.model';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { AppTranslationService } from '../../../services/app-translation.service';
 import * as moment from 'moment'
 import { CalendarModule } from 'primeng/calendar';
 import { LegalEntityService } from '../../../services/legalentity.service';
 import { EmployeeLeaveType } from '../../../models/EmployeeLeaveTypeModel';
+import { LocalStoreManager } from '../../../services/local-store-manager.service';
+//import { EmployeeAddService } from '../../../services/employee.Add.Service';
+import { DBkeys } from '../../../services/db-Keys';
+
+import { User } from '../../../models/user.model';
+
+
+import { CompanyService } from '../../../services/company.service';
+
+
 
 @Component({
 	selector: 'app-employee-general-information',
@@ -41,6 +53,8 @@ import { EmployeeLeaveType } from '../../../models/EmployeeLeaveTypeModel';
 })
 
 export class EmployeeGeneralInformationComponent implements OnInit, AfterViewInit {    
+
+    
 	local: any;
 	activeIndex: number;
 	allLeaves: EmployeeLeaveType[];
@@ -57,7 +71,8 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 	businessUnitId: any;
 	companyId: any;
 	allEmployeeExpertiseInfo: EmployeeExpertise[];
-	allJobTitlesinfo: JobTitle[];
+    allJobTitlesinfo: JobTitle[];
+    allJobTypesinfo: JobType[];
 	jobName: string;
 	_divisionlist: any[];
 	_departmentList: any[];
@@ -87,7 +102,19 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     display: boolean = false;
     modelValue: boolean = false;
 
-	ngOnInit(): void {
+    public empId: any;
+    public firstName: any;
+    public lastName: any;
+
+    public jobTypeName: any;
+    public jobTypeDescription: any;
+
+
+   
+
+    ngOnInit(): void {
+
+
 		this.employeeService.currentUrl = '/employeesmodule/employeepages/app-employee-general-information';
 		this.employeeService.bredcrumbObj.next(this.employeeService.currentUrl);
 		this.employeeService.ShowPtab = true;
@@ -102,7 +129,9 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 		this.EmployeeTrainingType();
 		this.shift();
 		this.Countries();
-		this.EmployeeLeaveType();
+        this.EmployeeLeaveType();
+        this.loadjobtypesData();
+        
 	}
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
@@ -143,25 +172,107 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 	Active: string = "Active";
     allAircraftManufacturer: any[] = [];
     sourceEmployee: any = {};
-    updateMode: boolean = false;
+	updateMode: boolean = false;
+	showMsg: boolean = false;
+	showTitle: string;
+    sourceEmpFirst: {
+        firstName: any;};
+    sourceEmpLast: {
+        lastName: any;
+    };
+    public userInfo: any;
+    public userA: any;
+    public companylist: any;
+    public supervisorId: any;
 
-	constructor(private translationService: AppTranslationService, private router: Router, public workFlowtService: JobTitleService, private empservice: EmployeeExpertiseService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private route: Router, private alertService: AlertService, public employeeService: EmployeeService, public workFlowtService1: LegalEntityService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+
+    empCreationForm = new FormGroup({
+        firstname: new FormControl('firstName', Validators.minLength(1)),
+        middleName: new FormControl('middleName', Validators.minLength(1)),
+        lastName: new FormControl('lastName', Validators.minLength(1)),
+        jobTitleId: new FormControl('jobTitleId', Validators.minLength(1)),
+        employeeExpertiseId: new FormControl('employeeExpertiseId', Validators.minLength(1)),
+        JobTypeId: new FormControl('JobTypeId', Validators.minLength(1)),
+        companyId: new FormControl('companyId', Validators.minLength(1)),
+        startDate: new FormControl('companyId', Validators.minLength(1)),
+       
+    });
+
+
+    constructor(private fb: FormBuilder, private Actroute: ActivatedRoute, private translationService: AppTranslationService, private router: Router, public jobTypeService: JobTypeService, public workFlowtService: JobTitleService, private empservice: EmployeeExpertiseService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private route: Router, private alertService: AlertService, public employeeService: EmployeeService, public workFlowtService1: LegalEntityService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private localStorage: LocalStoreManager, private companyService: CompanyService) {
         this.displayedColumns.push('action');
+
+        //new emp form
+
+        this.loadCompanyData()
+
+        let user = this.localStorage.getDataObject<User>(DBkeys.CURRENT_USER);
+
+        console.log("user:" + user.userName)
+
+        this.userA = user.userName;
+
+
+        //console.log(
+           // this.userInfo[0].name);
+
+        this.empCreationForm = fb.group({
+            'firstName': [null, Validators.compose([Validators.required,  Validators.minLength(1), this.checkfirstNameExists('firstName')])],
+            'middleName': [null],
+            'lastName': [null, Validators.compose([Validators.required, Validators.minLength(1), this.checklasttNameExists('lastName')])],
+            'jobTitleId': [null, Validators.compose([Validators.required, Validators.minLength(1)])],
+            'employeeExpertiseId': [null, Validators.compose([Validators.required, Validators.minLength(1)])],
+            'JobTypeId': [null, Validators.compose([Validators.required, Validators.minLength(1)])],
+            'companyId': [null, Validators.compose([Validators.required, Validators.minLength(1)])],
+            'startDate': [null, Validators.compose([Validators.required, Validators.minLength(1)])],
+            
+            
+            
+            
+            
+       
+        });
 
 
         const control = new FormControl('1', Validators.pattern('[a-zA-Z ]*'));
 
         console.log(control.errors);
 
-		this.dataSource = new MatTableDataSource();
+        this.dataSource = new MatTableDataSource();
+   
+        console.log(this.employeeService.listCollection);
+
 		if (this.employeeService.listCollection != null && this.employeeService.isEditMode == true) {
-		
+
+            if (  this.sourceEmployee.employeeId) {
+                this.empId = this.sourceEmployee.employeeId;
+            }
+
+           
+             
             this.sourceEmployee = this.employeeService.listCollection;
+
+            console.log("setting jpo1b title*" + this.sourceEmployee.jobTitleId);
+
+            console.log("setting jpob title*")
+
+            this.empCreationForm.controls['jobTitleId'].setValue(this.sourceEmployee.jobTitleId);
+          
+
+            this.empCreationForm.controls['employeeExpertiseId'].setValue(this.sourceEmployee.employeeExpertiseId);
+            this.empCreationForm.controls['JobTypeId'].setValue(this.sourceEmployee.jobTypeId);
+            this.supervisorId = this.sourceEmployee.supervisorId;
+            
+
+            
+
+            
             this.updateMode = true;
 			this.sourceEmployee.startDate = new Date();
 			this.sourceEmployee.dateOfBirth = new Date(this.sourceEmployee.dateOfBirth);
 			if (this.local) {
-				this.employeeService.employeeCollection = this.local;
+                this.employeeService.employeeCollection = this.local;
+             
 			}
 
 			if (this.sourceEmployee.inMultipleShifts == true) {
@@ -179,15 +290,318 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 				this.hourly = true
 			}
 
+
+
 			if (this.sourceEmployee.isHourly == false) {
 				this.sourceEmployee.yearlypayType = "Yearly";
 				this.yearly = true
 			}
 		}
-		this.translationService.closeCmpny = false;
+        this.translationService.closeCmpny = false;
+
+        this.Actroute.queryParams
+            .filter(params => params.order)
+            .subscribe(params => {
+                console.log(params); // {order: "popular"}
+                //  console.log(params.order);
+                this.empId = params.order;
+                this.firstName = params.firstname;
+                this.lastName = params.lastname;
+                console.log(params.order);
+
+                if (this.empId != undefined || this.empId != null) {
+                    console.log("haviing emp Id value");
+                    this.employeeService.getEmployeeListforView(this.empId).subscribe(
+                        results => this.getEmpInfo(results),
+
+                        error => this.onDataLoadFailed(error)
+                    );
 
 
+                }
+              
+            });
+
+        //new code
+
+
+     
+
+    }
+
+    loadCompanyData() {
+
+        this.companyService.getallCompanyData().subscribe(
+            results => this.assigninCOmpanyData(results),
+
+            error => this.onDataLoadFailed(error)
+        );
+
+    }
+
+    assigninCOmpanyData(results: any) {
+        console.log("results")
+        this.companylist = results[0];
+        console.log("companylist")
+        console.log(this.companylist)
+    }
+
+    onSelectMethod(event) {
+        let d = new Date(Date.parse(event));
+        this.sourceEmployee.dateOfBirth = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
+    }
+    checkfirstName(value) {
+
+      
+
+        const arr = this.allEmployeeinfo;
+
+        console.log(arr.find(e => e.firstName === value));
+
+        return arr.find(e => e.firstName === value);
+
+       
+
+    }
+
+    checklastName(value) {
+
+        const arr = this.allEmployeeinfo;
+
+        console.log(arr.find(e => e.lastName === value));
+
+        return arr.find(e => e.lastName === value);
+
+    }
+    checkfirstNameExists(field_name): ValidatorFn {
+        return (control: AbstractControl): { [key: string]: any } => {
+            if (this.allEmployeeinfo) {
+                console.log(control.value);
+
+                var res = this.checkfirstName(control.value);
+                var msg = true;
+
+                if (res == undefined) {
+                  
+                    return null;
+                }
+                else {
+                   
+                    return { notSame: true } 
+
+                }
+
+               
+               
+
+            
+
+                //console.log("hellox");
+             
+            }
+         
+        }
+    }
+    checklasttNameExists(field_name): ValidatorFn {
+        return (control: AbstractControl): { [key: string]: any } => {
+            if (this.allEmployeeinfo) {
+                console.log(control.value);
+
+                var res = this.checklastName(control.value);
+                var msg = true;
+
+                if (res == undefined) {
+
+                    return null;
+                }
+                else {
+
+                    return { notSame: true }
+
+                }
+
+
+
+
+
+
+                //console.log("hellox");
+
+            }
+
+        }
+    }
+
+    getEmpInfo(res: any) {
+        console.log("getEmpInfo");
+        console.log(res[0][0]);
+      
+        this.sourceEmployee = res[0][0];
+   
+        console.log(res[0][0].firstName);
+        this.sourceEmpFirst.firstName = res[0][0].firstName;
+        console.log(res[0][0].firstName);
+        console.log(this.sourceEmpFirst.firstName);
+        this.sourceEmpLast.lastName = res[0][0].lastName;
+        
+    }
+
+
+  
+
+    onSubmit2() {
+        console.log("superivisorId");
+        this.supervisorId;
+        console.log(this.supervisorId);
+        console.log(this.sourceEmployee.supervisorName);
+
+        this.sourceEmployee.firstName = this.empCreationForm.get('firstName').value;
+        this.sourceEmployee.lastName = this.empCreationForm.get('lastName').value;
+        this.sourceEmployee.middleName = this.empCreationForm.get('middleName').value;
+        this.sourceEmployee.jobTitleId = this.empCreationForm.get('jobTitleId').value;
+        this.sourceEmployee.employeeExpertiseId = this.empCreationForm.get('employeeExpertiseId').value;
+        this.sourceEmployee.JobTypeId = this.empCreationForm.get('JobTypeId').value;
+        this.sourceEmployee.companyId = this.empCreationForm.get('companyId').value;
+        this.sourceEmployee.startDate = this.empCreationForm.get('startDate').value;
+        this.sourceEmployee.SupervisorId = this.supervisorId;
+
+        if (this.sourceEmployee.hourlypayType == "Hourly") {
+
+            this.sourceEmployee.IsHourly = true;
+            this.sourceEmployee.HourlyPay = this.sourceEmployee.hourlyPay;
+
+        }
+
+        if (this.sourceEmployee.hourlypayType == "Monthly") {
+            this.sourceEmployee.IsHourly = false;
+            this.sourceEmployee.HourlyPay = this.sourceEmployee.hourlyPay;
+        }
+        this.sourceEmployee.createdBy = this.userA;
+        this.sourceEmployee.updatedBy = this.userA;
+        console.log(this.empCreationForm.get('firstName').value);
+        console.log(this.sourceEmployee);
+
+        console.log(this.sourceEmployee.dateOfBirth);
+
+        if (this.sourceEmployee.dateOfBirth == undefined) {
+            console.log("No Value");
+            this.sourceEmployee.dateOfBirth = null;
+        }
+
+        console.log("source Empi Id :" + this.sourceEmployee.employeeId);
+        if (this.sourceEmployee.employeeId) {
+            this.employeeService.updateEmployee(this.sourceEmployee).subscribe(
+                results => this.empUpdate(this.sourceEmployee, results),
+
+                error => this.onDataLoadFailed(error)
+            );
+        }
+        else {
+            // this.sourceEmployee.startDate 
+            this.sourceEmployee.employeeLeaveTypeId = this.selectedLeaveValues;
+            console.log(this.sourceEmployee);
+            // this.sourceEmployee.employeeLeaveTypeId = this.selectedLeaveValues[0]+'';
+
+
+
+            this.employeeService.newAddEmployee(this.sourceEmployee).subscribe(
+                results => this.empAdd(this.sourceEmployee, results),
+
+                error => this.onDataLoadFailed(error)
+            );
+        }
+
+      
+        
+        
+        
+    }
+
+
+
+    onSubmit() {
+		this.sourceEmployee.firstName;
+	
+		//console.log(this.sourceEmpFirst.firstName);
+
+		//console.log(this.selectedFirstName);
+
+		
+		this.employeeService.newAddEmployee(this.sourceEmployee).subscribe(
+            results => this.empAdd(this.sourceEmployee, results),
+            
+          error => this.onDataLoadFailed(error)
+       );
+    }
+
+
+    empUpdate(obj: any, res: any) {
+        this.showMsg = true;
+        //this.sourceEmployee.reser
+
+        if (res.employeeId) {
+            this.empId = res.employeeId;
+            console.log(res.employeeId);
+            this.firstName = res.firstName;
+            this.lastName = res.lastName;
+
+            console.log(this.empId);
+            this.showTitle = 'Employee Updated Sucessfully';
+
+            ///this.sourceEmployee.reset();
+            this.alertService.showMessage("Success", this.showTitle, MessageSeverity.success);
+            this.nextClick();
+            this.sourceEmpFirst = null;
+            //window.location.reload();
+
+            this.loadData();
+
+        }
+        else {
+            this.showTitle = 'Some thing went wrong please try again later';
+
+            ///this.sourceEmployee.reset();
+            this.alertService.showMessage("Failure", this.showTitle, MessageSeverity.success);
+
+        }
+
+
+    }
+    empAdd(obj: any, res: any) {
+
+		this.showMsg = true;
+		//this.sourceEmployee.reser
+
+        if (res.employeeId) {
+            this.empId = res.employeeId;
+            console.log(res.employeeId);
+            this.firstName = res.firstName;
+            this.lastName = res.lastName;
+
+            console.log(this.empId);
+            this.showTitle = 'Employee Added Sucessfully';
+
+            ///this.sourceEmployee.reset();
+            this.alertService.showMessage("Success", this.showTitle, MessageSeverity.success);
+            this.nextClick();
+            this.sourceEmpFirst = null;
+            //window.location.reload();
+
+            this.loadData();
+
+        }
+        else {
+            this.showTitle = 'Some thing went wrong please try again later';
+
+            ///this.sourceEmployee.reset();
+            this.alertService.showMessage("Failure", this.showTitle, MessageSeverity.success);
+
+        }
+
+       
 	}
+
+
 
 	singleClick(click) {
 		if (click == 'single') {
@@ -272,7 +686,9 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 			error => this.onDataLoadFailed(error)
 		);
 	}
-	private EmployeeLeaveType() {
+    private EmployeeLeaveType() {
+
+        console.log("leave type()")
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
 		this.employeeService.getEmployeeLeaveType().subscribe(
@@ -293,14 +709,21 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 	private onDataLoadSuccessful(getEmployeeCerficationList: any[]) {
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
-		this.dataSource.data = getEmployeeCerficationList;
-		this.allEmployeeinfo = getEmployeeCerficationList;
+        this.dataSource.data = getEmployeeCerficationList;
+
+  
+        this.allEmployeeinfo = getEmployeeCerficationList;
+        console.log("this.allEmployeeinfo")
+        console.log(this.allEmployeeinfo);
 	}
-	private onLeavedata(getEmployeeCerficationList: any[]) {
+    private onLeavedata(getEmployeeCerficationList: any[]) {
+        console.log("on levae data");
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.dataSource.data = getEmployeeCerficationList;
-		this.allLeaves = getEmployeeCerficationList;
+        this.allLeaves = getEmployeeCerficationList;
+     //   this.leavemultiValues = getEmployeeCerficationList;
+        console.log(getEmployeeCerficationList);
 	}
 	private onCountryloadsuccessfull(getEmployeeCerficationList: any[]) {
 		this.alertService.stopLoadingMessage();
@@ -369,7 +792,8 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 			);
 	}
 
-	private loadJobtitlesData() {
+    private loadJobtitlesData() {
+   
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
 
@@ -377,7 +801,27 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 			results => this.onJobtitlesDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
-	}
+    }
+
+    private loadjobtypesData() {
+
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+
+        this.jobTypeService.getjobTypeWorkFlows().subscribe(
+            results => this.onJobtypeDataLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+
+    }
+
+    onJobtypeDataLoadSuccessful(allWorkFlows: JobType[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        console.log("Job Type Data")
+        console.log(allWorkFlows);
+        this.allJobTypesinfo = allWorkFlows
+    }
 
 
 	private onJobtitlesDataLoadSuccessful(allWorkFlows: JobTitle[]) {
@@ -412,7 +856,8 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 		}
 	}
 
-	private loademployeesexperties() {
+    private loademployeesexperties() {
+      
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
 
@@ -513,7 +958,20 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
-	}
+    }
+    openjobtype(content) {
+        this.isEditMode = false;
+        this.isDeleteMode = false;
+        this.isSaving = true;
+        this.loadMasterCompanies();
+        this.sourceAction = new JobTitle();
+        this.sourceAction.isActive = true;
+        this.jobName = "";
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
 
 	openjobtitle(content) {
 		this.isEditMode = false;
@@ -665,17 +1123,88 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
                 this.employeeService.indexObj.next(this.activeIndex);
             }
         }
+
+        this.multiLeavelist()
         //this.modal.close();
+    }
+
+    saveJobTitle() {
+        this.sourceAction.createdBy = this.userA;
+        this.sourceAction.updatedBy = this.userA;
+        this.sourceAction.description = this.jobName;
+        this.sourceAction.masterCompanyId = 1;
+        console.log(this.sourceAction);
+        this.sourceAction.description = this.jobName;
+        console.log(this.sourceAction);
+        this.workFlowtService.newAction(this.sourceAction).subscribe(data => {
+            this.loadJobtitlesData()
+            this.showTitle = 'job Title Added Sucessfully';
+
+            ///this.sourceEmployee.reset();
+            this.alertService.showMessage("Success", this.showTitle, MessageSeverity.success);
+        })
+    }
+
+    saveJobType() {
+
+        console.log(this.jobTypeName);
+
+
+        if (this.jobTypeName) {
+
+            this.sourceAction.createdBy = this.userA;
+            this.sourceAction.updatedBy = this.userA;
+            this.sourceAction.jobTypeName = this.jobTypeName;
+            this.sourceAction.jobTypeDescription = this.jobTypeDescription;
+
+            console.log(this.sourceAction);
+            this.sourceAction.description = this.jobName;
+
+            this.jobTypeService.addjobPoint(this.sourceAction).subscribe(data => {
+                this.loadJobtitlesData()
+                this.showTitle = 'job Type Added Sucessfully';
+                this.loadjobtypesData();
+
+                ///this.sourceEmployee.reset();
+                this.alertService.showMessage("Success", this.showTitle, MessageSeverity.success);
+            })
+            console.log(this.jobTypeName);
+            console.log(this.jobTypeDescription)
+
+        }
+        else {
+            this.showTitle = 'Job Title Required';
+            this.alertService.showMessage("Failure", this.showTitle, MessageSeverity.error);
+        }
+
+       // if (this.jobTypeName == null || this.jobTypeName == undefined) {
+          
+
+       // }
+        //else {
+           
+      //  }
+
+       
+
+
     }
 
 	editItemJobCloseModel() {
 		this.isSaving = true;
 
-		if (this.isEditMode == false) {
+        if (this.isEditMode == false) {
+
+            console.log(this.jobName);
+
+            console.log("new action");
 			this.sourceAction.createdBy = this.userName;
 			this.sourceAction.updatedBy = this.userName;
 			this.sourceAction.description = this.jobName;
-			this.sourceAction.masterCompanyId = 1;
+            this.sourceAction.masterCompanyId = 1;
+            console.log(this.sourceAction);
+            this.sourceAction.jobTitleId = this.jobName;
+            console.log(this.sourceAction);
 			this.workFlowtService.newAction(this.sourceAction).subscribe(data => { this.loadJobtitlesData() })
 		}
 		else {
@@ -689,7 +1218,8 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 		}
 	}
 
-	editItemLeaveCloseModel() {
+    editItemLeaveCloseModel() {
+        console.log("hii2");
 		this.isSaving = true;
 
 		if (this.isEditMode == false) {
@@ -701,7 +1231,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 				this.saveCompleted(this.sourceAction);
                 this.sourceEmployee.employeeLeaveTypeId = data.employeeLeaveTypeId;
                 this.EmployeeLeaveType();
-                
+                this.multiLeavelist();
 			})
 		}
 		else {
@@ -713,12 +1243,29 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 				this.saveCompleted(this.sourceAction);
                 this.sourceEmployee.employeeLeaveTypeId = data.employeeLeaveTypeId;
                 this.EmployeeLeaveType();
+                this.multiLeavelist();
 			});
 			
 		}
 
 		this.modal.close();
-	}
+    }
+
+    saveEmpExpertise() {
+        this.sourceAction.createdBy = this.userName;
+        this.sourceAction.updatedBy = this.userName;
+        this.sourceAction.description = this.employeeName;
+        this.sourceAction.masterCompanyId = 1;
+        this.empservice.newAction(this.sourceAction).subscribe(data => {
+
+            this.showTitle = 'Employee Expertise Added Sucessfully';
+
+            ///this.sourceEmployee.reset();
+            this.alertService.showMessage("Success", this.showTitle, MessageSeverity.success);
+            this.loademployeesexperties()
+
+        })
+    }
 
 	editItemExpertiesCloseModel() {
 
@@ -866,7 +1413,8 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 		this.workFlowtService1.getManagemententity().subscribe(
 			results => this.onManagemtntdataLoad(results[0]),
 			error => this.onDataLoadFailed(error)
-		);
+        );
+
 	}
 
 	private onManagemtntdataLoad(getAtaMainList: any[]) {
@@ -967,7 +1515,8 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
 
 
-	private multiLeavelist() {
+    private multiLeavelist() {
+        console.log("multList")
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
 
@@ -976,13 +1525,49 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 			error => this.onDataLoadFailed(error)
 		);
 	}
-	nextClick() {
-		this.employeeService.listCollection = this.local;
-		this.activeIndex = 1;
-		this.employeeService.indexObj.next(this.activeIndex);
-		this.route.navigateByUrl('/employeesmodule/employeepages/app-employee-certification');
+//	nextClick() {
+		//this.employeeService.listCollection = this.local;
+		//this.activeIndex = 1;
+		//this.employeeService.indexObj.next(this.activeIndex);
+	//	this.route.navigateByUrl('/employeesmodule/employeepages/app-employee-certification');
+//
+	//}
+    nextClick() {
 
-	}
+        console.log("next Click")
+
+        console.log(this.local);
+
+    
+
+        console.log(this.employeeService.listCollection);
+        this.employeeService.listCollection = this.local;
+
+        console.log(this.employeeService.listCollection);
+        console.log(this.local);
+        console.log(this.empId);
+        this.activeIndex = 1;
+        this.employeeService.indexObj.next(this.activeIndex);
+
+        var data = { "empId": this.empId, "firstName": this.firstName, "lastName": this.lastName };
+
+        console.log(data);
+
+        var stringData = JSON.stringify(data);
+
+        console.log(stringData)
+       
+      
+        var encryptedData = btoa(JSON.stringify(data));
+
+        console.log(encryptedData);
+
+
+        
+        this.route.navigate(['/employeesmodule/employeepages/app-employee-certification'], { queryParams: { order: this.empId, 'firstName': this.firstName, 'lastName': this.lastName }, skipLocationChange: true });
+       // this.route.navigate(['/employeesmodule/employeepages/app-employee-certification'], { queryParams: { order: stringData } });
+
+    }
 	public AddLeavedata(imObj) {
 		for (let i = 0; i < this.selectedLeaveValues.length; i++) {
 			imObj.employeeLeaveTypeId = this.selectedLeaveValues[i];
@@ -1044,11 +1629,17 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     }
     onKeyUpFirstNames(event) {
         if (event.target.value != "") {
-            let value = event.target.value.toLowerCase();
-            if (this.selectedFirstName) {
+			let value = event.target.value.toLowerCase();
+			console.log(this.sourceEmployee.firstName);
+			console.log(value);
+			this.sourceEmployee.firstName = value;
+			console.log(this.sourceEmployee.firstName);
+			if (this.selectedFirstName) {
+
+			
                 if (value == this.selectedFirstName.toLowerCase()) {
                     this.disableSaveFirstName = true;
-
+			
                 }
                 else {
                     this.disableSaveFirstName = false;
@@ -1057,7 +1648,14 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             }
 
         }
-    }
+	}
+	handlePayType(evt) {
+		var target = evt.target.value;
+		
+		this.sourceEmployee.hourlyPay = null;
+	
+
+	}
 
     onSelectFirstName(event) {
         if (this.allEmployeeinfo) {
@@ -1106,7 +1704,8 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
     onKeyUpLastNames(event) {
         if (event.target.value != "") {
-            let value = event.target.value.toLowerCase();
+			let value = event.target.value.toLowerCase();
+			this.sourceEmployee.lastName = value;
             if (this.disableSaveName) {
                 if (value == this.disableSaveName.toLowerCase()) {
                     this.disableSaveLastName = true;

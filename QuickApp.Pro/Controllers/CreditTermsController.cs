@@ -34,47 +34,41 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<CreditTermsViewModel>))]
         public IActionResult Get()
         {
-            var result = _unitOfWork.CreditTerms.GetAllCreditTermsData(); //.GetAllCustomersData();
+            var result = _unitOfWork.CreditTerms.GetAllCreditTermsData();
 
-
-            try
+            List<ColumHeader> columHeaders = new List<ColumHeader>();
+            PropertyInfo[] propertyInfos = typeof(CreditTermsViewModel).GetProperties();
+            ColumHeader columnHeader;
+            DynamicGridData<dynamic> dynamicGridData = new DynamicGridData<dynamic>();
+            foreach (PropertyInfo property in propertyInfos)
             {
-                var resul1 = Mapper.Map<IEnumerable<CreditTermsViewModel>>(result);
-
-                return Ok(resul1);
+                columnHeader = new ColumHeader();
+                columnHeader.field = char.ToLower(property.Name[0]) + property.Name.Substring(1);//FirstCharToUpper(property.Name);
+                columnHeader.header = property.Name;
+                columHeaders.Add(columnHeader);
             }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
+            dynamicGridData.columHeaders = columHeaders;
+            dynamicGridData.ColumnData = Mapper.Map<IEnumerable<CreditTermsViewModel>>(result);
+            dynamicGridData.TotalRecords = dynamicGridData.ColumnData.Count();
+            return Ok(dynamicGridData);
+           
 
 
 
         }
 
-        [HttpGet("auditHistoryById/{id}")]
-        [Produces(typeof(List<AuditHistory>))]
-        public IActionResult GetAuditHostoryById(long id)
+ 
+
+        [HttpGet("audits/{id}")]
+        [Produces(typeof(List<CreditTermsAudit>))]
+        public IActionResult AuditDetails(long id)
         {
-            var result = _unitOfWork.AuditHistory.GetAllHistory("CreditTerms", id); //.GetAllCustomersData();
 
-
-            try
-            {
-                var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
-
-                return Ok(resul1);
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
-
-
-
+            var result = _unitOfWork.CreditTerms.GetAuditDetails(id);
+            return Ok(result);
         }
+
+
         [HttpPost("Creditermspost")]
         //[Authorize(Authorization.Policies.ManageAllRolesPolicy)]
         public IActionResult CreateAction([FromBody] CreditTermsViewModel credittermviewmodel)
@@ -91,6 +85,7 @@ namespace QuickApp.Pro.Controllers
                 credittermsobj.MasterCompanyId = credittermviewmodel.MasterCompanyId;
                 credittermsobj.Memo = credittermviewmodel.Memo;
                 credittermsobj.IsActive = credittermviewmodel.IsActive;
+                credittermsobj.IsDeleted = credittermviewmodel.IsDeleted;
                 credittermsobj.CreatedDate = DateTime.Now;
                 credittermsobj.UpdatedDate = DateTime.Now;
                 credittermsobj.CreatedBy = credittermviewmodel.CreatedBy;
@@ -112,9 +107,6 @@ namespace QuickApp.Pro.Controllers
                     return BadRequest($"{nameof(credittermviewmodel)} cannot be null");
 
                 var existingResult = _unitOfWork.CreditTerms.GetSingleOrDefault(c => c.CreditTermsId == id);
-                // DAL.Models.Action updateObject = new DAL.Models.Action();
-
-
                 existingResult.UpdatedDate = DateTime.Now;
                 existingResult.UpdatedBy = credittermviewmodel.UpdatedBy;
                 existingResult.Memo = credittermviewmodel.Memo;
@@ -139,7 +131,7 @@ namespace QuickApp.Pro.Controllers
         {
             var existingResult = _unitOfWork.CreditTerms.GetSingleOrDefault(c => c.CreditTermsId == id);
 
-            existingResult.IsDelete = true;
+            existingResult.IsDeleted = true;
             _unitOfWork.CreditTerms.Update(existingResult);
 
             //_unitOfWork.CreditTerms.Remove(existingResult);
@@ -149,19 +141,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(id);
         }
 
-        [HttpGet("audits/{id}")]
-        public IActionResult AuditDetails(long id)
-        {
-            var audits = _unitOfWork.Repository<CreditTermsAudit>()
-                .Find(x => x.CreditTermsId == id)
-                .OrderByDescending(x => x.CreditTermsAuditId);
-
-            var auditResult = new List<AuditResult<CreditTermsAudit>>();
-
-            auditResult.Add(new AuditResult<CreditTermsAudit> { AreaName = "Credit terms ", Result = audits.ToList() });
-
-            return Ok(auditResult);
-        }
+       
         #region
         [HttpGet("getAll")]
         public IActionResult GetAll()
@@ -178,7 +158,7 @@ namespace QuickApp.Pro.Controllers
                 columHeaders.Add(columnHeader);
             }
             dynamicGridData.columHeaders = columHeaders;
-            dynamicGridData.ColumnData = _unitOfWork.CreditTerms.GetAll().Where(u => u.IsDelete == false);
+            dynamicGridData.ColumnData = _unitOfWork.CreditTerms.GetAll().Where(u => u.IsDeleted == false);
             return Ok(dynamicGridData);
         }
         #endregion

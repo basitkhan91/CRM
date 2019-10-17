@@ -41,7 +41,10 @@ namespace DAL.Repositories
 
         }
 
-
+        public IEnumerable<ConditionAudit> GetAuditDetails(long conditionId)
+        {
+            return _appContext.ConditionAudit.Where(c => c.ConditionId   == conditionId).OrderByDescending(p => p.UpdatedDate).ToList();
+        }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 

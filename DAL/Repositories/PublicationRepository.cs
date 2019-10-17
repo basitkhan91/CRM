@@ -32,10 +32,10 @@ namespace DAL.Repositories
                 if (publication != null)
                 {
                     var attachmentList = _appContext.Attachment.Where(p => p.ReferenceId == ID && p.ModuleId == Convert.ToInt32(ModuleEnum.Publication)).ToList();
-                    if (attachmentList != null && attachmentList.Count>0)
+                    if (attachmentList != null && attachmentList.Count > 0)
                     {
                         publication.AttachmentDetails = new List<AttachmentDetails>();
-                        foreach (var attachment in attachmentList )
+                        foreach (var attachment in attachmentList)
                         {
                             publication.AttachmentId = attachment.AttachmentId;
 
@@ -44,9 +44,9 @@ namespace DAL.Repositories
                                      a => a.AttachmentId,
                                      ad => ad.AttachmentId,
                                      (a, ad) => new { a, ad })
-                              .Where(p => p.ad.IsDeleted == false 
-                                    && p.a.AttachmentId == publication.AttachmentId 
-                                    && p.a.ModuleId == Convert.ToInt32(ModuleEnum.Publication) 
+                              .Where(p => p.ad.IsDeleted == false
+                                    && p.a.AttachmentId == publication.AttachmentId
+                                    && p.a.ModuleId == Convert.ToInt32(ModuleEnum.Publication)
                                     && p.a.ReferenceId == ID)
                               .Select(p => new
                               {
@@ -56,7 +56,7 @@ namespace DAL.Repositories
 
                             if (details != null && details.Count > 0)
                             {
-                               
+
                                 foreach (var item in details)
                                 {
                                     publication.AttachmentDetails.Add(item.AttachmentDetails);
@@ -64,7 +64,7 @@ namespace DAL.Repositories
                             }
                         }
 
-                        
+
                     }
                 }
 
@@ -108,7 +108,7 @@ namespace DAL.Repositories
                             pub.PublicationId,
                             im.PartNumber,
                             im.PartDescription,
-                            ItemClassification=ic.Description,
+                            ItemClassification = ic.Description,
                             im.ItemClassificationId,
                             im.ItemGroupId,
                             pim.PublicationItemMasterMappingId,
@@ -127,22 +127,16 @@ namespace DAL.Repositories
             var data = (from PublicationItemMaster in _appContext.PublicationItemMasterMapping
                         join it in _appContext.ItemMasterAircraftMapping on PublicationItemMaster.ItemMasterId equals it.ItemMasterId
                         join pub in _appContext.Publication on PublicationItemMaster.PublicationRecordId equals pub.PublicationRecordId
-                        where PublicationItemMaster.PublicationRecordId == PublicationID
+                        where it.IsDeleted==false && PublicationItemMaster.PublicationRecordId == PublicationID
 
                         select new
                         {
-                            PublicationItemMaster.ItemMasterId,
-                            pub.PublicationId,
-                            it.PartNumber,
-                            it.AircraftTypeId,
-                            it.AircraftModelId,
-                            it.DashNumberId,
                             it.DashNumber,
                             it.AircraftType,
-                            it.AircraftModel,
-                            it.Memo, 
-                            it.MasterCompanyId
-                        }).ToList();
+                            it.AircraftModel
+                            
+                        }).Distinct()
+                        .ToList();
             return data;
             throw new NotImplementedException();
         }
@@ -151,19 +145,13 @@ namespace DAL.Repositories
             var data = (from PublicationItemMaster in _appContext.PublicationItemMasterMapping
                         join it in _appContext.ItemMasterATAMapping on PublicationItemMaster.ItemMasterId equals it.ItemMasterId
                         join pub in _appContext.Publication on PublicationItemMaster.PublicationRecordId equals pub.PublicationRecordId
-                        where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true
+                        where it.IsDeleted==false && PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true
                         select new
                         {
-                            PublicationItemMaster.ItemMasterId,
-                            pub.PublicationId,
-                            it.PartNumber,
-                            it.ATAChapterId,
-                            it.ATAChapterCode,
                             it.ATAChapterName,
-                            it.ATASubChapterId,
                             it.ATASubChapterDescription,
-                            it.MasterCompanyId
-                        }).ToList();
+                        }).Distinct()
+                        .ToList();
             return data;
         }
         public IEnumerable<object> GetAircraftMappingDataByMultiTypeId(long PublicationID, string AircraftTypeId)
@@ -525,7 +513,7 @@ namespace DAL.Repositories
             }
         }
 
-        public GetData<PublicationsList> GetPublicationsList(string publicationId, string description, int? publicationTypeId, string publishedBy, long employeeId, string location, int pageNumber, int pageSize)
+        public GetData<PublicationsList> GetPublicationsList(string publicationId, string description, long publicationTypeId, string publishedBy, long employeeId, string location, int pageNumber, int pageSize)
         {
             try
             {
@@ -539,7 +527,7 @@ namespace DAL.Repositories
                 PublicationsList publication;
 
                 getData.TotalRecordsCount = _appContext.Publication
-                           .Join(_appContext.PublicationTypes,
+                           .Join(_appContext.PublicationType,
                            p => p.PublicationTypeId,
                            pt => pt.PublicationTypeId,
                            (p, pt) => new { p, pt })
@@ -554,7 +542,7 @@ namespace DAL.Repositories
                             .Count();
 
                 var result = _appContext.Publication
-                            .Join(_appContext.PublicationTypes,
+                            .Join(_appContext.PublicationType,
                             p => p.PublicationTypeId,
                             pt => pt.PublicationTypeId,
                             (p, pt) => new { p, pt })
@@ -639,111 +627,91 @@ namespace DAL.Repositories
 
                 GetData<PublicationsList> getData = new GetData<PublicationsList>();
                 PublicationsList publication;
+                getData.PaginationList = new List<PublicationsList>();
+
                 if (ataChapterId > 0 && airCraftId > 0)
                 {
-                    var ataresult = _appContext.Publication
-                            .Join(_appContext.PublicationTypes,
-                            p => p.PublicationTypeId,
-                            pt => pt.PublicationTypeId,
-                            (p, pt) => new { p, pt })
-                            .Join(_appContext.PublicationItemMasterMapping,
-                            p1 => p1.p.PublicationRecordId,
-                            pim => pim.PublicationRecordId,
-                            (p1, pim) => new { p1, pim })
-                            .Join(_appContext.ItemMasterATAMapping,
-                            pim1 => pim1.pim.ItemMasterId,
-                            ata => ata.ItemMasterId,
-                            (pim1, ata) => new { pim1, ata })
+                    var ataresult = (from p in _appContext.Publication
+                                     join pt in _appContext.PublicationType on p.PublicationTypeId equals pt.PublicationTypeId
+                                     join pim in _appContext.PublicationItemMasterMapping on p.PublicationRecordId equals pim.PublicationRecordId
+                                     join ima in _appContext.ItemMasterATAMapping on pim.ItemMasterId equals ima.ItemMasterId
+                                     join ac in _appContext.ATAChapter on ima.ATAChapterId equals ac.ATAChapterId
+                                     join e in _appContext.Employee on p.EmployeeId equals e.EmployeeId
+                                     where p.IsDeleted == false && ac.ATAChapterId == ataChapterId
+                                           && ima.ATASubChapterId == (ataSubChapterId > 0 ? ataSubChapterId : ima.ATASubChapterId)
+                                     select new
+                                     {
+                                         PublicationRecordId = p.PublicationRecordId,
+                                         PublicationId = p.PublicationId,
+                                         Description = p.Description,
+                                         PublicationType = pt.Name,
+                                         Publishby = p.Publishby,
+                                         Location = p.Location,
+                                         IsActive = p.IsActive,
+                                         UpdatedDate = p.UpdatedDate,
+                                         EmployeeName = e.FirstName + ' ' + e.LastName
+                                     })
+                                     .Distinct()
+                                     .OrderByDescending(p => p.UpdatedDate)
+                                     .ToList();
 
-                             .Where(p => (p.pim1.p1.p.IsDeleted == null || p.pim1.p1.p.IsDeleted == false)
-                                          && p.ata.ATAChapterId == ataChapterId
-                                          && p.ata.ATASubChapterId == (ataSubChapterId > 0 ? ataSubChapterId : p.ata.ATASubChapterId))
-                             .Select(p => new
-                             {
-                                 PublicationRecordId = p.pim1.p1.p.PublicationRecordId,
-                                 PublicationId = p.pim1.p1.p.PublicationId,
-                                 Description = p.pim1.p1.p.Description,
-                                 PublicationType = p.pim1.p1.pt.Name,
-                                 Publishby = p.pim1.p1.p.Publishby,
-                                 EmployeeId = p.pim1.p1.p.EmployeeId,
-                                 Location = p.pim1.p1.p.Location,
-                                 IsActive = p.pim1.p1.p.IsActive,
-                                 UpdatedDate = p.pim1.p1.p.UpdatedDate
-                             })
+                    var aircraftResult = (from p in _appContext.Publication
+                                          join pt in _appContext.PublicationType on p.PublicationTypeId equals pt.PublicationTypeId
+                                          join pim in _appContext.PublicationItemMasterMapping on p.PublicationRecordId equals pim.PublicationRecordId
+                                          join ima in _appContext.ItemMasterAircraftMapping on pim.ItemMasterId equals ima.ItemMasterId
+                                          join e in _appContext.Employee on p.EmployeeId equals e.EmployeeId
+                                          join ac in _appContext.AircraftType on ima.AircraftTypeId equals ac.AircraftTypeId
+                                          where p.IsDeleted == null || p.IsDeleted == false
+                                                && ima.AircraftTypeId == airCraftId
+                                                && ima.AircraftModelId == (modelId > 0 ? modelId : ima.AircraftModelId)
+                                                && ima.DashNumberId == (dashNumberId > 0 ? dashNumberId : ima.DashNumberId)
+                                          select new
+                                          {
+                                              PublicationRecordId = p.PublicationRecordId,
+                                              PublicationId = p.PublicationId,
+                                              Description = p.Description,
+                                              PublicationType = pt.Name,
+                                              Publishby = p.Publishby,
+                                              Location = p.Location,
+                                              IsActive = p.IsActive,
+                                              UpdatedDate = p.UpdatedDate,
+                                              EmployeeName = e.FirstName + ' ' + e.LastName
+                                          })
+                             .Distinct()
                              .OrderByDescending(p => p.UpdatedDate)
                              .ToList();
 
-                    var aircraftResult = _appContext.Publication
-                                .Join(_appContext.PublicationTypes,
-                                p => p.PublicationTypeId,
-                                pt => pt.PublicationTypeId,
-                                (p, pt) => new { p, pt })
-                                .Join(_appContext.PublicationItemMasterMapping,
-                                p1 => p1.p.PublicationRecordId,
-                                pim => pim.PublicationRecordId,
-                                (p1, pim) => new { p1, pim })
-                                .Join(_appContext.ItemMasterAircraftMapping,
-                                pim1 => pim1.pim.ItemMasterId,
-                                ata => ata.ItemMasterId,
-                                (pim1, ata) => new { pim1, ata })
 
-                                 .Where(p => (p.pim1.p1.p.IsDeleted == null || p.pim1.p1.p.IsDeleted == false)
-                                               && p.ata.ItemMasterAircraftMappingId == airCraftId
-                                               && p.ata.AircraftModelId == (modelId > 0 ? modelId : p.ata.AircraftModelId)
-                                               && p.ata.DashNumberId == (dashNumberId > 0 ? dashNumberId : p.ata.DashNumberId))
-                                 .Select(p => new
-                                 {
-                                     PublicationRecordId = p.pim1.p1.p.PublicationRecordId,
-                                     PublicationId = p.pim1.p1.p.PublicationId,
-                                     Description = p.pim1.p1.p.Description,
-                                     PublicationType = p.pim1.p1.pt.Name,
-                                     Publishby = p.pim1.p1.p.Publishby,
-                                     EmployeeId = p.pim1.p1.p.EmployeeId,
-                                     Location = p.pim1.p1.p.Location,
-                                     IsActive = p.pim1.p1.p.IsActive,
-                                     UpdatedDate = p.pim1.p1.p.UpdatedDate
+                    getData.TotalRecordsCount = (from ata in ataresult
+                                                 join ac in aircraftResult on ata.PublicationRecordId equals ac.PublicationRecordId
+                                                 select new
+                                                 {
+                                                     ata.PublicationRecordId
+                                                 }
+                           )
+                           .Distinct()
+                           .Count();
 
-                                 })
-                                 .OrderByDescending(p => p.UpdatedDate)
-                                 .ToList();
-
-                    getData.TotalRecordsCount = ataresult.
-                            Join(aircraftResult,
-                                ata => ata.PublicationRecordId,
-                                craft => craft.PublicationRecordId,
-                                (ata, craft) => new { ata, craft })
-                            .Join(_appContext.Employee,
-                              ata1 => ata1.ata.EmployeeId,
-                              e => e.EmployeeId,
-                              (ata1, e) => new { ata1, e })
-                            .Count();
-
-                    var result = ataresult
-                          .Join(aircraftResult,
-                              ata => ata.PublicationRecordId,
-                              craft => craft.PublicationRecordId,
-                              (ata, craft) => new { ata, craft })
-
-                          .Join(_appContext.Employee,
-                            ata1 => ata1.ata.EmployeeId,
-                            e => e.EmployeeId,
-                            (ata1, e) => new { ata1, e })
-
-                          .Select(p => new
-                          {
-                              PublicationRecordId = p.ata1.ata.PublicationRecordId,
-                              PublicationId = p.ata1.ata.PublicationId,
-                              Description = p.ata1.ata.Description,
-                              PublicationType = p.ata1.ata.PublicationType,
-                              Publishby = p.ata1.ata.Publishby,
-                              Location = p.ata1.ata.Location,
-                              IsActive = p.ata1.ata.IsActive,
-                              UpdatedDate = p.ata1.ata.UpdatedDate,
-                              EmployeeName = p.e.FirstName + ' ' + p.e.LastName
-                          })
-                          .Skip(skip)
+                    var result = (from ata in ataresult
+                                  join ac in aircraftResult on ata.PublicationRecordId equals ac.PublicationRecordId
+                                  select new
+                                  {
+                                      PublicationRecordId = ata.PublicationRecordId,
+                                      PublicationId = ata.PublicationId,
+                                      Description = ata.Description,
+                                      PublicationType = ata.PublicationType,
+                                      Publishby = ata.Publishby,
+                                      Location = ata.Location,
+                                      IsActive = ata.IsActive,
+                                      UpdatedDate = ata.UpdatedDate,
+                                      EmployeeName = ata.EmployeeName
+                                  }
+                           )
+                           .Distinct()
+                           .Skip(skip)
                           .Take(take)
                           .ToList();
+
 
                     if (result != null && result.Count > 0)
                     {
@@ -765,64 +733,44 @@ namespace DAL.Repositories
 
                 else if (ataChapterId > 0)
                 {
-                    getData.TotalRecordsCount = _appContext.Publication
-                             .Join(_appContext.PublicationTypes,
-                             p => p.PublicationTypeId,
-                             pt => pt.PublicationTypeId,
-                             (p, pt) => new { p, pt })
-                             .Join(_appContext.PublicationItemMasterMapping,
-                             p1 => p1.p.PublicationRecordId,
-                             pim => pim.PublicationRecordId,
-                             (p1, pim) => new { p1, pim })
-                             .Join(_appContext.ItemMasterATAMapping,
-                             pim1 => pim1.pim.ItemMasterId,
-                             ata => ata.ItemMasterId,
-                             (pim1, ata) => new { pim1, ata })
-                             .Join(_appContext.Employee,
-                             p2 => p2.pim1.p1.p.EmployeeId,
-                             e => e.EmployeeId,
-                             (p2, e) => new { p2, e })
-
-                              .Where(p => (p.p2.pim1.p1.p.IsDeleted == null || p.p2.pim1.p1.p.IsDeleted == false)
-                                           && p.p2.ata.ATAChapterId == ataChapterId
-                                           && p.p2.ata.ATASubChapterId == (ataSubChapterId > 0 ? ataSubChapterId : p.p2.ata.ATASubChapterId))
-                              .Count();
 
 
-                    var ataresult = _appContext.Publication
-                            .Join(_appContext.PublicationTypes,
-                            p => p.PublicationTypeId,
-                            pt => pt.PublicationTypeId,
-                            (p, pt) => new { p, pt })
-                            .Join(_appContext.PublicationItemMasterMapping,
-                            p1 => p1.p.PublicationRecordId,
-                            pim => pim.PublicationRecordId,
-                            (p1, pim) => new { p1, pim })
-                            .Join(_appContext.ItemMasterATAMapping,
-                            pim1 => pim1.pim.ItemMasterId,
-                            ata => ata.ItemMasterId,
-                            (pim1, ata) => new { pim1, ata })
-                            .Join(_appContext.Employee,
-                            p2 => p2.pim1.p1.p.EmployeeId,
-                            e => e.EmployeeId,
-                            (p2, e) => new { p2, e })
+                    getData.TotalRecordsCount = (from p in _appContext.Publication
+                                                 join pt in _appContext.PublicationType on p.PublicationTypeId equals pt.PublicationTypeId
+                                                 join pim in _appContext.PublicationItemMasterMapping on p.PublicationRecordId equals pim.PublicationRecordId
+                                                 join ima in _appContext.ItemMasterATAMapping on pim.ItemMasterId equals ima.ItemMasterId
+                                                 join ac in _appContext.ATAChapter on ima.ATAChapterId equals ac.ATAChapterId
+                                                 join e in _appContext.Employee on p.EmployeeId equals e.EmployeeId
+                                                 where p.IsDeleted == false && ac.ATAChapterId == ataChapterId
+                                                       && ima.ATASubChapterId == (ataSubChapterId > 0 ? ataSubChapterId : ima.ATASubChapterId)
+                                                 select new
+                                                 {
+                                                     p.PublicationRecordId
+                                                 })
+                                                 .Distinct()
+                                                .Count();
 
-                             .Where(p => (p.p2.pim1.p1.p.IsDeleted == null || p.p2.pim1.p1.p.IsDeleted == false)
-                                          && p.p2.ata.ATAChapterId == ataChapterId
-                                          && p.p2.ata.ATASubChapterId == (ataSubChapterId > 0 ? ataSubChapterId : p.p2.ata.ATASubChapterId))
-                             .Select(p => new
-                             {
-                                 PublicationRecordId = p.p2.pim1.p1.p.PublicationRecordId,
-                                 PublicationId = p.p2.pim1.p1.p.PublicationId,
-                                 Description = p.p2.pim1.p1.p.Description,
-                                 PublicationType = p.p2.pim1.p1.pt.Name,
-                                 Publishby = p.p2.pim1.p1.p.Publishby,
-                                 Location = p.p2.pim1.p1.p.Location,
-                                 IsActive = p.p2.pim1.p1.p.IsActive,
-                                 UpdatedDate = p.p2.pim1.p1.p.UpdatedDate,
-                                 EmployeeName = p.e.FirstName + ' ' + p.e.LastName
-
-                             })
+                    var ataresult = (from p in _appContext.Publication
+                                     join pt in _appContext.PublicationType on p.PublicationTypeId equals pt.PublicationTypeId
+                                     join pim in _appContext.PublicationItemMasterMapping on p.PublicationRecordId equals pim.PublicationRecordId
+                                     join ima in _appContext.ItemMasterATAMapping on pim.ItemMasterId equals ima.ItemMasterId
+                                     join ac in _appContext.ATAChapter on ima.ATAChapterId equals ac.ATAChapterId
+                                     join e in _appContext.Employee on p.EmployeeId equals e.EmployeeId
+                                     where p.IsDeleted == false && ac.ATAChapterId == ataChapterId
+                                           && ima.ATASubChapterId == (ataSubChapterId > 0 ? ataSubChapterId : ima.ATASubChapterId)
+                                     select new
+                                     {
+                                         PublicationRecordId = p.PublicationRecordId,
+                                         PublicationId = p.PublicationId,
+                                         Description = p.Description,
+                                         PublicationType = pt.Name,
+                                         Publishby = p.Publishby,
+                                         Location = p.Location,
+                                         IsActive = p.IsActive,
+                                         UpdatedDate = p.UpdatedDate,
+                                         EmployeeName = e.FirstName + ' ' + e.LastName
+                                     })
+                                     .Distinct()
                              .OrderByDescending(p => p.UpdatedDate)
                              .Skip(skip)
                              .Take(take)
@@ -848,69 +796,50 @@ namespace DAL.Repositories
                 else if (airCraftId > 0)
                 {
 
-                    getData.TotalRecordsCount = _appContext.Publication
-                               .Join(_appContext.PublicationTypes,
-                               p => p.PublicationTypeId,
-                               pt => pt.PublicationTypeId,
-                               (p, pt) => new { p, pt })
-                               .Join(_appContext.PublicationItemMasterMapping,
-                               p1 => p1.p.PublicationRecordId,
-                               pim => pim.PublicationRecordId,
-                               (p1, pim) => new { p1, pim })
-                               .Join(_appContext.ItemMasterAircraftMapping,
-                               pim1 => pim1.pim.ItemMasterId,
-                               ata => ata.ItemMasterId,
-                               (pim1, ata) => new { pim1, ata })
-                                .Join(_appContext.Employee,
-                            p2 => p2.pim1.p1.p.EmployeeId,
-                            e => e.EmployeeId,
-                            (p2, e) => new { p2, e })
+                    getData.TotalRecordsCount = (from p in _appContext.Publication
+                                                 join pt in _appContext.PublicationType on p.PublicationTypeId equals pt.PublicationTypeId
+                                                 join pim in _appContext.PublicationItemMasterMapping on p.PublicationRecordId equals pim.PublicationRecordId
+                                                 join ima in _appContext.ItemMasterAircraftMapping on pim.ItemMasterId equals ima.ItemMasterId
+                                                 join e in _appContext.Employee on p.EmployeeId equals e.EmployeeId
+                                                 join ac in _appContext.AircraftType on ima.AircraftTypeId equals ac.AircraftTypeId
+                                                 where p.IsDeleted == null || p.IsDeleted == false
+                                                       && ima.AircraftTypeId == airCraftId
+                                                       && ima.AircraftModelId == (modelId > 0 ? modelId : ima.AircraftModelId)
+                                                       && ima.DashNumberId == (dashNumberId > 0 ? dashNumberId : ima.DashNumberId)
+                                                 select new
+                                                 {
+                                                     p.PublicationRecordId
+                                                 }).Distinct().Count();
 
-                                .Where(p => (p.p2.pim1.p1.p.IsDeleted == null || p.p2.pim1.p1.p.IsDeleted == false)
-                                              && p.p2.ata.ItemMasterAircraftMappingId == airCraftId
-                                              && p.p2.ata.AircraftModelId == (modelId > 0 ? modelId : p.p2.ata.AircraftModelId)
-                                              && p.p2.ata.DashNumberId == (dashNumberId > 0 ? dashNumberId : p.p2.ata.DashNumberId))
-                                .Count();
+                    var aircraftResult = (from p in _appContext.Publication
+                                          join pt in _appContext.PublicationType on p.PublicationTypeId equals pt.PublicationTypeId
+                                          join pim in _appContext.PublicationItemMasterMapping on p.PublicationRecordId equals pim.PublicationRecordId
+                                          join ima in _appContext.ItemMasterAircraftMapping on pim.ItemMasterId equals ima.ItemMasterId
+                                          join e in _appContext.Employee on p.EmployeeId equals e.EmployeeId
+                                          join ac in _appContext.AircraftType on ima.AircraftTypeId equals ac.AircraftTypeId
+                                          where p.IsDeleted == null || p.IsDeleted == false
+                                                && ima.AircraftTypeId == airCraftId
+                                                && ima.AircraftModelId == (modelId > 0 ? modelId : ima.AircraftModelId)
+                                                && ima.DashNumberId == (dashNumberId > 0 ? dashNumberId : ima.DashNumberId)
+                                          select new
+                                          {
+                                              PublicationRecordId = p.PublicationRecordId,
+                                              PublicationId = p.PublicationId,
+                                              Description = p.Description,
+                                              PublicationType = pt.Name,
+                                              Publishby = p.Publishby,
+                                              Location = p.Location,
+                                              IsActive = p.IsActive,
+                                              UpdatedDate = p.UpdatedDate,
+                                              EmployeeName = e.FirstName + ' ' + e.LastName
+                                          })
+                             .Distinct()
+                             .OrderByDescending(p => p.UpdatedDate)
+                             .Skip(skip)
+                             .Take(take)
+                             .ToList();
 
-                    var aircraftResult = _appContext.Publication
-                               .Join(_appContext.PublicationTypes,
-                               p => p.PublicationTypeId,
-                               pt => pt.PublicationTypeId,
-                               (p, pt) => new { p, pt })
-                               .Join(_appContext.PublicationItemMasterMapping,
-                               p1 => p1.p.PublicationRecordId,
-                               pim => pim.PublicationRecordId,
-                               (p1, pim) => new { p1, pim })
-                               .Join(_appContext.ItemMasterAircraftMapping,
-                               pim1 => pim1.pim.ItemMasterId,
-                               ata => ata.ItemMasterId,
-                               (pim1, ata) => new { pim1, ata })
-                               .Join(_appContext.Employee,
-                            p2 => p2.pim1.p1.p.EmployeeId,
-                            e => e.EmployeeId,
-                            (p2, e) => new { p2, e })
 
-                                .Where(p => (p.p2.pim1.p1.p.IsDeleted == null || p.p2.pim1.p1.p.IsDeleted == false)
-                                              && p.p2.ata.ItemMasterAircraftMappingId == airCraftId
-                                              && p.p2.ata.AircraftModelId == (modelId > 0 ? modelId : p.p2.ata.AircraftModelId)
-                                              && p.p2.ata.DashNumberId == (dashNumberId > 0 ? dashNumberId : p.p2.ata.DashNumberId))
-                                .Select(p => new
-                                {
-                                    PublicationRecordId = p.p2.pim1.p1.p.PublicationRecordId,
-                                    PublicationId = p.p2.pim1.p1.p.PublicationId,
-                                    Description = p.p2.pim1.p1.p.Description,
-                                    PublicationType = p.p2.pim1.p1.pt.Name,
-                                    Publishby = p.p2.pim1.p1.p.Publishby,
-                                    Location = p.p2.pim1.p1.p.Location,
-                                    IsActive = p.p2.pim1.p1.p.IsActive,
-                                    UpdatedDate = p.p2.pim1.p1.p.UpdatedDate,
-                                    EmployeeName = p.e.FirstName + ' ' + p.e.LastName
-
-                                })
-                                .OrderByDescending(p => p.UpdatedDate)
-                                .Skip(skip)
-                                .Take(take)
-                                .ToList();
 
                     if (aircraftResult != null && aircraftResult.Count > 0)
                     {
@@ -927,6 +856,7 @@ namespace DAL.Repositories
                             publication.EmployeeName = item.EmployeeName;
                             getData.PaginationList.Add(publication);
                         }
+
                     }
                 }
 
@@ -947,7 +877,7 @@ namespace DAL.Repositories
             try
             {
                 var result = _appContext.Publication
-                     .Join(_appContext.PublicationTypes,
+                     .Join(_appContext.PublicationType,
                                 p => p.PublicationTypeId,
                                 pt => pt.PublicationTypeId,
                                 (p, pt) => new { p, pt })
@@ -972,7 +902,7 @@ namespace DAL.Repositories
                           VerifiedBy = p.p1.p.VerifiedBy,
                           VerifiedDate = p.p1.p.VerifiedDate,
                           EmployeeName = p.e.FirstName + ' ' + p.e.LastName,
-                          AttachmentDetails=GetAttachmentDetails(publicationRecordId)
+                          AttachmentDetails = GetAttachmentDetails(publicationRecordId)
                       })
                  .Where(p => p.PublicationRecordId == publicationRecordId)
                  .FirstOrDefault();
@@ -985,7 +915,7 @@ namespace DAL.Repositories
             }
         }
 
-        public void PublicationStatus(long publicationRecordId, bool status,string updatedBy)
+        public void PublicationStatus(long publicationRecordId, bool status, string updatedBy)
         {
             Publication publication = new Publication();
             try
@@ -1012,7 +942,7 @@ namespace DAL.Repositories
         {
             try
             {
-                var result = (from pt in _appContext.PublicationTypes
+                var result = (from pt in _appContext.PublicationType
                               where pt.IsDeleted == false
                               select new
                               {
@@ -1027,6 +957,52 @@ namespace DAL.Repositories
 
                 throw;
             }
+        }
+
+        public IEnumerable<PublicationsList> getPublicationDropdownData()
+        {
+            var aircraftResult = (from p in _appContext.Publication
+                                  where (p.IsDeleted == null || p.IsDeleted == false)
+                                  select new PublicationsList
+                                  {
+                                      PublicationRecordId = p.PublicationRecordId,
+                                      PublicationId = p.PublicationId,
+                                  }).OrderByDescending(x => x.UpdatedDate).ToList();
+
+            return aircraftResult;
+
+        }
+
+        public PublicationsList GetPublicationForWorkFlow(long publicationRecordId)
+        {
+            var aircraftResult = (from p in _appContext.Publication
+                                  where p.PublicationRecordId == publicationRecordId && (p.IsDeleted == null || p.IsDeleted == false)
+
+                                  select new PublicationsList
+                                  {
+                                      PublicationRecordId = p.PublicationRecordId,
+                                      PublicationId = p.PublicationId,
+                                      Description = p.Description,
+                                      PublicationTypeId = p.PublicationTypeId,
+                                      PublishedBy = p.Publishby,
+                                      Location = p.Location,
+                                      IsActive = p.IsActive,
+                                      UpdatedDate = p.UpdatedDate,
+                                      Sequence = p.Sequence,
+                                      RevisionDate = p.RevisionDate,
+                                      VerifiedBy = p.VerifiedBy,
+                                      VerifiedDate = p.VerifiedDate,
+                                      ASD = p.ASD,
+                                      ItemMasterAircraftMapping = (from iam in _appContext.ItemMasterAircraftMapping
+                                                                   join pim in _appContext.PublicationItemMasterMapping on iam.ItemMasterId equals pim.ItemMasterId
+                                                                   where pim.PublicationRecordId == p.PublicationRecordId && iam.IsDeleted == false && pim.IsDeleted == false
+                                                                   select iam).ToList()
+
+                                  })
+                                 .FirstOrDefault();
+
+            return aircraftResult;
+
         }
 
         private List<AttachmentDetails> GetAttachmentDetails(long publicationRecordId)

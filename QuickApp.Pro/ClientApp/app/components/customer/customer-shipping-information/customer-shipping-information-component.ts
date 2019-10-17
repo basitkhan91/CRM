@@ -131,6 +131,7 @@ export class CustomerShippingInformationComponent implements OnInit {
         // create shipping 
         if (!this.isEditDomestic) {
             this.customerService.newShippingAdd(data).subscribe(() => {
+                this.shipViaDomestic = new CustomerInternationalShipVia();
                 this.alertService.showMessage(
                     'Success',
                     `Saved  Shipping Information Sucessfully `,
@@ -141,6 +142,7 @@ export class CustomerShippingInformationComponent implements OnInit {
         } else {
             // update shipping 
             this.customerService.updateshippinginfo(data).subscribe(() => {
+                this.shipViaDomestic = new CustomerInternationalShipVia();
                 this.alertService.showMessage(
                     'Success',
                     `Updated  Shipping Information Sucessfully `,
@@ -212,6 +214,7 @@ export class CustomerShippingInformationComponent implements OnInit {
         if (!this.isEditInternational) {
             // save International SDhipping 
             this.customerService.postInternationalShippingPost(data).subscribe((res) => {
+                this.shipViaInternational = new CustomerInternationalShipVia();
                 this.getInternationalShippingByCustomerId()
                 this.alertService.showMessage(
                     'Success',
@@ -222,6 +225,7 @@ export class CustomerShippingInformationComponent implements OnInit {
         } else {
             // update international 
             this.customerService.updateInternationalShipping(data).subscribe(res => {
+                this.shipViaInternational = new CustomerInternationalShipVia();
                 this.getInternationalShippingByCustomerId()
                 this.alertService.showMessage(
                     'Success',

@@ -19,7 +19,9 @@ namespace DAL.Repositories
 
         public IEnumerable<EmployeeLeaveType> GetAllEmployeeLeaveTypeData()
         {
-            return _appContext.EmployeeLeaveType.OrderByDescending(c => c.EmployeeLeaveTypeId).ToList();
+            //return _appContext.EmployeeExpertise.Include("MasterCompany").Where(c => c.IsActive == true && c.IsDelete != null).OrderByDescending(c => c.EmployeeExpertiseId).ToList();
+            //return _appContext.EmployeeLeaveType.OrderByDescending(c => c.EmployeeLeaveTypeId).ToList();
+            return _appContext.EmployeeLeaveType.Where(c => c.IsActive == true).OrderByDescending(c => c.EmployeeLeaveTypeId).ToList();
         }
 
 

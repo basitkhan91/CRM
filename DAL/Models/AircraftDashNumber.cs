@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
@@ -27,5 +28,8 @@ namespace DAL.Models
 
         public virtual AircraftModel AircraftModel { get; set; }
 		public string Memo { get; set; }
+
+        [NotMapped]
+        public List<int> AircraftModels { get; set; }
 	}
 }

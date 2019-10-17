@@ -12,11 +12,18 @@ export class JobTitleEndpontService extends EndpointFactory {
 
 
     private readonly _JobTilesUrl: string = "/api/JobTitle/Get";
+  
+    
     private readonly _JobTilesUrlNew: string = "/api/JobTitle/jobTitlepost";
     private readonly _JobTilesUrlAuditHistory: string = "/api/JobTitle/auditHistoryById";
     private readonly getJobTitleDataAuditById: string = "/api/JobTitle/audits";
 
+    private readonly _JobTypeUrlNew: string = "/api/JobType/jobTypepost";
+    private readonly _JobTypeUrl: string = "/api/JobType/Get";
+
     get jobtitleurl() { return this.configurations.baseUrl + this._JobTilesUrl; }
+
+    get jobtypeurl() { return this.configurations.baseUrl + this._JobTypeUrl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -31,9 +38,25 @@ export class JobTitleEndpontService extends EndpointFactory {
             });
     }
 
+    getJobtypeEndpoint<T>(): Observable<T> {
+
+        return this.http.get<T>(this.jobtypeurl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getJobtitleEndpoint());
+            });
+    }
+
     getNewjobtitleEndpoint<T>(userObject: any): Observable<T> {
 
         return this.http.post<T>(this._JobTilesUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getNewjobtitleEndpoint(userObject));
+            });
+    }
+
+    getNewjobtitleEndpoint2<T>(userObject: any): Observable<T> {
+
+        return this.http.post<T>(this._JobTypeUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getNewjobtitleEndpoint(userObject));
             });
