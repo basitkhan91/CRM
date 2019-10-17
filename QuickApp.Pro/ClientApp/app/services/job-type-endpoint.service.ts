@@ -12,10 +12,6 @@ export class JobTypeEndpontService extends EndpointFactory {
 
 
     private readonly _JobTilesUrl: string = "/api/JobTitle/Get";
-
-
-  
-
     private readonly _JobTypeUrlNew: string = "/api/JobType/jobTypepost";
     private readonly _JobTypeUrl: string = "/api/JobType/Get";
 

@@ -42,16 +42,16 @@ export class JobTypeService {
   
 
 
-    getjobTypeWorkFlows() {
+    getAllJobTypeList() {
         return Observable.forkJoin(
-            this.jobTypeEndpoint.getJobtypeEndpoint<JobType[]>());
+            this.jobTypeEndpoint.getJobtypeEndpoint<any>());
     }
-    addjobPoint(action: JobType) {
+    newJobType(action) {
         return this.jobTypeEndpoint.addNewJobtype<JobType>(action);
     }
 
 
-    updateAction(action: JobType) {
+    updateAction(action) {
         return this.jobTypeEndpoint.updateJobType(action, action.jobTypeId);
     }
 

@@ -39,28 +39,20 @@ export class JobTitleService {
         private authService: AuthService,
         private jobTitleEndpoint: JobTitleEndpontService) { }
 
-    getWorkFlows() {
+    getAllJobTitleList() {
         return Observable.forkJoin(
-            this.jobTitleEndpoint.getJobtitleEndpoint<JobTitle[]>());
+            this.jobTitleEndpoint.getJobtitleEndpoint<any>());
     }
 
-    getjobTypeWorkFlows() {
-        return Observable.forkJoin(
-            this.jobTitleEndpoint.getJobtypeEndpoint<JobType[]>());
-    }
-    newAction(action: JobTitle) {
-        return this.jobTitleEndpoint.getNewjobtitleEndpoint<JobTitle>(action);
-    }
-
-    newAction2(action: JobType) {
-        return this.jobTitleEndpoint.getNewjobtitleEndpoint2<JobType>(action);
+    newJobTitle(action) {
+        return this.jobTitleEndpoint.getNewjobtitleEndpoint<any>(action);
     }
 
     getAction(actionId?: number) {
         return this.jobTitleEndpoint.getEditJobTitleEndpoint<JobTitle>(actionId);
     }
 
-    updateAction(action: JobTitle) {     
+    updateAction(action) {     
         return this.jobTitleEndpoint.getUpdateJobtitleEndpoint(action, action.jobTitleId);
     }
 

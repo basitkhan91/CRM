@@ -441,7 +441,7 @@ namespace DAL.Repositories
         {
             foreach (var item in jobTitleList)
             {
-                var flag = _appContext.JobTitle.Any(p => p.IsDelete == false
+                var flag = _appContext.JobTitle.Any(p => p.IsDeleted == false
                                                     && (p.Description.ToLower() == item.Description.Trim().ToLower()));
                 if (!flag)
                 {

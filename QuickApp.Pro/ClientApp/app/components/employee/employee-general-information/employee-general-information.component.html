@@ -164,7 +164,7 @@
                                                     <div class="form-group col-sm-12">
                                                         <label class="form-group control-label col-sm-4">Company<span style="color:red">*</span></label>
                                                         <div class="col-sm-7">
-                                                            <select [formControl]="empCreationForm.controls['companyId']" (change)="getBUList(sourceCompany.companyId)" required>
+                                                            <select [formControl]="empCreationForm.controls['companyId']" (change)="getBUList(sourceEmployee.companyId)" required>
                                                                 <!--<option>--Select--</option>-->
                                                                 <option *ngFor="let company of companylist" [ngValue]="company.companyId">{{company.companyName}}</option>
                                                             </select>

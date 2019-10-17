@@ -25,8 +25,10 @@ export class DirectionsCreateComponent implements OnInit, OnChanges {
     }
 
     ngOnInit(): void {
-        this.row = this.workFlow.directions[0];
-        this.row.taskId = this.workFlow.taskId;
+       // if (this.workFlow.directions.length > 0) {
+            this.row = this.workFlow.directions[0];
+            this.row.taskId = this.workFlow.taskId;
+       // }
     }
 
     ngOnChanges(): void {
@@ -59,7 +61,7 @@ export class DirectionsCreateComponent implements OnInit, OnChanges {
     checkDuplicateSequence(event, direction: any): void {
 
         if (this.workFlow.directions != undefined && this.workFlow.directions.length > 0) {
-            var duplicate = this.workFlow.directions.filter(d => d.sequence == direction.sequence && direction.taskId == this.workFlow.taskId);
+            var duplicate = this.workFlow.directions.filter(d => d.sequence == direction.sequence && direction.taskId == this.workFlow.taskId && d.isDelete != true);
             if (duplicate.length > 1) {
                 this.alertService.showMessage('Work Flow', 'Duplicate Sequence are not allowed Direction.', MessageSeverity.error);
                 direction.sequence = '';

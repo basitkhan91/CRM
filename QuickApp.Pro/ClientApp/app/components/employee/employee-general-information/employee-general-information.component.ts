@@ -199,7 +199,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     });
 
 
-    constructor(private fb: FormBuilder, private Actroute: ActivatedRoute, private translationService: AppTranslationService, private router: Router, public jobTypeService: JobTypeService, public workFlowtService: JobTitleService, private empservice: EmployeeExpertiseService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private route: Router, private alertService: AlertService, public employeeService: EmployeeService, public workFlowtService1: LegalEntityService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private localStorage: LocalStoreManager, private companyService: CompanyService) {
+    constructor(private fb: FormBuilder, private Actroute: ActivatedRoute, private translationService: AppTranslationService, private router: Router, public jobTypeService: JobTypeService, public jobTitleService: JobTitleService, private empservice: EmployeeExpertiseService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private route: Router, private alertService: AlertService, public employeeService: EmployeeService, public jobTitleService1: LegalEntityService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private localStorage: LocalStoreManager, private companyService: CompanyService) {
         this.displayedColumns.push('action');
 
         //new emp form
@@ -796,40 +796,42 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
    
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-
-		this.workFlowtService.getWorkFlows().subscribe(
+        /*
+		this.jobTitleService.getAllJobTitleList.subscribe(
 			results => this.onJobtitlesDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
+        */
     }
 
     private loadjobtypesData() {
 
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
+        
+        /*
         this.jobTypeService.getjobTypeWorkFlows().subscribe(
             results => this.onJobtypeDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
-
+        */
     }
 
-    onJobtypeDataLoadSuccessful(allWorkFlows: JobType[]) {
+    onJobtypeDataLoadSuccessful(jobTypes: JobType[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         console.log("Job Type Data")
-        console.log(allWorkFlows);
-        this.allJobTypesinfo = allWorkFlows
+        console.log(jobTypes);
+        this.allJobTypesinfo = jobTypes
     }
 
 
-	private onJobtitlesDataLoadSuccessful(allWorkFlows: JobTitle[]) {
+	private onJobtitlesDataLoadSuccessful(jobTitles: JobTitle[]) {
 		// alert('success');
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
-		this.dataSource.data = allWorkFlows;
-		this.allJobTitlesinfo = allWorkFlows;
+        this.dataSource.data = jobTitles;
+        this.allJobTitlesinfo = jobTitles;
 	}
 
 
@@ -1136,7 +1138,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         console.log(this.sourceAction);
         this.sourceAction.description = this.jobName;
         console.log(this.sourceAction);
-        this.workFlowtService.newAction(this.sourceAction).subscribe(data => {
+        this.jobTitleService.newJobTitle(this.sourceAction).subscribe(data => {
             this.loadJobtitlesData()
             this.showTitle = 'job Title Added Sucessfully';
 
@@ -1160,7 +1162,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             console.log(this.sourceAction);
             this.sourceAction.description = this.jobName;
 
-            this.jobTypeService.addjobPoint(this.sourceAction).subscribe(data => {
+            this.jobTypeService.newJobType(this.sourceAction).subscribe(data => {
                 this.loadJobtitlesData()
                 this.showTitle = 'job Type Added Sucessfully';
                 this.loadjobtypesData();
@@ -1205,14 +1207,14 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             console.log(this.sourceAction);
             this.sourceAction.jobTitleId = this.jobName;
             console.log(this.sourceAction);
-			this.workFlowtService.newAction(this.sourceAction).subscribe(data => { this.loadJobtitlesData() })
+			this.jobTitleService.newJobTitle(this.sourceAction).subscribe(data => { this.loadJobtitlesData() })
 		}
 		else {
 
 			this.sourceAction.updatedBy = this.userName;
 			this.sourceAction.description = this.jobName;
 			this.sourceAction.masterCompanyId = 1;
-			this.workFlowtService.updateAction(this.sourceAction).subscribe(
+			this.jobTitleService.updateAction(this.sourceAction).subscribe(
 				response => this.saveCompleted(this.sourceAction),
 				error => this.saveFailedHelper(error));
 		}
@@ -1284,7 +1286,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 			this.sourceAction.updatedBy = this.userName;
 			this.sourceAction.description = this.employeeName;
 			this.sourceAction.masterCompanyId = 1;
-			this.workFlowtService.updateAction(this.sourceAction).subscribe(
+			this.jobTitleService.updateAction(this.sourceAction).subscribe(
 				response => this.saveCompleted(this.sourceAction),
 				error => this.saveFailedHelper(error));
 		}
@@ -1410,7 +1412,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
 
-		this.workFlowtService1.getManagemententity().subscribe(
+		this.jobTitleService1.getManagemententity().subscribe(
 			results => this.onManagemtntdataLoad(results[0]),
 			error => this.onDataLoadFailed(error)
         );

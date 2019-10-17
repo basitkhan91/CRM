@@ -53,26 +53,28 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
         };
 
         this.getAllPublicationTypes();
-        this.row = this.workFlow.publication[0];
-
-        if (this.UpdateMode == true && this.workFlow.publication.length >= 0) {
-            this.publications = [];
-            for (let i = 0; i < this.workFlow.publication.length; i++) {
-                this.loadPublicationById(this.workFlow.publication[i], false);
-            }
-        }
-        else {
-            this.row.publicationId = "0";
-            this.row.publicationRecordId = "0";
+       // if (this.workFlow.publication.length > 0) {
+            this.row = this.workFlow.publication[0];
             this.row.taskId = this.workFlow.taskId;
-        }
 
-        this.actionService.GetPublicationType().subscribe(
-            type => {
-                this.publicationTypes = type;
-            },
-            error => this.errorMessage = <any>error()
-        );
+            if (this.UpdateMode == true && this.workFlow.publication.length >= 0) {
+                this.publications = [];
+                for (let i = 0; i < this.workFlow.publication.length; i++) {
+                    this.loadPublicationById(this.workFlow.publication[i], false);
+                }
+            }
+            else {
+                this.row.publicationId = "0";
+                this.row.publicationRecordId = "0";
+            }
+
+            this.actionService.GetPublicationType().subscribe(
+                type => {
+                    this.publicationTypes = type;
+                },
+                error => this.errorMessage = <any>error()
+            );
+        //}        
     }
 
     Browse(): void {
@@ -113,6 +115,10 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
         newRow.verifiedBy = "";
         newRow.status = "";
         newRow.verifiedDate = "";
+        newRow.aircraft = [];
+        newRow.aircraftModels = [];
+        newRow.workflowPublicationDashNumbers = [];
+        newRow.allDashNumbers = [];
         newRow.isDeleted = false;
         this.workFlow.publication.push(newRow);
     }
@@ -280,6 +286,7 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
             row.aircraft = [];
             row.source = '';
             row.model = '0';
+            row.workflowPublicationDashNumbers = [];
             row.itemMasterAircraftMapping = [];
             row.aircraftModels = [];
             row.allDashNumbers = [];
