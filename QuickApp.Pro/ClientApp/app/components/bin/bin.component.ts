@@ -119,8 +119,10 @@ export class BinComponent {
 	localCollection: any[] = [];
 	disableSaveManufacturer: boolean = false;
     selectedBin: any;
-    AuditDetails: SingleScreenAuditDetails[];
-    IS
+    AuditDetails: any[];
+	HasAuditDetails: boolean;
+	AuditHistoryTitle: string = 'History of Bin'
+	
 	ngOnInit(): void {
 		this.cols = [
 			{ field: 'name', header: 'Bin Name' },
@@ -148,6 +150,7 @@ export class BinComponent {
 		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-bin';
 		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
 		this.selectedColumns = this.cols;
+		this.HasAuditDetails = false;
 	}
 
 	@ViewChild(MatPaginator) paginator: MatPaginator;
@@ -813,12 +816,13 @@ export class BinComponent {
     }
 
     auditBin(binId: number): void {
-        this.AuditDetails = [];
+		this.AuditDetails = [];
+		this.HasAuditDetails = this.AuditDetails.length > 0;
         this.workFlowtService.getBinAudit(binId).subscribe(audits => {
             if (audits.length > 0) {
-                this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["binAuditId", "binId", "createdBy", "createdDate", "updatedDate"];
-            }
+                this.AuditDetails = audits[0].result;
+				this.HasAuditDetails =  this.AuditDetails.length > 0;;
+			}
         });
     }
 }
