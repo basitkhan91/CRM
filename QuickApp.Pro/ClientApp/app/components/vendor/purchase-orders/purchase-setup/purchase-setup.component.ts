@@ -224,6 +224,8 @@ export class PurchaseSetupComponent {
 	newData: any = [];
 	childOrderQtyArray: any = [];
 	childOrderQtyTotal: any;
+	arraySearch: any = [];
+	responseData: any;
 
 	/** po-approval ctor */
 	constructor(public siteService: SiteService, public warehouseService: WarehouseService, private masterComapnyService: MasterComapnyService, public cusservice: CustomerService, private itemser: ItemMasterService, private modalService: NgbModal, private route: Router, public legalEntityService: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public vendorService: VendorService, public priority: PriorityService, private alertService: AlertService ,public glAccountService: GlAccountService, private authService: AuthService , private commonService : CommonService) {
@@ -1846,50 +1848,154 @@ export class PurchaseSetupComponent {
 		// this.returnPartsListArray = [];
 		this.array = [];
 		this.newPNList = [];
+		this.newData = [];
 		this.addAllMultiPN = false;
 	}
 
-	async getAllparts() {
-
-		//let partsArray = [];
-		// this.returnPartsListArray = [];
-		this.newPNList = [];
-		this.array = this.partNumbers.split(',');
-
-
+	// async getAllparts() {
+	// 	console.log('getallparts function');
+	// 	//let partsArray = [];
+	// 	// this.returnPartsListArray = [];
+	// 	this.newPNList = [];
+	// 	this.array = this.partNumbers.split(',');
        
-        // const tempData = []
-		if (this.array.length > 0) {
-			for (let i = 0; i < this.array.length; i++) {
-				await this.vendorService.getPartDetailsWithid(this.array[i]).subscribe(data => {
+    //     // const tempData = []
+	// 	if (this.array.length > 0) {
+	// 		for (let i = 0; i < this.array.length; i++) {
+	// 			await this.vendorService.getPartDetailsWithid(this.array[i]).subscribe(data => {
+					
+	// 				const responseData = data[0].map(x => {
+	// 					// console.log(x);
+	// 					this.newData.push({
+	// 						...x,
+	// 						addAllMultiPNRows: false
+	// 					});
+	// 				})
+	// 				// console.log(this.newData);
+
+	// 				// this.returnPartsListArray.push( {...responseData, addAllMultiPNRows: false } );
+	// 			});				
+	// 		}
+	// 		// console.log(this.newData);
+
+	// 		// console.log(this.array);
+			
+	// 			// this.newPNList = [...this.array.reduce((acc,x) => {
+	// 			// 	// console.log(acc,  x)
+	// 			// 	 return acc.filter(y => y.partNumber.toLowerCase() !== x.toLowerCase())  
+					 
+	// 			// 	//  .x.partNumber.toLowerCase() !== x.toLowerCase()
+	// 			// }, this.newData)]
+
+	// 			this.newPNList = this.array;
+		
+	// 			console.log(this.newPNList);
+	// 	}
+
+
+		
+	// }
+
+	// async getAllparts() {
+	// 		this.newPNList = [];
+	// 		this.arraySearch = this.partNumbers.split(',');
+	// 		this.array = [];
+	// 		let ary = [];
+		   
+	// 	    // const tempData = []
+	// 		if (this.arraySearch.length > 0) {
+	// 			for (let i = 0; i < this.arraySearch.length; i++) {
+	// 				let flag = false;
+	// 				await this.vendorService.getPartDetailsWithid(this.arraySearch[i]).subscribe(data => {
+	// 					const responseData = data[0].map(x => {
+	// 						if(x.partNumber.toLowerCase().trim() == this.arraySearch[i].toLowerCase().trim()){
+								
+	// 							ary.push(x.partNumber);
+	// 							console.log(ary);
+	// 						}
+	// 						this.newData.push({
+	// 							...x,
+	// 							addAllMultiPNRows: false
+	// 						});
+	// 					})
+	// 				});	
+					
+	// 			}
+
+	// 			console.log('array length');
+	// 			console.log(ary.length);
+				
+				
+	// 				// this.newPNList = [...this.array.reduce((acc,x) => {
+	// 				// 	// console.log(acc,  x)
+	// 				// 	 return acc.filter(y => y.partNumber.toLowerCase() !== x.toLowerCase())  
+						 
+	// 				// 	//  .x.partNumber.toLowerCase() !== x.toLowerCase()
+	// 				// }, this.newData)]
+					
+	// 				this.array.forEach(element => {
+	// 					console.log(element);
+	// 				});
+
+					
+
+	// 				this.newPNList = this.array;
+	// 		}
+	
+	
+			
+	// 	}
+
+	 getAllparts() {
+		this.newPNList = [];
+		this.arraySearch = this.partNumbers.split(',');
+		this.array = [];
+		let ary = [];
+	   
+		// const tempData = []
+		if (this.arraySearch.length > 0) {
+			for (let i = 0; i < this.arraySearch.length; i++) {
+				let flag = false;
+				this.vendorService.getPartDetailsWithid(this.arraySearch[i]).subscribe(data => {
 					const responseData = data[0].map(x => {
+						if(x.partNumber.toLowerCase().trim() == this.arraySearch[i].toLowerCase().trim()){
+							
+							ary.push(x.partNumber);
+							console.log(ary);
+						}
 						this.newData.push({
 							...x,
 							addAllMultiPNRows: false
 						});
 					})
-					console.log(this.newData);
-
-					// this.returnPartsListArray.push( {...responseData, addAllMultiPNRows: false } );
-				});				
+				});	
+				
 			}
-			console.log(this.newData , this.array);
-			
-				this.newPNList = [...this.array.reduce((acc,x) => {
-					console.log(acc,  x)
-					 return acc.filter(y => y.partNumber.toLowerCase() !== x.toLowerCase())  
-					 
-					//  .x.partNumber.toLowerCase() !== x.toLowerCase()
-				}, this.newData)]
-		
 
-	
-			console.log(this.newPNList);
+			console.log('array length');
+			console.log(ary.length);
+			
+			
+				// this.newPNList = [...this.array.reduce((acc,x) => {
+				// 	// console.log(acc,  x)
+				// 	 return acc.filter(y => y.partNumber.toLowerCase() !== x.toLowerCase())  
+					 
+				// 	//  .x.partNumber.toLowerCase() !== x.toLowerCase()
+				// }, this.newData)]
+				
+				this.array.forEach(element => {
+					console.log(element);
+				});
+
+				
+
+				this.newPNList = this.array;
 		}
 
 
 		
 	}
+	
 
 	addPartNumber() {
 		//this.itemTypeId=0;		
