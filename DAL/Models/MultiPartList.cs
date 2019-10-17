@@ -18,7 +18,19 @@ namespace DAL.Models
         public long? PriorityId { get; set; }
         public int AircraftTypeId { get; set; }
         public string NSN { get; set; }
-        public string Priority {get;set;} 
+        public string Priority { get; set; }
         public string AircraftType { get; set; }
     }
+
+    public class PartsNotFound
+    {
+        public string PartNumber { get; set; }
+    }
+
+    public class MultiPart
+    {
+        public List<MultiPartList> MultiParts { get; set; }
+        public List<PartsNotFound> PartsNotFound { get; set; }
+    }
+
 }
