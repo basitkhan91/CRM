@@ -37,27 +37,30 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
     }
 
     ngOnInit(): void {
-        this.row = this.workFlow.charges[0];
-        this.row.taskId = this.workFlow.taskId;
-        this.actionService.getChargesType().subscribe(
-            chargesTypes => {
-                this.chargesTypes = chargesTypes;
-            },
-            error => this.errorMessage = <any>error
-        );
+        //if (this.workFlow.charges.length > 0) {
+            this.row = this.workFlow.charges[0];
+            this.row.taskId = this.workFlow.taskId;
+            this.actionService.getChargesType().subscribe(
+                chargesTypes => {
+                    this.chargesTypes = chargesTypes;
+                },
+                error => this.errorMessage = <any>error
+            );
 
-        this.currencyService.getCurrencyList().subscribe(
-            chargesCurrencies => {
-                this.chargesCurrency = chargesCurrencies[0];
-            },
-            error => this.errorMessage = <any>error
-        );
-        this.loadData();
+            this.currencyService.getCurrencyList().subscribe(
+                chargesCurrencies => {
+                    this.chargesCurrency = chargesCurrencies[0];
+                },
+                error => this.errorMessage = <any>error
+            );
+            this.loadData();
 
-        // summation of all values in edit mode 
-        if (this.UpdateMode) {
-            this.reCalculate();
-        }
+            // summation of all values in edit mode 
+            if (this.UpdateMode) {
+                this.reCalculate();
+            }
+        //}
+       
     }
 
     ngOnChanges(): void {

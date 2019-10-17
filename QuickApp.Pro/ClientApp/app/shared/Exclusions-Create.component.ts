@@ -33,23 +33,14 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
     }
 
     ngOnInit(): void {
+        //if (this.workFlow.exclusions.length > 0) {
         this.row = this.workFlow.exclusions[0];
-        // this.actionService.GetExclusionEstimatedOccurance().subscribe(
-        //     type => {
-        //         this.exclusionEstimatedOccurances = type;
-        //         console.log(type);
-        //     },
-        //     error => this.errorMessage = <any>error
-        // );
-
-        this.ptnumberlistdata();
-        // summation of all values in edit mode 
-        if (this.UpdateMode) {
-            this.reCalculate();
-
-
-        }
-
+        this.row.taskId = this.workFlow.taskId;
+            this.ptnumberlistdata();
+            if (this.UpdateMode) {
+                this.reCalculate();
+            }
+        //}
     }
 
     ngOnChanges(): void {
@@ -135,8 +126,6 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
                 }
             }
         }
-
-
     }
 
     calculateExtendedCost(exclusion): void {
@@ -151,20 +140,20 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
 
     }
 
-
     // sum of the qty
     calculateQtySummation() {
-        this.workFlow.sumofQty = this.workFlow.exclusions.reduce((acc, x) => {
+        this.workFlow.sumofQty = this.workFlow.exclusions.filter(x => x.isDelete != true).reduce((acc, x) => {
             return acc + parseFloat(x.quantity == undefined || x.quantity === '' ? 0 : x.quantity)
         }, 0);
 
     }
     // sum of extended cost
     calculateExtendedCostSummation() {
-        this.workFlow.sumofExtendedCost = this.workFlow.exclusions.reduce((acc, x) => {
+        this.workFlow.sumofExtendedCost = this.workFlow.exclusions.filter(x => x.isDelete != true).reduce((acc, x) => {
             return acc + parseFloat(x.extendedCost == undefined || x.extendedCost === '' ? 0 : x.extendedCost)
         }, 0);
     }
+
     private ptnumberlistdata() {
         this.itemser.getPrtnumberslistList().subscribe(
             results => this.onptnmbersSuccessful(results[0])
@@ -172,13 +161,7 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
         );
     }
     private onptnmbersSuccessful(allWorkFlows: any[]) {
-
-
-
         this.allPartnumbersInfo = allWorkFlows;
-
-
-
     }
 
 }

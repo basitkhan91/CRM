@@ -558,9 +558,11 @@ namespace QuickApp.Pro.Controllers
             new
             {
                 PublicationRecordId = x.PublicationRecordId,
-                PublicationId = x.PublicationId
+                PublicationId = x.PublicationId,
+                x.ItemMasterAircraftMapping,
+
             });
-            
+
             return Ok(result);
         }
 

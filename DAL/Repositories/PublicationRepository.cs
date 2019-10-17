@@ -974,7 +974,7 @@ namespace DAL.Repositories
         public IEnumerable<PublicationsList> getPublicationDropdownData()
         {
             var aircraftResult = (from p in _appContext.Publication
-                                  where (p.IsDeleted == null || p.IsDeleted == false)
+                                  where (p.IsDeleted == null || p.IsDeleted == false) && p.IsActive == true
                                   select new PublicationsList
                                   {
                                       PublicationRecordId = p.PublicationRecordId,
@@ -985,12 +985,12 @@ namespace DAL.Repositories
 
         }
 
-        public PublicationsList GetPublicationForWorkFlow(long publicationRecordId)
+        public object GetPublicationForWorkFlow(long publicationRecordId)
         {
             var aircraftResult = (from p in _appContext.Publication
                                   where p.PublicationRecordId == publicationRecordId && (p.IsDeleted == null || p.IsDeleted == false)
 
-                                  select new PublicationsList
+                                  select new
                                   {
                                       PublicationRecordId = p.PublicationRecordId,
                                       PublicationId = p.PublicationId,
@@ -1005,6 +1005,7 @@ namespace DAL.Repositories
                                       VerifiedBy = p.VerifiedBy,
                                       VerifiedDate = p.VerifiedDate,
                                       ASD = p.ASD,
+                                      AttachmentDetails = GetAttachmentDetails(publicationRecordId),
                                       ItemMasterAircraftMapping = (from iam in _appContext.ItemMasterAircraftMapping
                                                                    join pim in _appContext.PublicationItemMasterMapping on iam.ItemMasterId equals pim.ItemMasterId
                                                                    where pim.PublicationRecordId == p.PublicationRecordId && iam.IsDeleted == false && pim.IsDeleted == false

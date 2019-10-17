@@ -25,23 +25,20 @@ export class ExpertiseCreateComponent implements OnInit, OnChanges {
     }
 
     ngOnInit(): void {
+       // if (this.workFlow.expertise.length > 0) {
+
         this.row = this.workFlow.expertise[0];
-
-        this.actionService.GetExpertiseType().subscribe(
-            expertiseTypes => {
-                this.expertiseTypes = expertiseTypes;
-            },
-            error => this.errorMessage = <any>error
-        );
-        // this.calculateTotalExpertiseCost();
-        // for edit workflow to add the sum of amount 
-
-
-        // summation of all values in edit mode 
-        if (this.UpdateMode) {
-            this.reCalculate();
-        }
-
+        this.row.taskId = this.workFlow.taskId;
+            this.actionService.GetExpertiseType().subscribe(
+                expertiseTypes => {
+                    this.expertiseTypes = expertiseTypes;
+                },
+                error => this.errorMessage = <any>error
+            );
+            if (this.UpdateMode) {
+                this.reCalculate();
+            }
+       // }      
     }
 
 
