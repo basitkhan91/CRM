@@ -1603,43 +1603,84 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
-        [HttpGet("GetpartdetailsWithid/{partid}")]
-        public Object getPartwithid(string partid)
+        [HttpGet("GetpartdetailsWithid/{partsList}")]
+        public Object getPartwithid(string partsList)
         {
-            var data = (from IM in _context.ItemMaster
-                        join MF in _context.Manufacturer on IM.ManufacturerId equals MF.ManufacturerId into mfg
-                        from MF in mfg.DefaultIfEmpty()
-                        join IMA in _context.ItemMasterAircraftMapping on IM.ItemMasterId equals IMA.ItemMasterId into imap
-                        from IMA in imap.DefaultIfEmpty()
-                        join AC in _context.AircraftType on IMA.AircraftTypeId equals AC.AircraftTypeId into act
-                        from AC in act.DefaultIfEmpty()
-                        join P in _context.Priority on IM.PriorityId equals P.PriorityId into pir
-                        from P in pir.DefaultIfEmpty()
-                        where (
-                        IM.PartNumber.Contains(partid)
-                        )
-                        select new
+            List<MultiPartList> multiPartList = new List<MultiPartList>();
+            MultiPartList multiPart;
+
+            if (!string.IsNullOrEmpty(partsList))
+            {
+                var parts = partsList.Split(',');
+
+                foreach (var partNo in parts)
+                {
+                    var data = (from IM in _context.ItemMaster
+                                join MF in _context.Manufacturer on IM.ManufacturerId equals MF.ManufacturerId into mfg
+                                from MF in mfg.DefaultIfEmpty()
+                                join IMA in _context.ItemMasterAircraftMapping on IM.ItemMasterId equals IMA.ItemMasterId into imap
+                                from IMA in imap.DefaultIfEmpty()
+                                join AC in _context.AircraftType on IMA.AircraftTypeId equals AC.AircraftTypeId into act
+                                from AC in act.DefaultIfEmpty()
+                                join P in _context.Priority on IM.PriorityId equals P.PriorityId into pir
+                                from P in pir.DefaultIfEmpty()
+                                where (
+                                IM.PartNumber.Contains(partNo)
+                                )
+                                select new
+                                {
+                                    IM.PartNumber,
+                                    IM.PartAlternatePartId,
+                                    IM.PartDescription,
+                                    IM.ManufacturerId,
+                                    Manufacturer = MF.Name,
+                                    IM.ReorderQuantiy,
+                                    IM.ItemTypeId,
+                                    IM.ItemMasterId,
+                                    IM.IsHazardousMaterial,
+                                    IM.PriorityId,
+                                    AircraftTypeId = AC == null ? 0 : AC.AircraftTypeId,
+                                    NSN = IM.NationalStockNumber,
+                                    Priority = P == null ? "" : P.Description,
+                                    AircraftType = AC == null ? "" : AC.Description
+
+
+                                }).Distinct().ToList();
+
+                    if (data != null && data.Count > 0)
+                    {
+
+                        foreach (var part in data)
                         {
-                            IM.PartNumber,
-                            IM.PartAlternatePartId,
-                            IM.PartDescription,
-                            IM.ManufacturerId,
-                            Manufacturer = MF.Name,
-                            IM.ReorderQuantiy,
-                            IM.ItemTypeId,
-                            IM.ItemMasterId,
-                            IM.IsHazardousMaterial,
-                            IM.PriorityId,
-                            AircraftTypeId = AC == null ? 0 : AC.AircraftTypeId,
-                            NSN = IM.NationalStockNumber,
-                            Priority = P == null ? "" : P.Description,
-                            AircraftType = AC == null ? "" : AC.Description
+                            var flag = multiPartList.Any(p => p.PartNumber == part.PartNumber && p.AircraftType == part.AircraftType);
+                            if (!flag)
+                            {
+                                multiPart = new MultiPartList();
+                                multiPart.AircraftType = part.AircraftType;
+                                multiPart.AircraftTypeId = part.AircraftTypeId;
+                                multiPart.IsHazardousMaterial = part.IsHazardousMaterial;
+                                multiPart.ItemMasterId = part.ItemMasterId;
+                                multiPart.ItemTypeId = part.ItemTypeId;
+                                multiPart.Manufacturer = part.Manufacturer;
+                                multiPart.ManufacturerId = part.ManufacturerId;
+                                multiPart.NSN = part.NSN;
+                                multiPart.PartAlternatePartId = part.PartAlternatePartId;
+                                multiPart.PartDescription = part.PartDescription;
+                                multiPart.PartNumber = part.PartNumber;
+                                multiPart.Priority = part.Priority;
+                                multiPart.PriorityId = part.PriorityId;
+                                multiPart.ReorderQuantiy = part.ReorderQuantiy;
 
+                                multiPartList.Add(multiPart);
+                            }
+                        }
+                    }
 
-                        }).Distinct().ToList();
-            return data;
+                }
 
+            }
 
+            return multiPartList;
         }
     }
 
