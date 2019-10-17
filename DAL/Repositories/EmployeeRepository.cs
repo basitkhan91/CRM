@@ -136,14 +136,36 @@ namespace DAL.Repositories
                     EmployeeId = x.EmployeeId,
                     FirstName = x.FirstName,
                     LastName = x.LastName,
-                    MiddleName = x.MiddleName,
-                    EmployeeCode=x.EmployeeCode,
-                    Email=x.Email
+                    MiddleName = x.MiddleName
                 }
             ).ToList();
             return employees;
         }
 
+        public object GetEmployeeData(long employeeId)
+        {
+            try
+            {
+                var data = (from emp in _appContext.Employee
+                            where emp.EmployeeId == employeeId
+                            select new
+                            {
+                                FirstName = emp.FirstName,
+                                LastName = emp.LastName,
+                                MiddleName = emp.MiddleName,
+                                EmployeeCode = emp.EmployeeCode,
+                                Email = emp.Email
+                            }).FirstOrDefault();
+
+                return data;
+            }
+
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 

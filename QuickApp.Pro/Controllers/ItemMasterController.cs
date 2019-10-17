@@ -1606,8 +1606,15 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("GetpartdetailsWithid/{partsList}")]
         public Object getPartwithid(string partsList)
         {
-            List<MultiPartList> multiPartList = new List<MultiPartList>();
+            MultiPart result = new MultiPart();
+            PartsNotFound partsNotFound;
             MultiPartList multiPart;
+
+            List<MultiPartList> multiPartList = new List<MultiPartList>();
+            List<PartsNotFound> partsNotFoundList = new List<PartsNotFound>();
+
+            result.MultiParts = new List<MultiPartList>();
+            result.PartsNotFound = new List<PartsNotFound>();
 
             if (!string.IsNullOrEmpty(partsList))
             {
@@ -1625,7 +1632,7 @@ namespace QuickApp.Pro.Controllers
                                 join P in _context.Priority on IM.PriorityId equals P.PriorityId into pir
                                 from P in pir.DefaultIfEmpty()
                                 where (
-                                IM.PartNumber.Contains(partNo)
+                                IM.PartNumber.ToLower().Contains(partNo.ToLower())
                                 )
                                 select new
                                 {
@@ -1650,37 +1657,46 @@ namespace QuickApp.Pro.Controllers
                     if (data != null && data.Count > 0)
                     {
 
-                        foreach (var part in data)
+                        foreach (var item in data)
                         {
-                            var flag = multiPartList.Any(p => p.PartNumber == part.PartNumber && p.AircraftType == part.AircraftType);
+                            var flag = multiPartList.Any(p => p.PartNumber == item.PartNumber && p.AircraftType == item.AircraftType);
                             if (!flag)
                             {
                                 multiPart = new MultiPartList();
-                                multiPart.AircraftType = part.AircraftType;
-                                multiPart.AircraftTypeId = part.AircraftTypeId;
-                                multiPart.IsHazardousMaterial = part.IsHazardousMaterial;
-                                multiPart.ItemMasterId = part.ItemMasterId;
-                                multiPart.ItemTypeId = part.ItemTypeId;
-                                multiPart.Manufacturer = part.Manufacturer;
-                                multiPart.ManufacturerId = part.ManufacturerId;
-                                multiPart.NSN = part.NSN;
-                                multiPart.PartAlternatePartId = part.PartAlternatePartId;
-                                multiPart.PartDescription = part.PartDescription;
-                                multiPart.PartNumber = part.PartNumber;
-                                multiPart.Priority = part.Priority;
-                                multiPart.PriorityId = part.PriorityId;
-                                multiPart.ReorderQuantiy = part.ReorderQuantiy;
+                                multiPart.AircraftType = item.AircraftType;
+                                multiPart.AircraftTypeId = item.AircraftTypeId;
+                                multiPart.IsHazardousMaterial = item.IsHazardousMaterial;
+                                multiPart.ItemMasterId = item.ItemMasterId;
+                                multiPart.ItemTypeId = item.ItemTypeId;
+                                multiPart.Manufacturer = item.Manufacturer;
+                                multiPart.ManufacturerId = item.ManufacturerId;
+                                multiPart.NSN = item.NSN;
+                                multiPart.PartAlternatePartId = item.PartAlternatePartId;
+                                multiPart.PartDescription = item.PartDescription;
+                                multiPart.PartNumber = item.PartNumber;
+                                multiPart.Priority = item.Priority;
+                                multiPart.PriorityId = item.PriorityId;
+                                multiPart.ReorderQuantiy = item.ReorderQuantiy;
 
                                 multiPartList.Add(multiPart);
                             }
                         }
                     }
+                    else
+                    {
+                        partsNotFound = new PartsNotFound();
+                        partsNotFound.PartNumber = partNo;
+                        partsNotFoundList.Add(partsNotFound);
+                    }
 
                 }
 
+                result.MultiParts = multiPartList;
+                result.PartsNotFound = partsNotFoundList;
+
             }
 
-            return multiPartList;
+            return result;
         }
     }
 
