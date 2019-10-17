@@ -230,6 +230,9 @@ export class PurchaseSetupComponent {
 	approversData:any = {};
 	approver1:any = {};
 	approver2:any = {};
+	approver3:any = {};
+	approver4:any = {};
+	approver5:any = {};
 	allEmployeeList:any = [];
 	poApproverData:any = {};
 	poApproverList:any = [];
@@ -1995,52 +1998,25 @@ export class PurchaseSetupComponent {
 			
 	// 	}
 
-	 getAllparts() {
-		this.newPNList = [];
-		this.arraySearch = this.partNumbers.split(',');
-		this.array = [];
-		this.newData = [];
-		let ary = [];
-	   
-		// const tempData = []
+	 getAllparts() {					
+		this.arraySearch = this.partNumbers;
+		console.log(this.arraySearch);	
+		this.newData = [];	 
+		this.newPNList = [];  
+
 		if (this.arraySearch.length > 0) {
-			for (let i = 0; i < this.arraySearch.length; i++) {
-				let flag = false;
-				this.vendorService.getPartDetailsWithid(this.arraySearch[i]).subscribe(data => {
-					data[0].map(x => {
-						if (this.newData.includes({...x, addAllMultiPNRows: false}) === false) {
-							this.newData.push({
-								...x,
-								addAllMultiPNRows: false
-							});
-						}
-						
+				this.itemser.getPartDetailsByid(this.arraySearch).subscribe(data => {
+					console.log(data);
+					this.newData = data.multiParts;
+					//.map(x => {
+					//	return {
 
-					})
-
-					
-				});	
-				
-			}
-
-			console.log('array length');
-			console.log(ary.length);
-			
-			
-				// this.newPNList = [...this.array.reduce((acc,x) => {
-				// 	// console.log(acc,  x)
-				// 	 return acc.filter(y => y.partNumber.toLowerCase() !== x.toLowerCase())  
-					 
-				// 	//  .x.partNumber.toLowerCase() !== x.toLowerCase()
-				// }, this.newData)]
-				
-				this.array.forEach(element => {
-					console.log(element);
-				});
+					//	}
+					//})
+					this.newPNList = data.partsNotFound;
+				})
 
 				
-
-				this.newPNList = this.array;
 		}
 
 
@@ -3522,14 +3498,26 @@ export class PurchaseSetupComponent {
 			alert('Total Child Order Quantity exceeded the Parent Quantity!');
 		}
 	}
-	onSelectApprover(value) {
-		if (value === 'approver1') {
-			//this.approver1 = this.approversData.approver1;
-			
-		}
-		if (value === 'approver2') {
-			//this.approver2 = this.approversData.approver2;
-		}
+	onSelectApprover(value, data) {
+		console.log(data);
+		this.employeeService.getEmployeeDataById(data.value).subscribe(response => {
+			console.log(response);
+			if (value === 'approver1') {			
+				this.approver1 = response;
+			}
+			if (value === 'approver2') {			
+				this.approver2 = response;
+			}
+			if (value === 'approver3') {			
+				this.approver3 = response;
+			}
+			if (value === 'approver4') {			
+				this.approver4 = response;
+			}
+			if (value === 'approver5') {			
+				this.approver5 = response;
+			}					
+		})
 	}
 
 }

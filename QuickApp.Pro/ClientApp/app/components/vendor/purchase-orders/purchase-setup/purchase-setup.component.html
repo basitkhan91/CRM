@@ -716,17 +716,14 @@
                         <div class="col-md-3">
                             <label>Approver 1</label>
                             <p-autoComplete field="label" class="pautocomp-cstm" 
-                                [(ngModel)]="approversData.approver1" name="approver1" [suggestions]="approversList" (completeMethod)="filterApproversList($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="onSelectApprover('approver1')">
+                                [(ngModel)]="approversData.approver1" name="approver1" [suggestions]="approversList" (completeMethod)="filterApproversList($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="onSelectApprover('approver1', approversData.approver1)">
                             </p-autoComplete>
                         </div>
                         <div class="col-md-9">
                             <div class="approver-details-cstm">
-                                <!--<p><b>Name: </b>{{approver1.firstName}}</p>
+                                <p><b>Name: </b>{{approver1.firstName}}</p>
                                 <p><b>Code: </b>{{approver1.employeeCode}}</p>
-                                <p><b>Email: </b>{{approver1.email}}</p>-->
-                                <p><b>Name: </b></p>
-                                <p><b>Code: </b></p>
-                                <p><b>Email: </b></p>
+                                <p><b>Email: </b>{{approver1.email}}</p>
                             </div>
                         </div>
                     </div>
@@ -734,14 +731,14 @@
                         <div class="col-md-3">
                             <label>Approver 2</label>
                             <p-autoComplete field="label" class="pautocomp-cstm" 
-                                [(ngModel)]="approversData.approver2" name="approver2" [suggestions]="approversList" (completeMethod)="filterApproversList($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true">
+                                [(ngModel)]="approversData.approver2" name="approver2" [suggestions]="approversList" (completeMethod)="filterApproversList($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="onSelectApprover('approver2', approversData.approver2)">
                             </p-autoComplete>
                         </div>
                         <div class="col-md-9">
                             <div class="approver-details-cstm">
-                                <p><b>Name: </b></p>
-                                <p><b>Code: </b></p>
-                                <p><b>Email: </b></p>
+                                <p><b>Name: </b>{{approver2.firstName}}</p>
+                                <p><b>Code: </b>{{approver2.employeeCode}}</p>
+                                <p><b>Email: </b>{{approver2.email}}</p>
                             </div>
                         </div>
                     </div>
@@ -2728,17 +2725,17 @@
                                     <td *ngIf="obj.itemTypeId==3">Equipment</td>
                                     <td *ngIf="obj.itemTypeId==0"></td>
                                     <td>{{obj.isHazardousMaterial === null ? '-':obj.isHazardousMaterial}}</td>
-                                    <td>{{obj.manufacturerId === null ? '-':obj.manufacturerId}}</td>
-                                    <td>{{obj.aircraftManufacturer === null ? '-':obj.aircraftManufacturer}}</td>
+                                    <td>{{obj.manufacturer === null ? '-':obj.manufacturer}}</td>
+                                    <td>{{obj.aircraftType === null ? '-':obj.aircraftType}}</td>
                                     <td>{{obj.nsn === null ? '-':obj.nsn}}</td>
-                                    <td>{{obj.priorityId === null ? '-':obj.priorityId}}</td>
+                                    <td>{{obj.priority === null ? '-':obj.priority}}</td>
                                     <td></td>
                                     <!-- <td><a href="#" class="clr-red" target="_blank" *ngIf="multiplePNDetails" (click)="onAddPartNum()">Add Part Number</a></td> -->
                                 </tr>
                                 <tr *ngFor="let obj of newPNList">
                                     <!--<th>{{obj.enterdPart}}</th>-->
                                     <td></td>
-                                    <td style="padding: 6px;">{{obj}}</td>
+                                    <td style="padding: 6px;">{{obj.partNumber}}</td>
                                     <td></td>
                                     <td></td>
                                     <td></td>

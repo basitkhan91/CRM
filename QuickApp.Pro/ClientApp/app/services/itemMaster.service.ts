@@ -336,4 +336,8 @@ export class ItemMasterService {
         return this.itemMasterEndpoint.updateItemMasterTimeLife(itemMasterId, active);
     }
 
+    getPartDetailsByid(partListArray: number) {
+        return this.itemMasterEndpoint.getPartDetailsByid<any>(partListArray);
+    }
+
 }
