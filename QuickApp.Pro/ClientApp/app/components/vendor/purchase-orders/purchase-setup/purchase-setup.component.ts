@@ -206,6 +206,7 @@ export class PurchaseSetupComponent {
 	tempParentData: any;
 	requisitionerList: any[];
 	approverList: any[];
+	approversList: any[];
 	newPNList : any = [];
 	newPartsList: CreatePOPartsList;
 	splitVendorNames: any[];
@@ -226,6 +227,13 @@ export class PurchaseSetupComponent {
 	childOrderQtyTotal: any;
 	arraySearch: any = [];
 	responseData: any;
+	approversData:any = {};
+	approver1:any = {};
+	approver2:any = {};
+	allEmployeeList:any = [];
+	poApproverData:any = {};
+	poApproverList:any = [];
+	approverIds:any = [];
 
 	/** po-approval ctor */
 	constructor(public siteService: SiteService, public warehouseService: WarehouseService, private masterComapnyService: MasterComapnyService, public cusservice: CustomerService, private itemser: ItemMasterService, private modalService: NgbModal, private route: Router, public legalEntityService: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public vendorService: VendorService, public priority: PriorityService, private alertService: AlertService ,public glAccountService: GlAccountService, private authService: AuthService , private commonService : CommonService) {
@@ -546,7 +554,7 @@ export class PurchaseSetupComponent {
 		}
 		console.log(this.sourcePoApprovalObj);
 
-		if(this.createPOForm.invalid) {
+		if(this.createPOForm.valid) { //invalid
 			//  $('.createPO-form input.ng-invalid, .createPO-form select.ng-invalid, .createPO-form p-calendar.ng-invalid input').addClass('border-red-clr');
 			//  $('.createPO-form input.ng-valid, .createPO-form select.ng-valid').removeClass('border-red-clr');
 			alert('Please enter required fields!');
@@ -583,9 +591,50 @@ export class PurchaseSetupComponent {
 			console.log(saveddata);
 			this.tempVendorId = null;
 			this.savePurchaseorderPart(saveddata.purchaseOrderId);
+			this.savePOApproverData(saveddata.purchaseOrderId);
 		});
 		}
 
+	}
+
+	savePOApproverData(purchaseOrderId) {
+		console.log(this.approversData);
+		if(this.approversData.approver1) {
+			this.approverIds.push(this.approversData.approver1.value);
+		}
+		if(this.approversData.approver2) {
+			this.approverIds.push(this.approversData.approver2.value);
+		}
+		if(this.approversData.approver3) {
+			this.approverIds.push(this.approversData.approver3.value);
+		}
+		if(this.approversData.approver4) {
+			this.approverIds.push(this.approversData.approver4.value);
+		}
+		if(this.approversData.approver5) {
+			this.approverIds.push(this.approversData.approver5.value);
+		}
+		console.log(this.approverIds);
+		
+		for(let i=0; i < this.approverIds.length; i++) {
+			const poapprover = {
+				employeeId: this.approverIds[i],
+				level: i+1,
+				statusId: 1,
+				createdBy: "admin",
+				updatedBy: "admin"
+			}
+			this.poApproverList.push(poapprover);
+			console.log(this.poApproverList);			
+		}
+		this.poApproverData = {
+			purchaseOrderId: purchaseOrderId,
+			purchaseOrderApproverList: this.poApproverList
+		}
+		console.log(this.poApproverData);
+		this.vendorService.saveCreatePOApproval(this.poApproverData).subscribe(res => {
+			console.log(res);			
+		})
 	}
 
 	private loadcustomerData() {
@@ -2975,24 +3024,34 @@ export class PurchaseSetupComponent {
 	// }
 
 	filterRequisitioner(event) {
-		this.requisitionerList = this.allEmployeeinfo;
+		this.requisitionerList = this.allEmployeeList;
 
 		if (event.query !== undefined && event.query !== null) {
-			const empFirstName = [...this.allEmployeeinfo.filter(x => {
-				return x.firstName;
+			const empFirstName = [...this.allEmployeeList.filter(x => {
+				return x.label;
 			})]
 			this.requisitionerList = empFirstName;
 		}
 	}
 
 	filterApprover(event) {
-		this.approverList = this.allEmployeeinfo;
+		this.approverList = this.allEmployeeList;
 
 		if (event.query !== undefined && event.query !== null) {
-			const empFirstName = [...this.allEmployeeinfo.filter(x => {
-				return x.firstName;
+			const empFirstName = [...this.allEmployeeList.filter(x => {
+				return x.label;
 			})]
 			this.approverList = empFirstName;
+		}
+	}
+
+	filterApproversList(event) {
+		this.approversList = this.allEmployeeList;
+		if (event.query !== undefined && event.query !== null) {
+			const empFirstName = [...this.allEmployeeList.filter(x => {
+				return x.label;
+			})]
+			this.approversList = empFirstName;
 		}
 	}
 
@@ -3047,27 +3106,34 @@ export class PurchaseSetupComponent {
 			}
 		}
 	}
-	private employeedata() {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
-
-		this.employeeService.getEmployeeList().subscribe(
-			results => { console.log(results), this.onempDataLoadSuccessful(results[0]) },
-			error => this.onDataLoadFailed(error)
-		);
-
-		//this.selectedColumns = this.cols;
-
+	employeedata() {
+		this.commonService.smartDropDownList('Employee', 'employeeId', 'firstName').subscribe(res => {
+			console.log(res);	
+			this.allEmployeeList = res;
+		})
 	}
 
-	private onempDataLoadSuccessful(getEmployeeCerficationList: any[]) {
-		// alert('success');
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		//this.dataSource.data = getEmployeeCerficationList;
-		this.allEmployeeinfo = getEmployeeCerficationList;
-		console.log(this.allEmployeeinfo);
-	}
+	// private employeedata() {
+	// 	this.alertService.startLoadingMessage();
+	// 	this.loadingIndicator = true;
+
+	// 	this.employeeService.getEmployeeList().subscribe(
+	// 		results => { console.log(results), this.onempDataLoadSuccessful(results[0]) },
+	// 		error => this.onDataLoadFailed(error)
+	// 	);
+
+	// 	//this.selectedColumns = this.cols;
+
+	// }
+
+	// private onempDataLoadSuccessful(getEmployeeCerficationList: any[]) {
+	// 	// alert('success');
+	// 	this.alertService.stopLoadingMessage();
+	// 	this.loadingIndicator = false;
+	// 	//this.dataSource.data = getEmployeeCerficationList;
+	// 	this.allEmployeeinfo = getEmployeeCerficationList;
+	// 	console.log(this.allEmployeeinfo);
+	// }
 
 	saveSiteItemAndCloseModel() {
 		this.sourceSite.createdBy = this.userName;
@@ -3454,6 +3520,15 @@ export class PurchaseSetupComponent {
 		}
 		if(this.childOrderQtyTotal > this.parentQty) {
 			alert('Total Child Order Quantity exceeded the Parent Quantity!');
+		}
+	}
+	onSelectApprover(value) {
+		if (value === 'approver1') {
+			//this.approver1 = this.approversData.approver1;
+			
+		}
+		if (value === 'approver2') {
+			//this.approver2 = this.approversData.approver2;
 		}
 	}
 

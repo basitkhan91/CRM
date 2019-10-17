@@ -156,7 +156,7 @@
                                 <label>Requisitioner <span class="clr-red">*</span></label>
                                 <div class="inner-addon right-addon inline-block">
                                     <div class="inner-addon right-addon inline-block">
-                                        <p-autoComplete field="firstName" class="pautocomp-cstm" 
+                                        <p-autoComplete field="label" class="pautocomp-cstm" 
                                         [(ngModel)]="sourcePoApproval.requisitionerId" name="requisitionerId" [suggestions]="requisitionerList" (completeMethod)="filterRequisitioner($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" #requisitionerId="ngModel" required>
                                         </p-autoComplete>
                                         <div *ngIf="requisitionerId.invalid && (requisitionerId.dirty || requisitionerId.touched)" class="alert alert-danger alert-danger-cstm">
@@ -176,7 +176,7 @@
                             <div class="form-group">
                                 <label>Approver</label>
                                 <div class="inner-addon right-addon inline-block">
-                                        <p-autoComplete field="firstName" class="pautocomp-cstm" 
+                                        <p-autoComplete field="label" class="pautocomp-cstm" 
                                         [(ngModel)]="sourcePoApproval.approverId" name="approver" [suggestions]="approverList" (completeMethod)="filterApprover($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" #requisitionerId="ngModel">
                                         </p-autoComplete>
                                     <!-- <input type="text" class="form-control" name="approver" [(ngModel)]="sourcePoApproval.approver"> -->
@@ -710,7 +710,88 @@
             </div>
         </p-tabPanel>
         <p-tabPanel header="Approve">
-            <h5>Approve Content Not given</h5>
+                <div class="approver-tab-cstm">
+                    <h5 class="po-head">Approvers List</h5>
+                    <div class="form-row">
+                        <div class="col-md-3">
+                            <label>Approver 1</label>
+                            <p-autoComplete field="label" class="pautocomp-cstm" 
+                                [(ngModel)]="approversData.approver1" name="approver1" [suggestions]="approversList" (completeMethod)="filterApproversList($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="onSelectApprover('approver1')">
+                            </p-autoComplete>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="approver-details-cstm">
+                                <!--<p><b>Name: </b>{{approver1.firstName}}</p>
+                                <p><b>Code: </b>{{approver1.employeeCode}}</p>
+                                <p><b>Email: </b>{{approver1.email}}</p>-->
+                                <p><b>Name: </b></p>
+                                <p><b>Code: </b></p>
+                                <p><b>Email: </b></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-3">
+                            <label>Approver 2</label>
+                            <p-autoComplete field="label" class="pautocomp-cstm" 
+                                [(ngModel)]="approversData.approver2" name="approver2" [suggestions]="approversList" (completeMethod)="filterApproversList($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true">
+                            </p-autoComplete>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="approver-details-cstm">
+                                <p><b>Name: </b></p>
+                                <p><b>Code: </b></p>
+                                <p><b>Email: </b></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-3">
+                            <label>Approver 3</label>
+                            <p-autoComplete field="label" class="pautocomp-cstm" 
+                                [(ngModel)]="approversData.approver3" name="approver3" [suggestions]="approversList" (completeMethod)="filterApproversList($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true">
+                            </p-autoComplete>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="approver-details-cstm">
+                                <p><b>Name: </b></p>
+                                <p><b>Code: </b></p>
+                                <p><b>Email: </b></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-3">
+                            <label>Approver 4</label>
+                            <p-autoComplete field="label" class="pautocomp-cstm" 
+                                [(ngModel)]="approversData.approver4" name="approver4" [suggestions]="approversList" (completeMethod)="filterApproversList($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true">
+                            </p-autoComplete>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="approver-details-cstm">
+                                <p><b>Name: </b></p>
+                                <p><b>Code: </b></p>
+                                <p><b>Email: </b></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-3">
+                            <label>Approver 5</label>
+                            <p-autoComplete field="label" class="pautocomp-cstm" 
+                                [(ngModel)]="approversData.approver5" name="approver5" [suggestions]="approversList" (completeMethod)="filterApproversList($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true">
+                            </p-autoComplete>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="approver-details-cstm">
+                                <p><b>Name: </b></p>
+                                <p><b>Code: </b></p>
+                                <p><b>Email: </b></p>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+
         </p-tabPanel>
         <p-tabPanel header="Vendor Capes">
             <p-table class="rpo-table-cstm" #dt [value]="vendorCapesInfo" [metaKeySelection]="true"
@@ -928,7 +1009,7 @@
                     </div>
                     <div class="form-group" *ngIf="sourcePoApproval.shipToUserTypeId==2">
                         <label>Contact Name <span class="clr-red">*</span></label>
-                        <p-autoComplete field="firstName" class="pautocomp-cstm" [(ngModel)]="sourcePoApproval.shipToContactId" name="shipToVendorContactName" [suggestions]="firstNamesShipTo1" (completeMethod)="filterVendorContactsForShipTo($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" #shipVenContactName="ngModel" required>
+                        <p-autoComplete field="firstName" class="pautocomp-cstm" [(ngModel)]="sourcePoApproval.shipToContactId" name="shipToVendorContactName" [suggestions]="firstNamesShipTo1" (completeMethod)="filterVendorContactsForShipTo($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" #shipVenContactName="ngModel"> <!--required-->
                             <!-- <ng-template let-firstName pTemplate="item">
                                 <div class="ui-helper-clearfix">{{firstName}}</div>
                             </ng-template> -->
@@ -1232,7 +1313,7 @@
                     </div>
                     <div class="form-group" *ngIf="sourcePoApproval.billToUserTypeId==2">
                         <label>Contact Name <span class="clr-red">*</span></label>
-                        <p-autoComplete field="firstName" class="pautocomp-cstm" [(ngModel)]="sourcePoApproval.billToContactId" name="customerContactsForBillTo" [suggestions]="firstNamesbillTo1" (completeMethod)="filterVendorContactsForBillTo($event)" [size]="30" errorMessage="Records not found" [forceSelection]="true" [minLength]="1" [dropdown]="true" #billVenContactName="ngModel" required></p-autoComplete>
+                        <p-autoComplete field="firstName" class="pautocomp-cstm" [(ngModel)]="sourcePoApproval.billToContactId" name="customerContactsForBillTo" [suggestions]="firstNamesbillTo1" (completeMethod)="filterVendorContactsForBillTo($event)" [size]="30" errorMessage="Records not found" [forceSelection]="true" [minLength]="1" [dropdown]="true" #billVenContactName="ngModel"></p-autoComplete> <!--required-->
                         <!--<p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourcePoApproval.billToContactId" name="firstNamesbillTo1" [suggestions]="firstNamesbillTo1" (completeMethod)="filterFirstNamesforbillto1($event)" [size]="30"
                                         [minLength]="1" [dropdown]="true" #billVenContactName="ngModel" errorMessage="Records not found" [forceSelection]="true" required>
                             <ng-template let-firstName pTemplate="item">
