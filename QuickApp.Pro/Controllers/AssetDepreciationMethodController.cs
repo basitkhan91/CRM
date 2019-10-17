@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -30,17 +30,10 @@ namespace QuickApp.Pro.Controllers
 
         #region Public Methods
 
-        //[HttpGet("getAll")]
-        //public IActionResult getAll()
-        //{
-        //    var depreciationMethods = unitOfWork.Repository<AssetDepreciationMethod>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AssetDepreciationMethodId);
-        //    return Ok(depreciationMethods);
-        //}
-
         [HttpGet("getById/{id}")]
         public IActionResult getdepreciationMethodById(long id)
         {
-            var depreciationMethod = unitOfWork.Repository<AssetDepreciationMethod>().Find(x => x.AssetDepreciationMethodId == id && x.IsDelete != true);
+            var depreciationMethod = unitOfWork.Repository<AssetDepreciationMethod>().Find(x => x.AssetDepreciationMethodId == id && x.IsDeleted != true);
             return Ok(depreciationMethod);
         }
 
@@ -103,7 +96,7 @@ namespace QuickApp.Pro.Controllers
             var depriciation = unitOfWork.Repository<AssetDepreciationMethod>().Find(x => x.AssetDepreciationMethodId == id).FirstOrDefault();
             if (depriciation != null)
             {
-                depriciation.IsDelete = true;
+                depriciation.IsDeleted = true;
                 unitOfWork.Repository<AssetDepreciationMethod>().Update(depriciation);
                 unitOfWork.SaveChanges();
                 return Ok();
@@ -146,7 +139,7 @@ namespace QuickApp.Pro.Controllers
             dynamicGridData.columHeaders = columHeaders;
             List<AssetDepreciationMethodSPModel> assetDepreciationMethods = new List<AssetDepreciationMethodSPModel>();
             AssetDepreciationMethodSPModel assetDepreciationMethod = null;
-            var gLAccounts = unitOfWork.Repository<AssetDepreciationMethod>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AssetDepreciationMethodId);
+            var gLAccounts = unitOfWork.Repository<AssetDepreciationMethod>().GetAll().Where(x => x.IsDeleted != true).OrderByDescending(x => x.AssetDepreciationMethodId);
             foreach (var item in gLAccounts)
             {
                 assetDepreciationMethod = new AssetDepreciationMethodSPModel();
@@ -165,6 +158,14 @@ namespace QuickApp.Pro.Controllers
             }
             dynamicGridData.ColumnData = assetDepreciationMethods;
             return Ok(dynamicGridData);
+        }
+
+        [HttpPost("UploadDepMethodCustomData")]
+        public IActionResult UploadDepMethodCustomData()
+        {
+
+            unitOfWork.FileUploadRepository.UploadCustomFile(Convert.ToString("DepreciationMethod"), Request.Form.Files[0]);
+            return Ok();
         }
         #endregion Public Methods
 

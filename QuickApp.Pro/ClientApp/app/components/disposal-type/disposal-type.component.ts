@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DisposalTypeService } from '../../services/disposal-type/disposaltype.service';
 import { AlertService, MessageSeverity } from '../../services/alert.service';
 import { DisposalType } from '../../models/disposal-type.model';
@@ -11,6 +11,7 @@ import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { AuditHistory } from '../../models/audithistory.model';
 import { MasterCompany } from '../../models/mastercompany.model';
 import { MasterComapnyService } from '../../services/mastercompany.service';
+import { ConfigurationService } from '../../services/configuration.service';
 
 @Component({
     selector: 'app-disposal-type',
@@ -26,6 +27,7 @@ export class DisposalTypeComponent implements OnInit {
     disposalTypeToUpdate: DisposalType;
     updateMode: boolean;
     selectedData: any;
+    formData = new FormData();
     public auditHisory: AuditHistory[] = [];
     private isDeleteMode: boolean = false;
     private isEditMode: boolean = false;
@@ -48,6 +50,7 @@ export class DisposalTypeComponent implements OnInit {
     displayedColumns = ['Code', 'Name', 'Memo'];
     cols: any[];
     memoPopupText: string;
+    auditHistory: any[] = [];
     selectedreason: any;
     memoNotes: string = 'This is  memo';
     AuditDetails: SingleScreenAuditDetails[];
@@ -58,7 +61,7 @@ export class DisposalTypeComponent implements OnInit {
     isSaving: boolean;
     private isDelete: boolean = false;
     codeName: string = "";
-
+    existingRecordsResponse: Object;
     isEdit: boolean = false;
     pageIndex: number = 0;
     pageSize: number = 10;
@@ -77,7 +80,7 @@ export class DisposalTypeComponent implements OnInit {
 
     
 
-    constructor(private breadCrumb: SingleScreenBreadcrumbService, private alertService: AlertService, private disposalTypeService: DisposalTypeService, private authService: AuthService, private modalService: NgbModal, private masterComapnyService: MasterComapnyService) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private alertService: AlertService, private disposalTypeService: DisposalTypeService, private authService: AuthService, private modalService: NgbModal, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
         this.sourceAction = new DisposalType();
@@ -102,11 +105,13 @@ export class DisposalTypeComponent implements OnInit {
             this.disposalTypeList = data[0].columnData;
             console.log(this.disposalTypeList);
             this.totalRecords = this.disposalTypeList.length;
+            this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
             this.cols = [
                 console.log(this.allunitData),
                 this.selectedColumns = this.allunitData
             ];
             this.selectedData = this.selectedColumns
+            this.alertService.stopLoadingMessage();
         });
     }
 
@@ -273,7 +278,7 @@ export class DisposalTypeComponent implements OnInit {
             AssetDisposalMemo: this.sourceAction.memo,
 
             IsActive: this.sourceAction.isActive,
-            IsDelete: this.isDelete,
+            IsDeleted: this.isDelete,
             masterCompanyId: 1
         };
         if (this.isEditMode == false) {
@@ -304,6 +309,7 @@ export class DisposalTypeComponent implements OnInit {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
         this.loadData();
+        this.alertService.stopLoadingMessage();
     }
 
     private saveFailedHelper(error: any) {
@@ -330,11 +336,12 @@ export class DisposalTypeComponent implements OnInit {
         const params = <any>{
             createdBy: this.userName,
             updatedBy: this.userName,
+            AssetDisposalTypeId: rowData.assetDisposalTypeId,
             AssetDisposalCode: rowData.code,
             AssetDisposalName: rowData.name,
             AssetDisposalMemo: rowData.memo,
             isActive: rowData.isActive,
-            IsDelete: false,
+            IsDeleted: false,
             masterCompanyId: 1
         };
         if (e.checked == false) {
@@ -380,18 +387,63 @@ export class DisposalTypeComponent implements OnInit {
         }, () => { console.log('Backdrop click') })
     }
 
-    showAuditPopup(template, id): void {
-        this.getAssetDepreciationAudits(id);
-        this.modal = this.modalService.open(template, { size: 'sm' });
+    //showAuditPopup(template, id): void {
+    //    this.getAssetDepreciationAudits(id);
+    //    this.modal = this.modalService.open(template, { size: 'sm' });
+    //}
+
+    //getAssetDepreciationAudits(AssetDisposalTypeId: number): void {
+    //    this.AuditDetails = [];
+    //    this.disposalTypeService.getDisposalAudit(AssetDisposalTypeId).subscribe(audits => {
+    //        if (audits.length > 0) {
+    //            this.AuditDetails = audits;
+    //            this.AuditDetails[0].ColumnsToAvoid = ["assetDisposalTypeAuditId", "AssetDisposalTypeId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
+    //        }
+    //    });
+    //}
+
+    getAuditHistoryById(rowData) {
+        this.disposalTypeService.getDisposalAudit(rowData.assetDisposalTypeId).subscribe(res => {
+            this.auditHistory = res;
+        })
     }
 
-    getAssetDepreciationAudits(AssetDisposalTypeId: number): void {
-        this.AuditDetails = [];
-        this.disposalTypeService.getDisposalAudit(AssetDisposalTypeId).subscribe(audits => {
-            if (audits.length > 0) {
-                this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["assetDisposalTypeAuditId", "AssetDisposalTypeId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
-            }
-        });
+    sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=DisposalType&fileName=DispType.xlsx`;
+
+        window.location.assign(url);
     }
+
+    customExcelUpload(event) {
+        const file = event.target.files;
+
+        console.log(file);
+        if (file.length > 0) {
+
+            this.formData.append('file', file[0])
+            this.disposalTypeService.DispTypeCustomUpload(this.formData).subscribe(res => {
+                event.target.value = '';
+
+                this.formData = new FormData();
+                this.existingRecordsResponse = res;
+                this.getDispTypeList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+
+                // $('#duplicateRecords').modal('show');
+                // document.getElementById('duplicateRecords').click();
+
+            })
+        }
+
+    }
+
+    getDispTypeList() {
+
+        this.loadData();
+    }
+
 }

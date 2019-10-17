@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { AlertService, MessageSeverity } from '../../services/alert.service';
 import { DepriciationMethodService } from '../../services/depriciation-method/depriciation.service';
 import { DepriciationMethod } from '../../models/depriciation-method.model';
@@ -17,6 +17,7 @@ import { Itemgroup } from '../../models/item-group.model';
 import { ItemGroupService } from '../../services/item-group.service';
 import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem, LazyLoadEvent } from 'primeng/api';//bread crumb;
+import { ConfigurationService } from '../../services/configuration.service';
 
 
 @Component({
@@ -33,6 +34,7 @@ export class DepriciationMethodComponent implements OnInit, AfterViewInit{
     depriciationToUpdate: DepriciationMethod;
     updateMode: boolean;
     selectedData: any;
+    formData = new FormData();
     public auditHisory: AuditHistory[] = [];
     private isDeleteMode: boolean = false;
     private isEditMode: boolean = false;
@@ -65,7 +67,12 @@ export class DepriciationMethodComponent implements OnInit, AfterViewInit{
     localCollection: any[] = [];
     disableSave: boolean = false;
     isSaving: boolean;
+    existingRecordsResponse: Object;
     private isDelete: boolean = false;
+    auditHistory: any[] = [];
+    pageIndex: number = 0;
+    pageSize: number = 10;
+    totalPages: number;
     codeName: string = "";
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -79,7 +86,7 @@ export class DepriciationMethodComponent implements OnInit, AfterViewInit{
     loading: boolean;
     depreciationMethodPagination: DepriciationMethod[];
 
-    constructor(private breadCrumb: SingleScreenBreadcrumbService, private alertService: AlertService, private authService: AuthService, private depriciationMethodService: DepriciationMethodService, private modalService: NgbModal, private masterComapnyService: MasterComapnyService) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private alertService: AlertService, private authService: AuthService, private depriciationMethodService: DepriciationMethodService, private modalService: NgbModal, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
         this.sourceAction = new DepriciationMethod();
@@ -104,11 +111,13 @@ export class DepriciationMethodComponent implements OnInit, AfterViewInit{
             this.depriciationMethodList = data[0].columnData;
             console.log(this.depriciationMethodList);
             this.totalRecords = this.depriciationMethodList.length;
+            this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
             this.cols = [
                 console.log(this.allunitData),
                 this.selectedColumns = this.allunitData
             ];
-            this.selectedData = this.selectedColumns
+            this.selectedData = this.selectedColumns;
+            this.alertService.stopLoadingMessage();
         });
     }
 
@@ -255,7 +264,7 @@ export class DepriciationMethodComponent implements OnInit, AfterViewInit{
             AssetDepreciationMemo: this.sourceAction.memo,
             AssetDepreciationMethodBasis: this.sourceAction.depreciationMethod,
             IsActive: this.sourceAction.isActive,
-            IsDelete: this.isDelete,
+            IsDeleted: this.isDelete,
             masterCompanyId: 1
         };
         if (this.isEditMode == false) {            
@@ -286,6 +295,7 @@ export class DepriciationMethodComponent implements OnInit, AfterViewInit{
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
         this.loadData();
+        this.alertService.stopLoadingMessage();
     }
 
     private saveFailedHelper(error: any) {
@@ -336,18 +346,62 @@ export class DepriciationMethodComponent implements OnInit, AfterViewInit{
         }, () => { console.log('Backdrop click') })
     }
 
-    showAuditPopup(template, id): void {
-        this.getAssetDepreciationAudits(id);
-        this.modal = this.modalService.open(template, { size: 'sm' });
+    //showAuditPopup(template, id): void {
+    //    this.getAssetDepreciationAudits(id);
+    //    this.modal = this.modalService.open(template, { size: 'sm' });
+    //}
+
+    //getAssetDepreciationAudits(assetdepreciationMethodId: number): void {
+    //    this.AuditDetails = [];
+    //    this.depriciationMethodService.getAssetDepriciationMethodAudits(assetdepreciationMethodId).subscribe(audits => {
+    //        if (audits.length > 0) {
+    //            this.AuditDetails = audits;
+    //            this.AuditDetails[0].ColumnsToAvoid = ["assetDepreciationMethodAuditId", "assetDepreciationMethodId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
+    //        }
+    //    });
+    //}
+
+    getAuditHistoryById(rowData) {
+        this.depriciationMethodService.getAssetDepriciationMethodAudits(rowData.assetDepreciationMethodId).subscribe(res => {
+            this.auditHistory = res;
+        })
     }
 
-    getAssetDepreciationAudits(assetdepreciationMethodId: number): void {
-        this.AuditDetails = [];
-        this.depriciationMethodService.getAssetDepriciationMethodAudits(assetdepreciationMethodId).subscribe(audits => {
-            if (audits.length > 0) {
-                this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["assetDepreciationMethodAuditId", "assetDepreciationMethodId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
-            }
-        });
+    sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=DepreciationMethod&fileName=DepMethod.xlsx`;
+
+        window.location.assign(url);
+    }
+
+    customExcelUpload(event) {
+        const file = event.target.files;
+
+        console.log(file);
+        if (file.length > 0) {
+
+            this.formData.append('file', file[0])
+            this.depriciationMethodService.DepMethodCustomUpload(this.formData).subscribe(res => {
+                event.target.value = '';
+
+                this.formData = new FormData();
+                this.existingRecordsResponse = res;
+                this.getDepMethodList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+
+                // $('#duplicateRecords').modal('show');
+                // document.getElementById('duplicateRecords').click();
+
+            })
+        }
+
+    }
+
+    getDepMethodList() {
+
+        this.loadData();
     }
 }
