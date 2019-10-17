@@ -1950,6 +1950,7 @@ export class PurchaseSetupComponent {
 		this.newPNList = [];
 		this.arraySearch = this.partNumbers.split(',');
 		this.array = [];
+		this.newData = [];
 		let ary = [];
 	   
 		// const tempData = []
@@ -1957,17 +1958,18 @@ export class PurchaseSetupComponent {
 			for (let i = 0; i < this.arraySearch.length; i++) {
 				let flag = false;
 				this.vendorService.getPartDetailsWithid(this.arraySearch[i]).subscribe(data => {
-					const responseData = data[0].map(x => {
-						if(x.partNumber.toLowerCase().trim() == this.arraySearch[i].toLowerCase().trim()){
-							
-							ary.push(x.partNumber);
-							console.log(ary);
+					data[0].map(x => {
+						if (this.newData.includes({...x, addAllMultiPNRows: false}) === false) {
+							this.newData.push({
+								...x,
+								addAllMultiPNRows: false
+							});
 						}
-						this.newData.push({
-							...x,
-							addAllMultiPNRows: false
-						});
+						
+
 					})
+
+					
 				});	
 				
 			}
