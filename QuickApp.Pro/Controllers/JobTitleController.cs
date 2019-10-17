@@ -79,7 +79,7 @@ namespace QuickApp.Pro.Controllers
                 jobTitleObj.Description = jobTitleViewModel.Description;
                 jobTitleObj.MasterCompanyId = jobTitleViewModel.MasterCompanyId;
                 jobTitleObj.IsActive = jobTitleViewModel.IsActive;
-                jobTitleObj.IsDelete = false;
+                jobTitleObj.IsDeleted = false;
                 jobTitleObj.Memo = jobTitleViewModel.Memo;
                 jobTitleObj.CreatedDate = DateTime.Now;
                 jobTitleObj.UpdatedDate = DateTime.Now;
@@ -129,7 +129,7 @@ namespace QuickApp.Pro.Controllers
         {
             var existingResult = _unitOfWork.JobTitle.GetSingleOrDefault(c => c.JobTitleId == id);
 
-            existingResult.IsDelete = true;
+            existingResult.IsDeleted = true;
             _unitOfWork.JobTitle.Update(existingResult);
 
             //_unitOfWork.JobTitle.Remove(existingResult);
