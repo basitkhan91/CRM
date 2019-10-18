@@ -590,7 +590,7 @@ export class PurchaseSetupComponent {
 		}
 		console.log(this.sourcePoApprovalObj);
 
-		if (this.createPOForm.valid) { //invalid
+		if (this.createPOForm.invalid) { //invalid
 			//  $('.createPO-form input.ng-invalid, .createPO-form select.ng-invalid, .createPO-form p-calendar.ng-invalid input').addClass('border-red-clr');
 			//  $('.createPO-form input.ng-valid, .createPO-form select.ng-valid').removeClass('border-red-clr');
 			alert('Please enter required fields!');
