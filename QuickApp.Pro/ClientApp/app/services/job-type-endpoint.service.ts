@@ -11,11 +11,9 @@ import { ConfigurationService } from './configuration.service';
 export class JobTypeEndpontService extends EndpointFactory {
 
 
-    private readonly _JobTilesUrl: string = "/api/JobTitle/Get";
     private readonly _JobTypeUrlNew: string = "/api/JobType/jobTypepost";
     private readonly _JobTypeUrl: string = "/api/JobType/Get";
-
-    get jobtitleurl() { return this.configurations.baseUrl + this._JobTilesUrl; }
+    private readonly getJobTypeDataAuditById: string = "/api/JobType/audits";
 
     get jobtypeurl() { return this.configurations.baseUrl + this._JobTypeUrl; }
 
@@ -61,12 +59,14 @@ export class JobTypeEndpontService extends EndpointFactory {
             });
     }
 
-   
+    getJobTypeAuditById<T>(jobTypeId: number): Observable<T> {
+        let endpointUrl = `${this.getJobTypeDataAuditById}/${jobTypeId}`;
 
- 
-
- 
-
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getJobTypeAuditById(jobTypeId));
+            });
+    }
 
 
   
