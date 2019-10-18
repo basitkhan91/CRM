@@ -15,11 +15,14 @@ namespace DAL.Models
         public string EmployeeIdAsPerPayroll { get; set; }
         public string StationId { get; set; }
         public Int16? JobTitleId { get; set; }
-        public Int16? JobTypeId { get; set; }
+        public int? JobTypeId { get; set; }
 
         public Int16? EmployeeExpertiseId { get; set; }
         public DateTime? DateOfBirth { get; set; }
-        public Int16? OriginatingCountryId { get; set; }
+          public Int16? OriginatingCountryId { get; set; }
+        //public virtual Countries OriginatingCountryId { get; set; }
+
+        
         public Int16? NationalityCountryId { get; set; }
         public DateTime StartDate { get; set; }
 
@@ -39,8 +42,14 @@ namespace DAL.Models
         public Byte? EmployeeLeaveTypeId { get; set; }
         public long? SupervisorId { get; set; }
 
-        public int CompanyId  { get; set; }
-        //public string shift { get; set; }
+
+        // public int? BusinessUnitId { get; set; }
+        public long? BusinessUnitId { get; set; }
+          public long? DepartmentId { get; set; }
+        //  public long? DepartmentId { get; set; }
+        public long? DivisionId { get; set; }
+        //  public long? DivisionId { get; set; }
+        public string shift { get; set; }
         [ForeignKey("MasterCompanyId")]
         public Int32 MasterCompanyId { get; set; }
 
@@ -51,6 +60,7 @@ namespace DAL.Models
 
         public virtual MasterCompany MasterCompany { get; set; }
 
+        public virtual EmployeeLeaveTypeMapping EmployeeLeaveTypeMapping { get; set; }
 
         public virtual EmployeeShiftMapping EmployeeShiftMapping { get; set; }
 

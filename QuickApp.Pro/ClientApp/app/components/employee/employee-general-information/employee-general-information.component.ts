@@ -121,7 +121,8 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 		this.employeeService.alertObj.next(this.employeeService.ShowPtab); //steps
 		this.activeIndex = 0;
 		this.employeeService.indexObj.next(this.activeIndex);
-		this.loadManagementdata();
+        this.loadManagementdata();
+        this.loadLegalEntityData();
 		this.loadData();
 		this.loadJobtitlesData();
 		this.loademployeesexperties();
@@ -132,7 +133,34 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.EmployeeLeaveType();
         this.loadjobtypesData();
         
-	}
+    }
+    loadLegalEntityData() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+
+        this.workFlowtService1.getManagemtentLengalEntityData().subscribe(
+            results => this.onManagemtntlegaldataLoad(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+
+    }
+
+    private onManagemtntlegaldataLoad(getAtaMainList: any[]) {
+        // alert('success');
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.alllegalEntityInfo = getAtaMainList;
+        for (let i = 0; i < this.alllegalEntityInfo.length; i++) {
+
+            if (this.alllegalEntityInfo[i].parentId == null) {
+                this.maincompanylist.push(this.alllegalEntityInfo[i]);
+
+            }
+        }
+
+    }
+
+
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 
@@ -162,7 +190,8 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 	empIdCollection: any[];
 	middleNameCollection: any[];
 	/** Actions ctor */
-	allManagemtninfo: any[] = [];
+    allManagemtninfo: any[] = [];
+    alllegalEntityInfo: any[] = [];
 	maincompanylist: any[] = [];
 	private isEditMode: boolean = false;
 	private isDeleteMode: boolean = false;
@@ -199,7 +228,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     });
 
 
-    constructor(private fb: FormBuilder, private Actroute: ActivatedRoute, private translationService: AppTranslationService, private router: Router, public jobTypeService: JobTypeService, public jobTitleService: JobTitleService, private empservice: EmployeeExpertiseService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private route: Router, private alertService: AlertService, public employeeService: EmployeeService, public jobTitleService1: LegalEntityService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private localStorage: LocalStoreManager, private companyService: CompanyService) {
+    constructor(private fb: FormBuilder, private Actroute: ActivatedRoute, private translationService: AppTranslationService, private router: Router, public jobTypeService: JobTypeService, public workFlowtService: JobTitleService, private empservice: EmployeeExpertiseService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private route: Router, private alertService: AlertService, public employeeService: EmployeeService, public workFlowtService1: LegalEntityService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private localStorage: LocalStoreManager, private companyService: CompanyService) {
         this.displayedColumns.push('action');
 
         //new emp form
@@ -225,6 +254,10 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             'JobTypeId': [null, Validators.compose([Validators.required, Validators.minLength(1)])],
             'companyId': [null, Validators.compose([Validators.required, Validators.minLength(1)])],
             'startDate': [null, Validators.compose([Validators.required, Validators.minLength(1)])],
+            'BusinessUnitId': [null],
+            'divisionId': [null],
+            'departmentId': [null],
+            
             
             
             
@@ -248,24 +281,37 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
                 this.empId = this.sourceEmployee.employeeId;
             }
 
-           
+            
              
             this.sourceEmployee = this.employeeService.listCollection;
+
+            console.log(this.sourceEmployee);
 
             console.log("setting jpo1b title*" + this.sourceEmployee.jobTitleId);
 
             console.log("setting jpob title*")
 
+         
             this.empCreationForm.controls['jobTitleId'].setValue(this.sourceEmployee.jobTitleId);
           
 
             this.empCreationForm.controls['employeeExpertiseId'].setValue(this.sourceEmployee.employeeExpertiseId);
             this.empCreationForm.controls['JobTypeId'].setValue(this.sourceEmployee.jobTypeId);
             this.supervisorId = this.sourceEmployee.supervisorId;
-            
 
-            
+            this.empCreationForm.controls['companyId'].setValue(
+                this.sourceEmployee.managementStructureId);
 
+
+          
+
+       
+
+           
+
+
+            console.log(" this.sourceEmployee.businessUnitId*" + this.sourceEmployee.businessUnitId)
+            this.sourceEmployee.BusinessUnitId = this.sourceEmployee.businessUnitId;
             
             this.updateMode = true;
 			this.sourceEmployee.startDate = new Date();
@@ -450,20 +496,62 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
   
 
     onSubmit2() {
-        console.log("superivisorId");
+  
         this.supervisorId;
-        console.log(this.supervisorId);
-        console.log(this.sourceEmployee.supervisorName);
-
         this.sourceEmployee.firstName = this.empCreationForm.get('firstName').value;
         this.sourceEmployee.lastName = this.empCreationForm.get('lastName').value;
         this.sourceEmployee.middleName = this.empCreationForm.get('middleName').value;
         this.sourceEmployee.jobTitleId = this.empCreationForm.get('jobTitleId').value;
         this.sourceEmployee.employeeExpertiseId = this.empCreationForm.get('employeeExpertiseId').value;
         this.sourceEmployee.JobTypeId = this.empCreationForm.get('JobTypeId').value;
-        this.sourceEmployee.companyId = this.empCreationForm.get('companyId').value;
+    
         this.sourceEmployee.startDate = this.empCreationForm.get('startDate').value;
         this.sourceEmployee.SupervisorId = this.supervisorId;
+        console.log("Division Id " + this.empCreationForm.get('divisionId').value);
+        console.log("Bu Id" + this.empCreationForm.get('BusinessUnitId').value);
+        console.log("Department Id " + this.empCreationForm.get('departmentId').value);
+        if (this.empCreationForm.get('departmentId').value!= null ) {
+
+     
+            this.sourceEmployee.managementStructureId = this.empCreationForm.get('departmentId').value;
+
+        }
+      
+
+        else if (this.empCreationForm.get('divisionId').value != null && this.sourceEmployee.departmentId == '') {
+
+       
+            this.sourceEmployee.managementStructureId = this.empCreationForm.get('divisionId').value ;
+           
+
+        }
+        else if (this.empCreationForm.get('BusinessUnitId').value != null  && this.sourceEmployee.departmentId == '' && this.sourceEmployee.divisionId == '') {
+
+           
+            this.sourceEmployee.managementStructureId = this.empCreationForm.get('BusinessUnitId').value;
+
+
+        }
+        else {
+       
+            this.sourceEmployee.managementStructureId = this.empCreationForm.get('companyId').value;
+        }
+
+       
+        console.log(" Selected Entity"+this.sourceEmployee.managementStructureId);
+
+        this.selectedshiftValues.push(this.sourceEmployee.shifId); 
+
+        console.log("this.selectedvalues"+this.selectedshiftValues);
+        
+       
+
+        this.sourceEmployee.ShiftId = this.selectedshiftValues;
+
+       
+        
+
+        console.log("this.sourceEmployee.managementStructureId" + this.sourceEmployee.managementStructureId);
 
         if (this.sourceEmployee.hourlypayType == "Hourly") {
 
@@ -550,7 +638,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
             ///this.sourceEmployee.reset();
             this.alertService.showMessage("Success", this.showTitle, MessageSeverity.success);
-            this.nextClick();
+         //   this.nextClick();
             this.sourceEmpFirst = null;
             //window.location.reload();
 
@@ -796,42 +884,40 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
    
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-        /*
-		this.jobTitleService.getAllJobTitleList.subscribe(
+
+        this.workFlowtService.getAllJobTitleList().subscribe(
 			results => this.onJobtitlesDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
-        */
     }
 
     private loadjobtypesData() {
 
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        
-        /*
-        this.jobTypeService.getjobTypeWorkFlows().subscribe(
+
+        this.jobTypeService.getAllJobTypeList().subscribe(
             results => this.onJobtypeDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
-        */
+
     }
 
-    onJobtypeDataLoadSuccessful(jobTypes: JobType[]) {
+    onJobtypeDataLoadSuccessful(allWorkFlows: JobType[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         console.log("Job Type Data")
-        console.log(jobTypes);
-        this.allJobTypesinfo = jobTypes
+        console.log(allWorkFlows);
+        this.allJobTypesinfo = allWorkFlows
     }
 
 
-	private onJobtitlesDataLoadSuccessful(jobTitles: JobTitle[]) {
+	private onJobtitlesDataLoadSuccessful(allWorkFlows: JobTitle[]) {
 		// alert('success');
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
-        this.dataSource.data = jobTitles;
-        this.allJobTitlesinfo = jobTitles;
+		this.dataSource.data = allWorkFlows;
+		this.allJobTitlesinfo = allWorkFlows;
 	}
 
 
@@ -1138,7 +1224,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         console.log(this.sourceAction);
         this.sourceAction.description = this.jobName;
         console.log(this.sourceAction);
-        this.jobTitleService.newJobTitle(this.sourceAction).subscribe(data => {
+        this.workFlowtService.newJobTitle(this.sourceAction).subscribe(data => {
             this.loadJobtitlesData()
             this.showTitle = 'job Title Added Sucessfully';
 
@@ -1207,14 +1293,14 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             console.log(this.sourceAction);
             this.sourceAction.jobTitleId = this.jobName;
             console.log(this.sourceAction);
-			this.jobTitleService.newJobTitle(this.sourceAction).subscribe(data => { this.loadJobtitlesData() })
+            this.workFlowtService.newJobTitle(this.sourceAction).subscribe(data => { this.loadJobtitlesData() })
 		}
 		else {
 
 			this.sourceAction.updatedBy = this.userName;
 			this.sourceAction.description = this.jobName;
 			this.sourceAction.masterCompanyId = 1;
-			this.jobTitleService.updateAction(this.sourceAction).subscribe(
+			this.workFlowtService.updateAction(this.sourceAction).subscribe(
 				response => this.saveCompleted(this.sourceAction),
 				error => this.saveFailedHelper(error));
 		}
@@ -1286,7 +1372,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 			this.sourceAction.updatedBy = this.userName;
 			this.sourceAction.description = this.employeeName;
 			this.sourceAction.masterCompanyId = 1;
-			this.jobTitleService.updateAction(this.sourceAction).subscribe(
+			this.workFlowtService.updateAction(this.sourceAction).subscribe(
 				response => this.saveCompleted(this.sourceAction),
 				error => this.saveFailedHelper(error));
 		}
@@ -1412,7 +1498,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
 
-		this.jobTitleService1.getManagemententity().subscribe(
+		this.workFlowtService1.getManagemententity().subscribe(
 			results => this.onManagemtntdataLoad(results[0]),
 			error => this.onDataLoadFailed(error)
         );
@@ -1431,14 +1517,59 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 				this.maincompanylist.push(this.allManagemtninfo[i]);
 
 			}
-		}
+        }
+
+     
+
+       
+            console.log("edit Mode");
+
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+
+                console.log("loadData" + this.sourceEmployee.managementStructureId);
+
+                if (this.allManagemtninfo[i].parentId == this.sourceEmployee.managementStructureId) {
+                    this.bulist.push(this.allManagemtninfo[i])
+                }
+
+
+        }
+
+
+        for (let i = 0; i < this.allManagemtninfo.length; i++) {
+
+
+            if (this.allManagemtninfo[i].parentId == this.sourceEmployee.BusinessUnitId) {
+
+                this.departmentList.push(this.allManagemtninfo[i]);
+            }
+        }
+
+            console.log(this.bulist);
+            console.log(this.bulist);
+          
+            //code for get getBUList
+
+
+        for (let i = 0; i < this.allManagemtninfo.length; i++) {
+            if (this.allManagemtninfo[i].parentId == this.sourceEmployee.departmentId) {
+                this.divisionlist.push(this.allManagemtninfo[i]);
+            }
+        }
+       
 
         this.setManagementStrucureData(this.sourceEmployee);
 	}
 	
 
-    getBUList(companyId) {
+    getBUList(event) {
+
+        var eventid = event.target.value;
+        var splitted = eventid.split(": "); 
+        var companyId = splitted[1];
+  
         if (this.updateMode == false) {
+          
             this.sourceEmployee.buisinessUnitId = "";
             this.sourceEmployee.departmentId = "";
             this.sourceEmployee.divisionId = "";
@@ -1446,9 +1577,56 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             this.departmentList = [];
             this.divisionlist = [];
             this.bulist = [];
+           
+
+        
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+
+                
+               
+                if (this.allManagemtninfo[i].parentId == companyId) {
+                    this.bulist.push(this.allManagemtninfo[i])
+                }
+
+           
+            }
+
+        }
+        else {
+
+            this.departmentList = [];
+            this.divisionlist = [];
+            this.bulist = [];
+
+           
             for (let i = 0; i < this.allManagemtninfo.length; i++) {
                 if (this.allManagemtninfo[i].parentId == companyId) {
                     this.bulist.push(this.allManagemtninfo[i])
+                }
+            }
+
+          
+        }
+    }
+
+    getDepartmentlist2(value) {
+
+        console.log("getDepartmentlist2"+value);
+
+        if (this.updateMode == false) {
+            this.sourceEmployee.departmentId = "";
+            this.sourceEmployee.divisionId = "";
+            this.sourceEmployee.managementStructureId = value;
+            this.departmentList = [];
+            this.divisionlist = [];
+
+    
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+            
+             
+                if (this.allManagemtninfo[i].parentId == value) {
+               
+                    this.departmentList.push(this.allManagemtninfo[i]);
                 }
             }
 
@@ -1456,16 +1634,19 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         else {
             this.departmentList = [];
             this.divisionlist = [];
-            this.bulist = [];
             for (let i = 0; i < this.allManagemtninfo.length; i++) {
-                if (this.allManagemtninfo[i].parentId == companyId) {
-                    this.bulist.push(this.allManagemtninfo[i])
+                if (this.allManagemtninfo[i].parentId == value) {
+                    this.departmentList.push(this.allManagemtninfo[i]);
                 }
             }
         }
+
     }
 
-    getDepartmentlist(businessUnitId) {
+    getDepartmentlist(value) {
+        var splitted = value.split(": "); 
+        var businessUnitId = splitted[1];
+        console.log(businessUnitId);
         if (this.updateMode == false) {
             this.sourceEmployee.departmentId = "";
             this.sourceEmployee.divisionId = "";
@@ -1490,7 +1671,9 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         }
     }
 
-    getDivisionlist(departmentId) {
+    getDivisionlist(value) {
+        var splitted = value.split(": ");
+        var departmentId = splitted[1];
         if (this.updateMode == false) {
             this.sourceEmployee.divisionId = "";
             this.sourceEmployee.managementStructureId = departmentId;

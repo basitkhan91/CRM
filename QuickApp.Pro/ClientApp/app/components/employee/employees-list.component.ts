@@ -41,7 +41,20 @@ export class EmployeesListComponent implements OnInit{
 	//viewempDetails: any = {};
 	viewTraining: any = {};
 	viewGeneralDetails: any = {};
-    allEmployeelist: any[]=[];
+    allEmployeelist: any[] = [];
+    totalRecords: any;
+    totalPages: number;
+    pageSize: number = 10;
+    public originationCounty: any;
+    public nationalCountry: any;
+    public companyCode: any;
+    public businessUnit: any;
+    public departmentCode: any;
+    public divisionCode: any;
+    public empExpertisedescription: any;
+    public jobTypeName: any;
+    public employeeLeaveType: any;
+    
 	ngOnInit(): void {
 
 		// debugger;
@@ -62,7 +75,8 @@ export class EmployeesListComponent implements OnInit{
 	Active: string = "Active";
 	selectedColumns: any[];
 	cols: any[];
-	modal: NgbModalRef;
+    modal: NgbModalRef;
+
     /** employees-list ctor */
 	constructor(private modalService: NgbModal,private translationService: AppTranslationService, private empService: EmployeeService, private router: Router, private authService: AuthService, private alertService: AlertService) {
 		this.dataSource = new MatTableDataSource();
@@ -75,12 +89,19 @@ export class EmployeesListComponent implements OnInit{
 	//debugger;
 		//this.alertService.stopLoadingMessage();
 		//this.loadingIndicator = false;
+        this.totalRecords = allWorkFlows.length;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
 		this.dataSource.data = allWorkFlows;
 		this.allVendorList = allWorkFlows;
 
 
 	}
-	private onemployeeDataLoadSuccessful(allWorkFlows: any[]) {
+    private onemployeeDataLoadSuccessful(allWorkFlows: any[]) {
+
+        if (allWorkFlows[0].employeeLeaveTypeMapping != null) {
+            this.employeeLeaveType = allWorkFlows[0].employeeLeaveTypeMapping.employeeLeaveTypeId
+        }
+        console.log();
 		//debugger;
 		//this.alertService.stopLoadingMessage();
 		//this.loadingIndicator = false;
@@ -203,7 +224,46 @@ export class EmployeesListComponent implements OnInit{
 		this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
 		this.alertService.showStickyMessage(error, null, MessageSeverity.error);
 	}
-	openView(content, row) {
+    openView(content, row) {
+        console.log("empInfo");
+
+        console.log(row);
+        this.originationCounty = row.orgCountries.countries_name;
+        this.nationalCountry = row.nationalCountryId.countries_name;
+
+        if (row.employeeExpertise != null ) {
+            this.empExpertisedescription = row.employeeExpertise.description
+        }
+
+        if (row.jobtype != null) {
+            this.jobTypeName = row.jobtype.jobTypeName
+        }
+
+      
+
+        
+
+        if (row.managementStructeInfo !=null) {
+            this.companyCode = row.managementStructeInfo.code;
+        }
+
+    
+
+        if (row.buInfo !=null ) {
+            this.businessUnit = row.buInfo.code;
+        }
+        if (row.departmentInfo != null) {
+            this.departmentCode = row.departmentInfo.code;
+        }
+        if (row.divisonInfo != null) {
+
+            this.divisionCode = row.divisonInfo.code;
+        }
+ 
+      
+        
+        
+
 		this.viewGeneralDetails = row;
 		this.viewempDetails = row;
 		this.viewTraining = row;

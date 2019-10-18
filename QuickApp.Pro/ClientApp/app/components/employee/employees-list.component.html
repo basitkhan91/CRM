@@ -11,85 +11,92 @@
 			<h4 class="page-heading clr-green">Employee's List</h4>
 			<div class="right_col" role="main">
 
-				<p-table #dt [value]="allVendorList" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" [metaKeySelection]="true" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true">
-					<ng-template pTemplate="caption">
+                <p-table #dt [value]="allVendorList" [rows]="10" [paginator]="true"  (onLazyLoad)="loadCustomerPages($event)" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" [metaKeySelection]="true" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true">
+                    <ng-template pTemplate="caption">
 
-						<div style="text-align: right">
-							<p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
-										   selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-
-
-							<div class="inner-addon right-addon w200 inline-block">
-								<i class="fa fa-search"></i>
-								<input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter">
-							</div>
+                        <div style="text-align: right">
+                            <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
+                                           selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
 
 
-							<button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-							<button type="button" pButton icon="fa-download" iconPos="left" label="Export Selected" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button>
-							<a matTooltip="Add Employee" (click)="navigateTogeneralInfo()" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>
-
-							<div class="excel-upload">
-								<input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-								<label for="upload">
-									<span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
-								</label>
-							</div>
-						</div>
+                            <div class="inner-addon right-addon w200 inline-block">
+                                <i class="fa fa-search"></i>
+                                <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter">
+                            </div>
 
 
-					</ng-template>
-					<ng-template pTemplate="header" let-columns>
-						<tr>
+                            <button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+                            <button type="button" pButton icon="fa-download" iconPos="left" label="Export Selected" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                            <a matTooltip="Add Employee" (click)="navigateTogeneralInfo()" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>
 
-							<th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
-								{{col.header}}
-								<p-sortIcon [field]="col.field"></p-sortIcon>
-							</th>
+                            <div class="excel-upload">
+                                <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                                <label for="upload">
+                                    <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+                                </label>
+                            </div>
+                        </div>
 
-							<th></th>
 
-						</tr>
+                    </ng-template>
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
 
-						<tr>
-							<th *ngFor="let col of columns" [ngSwitch]="col.field">
-								<input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                            <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                {{col.header}}
+                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                            </th>
 
-							</th>
-							<th></th>
-						</tr>
-					</ng-template>
+                            <th></th>
 
-					<ng-template pTemplate="body" let-rowData let-columns="columns">
-						<tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openEdit(rowData)">
-							<td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-								{{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
-							</td>
-							
-							<td>
-								<p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-								<p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-								<p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-								<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-								<button class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="Edit">
-									<mat-icon>edit</mat-icon>
-								</button>
+                        </tr>
 
-								<button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="deleteItemAndCloseModel(rowData)">
-								
-									<mat-icon color="warn">delete</mat-icon>
-								</button>
+                        <tr>
+                            <th *ngFor="let col of columns" [ngSwitch]="col.field">
+                                <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
 
-								<button class="btn-history" mat-icon-button matTooltip="History">
-									<mat-icon color="green">history</mat-icon>
-									<!--(click)="openHist(contentHist,rowData)"-->
-								</button>
+                            </th>
+                            <th></th>
+                        </tr>
+                    </ng-template>
 
-							</td>
-						</tr>
-					</ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                        <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openEdit(rowData)">
+                            <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                                {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                            </td>
 
-				</p-table>
+                            <td>
+                                <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+                                <button class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="Edit">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+
+                                <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="deleteItemAndCloseModel(rowData)">
+
+                                    <mat-icon color="warn">delete</mat-icon>
+                                </button>
+
+                                <button class="btn-history" mat-icon-button matTooltip="History">
+                                    <mat-icon color="green">history</mat-icon>
+                                    <!--(click)="openHist(contentHist,rowData)"-->
+                                </button>
+
+                            </td>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="summary" id="footer">
+                        <label id="footer" class="footer">No'of records:</label>
+                        <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                        <label id="footer" class="footer1">Pages Count:</label>
+                        <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" />
+                    </ng-template>
+
+                </p-table>
 
 			</div>
 			<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
@@ -145,71 +152,77 @@
 							<div class="clear"></div>
 							<hr>
 						</div>
-						<div class="col-sm-6 left-block">
-							<div class="col-sm-12">
-								<label class="w150">Employee First Name</label>
-								<span class="value">{{allEmployeelist.firstName }}</span>
-							</div>
-							<div class="col-sm-12">
+                        <div class="col-sm-6 left-block">
+                            <div class="col-sm-12">
+                                <label class="w150">Employee First Name</label>
+                                <span class="value">{{allEmployeelist.firstName }}</span>
+                            </div>
+                            <div class="col-sm-12">
                                 <label class="w150">Employee Last Name</label>
-								<span class="value">{{allEmployeelist.lastName}}</span>
-							</div>
-							<div class="col-sm-12">
+                                <span class="value">{{allEmployeelist.lastName}}</span>
+                            </div>
+                            <div class="col-sm-12">
                                 <label class="w150">Employee Id</label>
-								<span class="value">{{allEmployeelist.employeeId}}</span>
-							</div>
-							<div class="col-sm-12">
+                                <span class="value">{{allEmployeelist.employeeId}}</span>
+                            </div>
+                            <div class="col-sm-12">
                                 <label class="w150">Employee Id (per Payroll)</label>
-								<span class="value">{{allEmployeelist.employeeIdAsPerPayroll}}</span>
-							</div>
+                                <span class="value">{{allEmployeelist.employeeIdAsPerPayroll}}</span>
+                            </div>
 
-							<div class="col-sm-12">
-								<label class="w150">Company</label>
-								<span class="value">{{allEmployeelist.companyId}}</span>
-							</div>
-							<div class="col-sm-12">
-								<label class="w150">BU</label>
-								<span class="value">{{allEmployeelist.businessUnitId}}</span>
-							</div>
-							<div class="col-sm-12">
-								<label class="w150">Division</label>
-								<span class="value">{{allEmployeelist.divisionId}}</span>
-							</div>
-							<div class="col-sm-12">
-								<label class="w150">Dept</label>
-								<span class="value">{{allEmployeelist.departmentId}}</span>
-							</div>
-							<div class="col-sm-12">
-								<label class="w150">Job Title</label>
-								Developer
-								<span class="value">{{allEmployeelist.jobTitleId}}</span>
-							</div>
-							<div class="col-sm-12">
+                            <div class="col-sm-12">
+                                <label class="w150">Company</label>
+                                <span class="value">{{companyCode}}</span>
+                            </div>
+                            <div class="col-sm-12">
+                                <label class="w150">BU</label>
+                                <span class="value">{{businessUnit}}</span>
+                            </div>
+                            <div class="col-sm-12">
+                                <label class="w150">Division</label>
+                                <span class="value">{{divisionCode}}</span>
+                            </div>
+                            <div class="col-sm-12">
+                                <label class="w150">Dept</label>
+                                <span class="value">{{departmentCode}}</span>
+                            </div>
+                            <div class="col-sm-12">
+                                <label class="w150">Job Title</label>
+                                Developer
+                                <span class="value">{{allEmployeelist.jobTitleId}}</span>
+                            </div>
+                            <div class="col-sm-12">
+                                <label class="w150">Job Type</label>
+                                Developer
+                                <span class="value">{{allEmployeelist.jobTypeName}}</span>
+                            </div>
+                            <div class="col-sm-12">
                                 <label class="w150">Employee Expertise</label>
-								<span class="value">{{allEmployeelist.employeeExpertiseId}}</span>
-							</div>
-							<div class="col-sm-12">
-								<label class="w150">Station ID</label>
-								<span class="value">{{allEmployeelist.stationId}}</span>
-							</div>
-							<div class="col-sm-12">
-								<label class="w150">Date of Birth</label>
+                                <span class="value">{{empExpertisedescription}}</span>
+                            </div>
+                            <div class="col-sm-12">
+                                <label class="w150">Station ID</label>
+                                <span class="value">{{allEmployeelist.stationId}}</span>
+                            </div>
+                            <div class="col-sm-12">
+                                <label class="w150">Date of Birth</label>
                                 <span class="value">{{allEmployeelist.dateOfBirth | date:'MM-dd-yyyy'}}</span>
-							</div>
-							<div class="col-sm-12">
-								<label class="w150">Country of Origin</label>
-								<span class="value">{{allEmployeelist.originatingCountryId}}</span>
-							</div>
-							<div class="col-sm-12">
-								<label class="w150">Start Date</label>
+                            </div>
+                            <div class="col-sm-12">
+                                <label class="w150">Country of Origin</label>
+                                <span class="value">{{originationCounty}}</span>
+                            </div>
+                            <div class="col-sm-12">
+                                <label class="w150">Start Date</label>
                                 <span class="value">{{allEmployeelist.startDate | date:'MM-dd-yyyy'}}</span>
-							</div>
-						</div>
+                            </div>
+                        </div>
 						<div class="col-sm-6 right-block">
-							<div class="col-sm-12">
-								<label class="w150">Nationality</label>
-								<span class="value">{{allEmployeelist.nationalityCountryId}}</span>
-							</div>
+                            <div class="col-sm-12">
+                                <label class="w150">Nationality</label>
+                                <span class="value">{{nationalCountry}}</span>
+                           
+                            </div>
 							<div class="col-sm-12">
 								<label class="w150">Cell</label>
 								<span class="value">{{allEmployeelist.mobilePhone}}</span>
@@ -230,14 +243,15 @@
 								<label class="w150">SS</label>
 								<span class="value">{{allEmployeelist.ssn}}</span>
 							</div>
-							<div class="col-sm-12">
-								<label class="w150">Shift</label>
-								<span class="value">{{allEmployeelist.singleShift}}</span>
-							</div>
-							<div class="col-sm-12">
-								<label class="w150">Shift Type</label>
-								<span class="value">{{allEmployeelist.shifId}}</span>
-							</div>
+                            <div class="col-sm-12">
+                                <label class="w150">Shift</label>
+                                <span class="value" *ngIf="allEmployeelist.inMultipleShifts == true">Multiple Shift</span>
+                                <span class="value" *ngIf="allEmployeelist.inMultipleShifts == false">Single Shift</span>
+                            </div>
+                            <div class="col-sm-12">
+                                <label class="w150">Shift Type</label>
+                              
+                            </div>
 							<div class="col-sm-12">
 								<label class="w150">Extra Hours</label>
 								<span class="value">{{allEmployeelist.allowOvertime}}</span>
@@ -252,7 +266,7 @@
 							</div>
 							<div class="col-sm-12">
 								<label class="w150">Leave</label>
-								<span class="value">{{allEmployeelist.employeeLeaveTypeId}}</span>
+                                <span class="value">{{employeeLeaveType}}</span>
 							</div>
 							<div class="col-sm-12">
 								<label class="w150">Employee Certifying Staff?</label>
