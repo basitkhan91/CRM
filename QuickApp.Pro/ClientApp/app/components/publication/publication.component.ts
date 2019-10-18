@@ -89,6 +89,8 @@ export class PublicationComponent implements OnInit, AfterViewInit {
     pnMappingList = [];
     aircraftList: any = [];
     ataList = [];
+    formData = new FormData()
+
     headersforPNMapping = [
         { field: 'partNumber', header: 'PN ID/Code' },
         { field: 'partDescription', header: 'PN Description' },
@@ -337,7 +339,8 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         $('#step4').collapse('hide');
     }
 
-    openView(content, row) {
+    openView(row) {
+        this.closeAllCollapse();
         console.log(row)
         //this.generalInfo = row;
         // this.sourceAction = row;
@@ -838,4 +841,29 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         //window.location.assign(url);
     }
 
+    sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=Publication&fileName=publication.xlsx`;
+        window.location.assign(url);
+    }
+
+    customExcelUpload(event) {
+        const file = event.target.files;
+
+        console.log(file);
+        if (file.length > 0) {
+
+            this.formData.append('file', file[0])
+            // this.publicationService.UOMFileUpload(this.formData).subscribe(res => {
+            //     event.target.value = '';
+
+            //     this.formData = new FormData();
+            //     this.loadData();
+            //     this.alertService.showMessage(
+            //         'Success',
+            //         `Successfully Uploaded  `,
+            //         MessageSeverity.success
+            //     );
+            // })
+        }
+    }
 }

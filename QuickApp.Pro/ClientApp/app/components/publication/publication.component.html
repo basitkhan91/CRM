@@ -7,127 +7,133 @@
                             <div class="inline-block display-flex">
                                 <h3 class="po-head lead">Publication</h3>
                             </div>
-                        </div>
-                    </div>
 
-                <div class="form-row pub-global-filter">
-                    <div class="col-md-2">                        
-                        <div class="form-group">
-                            <label class="fs12">Aircraft </label>
-                            <p-dropdown name="aircraftSearch" class="pub-type-select" [options]="airCraftTypesList" [(ngModel)]="selectAircraftManfacturer" (onChange)="getAircraftModelByManfacturerType()"></p-dropdown>
-                        </div>                        
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                                <label class="fs12">Aircraft Model</label>
-                                <p-dropdown name="aircraftModelSearch" class="pub-type-select" [options]="aircraftModelList" [(ngModel)]="selectedAircraftModel" (onChange)="getDashNumberByManfacturerandModel();"></p-dropdown>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group ">
-                            <label class="fs12">DashNumber </label>
-                            <p-dropdown name="dashNumSearch" class="pub-type-select" [options]="dashNumberList" [(ngModel)]="selectedDashNumbers"></p-dropdown>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label class="fs12">ATA Chapter</label>
-                            <p-dropdown name="ataChapterSearch" class="pub-type-select" [options]="ataChapterList" [(ngModel)]="selectedATAchapter" (onChange)="getSubChapterByATAChapter()"></p-dropdown>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label class="fs12">ATA SubChapter</label>
-                            <p-dropdown name="ataSubChapterSearch" class="pub-type-select" [options]="ataSubChapterList" [(ngModel)]="selectedATASubChapter"></p-dropdown>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <button class="btn btn-primary-cstm" style="margin-top: 18px;" (click)="onSearchAircraftInfoAtaChapter()">Search</button>
-                        <button class="btn btn-primary-cstm" style="margin-top: 18px;" (click)="onReset()">Reset</button>
-                    </div>
-                </div>
-
-
-                <p-table #dt class="rpo-table-cstm rro-table-cstm" [first]="0" [rows]="pagesize" [value]="allpublicationInfo"  [metaKeySelection]="true" [paginator]="true"  [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [resizableColumns]="true" [reorderableColumns]="true"  [totalRecords]="totalRecords" (onLazyLoad)="publicationPagination($event)" [lazy]="true"> <!--onPage-->
-                    <ng-template pTemplate="caption">
-
-                        <div style="text-align: right">
-                            <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
-                                           selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-                            <!-- <div class="inner-addon right-addon w200 inline-block">
-                                <i class="fa fa-search"></i>
-                                <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter">
-                            </div> -->
-                            <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding: 5px 12px !important;"></button>
-                            <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 12px !important;"></button>
-                            <!-- <a (click)="open(contentEdit)" matTooltip="Add Publication" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a> -->
-                            <a [routerLink]="['/singlepages/singlepages/app-create-publication']" matTooltip="Add Publication" class="btn btn-success nobg btn-cstm"><span><i class="fa fa-plus"></i></span></a>
-                            <div class="excel-upload">
-                                <input type="file" class="uploaddoc upload-file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                                <label for="upload">
-                                    <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
-                                </label>
+                            <div class="form-row pub-global-filter">
+                                <div class="col-md-2">                        
+                                    <div class="form-group">
+                                        <label class="fs12">Aircraft </label>
+                                        <p-dropdown name="aircraftSearch" class="pub-type-select" [options]="airCraftTypesList" [(ngModel)]="selectAircraftManfacturer" (onChange)="getAircraftModelByManfacturerType()"></p-dropdown>
+                                    </div>                        
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                            <label class="fs12">Aircraft Model</label>
+                                            <p-dropdown name="aircraftModelSearch" class="pub-type-select" [options]="aircraftModelList" [(ngModel)]="selectedAircraftModel" (onChange)="getDashNumberByManfacturerandModel();"></p-dropdown>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group ">
+                                        <label class="fs12">DashNumber </label>
+                                        <p-dropdown name="dashNumSearch" class="pub-type-select" [options]="dashNumberList" [(ngModel)]="selectedDashNumbers"></p-dropdown>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="fs12">ATA Chapter</label>
+                                        <p-dropdown name="ataChapterSearch" class="pub-type-select" [options]="ataChapterList" [(ngModel)]="selectedATAchapter" (onChange)="getSubChapterByATAChapter()"></p-dropdown>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="fs12">ATA SubChapter</label>
+                                        <p-dropdown name="ataSubChapterSearch" class="pub-type-select" [options]="ataSubChapterList" [(ngModel)]="selectedATASubChapter"></p-dropdown>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-primary-cstm" style="margin-top: 18px;" (click)="onSearchAircraftInfoAtaChapter()">Search</button>
+                                    <button class="btn btn-primary-cstm" style="margin-top: 18px;" (click)="onReset()">Reset</button>
+                                </div>
                             </div>
+            
+            
+                            <p-table #dt class="rpo-table-cstm rro-table-cstm" [first]="0" [rows]="pagesize" [value]="allpublicationInfo"  [metaKeySelection]="true" [paginator]="true"  [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [resizableColumns]="true" [reorderableColumns]="true"  [totalRecords]="totalRecords" (onLazyLoad)="publicationPagination($event)" [lazy]="true"> <!--onPage-->
+                                <ng-template pTemplate="caption">
+            
+                                    <div style="text-align: right">
+                                        <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
+                                                       selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
+                                        <!-- <div class="inner-addon right-addon w200 inline-block">
+                                            <i class="fa fa-search"></i>
+                                            <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter">
+                                        </div> -->
+                                        <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding: 5px 12px !important;"></button>
+                                        <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 12px !important;"></button>
+                                        <!-- <a (click)="open(contentEdit)" matTooltip="Add Publication" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a> -->
+                                        <a [routerLink]="['/singlepages/singlepages/app-create-publication']" matTooltip="Add Publication" class="btn btn-success nobg btn-cstm"><span><i class="fa fa-plus"></i></span></a>
+                                        <!-- <div class="excel-upload excel-upload-cstm">
+                                            <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                                            <label for="upload">
+                                                <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+                                            </label>
+                                        </div> -->
+                                        <div class="excel-upload  excel-upload-cstm">                                        
+                                            <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)"   class="uploaddoc upload-file" accept=".xlsx, .xls, .csv">
+                                            <label for="upload">
+                                                <span matTooltip="Upload Data (Excel)">
+                                                    <i class="fa fa-upload"></i>
+                                                </span>
+                                            </label>
+                                            &nbsp; &nbsp;
+                                            <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()" >Sample File Download</button>
+                                        </div>
+                                    </div>                        
+                                </ng-template>
+
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr>
+                                        <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                            {{col.header}}
+                                            <p-sortIcon [field]="col.field"></p-sortIcon>
+                                        </th>
+                                        <th style="width:200px;position:sticky" *ngIf="selectedColumns.length> 0"> Actions</th>
+                                    </tr>
+                                    <tr>
+                                        <th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                            <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field,'contains')">
+                                        </th>
+                                        <th  style="width:200px;position:sticky"></th>
+                                    </tr>
+                                </ng-template>
+            
+                                <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                    <tr [pSelectableRow]="rowData">
+                        
+                                        <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                                            {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
+                                        </td>
+            
+                                        <td>
+                                            <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                            <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                            <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                            <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+            
+                                            <button class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="edit">
+                                                <mat-icon>edit</mat-icon>
+                                            </button>
+            
+                                            <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="openDelete(content,rowData)">
+                                                <mat-icon color="warn">delete</mat-icon>
+                                            </button>
+            
+                                            <button class="btn-history" mat-icon-button matTooltip="history" (click)="showAuditPopup(auditContent,rowData.publicationRecordId)">
+                                                <mat-icon color="green">history</mat-icon>
+                                            </button>            
+                                        </td>
+                                    </tr>
+                                </ng-template>
+            
+                                <ng-template #auditContent let-c="close" let-d="dismiss">
+                                    <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
+                                        <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+                                    </div>
+                                </ng-template>
+                        
+                            </p-table>
                         </div>
+                    </div>
 
-
-                    </ng-template>
-
-                    <ng-template pTemplate="header" let-columns>
-                        <tr>
-                            <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
-                                {{col.header}}
-                                <p-sortIcon [field]="col.field"></p-sortIcon>
-                            </th>
-                            <th style="width:200px;position:sticky" *ngIf="selectedColumns.length> 0"> Actions</th>
-                        </tr>
-                        <tr>
-                            <th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
-                                <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field,'contains')">
-                            </th>
-                            <th  style="width:200px;position:sticky"></th>
-                        </tr>
-                    </ng-template>
-
-                    <ng-template pTemplate="body" let-rowData let-columns="columns">
-                        <tr [pSelectableRow]="rowData">
-
-
-                            <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-                                {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
-                            </td>
-
-                            <td>
-                                <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-
-                                <button class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="edit">
-                                    <mat-icon>edit</mat-icon>
-                                </button>
-
-                                <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="openDelete(content,rowData)">
-                                    <mat-icon color="warn">delete</mat-icon>
-                                </button>
-
-                                <button class="btn-history" mat-icon-button matTooltip="history" (click)="showAuditPopup(auditContent,rowData.publicationRecordId)">
-                                    <mat-icon color="green">history</mat-icon>
-                                </button>
-
-                            </td>
-                        </tr>
-                    </ng-template>
-
-                    <ng-template #auditContent let-c="close" let-d="dismiss">
-                        <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
-                            <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
-                        </div>
-                    </ng-template>
-
-
-
-                </p-table>
+                
             </div>
         </div>
     </div>
@@ -386,66 +392,71 @@
                                     </div>
                                     <div id="step1" class="panel-collapse  collapse" *ngIf="generalInfo">
                                         <div class="panel-body">
-                                            <div class="modal-content">
-                                                <div class="table-responsive default-bg clear">
-                                                    <div class="col-sm-4">
-                                                        <p><span class="label"><b>Entry Date: </b></span><span class="value">{{generalInfo.entryDate | date: 'dd/MM/yyyy'}}</span></p>
-                                                        <p><span class="label"><b>Publication ID: </b></span><span class="value">{{generalInfo.publicationId ? generalInfo.publicationId : '-'}}</span></p>
-                                                        <p><span class="label"><b>Publication Description: </b></span><span class="value">{{generalInfo.description ? generalInfo.description : '-'}}</span></p>
-                                                        <p><span class="label"><b>Publication Type: </b></span><span class="value">{{generalInfo.publicationType ? generalInfo.publicationType : '-'}}</span></p>
-                                                        <p><span class="label"><b>Author / Source / Directive: </b></span><span class="value">{{generalInfo.asd ? generalInfo.asd : '-'}}</span></p>                                                                                         
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div>
+                                                    <div class="table-responsive default-bg clear">
+                                                        <div class="col-sm-4">
+                                                            <p><span class="label"><b>Entry Date: </b></span><span class="value">{{generalInfo.entryDate | date: 'dd/MM/yyyy'}}</span></p>
+                                                            <p><span class="label"><b>Publication ID: </b></span><span class="value">{{generalInfo.publicationId ? generalInfo.publicationId : '-'}}</span></p>
+                                                            <p><span class="label"><b>Publication Description: </b></span><span class="value">{{generalInfo.description ? generalInfo.description : '-'}}</span></p>
+                                                            <p><span class="label"><b>Publication Type: </b></span><span class="value">{{generalInfo.publicationType ? generalInfo.publicationType : '-'}}</span></p>
+                                                            <p><span class="label"><b>Author / Source / Directive: </b></span><span class="value">{{generalInfo.asd ? generalInfo.asd : '-'}}</span></p>                                                                                         
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                                <p><span class="label"><b>Sequence: </b></span><span class="value">{{generalInfo.sequence ? generalInfo.sequence : '-'}}</span></p>
+                                                                <p><span class="label"><b>Published By: </b></span><span class="value">{{generalInfo.publishby ? generalInfo.publishby : '-'}}</span></p>
+                                                                <p><span class="label"><b>Location: </b></span><span class="value">{{generalInfo.location ? generalInfo.location : '-'}}</span></p>
+                                                                <p><span class="label"><b>Revision Date: </b></span><span class="value">{{generalInfo.revisionDate | date: 'dd/MM/yyyy'}}</span></p>
+                                                                <p><span class="label"><b>Expiration Date: </b></span><span class="value">{{generalInfo.expirationDate | date: 'dd/MM/yyyy'}}</span></p>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                                <p><span class="label"><b>Next Review Date: </b></span><span class="value">{{generalInfo.nextReviewDate | date: 'dd/MM/yyyy'}}</span></p>
+                                                                <p><span class="label"><b>Employee: </b></span><span class="value">{{generalInfo.employeeName ? generalInfo.employeeName : '-'}}</span></p>
+                                                                <p><span class="label"><b>Verified By: </b></span><span class="value">{{generalInfo.verifiedBy ? generalInfo.verifiedBy : '-'}}</span></p>
+                                                                <p><span class="label"><b>Status: </b></span><span class="value">{{isActive}}</span></p>
+                                                            
+                                                        </div>
                                                     </div>
-                                                    <div class="col-sm-4">
-                                                            <p><span class="label"><b>Sequence: </b></span><span class="value">{{generalInfo.sequence ? generalInfo.sequence : '-'}}</span></p>
-                                                            <p><span class="label"><b>Published By: </b></span><span class="value">{{generalInfo.publishby ? generalInfo.publishby : '-'}}</span></p>
-                                                            <p><span class="label"><b>Location: </b></span><span class="value">{{generalInfo.location ? generalInfo.location : '-'}}</span></p>
-                                                            <p><span class="label"><b>Revision Date: </b></span><span class="value">{{generalInfo.revisionDate | date: 'dd/MM/yyyy'}}</span></p>
-                                                            <p><span class="label"><b>Expiration Date: </b></span><span class="value">{{generalInfo.expirationDate | date: 'dd/MM/yyyy'}}</span></p>
-                                                    </div>
-                                                    <div class="col-sm-4">
-                                                            <p><span class="label"><b>Next Review Date: </b></span><span class="value">{{generalInfo.nextReviewDate | date: 'dd/MM/yyyy'}}</span></p>
-                                                            <p><span class="label"><b>Employee: </b></span><span class="value">{{generalInfo.employeeName ? generalInfo.employeeName : '-'}}</span></p>
-                                                            <p><span class="label"><b>Verified By: </b></span><span class="value">{{generalInfo.verifiedBy ? generalInfo.verifiedBy : '-'}}</span></p>
-                                                            <p><span class="label"><b>Status: </b></span><span class="value">{{isActive}}</span></p>
-                                                        
+                                                    <div>
+                                                        <h4 class="panel-title" style="padding-left: 10px;">Attachment Details:</h4>
+                                                        <p-table
+                                                            [columns]="headersforAttachment"
+                                                            [value]="attachmentList"
+                                                            [paginator]="true"
+                                                            [rows]="10"
+                                                            [first]="first"
+                                                        >
+                                                            <ng-template pTemplate="header" let-columns>
+                                                            <tr>
+                                                                <th>Sl.No</th>
+                                                                <th *ngFor="let col of columns">
+                                                                {{ col.header }}
+                                                                </th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                            </ng-template>
+                                                            <ng-template
+                                                            pTemplate="body"
+                                                            let-rowData
+                                                            let-columns="columns"
+                                                            let-rowIndex="rowIndex"
+                                                            >
+                                                            <tr>
+                                                                <td>{{ rowIndex + 1 }}</td>
+                                                                <td *ngFor="let col of columns">
+                                                                {{ rowData[col.field] }}
+                                                                </td>
+                                                                <td><a class="btn btn-primary-cstm" (click)="downloadFileUpload(rowData)" download>Download</a></td> <!--routerLink="/{{rowData.link}}"-->
+                                                            </tr>
+                                                            
+                                                            </ng-template>
+                                                        </p-table>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div>
-                                                    <h4 class="panel-title" style="padding-left: 10px;">Attachment Details:</h4>
-                                                    <p-table
-                                                      [columns]="headersforAttachment"
-                                                      [value]="attachmentList"
-                                                      [paginator]="true"
-                                                      [rows]="10"
-                                                      [first]="first"
-                                                    >
-                                                      <ng-template pTemplate="header" let-columns>
-                                                        <tr>
-                                                          <th>Sl.No</th>
-                                                          <th *ngFor="let col of columns">
-                                                            {{ col.header }}
-                                                          </th>
-                                                          <th>Action</th>
-                                                        </tr>
-                                                      </ng-template>
-                                                      <ng-template
-                                                        pTemplate="body"
-                                                        let-rowData
-                                                        let-columns="columns"
-                                                        let-rowIndex="rowIndex"
-                                                      >
-                                                        <tr>
-                                                          <td>{{ rowIndex + 1 }}</td>
-                                                          <td *ngFor="let col of columns">
-                                                            {{ rowData[col.field] }}
-                                                          </td>
-                                                          <td><a class="btn btn-primary-cstm" (click)="downloadFileUpload(rowData)" download>Download</a></td> <!--routerLink="/{{rowData.link}}"-->
-                                                        </tr>
-                                                        
-                                                      </ng-template>
-                                                    </p-table>
-                                                  </div>
                                             </div>
+                                            
         
                                         </div>
                                     </div>

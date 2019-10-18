@@ -145,11 +145,15 @@ namespace DAL.Repositories
             var data = (from PublicationItemMaster in _appContext.PublicationItemMasterMapping
                         join it in _appContext.ItemMasterATAMapping on PublicationItemMaster.ItemMasterId equals it.ItemMasterId
                         join pub in _appContext.Publication on PublicationItemMaster.PublicationRecordId equals pub.PublicationRecordId
+                        join sc in _appContext.ATASubChapter on it.ATASubChapterId equals sc.ATASubChapterId
                         where it.IsDeleted==false && PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true
                         select new
                         {
                             it.ATAChapterName,
                             it.ATASubChapterDescription,
+                            it.ATAChapterCode,
+                            sc.ATASubChapterCode
+                            
                         }).Distinct()
                         .ToList();
             return data;
