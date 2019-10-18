@@ -408,6 +408,10 @@ namespace DAL
         public DbSet<Percent> Percent { get; set; }
         public DbSet<PurchaseOrderApprover> PurchaseOrderApprover { get; set; }
         public DbSet<PurchaseOrderApproverList> PurchaseOrderApproverList { get; set; }
+        public DbSet<POBillingShippingAddress> POBillingShippingAddress { get; set; }
+        public DbSet<PurchaseOrderAddress> PurchaseOrderAddress { get; set; }
+        public DbSet<VendorBillingAddress> VendorBillingAddress { get; set; }
+        public DbSet<PurchaseOrderShipVia> PurchaseOrderShipVia { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
