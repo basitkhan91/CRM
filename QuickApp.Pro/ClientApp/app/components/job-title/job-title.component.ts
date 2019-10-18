@@ -106,8 +106,8 @@ export class JobTitleComponent implements OnInit {
     getJobTitleList() {
         this.jobTitleService.getAllJobTitleList().subscribe(res => {
             const responseData = res[0];
-            this.jobTitleData = responseData.columnData;
-            this.totalRecords = responseData.totalRecords;
+            this.jobTitleData = responseData;
+            this.totalRecords = responseData.length;
             this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
         })
     }
@@ -134,7 +134,7 @@ export class JobTitleComponent implements OnInit {
         this.jobTitleList = this.jobTitleData;
 
         const jobTitleData = [...this.jobTitleData.filter(x => {
-            return x.classificationName.toLowerCase().includes(event.query.toLowerCase())
+            return x.description.toLowerCase().includes(event.query.toLowerCase())
         })]
         this.jobTitleList = jobTitleData;
     }
@@ -239,7 +239,7 @@ export class JobTitleComponent implements OnInit {
 
     getAuditHistoryById(rowData) {
         this.jobTitleService.getJobTitleAudit(rowData.jobTitleId).subscribe(res => {
-            this.auditHistory = res;
+            this.auditHistory = res[0].result;
         })
     }
 

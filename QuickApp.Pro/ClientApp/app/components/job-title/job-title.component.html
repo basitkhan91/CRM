@@ -86,7 +86,7 @@
                                                 <i class="fa fa-eye"></i>
                                             </a>
                                         </span>
-                                        <button class="btn-edit" mat-icon-button (click)="editJobtitles(rowData)"
+                                        <button class="btn-edit" mat-icon-button (click)="editJobTitle(rowData)"
                                             data-target="#addJobtitles" data-toggle="modal" matTooltip="Edit">
                                             <mat-icon>edit</mat-icon>
                                         </button>
@@ -187,10 +187,10 @@
                         </div>
                         <div class="col-sm-12">
                             <div class="col-sm-4">
-                                <label for="description" class="control-label">Memo</label>
+                                <label for="memo" class="control-label">Memo</label>
                             </div>
                             <div class="col-sm-5">
-                                <textarea class="text-item" #memo="ngModel" id="memo" name="memodescription"
+                                <textarea class="text-item" #memo="ngModel" id="memo" name="memo"
                                     [(ngModel)]="addNewJobTitle.memo" minlength="2"></textarea>
                             </div>
                         </div>
@@ -246,8 +246,6 @@
                         </thead>
                         <tbody *ngIf="existingRecordsResponse.length> 0">
                             <tr *ngFor="let ext of existingRecordsResponse; let i = index;">
-
-                                <!-- <td >{{audit.unitOfMeasureAuditId}}</td> -->
                                 <td>{{ext.description}}</td>
                                 <td>{{ext.memo}}</td>
                             </tr>
