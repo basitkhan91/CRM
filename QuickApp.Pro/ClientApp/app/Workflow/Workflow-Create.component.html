@@ -438,7 +438,7 @@
                                     </li>
                                 </ul>
                                 <div class="tab-content" style="position: relative;">
-                                    <div id="tab_Publications" *ngIf="workFlow != undefined && workFlow.publication.length > 0"
+                                    <div id="tab_Publications" *ngIf="workFlow != undefined && workFlow.publication != undefined"
                                          class="tab-pane fade pan">
                                         <grd-publication [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-publication>
                                     </div>
