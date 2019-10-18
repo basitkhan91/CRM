@@ -29,6 +29,7 @@ import { GlAccount } from '../../../../models/GlAccount.model';
 import { getValueFromObjectByKey, getObjectByValue, getValueFromArrayOfObjectById, getObjectById } from '../../../../generic/autocomplete';
 import { AuthService } from '../../../../services/auth.service';
 import { CommonService } from '../../../../services/common.service';
+import { CustomerShippingModel } from '../../../../models/customer-shipping.model';
 
 @Component({
 	selector: 'app-purchase-setup',
@@ -239,14 +240,44 @@ export class PurchaseSetupComponent {
 	approverIds: any = [];
 	multiplePNIdArray: any = [];
 	tempNewPNArray: any = [];
+	newObjectForParent = new CreatePOPartsList();
+	addressFormForShipping = new CustomerShippingModel()
+	addressFormForBilling = new CustomerShippingModel()
+	// this.siteName ="";
+	// this.address1 ="";
+	// this.address3 ="";
+	// this.address2 ="";
+	// this.city ="";
+	// this.stateOrProvince = "";
+	// this.postalCode ="";
+	// this.country ="" ;
 
 	/** po-approval ctor */
-	constructor(public siteService: SiteService, public warehouseService: WarehouseService, private masterComapnyService: MasterComapnyService, public cusservice: CustomerService, private itemser: ItemMasterService, private modalService: NgbModal, private route: Router, public legalEntityService: LegalEntityService, public currencyService: CurrencyService, public unitofmeasureService: UnitOfMeasureService, public conditionService: ConditionService, public CreditTermsService: CreditTermsService, public employeeService: EmployeeService, public vendorService: VendorService, public priority: PriorityService, private alertService: AlertService, public glAccountService: GlAccountService, private authService: AuthService, private commonService: CommonService) {
+	constructor(public siteService: SiteService,
+		public warehouseService: WarehouseService,
+		private masterComapnyService: MasterComapnyService,
+		// public customerService: CustomerService, 
+		private itemser: ItemMasterService,
+		private modalService: NgbModal,
+		private route: Router,
+		public legalEntityService: LegalEntityService,
+		public currencyService: CurrencyService,
+		public unitofmeasureService: UnitOfMeasureService,
+		public conditionService: ConditionService,
+		public CreditTermsService: CreditTermsService,
+		public employeeService: EmployeeService,
+		public vendorService: VendorService,
+		public priority: PriorityService,
+		private alertService: AlertService,
+		public glAccountService: GlAccountService,
+		private authService: AuthService,
+		private customerService: CustomerService,
+		private commonService: CommonService) {
 
 		//this.loadcustomerData();
 		//this.loadData();
 		//this.createPOPartsList = [new CreatePOPartsList()];
-		this.partListData = [new CreatePOPartsList()]; //CreatePOPartsListParent
+		this.partListData = [this.newObjectForParent]; //CreatePOPartsListParent
 
 		/*if (this.sourcePoApproval.purchaseOrderNumber == "" || this.sourcePoApproval.purchaseOrderNumber == undefined) {
 			this.sourcePoApproval.purchaseOrderNumber = 'Creating';
@@ -646,7 +677,7 @@ export class PurchaseSetupComponent {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
 
-		this.cusservice.getWorkFlows().subscribe(
+		this.customerService.getWorkFlows().subscribe(
 			results => this.oncusDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
@@ -694,7 +725,7 @@ export class PurchaseSetupComponent {
 
 		//get Shipping info
 		if (this.sourcePoApproval.billToUserType == 1) {
-			this.cusservice.getCustomerShipAddressGetWIthAddressId(this.sourcePoApproval.billToAddressId).subscribe(
+			this.customerService.getCustomerShipAddressGetWIthAddressId(this.sourcePoApproval.billToAddressId).subscribe(
 				returnddataforbill1 => {
 					let obj = returnddataforbill1[0][0];
 					if (obj) {
@@ -711,7 +742,7 @@ export class PurchaseSetupComponent {
 		}
 		if (this.sourcePoApproval.billToUserType == 2) {
 
-			this.cusservice.getvendorShipAddressGetWIthAddressId(this.sourcePoApproval.billToAddressId).subscribe(
+			this.customerService.getvendorShipAddressGetWIthAddressId(this.sourcePoApproval.billToAddressId).subscribe(
 				returnddataforbill => {
 					let obj = returnddataforbill[0][0];
 					if (obj) {
@@ -727,7 +758,7 @@ export class PurchaseSetupComponent {
 				});
 		}
 		if (this.sourcePoApproval.shipToUserType == 1) {
-			this.cusservice.getCustomerShipAddressGetWIthAddressId(this.sourcePoApproval.shipToAddressId).subscribe(
+			this.customerService.getCustomerShipAddressGetWIthAddressId(this.sourcePoApproval.shipToAddressId).subscribe(
 				returnddataforbill => {
 
 					let obj = returnddataforbill[0][0];
@@ -744,7 +775,7 @@ export class PurchaseSetupComponent {
 				});
 		}
 		if (this.sourcePoApproval.shipToUserType == 2) {
-			this.cusservice.getvendorShipAddressGetWIthAddressId(this.sourcePoApproval.shipToAddressId).subscribe(
+			this.customerService.getvendorShipAddressGetWIthAddressId(this.sourcePoApproval.shipToAddressId).subscribe(
 				returnddataforbill => {
 					let obj = returnddataforbill[0][0];
 					if (obj) {
@@ -798,26 +829,37 @@ export class PurchaseSetupComponent {
 
 	filterpartItems(event) {
 
-		this.partCollection = [];
-		this.itemclaColl = [];
-		if (this.allPartnumbersInfo) {
-			if (this.allPartnumbersInfo.length > 0) {
 
-				for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
-					let partName = this.allPartnumbersInfo[i].partNumber;
-					if (partName) {
-						if (partName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-							this.itemclaColl.push([{
-								"partId": this.allPartnumbersInfo[i].itemMasterId,
-								"partName": partName
-							}]),
 
-								this.partCollection.push(partName);
-						}
-					}
-				}
-			}
+		this.partCollection = this.allPartnumbersInfo;
+
+		if (event.query !== undefined && event.query !== null) {
+			const partNumberFilter = [...this.allPartnumbersInfo.filter(x => {
+				return x.partNumber.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.partCollection = partNumberFilter;
 		}
+
+		// this.partCollection = [];
+		// this.itemclaColl = [];
+		// if (this.allPartnumbersInfo) {
+		// 	if (this.allPartnumbersInfo.length > 0) {
+
+		// 		for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
+		// 			let partName = this.allPartnumbersInfo[i].partNumber;
+		// 			if (partName) {
+		// 				if (partName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+		// 					this.itemclaColl.push([{
+		// 						"partId": this.allPartnumbersInfo[i].itemMasterId,
+		// 						"partName": partName
+		// 					}]),
+
+		// 						this.partCollection.push(partName);
+		// 				}
+		// 			}
+		// 		}
+		// 	}
+		// }
 	}
 
 	// filterpartItems(event) {
@@ -830,56 +872,59 @@ export class PurchaseSetupComponent {
 	// 		this.partCollection = partnum;
 	// 	}}
 
-	partnmId(parentdata, event) {
+	partnmId(parentdata) {
 		console.log(parentdata, event)
 
 		this.showInput = true;
 
-		if (this.itemclaColl) {
-			for (let i = 0; i < this.itemclaColl.length; i++) {
-				if (event == this.itemclaColl[i][0].partName) {
-					this.sourcePoApproval.itemMasterId = this.itemclaColl[i][0].partId;
-					//this.allSelectedParts.push(this.itemclaColl[i][0].partId);
-					//this.selectedActionName = event;
-					this.partWithId = [];
-					this.itemTypeId = 1;
+		// if (this.itemclaColl) {
+		// 	for (let i = 0; i < this.itemclaColl.length; i++) {
+		// 		if (event == this.itemclaColl[i][0].partName) {
+		// 			this.sourcePoApproval.itemMasterId = this.itemclaColl[i][0].partId;
+		//this.allSelectedParts.push(this.itemclaColl[i][0].partId);
+		//this.selectedActionName = event;
 
-					//For Getting Data After Part Selected
+		const itemMasterId = getValueFromObjectByKey('itemMasterId', parentdata.partNumberId)
+		this.sourcePoApproval.itemMasterId = itemMasterId;
+		this.partWithId = [];
+		this.itemTypeId = 1;
 
-					this.vendorService.getPartDetailsWithidForSinglePart(this.sourcePoApproval.itemMasterId).subscribe(
-						data1 => {
-							console.log(data1);
-							if (data1[0][0]) {
-								this.partWithId = data1[0][0];
-								parentdata.partId = this.partWithId.itemMasterId;
-								parentdata.altPartNumberId = this.partWithId.partAlternatePartId;
-								parentdata.partDescription = this.partWithId.partDescription;
-								parentdata.itemTypeId = this.partWithId.itemTypeId;
-								parentdata.manufacturerId = this.partWithId.manufacturerId;
-								parentdata.manufacturerName = this.partWithId.name;
-								parentdata.glAccountId = this.partWithId.glAccountId;
-								parentdata.glAccount = getObjectById('glAccountId', this.partWithId.glAccountId, this.allGlInfo);
-								parentdata.UOMId = this.partWithId.purchaseUnitOfMeasureId;
-								parentdata.UOMShortName = this.partWithId.shortName;
-								parentdata.partNumber = this.partWithId.partNumber;
-								parentdata.itemMasterId = this.partWithId.itemMasterId;
-								//parentdata.partNumberId = this.partWithId.itemMasterId;
+		//For Getting Data After Part Selected
 
-								/*	//this.glAccountTemp = this.partWithId.glAccountId;								
-									//parentdata.glAccountId = this.partWithId.glAccountId;
-									//console.log(parentdata.glAccount.accountName)
-									parentdata.shortName = this.partWithId.shortName;
-									parentdata.listPrice = this.partWithId.listPrice; //Initial Value
-									parentdata.purchaseDiscountOffListPrice = this.partWithId.purchaseDiscountOffListPrice; //Percentage
-									parentdata.manufacturerId = this.partWithId.manufacturerId;
-									this.partList.unitCost = this.partWithId.purchaseListPriceAfterDiscount; //After Discount Value
-									*/
-							}
+		this.vendorService.getPartDetailsWithidForSinglePart(this.sourcePoApproval.itemMasterId).subscribe(
+			data1 => {
+				console.log(data1);
+				if (data1[0][0]) {
+					this.partWithId = data1[0][0];
+					parentdata.partId = this.partWithId.itemMasterId;
+					parentdata.altPartNumberId = this.partWithId.partAlternatePartId;
+					parentdata.partDescription = this.partWithId.partDescription;
+					parentdata.itemTypeId = this.partWithId.itemTypeId;
+					parentdata.manufacturerId = this.partWithId.manufacturerId;
+					parentdata.manufacturerName = this.partWithId.name;
+					parentdata.glAccountId = this.partWithId.glAccountId;
+					parentdata.glAccount = getObjectById('glAccountId', this.partWithId.glAccountId, this.allGlInfo);
+					parentdata.UOMId = this.partWithId.purchaseUnitOfMeasureId;
+					parentdata.UOMShortName = this.partWithId.shortName;
+					parentdata.partNumber = this.partWithId.partNumber;
+					parentdata.itemMasterId = this.partWithId.itemMasterId;
+					//parentdata.partNumberId = this.partWithId.itemMasterId;
 
-						})
+					/*	//this.glAccountTemp = this.partWithId.glAccountId;								
+						//parentdata.glAccountId = this.partWithId.glAccountId;
+						//console.log(parentdata.glAccount.accountName)
+						parentdata.shortName = this.partWithId.shortName;
+						parentdata.listPrice = this.partWithId.listPrice; //Initial Value
+						parentdata.purchaseDiscountOffListPrice = this.partWithId.purchaseDiscountOffListPrice; //Percentage
+						parentdata.manufacturerId = this.partWithId.manufacturerId;
+						this.partList.unitCost = this.partWithId.purchaseListPriceAfterDiscount; //After Discount Value
+						*/
 				}
-			};
-		}
+
+			})
+		// 		}
+		// 	};
+		// }
 	}
 	ddlModel: any;
 
@@ -1062,7 +1107,7 @@ export class PurchaseSetupComponent {
 		console.log(part, customer)
 		// part.poPartSplitUserId = customer.customerId;
 
-		this.cusservice.getCustomerShipAddressGet(customer.customerId).subscribe(returnedcustomerAddressses => {
+		this.customerService.getCustomerShipAddressGet(customer.customerId).subscribe(returnedcustomerAddressses => {
 			this.spiltshipmentData = returnedcustomerAddressses[0];
 			part.addressData = returnedcustomerAddressses[0];
 			//part.poPartSplitAddressId = 0;
@@ -1148,7 +1193,7 @@ export class PurchaseSetupComponent {
 		for (let i = 0; i < this.customerNamecoll.length; i++) {
 			if (event == this.customerNamecoll[i][0].name) {
 
-				this.cusservice.getCustomerShipAddressGet(this.customerNamecoll[i][0].customerId).subscribe(returnedcusdata => {
+				this.customerService.getCustomerShipAddressGet(this.customerNamecoll[i][0].customerId).subscribe(returnedcusdata => {
 					this.spiltshipmentData = returnedcusdata[0];
 					partChildList["addressData"] = returnedcusdata[0];
 				});
@@ -1263,11 +1308,11 @@ export class PurchaseSetupComponent {
 		for (let i = 0; i < this.customerNames.length; i++) {
 			if (event.name == this.customerNames[i].name) {
 
-				this.cusservice.getCustomerShipAddressGet(this.customerNames[i].customerId).subscribe(
+				this.customerService.getCustomerShipAddressGet(this.customerNames[i].customerId).subscribe(
 					returnddataforbill => {
 						this.billToCusData = returnddataforbill[0];
 					});
-				this.cusservice.getContacts(this.customerNames[i].customerId).subscribe(data => {
+				this.customerService.getContacts(this.customerNames[i].customerId).subscribe(data => {
 					this.billToContactData = data[0];//shipToContactData
 				});
 				break;
@@ -1279,13 +1324,14 @@ export class PurchaseSetupComponent {
 		for (let i = 0; i < this.customerNames.length; i++) {
 			if (event.name == this.customerNames[i].name) {
 
-				this.cusservice.getCustomerShipAddressGet(this.customerNames[i].customerId).subscribe(
+				this.customerService.getCustomerShipAddressGet(this.customerNames[i].customerId).subscribe(
 					returnddataforbill => {
 						this.shipToCusData = returnddataforbill[0];
 					});
-				this.cusservice.getContacts(this.customerNames[i].customerId).subscribe(data => {
+				this.customerService.getContacts(this.customerNames[i].customerId).subscribe(data => {
 
 					this.shipToContactData = data[0];
+					// this.adressPOPUPDropdown = this.shipToContactData ;
 				});
 				break;
 			}
@@ -1861,24 +1907,46 @@ export class PurchaseSetupComponent {
 		console.log(this.partListData)
 		console.log(this.newData);
 		this.tempNewPNArray = [];
+		let newParentObject = new CreatePOPartsList()
 		if (this.newData) {
-			for (let i = 0; i < this.newData.length; i++) {
-				//this.multiplePNIdArray.push(this.newData[i].itemMasterId);
-				if (this.newData[i].addAllMultiPNRows) {
-					this.tempNewPNArray.push(new CreatePOPartsList());
+			const data = this.newData.map(x => {
+				if (x.addAllMultiPNRows) {
+					this.partListData = [...this.partListData, {
+						...newParentObject,
+						partNumberId: getObjectById('itemMasterId', x.itemMasterId, this.allPartnumbersInfo)
+					}]
 				}
-
-			}
-			this.tempNewPNArray.map(x => {
-				const pnobj = {
-					...x,
-					//partNumberId: getObjectById('itemMasterId', this.newData[i].itemMasterId, this.allActions)
-				}
-				this.partListData.push(pnobj);
-
+				// this.partListData.map(x => {
+				// 	this.partnmId(x)
+				// })
 
 
 			})
+			console.log(data);
+			console.log(this.partListData);
+
+			// for (let i = 0; i < this.newData.length; i++) {
+
+			// 	if(this.newData[i].addAllMultiPNRows)
+			// 					// if (this.newData[i].addAllMultiPNRows) {
+			// 					// 	this.tempNewPNArray.push(new CreatePOPartsList());
+			// 					// }
+			// 					// partListData
+
+
+
+
+			// }
+			// this.tempNewPNArray.map(x => {
+			// 	const pnobj = {
+			// 		...x,
+			// 		//partNumberId: getObjectById('itemMasterId', this.newData[i].itemMasterId, this.allActions)
+			// 	}
+			// 	this.partListData.push(pnobj);
+
+
+
+			// })
 
 			//this.partListData.push(new CreatePOPartsList());
 			//grid childlist disable on load
@@ -2309,6 +2377,7 @@ export class PurchaseSetupComponent {
 			});
 		this.vendorService.getContacts(event.vendorId).subscribe(data => {
 			this.vendorContactsForshipTo = data[0]; //vendorContactsForshipTo
+
 			console.log(this.vendorContactsForshipTo);
 
 		});
@@ -2333,11 +2402,11 @@ export class PurchaseSetupComponent {
         for (let i = 0; i < this.customerNamecoll.length; i++) {
             if (event == this.customerNamecoll[i][0].name) {
 
-                this.cusservice.getCustomerShipAddressGet(this.customerNamecoll[i][0].customerId).subscribe(
+                this.customerService.getCustomerShipAddressGet(this.customerNamecoll[i][0].customerId).subscribe(
                     returnddataforbill => {
                         this.shipToCusData = returnddataforbill[0];
                     });
-                this.cusservice.getContacts(this.customerNamecoll[i][0].customerId).subscribe(data => {
+                this.customerService.getContacts(this.customerNamecoll[i][0].customerId).subscribe(data => {
 
                     this.shipToContactData = data[0];
                 });
@@ -3433,9 +3502,82 @@ export class PurchaseSetupComponent {
 		}
 	}
 
-	saveAddressSiteName() {
+	saveShippingAddress() {
+		const data = {
+			...this.addressFormForShipping,
+			createdBy: this.userName,
+			updatedBy: this.userName,
+			masterCompanyId: 1,
+			isActive: true,
+
+		}
+		if (this.sourcePoApproval.shipToUserTypeId == 1) {
+			const customeraddressData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('customerId', this.sourcePoApproval.shipToUserId) }
+
+
+			this.customerService.newShippingAdd(customeraddressData).subscribe(() => {
+				this.addressFormForShipping = new CustomerShippingModel()
+				this.alertService.showMessage(
+					'Success',
+					`Saved  Shipping Information Sucessfully `,
+					MessageSeverity.success
+				);
+
+			})
+		}
+		if (this.sourcePoApproval.shipToUserTypeId == 2) {
+			const vendoraddressData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId) }
+
+			this.vendorService.newShippingAdd(vendoraddressData).subscribe(() => {
+				this.addressFormForShipping = new CustomerShippingModel()
+				this.alertService.showMessage(
+					'Success',
+					`Saved  Shipping Information Sucessfully `,
+					MessageSeverity.success
+				);
+
+			})
+		}
 
 	}
+
+	saveBillingAddress() {
+		const data = {
+			...this.addressFormForBilling,
+			createdBy: this.userName,
+			updatedBy: this.userName,
+			masterCompanyId: 1,
+			isActive: true,
+
+		}
+		if (this.sourcePoApproval.billToUserTypeId == 1) {
+			const customeraddressData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('customerId', this.sourcePoApproval.billToUserId) }
+			this.customerService.newBillingAdd(customeraddressData).subscribe(() => {
+				this.addressFormForBilling = new CustomerShippingModel()
+				this.alertService.showMessage(
+					'Success',
+					`Saved  Billing Information Sucessfully `,
+					MessageSeverity.success
+				);
+
+			})
+		}
+		if (this.sourcePoApproval.billToUserTypeId == 2) {
+			const vendoraddressData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.billToUserId) }
+			this.vendorService.newShippingAdd(vendoraddressData).subscribe(() => {
+				this.addressFormForBilling = new CustomerShippingModel()
+				this.alertService.showMessage(
+					'Success',
+					`Saved  Billing Information Sucessfully `,
+					MessageSeverity.success
+				);
+
+			})
+		}
+
+	}
+
+
 
 	saveAddressSiteNameToPO() {
 

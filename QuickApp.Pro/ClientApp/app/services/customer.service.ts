@@ -299,7 +299,6 @@ export class CustomerService {
         return this.customerEndpoint.AddCustomerContactDetails<any>(Customer);
     }
     newBillingAdd(action: any) {
-
         return this.customerEndpoint.getNewBillinginfo<any>(action);
     }
 
