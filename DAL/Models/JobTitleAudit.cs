@@ -8,7 +8,7 @@ namespace DAL.Models
     public class JobTitleAudit
     {
         [Key]
-        public Int16 JobTitleAuditId { get; set; }
+        public long JobTitleAuditId { get; set; }
         public Int16 JobTitleId { get; set; }
 
         public string Description { get; set; }
