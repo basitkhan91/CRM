@@ -34,6 +34,7 @@ import { VendorCapabilitiesListComponent } from "../components/vendor/vendor-cap
 import { AddVendorCapabilitiesComponent } from "../components/vendor/vendor-caps/add-vendor-capabilities/add-vendor-capabilities.component";
 import { EditVendorCapabilitiesComponent } from '../components/vendor/vendor-caps/edit-vendor-capabilities/edit-vendor-capabilities.component';
 import { RolesGuardService } from '../services/roles-guard.service';
+import { CommonService } from '../services/common.service';
 
 
 const vendorPagesRoutes: Routes = [
@@ -77,7 +78,7 @@ const vendorPagesRoutes: Routes = [
 		RouterModule
 	],
 	providers: [
-		AuthService, AuthGuard
+		AuthService, AuthGuard,CommonService
 	]
 })
 export class VendorPagesRoutingModule { }

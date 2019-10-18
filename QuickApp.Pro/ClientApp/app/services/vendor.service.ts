@@ -551,6 +551,13 @@ export class VendorService {
 	getVendorContactsListByID(vendorId: any) {
         return Observable.forkJoin(
             this.actionEndpoint.getVendorContactsByIDEndpoint<any[]>(vendorId));
-    }
+	}
 
+	saveCreatePOApproval(action: any) {
+		return this.actionEndpoint.saveCreatePOApproval<any>(action);
+	}
+
+	updatePOApproval(action: any) {
+		return this.actionEndpoint.updatePOApproval<any>(action);
+	}
 }

@@ -19,7 +19,7 @@ namespace DAL.Repositories
 
         public IEnumerable<DAL.Models.Employee> GetAllEmployeeData()
         {
-            var empData = _appContext.Employee.Include("EmployeeShiftMapping").ToList().Where(t => t.IsDelete == null || t.IsDelete == false);
+            var empData = _appContext.Employee.Include("EmployeeShiftMapping").ToList().Where(t => t.IsDeleted == null || t.IsDeleted == false);
             return empData;
         }
 
