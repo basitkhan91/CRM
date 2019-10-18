@@ -336,6 +336,7 @@ namespace DAL
         public DbSet<ItemClassficationAudit> ItemClassificationAudit { get; set; }
         public DbSet<ItemgroupAudit> ItemGroupAudit { get; set; }
         public DbSet<JobTitleAudit> JobTitleAudit { get; set; }
+        public DbSet<JobTypeAudit> JobTypeAudit { get; set; }
         public DbSet<PriorityAudit> PriorityAudit { get; set; }
         public DbSet<WarehouseAudit> WarehouseAudit { get; set; }
         public DbSet<LocationAudit> LocationAudit { get; set; }

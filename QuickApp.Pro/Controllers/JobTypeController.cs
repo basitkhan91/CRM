@@ -51,6 +51,7 @@ namespace QuickApp.Pro.Controllers
                 DAL.Models.JobType jobTypeObj = new DAL.Models.JobType();
                 jobTypeObj.jobTypeDescription = jobTypeViewModel.jobTypeDescription;
                 jobTypeObj.JobTypeName = jobTypeViewModel.JobTypeName;
+                jobTypeObj.MasterCompanyId = jobTypeViewModel.MasterCompanyId;
                 jobTypeObj.IsActive = jobTypeViewModel.IsActive;
                 jobTypeObj.CreatedDate = DateTime.Now;
                 jobTypeObj.UpdatedDate = DateTime.Now;
@@ -80,6 +81,7 @@ namespace QuickApp.Pro.Controllers
 
                 existingResult.jobTypeDescription = jobTypeViewModel.jobTypeDescription;
                 existingResult.JobTypeName = jobTypeViewModel.JobTypeName;
+                existingResult.MasterCompanyId = jobTypeViewModel.MasterCompanyId;
                 existingResult.IsActive = jobTypeViewModel.IsActive;
                 existingResult.UpdatedDate = DateTime.Now;
                 existingResult.UpdatedBy = jobTypeViewModel.UpdatedBy;
@@ -110,6 +112,20 @@ namespace QuickApp.Pro.Controllers
             return Ok(id);
         }
 
+
+        [HttpGet("audits/{id}")]
+        public IActionResult AuditDetails(long id)
+        {
+            var audits = _unitOfWork.Repository<JobTypeAudit>()
+                .Find(x => x.JobTypeId == id)
+                .OrderByDescending(x => x.JobTypeAuditId);
+
+            var auditResult = new List<AuditResult<JobTypeAudit>>();
+
+            auditResult.Add(new AuditResult<JobTypeAudit> { AreaName = "Job Type", Result = audits.ToList() });
+
+            return Ok(auditResult);
+        }
 
     }
 

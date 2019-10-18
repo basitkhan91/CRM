@@ -224,7 +224,7 @@ export class JobTitleComponent implements OnInit {
 
     deleteConformation(value) {
         if (value === 'Yes') {
-            this.jobTitleService.deleteAcion(this.selectedRowforDelete.vendorClassificationId).subscribe(() => {
+            this.jobTitleService.deleteAcion(this.selectedRowforDelete.jobTitleId).subscribe(() => {
                 this.getJobTitleList();
                 this.alertService.showMessage(
                     'Success',

@@ -9,10 +9,13 @@ namespace DAL.Models
     public class JobType : IAudit
     {
         [Key]
-        public int JobTypeId { get; set; }
+        public Int16 JobTypeId { get; set; }
 
         public string JobTypeName { get; set; }
         public string jobTypeDescription { get; set; }
+
+        [ForeignKey("MasterCompanyId")]
+        public Int32 MasterCompanyId { get; set; }
 
         public string CreatedBy { get; set; }
 
@@ -25,6 +28,8 @@ namespace DAL.Models
         public bool IsActive { get; set; }
 
         public bool IsDeleted { get; set; }
+
+        public virtual MasterCompany MasterCompany { get; set; }
 
     }
 }

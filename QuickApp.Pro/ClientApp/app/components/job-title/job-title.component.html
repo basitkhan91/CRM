@@ -286,17 +286,15 @@
                             </tr>
                         </thead>
                         <tbody *ngIf="auditHistory.length> 0">
-                            <tr *ngFor="let audit of auditHistory; let i = index;">
 
-                                <td
-                                    [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].description === audit.description ? 'black' : 'red'  }">
-                                    {{audit.description}}</td>
-                                <td
-                                    [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].memo === audit.memo ? 'black' : 'red'  }">
-                                    {{audit.memo}}</td>
-                                <td
-                                    [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].isActive === audit.isActive ? 'black' : 'red'  }">
-                                    {{audit.isActive}}</td>
+
+
+                            <tr *ngFor="let audit of auditHistory; let i = index;">
+                                <!-- auditHistory[i>0 ? i-1 : i] -->
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'description', audit.description)  ? 'black' : 'red'  }">{{audit.description}}</td>
+                          
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'memo', audit.memo)  ? 'black' : 'red'  }">{{audit.memo}}</td>
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
                                 <td>{{audit.updatedBy}}</td>
                                 <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
                             </tr>
