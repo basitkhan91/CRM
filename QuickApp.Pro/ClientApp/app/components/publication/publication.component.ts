@@ -806,6 +806,22 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         }
     }
 
+    onReset() {
+        this.publicationService.getWorkFlows(this.pageIndex, this.pagesize).subscribe(
+            results => {
+                this.onDataLoadSuccessful(results[0]['paginationList']);
+                console.log(results[0]['totalRecordsCount']);
+                this.totalRecords = results[0]['totalRecordsCount'];
+            },
+            error => this.onDataLoadFailed(error)
+        );
+        this.selectAircraftManfacturer = null;
+        this.selectedAircraftModel = null;
+        this.selectedDashNumbers = null;
+        this.selectedATAchapter = null;
+        this.selectedATASubChapter = null;
+    }
+
     downloadFileUpload(rowData) {
         console.log(rowData.link)
 
