@@ -619,10 +619,118 @@ namespace DAL.Repositories
             }
         }
 
+
+        public long CreateShippingVia(ShippingVia shippingVia)
+        {
+            try
+            {
+                shippingVia.CreatedDate = shippingVia.UpdatedDate = DateTime.Now;
+                shippingVia.IsActive = true;
+                shippingVia.IsDeleted = false;
+                _appContext.ShippingVia.Add(shippingVia);
+                _appContext.SaveChanges();
+                return shippingVia.ShippingViaId;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void UpdateShippingVia(ShippingVia shippingVia)
+        {
+            try
+            {
+                shippingVia.UpdatedDate = DateTime.Now;
+                _appContext.ShippingVia.Update(shippingVia);
+                _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public object GetShippingViaDetails(long shippingViaId)
+        {
+            var data = (from sv in _appContext.ShippingVia
+                        where sv.IsDeleted == false && sv.ShippingViaId == shippingViaId
+                        select new
+                        {
+                            ShipVia = sv.Name,
+                            sv.ShippingAccountInfo,
+                            sv.ShippingURL,
+                            sv.ShippingId,
+                            sv.Memo
+                        }).FirstOrDefault();
+            return data;
+        }
+
         private static PropertyInfo[] GetProperties(object obj)
         {
             return obj.GetType().GetProperties();
         }
+
+        public long? CreateAddress(Address address)
+        {
+            try
+            {
+                address.CreatedDate = address.UpdatedDate = DateTime.Now;
+                address.IsActive = true;
+                _appContext.Address.Add(address);
+                _appContext.SaveChanges();
+                return address.AddressId;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void UpdateAddress(Address address)
+        {
+            try
+            {
+                address.UpdatedDate = DateTime.Now;
+                _appContext.Address.Update(address);
+                _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public object GetAddressDetails(long addressId)
+        {
+            try
+            {
+                var data = (from ad in _appContext.Address
+                            where ad.AddressId == addressId
+                            select new
+                            {
+                                ad.City,
+                                ad.Country,
+                                ad.Line1,
+                                ad.Line2,
+                                ad.Line3,
+                                ad.PoBox,
+                                ad.PostalCode,
+                                ad.StateOrProvince
+                            }).FirstOrDefault();
+                return data;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }

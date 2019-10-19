@@ -37,5 +37,14 @@ namespace DAL.Repositories.Interfaces
 
         IEnumerable<object> BindDropdowns(string tableName, string primaryColumn, string textColumn,long count);
 
-	}
+        long CreateShippingVia(ShippingVia shippingVia);
+        void UpdateShippingVia(ShippingVia shippingVia);
+        object GetShippingViaDetails(long shippingViaId);
+
+        long? CreateAddress(Address address);
+        void UpdateAddress(Address address);
+        object GetAddressDetails(long addressId);
+
+
+    }
 }
