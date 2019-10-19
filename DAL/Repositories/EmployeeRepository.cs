@@ -99,8 +99,6 @@ namespace DAL.Repositories
 
 
 
-
-            //  var empData = _appContext.Employee.Include("EmployeeShiftMapping").join(countriesRep.GetCountries()).ToList().Where(t => t.IsDelete == null || t.IsDelete == false);
             return empData;
 
 

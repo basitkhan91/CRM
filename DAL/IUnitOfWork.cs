@@ -142,7 +142,7 @@ namespace DAL
         IEmployeeLeaveType EmployeeLeaveType { get; }
         IEmployeeTrainingTypeRepository EmployeeTrainingType { get; }
         
-        ICompany company { get; }
+        ICompany Company { get; }
 
         IDivision division { get; }
 

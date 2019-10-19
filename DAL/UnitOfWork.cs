@@ -1040,7 +1040,7 @@ namespace DAL
                 return _CustomerWarning;
             }
         }
-        public ICompany company
+        public ICompany Company
         {
             get
             {

@@ -793,7 +793,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult EmpDeleteAction(long id, [FromBody]EmployeeViewModel employee)
         {
             var existingResult = _unitOfWork.employee.GetSingleOrDefault(c => c.EmployeeId == id);
-            existingResult.IsDelete = true;
+            existingResult.IsDeleted = true;
 
             _unitOfWork.employee.Update(existingResult);
             _unitOfWork.SaveChanges();

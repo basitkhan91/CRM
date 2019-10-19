@@ -179,5 +179,8 @@ export class EmployeeService {
     getAllEmployeesInfo() {
         this.employeeEndpoint.getAllEmployeesInfo<any[]>();
     }
+    getEmployeeDataById(employeeId: any) {
+        return this.employeeEndpoint.getEmployeeDataById<any>(employeeId);
+    }
 
 }
