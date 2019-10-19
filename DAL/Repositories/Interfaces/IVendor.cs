@@ -27,6 +27,13 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object>  getVendorCapabilityData(long id);
         IEnumerable<object> getVendorByID(long vendorid, bool isDContact);
 
+        long CreateVendorBillingAddress(VendorBillingAddress billingAddress);
+        void UpdateVendorBillingAddress(VendorBillingAddress billingAddress);
+        void DeleteVendorBillingAddress(long billingAddressId, string updatedBy);
+        void VendorBillingAddressStatus(long billingAddressId, bool status, string updatedBy);
+        IEnumerable<object> GetVendorBillingAddress(long addressId);
+        object VendorBillingAddressById(long billingAddressId);
+
         //  void CreateAction(DAL.Models.Action action);
 
     }

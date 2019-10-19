@@ -2838,6 +2838,30 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [HttpPost("createvendorbillingaddress")]
+        public IActionResult CreateVendorBillingAddress([FromBody] VendorBillingAddress billingAddress)
+        {
+            if(ModelState.IsValid)
+            {
+                billingAddress.VendorBillingAddressId= _unitOfWork.Vendor.CreateVendorBillingAddress(billingAddress);
+                return Ok(billingAddress);
+            }
+            return BadRequest(ModelState);
+        }
+
+        [HttpPost("updatevendorbillingaddress")]
+        public IActionResult UpdateVendorBillingAddress([FromBody] VendorBillingAddress billingAddress)
+        {
+            if (ModelState.IsValid)
+            {
+                 _unitOfWork.Vendor.UpdateVendorBillingAddress(billingAddress);
+                return Ok(billingAddress);
+            }
+            return BadRequest(ModelState);
+        }
+
+
+
 
         #endregion
 
