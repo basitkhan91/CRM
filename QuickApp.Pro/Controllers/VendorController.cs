@@ -2861,6 +2861,34 @@ namespace QuickApp.Pro.Controllers
         }
 
 
+        [HttpGet("deletevendorbillingaddress")]
+        public IActionResult DeleteVendorBillingAddress(long billingAddressId, string updatedBy)
+        {
+                _unitOfWork.Vendor.DeleteVendorBillingAddress(billingAddressId, updatedBy);
+                return Ok();
+        }
+
+        [HttpGet("vendorbillingaddressstatus")]
+        public IActionResult VendorBillingAddressStatus(long billingAddressId, bool status, string updatedBy)
+        {
+            _unitOfWork.Vendor.VendorBillingAddressStatus(billingAddressId, status, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("vendorbillingaddress")]
+        public IActionResult GetVendorBillingAddress()
+        {
+            _unitOfWork.Vendor.GetVendorBillingAddress();
+            return Ok();
+        }
+
+        [HttpGet("vendorbillingaddressbyid")]
+        public IActionResult VendorBillingAddressById(long billingAddressId)
+        {
+            _unitOfWork.Vendor.VendorBillingAddressById(billingAddressId);
+            return Ok();
+        }
+
 
 
         #endregion

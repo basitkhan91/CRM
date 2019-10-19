@@ -537,7 +537,7 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetVendorBillingAddress(long addressId)
+        public IEnumerable<object> GetVendorBillingAddress()
         {
             try
             {

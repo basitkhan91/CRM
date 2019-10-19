@@ -31,7 +31,7 @@ namespace DAL.Repositories.Interfaces
         void UpdateVendorBillingAddress(VendorBillingAddress billingAddress);
         void DeleteVendorBillingAddress(long billingAddressId, string updatedBy);
         void VendorBillingAddressStatus(long billingAddressId, bool status, string updatedBy);
-        IEnumerable<object> GetVendorBillingAddress(long addressId);
+        IEnumerable<object> GetVendorBillingAddress();
         object VendorBillingAddressById(long billingAddressId);
 
         //  void CreateAction(DAL.Models.Action action);
