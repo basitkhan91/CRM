@@ -20,7 +20,6 @@ import { SingleScreenBreadcrumbService } from "../../services/single-screens-bre
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 
 import { CustomerService } from '../../services/customer.service';
-import { PercentageService } from '../../services/percentage.service';
 import { Table } from '../../../../node_modules/primeng/table';
 import { validateRecordExistsOrNot, selectedValueValidate } from '../../generic/autocomplete';
 import { PercentService } from '../../services/percent.service';
