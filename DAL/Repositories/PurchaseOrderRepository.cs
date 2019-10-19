@@ -328,7 +328,7 @@ namespace DAL.Repositories
             try
             {
                 var data = (from ps in _appContext.PurchaseOrderShipVia
-                            join sv in _appContext.ShippingViaDetails on ps.ShipViaId equals sv.ShippingViaDetailsId
+                            join sv in _appContext.ShippingVia on ps.ShipViaId equals sv.ShippingViaId
                             join po in _appContext.PurchaseOrder on ps.PurchaseOrderId equals po.PurchaseOrderId
                             where ps.PurchaseOrderId == purchaseOrderId && ps.UserType == userType
                             select new
