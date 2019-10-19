@@ -127,6 +127,9 @@ import { PaginationService } from "../services/pagination/pagination.service";
 import { TooltipModule } from "primeng/tooltip";
 import { KeyFilterModule } from 'primeng/keyfilter';
 import { PercentComponent } from "../components/percent/percent.component";
+import { JobTypeComponent } from '../components/job-type/job-type.component';
+import { PercentService } from "../services/percent.service";
+import { PercentEndpoint } from "../services/percent-endpoint.service";
 import {MgmtStructureComponent} from '../components/mgmt-structure/mgmt-structure.component';
 
 @NgModule({
@@ -168,6 +171,7 @@ import {MgmtStructureComponent} from '../components/mgmt-structure/mgmt-structur
         ItemClassificationComponent,
         ItemGroupComponent,
         JobTitleComponent,
+        JobTypeComponent,
         PriorityComponent,
         ProvisionComponent,
         PublicationComponent,
@@ -213,9 +217,11 @@ import {MgmtStructureComponent} from '../components/mgmt-structure/mgmt-structur
         AircraftModelComponent,
         DashnumberComponent,
         PaginationComponent,
-        MgmtStructureComponent
+    MgmtStructureComponent
     ],
     providers: [
+        PercentService,
+        PercentEndpoint,
         SingleScreenBreadcrumbService,
         AssetStatusService,
         AssetStatusEndpointService,

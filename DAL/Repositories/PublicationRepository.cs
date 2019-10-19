@@ -11,13 +11,21 @@ using System.Threading.Tasks;
 using DAL.Core;
 using DAL.Models;
 using DAL.Common;
+using Microsoft.AspNetCore.Http;
+using ExcelDataReader;
+using System.IO;
+using System.Net.Http.Headers;
+using Microsoft.Extensions.Options;
 
 namespace DAL.Repositories
 {
     public class PublicationRepository : Repository<DAL.Models.Publication>, IPublication
     {
-        public PublicationRepository(ApplicationDbContext context) : base(context)
-        { }
+        private AppSettings AppSettings { get; set; }
+        public PublicationRepository(ApplicationDbContext context, IOptions<AppSettings> settings) : base(context)
+        {
+            AppSettings = settings.Value;
+        }
 
         public Publication GetPublicationsById(long ID)
         {
@@ -127,22 +135,16 @@ namespace DAL.Repositories
             var data = (from PublicationItemMaster in _appContext.PublicationItemMasterMapping
                         join it in _appContext.ItemMasterAircraftMapping on PublicationItemMaster.ItemMasterId equals it.ItemMasterId
                         join pub in _appContext.Publication on PublicationItemMaster.PublicationRecordId equals pub.PublicationRecordId
-                        where PublicationItemMaster.PublicationRecordId == PublicationID
+                        where it.IsDeleted == false && PublicationItemMaster.PublicationRecordId == PublicationID
 
                         select new
                         {
-                            PublicationItemMaster.ItemMasterId,
-                            pub.PublicationId,
-                            it.PartNumber,
-                            it.AircraftTypeId,
-                            it.AircraftModelId,
-                            it.DashNumberId,
                             it.DashNumber,
                             it.AircraftType,
-                            it.AircraftModel,
-                            it.Memo,
-                            it.MasterCompanyId
-                        }).ToList();
+                            it.AircraftModel
+
+                        }).Distinct()
+                        .ToList();
             return data;
             throw new NotImplementedException();
         }
@@ -151,19 +153,17 @@ namespace DAL.Repositories
             var data = (from PublicationItemMaster in _appContext.PublicationItemMasterMapping
                         join it in _appContext.ItemMasterATAMapping on PublicationItemMaster.ItemMasterId equals it.ItemMasterId
                         join pub in _appContext.Publication on PublicationItemMaster.PublicationRecordId equals pub.PublicationRecordId
-                        where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true
+                        join sc in _appContext.ATASubChapter on it.ATASubChapterId equals sc.ATASubChapterId
+                        where it.IsDeleted == false && PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true
                         select new
                         {
-                            PublicationItemMaster.ItemMasterId,
-                            pub.PublicationId,
-                            it.PartNumber,
-                            it.ATAChapterId,
-                            it.ATAChapterCode,
                             it.ATAChapterName,
-                            it.ATASubChapterId,
                             it.ATASubChapterDescription,
-                            it.MasterCompanyId
-                        }).ToList();
+                            it.ATAChapterCode,
+                            sc.ATASubChapterCode
+
+                        }).Distinct()
+                        .ToList();
             return data;
         }
         public IEnumerable<object> GetAircraftMappingDataByMultiTypeId(long PublicationID, string AircraftTypeId)
@@ -974,7 +974,7 @@ namespace DAL.Repositories
         public IEnumerable<PublicationsList> getPublicationDropdownData()
         {
             var aircraftResult = (from p in _appContext.Publication
-                                  where (p.IsDeleted == null || p.IsDeleted == false)
+                                  where (p.IsDeleted == null || p.IsDeleted == false) && p.IsActive == true
                                   select new PublicationsList
                                   {
                                       PublicationRecordId = p.PublicationRecordId,
@@ -985,12 +985,12 @@ namespace DAL.Repositories
 
         }
 
-        public PublicationsList GetPublicationForWorkFlow(long publicationRecordId)
+        public object GetPublicationForWorkFlow(long publicationRecordId)
         {
             var aircraftResult = (from p in _appContext.Publication
                                   where p.PublicationRecordId == publicationRecordId && (p.IsDeleted == null || p.IsDeleted == false)
 
-                                  select new PublicationsList
+                                  select new
                                   {
                                       PublicationRecordId = p.PublicationRecordId,
                                       PublicationId = p.PublicationId,
@@ -1005,6 +1005,7 @@ namespace DAL.Repositories
                                       VerifiedBy = p.VerifiedBy,
                                       VerifiedDate = p.VerifiedDate,
                                       ASD = p.ASD,
+                                      AttachmentDetails = GetAttachmentDetails(publicationRecordId),
                                       ItemMasterAircraftMapping = (from iam in _appContext.ItemMasterAircraftMapping
                                                                    join pim in _appContext.PublicationItemMasterMapping on iam.ItemMasterId equals pim.ItemMasterId
                                                                    where pim.PublicationRecordId == p.PublicationRecordId && iam.IsDeleted == false && pim.IsDeleted == false
@@ -1049,6 +1050,132 @@ namespace DAL.Repositories
             }
 
             return attachmentDetailsList;
+        }
+
+        public IEnumerable<Publication> UploadUOMCustomData(IFormFile file)
+        {
+            string description = string.Empty;
+            string shortName = string.Empty;
+            string standard = string.Empty;
+            string memo = string.Empty;
+            List<Publication> publications = new List<Publication>();
+            long? employeeId = 0;
+            int count = 0;
+            try
+            {
+                Publication publication;
+
+                string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                string filePath = Path.Combine(AppSettings.CustomUploadFilePath, Convert.ToString(ModuleEnum.Publication), DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss"));
+
+                if (!Directory.Exists(filePath))
+                {
+                    Directory.CreateDirectory(filePath);
+                }
+
+                string fullPath = Path.Combine(filePath, fileName);
+
+                var publicationTypes = _appContext.PublicationType.Where(p => p.IsDeleted == false && p.IsActive == true).ToList();
+                var employees = _appContext.Employee.Where(p => p.IsDeleted == false && p.IsActive == true).ToList();
+
+                using (var stream = File.Open(fullPath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                    {
+                        using (var reader = ExcelReaderFactory.CreateReader(stream))
+                        {
+                            do
+                            {
+                                while (reader.Read())
+                                {
+                                    employeeId = 0;
+                                    if (count > 0 && reader.GetValue(0) != null && reader.GetValue(1) != null)
+                                    {
+                                        var publicationType = publicationTypes.Where(p => p.Name == reader.GetValue(2).ToString()).FirstOrDefault();
+                                        var employee = employees.Where(p => p.FirstName == reader.GetValue(4).ToString()).FirstOrDefault();
+                                        if(employee!=null)
+                                            employeeId = employee.EmployeeId;
+                                        else
+                                            employeeId=0;
+                                        if (publicationType != null)
+                                        {
+                                            var flag = _appContext.Publication.Any(p => p.IsDeleted == false && p.PublicationId == Convert.ToString(reader.GetValue(0)).Trim() && p.PublicationTypeId == publicationType.PublicationTypeId);
+                                            if (!flag)
+                                            {
+                                                publication = new Publication();
+                                                if (reader.GetValue(0) != null)
+                                                    publication.PublicationId = Convert.ToString(reader.GetValue(0));
+                                                if (reader.GetValue(1) != null)
+                                                    publication.Description = Convert.ToString(reader.GetValue(1));
+                                                if (reader.GetValue(2) != null)
+                                                   publication.PublicationTypeId = publicationType.PublicationTypeId;
+                                                if (reader.GetValue(3) != null)
+                                                    publication.Publishby = Convert.ToString(reader.GetValue(3));
+                                                if (reader.GetValue(4) != null)
+                                                    publication.EmployeeId = Convert.ToInt64(employeeId);
+                                                if (reader.GetValue(5) != null)
+                                                    publication.Location = Convert.ToString(reader.GetValue(5));
+
+                                                publication.MasterCompanyId = 1;
+                                                publication.IsActive = true;
+                                                publication.IsDeleted = false;
+                                                publication.CreatedBy = publication.UpdatedBy = "System";
+                                                publication.UpdatedDate = publication.CreatedDate = DateTime.Now;
+                                                publication.EntryDate = publication.ExpirationDate = DateTime.Now;
+                                                publication.NextReviewDate = publication.RevisionDate = DateTime.Now;
+                                                publication.VerifiedDate = DateTime.Now;
+
+                                                _appContext.Publication.Add(publication);
+                                                _appContext.SaveChanges();
+                                                //publication.UploadStatus = "Success";
+                                                publications.Add(publication);
+                                            }
+                                            else
+                                            {
+                                                publication = new Publication();
+                                                if (reader.GetValue(0) != null)
+                                                    publication.PublicationId = Convert.ToString(reader.GetValue(0));
+                                                if (reader.GetValue(1) != null)
+                                                    publication.Description = Convert.ToString(reader.GetValue(1));
+                                                if (reader.GetValue(2) != null)
+                                                    publication.PublicationTypeId = publicationType.PublicationTypeId;
+                                                if (reader.GetValue(3) != null)
+                                                    publication.Publishby = Convert.ToString(reader.GetValue(3));
+                                                if (reader.GetValue(4) != null)
+                                                    publication.EmployeeId = Convert.ToInt64(employeeId);
+                                                if (reader.GetValue(5) != null)
+                                                    publication.Location = Convert.ToString(reader.GetValue(5));
+                                                publications.Add(publication);
+                                            }
+                                        }
+
+
+                                    }
+                                    count++;
+                                }
+                            } while (reader.NextResult());
+
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return publications;
+        }
+
+        public IEnumerable<PublicationAudit> PublicationHistory(long publicationId)
+        {
+            try
+            {
+                return _appContext.PublicationAudit.Where(p => p.PublicationRecordId == publicationId).ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

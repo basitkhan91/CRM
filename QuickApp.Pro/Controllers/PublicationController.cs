@@ -554,7 +554,29 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("GetPublicationDropdownData")]
         public IActionResult GetPublicationDropdownData()
         {
-            var result = _unitOfWork.Publication.getPublicationDropdownData();
+            var result = _unitOfWork.Publication.getPublicationDropdownData().Select(x =>
+            new
+            {
+                PublicationRecordId = x.PublicationRecordId,
+                PublicationId = x.PublicationId,
+                x.ItemMasterAircraftMapping,
+
+            });
+
+            return Ok(result);
+        }
+
+        [HttpPost("uploadpublicationcustomdata")]
+        public IActionResult UploadUOMCustomData()
+        {
+            var result = _unitOfWork.Publication.UploadUOMCustomData(Request.Form.Files[0]);
+            return Ok(result);
+        }
+
+        [HttpGet("publicationhistory")]
+        public IActionResult PublicationHistory(long publicationId)
+        {
+            var result = _unitOfWork.Publication.PublicationHistory(publicationId);
             return Ok(result);
         }
 

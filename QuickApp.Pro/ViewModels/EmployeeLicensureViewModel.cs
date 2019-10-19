@@ -29,7 +29,7 @@ namespace QuickApp.Pro.ViewModels
         public DateTime CertificationDate { get; set; }
         public DateTime ExpirationDate { get; set; }
 
-        public int IsExpirationDate { get; set; }
+        public bool? IsExpirationDate { get; set; }
         // public DateTime ExpirationDate { get; set; }
         public bool IsLicenseInForce { get; set; }
         [ForeignKey("MasterCompanyId")]

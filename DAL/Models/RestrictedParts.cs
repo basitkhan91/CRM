@@ -10,6 +10,7 @@ namespace DAL.Models
         public int ModuleId { get; set; }
         public long? ReferenceId { get; set; }
         public long MasterPartId { get; set; }
+        public string Memo { get; set; }
         public string PartType { get; set; } 
         public DateTime CreatedDate { get; set; }
         public string CreatedBy { get; set; }

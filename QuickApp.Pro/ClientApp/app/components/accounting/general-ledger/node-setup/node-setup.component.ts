@@ -1,12 +1,12 @@
-﻿import { OnInit, Component } from "@angular/core";
+﻿import { OnInit, Component, ViewChild } from "@angular/core";
 import { fadeInOut } from "../../../../services/animations";
-import { AlertService } from "../../../../services/alert.service";
+import { AlertService, MessageSeverity } from "../../../../services/alert.service";
 import { GLAccountNodeSetup } from "../../../../models/node-setup.model";
 import { NodeSetupService } from "../../../../services/node-setup/node-setup.service";
 import { LegalEntityService } from "../../../../services/legalentity.service";
 import { GLAccountClassService } from "../../../../services/glaccountclass.service";
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { TableModule } from 'primeng/table';
+import { TableModule, Table } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { InputTextModule } from 'primeng/inputtext';
@@ -16,6 +16,9 @@ import { MenuItem } from 'primeng/api';//bread crumb
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { AuthService } from "../../../../services/auth.service";
+import { SingleScreenBreadcrumbService } from "../../../../services/single-screens-breadcrumb.service";
+import { ConfigurationService } from "../../../../services/configuration.service";
+import { editValueAssignByCondition, getObjectById, validateRecordExistsOrNot, selectedValueValidate } from "../../../../generic/autocomplete";
 @Component({
     selector: 'app-node-setup',
     templateUrl: './node-setup.component.html',
@@ -24,6 +27,57 @@ import { AuthService } from "../../../../services/auth.service";
 })
 /** node-setup component*/
 export class NodeSetupComponent implements OnInit {
+    originalData: any;
+    isEdit: boolean = false;
+    totalRecords: any;
+    pageIndex: number = 0;
+    pageSize: number = 10;
+    totalPages: number;
+    headers = [
+        { field: 'ledgerName', header: 'Ledger Name' },
+        { field: 'companyCodes', header: 'Share with the Other Entities' },
+        { field: 'nodeCode', header: 'Node Code' },
+        { field: 'nodeName', header: 'Node Name' },
+        { field: 'description', header: 'Description' },
+        { field: 'parentNodeName', header: 'Parent Node' },
+        { field: 'leafNodeCheck', header: 'Leaf Node' },
+        { field: 'glAccountNodeType', header: 'Node Type' },
+        { field: 'fsType', header: 'F/S Type' },
+
+    ]
+    selectedColumns = this.headers;
+    formData = new FormData()
+    @ViewChild('dt')
+
+    private table: Table;
+    auditHistory: any[] = [];
+    disableSaveGroupId: boolean = false;
+    PortalList: any;
+    disableSaveForDescription: boolean = false;
+    descriptionList: any;
+    new = {
+        glAccountNodeId: "",
+        ledgerName: "",
+        ledgerNameMgmStructureId: "",
+        nodeCode: "",
+        nodeName: "",
+        description: "",
+        selectedCompanysData: "",
+        parentNodeId: "",
+        leafNodeCheck: "",
+        glAccountNodeType: "",
+        fsType: "",
+        masterCompanyId: 1,
+        isActive: true,
+    }
+    addNew = { ...this.new };
+    selectedRecordForEdit: any;
+    viewRowData: any;
+    selectedRowforDelete: any;
+    existingRecordsResponse = []
+    ledgerList: any;
+
+
     nodeSetupViewData: any;
     parentNode: string;
     parentCodeCollection: any[];
@@ -49,25 +103,260 @@ export class NodeSetupComponent implements OnInit {
     disablesave: boolean;
     localCollection: any[];
     codeCollection: any;
-    constructor(private modalService: NgbModal, public glAccountService: GLAccountClassService, public legalEntityService: LegalEntityService, private alertService: AlertService, private nodeSetupService: NodeSetupService, private authService: AuthService) {
+    constructor(private modalService: NgbModal,
+        private configurations: ConfigurationService,
+        public glAccountService: GLAccountClassService,
+        public legalEntityService: LegalEntityService,
+        private alertService: AlertService,
+        private nodeSetupService: NodeSetupService,
+        private authService: AuthService,
+        public breadCrumb: SingleScreenBreadcrumbService) {
     }
 
     ngOnInit(): void {
         this.loadManagementdata();
-
         this.setManagementDesctoList();
-
         this.currentNodeSetup = new GLAccountNodeSetup();
-
         this.loadGlAccountClassData();
+        this.getList();
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-node-setup';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
     }
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
+    save() {
+        const data = {
+            ...this.addNew, createdBy: this.userName, updatedBy: this.userName, 
+        };
+        //const data = this.addNew 
+        console.log(data);
+        const { selectedCompanysData, ...rest }: any = data;
+        console.log(rest);
+        if (!this.isEdit) {
+            this.nodeSetupService.add(rest).subscribe(() => {
+                this.resetForm();
+                this.addGLAccountEntitymapping();
+                this.nodeSetupService.getAll().subscribe(nodes => {
+                    this.originalData = nodes[0];
+                    this.getList();
+                });
+                this.alertService.showMessage(
+                    'Success',
+                    `Added  New Node Successfully`,
+                    MessageSeverity.success
+                );
+            })
+
+        } else {
+            this.nodeSetupService.update(data).subscribe((response) => {
+                this.selectedRecordForEdit = undefined;
+                this.isEdit = false;
+                this.resetForm();
+                this.updateGLAccountEntity(response.glAccountNodeId);
+                this.nodeSetupService.getAll().subscribe(nodes => {
+                    this.originalData = nodes[0];
+                    this.getList();
+                    this.alertService.showMessage(
+                        'Success',
+                        `Updated Node Successfully`,
+                        MessageSeverity.success
+                    );
+                });
+
+            })
+            this.updateNodeSetup();
+        }
+
+    }
+    getList() {
+        this.nodeSetupService.getAll().subscribe(res => {
+            const responseData = res[0];
+            this.nodeSetupList = responseData;
+            this.originalData = responseData;
+            this.originalData = responseData.map(x => {
+                return {
+                    ...x, parentNodeName: x.parentNode !== null ? x.parentNode.nodeCode : ' ',
+                }
+            });
+            this.parentNodeList;
+            for (let i = 0; i < this.nodeSetupList.length; i++) {
+                if (this.nodeSetupList[i].leafNodeCheck == false) {
+                    this.parentNodeList.push(this.nodeSetupList[i]);
+                }
+            }
+            if (this.originalData) {
+                for (let nlength = 0; nlength < this.originalData.length; nlength++) {
+
+                    this.nodeSetupService.getShareWithOtherEntitysData(this.originalData[nlength].glAccountNodeId).subscribe(msData => {
+                        let companyCodes = [];
+                        let string = '';
+                        let companyIds = [];
+
+                        if (msData[0].length) {
+                            for (let j = 0; j < msData[0].length; j++) {
+                                if (msData[0][j]) {
+                                    companyCodes.push(msData[0][j].code);
+                                    companyIds.push(msData[0][j].managementStructureId);
+                                    string = companyCodes.join(',');
+                                }
+                                this.originalData[nlength].companyCodes = string;
+                                this.originalData[nlength].selectedCompanysData = companyIds;
+
+                            }
+                        }
+                        console.log(companyCodes)
+
+                    })
+                }
+            }
+            this.totalRecords = responseData.length;
+            this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+        })
+    }
+    changePage(event: { first: any; rows: number }) {
+        console.log(event);
+
+        this.pageSize = event.rows;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+    }
+    changeStatus(rowData) {
+        console.log(rowData);
+        const { parentNodeName, ...rest }: any = rowData;
+        this.nodeSetupService.update(rest).subscribe(() => {
+            this.alertService.showMessage(
+                'Success',
+                `Updated Status Successfully  `,
+                MessageSeverity.success
+            );
+        })
+    }
+    delete(rowData) {
+        this.selectedRowforDelete = rowData;
+
+    }
+    deleteConformation(value) {
+        if (value === 'Yes') {
+            this.nodeSetupService.remove(this.selectedRowforDelete.glAccountNodeId).subscribe(() => {
+                this.getList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Deleted Record Successfully  `,
+                    MessageSeverity.success
+                );
+            })
+        } else {
+            this.selectedRowforDelete = undefined;
+        }
+    }
+    viewSelectedRow(rowData) {
+        console.log(rowData);
+        this.viewRowData = rowData;
+    }
+    columnsChanges() {
+        this.refreshList();
+    }
+    refreshList() {
+        this.table.reset();
+
+        this.getList();
+    }
+    sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=DashNumber&fileName=dashnumber.xlsx`;
+
+        window.location.assign(url);
+    }
+    resetForm() {
+        this.isEdit = false;
+        this.selectedRecordForEdit = undefined;
+        this.addNew = { ...this.new };
+    }
+
+    edit(rowData) {
+        this.isEdit = true;
+        this.disableSaveGroupId = false;
+        this.disableSaveForDescription = false;
+        this.addNew = {
+            ...rowData,
+            parentNodeId: getObjectById('parenNodeId', rowData.parenNodeId, this.originalData.parentNode)
+        };
+        this.selectedRecordForEdit = { ...this.addNew }
+
+    }
+
+    checkGroupDescriptionExists(field, value) {
+        console.log(this.selectedRecordForEdit);
+        const exists = validateRecordExistsOrNot(field, value, this.parentNodeList, this.selectedRecordForEdit);
+        if (exists.length > 0) {
+            this.disableSaveForDescription = true;
+        }
+        else {
+            this.disableSaveForDescription = false;
+        }
+
+    }
+    filterDescription(event) {
+        this.descriptionList = this.parentNodeList;
+        console.log(this.parentNodeList);
+        const descriptionData = [...this.parentNodeList.filter(x => {
+            return x.nodeCode.toLowerCase().includes(event.query.toLowerCase())
+
+        })]
+        console.log(descriptionData)
+        this.descriptionList = descriptionData;
+    }
+    selectedDescription(object) {
+        for (let i = 0; i < this.parentNodeList.length; i++) {
+            if (event == this.parentNodeList[i].nodeCode) {
+                this.parentNode = this.parentNodeList[i].nodeCode;
+                this.addNew.parentNodeId = this.parentNodeList[i].glAccountNodeId;
+                const exists = selectedValueValidate('parentNode', object, this.selectedRecordForEdit)
+                this.disableSaveForDescription = !exists;
+            }
+        }
+
+    }
+    addGLAccountEntitymapping() {
+        let data = [];
+        if (this.addNew.selectedCompanysData) {
+            for (let i = 0; i < this.addNew.selectedCompanysData.length; i++) {
+                data.push({
+                    "managementStructureId": this.addNew.selectedCompanysData[i],
+                    "GLAccountNodeId": this.addNew.glAccountNodeId
+                })
+
+                this.nodeSetupService.addGLAccountNodeShareWithEntityMapper(data[i]).subscribe(Nodes => {
+                    this.nodeSetupList = Nodes[0];
+                });
+            }
+        }
+    }
+    updateGLAccountEntity(id) {
+        this.nodeSetupService.removeNodeShareEntityMapper(id).subscribe(Nodes => {
+            this.nodeSetupList = Nodes[0];
+
+            let data = [];
+            if (this.addNew.selectedCompanysData) {
+                for (let i = 0; i < this.addNew.selectedCompanysData.length; i++) {
+                    data.push({
+                        "managementStructureId": this.addNew.selectedCompanysData[i],
+                        "GLAccountNodeId": this.addNew.glAccountNodeId
+                    })
+
+                    this.nodeSetupService.addGLAccountNodeShareWithEntityMapper(data[i]).subscribe(Nodes => {
+                        this.nodeSetupList = Nodes[0];
+                    });
+                }
+            }
+
+            this.resetNodeSetup();
+        });
+
+    }
     setManagementDesctoList() {
         this.nodeSetupService.getAll().subscribe(nodes => {
-            this.nodeSetupList = nodes[0];
             this.nodeSetupListData = nodes[0];
+            this.nodeSetupList = nodes[0];
             this.parentNodeList;
             for (let i = 0; i < this.nodeSetupList.length; i++) {
 
@@ -84,12 +373,10 @@ export class NodeSetupComponent implements OnInit {
 
                         if (msData[0].length) {
                             for (let j = 0; j < msData[0].length; j++) {
-
                                 if (msData[0][j]) {
                                     companyCodes.push(msData[0][j].code);
                                     companyIds.push(msData[0][j].managementStructureId);
                                     string = companyCodes.join(',');
-
                                 }
                                 this.nodeSetupListData[nlength].comapnycodes = string;
                                 this.nodeSetupListData[nlength].selectedCompanysData = companyIds;
@@ -122,7 +409,6 @@ export class NodeSetupComponent implements OnInit {
                 this.dismissModel();
             });
         }
-
 
     }
 
@@ -173,6 +459,7 @@ export class NodeSetupComponent implements OnInit {
         this.currentNodeSetup.isActive = !this.currentNodeSetup.isActive;
     }
 
+
     resetNodeSetup(): void {
         this.updateMode = false;
         this.currentNodeSetup = new GLAccountNodeSetup();
@@ -197,6 +484,7 @@ export class NodeSetupComponent implements OnInit {
         for (let i = 0; i < this.allManagemtninfoData.length; i++) {
             if (this.allManagemtninfoData[i].parentId == null) {
                 this.maincompanylist.push(this.allManagemtninfoData[i]);
+                console.log(this.maincompanylist)
             }
         }
 
@@ -227,6 +515,7 @@ export class NodeSetupComponent implements OnInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allGLAccountClassData = allWorkFlows;
+        console.log(this.allGLAccountClassData);
     }
 
     addGLAccountNodeShareWithEntityMapper() {
@@ -381,6 +670,7 @@ export class NodeSetupComponent implements OnInit {
                 if (event == this.parentNodeList[i].nodeCode) {
                     this.parentNode = this.parentNodeList[i].nodeCode;
                     this.currentNodeSetup.parentNodeId = this.parentNodeList[i].glAccountNodeId;
+                    this.addNew.parentNodeId = this.parentNodeList[i].glAccountNodeId
                     // this.disablesave = true;
                     this.selectedCodeName = event;
                 }

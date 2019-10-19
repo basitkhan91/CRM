@@ -517,6 +517,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                 items: [
                     { label: 'Employee List', routerLink: '/employeesmodule/employeepages/app-employees-list' },
                     { label: 'Create Employee', routerLink: '/employeesmodule/employeepages/app-employee-general-information' },
+                    
                     {
                         label: 'Expense Reports', items: [
                             { label: 'Expense List', routerLink: '/#' },
@@ -627,7 +628,8 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Asset Status', routerLink: '/singlepages/singlepages/asset-status' },
                             { label: 'Asset Type', routerLink: '/singlepages/singlepages/app-asset-type-single-screen' },
                             { label: 'Intagible Type', routerLink: '/singlepages/singlepages/app-asset-intangible-type-single-screen' },
-                            { label: 'Depreciation Convension', routerLink: '/singlepages/singlepages/app-asset-dep-convention-type' },]
+                            { label: 'Depreciation Convension', routerLink: '/singlepages/singlepages/app-asset-dep-convention-type' },
+                            { label: 'Depreciation Intervals', routerLink: '/singlepages/singlepages/app-depreciation-intervals' },]
                     },
                     {
                         label: 'Asset Attributes', items: [
@@ -662,6 +664,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                     {
                         label: 'Employees', items: [
                             { label: 'Job Titles', routerLink: '/singlepages/singlepages/app-job-title' },
+                            { label: 'Job Type', routerLink: '/singlepages/singlepages/app-job-type' },
                             { label: 'Employee Expertise', routerLink: '/singlepages/singlepages/app-employee-expertise' },
                             { label: 'Certification Type', routerLink: '/singlepages/singlepages/app-certification-type' },
                         ]

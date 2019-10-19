@@ -8,7 +8,7 @@ namespace DAL.Models
     public class JobTitleAudit
     {
         [Key]
-        public Int16 JobTitleAuditId { get; set; }
+        public long JobTitleAuditId { get; set; }
         public Int16 JobTitleId { get; set; }
 
         public string Description { get; set; }
@@ -23,8 +23,8 @@ namespace DAL.Models
 
         public DateTime UpdatedDate { get; set; }
 
-        public bool? IsActive { get; set; }
-        public bool? IsDelete { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsDeleted { get; set; }
 
     }
 }

@@ -1,5 +1,6 @@
 ﻿using DAL.Common;
 using DAL.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -46,8 +47,11 @@ namespace DAL.Repositories.Interfaces
         
         IEnumerable<object> GetPublicationTypes();
         
-        PublicationsList GetPublicationForWorkFlow(long publicationRecordId);
+        object GetPublicationForWorkFlow(long publicationRecordId);
         
         IEnumerable<PublicationsList> getPublicationDropdownData();
+
+        IEnumerable<Publication> UploadUOMCustomData(IFormFile file);
+        IEnumerable<PublicationAudit> PublicationHistory(long publicationId);
     }
 }

@@ -108,11 +108,13 @@ export class LocationComponent implements OnInit, AfterViewInit {
     showManagement: boolean;
 	Active: string = "Active";
 	actionamecolle: any[] = [];
-    AuditDetails: SingleScreenAuditDetails[];
+    AuditDetails: any[];
     localWareHouseManagementWarehouseCollection: any;
 	disableSaveManufacturer: boolean = false;;
     selectedLocation: any;
-    locationName: any;
+	locationName: any;
+	HasAuditDetails: boolean;
+	AuditHistoryTitle: string = 'History of Location';
 
 	ngOnInit(): void
 	{
@@ -783,11 +785,12 @@ export class LocationComponent implements OnInit, AfterViewInit {
     }
 
     auditLocation(locationId: number): void {
-        this.AuditDetails = [];
+		this.AuditDetails = [];
+		this.HasAuditDetails = this.AuditDetails.length > 0;
         this.workFlowtService.getLocationAudit(locationId).subscribe(audits => {
             if (audits.length > 0) {
-                this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["locationAuditId", "locationId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails = audits[0].result;
+				this.HasAuditDetails = this.AuditDetails.length > 0;
             }
         });
     }

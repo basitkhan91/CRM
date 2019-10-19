@@ -11,6 +11,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DAL.Common;
 
 namespace DAL.Models
 {
@@ -21,6 +22,8 @@ namespace DAL.Models
         public long CustomerId { get; set; }
 
         public string Name { get; set; }
+        public long? CsrId { get; set; }
+        public long? SaId { get; set; }
 
 
         public string CustomerCode { get; set; }
@@ -39,6 +42,7 @@ namespace DAL.Models
         public int? IntegrationPortalId { get; set; }
 
         public string CustomerPhone { get; set; }
+        public string CustomerPhoneExt { get; set; }
 
         [ForeignKey("CustomerClassificationId")]
         public long? CustomerClassificationId { get; set; }
@@ -160,7 +164,7 @@ namespace DAL.Models
 
 
         public bool? IsActive { get; set; }
-        public bool? IsDelete { get; set; }
+        public bool? IsDeleted { get; set; }
         public Int32? MarkUpPercentageId { get; set; }
         public long? GeneralCurrencyId { get; set; }
 
@@ -188,8 +192,18 @@ namespace DAL.Models
         public virtual CustomerType CustomerType { get; set; }
 
         public List<ClassificationMapping> CustomerClassificationMapping { get; set; }
+
+        [NotMapped]
         public List<RestrictedParts> RestrictedPMAParts { get; set; }
+        [NotMapped]
         public List<RestrictedParts> RestrictedDERParts { get; set; }
+
+        public List<RestrictsPMAList> RestrictsPmaLists { get; set;}
+        public List<RestrictsBERList> RestrictsDerLists { get; set; }
+
+        [NotMapped]
+        public long AttachmentId { get; set; }
+
 
         //public virtual Order Orders { get; set; }
     }

@@ -15,7 +15,7 @@ import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { MasterCompany } from '../../models/mastercompany.model';
 
-import { TableModule } from 'primeng/table';
+import { TableModule, Table } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { InputTextModule } from 'primeng/inputtext';
@@ -24,6 +24,8 @@ import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { ATAChapter } from '../../models/atachapter.model';
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
+import { validateRecordExistsOrNot, selectedValueValidate, editValueAssignByCondition, getObjectByValue, getObjectById } from '../../generic/autocomplete';
+import { ConfigurationService } from '../../services/configuration.service';
 @Component({
 	selector: 'app-ata-sub-chapter1',
 	templateUrl: './ata-sub-chapter1.component.html',
@@ -31,495 +33,263 @@ import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-scre
 	animations: [fadeInOut]
 })
 /** AtaSubChapter1 component*/
-export class AtaSubChapter1Component implements OnInit, AfterViewInit {
+export class AtaSubChapter1Component implements OnInit {
 
-	memo: any = "";
-	createdBy: any = "";
-	updatedBy: any = "";
-	createdDate: any = "";
-	updatedDate: any = "";
-	private isEditMode: boolean = false;
-	private isDeleteMode: boolean = false;
-	Active: string = "Active";
-	selectedActionName: any;
-	disableSave: boolean;
-	actionamecolle: any[] = [];
-	description: string;
-	ataChapterCode: any;
-	AuditDetails: SingleScreenAuditDetails[];
-	/** AtaSubChapter1 ctor */
+	originalData: any;
+	isEdit: boolean = false;
+	totalRecords: any;
+	pageIndex: number = 0;
+	pageSize: number = 10;
+	totalPages: number;
+	headers = [
+		{ field: 'ataSubChapterCode', header: 'Code' },
+		{ field: 'description', header: 'ATA Sub Chapter' },
+		{ field: 'ataChapterName', header: 'ATA Chapter' },
+		{ field: 'ataChapterCategory', header: 'ATA Chapter Category' },
+		{ field: 'memo', header: 'Memo' },
+	]
+	selectedColumns = this.headers;
+	formData = new FormData()
+	@ViewChild('dt')
+
+	private table: Table;
+	auditHistory: any[] = [];
+	disableSaveGroupId: boolean = false;
+	PortalList: any;
+	disableSaveForDescription: boolean = false;
+	descriptionList: any;
+	ataList: any;
+	new = {
+		ataSubChapterCode: "",
+		description: "",
+		ataChapterId: "",
+		ataChapterName: "",
+		ataChapterCategory: "",
+		masterCompanyId: 1,
+		isActive: true,
+		memo: "",
+	}
+	addNew = { ...this.new };
+	selectedRecordForEdit: any;
+	viewRowData: any;
+	selectedRowforDelete: any;
+	existingRecordsResponse = []
+	constructor(private breadCrumb: SingleScreenBreadcrumbService,
+		private authService: AuthService,
+		private modalService: NgbModal,
+		private activeModal: NgbActiveModal,
+		private _fb: FormBuilder,
+		private alertService: AlertService,
+		public atasubchapterService: AtaSubChapter1Service,
+		private ataChapterService: AtaMainService,
+		private dialog: MatDialog, private configurations: ConfigurationService) {
+	}
 	ngOnInit(): void {
-		this.loadData();
-		this.atamaindata();
+		this.getList();
 		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-ata-sub-chapter1';
 		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
-	}
-
-	@ViewChild(MatPaginator) paginator: MatPaginator;
-	@ViewChild(MatSort) sort: MatSort;
-
-	displayedColumns = ['memo', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
-    dataSource: MatTableDataSource<ATASubChapter>;
-    allATAMaininfo: ATASubChapter[] =[];
-	allComapnies: MasterCompany[] = [];
-	allATAMaininfo1: any[];
-	private isSaving: boolean;
-	public sourceAction: any;
-	public auditHisory: AuditHistory[] = [];
-	private bodyText: string;
-	loadingIndicator: boolean;
-	closeResult: string;
-	selectedColumn: ATASubChapter[];
-	selectedColumns: any[];
-	cols: any[];
-	title: string = "Create";
-	id: number;
-	errorMessage: any;
-	modal: NgbModalRef;
-	ataChapterName: string;
-	filteredBrands: any[];
-	localCollection: any[] = [];
-	//allATAMaininfo: ATAMain[] = [];
-	/** Actions ctor */
-
-	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, public ataservice: AtaMainService, private _fb: FormBuilder, private alertService: AlertService, public ataSubChapter1Service: AtaSubChapter1Service, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
-		this.displayedColumns.push('action');
-		this.dataSource = new MatTableDataSource();
-		this.sourceAction = new ATASubChapter();
-
-	}
-
-	ngAfterViewInit() {
-		this.dataSource.paginator = this.paginator;
-		this.dataSource.sort = this.sort;
-	}
-	public allWorkFlows: ATASubChapter[] = [];
-
-	private loadData() {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
-
-		this.ataSubChapter1Service.getAtaSubChapter1List().subscribe(
-			results => this.onDataLoadSuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
-
-		this.cols = [           
-            { field: 'ataSubChapterCode', header: 'ATA SubChapter Code' },            
-            { field: 'description', header: 'ATA SubChapter' },
-            { field: 'ataSubChapterdesc', header: 'ATA Subchapter Description' },     
-            { field: 'ataChapter', header: 'ATA Chapter' },
-            { field: 'ataChaptercode', header: 'ATA Chapter Code' },                        
-            { field: 'ataChapterdesc', header: 'ATA Chapter Description'},
-            { field: 'memo', header: 'Memo' },
-            { field: 'createdBy', header: 'Created By' },
-            { field: 'updatedBy', header: 'Updated By' }
-		];
-
-		this.selectedColumns = this.cols;
-	}
-	private loadMasterCompanies() {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
-
-		this.masterComapnyService.getMasterCompanies().subscribe(
-			results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
-
-	}
-	private atamaindata() {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
-
-		this.ataservice.getAtaMainList().subscribe(
-			results => this.onSuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
-	}
-
-	private onSuccessful(getAtaMainList: any[]) {
-		// alert('success');
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		//this.dataSource.data = getAtaMainList;
-		this.allATAMaininfo1 = getAtaMainList;
-	}
-
-	public applyFilter(filterValue: string) {
-		this.dataSource.filter = filterValue;
-	}
-
-	private refresh() {
-		// Causes the filter to refresh there by updating with recently added data.
-		this.applyFilter(this.dataSource.filter);
-	}
-
-	private onDataLoadSuccessful(getAtaSubChapter1List: ATASubChapter[]) {
-		// alert('success');
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-        this.dataSource.data = getAtaSubChapter1List;
-       this.allATAMaininfo = getAtaSubChapter1List;
-        //const respData = getAtaSubChapter1List;
-        //this.allATAMaininfo = respData.map(x => {
-        //    return {
-        //        ataSubChapterCode: x.ataSubChapterCode,
-        //        description: x.description,
-        //        ataSubChapterdesc: `${x.ataSubChapterCode}-${x.description}`,
-        //        memo: x.memo,
-        //        createdBy: x.createdBy,
-        //        updatedBy: x.updatedBy
-        //    }
-        //})		
-	}
-
-	private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
-
-		// debugger;
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-
-		this.auditHisory = auditHistory;
-
-
-		this.modal = this.modalService.open(content, { size: 'lg' });
-
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-
-
-	}
-
-	//eventHandler(event) {
-	//	let value = event.target.value.toLowerCase();
-	//	if (this.selectedActionName) {
-	//		if (value == this.selectedActionName.toLowerCase()) {
-	//			//alert("Action Name already Exists");
-	//			this.disableSave = true;
-	//		}
-	//		else {
-	//			this.disableSave = false;
-	//		}
-	//	}
-	//	else {
-	//		for (let i = 0; i < this.allATAMaininfo.length; i++) {
-	//			if (value == this.allATAMaininfo[i][0].actionAttributeName.toLowerCase()) {
-	//				//alert("Action Name already Exists");
-	//				this.disableSave = true;
-	//				this.selectedActionName = event;
-	//			}
-	//		}
-	//	}
-
-	//}
-
-	eventHandler(event) {
-		if (event.target.value != "") {
-			let value = event.target.value.toLowerCase();
-			if (this.selectedActionName) {
-				if (value == this.selectedActionName.toLowerCase()) {
-					//alert("Action Name already Exists");
-					this.disableSave = true;
-				}
-				else {
-					this.disableSave = false;
-				}
-			}
-		}
-	}
-
-
-	partnmId(event) {
-		//debugger;
-		if (this.allATAMaininfo) {
-
-			for (let i = 0; i < this.allATAMaininfo.length; i++) {
-				if (event == this.allATAMaininfo[i].description) {
-					this.sourceAction.description = this.allATAMaininfo[i].description;
-					this.disableSave = true;
-
-					this.selectedActionName = event;
-				}
-			}
-		}
-	}
-	filterActionAttributes(event) {
-
-		this.localCollection = [];
-		for (let i = 0; i < this.allATAMaininfo.length; i++) {
-			let description = this.allATAMaininfo[i].description;
-			if (description.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-				this.actionamecolle.push([{
-					"ataSubChapterId": this.allATAMaininfo[i].ataSubChapterId,
-					"description": description
-				}]),
-					this.localCollection.push(description)
-
-			}
-		}
-	}
-
-	private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
-		// alert('success');
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.allComapnies = allComapnies;
-
-	}
-
-	private onDataLoadFailed(error: any) {
-		// alert(error);
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-
-	}
-
-	handleChange(rowData, e) {
-		if (e.checked == false) {
-			this.sourceAction = rowData;
-			this.sourceAction.updatedBy = this.userName;
-			this.Active = "In Active";
-			this.sourceAction.isActive == false;
-			this.ataSubChapter1Service.updateATASubChapter1(this.sourceAction).subscribe(
-				response => this.saveCompleted(this.sourceAction),
-				error => this.saveFailedHelper(error));
-			//alert(e);
-		}
-		else {
-			this.sourceAction = rowData;
-			this.sourceAction.updatedBy = this.userName;
-			this.Active = "Active";
-			this.sourceAction.isActive == true;
-			this.ataSubChapter1Service.updateATASubChapter1(this.sourceAction).subscribe(
-				response => this.saveCompleted(this.sourceAction),
-				error => this.saveFailedHelper(error));
-			//alert(e);
-		}
-
-	}
-
-	open(content) {
-
-		this.isEditMode = false;
-		this.isDeleteMode = false;
-		this.disableSave = false;
-		this.isSaving = true;
-		this.loadMasterCompanies();
-		this.sourceAction = new ATASubChapter();
-		this.sourceAction.isActive = true;
-		this.ataChapterName = "";
-		this.modal = this.modalService.open(content, { size: 'sm' });
-		this.modal.result.then(() => {
-
-
-
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-	}
-
-
-	openDelete(content, row) {
-
-		this.isEditMode = false;
-		this.isDeleteMode = true;
-		this.sourceAction = row;
-		this.modal = this.modalService.open(content, { size: 'sm' });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-	}
-
-	openEdit(content, row) {
-
-		this.isEditMode = true;
-		this.disableSave = false;
-		this.isSaving = true;
-		this.loadMasterCompanies();
-		this.sourceAction = row;
-		//this.ataChapterName = this.sourceAction.ataChapterName;
-		this.loadMasterCompanies();
-		this.modal = this.modalService.open(content, { size: 'sm' });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-	}
-
-	openView(content, row) {
-
-		this.sourceAction = row;
-		//this.ataChapter_Name = row.ataChapterName;
-		//this.ataChapterCategory = row.ataChapterCategory;
-		this.memo = row.memo;
-		this.createdBy = row.createdBy;
-		this.updatedBy = row.updatedBy;
-		this.createdDate = row.createdDate;
-		this.updatedDate = row.updatedDate;
-		this.loadMasterCompanies();
-		this.modal = this.modalService.open(content, { size: 'sm' });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-	}
-
-	openHelpText(content) {
-		this.modal = this.modalService.open(content, { size: 'sm' });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-	}
-
-
-
-	openHist(content, row) {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
-
-
-		this.sourceAction = row;
-
-
-
-		//this.isSaving = true;
-		// debugger;
-		this.ataSubChapter1Service.historyATASubChapter1(this.sourceAction.ataSubChapterId).subscribe(
-			results => this.onHistoryLoadSuccessful(results[0], content),
-			error => this.saveFailedHelper(error));
-
-
-	}
-
-
-	editItemAndCloseModel() {
-
-		// debugger;
-
-		this.isSaving = true;
-
-		if (this.isEditMode == false) {
-			this.sourceAction.createdBy = this.userName;
-			this.sourceAction.updatedBy = this.userName;
-			this.sourceAction.masterCompanyId = 1;
-			//this.sourceAction.ataChapterCode = this.ataChapterCode;
-			this.ataSubChapter1Service.newATASubChapter1(this.sourceAction).subscribe(
-				role => this.saveSuccessHelper(role),
-				error => this.saveFailedHelper(error));
-		}
-		else {
-
-			this.sourceAction.updatedBy = this.userName;
-			//this.sourceAction.ataChapterCode = this.ataChapterCode;
-			this.sourceAction.masterCompanyId = 1;
-			this.ataSubChapter1Service.updateATASubChapter1(this.sourceAction).subscribe(
-				response => this.saveCompleted(this.sourceAction),
-				error => this.saveFailedHelper(error));
-		}
-
-		this.modal.close();
-	}
-
-	deleteItemAndCloseModel() {
-		this.isSaving = true;
-		this.sourceAction.updatedBy = this.userName;
-		this.ataSubChapter1Service.deleteATASubChapter1(this.sourceAction.ataSubChapterId).subscribe(
-			response => this.saveCompleted(this.sourceAction),
-			error => this.saveFailedHelper(error));
-		this.modal.close();
-	}
-
-
-
-	//partnmId(event) {
-	//	//debugger;
-	//	for (let i = 0; i < this.actionamecolle.length; i++) {
-	//		if (event == this.actionamecolle[i][0].ataChapterName) {
-	//			//alert("Action Name already Exists");
-	//			this.disableSave = true;
-	//			this.selectedActionName = event;
-	//		}
-	//	}
-	//}
-
-	//filterAtamains(event) {
-
-	//	this.localCollection = [];
-	//	for (let i = 0; i < this.allATAMaininfo.length; i++) {
-	//		let ataChapterName = this.allATAMaininfo[i].ataSubChapter1Id;
-	//		if (ataChapterName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-	//			this.actionamecolle.push([{
-	//				"ataSubChapter1Id": this.allATAMaininfo[i].ataSubChapter1Id,
-	//				"ataChapterName": ataChapterName
-	//			}]),
-	//				this.localCollection.push(ataChapterName);
-	//		}
-	//	}
-	//}
-
-	dismissModel() {
-		this.isDeleteMode = false;
-		this.isEditMode = false;
-		this.modal.close();
-	}
-
-	private saveCompleted(user?: ATASubChapter) {
-		this.isSaving = false;
-
-		if (this.isDeleteMode == true) {
-			this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
-			this.isDeleteMode = false;
-		}
-		else {
-			this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
-
-		}
-
-		this.loadData();
-	}
-
-	private saveSuccessHelper(role?: ATASubChapter) {
-		this.isSaving = false;
-		this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
-
-		this.loadData();
-
 	}
 
 	get userName(): string {
 		return this.authService.currentUser ? this.authService.currentUser.userName : "";
 	}
+	columnsChanges() {
+		this.refreshList();
+	}
+	refreshList() {
+		this.table.reset();
 
-	private saveFailedHelper(error: any) {
-		this.isSaving = false;
-		this.alertService.stopLoadingMessage();
-		this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
-		this.alertService.showStickyMessage(error, null, MessageSeverity.error);
+		// this.table.sortOrder = 0;
+		// this.table.sortField = '';
+
+		this.getList();
 	}
 
-	private getDismissReason(reason: any): string {
-		if (reason === ModalDismissReasons.ESC) {
-			return 'by pressing ESC';
-		} else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-			return 'by clicking on a backdrop';
+	customExcelUpload(event) {
+		// const file = event.target.files;
+
+		// console.log(file);
+		// if (file.length > 0) {
+
+		//     this.formData.append('file', file[0])
+		//     this.unitofmeasureService.UOMFileUpload(this.formData).subscribe(res => {
+		//         event.target.value = '';
+
+		//         this.formData = new FormData();
+		//         this.existingRecordsResponse = res;
+		//         this.getList();
+		//         this.alertService.showMessage(
+		//             'Success',
+		//             `Successfully Uploaded  `,
+		//             MessageSeverity.success
+		//         );
+
+		//     })
+		// }
+
+	}
+	sampleExcelDownload() {
+		const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=ATASubchapter&fileName=ATASubchapter.xlsx`;
+
+		window.location.assign(url);
+	}
+
+	getList() {
+		this.atasubchapterService.getAtaSubChapter1List().subscribe(res => {
+			const responseData = res[0];
+			this.originalData = responseData;
+			this.totalRecords = responseData.length;
+			this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+		})
+		this.ataChapterService.getAtaMainList().subscribe(result => {
+			this.ataList = result[0];
+		})
+
+	}
+	changePage(event: { first: any; rows: number }) {
+		console.log(event);
+		const pageIndex = (event.first / event.rows);
+
+		this.pageSize = event.rows;
+		this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+	}
+
+
+	checkGroupDescriptionExists(field, value) {
+		console.log(this.selectedRecordForEdit);
+		const exists = validateRecordExistsOrNot(field, value, this.originalData, this.selectedRecordForEdit);
+		if (exists.length > 0) {
+			this.disableSaveForDescription = true;
+		}
+		else {
+			this.disableSaveForDescription = false;
+		}
+
+	}
+	filterDescription(event) {
+		this.descriptionList = this.originalData;
+
+		const descriptionData = [...this.originalData.filter(x => {
+			return x.description.toLowerCase().includes(event.query.toLowerCase())
+		})]
+		this.descriptionList = descriptionData;
+	}
+	selectedDescription(object) {
+		const exists = selectedValueValidate('description', object, this.selectedRecordForEdit)
+
+		this.disableSaveForDescription = !exists;
+	}
+
+	save() {
+		const data = {
+			...this.addNew, createdBy: this.userName, updatedBy: this.userName,
+		    description: editValueAssignByCondition('description',this.addNew.description)
+		};
+		console.log(data)
+		if (!this.isEdit) {
+			this.atasubchapterService.newATASubChapter1(data).subscribe(() => {
+				this.resetForm();
+				this.getList();
+				this.alertService.showMessage(
+					'Success',
+					`Added  New ATA Subchapter Successfully  `,
+					MessageSeverity.success
+				);
+			})
 		} else {
-			return `with: ${reason}`;
+			
+			this.atasubchapterService.updateATASubChapter1(data).subscribe(() => {
+				this.selectedRecordForEdit = undefined;
+				this.isEdit = false;
+				this.resetForm();
+				this.getList();
+				this.alertService.showMessage(
+					'Success',
+					`Added  New ATA Subchapter Successfully  `,
+					MessageSeverity.success
+				);
+			})
 		}
 	}
 
-	showAuditPopup(template, id): void {
-		this.auditAtaSubchapter(id);
-		this.modal = this.modalService.open(template, { size: 'sm' });
+	resetForm() {
+		this.isEdit = false;
+		this.selectedRecordForEdit = undefined;
+		this.addNew = { ...this.new };
 	}
 
-	auditAtaSubchapter(ataSubChapterId: number): void {
-		this.AuditDetails = [];
-		this.ataSubChapter1Service.getAtaSubChapterAudit(ataSubChapterId).subscribe(audits => {
-			if (audits.length > 0) {
-				this.AuditDetails = audits;
-				this.AuditDetails[0].ColumnsToAvoid = ["ataSubChapterAuditId", "ataSubChapterId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
-			}
-		});
+
+	edit(rowData) {
+		console.log(rowData);
+		this.isEdit = true;
+		this.disableSaveGroupId = false;
+		this.disableSaveForDescription = false;
+
+
+		this.addNew = {
+			...rowData,		
+			description: getObjectByValue('description', rowData.description, this.originalData),
+		};
+		this.selectedRecordForEdit = { ...this.addNew }
+
 	}
+
+	changeStatus(rowData) {
+		console.log(rowData);
+		const data = { ...rowData }
+		this.atasubchapterService.updateATASubChapter1(data).subscribe(() => {
+			this.alertService.showMessage(
+				'Success',
+				`Updated Status Successfully  `,
+				MessageSeverity.success
+			);
+		})
+
+	}
+	viewSelectedRow(rowData) {
+		console.log(rowData);
+		this.viewRowData = rowData;
+	}
+	resetViewData() {
+		this.viewRowData = undefined;
+	}
+	delete(rowData) {
+		this.selectedRowforDelete = rowData;
+
+	}
+	deleteConformation(value) {
+		if (value === 'Yes') {
+			this.atasubchapterService.deleteATASubChapter1(this.selectedRowforDelete.ataSubChapterId).subscribe(() => {
+				this.getList();
+				this.alertService.showMessage(
+					'Success',
+					`Deleted ATA Subchapter Successfully  `,
+					MessageSeverity.success
+				);
+			})
+		} else {
+			this.selectedRowforDelete = undefined;
+		}
+	}
+
+	getAuditHistoryById(rowData) {
+		this.atasubchapterService.getAtaSubChapterAudit(rowData.ataSubChapterId).subscribe(res => {
+			this.auditHistory = res;
+		})
+	}
+	getColorCodeForHistory(i, field, value) {
+		const data = this.auditHistory;
+		const dataLength = data.length;
+		if (i >= 0 && i <= dataLength) {
+			if ((i + 1) === dataLength) {
+				return true;
+			} else {
+				return data[i + 1][field] === value
+			}
+		}
+	}
+
+	
 }
 
 

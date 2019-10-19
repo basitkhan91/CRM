@@ -137,6 +137,21 @@
         <div class="md-step-bar-right"></div>
       </div>
     </div>
+    <div
+    class="md-step"
+    [ngClass]="{
+      active: activeMenuItem >= 10,
+      editable: activeMenuItem === 10
+    }"
+    (click)="changeOfTab('Documents')"
+    [class.isDisabled]="!isDisabledSteps"
+  >
+    <div class="md-step-circle"><span>10</span></div>
+    <div class="md-step-title">
+      Documents
+      <div class="md-step-bar-right"></div>
+    </div>
+  </div>
   </div>
   <div class="card">
     <div [ngClass]="{ hideTab: currentTab !== 'General' }">
@@ -157,6 +172,7 @@
         <app-customer-contacts
           [savedGeneralInformationData]="savedGeneralInformationData"
           [editMode]="editMode"
+          [add_ataChapterList]="add_ataChapterList"
           [editGeneralInformationData]="editGeneralInformationData"
           (tab)="changeOfTab($event)"
         ></app-customer-contacts>
@@ -176,6 +192,7 @@
       <div *ngIf="savedGeneralInformationData || editGeneralInformationData">
         <app-customer-ata
           [editMode]="editMode"
+          [search_ataChapterList]="search_ataChapterList"
           [editGeneralInformationData]="editGeneralInformationData"
           [savedGeneralInformationData]="savedGeneralInformationData"
           (tab)="changeOfTab($event)"
@@ -235,6 +252,14 @@
           (tab)="changeOfTab($event)"
         ></app-customer-warnings>
       </div>
+    </div>
+    <div [ngClass]="{ hideTab: currentTab !== 'Documents' }">
+        <div *ngIf="savedGeneralInformationData || editGeneralInformationData">
+        <app-customer-documents  
+        [editGeneralInformationData]="editGeneralInformationData"
+        [savedGeneralInformationData]="savedGeneralInformationData"
+         (tab)="changeOfTab($event)"></app-customer-documents>
+        </div>
     </div>
   </div>
 </div>

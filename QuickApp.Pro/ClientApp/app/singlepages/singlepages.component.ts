@@ -245,14 +245,23 @@ export class SingleComponent {
 					{ label: 'Single Screens' },
 					{ label: 'Item Group' }
 				];
-			}
+            }
+
+            else if (this.currentUrl == '/singlepages/singlepages/app-job-type') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Job Types' }
+                ];
+            }
 
 			else if (this.currentUrl == '/singlepages/singlepages/app-job-title') {
 				this.items = [
 					{ label: 'Single Screens' },
 					{ label: 'Job Titles' }
 				];
-			}
+            }
+
+           
 
 			else if (this.currentUrl == '/singlepages/singlepages/app-priority') {
 				this.items = [
@@ -543,7 +552,14 @@ export class SingleComponent {
 					{ label: 'Single Screens' },
 					{ label: 'Item Classification' }
 				];
-			}
+            }
+
+                  else if (this.currentUrl == '/singlepages/singlepages/app-job-type') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Job Types' }
+                ];
+            }
 
 			else if (this.currentUrl == '/singlepages/singlepages/app-item-group') {
 				this.items = [
@@ -557,7 +573,8 @@ export class SingleComponent {
 					{ label: 'Single Screens' },
 					{ label: 'Job Titles' }
 				];
-			}
+            }
+          
 
 			else if (this.currentUrl == '/singlepages/singlepages/app-priority') {
 				this.items = [
@@ -824,6 +841,18 @@ export class SingleComponent {
                 this.items = [
                     { label: 'Single Screens' },
                     { label: 'Aircraft Manufacturer' }
+                ];
+			}
+			else if (this.currentUrl == '/singlepages/singlepages/app-dashNumber') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Dash Number' }
+                ];
+			}
+			else if (this.currentUrl == '/singlepages/singlepages/app-node-setup') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Nodes' }
                 ];
             }
 		}

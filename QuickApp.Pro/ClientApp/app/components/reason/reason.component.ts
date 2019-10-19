@@ -57,7 +57,7 @@ export class ReasonComponent {
     allReasonsInfo: Reason[] = [];
     private isSaving: boolean;
 
-    public auditHisory: AuditHistory[] = [];
+    auditHistory: any[] = [];
     private bodyText: string;
     loadingIndicator: boolean;
     closeResult: string;
@@ -88,6 +88,7 @@ export class ReasonComponent {
 
     reasonPagination: any;//added
     totalRecords: number;
+    totalPages: number;
     loading: boolean;
     /** Actions ctor */
 	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal,   private masterComapnyService: MasterComapnyService,private _fb: FormBuilder, private alertService: AlertService, public reasonService: ReasonService, private dialog: MatDialog) {
@@ -114,6 +115,12 @@ export class ReasonComponent {
     }
 
 
+    changePage(event: { first: any; rows: number }) {
+        console.log(event);
+        const pageIndex = (event.first / event.rows);
+        this.pageSize = event.rows;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+    }
 
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
@@ -288,40 +295,40 @@ export class ReasonComponent {
             }
         }
     }
-    openHist(content, row) {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
+    //openHist(content, row) {
+    //    this.alertService.startLoadingMessage();
+    //    this.loadingIndicator = true;
 
 
-        this.sourceAction = row;
+    //    this.sourceAction = row;
 
 
 
-        //this.isSaving = true;
-        // debugger;
-        this.reasonService.historyReason(this.sourceAction.reasonId).subscribe(
-            results => this.onHistoryLoadSuccessful(results[0], content),
-            error => this.saveFailedHelper(error));
+    //    //this.isSaving = true;
+    //    // debugger;
+    //    this.reasonService.historyReason(this.sourceAction.reasonId).subscribe(
+    //        results => this.onHistoryLoadSuccessful(results[0], content),
+    //        error => this.saveFailedHelper(error));
 
 
-    }
-    private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
+    //}
+    //private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
 
-        // debugger;
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
+    //    // debugger;
+    //    this.alertService.stopLoadingMessage();
+    //    this.loadingIndicator = false;
 
-        this.auditHisory = auditHistory;
-
-
-        this.modal = this.modalService.open(content, { size: 'lg' });
-
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+    //    this.auditHisory = auditHistory;
 
 
-    }
+    //    this.modal = this.modalService.open(content, { size: 'lg' });
+
+    //    this.modal.result.then(() => {
+    //        console.log('When user closes');
+    //    }, () => { console.log('Backdrop click') })
+
+
+    //}
     editItemAndCloseModel() {
 
         // debugger;
@@ -592,6 +599,13 @@ export class ReasonComponent {
             this.reasonPagination = responseData.columnData;
             this.totalRecords = responseData.totalRecords;
             this.totelPages = Math.ceil(this.totalRecords / this.pageSize);
+        })
+    }
+
+    getAuditHistoryById(rowData) {
+        this.reasonService.getReasonAudit(rowData.reasonId).subscribe(res => {
+
+            this.auditHistory = res[0].result;
         })
     }
 

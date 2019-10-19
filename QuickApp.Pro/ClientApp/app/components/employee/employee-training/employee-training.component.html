@@ -88,13 +88,13 @@
                                                 <div class="form-group col-sm-12">
                                                     <label class="control-label col-sm-4">Provider</label>
                                                     <div class="col-sm-7">
-                                                        <input type="text" class="form-control" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.provider">
+                                                        <input type="number" class="form-control" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.provider">
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-sm-12">
                                                     <label class="control-label col-sm-4">Industry Code</label>
                                                     <div class="col-sm-7">
-                                                        <input type="text" class="form-control" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.industryCode">
+                                                        <input type="number" class="form-control" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.industryCode">
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-sm-12">
@@ -113,10 +113,13 @@
                                             </div>
                                             <div class="clear"></div>
 
-                                            <button type="button" class="btn btn-success pull-right submit-btn" (click)="savetrainigSection()">Save Training Data </button>
+                                            <button type="button" [disabled]="nextbuttonEnable == false"  class="btn btn-success pull-right submit-btn" (click)="savetrainigSection()">Save</button>
                                             <div class="clear"></div>
-                                            <hr class="hr-light-grey" />
-                                            <button type="button" class="btn btn-success pull-right submit-btn" (click)="editTrainAndCloseModel()">Save</button>
+                                            <!--
+         <hr class="hr-light-grey" />
+    <button type="button" class="btn btn-success pull-right submit-btn" (click)="editTrainAndCloseModel()">Save</button>
+    -->
+
 
                                         </div>
                                     </div>

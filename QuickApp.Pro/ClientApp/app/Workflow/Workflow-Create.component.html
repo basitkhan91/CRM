@@ -28,16 +28,13 @@
                                     PN <span class="clr-red">*</span>  <span style="margin-left:3px;cursor:pointer;"><i class="fa fa-plus-circle fa-lg" (click)="AddPage()"></i></span>
                                 </label>
                                 <p class="c-workflow-select">
-                                    <p-autoComplete class="wf-header-select" 
+                                    <p-autoComplete [(ngModel)]="sourceWorkFlow.part"
+                                                    [suggestions]="partCollection"
+                                                    (completeMethod)="filterpartItems($event)"
                                                     (onSelect)="onPartSelect($event)"
-                                                    [(ngModel)]="sourceWorkFlow.partNumber" 
-                                                    [suggestions]="partCollection" 
-                                                    (completeMethod)="filterpartItems($event)" 
-                                                    [size]="32"
-                                                    [minLength]="1" [dropdown]="true" required>
-                                        <ng-template let-partName pTemplate="part">
-                                            <div class="ui-helper-clearfix">{{partName}}</div>
-                                        </ng-template>
+                                                    [dropdown]="true" [size]="32" [minLength]="1"
+                                                    field="partName" class="wf-header-select" required>
+                                                    
                                     </p-autoComplete>
                                 </p>
                             </div>
@@ -68,11 +65,14 @@
                             <div class="form-group">
                                 <label for="changepn">Changed PN</label>
                                 <p class="c-workflow-select">
-                                    <p-autoComplete class="wf-header-select" (onSelect)="onChangePartSelect($event)" [(ngModel)]="sourceWorkFlow.changedPartNumber" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="32"
-                                                    [minLength]="1" [dropdown]="true" required>
-                                        <ng-template let-partName pTemplate="part">
-                                            <div class="ui-helper-clearfix">{{partName}}</div>
-                                        </ng-template>
+                                    <p-autoComplete  
+                                                    [(ngModel)]="sourceWorkFlow.changedPart" 
+                                                    [suggestions]="changedPartCollection" 
+                                                    (completeMethod)="filterChangedPartItems($event)" 
+                                                    (onSelect)="onChangedPartSelect($event)" 
+                                                    [dropdown]="true" [size]="32" [minLength]="1"
+                                                    field="partName"
+                                                    class="wf-header-select">
                                     </p-autoComplete>
                                 </p>
                                 
@@ -108,7 +108,8 @@
                                     Customer Name  <span style="margin-left:3px;cursor:pointer;"><i class="fa fa-plus-circle fa-lg" (click)="AddPageCustomer()"></i></span>
                                 </label>
                                 <p class="c-workflow-select">
-                                    <p-autoComplete class="wf-header-select" [(ngModel)]="sourceWorkFlow.customerName"
+                                    <p-autoComplete class="wf-header-select" 
+                                                    [(ngModel)]="sourceWorkFlow.customerName"
                                                     (onSelect)="onCustomerNameselected($event)"
                                                     [suggestions]="customerNames"
                                                     (completeMethod)="filterNames($event)" [size]="32"

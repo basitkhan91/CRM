@@ -105,8 +105,8 @@
 
                 <p-autoComplete
                   class="autocomp-customer-cstm"
-                  name="csrName"
-                  [(ngModel)]="salesInfo.csrName"
+                  name="csr"
+                  [(ngModel)]="salesInfo.csrId"
                   [suggestions]="employeeList"
                   [forceSelection]="true"
                   emptyMessage="No Match Found"
@@ -129,7 +129,7 @@
                 <p-autoComplete
                   class="autocomp-customer-cstm"
                   name="agentName"
-                  [(ngModel)]="salesInfo.agentName"
+                  [(ngModel)]="salesInfo.saId"
                   [suggestions]="employeeList"
                   field="firstName"
                   [forceSelection]="true"
@@ -156,7 +156,8 @@
                   id="cspostal"
                   type="text"
                   name="annualRevenuePotential"
-                  pattern="^[0-9]*$"
+                  pInputText 
+                  pKeyFilter="num"
                   [(ngModel)]="salesInfo.annualRevenuePotential"
                 />
               </div>
@@ -167,6 +168,8 @@
                   id="cspostal"
                   type="text"
                   name="annualQuota"
+                  pInputText 
+                  pKeyFilter="num"
                   [(ngModel)]="salesInfo.annualQuota"
                 />
               </div>

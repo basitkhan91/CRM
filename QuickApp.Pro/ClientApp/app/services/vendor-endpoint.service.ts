@@ -131,7 +131,9 @@ export class VendorEndpointService extends EndpointFactory {
     private readonly _mancapPost: string = "/api/Vendor/VendorMancapespost";
 	private readonly _aircraftmodelsPost: string = "/api/Vendor/Aircraftpost";
 	private readonly _vendorContactsGetByID: string = "/api/Common/vendorcontacts"; 
-    private readonly getVendor: string = "/api/vendor/pagination";
+	private readonly getVendor: string = "/api/vendor/pagination";
+	private readonly _saveCreatePOApproval: string = "/api/purchaseorder/createpoapprover";
+	private readonly _updatePOApproval: string = "/api/purchaseorder/updatepoapprover";
 
 	get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
 	get vendorlistsUrl() { return this.configurations.baseUrl + this._vendrUrl; }
@@ -1230,5 +1232,25 @@ export class VendorEndpointService extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.getVendorContactsByIDEndpoint(vendorId));
             });
-    }
+	}
+	
+	saveCreatePOApproval<T>(param: any): Observable<any> {
+		let body = JSON.stringify(param);
+		let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+		return this.http.post(this._saveCreatePOApproval, body, this.getRequestHeaders())
+			.map((response: Response) => {
+				return <any>response;
+
+			}).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+	}
+
+	updatePOApproval<T>(param: any): Observable<any> {
+		let body = JSON.stringify(param);
+		let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+		return this.http.post(this._updatePOApproval, body, this.getRequestHeaders())
+			.map((response: Response) => {
+				return <any>response;
+
+			}).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+	}
 }

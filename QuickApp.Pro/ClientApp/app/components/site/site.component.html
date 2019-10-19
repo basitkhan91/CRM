@@ -90,11 +90,7 @@
 									</td>
 								</tr>
 							</ng-template>
-							<ng-template #auditContent let-c="close" let-d="dismiss">
-								<div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
-									<app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
-								</div>
-							</ng-template>
+							
 							<ng-template pTemplate="summary" id="footer">
 								<label id="footer" class="footer">No'of records:</label>
 								<input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
@@ -109,7 +105,12 @@
 	</div>
 </div>
 
-
+<ng-template #auditContent let-c="close" let-d="dismiss">
+	<div class="audit-template-launcher">
+		<app-site-audit [Data]="AuditDetails" [Modal]="modal" *ngIf= "HasAuditDetails"></app-site-audit>
+		<audit-no-history [Modal]="modal" [Title]="AuditHistoryTitle" *ngIf="!HasAuditDetails"></audit-no-history>
+	</div>
+</ng-template>
 
 
 <ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
@@ -128,7 +129,7 @@
 					<div class="form-group">
 						<div class="col-sm-12">
 							<div class="col-sm-4">
-								<label class="control-label">Site Name
+								<label class="control-label label">Site Name
 									<span class="clr-red">*</span>
 								</label>
 							</div>
@@ -332,43 +333,43 @@
 		<div class="modal-body viewform">
 			<div class="col-sm-6">
 				<p>
-					<span class="label">
+					<span class="label view-Header">
 						<b> Site Name : </b>
 					</span>
 					<span class="value">{{name}}</span>
 				</p>
 				<p>
-					<span class="label">
+					<span class="label view-Header">
 						<b> Address1: </b>
 					</span>
 					<span class="value">{{address1}}</span>
 				</p>
 				<p>
-					<span class="label">
+					<span class="label view-Header">
 						<b> Address2: </b>
 					</span>
 					<span class="value">{{address2}}</span>
 				</p>
 				<p>
-					<span class="label">
+					<span class="label view-Header">
 						<b> Address3: </b>
 					</span>
 					<span class="value">{{address3}}</span>
 				</p>
 				<p>
-					<span class="label">
+					<span class="label view-Header">
 						<b> City: </b>
 					</span>
 					<span class="value">{{city}}</span>
 				</p>
 				<p>
-					<span class="label">
+					<span class="label view-Header">
 						<b> State: </b>
 					</span>
 					<span class="value">{{stateOrProvince}}</span>
 				</p>
 				<p>
-					<span class="label">
+					<span class="label view-Header">
 						<b> Country: </b>
 					</span>
 					<span class="value">{{country}}</span>
@@ -376,37 +377,37 @@
 			</div>
 			<div class="col-sm-6">
 				<p>
-					<span class="label">
+					<span class="label view-Header">
 						<b> ZipCode: </b>
 					</span>
 					<span class="value">{{postalCode}}</span>
 				</p>
 				<p>
-					<span class="label">
+					<span class="label view-Header">
 						<b>Memo: </b>
 					</span>
 					<span class="value">{{memo}}</span>
 				</p>
 				<p>
-					<span class="label">
+					<span class="label view-Header">
 						<b>Created By: </b>
 					</span>
 					<span class="value">{{createdBy}}</span>
 				</p>
 				<p>
-					<span class="label">
+					<span class="label view-Header">
 						<b>Created Date: </b>
 					</span>
 					<span class="value">{{createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
 				</p>
 				<p>
-					<span class="label">
+					<span class="label view-Header">
 						<b>Updated By: </b>
 					</span>
 					<span class="value">{{updatedBy}}</span>
 				</p>
 				<p>
-					<span class="label">
+					<span class="label view-Header">
 						<b>Updated Date: </b>
 					</span>
 					<span class="value">{{updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>

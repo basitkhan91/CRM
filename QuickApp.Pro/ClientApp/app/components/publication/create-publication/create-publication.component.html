@@ -76,7 +76,7 @@
 
           <div class="form-group">
             <label for="Publicationtype">Publication Type <span class="clr-red">*</span></label>
-            <p-dropdown name="gPubType" class="pub-type-select" #pubType="ngModel" [options]="publicationTypes" [(ngModel)]="sourcePublication.publicationTypeId" required></p-dropdown>
+            <p-dropdown name="gPubType" class="pub-type-select" #pubType="ngModel" placeholder="Select Publication Type"  [options]="publicationTypes" [(ngModel)]="sourcePublication.publicationTypeId" required></p-dropdown>
           </div>
 
 
@@ -214,7 +214,7 @@
                 <div  class="col-md-4">
                   <p class="fs12">
                     <label class="control-label labels-font-header" style="width: auto; ">Publication Type</label>
-                    <span class="span-header-red"> {{isEditMode ? this.sourcePublication.publicationType : publicationType}} </span></p>
+                    <span class="span-header-red"> {{publicationType}} </span></p>
                 </div>                              
               </div>
           <div class="col-md-12">
@@ -324,7 +324,7 @@
                     [options]="airCraftTypesList"
                     [(ngModel)]="selectAircraftManfacturer"
                     (onChange)="getAircraftModelByManfacturerType()"
-                    class="pub-multi"
+                    class="pub-multi" [resetFilterOnHide]="true"
                   ></p-multiSelect>
                 </div>
               </div>
@@ -338,7 +338,7 @@
                     [(ngModel)]="selectedAircraftModel"
                     [selectionLimit]="30"
                     (onChange)="getDashNumberByManfacturerandModel(); multiSelectMaxLengthAlert();"
-                    class="pub-multi"
+                    class="pub-multi" [resetFilterOnHide]="true"
                   ></p-multiSelect>
                 </div>
               </div>
@@ -350,7 +350,7 @@
                       [selectionLimit]="30"
                       [(ngModel)]="selectedDashNumbers"
                       (onChange)="multiSelectMaxLengthAlert();"
-                      class="pub-multi"
+                      class="pub-multi" [resetFilterOnHide]="true"
                     ></p-multiSelect>
                   </div>
                 </div>
@@ -376,7 +376,7 @@
               >
                 <ng-template pTemplate="header" let-columns>
                   <tr>
-                    <th>ID</th>
+                    <!-- <th>ID</th> -->
                     <th *ngFor="let col of columns">
                       {{ col.header }}
                     </th>                    
@@ -389,7 +389,7 @@
                   let-rowIndex="rowIndex"
                 >
                   <tr>
-                    <td>{{ rowIndex + 1 }}</td>
+                    <!-- <td>{{ rowIndex + 1 }}</td> -->
                     <td *ngFor="let col of columns">
                       {{ rowData[col.field] }}
                     </td>
@@ -435,7 +435,7 @@
                     [options]="ataChapterList"
                     [(ngModel)]="selectedATAchapter"
                     (onChange)="getSubChapterByATAChapter()"
-                    class="pub-multi"
+                    class="pub-multi" [resetFilterOnHide]="true"
                   ></p-multiSelect>
                 </div>
               </div>
@@ -445,7 +445,7 @@
                   <p-multiSelect
                     [options]="ataSubChapterList"
                     [(ngModel)]="selectedATASubChapter"
-                    class="pub-multi"
+                    class="pub-multi" [resetFilterOnHide]="true"
                   ></p-multiSelect>
                 </div>
               </div>
@@ -470,7 +470,7 @@
               >
                 <ng-template pTemplate="header" let-columns>
                   <tr>
-                    <th>ID</th>
+                    <!-- <th>ID</th> -->
                     <th *ngFor="let col of columns">
                       {{ col.header }}
                     </th>
@@ -483,7 +483,7 @@
                   let-rowIndex="rowIndex"
                 >
                   <tr>
-                    <td>{{ rowIndex + 1 }}</td>
+                    <!-- <td>{{ rowIndex + 1 }}</td> -->
                     <td *ngFor="let col of columns">
                       {{ rowData[col.field] }}
                     </td>

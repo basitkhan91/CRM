@@ -82,7 +82,7 @@ import { InputTextModule } from "primeng/inputtext";
 import { FileUploadModule } from "primeng/fileupload";
 import { CheckboxModule } from "primeng/checkbox";
 import { PercentComponent } from "../components/percent/percent.component";
-
+import { JobTypeComponent } from '../components/job-type/job-type.component';
 const singlePagesRoutes: Routes = [
   {
     path: "singlepages",
@@ -178,7 +178,12 @@ const singlePagesRoutes: Routes = [
         path: "app-job-title",
         component: JobTitleComponent,
         data: { title: "Job Title" }
-      },
+        },
+        {
+            path: "app-job-type",
+            component: JobTypeComponent,
+            data: { title: "Job Type" }
+        },
       {
         path: "app-priority",
         component: PriorityComponent,
@@ -334,7 +339,7 @@ const singlePagesRoutes: Routes = [
       {
         path: "app-depriciation-method",
         component: DepriciationMethodComponent,
-        data: { title: "Certification Type" }
+          data: { title: "Depreciation Method" }
       },
       {
         path: "app-disposal-type",

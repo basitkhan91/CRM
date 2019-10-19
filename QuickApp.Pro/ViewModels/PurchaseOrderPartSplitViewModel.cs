@@ -13,7 +13,7 @@ namespace QuickApp.Pro.ViewModels
         public long PartNumberId { get; set; }
         public long PurchaseOrderId { get; set; }
         public long ItemMasterId { get; set; }
-        //public string SerialNumber { get; set; }
+        public string SerialNumber { get; set; }
         public DateTime? NeedByDate { get; set; }
         public Nullable<long> UOMId { get; set; }
         public Nullable<short> QuantityOrdered { get; set; }

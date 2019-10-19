@@ -269,7 +269,6 @@ namespace QuickApp.Pro.Controllers
                 existingResult.UpdatedDate = DateTime.Now;
                 existingResult.CreatedBy = shelfViewModel.CreatedBy;
                 existingResult.UpdatedBy = shelfViewModel.UpdatedBy;
-                _unitOfWork.SaveChanges();
                 _unitOfWork.Shelfs.Update(existingResult);
                 _unitOfWork.SaveChanges();
                 return Ok(existingResult);

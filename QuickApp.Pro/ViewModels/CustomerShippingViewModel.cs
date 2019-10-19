@@ -22,6 +22,7 @@ namespace QuickApp.Pro.ViewModels
         public System.DateTime CreatedDate { get; set; }
         public System.DateTime UpdatedDate { get; set; }
         public bool? IsActive { get; set; }
+        public bool? IsPrimary { get; set; }
 
         public string Address1 { get; set; }
         public string Address2 { get; set; }

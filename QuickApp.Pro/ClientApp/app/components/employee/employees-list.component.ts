@@ -41,7 +41,17 @@ export class EmployeesListComponent implements OnInit{
 	//viewempDetails: any = {};
 	viewTraining: any = {};
 	viewGeneralDetails: any = {};
-    allEmployeelist: any[]=[];
+    allEmployeelist: any[] = [];
+    public originationCounty: any;
+    public nationalCountry: any;
+    public companyCode: any;
+    public businessUnit: any;
+    public departmentCode: any;
+    public divisionCode: any;
+    public empExpertisedescription: any;
+    public jobTypeName: any;
+    public employeeLeaveType: any;
+    public deleteEmployeeId: any;
 	ngOnInit(): void {
 
 		// debugger;
@@ -80,7 +90,10 @@ export class EmployeesListComponent implements OnInit{
 
 
 	}
-	private onemployeeDataLoadSuccessful(allWorkFlows: any[]) {
+    private onemployeeDataLoadSuccessful(allWorkFlows: any[]) {
+        if (allWorkFlows[0].employeeLeaveTypeMapping != null) {
+            this.employeeLeaveType = allWorkFlows[0].employeeLeaveTypeMapping.employeeLeaveTypeId
+        }
 		//debugger;
 		//this.alertService.stopLoadingMessage();
 		//this.loadingIndicator = false;
@@ -88,14 +101,20 @@ export class EmployeesListComponent implements OnInit{
 		this.allEmployeelist = allWorkFlows[0];
 
 
-	}
+    }
+
+
 	public navigateTogeneralInfo() {
 		//this.workFlowtService.listCollection = [];
 		this.empService.isEditMode = false;
 		this.router.navigateByUrl('/employeesmodule/employeepages/app-employee-general-information')
 
 	}
-	openEdit(row) {
+    openEdit(row) {
+
+        console.log(row);
+
+        console.log("row");
 
 		//this.isEditMode = true;
 		this.empService.isEditMode = true;
@@ -158,22 +177,30 @@ export class EmployeesListComponent implements OnInit{
 
 	}
 
-	deleteItemAndCloseModel(rowData) {
+	deleteItemAndCloseModel() {
 		this.isSaving = true;
 		this.isDeleteMode = true;
 		this.sourceEmployee.isdelete = true;
 		//this.sourceVendor = content;
-		this.sourceEmployee.employeeId = rowData.employeeId;
+		//this.sourceEmployee.employeeId = rowData.employeeId;
+        this.sourceEmployee.employeeId =this.deleteEmployeeId;
 		this.sourceEmployee.updatedBy = this.userName;
-		this.empService.deleteEmployee(this.sourceEmployee).subscribe(data => { this.loadData();})
+        this.empService.deleteEmployee(this.sourceEmployee).subscribe(data => {
+            this.alertService.showMessage("Employee removed successfully.");
+            this.modal.close();
+            this.loadData();
+        })
 		//this.modal.close();
 	}
 
-	openDelete(content, row) {
+    openDelete(content, row) {
 
+        console.log(row);
+        this.deleteEmployeeId = row.employeeId
 		this.isEditMode = false;
 		this.isDeleteMode = true;
-		this.sourceEmployee = row;
+        this.sourceEmployee = row;
+     
 		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
 			console.log('When user closes');
@@ -199,21 +226,60 @@ export class EmployeesListComponent implements OnInit{
 		this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
 		this.alertService.showStickyMessage(error, null, MessageSeverity.error);
 	}
-	openView(content, row) {
-		this.viewGeneralDetails = row;
-		this.viewempDetails = row;
-		this.viewTraining = row;
-		this.allEmployeelist = row;
-		this.empService.getEmployeeListforView(row.employeeId).subscribe(
-			results => this.onemployeeDataLoadSuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
-	
-		this.modal = this.modalService.open(content, { size: 'lg' });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-	}
+    openView(content, row) {
+        console.log("empInfo");
+
+        console.log(row);
+        this.originationCounty = row.orgCountries.countries_name;
+        this.nationalCountry = row.nationalCountryId.countries_name;
+
+        if (row.employeeExpertise != null) {
+            this.empExpertisedescription = row.employeeExpertise.description
+        }
+
+        if (row.jobtype != null) {
+            this.jobTypeName = row.jobtype.jobTypeName
+        }
+
+
+
+
+
+        if (row.managementStructeInfo != null) {
+            this.companyCode = row.managementStructeInfo.code;
+        }
+
+
+
+        if (row.buInfo != null) {
+            this.businessUnit = row.buInfo.code;
+        }
+        if (row.departmentInfo != null) {
+            this.departmentCode = row.departmentInfo.code;
+        }
+        if (row.divisonInfo != null) {
+
+            this.divisionCode = row.divisonInfo.code;
+        }
+
+
+
+
+
+        this.viewGeneralDetails = row;
+        this.viewempDetails = row;
+        this.viewTraining = row;
+        this.allEmployeelist = row;
+        this.empService.getEmployeeListforView(row.employeeId).subscribe(
+            results => this.onemployeeDataLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+
+        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
 	dismissModel() {
 		this.modal.close();
 	}

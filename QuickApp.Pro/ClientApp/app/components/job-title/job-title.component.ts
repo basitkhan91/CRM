@@ -1,467 +1,59 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
-import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
-import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+﻿import { Component, OnInit, ViewChild } from '@angular/core';
 import { fadeInOut } from '../../services/animations';
-import { PageHeaderComponent } from '../../shared/page-header.component';
-import { MasterComapnyService } from '../../services/mastercompany.service';
-import { AlertService, DialogType, MessageSeverity } from '../../services/alert.service';
-import { AuditHistory } from '../../models/audithistory.model';
-import { AuthService } from '../../services/auth.service';
-
-import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
-import { MasterCompany } from '../../models/mastercompany.model';
-
-import { TableModule, Table } from 'primeng/table';
-import { ButtonModule } from 'primeng/button';
-import { SelectButtonModule } from 'primeng/selectbutton';
-import { InputTextModule } from 'primeng/inputtext';
-import { MultiSelectModule } from 'primeng/multiselect';
-import { JobTitle } from '../../models/jobtitle.model';
 import { JobTitleService } from '../../services/job-title.service';
-import { MenuItem } from 'primeng/api';//bread crumb
+import { AlertService, MessageSeverity } from '../../services/alert.service';
+import { AuthService } from '../../services/auth.service';
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
-import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
-import { getObjectByValue, validateRecordExistsOrNot, selectedValueValidate, editValueAssignByCondition } from '../../generic/autocomplete';
+import { validateRecordExistsOrNot, editValueAssignByCondition, getObjectById, selectedValueValidate, getObjectByValue } from '../../generic/autocomplete';
+import { Table } from 'primeng/table';
 import { ConfigurationService } from '../../services/configuration.service';
+
 @Component({
     selector: 'app-job-title',
     templateUrl: './job-title.component.html',
     styleUrls: ['./job-title.component.scss'],
     animations: [fadeInOut]
 })
-/** Actions component*/
-export class JobTitleComponent implements OnInit{
-    // allreasn: any[] = [];
-    // selectedreason: any;
-    // job_Name: any = "";
-    // memo: any = "";
-    // createdBy: any = "";
-    // updatedBy: any = "";
-    // createdDate: any = "";
-    // updatedDate: any = "";
-    // disableSave: boolean = false;
-    // totalRecords: number;
-    // totalPages: number;
-    // rows: number;
-    // AuditDetails: SingleScreenAuditDetails[];
-    // ngOnInit(): void {
-    //     this.cols = [
-    //         //{ field: 'jobTitleId', header: 'Job Title Id' },
-    //         { field: 'description', header: 'Job Titles' },
-    //         { field: 'memo', header: 'Memo' },
-    //         // { field: 'createdBy', header: 'Created By' },
-    //         // { field: 'updatedBy', header: 'Updated By' },
-    //         //{ field: 'updatedDate', header: 'Updated Date' },
-    //         //{ field: 'createdDate', header: 'createdDate' }
-    //     ];
-    //     this.selectedColumns = this.cols;
-    //     this.loadData();
-    //     this.breadCrumb.currentUrl = '/singlepages/singlepages/app-job-title';
-    //     this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
-    // }
-    // @ViewChild(MatPaginator) paginator: MatPaginator;
-    // @ViewChild(MatSort) sort: MatSort;
-
-    // Active: string = "Active";
-    // displayedColumns = ['jobTitleId', 'companyName', 'description', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
-    // dataSource: MatTableDataSource<JobTitle>;
-    // allJobTitlesinfo: JobTitle[] = [];
-    // allComapnies: MasterCompany[] = [];
-    // private isSaving: boolean;
-    // public sourceAction: any;
-    // public auditHisory: AuditHistory[] = [];
-    // private bodyText: string;
-    // loadingIndicator: boolean;
-    // closeResult: string;
-    // selectedColumns: any[];
-    // cols: any[];
-    // title: string = "Create";
-    // id: number;
-    // errorMessage: any;
-    // modal: NgbModalRef;
-    // selectedColumn: JobTitle[];
-    // jobName: any;
-    // filteredBrands: any[];
-    // localCollection: any[] = [];
-    // isDelete: boolean = false;
-    // /** Actions ctor */
-
-    // private isEditMode: boolean = false;
-    // private isDeleteMode: boolean = false;
-
-    // constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: JobTitleService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
-    //     this.displayedColumns.push('action');
-    //     this.dataSource = new MatTableDataSource();
-    //     this.sourceAction = new JobTitle();
-
-    // }
-    // validateRecordExistsOrNot(field: string, currentInput: any, originalData: any) {
-    //     console.log(field, currentInput, originalData)
-    //     if ((field !== '' || field !== undefined) && (currentInput !== '' || currentInput !== undefined) && (originalData !== undefined)) {
-    //         const data = originalData.filter(x => {
-    //             return x[field].toLowerCase() === currentInput.toLowerCase()
-    //         })
-    //         return data;
-    //     }
-    // }
-    // editValueAssignByCondition(field: any, value: any) {
-    //     console.log(field, value)
-    //     if ((value !== undefined) && (field !== '' || field !== undefined)) {
-
-    //         if (typeof (value) === 'string') {
-    //             return value
-    //         }
-    //         else {
-    //             return this.getValueFromObjectByKey(field, value)
-    //         }
-    //     }
-    // }
-    // getValueFromObjectByKey(field: string, object: any) {
-    //     console.log(field, object)
-    //     if ((field !== '' || field !== undefined) && (object !== undefined)) {
-    //         return object[field];
-    //     }
-    // }
-    // ngAfterViewInit() {
-    //     this.dataSource.paginator = this.paginator;
-    //     this.dataSource.sort = this.sort;
-    // }
-    // public allWorkFlows: JobTitle[] = [];
-
-    // private loadData() {
-    //     this.alertService.startLoadingMessage();
-    //     this.loadingIndicator = true;
-    //     this.workFlowtService.getWorkFlows().subscribe(
-    //         results => this.onDataLoadSuccessful(results[0]),
-    //         error => this.onDataLoadFailed(error)
-    //     );
-
-
-    // }
-
-    // private loadMasterCompanies() {
-    //     this.alertService.startLoadingMessage();
-    //     this.loadingIndicator = true;
-    //     this.masterComapnyService.getMasterCompanies().subscribe(
-    //         results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
-    //         error => this.onDataLoadFailed(error)
-    //     );
-
-    // }
-
-    // public applyFilter(filterValue: string) {
-    //     this.dataSource.filter = filterValue;
-    // }
-
-    // private refresh() {
-    //     // Causes the filter to refresh there by updating with recently added data.
-    //     this.applyFilter(this.dataSource.filter);
-    // }
-    // private onDataLoadSuccessful(allWorkFlows: JobTitle[]) {
-    //     // alert('success');
-    //     this.alertService.stopLoadingMessage();
-    //     this.loadingIndicator = false;
-    //     this.dataSource.data = allWorkFlows;
-    //     console.log(this.dataSource.data);
-    //     this.allJobTitlesinfo = allWorkFlows;
-    //     this.totalRecords = this.allJobTitlesinfo.length;
-    //     this.totalPages = Math.ceil(this.totalRecords / this.rows);
-    //     console.log(this.totalPages);
-
-    // }
-    // openHist(content, row) {
-    //     this.alertService.startLoadingMessage();
-    //     this.loadingIndicator = true;
-    //     this.sourceAction = row;
-    //     //this.isSaving = true;
-    //     // debugger;
-    //     this.workFlowtService.historyJobTitle(this.sourceAction.jobTitleId).subscribe(data => {
-    //         console.log(data);
-    //         results => this.onHistoryLoadSuccessful(results[0], content)
-    //         error => this.saveFailedHelper(error)
-    //     });
-    // }
-    // private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
-    //     // alert('success');
-
-    //     this.alertService.stopLoadingMessage();
-    //     this.loadingIndicator = false;
-    //     this.auditHisory = auditHistory; this.modal = this.modalService.open(content, { size: 'lg' });
-    //     this.modal.result.then(() => {
-    //         console.log('When user closes');
-    //     }, () => { console.log('Backdrop click') })
-
-    // }
-
-    // private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
-    //     // alert('success');
-    //     this.alertService.stopLoadingMessage();
-    //     this.loadingIndicator = false;
-    //     this.allComapnies = allComapnies;
-    // }
-
-    // private onDataLoadFailed(error: any) {
-    //     // alert(error);
-    //     this.alertService.stopLoadingMessage();
-    //     this.loadingIndicator = false;
-    // }
-
-    // open(content) {
-    //     this.isEditMode = false;
-    //     this.isDeleteMode = false;
-    //     this.isSaving = true;
-    //     this.loadMasterCompanies();
-    //     this.sourceAction = new JobTitle();
-    //     this.disableSave = false;
-    //     this.sourceAction.isActive = true;
-    //     this.sourceAction.jobName = "";
-    //     this.modal = this.modalService.open(content, { size: 'sm' });
-    //     this.modal.result.then(() => {
-    //         console.log('When user closes');
-    //     }, () => { console.log('Backdrop click') })
-    // }
-
-
-    // openDelete(content, row) {
-    //     this.isEditMode = false;
-    //     this.isDeleteMode = true;
-    //     this.sourceAction = row;
-    //     this.job_Name = row.description;
-    //     this.modal = this.modalService.open(content, { size: 'sm' });
-    //     this.modal.result.then(() => {
-    //         console.log('When user closes');
-    //     }, () => { console.log('Backdrop click') })
-    // }
-
-    // openEdit(content, row) {
-    //     this.isEditMode = true;
-    //     this.disableSave = false;
-    //     this.isSaving = true;
-    //     this.loadMasterCompanies();
-    //     this.sourceAction = { ...row };
-    //     this.sourceAction.jobName = getObjectByValue('description', row.description, this.allJobTitlesinfo)
-    //     this.loadMasterCompanies();
-    //     this.modal = this.modalService.open(content, { size: 'sm' });
-    //     this.modal.result.then(() => {
-    //         console.log('When user closes');
-    //     }, () => { console.log('Backdrop click') })
-    // }
-    // openView(content, row) {
-    //     this.sourceAction = row;
-    //     this.job_Name = row.description;
-    //     this.memo = row.memo;
-    //     this.createdBy = row.createdBy;
-    //     this.updatedBy = row.updatedBy;
-    //     this.createdDate = row.createdDate;
-    //     this.updatedDate = row.updatedDate;
-    //     this.loadMasterCompanies();
-    //     this.modal = this.modalService.open(content, { size: 'sm' });
-    //     this.modal.result.then(() => {
-    //         console.log('When user closes');
-    //     }, () => { console.log('Backdrop click') })
-    // }
-    // openHelpText(content) {
-    //     this.modal = this.modalService.open(content, { size: 'sm' });
-    //     this.modal.result.then(() => {
-    //         console.log('When user closes');
-    //     }, () => { console.log('Backdrop click') })
-    // }
-
-
-    // eventHandler(field, value) {
-    //     value = value.trim();
-    //     const exists = this.validateRecordExistsOrNot(field, value, this.allJobTitlesinfo);
-    //     // console.log(exists);
-    //     if (exists.length > 0) {
-    //         this.disableSave = true;
-    //     }
-    //     else {
-    //         this.disableSave = false;
-    //     }
-    // }
-
-    // jobTitleId(event) {
-    //     this.disableSave = true;
-    // }
-
-    // filterJobs(event) {
-
-    //     this.localCollection = this.allJobTitlesinfo;
-
-    //     if (event.query !== undefined && event.query !== null) {
-    //         const jobTitle = [...this.allJobTitlesinfo.filter(x => {
-    //             return x.description.toLowerCase().includes(event.query.toLowerCase())
-    //         })]
-    //         this.localCollection = jobTitle;
-    //     }
-    // }
-    // handleChange(rowData, e) {
-    //     if (e.checked == false) {
-    //         this.sourceAction = rowData;
-    //         this.sourceAction.updatedBy = this.userName;
-    //         this.Active = "In Active";
-    //         this.sourceAction.isActive == false;
-    //         this.workFlowtService.updateAction(this.sourceAction).subscribe(
-    //             response => this.saveCompleted(this.sourceAction),
-    //             error => this.saveFailedHelper(error));
-    //         //alert(e);
-    //     }
-    //     else {
-    //         this.sourceAction = rowData;
-    //         this.sourceAction.updatedBy = this.userName;
-    //         this.Active = "Active";
-    //         this.sourceAction.isActive == true;
-    //         this.workFlowtService.updateAction(this.sourceAction).subscribe(
-    //             response => this.saveCompleted(this.sourceAction),
-    //             error => this.saveFailedHelper(error));
-    //         //alert(e);
-    //     }
-
-    // }
-
-    // editItemAndCloseModel() {
-
-    //     this.isSaving = true;
-    //     if (this.isEditMode == false) {
-    //         this.sourceAction.createdBy = this.userName;
-    //         this.sourceAction.updatedBy = this.userName;
-    //         this.sourceAction.description = this.sourceAction.jobName;
-    //         this.sourceAction.masterCompanyId = 1;
-    //         this.sourceAction.isDelete = false;
-    //         this.workFlowtService.newAction(this.sourceAction).subscribe(
-    //             role => this.saveSuccessHelper(role),
-    //             error => this.saveFailedHelper(error));
-    //     }
-    //     else {
-
-    //         this.sourceAction.updatedBy = this.userName;
-    //         this.sourceAction.jobName = this.editValueAssignByCondition('description', this.sourceAction.jobName)
-    //         this.sourceAction.description = this.sourceAction.jobName;
-    //         this.sourceAction.masterCompanyId = 1;
-    //         this.sourceAction.isDelete = false;
-    //         this.workFlowtService.updateAction(this.sourceAction).subscribe(
-    //             response => this.saveCompleted(this.sourceAction),
-    //             error => this.saveFailedHelper(error));
-    //     }
-
-    //     this.modal.close();
-    // }
-
-    // deleteItemAndCloseModel() {
-    //     this.isSaving = true;
-    //     this.sourceAction.updatedBy = this.userName;
-    //     this.workFlowtService.deleteAcion(this.sourceAction.jobTitleId).subscribe(
-    //         response => this.saveCompleted(this.sourceAction),
-    //         error => this.saveFailedHelper(error));
-    //     this.modal.close();
-    // }
-
-    // dismissModel() {
-    //     this.isDeleteMode = false;
-    //     this.isEditMode = false;
-    //     this.modal.close();
-    // }
-
-    // private saveCompleted(user?: JobTitle) {
-    //     this.isSaving = false;
-
-    //     if (this.isDeleteMode == true) {
-    //         this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
-    //         this.isDeleteMode = false;
-    //     }
-    //     else {
-    //         this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
-
-    //     }
-
-    //     this.loadData();
-    // }
-
-    // private saveSuccessHelper(role?: JobTitle) {
-    //     this.isSaving = false;
-    //     this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
-
-    //     this.loadData();
-
-    // }
-
-    // get userName(): string {
-    //     return this.authService.currentUser ? this.authService.currentUser.userName : "";
-    // }
-
-    // private saveFailedHelper(error: any) {
-    //     this.isSaving = false;
-    //     this.alertService.stopLoadingMessage();
-    //     this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
-    //     this.alertService.showStickyMessage(error, null, MessageSeverity.error);
-    // }
-
-    // private getDismissReason(reason: any): string {
-    //     if (reason === ModalDismissReasons.ESC) {
-    //         return 'by pressing ESC';
-    //     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-    //         return 'by clicking on a backdrop';
-    //     } else {
-    //         return `with: ${reason}`;
-    //     }
-    // }
-
-    // showAuditPopup(template, id): void {
-    //     this.auditJobTitle(id);
-    //     this.modal = this.modalService.open(template, { size: 'sm' });
-    // }
-
-    // auditJobTitle(jobTitleId: number): void {
-    //     this.AuditDetails = [];
-    //     this.workFlowtService.getJobTitleAudit(jobTitleId).subscribe(audits => {
-    //         if (audits.length > 0) {
-    //             this.AuditDetails = audits;
-    //             this.AuditDetails[0].ColumnsToAvoid = ["jobTitleAuditId", "jobTitleId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
-    //         }
-    //     });
-    // }
-    jobtitlesData: any;
-    // selectedColumns: any = [];
+/** Vendor Classification component*/
+export class JobTitleComponent implements OnInit {
+    jobTitleData: any;
     viewRowData: any;
     selectedRowforDelete: any;
-    newJobtitles =
-        {            
-            description: "",           
+    newJobTitle =
+        {
+            description: "",
             masterCompanyId: 1,
             isActive: true,
-            isDelete: false,
-            memo: "",
-          
+            isDeleted: false,
+            memo: ""
         }
-    addnewJobtitles = {...this.newJobtitles};
-    disableSaveForJobtitles: boolean = false;
-    JobtitlesList: any;
+    addNewJobTitle = { ...this.newJobTitle };
+    disableSaveForJobTitle: boolean = false;
+    jobTitleList: any;
     isEdit: boolean = false;
     totalRecords: any;
     pageIndex: number = 0;
     pageSize: number = 10;
     totalPages: number;
-    jobtitleHeader = [
-        { field: 'description', header: 'Job Titles' },
+    jobTitleHeaders = [
+        { field: 'description', header: 'Job Title' },
         { field: 'memo', header: 'Memo' },
     ]
-    selectedColumns = this.jobtitleHeader;
+    selectedColumns = this.jobTitleHeaders;
     formData = new FormData()
-
     @ViewChild('dt')
+
     private table: Table;
     auditHistory: any[] = [];
     existingRecordsResponse: Object;
     selectedRecordForEdit: any;
-    disableSaveForShortName: boolean = false;
-    manufacturerList: any;
 
-    constructor(private breadCrumb: SingleScreenBreadcrumbService, private configurations: ConfigurationService, private authService: AuthService, private alertService: AlertService, public jobtitleService: JobTitleService) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private configurations: ConfigurationService, private authService: AuthService, private alertService: AlertService, private jobTitleService: JobTitleService) {
 
     }
+
     ngOnInit(): void {
-        this.getJobtitles();
+        this.getJobTitleList();
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-job-title';
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
     }
@@ -469,55 +61,57 @@ export class JobTitleComponent implements OnInit{
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
+
     columnsChanges() {
         this.refreshList();
     }
+
     refreshList() {
         this.table.reset();
-        this.getJobtitles();
+        this.getJobTitleList();
     }
 
-    // customExcelUpload(event) {
-    //     const file = event.target.files;
+    customExcelUpload(event) {
+        const file = event.target.files;
 
-    //     console.log(file);
-    //     if (file.length > 0) {
+        console.log(file);
+        if (file.length > 0) {
 
-    //         this.formData.append('file', file[0])
-    //         this.unitofmeasureService.UOMFileUpload(this.formData).subscribe(res => {
-    //             event.target.value = '';
+            this.formData.append('file', file[0])
+            //this.jobTitleService.jobTitleFileUpload(this.formData).subscribe(res => {
+            //    event.target.value = '';
 
-    //             this.formData = new FormData();
-    //             this.existingRecordsResponse = res;
-    //             this.getUOMList();
-    //             this.alertService.showMessage(
-    //                 'Success',
-    //                 `Successfully Uploaded  `,
-    //                 MessageSeverity.success
-    //             );
+            //    this.formData = new FormData();
+            //    this.existingRecordsResponse = res;
+            //    this.getJobTitleList();
+            //    this.alertService.showMessage(
+            //        'Success',
+            //        `Successfully Uploaded  `,
+            //        MessageSeverity.success
+            //    );
 
-    //             // $('#duplicateRecords').modal('show');
-    //             // document.getElementById('duplicateRecords').click();
+            //    // $('#duplicateRecords').modal('show');
+            //    // document.getElementById('duplicateRecords').click();
 
-    //         })
-    //     }
+            //})
+        }
 
-    // }
+    }
+
     sampleExcelDownload() {
-        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=Jobtitles&fileName=manufacturer.xlsx`;
-
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=JobTitle&fileName=JobTitle.xlsx`;
         window.location.assign(url);
     }
 
-    getJobtitles() {
-        this.jobtitleService.getWorkFlows().subscribe(res => {
-           // console.log(res[0])          
-            const responseData = res[0];           
-            this.jobtitlesData = responseData;
+    getJobTitleList() {
+        this.jobTitleService.getAllJobTitleList().subscribe(res => {
+            const responseData = res[0];
+            this.jobTitleData = responseData;
             this.totalRecords = responseData.length;
             this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
         })
     }
+
     changePage(event: { first: any; rows: number }) {
         console.log(event);
         const pageIndex = (event.first / event.rows);
@@ -525,89 +119,86 @@ export class JobTitleComponent implements OnInit{
         this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
     }
 
-
-    checkJobtitlesExists(field, value) {
-        const exists = validateRecordExistsOrNot(field, value, this.jobtitlesData, this.selectedRecordForEdit);
+    checkJobTitleExists(field, value) {
+        const exists = validateRecordExistsOrNot(field, value, this.jobTitleData, this.selectedRecordForEdit);
         if (exists.length > 0) {
-            this.disableSaveForJobtitles = true;
+            this.disableSaveForJobTitle = true;
         }
         else {
-            this.disableSaveForJobtitles = false;
+            this.disableSaveForJobTitle = false;
         }
 
     }
-    filterDescription(event) {
-        this.JobtitlesList = this.JobtitlesList;
 
-        const JobtitlesValue = [...this.jobtitlesData.filter(x => {
+    filterJobTitles(event) {
+        this.jobTitleList = this.jobTitleData;
+
+        const jobTitleData = [...this.jobTitleData.filter(x => {
             return x.description.toLowerCase().includes(event.query.toLowerCase())
         })]
-        this.JobtitlesList = JobtitlesValue;
+        this.jobTitleList = jobTitleData;
     }
-    selectedJobtitles(object) {
+
+    selectedJobTitle(object) {
         const exists = selectedValueValidate('description', object, this.selectedRecordForEdit)
-
-        this.disableSaveForJobtitles = !exists;
+        this.disableSaveForJobTitle = !exists;
     }
 
-    
-    saveJobtitles() {
+    saveJobTitle() {
         const data = {
-            ...this.addnewJobtitles, createdBy: this.userName, updatedBy: this.userName,
-            description: editValueAssignByCondition('description', this.addnewJobtitles.description),
+            ...this.addNewJobTitle, createdBy: this.userName, updatedBy: this.userName,
+            description: editValueAssignByCondition('description', this.addNewJobTitle.description)
         };
         if (!this.isEdit) {
-            this.jobtitleService.newAction(data).subscribe(() => {
-                this.resetJobtitlesForm();
-                this.getJobtitles();
+            this.jobTitleService.newJobTitle(data).subscribe(() => {
+                this.resetJobTitleForm();
+                this.getJobTitleList();
                 this.alertService.showMessage(
                     'Success',
-                    `Added  New Jobtitles Successfully  `,
+                    `Added  New Job Title Successfully`,
                     MessageSeverity.success
                 );
             })
-        }
-        else {
-            this.jobtitleService.updateAction(data).subscribe(() => {
+        } else {
+            this.jobTitleService.updateAction(data).subscribe(() => {
                 this.selectedRecordForEdit = undefined;
                 this.isEdit = false;
-                this.resetJobtitlesForm();
-                this.getJobtitles();
+                this.resetJobTitleForm();
+                this.getJobTitleList();
                 this.alertService.showMessage(
                     'Success',
-                    `Updated   Jobtitles  Successfully  `,
+                    `Updated Job Title Successfully`,
                     MessageSeverity.success
                 );
             })
         }
     }
 
-    resetJobtitlesForm() {
+    resetJobTitleForm() {
         this.isEdit = false;
+        this.disableSaveForJobTitle = false;
         this.selectedRecordForEdit = undefined;
-        this.addnewJobtitles = { ...this.newJobtitles };
+        this.addNewJobTitle = { ...this.newJobTitle };
     }
 
 
-    editJobtitles(rowData) {
+    editJobTitle(rowData) {
         console.log(rowData);
         this.isEdit = true;
-        this.disableSaveForJobtitles = false;
-       // this.disableSaveForShortName = false;
-        // this.addNewUOM = rowData;
+        this.disableSaveForJobTitle = false;
 
-        this.addnewJobtitles = {
-            ...rowData, description: getObjectByValue('description', rowData.description, this.jobtitlesData),
-            
+        this.addNewJobTitle = {
+            ...rowData, description: getObjectById('jobTitleId', rowData.jobTitleId, this.jobTitleData)
         };
-        this.selectedRecordForEdit = { ...this.addnewJobtitles }
+        this.selectedRecordForEdit = { ...this.addNewJobTitle }
 
     }
 
     changeStatus(rowData) {
         console.log(rowData);
         const data = { ...rowData }
-        this.jobtitleService.updateAction(data).subscribe(() => {
+        this.jobTitleService.updateAction(data).subscribe(() => {
+            // this.getvendorClassificationList();
             this.alertService.showMessage(
                 'Success',
                 `Updated Status Successfully  `,
@@ -616,40 +207,52 @@ export class JobTitleComponent implements OnInit{
         })
 
     }
+
     viewSelectedRow(rowData) {
         console.log(rowData);
         this.viewRowData = rowData;
     }
+
     resetViewData() {
         this.viewRowData = undefined;
     }
+
     delete(rowData) {
         this.selectedRowforDelete = rowData;
 
     }
+
     deleteConformation(value) {
         if (value === 'Yes') {
-
-            this.jobtitleService.deleteAcion(this.selectedRowforDelete.jobTitleId).subscribe(() => {
-                this.getJobtitles();
+            this.jobTitleService.deleteAcion(this.selectedRowforDelete.jobTitleId).subscribe(() => {
+                this.getJobTitleList();
                 this.alertService.showMessage(
                     'Success',
-                    `Deleted Jobtitles Successfully  `,
+                    `Deleted Job Title Successfully  `,
                     MessageSeverity.success
                 );
             })
-
         } else {
             this.selectedRowforDelete = undefined;
         }
     }
 
     getAuditHistoryById(rowData) {
-        this.jobtitleService.getJobTitleAudit(rowData.jobTitleId).subscribe(res => {
-            console.log(res)
-            this.auditHistory = res;
+        this.jobTitleService.getJobTitleAudit(rowData.jobTitleId).subscribe(res => {
+            this.auditHistory = res[0].result;
         })
     }
-    
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
 
 }

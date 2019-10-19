@@ -9,7 +9,7 @@ using System.Reflection;
 
 namespace DAL.Repositories
 {
-    public class CommonRepository : Repository<Contact>, ICommonRepository
+    public class CommonRepository : Repository<RestrictedParts>, ICommonRepository
     {
         public CommonRepository(ApplicationDbContext context) : base(context)
         {
@@ -40,7 +40,7 @@ namespace DAL.Repositories
                          Reference = string.Empty,
                          CreditLimt = z.vc1.v.CreditLimit,
                          CreditTermId = z.vc1.v.CreditTermsId,
-                         CSR = z.con.FirstName + " " +z.con.LastName,
+                         CSR = z.con.FirstName + " " + z.con.LastName,
                          Email = z.vc1.v.VendorEmail,
                          IsDefaultContact = z.vc1.vc.IsDefaultContact
                      }).ToList();
@@ -202,7 +202,7 @@ namespace DAL.Repositories
             }
         }
 
-        public void MasterPartsStatus(long masterPartId,bool status, string updatedBy)
+        public void MasterPartsStatus(long masterPartId, bool status, string updatedBy)
         {
             try
             {
@@ -238,13 +238,13 @@ namespace DAL.Repositories
             }
         }
 
-        public void CreateRestrictedParts(List<RestrictedParts> restrictedParts, long? referenceId)
+        public void CreateRestrictedParts(List<RestrictedParts> restrictedParts, long referenceId, int moduleId)
         {
             try
             {
                 if (restrictedParts != null && restrictedParts.Count > 0)
                 {
-                    restrictedParts.ForEach(p => p.ReferenceId = referenceId);
+                    restrictedParts.ForEach(p => { p.ReferenceId = referenceId; p.ModuleId = moduleId; p.IsDeleted = false; p.IsActive = true;p.CreatedDate = p.UpdatedDate = DateTime.Now; });
                     _appContext.RestrictedParts.AddRange(restrictedParts);
                     _appContext.SaveChanges();
                 }
@@ -256,7 +256,7 @@ namespace DAL.Repositories
             }
         }
 
-        public void UpdateRestrictedParts(List<RestrictedParts> restrictedParts, long? referenceId)
+        public void UpdateRestrictedParts(List<RestrictedParts> restrictedParts, long referenceId,int moduleId)
         {
             try
             {
@@ -271,6 +271,11 @@ namespace DAL.Repositories
                         else
                         {
                             item.ReferenceId = referenceId;
+                            item.ModuleId = moduleId;
+                            item.IsActive = true;
+                            item.IsDeleted = false;
+                            item.CreatedDate = item.UpdatedDate = DateTime.Now;
+                            
                             _appContext.RestrictedParts.Add(item);
                         }
                         _appContext.SaveChanges();
@@ -299,13 +304,144 @@ namespace DAL.Repositories
             }
         }
 
+
+        #region RestrictsPMAList
+
+        public void CreateRestrictPmaList(List<RestrictsPMAList> restrictedPmaLists, long customerId)
+        {
+            try
+            {
+                if (restrictedPmaLists != null && restrictedPmaLists.Count > 0)
+                {
+                    restrictedPmaLists.ForEach(p => p.CustomerId = customerId);
+                    _appContext.RestrictsPMAList.AddRange(restrictedPmaLists);
+                    _appContext.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void UpdateRestrictPmaList(List<RestrictsPMAList> restrictedPmaLists, long customerId)
+        {
+            try
+            {
+                if (restrictedPmaLists != null && restrictedPmaLists.Count > 0)
+                {
+                    foreach (var item in restrictedPmaLists)
+                    {
+                        if (item.RestrictedPMAId > 0)
+                        {
+                            _appContext.RestrictsPMAList.Update(item);
+                        }
+                        else
+                        {
+                            item.CustomerId = customerId;
+                            _appContext.RestrictsPMAList.Add(item);
+                        }
+                        _appContext.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public List<RestrictsPMAList> GetRestrictPmaList(int itemMasterId, long? customerId)
+        {
+            try
+            {
+                return _appContext.RestrictsPMAList.Where(p => p.IsDeleted == false && p.ItemMasterId == itemMasterId && p.CustomerId == customerId)
+                                                   .OrderBy(p => p.RestrictedPMAId)
+                                                   .ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        #endregion
+
+        #region RestrictsBERList
+
+        public void CreateRestrictDerList(List<RestrictsBERList> restrictedBerLists, long customerId)
+        {
+            try
+            {
+                if (restrictedBerLists != null && restrictedBerLists.Count > 0)
+                {
+                    restrictedBerLists.ForEach(p => p.CustomerId = customerId);
+                    _appContext.RestrictsBERList.AddRange(restrictedBerLists);
+                    _appContext.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void UpdateRestrictDerList(List<RestrictsBERList> restrictedBerLists, long customerId)
+        {
+            try
+            {
+                if (restrictedBerLists != null && restrictedBerLists.Count > 0)
+                {
+                    foreach (var item in restrictedBerLists)
+                    {
+                        if (item.RestrictedBERId > 0)
+                        {
+                            _appContext.RestrictsBERList.Update(item);
+                        }
+                        else
+                        {
+                            item.CustomerId = customerId;
+                            _appContext.RestrictsBERList.Add(item);
+                        }
+                        _appContext.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public List<RestrictsBERList> GetRestrictDerList(int itemMasterId, long? customerId)
+        {
+            try
+            {
+                return _appContext.RestrictsBERList.Where(p => p.IsDeleted == false && p.ItemMasterId == itemMasterId && p.CustomerId == customerId)
+                                                   .OrderBy(p => p.RestrictedBERId)
+                                                   .ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        #endregion
+
         public void CreateClassificationMappings(List<ClassificationMapping> classificationMappings, long referenceId)
         {
             try
             {
                 if (classificationMappings != null && classificationMappings.Count > 0)
                 {
-                    classificationMappings.ForEach(p => p.ReferenceId = referenceId);
+                    classificationMappings.ForEach(p => p.CustomerId = referenceId);
                     _appContext.ClassificationMapping.AddRange(classificationMappings);
                     _appContext.SaveChanges();
                 }
@@ -331,7 +467,7 @@ namespace DAL.Repositories
                         }
                         else
                         {
-                            item.ReferenceId = referenceId;
+                            item.CustomerId = referenceId;
                             _appContext.ClassificationMapping.Add(item);
                         }
                         _appContext.SaveChanges();
@@ -356,12 +492,12 @@ namespace DAL.Repositories
                              cm => cm.ClasificationId,
                              cc => cc.CustomerClassificationId,
                              (cm, cc) => new { cm, cc })
-                             .Where(p => p.cm.IsDeleted == false && p.cm.ModuleId == moduleId && p.cm.ReferenceId == referenceId)
+                             .Where(p => p.cm.IsDeleted == false && p.cm.ModuleId == moduleId && p.cm.CustomerId == referenceId)
                              .Select(p => new
                              {
-                                 ClassificationMappingId = p.cm.ClassificationMappingId,
-                                 ClasificationId = p.cm.ClasificationId,
-                                 Description = p.cc.Description
+                                 p.cm.ClassificationMappingId,
+                                 p.cm.ClasificationId,
+                                 p.cc.Description
                              })
                              .ToList();
 
@@ -427,7 +563,7 @@ namespace DAL.Repositories
             }
         }
 
-        public dynamic UpdateEntity(dynamic uiModel, dynamic dbModel,ref IDictionary<string, object> keyValuePairs)
+        public dynamic UpdateEntity(dynamic uiModel, dynamic dbModel, ref IDictionary<string, object> keyValuePairs)
         {
 
             uiModel.MasterCompanyId = dbModel.MasterCompanyId;
@@ -461,7 +597,7 @@ namespace DAL.Repositories
                     {
                         break;
                     }
-                        
+
                 }
             }
 
@@ -469,11 +605,11 @@ namespace DAL.Repositories
         }
 
 
-        public IEnumerable<object> BindDropdowns(string tableName,string primaryColumn,string textColumn)
+        public IEnumerable<object> BindDropdowns(string tableName, string primaryColumn, string textColumn,long count)
         {
             try
             {
-               var result= _appContext.Dropdowns.FromSql("BindDropdowns @p0,@p1,@p2", tableName, primaryColumn, textColumn).ToList();
+                var result = _appContext.Dropdowns.FromSql("BindDropdowns @p0,@p1,@p2,@p3", tableName, primaryColumn, textColumn,count).ToList();
                 return result;
             }
             catch (Exception)
@@ -483,10 +619,118 @@ namespace DAL.Repositories
             }
         }
 
+
+        public long CreateShippingVia(ShippingVia shippingVia)
+        {
+            try
+            {
+                shippingVia.CreatedDate = shippingVia.UpdatedDate = DateTime.Now;
+                shippingVia.IsActive = true;
+                shippingVia.IsDeleted = false;
+                _appContext.ShippingVia.Add(shippingVia);
+                _appContext.SaveChanges();
+                return shippingVia.ShippingViaId;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void UpdateShippingVia(ShippingVia shippingVia)
+        {
+            try
+            {
+                shippingVia.UpdatedDate = DateTime.Now;
+                _appContext.ShippingVia.Update(shippingVia);
+                _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public object GetShippingViaDetails(long shippingViaId)
+        {
+            var data = (from sv in _appContext.ShippingVia
+                        where sv.IsDeleted == false && sv.ShippingViaId == shippingViaId
+                        select new
+                        {
+                            ShipVia = sv.Name,
+                            sv.ShippingAccountInfo,
+                            sv.ShippingURL,
+                            sv.ShippingId,
+                            sv.Memo
+                        }).FirstOrDefault();
+            return data;
+        }
+
         private static PropertyInfo[] GetProperties(object obj)
         {
             return obj.GetType().GetProperties();
         }
+
+        public long? CreateAddress(Address address)
+        {
+            try
+            {
+                address.CreatedDate = address.UpdatedDate = DateTime.Now;
+                address.IsActive = true;
+                _appContext.Address.Add(address);
+                _appContext.SaveChanges();
+                return address.AddressId;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void UpdateAddress(Address address)
+        {
+            try
+            {
+                address.UpdatedDate = DateTime.Now;
+                _appContext.Address.Update(address);
+                _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public object GetAddressDetails(long addressId)
+        {
+            try
+            {
+                var data = (from ad in _appContext.Address
+                            where ad.AddressId == addressId
+                            select new
+                            {
+                                ad.City,
+                                ad.Country,
+                                ad.Line1,
+                                ad.Line2,
+                                ad.Line3,
+                                ad.PoBox,
+                                ad.PostalCode,
+                                ad.StateOrProvince
+                            }).FirstOrDefault();
+                return data;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }

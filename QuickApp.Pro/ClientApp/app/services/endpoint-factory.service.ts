@@ -66,7 +66,7 @@ export class EndpointFactory {
             });
     }
 
-    protected getRequestHeaders(): { headers: HttpHeaders | { [header: string]: string | string[]; } } {
+    getRequestHeaders(): { headers: HttpHeaders | { [header: string]: string | string[]; } } {
         let headers = new HttpHeaders({
             'Authorization': 'Bearer ' + this.authService.accessToken,
             'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ export class EndpointFactory {
         return { headers: headers };
     }
 
-    protected handleError(error, continuation: () => Observable<any>) {
+    handleError(error, continuation: () => Observable<any>) {
         if (error.status == 401) {
             if (this.isRefreshingLogin) {
                 return this.pauseTask(continuation);

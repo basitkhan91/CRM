@@ -14,7 +14,7 @@
                         </div>
                         <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="originalData" [first]="0" [rows]="pageSize" [paginator]="true"
                             [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple"
-                            (onPage)="changePage($event)" [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true"
+                            (onPage)="changePage($event)" [resizableColumns]="true" [reorderableColumns]="true" 
                             [totalRecords]="totalRecords" scrollHeight="450px">
                             <ng-template pTemplate="caption">
                                 <div style="text-align: right;margin-left:-6px !important;">
@@ -151,26 +151,27 @@
                                 </label>
                             </div>
                             <div class="col-sm-5">
-                                <select [(ngModel)]="addNew.aircraftTypeId" required name="aircraftType" (change)="aircraftManufacturerChange()">
-                                    <option *ngIf="isEdit">{{addNew.aircraftTypeId}}</option>
-                                    <option *ngFor="let manufacturer of aircraftManufacturerList" [ngValue]="manufacturer.aircraftTypeId">{{manufacturer.description}}</option>
+                                <select name="aircraftType" [(ngModel)]="addNew.aircraftTypeId" #aircraftTypeId="ngModel" (change)="aircraftManufacturerChange()"
+                                    required>
+                                    <option>-- Select --</option>
+                                    <option *ngFor="let object of aircraftManufacturerList" [ngValue]="object.aircraftTypeId">{{object.description}}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-sm-12">
-                                <div class="col-sm-5">
-                                    <label for="description" class="control-label">Aircraft Model:
-                                        <span class="clr-red">*</span>
-                                    </label>
-                                </div>
-                                <div class="col-sm-5">
-                                        <select [(ngModel)]="addNew.aircraftModelId" required name="aircraftModelId" (change)="aircraftManufacturerChange()">
-                                            <option *ngIf="isEdit">{{addNew.aircraftModel}}</option>
-                                            <option *ngFor="let model of aircraftModelsList" [ngValue]="model.value">{{model.label}}</option>
-                                        </select>
-                                    </div>
+                            <div class="col-sm-5">
+                                <label for="description" class="control-label">Aircraft Model:
+                                    <span class="clr-red">*</span>
+                                </label>
                             </div>
-
+                            <div class="col-sm-5">
+                                <select name="aircraftModelId" [(ngModel)]="addNew.aircraftModelId" #aircraftModelId="ngModel" (change)="getDashNumberByManfacturerandModel()"
+                                    required>
+                                    <option>-- Select --</option>
+                                    <option *ngFor="let object of aircraftModelsList" [ngValue]="object.aircraftModelId">{{object.aircraftModel}}</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="col-sm-12">
                             <div class="col-sm-5">
                                 <label for="description" class="control-label">Dash Number
@@ -178,7 +179,8 @@
                                 </label>
                             </div>
                             <div class="col-sm-5">
-                                <p-autoComplete field="dashNumber" [(ngModel)]="addNew.dashNumber" (onSelect)="selectedDescription($event)" (onKeyUp)="checkGroupDescriptionExists('dashNumber', $event.target.value)"
+                                <p-autoComplete field="dashNumber" [(ngModel)]="addNew.dashNumber
+                                " (onSelect)="selectedDescription($event)" (onKeyUp)="checkGroupDescriptionExists('dashNumber', $event.target.value)"
                                     name="description" [suggestions]="descriptionList" (completeMethod)="filterDescription($event)"
                                     [size]="30" [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
 
@@ -241,10 +243,8 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-
                                 <th>Dash Number Code</th>
                                 <th>Description</th>
-
                                 <th>Memo</th>
                             </tr>
                         </thead>
@@ -254,7 +254,6 @@
                                 <!-- <td >{{audit.unitOfMeasureAuditId}}</td> -->
                                 <td>{{ext.workPerformedCode}}</td>
                                 <td>{{ext.description}}</td>
-
                                 <td>{{ext.memo}}</td>
                             </tr>
                         </tbody>

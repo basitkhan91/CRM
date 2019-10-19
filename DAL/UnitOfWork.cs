@@ -62,6 +62,7 @@ namespace DAL
         IWorkScopeRepository _workScopeRepository;
         IEmployeeExpertiseRepository _employeeExpertiseRepository;
         IJobTitle _jobTitle;
+        IJobType _jobType;
         IExpenditureCategory _expenditureCategory;
         IDefaultMessage _defaultMessage;
         IDocument _document;
@@ -204,6 +205,7 @@ namespace DAL
         IAssetDepreciationInterval _assetDepreciationInterval;
 
         IPublicationTypesRepository _publicationTypesRepository;
+        IPercentageRepository _percentageRepository;
 
         public UnitOfWork(ApplicationDbContext context, IOptions<AppSettings> appSettings)
         {
@@ -682,7 +684,7 @@ namespace DAL
             get
             {
                 if (_publication == null)
-                    _publication = new PublicationRepository(_context);
+                    _publication = new PublicationRepository(_context,_appSettings);
                 return _publication;
 
             }
@@ -740,6 +742,17 @@ namespace DAL
                 return _jobTitle;
             }
         }
+
+        public IJobType JobType
+        {
+            get
+            {
+                if (_jobType == null)
+                    _jobType = new JobTypeRepository(_context);
+                return _jobType;
+            }
+        }
+
 
         public IExpenditureCategory ExpenditureCategory
         {
@@ -1027,7 +1040,7 @@ namespace DAL
                 return _CustomerWarning;
             }
         }
-        public ICompany company
+        public ICompany Company
         {
             get
             {
@@ -1752,6 +1765,18 @@ namespace DAL
                 if (_publicationTypesRepository == null)
                     _publicationTypesRepository = new PublicationTypesRepository(_context,_appSettings);
                 return _publicationTypesRepository;
+            }
+        }
+
+        public IPercentageRepository PercentageRepository
+        {
+            get
+            {
+                if(_percentageRepository==null)
+                {
+                    _percentageRepository = new PercentageRepository(_context,_appSettings);
+                }
+                return _percentageRepository;
             }
         }
     }

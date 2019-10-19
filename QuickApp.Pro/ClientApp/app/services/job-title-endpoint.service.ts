@@ -12,6 +12,8 @@ export class JobTitleEndpontService extends EndpointFactory {
 
 
     private readonly _JobTilesUrl: string = "/api/JobTitle/Get";
+  
+    
     private readonly _JobTilesUrlNew: string = "/api/JobTitle/jobTitlepost";
     private readonly _JobTilesUrlAuditHistory: string = "/api/JobTitle/auditHistoryById";
     private readonly getJobTitleDataAuditById: string = "/api/JobTitle/audits";

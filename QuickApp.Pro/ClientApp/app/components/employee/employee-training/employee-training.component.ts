@@ -25,6 +25,12 @@ import { AppTranslationService } from '../../../services/app-translation.service
 import { Router, ActivatedRoute } from '@angular/router';
 import { UnitOfMeasureService } from '../../../services/unitofmeasure.service';
 
+import { LocalStoreManager } from '../../../services/local-store-manager.service';
+//import { EmployeeAddService } from '../../../services/employee.Add.Service';
+import { DBkeys } from '../../../services/db-Keys';
+
+import { User } from '../../../models/user.model';
+
 
 
 @Component({
@@ -83,23 +89,34 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
     public empId: any;
     public firstName: any;
     public lastName: any;
+    public nextbuttonEnable = false;
+    public userA: any;
 
     /** Actions ctor */
 
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
     Active: string = "Active";
-    constructor(private route: ActivatedRoute,private translationService: AppTranslationService, public unitService: UnitOfMeasureService, public authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, private router: Router, public employeeService: EmployeeService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(private route: ActivatedRoute, private translationService: AppTranslationService, public unitService: UnitOfMeasureService, public authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, private router: Router, public employeeService: EmployeeService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private localStorage: LocalStoreManager,) {
         this.displayedColumns.push('action');
 		this.dataSource = new MatTableDataSource();
 		if (this.employeeService.generalCollection) {
 			this.local = this.employeeService.generalCollection;
 		}
 		if (this.employeeService.listCollection && this.employeeService.isEditMode == true) {
-			this.sourceEmployee = this.employeeService.listCollection;
+            this.sourceEmployee = this.employeeService.listCollection;
+            this.empId = this.sourceEmployee.employeeId;
+            this.firstName = this.sourceEmployee.firstName;
+            this.lastName = this.sourceEmployee.lastName;
+            console.log(this.sourceEmployee.employeeTrainingTypeId);
+
+            console.log("traingi");
+            console.log(this.sourceEmployee );
 			this.local = this.employeeService.listCollection;
             this.loadData();
-		}
+        }
+        let user = this.localStorage.getDataObject<User>(DBkeys.CURRENT_USER);
+        this.userA = user.userName;
 		this.translationService.closeCmpny = false;
     }
     
@@ -111,6 +128,16 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
                 console.log(params); // {order: "popular"}
                 //  console.log(params.order);
                 this.empId = params.order;
+
+                this.empId = params.order;
+
+                if (this.empId) {
+                    this.nextbuttonEnable = true;
+
+                }
+                else {
+                    console.log('no buttion')
+                }
                 this.firstName = params.firstname;
                 this.lastName = params.lastname;
                 console.log(this.empId);
@@ -121,9 +148,11 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
   
 
     private loadData() {
+
+        console.log("this.empId"+this.empId);
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.employeeService.getTrainingList(this.local.employeeId).subscribe(
+        this.employeeService.getTrainingList(this.empId).subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -179,11 +208,18 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
         this.loadingIndicator = false;
         this.dataSource.data = getTrainingList;
 		this.allEmployeeinfo = getTrainingList;
-		if (this.allEmployeeinfo.length > 0) {
-			this.sourceEmployee = this.allEmployeeinfo[0].t;
+        if (this.allEmployeeinfo.length > 0) {
+
+            
+            this.sourceEmployee = this.allEmployeeinfo[0].t;
+            console.log(this.sourceEmployee);
 			this.sourceEmployee.scheduleDate = new Date(this.sourceEmployee.scheduleDate);
 			this.sourceEmployee.completionDate = new Date(this.sourceEmployee.completionDate);
-			this.sourceEmployee.expirationDate = new Date(this.sourceEmployee.expirationDate);
+            this.sourceEmployee.expirationDate = new Date(this.sourceEmployee.expirationDate);
+            this.sourceEmployee.aircraftModelId = this.sourceEmployee.aircraftModelId;
+
+            console.log(" this.sourceEmployee.aircraftModelId" + this.sourceEmployee.aircraftModelId);
+            
 		}
     }
 
@@ -331,6 +367,9 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
         this.sourceEmployee.masterCompanyId = 1;
         this.sourceEmployee.isActive = true;
         this.sourceEmployee.employeeId = this.empId;
+        this.sourceEmployee.createdBy = this.userA;
+        this.sourceEmployee.updatedBy = this.userA;
+
         this.employeeService.newAddTraining(this.sourceEmployee).subscribe(
             role => this.saveSuccessHelper(role),
             error => this.saveFailedHelper(error));

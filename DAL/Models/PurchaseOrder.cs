@@ -50,6 +50,8 @@ namespace DAL.Models
         public bool? DeferredReceiver { get; set; }
         public bool? Resale { get; set; }
         public Nullable<bool> IsActive { get; set; }
+        public string ShipToSiteName { get; set; }
+        public string BillToSiteName { get; set; }
 
         public virtual ICollection<PurchaseOrderPart> PurchaseOderPart { get; set; }
         public virtual List<StockLine> StockLine { get; set; }

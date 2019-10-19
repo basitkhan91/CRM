@@ -198,6 +198,12 @@ import { SpinnerComponent } from './shared/spinner/spinner.component';
 import { CardModule } from 'primeng/card';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { WorkOrderService } from './services/work-order/work-order.service';
+import { JobTypeService } from './services/job-type.service';
+import { JobTypeEndpontService } from './services/job-type-endpoint.service';
+import { PercentageService } from './services/percentage.service';
+import { PercentageEndpoint } from './services/percentage-endpoint.service';
+import { PercentEndpoint } from './services/percent-endpoint.service';
+import { PercentService } from './services/percent.service';
 import { PurchaseOrderService } from './services/purchase-order.service';
 import { PurchaseOrderEndpoint } from './services/purchase-order-endpoint.service';
 import { GLAccountService } from './services/glAccount.service';
@@ -405,17 +411,13 @@ import { GLAccountEndpoint } from './services/glAccount-endpoint.service';
     RolesGuardService,
     CompanyService,
     CompanyEndpoint,
-    WorkOrderService,
-    PurchaseOrderEndpoint,
-    PurchaseOrderService,
-    GLAccountService,
-    GLAccountEndpoint
+    WorkOrderService
   ],
   entryComponents: [LoginDialogComponent, AddTaskDialogComponent],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AppModule {}
+export class AppModule { }
 
 export function getBaseUrl() {
   return document.getElementsByTagName('base')[0].href;

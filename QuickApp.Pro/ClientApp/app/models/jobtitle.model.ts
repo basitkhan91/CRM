@@ -3,7 +3,7 @@ import { MasterCompany } from './mastercompany.model';
 
 export class JobTitle {
     // Note: Using only optional constructor properties without backing store disables typescript's type checking for the type
-    constructor(masterCompany?: MasterCompany, jobTitleId?: number, description?: string, masterCompanyId?: number, createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string, isActive?: boolean, isDelete?: boolean
+    constructor(masterCompany?: MasterCompany, jobTitleId?: number, description?: string, masterCompanyId?: number, createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string, isActive?: boolean, isDeleted?: boolean
 		, memo?: string) {
 
         this.jobTitleId = jobTitleId;
@@ -16,7 +16,7 @@ export class JobTitle {
         this.masterCompany = masterCompany;
 		this.isActive = isActive;
         this.memo = memo;
-        this.isDelete = isDelete;
+        this.isDeleted = isDeleted;
     }
 
     public jobTitleId: number;
@@ -29,7 +29,7 @@ export class JobTitle {
     public masterCompany?: MasterCompany;
 	public isActive: boolean;
     public memo: string;
-    public isDelete: boolean;
+    public isDeleted: boolean;
 
 
 }
