@@ -684,7 +684,7 @@ namespace DAL
             get
             {
                 if (_publication == null)
-                    _publication = new PublicationRepository(_context);
+                    _publication = new PublicationRepository(_context,_appSettings);
                 return _publication;
 
             }

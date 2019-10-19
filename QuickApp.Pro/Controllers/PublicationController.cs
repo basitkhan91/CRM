@@ -566,5 +566,19 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpPost("uploadpublicationcustomdata")]
+        public IActionResult UploadUOMCustomData()
+        {
+            var result = _unitOfWork.Publication.UploadUOMCustomData(Request.Form.Files[0]);
+            return Ok(result);
+        }
+
+        [HttpGet("publicationhistory")]
+        public IActionResult PublicationHistory(long publicationId)
+        {
+            var result = _unitOfWork.Publication.PublicationHistory(publicationId);
+            return Ok(result);
+        }
+
     }
 }
