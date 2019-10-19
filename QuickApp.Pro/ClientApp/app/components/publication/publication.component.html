@@ -46,7 +46,7 @@
                             </div>
             
             
-                            <p-table #dt class="rpo-table-cstm rro-table-cstm" [first]="0" [rows]="pagesize" [value]="allpublicationInfo"  [metaKeySelection]="true" [paginator]="true"  [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [resizableColumns]="true" [reorderableColumns]="true"  [totalRecords]="totalRecords" (onLazyLoad)="publicationPagination($event)" [lazy]="true"> <!--onPage-->
+                            <p-table #dt class="rpo-table-cstm rro-table-cstm pub-ptable-cstm" [first]="0" [rows]="pagesize" [value]="allpublicationInfo"  [metaKeySelection]="true" [paginator]="true"  [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [resizableColumns]="true" [reorderableColumns]="true"  [totalRecords]="totalRecords" (onLazyLoad)="publicationPagination($event)" [lazy]="true"> <!--onPage-->
                                 <ng-template pTemplate="caption">
             
                                     <div style="text-align: right">
@@ -114,11 +114,10 @@
             
                                             <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="openDelete(content,rowData)">
                                                 <mat-icon color="warn">delete</mat-icon>
-                                            </button>
-            
-                                            <button class="btn-history" mat-icon-button matTooltip="history" (click)="showAuditPopup(auditContent,rowData.publicationRecordId)">
-                                                <mat-icon color="green">history</mat-icon>
-                                            </button>            
+                                            </button>   
+                                            <button class="btn-history" mat-icon-button matTooltip="History" data-target="#contentHist" data-toggle="modal" (click)="getAuditHistoryById(rowData)" >
+                                                    <mat-icon color="green">history</mat-icon>
+                                            </button>        
                                         </td>
                                     </tr>
                                 </ng-template>
@@ -127,6 +126,12 @@
                                     <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
                                         <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
                                     </div>
+                                </ng-template>
+                                <ng-template pTemplate="summary" id="footer">
+                                    <label id="footer" class="footer">No'of records:</label>
+                                    <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp; 
+                                    <label id="footer" class="footer1">Pages Count:</label>
+                                    <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" /> 
                                 </ng-template>
                         
                             </p-table>
@@ -324,7 +329,7 @@
 
 </ng-template>-->
 
-<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
+<!-- <ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
     <div class="modal-header">
 
         <h4 class="modal-title">History of Publication</h4>
@@ -362,7 +367,65 @@
     <div class="modal-footer">
         <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
     </div>
-</ng-template>
+</ng-template> -->
+
+<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" >
+        <div class="modal-dialog modal-lg">
+      
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">History of Publication</h4>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive rro-table-cstm">
+                    <table class="table table-bordered" *ngIf="auditHistory.length> 0 else noDatavailable" >
+                        <thead>
+                            <tr>
+                                <!-- <th>UMID</th> -->
+                                <th>UOM</th>
+                                <th>Short Name</th>
+                                <th>Standard</th>
+                                <th>Memo</th>
+                                <th>IsActive</th>
+                                <th>Updated By</th>
+                                <th>Updated Time</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="auditHistory.length> 0" >
+                                <tr *ngFor="let audit of auditHistory; let i = index;">
+                                    <!-- auditHistory[i>0 ? i-1 : i] -->          
+                                        <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'publicationId', audit.publicationId)  ? 'black' : 'red'  }">{{audit.publicationId}}</td>
+                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'description', audit.description)  ? 'black' : 'red'  }">{{audit.description}}</td>
+                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'publicationType', audit.standard)  ? 'black' : 'red'  }">{{audit.standard}}</td>
+                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'publishedBy', audit.publishedBy)  ? 'black' : 'red'  }">{{audit.publishedBy}}</td>
+                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'employeeName', audit.employeeName)  ? 'black' : 'red'  }">{{audit.employeeName}}</td>
+                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'location', audit.location)  ? 'black' : 'red'  }">{{audit.location}}</td>
+                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
+                                        <td >{{audit.updatedBy}}</td>
+                                        <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                                    </tr>
+                        </tbody>
+                        
+
+                    </table>
+                    <ng-template #noDatavailable>
+                        <div class="text-center"> 
+                                <img src="../../assets/images/binoculars.png" style="height: 100px; width: 100px;">
+                                <h4 style="color: #ff5663;">No History Found </h4>
+                        </div>
+
+                    </ng-template>  
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+      
+        </div>
+      </div>
 
 
 
