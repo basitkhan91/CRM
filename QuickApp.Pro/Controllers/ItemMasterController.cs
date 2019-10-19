@@ -1698,6 +1698,19 @@ namespace QuickApp.Pro.Controllers
 
             return result;
         }
+
+        [HttpGet("GetPartDetailsDropDown")]
+        public IActionResult GetPartDetailsDropDown()
+        {
+            var allPartDetails = _context.ItemMaster.Where(a => (a.IsActive == null || a.IsActive == true) && (a.IsDelete == false || a.IsDelete == null))
+                .Select(x => new {
+                    ItemMasterId = x.ItemMasterId,
+                    PartNumber = x.PartNumber,
+                    PartDescription = x.PartDescription
+
+                }).OrderByDescending(a => a.ItemMasterId).ToList();
+            return Ok(allPartDetails);
+        }
     }
 
 }
