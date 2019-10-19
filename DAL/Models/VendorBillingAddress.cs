@@ -6,12 +6,13 @@ using System.Text;
 
 namespace DAL.Models
 {
-    public class VendorBillingAddress
-    {
+    public class VendorBillingAddress: TempAddress
+	{
         [Key]
         public long VendorBillingAddressId { get; set; }
         public long VendorId { get; set; }
-        public long AddressId { get; set; }
+		[ForeignKey("AddressId")]
+		public long AddressId { get; set; }
         public string SiteName { get; set; }
         public bool? IsPrimary { get; set; }
         [ForeignKey("MasterCompanyId")]
@@ -22,7 +23,8 @@ namespace DAL.Models
         public DateTime UpdatedDate { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
+		
 
-        
-    }
+
+	}
 }

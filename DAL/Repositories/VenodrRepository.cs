@@ -458,10 +458,39 @@ namespace DAL.Repositories
         {
             try
             {
-                billingAddress.CreatedDate = billingAddress.UpdatedDate = DateTime.Now;
+				Address address = new Address();
+
+				address.City = billingAddress.City;
+				address.Country = billingAddress.Country;
+				
+				
+				
+				address.Line1 = billingAddress.Address1;
+				address.Line2 = billingAddress.Address2;
+				address.Line3 = billingAddress.Address3;
+				address.MasterCompanyId = billingAddress.MasterCompanyId;
+				address.PostalCode = billingAddress.PostalCode;
+				address.StateOrProvince = billingAddress.StateOrProvince;
+
+				address.IsActive = true;
+				address.UpdatedDate = address.CreatedDate = DateTime.Now;
+				address.CreatedBy = billingAddress.CreatedBy;
+				address.UpdatedBy = billingAddress.UpdatedBy;
+
+				_appContext.Address.Add(address);
+				_appContext.SaveChanges();
+
+
+				billingAddress.AddressId =Convert.ToInt64(address.AddressId);
+				billingAddress.CreatedDate = billingAddress.UpdatedDate = DateTime.Now;
                 billingAddress.IsActive = true;
                 billingAddress.IsDeleted = false;
-                _appContext.VendorBillingAddress.Add(billingAddress);
+				billingAddress.IsPrimary = false;
+
+
+				
+
+				_appContext.VendorBillingAddress.Add(billingAddress);
                 _appContext.SaveChanges();
                 return billingAddress.VendorBillingAddressId;
             }
