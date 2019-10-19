@@ -23,6 +23,7 @@ import { AtaSubChapter1Service } from '../../../services/atasubchapter1.service'
 import { EmployeeService } from '../../../services/employee.service';
 import * as moment from 'moment';
 import { getValueFromArrayOfObjectById } from '../../../generic/autocomplete';
+import { CommonService } from '../../../services/common.service';
 
 @Component({
   selector: 'app-create-publication',
@@ -49,16 +50,17 @@ export class CreatePublicationComponent implements OnInit {
     entryDate: new Date(),
     publicationId: '',
     description: '',
-    publicationTypeId: '',
+    publicationTypeId: null,
     asd: '',
-    sequence: '',
+    sequence: null,
     publishby: '',
     location: '',
     revisionDate: new Date(),
+    revisionNum: null,
     expirationDate: new Date(),
     nextReviewDate: new Date(),
     employeeId: null,
-    verifiedBy: '',
+    verifiedBy: null,
     verifiedDate: new Date(),
     masterCompanyId: 1,
   }
@@ -77,7 +79,7 @@ export class CreatePublicationComponent implements OnInit {
   selectedPartNumbers = [];
   pnMappingList = [];
   publicationRecordId: any;
-  employeeList = [];
+  employeeList:any = [];
   ataList = [];
   headersforPNMapping = [
     { field: 'partNumber', header: 'PN ID/Code' },
@@ -147,7 +149,8 @@ export class CreatePublicationComponent implements OnInit {
     private Dashnumservice: DashNumberService,
     private employeeService: EmployeeService,
     private route: Router,
-    private _actRoute: ActivatedRoute
+    private _actRoute: ActivatedRoute,
+    private commonService: CommonService,
   ) { }
   aircraftInformationCols: any[] = [
     { field: 'aircraft', header: 'Aircraft' },
@@ -163,6 +166,8 @@ export class CreatePublicationComponent implements OnInit {
   ngOnInit() {
     // this.itemMasterId = this._actRoute.snapshot.params['id'];
     this.publicationRecordId = this._actRoute.snapshot.params['id'];
+    this.sourcePublication.sequence = 1;
+    this.sourcePublication.revisionNum = 1;
     this.getAllEmployeeList();
     this.getPublicationTypes();
 
@@ -285,16 +290,21 @@ export class CreatePublicationComponent implements OnInit {
 
 
   async getAllEmployeeList() {
-    await this.employeeService.getEmployeeList().subscribe(res => {
-      const responseData = res[0];
-      this.employeeList = responseData.map(x => {
-        return {
-          label: x.firstName,
-          value: x.employeeId
-        };
-      });
+    this.commonService.smartDropDownList('Employee', 'employeeId', 'firstName').subscribe(res => {
+			console.log(res);
+      this.employeeList = res;
       this.employeeList = [{ label: 'Select Employee', value: null }, ...this.employeeList]
-    });
+		})
+    // await this.employeeService.getEmployeeList().subscribe(res => {
+    //   const responseData = res[0];
+    //   this.employeeList = responseData.map(x => {
+    //     return {
+    //       label: x.firstName,
+    //       value: x.employeeId
+    //     };
+    //   });
+    //   this.employeeList = [{ label: 'Select Employee', value: null }, ...this.employeeList]
+    // });
   }
   private saveSuccessHelper(role?: any) {
     this.isSaving = false;
@@ -409,6 +419,7 @@ export class CreatePublicationComponent implements OnInit {
     this.formData.append('publishby', data.publishby);
     this.formData.append('location', data.location);
     this.formData.append('revisionDate', moment(data.revisionDate).format('DD/MM/YYYY'));
+    this.formData.append('revisionNum', data.revisionNum);
     this.formData.append('expirationDate', moment(data.expirationDate).format('DD/MM/YYYY'));
     this.formData.append('nextReviewDate', moment(data.nextReviewDate).format('DD/MM/YYYY'));
     this.formData.append('employeeId', data.employeeId);
@@ -865,14 +876,15 @@ export class CreatePublicationComponent implements OnInit {
         this.publicationRecordId
       )
       .subscribe(res => {
-
         this.ataList = res.map(x => {
           return {
             ataChapter: x.ataChapterName,
             ataSubChapter: x.ataSubChapterDescription,
             ataChapterCode: x.ataChapterCode,
-            ataSubChapterId: x.ataSubChapterId,
-            ataChapterId: x.ataChapterId
+            ataSubChapterCode: x.ataSubChapterCode,
+
+            //ataSubChapterId: x.ataSubChapterId,
+            //ataChapterId: x.ataChapterId
           };
         });
       });
@@ -899,6 +911,8 @@ export class CreatePublicationComponent implements OnInit {
                 ItemClassification: x.itemClassification
               };
             });
+            this.getAtaChapterByPublicationId();
+            this.getAircraftInformationByPublicationId();
           });
         this.alertService.showMessage(
           'Success',
