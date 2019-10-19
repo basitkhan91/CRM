@@ -864,26 +864,49 @@ namespace QuickApp.Pro.Controllers
 
 		}
 
-		[HttpPut("customersUpdateforActive/{id}")]
-		public IActionResult customersUpdateforActive(long id, [FromBody]CustomerViewModel Customershipping)
-		{
-			if (ModelState.IsValid)
-			{
-				var CustomerObj = _unitOfWork.Customer.GetSingleOrDefault(a => a.CustomerId == id);
-				Customershipping.MasterCompanyId = 1;
-				//Customershipping.IsActive = true;
-				CustomerObj.IsActive = Customershipping.IsActive;
-				CustomerObj.UpdatedDate = DateTime.Now;
-				CustomerObj.UpdatedBy = Customershipping.UpdatedBy;
-				CustomerObj.CustomerId = Customershipping.CustomerId;
-				_unitOfWork.Customer.Update(CustomerObj);
-				_unitOfWork.SaveChanges();
-				return Ok(CustomerObj);
-			}
+		//[HttpPut("customersUpdateforActive/{id}")]
+		//public IActionResult customersUpdateforActive(long id, [FromBody]CustomerViewModel Customershipping)
+		//{
+		//	if (ModelState.IsValid)
+		//	{
+		//		var CustomerObj = _unitOfWork.Customer.GetSingleOrDefault(a => a.CustomerId == id);
+		//		Customershipping.MasterCompanyId = 1;
+		//		//Customershipping.IsActive = true;
+		//		CustomerObj.IsActive = Customershipping.IsActive;
+		//		CustomerObj.UpdatedDate = DateTime.Now;
+		//		CustomerObj.UpdatedBy = Customershipping.UpdatedBy;
+		//		CustomerObj.CustomerId = Customershipping.CustomerId;
+		//		_unitOfWork.Customer.Update(CustomerObj);
+		//		_unitOfWork.SaveChanges();
+		//		return Ok(CustomerObj);
+		//	}
 
-			return Ok(ModelState);
+		//	return Ok(ModelState);
+		//}
+
+
+		[HttpPost("List")]
+		public IActionResult GetList([FromBody] Filters<CustomerFilters> customerFilters)
+		{
+			var result = _unitOfWork.Customer.GetList(customerFilters);
+			return Ok(result);
+
+		}
+		[HttpGet("ListGlobalSearch")]
+
+		public IActionResult GetListGlobalFilter(string value, int pageNumber, int pageSize)
+		{
+			var result = _unitOfWork.Customer.GetListGlobalFilter(value, pageNumber, pageSize);
+			return Ok(result);
 		}
 
+		[HttpGet("customersUpdateforActive")]
+		public IActionResult CustomerStatus(long CustomerId, bool status, string updatedBy)
+		{
+			_unitOfWork.Customer.CustomerStatus(CustomerId, status, updatedBy);
+			return Ok();
+
+		}
 		[HttpPut("shippingUpdateforActive/{id}")]
 		public IActionResult shippingUpdateforActive(long id, [FromBody]CustomerShippingAdressViewModel customershipping)
 		{

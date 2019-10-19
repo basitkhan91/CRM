@@ -131,6 +131,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 		this.Countries();
         this.EmployeeLeaveType();
         this.loadjobtypesData();
+        this.loadLegalEntityData();
         
 	}
 	@ViewChild(MatPaginator) paginator: MatPaginator;
@@ -162,7 +163,8 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 	empIdCollection: any[];
 	middleNameCollection: any[];
 	/** Actions ctor */
-	allManagemtninfo: any[] = [];
+    allManagemtninfo: any[] = [];
+    alllegalEntityInfo: any[] = [];
 	maincompanylist: any[] = [];
 	private isEditMode: boolean = false;
 	private isDeleteMode: boolean = false;
@@ -225,7 +227,9 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             'JobTypeId': [null, Validators.compose([Validators.required, Validators.minLength(1)])],
             'companyId': [null, Validators.compose([Validators.required, Validators.minLength(1)])],
             'startDate': [null, Validators.compose([Validators.required, Validators.minLength(1)])],
-            
+            'BusinessUnitId': [null],
+            'divisionId': [null],
+            'departmentId': [null],
             
             
             
@@ -328,6 +332,33 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
      
 
     }
+
+    loadLegalEntityData() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+
+        this.jobTitleService1.getManagemtentLengalEntityData().subscribe(
+            results => this.onManagemtntlegaldataLoad(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+
+    }
+
+    private onManagemtntlegaldataLoad(getAtaMainList: any[]) {
+        // alert('success');
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.alllegalEntityInfo = getAtaMainList;
+        for (let i = 0; i < this.alllegalEntityInfo.length; i++) {
+
+            if (this.alllegalEntityInfo[i].parentId == null) {
+                this.maincompanylist.push(this.alllegalEntityInfo[i]);
+
+            }
+        }
+
+    }
+
 
     loadCompanyData() {
 
@@ -450,20 +481,63 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
   
 
     onSubmit2() {
-        console.log("superivisorId");
         this.supervisorId;
-        console.log(this.supervisorId);
-        console.log(this.sourceEmployee.supervisorName);
-
         this.sourceEmployee.firstName = this.empCreationForm.get('firstName').value;
         this.sourceEmployee.lastName = this.empCreationForm.get('lastName').value;
         this.sourceEmployee.middleName = this.empCreationForm.get('middleName').value;
         this.sourceEmployee.jobTitleId = this.empCreationForm.get('jobTitleId').value;
         this.sourceEmployee.employeeExpertiseId = this.empCreationForm.get('employeeExpertiseId').value;
         this.sourceEmployee.JobTypeId = this.empCreationForm.get('JobTypeId').value;
-        this.sourceEmployee.companyId = this.empCreationForm.get('companyId').value;
+
         this.sourceEmployee.startDate = this.empCreationForm.get('startDate').value;
         this.sourceEmployee.SupervisorId = this.supervisorId;
+   
+        if (this.empCreationForm.get('departmentId').value != null) {
+
+           
+
+
+            this.sourceEmployee.managementStructureId = this.empCreationForm.get('departmentId').value;
+
+        }
+
+
+        else if (this.empCreationForm.get('divisionId').value != null && this.sourceEmployee.departmentId == '') {
+
+
+
+
+            this.sourceEmployee.managementStructureId = this.empCreationForm.get('divisionId').value;
+
+
+        }
+        else if (this.empCreationForm.get('BusinessUnitId').value != null && this.sourceEmployee.departmentId == '' && this.sourceEmployee.divisionId == '') {
+
+
+            this.sourceEmployee.managementStructureId = this.empCreationForm.get('BusinessUnitId').value;
+
+
+        }
+        else {
+
+            this.sourceEmployee.managementStructureId = this.empCreationForm.get('companyId').value;
+        }
+
+
+        console.log(" Selected Entity" + this.sourceEmployee.managementStructureId);
+
+        this.selectedshiftValues.push(this.sourceEmployee.shifId);
+
+        console.log("this.selectedvalues" + this.selectedshiftValues);
+
+
+
+        this.sourceEmployee.ShiftId = this.selectedshiftValues;
+
+
+
+
+        console.log("this.sourceEmployee.managementStructureId" + this.sourceEmployee.managementStructureId);
 
         if (this.sourceEmployee.hourlypayType == "Hourly") {
 
@@ -505,11 +579,14 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
 
             this.employeeService.newAddEmployee(this.sourceEmployee).subscribe(
-                results => this.empAdd(this.sourceEmployee, results),
+               results => this.empAdd(this.sourceEmployee, results),
 
                 error => this.onDataLoadFailed(error)
             );
         }
+
+
+
 
       
         
@@ -796,12 +873,12 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
    
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-        /*
-		this.jobTitleService.getAllJobTitleList.subscribe(
+
+        this.jobTitleService.getAllJobTitleList().subscribe(
 			results => this.onJobtitlesDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
-        */
+        
     }
 
     private loadjobtypesData() {
@@ -809,12 +886,12 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         
-        /*
-        this.jobTypeService.getjobTypeWorkFlows().subscribe(
+        
+        this.jobTypeService.getAllJobTypeList().subscribe(
             results => this.onJobtypeDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
-        */
+        
     }
 
     onJobtypeDataLoadSuccessful(jobTypes: JobType[]) {
@@ -1437,8 +1514,17 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 	}
 	
 
-    getBUList(companyId) {
+    getBUList(event) {
+
+        var eventid = event.target.value;
+
+        console.log("selected legal Id" + eventid)
+        var splitted = eventid.split(":");
+        var companyId = splitted[1];
+        console.log("companyId" + companyId)
+
         if (this.updateMode == false) {
+
             this.sourceEmployee.buisinessUnitId = "";
             this.sourceEmployee.departmentId = "";
             this.sourceEmployee.divisionId = "";
@@ -1446,26 +1532,44 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             this.departmentList = [];
             this.divisionlist = [];
             this.bulist = [];
+
+
+
             for (let i = 0; i < this.allManagemtninfo.length; i++) {
+
+
+
                 if (this.allManagemtninfo[i].parentId == companyId) {
                     this.bulist.push(this.allManagemtninfo[i])
                 }
+
+
             }
 
         }
         else {
+
             this.departmentList = [];
             this.divisionlist = [];
             this.bulist = [];
+
+
             for (let i = 0; i < this.allManagemtninfo.length; i++) {
                 if (this.allManagemtninfo[i].parentId == companyId) {
                     this.bulist.push(this.allManagemtninfo[i])
                 }
             }
+
+
         }
     }
 
-    getDepartmentlist(businessUnitId) {
+    getDepartmentlist(value) {
+
+        console.log("Department"+value);
+        var splitted = value.split(": ");
+        var businessUnitId = splitted[1];
+        console.log(businessUnitId);
         if (this.updateMode == false) {
             this.sourceEmployee.departmentId = "";
             this.sourceEmployee.divisionId = "";
@@ -1490,7 +1594,43 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         }
     }
 
-    getDivisionlist(departmentId) {
+    getDepartmentlist2(value) {
+
+        console.log("getDepartmentlist2" + value);
+
+        if (this.updateMode == false) {
+            this.sourceEmployee.departmentId = "";
+            this.sourceEmployee.divisionId = "";
+            this.sourceEmployee.managementStructureId = value;
+            this.departmentList = [];
+            this.divisionlist = [];
+
+
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+
+
+                if (this.allManagemtninfo[i].parentId == value) {
+
+                    this.departmentList.push(this.allManagemtninfo[i]);
+                }
+            }
+
+        }
+        else {
+            this.departmentList = [];
+            this.divisionlist = [];
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                if (this.allManagemtninfo[i].parentId == value) {
+                    this.departmentList.push(this.allManagemtninfo[i]);
+                }
+            }
+        }
+
+    }
+
+    getDivisionlist(value) {
+        var splitted = value.split(": ");
+        var departmentId = splitted[1];
         if (this.updateMode == false) {
             this.sourceEmployee.divisionId = "";
             this.sourceEmployee.managementStructureId = departmentId;
@@ -1596,7 +1736,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             this.sourceEmployee.departmentId = this.managementStructureData[1];
             this.sourceEmployee.divisionId = this.managementStructureData[0];
             this.getBUList(this.sourceEmployee.companyId);
-            this.getDepartmentlist(this.sourceEmployee.buisinessUnitId);
+            this.getDepartmentlist2(this.sourceEmployee.buisinessUnitId);
             this.getDivisionlist(this.sourceEmployee.departmentId);
         }
         if (this.managementStructureData.length == 3) {
@@ -1604,7 +1744,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             this.sourceEmployee.buisinessUnitId = this.managementStructureData[1];
             this.sourceEmployee.departmentId = this.managementStructureData[0];
             this.getBUList(this.sourceEmployee.companyId);
-            this.getDepartmentlist(this.sourceEmployee.buisinessUnitId);
+            this.getDepartmentlist2(this.sourceEmployee.buisinessUnitId);
         }
         if (this.managementStructureData.length == 2) {
             this.sourceEmployee.companyId = this.managementStructureData[1];

@@ -413,6 +413,8 @@ namespace DAL
         public DbSet<PurchaseOrderAddress> PurchaseOrderAddress { get; set; }
         public DbSet<VendorBillingAddress> VendorBillingAddress { get; set; }
         public DbSet<PurchaseOrderShipVia> PurchaseOrderShipVia { get; set; }
+        public DbSet<CompanyBillingAddress> CompanyBillingAddress { get; set; }
+        public DbSet<CompanyShippingAddress> CompanyShippingAddress { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
