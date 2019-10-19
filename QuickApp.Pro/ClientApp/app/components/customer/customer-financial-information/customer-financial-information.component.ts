@@ -11,6 +11,7 @@ import { TaxTypeService } from '../../../services/taxtype.service';
 import { AuthService } from '../../../services/auth.service';
 import { AlertService, MessageSeverity } from '../../../services/alert.service';
 import { validateRecordExistsOrNot } from '../../../generic/autocomplete';
+import { CommonService } from '../../../services/common.service';
 
 @Component({
     selector: 'app-customer-financial-information',
@@ -177,6 +178,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
         public itemser: ItemMasterService, public customerService: CustomerService,
         private authService: AuthService,
         private alertService: AlertService,
+        private commonservice: CommonService
     ) {
         // if (this.workFlowtService.contactCollection) {
         //     this.local = this.workFlowtService.contactCollection;
@@ -230,9 +232,13 @@ export class CustomerFinancialInformationComponent implements OnInit {
         }
     }
     getAllcreditTermList() {
-        this.creditTermsService.getCreditTermsList().subscribe(res => {
-            this.creditTermList = res[0];
+        this.commonservice.smartDropDownList('CreditTerms', 'CreditTermsId', 'Name').subscribe(res => {
+            this.creditTermList = res;
+
         })
+        // this.creditTermsService.getCreditTermsList().subscribe(res => {
+        //     this.creditTermList = res[0];
+        // })
     }
     getAllCurrency() {
         this.currencyService.getCurrencyList().subscribe(res => {
@@ -244,7 +250,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
         this._creditTermList = this.creditTermList;
 
         this._creditTermList = [...this.creditTermList.filter(x => {
-            return x.name.toLowerCase().includes(event.query.toLowerCase())
+            return x.label.toLowerCase().includes(event.query.toLowerCase())
         })]
 
     }
@@ -329,6 +335,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     saveFinancialInformation() {
         this.customerService.updatefinanceinfo({
             ...this.savedGeneralInformationData,
+            taxing: this.taxTypeRateMapping,
             updatedBy: this.userName
         }, this.id).subscribe(res => {
             this.alertService.showMessage(

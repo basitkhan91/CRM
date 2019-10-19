@@ -873,7 +873,7 @@ export class PurchaseSetupComponent {
 	// 	}}
 
 	partnmId(parentdata) {
-		console.log(parentdata, event)
+		console.log(parentdata)
 
 		this.showInput = true;
 
@@ -884,8 +884,12 @@ export class PurchaseSetupComponent {
 		//this.allSelectedParts.push(this.itemclaColl[i][0].partId);
 		//this.selectedActionName = event;
 
+
 		const itemMasterId = getValueFromObjectByKey('itemMasterId', parentdata.partNumberId)
+		console.log(itemMasterId);
+
 		this.sourcePoApproval.itemMasterId = itemMasterId;
+
 		this.partWithId = [];
 		this.itemTypeId = 1;
 
@@ -894,8 +898,8 @@ export class PurchaseSetupComponent {
 		this.vendorService.getPartDetailsWithidForSinglePart(this.sourcePoApproval.itemMasterId).subscribe(
 			data1 => {
 				console.log(data1);
-				if (data1[0][0]) {
-					this.partWithId = data1[0][0];
+				if (data1[0]) {
+					this.partWithId = data1[0];
 					parentdata.partId = this.partWithId.itemMasterId;
 					parentdata.altPartNumberId = this.partWithId.partAlternatePartId;
 					parentdata.partDescription = this.partWithId.partDescription;
@@ -1904,21 +1908,24 @@ export class PurchaseSetupComponent {
 	}
 
 	addAvailableParts() {
-		console.log(this.partListData)
-		console.log(this.newData);
+		// console.log(this.partListData)
+		// console.log(this.newData);
 		this.tempNewPNArray = [];
 		let newParentObject = new CreatePOPartsList()
 		if (this.newData) {
 			const data = this.newData.map(x => {
 				if (x.addAllMultiPNRows) {
-					this.partListData = [...this.partListData, {
+
+					const newObject = {
 						...newParentObject,
 						partNumberId: getObjectById('itemMasterId', x.itemMasterId, this.allPartnumbersInfo)
-					}]
+					}
+					this.partnmId(newObject)
+					this.partListData = [...this.partListData, newObject]
+
+
 				}
-				// this.partListData.map(x => {
-				// 	this.partnmId(x)
-				// })
+
 
 
 			})
@@ -3455,8 +3462,8 @@ export class PurchaseSetupComponent {
 	}
 
 	getEmployeeId(obj) {
-		if (obj.employeeId) {
-			return obj.employeeId;
+		if (obj.value) {
+			return obj.value;
 		} else {
 			return 0;
 		}
