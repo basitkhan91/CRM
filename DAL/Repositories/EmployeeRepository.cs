@@ -21,28 +21,18 @@ namespace DAL.Repositories
         {
 
             //var empData = _appContext.Employee.Include("EmployeeShiftMapping").ToList().Where(t => t.IsDelete == null || t.IsDelete == false);
-            var empData = (from t in _appContext.Employee   
-                           
+            var empData = (from t in _appContext.Employee
 
-                        join orgCountries in _appContext.Countries on t.OriginatingCountryId equals orgCountries.countries_id into cre
-                        from orgCountries in cre.DefaultIfEmpty()
+
+                           join orgCountries in _appContext.Countries on t.OriginatingCountryId equals orgCountries.countries_id into cre
+                           from orgCountries in cre.DefaultIfEmpty()
 
                            join nationalCountryId in _appContext.Countries on t.NationalityCountryId equals nationalCountryId.countries_id into nationalCounty
                            from nationalCountryId in nationalCounty.DefaultIfEmpty()
 
                            join managementStructeInfo in _appContext.ManagementStructure on t.ManagementStructureId equals managementStructeInfo.ManagementStructureId into managmentCompany
                            from managementStructeInfo in managmentCompany.DefaultIfEmpty()
-
-
-                           join buInfo in _appContext.ManagementStructure on t.BusinessUnitId equals buInfo.ManagementStructureId into buisnessInfo
-                           from buInfo in buisnessInfo.DefaultIfEmpty()
-
-                           join departmentInfo in _appContext.ManagementStructure on t.DepartmentId equals departmentInfo.ManagementStructureId into departmentInfos
-                           from departmentInfo in departmentInfos.DefaultIfEmpty()
-
-                           join divisonInfo in _appContext.ManagementStructure on t.DivisionId equals divisonInfo.ManagementStructureId into DivisionInfos
-                           from divisonInfo in DivisionInfos.DefaultIfEmpty()
-
+                        
                            join employeeExpertise in _appContext.EmployeeExpertise on t.EmployeeExpertiseId equals employeeExpertise.EmployeeExpertiseId into employeeExpertiseInfos
                            from employeeExpertise in employeeExpertiseInfos.DefaultIfEmpty()
 
@@ -54,63 +44,56 @@ namespace DAL.Repositories
 
 
                            where t.IsDelete == false || t.IsDelete == null
-                        // select new { t, ad, vt }).ToList();
-                        select new
-                        {
-                            t.EmployeeId,
-                            t.FirstName,
-                            t.LastName,
-                            t.MiddleName,
-                            t.EmployeeIdAsPerPayroll,
-                            t.StationId,
-                            t.JobTitleId,
-                            t.JobTypeId,
-                            t.EmployeeExpertiseId,
-                            t.DateOfBirth,
-                            t.OriginatingCountryId,
-                            t.NationalityCountryId,
-                            t.StartDate,
-                            // cc,
-                            t.EmployeeCode,
-                            t.MobilePhone,
-                            t.WorkPhone,
-                            orgCountries,
-                            nationalCountryId,
-                            managementStructeInfo,
-                            buInfo,
-                            departmentInfo,
-                            divisonInfo,
-                            employeeExpertise,
-                            jobtype,
-                            t.Fax,
-                            t.Email,
-                            t.SSN,
+                           // select new { t, ad, vt }).ToList();
+                           select new
+                           {
+                               t.EmployeeId,
+                               t.FirstName,
+                               t.LastName,
+                               t.MiddleName,
+                               t.EmployeeIdAsPerPayroll,
+                               t.StationId,
+                               t.JobTitleId,
+                               t.JobTypeId,
+                               t.EmployeeExpertiseId,
+                               t.DateOfBirth,
+                               t.OriginatingCountryId,
+                               t.NationalityCountryId,
+                               t.StartDate,
+                               // cc,
+                               t.EmployeeCode,
+                               t.MobilePhone,
+                               t.WorkPhone,
+                               orgCountries,
+                               nationalCountryId,
+                               managementStructeInfo,
+                               employeeExpertise,
+                               jobtype,
+                               t.Fax,
+                               t.Email,
+                               t.SSN,
 
-                            t.InMultipleShifts,
-                            t.AllowOvertime,
-                            t.AllowDoubleTime,
+                               t.InMultipleShifts,
+                               t.AllowOvertime,
+                               t.AllowDoubleTime,
 
-                            t.IsHourly,
-                            t.HourlyPay,
-                            t.EmployeeCertifyingStaff,
-                            t.EmployeeLeaveTypeId,
-                            t.SupervisorId,
-                            t.BusinessUnitId,
+                               t.IsHourly,
+                               t.HourlyPay,
+                               t.EmployeeCertifyingStaff,
+                               t.EmployeeLeaveTypeId,
+                               t.SupervisorId,
+                               t.MasterCompanyId,
+                               t.IsDelete,
+                               t.ManagementStructureId,
+                               t.MasterCompany,
+                               t.IsActive,
+                               t.CreatedDate,
+                               t.CreatedBy,
+                               t.UpdatedBy,
+                               t.UpdatedDate,
 
-                            t.DepartmentId,
-                            t.DivisionId,
-                            t.MasterCompanyId,
-                            t.IsDelete,
-                            t.ManagementStructureId,
-                            t.MasterCompany,
-                            t.IsActive,
-                            t.CreatedDate,
-                            t.CreatedBy,
-                            t.UpdatedBy,
-                            t.UpdatedDate,
-                         
-                            //cc.Description
-                        }).ToList();
+                               //cc.Description
+                           }).ToList();
 
 
 
@@ -120,7 +103,7 @@ namespace DAL.Repositories
             //  var empData = _appContext.Employee.Include("EmployeeShiftMapping").join(countriesRep.GetCountries()).ToList().Where(t => t.IsDelete == null || t.IsDelete == false);
             return empData;
 
-          
+
         }
 
 
@@ -242,6 +225,30 @@ namespace DAL.Repositories
             return employees;
         }
 
+        public object GetEmployeeData(long employeeId)
+        {
+            try
+            {
+                var data = (from emp in _appContext.Employee
+                            where emp.EmployeeId == employeeId
+                            select new
+                            {
+                                FirstName = emp.FirstName,
+                                LastName = emp.LastName,
+                                MiddleName = emp.MiddleName,
+                                EmployeeCode = emp.EmployeeCode,
+                                Email = emp.Email
+                            }).FirstOrDefault();
+
+                return data;
+            }
+
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 

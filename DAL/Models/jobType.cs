@@ -9,7 +9,7 @@ namespace DAL.Models
     public class JobType : IAudit
     {
         [Key]
-        public int JobTypeId { get; set; }
+        public Int16 JobTypeId { get; set; }
 
         public string JobTypeName { get; set; }
         public string jobTypeDescription { get; set; }

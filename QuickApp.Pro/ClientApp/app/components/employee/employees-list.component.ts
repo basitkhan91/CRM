@@ -42,9 +42,6 @@ export class EmployeesListComponent implements OnInit{
 	viewTraining: any = {};
 	viewGeneralDetails: any = {};
     allEmployeelist: any[] = [];
-    totalRecords: any;
-    totalPages: number;
-    pageSize: number = 10;
     public originationCounty: any;
     public nationalCountry: any;
     public companyCode: any;
@@ -54,7 +51,7 @@ export class EmployeesListComponent implements OnInit{
     public empExpertisedescription: any;
     public jobTypeName: any;
     public employeeLeaveType: any;
-    
+    public deleteEmployeeId: any;
 	ngOnInit(): void {
 
 		// debugger;
@@ -75,8 +72,7 @@ export class EmployeesListComponent implements OnInit{
 	Active: string = "Active";
 	selectedColumns: any[];
 	cols: any[];
-    modal: NgbModalRef;
-
+	modal: NgbModalRef;
     /** employees-list ctor */
 	constructor(private modalService: NgbModal,private translationService: AppTranslationService, private empService: EmployeeService, private router: Router, private authService: AuthService, private alertService: AlertService) {
 		this.dataSource = new MatTableDataSource();
@@ -89,19 +85,15 @@ export class EmployeesListComponent implements OnInit{
 	//debugger;
 		//this.alertService.stopLoadingMessage();
 		//this.loadingIndicator = false;
-        this.totalRecords = allWorkFlows.length;
-        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
 		this.dataSource.data = allWorkFlows;
 		this.allVendorList = allWorkFlows;
 
 
 	}
     private onemployeeDataLoadSuccessful(allWorkFlows: any[]) {
-
         if (allWorkFlows[0].employeeLeaveTypeMapping != null) {
             this.employeeLeaveType = allWorkFlows[0].employeeLeaveTypeMapping.employeeLeaveTypeId
         }
-        console.log();
 		//debugger;
 		//this.alertService.stopLoadingMessage();
 		//this.loadingIndicator = false;
@@ -109,7 +101,9 @@ export class EmployeesListComponent implements OnInit{
 		this.allEmployeelist = allWorkFlows[0];
 
 
-	}
+    }
+
+
 	public navigateTogeneralInfo() {
 		//this.workFlowtService.listCollection = [];
 		this.empService.isEditMode = false;
@@ -183,22 +177,30 @@ export class EmployeesListComponent implements OnInit{
 
 	}
 
-	deleteItemAndCloseModel(rowData) {
+	deleteItemAndCloseModel() {
 		this.isSaving = true;
 		this.isDeleteMode = true;
 		this.sourceEmployee.isdelete = true;
 		//this.sourceVendor = content;
-		this.sourceEmployee.employeeId = rowData.employeeId;
+		//this.sourceEmployee.employeeId = rowData.employeeId;
+        this.sourceEmployee.employeeId =this.deleteEmployeeId;
 		this.sourceEmployee.updatedBy = this.userName;
-		this.empService.deleteEmployee(this.sourceEmployee).subscribe(data => { this.loadData();})
+        this.empService.deleteEmployee(this.sourceEmployee).subscribe(data => {
+            this.alertService.showMessage("Employee removed successfully.");
+            this.modal.close();
+            this.loadData();
+        })
 		//this.modal.close();
 	}
 
-	openDelete(content, row) {
+    openDelete(content, row) {
 
+        console.log(row);
+        this.deleteEmployeeId = row.employeeId
 		this.isEditMode = false;
 		this.isDeleteMode = true;
-		this.sourceEmployee = row;
+        this.sourceEmployee = row;
+     
 		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
 			console.log('When user closes');
@@ -231,7 +233,7 @@ export class EmployeesListComponent implements OnInit{
         this.originationCounty = row.orgCountries.countries_name;
         this.nationalCountry = row.nationalCountryId.countries_name;
 
-        if (row.employeeExpertise != null ) {
+        if (row.employeeExpertise != null) {
             this.empExpertisedescription = row.employeeExpertise.description
         }
 
@@ -239,17 +241,17 @@ export class EmployeesListComponent implements OnInit{
             this.jobTypeName = row.jobtype.jobTypeName
         }
 
-      
 
-        
 
-        if (row.managementStructeInfo !=null) {
+
+
+        if (row.managementStructeInfo != null) {
             this.companyCode = row.managementStructeInfo.code;
         }
 
-    
 
-        if (row.buInfo !=null ) {
+
+        if (row.buInfo != null) {
             this.businessUnit = row.buInfo.code;
         }
         if (row.departmentInfo != null) {
@@ -259,25 +261,25 @@ export class EmployeesListComponent implements OnInit{
 
             this.divisionCode = row.divisonInfo.code;
         }
- 
-      
-        
-        
 
-		this.viewGeneralDetails = row;
-		this.viewempDetails = row;
-		this.viewTraining = row;
-		this.allEmployeelist = row;
-		this.empService.getEmployeeListforView(row.employeeId).subscribe(
-			results => this.onemployeeDataLoadSuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
-	
-		this.modal = this.modalService.open(content, { size: 'lg' });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-	}
+
+
+
+
+        this.viewGeneralDetails = row;
+        this.viewempDetails = row;
+        this.viewTraining = row;
+        this.allEmployeelist = row;
+        this.empService.getEmployeeListforView(row.employeeId).subscribe(
+            results => this.onemployeeDataLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+
+        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
 	dismissModel() {
 		this.modal.close();
 	}

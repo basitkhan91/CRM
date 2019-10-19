@@ -38,9 +38,7 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<EmployeeViewModel>))]
         public IActionResult Get()
         {
-            var allEmployeeinfo = _unitOfWork.employee.GetAllEmployeeData(); 
-            
-            //.GetAllCustomersData();
+            var allEmployeeinfo = _unitOfWork.employee.GetAllEmployeeData(); //.GetAllCustomersData();
             return Ok(allEmployeeinfo);
 
         }
@@ -58,7 +56,7 @@ namespace QuickApp.Pro.Controllers
         public Object GetforView(long employeeId)
         {
             var allEmployeeinfo = _context.Employee.Include("EmployeeLicensure").Include("EmployeeTraining").
-                Include("EmployeeLeaveTypeMapping").Where(a => a.EmployeeId == employeeId).ToList();
+              Include("EmployeeLeaveTypeMapping").Where(a => a.EmployeeId == employeeId).ToList();
             return allEmployeeinfo;
 
 
@@ -162,13 +160,17 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("employeepost")]
-        public IActionResult empCreateAction([FromBody] EmployeeViewModel employeeViewModel)
+        public IActionResult CreateAction([FromBody] EmployeeViewModel employeeViewModel)
         {
             if (ModelState.IsValid)
             {
                 if (employeeViewModel == null)
                     return BadRequest($"{nameof(employeeViewModel)} cannot be null");
                 DAL.Models.Employee employeeobject = new DAL.Models.Employee();
+
+
+                var entityobject = _context.ManagementStructure.Where(a => a.ManagementStructureId == employeeViewModel.ManagementStructureId).SingleOrDefault();
+        
 
                 employeeobject.MasterCompanyId = 1;
                 employeeobject.IsActive = true;
@@ -181,12 +183,8 @@ namespace QuickApp.Pro.Controllers
                 employeeobject.EmployeeIdAsPerPayroll = employeeViewModel.EmployeeIdAsPerPayroll;
                 employeeobject.StationId = employeeViewModel.StationId;
                 employeeobject.EmployeeExpertiseId = employeeViewModel.EmployeeExpertiseId;
-                employeeobject.BusinessUnitId = employeeViewModel.BusinessUnitId;
-                employeeobject.DepartmentId = employeeViewModel.DepartmentId;
-                employeeobject.DivisionId = employeeViewModel.DivisionId;
-
-
-
+           
+                
                 employeeobject.DateOfBirth = employeeViewModel.DateOfBirth;
                 employeeobject.OriginatingCountryId = employeeViewModel.OriginatingCountryId;
                 employeeobject.NationalityCountryId = employeeViewModel.NationalityCountryId;
@@ -194,6 +192,7 @@ namespace QuickApp.Pro.Controllers
                 employeeobject.WorkPhone = employeeViewModel.WorkPhone;
                 employeeobject.Fax = employeeViewModel.Fax;
                 employeeobject.ManagementStructureId = employeeViewModel.ManagementStructureId;
+                employeeobject.LegalEntityId = entityobject.LegalEntityId;
                 employeeobject.SSN = employeeViewModel.SSN;
                 employeeobject.Email = employeeViewModel.Email;
                 employeeobject.AllowDoubleTime = employeeViewModel.AllowDoubleTime;
@@ -226,9 +225,8 @@ namespace QuickApp.Pro.Controllers
                             var integrationTypes = new EmployeeLeaveTypeMapping();
                             integrationTypes.EmployeeLeaveTypeId = Convert.ToByte(s);
                             integrationTypes.MasterCompanyId = 1;
-                            // integrationTypes.EmployeeId = empId;
-                            integrationTypes.EmployeeId = 70151;
-                            // integrationTypes.EmployeeId = employeeobject.EmployeeId;
+                           // integrationTypes.EmployeeId = empId;
+                            integrationTypes.EmployeeId = 62;
                             integrationTypes.CreatedBy = employeeViewModel.CreatedBy;
                             integrationTypes.UpdatedBy = employeeViewModel.UpdatedBy;
                             integrationTypes.CreatedDate = DateTime.Now;
@@ -243,7 +241,6 @@ namespace QuickApp.Pro.Controllers
 
                 if (employeeViewModel.ShiftId != null)
                 {
-                    employeeViewModel.EmployeeId  = employeeobject.EmployeeId;
                     var integrationList = _unitOfWork.EmployeeShiftMappingRepository.GetAllData().ToList();
                     _unitOfWork.SaveChanges();
                     foreach (string s in employeeViewModel.ShiftId)
@@ -253,10 +250,8 @@ namespace QuickApp.Pro.Controllers
                             var integrationTypes = new EmployeeShiftMapping();
                             integrationTypes.ShiftId = Convert.ToByte(s);
                             integrationTypes.MasterCompanyId = 1;
-                            integrationTypes.EmployeeId = employeeobject.EmployeeId;
-                            integrationTypes.CreatedBy = employeeViewModel.CreatedBy;
+                            integrationTypes.EmployeeId = 62;
                             integrationTypes.UpdatedBy = employeeViewModel.UpdatedBy;
-                         
                             integrationTypes.CreatedDate = DateTime.Now;
                             integrationTypes.UpdatedDate = DateTime.Now;
                             integrationTypes.IsActive = true;
@@ -269,7 +264,7 @@ namespace QuickApp.Pro.Controllers
 
                 var existingResult = _unitOfWork.employee.GetSingleOrDefault(c => c.EmployeeId == employeeobject.EmployeeId);
 
-                existingResult.EmployeeCode = "EMP" + employeeobject.EmployeeId; 
+                existingResult.EmployeeCode = "EMP" + employeeobject.EmployeeId; ;
                 _unitOfWork.employee.Update(existingResult);
 
                 _unitOfWork.SaveChanges();
@@ -313,12 +308,11 @@ namespace QuickApp.Pro.Controllers
                 existingResult.IsHourly = employeeViewModel.IsHourly;
                 existingResult.HourlyPay = employeeViewModel.HourlyPay;
                 existingResult.ManagementStructureId = employeeViewModel.ManagementStructureId;
+                existingResult.LegalEntityId = 19;                
                 existingResult.SupervisorId = employeeViewModel.SupervisorId;
                 existingResult.EmployeeCertifyingStaff = employeeViewModel.EmployeeCertifyingStaff;
                 existingResult.MasterCompanyId = 1;
-                existingResult.BusinessUnitId = employeeViewModel.BusinessUnitId;
-                existingResult.DepartmentId = employeeViewModel.DepartmentId;
-                existingResult.DivisionId = employeeViewModel.DivisionId;
+             
 
                 if (employeeViewModel.EmployeeLeaveTypeId != null)
                 {
@@ -796,10 +790,10 @@ namespace QuickApp.Pro.Controllers
 
         [HttpPut("employeepost/{id}")]
         [Produces(typeof(EmployeeViewModel))]
-        public IActionResult DeleteAction(long id, [FromBody]EmployeeViewModel employee)
+        public IActionResult EmpDeleteAction(long id, [FromBody]EmployeeViewModel employee)
         {
             var existingResult = _unitOfWork.employee.GetSingleOrDefault(c => c.EmployeeId == id);
-            existingResult.IsDelete = employee.IsDelete;
+            existingResult.IsDelete = true;
 
             _unitOfWork.employee.Update(existingResult);
             _unitOfWork.SaveChanges();
@@ -910,5 +904,14 @@ namespace QuickApp.Pro.Controllers
 
         //        return Ok(id);
         //    }
+
+
+        [HttpGet("employeedata/{employeeId}")]
+        public IActionResult GetEmployeeData(long employeeId)
+        {
+            var result = _unitOfWork.employee.GetEmployeeData(employeeId);
+            return Ok(result);
+
+        }
     }
 }

@@ -81,7 +81,6 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
     public empId: any;
     public firstName: any;
     public lastName: any;
-    public employeeLicensureId: any;
     public allWorkFlows: any[] = [];
     constructor(private route: ActivatedRoute, private translationService: AppTranslationService, public certificationser: CertificationtypeService, private router: Router, public authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public employeeService: EmployeeService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.displayedColumns.push('action');
@@ -97,18 +96,13 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
         if (this.employeeService.listCollection && this.employeeService.isEditMode == true) {
             //debugger;
             this.sourceEmployee = this.employeeService.listCollection;
-
-            if (this.sourceEmployee.employeeId) {
-                this.nextbuttonEnable = true;
-
-            }
             console.log("this.sourceemployee")
             console.log(this.sourceEmployee);
             this.empId = this.sourceEmployee.employeeId;
             this.firstName = this.sourceEmployee.firstName;
             this.lastName = this.sourceEmployee.lastName;
             this.local = this.employeeService.listCollection;
-           // this.sourceEmployee.certificationDate = new Date();
+            this.sourceEmployee.certificationDate = new Date();
             this.getwithemployeeLicensureId();
         }
 
@@ -220,9 +214,6 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
 
             this.sourceEmployee.updatedBy = this.userName;
             this.sourceEmployee.masterCompanyId = 1;
-
-            console.log("source: Data");
-            console.log(this.sourceEmployee);
             this.employeeService.updateCertificationDetails(this.sourceEmployee).subscribe(data => {
                 this.alertService.showMessage('Employee Certification updated successfully.');
                 this.employeeService.generalCollection = this.local;
@@ -324,9 +315,6 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
         this.dataSource.data = certfilist;
         this.data = certfilist;
         if (this.data.length > 0) {
-            
-            this.employeeLicensureId = this.data[0].t.employeeLicensureId;
-            console.log("this.data[0].t" + this.data[0].t );
             this.sourceEmployee = this.data[0].t;
             this.sourceEmployee.certificationDate = new Date(this.sourceEmployee.certificationDate);
         }
