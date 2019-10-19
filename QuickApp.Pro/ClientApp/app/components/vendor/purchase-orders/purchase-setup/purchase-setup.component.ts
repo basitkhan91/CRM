@@ -30,6 +30,7 @@ import { getValueFromObjectByKey, getObjectByValue, getValueFromArrayOfObjectByI
 import { AuthService } from '../../../../services/auth.service';
 import { CommonService } from '../../../../services/common.service';
 import { CustomerShippingModel } from '../../../../models/customer-shipping.model';
+import { CompanyService } from '../../../../services/company.service';
 
 @Component({
 	selector: 'app-purchase-setup',
@@ -243,6 +244,9 @@ export class PurchaseSetupComponent {
 	newObjectForParent = new CreatePOPartsList();
 	addressFormForShipping = new CustomerShippingModel()
 	addressFormForBilling = new CustomerShippingModel()
+	legalEntity: any;
+	legalEntityList_ForShipping: Object;
+	legalEntityList_ForBilling: Object;
 	// this.siteName ="";
 	// this.address1 ="";
 	// this.address3 ="";
@@ -272,6 +276,7 @@ export class PurchaseSetupComponent {
 		public glAccountService: GlAccountService,
 		private authService: AuthService,
 		private customerService: CustomerService,
+		private companyService: CompanyService,
 		private commonService: CommonService) {
 
 		//this.loadcustomerData();
@@ -389,6 +394,7 @@ export class PurchaseSetupComponent {
 		this.ptnumberlistdata();
 		this.loadcustomerData();
 		this.glAccountData();
+		this.getLegalEntity();
 		//this.getAllPartNumbers();
 		this.sourcePoApproval.companyId = 0;
 		this.sourcePoApproval.buId = 0;
@@ -432,6 +438,31 @@ export class PurchaseSetupComponent {
 
 	}
 
+	getLegalEntity() {
+		this.commonService.smartDropDownList('LegalEntity', 'LegalEntityId', 'Name').subscribe(res => {
+			this.legalEntity = res;
+		})
+	}
+	filterCompanyNameforShipping(event) {
+		this.legalEntityList_ForShipping = this.legalEntity;
+
+
+		const legalFilter = [...this.legalEntity.filter(x => {
+			return x.label.toLowerCase().includes(event.query.toLowerCase())
+		})]
+
+		this.legalEntityList_ForShipping = legalFilter;
+	}
+
+	filterCompanyNameforBilling(event) {
+		this.legalEntityList_ForBilling = this.legalEntity;
+		const legalFilter = [...this.legalEntity.filter(x => {
+			return x.label.toLowerCase().includes(event.query.toLowerCase())
+		})]
+
+		this.legalEntityList_ForBilling = legalFilter;
+
+	}
 	/*getAllPartNumbers() {
 		this.commonService.smartDropDownList('ItemMaster', 'ItemMasterId', 'partnumber').subscribe(res => {
 			console.log(res);			
@@ -3508,7 +3539,13 @@ export class PurchaseSetupComponent {
 			return 0;
 		}
 	}
+    resetAddressShippingForm(){
+		this.addressFormForShipping = new CustomerShippingModel()
+	}
 
+	resetAddressBillingForm(){
+		this.addressFormForBilling = new CustomerShippingModel()
+	}
 	saveShippingAddress() {
 		const data = {
 			...this.addressFormForShipping,
@@ -3521,9 +3558,8 @@ export class PurchaseSetupComponent {
 		if (this.sourcePoApproval.shipToUserTypeId == 1) {
 			const customeraddressData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('customerId', this.sourcePoApproval.shipToUserId) }
 
-
 			this.customerService.newShippingAdd(customeraddressData).subscribe(() => {
-				this.addressFormForShipping = new CustomerShippingModel()
+				// this.addressFormForShipping = new CustomerShippingModel()
 				this.alertService.showMessage(
 					'Success',
 					`Saved  Shipping Information Sucessfully `,
@@ -3536,7 +3572,19 @@ export class PurchaseSetupComponent {
 			const vendoraddressData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId) }
 
 			this.vendorService.newShippingAdd(vendoraddressData).subscribe(() => {
-				this.addressFormForShipping = new CustomerShippingModel()
+				// this.addressFormForShipping = new CustomerShippingModel()
+				this.alertService.showMessage(
+					'Success',
+					`Saved  Shipping Information Sucessfully `,
+					MessageSeverity.success
+				);
+
+			})
+		}
+		if (this.sourcePoApproval.shipToUserTypeId == 3) {
+			const companyaddressData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId) }
+			this.companyService.addNewShippingAddress(companyaddressData).subscribe(() => {
+				// this.addressFormForShipping = new CustomerShippingModel()
 				this.alertService.showMessage(
 					'Success',
 					`Saved  Shipping Information Sucessfully `,
@@ -3555,12 +3603,13 @@ export class PurchaseSetupComponent {
 			updatedBy: this.userName,
 			masterCompanyId: 1,
 			isActive: true,
+			isPrimary: true
 
 		}
 		if (this.sourcePoApproval.billToUserTypeId == 1) {
-			const customeraddressData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('customerId', this.sourcePoApproval.billToUserId) }
+			const customeraddressData = { ...data, customerId: getValueFromObjectByKey('customerId', this.sourcePoApproval.billToUserId) }
 			this.customerService.newBillingAdd(customeraddressData).subscribe(() => {
-				this.addressFormForBilling = new CustomerShippingModel()
+				// this.addressFormForBilling = new CustomerShippingModel()
 				this.alertService.showMessage(
 					'Success',
 					`Saved  Billing Information Sucessfully `,
@@ -3571,8 +3620,8 @@ export class PurchaseSetupComponent {
 		}
 		if (this.sourcePoApproval.billToUserTypeId == 2) {
 			const vendoraddressData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.billToUserId) }
-			this.vendorService.newShippingAdd(vendoraddressData).subscribe(() => {
-				this.addressFormForBilling = new CustomerShippingModel()
+			this.vendorService.addNewBillingAddress(vendoraddressData).subscribe(() => {
+				// this.addressFormForBilling = new CustomerShippingModel()
 				this.alertService.showMessage(
 					'Success',
 					`Saved  Billing Information Sucessfully `,
@@ -3581,7 +3630,18 @@ export class PurchaseSetupComponent {
 
 			})
 		}
+		if (this.sourcePoApproval.billToUserTypeId == 3) {
+			const companyaddressData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourcePoApproval.billToUserId) }
+			this.companyService.addNewBillingAddress(companyaddressData).subscribe(() => {
+				// this.addressFormForBilling = new CustomerShippingModel()
+				this.alertService.showMessage(
+					'Success',
+					`Saved  Billing Information Sucessfully `,
+					MessageSeverity.success
+				);
 
+			})
+		}
 	}
 
 

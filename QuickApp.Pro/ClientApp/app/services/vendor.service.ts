@@ -390,6 +390,10 @@ export class VendorService {
 
 		return this.actionEndpoint.getNewShipppinginfo<any>(action);
 	}
+
+	addNewBillingAddress(object) {
+		return this.actionEndpoint.postNewBillingAddress<any>(object);
+	}
 	//updateShipAddressdetails(action: any) {
 
 	//	return this.actionEndpoint.updateShipAddressDetails(action, action.vendorShippingId);
