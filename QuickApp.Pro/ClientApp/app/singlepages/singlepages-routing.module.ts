@@ -82,6 +82,7 @@ import { InputTextModule } from "primeng/inputtext";
 import { FileUploadModule } from "primeng/fileupload";
 import { CheckboxModule } from "primeng/checkbox";
 import { PercentComponent } from "../components/percent/percent.component";
+
 const singlePagesRoutes: Routes = [
   {
     path: "singlepages",

@@ -127,6 +127,7 @@ import { PaginationService } from "../services/pagination/pagination.service";
 import { TooltipModule } from "primeng/tooltip";
 import { KeyFilterModule } from 'primeng/keyfilter';
 import { PercentComponent } from "../components/percent/percent.component";
+import {MgmtStructureComponent} from '../components/mgmt-structure/mgmt-structure.component';
 
 @NgModule({
 	imports: [
@@ -211,7 +212,8 @@ import { PercentComponent } from "../components/percent/percent.component";
         AircraftManufacturerComponent,
         AircraftModelComponent,
         DashnumberComponent,
-        PaginationComponent
+        PaginationComponent,
+        MgmtStructureComponent
     ],
     providers: [
         SingleScreenBreadcrumbService,

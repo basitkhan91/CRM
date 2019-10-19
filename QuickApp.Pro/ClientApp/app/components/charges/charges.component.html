@@ -373,6 +373,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                     <input type="number" name="mgmtStructureId" class="form-control" #standard="ngModel" [(ngModel)]="addNewCharge.mgmtStructureId" required>
                                 </div>
                             </div>
+                            <app-mgmt-structure></app-mgmt-structure>
                         <div class="col-sm-12">
                             <div class="col-sm-4">
                                 <label for="memo" class="control-label">Memo</label>
