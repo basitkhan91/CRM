@@ -4,12 +4,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Models
 {
-    public class CompanyBillingAddress
+    public class CompanyBillingAddress:TempAddress
     {
         [Key]
         public long CompanyBillingAddressId { get; set; }
-        public long CompanyId { get; set; }
-        public long AddressId { get; set; }
+        public long LegalEntityId { get; set; }
+		[ForeignKey("AddressId")]
+		public long AddressId { get; set; }
         public string SiteName { get; set; }
         public bool? IsPrimary { get; set; }
         [ForeignKey("MasterCompanyId")]
@@ -20,5 +21,7 @@ namespace DAL.Models
         public DateTime UpdatedDate { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
+
+		public virtual Address Address { get; set; }
     }
 }

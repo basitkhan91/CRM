@@ -30,6 +30,7 @@ import { getValueFromObjectByKey, getObjectByValue, getValueFromArrayOfObjectByI
 import { AuthService } from '../../../../services/auth.service';
 import { CommonService } from '../../../../services/common.service';
 import { CustomerShippingModel } from '../../../../models/customer-shipping.model';
+import { CompanyService } from '../../../../services/company.service';
 
 @Component({
 	selector: 'app-purchase-setup',
@@ -243,6 +244,9 @@ export class PurchaseSetupComponent {
 	newObjectForParent = new CreatePOPartsList();
 	addressFormForShipping = new CustomerShippingModel()
 	addressFormForBilling = new CustomerShippingModel()
+	legalEntity: any;
+	legalEntityList_ForShipping: Object;
+	legalEntityList_ForBilling: Object;
 	// this.siteName ="";
 	// this.address1 ="";
 	// this.address3 ="";
@@ -272,6 +276,7 @@ export class PurchaseSetupComponent {
 		public glAccountService: GlAccountService,
 		private authService: AuthService,
 		private customerService: CustomerService,
+		private companyService: CompanyService,
 		private commonService: CommonService) {
 
 		//this.loadcustomerData();
@@ -389,6 +394,7 @@ export class PurchaseSetupComponent {
 		this.ptnumberlistdata();
 		this.loadcustomerData();
 		this.glAccountData();
+		this.getLegalEntity();
 		//this.getAllPartNumbers();
 		this.sourcePoApproval.companyId = 0;
 		this.sourcePoApproval.buId = 0;
@@ -432,6 +438,31 @@ export class PurchaseSetupComponent {
 
 	}
 
+	getLegalEntity() {
+		this.commonService.smartDropDownList('LegalEntity', 'LegalEntityId', 'Name').subscribe(res => {
+			this.legalEntity = res;
+		})
+	}
+	filterCompanyNameforShipping(event) {
+		this.legalEntityList_ForShipping = this.legalEntity;
+
+
+		const legalFilter = [...this.legalEntity.filter(x => {
+			return x.label.toLowerCase().includes(event.query.toLowerCase())
+		})]
+
+		this.legalEntityList_ForShipping = legalFilter;
+	}
+
+	filterCompanyNameforBilling(event) {
+		this.legalEntityList_ForBilling = this.legalEntity;
+		const legalFilter = [...this.legalEntity.filter(x => {
+			return x.label.toLowerCase().includes(event.query.toLowerCase())
+		})]
+
+		this.legalEntityList_ForBilling = legalFilter;
+
+	}
 	/*getAllPartNumbers() {
 		this.commonService.smartDropDownList('ItemMaster', 'ItemMasterId', 'partnumber').subscribe(res => {
 			console.log(res);			
@@ -873,7 +904,7 @@ export class PurchaseSetupComponent {
 	// 	}}
 
 	partnmId(parentdata) {
-		console.log(parentdata, event)
+		console.log(parentdata)
 
 		this.showInput = true;
 
@@ -884,8 +915,12 @@ export class PurchaseSetupComponent {
 		//this.allSelectedParts.push(this.itemclaColl[i][0].partId);
 		//this.selectedActionName = event;
 
+
 		const itemMasterId = getValueFromObjectByKey('itemMasterId', parentdata.partNumberId)
+		console.log(itemMasterId);
+
 		this.sourcePoApproval.itemMasterId = itemMasterId;
+
 		this.partWithId = [];
 		this.itemTypeId = 1;
 
@@ -894,8 +929,8 @@ export class PurchaseSetupComponent {
 		this.vendorService.getPartDetailsWithidForSinglePart(this.sourcePoApproval.itemMasterId).subscribe(
 			data1 => {
 				console.log(data1);
-				if (data1[0][0]) {
-					this.partWithId = data1[0][0];
+				if (data1[0]) {
+					this.partWithId = data1[0];
 					parentdata.partId = this.partWithId.itemMasterId;
 					parentdata.altPartNumberId = this.partWithId.partAlternatePartId;
 					parentdata.partDescription = this.partWithId.partDescription;
@@ -1904,21 +1939,24 @@ export class PurchaseSetupComponent {
 	}
 
 	addAvailableParts() {
-		console.log(this.partListData)
-		console.log(this.newData);
+		// console.log(this.partListData)
+		// console.log(this.newData);
 		this.tempNewPNArray = [];
 		let newParentObject = new CreatePOPartsList()
 		if (this.newData) {
 			const data = this.newData.map(x => {
 				if (x.addAllMultiPNRows) {
-					this.partListData = [...this.partListData, {
+
+					const newObject = {
 						...newParentObject,
 						partNumberId: getObjectById('itemMasterId', x.itemMasterId, this.allPartnumbersInfo)
-					}]
+					}
+					this.partnmId(newObject)
+					this.partListData = [...this.partListData, newObject]
+
+
 				}
-				// this.partListData.map(x => {
-				// 	this.partnmId(x)
-				// })
+
 
 
 			})
@@ -3455,8 +3493,8 @@ export class PurchaseSetupComponent {
 	}
 
 	getEmployeeId(obj) {
-		if (obj.employeeId) {
-			return obj.employeeId;
+		if (obj.value) {
+			return obj.value;
 		} else {
 			return 0;
 		}
@@ -3501,7 +3539,13 @@ export class PurchaseSetupComponent {
 			return 0;
 		}
 	}
+    resetAddressShippingForm(){
+		this.addressFormForShipping = new CustomerShippingModel()
+	}
 
+	resetAddressBillingForm(){
+		this.addressFormForBilling = new CustomerShippingModel()
+	}
 	saveShippingAddress() {
 		const data = {
 			...this.addressFormForShipping,
@@ -3514,9 +3558,8 @@ export class PurchaseSetupComponent {
 		if (this.sourcePoApproval.shipToUserTypeId == 1) {
 			const customeraddressData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('customerId', this.sourcePoApproval.shipToUserId) }
 
-
 			this.customerService.newShippingAdd(customeraddressData).subscribe(() => {
-				this.addressFormForShipping = new CustomerShippingModel()
+				// this.addressFormForShipping = new CustomerShippingModel()
 				this.alertService.showMessage(
 					'Success',
 					`Saved  Shipping Information Sucessfully `,
@@ -3529,7 +3572,19 @@ export class PurchaseSetupComponent {
 			const vendoraddressData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId) }
 
 			this.vendorService.newShippingAdd(vendoraddressData).subscribe(() => {
-				this.addressFormForShipping = new CustomerShippingModel()
+				// this.addressFormForShipping = new CustomerShippingModel()
+				this.alertService.showMessage(
+					'Success',
+					`Saved  Shipping Information Sucessfully `,
+					MessageSeverity.success
+				);
+
+			})
+		}
+		if (this.sourcePoApproval.shipToUserTypeId == 3) {
+			const companyaddressData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId) }
+			this.companyService.addNewShippingAddress(companyaddressData).subscribe(() => {
+				// this.addressFormForShipping = new CustomerShippingModel()
 				this.alertService.showMessage(
 					'Success',
 					`Saved  Shipping Information Sucessfully `,
@@ -3548,12 +3603,13 @@ export class PurchaseSetupComponent {
 			updatedBy: this.userName,
 			masterCompanyId: 1,
 			isActive: true,
+			isPrimary: true
 
 		}
 		if (this.sourcePoApproval.billToUserTypeId == 1) {
-			const customeraddressData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('customerId', this.sourcePoApproval.billToUserId) }
+			const customeraddressData = { ...data, customerId: getValueFromObjectByKey('customerId', this.sourcePoApproval.billToUserId) }
 			this.customerService.newBillingAdd(customeraddressData).subscribe(() => {
-				this.addressFormForBilling = new CustomerShippingModel()
+				// this.addressFormForBilling = new CustomerShippingModel()
 				this.alertService.showMessage(
 					'Success',
 					`Saved  Billing Information Sucessfully `,
@@ -3564,8 +3620,8 @@ export class PurchaseSetupComponent {
 		}
 		if (this.sourcePoApproval.billToUserTypeId == 2) {
 			const vendoraddressData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.billToUserId) }
-			this.vendorService.newShippingAdd(vendoraddressData).subscribe(() => {
-				this.addressFormForBilling = new CustomerShippingModel()
+			this.vendorService.addNewBillingAddress(vendoraddressData).subscribe(() => {
+				// this.addressFormForBilling = new CustomerShippingModel()
 				this.alertService.showMessage(
 					'Success',
 					`Saved  Billing Information Sucessfully `,
@@ -3574,7 +3630,18 @@ export class PurchaseSetupComponent {
 
 			})
 		}
+		if (this.sourcePoApproval.billToUserTypeId == 3) {
+			const companyaddressData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourcePoApproval.billToUserId) }
+			this.companyService.addNewBillingAddress(companyaddressData).subscribe(() => {
+				// this.addressFormForBilling = new CustomerShippingModel()
+				this.alertService.showMessage(
+					'Success',
+					`Saved  Billing Information Sucessfully `,
+					MessageSeverity.success
+				);
 
+			})
+		}
 	}
 
 

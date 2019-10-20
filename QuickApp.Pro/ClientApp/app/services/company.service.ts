@@ -29,4 +29,11 @@ export class CompanyService {
         return Observable.forkJoin(
             this.companyEndpoint.getallCompanyData<Company>());
     }
+
+    addNewShippingAddress(object) {
+        return this.companyEndpoint.postNewShippingAddress<any>(object);
+    }
+    addNewBillingAddress(object) {
+        return this.companyEndpoint.postNewBillingAddress<any>(object);
+    }
 }
