@@ -195,6 +195,7 @@ export class WorkflowListComponent implements OnInit {
     }
 
     dismissModel() {
+        if (this.modal != undefined)
         this.modal.close();
     }
 
@@ -274,13 +275,14 @@ export class WorkflowListComponent implements OnInit {
 
     getWorkFlowActions() {
         this.workFlowtService.getWorkFlowMaterial().subscribe(
-            results => console.log(results[0]),
+            results => { },
             error => { }
         );
     }
 
     private setPublicationData(selectedPublication: any, row: any) {
         if (selectedPublication != null) {
+            row.publicationName = selectedPublication.publicationId;
             row.publicationDescription = selectedPublication.description != null ? selectedPublication.description : '';
             row.revisionDate = selectedPublication.revisionDate != null ? new Date(selectedPublication.revisionDate).toLocaleDateString() : '';
             row.publicationType = selectedPublication.publicationTypeId != null ? selectedPublication.publicationTypeId : '';
@@ -539,7 +541,7 @@ export class WorkflowListComponent implements OnInit {
                 this.organiseTaskAndTaskAttributes();
                 this.loadPublicationTypes();
             },
-            error => { console.log(error); }
+            error => {}
         );
     }
 
@@ -554,7 +556,7 @@ export class WorkflowListComponent implements OnInit {
             var chargesTotalChargesCost = 0;
 
             task.charges = this.sourceWorkFlow.charges.filter(x => {
-                if (x.taskId == task.Id) {
+                if (x.taskId == task.Id) {  
                     this.LoadChargesDropDownValues(x);
                     chargesTotalQty += x.quantity == undefined || x.quantity == '' ? 0 : x.quantity;
                     chargesTotalExtendedCost += x.extendedCost == undefined || x.extendedCost == '' ? 0 : x.extendedCost;
@@ -641,36 +643,55 @@ export class WorkflowListComponent implements OnInit {
             });
 
             for (var pub of task.publication) {
-                this.aircraftManufacturerService.getById(pub.aircraftManufacturer).subscribe(
-                    result => {
-                        if (result[0][0] != undefined && result[0][0] != null) {
-                            pub.aircraftManufacturerName = result[0][0].description;
-                        }
-                    },
-                    error => {
-                        [0]
-                    }
-                );
-                this.aircraftmodelService.getById(pub.model).subscribe(
-                    result => {
-                        if (result[0][0] != undefined && result[0][0] != null) {
-                            pub.modelName = result[0][0].modelName;
-                        }
-                    },
-                    error => {
+                if (pub.aircraftManufacturer != null && pub.aircraftManufacturer != '') {
 
-                    }
-                );
-                this.dashNumberService.getDashNumberByModelTypeId(pub.model.toString(), pub.aircraftManufacturer.toString()).subscribe((dashnumberValues) => {
-                    pub.allDashNumbers = '';
+                    this.aircraftManufacturerService.getById(pub.aircraftManufacturer).subscribe(
+                        result => {
+                            for (var task of this.addedTasks) {
+                                for (var publication of task.publication) {
+                                    if (publication.aircraftManufacturer == result[0][0].aircraftTypeId) {
+                                        publication.aircraftManufacturerName = result[0][0].description;
+                                    }
+                                } 
+                            }
+                        },
+                        error => {
 
-                    for (var dashNum of dashnumberValues) {
-                        var workFlowDashNumber = pub.workflowPublicationDashNumbers.filter(x => x.aircraftDashNumberId == dashNum.dashNumberId);
-                        if (workFlowDashNumber.length > 0) {
-                            pub.allDashNumbers += dashNum.dashNumber.toString() + ', ';
                         }
+                    );
+
+                    if (pub.model != null && pub.model != '') {
+                        this.aircraftmodelService.getById(pub.model).subscribe(
+                            result => {
+                                for (var publication of task.publication) {
+                                    if (publication.model == result[0][0].aircraftModelId) {
+                                        publication.modelName = result[0][0].modelName;
+                                    }
+                                }
+                            },
+                            error => {
+
+                            }
+                        );
+
+                        this.dashNumberService.getDashNumberByModelTypeId(pub.model.toString(), pub.aircraftManufacturer.toString()).subscribe((dashnumberValues) => {
+                            for (var publication of task.publication) {
+                                if (dashnumberValues.length > 0 && dashnumberValues[0].aircraftModelId == publication.model && dashnumberValues[0].aircraftTypeId == publication.aircraftManufacturer) {
+                                    publication.allDashNumbers = '';
+
+                                    for (var dashNum of dashnumberValues) {
+                                        var workFlowDashNumber = publication.workflowPublicationDashNumbers.filter(x => x.aircraftDashNumberId == dashNum.dashNumberId);
+                                        if (workFlowDashNumber.length > 0) {
+                                            publication.allDashNumbers += dashNum.dashNumber.toString() + ', ';
+                                        }
+                                    }
+                                }
+                                
+                            }
+                        });
                     }
-                });
+
+                }
 
                 if (this.publications != undefined) {
                     var selectedPublication = this.publications.filter(function (publication) {
@@ -775,9 +796,9 @@ export class WorkflowListComponent implements OnInit {
     }
 
     private LoadParts(): void {
-        this.itemMasterService.getPrtnumberslistList().subscribe(
+        this.itemMasterService.getPartDetailsDropdown().subscribe(
             results => {
-                this.allParts = results[0];
+                this.allParts = results;
             },
             error => { }
         );
@@ -798,6 +819,7 @@ export class WorkflowListComponent implements OnInit {
             this.actionService.getEquipmentAssetType().subscribe(
                 allAssetTypes => {
                     this.assetTypes = allAssetTypes;
+                    this.setEquipmentAssetTypeDropdownText(equipment);
                 },
                 error => {
                 }
@@ -884,7 +906,6 @@ export class WorkflowListComponent implements OnInit {
             this.actionService.GetMaterialMandatory().subscribe(
                 mandatory => {
                     this.materialMandatory = mandatory;
-                    console.log(this.materialMandatory);
                     this.setMaterialMandatoryText(material);
                 },
                 error => {

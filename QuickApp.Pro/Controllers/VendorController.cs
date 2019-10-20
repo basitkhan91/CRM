@@ -215,22 +215,22 @@ namespace QuickApp.Pro.Controllers
             return Ok(allContacts);
 
         }
+
         [HttpGet("AddressGet")]
         [Produces(typeof(List<Address>))]
         public IActionResult GetAddress()
         {
             var alladdresses = _unitOfWork.Address.GetAddresses(); //.GetAllCustomersData();
             return Ok(alladdresses);
-
         }
+
         [HttpGet("Getpartdetails")]
-        [Produces(typeof(List<Address>))]
         public IActionResult Getpartdetails()
         {
             var allPartDetails = _context.ItemMaster.Where(a => a.IsDelete == false || a.IsDelete == null).OrderByDescending(a => a.ItemMasterId).ToList(); //.GetAllCustomersData();
             return Ok(allPartDetails);
-
         }
+
         [HttpGet("getSitesAddress")]
         [Produces(typeof(List<Address>))]
         public IActionResult getSitesAddress()

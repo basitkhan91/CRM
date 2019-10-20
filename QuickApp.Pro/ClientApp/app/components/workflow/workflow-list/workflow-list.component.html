@@ -281,7 +281,7 @@
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label>Other: </label>${{sourceWorkFlow.otherCost != undefined && sourceWorkFlow.otherCost != null && sourceWorkFlow.otherCost > 0 ? '$' + sourceWorkFlow.otherCost.toString() : 0 }}
+                                                <label>Other: </label>{{sourceWorkFlow.otherCost != undefined && sourceWorkFlow.otherCost != null && sourceWorkFlow.otherCost > 0 ? '$' + sourceWorkFlow.otherCost.toString() : 0 }}
                                             </div>
                                         </div>
                                     </div>
@@ -338,7 +338,7 @@
                                     <tbody>
                                         <tr *ngFor="let publication of task.publication;let i = index">
                                             <td>{{(i+1)}}</td>
-                                            <td>{{publication.publicationId}}</td>
+                                            <td>{{publication.publicationName}}</td>
                                             <td>{{publication.publicationDescription}}</td>
                                             <td>{{publication.revisionDate}}</td>
                                             <td>{{publication.publicationTypeName}}</td>
