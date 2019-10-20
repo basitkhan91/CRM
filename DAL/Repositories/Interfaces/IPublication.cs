@@ -9,7 +9,7 @@ namespace DAL.Repositories.Interfaces
 {
     public interface IPublication : IRepository<DAL.Models.Publication>
     {
-        Publication GetPublicationsById(long id);
+        Publication GetPublicationsById(long id); 
         
         IEnumerable<object> GetPubPNMappingData(string id);
         

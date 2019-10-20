@@ -21,7 +21,7 @@ namespace DAL.Models
         public DateTime RevisionDate { get; set; }
         public DateTime ExpirationDate { get; set; }
         public DateTime NextReviewDate { get; set; }
-        public long EmployeeId { get; set; }
+        public long EmployeeId { get; set; } 
         public int VerifiedBy { get; set; }
         public int RevisionNum { get; set; }
         public Nullable<DateTime> VerifiedDate { get; set; }

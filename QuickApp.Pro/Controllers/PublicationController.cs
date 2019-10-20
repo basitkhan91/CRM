@@ -102,7 +102,7 @@ namespace QuickApp.Pro.Controllers
                     publicationobject.RevisionDate = Request.Form["revisionDate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["revisionDate"].ToString(), "dd/MM/yyyy", null);
                     publicationobject.NextReviewDate = Request.Form["nextreviewDate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["nextreviewDate"].ToString(), "dd/MM/yyyy", null);
                     publicationobject.ASD = Request.Form["ASD"];
-                    publicationobject.Publishby = Request.Form["publishby"];
+                    publicationobject.Publishby = Request.Form["publishby"]; 
                     publicationobject.Location = Request.Form["location"];
                     publicationobject.VerifiedBy = Convert.ToInt32(Request.Form["verifiedby"]);
                     publicationobject.VerifiedDate = Request.Form["verifieddate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["verifieddate"].ToString(), "dd/MM/yyyy", null);

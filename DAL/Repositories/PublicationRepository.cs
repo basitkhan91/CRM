@@ -1163,7 +1163,7 @@ namespace DAL.Repositories
             {
             }
             return publications;
-        }
+        } 
 
         public IEnumerable<object> PublicationHistory(long publicationId)
         {

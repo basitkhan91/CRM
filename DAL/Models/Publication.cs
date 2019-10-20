@@ -9,7 +9,7 @@ namespace DAL.Models
 {
     public class Publication :IAudit
     {
-
+         
         [Key]
         public long PublicationRecordId { get; set; }
         public DateTime EntryDate { get; set; }
