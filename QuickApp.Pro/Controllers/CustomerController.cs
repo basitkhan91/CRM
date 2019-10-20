@@ -1758,7 +1758,7 @@ namespace QuickApp.Pro.Controllers
 
 		#region ATA Chapter
 		[HttpGet("getCustomerATAMapped/{customerId}")]
-		[Produces(typeof(List<CustomerATAMapping>))]
+		[Produces(typeof(List<CustomerATAMapping>[]))]
 		public IActionResult ataMapped(long customerId)
 		{
 			var result = _unitOfWork.Customer.GetATAMapped(customerId);
