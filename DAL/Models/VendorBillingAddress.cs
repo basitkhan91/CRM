@@ -6,30 +6,25 @@ using System.Text;
 
 namespace DAL.Models
 {
-    public class JobType : IAudit
-    {
+    public class VendorBillingAddress: TempAddress
+	{
         [Key]
-        public Int16 JobTypeId { get; set; }
-
-        public string JobTypeName { get; set; }
-        public string jobTypeDescription { get; set; }
-
+        public long VendorBillingAddressId { get; set; }
+        public long VendorId { get; set; }
+		[ForeignKey("AddressId")]
+		public long AddressId { get; set; }
+        public string SiteName { get; set; }
+        public bool? IsPrimary { get; set; }
         [ForeignKey("MasterCompanyId")]
-        public Int32 MasterCompanyId { get; set; }
-
+        public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
-
         public string UpdatedBy { get; set; }
-
         public DateTime CreatedDate { get; set; }
-
         public DateTime UpdatedDate { get; set; }
-
         public bool IsActive { get; set; }
-
         public bool IsDeleted { get; set; }
+		
 
-        public virtual MasterCompany MasterCompany { get; set; }
 
-    }
+	}
 }

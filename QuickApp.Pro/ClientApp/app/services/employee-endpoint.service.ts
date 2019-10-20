@@ -48,7 +48,8 @@ export class EmployeeEndpoint extends EndpointFactory {
 	private readonly _shiftsurl: string = "/api/Employee/saveShifts";
     private readonly _getMultiLeaveListUrl: string = "/api/Employee/GetLeaveData";
     private readonly _getAllEmployeeInfoURL: string = "/api/Employee/GetAllEmployeeInfo";
-    private readonly _getEmpTrainingInfo: string = "/api/Employee/EmpTrainingGet";
+	private readonly _getEmpTrainingInfo: string = "/api/Employee/EmpTrainingGet";
+	private readonly _getEmpDataByid: string = "/api/Employee/employeedata";
  
     
 
@@ -71,6 +72,7 @@ export class EmployeeEndpoint extends EndpointFactory {
 	get getemployeeshiftsListUrl() { return this.configurations.baseUrl + this._getemployeeshifturl; }
 	get getemployeeleaveListUrl() { return this.configurations.baseUrl + this._getemployeeLeaveurl; }
 	get getLeavesListUrl() { return this.configurations.baseUrl + this._getMultiLeaveListUrl; }
+	get getEmpDataByid() { return this.configurations.baseUrl + this._getEmpDataByid; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -361,6 +363,14 @@ export class EmployeeEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getAllEmployeesInfo());
             });
 
+	}
+	
+	getEmployeeDataById<T>(employeeId): Observable<T> {
+        let endpointUrl = `${this._getEmpDataByid}/${employeeId}`;
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getEmployeeDataById(employeeId));
+            });
     }
 }
 

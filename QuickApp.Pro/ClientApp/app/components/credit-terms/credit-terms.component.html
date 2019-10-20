@@ -166,7 +166,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                 </div>
                                 <div class="col-sm-5">
                                	   <select [(ngModel)]="addNewCreditTerm.percentage" name="percentage" required >
-                                        <option *ngFor="let per of percentageList" [ngValue]="per.value">{{per.name}}</option>
+                                           <option *ngFor="let per of percentageList" [ngValue]="per.percentValue">{{per.percentValue}}</option>
                                    </select>
                                 </div>
                             </div>

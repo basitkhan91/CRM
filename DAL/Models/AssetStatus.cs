@@ -11,7 +11,7 @@ namespace DAL.Models
         [Key]
         public long AssetStatusId { get; set; }
 
-        [Required(ErrorMessage= "Id Is Required.")]
+        [Required(ErrorMessage= "Code Is Required.")]
         public string Code { get; set; }
 
         [Required(ErrorMessage = "Name Is Required.")]

@@ -339,4 +339,7 @@ export class ItemMasterService {
     getPartDetailsDropdown<T>() {
         return this.itemMasterEndpoint.getPartDetailsDropdown<any[]>();
     }
+    getPartDetailsByid(partListArray: number) {
+        return this.itemMasterEndpoint.getPartDetailsByid<any>(partListArray);
+    }
 }

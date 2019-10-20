@@ -1,6 +1,6 @@
 // used to pass (field/key) and value and original Data and get  Filtered Data Bases on the (value/input) you give 
 export function getObjectByValue(field: string, value: string, originalData: any) {
-    if ((field !== '' || field !== undefined) && (value !== '' || value !== undefined) && (originalData !== undefined)) {
+    if ((field !== '' || field !== undefined) && (value !== '' || value !== undefined) && (originalData !== undefined && originalData.length > 0)) {
         const data = originalData.filter(x => {
             if (x[field] === value) {
                 return x;
@@ -12,12 +12,12 @@ export function getObjectByValue(field: string, value: string, originalData: any
 }
 // used to pass  (field/key) and id and original Data and get  Filtered Data Bases on the (id/input) you give 
 export function getObjectById(field: string, id: any, originalData: any) {
-    if ((field !== '' || field !== undefined) && (id !== '' || id !== undefined) && (originalData !== undefined)) {
+    console.log(field, id, originalData)
+
+    if ((field !== '' || field !== undefined) && (id !== '' || id !== undefined) && (originalData !== undefined && originalData.length > 0)) {
         const data = originalData.filter(x => {
 
             if (parseInt(x[field]) === parseInt(id)) {
-
-
                 return x;
             }
         })
@@ -32,7 +32,7 @@ export function getValueFromObjectByKey(field: string, object: any) {
 }
 // pass the (field/key) and (idField) where to Match with the  (id/input) from Original Data and particular value of key after Filter
 export function getValueFromArrayOfObjectById(field: string, idField: string, id: any, originalData: any) {
-    if ((field !== '' || field !== undefined) && (idField !== '' || idField !== undefined) && (id !== '' || id !== undefined) && (originalData !== undefined)) {
+    if ((field !== '' || field !== undefined) && (idField !== '' || idField !== undefined) && (id !== '' || id !== undefined) && (originalData !== undefined && originalData.length > 0)) {
         const data = originalData.filter(x => {
             if (parseInt(x[idField]) === parseInt(id)) {
                 return x;
@@ -80,7 +80,7 @@ export function validateRecordExistsOrNot(field: string, currentInput: any, orig
         validData = validateRecordExistsOrNotOnEdit(field, currentInput, editModeDataObject)
     }
     if (validData || editModeDataObject == undefined) {
-        if ((field !== '' || field !== undefined) && (currentInput !== '' || currentInput !== undefined) && (originalData !== undefined)) {
+        if ((field !== '' || field !== undefined) && (currentInput !== '' || currentInput !== undefined) && (originalData !== undefined && originalData.length > 0)) {
             if (typeof (currentInput) === 'string') {
                 const data = originalData.filter(x => {
                     return x[field].toLowerCase() === currentInput.toLowerCase().trim()
@@ -89,11 +89,13 @@ export function validateRecordExistsOrNot(field: string, currentInput: any, orig
             } else if (typeof (currentInput) === 'number') {
                 const data = originalData.filter(x => {
 
-                    return x[field] === currentInput
+                    return parseInt(x[field]) === currentInput
                 })
                 return data;
             }
 
+        } else {
+            return [];
         }
     } else {
         return [];

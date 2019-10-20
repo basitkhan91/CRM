@@ -108,8 +108,8 @@ export class JobTypeComponent implements OnInit {
     getJobTypeList() {
         this.jobTypeService.getAllJobTypeList().subscribe(res => {
             const responseData = res[0];
-            this.jobTypeData = responseData.columnData;
-            this.totalRecords = responseData.totalRecords;
+            this.jobTypeData = responseData;
+            this.totalRecords = responseData.length;
             this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
         })
     }
@@ -134,9 +134,8 @@ export class JobTypeComponent implements OnInit {
 
     filterJobTypes(event) {
         this.jobTypeList = this.jobTypeData;
-
         const jobTypeData = [...this.jobTypeData.filter(x => {
-            return x.classificationName.toLowerCase().includes(event.query.toLowerCase())
+            return x.jobTypeName.toLowerCase().includes(event.query.toLowerCase())
         })]
         this.jobTypeList = jobTypeData;
     }
@@ -191,8 +190,7 @@ export class JobTypeComponent implements OnInit {
         this.disableSaveForJobType = false;
 
         this.addNewJobType = {
-            ...rowData, jobTypeName: getObjectById('jobTypeId', rowData.jobTypeId, this.jobTypeData),
-            jobTypeDescription: getObjectById('jobTypeId', rowData.jobTypeId, this.jobTypeData)
+            ...rowData, jobTypeName: getObjectById('jobTypeId', rowData.jobTypeId, this.jobTypeData)
         };
         this.selectedRecordForEdit = { ...this.addNewJobType }
 
@@ -228,7 +226,7 @@ export class JobTypeComponent implements OnInit {
 
     deleteConformation(value) {
         if (value === 'Yes') {
-            this.jobTypeService.deleteAcion(this.selectedRowforDelete.vendorClassificationId).subscribe(() => {
+            this.jobTypeService.deleteAcion(this.selectedRowforDelete.jobTypeId).subscribe(() => {
                 this.getJobTypeList();
                 this.alertService.showMessage(
                     'Success',
@@ -242,10 +240,10 @@ export class JobTypeComponent implements OnInit {
     }
 
     
-    getAuditHistoryById(rowData) { /*
+    getAuditHistoryById(rowData) {
         this.jobTypeService.getJobTypeAudit(rowData.jobTypeId).subscribe(res => {
-            this.auditHistory = res;
-        }) */
+            this.auditHistory = res[0].result;
+        })
     }
     
 

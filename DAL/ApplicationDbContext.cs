@@ -336,6 +336,7 @@ namespace DAL
         public DbSet<ItemClassficationAudit> ItemClassificationAudit { get; set; }
         public DbSet<ItemgroupAudit> ItemGroupAudit { get; set; }
         public DbSet<JobTitleAudit> JobTitleAudit { get; set; }
+        public DbSet<JobTypeAudit> JobTypeAudit { get; set; }
         public DbSet<PriorityAudit> PriorityAudit { get; set; }
         public DbSet<WarehouseAudit> WarehouseAudit { get; set; }
         public DbSet<LocationAudit> LocationAudit { get; set; }
@@ -408,6 +409,12 @@ namespace DAL
         public DbSet<Percent> Percent { get; set; }
         public DbSet<PurchaseOrderApprover> PurchaseOrderApprover { get; set; }
         public DbSet<PurchaseOrderApproverList> PurchaseOrderApproverList { get; set; }
+        public DbSet<POBillingShippingAddress> POBillingShippingAddress { get; set; }
+        public DbSet<PurchaseOrderAddress> PurchaseOrderAddress { get; set; }
+        public DbSet<VendorBillingAddress> VendorBillingAddress { get; set; }
+        public DbSet<PurchaseOrderShipVia> PurchaseOrderShipVia { get; set; }
+        public DbSet<CompanyBillingAddress> CompanyBillingAddress { get; set; }
+        public DbSet<CompanyShippingAddress> CompanyShippingAddress { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {

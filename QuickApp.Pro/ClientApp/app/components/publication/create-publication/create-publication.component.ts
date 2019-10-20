@@ -119,8 +119,10 @@ export class CreatePublicationComponent implements OnInit {
   // table columns for ata
 
   atacols = [
-    { field: 'ataChapter', header: 'AtaChapter' },
-    { field: 'ataSubChapter', header: 'AtaSubChapter' }
+    { field: 'ataChapter', header: 'ATA Chapter' },
+    { field: 'ataChapterCode', header: 'ATA Chapter Code' },
+    { field: 'ataSubChapter', header: 'ATA SubChapter' },
+    { field: 'ataSubChapterCode', header: 'ATA SubChapter Code' }
   ];
   status = [
     { label: 'Select Status ', value: 'Select Status' },
@@ -685,7 +687,7 @@ export class CreatePublicationComponent implements OnInit {
     }
   }
 
-  async searchAircraftInformation() {
+  async searchAircraftInformation() {    
     await this.searchByFieldUrlCreateforAircraftInformation();
 
     this.searchParams = '';
@@ -735,6 +737,9 @@ export class CreatePublicationComponent implements OnInit {
           };
         })
       });
+      this.selectAircraftManfacturer = [];
+      this.selectedAircraftModel = [];
+      this.selectedDashNumbers = [];
   }
 
   // get atachapter by publication id
@@ -749,8 +754,9 @@ export class CreatePublicationComponent implements OnInit {
             ataChapter: x.ataChapterName,
             ataSubChapter: x.ataSubChapterDescription,
             ataChapterCode: x.ataChapterCode,
-            ataSubChapterId: x.ataSubChapterId,
-            ataChapterId: x.ataChapterId
+            ataSubChapterCode: x.ataSubChapterCode,
+            //ataSubChapterId: x.ataSubChapterId,
+            //ataChapterId: x.ataChapterId
           };
         });
       });
@@ -870,6 +876,8 @@ export class CreatePublicationComponent implements OnInit {
           };
         });
       });
+      this.selectedATAchapter = [];
+      this.selectedATASubChapter = [];
   }
 
   onDeletePNMappingRow(rowData) {
@@ -877,6 +885,7 @@ export class CreatePublicationComponent implements OnInit {
   }
 
   deleteConformation(value) {
+    console.log(this.selectedRowforDelete);    
     if (value === 'Yes') {
       this.publicationService.deleteItemMasterMapping(this.selectedRowforDelete.publicationItemMasterMappingId).subscribe(() => {
         this.publicationService

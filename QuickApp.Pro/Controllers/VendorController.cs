@@ -2838,6 +2838,58 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [HttpPost("createvendorbillingaddress")]
+        public IActionResult CreateVendorBillingAddress([FromBody] VendorBillingAddress billingAddress)
+        {
+            if(ModelState.IsValid)
+            {
+                billingAddress.VendorBillingAddressId= _unitOfWork.Vendor.CreateVendorBillingAddress(billingAddress);
+                return Ok(billingAddress);
+            }
+            return BadRequest(ModelState);
+        }
+
+        [HttpPost("updatevendorbillingaddress")]
+        public IActionResult UpdateVendorBillingAddress([FromBody] VendorBillingAddress billingAddress)
+        {
+            if (ModelState.IsValid)
+            {
+                 _unitOfWork.Vendor.UpdateVendorBillingAddress(billingAddress);
+                return Ok(billingAddress);
+            }
+            return BadRequest(ModelState);
+        }
+
+
+        [HttpGet("deletevendorbillingaddress")]
+        public IActionResult DeleteVendorBillingAddress(long billingAddressId, string updatedBy)
+        {
+                _unitOfWork.Vendor.DeleteVendorBillingAddress(billingAddressId, updatedBy);
+                return Ok();
+        }
+
+        [HttpGet("vendorbillingaddressstatus")]
+        public IActionResult VendorBillingAddressStatus(long billingAddressId, bool status, string updatedBy)
+        {
+            _unitOfWork.Vendor.VendorBillingAddressStatus(billingAddressId, status, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("vendorbillingaddress")]
+        public IActionResult GetVendorBillingAddress()
+        {
+            _unitOfWork.Vendor.GetVendorBillingAddress();
+            return Ok();
+        }
+
+        [HttpGet("vendorbillingaddressbyid")]
+        public IActionResult VendorBillingAddressById(long billingAddressId)
+        {
+            _unitOfWork.Vendor.VendorBillingAddressById(billingAddressId);
+            return Ok();
+        }
+
+
 
         #endregion
 

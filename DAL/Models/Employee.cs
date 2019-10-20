@@ -16,6 +16,10 @@ namespace DAL.Models
         public string StationId { get; set; }
         public Int16? JobTitleId { get; set; }
         public Int16? JobTypeId { get; set; }
+        public long? LegalEntityId { get; set; }
+
+
+        
 
         public Int16? EmployeeExpertiseId { get; set; }
         public DateTime? DateOfBirth { get; set; }
@@ -39,18 +43,18 @@ namespace DAL.Models
         public Byte? EmployeeLeaveTypeId { get; set; }
         public long? SupervisorId { get; set; }
 
-        public int CompanyId  { get; set; }
+    
         //public string shift { get; set; }
         [ForeignKey("MasterCompanyId")]
         public Int32 MasterCompanyId { get; set; }
 
         public bool? IsActive { get; set; }
 
-        public bool? IsDelete { get; set; }
+        public bool? IsDeleted { get; set; }
         public long? ManagementStructureId { get; set; }
 
         public virtual MasterCompany MasterCompany { get; set; }
-
+        public virtual EmployeeLeaveTypeMapping EmployeeLeaveTypeMapping { get; set; }
 
         public virtual EmployeeShiftMapping EmployeeShiftMapping { get; set; }
 

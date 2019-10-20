@@ -1,23 +1,16 @@
-﻿using DAL.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
-namespace QuickApp.Pro.ViewModels
+namespace DAL.Models
 {
-
-    public class JobTypeViewModel
+    public class JobTypeAudit
     {
-
-        public int JobTypeId { get; set; }
-
-        public string JobTypeName{ get; set; }
-
+        [Key]
+        public long JobTypeAuditId { get; set; }
+        public Int16 JobTypeId { get; set; }
+        public string JobTypeName { get; set; }
         public string jobTypeDescription { get; set; }
-
         public Int32 MasterCompanyId { get; set; }
-
 
         public string CreatedBy { get; set; }
 
@@ -30,8 +23,5 @@ namespace QuickApp.Pro.ViewModels
         public bool IsActive { get; set; }
 
         public bool IsDeleted { get; set; }
-
     }
-
-
-    }
+}

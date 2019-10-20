@@ -60,6 +60,7 @@ import { AircraftManufacturerService } from "../services/aircraft-manufacturer/a
 import { DashNumberService } from "../services/dash-number/dash-number.service";
 import { DashNumberEndpointService } from "../services/dash-number/dash-number-endpoint.service";
 import { CustomerDocumentsComponent } from "../components/customer/customer-documents/customer-documents.component";
+import { CommonService } from "../services/common.service";
 
 
 
@@ -110,7 +111,8 @@ import { CustomerDocumentsComponent } from "../components/customer/customer-docu
         AircraftManufacturerEndpointService,
         AircraftManufacturerService,
         DashNumberService,
-        DashNumberEndpointService
+        DashNumberEndpointService,
+        CommonService
 
     ],
     entryComponents: [

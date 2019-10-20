@@ -76,7 +76,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
     private readonly _updateItemMasterSerialzed: string = '/api/itemmaster/itemMasterSerialized';
     private readonly _updateItemMasterTimeLife: string = '/api/itemmaster/itemMasterTimeLife';
     private readonly _getPartsDropDown: string = '/api/itemmaster/GetPartDetailsDropDown';
-
+    private readonly _getpartdetailsWithidUrl: string = "/api/ItemMaster/GetpartdetailsWithid";
 
     get getItemMasterAircrafPosttUrl() { return this.configurations.baseUrl + this._ItemMasterAircraftPostUrlNew }
     get getAircraftUrl() { return this.configurations.baseUrl + this._getAircraftUrl }
@@ -105,6 +105,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
     get UpdateItemMasterSerialzedURL() { return this.configurations.baseUrl + this._updateItemMasterSerialzed }
     get UpdateItemMasterTimeLifeURL() { return this.configurations.baseUrl + this._updateItemMasterTimeLife }
     get GetPartsDropDownURL() { return this.configurations.baseUrl + this._getPartsDropDown }
+    get getpartdetailsWithidUrl() { return this.configurations.baseUrl + this._getpartdetailsWithidUrl };
 
 
 
@@ -943,6 +944,11 @@ export class ItemMasterEndpoint extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.getPartDetailsDropdown<T>());
             });
+    getPartDetailsByid<T>(action: any): Observable<T> {
+        return this.http.get<T>(`${this.getpartdetailsWithidUrl}/${action}`, this.getRequestHeaders())
+            .catch(err => {
+                return this.handleError(err, () => this.getPartDetailsByid(action));
+            })
     }
 
 }
