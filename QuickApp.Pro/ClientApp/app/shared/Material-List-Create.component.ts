@@ -52,9 +52,11 @@ export class MaterialListCreateComponent implements OnInit {
     defaultMaterialMandatory: string;
 
     ngOnInit(): void {
-
         this.row = this.workFlow.materialList[0];
-
+        if (this.row == undefined) {
+            this.row = {};
+        }
+        this.row.taskId = this.workFlow.taskId;
         this.actionService.GetMaterialMandatory().subscribe(
             mandatory => {
                 this.materialMandatory = mandatory;
@@ -123,7 +125,7 @@ export class MaterialListCreateComponent implements OnInit {
                 material.partDescription = '';
                 material.partNumber = '';
                 material.itemClassificationId = '';
-                event = '';      
+                event = '';
                 this.alertService.showMessage("Workflow", "Part Number is already in use in Material List.", MessageSeverity.error);
                 return;
             }

@@ -21,6 +21,7 @@ export class AssetStatusEndpointService extends EndpointFactory {
     private readonly removeByIdURL: string = "/api/assetstatus/removeById";
     private readonly updateForActive: string = "/api/assetstatus/updateActive";
     private readonly getAssetAuditById: string = "/api/assetstatus/audits";
+    private readonly excelUpload: string = "/api/assetstatus/UploadAssetStatusCustomData";
 
 
     get getAll() { return this.configurations.baseUrl + this.getAllURL; }
@@ -95,6 +96,12 @@ export class AssetStatusEndpointService extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.getAssetStatusAuditById(assetId));
             });
+    }
+
+    AssetStatusCustomUpload(file) {
+        return this.http.post(`${this.configurations.baseUrl}${this.excelUpload}`, file)
+
+
     }
     
 }

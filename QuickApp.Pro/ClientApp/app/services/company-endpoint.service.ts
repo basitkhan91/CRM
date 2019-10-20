@@ -5,12 +5,12 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import { EndpointFactory } from './endpoint-factory.service';
 import { ConfigurationService } from './configuration.service';
-    
+
 @Injectable()
 export class CompanyEndpoint extends EndpointFactory {
 
     private readonly _getCompany: string = "/api/company/get";
-    
+
     get getCompanyUrl() { return this.configurations.baseUrl + this._getCompany; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -25,7 +25,29 @@ export class CompanyEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getCustomerEndpoint(companyid));
             });
     }
-    
+    getallCompanyData<T>(): Observable<T> {
+
+        return this.http.get<T>(this.getCompanyUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getallCompanyData());
+            });
+    }
+
+    postNewShippingAddress<T>(object) {
+        let url = `${this.configurations.baseUrl}/api/Company/createcompanyshippingaddress`
+        return this.http.post<T>(url, JSON.stringify(object), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.postNewShippingAddress(object));
+            });
+    }
+    postNewBillingAddress<T>(object) {
+        let url = `${this.configurations.baseUrl}/api/Company/companybillingaddressbyid`
+        return this.http.post<T>(url, JSON.stringify(object), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.postNewBillingAddress(object));
+            });
+    }
+
 }
 
 

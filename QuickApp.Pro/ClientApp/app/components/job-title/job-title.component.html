@@ -8,11 +8,11 @@
                             <h3 class="po-head lead">Job Titles</h3>
                             &nbsp;&nbsp;
                             <a class="plusicon-cstm new-margin" pTooltip="Add Job Titles" tooltipPosition="right"
-                                data-target="#addJobtitles" data-toggle="modal" (click)="resetJobtitlesForm()">
+                                data-target="#addJobtitles" data-toggle="modal" (click)="resetJobTitleForm()">
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
                         </div>
-                        <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="jobtitlesData" [first]="0"
+                        <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="jobTitleData" [first]="0"
                             [rows]="pageSize" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]"
                             [columns]="selectedColumns" selectionMode="multiple" (onPage)="changePage($event)"
                             [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true"
@@ -86,7 +86,7 @@
                                                 <i class="fa fa-eye"></i>
                                             </a>
                                         </span>
-                                        <button class="btn-edit" mat-icon-button (click)="editJobtitles(rowData)"
+                                        <button class="btn-edit" mat-icon-button (click)="editJobTitle(rowData)"
                                             data-target="#addJobtitles" data-toggle="modal" matTooltip="Edit">
                                             <mat-icon>edit</mat-icon>
                                         </button>
@@ -162,7 +162,7 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" (click)="resetJobtitlesForm()" data-dismiss="modal">&times;</button>
+                <button type="button" class="close" (click)="resetJobTitleForm()" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">{{isEdit ? 'Edit' : 'Add' }} Job Titles </h4>
             </div>
             <div class="modal-body">
@@ -174,24 +174,24 @@
                                 </label>
                             </div>
                             <div class="col-sm-5">
-                                <p-autoComplete field="description" [(ngModel)]="addnewJobtitles.description"
-                                    (onSelect)="selectedJobtitles($event)" name="description"
-                                    (onKeyUp)="checkJobtitlesExists('description', $event.target.value)"
-                                    [suggestions]="JobtitlesList" (completeMethod)="filterDescription($event)"
+                                <p-autoComplete field="description" [(ngModel)]="addNewJobTitle.description"
+                                    (onSelect)="selectedJobTitle($event)" name="description"
+                                    (onKeyUp)="checkJobTitleExists('description', $event.target.value)"
+                                    [suggestions]="jobTitleList" (completeMethod)="filterJobTitles($event)"
                                     [size]="30" [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
 
                                 </p-autoComplete>
-                                <div *ngIf="disableSaveForJobtitles" class="clr-red">Already Exists</div>
+                                <div *ngIf="disableSaveForJobTitle" class="clr-red">Already Exists</div>
                                 <div class="clear"></div>
                             </div>
                         </div>
                         <div class="col-sm-12">
                             <div class="col-sm-4">
-                                <label for="description" class="control-label">Memo</label>
+                                <label for="memo" class="control-label">Memo</label>
                             </div>
                             <div class="col-sm-5">
-                                <textarea class="text-item" #memo="ngModel" id="memo" name="memodescription"
-                                    [(ngModel)]="addnewJobtitles.memo" minlength="2"></textarea>
+                                <textarea class="text-item" #memo="ngModel" id="memo" name="memo"
+                                    [(ngModel)]="addNewJobTitle.memo" minlength="2"></textarea>
                             </div>
                         </div>
                     </div>
@@ -199,7 +199,7 @@
                         <div class="col-sm-6">
                             <div class="checkbox-cstm">
                                 <label>
-                                    <input type="checkbox" name="isActive" [(ngModel)]="addnewJobtitles.isActive">
+                                    <input type="checkbox" name="isActive" [(ngModel)]="addNewJobTitle.isActive">
                                     <span class="cr">
                                         <i class="cr-icon pi pi-check"></i>
                                     </span>
@@ -213,10 +213,10 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary-cstm" data-dismiss="modal"
-                    [disabled]="jobtitle.invalid || disableSaveForJobtitles " (click)="saveJobtitles();">
+                    [disabled]="jobtitle.invalid || disableSaveForJobTitle " (click)="saveJobTitle();">
                     {{isEdit ? 'Update' : 'Save' }}</button>
                 <button type="button" class="btn btn-danger-cstm" data-dismiss="modal"
-                    (click)="resetJobtitlesForm()">Close</button>
+                    (click)="resetJobTitleForm()">Close</button>
             </div>
         </div>
 
@@ -246,8 +246,6 @@
                         </thead>
                         <tbody *ngIf="existingRecordsResponse.length> 0">
                             <tr *ngFor="let ext of existingRecordsResponse; let i = index;">
-
-                                <!-- <td >{{audit.unitOfMeasureAuditId}}</td> -->
                                 <td>{{ext.description}}</td>
                                 <td>{{ext.memo}}</td>
                             </tr>
@@ -288,17 +286,15 @@
                             </tr>
                         </thead>
                         <tbody *ngIf="auditHistory.length> 0">
-                            <tr *ngFor="let audit of auditHistory; let i = index;">
 
-                                <td
-                                    [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].description === audit.description ? 'black' : 'red'  }">
-                                    {{audit.description}}</td>
-                                <td
-                                    [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].memo === audit.memo ? 'black' : 'red'  }">
-                                    {{audit.memo}}</td>
-                                <td
-                                    [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].isActive === audit.isActive ? 'black' : 'red'  }">
-                                    {{audit.isActive}}</td>
+
+
+                            <tr *ngFor="let audit of auditHistory; let i = index;">
+                                <!-- auditHistory[i>0 ? i-1 : i] -->
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'description', audit.description)  ? 'black' : 'red'  }">{{audit.description}}</td>
+                          
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'memo', audit.memo)  ? 'black' : 'red'  }">{{audit.memo}}</td>
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
                                 <td>{{audit.updatedBy}}</td>
                                 <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
                             </tr>

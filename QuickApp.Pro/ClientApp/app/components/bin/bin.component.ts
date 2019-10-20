@@ -70,6 +70,7 @@ export class BinComponent {
 	private isEditMode: boolean = false;
 	private isDeleteMode: boolean = false;
 	dataSource: MatTableDataSource<any>;
+	totalRecords: number;
 	showLable: boolean;
 	closeCmpny: boolean = true;
 	loadingIndicator: boolean;
@@ -119,8 +120,10 @@ export class BinComponent {
 	localCollection: any[] = [];
 	disableSaveManufacturer: boolean = false;
     selectedBin: any;
-    AuditDetails: SingleScreenAuditDetails[];
-    IS
+    AuditDetails: any[];
+	HasAuditDetails: boolean;
+	AuditHistoryTitle: string = 'History of Bin'
+
 	ngOnInit(): void {
 		this.cols = [
 			{ field: 'name', header: 'Bin Name' },
@@ -148,6 +151,7 @@ export class BinComponent {
 		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-bin';
 		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
 		this.selectedColumns = this.cols;
+		this.HasAuditDetails = false;
 	}
 
 	@ViewChild(MatPaginator) paginator: MatPaginator;
@@ -486,9 +490,6 @@ export class BinComponent {
 
 	managementStructureClick(data)
 	{
-		console.log(this.selectedNodeTest);
-		//console.log(this.localSelectedManagement);
-
 		this.testLocalNodeSlect = this.selectedNodeTest;
 	}
 
@@ -511,6 +512,7 @@ export class BinComponent {
 		this.loadingIndicator = false;
 		this.dataSource.data = getBinList;
 		this.allBins = getBinList;
+		this.totalRecords = getBinList ? getBinList.length : 0;
 
 	}
 
@@ -731,6 +733,11 @@ export class BinComponent {
 	//EditItem
 	editItemAndCloseModel() {
 		this.isSaving = true;
+		
+		var selectedNodes =  ( this.selectedNodeTest && this.selectedNodeTest.length > 0 ) 
+									? this.selectedNodeTest.slice()
+									: [];
+
 		if (this.isEditMode == false)
 		{
 			this.showAddress = false;
@@ -742,7 +749,7 @@ export class BinComponent {
 			this.workFlowtService.newBin({...this.sourceBin,isDelete: this.isDeleteMode}).subscribe(data => {
 				this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 				if (data != null) {
-					this.saveManagement(data.binId, this.selectedNodeTest); //pushing Site Management Need Site Value so after getting SiteId we are calling
+					this.saveManagement(data.binId, selectedNodes); //pushing Site Management Need Site Value so after getting SiteId we are calling
 				}
 			});
 			this.loadData();
@@ -756,21 +763,16 @@ export class BinComponent {
 			this.sourceBin.masterCompanyId = 1;
 			this.workFlowtService.updateBin(this.sourceBin).subscribe( //Update
 				response => this.saveCompleted(this.sourceBin),
-                error => this.saveFailedHelper(error));
-            if (this.selectedNodeTest && this.selectedNodeTest.length > 0)
-            {
-                this.workFlowtService.deleteManagementBin(this.selectedNodeTest).subscribe(data => {
-                    //alert("getting delete");
-                });
-            }
+				error => this.saveFailedHelper(error));
+			
+			
 
-            if (this.selectedNodeTest && this.selectedNodeTest.length > 0)
-            {
-                this.saveManagement(this.selectedNodeTest[0].data.binId, this.selectedNodeTest); // will call ManagementSite Edit Data
-            }
-			
-			
-			this.selectedNodeTest = []; //after Edit making empty
+			this.workFlowtService.deleteManagementBinById(this.sourceBin.binId).subscribe(data => {
+				console.log('deleted structure successfull');
+				this.saveManagement(this.sourceBin.binId, selectedNodes); 
+			});
+
+			this.selectedNodeTest = [];
 		}
 
 		this.modal.close();
@@ -813,12 +815,13 @@ export class BinComponent {
     }
 
     auditBin(binId: number): void {
-        this.AuditDetails = [];
+		this.AuditDetails = [];
+		this.HasAuditDetails = this.AuditDetails.length > 0;
         this.workFlowtService.getBinAudit(binId).subscribe(audits => {
             if (audits.length > 0) {
-                this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["binAuditId", "binId", "createdBy", "createdDate", "updatedDate"];
-            }
+                this.AuditDetails = audits[0].result;
+				this.HasAuditDetails =  this.AuditDetails.length > 0;;
+			}
         });
     }
 }

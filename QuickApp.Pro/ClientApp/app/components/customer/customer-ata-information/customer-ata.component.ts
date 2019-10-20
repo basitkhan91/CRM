@@ -162,7 +162,7 @@ export class CustomerATAInformationComponent implements OnInit {
     // get mapped ata by customer id 
     getMappedATAByCustomerId() {
         // const id = this.savedGeneralInformationData.customerId;
-        this.customerService.getMappedATADetails(this.id).subscribe(res => {
+        this.customerService.getATAMappedByCustomerId(this.id).subscribe(res => {
             this.ataListDataValues = res;
             console.log(res);
 
@@ -253,8 +253,12 @@ export class CustomerATAInformationComponent implements OnInit {
             });
     }
 
-    deleteATAMapping(customerATAMappingId) {
-        this.customerService.deleteATAMappings(customerATAMappingId).subscribe(res => {
+
+
+
+
+    deleteATAMapping(rowData) {
+        this.customerService.deleteATAMappedByContactId(rowData.customerContactATAMappingId).subscribe(res => {
             this.alertService.showMessage(
                 'Success',
                 'Successfully Deleted ATA Mapped Data',

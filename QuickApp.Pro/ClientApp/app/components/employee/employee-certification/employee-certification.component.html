@@ -69,6 +69,7 @@
                                                         <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.certificationDate"></p-calendar>
                                                     </div>
                                                 </div>
+
                                                 <div class="form-group col-sm-12">
                                                     <label class="control-label col-sm-4">Certification In Force?</label>
                                                     <div class="col-sm-7">
@@ -76,16 +77,32 @@
 
                                                     </div>
                                                 </div>
-                                                <!--  <div class="form-group col-sm-12">
-           <label class="control-label col-sm-4">Certification In Expired?</label>
-           <div class="col-sm-7">
-               <input class="form-control datepicker" type="checkbox" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.IsExpirationDate">
+                                                <div class="form-group col-sm-12">
+                                                    <label class="control-label col-sm-4">Certification Expiry Date</label>
+                                                    <div class="col-sm-7">
+                                                        <!--<input class="form-control datepicker" type="date" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.certificationDate">-->
 
-           </div>
-       </div>-->
+                                                        <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.ExpirationDate"></p-calendar>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-sm-12">
+                                                    <label class="control-label col-sm-4">Is Expiration Date</label>
+                                                    <div class="col-sm-7">
+                                                        <input class="form-control datepicker" type="checkbox" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.IsExpirationDate">
+
+                                                    </div>
+                                                </div>
+                                                <!--  <div class="form-group col-sm-12">
+        <label class="control-label col-sm-4">Certification In Expired?</label>
+        <div class="col-sm-7">
+            <input class="form-control datepicker" type="checkbox" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.IsExpirationDate">
+
+        </div>
+    </div>-->
 
                                             </div>
-                                            <button type="button" class="btn btn-success pull-right submit-btn" (click)="saveCertificateData()">Save </button>
+                                          
+                                            
                                             <div class="clear"></div>
 
 
@@ -117,7 +134,7 @@
 
 
         </div>
-        <button type="button" class="btn btn-success pull-right submit-btn" (click)="nextClick()">Next</button>
+        <button type="button" [disabled]="nextbuttonEnable == false" class="btn btn-success pull-right submit-btn" (click)="saveCertificateData()">Save & Next </button>
         <button type="button" class="btn btn-success pull-right submit-btn" (click)="previousClick()">Previous</button>
     </div>
 

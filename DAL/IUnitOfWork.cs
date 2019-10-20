@@ -104,6 +104,8 @@ namespace DAL
         IAuditHistoryRepository AuditHistory { get; }
 
         IJobTitle JobTitle { get; }
+
+        IJobType JobType { get; }
         IDocument Document { get; }
 
         ICharge Charge { get; }
@@ -140,7 +142,7 @@ namespace DAL
         IEmployeeLeaveType EmployeeLeaveType { get; }
         IEmployeeTrainingTypeRepository EmployeeTrainingType { get; }
         
-        ICompany company { get; }
+        ICompany Company { get; }
 
         IDivision division { get; }
 

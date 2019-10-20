@@ -22,14 +22,243 @@ namespace DAL.Repositories
 
 
 
-        //public IEnumerable<Customer> GetTopActiveCustomers(int count)
-        //{
-        //    throw new NotImplementedException();
-        //}
+		//public IEnumerable<Customer> GetTopActiveCustomers(int count)
+		//{
+		//    throw new NotImplementedException();
+		//}
 
-        public IEnumerable<Customer> getAllCustomer()
+
+		public IEnumerable<object> GetList(Filters<CustomerFilters> customerFilters)
+		{
+			if (customerFilters.filters == null)
+				customerFilters.filters = new CustomerFilters();
+			var pageNumber = customerFilters.first + 1;
+			var take = customerFilters.rows;
+			var skip = take * (pageNumber - 1);
+
+
+			var totalRecords = (from t in _appContext.Customer
+								join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
+								join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId
+								join ad in _appContext.Address on t.AddressId equals ad.AddressId
+								join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
+								from custContacts in custinfo.DefaultIfEmpty()
+								join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
+								from contacts in contactInfo.DefaultIfEmpty()
+								where (t.IsDeleted == false || t.IsDeleted == null)
+								&& t.Name.Contains((!String.IsNullOrEmpty(customerFilters.filters.Name) ? customerFilters.filters.Name : t.Name))
+								&& t.CustomerCode.Contains((!String.IsNullOrEmpty(customerFilters.filters.CustomerCode) ? customerFilters.filters.CustomerCode : t.CustomerCode))
+								&& t.Email.Contains((!String.IsNullOrEmpty(customerFilters.filters.Email) ? customerFilters.filters.Email : t.Email))
+								&& type.Description.Contains((!String.IsNullOrEmpty(customerFilters.filters.CustomerType) ? customerFilters.filters.CustomerType : type.Description))
+								&& ct.Description.Contains((!String.IsNullOrEmpty(customerFilters.filters.CustomerClassification) ? customerFilters.filters.CustomerClassification : ct.Description))
+								&& ad.City.Contains((!String.IsNullOrEmpty(customerFilters.filters.City) ? customerFilters.filters.City : ad.City))
+								&& ad.StateOrProvince.Contains((!String.IsNullOrEmpty(customerFilters.filters.StateOrProvince) ? customerFilters.filters.StateOrProvince : ad.StateOrProvince))
+
+								 && customerFilters.filters.Contact == null ? string.IsNullOrEmpty(contacts.WorkPhone) || contacts.WorkPhone != null :
+										 contacts.WorkPhone.Contains(customerFilters.filters.Contact)
+
+								&& customerFilters.filters.SalesPersonPrimary == null ? string.IsNullOrEmpty(t.PrimarySalesPersonFirstName) || t.PrimarySalesPersonFirstName != null :
+										 t.PrimarySalesPersonFirstName.Contains(customerFilters.filters.SalesPersonPrimary)
+								select new
+								{
+									t.CustomerId,
+									Contact = contacts.WorkPhone == null ? "-" : contacts.WorkPhone,
+
+								}).Distinct().Count();
+
+			var data = (from t in _appContext.Customer
+						join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
+						join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId
+						join ad in _appContext.Address on t.AddressId equals ad.AddressId
+						join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
+						from custContacts in custinfo.DefaultIfEmpty()
+						join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
+						from contacts in contactInfo.DefaultIfEmpty()
+						where (t.IsDeleted == false || t.IsDeleted == null)
+						&& t.Name.Contains((!String.IsNullOrEmpty(customerFilters.filters.Name) ? customerFilters.filters.Name : t.Name))
+						&& t.CustomerCode.Contains((!String.IsNullOrEmpty(customerFilters.filters.CustomerCode) ? customerFilters.filters.CustomerCode : t.CustomerCode))
+						&& t.Email.Contains((!String.IsNullOrEmpty(customerFilters.filters.Email) ? customerFilters.filters.Email : t.Email))
+						&& type.Description.Contains((!String.IsNullOrEmpty(customerFilters.filters.CustomerType) ? customerFilters.filters.CustomerType : type.Description))
+						&& ct.Description.Contains((!String.IsNullOrEmpty(customerFilters.filters.CustomerClassification) ? customerFilters.filters.CustomerClassification : ct.Description))
+						&& ad.City.Contains((!String.IsNullOrEmpty(customerFilters.filters.City) ? customerFilters.filters.City : ad.City))
+						&& ad.StateOrProvince.Contains((!String.IsNullOrEmpty(customerFilters.filters.StateOrProvince) ? customerFilters.filters.StateOrProvince : ad.StateOrProvince))
+						 && customerFilters.filters.Contact == null ? string.IsNullOrEmpty(contacts.WorkPhone) || contacts.WorkPhone != null :
+								 contacts.WorkPhone.Contains(customerFilters.filters.Contact)
+
+						&& customerFilters.filters.SalesPersonPrimary == null ? string.IsNullOrEmpty(t.PrimarySalesPersonFirstName) || t.PrimarySalesPersonFirstName != null :
+								 t.PrimarySalesPersonFirstName.Contains(customerFilters.filters.SalesPersonPrimary)
+						select new
+						{
+							t.CustomerId,
+							t.Name,
+							t.CustomerCode,
+							t.Email,
+							CustomerType = type.Description,
+							CustomerClassification = ct.Description,
+							City = ad.City,
+							StateOrProvince = ad.StateOrProvince,
+							Contact = contacts.WorkPhone == null ? "-" : contacts.WorkPhone,
+							SalesPersonPrimary = t.PrimarySalesPersonFirstName == null ? "-" : t.PrimarySalesPersonFirstName,
+							t.CreatedDate,
+							t.IsActive,
+							t.IsDeleted,
+							TotalRecords = totalRecords
+						}).Distinct().OrderByDescending(p => p.CreatedDate)
+							 .Skip(skip)
+							 .Take(take)
+							 .ToList();
+
+
+
+			return (data);
+		}
+
+		public IEnumerable<object> GetListGlobalFilter(string value, int pageNumber, int pageSize)
+		{
+
+			var pageNumbers = pageNumber + 1;
+			var take = pageSize;
+			var skip = take * (pageNumbers - 1);
+
+			if (!string.IsNullOrEmpty(value))
+			{
+				var totalRecords = (from t in _appContext.Customer
+									join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
+									join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId
+									join ad in _appContext.Address on t.AddressId equals ad.AddressId
+									join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
+									from custContacts in custinfo.DefaultIfEmpty()
+									join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
+									from contacts in contactInfo.DefaultIfEmpty()
+									where (t.IsDeleted == false || t.IsDeleted == null)
+									&& t.Name.Contains(value) || t.CustomerCode.Contains(value) || t.Email.Contains(value)
+									|| type.Description.Contains(value) || ct.Description.Contains(value)
+									|| ad.City.Contains(value) || ad.StateOrProvince.Contains(value)
+									|| contacts.WorkPhone.Contains(value) || t.PrimarySalesPersonFirstName.Contains(value)
+									select new
+									{
+										t.CustomerId,
+
+									}).Count();
+
+				var data = (from t in _appContext.Customer
+							join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
+							join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId
+							join ad in _appContext.Address on t.AddressId equals ad.AddressId
+							join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
+							from custContacts in custinfo.DefaultIfEmpty()
+							join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
+							from contacts in contactInfo.DefaultIfEmpty()
+							where (t.IsDeleted == false || t.IsDeleted == null)
+								   && t.Name.Contains(value) || t.CustomerCode.Contains(value) || t.Email.Contains(value)
+								   || type.Description.Contains(value) || ct.Description.Contains(value)
+								   || ad.City.Contains(value) || ad.StateOrProvince.Contains(value)
+								   || contacts.WorkPhone.Contains(value) || t.PrimarySalesPersonFirstName.Contains(value)
+							select new
+							{
+								t.CustomerId,
+								t.Name,
+								t.CustomerCode,
+								t.Email,
+								CustomerType = type.Description,
+								CustomerClassification = ct.Description,
+								City = ad.City,
+								StateOrProvince = ad.StateOrProvince,
+								Contact = contacts.WorkPhone == null ? "-" : contacts.WorkPhone,
+								SalesPersonPrimary = t.PrimarySalesPersonFirstName == null ? "-" : t.PrimarySalesPersonFirstName,
+								t.UpdatedDate,
+								t.IsActive,
+								t.IsDeleted,
+								TotalRecords = totalRecords
+							}).OrderBy(p => p.UpdatedDate)
+								 .Skip(skip)
+								 .Take(take)
+								 .ToList();
+
+
+
+				return (data);
+			}
+			else
+			{
+				var totalRecords = (from t in _appContext.Customer
+									join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
+									join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId
+									join ad in _appContext.Address on t.AddressId equals ad.AddressId
+									join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
+									from custContacts in custinfo.DefaultIfEmpty()
+									join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
+									from contacts in contactInfo.DefaultIfEmpty()
+									where (t.IsDeleted == false || t.IsDeleted == null)
+									select new
+									{
+										t.CustomerId,
+
+									}).Count();
+
+				var data = (from t in _appContext.Customer
+							join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
+							join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId
+							join ad in _appContext.Address on t.AddressId equals ad.AddressId
+							join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
+							from custContacts in custinfo.DefaultIfEmpty()
+							join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
+							from contacts in contactInfo.DefaultIfEmpty()
+							where (t.IsDeleted == false || t.IsDeleted == null)
+							select new
+							{
+								t.CustomerId,
+								t.Name,
+								t.CustomerCode,
+								t.Email,
+								CustomerType = type.Description,
+								CustomerClassification = ct.Description,
+								City = ad.City,
+								StateOrProvince = ad.StateOrProvince,
+								Contact = contacts.WorkPhone == null ? "-" : contacts.WorkPhone,
+								SalesPersonPrimary = t.PrimarySalesPersonFirstName == null ? "-" : t.PrimarySalesPersonFirstName,
+								t.UpdatedDate,
+								t.IsActive,
+								t.IsDeleted,
+								TotalRecords = totalRecords
+							}).OrderBy(p => p.UpdatedDate)
+								 .Skip(skip)
+								 .Take(take)
+								 .ToList();
+
+
+
+				return (data);
+			}
+
+
+		}
+		public void CustomerStatus(long CustomerId, bool status, string updatedBy)
+		{
+			Customer customer = new Customer();
+			try
+			{
+				customer.CustomerId = CustomerId;
+				customer.UpdatedDate = DateTime.Now;
+				customer.UpdatedBy = updatedBy;
+				customer.IsActive = status;
+
+				_appContext.Customer.Attach(customer);
+				_appContext.Entry(customer).Property(x => x.IsActive).IsModified = true;
+				_appContext.Entry(customer).Property(x => x.UpdatedDate).IsModified = true;
+				_appContext.Entry(customer).Property(x => x.UpdatedBy).IsModified = true;
+				_appContext.SaveChanges();
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+		}
+
+		public IEnumerable<Customer> getAllCustomer()
         {
-            return _appContext.Customer.Include("CustomerContact").Where(x => x.IsDelete == null || x.IsDelete == false).ToList();
+            return _appContext.Customer.Include("CustomerContact").Where(x => x.IsDeleted == null || x.IsDeleted == false).ToList();
 
         }
 
@@ -43,7 +272,7 @@ namespace DAL.Repositories
                         join creditTerms in _appContext.CreditTerms on t.CreditTermsId equals creditTerms.CreditTermsId into cre
                         from creditTerms in cre.DefaultIfEmpty()
                         join cc in _appContext.CustomerClassification on t.CustomerClassificationId equals cc.CustomerClassificationId
-                        where t.IsDelete == false || t.IsDelete == null
+                        where t.IsDeleted == false || t.IsDeleted == null
                         // select new { t, ad, vt }).ToList();
                         select new
                         {
@@ -381,11 +610,11 @@ namespace DAL.Repositories
         {
             {
 
-                var data = (from ca in _appContext.CustomerATAMapping
-                            where ca.CustomerId == customerId && ca.IsDeleted == false
+                var data = (from ca in _appContext.CustomerContactATAMapping
+							where ca.CustomerId == customerId && ca.IsDeleted == false
                             select new
                             {
-                                ca.CustomerATAMappingId,
+                                ca.CustomerContactATAMappingId,
                                 ca.CustomerId,
                                 ca.ATAChapterId,
                                 ca.ATAChapterCode,
@@ -400,12 +629,12 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetATAContactMapped(long customerId)
+        public IEnumerable<object> GetATAContactMapped(long contactId)
         {
             {
 
                 var data = (from ca in _appContext.CustomerContactATAMapping
-                    where ca.CustomerId == customerId && ca.IsDeleted == false
+                    where ca.CustomerContactId == contactId && ca.IsDeleted == false
                     select new
                     {
                         ca.CustomerContactATAMappingId,
@@ -469,7 +698,7 @@ namespace DAL.Repositories
 
         public IEnumerable<Customer> getAllCustomersInfo()
         {
-            return _appContext.Customer.Where(x => x.IsActive == true && x.IsDelete == false)
+            return _appContext.Customer.Where(x => x.IsActive == true && x.IsDeleted == false)
                 .Select(x =>
                     new Customer
                     {
@@ -486,7 +715,7 @@ namespace DAL.Repositories
         override
        public IQueryable<DAL.Models.Customer> GetPaginationData()
         {
-            return _appContext.Customer.Where(c => (c.IsDelete == false || c.IsDelete == null))
+            return _appContext.Customer.Where(c => (c.IsDeleted == false || c.IsDeleted == null))
                 .OrderByDescending(c => c.CustomerId).ToList().AsQueryable();
         }
 
@@ -1045,7 +1274,7 @@ namespace DAL.Repositories
                 return uniquedata;
             }
         }
-        public IEnumerable<object> searchgetCustomerATAMappingDataByMultiTypeIdATAIDATASUBID(long CustomerId, string ATAChapterId, string ATASubChapterID)
+        public IEnumerable<object> searchgetCustomerATAMappingDataByMultiTypeIdATAIDATASUBID(long contactId, string ATAChapterId, string ATASubChapterID)
         {
             long[] myATAChapterId = null;
             long[] myATASubChapterID = null;
@@ -1055,35 +1284,35 @@ namespace DAL.Repositories
                 myATASubChapterID = ATASubChapterID.Split(',').Select(y => Convert.ToInt64(y)).ToArray();
             if (ATAChapterId != null && ATASubChapterID != null)
             {
-                var data = (from cATA in _appContext.CustomerATAMapping
-                            where cATA.CustomerId == CustomerId && myATAChapterId.Contains(cATA.ATAChapterId) && myATASubChapterID.Contains(cATA.ATASubChapterId) && cATA.IsDeleted != true
-                            select new { cATA.CustomerATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
+                var data = (from cATA in _appContext.CustomerContactATAMapping
+							where cATA.CustomerContactId == contactId && myATAChapterId.Contains(cATA.ATAChapterId) && myATASubChapterID.Contains(cATA.ATASubChapterId) && cATA.IsDeleted != true
+                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return uniquedata;
             }
             else if (ATAChapterId != null && ATASubChapterID == null)
             {
-                var data = (from cATA in _appContext.CustomerATAMapping
-                            where cATA.CustomerId == CustomerId && myATAChapterId.Contains(cATA.ATAChapterId) && cATA.IsDeleted != true
-                            select new { cATA.CustomerATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
+                var data = (from cATA in _appContext.CustomerContactATAMapping
+							where cATA.CustomerContactId == contactId && myATAChapterId.Contains(cATA.ATAChapterId) && cATA.IsDeleted != true
+                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return uniquedata;
 
             }
             else if (ATAChapterId == null && ATASubChapterID != null)
             {
-                var data = (from cATA in _appContext.CustomerATAMapping
-                            where cATA.CustomerId == CustomerId && myATASubChapterID.Contains(cATA.ATASubChapterId) && cATA.IsDeleted != true
-                            select new { cATA.CustomerATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
+                var data = (from cATA in _appContext.CustomerContactATAMapping
+							where cATA.CustomerContactId == contactId && myATASubChapterID.Contains(cATA.ATASubChapterId) && cATA.IsDeleted != true
+                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return uniquedata;
 
             }
             else
             {
-                var data = (from cATA in _appContext.CustomerATAMapping
-                            where cATA.CustomerId == CustomerId && cATA.IsDeleted != true
-                            select new { cATA.CustomerATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
+                var data = (from cATA in _appContext.CustomerContactATAMapping
+							where cATA.CustomerContactId == contactId && cATA.IsDeleted != true
+                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return uniquedata;
 

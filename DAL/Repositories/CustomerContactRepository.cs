@@ -18,9 +18,16 @@ namespace DAL.Repositories
         }
 
 
-        //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 
-        private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
+		public IEnumerable<object> GetCustomerContactAuditDetails(long customercontactId)
+		{
+			return _appContext.CustomerContactAudit.Where(c => c.CustomerContactId == customercontactId).OrderByDescending(p => p.UpdatedDate).ToList();
+
+		}
+
+		//Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
+
+		private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
     }
 }

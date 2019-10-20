@@ -83,17 +83,18 @@
 										<button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="openDelete(content,rowData)">
 											<mat-icon color="warn">delete</mat-icon>
 										</button>
-										<button class="btn-history" mat-icon-button matTooltip="History" (click)="showAuditPopup(auditContent,rowData.siteId)">
+										<button class="btn-history" mat-icon-button matTooltip="History" (click)="showAuditPopup(auditContent,rowData.locationId)">
 											<mat-icon color="green">history</mat-icon>
 										</button>
 									</td>
 								</tr>
 							</ng-template>
 							<ng-template #auditContent let-c="close" let-d="dismiss">
-								<div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
-									<app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
-								</div>
-							</ng-template>
+									<div class="audit-template-launcher">
+										<location-audit [Data]="AuditDetails" [Modal]="modal" *ngIf= "HasAuditDetails"></location-audit>
+										<audit-no-history [Modal]="modal" [Title]="AuditHistoryTitle" *ngIf="!HasAuditDetails"></audit-no-history>
+									</div>
+								</ng-template>
 							<ng-template pTemplate="summary" id="footer">
 								<label id="footer" class="footer">No'of records:</label>
 								<input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
@@ -356,49 +357,49 @@
 		<div class="modal-body viewform">
 			<div class="col-sm-6">
 				<p>
-					<span class="label">
+					<span class="label view-Header">
 						<b> Location Name : </b>
 					</span>
 					<span class="value">{{location_Name}}</span>
 				</p>
 				<p>
-					<span class="label">
+					<span class="label view-Header">
 						<b> Warehouse Name : </b>
 					</span>
 					<span class="value">{{warehouseName}}</span>
 				</p>
 				<p>
-					<span class="label">
+					<span class="label view-Header">
 						<b> Site Name : </b>
 					</span>
 					<span class="value">{{siteName}}</span>
 				</p>
 				<p>
-					<span class="label">
+					<span class="label view-Header">
 						<b> Address1: </b>
 					</span>
 					<span class="value">{{address1}}</span>
 				</p>
 				<p>
-					<span class="label">
+					<span class="label view-Header">
 						<b> Address2: </b>
 					</span>
 					<span class="value">{{address2}}</span>
 				</p>
 				<p>
-					<span class="label">
+					<span class="label view-Header">
 						<b> Address3: </b>
 					</span>
 					<span class="value">{{address3}}</span>
 				</p>
 				<p>
-					<span class="label">
+					<span class="label view-Header">
 						<b> City: </b>
 					</span>
 					<span class="value">{{city}}</span>
 				</p>
 				<p>
-					<span class="label">
+					<span class="label view-Header">
 						<b> State: </b>
 					</span>
 					<span class="value">{{stateOrProvince}}</span>
@@ -406,43 +407,43 @@
 			</div>
 			<div class="col-sm-6">
 				<p>
-					<span class="label">
+					<span class="label view-Header">
 						<b> Country: </b>
 					</span>
 					<span class="value">{{country}}</span>
 				</p>
 				<p>
-					<span class="label">
+					<span class="label view-Header">
 						<b> ZipCode: </b>
 					</span>
 					<span class="value">{{postalCode}}</span>
 				</p>
 				<p>
-					<span class="label">
+					<span class="label view-Header">
 						<b>Memo: </b>
 					</span>
 					<span class="value">{{memo}}</span>
 				</p>
 				<p>
-					<span class="label">
+					<span class="label view-Header">
 						<b>Created By: </b>
 					</span>
 					<span class="value">{{createdBy}}</span>
 				</p>
 				<p>
-					<span class="label">
+					<span class="label view-Header">
 						<b>Created Date: </b>
 					</span>
 					<span class="value">{{createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
 				</p>
 				<p>
-					<span class="label">
+					<span class="label view-Header">
 						<b>Updated By: </b>
 					</span>
 					<span class="value">{{updatedBy}}</span>
 				</p>
 				<p>
-					<span class="label">
+					<span class="label view-Header">
 						<b>Updated Date: </b>
 					</span>
 					<span class="value">{{updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>

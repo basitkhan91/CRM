@@ -37,7 +37,10 @@ namespace DAL.Repositories
             }
         }
 
-        private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
+
+
+
+		private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
     }
 }

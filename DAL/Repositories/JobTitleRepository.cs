@@ -19,12 +19,9 @@ namespace DAL.Repositories
 
         public IEnumerable<DAL.Models.JobTitle> GetAllJobTitles()
         {
-            //return _appContext.JobTitle.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.JobTitleId).ToList();
-            return _appContext.JobTitle.Include("MasterCompany").Where(c =>  c.IsDelete == false ).OrderByDescending(c => c.JobTitleId).ToList();
+            return _appContext.JobTitle.Where(c => c.IsDeleted == false).OrderByDescending(c => c.JobTitleId).ToList();
+          
         }
-
-
-        //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 

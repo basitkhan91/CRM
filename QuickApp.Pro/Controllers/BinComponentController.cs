@@ -285,7 +285,6 @@ namespace QuickApp.Pro.Controllers
                 existingResult.UpdatedDate = DateTime.Now;
                 existingResult.CreatedBy = binViewModel.CreatedBy;
                 existingResult.UpdatedBy = binViewModel.UpdatedBy;
-                _unitOfWork.SaveChanges();
                 _unitOfWork.Bins.Update(existingResult);
                 _unitOfWork.SaveChanges();
                 return Ok(existingResult);

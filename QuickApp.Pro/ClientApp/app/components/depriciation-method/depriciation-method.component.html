@@ -1,4 +1,4 @@
-﻿<div [@fadeInOut] class="page-content">
+<div [@fadeInOut] class="page-content">
     <div class="right_col" role="main">
         <div class="x_panel">
             <div class="x_content">
@@ -40,13 +40,15 @@
                                         <button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
                                                 iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                         <div class="excel-upload  excel-upload-cstm">
-                                            <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected"
-                                                   accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                                            <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file"
+                                                   accept=".xlsx, .xls, .csv">
                                             <label for="upload">
                                                 <span matTooltip="Upload Data (Excel)">
                                                     <i class="fa fa-upload"></i>
                                                 </span>
                                             </label>
+                                            &nbsp; &nbsp;
+                                            <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()">Sample File Download</button>
                                         </div>
                                     </div>
                             </ng-template>
@@ -93,7 +95,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                         <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="openDelete(content,rowData)">
                                             <mat-icon color="warn">delete</mat-icon>
                                         </button>
-                                        <button class="btn-history" mat-icon-button matTooltip="History" (click)="showAuditPopup(auditContent,rowData.shelfId)">
+                                        <button class="btn-history" mat-icon-button matTooltip="History" (click)="getAuditHistoryById(rowData)">
                                             <mat-icon color="green">history</mat-icon>
                                         </button>
                                     </td>
@@ -107,6 +109,8 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                             <ng-template pTemplate="summary" id="footer">
                                 <label id="footer" class="footer">No'of records:</label> <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" />
                                 &nbsp;&nbsp;
+                                <label id="footer" class="footer1">Pages Count:</label>
+                                <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" />
                             </ng-template>
                         </p-table>
                     </div>

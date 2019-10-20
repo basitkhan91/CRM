@@ -38,6 +38,9 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {
         this.row = this.workFlow.charges[0];
+        if (this.row == undefined) {
+            this.row = {};
+        }
         this.row.taskId = this.workFlow.taskId;
         this.actionService.getChargesType().subscribe(
             chargesTypes => {
@@ -52,12 +55,13 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
             },
             error => this.errorMessage = <any>error
         );
+
         this.loadData();
 
-        // summation of all values in edit mode 
         if (this.UpdateMode) {
             this.reCalculate();
         }
+
     }
 
     ngOnChanges(): void {
@@ -82,7 +86,6 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
                     "vendorCode": vendorCode
                 }]);
                 this.vendorCodes.push(vendorCode);
-
             }
         }
     }
@@ -93,7 +96,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
             event.target.value = '0';
             charge.workflowChargeTypeId = "0";
             this.alertService.showMessage("Work Flow", "Type is already in use in Charges List.", MessageSeverity.error);
-            
+
         }
     }
 
@@ -143,7 +146,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         var value = Number.parseFloat(charge.quantity) * Number.parseFloat(charge.unitCost);
         if (value > 0) {
             charge.extendedCost = value;
-            
+
         }
         else {
             charge.extendedCost = "";
@@ -164,7 +167,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
 
     // sum of the qty
     calculateQtySummation() {
-        var charges = this.workFlow.charges.filter(x => x.isDelete != true );
+        var charges = this.workFlow.charges.filter(x => x.isDelete != true);
         this.workFlow.qtySummation = charges.reduce((acc, x) => {
             return acc + parseFloat(x.quantity == undefined || x.quantity === '' ? 0 : x.quantity)
         }, 0);

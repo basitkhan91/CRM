@@ -113,7 +113,9 @@ export class ShelfComponent {
 	selectedShelf: any;
 	localCollection: any[] = [];
 	shelfName: any;
-	AuditDetails: SingleScreenAuditDetails[];
+	AuditDetails: any[];
+	HasAuditDetails:boolean = false;
+	AuditHistoryTitle: string = 'History of Shelf';
 
 	ngOnInit(): void {
 		this.cols = [
@@ -747,10 +749,11 @@ export class ShelfComponent {
 
 	auditShelf(shelfId: number): void {
 		this.AuditDetails = [];
+		this.HasAuditDetails = this.AuditDetails.length > 0;
 		this.workFlowtService.getShelfAudit(shelfId).subscribe(audits => {
 			if (audits.length > 0) {
-				this.AuditDetails = audits;
-				this.AuditDetails[0].ColumnsToAvoid = ["shelfAuditId", "shelfId", "createdBy", "createdDate", "updatedDate"];
+				this.AuditDetails = audits[0].result;
+				this.HasAuditDetails = this.AuditDetails.length > 0;
 			}
 		});
 	}

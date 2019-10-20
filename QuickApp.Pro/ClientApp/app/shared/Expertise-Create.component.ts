@@ -19,29 +19,27 @@ export class ExpertiseCreateComponent implements OnInit, OnChanges {
     errorMessage: string;
     currentPage: number = 1;
     itemsPerPage: number = 10;
-   
+
 
     constructor(private actionService: ActionService) {
     }
 
     ngOnInit(): void {
-        this.row = this.workFlow.expertise[0];
 
+        this.row = this.workFlow.expertise[0];
+        if (this.row == undefined) {
+            this.row = {};
+        }
+        this.row.taskId = this.workFlow.taskId;
         this.actionService.GetExpertiseType().subscribe(
             expertiseTypes => {
                 this.expertiseTypes = expertiseTypes;
             },
             error => this.errorMessage = <any>error
         );
-        // this.calculateTotalExpertiseCost();
-        // for edit workflow to add the sum of amount 
-
-
-        // summation of all values in edit mode 
         if (this.UpdateMode) {
             this.reCalculate();
         }
-
     }
 
 
@@ -72,7 +70,7 @@ export class ExpertiseCreateComponent implements OnInit, OnChanges {
     }
 
     deleteRow(index): void {
-        if (this.workFlow.expertise[index].workflowExpertiseListId != undefined  || this.workFlow.expertise[index].workflowExpertiseListId == "0" || this.workFlow.expertise[index].workflowExpertiseListId == "") {
+        if (this.workFlow.expertise[index].workflowExpertiseListId != undefined || this.workFlow.expertise[index].workflowExpertiseListId == "0" || this.workFlow.expertise[index].workflowExpertiseListId == "") {
             this.workFlow.expertise.splice(index, 1);
         }
         else {
@@ -106,7 +104,7 @@ export class ExpertiseCreateComponent implements OnInit, OnChanges {
         this.workFlow.sumofLabourDirectCost = this.workFlow.expertise.reduce((acc, x) => {
             return acc + parseFloat(x.directLaborRate === undefined || x.directLaborRate === '' ? 0 : x.directLaborRate)
         }, 0);
-        
+
     }
 
     calculateOHCost(expertise): void {

@@ -8,7 +8,7 @@ import { SingleScreenBreadcrumbService } from "../../services/single-screens-bre
 
 import { Table } from 'primeng/table';
 import { ConditionService } from '../../services/condition.service';
-import { PercentageService } from '../../services/percentage.service';
+import { PercentService } from '../../services/percent.service';
 import { validateRecordExistsOrNot, getObjectById, getObjectByValue, selectedValueValidate, editValueAssignByCondition } from '../../generic/autocomplete';
 
 @Component({
@@ -63,14 +63,14 @@ export class CreditTermsComponent implements OnInit {
             netDays:null,
             masterCompanyId: 1,
             isActive: true,
-            isDelete: false,
+            isDeleted: false,
             memo: ""
         };
     addNewCreditTerm= { ...this.newCreditTerm };
     disableSaveForCreditTerm: boolean;
     /** credit terms ctor */
     constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private alertService: AlertService,
-        public percentageService: PercentageService, public creditTermService: CreditTermsService) {
+        public percentageService: PercentService, public creditTermService: CreditTermsService) {
 
 
     }
@@ -97,7 +97,7 @@ export class CreditTermsComponent implements OnInit {
     }
 
     private getPercentageList() {
-        this.percentageService.getPercentageList().subscribe(res => {
+        this.percentageService.getPercentages().subscribe(res => {
             const respData = res[0];
             this.percentageList= respData;
         });

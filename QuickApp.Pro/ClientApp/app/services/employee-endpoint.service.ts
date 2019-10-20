@@ -21,7 +21,11 @@ export class EmployeeEndpoint extends EndpointFactory {
 	private readonly _EmployeeLeaveTypeUrl: string = "/api/Employee/EmployeeLeaveTypeGet";
 	private readonly _EmployeeTrainingTypeUrl: string = "/api/Employee/GetEmployeeTrainingType";
     private readonly _actionsUrlNew: string = "/api/Employee/employeepost";
+    private readonly _actionsUrlNewUpdate: string = "/api/Employee/employeelistgpost";
+
+    
     private readonly _certificationUrlNew: string = "/api/Employee/employeecertificationpost";
+ 
 	private readonly _trainUrlNew: string = "/api/Employee/EmpTrainingGet";
 	private readonly _trainingTypeUrlNew: string = "/api/Employee/empTrainingTypesGet";
     private readonly _actionsUrlAuditHistory: string = "/api/Employee/auditHistoryById";
@@ -44,6 +48,10 @@ export class EmployeeEndpoint extends EndpointFactory {
 	private readonly _shiftsurl: string = "/api/Employee/saveShifts";
     private readonly _getMultiLeaveListUrl: string = "/api/Employee/GetLeaveData";
     private readonly _getAllEmployeeInfoURL: string = "/api/Employee/GetAllEmployeeInfo";
+	private readonly _getEmpTrainingInfo: string = "/api/Employee/EmpTrainingGet";
+	private readonly _getEmpDataByid: string = "/api/Employee/employeedata";
+ 
+    
 
 	get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
 	get getView() { return this.configurations.baseUrl + this._getView; }
@@ -64,6 +72,7 @@ export class EmployeeEndpoint extends EndpointFactory {
 	get getemployeeshiftsListUrl() { return this.configurations.baseUrl + this._getemployeeshifturl; }
 	get getemployeeleaveListUrl() { return this.configurations.baseUrl + this._getemployeeLeaveurl; }
 	get getLeavesListUrl() { return this.configurations.baseUrl + this._getMultiLeaveListUrl; }
+	get getEmpDataByid() { return this.configurations.baseUrl + this._getEmpDataByid; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -85,7 +94,18 @@ export class EmployeeEndpoint extends EndpointFactory {
 			.catch(error => {
 				return this.handleError(error, () => this.getEmployeeEndpoint());
 			});
-	}
+    }
+
+    getEmployeeCertifications<T>(employeeId): Observable<T> {
+
+      
+        let endpointUrl = `${this._certificationUrlNew}/${employeeId}`;
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getEmployeeEndpoint());
+            });
+    }
+
 	getNewLeaveEndpoint<T>(userObject: any): Observable<T> {
 
 		return this.http.post<T>(this._newLeavesUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
@@ -234,7 +254,7 @@ export class EmployeeEndpoint extends EndpointFactory {
     } 
 
     getUpdateEmployeeEndpoint<T>(roleObject: any, employeeId: number): Observable<T> {
-        let endpointUrl = `${this._actionsUrlNew}/${employeeId}`;
+        let endpointUrl = `${this._actionsUrlNewUpdate}/${employeeId}`;
 
         return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
             .catch(error => {
@@ -343,6 +363,14 @@ export class EmployeeEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getAllEmployeesInfo());
             });
 
+	}
+	
+	getEmployeeDataById<T>(employeeId): Observable<T> {
+        let endpointUrl = `${this._getEmpDataByid}/${employeeId}`;
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getEmployeeDataById(employeeId));
+            });
     }
 }
 

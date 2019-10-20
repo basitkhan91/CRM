@@ -217,22 +217,22 @@ namespace QuickApp.Pro.Controllers
             return Ok(allContacts);
 
         }
+
         [HttpGet("AddressGet")]
         [Produces(typeof(List<Address>))]
         public IActionResult GetAddress()
         {
             var alladdresses = _unitOfWork.Address.GetAddresses(); //.GetAllCustomersData();
             return Ok(alladdresses);
-
         }
+
         [HttpGet("Getpartdetails")]
-        [Produces(typeof(List<Address>))]
         public IActionResult Getpartdetails()
         {
             var allPartDetails = _context.ItemMaster.Where(a => a.IsDelete == false || a.IsDelete == null).OrderByDescending(a => a.ItemMasterId).ToList(); //.GetAllCustomersData();
             return Ok(allPartDetails);
-
         }
+
         [HttpGet("getSitesAddress")]
         [Produces(typeof(List<Address>))]
         public IActionResult getSitesAddress()
@@ -368,50 +368,7 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        [HttpGet("GetpartdetailsWithid/{partid}")]
-        public Object getPartwithid(string partid)
-        {
-
-
-            var data = (from IM in _context.ItemMaster
-
-                            //join PT in _context.Part on IM.PartId equals PT.PartId into pt
-
-                            //from PT in pt.DefaultIfEmpty()
-                        join MF in _context.Manufacturer on IM.ManufacturerId equals MF.ManufacturerId into mfg
-
-                        from MF in mfg.DefaultIfEmpty()
-
-                            //join PS in _context.Item on IM.AddressId equals PS.AddressId into pro
-
-                            //from PS in pro.DefaultIfEmpty()
-                        where (
-
-                        IM.PartNumber.Contains(partid)
-
-                        )
-                        select new
-                        {
-
-                            IM.PartNumber,
-                            IM.PartAlternatePartId,
-                            IM.PartDescription,
-                            //it.Description,
-                            IM.ManufacturerId,
-                            MF.Name,
-                            IM.ReorderQuantiy,
-                            IM.ItemTypeId,
-                            IM.ItemMasterId,
-                            //MF.Name
-                            // PT.PartId,
-                            IM.IsHazardousMaterial,
-                            IM.PriorityId
-
-                        }).ToList();
-            return data;
-
-
-        }
+        
 
 
 
@@ -709,6 +666,7 @@ namespace QuickApp.Pro.Controllers
             //actionobject.RequisitionedDate = poViewModel.RequisitionedDate;
             //actionobject.POPartSplitAddressId = poViewModel.POPartSplitAddressId;
             actionobject.MasterCompanyId = poViewModel.MasterCompanyId;
+            actionobject.ManagementStructureId = poViewModel.ManagementStructureId;
 
             actionobject.NeedByDate = poViewModel.NeedByDate;
             //actionobject.Approver = poViewModel.Approver;
@@ -815,10 +773,9 @@ namespace QuickApp.Pro.Controllers
                         }
                         _unitOfWork.SaveChanges();
                         poPartSplit.PurchaseOrderPartRecordId = popSplitEnt.PurchaseOrderPartRecordId;
-                    }
-
-                    return Ok(poViewModels);
+                    }                   
                 }
+                return Ok(poViewModels);
             }
             return Ok(ModelState);
         }
@@ -2992,6 +2949,58 @@ namespace QuickApp.Pro.Controllers
             return Ok(allTaxrateInfo);
 
         }
+
+        [HttpPost("createvendorbillingaddress")]
+        public IActionResult CreateVendorBillingAddress([FromBody] VendorBillingAddress billingAddress)
+        {
+            if(ModelState.IsValid)
+            {
+                billingAddress.VendorBillingAddressId= _unitOfWork.Vendor.CreateVendorBillingAddress(billingAddress);
+                return Ok(billingAddress);
+            }
+            return BadRequest(ModelState);
+        }
+
+        [HttpPost("updatevendorbillingaddress")]
+        public IActionResult UpdateVendorBillingAddress([FromBody] VendorBillingAddress billingAddress)
+        {
+            if (ModelState.IsValid)
+            {
+                 _unitOfWork.Vendor.UpdateVendorBillingAddress(billingAddress);
+                return Ok(billingAddress);
+            }
+            return BadRequest(ModelState);
+        }
+
+
+        [HttpGet("deletevendorbillingaddress")]
+        public IActionResult DeleteVendorBillingAddress(long billingAddressId, string updatedBy)
+        {
+                _unitOfWork.Vendor.DeleteVendorBillingAddress(billingAddressId, updatedBy);
+                return Ok();
+        }
+
+        [HttpGet("vendorbillingaddressstatus")]
+        public IActionResult VendorBillingAddressStatus(long billingAddressId, bool status, string updatedBy)
+        {
+            _unitOfWork.Vendor.VendorBillingAddressStatus(billingAddressId, status, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("vendorbillingaddress")]
+        public IActionResult GetVendorBillingAddress()
+        {
+            _unitOfWork.Vendor.GetVendorBillingAddress();
+            return Ok();
+        }
+
+        [HttpGet("vendorbillingaddressbyid")]
+        public IActionResult VendorBillingAddressById(long billingAddressId)
+        {
+            _unitOfWork.Vendor.VendorBillingAddressById(billingAddressId);
+            return Ok();
+        }
+
 
 
         #endregion
