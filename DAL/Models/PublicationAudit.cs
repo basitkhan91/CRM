@@ -9,35 +9,28 @@ namespace DAL.Models
     {
         [Key]
         public long PublicationAuditId { get; set; }
-
         public long PublicationRecordId { get; set; }
-
+        public DateTime EntryDate { get; set; }
         public string PublicationId { get; set; }
-
-        public string PartNumber { get; set; }
-        public string Memo { get; set; }
-
         public string Description { get; set; }
-
-        public string Platform { get; set; }
-
-        public string Model { get; set; }
-
-        public string ATAMain { get; set; }
-
-        public string ATASubChapter { get; set; }
-
-        public string ATAPositionZone { get; set; }
-
+        public long PublicationTypeId { get; set; }
+        public string ASD { get; set; }
+        public int Sequence { get; set; }
+        public string Publishby { get; set; }
+        public string Location { get; set; }
+        public DateTime RevisionDate { get; set; }
+        public DateTime ExpirationDate { get; set; }
+        public DateTime NextReviewDate { get; set; }
+        public long EmployeeId { get; set; }
+        public int VerifiedBy { get; set; }
+        public int RevisionNum { get; set; }
+        public Nullable<DateTime> VerifiedDate { get; set; }
         public Int32 MasterCompanyId { get; set; }
-
-        public bool? IsDelete { get; set; }
-
         public string CreatedBy { get; set; }
-        public DateTime CreatedDate { get; set; }
         public string UpdatedBy { get; set; }
+        public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
-        public Nullable<bool> IsActive { get; set; }
-        
+        public bool? IsActive { get; set; }
+        public bool? IsDeleted { get; set; }
     }
 }

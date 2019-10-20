@@ -43,7 +43,7 @@ namespace DAL.Repositories
 
 
 
-                           where t.IsDelete == false || t.IsDelete == null
+                           where t.IsDeleted == false || t.IsDeleted == null
                            // select new { t, ad, vt }).ToList();
                            select new
                            {
@@ -83,7 +83,7 @@ namespace DAL.Repositories
                                t.EmployeeLeaveTypeId,
                                t.SupervisorId,
                                t.MasterCompanyId,
-                               t.IsDelete,
+                               t.IsDeleted,
                                t.ManagementStructureId,
                                t.MasterCompany,
                                t.IsActive,
