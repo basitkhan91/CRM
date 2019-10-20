@@ -517,7 +517,7 @@ namespace QuickApp.Pro.Controllers
 			_unitOfWork.CommonRepository.UpdateRestrictedParts(customerViewModel.RestrictedPMAParts, actionobject.CustomerId, Convert.ToInt32(ModuleEnum.Customer));
 			_unitOfWork.CommonRepository.UpdateRestrictedParts(customerViewModel.RestrictedDERParts, actionobject.CustomerId, Convert.ToInt32(ModuleEnum.Customer));
 
-            //_unitOfWork.CommonRepository.UpdateRestrictPmaList(actionobject.RestrictsPmaLists, actionobject.CustomerId);
+			//_unitOfWork.CommonRepository.UpdateRestrictPmaList(actionobject.RestrictsPmaLists, actionobject.CustomerId);
 
 
 			//actionobject.RestrictsPmaLists = customerViewModel.RestrictsPmaList;
@@ -1719,7 +1719,7 @@ namespace QuickApp.Pro.Controllers
 						AircraftType = customerAircraftMappingVM[i].AircraftType,
 						AircraftModel = customerAircraftMappingVM[i].AircraftModel,
 						DashNumber = customerAircraftMappingVM[i].DashNumber,
-						ModelNumber = customerAircraftMappingVM[i].ModelNumber,
+						//ModelNumber = customerAircraftMappingVM[i].ModelNumber,
 						AircraftModelId = customerAircraftMappingVM[i].AircraftModelId,
 						DashNumberId = customerAircraftMappingVM[i].DashNumberId,
 						Memo = customerAircraftMappingVM[i].Memo,
