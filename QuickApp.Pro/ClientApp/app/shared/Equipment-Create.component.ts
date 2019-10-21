@@ -29,24 +29,27 @@ export class EquipmentCreateComponent implements OnInit, OnChanges {
     row: any;
     itemclaColl: any[];
     allPartnumbersInfo: any[] = [];
-    currentPage : number = 1;
-    itemsPerPage : number = 10;
+    currentPage: number = 1;
+    itemsPerPage: number = 10;
 
-    constructor(private itemser: ItemMasterService, private actionService: ActionService, private vendorService: VendorService, private assetService: AssetService, private alertService : AlertService) {
+    constructor(private itemser: ItemMasterService, private actionService: ActionService, private vendorService: VendorService, private assetService: AssetService, private alertService: AlertService) {
     }
 
     ngOnInit(): void {
-       // if (this.workFlow.equipments.length > 0) {
-            this.row = this.workFlow.equipments[0];
-            this.row.taskId = this.workFlow.taskId;
-            this.actionService.getEquipmentAssetType().subscribe(
-                equipmentAssetType => {
-                    this.equipmentAssetType = equipmentAssetType;
-                },
-                error => this.errorMessage = <any>error
-            );
-            this.ptnumberlistdata();
-        //}        
+
+        this.row = this.workFlow.equipments[0];
+        if (this.row == undefined) {
+            this.row = {};
+        }
+        this.row.taskId = this.workFlow.taskId;
+        this.actionService.getEquipmentAssetType().subscribe(
+            equipmentAssetType => {
+                this.equipmentAssetType = equipmentAssetType;
+            },
+            error => this.errorMessage = <any>error
+        );
+        this.ptnumberlistdata();
+
     }
 
     ngOnChanges(): void {
@@ -92,9 +95,9 @@ export class EquipmentCreateComponent implements OnInit, OnChanges {
         if (this.workFlow.equipments[index].workflowEquipmentListid == undefined || this.workFlow.equipments[index].workflowEquipmentListid == "0" || this.workFlow.equipments[index].workflowEquipmentListid == "") {
             this.workFlow.equipments.splice(index, 1);
         }
-        else {	
-            this.workFlow.equipments[index].isDelete = true;	
-        }	
+        else {
+            this.workFlow.equipments[index].isDelete = true;
+        }
     }
 
     onPartSelect(event, equipment) {
@@ -122,7 +125,7 @@ export class EquipmentCreateComponent implements OnInit, OnChanges {
                 };
             }
 
-            
+
         }
     }
     filterpartItems(event) {
@@ -164,10 +167,10 @@ export class EquipmentCreateComponent implements OnInit, OnChanges {
         this.assetService.getAllAssetList().subscribe(results => {
             this.onptnmbersSuccessful(results[0]);
         });
-        
+
     }
     private onptnmbersSuccessful(allWorkFlows: any[]) {
-        
+
         this.allPartnumbersInfo = allWorkFlows;
 
     }

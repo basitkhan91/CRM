@@ -264,6 +264,14 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(auditResult);
         }
+
+        [HttpPost("bulkupload")]
+        public IActionResult BulkUpload()
+        {
+            var result = _unitOfWork.Sites.BulkUpload(Request.Form.Files[0]);
+
+            return Ok(result);
+        }
     }
 
 }

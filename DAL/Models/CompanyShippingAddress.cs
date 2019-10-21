@@ -1,15 +1,17 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Models
 {
-    public class CompanyShippingAddress
-    {
+    public class CompanyShippingAddress: TempAddress
+	{
         [Key]
         public long CompanyShippingAddressId { get; set; }
-        public long CompanyId { get; set; }
+        public long LegalEntityId { get; set; }
         public string SiteName { get; set; }
-        public long AddressId { get; set; }
+		[ForeignKey("AddressId")]
+		public long AddressId { get; set; }
         public string ExportLicenseNumber { get; set; }
         public string Description { get; set; }
         public DateTime? StartDate { get; set; }
@@ -23,6 +25,8 @@ namespace DAL.Models
         public DateTime UpdatedDate { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
-        
-    }
+
+		
+
+	}
 }

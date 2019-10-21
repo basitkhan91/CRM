@@ -1163,13 +1163,32 @@ namespace DAL.Repositories
             {
             }
             return publications;
-        }
+        } 
 
-        public IEnumerable<PublicationAudit> PublicationHistory(long publicationId)
+        public IEnumerable<object> PublicationHistory(long publicationId)
         {
             try
             {
-                return _appContext.PublicationAudit.Where(p => p.PublicationRecordId == publicationId).ToList();
+                var list = (from pa in _appContext.PublicationAudit
+                            join pt in _appContext.PublicationType on pa.PublicationRecordId equals pt.PublicationTypeId
+                            join e in _appContext.Employee on pa.EmployeeId equals e.EmployeeId into emp
+                            from e in emp.DefaultIfEmpty()
+                            where pa.PublicationRecordId == publicationId
+                            select new
+                            {
+                                pa.PublicationId,
+                                pa.Description,
+                                PublicationType=pt.Name,
+                                pa.Publishby,
+                                EmployeeName=e==null?" ":e.FirstName,
+                                pa.Location,
+                                pa.UpdatedBy,
+                                pa.UpdatedDate
+                            }
+                          ).ToList();
+
+
+                    return list;
             }
             catch (Exception)
             {

@@ -13,6 +13,18 @@ export class CommonService {
 
     }
 
+    smartAdressCreate(object, moduleid) {
+
+    }
+
+    //     postNewAddress<T>(object) {
+    // 	let url = `${this.configurations.baseUrl}/api/Company/createvendorbillingaddress`
+    // 	return this.http.post<T>(url, JSON.stringify(object), this.getRequestHeaders())
+    // 		.catch(error => {
+    // 			return this.handleError(error, () => this.postNewAddress(object));
+    // 		});
+    // } 
+
 
     // http://localhost:5050/api/Common/binddropdowns?tableName=AircraftType&primaryColumn=AircraftTypeId&textColumn=Description
 

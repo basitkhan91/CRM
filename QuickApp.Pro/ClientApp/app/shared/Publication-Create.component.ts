@@ -53,28 +53,31 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
         };
 
         this.getAllPublicationTypes();
-       // if (this.workFlow.publication.length > 0) {
-            this.row = this.workFlow.publication[0];
-            this.row.taskId = this.workFlow.taskId;
 
-            if (this.UpdateMode == true && this.workFlow.publication.length >= 0) {
-                this.publications = [];
-                for (let i = 0; i < this.workFlow.publication.length; i++) {
-                    this.loadPublicationById(this.workFlow.publication[i], false);
-                }
-            }
-            else {
-                this.row.publicationId = "0";
-                this.row.publicationRecordId = "0";
-            }
+        this.row = this.workFlow.publication[0];
+        if (this.row == undefined) {
+            this.row = {};
+        }
+        this.row.taskId = this.workFlow.taskId;
 
-            this.actionService.GetPublicationType().subscribe(
-                type => {
-                    this.publicationTypes = type;
-                },
-                error => this.errorMessage = <any>error()
-            );
-        //}        
+        if (this.UpdateMode == true && this.workFlow.publication.length >= 0) {
+            this.publications = [];
+            for (let i = 0; i < this.workFlow.publication.length; i++) {
+                this.loadPublicationById(this.workFlow.publication[i], false);
+            }
+        }
+        else {
+            this.row.publicationId = "0";
+            this.row.publicationRecordId = "0";
+        }
+
+        this.actionService.GetPublicationType().subscribe(
+            type => {
+                this.publicationTypes = type;
+            },
+            error => this.errorMessage = <any>error()
+        );
+
     }
 
     Browse(): void {
@@ -225,7 +228,7 @@ export class PublicationCreateComponent implements OnInit, OnChanges {
                         if (!isDropdownChange) {
                             wfPublication.aircraftModels = this.getUniqueAircraftModels(wfPublication);
                             wfPublication.allDashNumbers = this.getUniqueAircraftDashNumbers(wfPublication);
-                            
+
                         }
                         else {
                             wfPublication.aircraftModels = [];

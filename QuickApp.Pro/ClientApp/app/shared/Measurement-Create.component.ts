@@ -32,11 +32,12 @@ export class MeasurementCreateComponent implements OnInit, OnChanges {
     }
 
     ngOnInit(): void {
-        //if (this.workFlow.measurements.length > 0) {
-            this.row = this.workFlow.measurements[0];
-            this.row.taskId = this.workFlow.taskId;
-            this.ptnumberlistdata();
-        //}
+        this.row = this.workFlow.measurements[0];
+        if (this.row == undefined) {
+            this.row = {};
+        }
+        this.row.taskId = this.workFlow.taskId;
+        this.ptnumberlistdata();
     }
 
     ngOnChanges(): void {
@@ -121,13 +122,11 @@ export class MeasurementCreateComponent implements OnInit, OnChanges {
     }
 
     private ptnumberlistdata() {
-        this.itemser.getPrtnumberslistList().subscribe(
-            results => this.onptnmbersSuccessful(results[0])
+        this.itemser.getPartDetailsDropdown().subscribe(
+            results => {
+                this.allPartnumbersInfo = results;
+            }
         );
-    }
-
-    private onptnmbersSuccessful(allWorkFlows: any[]) {
-        this.allPartnumbersInfo = allWorkFlows;
     }
 
     checkDuplicateSequence(event, measurements: any): void {

@@ -336,8 +336,10 @@ export class ItemMasterService {
         return this.itemMasterEndpoint.updateItemMasterTimeLife(itemMasterId, active);
     }
 
+    getPartDetailsDropdown<T>() {
+        return this.itemMasterEndpoint.getPartDetailsDropdown<any[]>();
+    }
     getPartDetailsByid(partListArray: number) {
         return this.itemMasterEndpoint.getPartDetailsByid<any>(partListArray);
     }
-
 }

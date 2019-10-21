@@ -9,7 +9,7 @@ namespace DAL.Repositories.Interfaces
 {
     public interface IPublication : IRepository<DAL.Models.Publication>
     {
-        Publication GetPublicationsById(long id);
+        Publication GetPublicationsById(long id); 
         
         IEnumerable<object> GetPubPNMappingData(string id);
         
@@ -52,6 +52,6 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<PublicationsList> getPublicationDropdownData();
 
         IEnumerable<Publication> UploadUOMCustomData(IFormFile file);
-        IEnumerable<PublicationAudit> PublicationHistory(long publicationId);
+        IEnumerable<object> PublicationHistory(long publicationId);
     }
 }

@@ -27,10 +27,35 @@ namespace DAL.Repositories
         {
             try
             {
-                billingAddress.CreatedDate = billingAddress.UpdatedDate = DateTime.Now;
+
+				Address address = new Address();
+
+				address.City = billingAddress.City;
+				address.Country = billingAddress.Country;
+				address.Line1 = billingAddress.Address1;
+				address.Line2 = billingAddress.Address2;
+				address.Line3 = billingAddress.Address3;
+				address.MasterCompanyId = billingAddress.MasterCompanyId;
+				address.PostalCode = billingAddress.PostalCode;
+				address.StateOrProvince = billingAddress.StateOrProvince;
+				address.IsActive = true;
+				address.UpdatedDate = address.CreatedDate = DateTime.Now;
+				address.CreatedBy = billingAddress.CreatedBy;
+				address.UpdatedBy = billingAddress.UpdatedBy;
+
+				_appContext.Address.Add(address);
+				_appContext.SaveChanges();
+
+
+				billingAddress.AddressId = Convert.ToInt64(address.AddressId);
+
+				billingAddress.CreatedDate = billingAddress.UpdatedDate = DateTime.Now;
                 billingAddress.IsActive = true;
                 billingAddress.IsDeleted = false;
-                _appContext.CompanyBillingAddress.Add(billingAddress);
+				billingAddress.IsPrimary = false;
+				
+
+				_appContext.CompanyBillingAddress.Add(billingAddress);
                 _appContext.SaveChanges();
                 return billingAddress.CompanyBillingAddressId;
             }
@@ -163,16 +188,39 @@ namespace DAL.Repositories
         }
 
 
-        public long CreateCompanyShippingAddress(CompanyShippingAddress ShippingAddress)
+        public long CreateCompanyShippingAddress(CompanyShippingAddress shippingAddress)
         {
             try
             {
-                ShippingAddress.CreatedDate = ShippingAddress.UpdatedDate = DateTime.Now;
-                ShippingAddress.IsActive = true;
-                ShippingAddress.IsDeleted = false;
-                _appContext.CompanyShippingAddress.Add(ShippingAddress);
+
+				Address address = new Address();
+
+				address.City = shippingAddress.City;
+				address.Country = shippingAddress.Country;
+				address.Line1 = shippingAddress.Address1;
+				address.Line2 = shippingAddress.Address2;
+				address.Line3 = shippingAddress.Address3;
+				address.MasterCompanyId = shippingAddress.MasterCompanyId;
+				address.PostalCode = shippingAddress.PostalCode;
+				address.StateOrProvince = shippingAddress.StateOrProvince;
+				address.IsActive = true;
+				address.UpdatedDate = address.CreatedDate = DateTime.Now;
+				address.CreatedBy = shippingAddress.CreatedBy;
+				address.UpdatedBy = shippingAddress.UpdatedBy;
+
+				_appContext.Address.Add(address);
+				_appContext.SaveChanges();
+
+
+				shippingAddress.AddressId = Convert.ToInt64(address.AddressId);
+
+				shippingAddress.CreatedDate = shippingAddress.UpdatedDate = DateTime.Now;
+				shippingAddress.IsActive = true;
+				shippingAddress.IsDeleted = false;
+
+                _appContext.CompanyShippingAddress.Add(shippingAddress);
                 _appContext.SaveChanges();
-                return ShippingAddress.CompanyShippingAddressId;
+                return shippingAddress.CompanyShippingAddressId;
             }
             catch (Exception)
             {

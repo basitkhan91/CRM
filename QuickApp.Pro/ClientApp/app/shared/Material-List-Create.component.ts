@@ -52,31 +52,32 @@ export class MaterialListCreateComponent implements OnInit {
     defaultMaterialMandatory: string;
 
     ngOnInit(): void {
-        //if (this.workFlow.materialList.length > 0) {
-            this.row = this.workFlow.materialList[0];
-            this.row.taskId = this.workFlow.taskId;
-            this.actionService.GetMaterialMandatory().subscribe(
-                mandatory => {
-                    this.materialMandatory = mandatory;
-                    this.defaultMaterialMandatory = 'Mandatory';
-                    if (this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') {
-                        this.workFlow.materialList[0].mandatoryOrSupplemental = this.defaultMaterialMandatory;
-                    }
-                },
-                error => this.errorMessage = <any>error
-            );
+        this.row = this.workFlow.materialList[0];
+        if (this.row == undefined) {
+            this.row = {};
+        }
+        this.row.taskId = this.workFlow.taskId;
+        this.actionService.GetMaterialMandatory().subscribe(
+            mandatory => {
+                this.materialMandatory = mandatory;
+                this.defaultMaterialMandatory = 'Mandatory';
+                if (this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') {
+                    this.workFlow.materialList[0].mandatoryOrSupplemental = this.defaultMaterialMandatory;
+                }
+            },
+            error => this.errorMessage = <any>error
+        );
 
-            this.loadConditionData();
-            this.loadItemClassData();
-            this.loadPartData();
-            this.loadUOMData();
-            this.ptnumberlistdata();
+        this.loadConditionData();
+        this.loadItemClassData();
+        this.loadPartData();
+        this.loadUOMData();
+        this.ptnumberlistdata();
 
-            if (this.UpdateMode) {
-                this.reCalculate();
+        if (this.UpdateMode) {
+            this.reCalculate();
 
-            }
-        //}
+        }
     }
 
     reCalculate() {
@@ -124,7 +125,7 @@ export class MaterialListCreateComponent implements OnInit {
                 material.partDescription = '';
                 material.partNumber = '';
                 material.itemClassificationId = '';
-                event = '';      
+                event = '';
                 this.alertService.showMessage("Workflow", "Part Number is already in use in Material List.", MessageSeverity.error);
                 return;
             }
