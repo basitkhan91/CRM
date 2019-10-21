@@ -155,17 +155,13 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("audits/{id}")]
+        [Produces(typeof(List<ChargeAudit>))]
         public IActionResult AuditDetails(long id)
         {
             var audits = _unitOfWork.Repository<ChargeAudit>()
                 .Find(x => x.ChargeId == id)
                 .OrderByDescending(x => x.ChargeAuditId);
-
-            var auditResult = new List<AuditResult<ChargeAudit>>();
-
-            auditResult.Add(new AuditResult<ChargeAudit> { AreaName = "Charge Audit", Result = audits.ToList() });
-
-            return Ok(auditResult);
+            return Ok(audits);
         }
 
         [HttpPost("pagination")]

@@ -16,10 +16,12 @@ namespace DAL.Models
 
         public int? Quantity { get; set; }
 
-        public int? MarkUp { get; set; }
+        public string Description { get; set; }
+        public int? FunctionalCurrencyId { get; set; }
+        public decimal? MarkUpPercentage { get; set; }
 
         public int? CurrencyId { get; set; }
-        public int? PurchaseOrderId { get; set; }
+        public long? PurchaseOrderId { get; set; }
 
         public long? VendorId { get; set; }
 
@@ -27,19 +29,19 @@ namespace DAL.Models
 
         public int? IntegrationPortalId { get; set; }
 
-        public long? GeneralLedgerId { get; set; }
+        public long? GLAccountId { get; set; }
 
-        public int? FunctionalCurrencyId { get; set; }
+  
 
         public decimal? Cost { get; set; }
 
-        public string Description { get; set; }
-        public string BillableAmount { get; set; }
-        public Int32? ManagementStructureId { get; set; }
+    
+        public decimal? BillableAmount { get; set; }
+        public long? ManagementStructureId { get; set; }
 
         public Int32? MasterCompanyId { get; set; }
 
         public bool? IsActive { get; set; }
-        public bool? IsDelete { get; set; }
+        public bool? IsDeleted { get; set; }
     }
 }

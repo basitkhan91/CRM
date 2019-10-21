@@ -37,7 +37,7 @@ export class ChargesComponent implements OnInit {
     chargeHeaders = [
         { field: 'chargeName', header: 'Charge' },
         { field: 'quantity', header: 'Quantity' },
-        { field: 'description', header: 'Standard' },
+        { field: 'description', header: 'Description' },
         { field: 'symbol', header: 'Currency' },
         { field: 'functionalCurrencySymbol', header: 'Functional Currency' },
         { field: 'cost', header: 'Cost' },
@@ -76,6 +76,7 @@ export class ChargesComponent implements OnInit {
     selectedRecordForEdit: any;
     disableSaveForCharge:boolean;
     disableForMgmtStructure:boolean;
+    auditHistory:any[];
     @ViewChild('dt')
     private table: Table;
 
@@ -486,6 +487,22 @@ export class ChargesComponent implements OnInit {
     findmgmtSiblingRecords(parentid:number):any[]{
         return  this.allmgmtData.filter(c=>c.parentId==parentid);
     } 
+    getAuditHistoryById(rowData) {
+        this.chargeService.getChargeAudit(rowData.chargeId).subscribe(res => {
+            this.auditHistory = res;
+        })
+    }
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
 }
 
 

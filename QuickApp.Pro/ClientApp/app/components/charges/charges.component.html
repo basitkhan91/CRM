@@ -103,11 +103,78 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
 </div>
 
 
-<ng-template #auditContent let-c="close" let-d="dismiss">
-    <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
-        <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">History of Charge</h4>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive rro-table-cstm">
+                    <table class="table table-bordered" *ngIf="auditHistory.length> 0 else noDatavailable">
+                        <thead>
+                            <tr>
+                                <!-- <th>UMID</th> -->
+                                <th>Charge Name</th>
+                                <th>Quantity</th>
+                                <th>Description</th>
+                                <th>Currency</th>
+                                <th>Cost</th>
+                                <th>Mark Up( %) </th>
+                                <th>Functional Currency </th>
+                                <th>Purchase Order Number </th>
+                                <th>Vendor Name </th>
+                                <th>Integration Name </th>
+                                <th>GL Account </th>
+                                <th>Memo</th>
+                                <th>Is Active</th>
+                                <th>Updated By</th>
+                                <th>Updated Time</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="auditHistory.length> 0">
+                            <tr *ngFor="let audit of auditHistory; let i = index;">
+                                <!-- auditHistory[i>0 ? i-1 : i] -->
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'chargeName', audit.chargeName)  ? 'black' : 'red'  }">{{audit.chargeName}}</td>
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'quantity', audit.quantity)  ? 'black' : 'red'  }">{{audit.quantity}}</td>
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'description', audit.description)  ? 'black' : 'red'  }">{{audit.description}}</td>
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'currencyId', audit.currencyId)  ? 'black' : 'red'  }">{{audit.currencyId}}</td>
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'cost', audit.cost)  ? 'black' : 'red'  }">{{audit.cost}}</td>
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'markUpPercentage', audit.markUpPercentage)  ? 'black' : 'red'  }">{{audit.markUpPercentage}}</td>
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'functionalCurrencyId', audit.functionalCurrencyId)  ? 'black' : 'red'  }">{{audit.functionalCurrencyId}}</td>
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'purchaseOrderId', audit.purchaseOrderId)  ? 'black' : 'red'  }">{{audit.purchaseOrderId}}</td>
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'vendorId', audit.vendorId)  ? 'black' : 'red'  }">{{audit.vendorId}}</td>
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'integrationPortalId', audit.integrationPortalId)  ? 'black' : 'red'  }">{{audit.integrationPortalId}}</td>
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'glAccountId', audit.glAccountId)  ? 'black' : 'red'  }">{{audit.glAccountId}}</td>
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'memo', audit.memo)  ? 'black' : 'red'  }">{{audit.memo}}</td>
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
+                                <td>{{audit.updatedBy}}</td>
+                                <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                            </tr>
+                        </tbody>
+
+
+                    </table>
+                    <ng-template #noDatavailable>
+                        <div class="text-center">
+                            <img src="../../assets/images/binoculars.png" style="height: 100px; width: 100px;">
+                            <h4 style="color: #ff5663;">No History Found </h4>
+                        </div>
+
+                    </ng-template>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
     </div>
-</ng-template>
+</div>
+
 
 
 <div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog">
