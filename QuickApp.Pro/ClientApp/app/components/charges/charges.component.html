@@ -17,7 +17,7 @@
                                  [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" [totalRecords]="totalRecords" scrollHeight="450px">
                             <ng-template pTemplate="caption">
                                 <div style="text-align: right;margin-left:-6px !important;">
-                                    <p-multiSelect [maxSelectedLabels]="2" [options]="uomHeaders" optionLabel="header" [(ngModel)]="selectedColumns"
+                                    <p-multiSelect [maxSelectedLabels]="2" [options]="chargeHeaders" optionLabel="header" [(ngModel)]="selectedColumns"
                                                    [style]="{minWidth: '200px'}" style="float:left" (onChange)="columnsChanges()"></p-multiSelect>
                                     <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
                                             iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
@@ -70,7 +70,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                                 <i class="fa fa-eye"></i>
                                             </a>
                                         </span>
-                                        <button class="btn-edit" mat-icon-button (click)="editUOM(rowData)" data-target="#addUOM" data-toggle="modal" matTooltip="Edit">
+                                        <button class="btn-edit" mat-icon-button (click)="editCharge(rowData)" data-target="#addCharge" data-toggle="modal" matTooltip="Edit">
                                             <mat-icon>edit</mat-icon>
                                         </button>
 
@@ -123,29 +123,77 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                         <span class="label ">
                             <b class="view-Header">Charge: </b>
                         </span>
+                        <span class="value">{{ viewRowData.chargeName}}</span>
+                    </p>
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header">quantity: </b>
+                        </span>
+                        <span class="value">{{ viewRowData.quantity}}</span>
+                    </p>
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header"> Description: </b>
+                        </span>
                         <span class="value">{{ viewRowData.description}}</span>
                     </p>
                     <p>
                         <span class="label ">
-                            <b class="view-Header">ShortName: </b>
+                            <b class="view-Header">Currency: </b>
                         </span>
-                        <span class="value">{{ viewRowData.shortName}}</span>
+                        <span class="value">{{viewRowData.symbol}}</span>
                     </p>
                     <p>
                         <span class="label ">
-                            <b class="view-Header"> Standard: </b>
+                            <b class="view-Header">Cost: </b>
                         </span>
-                        <span class="value">{{ viewRowData.standard}}</span>
+                        <span class="value">{{viewRowData.cost}}</span>
                     </p>
                     <p>
                         <span class="label ">
-                            <b class="view-Header">Memo: </b>
+                            <b class="view-Header">Mark up (%): </b>
                         </span>
-                        <span class="value">{{viewRowData.memo}}</span>
+                        <span class="value">{{viewRowData.markUpPercentage}}</span>
                     </p>
                     <p>
                         <span class="label ">
-                            <b class="view-Header">IsActive</b>
+                            <b class="view-Header">Billable Amount: </b>
+                        </span>
+                        <span class="value">{{viewRowData.billableAmount}}</span>
+                    </p>
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header">Functional CUR: </b>
+                        </span>
+                        <span class="value">{{viewRowData.functionalCurrencySymbol}}</span>
+                    </p>
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header">Purchase Order Number: </b>
+                        </span>
+                        <span class="value">{{viewRowData.purchaseOrderNumber}}</span>
+                    </p>
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header">Vendor Name: </b>
+                        </span>
+                        <span class="value">{{viewRowData.vendorName}}</span>
+                    </p>
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header">Integration Name: </b>
+                        </span>
+                        <span class="value">{{viewRowData.integrationPortalDescription}}</span>
+                    </p>
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header">GL Account Name: </b>
+                        </span>
+                        <span class="value">{{viewRowData.glAccountName}}</span>
+                    </p>
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header">Is Active</b>
                         </span>
                         <span class="value">{{viewRowData.isActive === true ? 'Yes' : 'No'}}</span>
                     </p>
@@ -205,12 +253,12 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                 </label>
                             </div>
                             <div class="col-sm-5">
-                                <p-autoComplete field="description" [(ngModel)]="addNewCharge.chargeName" (onSelect)="selectedCharge($event)" (onKeyUp)="checkUOMExists('description', $event.target.value)" name="uom"
-                                                [suggestions]="uomList" (completeMethod)="filterUnitOfMeasures($event)" [size]="30" [minLength]="1"
+                                <p-autoComplete field="chargeName" [(ngModel)]="addNewCharge.chargeName" (onSelect)="selectedCharge($event)" (onKeyUp)="checkChargeExists('chargeName', $event.target.value)" name="uom"
+                                                [suggestions]="filteredChargeList" (completeMethod)="filterCharge($event)" [size]="30" [minLength]="1"
                                                 [dropdown]="true" class="p-autoComplete-ctsm" required>
 
                                 </p-autoComplete>
-                                <div *ngIf="disableSaveForUOM" class="clr-red">Already Exists</div>
+                                <div *ngIf="disableSaveForCharge" class="clr-red">Already Exists</div>
                                 <div class="clear"></div>
                             </div>
                         </div>
@@ -222,7 +270,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                 </label>
                             </div>
                             <div class="col-sm-5">
-                                <input type="number" name="quantity" class="form-control" #standard="ngModel" [(ngModel)]="addNewCharge.quantity" required>
+                                <input type="number" name="quantity" class="form-control" [(ngModel)]="addNewCharge.quantity" required>
                             </div>
                         </div>
                         <div class="col-sm-12">
@@ -233,7 +281,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                 </label>
                             </div>
                             <div class="col-sm-5">
-                                    <input type="text" name="description" class="form-control" #standard="ngModel" [(ngModel)]="addNewCharge.description" required>
+                                    <input type="text" name="description" class="form-control"  [(ngModel)]="addNewCharge.description" required>
                                 <div class="clear"></div>
                             </div>
                         </div>
@@ -269,8 +317,9 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                 </label>
                             </div>
                             <div class="col-sm-5">
-                                    <select name="markUp"  [(ngModel)]="addNewCharge.markUp" required>
-                                        </select>
+                                <select [(ngModel)]="addNewCharge.markUpPercentage" name="markUp" required >
+                                            <option *ngFor="let per of percentageList" [ngValue]="per.percentValue">{{per.percentValue}}</option>
+                                </select>
                                 
                             </div>
                         </div>
@@ -355,7 +404,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                     </label>
                                 </div>
                                 <div class="col-sm-5">
-                                        <p-autoComplete field="accountName" [(ngModel)]="addNewCharge.glAccountId"   name="glAccountId"                                      name="glAccountId"
+                                        <p-autoComplete field="accountName" [(ngModel)]="addNewCharge.glAccountId"   name="glAccountId"          
                                         [suggestions]="filteredGLAccountList" (completeMethod)="filterGLAccount($event)" [forceSelection]="true"  [size]="30" [minLength]="1"
                                         [dropdown]="true" class="p-autoComplete-ctsm" required>
 
@@ -365,15 +414,60 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                          <div class="col-sm-12">
                                 <div class="col-sm-4">
                                     <label for="quantity" class="control-label">
-                                        Mgmt Structure:
+                                       Company 
                                         <span class="clr-red">*</span>
                                     </label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <input type="number" name="mgmtStructureId" class="form-control" #standard="ngModel" [(ngModel)]="addNewCharge.mgmtStructureId" required>
+                                    <select name="primaryCompany"
+                                    (change)="companyselected()" [(ngModel)]="selectedCompanyID"   required>
+                                        <option value="0">Select Company</option>
+                                          <option *ngFor="let name of companyList" [ngValue]="name.managementStructureId" >{{name.code}}</option>
+                                    </select>
                                 </div>
                             </div>
-                            <app-mgmt-structure></app-mgmt-structure>
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="quantity" class="control-label">
+                                        BU 
+                                       
+                                    </label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <select  name="primaryBU"  class="form-control" [(ngModel)]="selectedBUId" (change)="buselected()" >
+                                        <option value="0">Select BU</option>
+                                        <option *ngFor="let name of buList" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                    </select>
+                                </div>
+                            </div>  
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="quantity" class="control-label">
+                                        Division 
+                                       
+                                    </label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <select class="form-control"  name="primaryDivision" (change)="divisionselected()"  [(ngModel)]="selectedDivisionID" >
+                                        <option value="0">Select Division</option>
+                                        <option *ngFor="let name of divisionList" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                    </select>
+                                </div>
+                            </div>  
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="quantity" class="control-label">
+                                        Department 
+                                       
+                                    </label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <select class="form-control" name="primaryDept" [(ngModel)]="selectedDeptID" (change)="departmentselected()"  >
+                                        <option value="0">Select Dept</option>
+                                        <option *ngFor="let name of departmentList" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                    </select>
+                                </div>
+                            </div>  
                         <div class="col-sm-12">
                             <div class="col-sm-4">
                                 <label for="memo" class="control-label">Memo</label>
@@ -400,7 +494,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="charge.invalid || disableSaveForUOM || disableSaveForShortName " (click)="saveCharge();"> {{isEdit ? 'Update' : 'Save' }}</button>
+                <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="charge.invalid || disableSaveForCharge ||disableForMgmtStructure" (click)="saveCharge();"> {{isEdit ? 'Update' : 'Save' }}</button>
                 <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetChargeForm()">Close</button>
 
             </div>

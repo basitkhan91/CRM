@@ -130,7 +130,6 @@ import { PercentComponent } from "../components/percent/percent.component";
 import { JobTypeComponent } from '../components/job-type/job-type.component';
 import { PercentService } from "../services/percent.service";
 import { PercentEndpoint } from "../services/percent-endpoint.service";
-import {MgmtStructureComponent} from '../components/mgmt-structure/mgmt-structure.component';
 
 @NgModule({
 	imports: [
@@ -216,8 +215,7 @@ import {MgmtStructureComponent} from '../components/mgmt-structure/mgmt-structur
         AircraftManufacturerComponent,
         AircraftModelComponent,
         DashnumberComponent,
-        PaginationComponent,
-    MgmtStructureComponent
+        PaginationComponent
     ],
     providers: [
         PercentService,

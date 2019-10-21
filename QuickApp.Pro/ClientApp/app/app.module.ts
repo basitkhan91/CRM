@@ -411,7 +411,11 @@ import { GLAccountEndpoint } from './services/glAccount-endpoint.service';
     RolesGuardService,
     CompanyService,
     CompanyEndpoint,
-    WorkOrderService
+    WorkOrderService,
+    PurchaseOrderService,
+    PurchaseOrderEndpoint,
+    GLAccountService,
+    GLAccountEndpoint
   ],
   entryComponents: [LoginDialogComponent, AddTaskDialogComponent],
   bootstrap: [AppComponent],

@@ -6,8 +6,9 @@ export class Charge {
     // Note: Using only optional constructor properties without backing store disables typescript's type checking for the type
     constructor(masterCompany?: MasterCompany, chargeId?: number, cost?:number, billableAmount?:number,isActive?: boolean, chargeName?: string, quantity?: number, markUp?: number, 
         currencyId?: number, purchaseOrderId?: number, vendorId?: number, integrationPortalId?: number,
-         glAccountId?: number, functionalCurrencyId ?: number, masterCompanyId?: number,
-          createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string, memo?: string) {
+         glAccountId?: number, functionalCurrencyId ?: number, masterCompanyId?: number, managementStructureId?:number,
+          createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string, memo?: string, IsDeleted?:boolean,
+           description?:string,markUpPercentage?:number) {
 
         this.chargeId = chargeId;
         this.currencyId = currencyId;
@@ -25,9 +26,13 @@ export class Charge {
         this.updatedDate = updatedDate;
         this.updatedBy = updatedBy;
         this.isActive = isActive;
+        this.isDeleted=IsDeleted;
         this.memo = memo;
         this.cost=cost;
         this.billableAmount= billableAmount;
+        this.managementStructureId=managementStructureId;
+        this.description=description;
+        this.markUpPercentage=markUpPercentage;
     }
 
     public chargeId: number;
@@ -42,6 +47,7 @@ export class Charge {
     public billableAmount:number;
     public quantity: number;
     public isActive?: boolean;
+    public isDeleted?:boolean;
     public masterCompany: MasterCompany;
     public cost:number;
     public masterCompanyId: number;
@@ -50,4 +56,7 @@ export class Charge {
     public createdDate: Date;
     public updatedDate: Date;
     public memo: string;
+    public managementStructureId:number;
+    public description:string
+    public markUpPercentage:number
 }

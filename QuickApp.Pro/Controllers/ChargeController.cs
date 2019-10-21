@@ -77,7 +77,8 @@ namespace QuickApp.Pro.Controllers
                 curreobj.Description = chargeViewModel.Description;
                 curreobj.BillableAmount = chargeViewModel.BillableAmount;
                 curreobj.CurrencyId = chargeViewModel.CurrencyId;
-                curreobj.GLAccountId = chargeViewModel.GeneralLedgerId;
+                curreobj.FunctionalCurrencyId = chargeViewModel.FunctionalCurrencyId;
+                curreobj.GLAccountId = chargeViewModel.GLAccountId;
                 curreobj.IntegrationPortalId = chargeViewModel.IntegrationPortalId;
                 curreobj.PurchaseOrderId = chargeViewModel.PurchaseOrderId;
                 curreobj.Quantity = chargeViewModel.Quantity;
@@ -85,7 +86,8 @@ namespace QuickApp.Pro.Controllers
                 curreobj.ManagementStructureId = chargeViewModel.ManagementStructureId;
                 curreobj.Memo = chargeViewModel.Memo;
                 curreobj.IsActive = chargeViewModel.IsActive;
-                curreobj.MarkUpPercentage = chargeViewModel.MarkUp; 
+                curreobj.IsDeleted = chargeViewModel.IsDeleted;
+                curreobj.MarkUpPercentage = chargeViewModel.MarkUpPercentage; 
                 curreobj.CreatedDate = DateTime.Now;
                 curreobj.UpdatedDate = DateTime.Now;
                 curreobj.CreatedBy = chargeViewModel.CreatedBy;
@@ -120,16 +122,15 @@ namespace QuickApp.Pro.Controllers
                 existingResult.Description = chargeViewModel.Description;
                 existingResult.FunctionalCurrencyId = chargeViewModel.FunctionalCurrencyId;
                 existingResult.CurrencyId = chargeViewModel.CurrencyId;
-                existingResult.GLAccountId = chargeViewModel.GeneralLedgerId;
+                existingResult.GLAccountId = chargeViewModel.GLAccountId;
                 existingResult.IntegrationPortalId = chargeViewModel.IntegrationPortalId;
                 existingResult.PurchaseOrderId = chargeViewModel.PurchaseOrderId;
                 existingResult.Quantity = chargeViewModel.Quantity;
                 existingResult.VendorId = chargeViewModel.VendorId;
                 existingResult.Memo = chargeViewModel.Memo;
-                existingResult.MarkUpPercentage = chargeViewModel.MarkUp;
+                existingResult.MarkUpPercentage = chargeViewModel.MarkUpPercentage;
                 existingResult.IsActive = chargeViewModel.IsActive;
                 existingResult.ManagementStructureId = chargeViewModel.ManagementStructureId;
-
                 _unitOfWork.Charge.Update(existingResult);
                 _unitOfWork.SaveChanges();
 
