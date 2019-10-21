@@ -111,6 +111,8 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 	AuditDetails: any[];
 	HasAuditDetails: boolean;
 	AuditHistoryTitle: string = 'History of Ware House'
+	formData:FormData = null;
+	uploadedRecords: Object = null
 	ngOnInit(): void
 	{
 		this.cols = [
@@ -137,6 +139,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-warehouse';
 		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
 		this.selectedColumns = this.cols;
+		this.formData  = new FormData();
 	}
 
 	ngAfterViewInit() {
@@ -788,6 +791,42 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 				this.HasAuditDetails = this.AuditDetails.length > 0;
             }
         });
-    }
+	}
+	
+	/* 
+	    Bulk site upload
+	*/
+
+	bulkUpload(event) {
+
+		this.formData = new FormData();
+
+		this.uploadedRecords = null;
+
+		const file = event.target.files;
+		
+        console.log(file);
+		
+		if (file.length > 0) {
+
+			this.formData.append('file', file[0])
+			
+            this.workFlowtService.bulkUpload(this.formData).subscribe(response => {
+				
+				event.target.value = '';
+
+                this.uploadedRecords = response;
+				
+				this.loadData();
+				
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+            })
+        }
+
+	}
 
 }

@@ -10,6 +10,9 @@
         UnitOfMeasure,
         Manufacturer,
         ItemClassfication, 
-        Site
+        Site, 
+        WareHouse,
+        Location,
+        Shelf
     }
 }

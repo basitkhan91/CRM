@@ -414,7 +414,7 @@ namespace DAL
             get
             {
                 if (_warehouseRepository == null)
-                    _warehouseRepository = new WarehouseRepository(_context);
+                    _warehouseRepository = new WarehouseRepository(_context, _appSettings);
                 return _warehouseRepository;
             }
         }
@@ -423,7 +423,7 @@ namespace DAL
             get
             {
                 if (_locationRepository == null)
-                    _locationRepository = new LocationRepository(_context);
+                    _locationRepository = new LocationRepository(_context, _appSettings);
                 return _locationRepository;
             }
         }
@@ -432,7 +432,7 @@ namespace DAL
             get
             {
                 if (_shelfRepository == null)
-                    _shelfRepository = new ShelfRepository(_context);
+                    _shelfRepository = new ShelfRepository(_context, _appSettings);
                 return _shelfRepository;
             }
         }

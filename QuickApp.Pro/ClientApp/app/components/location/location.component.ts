@@ -115,6 +115,8 @@ export class LocationComponent implements OnInit, AfterViewInit {
 	locationName: any;
 	HasAuditDetails: boolean;
 	AuditHistoryTitle: string = 'History of Location';
+	formData:FormData = null;
+	uploadedRecords: Object = null;
 
 	ngOnInit(): void
 	{
@@ -795,5 +797,40 @@ export class LocationComponent implements OnInit, AfterViewInit {
         });
     }
 
+	/* 
+	    Bulk location upload
+	*/
+
+	bulkUpload(event) {
+
+		this.formData = new FormData();
+
+		this.uploadedRecords = null;
+
+		const file = event.target.files;
+		
+        console.log(file);
+		
+		if (file.length > 0) {
+
+			this.formData.append('file', file[0])
+			
+            this.workFlowtService.bulkUpload(this.formData).subscribe(response => {
+				
+				event.target.value = '';
+
+                this.uploadedRecords = response;
+				
+				this.loadData();
+				
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+            })
+        }
+
+	}
 	
 }

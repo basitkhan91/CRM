@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DAL.Repositories.Interfaces
 {
-    public interface IShelfRepository : IRepository<Shelf>
+    public interface IShelfRepository : IRepository<Shelf>, IBulkUpload<Shelf>
     {
         IEnumerable<object> GetAllShelfData();
         IEnumerable<object> GetAllAddressData(long id);
