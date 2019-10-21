@@ -301,8 +301,11 @@ namespace QuickApp.Pro.Controllers
 				actionobject.EDIDescription = customerViewModel.EDIDescription;
 				// actionobject.IntegrationPortalId = customerViewModel.IntegrationPortalId;
 				actionobject.RestrictBERMemo = customerViewModel.RestrictBERMemo;
-				actionobject.CustomerClassificationId = customerViewModel.CustomerClassificationIds[0];
-				actionobject.CustomerTypeId = customerViewModel.CustomerTypeId;
+
+                if (customerViewModel.CustomerClassificationIds !=null)
+                { actionobject.CustomerClassificationId = customerViewModel.CustomerClassificationIds[0] ?? null;}
+
+                actionobject.CustomerTypeId = customerViewModel.CustomerTypeId;
 				actionobject.CustomerType = customerViewModel.CustomerType;
 				actionobject.IsCustomerAlsoVendor = customerViewModel.IsCustomerAlsoVendor;
 				actionobject.IsPBHCustomer = customerViewModel.IsPBHCustomer;
@@ -375,20 +378,30 @@ namespace QuickApp.Pro.Controllers
 				if (actionobject.RestrictBER == true)
 					_unitOfWork.CommonRepository.CreateRestrictedParts(customerViewModel.RestrictedDERParts, actionobject.CustomerId, Convert.ToInt32(ModuleEnum.Customer));
 
+                if (customerViewModel.CustomerTaxTypeRateMapping != null)
+                {
+                    actionobject.CustomerTaxTypeRateMapping = customerViewModel.CustomerTaxTypeRateMapping;
+                    _unitOfWork.CommonRepository.CreateCustomerTaxTypeRateMapping(
+                        actionobject.CustomerTaxTypeRateMapping, actionobject.CustomerId);
 
+                }
 
-				//actionobject.RestrictsPmaLists = customerViewModel.RestrictsPmaList;
-				//_unitOfWork.CommonRepository.CreateRestrictPmaList(actionobject.RestrictsPmaLists, actionobject.CustomerId);
+                //actionobject.RestrictsPmaLists = customerViewModel.RestrictsPmaList;
+                //_unitOfWork.CommonRepository.CreateRestrictPmaList(actionobject.RestrictsPmaLists, actionobject.CustomerId);
 
-				//actionobject.RestrictsDerLists = customerViewModel.restrictBERList;
-				//_unitOfWork.CommonRepository.CreateRestrictDerList(actionobject.RestrictsDerLists, actionobject.CustomerId);
+                //actionobject.RestrictsDerLists = customerViewModel.restrictBERList;
+                //_unitOfWork.CommonRepository.CreateRestrictDerList(actionobject.RestrictsDerLists, actionobject.CustomerId);
 
-				List<ClassificationMapping> listofEClassificationMappings = customerViewModel.CustomerClassificationIds
-					.Select(item => new ClassificationMapping() { ClasificationId = item.Value }
-				).ToList();
-				_unitOfWork.CommonRepository.CreateClassificationMappings(listofEClassificationMappings, actionobject.CustomerId);
-
-				// _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, attachmentDetails, actionobject.CustomerId,Convert.ToInt32(DAL.Common.ModuleEnum.Customer), Convert.ToString(DAL.Common.ModuleEnum.Customer), actionobject.CreatedBy, actionobject.MasterCompanyId);
+                if (customerViewModel.CustomerClassificationIds != null)
+                {
+                    List<ClassificationMapping> listofEClassificationMappings = customerViewModel
+                        .CustomerClassificationIds
+                        .Select(item => new ClassificationMapping() {ClasificationId = item.Value}
+                        ).ToList();
+                    _unitOfWork.CommonRepository.CreateClassificationMappings(listofEClassificationMappings,
+                        actionobject.CustomerId);
+                }
+                // _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, attachmentDetails, actionobject.CustomerId,Convert.ToInt32(DAL.Common.ModuleEnum.Customer), Convert.ToString(DAL.Common.ModuleEnum.Customer), actionobject.CreatedBy, actionobject.MasterCompanyId);
 
 				return Ok(actionobject);
 			}
@@ -517,7 +530,7 @@ namespace QuickApp.Pro.Controllers
 			_unitOfWork.CommonRepository.UpdateRestrictedParts(customerViewModel.RestrictedPMAParts, actionobject.CustomerId, Convert.ToInt32(ModuleEnum.Customer));
 			_unitOfWork.CommonRepository.UpdateRestrictedParts(customerViewModel.RestrictedDERParts, actionobject.CustomerId, Convert.ToInt32(ModuleEnum.Customer));
 
-            //_unitOfWork.CommonRepository.UpdateRestrictPmaList(actionobject.RestrictsPmaLists, actionobject.CustomerId);
+			//_unitOfWork.CommonRepository.UpdateRestrictPmaList(actionobject.RestrictsPmaLists, actionobject.CustomerId);
 
 
 			//actionobject.RestrictsPmaLists = customerViewModel.RestrictsPmaList;
@@ -1719,7 +1732,7 @@ namespace QuickApp.Pro.Controllers
 						AircraftType = customerAircraftMappingVM[i].AircraftType,
 						AircraftModel = customerAircraftMappingVM[i].AircraftModel,
 						DashNumber = customerAircraftMappingVM[i].DashNumber,
-						ModelNumber = customerAircraftMappingVM[i].ModelNumber,
+						//ModelNumber = customerAircraftMappingVM[i].ModelNumber,
 						AircraftModelId = customerAircraftMappingVM[i].AircraftModelId,
 						DashNumberId = customerAircraftMappingVM[i].DashNumberId,
 						Memo = customerAircraftMappingVM[i].Memo,
@@ -1758,7 +1771,7 @@ namespace QuickApp.Pro.Controllers
 
 		#region ATA Chapter
 		[HttpGet("getCustomerATAMapped/{customerId}")]
-		[Produces(typeof(List<CustomerATAMapping>))]
+		[Produces(typeof(List<CustomerATAMapping>[]))]
 		public IActionResult ataMapped(long customerId)
 		{
 			var result = _unitOfWork.Customer.GetATAMapped(customerId);
@@ -1874,41 +1887,37 @@ namespace QuickApp.Pro.Controllers
 
 		[HttpPost("CustomerTaxTypeRatePost")]
 		[Produces(typeof(CustomerTaxTypeRateMapping[]))]
-		public IActionResult InsertCustomerTaxTypeRateInfo([FromBody] CustomerTaxTypeRateMappingViewModel[] customerTaxTypeRateMappingVM)
+		public IActionResult InsertCustomerTaxTypeRateInfo([FromBody] CustomerTaxTypeRateMapping[] customerTaxTypeRateMapping)
 		{
 			if (ModelState.IsValid)
 			{
-				for (int i = 0; i < customerTaxTypeRateMappingVM.Length; i++)
-				{
-					CustomerTaxTypeRateMapping customerAircraftMapping = new CustomerTaxTypeRateMapping
-					{
-						TaxType = customerTaxTypeRateMappingVM[i].TaxType,
-						TaxRate = customerTaxTypeRateMappingVM[i].TaxRate,
-						CustomerId = customerTaxTypeRateMappingVM[i].CustomerId,
-						MasterCompanyId = customerTaxTypeRateMappingVM[i].MasterCompanyId,
-						CreatedBy = customerTaxTypeRateMappingVM[i].CreatedBy,
-						UpdatedBy = customerTaxTypeRateMappingVM[i].UpdatedBy,
-						CreatedDate = System.DateTime.Now,
-						UpdatedDate = System.DateTime.Now,
-						IsDeleted = customerTaxTypeRateMappingVM[i].IsDeleted,
+                foreach (var customerContactTaxMapping in customerTaxTypeRateMapping)
+                {
 
-					};
-					_unitOfWork.Repository<CustomerTaxTypeRateMapping>().Add(customerAircraftMapping);
+                    customerContactTaxMapping.MasterCompanyId = 1;
+                        customerContactTaxMapping.CreatedBy = customerContactTaxMapping.CreatedBy ?? "admin";
+                        customerContactTaxMapping.UpdatedBy = customerContactTaxMapping.UpdatedBy ?? "admin";
+                        customerContactTaxMapping.CreatedDate = System.DateTime.Now;
+                        customerContactTaxMapping.UpdatedDate = System.DateTime.Now;
+                        customerContactTaxMapping.IsDeleted = customerContactTaxMapping.IsDeleted;
+                    
+					_unitOfWork.Repository<CustomerTaxTypeRateMapping>().Add(customerContactTaxMapping);
 					_unitOfWork.SaveChanges();
 				}
 			}
-			else
-			{
-				return BadRequest($"{nameof(customerTaxTypeRateMappingVM)} cannot be null");
-			}
-			return Ok(ModelState);
-		}
+            else
+            {
+                return BadRequest($"{nameof(customerTaxTypeRateMapping)} cannot be null");
+            }
+
+            return Ok(ModelState);
+        }
 
 		[HttpDelete("DeleteCustomerTaxTypeRateMappint/{id}")]
 		public IActionResult DeleteCustomerTaxTypeRate(long id)
 		{
 			var existingResult = _unitOfWork.Repository<CustomerTaxTypeRateMapping>().GetSingleOrDefault(c => c.CustomerTaxTypeRateMappingId == id);
-			existingResult.IsDeleted = true;
+			//existingResult.IsDeleted = true;
 			_unitOfWork.Repository<CustomerTaxTypeRateMapping>().Update(existingResult);
 			_unitOfWork.SaveChanges();
 			return Ok(id);

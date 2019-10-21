@@ -200,6 +200,7 @@ namespace DAL.Models
 
         public List<RestrictsPMAList> RestrictsPmaLists { get; set;}
         public List<RestrictsBERList> RestrictsDerLists { get; set; }
+        public  List<CustomerTaxTypeRateMapping> CustomerTaxTypeRateMapping { get; set; }
 
         [NotMapped]
         public long AttachmentId { get; set; }
