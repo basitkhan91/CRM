@@ -747,7 +747,7 @@ export class ReceivngPoComponent implements OnInit {
                 stockLine.quantity = 1;
                 stockLine.stockLineId = 0;
                 stockLine.createdDate = new Date();
-                stockLine.manufacturerId = 0;
+                stockLine.manufacturerId = part.itemMaster.manufacturerId;
                 stockLine.visible = false;
                 stockLine.shippingReference = '';
                 stockLine.shippingViaId = 0;
@@ -761,7 +761,8 @@ export class ReceivngPoComponent implements OnInit {
                 stockLine.masterCompanyId = 1;
                 stockLine.serialNumberNotProvided = false;
                 stockLine.purchaseOrderUnitCost = 0;
-                stockLine.purchaseOrderExtendedCost = part.extendedCost;
+                stockLine.purchaseOrderExtendedCost = part.unitCost;
+                stockLine.currentDate = new Date();
 
                 if (part.itemMaster != undefined) {
                     stockLine.purchaseOrderUnitCost = part.unitCost;
@@ -784,7 +785,7 @@ export class ReceivngPoComponent implements OnInit {
             stockLine.quantity = part.quantityActuallyReceived;
             stockLine.stockLineId = 0;
             stockLine.createdDate = new Date();
-            stockLine.manufacturerId = 0;
+            stockLine.manufacturerId = part.itemMaster.manufacturerId;
             stockLine.visible = false;
             stockLine.shippingReference = '';
             stockLine.shippingViaId = 0;
@@ -798,7 +799,8 @@ export class ReceivngPoComponent implements OnInit {
             stockLine.masterCompanyId = 1;
             stockLine.serialNumberNotProvided = false;
             stockLine.purchaseOrderUnitCost = 0;
-            stockLine.purchaseOrderExtendedCost = part.extendedCost;
+            stockLine.purchaseOrderExtendedCost = part.unitCost;
+            stockLine.currentDate = new Date();
 
             if (part.itemMaster != undefined) {
                 stockLine.purchaseOrderUnitCost = part.unitCost;
@@ -1181,7 +1183,7 @@ export class ReceivngPoComponent implements OnInit {
             if (item.itemMaster.glAccountId == 0) {
                 errorMessages.push("Please select GL Account of Part No. " + item.itemMaster.partNumber);
             }
-            if (item.conditionCode == undefined || item.conditionCode == "0") {
+            if (item.conditionId == undefined || item.conditionId == 0) {
                 errorMessages.push("Please select Condition of Part No. " + item.itemMaster.partNumber);
             }
             if (item.quantityRejected == undefined || item.quantityRejected == "") {
@@ -1194,7 +1196,7 @@ export class ReceivngPoComponent implements OnInit {
             if (item.stocklineListObj != undefined && item.stocklineListObj.length > 0) {
                 for (var i = 0; i < item.stocklineListObj.length; i++) {
                     item.stocklineListObj[i].gLAccountId = item.itemMaster.glAccountId;
-                    item.stocklineListObj[i].conditionId = parseInt(item.conditionCode);
+                    item.stocklineListObj[i].conditionId = item.conditionId;
                     item.stocklineListObj[i].quantityRejected = toInteger(item.quantityRejected);
                     item.stocklineListObj[i].isSerialized = item.itemMaster.isSerialized == undefined ? false : item.itemMaster.isSerialized;
                     item.stocklineListObj[i].isPMA = item.itemMaster.pma;
@@ -1216,9 +1218,6 @@ export class ReceivngPoComponent implements OnInit {
                         errorMessages.push("Please select Site in Receiving Qty - " + (i + 1).toString() + ofPartMsg);
                     }
 
-                    if (item.stocklineListObj[i].manufacturerId == undefined || item.stocklineListObj[i].manufacturerId == 0) {
-                        errorMessages.push("Please select MFG in Receiving Qty - " + (i + 1).toString() + ofPartMsg);
-                    }
                     if (item.itemMaster.isSerialized == true) {
                         item.stocklineListObj[i].serialNumber = item.stocklineListObj[i].serialNumber != undefined  ? item.stocklineListObj[i].serialNumber.trim() : '';
                         if (!item.stocklineListObj[i].serialNumberNotProvided && (item.stocklineListObj[i].serialNumber == undefined || item.stocklineListObj[i].serialNumber == '')) {
@@ -1237,26 +1236,16 @@ export class ReceivngPoComponent implements OnInit {
 
             if (item.timeLifeList != undefined && item.timeLifeList.length > 0) {
                 // need to have some check to make sure atleast one field is entered.
-                //for (var i = 0; i < item.timeLifeList.length; i++) {
-                //    if (item.isTimeLifeUpdateLater == undefined || !item.isTimeLifeUpdateLater) {
-                //        if (item.timeLifeList[i].cyclesRemaining == "") {
-                //            errorMessages.push("Please select Remaining Cycle in Receiving Qty - " + (i + 1).toString() + ofPartMsg);
-                //        }
-                //        if (item.timeLifeList[i].cyclesSinceNew == "" && item.timeLifeList[i].cyclesSinceOVH == "" && item.timeLifeList[i].cyclesSinceInspection == "" && item.timeLifeList[i].cyclesSinceRepair == "") {
-                //            errorMessages.push("Aleast one of Since New, Since Ovh,Since Insp or Since Repair is required in Receiving Qty - " + (i + 1).toString() + ofPartMsg);
-                //        }
-
-                //        if (item.timeLifeList[i].timeRemaining == "") {
-                //            errorMessages.push("Please select Remaining Time in Receiving Qty - " + (i + 1).toString() + ofPartMsg);
-                //        }
-                //        if (item.timeLifeList[i].timeSinceNew == "" && item.timeLifeList[i].timeSinceOVH == "" && item.timeLifeList[i].timeSinceInspection == "" && item.timeLifeList[i].timeSinceRepair == "") {
-                //            errorMessages.push("Aleast one of Since New, Since Ovh,Since Insp or Since Repair is required in Receiving Qty - " + (i + 1).toString() + ofPartMsg);
-                //        }
-                //        if (item.timeLifeList[i].lastSinceInspection == "" && item.timeLifeList[i].lastSinceNew == "" && item.timeLifeList[i].lastSinceOVH == "") {
-                //            errorMessages.push("Aleast one of Since New, Since Ovh,Since Insp is required in Receiving Qty - " + (i + 1).toString() + ofPartMsg);
-                //        }
-                //    }
-                //}
+                for (var i = 0; i < item.timeLifeList.length; i++) {
+                    if (item.isTimeLifeUpdateLater == undefined || !item.isTimeLifeUpdateLater) {
+                        var timeLife = item.timeLifeList[i];
+                        if (timeLife.cyclesRemaining == '' && timeLife.cyclesSinceNew == '' && timeLife.cyclesSinceOVH == '' && timeLife.cyclesSinceInspection == '' && timeLife.cyclesSinceRepair == '' &&
+                            timeLife.timeRemaining == '' && timeLife.timeSinceNew == '' && timeLife.timeSinceOVH == '' && timeLife.timeSinceInspection == '' && timeLife.timeSinceRepair == '' &&
+                            timeLife.lastSinceNew == '' && timeLife.lastSinceOVH == '' && timeLife.lastSinceInspection == '') {
+                            errorMessages.push("Please enter atleast one field in Time Life Page - " + (i + 1).toString() + ofPartMsg);
+                        }
+                    }
+                }
             }
 
         }
@@ -1458,5 +1447,17 @@ export class ReceivngPoComponent implements OnInit {
         }
     }
 
+    calculateExtendedCost(event, part) {
+        if (part.stocklineListObj[this.currentSLIndex].purchaseOrderUnitCost == undefined || part.stocklineListObj[this.currentSLIndex].purchaseOrderUnitCost == '') {
+            return;
+        }
+        if (part.itemMaster.isSerialized) {
+            part.stocklineListObj[this.currentSLIndex].purchaseOrderExtendedCost = part.stocklineListObj[this.currentSLIndex].purchaseOrderUnitCost ;
+        }
+        else {
+            part.stocklineListObj[this.currentSLIndex].purchaseOrderExtendedCost = part.stocklineListObj[this.currentSLIndex].purchaseOrderUnitCost * part.quantityActuallyReceived;
+        }
+        
+    }
 }
 
