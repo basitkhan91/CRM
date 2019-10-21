@@ -152,7 +152,7 @@ namespace QuickApp.Pro.Controllers
 
 		}
 
-		[HttpGet("cusshippingGet/{id}")]
+        [HttpGet("cusshippingGet/{id}")]
 		[Produces(typeof(List<CustomerBillingAddress>))]
 		public IActionResult cusshippingGet(long id, CustomerBillingAddress cstomerBillingAddress)
 		{
@@ -804,7 +804,30 @@ namespace QuickApp.Pro.Controllers
 
 		}
 
-		[HttpDelete("CustomerContact/{id}")]
+        //[HttpGet("getBillingHistory/{id}", Name = "getBillingHistoryById")]
+        //[Produces(typeof(List<AuditHistory>))]
+
+        //[ApiExplorerSettings(IgnoreApi = true)]
+        //public IActionResult GetBillingAuditHistoryById(long id)
+        //{
+        //    var result = _unitOfWork.AuditHistory.GetAllHistory("CustomerBillingAddress", id); 
+
+
+        //    try
+        //    {
+        //        var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
+
+        //        return Ok(resul1);
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        throw;
+        //    }
+        //}
+
+
+        [HttpDelete("CustomerContact/{id}")]
 		[Produces(typeof(CustomercontactViewModel))]
 		public IActionResult DeleteAction(long id)
 		{
@@ -2537,11 +2560,18 @@ namespace QuickApp.Pro.Controllers
 		}
 
 
-		#endregion
+        #endregion
 
+        [HttpGet("getCustomerBillingHistory/{id}")]
+        [Produces(typeof(List<CustomerBillingAddress>))]
+        public IActionResult getCustomerBillingHistory(long id, CustomerBillingAddress cstomerBillingAddress)
+        {
+            var allCusbilldetails = _unitOfWork.CustomerBillingInformation.GetAllCusBillingHistory(id); //.GetAllCustomersData();
+            return Ok(allCusbilldetails);
 
+        }
 
-	}
+    }
 }
 
 
