@@ -83,6 +83,30 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
     public lastName: any;
     public allWorkFlows: any[] = [];
     constructor(private route: ActivatedRoute, private translationService: AppTranslationService, public certificationser: CertificationtypeService, private router: Router, public authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public employeeService: EmployeeService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+        //this.displayedColumns.push('action');
+        //this.dataSource = new MatTableDataSource();
+
+        //console.log(this.employeeService.generalCollection);
+        //console.log(this.local);
+        //if (this.employeeService.generalCollection) {
+
+        //    this.local = this.employeeService.generalCollection;
+
+        //}
+        //if (this.employeeService.listCollection && this.employeeService.isEditMode == true) {
+        //    //debugger;
+        //    this.sourceEmployee = this.employeeService.listCollection;
+        //    console.log("this.sourceemployee")
+        //    console.log(this.sourceEmployee);
+        //    this.empId = this.sourceEmployee.employeeId;
+        //    this.firstName = this.sourceEmployee.firstName;
+        //    this.lastName = this.sourceEmployee.lastName;
+        //    this.local = this.employeeService.listCollection;
+        //    this.sourceEmployee.certificationDate = new Date();
+        //    this.getwithemployeeLicensureId();
+        //}
+
+
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
 
@@ -96,13 +120,18 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
         if (this.employeeService.listCollection && this.employeeService.isEditMode == true) {
             //debugger;
             this.sourceEmployee = this.employeeService.listCollection;
+
+            if (this.sourceEmployee.employeeId) {
+                this.nextbuttonEnable = true;
+
+            }
             console.log("this.sourceemployee")
             console.log(this.sourceEmployee);
             this.empId = this.sourceEmployee.employeeId;
             this.firstName = this.sourceEmployee.firstName;
             this.lastName = this.sourceEmployee.lastName;
             this.local = this.employeeService.listCollection;
-            this.sourceEmployee.certificationDate = new Date();
+            // this.sourceEmployee.certificationDate = new Date();
             this.getwithemployeeLicensureId();
         }
 
@@ -187,6 +216,17 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
 
     saveCertificateData() {
         console.log(this.sourceEmployee);
+        if (this.sourceEmployee.IsExpirationDate == undefined) {
+            this.sourceEmployee.IsExpirationDate = false;
+        }
+        if (this.sourceEmployee.isLicenseInForce == undefined) {
+            this.sourceEmployee.isLicenseInForce = false;
+        }
+
+        console.log("EmpLicenseId"+this.sourceEmployee.EmployeeLicenseTypeId);
+
+        
+
         this.isSaving = true;
         if (!this.sourceEmployee.employeeLicensureId) {
             console.log("save Date Route");

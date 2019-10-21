@@ -97,7 +97,11 @@ export class SiteComponent implements OnInit, AfterViewInit {
 	HasAuditDetails: boolean;
 	AuditHistoryTitle: string = 'History of Site'
 	totelPages: number;
+	formData: FormData; 
+	uploadedRecords: Object;
+
 	ngOnInit(): void {
+
 		//This Headers will Place in Html
 		this.cols = [
 
@@ -119,6 +123,7 @@ export class SiteComponent implements OnInit, AfterViewInit {
 		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
 		this.selectedColumns = this.cols;
 		this.HasAuditDetails = false;
+		this.formData = new FormData();
 	}
 
 	ngAfterViewInit() {
@@ -696,4 +701,40 @@ export class SiteComponent implements OnInit, AfterViewInit {
 		});
 	}
 
+	/* 
+	    Bulk site upload
+	*/
+
+	bulkUpload(event) {
+
+		this.formData = new FormData();
+
+		this.uploadedRecords = null;
+
+		const file = event.target.files;
+		
+        console.log(file);
+		
+		if (file.length > 0) {
+
+			this.formData.append('file', file[0])
+			
+            this.workFlowtService.bulkUpload(this.formData).subscribe(response => {
+				
+				event.target.value = '';
+
+                this.uploadedRecords = response;
+				
+				this.loadData();
+				
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+            })
+        }
+
+	}
+	
 }

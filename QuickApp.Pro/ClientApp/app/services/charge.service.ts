@@ -44,26 +44,14 @@ export class ChargeService {
         return this.chargeEndpoint.getNewGatecodeEndpoint<Charge>(charge);
 	}
 
-	getCurrencyData()
-	{
-		return Observable.forkJoin(
-			this.chargeEndpoint.getCurrencyEndpoint<Charge[]>());
-	}
+	
 
 	getPOData() {
 		return Observable.forkJoin(
 			this.chargeEndpoint.getPOEndpoint<Charge[]>());
 	}
 
-	getVendorData() {
-		return Observable.forkJoin(
-			this.chargeEndpoint.getVendorEndpoint<Charge[]>());
-	}
-
-	getIntegrationData() {
-		return Observable.forkJoin(
-			this.chargeEndpoint.getIntegrationPortalEndpoint<Charge[]>());
-	}
+	
 
     getCharge(chargeId?: any) {
         return this.chargeEndpoint.getEditChargeEndpoint<Charge>(chargeId);

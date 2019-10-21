@@ -388,25 +388,22 @@ export class DepreciationIntervalsComponent implements OnInit {
     }
    
 
-    //showAuditPopup(template, assetDepreciationIntervalTypeId): void {
-    //    this.auditInterval(assetDepreciationIntervalTypeId);
-    //    this.modal = this.modalService.open(template, { size: 'sm' });
-    //}
-
-    //auditInterval(assetDepreciationIntervalTypeId: number): void {
-    //    this.AuditDetails = [];
-    //    this.depreciationIntervalsService.getAudit(assetDepreciationIntervalTypeId).subscribe(audits => {
-    //        if (audits.length > 0) {
-    //            this.AuditDetails = audits;
-    //            this.AuditDetails[0].ColumnsToAvoid = ["assetDepreciationIntervalTypeAuditId", "assetDepreciationIntervalTypeId", "createdBy", "createdDate", "updatedDate", "masterCompanyId"];
-    //        }
-    //    });
-    //}
-
     getAuditHistoryById(rowData) {
         this.depreciationIntervalsService.getAudit(rowData.assetDepreciationIntervalId).subscribe(res => {
             this.auditHistory = res;
         })
+    }
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
     }
 
     sampleExcelDownload() {

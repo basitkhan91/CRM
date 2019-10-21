@@ -256,6 +256,32 @@ namespace DAL.Repositories
             }
         }
 
+        public void CreateCustomerTaxTypeRateMapping(List<CustomerTaxTypeRateMapping> customerTaxTypeRateMappings, long referenceId)
+        {
+            try
+            {
+                if (customerTaxTypeRateMappings != null && customerTaxTypeRateMappings.Count > 0)
+                {
+                    customerTaxTypeRateMappings
+                        .ForEach(p => { p.CustomerId = referenceId;
+                                        p.IsDeleted = false;
+                                        p.CreatedDate =  DateTime.Now;
+                                        p.MasterCompanyId = 1;
+                                        p.CreatedBy = p.CreatedBy ?? "admin";
+                                        p.UpdatedBy = p.UpdatedBy ?? "admin";
+                                        p.UpdatedDate = System.DateTime.Now;
+                        });
+                    _appContext.CustomerTaxTypeRateMapping.AddRange(customerTaxTypeRateMappings);
+                    _appContext.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         public void UpdateRestrictedParts(List<RestrictedParts> restrictedParts, long referenceId,int moduleId)
         {
             try

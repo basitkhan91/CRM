@@ -35,7 +35,7 @@ export class GLAccountClassService {
 
 	getWorkFlows() {
 		return Observable.forkJoin(
-			this.glaccountclassEndpoint.getGLAccountclassEndpoint<any[]>());
+			this.glaccountclassEndpoint.getGLAccountclassEndpoint<any>());
 	}
 
 	historyGlAccountClass(GLAccountClassId: number) {
@@ -67,4 +67,9 @@ export class GLAccountClassService {
         return Observable.forkJoin(
             this.glaccountclassEndpoint.getGlAccountRecords<GLAccountClass[]>(serverSidePagesData));
     }
+
+    GLAccountClassCustomUpload(file) {
+        return this.glaccountclassEndpoint.GLAccountClassCustomUpload(file);
+    }
+
 }
