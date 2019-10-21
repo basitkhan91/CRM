@@ -14,6 +14,8 @@ export class ProvisionEndpoint extends EndpointFactory {
     private readonly _actionsUrlNew: string = "/api/Provision/provision";
     private readonly _actionsUrlAuditHistory: string = "/api/Provision/auditHistoryById";
     private readonly getProvisionAuditHistoryById: string = "/api/Provision/audits";
+    private readonly excelUpload: string = "/api/Provision/uploadProvisionCustomdata";
+
 
 
     // private readonly _workflowActionsNewUrl: string = "/api/WorkflowAction/Get";
@@ -86,7 +88,11 @@ export class ProvisionEndpoint extends EndpointFactory {
             });
     }
  
+    provisionCustomUpload(file) {
+        return this.http.post(`${this.configurations.baseUrl}${this.excelUpload}`, file)
 
+
+    }
 
 }
 
