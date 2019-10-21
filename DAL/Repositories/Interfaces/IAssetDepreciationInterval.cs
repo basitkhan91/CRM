@@ -7,6 +7,6 @@ namespace DAL.Repositories.Interfaces
 {
    public interface IAssetDepreciationInterval : IRepository<AssetDepreciationInterval>
     {
-
+        IEnumerable<DAL.Models.AssetDepreciationIntervalAudit> GetAssetDepIntervalAuditDetails(long assetDepreciationIntervalId);
     }
 }

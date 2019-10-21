@@ -23,7 +23,7 @@ import { AlertService, MessageSeverity } from '../../services/alert.service';
 import { MasterComapnyService } from '../../services/mastercompany.service';
 import { GLAccountClass } from '../../models/glaccountclass.model';
 import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
-
+import { ConfigurationService } from '../../services/configuration.service';
 
 @Component({
 	selector: 'app-gl-account-class',
@@ -32,42 +32,61 @@ import { SingleScreenAuditDetails } from '../../models/single-screen-audit-detai
 	animations: [fadeInOut]
 })
 /** GlAccountClass component*/
-export class GlAccountClassComponent implements OnInit, AfterViewInit {
+export class GlAccountClassComponent implements OnInit {
     event: any;
     glAccountClass = [];
+    dataSource: MatTableDataSource<GLAccountClass>;
+    GLAccountTypeList: GLAccountClass[] = [];
+    GLAccountTypeToUpdate: GLAccountClass;
     updatedByInputFieldValue: any;
     createdByInputFieldValue: any;
+    private isDelete: boolean = false;
     matvhMode: any;
+    formData = new FormData();
     field: any;
+    existingRecordsResponse: Object;
+    gLAccountType: string = "";
+    auditHistory: any[] = [];
+    selectedreason: any;
     glAccountClassNameInputFieldValue: any;
     glAccountData: any[] = [];
 	disableSave: boolean;
 	selectedGlAccountClassName: any;
 	auditHisory: any[];
-	@ViewChild(MatPaginator) paginator: MatPaginator;
-	@ViewChild(MatSort) sort: MatSort;
 	glaccountclassnamecolle: any[] = [];
-	cols: any[];
+    cols: any[];
+    GLCID: any = "";
+    GLAccountType: any = "";
+    memo: any = "";
+    createdBy: any = "";
+    updatedBy: any = "";
+    createdDate: any = "";
+    updatedDate: any = "";
+    GL_Account_Type: any = "";
 	selectedColumns: any[];
 	displayedColumns = ['glcid', 'glaccountclassname', 'createdDate', 'companyName'];
-	dataSource: MatTableDataSource<any>;
 	allGLAccountClass: any[] ;
 	allComapnies: MasterCompany[] = [];
 	private isSaving: boolean;
-	public sourceglaccountclass: any = {}
-	private bodyText: string;
-	loadingIndicator: boolean;
+    public sourceAction: GLAccountClass;
+    private bodyText: string;
+    code_Name: any = "";
+    loadingIndicator: boolean;
+    allunitData: any;
 	closeResult: string;
 	title: string = "Create";
 	id: number;
 	display: boolean = false;
 	modelValue: boolean = false;
-	errorMessage: any;
+    errorMessage: any;
+    allreasn: any[] = [];
 	modal: NgbModalRef;
 	/** Actions ctor */
 	private isEditMode: boolean = false;
 	private isDeleteMode: boolean = false;
-	glAccountclassName: string;
+    glAccountclassName: string;
+    selectedData: any;
+    codeName: string = "";
 	filteredBrands: any[];
 	localCollection: any[] = [];
 	selectedColumn: any[];
@@ -75,37 +94,33 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 	glclassViewFileds: any = {};
     disablesave: boolean = false;
     AuditDetails: SingleScreenAuditDetails[];
+    pageIndex: number = 0;
+    pageSize: number = 10;
+    totalPages: number;
 
     pageSearch: { query: any; field: any; };
     first: number;
     rows: number;
-    paginatorState: any;
+    paginatorState: { rows: number; first: number; };
+    totalRecords: number;
+    //paginatorState: any;
+
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
 
     glAccountClassPagination: GLAccountClass[];//added
-    totalRecords: number;
     loading: boolean;
 
 	/** GlAccountClass ctor */
-	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public glAccountService: GLAccountClassService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public glAccountService: GLAccountClassService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
 		this.displayedColumns.push('action');
 		this.dataSource = new MatTableDataSource();
-		this.sourceglaccountclass = new GLAccountClass();
+		this.sourceAction = new GLAccountClass();
 	}
 	ngOnInit(): void {
-		this.loadData();
-		this.cols = [
-
-			
-			{ field: 'glAccountClassName', header: 'GL Account Type Name' },
-			{ field: 'createdBy', header: 'Created By' },
-			{ field: 'updatedBy', header: 'Updated By' },
-
-
-		];
-		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-gl-account-class';
-		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
-		this.selectedColumns = this.cols;
-
+        this.loadData();
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-gl-account-class';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
 	}
 	ngAfterViewInit() {
 		this.dataSource.paginator = this.paginator;
@@ -115,11 +130,29 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 	private loadData() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-		this.glAccountService.getWorkFlows().subscribe(
-			results => this.onDataLoadSuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
-	}
+        this.glAccountService.getWorkFlows().subscribe(data => {
+            this.allunitData = data[0].columHeaders;
+            this.GLAccountTypeList = data[0].columnData;
+            console.log(this.GLAccountTypeList);
+            this.totalRecords = this.GLAccountTypeList.length;
+            this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            this.cols = [
+                console.log(this.allunitData),
+                this.selectedColumns = this.allunitData
+            ];
+            this.selectedData = this.selectedColumns
+            this.alertService.stopLoadingMessage();
+        });
+    }
+
+    changePage(event: { first: any; rows: number }) {
+        console.log(event);
+        const pageIndex = (event.first / event.rows);
+        // this.pageIndex = pageIndex;
+        this.pageSize = event.rows;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+    }
+
 	private loadMasterCompanies() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
@@ -135,8 +168,7 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 	private refresh() {		
 		this.applyFilter(this.dataSource.filter);
 	}
-
-
+    
 	private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
 		// alert('success');
 		this.alertService.stopLoadingMessage();
@@ -155,17 +187,31 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 
-	}
+    }
+
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    }
+
+    validateRecordExistsOrNot(field: string, currentInput: any, originalData: any) {
+        console.log(field, currentInput, originalData)
+        if ((field !== '' || field !== undefined) && (currentInput !== '' || currentInput !== undefined) && (originalData !== undefined)) {
+            const data = originalData.filter(x => {
+                return x[field].toLowerCase() === currentInput.toLowerCase()
+            })
+            return data;
+        }
+    }
+
 	open(content) {
 		this.disableSave = false;
 		this.isEditMode = false;
 		this.isDeleteMode = false;
-		this.disablesave = false;
 		this.isSaving = true;
 		this.loadMasterCompanies();
-		this.sourceglaccountclass = new GLAccountClass();
-		this.glAccountclassName = "";
-		this.sourceglaccountclass.isActive = true;
+        this.sourceAction = new GLAccountClass();
+        this.sourceAction.isActive = true;
+        this.gLAccountType = "";
 		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
 			console.log('When user closes');
@@ -175,9 +221,14 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 
 	openView(content, row) {
 
-		this.sourceglaccountclass = row;
-		this.glclassViewFileds.capabilityName = row.glAccountClassName;
-		this.glclassViewFileds.capabilityId = row.glcid;		
+		this.sourceAction = row;
+        this.GLAccountType = row.gLAccountType;
+        this.GLCID = row.gLCID;		
+        this.memo = row.memo;
+        this.createdBy = row.createdBy;
+        this.updatedBy = row.updatedBy;
+        this.createdDate = row.createdDate;
+        this.updatedDate = row.updatedDate;
 		this.loadMasterCompanies();
 		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
@@ -188,8 +239,12 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 
 		this.isEditMode = false;
 		this.isDeleteMode = true;
-		this.sourceglaccountclass = row;
-		this.modal = this.modalService.open(content, { size: 'sm' });
+        this.sourceAction = row;
+        this.code_Name = row.gLAccountType;
+        //this.GLCID = row.gLCID ;	
+        //this.GL_Account_Type = row.gLAccountType;
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        console.log(content);
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -200,9 +255,8 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 		this.isEditMode = true;
 		this.isSaving = true;
 		this.loadMasterCompanies();
-		this.disableSave = false;
-		this.sourceglaccountclass = row;
-		this.glAccountclassName = this.sourceglaccountclass.glaccountclassname;
+		this.sourceAction = row;
+        this.gLAccountType = row.gLAccountType;
 		this.loadMasterCompanies();
 		this.modal = this.modalService.open(content, { size: 'sm' });
 		this.modal.result.then(() => {
@@ -210,112 +264,122 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 		}, () => { console.log('Backdrop click') })
 	}
 
-	handleChange(rowData, e) {
-		if (e.checked == false) {
-			this.sourceglaccountclass = rowData;
-			this.sourceglaccountclass.updatedBy = this.userName;
-			this.Active = "In Active";
-			this.sourceglaccountclass.isActive == false;
-			this.glAccountService.updateGlAccountClass(this.sourceglaccountclass).subscribe(
-				response => this.saveCompleted(this.sourceglaccountclass),
-				error => this.saveFailedHelper(error));
-			//alert(e);
+    handleChange(rowData, e) {
+
+        const params = <any>{
+            createdBy: this.userName,
+            updatedBy: this.userName,
+            GLAccountClassId: rowData.glAccountClassId,
+            GLCID: rowData.gLCID,
+            GLAccountClassName: rowData.gLAccountType,
+            GLAccountClassMemo: rowData.memo,
+            isActive: rowData.isActive,
+            IsDeleted: false,
+            masterCompanyId: 1
+        };
+
+        if (e.checked == false) {
+            this.Active = "In Active";
+            this.glAccountService.updateGlAccountClass(params).subscribe(
+                response => this.saveCompleted(this.sourceAction),
+                error => this.saveFailedHelper(error));			
 		}
 		else {
-			this.sourceglaccountclass = rowData;
-			this.sourceglaccountclass.updatedBy = this.userName;
-			this.Active = "Active";
-			this.sourceglaccountclass.isActive == true;
-			this.glAccountService.updateGlAccountClass(this.sourceglaccountclass).subscribe(
-				response => this.saveCompleted(this.sourceglaccountclass),
-				error => this.saveFailedHelper(error));
-			//alert(e);
+            this.Active = "Active";
+            this.glAccountService.updateGlAccountClass(params).subscribe(
+                response => this.saveCompleted(this.sourceAction),
+                error => this.saveFailedHelper(error));			
 		}
 
 }
 	
-		eventHandler(event) {
-			if (event.target.value != "") {
-				let value = event.target.value.toLowerCase();
-				if (this.selectedGlAccountClassName) {
-					if (value == this.selectedGlAccountClassName.toLowerCase()) {
-						this.disablesave = true;
+    eventHandler(event) {
+        let value = event.target.value.toLowerCase()
+        if (this.selectedreason) {
+            if (value == this.selectedreason.toLowerCase()) {
+                this.disableSave = true;
+            }
+            else {
+                this.disableSave = false;
+            }
+        }
+    }
 
-					}
-					else {
-						this.disablesave = false;
-					}
-				}
+    partnmId(event) {
+        for (let i = 0; i < this.allreasn.length; i++) {
+            if (event == this.allreasn[i][0].gLAccountType) {
+                this.disableSave = true;
+                this.selectedreason = event;
+            }
+        }
+    }
 
-			}
-		}
-
-	partnmId(event) {
-		if (this.allGLAccountClass) {
-
-			for (let i = 0; i < this.allGLAccountClass.length; i++) {
-				if (event == this.allGLAccountClass[i].glAccountClassName) {
-					this.sourceglaccountclass.glAccountClassName = this.allGLAccountClass[i].glAccountClassName;
-					this.disablesave = true;
-
-					this.selectedGlAccountClassName = event;
-				}
-			}
-		}
-	}
 	filterGlAccountclass(event) {
 
 		this.localCollection = [];
-		for (let i = 0; i < this.allGLAccountClass.length; i++) {
-			let glAccountClassName = this.allGLAccountClass[i].glAccountClassName;
-			if (glAccountClassName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-				this.glaccountclassnamecolle.push([{
-					"glAccountClassId": this.allGLAccountClass[i].glAccountClassId,
-					"glAccountClassName": glAccountClassName
+        for (let i = 0; i < this.GLAccountTypeList.length; i++) {
+            let gLAccountType = this.GLAccountTypeList[i].gLAccountType;
+            if (gLAccountType.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.allreasn.push([{
+                    "gLAccountClassId": this.GLAccountTypeList[i].glAccountClassId,
+                    "gLAccountType": gLAccountType
 				}]),
-					this.localCollection.push(glAccountClassName)
+                    this.localCollection.push(gLAccountType)
 
 			}
 		}
 	}
 
-	editItemAndCloseModel() {
-		if (!(this.sourceglaccountclass.glAccountClassName)) {
-			this.display = true;
-			this.modelValue = true;
-		}
-		if ((this.sourceglaccountclass.glAccountClassName)) {
-			this.isSaving = true;
+    editItemAndCloseModel() {
 
-			if (this.isEditMode == false) {
-				this.sourceglaccountclass.createdBy = this.userName;
-				this.sourceglaccountclass.updatedBy = this.userName;
-				this.sourceglaccountclass.masterCompanyId = 1;
-				this.glAccountService.newGlAccountClass(this.sourceglaccountclass).subscribe(
-					role => this.saveSuccessHelper(role),
-					error => this.saveFailedHelper(error));
+        this.isSaving = true;
+        console.log(this);
+
+        const params = <any>{
+            createdBy: this.userName,
+            updatedBy: this.userName,
+            GLAccountClassName: this.gLAccountType,
+            GLCID: this.sourceAction.gLCID,
+            GLAccountClassMemo: this.sourceAction.memo,
+
+            IsActive: this.sourceAction.isActive,
+            IsDeleted: this.isDelete,
+            masterCompanyId: 1
+        };
+
+  //      if (!(this.sourceAction.GLAccountType)) {
+		//	this.display = true;
+		//	this.modelValue = true;
+		//}
+  //      if ((this.sourceAction.GLAccountType)) {
+		//	this.isSaving = true;
+
+        if (this.isEditMode == false) {
+
+            this.glAccountService.newGlAccountClass(params).subscribe(
+                role => this.saveSuccessHelper(role),
+                error => this.saveFailedHelper(error));
 			}
-			else {
-
-				this.sourceglaccountclass.updatedBy = this.userName;
-				this.sourceglaccountclass.glaccountclassname = this.glAccountclassName;
-				this.sourceglaccountclass.masterCompanyId = 1;
-				this.glAccountService.updateGlAccountClass(this.sourceglaccountclass).subscribe(
-					response => this.saveCompleted(this.sourceglaccountclass),
-					error => this.saveFailedHelper(error));
+        else {
+            params.glAccountClassId = this.sourceAction.glAccountClassId;
+            this.glAccountService.updateGlAccountClass(params).subscribe(
+                response => this.saveCompleted(this.sourceAction),
+                error => this.saveFailedHelper(error));
 			}
 
 			this.modal.close();
 		}
-	}
+
 	deleteItemAndCloseModel() {
 		this.isSaving = true;
-		this.sourceglaccountclass.updatedBy = this.userName;
-		this.glAccountService.deleteGlAccountClass(this.sourceglaccountclass.glAccountClassId).subscribe(
-			response => this.saveCompleted(this.sourceglaccountclass),
+        this.sourceAction.updatedBy = this.userName;
+		this.glAccountService.deleteGlAccountClass(this.sourceAction.glAccountClassId).subscribe(
+			response => this.saveCompleted(this.sourceAction),
 			error => this.saveFailedHelper(error));
 		this.modal.close();
-	}
+}
+
+
 
 	dismissModel() {
 		this.isDeleteMode = false;
@@ -323,32 +387,31 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 		this.modal.close();
 	}
 
-	private saveSuccessHelper(role?: any) {
-		this.isSaving = false;
-		this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
+    private saveSuccessHelper(role?: GLAccountClass) {
+        this.isSaving = false;
+        this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
+        this.loadData();
+        this.alertService.stopLoadingMessage();
+    }
 
-        this.updatePaginatorState();
+    private saveFailedHelper(error: any) {
+        this.isSaving = false;
+        this.alertService.stopLoadingMessage();
+        this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
+        this.alertService.showStickyMessage(error, null, MessageSeverity.error);
+    }
 
-	}
-
-	private saveCompleted(user?: any) {
-		this.isSaving = false;
-
-		if (this.isDeleteMode == true) {
-			this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
-			this.isDeleteMode = false;
-		}
-		else {
-			this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
-
-		}
-
-        this.updatePaginatorState();
-	}
-
-	get userName(): string {
-		return this.authService.currentUser ? this.authService.currentUser.userName : "";
-	}
+    private saveCompleted(user?: GLAccountClass) {
+        this.isSaving = false;
+        if (this.isDelete == true) {
+            this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
+            this.isDelete = false;
+        }
+        else {
+            this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
+        }
+        this.loadData();
+    }
 
 	private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
 		this.alertService.stopLoadingMessage();
@@ -361,107 +424,63 @@ export class GlAccountClassComponent implements OnInit, AfterViewInit {
 
 
 	}
-	private saveFailedHelper(error: any) {
-		this.isSaving = false;
-		this.alertService.stopLoadingMessage();
-		this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
-		this.alertService.showStickyMessage(error, null, MessageSeverity.error);
-	}
 
-	private getDismissReason(reason: any): string {
-		if (reason === ModalDismissReasons.ESC) {
-			return 'by pressing ESC';
-		} else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-			return 'by clicking on a backdrop';
-		} else {
-			return `with: ${reason}`;
-		}
-    }
-
-    showAuditPopup(template, glAccountClassId): void {
-        this.auditGlAccountClass(glAccountClassId);
-        this.modal = this.modalService.open(template, { size: 'sm' });
-    }
-
-    auditGlAccountClass(glAccountClassId: number): void {
-        this.AuditDetails = [];
-        this.glAccountService.getGlAudit(glAccountClassId).subscribe(audits => {
-            if (audits.length > 0) {
-                this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["glAccountClassAuditId", "glAccountClassId", "createdBy", "createdDate", "updatedDate", "masterCompanyId"];
-            }
-        });
-    }
-
-    updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
-    {
-        this.paginatorState = {
-            rows: this.rows,
-            first: this.first
-        }
-        if (this.paginatorState) {
-            this.loadGlAccountPage(this.paginatorState);
-        }
-    }
-
-
-    loadGlAccountPage(event: LazyLoadEvent) //when page initilizes it will call this method
-    {
-        this.loading = true;
-        this.rows = event.rows;
-        this.first = event.first;
-        setTimeout(() => {
-            if (this.totalRecords) {
-                this.glAccountService.getServerPages(event).subscribe( //we are sending event details to service
-                    pages => {
-                        if (pages.length > 0) {
-                            this.glAccountData = pages;
-                            this.glAccountClassPagination = this.glAccountData[0].getLAccountClasses;
-                            this.totalRecords = this.glAccountData[0].totalRecordsCount
-                        }
-                    });
-                this.loading = false;
-            }
-        }, 1000);
-    }
-
-    inputFiledFilter(event, filed, matchMode) {
-
-        this.event = event;
-        this.field = filed;
-        this.matvhMode = matchMode;
-
-        if (filed == 'glAccountClassName') {
-            this.glAccountClassNameInputFieldValue = event;
-        }
-        if (filed == 'createdBy') {
-            this.createdByInputFieldValue = event;
-        }
-        if (filed == 'updatedBy') {
-            this.updatedByInputFieldValue = event;
-        }
-        this.glAccountClass.push({
-            glAccountClassName: this.glAccountClassNameInputFieldValue,
-            CreatedBy: this.createdByInputFieldValue,
-            UpdatedBy: this.updatedByInputFieldValue,
-            first: this.first,
-            page: 10,
-            pageCount: 10,
-            rows: this.rows,
-            limit: 5
+    getAuditHistoryById(rowData) {
+        this.glAccountService.getGlAudit(rowData.glAccountClassId).subscribe(res => {
+            this.auditHistory = res;
         })
-        if (this.glAccountClass) {
-            this.glAccountService.getServerPages(this.glAccountClass[this.glAccountClass.length - 1]).subscribe( //we are sending event details to service
-                pages => {
-                    if (pages.length > 0) {
-                        this.glAccountData = pages;
-                        this.glAccountClassPagination = this.glAccountData[0].getLAccountClasses;
-                        this.totalRecords = this.glAccountData[0].totalRecordsCount;
-                
-                    }
-                });
-        }
-        else {
+    }
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
         }
     }
+
+    sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=GLAccountClass&fileName=GLAccountClass.xlsx`;
+
+        window.location.assign(url);
+    }
+
+    customExcelUpload(event) {
+        const file = event.target.files;
+
+        console.log(file);
+        if (file.length > 0) {
+
+            this.formData.append('file', file[0])
+            this.glAccountService.GLAccountClassCustomUpload(this.formData).subscribe(res => {
+                event.target.value = '';
+
+                this.formData = new FormData();
+                this.existingRecordsResponse = res;
+                this.getGLAccountClassList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+
+                // $('#duplicateRecords').modal('show');
+                // document.getElementById('duplicateRecords').click();
+
+            })
+        }
+
+    }
+
+    getGLAccountClassList() {
+
+        this.loadData();
+    }
+
 }
+    
+

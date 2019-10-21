@@ -20,7 +20,7 @@ export class AssetStatusEndpointService extends EndpointFactory {
     private readonly updateURL: string = "/api/assetstatus/update";
     private readonly removeByIdURL: string = "/api/assetstatus/removeById";
     private readonly updateForActive: string = "/api/assetstatus/updateActive";
-    private readonly getAssetAuditById: string = "/api/assetstatus/audits";
+    private readonly getAssetAuditById: string = "/api/assetstatus/assetstatusauditdetails";
     private readonly excelUpload: string = "/api/assetstatus/UploadAssetStatusCustomData";
 
 

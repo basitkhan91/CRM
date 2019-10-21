@@ -147,7 +147,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("audits/{id}")]
         public IActionResult AuditDetails(long id) {
             var audits = unitOfWork.Repository<AssetStatusAudit>()
-                .Find(x => x.Id == id)
+                .Find(x => x.AssetStatusId == id)
                 .OrderByDescending(x => x.AssetStatusAuditId);
 
             var auditResult = new List<AuditResult<AssetStatusAudit>>();
@@ -155,6 +155,21 @@ namespace QuickApp.Pro.Controllers
             auditResult.Add(new AuditResult<AssetStatusAudit> { AreaName="Asset Status", Result = audits.ToList() });
             
             return Ok(auditResult);
+        }
+
+        [HttpGet("assetstatusauditdetails/{assetStatusId}")]
+        [Produces(typeof(List<AssetStatusAudit>))]
+        public IActionResult GetAuditHostoryById(long assetStatusId)
+        {
+            try
+            {
+                var result = unitOfWork.AssetStatus.GetAssetStatusAuditDetails(assetStatusId);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         [HttpPost("UploadAssetStatusCustomData")]

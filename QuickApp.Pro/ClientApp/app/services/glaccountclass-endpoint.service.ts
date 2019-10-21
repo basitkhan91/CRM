@@ -10,11 +10,12 @@ import { ConfigurationService } from './configuration.service';
 export class GLAccountClassEndpoint extends EndpointFactory {
 
 
-	private readonly _glaccountclassUrl: string = "/api/GlAccountClass/Get";
+    private readonly _glaccountclassUrl: string = "/api/GlAccountClass/getAll";
 	private readonly _glaccountclassUrlNew: string = "/api/GlAccountClass/glaccountclasspost";
     private readonly _glaccountclassUrlAuditHistory: string = "/api/GlAccountClass/auditHistoryById";
-    private readonly getGlById: string = "/api/GlAccountClass/audits";
+    private readonly getGlById: string = "/api/GlAccountClass/GLAccountClassauditdetails";
     private readonly getGlAccount: string = "/api/GlAccountClass/pagination";
+    private readonly excelUpload: string = "/api/GlAccountClass/UploadGlAccountClassCustomData";
 
 	get glaccountclassUrl() { return this.configurations.baseUrl + this._glaccountclassUrl; }
     get paginate() { return this.configurations.baseUrl + this.getGlAccount; }
@@ -88,5 +89,11 @@ export class GLAccountClassEndpoint extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.getGlAccountRecords(paginationOption));
             });
+    }
+
+    GLAccountClassCustomUpload(file) {
+        return this.http.post(`${this.configurations.baseUrl}${this.excelUpload}`, file)
+
+
     }
 }

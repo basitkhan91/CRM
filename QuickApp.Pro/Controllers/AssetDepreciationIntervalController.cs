@@ -97,7 +97,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetAll()
         {
             List<ColumHeader> columHeaders = new List<ColumHeader>();
-            PropertyInfo[] propertyInfos = typeof(AssetDepreciationIntervalModel).GetProperties();
+            PropertyInfo[] propertyInfos = typeof(AssetDepreciationIntervalColModel).GetProperties();
             ColumHeader columnHeader;
             DynamicGridData<dynamic> dynamicGridData = new DynamicGridData<dynamic>();
             foreach (PropertyInfo property in propertyInfos)
@@ -148,6 +148,21 @@ namespace QuickApp.Pro.Controllers
             });
 
             return Ok(auditResult);
+        }
+
+        [HttpGet("depreciationintervalauditdetails/{assetDepreciationIntervalId}")]
+        [Produces(typeof(List<AssetDepreciationIntervalAudit>))]
+        public IActionResult GetAuditHostoryById(long assetDepreciationIntervalId)
+        {
+            try
+            {
+                var result = unitOfWork.AssetDepreciationInterval.GetAssetDepIntervalAuditDetails(assetDepreciationIntervalId);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         [HttpPost("UploadDepIntervalCustomData")]
