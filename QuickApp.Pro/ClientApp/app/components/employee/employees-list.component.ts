@@ -25,6 +25,8 @@ import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Router } from '@angular/router';
 import { AppTranslationService } from '../../services/app-translation.service';
 
+
+
 @Component({
     selector: 'app-employees-list',
     templateUrl: './employees-list.component.html',
@@ -52,6 +54,9 @@ export class EmployeesListComponent implements OnInit{
     public jobTypeName: any;
     public employeeLeaveType: any;
     public deleteEmployeeId: any;
+    totalRecords: any;
+    totalPages: number;
+    pageSize: number = 10;
 	ngOnInit(): void {
 
 		// debugger;
@@ -85,6 +90,9 @@ export class EmployeesListComponent implements OnInit{
 	//debugger;
 		//this.alertService.stopLoadingMessage();
 		//this.loadingIndicator = false;
+        this.totalRecords = allWorkFlows.length;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+
 		this.dataSource.data = allWorkFlows;
 		this.allVendorList = allWorkFlows;
 
@@ -100,6 +108,10 @@ export class EmployeesListComponent implements OnInit{
 		this.dataSource.data = allWorkFlows;
 		this.allEmployeelist = allWorkFlows[0];
 
+
+    }
+
+    loadCustomerPages(event) {
 
     }
 
@@ -284,19 +296,33 @@ export class EmployeesListComponent implements OnInit{
 		this.modal.close();
 	}
 	handleChange(rowData, e) {
-		if (e.checked == false) {
+        if (e.checked == false) {
+
+            console.log("In active");
 			this.sourceEmployee = rowData;
-			this.sourceEmployee.updatedBy = this.userName;
+            this.sourceEmployee.updatedBy = this.userName;
+            this.sourceEmployee.IsActive = false;
+            var employpeeleaveTypeId = [];           
+            employpeeleaveTypeId.push(this.sourceEmployee.employeeLeaveTypeId);
+
+            console.log(employpeeleaveTypeId);
+            this.sourceEmployee.employeeLeaveTypeId = employpeeleaveTypeId; 
+            
 			this.Active = "In Active";
-			this.sourceEmployee.isActive == false;
+			this.sourceEmployee.isActive = false;
 			this.empService.updateActionforActive(this.sourceEmployee).subscribe(
 				response => this.saveCompleted(this.sourceEmployee),
 				error => this.saveFailedHelper(error));
 			//alert(e);
 		}
-		else {
-			this.sourceEmployee = rowData;
-			this.sourceEmployee.updatedBy = this.userName;
+        else {
+            console.log("active");
+            var employpeeleaveTypeId = []; 
+            this.sourceEmployee = rowData;
+            employpeeleaveTypeId.push(this.sourceEmployee.employeeLeaveTypeId);
+            this.sourceEmployee.employeeLeaveTypeId = employpeeleaveTypeId; 
+            this.sourceEmployee.updatedBy = this.userName;
+            this.sourceEmployee.IsActive = true;
 			this.Active = "Active";
 			this.sourceEmployee.isActive == true;
 			this.empService.updateActionforActive(this.sourceEmployee).subscribe(

@@ -216,8 +216,7 @@ import { CommonService } from "../services/common.service";
         AircraftManufacturerComponent,
         AircraftModelComponent,
         DashnumberComponent,
-        PaginationComponent,
-       
+        PaginationComponent
     ],
     providers: [
         PercentService,

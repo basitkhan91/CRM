@@ -12,6 +12,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using MimeKit.Encodings;
 using RepairOrderPartChild = QuickApp.Pro.ViewModels.RepairOrderPartChild;
+using DAL.Common;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -44,7 +45,18 @@ namespace QuickApp.Pro.Controllers
             return Ok(allActions);
 
         }
-
+        /// <summary>
+        /// Method that gets basic info namely id and name only
+        /// </summary>
+        /// <returns>List with basic info</returns>
+        [HttpGet("basic")]
+        [Produces(typeof(List<VendorBaseViewModel>))]
+        public IActionResult GetBasicList()
+        {
+            var basicvendorList = _unitOfWork.Vendor.GetVendorsLite();
+            var mappedList= Mapper.Map <IEnumerable<VendorBaseViewModel>>(basicvendorList);
+            return Ok(mappedList);                  
+        }
 
         [HttpGet("GetmanagementSiteList/{companyId}")]
         [Produces(typeof(List<SiteViewModel>))]
@@ -77,15 +89,14 @@ namespace QuickApp.Pro.Controllers
         }
 
 
-        [HttpGet("polist")]
-        [Produces(typeof(List<PurchaseOrderViewModel>))]
-
-        public IActionResult polist()
+        [HttpPost("polist")]
+        public IActionResult polist(Filters<PurchaseOrderFilters> poFilters)
         {
-            var allActions = _unitOfWork.purchaseOrder.GetPurchaseOrderlist(); //.GetAllCustomersData();
+            var allActions = _unitOfWork.purchaseOrder.GetPurchaseOrderlist(poFilters); //.GetAllCustomersData();
             return Ok(allActions);
 
         }
+
         [HttpGet("rolist")]
         [Produces(typeof(List<RepairOrderViewModel>))]
 
@@ -582,7 +593,8 @@ namespace QuickApp.Pro.Controllers
         private void MapPOVMToEntity(PurchaseOrderViewModel poViewModel, PurchaseOrder actionobject)
         {
             actionobject.PriorityId = poViewModel.PriorityId;
-            actionobject.DateRequested = poViewModel.OpenDate;
+            actionobject.OpenDate = poViewModel.OpenDate;
+            actionobject.ClosedDate = poViewModel.ClosedDate;
 
             actionobject.PurchaseOrderNumber = poViewModel.PurchaseOrderNumber;
             actionobject.RequestedBy = poViewModel.RequisitionerId;

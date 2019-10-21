@@ -202,6 +202,10 @@ import { JobTypeService } from './services/job-type.service';
 import { JobTypeEndpontService } from './services/job-type-endpoint.service';
 import { PercentEndpoint } from './services/percent-endpoint.service';
 import { PercentService } from './services/percent.service';
+import { PurchaseOrderService } from './services/purchase-order.service';
+import { PurchaseOrderEndpoint } from './services/purchase-order-endpoint.service';
+import { GLAccountService } from './services/glAccount.service';
+import { GLAccountEndpoint } from './services/glAccount-endpoint.service';
 //import { AuditComponent } from "./components/Audit/audit.component";
 
 @NgModule({
@@ -409,7 +413,11 @@ import { PercentService } from './services/percent.service';
     JobTypeService,   
     JobTypeEndpontService,
     PercentService,
-    PercentEndpoint
+    PercentEndpoint,
+    PurchaseOrderService,
+    PurchaseOrderEndpoint,
+    GLAccountService,
+    GLAccountEndpoint
   ],
   entryComponents: [LoginDialogComponent, AddTaskDialogComponent],
   bootstrap: [AppComponent],

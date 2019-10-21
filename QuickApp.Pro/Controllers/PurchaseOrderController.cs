@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using DAL;
+using DAL.Common;
 using DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,13 +30,25 @@ namespace QuickApp.Pro.Controllers
         }
 
 
-        [HttpGet("Get")]
-        [Produces(typeof(List<PurchaseOrderViewModel>))]
-        public IActionResult Get()
+        [HttpPost("Get")]
+        public IActionResult Get(Filters<PurchaseOrderFilters> poFilters)
         {
-            var allpurchaseInfo = _unitOfWork.purchaseOrder.GetPurchaseOrderlist(); //.GetAllCustomersData();
+            var allpurchaseInfo = _unitOfWork.purchaseOrder.GetPurchaseOrderlist(poFilters); //.GetAllCustomersData();
             return Ok(Mapper.Map<IEnumerable<PurchaseOrderViewModel>>(allpurchaseInfo));
 
+        }
+
+        /// <summary>
+        /// Method that gets basic info namely id and name only
+        /// </summary>
+        /// <returns>List with basic info</returns>
+        [HttpGet("basic")]
+        [Produces(typeof(List<PurchaseOrderBaseViewModel>))]
+        public IActionResult GetBasicList()
+        {
+            var basicPOList = _unitOfWork.purchaseOrder.GetPurchaseOrderListLite();
+            var mappedList = Mapper.Map<IEnumerable<PurchaseOrderBaseViewModel>>(basicPOList);
+            return Ok(mappedList);
         }
 
         [HttpGet("auditHistoryById/{id}")]

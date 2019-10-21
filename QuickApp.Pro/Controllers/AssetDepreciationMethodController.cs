@@ -121,6 +121,21 @@ namespace QuickApp.Pro.Controllers
             return Ok(auditResult);
         }
 
+        [HttpGet("depreciationmethodauditdetails/{assetDepreciationMethodId}")]
+        [Produces(typeof(List<AssetDepreciationMethodAudit>))]
+        public IActionResult GetAuditHostoryById(long assetDepreciationMethodId)
+        {
+            try
+            {
+                var result = unitOfWork.AssetDepreciationMethod.GetDepreciationMethodAuditDetails(assetDepreciationMethodId);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         [HttpGet("getAll")]
         public IActionResult GetAll()
         {

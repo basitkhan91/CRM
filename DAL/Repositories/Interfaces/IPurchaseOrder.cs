@@ -1,4 +1,5 @@
-﻿using DAL.Models;
+﻿using DAL.Common;
+using DAL.Models;
 using System;
 using System.Collections.Generic;
 
@@ -7,8 +8,8 @@ namespace DAL.Repositories.Interfaces
 
     public interface IPurchaseOrder : IRepository<DAL.Models.PurchaseOrder>
     {
-        IEnumerable<DAL.Models.PurchaseOrder> GetPurchaseOrderlist();
-
+        IEnumerable<object> GetPurchaseOrderlist(Filters<PurchaseOrderFilters> poFilters);
+        IEnumerable<PurchaseOrder> GetPurchaseOrderListLite();
         int GetLastIdNumber(long puchaseOrderId, long purchaseOrderPartId);
         long CreatePOApprovers(PurchaseOrderApprover poApprover);
         void UpdatePOApprovers(PurchaseOrderApprover poApprover);

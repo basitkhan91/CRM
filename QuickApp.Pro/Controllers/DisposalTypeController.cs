@@ -154,7 +154,7 @@ namespace QuickApp.Pro.Controllers
 
         #endregion Private Methods
 
-        [HttpGet("audits/{id}")]
+        [HttpGet("audits/{id}")]        
         public IActionResult AuditDetails(long id)
         {
             var audits = unitOfWork.Repository<AssetDisposalTypeAudit>()
@@ -167,6 +167,22 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(auditResult);
         }
+
+        [HttpGet("disposaltypeauditdetails/{assetDisposalTypeId}")]
+        [Produces(typeof(List<AssetDisposalTypeAudit>))]
+        public IActionResult GetAuditHostoryById(long assetDisposalTypeId)
+        {
+            try
+            {
+                var result = unitOfWork.AssetDisposalType.GetDisposalTypeAuditDetails(assetDisposalTypeId);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         [HttpPost("UploadDispTypeCustomData")]
         public IActionResult UploadDispTypeCustomData()
         {

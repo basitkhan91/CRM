@@ -10,6 +10,8 @@ namespace DAL.Repositories.Interfaces
     public interface IVendor : IRepository<Vendor>
     {
         IEnumerable<Vendor> GetVendors();
+        IEnumerable<Vendor> GetVendorsLite();
+
 
         IEnumerable<object> GetVendorListDetails();
         IEnumerable<object> GetvendorPurchaseOrderList(long id);

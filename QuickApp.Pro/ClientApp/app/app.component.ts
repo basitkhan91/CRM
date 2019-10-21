@@ -619,6 +619,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Priority', routerLink: '/singlepages/singlepages/app-priority' },
                             { label: 'Work Scope', routerLink: '/singlepages/singlepages/app-work-scope' },
                             { label: 'Provision', routerLink: '/singlepages/singlepages/app-provision' },
+                            { label: 'Customer Classification', routerLink: '/singlepages/singlepages/app-customer-classification' },
                         ]
                     },
                     {

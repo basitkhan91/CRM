@@ -627,7 +627,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
             ///this.sourceEmployee.reset();
             this.alertService.showMessage("Success", this.showTitle, MessageSeverity.success);
-            this.nextClick();
+            //this.nextClick();
             this.sourceEmpFirst = null;
             //window.location.reload();
 
@@ -1043,7 +1043,8 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.isDeleteMode = false;
         this.isSaving = true;
         this.loadMasterCompanies();
-        this.sourceAction = new JobTitle();
+        //this.sourceAction = new JobTitle();
+        this.sourceAction = new JobType();
         this.sourceAction.isActive = true;
         this.jobName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
