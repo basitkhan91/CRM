@@ -5,7 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Reflection;
+using Microsoft.EntityFrameworkCore.Query.Expressions;
 
 namespace DAL.Repositories
 {
@@ -244,7 +246,16 @@ namespace DAL.Repositories
             {
                 if (restrictedParts != null && restrictedParts.Count > 0)
                 {
-                    restrictedParts.ForEach(p => { p.ReferenceId = referenceId; p.ModuleId = moduleId; p.IsDeleted = false; p.IsActive = true;p.CreatedDate = p.UpdatedDate = DateTime.Now; });
+                    
+                    restrictedParts.ForEach(p =>
+                    {
+                        p.ReferenceId = referenceId;
+                        p.PartNumber = GetRestrictedPartName(p.MasterPartId,moduleId);
+                        p.ModuleId = moduleId;
+                        p.IsDeleted = false;
+                        p.IsActive = true;
+                        p.CreatedDate = p.UpdatedDate = DateTime.Now; });
+                    
                     _appContext.RestrictedParts.AddRange(restrictedParts);
                     _appContext.SaveChanges();
                 }
@@ -262,6 +273,7 @@ namespace DAL.Repositories
             {
                 if (customerTaxTypeRateMappings != null && customerTaxTypeRateMappings.Count > 0)
                 {
+                    
                     customerTaxTypeRateMappings
                         .ForEach(p => { p.CustomerId = referenceId;
                                         p.IsDeleted = false;
@@ -286,12 +298,15 @@ namespace DAL.Repositories
         {
             try
             {
+               
                 if (restrictedParts != null && restrictedParts.Count > 0)
                 {
                     foreach (var item in restrictedParts)
                     {
+                        item.PartNumber = GetRestrictedPartName(item.MasterPartId, moduleId);
                         if (item.RestrictedPartId > 0)
                         {
+                           
                             _appContext.RestrictedParts.Update(item);
                         }
                         else
@@ -301,7 +316,6 @@ namespace DAL.Repositories
                             item.IsActive = true;
                             item.IsDeleted = false;
                             item.CreatedDate = item.UpdatedDate = DateTime.Now;
-                            
                             _appContext.RestrictedParts.Add(item);
                         }
                         _appContext.SaveChanges();
@@ -749,6 +763,29 @@ namespace DAL.Repositories
                                 ad.StateOrProvince
                             }).FirstOrDefault();
                 return data;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public string GetRestrictedPartName(long masterPartId, long masterCompanyId)
+        {
+            try
+            {
+                var data = (from im in _appContext.ItemMaster
+                    join mp in _appContext.MasterParts on im.MasterPartId equals mp.MasterPartId 
+                    where (im.MasterCompanyId == masterCompanyId)
+                    select new
+                    {
+                        mp.PartNumber,
+                        mp.MasterPartId
+                    }).Where(m => m.MasterPartId == masterPartId).Select(p=>p.PartNumber).SingleOrDefault();
+                if (!String.IsNullOrWhiteSpace(data))
+                    return data;
+                else return null;
             }
             catch (Exception)
             {
