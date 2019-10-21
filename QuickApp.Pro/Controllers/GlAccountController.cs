@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using AutoMapper;
 using DAL;
 using DAL.Models;
 using Microsoft.AspNetCore.Http;
@@ -47,7 +48,15 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
 
         }
-
+        [HttpGet("basic")]
+        [Produces(typeof(List<GLAccountBaseViewModel>))]
+        public IActionResult getGLAccountBasic()
+        {
+            var basicglData = unitOfWork.gLAccount.GetGLAccountsLite();
+                var mappedList = Mapper.Map<IEnumerable<GLAccountBaseViewModel>>(basicglData);
+              return Ok(mappedList);
+        }
+             
         [HttpGet("getMiscData")]
         public IActionResult getMiscData()
         {

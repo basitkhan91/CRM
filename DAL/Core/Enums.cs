@@ -13,4 +13,11 @@ namespace DAL.Core
         Female,
         Male
     }
+
+
+    public enum DataExtractorType
+    {
+        None = 1,  
+        Excel,  
+    }
 }

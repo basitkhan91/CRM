@@ -194,6 +194,13 @@ namespace QuickApp.Pro.Controllers
             
         }
 
+        [HttpPost("uploadReasonCustomdata")]
+        public IActionResult UploadReasonCustomData()
+        {
+            _unitOfWork.FileUploadRepository.UploadCustomFile(Convert.ToString("DepreciationConvention"), Request.Form.Files[0]);
+            return Ok();
+        }
+
         public class GetData
         {
             public int TotalRecordsCount { get; set; }

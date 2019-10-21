@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DAL.Models
 {
-    public class AssetDepreciationIntervalAudit : PasBase
+    public class AssetDepreciationIntervalAudit : PasBaseAudit
     {
         [Key]
         public long AssetDepreciationIntervalAuditId { get; set; }
@@ -12,7 +12,6 @@ namespace DAL.Models
         public string AssetDepreciationIntervalName { get; set; }
         public string AssetDepreciationIntervalMemo { get; set; }
         public Int32 MasterCompanyId { get; set; }
-        public bool? IsActive { get; set; }
-        public bool? IsDelete { get; set; }
+
     }
 }

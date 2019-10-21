@@ -17,12 +17,9 @@ using System.Threading.Tasks;
 
 namespace QuickApp.Pro.ViewModels
 {
-    public  class VendorViewModel
+    public  class VendorViewModel:VendorBaseViewModel
     {
-
-       
-        public long VendorId { get; set; }
-        public string VendorName { get; set; }
+      
         public string VendorCode { get; set; }
         public Int32? CurrencyId { get; set; }
         //[ForeignKey("VendorTypeId")]

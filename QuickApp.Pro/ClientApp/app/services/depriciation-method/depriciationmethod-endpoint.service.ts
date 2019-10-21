@@ -19,7 +19,8 @@ export class DepriciationMethodEndpointService extends EndpointFactory {
     private readonly addURL: string = "/api/depreciationMethod/add";
     private readonly updateURL: string = "/api/depreciationMethod/update";
     private readonly removeByIdURL: string = "/api/depreciationMethod/removeById";
-    private readonly audits: string = "/api/depreciationMethod/audits";
+    //private readonly audits: string = "/api/depreciationMethod/audits";
+    private readonly audits: string = "/api/depreciationMethod/depreciationmethodauditdetails";
     private readonly excelUpload: string = "/api/DepreciationMethod/UploadDepMethodCustomData";
 
 
@@ -84,7 +85,7 @@ export class DepriciationMethodEndpointService extends EndpointFactory {
 
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.removedepriciationMethodById(assetDepreciationMethodId));
+                return this.handleError(error, () => this.getAssetDepreciationAudits(assetDepreciationMethodId));
             });
     }
 

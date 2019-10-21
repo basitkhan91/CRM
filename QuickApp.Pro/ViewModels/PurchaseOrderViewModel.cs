@@ -5,11 +5,10 @@ using System.Threading.Tasks;
 
 namespace QuickApp.Pro.ViewModels
 {
-    public class PurchaseOrderViewModel
+    public class PurchaseOrderViewModel:PurchaseOrderBaseViewModel
     {
 
-        public long PurchaseOrderId { get; set; }
-        public string PurchaseOrderNumber { get; set; }
+
         public string ReferenceId { get; set; }
         public Nullable<long> PriorityId { get; set; }
         public long RequisitionerId { get; set; }

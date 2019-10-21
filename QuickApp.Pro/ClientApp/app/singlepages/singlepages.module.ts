@@ -215,8 +215,7 @@ import { PercentEndpoint } from "../services/percent-endpoint.service";
         AircraftManufacturerComponent,
         AircraftModelComponent,
         DashnumberComponent,
-        PaginationComponent,
-       
+        PaginationComponent
     ],
     providers: [
         PercentService,

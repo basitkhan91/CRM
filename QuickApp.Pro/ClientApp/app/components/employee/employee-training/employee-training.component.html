@@ -37,7 +37,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Training Type</label>
+                                                    <label class="control-label col-sm-4">Training Type <span style="color:red">*</span></label>
                                                     <div class="col-sm-7">
                                                         <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeTrainingTypeId">
                                                             <option *ngFor="let employeeName of alltrainingTypes" [ngValue]="employeeName.employeeTrainingTypeId">{{employeeName.description}}</option>

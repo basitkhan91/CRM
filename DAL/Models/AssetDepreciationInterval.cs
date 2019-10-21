@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DAL.Models
 {
-   public class AssetDepreciationInterval: PasBase
+   public class AssetDepreciationInterval: PasBase, IAudit
     {
         [Key]
         public long AssetDepreciationIntervalId { get; set; }

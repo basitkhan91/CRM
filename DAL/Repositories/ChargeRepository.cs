@@ -18,12 +18,18 @@ namespace DAL.Repositories
         {
             try
             {
-                var result = (from ch in _appContext.Charge
+                var result = (from ch in _appContext.Charge 
                               join ms in _appContext.ManagementStructure on ch.ManagementStructureId equals ms.ManagementStructureId
                               join cu in _appContext.Currency on ch.CurrencyId equals cu.CurrencyId
-                              join ve in _appContext.Vendor on ch.VendorId equals ve.VendorId
-                              join po in _appContext.PurchaseOrder on ch.PurchaseOrderId equals po.PurchaseOrderId
-                              join ip in _appContext.IntegrationPortal on ch.IntegrationPortalId equals ip.IntegrationPortalId
+                              join fu in _appContext.Currency on ch.FunctionalCurrencyId equals fu.CurrencyId
+                              join gl in _appContext.GLAccount on ch.GLAccountId equals gl.GLAccountId
+                              join ve in _appContext.Vendor on ch.VendorId equals ve.VendorId into vjoin
+                              join po in _appContext.PurchaseOrder on ch.PurchaseOrderId equals po.PurchaseOrderId into purjoin
+                              join ip in _appContext.IntegrationPortal on ch.IntegrationPortalId equals ip.IntegrationPortalId into intjoin
+                              from subvendor in vjoin.DefaultIfEmpty()
+                              from subPO in purjoin.DefaultIfEmpty()
+                              from subInt in intjoin.DefaultIfEmpty()
+                              where ch.IsDeleted.Value== false
                               select new
                               {
                                   ch.ChargeId,
@@ -31,21 +37,28 @@ namespace DAL.Repositories
                                   ch.Quantity,
                                   ch.Description,
                                   ch.CurrencyId,
+                                  functionalCurrencyId =fu.CurrencyId,
+                                  functionalCurrencySymbol=fu.Symbol,
                                   ch.Cost,
-                                  ch.MarkUp,
+                                  ch.MarkUpPercentage,
                                   ch.PurchaseOrderId,
                                   ch.VendorId,
-                                  ch.IntegrationPortalId,
-                                  ch.GeneralLedgerId,
+                                  subInt.IntegrationPortalId,
+                                  ch.GLAccountId,
+                                  glAccountName= gl.AccountName,
                                   ch.Memo,
                                   ch.IsActive,
                                   ch.ManagementStructureId,
                                   ch.BillableAmount,
                                   ms.Code,
                                   cu.Symbol,
-                                  po.PurchaseOrderNumber,
-                                  ve.VendorName,
-                                  IntegrationPortalDescription = ip.Description,
+                                  subPO.PurchaseOrderNumber,
+                                  subvendor.VendorName,
+                                  IntegrationPortalDescription = subInt.Description,
+                                  ch.CreatedBy,
+                                  ch.CreatedDate,
+                                  ch.UpdatedBy,
+                                  ch.UpdatedDate
                                  
                                  
 
@@ -62,99 +75,10 @@ namespace DAL.Repositories
             
         }
 
-        public IEnumerable<object> getCurrencyData()
-        {
-            try
-            {
-                var result = (from cu in _appContext.Currency
-                              
-
-                              select new
-                              {
-                                  cu.CurrencyId,
-                                  cu.Code,
-                                  cu.Symbol
-                              }).ToList();
-                return result;
-            }
-            catch (Exception ex)
-            {
-
-                return null;
-            }
-
-        }
-
-        public IEnumerable<object> getPurchaseOrderNumbers()
-        {
-            try
-            {
-                var result = (from po in _appContext.PurchaseOrder
-
-                              select new
-                              {
-                                  po.PurchaseOrderId,
-                                  po.PurchaseOrderNumber
-                                 
-                              }).ToList();
-                return result;
-            }
-            catch (Exception ex)
-            {
-
-                return null;
-            }
-
-        }
-
-        public IEnumerable<object> getVendorNmaes()
-        {
-            try
-            {
-                var result = (from vo in _appContext.Vendor
-
-                              select new
-                              {
-                                  vo.VendorId,
-                                  vo.VendorName
-
-                              }).ToList();
-                return result;
-            }
-            catch (Exception ex)
-            {
-
-                return null;
-            }
-
-        }
-
-        public IEnumerable<object> IntegrationPortal()
-        {
-            try
-            {
-                var result = (from ip in _appContext.IntegrationPortal
-
-                              select new
-                              {
-                                  ip.IntegrationPortalId,
-                                  ip.Description
-
-                              }).ToList();
-                return result;
-            }
-            catch (Exception ex)
-            {
-
-                return null;
-            }
-
-        }
-
         override
        public IQueryable<DAL.Models.Charge> GetPaginationData()
         {
-            return _appContext.Charge.Where(c => (c.IsDelete == false || c.IsDelete == null))
+            return _appContext.Charge.Where(c => (c.IsDeleted == false || c.IsDeleted == null))
                 .OrderByDescending(c => c.ChargeId).ToList().AsQueryable();
         }
 

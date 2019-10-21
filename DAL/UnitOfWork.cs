@@ -204,6 +204,11 @@ namespace DAL
         IAssetIntangibleAttributeType _assetIntangibleAttributeType;
         IAssetDepreciationInterval _assetDepreciationInterval;
 
+        IAssetDepreciationMethod _assetDepreciationMethod;
+        IAssetDisposalType _assetDisposalType;
+        IAssetStatus _assetStatus;
+        IAssetDepConvention _assetDepConvention;
+
         IPublicationTypesRepository _publicationTypesRepository;
         IPercentageRepository _percentageRepository;
 
@@ -405,7 +410,7 @@ namespace DAL
             get
             {
                 if (_siteRepository == null)
-                    _siteRepository = new SiteRepository(_context);
+                    _siteRepository = new SiteRepository(_context, _appSettings);
                 return _siteRepository;
             }
         }
@@ -511,7 +516,7 @@ namespace DAL
 
         public int SaveChanges()
         {
-            //AuditChanges();
+            AuditChanges();
             return _context.SaveChanges();
         }
 
@@ -1725,6 +1730,46 @@ namespace DAL
                 if (_assetDepreciationInterval == null)
                     _assetDepreciationInterval = new AssetDepreciationIntervalRepository(_context);
                 return _assetDepreciationInterval;
+            }
+        }
+
+        IAssetDepreciationMethod IUnitOfWork.AssetDepreciationMethod
+        {
+            get
+            {
+                if (_assetDepreciationMethod == null)
+                    _assetDepreciationMethod = new AssetDepreciationMethodRepository(_context);
+                return _assetDepreciationMethod;
+            }
+        }
+
+        IAssetDisposalType IUnitOfWork.AssetDisposalType
+        {
+            get
+            {
+                if (_assetDisposalType == null)
+                    _assetDisposalType = new AssetDisposalTypeRepository(_context);
+                return _assetDisposalType;
+            }
+        }
+
+        IAssetStatus IUnitOfWork.AssetStatus
+        {
+            get
+            {
+                if (_assetStatus == null)
+                    _assetStatus = new AssetStatusRepository(_context);
+                return _assetStatus;
+            }
+        }
+
+        IAssetDepConvention IUnitOfWork.AssetDepConvention
+        {
+            get
+            {
+                if (_assetDepConvention == null)
+                    _assetDepConvention = new AssetDepConventionRepository(_context);
+                return _assetDepConvention;
             }
         }
 
