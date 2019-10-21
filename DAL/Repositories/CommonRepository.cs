@@ -694,6 +694,27 @@ namespace DAL.Repositories
             return data;
         }
 
+
+        public IEnumerable<object> BindShipViaDetails(int userType,long referenceId)
+        {
+            try
+            {
+                var list = (from sv in _appContext.ShippingVia
+                            where sv.IsDeleted == false && sv.UserType == userType && sv.ReferenceId == referenceId
+                            select new
+                            {
+                                sv.ShippingViaId,
+                                sv.Name
+                            }).OrderBy(p=>p.Name).ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         private static PropertyInfo[] GetProperties(object obj)
         {
             return obj.GetType().GetProperties();

@@ -98,6 +98,15 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [HttpGet]
+        [Route("bindshipviadetails")]
+        public IActionResult BindShipViaDetails(int userType, long referenceId)
+        {
+            var result = _unitOfWork.CommonRepository.BindShipViaDetails(userType, referenceId);
+            return Ok(result);
+
+        }
+
         [HttpPost]
         [Route("createaddress")]
         public IActionResult CreateAddress([FromBody] Address address)
