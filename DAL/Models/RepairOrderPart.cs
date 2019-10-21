@@ -120,6 +120,8 @@ namespace DAL.Models
 
     public class RepairOrderPartChild
     {
+        [Key]
+        public long RepairOrderPartChildId { get; set; }
         [ForeignKey("RepairOrderId")]
         public long RepairOrderId { get; set; }
         public bool? IsParent { get; set; }
