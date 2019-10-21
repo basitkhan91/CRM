@@ -64,6 +64,9 @@ export class ProvisionService {
     getProvisionAudit(provisionId: number) {
         return this.provisionEndpoint.getProvisionAuditById<any>(provisionId);
     }
+    provisionFileUpload(file) {
+        return this.provisionEndpoint.provionCustomUpload(file);
+    }
 
 }
 
