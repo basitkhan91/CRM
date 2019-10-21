@@ -48,8 +48,8 @@ export class IntegrationService {
         return this.integrationEndpointService.getNewActionEndpoint<Integration>(action);
     }
 
-    getAction(actionId?: number) {
-        return this.integrationEndpointService.getEditActionEndpoint<Integration>(actionId);
+    getIntegrationsBasic() {
+        return this.integrationEndpointService.getIntegrationLiteEndpoint<any[]>();
     }
 
     updateAction(action) {

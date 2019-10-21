@@ -44,7 +44,18 @@ namespace QuickApp.Pro.Controllers
             return Ok(allActions);
 
         }
-
+        /// <summary>
+        /// Method that gets basic info namely id and name only
+        /// </summary>
+        /// <returns>List with basic info</returns>
+        [HttpGet("basic")]
+        [Produces(typeof(List<VendorBaseViewModel>))]
+        public IActionResult GetBasicList()
+        {
+            var basicvendorList = _unitOfWork.Vendor.GetVendorsLite();
+            var mappedList= Mapper.Map <IEnumerable<VendorBaseViewModel>>(basicvendorList);
+            return Ok(mappedList);                  
+        }
 
         [HttpGet("GetmanagementSiteList/{companyId}")]
         [Produces(typeof(List<SiteViewModel>))]

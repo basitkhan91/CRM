@@ -23,6 +23,10 @@ namespace DAL.Repositories
             return _appContext.Vendor.OrderByDescending(c => c.VendorId).ToList();
         }
 
+        public IEnumerable<Vendor> GetVendorsLite()
+        {
+            return _appContext.Vendor.Where(v => v.IsActive == true && v.IsDelete == false).Select(v => new  Vendor{ VendorId= v.VendorId, VendorName=v.VendorName }).OrderBy(c=>c.VendorName).ToList();
+        }
 
         public IEnumerable<object> GetVendorListDetails()
         {
@@ -648,5 +652,7 @@ namespace DAL.Repositories
                         }).ToList();
             return data;
         }
+
+     
     }
 }

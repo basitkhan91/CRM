@@ -27,6 +27,13 @@ namespace DAL.Repositories
             return purchaseOrderList;
         }
 
+        public IEnumerable<DAL.Models.PurchaseOrder> GetPurchaseOrderListLite()
+        {
+            var purchaseOrderList = _appContext.PurchaseOrder.Where(c=> c.IsActive==true).OrderByDescending(c => c.PurchaseOrderId)
+                .Select(c=>new PurchaseOrder { PurchaseOrderId=c.PurchaseOrderId, PurchaseOrderNumber=c.PurchaseOrderNumber }).ToList();
+            return purchaseOrderList;
+        }
+
         public int GetLastIdNumber(long puchaseOrderId, long purchaseOrderPartId)
         {
             var stockLine = _appContext.StockLine.Where(x => x.PurchaseOrderId == puchaseOrderId && x.PurchaseOrderPartRecordId == purchaseOrderPartId).OrderByDescending(x => x.StockLineId).FirstOrDefault();
