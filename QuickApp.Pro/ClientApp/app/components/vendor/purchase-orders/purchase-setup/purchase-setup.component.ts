@@ -32,6 +32,7 @@ import { CommonService } from '../../../../services/common.service';
 import { CustomerShippingModel } from '../../../../models/customer-shipping.model';
 import { CompanyService } from '../../../../services/company.service';
 import { CustomerInternationalShipVia } from '../../../../models/customer-internationalshipping.model';
+import { getModuleNameById } from '../../../../generic/enums';
 
 @Component({
 	selector: 'app-purchase-setup',
@@ -249,6 +250,7 @@ export class PurchaseSetupComponent {
 	legalEntityList_ForShipping: Object;
 	legalEntityList_ForBilling: Object;
 	addShipViaFormForShipping = new CustomerInternationalShipVia()
+	shipViaList: Object;
 
 
 	// this.siteName ="";
@@ -607,18 +609,18 @@ export class PurchaseSetupComponent {
 			shipToUserId: this.sourcePoApproval.shipToUserId ? this.getShipToBillToUserId(this.sourcePoApproval.shipToUserId) : 0,
 			shipToAddressId: this.sourcePoApproval.shipToAddressId ? this.sourcePoApproval.shipToAddressId : 0,
 			//shipToContactId: this.sourcePoApproval.shipToContactId ? this.getShipBillContactId(this.sourcePoApproval.shipToContactId) : 0,
-			shipToContactId: 2,
-			shipViaId: 0,
-			shippingCost: 0,
-			handlingCost: 0,
-			shippingId: 0,
-			shippingURL: '',
+			shipToContactId: this.sourcePoApproval.shipToContactId ? this.sourcePoApproval.shipToContactId : 0,
+			shipViaId: this.sourcePoApproval.shipViaId,
+			shippingCost: this.sourcePoApproval.shippingCost,
+			handlingCost: this.sourcePoApproval.handlingCost,
+			shippingId: this.sourcePoApproval.shippingId,
+			shippingURL: this.sourcePoApproval.shippingURL,
 			shipToMemo: this.sourcePoApproval.shipToMemo ? this.sourcePoApproval.shipToMemo : '',
 			billToUserTypeId: this.sourcePoApproval.billToUserTypeId ? parseInt(this.sourcePoApproval.billToUserTypeId) : 0,
 			billToUserId: this.sourcePoApproval.billToUserId ? this.getShipToBillToUserId(this.sourcePoApproval.billToUserId) : 0,
 			billToAddressId: this.sourcePoApproval.billToAddressId ? this.sourcePoApproval.billToAddressId : 0,
 			//billToContactId: this.sourcePoApproval.billToContactId ? this.getShipBillContactId(this.sourcePoApproval.billToContactId) : 0,
-			billToContactId: 2,
+			billToContactId: this.sourcePoApproval.billToContactId ? this.sourcePoApproval.billToContactId : 0,
 			billToMemo: this.sourcePoApproval.billToMemo ? this.sourcePoApproval.billToMemo : '',
 			createdBy: this.userName,
 			updatedBy: this.userName
@@ -1374,7 +1376,23 @@ export class PurchaseSetupComponent {
 					// this.sourcePoApproval.shipToContactId = data[0];
 					// this.adressPOPUPDropdown = this.shipToContactData ;
 				});
-				break;
+
+				// let moduleId = 0;
+				// if(this.sourcePoApproval.shipToUserId == 1){
+
+				// 	moduleId = getValueFromObjectByKey('customerId', this.sourcePoApproval.shipToUserId)
+				// } else if(this.sourcePoApproval.shipToUserId == 2){
+
+				// 	moduleId = getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId)
+				// }else if(this.sourcePoApproval.shipToUserId == 2){
+
+				// 	moduleId = getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId)
+				// }
+
+
+				this.commonService.getShipViaDetailsByModule(this.sourcePoApproval.shipToUserTypeId, this.customerNames[i].customerId).subscribe(res => {
+					this.shipViaList = res;
+				})
 			}
 		}
 
@@ -2424,7 +2442,13 @@ export class PurchaseSetupComponent {
 
 			console.log(this.vendorContactsForshipTo);
 
+			this.commonService.getShipViaDetailsByModule(this.sourcePoApproval.shipToUserTypeId, event.vendorId).subscribe(res => {
+				this.shipViaList = res;
+			})
+
 		});
+
+
 		//for (let i = 0; i < this.VendorNamecoll.length; i++) {
 		//	if (event == this.VendorNamecoll[i][0].vendorName) {
 		//		this.vendorService.getVendorShipAddressGet(this.VendorNamecoll[i][0].vendorId).subscribe(
@@ -2439,7 +2463,16 @@ export class PurchaseSetupComponent {
 		//	}
 		//}
 	}
-
+	getShipViaDetails(id) {
+		
+		this.commonService.getShipViaDetailsById(id).subscribe(res => {
+			const responseData = res;
+			this.sourcePoApproval.shippingAcctNum =  responseData.shippingAccountInfo;
+			this.sourcePoApproval.shippingURL  = responseData.shippingURL;
+			this.sourcePoApproval.shippingId = responseData.shippingId;
+			console.log(res)
+		})
+	}
 
     /*onshipCustomerNameselected(event) {
 
@@ -3602,6 +3635,55 @@ export class PurchaseSetupComponent {
 
 	}
 
+	saveShippingAddressToPO(){
+		const data = {
+			...this.addressFormForShipping,
+			createdBy: this.userName,
+			updatedBy: this.userName,
+			masterCompanyId: 1,
+			isActive: true,
+
+		}
+		if (this.sourcePoApproval.shipToUserTypeId == 1) {
+			const customerData = { ...data,  customerId: getValueFromObjectByKey('customerId', this.sourcePoApproval.shipToUserId) }
+
+			this.commonService.createAddress(customerData).subscribe(() => {
+				// this.addressFormForShipping = new CustomerShippingModel()
+				this.alertService.showMessage(
+					'Success',
+					`Saved  Shipping Information Sucessfully `,
+					MessageSeverity.success
+				);
+
+			})
+		}
+		if (this.sourcePoApproval.shipToUserTypeId == 2) {
+			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId) }
+
+			this.commonService.createAddress(vendorData).subscribe(() => {
+				// this.addressFormForShipping = new CustomerShippingModel()
+				this.alertService.showMessage(
+					'Success',
+					`Saved  Shipping Information Sucessfully `,
+					MessageSeverity.success
+				);
+
+			})
+		}
+		if (this.sourcePoApproval.shipToUserTypeId == 3) {
+			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId) }
+			this.commonService.createAddress(companyData).subscribe(() => {
+				// this.addressFormForShipping = new CustomerShippingModel()
+				this.alertService.showMessage(
+					'Success',
+					`Saved  Shipping Information Sucessfully `,
+					MessageSeverity.success
+				);
+
+			})
+		}
+	}
+
 
 
 	saveBillingAddress() {
@@ -3711,9 +3793,7 @@ export class PurchaseSetupComponent {
 
 
 
-	saveAddressSiteNameToPO() {
 
-	}
 
 	saveSplitAddress() {
 		console.log(this.splitUserTypeAddress);

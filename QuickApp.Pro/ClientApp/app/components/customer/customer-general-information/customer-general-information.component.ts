@@ -481,7 +481,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
             const responseData = res[0]
             this.integrationOriginalList = responseData.map(x => {
                 return {
-                    label: x.description, value: x
+                    label: x.description, value: x.integrationPortalId
                 }
             })
             console.log(this.integrationOriginalList)
@@ -651,7 +651,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
         if (!this.isEdit) {
             this.customerService.newAction({
                 ...this.generalInformation,
-                country: getValueFromObjectByKey('nice_name', this.generalInformation.country),
+                country: getValueFromObjectByKey('countries_id', this.generalInformation.country),
                 restrictedDERParts: this.generalInformation.restrictedDERParts.map(x => { return { ...x, partType: 'DER' } }),
                 restrictedPMAParts: this.generalInformation.restrictedPMAParts.map(x => { return { ...x, partType: 'PMA' } }),
                 customerParentName: getValueFromObjectByKey('name', this.generalInformation.customerParentName),

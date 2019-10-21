@@ -118,3 +118,5 @@ export function colorCodeGeneratorForHistory(index: number, field: string, value
     }
 }
 
+
+
