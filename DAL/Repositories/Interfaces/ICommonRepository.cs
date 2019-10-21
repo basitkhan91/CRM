@@ -42,6 +42,7 @@ namespace DAL.Repositories.Interfaces
         long CreateShippingVia(ShippingVia shippingVia);
         void UpdateShippingVia(ShippingVia shippingVia);
         object GetShippingViaDetails(long shippingViaId);
+        IEnumerable<object> BindShipViaDetails(int userType, long referenceId);
 
         long? CreateAddress(Address address);
         void UpdateAddress(Address address);
