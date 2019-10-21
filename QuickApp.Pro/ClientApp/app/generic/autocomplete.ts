@@ -13,12 +13,11 @@ export function getObjectByValue(field: string, value: string, originalData: any
 // used to pass  (field/key) and id and original Data and get  Filtered Data Bases on the (id/input) you give 
 export function getObjectById(field: string, id: any, originalData: any) {
     console.log(field, id, originalData)
+
     if ((field !== '' || field !== undefined) && (id !== '' || id !== undefined) && (originalData !== undefined && originalData.length > 0)) {
         const data = originalData.filter(x => {
 
             if (parseInt(x[field]) === parseInt(id)) {
-
-
                 return x;
             }
         })

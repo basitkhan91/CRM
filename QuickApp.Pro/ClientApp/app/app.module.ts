@@ -200,8 +200,6 @@ import { PanelMenuModule } from 'primeng/panelmenu';
 import { WorkOrderService } from './services/work-order/work-order.service';
 import { JobTypeService } from './services/job-type.service';
 import { JobTypeEndpontService } from './services/job-type-endpoint.service';
-import { PercentageService } from './services/percentage.service';
-import { PercentageEndpoint } from './services/percentage-endpoint.service';
 import { PercentEndpoint } from './services/percent-endpoint.service';
 import { PercentService } from './services/percent.service';
 import { PurchaseOrderService } from './services/purchase-order.service';
@@ -412,6 +410,10 @@ import { GLAccountEndpoint } from './services/glAccount-endpoint.service';
     CompanyService,
     CompanyEndpoint,
     WorkOrderService,
+    JobTypeService,   
+    JobTypeEndpontService,
+    PercentService,
+    PercentEndpoint
     PurchaseOrderService,
     PurchaseOrderEndpoint,
     GLAccountService,

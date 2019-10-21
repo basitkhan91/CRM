@@ -15,13 +15,10 @@ namespace DAL.Models
         [Required(ErrorMessage = "Publication Id is required")]
         public string PublicationId { get; set; }
 
-        [Required(ErrorMessage = "Publication Description is required")]
         public string PublicationDescription { get; set; }
 
-        [Required(ErrorMessage = "Publication Type is required")]
         public string PublicationType { get; set; }
 
-        [MaxLength(5,ErrorMessage ="Sequence maximum length 5 characters")]
         public string Sequence { get; set; }
 
         public string Source { get; set; }
@@ -32,12 +29,10 @@ namespace DAL.Models
 
         public string Location { get; set; }
 
-        [MaxLength(5, ErrorMessage = "Revision maximum length 5 characters")]
         public string Revision { get; set; }
 
         public string RevisionDate { get; set; }
 
-        [MaxLength(25, ErrorMessage = "VerifiedBy maximum length 25 characters")]
         public string VerifiedBy { get; set; }
 
         public string VerifiedDate { get; set; }
