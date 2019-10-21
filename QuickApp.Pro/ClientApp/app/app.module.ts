@@ -413,7 +413,7 @@ import { GLAccountEndpoint } from './services/glAccount-endpoint.service';
     JobTypeService,   
     JobTypeEndpontService,
     PercentService,
-    PercentEndpoint
+    PercentEndpoint,
     PurchaseOrderService,
     PurchaseOrderEndpoint,
     GLAccountService,
