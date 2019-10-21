@@ -186,7 +186,7 @@ namespace DAL.Repositories
                                 po.ReferenceId,
                                 po.PriorityId,
                                 po.RequestedBy,
-                                po.DateRequested,
+                                po.OpenDate,
                                 po.ApproverId,
                                 po.DeferredReceiver,
                                 po.Resale,

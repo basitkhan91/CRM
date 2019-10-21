@@ -1051,7 +1051,8 @@ namespace QuickApp.Pro.Controllers
 				CustomerShippingAddressObj.UpdatedDate = DateTime.Now;
 				CustomerShippingAddressObj.CreatedBy = Customershipping.CreatedBy;
 				CustomerShippingAddressObj.UpdatedBy = Customershipping.UpdatedBy;
-                CustomerShippingAddressObj.IsPrimary = Customershipping.IsPrimary;
+                //CustomerShippingAddressObj.IsPrimary = Customershipping.IsPrimary;
+                CustomerShippingAddressObj.IsPrimary = false;
                 _unitOfWork.CustomerShippingAddress.Add(CustomerShippingAddressObj);
 				_unitOfWork.SaveChanges();
 				long? venAddressid = CustomerShippingAddressObj.CustomerShippingAddressId;
