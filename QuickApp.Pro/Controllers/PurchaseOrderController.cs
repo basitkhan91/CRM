@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using DAL;
+using DAL.Common;
 using DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,11 +30,10 @@ namespace QuickApp.Pro.Controllers
         }
 
 
-        [HttpGet("Get")]
-        [Produces(typeof(List<PurchaseOrderViewModel>))]
-        public IActionResult Get()
+        [HttpPost("Get")]
+        public IActionResult Get(Filters<PurchaseOrderFilters> poFilters)
         {
-            var allpurchaseInfo = _unitOfWork.purchaseOrder.GetPurchaseOrderlist(); //.GetAllCustomersData();
+            var allpurchaseInfo = _unitOfWork.purchaseOrder.GetPurchaseOrderlist(poFilters); //.GetAllCustomersData();
             return Ok(Mapper.Map<IEnumerable<PurchaseOrderViewModel>>(allpurchaseInfo));
 
         }
