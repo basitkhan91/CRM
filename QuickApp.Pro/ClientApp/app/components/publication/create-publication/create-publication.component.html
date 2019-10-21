@@ -185,7 +185,7 @@
       </div>
   
       <div class="pull-right">
-          <button class="btn btn-primary-cstm button-save-cstm-cstm" [disabled]="!generalInfoForm.valid" type="submit" (click)="saveGeneralInfo(); ">
+          <button class="btn btn-primary-cstm button-save-cstm-cstm" data-toggle="modal" data-target="#revisionNum" [disabled]="!generalInfoForm.valid" type="submit" (click)="saveGeneralInfo(); ">
             Save & Next
           </button>
         </div>               
@@ -385,7 +385,7 @@
           <div class="col-md-12">
             <div class="shadow-Box">
               <p-table
-                class="rpo-table-cstm rro-table-cstm"
+                class="rpo-table-cstm"
                 [columns]="aircraftInformationCols"
                 [value]="aircraftList"
                 [paginator]="true"
@@ -395,7 +395,7 @@
                 <ng-template pTemplate="header" let-columns>
                   <tr>
                     <!-- <th>ID</th> -->
-                    <th *ngFor="let col of columns">
+                    <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
                       {{ col.header }}
                     </th>                    
                   </tr>
@@ -499,7 +499,7 @@
           <div class="col-md-12">
             <div class="shadow-Box">
               <p-table
-                class="rpo-table-cstm rro-table-cstm"
+                class="rpo-table-cstm"
                 [columns]="atacols"  
                 [value]="ataList"             
                 [paginator]="true"
@@ -509,7 +509,7 @@
                 <ng-template pTemplate="header" let-columns>
                   <tr>
                     <!-- <th>ID</th> -->
-                    <th *ngFor="let col of columns">
+                    <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
                       {{ col.header }}
                     </th>
                   </tr>
@@ -659,3 +659,21 @@
 
   </div>
 </div>
+
+<div *ngIf="isEditMode" class="modal fade" id="revisionNum" role="dialog">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Update Revision Number</h4>
+        </div>
+        <div class="modal-body">
+          <p style="font-size: 14px;">Do you want to update <b>RevisionNum</b> from <b>{{sourcePublication.revisionNum}}</b> to <b>{{sourcePublication.revisionNum+1}}</b> ?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="changeRevisionNum('Yes');">Yes & Save</button>
+          <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="changeRevisionNum('No');">No & Save</button>
+        </div>
+      </div>
+    </div>
+  </div>

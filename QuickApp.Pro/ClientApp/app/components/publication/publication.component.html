@@ -115,9 +115,9 @@
                                             <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="openDelete(content,rowData)">
                                                 <mat-icon color="warn">delete</mat-icon>
                                             </button>   
-                                            <button class="btn-history" mat-icon-button matTooltip="History" data-target="#contentHist" data-toggle="modal" (click)="getAuditHistoryById(rowData)" >
+                                            <button class="btn-history" mat-icon-button matTooltip="History" data-target="#publicationHistory" data-toggle="modal" (click)="getAuditHistoryById(rowData)" >
                                                     <mat-icon color="green">history</mat-icon>
-                                            </button>        
+                                            </button>
                                         </td>
                                     </tr>
                                 </ng-template>
@@ -154,8 +154,8 @@
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
-        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+        <button type="button" class="btn btn-primary-cstm" (click)="deleteItemAndCloseModel()">Yes</button>
+        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">No</button>
     </div>
 
 </ng-template>
@@ -369,7 +369,7 @@
     </div>
 </ng-template> -->
 
-<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" >
+<div id="publicationHistory" class="modal fade" role="dialog" >
         <div class="modal-dialog modal-lg">
       
           <!-- Modal content-->
@@ -378,44 +378,42 @@
               <button type="button" class="close" data-dismiss="modal">&times;</button>
               <h4 class="modal-title">History of Publication</h4>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" *ngIf="auditHistory">
                 <div class="table-responsive rro-table-cstm">
-                    <table class="table table-bordered" *ngIf="auditHistory.length> 0 else noDatavailable" >
+                    <table class="table table-bordered" *ngIf="auditHistory.length> 0 else noDatavailable">
                         <thead>
                             <tr>
-                                <!-- <th>UMID</th> -->
-                                <th>UOM</th>
-                                <th>Short Name</th>
-                                <th>Standard</th>
-                                <th>Memo</th>
+                                <th>Publication ID</th>
+                                <th>Description</th>
+                                <th>Publication Type</th>
+                                <th>Published By</th>
+                                <th>Employee</th>
+                                <th>Location</th>
                                 <th>IsActive</th>
                                 <th>Updated By</th>
                                 <th>Updated Time</th>
                             </tr>
                         </thead>
-                        <tbody *ngIf="auditHistory.length> 0" >
-                                <tr *ngFor="let audit of auditHistory; let i = index;">
-                                    <!-- auditHistory[i>0 ? i-1 : i] -->          
-                                        <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'publicationId', audit.publicationId)  ? 'black' : 'red'  }">{{audit.publicationId}}</td>
-                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'description', audit.description)  ? 'black' : 'red'  }">{{audit.description}}</td>
-                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'publicationType', audit.standard)  ? 'black' : 'red'  }">{{audit.standard}}</td>
-                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'publishedBy', audit.publishedBy)  ? 'black' : 'red'  }">{{audit.publishedBy}}</td>
-                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'employeeName', audit.employeeName)  ? 'black' : 'red'  }">{{audit.employeeName}}</td>
-                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'location', audit.location)  ? 'black' : 'red'  }">{{audit.location}}</td>
-                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
-                                        <td >{{audit.updatedBy}}</td>
-                                        <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-                                    </tr>
-                        </tbody>
-                        
-
+                        <tbody class="audithistory-cstm"> <!--*ngIf="auditHistory.length> 0"-->
+                            <tr *ngFor="let audit of auditHistory; let i = index;">
+                                <!-- auditHistory[i>0 ? i-1 : i] -->          
+                                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'publicationId', audit.publicationId)  ? 'black' : 'red'  }">{{audit.publicationId}}</td>
+                                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'description', audit.description)  ? 'black' : 'red'  }">{{audit.description}}</td>
+                                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'publicationType', audit.publicationType)  ? 'black' : 'red'  }">{{audit.publicationType}}</td>
+                                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'publishby', audit.publishby)  ? 'black' : 'red'  }">{{audit.publishby}}</td>
+                                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'employeeName', audit.employeeName)  ? 'black' : 'red'  }">{{audit.employeeName}}</td>
+                                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'location', audit.location)  ? 'black' : 'red'  }">{{audit.location}}</td>
+                                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
+                                    <td >{{audit.updatedBy}}</td>
+                                    <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                                </tr>
+                        </tbody>                        
                     </table>
                     <ng-template #noDatavailable>
                         <div class="text-center"> 
                                 <img src="../../assets/images/binoculars.png" style="height: 100px; width: 100px;">
                                 <h4 style="color: #ff5663;">No History Found </h4>
                         </div>
-
                     </ng-template>  
                 </div>
             </div>
@@ -471,6 +469,7 @@
                                                                 <p><span class="label"><b>Published By: </b></span><span class="value">{{generalInfo.publishby ? generalInfo.publishby : '-'}}</span></p>
                                                                 <p><span class="label"><b>Location: </b></span><span class="value">{{generalInfo.location ? generalInfo.location : '-'}}</span></p>
                                                                 <p><span class="label"><b>Revision Date: </b></span><span class="value">{{generalInfo.revisionDate | date: 'dd/MM/yyyy'}}</span></p>
+                                                                <p><span class="label"><b>Revision Number: </b></span><span class="value">{{generalInfo.revisionNum ? generalInfo.revisionNum : '-'}}</span></p>
                                                                 <p><span class="label"><b>Expiration Date: </b></span><span class="value">{{generalInfo.expirationDate | date: 'dd/MM/yyyy'}}</span></p>
                                                         </div>
                                                         <div class="col-sm-4">
@@ -484,6 +483,7 @@
                                                     <div>
                                                         <h4 class="panel-title" style="padding-left: 10px;">Attachment Details:</h4>
                                                         <p-table
+                                                            class="rpo-table-cstm"
                                                             [columns]="headersforAttachment"
                                                             [value]="attachmentList"
                                                             [paginator]="true"
@@ -493,7 +493,7 @@
                                                             <ng-template pTemplate="header" let-columns>
                                                             <tr>
                                                                 <th>Sl.No</th>
-                                                                <th *ngFor="let col of columns">
+                                                                <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
                                                                 {{ col.header }}
                                                                 </th>
                                                                 <th>Action</th>
@@ -533,6 +533,7 @@
                                                 <div class="col-sm-12">
                                                     <div class="shadow-Box">
                                                       <p-table
+                                                        class="rpo-table-cstm"
                                                         [columns]="headersforPNMapping"
                                                         [value]="pnMappingList"
                                                         [paginator]="true"
@@ -542,7 +543,7 @@
                                                         <ng-template pTemplate="header" let-columns>
                                                           <tr>
                                                             <th>Sl.No</th>
-                                                            <th *ngFor="let col of columns">
+                                                            <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
                                                               {{ col.header }}
                                                             </th>
                                                           </tr>
@@ -576,6 +577,7 @@
                                                 <div class="col-sm-12">
                                                     <div class="shadow-Box">
                                                         <p-table
+                                                        class="rpo-table-cstm"
                                                           [columns]="aircraftInformationCols"
                                                           [value]="aircraftList"
                                                           [paginator]="true"
@@ -584,8 +586,8 @@
                                                         >
                                                           <ng-template pTemplate="header" let-columns>
                                                             <tr>
-                                                              <th>ID</th>
-                                                              <th *ngFor="let col of columns">
+                                                            <!-- <th>ID</th> -->
+                                                              <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
                                                                 {{ col.header }}
                                                               </th>
                                                             </tr>
@@ -597,7 +599,7 @@
                                                             let-rowIndex="rowIndex"
                                                           >
                                                             <tr>
-                                                              <td>{{ rowIndex + 1 }}</td>
+                                                              <!-- <td>{{ rowIndex + 1 }}</td> -->
                                                               <td *ngFor="let col of columns">
                                                                 {{ rowData[col.field] }}
                                                               </td>
@@ -619,6 +621,7 @@
                                                 <div class="col-sm-12">
                                                     <div class="shadow-Box">
                                                         <p-table
+                                                            class="rpo-table-cstm"
                                                           [columns]="atacols"  
                                                           [value]="ataList"             
                                                           [paginator]="true"
@@ -627,8 +630,8 @@
                                                         >
                                                           <ng-template pTemplate="header" let-columns>
                                                             <tr>
-                                                              <th>ID</th>
-                                                              <th *ngFor="let col of columns">
+                                                              <!-- <th>ID</th> -->
+                                                              <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
                                                                 {{ col.header }}
                                                               </th>
                                                             </tr>
@@ -640,7 +643,7 @@
                                                             let-rowIndex="rowIndex"
                                                           >
                                                             <tr>
-                                                              <td>{{ rowIndex + 1 }}</td>
+                                                              <!-- <td>{{ rowIndex + 1 }}</td> -->
                                                               <td *ngFor="let col of columns">
                                                                 {{ rowData[col.field] }}
                                                               </td>

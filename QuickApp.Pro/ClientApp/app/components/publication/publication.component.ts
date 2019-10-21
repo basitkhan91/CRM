@@ -101,7 +101,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         { field: 'aircraft', header: 'Aircraft' },
         { field: 'model', header: 'Model' },
         { field: 'dashNumber', header: 'Dash Numbers' },
-        { field: 'memo', header: 'Memo' }
+        //{ field: 'memo', header: 'Memo' }
     ];
     atacols = [
         { field: 'ataChapter', header: 'AtaChapter' },
@@ -403,7 +403,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
                         aircraft: x.aircraftType,
                         model: x.aircraftModel,
                         dashNumber: x.dashNumber,
-                        memo: x.memo
+                        //memo: x.memo
                     };
                 });
             });
@@ -415,11 +415,13 @@ export class PublicationComponent implements OnInit, AfterViewInit {
                 const responseData = res;
                 this.ataList = responseData.map(x => {
                     return {
-                        ataChapter: x.ataChapterName,
-                        ataSubChapter: x.ataSubChapterDescription,
-                        ataChapterCode: x.ataChapterCode,
-                        ataSubChapterId: x.ataSubChapterId,
-                        ataChapterId: x.ataChapterId
+                        ataChapter: `${x.ataChapterCode} - ${x.ataChapterName}`,
+                        ataSubChapter: `${x.ataSubChapterCode} - ${x.ataSubChapterDescription}`,
+                        // ataChapter: x.ataChapterName,
+                        // ataSubChapter: x.ataSubChapterDescription,
+                        // ataChapterCode: x.ataChapterCode,
+                        // ataSubChapterId: x.ataSubChapterId,
+                        // ataChapterId: x.ataChapterId
                     };
                 });
             });
@@ -871,6 +873,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
 
     getAuditHistoryById(rowData) {
         this.publicationService.getPublicationAuditDetails(rowData.publicationRecordId).subscribe(res => {
+            console.log(res);            
             this.auditHistory = res;
         })
     }
