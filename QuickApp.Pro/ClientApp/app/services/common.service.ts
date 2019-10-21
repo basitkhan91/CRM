@@ -12,6 +12,9 @@ export class CommonService {
         return this.http.get(`${this.configurations.baseUrl}/api/Common/binddropdowns?tableName=${tableName}&primaryColumn=${primaryKeyColumn}&textColumn=${labelColumn}&count=${count !== undefined ? count : 0}`, this.authService.getRequestHeaders())
 
     }
+    createShipVia(object) {
+        return this.http.post(`${this.configurations.baseUrl}/api/Common/createshipvia`, JSON.stringify(object), this.authService.getRequestHeaders())
+    }
 
     smartAdressCreate(object, moduleid) {
 
@@ -26,6 +29,6 @@ export class CommonService {
     // } 
 
 
-    // http://localhost:5050/api/Common/binddropdowns?tableName=AircraftType&primaryColumn=AircraftTypeId&textColumn=Description
+
 
 }

@@ -125,6 +125,7 @@ export class CustomerShippingInformationComponent implements OnInit {
             createdBy: this.userName,
             updatedBy: this.userName,
             masterCompanyId: 1,
+            isPrimary: false,
             isActive: true,
             customerId: this.id
         }

@@ -834,6 +834,7 @@ namespace QuickApp.Pro.Controllers
 				address.CreatedDate = DateTime.Now;
 				address.UpdatedDate = DateTime.Now;
 				address.IsActive = Customershipping.IsActive;
+
 				_unitOfWork.Address.Add(address);
 				_unitOfWork.SaveChanges();
 				long? id = address.AddressId;
@@ -1038,6 +1039,7 @@ namespace QuickApp.Pro.Controllers
 				CustomerShippingAddressObj.UpdatedDate = DateTime.Now;
 				CustomerShippingAddressObj.CreatedBy = Customershipping.CreatedBy;
 				CustomerShippingAddressObj.UpdatedBy = Customershipping.UpdatedBy;
+				CustomerShippingAddressObj.IsPrimary = Customershipping.IsPrimary;
 				_unitOfWork.CustomerShippingAddress.Add(CustomerShippingAddressObj);
 				_unitOfWork.SaveChanges();
 				long? venAddressid = CustomerShippingAddressObj.CustomerShippingAddressId;

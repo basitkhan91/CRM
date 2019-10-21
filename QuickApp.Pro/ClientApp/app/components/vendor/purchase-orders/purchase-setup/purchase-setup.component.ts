@@ -31,6 +31,7 @@ import { AuthService } from '../../../../services/auth.service';
 import { CommonService } from '../../../../services/common.service';
 import { CustomerShippingModel } from '../../../../models/customer-shipping.model';
 import { CompanyService } from '../../../../services/company.service';
+import { CustomerInternationalShipVia } from '../../../../models/customer-internationalshipping.model';
 
 @Component({
 	selector: 'app-purchase-setup',
@@ -218,7 +219,7 @@ export class PurchaseSetupComponent {
 	addressSiteNameHeader: string;
 	addressSiteName: any = {};
 	splitUserTypeAddress: any = {};
-	shipToShipViaDetails: any = {};
+	// shipToShipViaDetails: any = {};
 	tempMultiplePNArray: any[];
 	partNumberNames: any[];
 	tempPartListData: any[];
@@ -247,6 +248,9 @@ export class PurchaseSetupComponent {
 	legalEntity: any;
 	legalEntityList_ForShipping: Object;
 	legalEntityList_ForBilling: Object;
+	addShipViaFormForShipping = new CustomerInternationalShipVia()
+
+
 	// this.siteName ="";
 	// this.address1 ="";
 	// this.address3 ="";
@@ -1365,7 +1369,9 @@ export class PurchaseSetupComponent {
 					});
 				this.customerService.getContacts(this.customerNames[i].customerId).subscribe(data => {
 
+
 					this.shipToContactData = data[0];
+					// this.sourcePoApproval.shipToContactId = data[0];
 					// this.adressPOPUPDropdown = this.shipToContactData ;
 				});
 				break;
@@ -3539,11 +3545,11 @@ export class PurchaseSetupComponent {
 			return 0;
 		}
 	}
-    resetAddressShippingForm(){
+	resetAddressShippingForm() {
 		this.addressFormForShipping = new CustomerShippingModel()
 	}
 
-	resetAddressBillingForm(){
+	resetAddressBillingForm() {
 		this.addressFormForBilling = new CustomerShippingModel()
 	}
 	saveShippingAddress() {
@@ -3556,9 +3562,9 @@ export class PurchaseSetupComponent {
 
 		}
 		if (this.sourcePoApproval.shipToUserTypeId == 1) {
-			const customeraddressData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('customerId', this.sourcePoApproval.shipToUserId) }
+			const customerData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('customerId', this.sourcePoApproval.shipToUserId) }
 
-			this.customerService.newShippingAdd(customeraddressData).subscribe(() => {
+			this.customerService.newShippingAdd(customerData).subscribe(() => {
 				// this.addressFormForShipping = new CustomerShippingModel()
 				this.alertService.showMessage(
 					'Success',
@@ -3569,9 +3575,9 @@ export class PurchaseSetupComponent {
 			})
 		}
 		if (this.sourcePoApproval.shipToUserTypeId == 2) {
-			const vendoraddressData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId) }
+			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId) }
 
-			this.vendorService.newShippingAdd(vendoraddressData).subscribe(() => {
+			this.vendorService.newShippingAdd(vendorData).subscribe(() => {
 				// this.addressFormForShipping = new CustomerShippingModel()
 				this.alertService.showMessage(
 					'Success',
@@ -3582,8 +3588,8 @@ export class PurchaseSetupComponent {
 			})
 		}
 		if (this.sourcePoApproval.shipToUserTypeId == 3) {
-			const companyaddressData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId) }
-			this.companyService.addNewShippingAddress(companyaddressData).subscribe(() => {
+			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId) }
+			this.companyService.addNewShippingAddress(companyData).subscribe(() => {
 				// this.addressFormForShipping = new CustomerShippingModel()
 				this.alertService.showMessage(
 					'Success',
@@ -3596,6 +3602,8 @@ export class PurchaseSetupComponent {
 
 	}
 
+
+
 	saveBillingAddress() {
 		const data = {
 			...this.addressFormForBilling,
@@ -3607,8 +3615,8 @@ export class PurchaseSetupComponent {
 
 		}
 		if (this.sourcePoApproval.billToUserTypeId == 1) {
-			const customeraddressData = { ...data, customerId: getValueFromObjectByKey('customerId', this.sourcePoApproval.billToUserId) }
-			this.customerService.newBillingAdd(customeraddressData).subscribe(() => {
+			const customerData = { ...data, customerId: getValueFromObjectByKey('customerId', this.sourcePoApproval.billToUserId) }
+			this.customerService.newBillingAdd(customerData).subscribe(() => {
 				// this.addressFormForBilling = new CustomerShippingModel()
 				this.alertService.showMessage(
 					'Success',
@@ -3619,8 +3627,8 @@ export class PurchaseSetupComponent {
 			})
 		}
 		if (this.sourcePoApproval.billToUserTypeId == 2) {
-			const vendoraddressData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.billToUserId) }
-			this.vendorService.addNewBillingAddress(vendoraddressData).subscribe(() => {
+			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.billToUserId) }
+			this.vendorService.addNewBillingAddress(vendorData).subscribe(() => {
 				// this.addressFormForBilling = new CustomerShippingModel()
 				this.alertService.showMessage(
 					'Success',
@@ -3631,8 +3639,8 @@ export class PurchaseSetupComponent {
 			})
 		}
 		if (this.sourcePoApproval.billToUserTypeId == 3) {
-			const companyaddressData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourcePoApproval.billToUserId) }
-			this.companyService.addNewBillingAddress(companyaddressData).subscribe(() => {
+			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourcePoApproval.billToUserId) }
+			this.companyService.addNewBillingAddress(companyData).subscribe(() => {
 				// this.addressFormForBilling = new CustomerShippingModel()
 				this.alertService.showMessage(
 					'Success',
@@ -3642,6 +3650,63 @@ export class PurchaseSetupComponent {
 
 			})
 		}
+	}
+
+
+	resetAddressShipViaForm() {
+		this.addShipViaFormForShipping = new CustomerInternationalShipVia()
+	}
+
+	saveShipViaForShipTo() {
+		const data = {
+			...this.addShipViaFormForShipping,
+			name: this.addShipViaFormForShipping.shipVia,
+			createdBy: this.userName,
+			updatedBy: this.userName,
+			masterCompanyId: 1,
+			isActive: true,
+			UserType: parseInt(this.sourcePoApproval.shipToUserTypeId)
+		}
+
+		if (this.sourcePoApproval.shipToUserTypeId == 1) {
+			const customerData = { ...data, ReferenceId: getValueFromObjectByKey('customerId', this.sourcePoApproval.shipToUserId) }
+
+			this.commonService.createShipVia(customerData).subscribe(() => {
+				// this.addressFormForShipping = new CustomerShippingModel()
+				this.alertService.showMessage(
+					'Success',
+					`Saved  Ship Via Information Sucessfully `,
+					MessageSeverity.success
+				);
+
+			})
+		}
+		if (this.sourcePoApproval.shipToUserTypeId == 2) {
+			const vendorData = { ...data, ReferenceId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId) }
+
+			this.commonService.createShipVia(vendorData).subscribe(() => {
+				// this.addressFormForShipping = new CustomerShippingModel()
+				this.alertService.showMessage(
+					'Success',
+					`Saved  Ship Via Information Sucessfully `,
+					MessageSeverity.success
+				);
+
+			})
+		}
+		if (this.sourcePoApproval.shipToUserTypeId == 3) {
+			const companyData = { ...data, ReferenceId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId) }
+			this.commonService.createShipVia(companyData).subscribe(() => {
+				// this.addressFormForShipping = new CustomerShippingModel()
+				this.alertService.showMessage(
+					'Success',
+					`Saved  Ship Via Information Sucessfully `,
+					MessageSeverity.success
+				);
+
+			})
+		}
+
 	}
 
 
@@ -3659,9 +3724,9 @@ export class PurchaseSetupComponent {
 
 	}
 
-	saveShipToShipViaDetails() {
+	// saveShipToShipViaDetails() {
 
-	}
+	// }
 
 	saveShipToShipViaDetailsToPO() {
 
