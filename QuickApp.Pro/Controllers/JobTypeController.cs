@@ -52,6 +52,7 @@ namespace QuickApp.Pro.Controllers
                 jobTypeObj.jobTypeDescription = jobTypeViewModel.jobTypeDescription;
                 jobTypeObj.JobTypeName = jobTypeViewModel.JobTypeName;
                 jobTypeObj.MasterCompanyId = jobTypeViewModel.MasterCompanyId;
+               
                 jobTypeObj.IsActive = jobTypeViewModel.IsActive;
                 jobTypeObj.CreatedDate = DateTime.Now;
                 jobTypeObj.UpdatedDate = DateTime.Now;

@@ -106,6 +106,10 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
 		if (this.employeeService.listCollection && this.employeeService.isEditMode == true) {
             this.sourceEmployee = this.employeeService.listCollection;
             this.empId = this.sourceEmployee.employeeId;
+            if (this.sourceEmployee.employeeId) {
+                this.nextbuttonEnable = true;
+
+            }
             this.firstName = this.sourceEmployee.firstName;
             this.lastName = this.sourceEmployee.lastName;
             console.log(this.sourceEmployee.employeeTrainingTypeId);
@@ -362,17 +366,41 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
     }
 
     savetrainigSection() {
-        this.sourceEmployee.createdBy = this.userName;
-        this.sourceEmployee.updatedBy = this.userName;
-        this.sourceEmployee.masterCompanyId = 1;
-        this.sourceEmployee.isActive = true;
-        this.sourceEmployee.employeeId = this.empId;
-        this.sourceEmployee.createdBy = this.userA;
-        this.sourceEmployee.updatedBy = this.userA;
 
-        this.employeeService.newAddTraining(this.sourceEmployee).subscribe(
-            role => this.saveSuccessHelper(role),
-            error => this.saveFailedHelper(error));
+        console.log();
+
+        if (!this.sourceEmployee.employeeTrainingTypeId) {
+
+
+            this.alertService.showMessage("Failure", `Training Type Required`, MessageSeverity.success);
+
+        }
+        else {
+            console.log("trainig id  exists");
+            if (!this.sourceEmployee.employeeTrainingId) {
+                this.sourceEmployee.createdBy = this.userName;
+                this.sourceEmployee.updatedBy = this.userName;
+                this.sourceEmployee.masterCompanyId = 1;
+                this.sourceEmployee.isActive = true;
+                this.sourceEmployee.employeeId = this.empId;
+                this.sourceEmployee.createdBy = this.userA;
+                this.sourceEmployee.updatedBy = this.userA;
+
+                this.employeeService.newAddTraining(this.sourceEmployee).subscribe(
+                    role => this.saveSuccessHelper(role),
+                    error => this.saveFailedHelper(error));
+
+            }
+            else {
+                this.sourceEmployee.updatedBy = this.userName;
+                this.sourceEmployee.masterCompanyId = 1;
+                this.employeeService.updateTrainingDetails(this.sourceEmployee).subscribe(
+                    response => this.saveCompleted(this.sourceEmployee),
+                    error => this.saveFailedHelper(error));
+            }
+
+        }
+    
     }
 
 
