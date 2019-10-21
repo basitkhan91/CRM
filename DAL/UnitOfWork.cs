@@ -405,7 +405,7 @@ namespace DAL
             get
             {
                 if (_siteRepository == null)
-                    _siteRepository = new SiteRepository(_context);
+                    _siteRepository = new SiteRepository(_context, _appSettings);
                 return _siteRepository;
             }
         }
