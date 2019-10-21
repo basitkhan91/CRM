@@ -44,7 +44,7 @@ export class AssetStatusService {
         return this.assetStatusEndpoint.getUpdateForActive(assetStatus, assetStatus.id);
     }
     getAssetAudit(assetId:number) {
-        return this.assetStatusEndpoint.getAssetStatusAuditById<any>(assetId);
+        return this.assetStatusEndpoint.getAssetStatusAuditById<any[]>(assetId);
     }
     
     AssetStatusCustomUpload(file) {

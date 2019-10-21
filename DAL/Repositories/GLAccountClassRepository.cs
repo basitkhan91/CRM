@@ -14,7 +14,7 @@ namespace DAL.Repositories
 
         public IEnumerable<Models.GLAccountClass> GetAllGLAccountClassData()
         {
-            return _appContext.GLAccountClass.Where(a => a.IsDelete == false || a.IsDelete == null).OrderByDescending(a => a.GLAccountClassId).ToList();
+            return _appContext.GLAccountClass.Where(a => a.IsDeleted == false || a.IsDeleted == null).OrderByDescending(a => a.GLAccountClassId).ToList();
            
         }
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
@@ -49,11 +49,18 @@ namespace DAL.Repositories
         override
        public IQueryable<DAL.Models.GLAccountClass> GetPaginationData()
             {
-                return _appContext.GLAccountClass.Where(c => (c.IsDelete == false || c.IsDelete == null))
+                return _appContext.GLAccountClass.Where(c => (c.IsDeleted == false || c.IsDeleted == null))
                     .OrderByDescending(c => c.GLAccountClassId).ToList().AsQueryable();
             }
 
-            private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
+        public IEnumerable<DAL.Models.GLAccountClassAudit> GetGLAccountClassAuditDetails(long gLAccountClassId)
+        {
+            return _appContext.GLAccountClassAudit.Where(c => c.GLAccountClassId == gLAccountClassId).OrderByDescending(p => p.UpdatedDate).ToList();
 
         }
+        private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
+
+        }
+
+
 }

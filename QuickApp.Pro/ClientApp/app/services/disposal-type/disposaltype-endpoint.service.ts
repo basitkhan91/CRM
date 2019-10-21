@@ -19,7 +19,7 @@ export class DisposalTypeEndpointService extends EndpointFactory {
     private readonly addURL: string = "/api/DisposalType/add";
     private readonly updateURL: string = "/api/DisposalType/update";
     private readonly removeByIdURL: string = "/api/DisposalType/removeById";
-    private readonly getdisposalTypeHistById: string = "/api/DisposalType/audits";
+    private readonly getdisposalTypeHistById: string = "/api/DisposalType/disposaltypeauditdetails";
     private readonly excelUpload: string = "/api/DisposalType/UploadDispTypeCustomData";
 
 

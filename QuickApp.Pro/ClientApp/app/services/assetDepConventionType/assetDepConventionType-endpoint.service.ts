@@ -19,7 +19,7 @@ export class AssetDepConventionTypeEndpointService extends EndpointFactory {
     private readonly addURL: string = "/api/assetDepConventionType/add";
     private readonly updateURL: string = "/api/assetDepConventionType/update";
     private readonly removeByIdURL: string = "/api/assetDepConventionType/removeById";
-    private readonly getAuditById: string = "/api/assetDepConventionType/audits";
+    private readonly getAuditById: string = "/api/assetDepConventionType/depconventionauditdetails";
     private readonly excelUpload: string = "/api/assetDepConventionType/UploadAssetDepConvCustomData";
 
 

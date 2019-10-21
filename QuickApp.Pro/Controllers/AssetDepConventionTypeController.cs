@@ -145,11 +145,11 @@ namespace QuickApp.Pro.Controllers
             }
         }
 
-        [HttpGet("audits/{id}")]
-        public IActionResult AuditDetails(long id)
+        [HttpGet("audit/{assetDepConventionId}")]
+        public IActionResult AuditDetails(long assetDepConventionId)
         {
             var audits = unitOfWork.Repository<AssetDepConventionAudit>()
-                .Find(x => x.AssetDepConventionId == id)
+                .Find(x => x.AssetDepConventionId == assetDepConventionId)
                 .OrderByDescending(x => x.AssetDepConventionAuditId);
 
             var auditResult = new List<AuditResult<AssetDepConventionAudit>>();
@@ -157,6 +157,21 @@ namespace QuickApp.Pro.Controllers
             auditResult.Add(new AuditResult<AssetDepConventionAudit> { AreaName = "Depreciation Convention", Memo = "Depreciation Convention", Result = audits.ToList() });
 
             return Ok(auditResult);
+        }
+
+        [HttpGet("depconventionauditdetails/{assetDepConventionId}")]
+        [Produces(typeof(List<AssetDepConventionAudit>))]
+        public IActionResult GetAuditHostoryById(long assetDepConventionId)
+        {
+            try
+            {
+                var result = unitOfWork.AssetDepConvention.GetAssetDepConventionAuditDetails(assetDepConventionId);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         [HttpPost("UploadAssetDepConvCustomData")]
