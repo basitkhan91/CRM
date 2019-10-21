@@ -406,7 +406,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="RSN.invalid || disableSaveForReason || disableSaveForReasonForRemoval " (click)="saveReason();"> {{isEdit ? 'Update' : 'Save' }}</button>
+                <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="RSN.invalid || disableSaveForReason " (click)="saveReason();"> {{isEdit ? 'Update' : 'Save' }}</button>
                 <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetReasonForm()">Close</button>
 
             </div>
