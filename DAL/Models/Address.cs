@@ -16,9 +16,6 @@ namespace DAL.Models
         public string PostalCode { get; set; }
         public string Country { get; set; }
         public int MasterCompanyId { get; set; }
-        public System.DateTime RecordCreateDate { get; set; }
-        public Nullable<System.DateTime> RecordModifiedDate { get; set; }
-        public Nullable<int> LastModifiedBy { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }

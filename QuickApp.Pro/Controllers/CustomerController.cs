@@ -467,7 +467,6 @@ namespace QuickApp.Pro.Controllers
 			address.City = customerViewModel.City;
 			address.Country = customerViewModel.Country;
 			address.MasterCompanyId = 1;
-			address.RecordCreateDate = DateTime.Now;
 			address.CreatedBy = customerViewModel.CreatedBy;
 			address.UpdatedBy = customerViewModel.UpdatedBy;
 			address.CreatedDate = DateTime.Now;
@@ -563,7 +562,6 @@ namespace QuickApp.Pro.Controllers
 			address.Country = customerViewModel.Country;
 			address.MasterCompanyId = 1;
 			address.IsActive = true;
-			address.RecordCreateDate = DateTime.Now;
 			address.CreatedBy = customerViewModel.CreatedBy;
 			address.UpdatedBy = customerViewModel.UpdatedBy;
 			address.CreatedDate = DateTime.Now;
@@ -841,7 +839,6 @@ namespace QuickApp.Pro.Controllers
 				address.PostalCode = Customershipping.PostalCode;
 				address.Country = Customershipping.Country;
 				address.MasterCompanyId = 1;
-				address.RecordCreateDate = DateTime.Now;
 				address.CreatedBy = Customershipping.CreatedBy;
 				address.UpdatedBy = Customershipping.UpdatedBy;
 				address.CreatedDate = DateTime.Now;
@@ -1439,7 +1436,6 @@ namespace QuickApp.Pro.Controllers
 				address.City = customerBillingAddressViewModel.City;
 				address.Country = customerBillingAddressViewModel.Country;
 				address.MasterCompanyId = 1;
-				address.RecordCreateDate = DateTime.Now;
 				address.CreatedBy = customerBillingAddressViewModel.CreatedBy;
 				address.UpdatedBy = customerBillingAddressViewModel.UpdatedBy;
 				address.CreatedDate = DateTime.Now;

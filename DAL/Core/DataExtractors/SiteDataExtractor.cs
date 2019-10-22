@@ -40,7 +40,6 @@ namespace DAL.Core.DataExtractors
                 StateOrProvince = reader.ExtractString(5),
                 Country = reader.ExtractString(6),
                 PostalCode = reader.ExtractString(7),
-                RecordCreateDate = currentDateTime,
                 CreatedBy = SYSTEM_USER,
                 CreatedDate = currentDateTime,
                 UpdatedBy = SYSTEM_USER,

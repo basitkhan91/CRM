@@ -412,6 +412,7 @@ export class PurchaseSetupComponent {
 		this.sourcePoApproval.buId = 0;
 		this.sourcePoApproval.divisionId = 0;
 		this.sourcePoApproval.departmentId = 0;
+		console.log('x');
 		if (this.sourcePoApproval.purchaseOrderNumber == "" || this.sourcePoApproval.purchaseOrderNumber == undefined) {
 			this.sourcePoApproval.purchaseOrderNumber = 'Creating';
 		}
@@ -1443,7 +1444,7 @@ export class PurchaseSetupComponent {
 	shippingSiteNameChange(id) {
 		this.companyService.getShippingAddress(id).subscribe(res => {
 			const resp = res;
-			if(resp){
+			if (resp) {
 				this.shipToAddress.address1 = resp.line1;
 				this.shipToAddress.address2 = resp.line2;
 				this.shipToAddress.address3 = resp.line3;
@@ -1452,21 +1453,21 @@ export class PurchaseSetupComponent {
 				this.shipToAddress.postalCode = resp.postalCode;
 				this.shipToAddress.country = resp.country;
 			}
-			
+
 
 		})
 	}
 	billingSiteNameChange(id) {
 		this.companyService.getBillingAddress(id).subscribe(res => {
 			const resp = res;
-			if(resp){
-			this.billToAddress.address1 = resp.line1;
-			this.billToAddress.address2 = resp.line2;
-			this.billToAddress.address3 = resp.line3;
-			this.billToAddress.city = resp.city;
-			this.billToAddress.stateOrProvince = resp.stateOrProvince;
-			this.billToAddress.postalCode = resp.postalCode;
-			this.billToAddress.country = resp.country;
+			if (resp) {
+				this.billToAddress.address1 = resp.line1;
+				this.billToAddress.address2 = resp.line2;
+				this.billToAddress.address3 = resp.line3;
+				this.billToAddress.city = resp.city;
+				this.billToAddress.stateOrProvince = resp.stateOrProvince;
+				this.billToAddress.postalCode = resp.postalCode;
+				this.billToAddress.country = resp.country;
 			}
 		})
 	}

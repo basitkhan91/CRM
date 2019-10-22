@@ -168,6 +168,13 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("vendorcapabilities")]
+        public IActionResult GetVendorCapabilities(long vendorId)
+        {
+            var result = _unitOfWork.purchaseOrder.GetVendorCapabilities(vendorId);
+            return Ok(result);
+        }
+
     }
 
 }
