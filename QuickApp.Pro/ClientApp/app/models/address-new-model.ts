@@ -1,9 +1,9 @@
-export class Address {
+// export class Address {
 
-    public siteName: string;
-    public address: AddressNew[];
+//     public siteName: string;
+//     public address: AddressNew[];
 
-}
+// }
 
 export class AddressNew {
     public line1: string;

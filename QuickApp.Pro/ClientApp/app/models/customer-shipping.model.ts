@@ -5,10 +5,10 @@ export class CustomerShippingModel {
 
             constructor() {
 
-                this.siteName ="";
+                this.siteName = "";
                 this.address1 ="";
-                this.address3 ="";
                 this.address2 ="";
+                this.address3 ="";
                 this.city ="";
                 this.stateOrProvince = "";
                 this.postalCode ="";
@@ -31,8 +31,8 @@ export class CustomerShippingModel {
         
             public siteName : string;
             public address1 : string;
-            public address3 : string;
             public address2 : string;
+            public address3 : string;
             public city : string;
             public stateOrProvince : string;
             public postalCode: string;

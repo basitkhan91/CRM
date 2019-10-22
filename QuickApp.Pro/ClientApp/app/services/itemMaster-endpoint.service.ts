@@ -945,7 +945,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getPartDetailsDropdown<T>());
             });
     }
-  
+
     getPartDetailsByid<T>(action: any): Observable<T> {
         return this.http.get<T>(`${this.getpartdetailsWithidUrl}/${action}`, this.getRequestHeaders())
             .catch(err => {

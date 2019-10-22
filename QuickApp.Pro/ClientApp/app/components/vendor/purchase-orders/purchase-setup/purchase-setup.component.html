@@ -1010,7 +1010,7 @@
                     <div class="form-group" *ngIf="sourcePoApproval.shipToUserTypeId==1">
                         <label>Contact Name <span class="clr-red">*</span></label>
                         <p-autoComplete field="firstName" class="pautocomp-cstm" 
-                        [(ngModel)]="sourcePoApproval.shipToContactId" name="shipToCustomerContactName" [suggestions]="firstNamesShipTo" (completeMethod)="filterCustomerContactsForShipTo($event)"  [size]="30" [minLength]="1" [dropdown]="true" #shipCusContactName="ngModel" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
+                        [(ngModel)]="sourcePoApproval.shipToContactId" name="shipToCustomerContactName" [suggestions]="firstNamesShipTo" (completeMethod)="filterCustomerContactsForShipTo($event)"  [size]="30" [minLength]="1" [dropdown]="true" #shipCusContactName="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
                         <!--<p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourcePoApproval.shipToContactId" name="shipToCustomerContactName" [suggestions]="firstNamesShipTo" (completeMethod)="filterFirstNamesforshipto($event)" [size]="30" [minLength]="1" [dropdown]="true" #shipCusContactName="ngModel" errorMessage="Records not found" [forceSelection]="true" required>
                             <ng-template let-firstName pTemplate="item">
                                 <div class="ui-helper-clearfix">{{firstName}}</div>
@@ -1024,7 +1024,7 @@
                     </div>
                     <div class="form-group" *ngIf="sourcePoApproval.shipToUserTypeId==2">
                         <label>Contact Name <span class="clr-red">*</span></label>
-                        <p-autoComplete field="firstName" class="pautocomp-cstm" [(ngModel)]="sourcePoApproval.shipToContactId" name="shipToVendorContactName" [suggestions]="firstNamesShipTo1" (completeMethod)="filterVendorContactsForShipTo($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" #shipVenContactName="ngModel"> <!--required-->
+                        <p-autoComplete field="firstName" class="pautocomp-cstm" [(ngModel)]="sourcePoApproval.shipToContactId" name="shipToVendorContactName" [suggestions]="firstNamesShipTo1" (completeMethod)="filterVendorContactsForShipTo($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" #shipVenContactName="ngModel" required> <!--required-->
                             <!-- <ng-template let-firstName pTemplate="item">
                                 <div class="ui-helper-clearfix">{{firstName}}</div>
                             </ng-template> -->
@@ -1044,6 +1044,131 @@
                                     <small> Memo is required </small>
                                 </div>
                         </div> -->
+                    </div>
+
+                    <div *ngIf="sourcePoApproval.shipToUserTypeId==1">
+                        <div class="form-group">
+                            <label>
+                                Ship Via <span class="clr-red">*</span>
+                                <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#shipToShipVia"></a></span>
+                                <span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" data-toggle="modal" data-target="#shipToShipVia"></a></span>
+                            </label>
+                            <select class="form-control" name="cusShipViaId"  (ngModelChange)="getShipViaDetails($event)" [(ngModel)]="sourcePoApproval.shipViaId" #cusShipViaId="ngModel" required> <!--required-->
+                                <option value="0">-- Select --</option>
+                                <option *ngFor="let object of shipViaList" 
+                               
+                                [ngValue]="object.shippingViaId">{{object.name}}</option>
+                               
+                            </select>
+                            <div *ngIf="cusShipViaId.invalid && (cusShipViaId.dirty || cusShipViaId.touched)" class="alert alert-danger alert-danger-cstm">
+                                    <div *ngIf="cusShipViaId.errors.required">
+                                        <small> Ship Via is required </small>
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Shipping Cost <span class="clr-red">*</span></label>
+                            <input class="form-control" type="number" name="cusShippingCost" [(ngModel)]="sourcePoApproval.shippingCost" #cusShippingCost="ngModel" required><!--required-->
+                            <div *ngIf="cusShippingCost.invalid && (cusShippingCost.dirty || cusShippingCost.touched)" class="alert alert-danger alert-danger-cstm">
+                                <div *ngIf="cusShippingCost.errors.required">
+                                    <small> Shipping Cost is required </small>
+                                </div>
+                        </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Handling Cost <span class="clr-red">*</span></label>
+                            <input class="form-control" type="number" name="cusHandlingCost" [(ngModel)]="sourcePoApproval.handlingCost" #cusHandlingCost="ngModel" required><!--required-->
+                            <div *ngIf="cusHandlingCost.invalid && (cusHandlingCost.dirty || cusHandlingCost.touched)" class="alert alert-danger alert-danger-cstm">
+                                <div *ngIf="cusHandlingCost.errors.required">
+                                    <small> Handling Cost is required </small>
+                                </div>
+                        </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Shipping Acct Num <span class="clr-red">*</span></label>
+                            <input class="form-control" type="text" name="cusShippingAcctNum" [(ngModel)]="sourcePoApproval.shippingAcctNum" disabled><!--required-->
+                        </div>
+                        <div class="form-group">
+                            <label>Shipping Id (AWB) <span class="clr-red">*</span></label>
+                            <input class="form-control" type="number" name="cusShippingId" [(ngModel)]="sourcePoApproval.shippingId" #cusShippingId="ngModel" required disabled><!--required-->
+                            <div *ngIf="cusShippingId.invalid && (cusShippingId.dirty || cusShippingId.touched)" class="alert alert-danger alert-danger-cstm">
+                                <div *ngIf="cusShippingId.errors.required">
+                                    <small> Shipping Id is required </small>
+                                </div>
+                        </div>
+                        </div>
+                        <div class="form-group">
+                            <label>URL <span class="clr-red">*</span></label>
+                            <input class="form-control" type="text" name="cusShippingURL" [(ngModel)]="sourcePoApproval.shippingURL" #cusShippingURL="ngModel" required disabled><!--required-->
+                            <div *ngIf="cusShippingURL.invalid && (cusShippingURL.dirty || cusShippingURL.touched)" class="alert alert-danger alert-danger-cstm">
+                                <div *ngIf="cusShippingURL.errors.required">
+                                    <small> Shipping URL is required </small>
+                                </div>
+                        </div>
+                        </div>
+                    </div>
+                    
+                    
+                    <div *ngIf="sourcePoApproval.shipToUserTypeId==2">
+                        <div class="form-group">
+                            <label>
+                                Ship Via <span class="clr-red">*</span>
+                                <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#shipToShipVia"></a></span>
+                                <span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" data-toggle="modal" data-target="#shipToShipVia"></a></span>
+                            </label>
+                            <select class="form-control" name="cusShipViaId"    (ngModelChange)="getShipViaDetails($event)" [(ngModel)]="sourcePoApproval.shipViaId" #cusShipViaId="ngModel" required> <!--required-->
+                                <option value="0">-- Select --</option>
+                                <option *ngFor="let object of shipViaList" 
+                             
+                                [ngValue]="object.shippingViaId">{{object.name}}</option>
+                               
+                            </select>
+                            <div *ngIf="cusShipViaId.invalid && (cusShipViaId.dirty || cusShipViaId.touched)" class="alert alert-danger alert-danger-cstm">
+                                    <div *ngIf="cusShipViaId.errors.required">
+                                        <small> Ship Via is required </small>
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Shipping Cost <span class="clr-red">*</span></label>
+                            <input class="form-control" type="number" name="cusShippingCost" [(ngModel)]="sourcePoApproval.shippingCost" #cusShippingCost="ngModel" required><!--required-->
+                            <div *ngIf="cusShippingCost.invalid && (cusShippingCost.dirty || cusShippingCost.touched)" class="alert alert-danger alert-danger-cstm">
+                                <div *ngIf="cusShippingCost.errors.required">
+                                    <small> Shipping Cost is required </small>
+                                </div>
+                        </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Handling Cost <span class="clr-red">*</span></label>
+                            <input class="form-control" type="number" name="cusHandlingCost" [(ngModel)]="sourcePoApproval.handlingCost" #cusHandlingCost="ngModel" required><!--required-->
+                            <div *ngIf="cusHandlingCost.invalid && (cusHandlingCost.dirty || cusHandlingCost.touched)" class="alert alert-danger alert-danger-cstm">
+                                <div *ngIf="cusHandlingCost.errors.required">
+                                    <small> Handling Cost is required </small>
+                                </div>
+                        </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Shipping Acct Num <span class="clr-red">*</span></label>
+                            <input class="form-control" type="text" name="cusShippingAcctNum" [(ngModel)]="sourcePoApproval.shippingAcctNum" disabled><!--required-->
+                        </div>
+                        <div class="form-group">
+                            <label>Shipping Id (AWB) <span class="clr-red">*</span></label>
+                            <input class="form-control" type="number" name="cusShippingId" [(ngModel)]="sourcePoApproval.shippingId" #cusShippingId="ngModel" required><!--required-->
+                            <div *ngIf="cusShippingId.invalid && (cusShippingId.dirty || cusShippingId.touched)" class="alert alert-danger alert-danger-cstm">
+                                <div *ngIf="cusShippingId.errors.required">
+                                    <small> Shipping Id is required </small>
+                                </div>
+                        </div>
+                        </div>
+                        <div class="form-group">
+                            <label>URL <span class="clr-red">*</span></label>
+                            <input class="form-control" type="text" name="cusShippingURL" [(ngModel)]="sourcePoApproval.shippingURL" #cusShippingURL="ngModel" required><!--required-->
+                            <div *ngIf="cusShippingURL.invalid && (cusShippingURL.dirty || cusShippingURL.touched)" class="alert alert-danger alert-danger-cstm">
+                                <div *ngIf="cusShippingURL.errors.required">
+                                    <small> Shipping URL is required </small>
+                                </div>
+                        </div>
+                        </div>
                     </div>
 
     
@@ -1204,7 +1329,7 @@
                     </div>
                     <div class="form-group" *ngIf="sourcePoApproval.billToUserTypeId==1">
                         <label>Contact Name <span class="clr-red">*</span></label>
-                        <p-autoComplete field="firstName" class="pautocomp-cstm" [(ngModel)]="sourcePoApproval.billToContactId" name="customerContactsForBillTo" [suggestions]="firstNamesbillTo" (completeMethod)="filterCustomerContactsForBillTo($event)" [size]="30" errorMessage="Records not found" [forceSelection]="true" [minLength]="1" [dropdown]="true" #billCusContactName="ngModel">
+                        <p-autoComplete field="firstName" class="pautocomp-cstm" [(ngModel)]="sourcePoApproval.billToContactId" name="customerContactsForBillTo" [suggestions]="firstNamesbillTo" (completeMethod)="filterCustomerContactsForBillTo($event)" [size]="30" errorMessage="Records not found" [forceSelection]="true" [minLength]="1" [dropdown]="true" #billCusContactName="ngModel" required>
                             <!--<ng-template let-firstName pTemplate="item">
                                 <div class="ui-helper-clearfix">{{firstName}}</div>
                             </ng-template>-->
@@ -1217,7 +1342,7 @@
                     </div>
                     <div class="form-group" *ngIf="sourcePoApproval.billToUserTypeId==2">
                         <label>Contact Name <span class="clr-red">*</span></label>
-                        <p-autoComplete field="firstName" class="pautocomp-cstm" [(ngModel)]="sourcePoApproval.billToContactId" name="customerContactsForBillTo" [suggestions]="firstNamesbillTo1" (completeMethod)="filterVendorContactsForBillTo($event)" [size]="30" errorMessage="Records not found" [forceSelection]="true" [minLength]="1" [dropdown]="true" #billVenContactName="ngModel"></p-autoComplete> <!--required-->
+                        <p-autoComplete field="firstName" class="pautocomp-cstm" [(ngModel)]="sourcePoApproval.billToContactId" name="customerContactsForBillTo" [suggestions]="firstNamesbillTo1" (completeMethod)="filterVendorContactsForBillTo($event)" [size]="30" errorMessage="Records not found" [forceSelection]="true" [minLength]="1" [dropdown]="true" #billVenContactName="ngModel" required></p-autoComplete> <!--required-->
                         <!--<p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourcePoApproval.billToContactId" name="firstNamesbillTo1" [suggestions]="firstNamesbillTo1" (completeMethod)="filterFirstNamesforbillto1($event)" [size]="30"
                                         [minLength]="1" [dropdown]="true" #billVenContactName="ngModel" errorMessage="Records not found" [forceSelection]="true" required>
                             <ng-template let-firstName pTemplate="item">
@@ -1236,8 +1361,14 @@
                         <span pTooltip="{{sourcePoApproval.billToMemo}}" tooltipPosition="top"><input type="text" pInputText class="form-control" value="{{sourcePoApproval.billToMemo}}" disabled required /></span>
                         <i class="fa fa-info-circle fa-lg" pTooltip="{{sourcePoApproval.billToMemo}}" tooltipPosition="top" data-toggle="modal" data-target="#address-memo" (click)="onClickBillMemo()"></i>
                     </div>
+
+
     
                 </div>
+
+
+
+                
             </div>
         </p-tabPanel>
     </p-tabView>
@@ -2783,7 +2914,7 @@
                             </div>
                             <div class="form-group col-md-12" style="margin-top: 8px;">
                                 <button type="button" class="btn btn-primary-cstm" [disabled]="!addSiteNameForm.valid" (click)="saveShippingAddress(); resetAddressShippingForm();" data-dismiss="modal">Save</button>
-                                <button type="button" class="btn btn-primary-cstm" [disabled]="!addSiteNameForm.valid" (click)="saveAddressSiteNameToPO(); resetAddressShippingForm();" data-dismiss="modal">Save to this PO</button>
+                                <button type="button" class="btn btn-primary-cstm" [disabled]="!addSiteNameForm.valid" (click)="saveShippingAddressToPO(); resetAddressShippingForm();" data-dismiss="modal">Save to this PO</button>
                             </div>
     
                         </form>
@@ -2846,7 +2977,7 @@
                             </div>
                             <div class="form-group col-md-12" style="margin-top: 8px;">
                                 <button type="button" class="btn btn-primary-cstm" [disabled]="!addSiteNameForm.valid" (click)="saveBillingAddress(); resetAddressBillingForm();"  data-dismiss="modal">Save</button>
-                                <button type="button" class="btn btn-primary-cstm" [disabled]="!addSiteNameForm.valid" (click)="saveAddressSiteNameToPO(); resetAddressBillingForm();" data-dismiss="modal">Save to this PO</button>
+                                <button type="button" class="btn btn-primary-cstm" [disabled]="!addSiteNameForm.valid" (click)="resetAddressBillingForm();" data-dismiss="modal">Save to this PO</button>
                             </div>
     
                         </form>
@@ -2863,44 +2994,45 @@
         <div class="modal-dialog modal-sm partsList-modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">{{addressSiteNameHeader}}</h4>
+                    <button type="button" class="close" data-dismiss="modal" (click)="resetAddressShipViaForm()">&times;</button>
+                    <h4 class="modal-title"> Add Ship Via </h4>
                 </div>
                 <div class="modal-body">
                     <div class="form-row">
                         <form #addShipViaForm="ngForm" class="form-horizontal">
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">Ship Via:</label>
-                                <select class="form-control col-md-6" name="shipviaId" [(ngModel)]="shipToShipViaDetails.shipviaId">
+                                <input type="text" class="form-control col-md-6" name="shippingAcctInfo" [(ngModel)]="addShipViaFormForShipping.shipVia">
+                                <!-- <select class="form-control col-md-6" name="shipviaId" [(ngModel)]="shipToShipViaDetails.shipviaId">
                                     <option value="0">Select</option>
-                                </select>
+                                </select> -->
                             </div>
-                            <div class="form-group col-md-12">
+                            <!-- <div class="form-group col-md-12">
                                 <label class="col-md-6">Shipping Cost:</label>
                                 <input type="text" class="form-control col-md-6" name="shippingCost" [(ngModel)]="shipToShipViaDetails.shippingCost">
                             </div>
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">Handling Cost:</label>
                                 <input type="text" class="form-control col-md-6" name="handlingCost" [(ngModel)]="shipToShipViaDetails.handlingCost">
-                            </div>
+                            </div> -->
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">Shipping Acct Info:</label>
-                                <input type="text" class="form-control col-md-6" name="shippingAcctInfo" [(ngModel)]="shipToShipViaDetails.shippingAcctInfo">
+                                <input type="text" class="form-control col-md-6" name="shippingAcctInfo" [(ngModel)]="addShipViaFormForShipping.shippingAccountInfo">
                             </div>
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">Shipping URL:</label>
-                                <input type="text" class="form-control col-md-6" name="shippingURL" [(ngModel)]="shipToShipViaDetails.shippingURL">
+                                <input type="text" class="form-control col-md-6" name="shippingURL" [(ngModel)]="addShipViaFormForShipping.shippingURL">
                             </div>
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">Shipping Id:</label>
-                                <input type="text" class="form-control col-md-6" name="shippingId" [(ngModel)]="shipToShipViaDetails.shippingId">
+                                <input type="text" class="form-control col-md-6" name="shippingId" [(ngModel)]="addShipViaFormForShipping.shippingId">
                             </div>
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">Memo:</label>
-                                <input type="text" class="form-control col-md-6" name="shipviamemo" [(ngModel)]="shipToShipViaDetails.memo">
+                                <input type="text" class="form-control col-md-6" name="shipviamemo" [(ngModel)]="addShipViaFormForShipping.memo">
                             </div>
                             <div class="form-group col-md-12" style="margin-top: 8px;">
-                                <button type="button" class="btn btn-primary-cstm" [disabled]="!addShipViaForm.valid" (click)="saveShipToShipViaDetails()">Save</button>
+                                <button type="button" class="btn btn-primary-cstm" [disabled]="!addShipViaForm.valid" (click)="saveShipViaForShipTo(); resetAddressShipViaForm();">Save</button>
                                 <button type="button" class="btn btn-primary-cstm" [disabled]="!addShipViaForm.valid" (click)="saveShipToShipViaDetailsToPO()">Save to this PO</button>
                             </div>
     
