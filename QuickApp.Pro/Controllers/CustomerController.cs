@@ -847,6 +847,7 @@ namespace QuickApp.Pro.Controllers
 				address.CreatedDate = DateTime.Now;
 				address.UpdatedDate = DateTime.Now;
 				address.IsActive = Customershipping.IsActive;
+
 				_unitOfWork.Address.Add(address);
 				_unitOfWork.SaveChanges();
 				long? id = address.AddressId;
