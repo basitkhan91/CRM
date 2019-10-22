@@ -627,8 +627,8 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Depreciation Method', routerLink: '/singlepages/singlepages/app-depriciation-method' },
                             { label: 'Disposal Type', routerLink: '/singlepages/singlepages/app-disposal-type' },
                             { label: 'Asset Status', routerLink: '/singlepages/singlepages/asset-status' },
-                            { label: 'Asset Type', routerLink: '/singlepages/singlepages/app-asset-type-single-screen' },
-                            { label: 'Intagible Type', routerLink: '/singlepages/singlepages/app-asset-intangible-type-single-screen' },
+                            { label: 'Asset Type', routerLink: '/singlepages/singlepages/app-asset-type' },
+                            { label: 'Asset Intangible Type', routerLink: '/singlepages/singlepages/app-asset-intangible-type' },
                             { label: 'Depreciation Convension', routerLink: '/singlepages/singlepages/app-asset-dep-convention-type' },
                             { label: 'Depreciation Intervals', routerLink: '/singlepages/singlepages/app-depreciation-intervals' },]
                     },
@@ -636,7 +636,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                         label: 'Asset Attributes', items: [
                             {
                                 label: 'Asset Attribute Type', items: [
-                                    { label: 'Asset Attribute List', routerLink: '/singlepages/singlepages/app-asset-type-single-screen' },
+                                    { label: 'Asset Attribute List', routerLink: '/singlepages/singlepages/app-asset-type' },
                                     { label: 'Create Attribute Asset', routerLink: '/#' },
                                 ]
                             },
