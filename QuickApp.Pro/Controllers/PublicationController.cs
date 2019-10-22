@@ -112,7 +112,7 @@ namespace QuickApp.Pro.Controllers
                     publicationobject.CreatedBy = Request.Form["CreatedBy"];
                     publicationobject.UpdatedBy = Request.Form["UpdatedBy"];
                     publicationobject.PublicationTypeId = Request.Form["PublicationTypeId"].ToString() == "" ? 0 : Convert.ToInt32(Request.Form["PublicationTypeId"].ToString());
-                    publicationobject.Sequence = Convert.ToInt32(Request.Form["Sequence"]);
+                    publicationobject.Sequence = Convert.ToString(Request.Form["Sequence"]) == "null" ? 0 : Convert.ToInt32(Request.Form["Sequence"]);
                     publicationobject.RevisionNum = Convert.ToInt32(Request.Form["RevisionNum"]);
                     publicationobject.ExpirationDate = Request.Form["ExpirationDate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["ExpirationDate"].ToString(), "dd/MM/yyyy", null);
 
@@ -163,12 +163,12 @@ namespace QuickApp.Pro.Controllers
                 publicationobject.CreatedBy = Request.Form["CreatedBy"];
                 publicationobject.UpdatedBy = Request.Form["UpdatedBy"];
                 publicationobject.PublicationTypeId = Request.Form["PublicationTypeId"].ToString() == "" ? 0 : Convert.ToInt32(Request.Form["PublicationTypeId"].ToString());
-                publicationobject.Sequence = Convert.ToInt32(Request.Form["Sequence"]);
+                publicationobject.Sequence = Convert.ToString(Request.Form["Sequence"]) == "null" ? 0 : Convert.ToInt32(Request.Form["Sequence"]);
                 publicationobject.RevisionNum = Convert.ToInt32(Request.Form["RevisionNum"]);
                 publicationobject.ExpirationDate = Request.Form["ExpirationDate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["ExpirationDate"].ToString(), "dd/MM/yyyy", null);
 
-                _unitOfWork.Publication.Update(publicationobject);
-                _unitOfWork.SaveChanges();
+                _context.Publication.Update(publicationobject);
+                _context.SaveChanges();
 
                 _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, publicationobject.PublicationRecordId, Convert.ToInt32(ModuleEnum.Publication), Convert.ToString(ModuleEnum.Publication), publicationobject.UpdatedBy, publicationobject.MasterCompanyId);
 
@@ -182,9 +182,13 @@ namespace QuickApp.Pro.Controllers
             var existingResult = _unitOfWork.Publication.GetSingleOrDefault(c => c.PublicationRecordId == id);
 
             existingResult.IsDeleted = true;
-            _unitOfWork.Publication.Update(existingResult);
+            //_unitOfWork.Publication.Update(existingResult);
             //_unitOfWork.Publication.Remove(existingResult);
-            _unitOfWork.SaveChanges();
+            //_unitOfWork.SaveChanges();
+
+            _context.Publication.Update(existingResult);
+            _context.SaveChanges();
+
             return Ok(id);
         }
 
