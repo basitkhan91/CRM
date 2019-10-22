@@ -513,7 +513,7 @@ namespace QuickApp.Pro.Controllers
             return Ok();
         }
 
-        [HttpGet("legalentityshippingaddress")]
+        [HttpGet("legalentityshippingaddresslist")]
         public IActionResult GetLegalEntityshippingAddress()
         {
             _unitOfWork.LegalEntity.GetLegalEntityShippingAddress();
@@ -547,7 +547,21 @@ namespace QuickApp.Pro.Controllers
             var result = _unitOfWork.LegalEntity.GetLegalEntityContacts(legalEntityId);
             return Ok(result);
         }
-    }
+
+		[HttpGet("legalentityshippingsitenames")]
+		public IActionResult GetLegalEntityShippingSiteNames(long legalEntityId)
+		{
+			var result = _unitOfWork.LegalEntity.GetLegalEntityShippingSiteNames(legalEntityId);
+			return Ok(result);
+		}
+
+		[HttpGet("legalentityshippingaddress")]
+		public IActionResult GetLegalEntityShippingAddress(long addressId)
+		{
+			var result = _unitOfWork.LegalEntity.GetLegalEntityShippingAddress(addressId);
+			return Ok(result);
+		}
+	}
 }
 
     
