@@ -55,7 +55,7 @@ namespace DAL.Repositories.Interfaces
         {
             var data = (from v in _appContext.CustomerBillingAddress
                 join ad in _appContext.Address on v.AddressId equals ad.AddressId
-                where ((v.IsDelete == null || v.IsDelete == false) && (v.CustomerId == id))
+                where v.CustomerId == id
 
                 select new
                 {
