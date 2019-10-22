@@ -491,10 +491,10 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
         this.sourceEmployee.startDate = this.empCreationForm.get('startDate').value;
         this.sourceEmployee.SupervisorId = this.supervisorId;
-   
+
         if (this.empCreationForm.get('departmentId').value != null) {
 
-           
+
 
 
             this.sourceEmployee.managementStructureId = this.empCreationForm.get('departmentId').value;
@@ -524,11 +524,11 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         }
 
 
-        console.log(" Selected Entity" + this.sourceEmployee.managementStructureId);
+
 
         this.selectedshiftValues.push(this.sourceEmployee.shifId);
 
-        console.log("this.selectedvalues" + this.selectedshiftValues);
+
 
 
 
@@ -537,7 +537,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
 
 
-        console.log("this.sourceEmployee.managementStructureId" + this.sourceEmployee.managementStructureId);
+
 
         if (this.sourceEmployee.hourlypayType == "Hourly") {
 
@@ -558,11 +558,11 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         console.log(this.sourceEmployee.dateOfBirth);
 
         if (this.sourceEmployee.dateOfBirth == undefined) {
-            console.log("No Value");
+
             this.sourceEmployee.dateOfBirth = null;
         }
 
-        console.log("source Empi Id :" + this.sourceEmployee.employeeId);
+
         if (this.sourceEmployee.employeeId) {
             this.employeeService.updateEmployee(this.sourceEmployee).subscribe(
                 results => this.empUpdate(this.sourceEmployee, results),
@@ -571,30 +571,96 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             );
         }
         else {
-            // this.sourceEmployee.startDate 
+
             this.sourceEmployee.employeeLeaveTypeId = this.selectedLeaveValues;
-            console.log(this.sourceEmployee);
-            // this.sourceEmployee.employeeLeaveTypeId = this.selectedLeaveValues[0]+'';
+
 
 
 
             this.employeeService.newAddEmployee(this.sourceEmployee).subscribe(
-               results => this.empAdd(this.sourceEmployee, results),
+                results => {
+
+                    this.empAdd(this.sourceEmployee, results);
+
+                    this.employeeLeavetypeAdd(results.employeeId);
+                    this.employeeShifttypeAdd(results.employeeId);
+
+                }
+
+                ,
 
                 error => this.onDataLoadFailed(error)
             );
         }
 
 
-
-
-      
-        
-        
-        
     }
 
+    employeeShifttypeAdd(employeeId) {
 
+
+
+        this.selectedshiftValues;
+
+        console.log("shiftValuesLength:" + this.selectedshiftValues.length);
+
+        for (var i = 0; i < this.selectedshiftValues.length; i++) {
+            console.log("i" + i);
+            console.log("this.shiftValues[i]" + this.selectedshiftValues[i]);
+
+            var shiftTypeId = this.selectedshiftValues[i];
+
+            if (shiftTypeId != null) {
+                this.sourceEmployee.ShiftTypeId = shiftTypeId;
+                this.sourceEmployee.EmployeeId = employeeId;
+
+                this.employeeService.employeeShifttypeAdd(this.sourceEmployee).subscribe(
+                    results => {
+                        console.log("shift value added sucessfully")
+                    },
+
+                    error => this.onDataLoadFailed(error)
+                );
+
+            }
+
+
+
+        }
+
+
+
+    }
+    employeeLeavetypeAdd(employeeId) {
+
+
+
+        this.selectedLeaveValues;
+
+        console.log("Length:" + this.selectedLeaveValues.length);
+
+        for (var i = 0; i < this.selectedLeaveValues.length; i++) {
+            console.log("i" + i);
+            console.log("this.selectedLeaveValues[i]" + this.selectedLeaveValues[i]);
+
+            var leaveTypeId = this.selectedLeaveValues[i];
+
+            this.sourceEmployee.LeaveTypeId = leaveTypeId;
+            this.sourceEmployee.EmployeeId = employeeId;
+
+            this.employeeService.employeeLeavetypeAdd(this.sourceEmployee).subscribe(
+                results => {
+                    console.log("Leave value added sucessfully")
+                },
+
+                error => this.onDataLoadFailed(error)
+            );
+
+        }
+
+
+
+    }
 
     onSubmit() {
 		this.sourceEmployee.firstName;
@@ -1236,7 +1302,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             this.sourceAction.updatedBy = this.userA;
             this.sourceAction.jobTypeName = this.jobTypeName;
             this.sourceAction.jobTypeDescription = this.jobTypeDescription;
-
+            this.sourceAction.masterCompanyId = 1;
             console.log(this.sourceAction);
             this.sourceAction.description = this.jobName;
 
@@ -1497,79 +1563,170 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
 	}
 
-	private onManagemtntdataLoad(getAtaMainList: any[]) {
-		// alert('success');
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.dataSource.data = getAtaMainList;
-		this.allManagemtninfo = getAtaMainList;
-		for (let i = 0; i < this.allManagemtninfo.length; i++) {
+    private onManagemtntdataLoad(getAtaMainList: any[]) {
+        // alert('success');
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = getAtaMainList;
+        this.allManagemtninfo = getAtaMainList;
+        for (let i = 0; i < this.allManagemtninfo.length; i++) {
 
-			if (this.allManagemtninfo[i].parentId == null) {
-				this.maincompanylist.push(this.allManagemtninfo[i]);
+            if (this.allManagemtninfo[i].parentId == null) {
+                this.maincompanylist.push(this.allManagemtninfo[i]);
 
-			}
-		}
+            }
+        }
+
+
+        console.log("struckin");
+
+        if (this.sourceEmployee.managmentLegalEntity != null && this.sourceEmployee.divmanagmentLegalEntity != null && this.sourceEmployee.biumanagmentLegalEntity != null && this.sourceEmployee.compmanagmentLegalEntity != null) {
+
+            console.log("Buid" + this.sourceEmployee.biumanagmentLegalEntity.managementStructureId);
+
+            this.empCreationForm.controls['companyId'].setValue(this.sourceEmployee.compmanagmentLegalEntity.managementStructureId);
+            this.empCreationForm.controls['BusinessUnitId'].setValue(this.sourceEmployee.biumanagmentLegalEntity.managementStructureId);
+            this.empCreationForm.controls['divisionId'].setValue(this.sourceEmployee.divmanagmentLegalEntity.managementStructureId);
+            this.empCreationForm.controls['departmentId'].setValue(this.sourceEmployee.managementStructeInfo.managementStructureId);
+
+
+        }
+        else if (this.sourceEmployee.biumanagmentLegalEntity != null && this.sourceEmployee.divmanagmentLegalEntity != null && this.sourceEmployee.managmentLegalEntity != null) {
+
+            this.empCreationForm.controls['companyId'].setValue(this.sourceEmployee.biumanagmentLegalEntity.managementStructureId);
+            this.empCreationForm.controls['BusinessUnitId'].setValue(this.sourceEmployee.divmanagmentLegalEntity.managementStructureId);
+            this.empCreationForm.controls['divisionId'].setValue(this.sourceEmployee.managmentLegalEntity.managementStructureId);
+
+
+
+
+
+        }
+        else if (this.sourceEmployee.divmanagmentLegalEntity != null && this.sourceEmployee.managmentLegalEntity != null) {
+
+            this.empCreationForm.controls['companyId'].setValue(this.sourceEmployee.divmanagmentLegalEntity.managementStructureId);
+            this.empCreationForm.controls['BusinessUnitId'].setValue(this.sourceEmployee.managmentLegalEntity.managementStructureId);
+
+        }
+        else if (this.sourceEmployee.managementStructeInfo != null) {
+
+            this.empCreationForm.controls['companyId'].setValue(this.sourceEmployee.managmentLegalEntity.managementStructureId);
+
+
+
+        }
+        else {
+            console.log("no Info Presnts")
+        }
 
         this.setManagementStrucureData(this.sourceEmployee);
-	}
+    }
 	
 
     getBUList(event) {
 
-        var eventid = event.target.value;
 
-        console.log("selected legal Id" + eventid)
-        var splitted = eventid.split(":");
-        var companyId = splitted[1];
-        console.log("companyId" + companyId)
+        this.empCreationForm.controls['companyId'];
 
-        if (this.updateMode == false) {
-
-            this.sourceEmployee.buisinessUnitId = "";
-            this.sourceEmployee.departmentId = "";
-            this.sourceEmployee.divisionId = "";
-            this.sourceEmployee.managementStructureId = companyId;
-            this.departmentList = [];
-            this.divisionlist = [];
-            this.bulist = [];
+        if (this.sourceEmployee.employeeId) {
 
 
+            var companyId = this.empCreationForm.controls['companyId'].value;
+            if (this.updateMode == false) {
 
-            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                this.sourceEmployee.buisinessUnitId = "";
+                this.sourceEmployee.departmentId = "";
+                this.sourceEmployee.divisionId = "";
+                this.sourceEmployee.managementStructureId = companyId;
+                this.departmentList = [];
+                this.divisionlist = [];
+                this.bulist = [];
 
 
 
-                if (this.allManagemtninfo[i].parentId == companyId) {
-                    this.bulist.push(this.allManagemtninfo[i])
+                for (let i = 0; i < this.allManagemtninfo.length; i++) {
+
+
+
+                    if (this.allManagemtninfo[i].parentId == companyId) {
+                        this.bulist.push(this.allManagemtninfo[i])
+                    }
+
+
+                }
+
+            }
+            else {
+
+                this.departmentList = [];
+                this.divisionlist = [];
+                this.bulist = [];
+
+
+                for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                    if (this.allManagemtninfo[i].parentId == companyId) {
+                        this.bulist.push(this.allManagemtninfo[i])
+                    }
                 }
 
 
             }
+
 
         }
         else {
 
-            this.departmentList = [];
-            this.divisionlist = [];
-            this.bulist = [];
+            var companyId = this.empCreationForm.controls['companyId'].value;
+
+            if (this.updateMode == false) {
+
+                this.sourceEmployee.buisinessUnitId = "";
+                this.sourceEmployee.departmentId = "";
+                this.sourceEmployee.divisionId = "";
+                this.sourceEmployee.managementStructureId = companyId;
+                this.departmentList = [];
+                this.divisionlist = [];
+                this.bulist = [];
 
 
-            for (let i = 0; i < this.allManagemtninfo.length; i++) {
-                if (this.allManagemtninfo[i].parentId == companyId) {
-                    this.bulist.push(this.allManagemtninfo[i])
+
+                for (let i = 0; i < this.allManagemtninfo.length; i++) {
+
+
+
+                    if (this.allManagemtninfo[i].parentId == companyId) {
+                        this.bulist.push(this.allManagemtninfo[i])
+                    }
+
+
                 }
+
+            }
+            else {
+
+                this.departmentList = [];
+                this.divisionlist = [];
+                this.bulist = [];
+
+
+                for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                    if (this.allManagemtninfo[i].parentId == companyId) {
+                        this.bulist.push(this.allManagemtninfo[i])
+                    }
+                }
+
+
             }
 
-
         }
+
     }
 
     getDepartmentlist(value) {
 
-        console.log("Department"+value);
+        console.log("Department" + value);
         var splitted = value.split(": ");
-        var businessUnitId = splitted[1];
+        var businessUnitId = this.empCreationForm.controls['BusinessUnitId'].value;
         console.log(businessUnitId);
         if (this.updateMode == false) {
             this.sourceEmployee.departmentId = "";
@@ -1630,8 +1787,10 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     }
 
     getDivisionlist(value) {
-        var splitted = value.split(": ");
-        var departmentId = splitted[1];
+
+        console.log("Division List" + value);
+
+        var departmentId = this.empCreationForm.controls['divisionId'].value;;
         if (this.updateMode == false) {
             this.sourceEmployee.divisionId = "";
             this.sourceEmployee.managementStructureId = departmentId;
