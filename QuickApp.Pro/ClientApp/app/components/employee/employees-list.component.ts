@@ -52,11 +52,18 @@ export class EmployeesListComponent implements OnInit{
     public divisionCode: any;
     public empExpertisedescription: any;
     public jobTypeName: any;
+    public jobTitleName: any;
     public employeeLeaveType: any;
     public deleteEmployeeId: any;
     totalRecords: any;
     totalPages: number;
     pageSize: number = 10;
+    public departname: any;
+    public divsioname: any;
+    public biuName: any;
+    public compnayname: any;
+    public shiftId: any;
+    
 	ngOnInit(): void {
 
 		// debugger;
@@ -100,13 +107,15 @@ export class EmployeesListComponent implements OnInit{
 	}
     private onemployeeDataLoadSuccessful(allWorkFlows: any[]) {
         if (allWorkFlows[0].employeeLeaveTypeMapping != null) {
-            this.employeeLeaveType = allWorkFlows[0].employeeLeaveTypeMapping.employeeLeaveTypeId
+            this.employeeLeaveType = allWorkFlows[0].employeeLeaveTypeMapping.employeeLeaveTypeId;
+            this.shiftId = allWorkFlows[0].employeeShiftMapping.shiftId
+
         }
-		//debugger;
-		//this.alertService.stopLoadingMessage();
-		//this.loadingIndicator = false;
-		this.dataSource.data = allWorkFlows;
-		this.allEmployeelist = allWorkFlows[0];
+        //debugger;
+        //this.alertService.stopLoadingMessage();
+        //this.loadingIndicator = false;
+        this.dataSource.data = allWorkFlows;
+        this.allEmployeelist = allWorkFlows[0];
 
 
     }
@@ -235,8 +244,38 @@ export class EmployeesListComponent implements OnInit{
 		this.alertService.showStickyMessage(error, null, MessageSeverity.error);
 	}
     openView(content, row) {
-        console.log("empInfo");
 
+
+        if (row.managmentLegalEntity != null && row.divmanagmentLegalEntity != null && row.biumanagmentLegalEntity != null && row.compmanagmentLegalEntity != null) {
+            this.departname = row.managementStructeInfo.name;
+            this.divsioname = row.divmanagmentLegalEntity.name;
+            this.biuName = row.biumanagmentLegalEntity.name;
+            this.compnayname = row.compmanagmentLegalEntity.name;
+
+        }
+        else if (row.biumanagmentLegalEntity != null && row.divmanagmentLegalEntity != null && row.managmentLegalEntity != null) {
+
+            this.divsioname = row.managmentLegalEntity.name;
+            this.biuName = row.divmanagmentLegalEntity.name;
+            this.compnayname = row.biumanagmentLegalEntity.name;
+
+
+
+        }
+        else if (row.divmanagmentLegalEntity != null && row.managmentLegalEntity != null) {
+            this.biuName = row.managmentLegalEntity.name;
+            this.compnayname = row.divmanagmentLegalEntity.name;
+
+
+        }
+        else if (row.managementStructeInfo != null) {
+
+            this.compnayname = row.managmentLegalEntity.name;
+
+        }
+        else {
+            console.log("no Info Presnts")
+        }
         console.log(row);
         this.originationCounty = row.orgCountries.countries_name;
         this.nationalCountry = row.nationalCountryId.countries_name;
@@ -249,6 +288,11 @@ export class EmployeesListComponent implements OnInit{
             this.jobTypeName = row.jobtype.jobTypeName
         }
 
+        if (row.jobtitle != null) {
+            this.jobTitleName = row.jobtitle.description
+        }
+
+        
 
 
 
@@ -271,7 +315,7 @@ export class EmployeesListComponent implements OnInit{
         }
 
 
-
+        this.jobTypeName=row.jobtype.jobTypeName;
 
 
         this.viewGeneralDetails = row;
@@ -288,6 +332,7 @@ export class EmployeesListComponent implements OnInit{
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
+
 	dismissModel() {
 		this.modal.close();
 	}

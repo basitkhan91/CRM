@@ -47,13 +47,13 @@
                                                         <div class="col-sm-7">
                                                             <div class="inner-addon right-addon inline-block">
                                                                 <!--
-                                                                  <p-autoComplete [(ngModel)]="sourceEmployee.middleName" (onKeyUp)=onKeyUpMiddleNames($event) (onSelect)="onSelectMiddleName($event)" [ngModelOptions]="{standalone: true}" [suggestions]="middleNameCollection" (completeMethod)="filtermiddleName($event)" [size]="30"
-                                                                            [minLength]="3" [dropdown]="true">
-                                                                <ng-template let-middleName pTemplate="item">
-                                                                    <div class="ui-helper-clearfix">{{middleName}}</div>
-                                                                </ng-template>
-                                                            </p-autoComplete>
-                                                            -->
+                          <p-autoComplete [(ngModel)]="sourceEmployee.middleName" (onKeyUp)=onKeyUpMiddleNames($event) (onSelect)="onSelectMiddleName($event)" [ngModelOptions]="{standalone: true}" [suggestions]="middleNameCollection" (completeMethod)="filtermiddleName($event)" [size]="30"
+                                    [minLength]="3" [dropdown]="true">
+                        <ng-template let-middleName pTemplate="item">
+                            <div class="ui-helper-clearfix">{{middleName}}</div>
+                        </ng-template>
+                    </p-autoComplete>
+                    -->
                                                                 <input class="form-control" type="text" id="" [formControl]="empCreationForm.controls['middleName']" [(ngModel)]="sourceEmployee.middleName">
 
                                                             </div>
@@ -110,11 +110,11 @@
 
                                                         </div>
                                                         <!--
-                                                          <div *ngIf="sourceJobTitle.errors && (sourceJobTitle.valid || sourceJobTitle.touched)">
-                                                        <small class="text-danger" *ngIf="sourceJobTitle.errors.required">Job Title is required</small>
+                  <div *ngIf="sourceJobTitle.errors && (sourceJobTitle.valid || sourceJobTitle.touched)">
+                <small class="text-danger" *ngIf="sourceJobTitle.errors.required">Job Title is required</small>
 
-                                                    </div>
-                                                    -->
+            </div>
+            -->
 
                                                     </div>
 
@@ -127,11 +127,11 @@
                                                             <a data-toggle="modal" data-target="#addEmpExprt" class="add-icon" (click)="openemployeeExpertise(contentEdit)"><i class="fa fa-plus"></i></a>
                                                         </div>
                                                         <!--
-                                                         <div *ngIf="sourceEmpExp.errors && (sourceEmpExp.valid || sourceEmpExp.touched)">
-                                                        <small class="text-danger" *ngIf="sourceEmpExp.errors.required">Employee Expertise is required</small>
+                 <div *ngIf="sourceEmpExp.errors && (sourceEmpExp.valid || sourceEmpExp.touched)">
+                <small class="text-danger" *ngIf="sourceEmpExp.errors.required">Employee Expertise is required</small>
 
-                                                    </div>
-                                                    -->
+            </div>
+            -->
 
                                                     </div>
                                                     <div class="form-group col-sm-12">
@@ -140,16 +140,16 @@
                                                             <select [formControl]="empCreationForm.controls['JobTypeId']" required>
                                                                 <option *ngFor="let jobType of allJobTypesinfo" [ngValue]="jobType.jobTypeId">{{jobType.jobTypeName}}</option>
                                                             </select>
-                                                            <a data-toggle="modal"  data-target="#addJobTitle" class="add-icon" (click)="openjobtype(content2)"><i class="fa fa-plus"></i></a>
+                                                            <a data-toggle="modal" data-target="#addJobTitle" class="add-icon" (click)="openjobtype(content2)"><i class="fa fa-plus"></i></a>
                                                         </div>
                                                         <!--
 
-                                                       <div *ngIf="sourceJobType.errors && (sourceJobType.valid || sourceJobType.touched)">
-                                                        <small class="text-danger" *ngIf="sourceJobType.errors.required">Job Type is required</small>
+               <div *ngIf="sourceJobType.errors && (sourceJobType.valid || sourceJobType.touched)">
+                <small class="text-danger" *ngIf="sourceJobType.errors.required">Job Type is required</small>
 
-                                                    </div>
+            </div>
 
-                                                    -->
+            -->
 
                                                     </div>
                                                     <div class="form-group col-sm-12">
@@ -164,49 +164,50 @@
                                                     <div class="form-group col-sm-12">
                                                         <label class="form-group control-label col-sm-4">Legal Entity<span style="color:red">*</span></label>
                                                         <div class="col-sm-7">
-                                                            <select [formControl]="empCreationForm.controls['companyId']" (change)="getBUList($event)" required>
+                                                            <select [formControl]="empCreationForm.controls['companyId']" (change)="getBUList($event.target.value)" required>
 
                                                                 <!--
-           <option *ngFor="let managementStructure of alllegalEntityInfo" [ngValue]="managementStructure.managementStructureId">{{managementStructure.legalEntiryInfo.description}}</option>
-    -->
+                           <option *ngFor="let managementStructure of alllegalEntityInfo" [ngValue]="managementStructure.managementStructureId">{{managementStructure.legalEntiryInfo.description}}</option>
+                    -->
                                                                 <!--<option>--Select--</option>-->
-                                                                <option *ngFor="let managementStructure of alllegalEntityInfo" [ngValue]="managementStructure.managementStructureId">{{managementStructure.name}}</option>
+                                                                <option *ngFor="let managementStructure of maincompanylist" [ngValue]="managementStructure.managementStructureId">{{managementStructure.name}}</option>
 
 
                                                             </select>
                                                         </div>
                                                         <!--
-                                                            <div *ngIf="sourceCompany.errors && (sourceCompany.valid || sourceCompany.touched)">
-                                                        <small class="text-danger" *ngIf="sourceCompany.errors.required">Company is required</small>
+                    <div *ngIf="sourceCompany.errors && (sourceCompany.valid || sourceCompany.touched)">
+                <small class="text-danger" *ngIf="sourceCompany.errors.required">Company is required</small>
 
-                                                    </div>
-                                                    -->
+            </div>
+            -->
 
                                                     </div>
                                                     <div class="form-group col-sm-12">
                                                         <label class="control-label col-sm-4">BU</label>
                                                         <div class="col-sm-7">
-                                                            <select [formControl]="empCreationForm.controls['BusinessUnitId']"   (change)="getDepartmentlist($event.target.value)">>
-                                                               
-                                                                <option *ngFor="let managementStructure of bulist"  [ngValue]="managementStructure.managementStructureId">{{managementStructure.code}}</option>
+                                                            <select [formControl]="empCreationForm.controls['BusinessUnitId']" (change)="getDepartmentlist($event.target.value)">
+                                                                >
+
+                                                                <option *ngFor="let managementStructure of bulist" [ngValue]="managementStructure.managementStructureId">{{managementStructure.name}}</option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-sm-12">
                                                         <label class="control-label col-sm-4">Div</label>
                                                         <div class="col-sm-7">
-                                                            <select [formControl]="empCreationForm.controls['divisionId']"  (change)="getDivisionlist($event.target.value)">
-                                                              
-                                                                <option *ngFor="let managementStructure of departmentList " [ngValue]="managementStructure.managementStructureId">{{managementStructure.code}}</option>
+                                                            <select [formControl]="empCreationForm.controls['divisionId']" (change)="getDivisionlist($event.target.value)">
+
+                                                                <option *ngFor="let managementStructure of departmentList " [ngValue]="managementStructure.managementStructureId">{{managementStructure.name}}</option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-sm-12">
                                                         <label class="control-label col-sm-4">Dept</label>
                                                         <div class="col-sm-7">
-                                                            <select [formControl]="empCreationForm.controls['departmentId']"   (change)="divisionChange(sourceEmployee.divisionId)">
-                                                             
-                                                                <option *ngFor="let managementStructure of divisionlist " [ngValue]="managementStructure.managementStructureId">{{managementStructure.code}}</option>
+                                                            <select [formControl]="empCreationForm.controls['departmentId']" (change)="divisionChange(sourceEmployee.divisionId)">
+
+                                                                <option *ngFor="let managementStructure of divisionlist " [ngValue]="managementStructure.managementStructureId">{{managementStructure.name}}</option>
                                                             </select>
                                                         </div>
                                                     </div>
