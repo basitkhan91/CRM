@@ -1,5 +1,7 @@
-﻿using System;
+﻿using DAL.Core;
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Models
 {
@@ -15,6 +17,9 @@ namespace DAL.Models
 
         public bool IsDelete { get; set; }
         public bool IsActive { get; set; }
+
+        [NotMapped]
+        public UploadTag UploadTag { get; set; }
 
     }
 }

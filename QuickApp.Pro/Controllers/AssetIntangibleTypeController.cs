@@ -28,20 +28,6 @@ namespace QuickApp.Pro.Controllers
 
         #region Public Methods
 
-        [HttpGet("getAll")]
-        public IActionResult getAll()
-        {
-            List<AssetIntangibleType> items = _unitOfWork.Repository<AssetIntangibleType>().GetAll().Where(x => !x.IsDelete).OrderByDescending(x => x.AssetIntangibleTypeId).ToList();
-            return Ok(items);
-        }
-
-        [HttpGet("getById/{id}")]
-        public IActionResult getById(long id)
-        {
-            AssetIntangibleType item = _unitOfWork.Repository<AssetIntangibleType>().Find(x => x.AssetIntangibleTypeId == id && !x.IsDelete).FirstOrDefault();
-            return Ok(item);
-        }
-
         [HttpPost("add")]
         public IActionResult add([FromBody]AssetIntangibleType item)
         {
@@ -63,6 +49,53 @@ namespace QuickApp.Pro.Controllers
                     return BadRequest(ModelState);
                 }
 
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("audit/{id}")]
+        public IActionResult AuditDetails(long id)
+        {
+            List<AssetIntangibleTypeAudit> audits = _unitOfWork.Repository<AssetIntangibleTypeAudit>().Find(x => x.AssetIntangibleTypeId == id).OrderByDescending(x => x.AssetIntangibleTypeAuditId).ToList();
+
+            return Ok(audits);
+        }
+
+        [HttpPost("bulkUpload")]
+        public IActionResult BulkUpload()
+        {
+            var result = _unitOfWork.AssetIntangibleTypeRepository.BulkUpload(Request.Form.Files[0]);
+
+            return Ok(result);
+        }
+
+        [HttpGet("getAll")]
+        public IActionResult getAll()
+        {
+            IEnumerable<AssetIntangibleType> items = _unitOfWork.AssetIntangibleTypeRepository.GetAllItems();
+            return Ok(items);
+        }
+
+        [HttpGet("getById/{id}")]
+        public IActionResult getById(long id)
+        {
+            AssetIntangibleType item = _unitOfWork.Repository<AssetIntangibleType>().Find(x => x.AssetIntangibleTypeId == id).FirstOrDefault(x => !(x?.IsDelete ?? false));
+            return Ok(item);
+        }
+
+        [HttpGet("removeById/{id}")]
+        public IActionResult removeById(long id)
+        {
+            var item = _unitOfWork.Repository<AssetIntangibleType>().Find(x => x.AssetIntangibleTypeId == id).FirstOrDefault();
+            if (item != null)
+            {
+                item.IsDelete = true;
+                _unitOfWork.Repository<AssetIntangibleType>().Update(item);
+                _unitOfWork.SaveChanges();
+                return Ok();
             }
             else
             {
@@ -93,31 +126,6 @@ namespace QuickApp.Pro.Controllers
                 return BadRequest();
             }
 
-        }
-
-        [HttpGet("removeById/{id}")]
-        public IActionResult removeById(long id)
-        {
-            var item = _unitOfWork.Repository<AssetIntangibleType>().Find(x => x.AssetIntangibleTypeId == id).FirstOrDefault();
-            if (item != null)
-            {
-                item.IsDelete = true;
-                _unitOfWork.Repository<AssetIntangibleType>().Update(item);
-                _unitOfWork.SaveChanges();
-                return Ok();
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }
-
-        [HttpGet("audit/{id}")]
-        public IActionResult AuditDetails(long id)
-        {
-            List<AssetIntangibleTypeAudit> audits = _unitOfWork.Repository<AssetIntangibleTypeAudit>().Find(x => x.AssetIntangibleTypeId == id).OrderByDescending(x => x.AssetIntangibleTypeAuditId).ToList();
-
-            return Ok(audits);
         }
 
         #endregion Public Methods

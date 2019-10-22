@@ -5,7 +5,6 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
 import { StageCode } from '../../models/stage-code.model';
 import { StageCodeEndpointService } from './stage-code-endpoint.service';
-import { AuditHistory } from '../../models/audithistory.model';
 @Injectable()
 export class StageCodeService {
 
@@ -46,5 +45,9 @@ export class StageCodeService {
         return Observable.forkJoin(
             this.endpointService.getItemAudit<any[]>(id)
         );
+    }
+
+    bulkUpload(file: any): Observable<object> {
+        return this.endpointService.bulkItemUpload(file);
     }
 }

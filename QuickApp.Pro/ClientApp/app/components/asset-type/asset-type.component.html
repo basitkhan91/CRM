@@ -50,9 +50,10 @@
                                             pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
                                     <button type="button" class="btn btn-primary-cstm" pTooltip="Download All Data" tooltipPosition="top"
                                             pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
-                                    <div class="excel-upload excel-upload-cstm">
-                                        <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected"
-                                               accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                                    <div class="excel-upload  excel-upload-cstm">
+                                        <input type="file" id="file" class="uploaddoc upload-file" data-multiple-caption="{count} files selected"
+                                               accept=".xlsx, .xls, .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                               (change)="bulkUpload($event)">
                                         <label for="upload">
                                             <span matTooltip="Upload Data (Excel)">
                                                 <i class="fa fa-upload"></i>

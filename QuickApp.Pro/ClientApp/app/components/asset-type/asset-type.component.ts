@@ -9,6 +9,7 @@ import { SingleScreenBreadcrumbService } from "../../services/single-screens-bre
 import { AssetTypeService } from "../../services/asset-type/asset-type.service";
 import { AssetType } from "../../models/asset-type.model";
 import { ModeOfOperation } from "../../models/ModeOfOperation.enum";
+import { UploadTag } from "../../models/UploadTag.enum";
 
 //
 @Component({
@@ -34,6 +35,8 @@ export class AssetTypeComponent implements OnInit {
     selectedRowforEdit: any;
     totalRecords: any;
     totalPages: number;
+    formData: FormData;
+    uploadedRecords: Object;
     constructor(private breadCrumb: SingleScreenBreadcrumbService, private alertService: AlertService, private coreDataService: AssetTypeService, private modalService: NgbModal, private authService: AuthService) {
     }
     ngOnInit(): void {
@@ -52,6 +55,21 @@ export class AssetTypeComponent implements OnInit {
         this.selectedRowforEdit = new AssetType();
         this.selectedRowforEdit.createdBy = this.userName;
         this.currentModeOfOperation = ModeOfOperation.Add;
+    }
+
+    bulkUpload(event) {
+        this.formData = new FormData();
+        const file = event.target.files;
+        if (file.length > 0) {
+            this.formData.append('file', file[0]);
+            this.coreDataService.bulkUpload(this.formData).subscribe(response => {
+                //event.target.value = '';
+                let bulkUploadResult = response[0];
+                this.showBulkUploadResult(bulkUploadResult);
+                this.getItemList();
+            })
+        }
+
     }
 
     //to-do: Build lazy loading
@@ -149,6 +167,15 @@ export class AssetTypeComponent implements OnInit {
         this.dismissModal();
     }
 
+    showBulkUploadResult(items: any) {
+        let successCount = items.filter(item => item.UploadTag == UploadTag.Success);
+        let failedCount = items.filter(item => item.UploadTag == UploadTag.Failed);
+        let duplicateCount = items.filter(item => item.UploadTag == UploadTag.Duplicate);
+        this.alertService.showMessage('Success', `${successCount} ${this.rowName}${successCount > 1 ? 's' : ''} uploaded successfully.`, MessageSeverity.success);
+        this.alertService.showMessage('Error', `${failedCount} ${this.rowName}${failedCount > 1 ? 's' : ''} failed to upload.`, MessageSeverity.error);
+        this.alertService.showMessage('Info', `${duplicateCount} ${duplicateCount > 1 ? 'duplicates' : 'duplicate'} ignored.`, MessageSeverity.info);
+    }
+
     showHistory(rowData): void {
         this.currentModeOfOperation = ModeOfOperation.Audit;
         //
@@ -168,7 +195,7 @@ export class AssetTypeComponent implements OnInit {
         this.selectedRowforEdit = rowData;
         this.saveExistingItem(rowData);
     }
-    
+
     updateItem(): void {
         this.saveExistingItem(this.selectedRowforEdit);
     }

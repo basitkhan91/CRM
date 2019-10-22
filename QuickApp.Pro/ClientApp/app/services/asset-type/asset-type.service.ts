@@ -5,7 +5,6 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
 import { AssetType } from '../../models/asset-type.model';
 import { AssetTypeEndpointService } from './asset-type-endpoint.service';
-import { AuditHistory } from '../../models/audithistory.model';
 @Injectable()
 export class AssetTypeService {
 
@@ -46,5 +45,9 @@ export class AssetTypeService {
         return Observable.forkJoin(
             this.endpointService.getItemAudit<any[]>(id)
         );
+    }
+
+    bulkUpload(file: any): Observable<object> {
+        return this.endpointService.bulkItemUpload(file);
     }
 }

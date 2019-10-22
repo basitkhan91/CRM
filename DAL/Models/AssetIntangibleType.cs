@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using DAL.Core;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Models
 {
@@ -12,5 +14,8 @@ namespace DAL.Models
         public int? MasterCompanyId { get; set; }
         public bool IsActive { get; set; }
         public bool IsDelete { get; set; }
+
+        [NotMapped]
+        public UploadTag UploadTag { get; set; }
     }
 }

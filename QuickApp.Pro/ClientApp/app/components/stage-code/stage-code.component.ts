@@ -8,6 +8,7 @@ import { SingleScreenBreadcrumbService } from "../../services/single-screens-bre
 import { StageCode } from "../../models/stage-code.model";
 import { StageCodeService } from "../../services/stage-code/stage-code.service";
 import { ModeOfOperation } from "../../models/ModeOfOperation.enum";
+import { UploadTag } from "../../models/UploadTag.enum";
 
 @Component({
     selector: 'app-stage-code',
@@ -31,6 +32,8 @@ export class StageCodeComponent implements OnInit {
     modal: NgbModalRef;
     selectedColumns: any[];
     auditHistory: any[];
+    formData: FormData;
+    uploadedRecords: Object;
     constructor(private breadCrumb: SingleScreenBreadcrumbService, private alertService: AlertService, private coreDataService: StageCodeService, private modalService: NgbModal, private authService: AuthService) {
     }
     ngOnInit(): void {
@@ -155,6 +158,15 @@ export class StageCodeComponent implements OnInit {
             this.saveNewItem();
         }
         this.dismissModal();
+    }
+
+    showBulkUploadResult(items: any) {
+        let successCount = items.filter(item => item.UploadTag == UploadTag.Success);
+        let failedCount = items.filter(item => item.UploadTag == UploadTag.Failed);
+        let duplicateCount = items.filter(item => item.UploadTag == UploadTag.Duplicate);
+        this.alertService.showMessage('Success', `${successCount} ${this.rowName}${successCount > 1 ? 's' : ''} uploaded successfully.`, MessageSeverity.success);
+        this.alertService.showMessage('Error', `${failedCount} ${this.rowName}${failedCount > 1 ? 's' : ''} failed to upload.`, MessageSeverity.error);
+        this.alertService.showMessage('Info', `${duplicateCount} ${duplicateCount > 1 ? 'duplicates' : 'duplicate'} ignored.`, MessageSeverity.info);
     }
 
     //Open the audit history modal.

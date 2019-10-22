@@ -8,12 +8,13 @@ import { SingleScreenBreadcrumbService } from "../../services/single-screens-bre
 import { AssetIntangibleType } from "../../models/asset-intangible-type.model";
 import { AssetIntangibleTypeService } from "../../services/asset-intangible-type/asset-intangible-type.service";
 import { ModeOfOperation } from "../../models/ModeOfOperation.enum";
+import { UploadTag } from "../../models/UploadTag.enum";
 
 @Component({
-     selector: 'app-asset-intangible-type',
-     templateUrl: './asset-intangible-type.component.html',
-     styleUrls: [],
-     animations: [fadeInOut]
+    selector: 'app-asset-intangible-type',
+    templateUrl: './asset-intangible-type.component.html',
+    styleUrls: [],
+    animations: [fadeInOut]
 })
 export class AssetIntangibleTypeComponent implements OnInit {
     itemList: AssetIntangibleType[];
@@ -31,6 +32,8 @@ export class AssetIntangibleTypeComponent implements OnInit {
     modal: NgbModalRef;
     selectedColumns: any[];
     auditHistory: AuditHistory[];
+    formData: FormData;
+    uploadedRecords: Object;
     constructor(private breadCrumb: SingleScreenBreadcrumbService, private alertService: AlertService, private coreDataService: AssetIntangibleTypeService, private modalService: NgbModal, private authService: AuthService) {
     }
     ngOnInit(): void {
@@ -48,6 +51,21 @@ export class AssetIntangibleTypeComponent implements OnInit {
     addNewItem(): void {
         this.currentRow = this.newItem(0);
         this.currentModeOfOperation = ModeOfOperation.Add;
+    }
+
+    bulkUpload(event) {
+        this.formData = new FormData();
+        const file = event.target.files;
+        if (file.length > 0) {
+            this.formData.append('file', file[0]);
+            this.coreDataService.bulkUpload(this.formData).subscribe(response => {
+                //event.target.value = '';
+                let bulkUploadResult = response[0];
+                this.showBulkUploadResult(bulkUploadResult);
+                this.getItemList();
+            })
+        }
+
     }
 
     //Functionality for pagination.
@@ -165,6 +183,15 @@ export class AssetIntangibleTypeComponent implements OnInit {
                 this.auditHistory = audits[0];
             }
         });
+    }
+
+    showBulkUploadResult(items: any) {
+        let successCount = items.filter(item => item.UploadTag == UploadTag.Success);
+        let failedCount = items.filter(item => item.UploadTag == UploadTag.Failed);
+        let duplicateCount = items.filter(item => item.UploadTag == UploadTag.Duplicate);
+        this.alertService.showMessage('Success', `${successCount} ${this.rowName}${successCount > 1 ? 's' : ''} uploaded successfully.`, MessageSeverity.success);
+        this.alertService.showMessage('Error', `${failedCount} ${this.rowName}${failedCount > 1 ? 's' : ''} failed to upload.`, MessageSeverity.error);
+        this.alertService.showMessage('Info', `${duplicateCount} ${duplicateCount > 1 ? 'duplicates' : 'duplicate'} ignored.`, MessageSeverity.info);
     }
 
     showItemEdit(rowData): void {

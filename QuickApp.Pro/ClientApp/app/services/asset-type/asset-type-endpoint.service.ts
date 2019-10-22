@@ -10,13 +10,13 @@ import { AssetType } from '../../models/asset-type.model';
 export class AssetTypeEndpointService extends EndpointFactory {
 
     private readonly item: string = "AssetType";
-    private readonly id: number;
     private readonly getAllItemsEndPointTemplate: string = "getAll";
     private readonly getItemByIdEndPointTemplate: string = "getById";
     private readonly addItemEndPointTemplate: string = "add";
     private readonly updateItemEndPointTemplate: string = "update";
     private readonly removeItemByIdEndPointTemplate: string = "removeById";
     private readonly getItemAuditByIdEndPointTemplate: string = "audit";
+    private readonly bulkUploadEndPointTemplate: string = "bulkUpload";
 
 
     get getAll() { return `${this.configurations.baseUrl}/api/${this.item}/${this.getAllItemsEndPointTemplate}`; }
@@ -25,10 +25,23 @@ export class AssetTypeEndpointService extends EndpointFactory {
     get update() { return `${this.configurations.baseUrl}/api/${this.item}/${this.updateItemEndPointTemplate}`; }
     get removeById() { return `${this.configurations.baseUrl}/api/${this.item}/${this.removeItemByIdEndPointTemplate}`; }
     get getAudit() { return `${this.configurations.baseUrl}/api/${this.item}/${this.getItemAuditByIdEndPointTemplate}`; }
+    get bulkUpload() { return `${this.configurations.baseUrl}/api/${this.item}/${this.bulkUploadEndPointTemplate}`; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
         super(http, configurations, injector);
+    }
+
+    addItem<T>(item: AssetType): Observable<T> {
+        let endpointUrl = this.add;
+        return this.http.post<T>(endpointUrl, JSON.stringify(item), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.addItem(item));
+            });
+    }
+
+    bulkItemUpload(file: any): Observable<object> {
+        return this.http.post(this.bulkUpload, file);
     }
 
     getAllItems<T>(): Observable<T> {
@@ -37,6 +50,15 @@ export class AssetTypeEndpointService extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getAllItems());
+            });
+    }
+
+    getItemAudit<T>(id: number): Observable<T> {
+        let endpointUrl = `${this.getAudit}/${id}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getItemAudit(id));
             });
     }
 
@@ -49,22 +71,6 @@ export class AssetTypeEndpointService extends EndpointFactory {
             });
     }
 
-    addItem<T>(item: AssetType): Observable<T> {
-        let endpointUrl = this.add;
-        return this.http.post<T>(endpointUrl, JSON.stringify(item), this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.addItem(item));
-            });
-    }
-
-    updateItem<T>(item: AssetType): Observable<T> {
-        let endpointUrl = this.update;
-        return this.http.post<T>(endpointUrl, JSON.stringify(item), this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.updateItem(item));
-            });
-    }
-
     removeItemById<T>(id: number): Observable<T> {
         let endpointUrl = `${this.removeById}/${id}`;
 
@@ -74,12 +80,11 @@ export class AssetTypeEndpointService extends EndpointFactory {
             });
     }
 
-    getItemAudit<T>(id: number): Observable<T> {
-        let endpointUrl = `${this.getAudit}/${id}`;
-
-        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+    updateItem<T>(item: AssetType): Observable<T> {
+        let endpointUrl = this.update;
+        return this.http.post<T>(endpointUrl, JSON.stringify(item), this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getItemAudit(id));
+                return this.handleError(error, () => this.updateItem(item));
             });
     }
 }

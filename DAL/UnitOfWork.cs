@@ -1520,7 +1520,7 @@ namespace DAL
             get
             {
                 if (_assetTypeRepository == null)
-                    _assetTypeRepository = new AssetTypeRepository(_context);
+                    _assetTypeRepository = new AssetTypeRepository(_context, _appSettings);
                 return _assetTypeRepository;
             }
         }
@@ -1530,7 +1530,7 @@ namespace DAL
             get
             {
                 if (_assetIntangibleTypeRepository == null)
-                    _assetIntangibleTypeRepository = new AssetIntangibleTypeRepository(_context);
+                    _assetIntangibleTypeRepository = new AssetIntangibleTypeRepository(_context, _appSettings);
                 return _assetIntangibleTypeRepository;
             }
         }
@@ -1540,7 +1540,7 @@ namespace DAL
             get
             {
                 if (_stageCodeRepository == null)
-                    _stageCodeRepository = new StageCodeRepository(_context);
+                    _stageCodeRepository = new StageCodeRepository(_context, _appSettings);
                 return _stageCodeRepository;
             }
         }
