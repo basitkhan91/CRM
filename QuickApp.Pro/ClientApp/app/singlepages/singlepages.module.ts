@@ -130,6 +130,7 @@ import { PercentComponent } from "../components/percent/percent.component";
 import { JobTypeComponent } from '../components/job-type/job-type.component';
 import { PercentService } from "../services/percent.service";
 import { PercentEndpoint } from "../services/percent-endpoint.service";
+import { CommonService } from "../services/common.service";
 
 @NgModule({
 	imports: [
@@ -242,7 +243,8 @@ import { PercentEndpoint } from "../services/percent-endpoint.service";
         AircraftModelEndpointService,
         DashNumberService,
         DashNumberEndpointService,
-        PaginationService
+        PaginationService,
+        CommonService
     ],
     exports: [
         FlexLayoutModule,
