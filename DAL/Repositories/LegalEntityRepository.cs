@@ -428,9 +428,8 @@ namespace DAL.Repositories
         {
             try
             {
-                var list = (from le in _appContext.LegalEntityContact
-                            join lba in _appContext.LegalEntityBillingAddress on le.LegalEntityId equals lba.LegalEntityId
-                            where le.IsDeleted == false && le.LegalEntityId == legalEntityId
+                var list = (from lba in _appContext.LegalEntityBillingAddress
+                            where lba.IsDeleted == false && lba.LegalEntityId == legalEntityId
                             select new
                             {
                                 lba.LegalEntityBillingAddressId,
@@ -451,7 +450,7 @@ namespace DAL.Repositories
             {
                 var data = (from lba in _appContext.LegalEntityBillingAddress
                             join ad in _appContext.Address on lba.AddressId equals ad.AddressId
-                            where lba.AddressId == addressId
+                            where lba.LegalEntityBillingAddressId == addressId
                             select new
                             {
                                 ad.Line1,
@@ -494,9 +493,56 @@ namespace DAL.Repositories
                 throw;
             }
         }
-        //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 
-        private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
+
+		public IEnumerable<object> GetLegalEntityShippingSiteNames(long legalEntityId)
+		{
+			try
+			{
+				var list = (from lsa in _appContext.LegalEntityShippingAddress
+							where lsa.IsDeleted == false && lsa.LegalEntityId == legalEntityId
+							select new
+							{
+								lsa.LegalEntityShippingAddressId,
+								lsa.SiteName
+							}).OrderBy(p => p.SiteName).ToList();
+				return list;
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+		}
+
+		public object GetLegalEntityShippingAddress(long addressId)
+		{
+			try
+			{
+				var data = (from lsa in _appContext.LegalEntityShippingAddress
+							join ad in _appContext.Address on lsa.AddressId equals ad.AddressId
+							where lsa.LegalEntityShippingAddressId == addressId
+							select new
+							{
+								ad.Line1,
+								ad.Line2,
+								ad.Line3,
+								ad.City,
+								ad.StateOrProvince,
+								ad.PostalCode,
+								ad.Country
+							}).FirstOrDefault();
+				return data;
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+		}
+		//Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
+
+		private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
     }
 
