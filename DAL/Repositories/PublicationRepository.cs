@@ -918,6 +918,7 @@ namespace DAL.Repositories
                           VerifiedBy = p.p1.p.VerifiedBy,
                           VerifiedDate = p.p1.p.VerifiedDate,
                           EmployeeName = p.e.FirstName + ' ' + p.e.LastName,
+                          RevisionNum = p.p1.p.RevisionNum,
                           AttachmentDetails = GetAttachmentDetails(publicationRecordId)
                       })
                  .Where(p => p.PublicationRecordId == publicationRecordId)
@@ -1026,33 +1027,28 @@ namespace DAL.Repositories
         {
             List<AttachmentDetails> attachmentDetailsList = new List<AttachmentDetails>();
             AttachmentDetails attachmentDetails;
-            var attachment = _appContext.Attachment.Where(p => p.ReferenceId == publicationRecordId && p.ModuleId == Convert.ToInt32(ModuleEnum.Publication)).FirstOrDefault();
-            if (attachment != null)
+            var details = _appContext.Attachment
+              .Join(_appContext.AttachmentDetails,
+                     a => a.AttachmentId,
+                     ad => ad.AttachmentId,
+                     (a, ad) => new { a, ad })
+              .Where(p => p.ad.IsDeleted == false && p.a.ModuleId == Convert.ToInt32(ModuleEnum.Publication) && p.a.ReferenceId == publicationRecordId)
+              .Select(p => new
+              {
+                  AttachmentDetails = p.ad
+              })
+              .ToList();
+
+            if (details != null && details.Count > 0)
             {
-                var details = _appContext.Attachment
-                  .Join(_appContext.AttachmentDetails,
-                         a => a.AttachmentId,
-                         ad => ad.AttachmentId,
-                         (a, ad) => new { a, ad })
-                  .Where(p => p.ad.IsDeleted == false && p.a.AttachmentId == attachment.AttachmentId && p.a.ModuleId == Convert.ToInt32(ModuleEnum.Publication) && p.a.ReferenceId == publicationRecordId)
-                  .Select(p => new
-                  {
-                      AttachmentDetails = p.ad
-                  })
-                  .ToList();
 
-                if (details != null && details.Count > 0)
+                foreach (var item in details)
                 {
-
-                    foreach (var item in details)
-                    {
-                        attachmentDetails = new AttachmentDetails();
-                        attachmentDetails = item.AttachmentDetails;
-                        attachmentDetailsList.Add(attachmentDetails);
-                    }
+                    attachmentDetails = new AttachmentDetails();
+                    attachmentDetails = item.AttachmentDetails;
+                    attachmentDetailsList.Add(attachmentDetails);
                 }
             }
-
             return attachmentDetailsList;
         }
 
@@ -1188,12 +1184,13 @@ namespace DAL.Repositories
                                 pa.Location,
                                 pa.IsActive,
                                 pa.UpdatedBy,
-                                pa.UpdatedDate
+                                pa.UpdatedDate,
+                                pa.RevisionNum
                             }
-                          ).ToList();
+                          ).OrderByDescending(p => p.UpdatedDate).ToList();
 
 
-                    return list;
+                return list;
             }
             catch (Exception)
             {
