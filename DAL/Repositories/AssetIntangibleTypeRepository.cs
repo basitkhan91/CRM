@@ -1,26 +1,21 @@
-﻿using DAL.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿
+using DAL.Models;
+using DAL.Repositories.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace DAL.Repositories
 {
-  public  class AssetIntangibleTypeRepository : Repository<DAL.Models.AssetIntangibleType>, IAssetIntangibleType
+    public class AssetIntangibleTypeRepository : Repository<AssetIntangibleType>, IAssetIntangibleTypeRepository
     {
         public AssetIntangibleTypeRepository(ApplicationDbContext context) : base(context)
         { }
 
-        public IEnumerable<DAL.Models.AssetIntangibleType> GetAllIntangibleType()
+        public IEnumerable<AssetIntangibleType> GetAllItems()
         {
-            var data = _appContext.AssetIntangibleType.Include("AssetIntangibleAttributeType").Where(c => c.IsDelete == false || c.IsDelete == null).
-               OrderByDescending(c => c.AssetIntangibleTypeId).ToList();
+            var data = _appContext.AssetIntangibleType.Where(c => !(bool)c.IsDelete).OrderByDescending(c => c.AssetIntangibleTypeId).ToList();
             return data;
         }
-
-
-        //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 

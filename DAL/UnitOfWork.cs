@@ -41,7 +41,6 @@ namespace DAL
         ICurrencyRepository _currencyRepository;
         IMasterCompanyRepository _masterCompanyRepository;
         IActionAttributeRepository _actionAttributeRepository;
-        IGatecodeRepository _gateCodeRepository;
         IIntegration _integrationRepository;
         IPriority _priority;
         ICreditTermsRepository _CreditTermsRepository;
@@ -170,11 +169,12 @@ namespace DAL
 
         IAccountingCalendar _accountingCalendar;
 
-        IAssetIntangibleType _assetIntangibleType;
+        IAssetTypeRepository _assetTypeRepository;
+        IAssetIntangibleTypeRepository _assetIntangibleTypeRepository;
+        IStageCodeRepository _stageCodeRepository;
 
         IGLAccount _gLAccount;
 
-        IAssetType _assetType;
 
         IGLAccountNodeShareWithEntityMapper gLAccountNodeShareWithEntityMapper;
 
@@ -575,16 +575,6 @@ namespace DAL
                 if (_actionAttributeRepository == null)
                     _actionAttributeRepository = new ActionAttributeRepository(_context);
                 return _actionAttributeRepository;
-            }
-        }
-
-        public IGatecodeRepository Gatecode
-        {
-            get
-            {
-                if (_gateCodeRepository == null)
-                    _gateCodeRepository = new GatecodeRepository(_context);
-                return _gateCodeRepository;
             }
         }
 
@@ -1525,23 +1515,33 @@ namespace DAL
             }
         }
 
-        public IAssetIntangibleType assetIntangibleType
+        public IAssetTypeRepository AssetTypeRepository
         {
             get
             {
-                if (_assetIntangibleType == null)
-                    _assetIntangibleType = new AssetIntangibleTypeRepository(_context);
-                return _assetIntangibleType;
+                if (_assetTypeRepository == null)
+                    _assetTypeRepository = new AssetTypeRepository(_context);
+                return _assetTypeRepository;
             }
         }
 
-        IAssetType IUnitOfWork.assetType
+        public IAssetIntangibleTypeRepository AssetIntangibleTypeRepository
         {
             get
             {
-                if (_assetType == null)
-                    _assetType = new AssetTypeRepository(_context);
-                return _assetType;
+                if (_assetIntangibleTypeRepository == null)
+                    _assetIntangibleTypeRepository = new AssetIntangibleTypeRepository(_context);
+                return _assetIntangibleTypeRepository;
+            }
+        }
+
+        public IStageCodeRepository StageCodeRepository
+        {
+            get
+            {
+                if (_stageCodeRepository == null)
+                    _stageCodeRepository = new StageCodeRepository(_context);
+                return _stageCodeRepository;
             }
         }
 

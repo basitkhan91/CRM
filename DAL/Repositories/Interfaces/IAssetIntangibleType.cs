@@ -1,13 +1,11 @@
 ﻿using DAL.Models;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DAL.Repositories.Interfaces
 {
-    public interface IAssetIntangibleType : IRepository<AssetIntangibleType>
+    public interface IAssetIntangibleTypeRepository : IRepository<AssetIntangibleType>
     {
-        IEnumerable<AssetIntangibleType> GetAllIntangibleType();
+        IEnumerable<AssetIntangibleType> GetAllItems();
 
     }
 }

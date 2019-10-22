@@ -75,7 +75,6 @@ namespace DAL
 
         public DbSet<ActionAttribute> ActionAttribute { get; set; }
         public DbSet<ActionAttributeAudit> ActionAttributeAudit { get; set; }
-        public DbSet<GatecodeClass> Gatecode { get; set; }
         public DbSet<IntegrationPortal> IntegrationPortal { get; set; }
         public DbSet<Priority> Priority { get; set; }
         public DbSet<ItemClassfication> ItemClassification { get; set; }
@@ -280,19 +279,23 @@ namespace DAL
         public DbSet<AssetDepConventionType> AssetDepConventionType { get; set; }
         public DbSet<AssetDepConvention> AssetDepConvention { get; set; }
         public DbSet<AssetDepConventionAudit> AssetDepConventionAudit { get; set; }
-        public DbSet<AssetIntangibleTypeSingleScreen> AssetIntangibleTypeSingleScreen { get; set; }
 
         public DbSet<AssetType> AssetType { get; set; }
+        public DbSet<AssetIntangibleType> AssetIntangibleType { get; set; }
+        public DbSet<StageCode> StageCode { get; set; }
+
+        public DbSet<AssetTypeAudit> AssetTypeAudit { get; set; }
+        public DbSet<AssetIntangibleTypeAudit> AssetIntangibleTypeAudit { get; set; }
+        public DbSet<StageCodeAudit> StageCodeAudit { get; set; }
+
         public DbSet<Asset> Asset { get; set; }
         public DbSet<GLAccountMiscCategory> GLAccountMiscCategory { get; set; }
         public DbSet<GLAccount> GLAccount { get; set; }
         public DbSet<AssetAttributeType> AssetAttributeType { get; set; }
-        public DbSet<AssetIntangibleType> AssetIntangibleType { get; set; }
 
         public DbSet<AccountingCalendar> AccountingCalendar { get; set; }
         public DbSet<PartStockLineMapper> PartStockLineMapper { get; set; }
         // public DbSet<ProvisionAudit> ProvisionAudit { get; set; }
-        public DbSet<AssetIntangibleTypeSingleScreenAudit> AssetIntangibleTypeSingleScreenAudit { get; set; }
 
         public DbSet<AssetDisposalTypeAudit> AssetDisposalTypeAudit { get; set; }
         public DbSet<AssetDepreciationIntervalTypeAudit> AssetDepreciationIntervalTypeAudit { get; set; }
@@ -340,10 +343,8 @@ namespace DAL
         public DbSet<BinAudit> BinAudit { get; set; }
         public DbSet<ProvisionAudit> ProvisionAudit { get; set; }
         public DbSet<ExpenditureCategoryAudit> ExpenditureCategoryAudit { get; set; }
-        public DbSet<AssetTypeAudit> AssetTypeAudit { get; set; }
 
 
-        public DbSet<GatecodeClassAudit> GatecodeAudit { get; set; }
         public DbSet<InterCompanySetup> InterCompanySetup { get; set; }
 
         public DbSet<JournalBatch> JournalBatch { get; set; }
