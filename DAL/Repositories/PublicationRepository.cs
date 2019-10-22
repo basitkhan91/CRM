@@ -1056,7 +1056,7 @@ namespace DAL.Repositories
             return attachmentDetailsList;
         }
 
-        public IEnumerable<Publication> UploadUOMCustomData(IFormFile file)
+        public IEnumerable<Publication> UploadCustomData(IFormFile file)
         {
             string description = string.Empty;
             string shortName = string.Empty;

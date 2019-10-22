@@ -569,9 +569,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("uploadpublicationcustomdata")]
-        public IActionResult UploadUOMCustomData()
+        public IActionResult UploadCustomData()
         {
-            var result = _unitOfWork.Publication.UploadUOMCustomData(Request.Form.Files[0]);
+            var result = _unitOfWork.Publication.UploadCustomData(Request.Form.Files[0]);
             return Ok(result);
         }
 
