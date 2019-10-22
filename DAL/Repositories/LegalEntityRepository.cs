@@ -32,7 +32,7 @@ namespace DAL.Repositories
                         from international in inter.DefaultIfEmpty()
                         join ach in _appContext.ACH on legal.ACHId equals ach.ACHId into ac
                         from ach in ac.DefaultIfEmpty()
-                        where legal.IsDelete == true || legal.IsDelete == null
+                        where legal.IsDeleted == true || legal.IsDeleted == null
                         select new
                         {
                             legal.LegalEntityId,
@@ -48,7 +48,7 @@ namespace DAL.Repositories
                             legal.IsLastLevel,
                             legal.MasterCompanyId,
                             legal.IsActive,
-                            legal.IsDelete,
+                            legal.IsDeleted,
                             legal.FunctionalCurrencyId,
                             legal.ReportingCurrencyId,
                             legal.IsBankingInfo,

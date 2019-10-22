@@ -396,7 +396,7 @@ namespace QuickApp.Pro.Controllers
                 var entityobject = _context.LegalEntity.Where(a => a.LegalEntityId == id).SingleOrDefault();
                 if (entityobject != null)
                 {
-                    entityobject.IsDelete = true;
+                    entityobject.IsDeleted = true;
                     _context.LegalEntity.Update(entityobject);
                     _context.SaveChanges();
                 }

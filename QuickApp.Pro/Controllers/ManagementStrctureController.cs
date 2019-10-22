@@ -135,6 +135,7 @@ namespace QuickApp.Pro.Controllers
                        t.LegalEntityId,
                        t.MasterCompanyId,
                        t.IsActive,
+                       t.IsDelete,
                        t.CreatedDate,
                        t.CreatedBy,
                        t.UpdatedBy,
