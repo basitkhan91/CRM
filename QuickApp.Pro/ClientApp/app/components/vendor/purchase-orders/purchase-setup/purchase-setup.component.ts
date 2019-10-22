@@ -2382,6 +2382,14 @@ export class PurchaseSetupComponent {
 
 
 	}
+	clearInputShipTo(){
+		this.sourcePoApproval.shipToUserId = '';
+
+		
+	}
+	clearInputBillTo(){
+		this.sourcePoApproval.billToUserTypeId = '';
+	}
 	getValueforShipTo(data, id) {
 		console.log(data, id);
 

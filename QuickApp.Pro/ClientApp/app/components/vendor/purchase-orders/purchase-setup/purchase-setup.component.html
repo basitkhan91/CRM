@@ -869,7 +869,7 @@
                     <div class="form-group">
                         <div class="form-row" *ngIf="sourcePoApproval.shipToUserTypeId==1">
                             <div class="col-sm-11">
-                                    <p-autoComplete field="name" class="pautocomp-cstm" 
+                                    <p-autoComplete field="name" class="pautocomp-cstm" (onClear)="clearInputShipTo()"
                                     [(ngModel)]="sourcePoApproval.shipToUserId" name="shipCustomerName" [suggestions]="customerNames" 
                                     (completeMethod)="filterNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onshipCustomerNameselected($event)" #shipCustomerName="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
                                 <!--<p-autoComplete field="name" class="pautocomp-cstm" (onSelect)="onshipCustomerNameselected($event)" (onKeyUp)=customereventHandler($event) [(ngModel)]="sourcePoApproval.shipToUserId" name="shipCustomerName" [suggestions]="customerNames" (completeMethod)="filterNames($event)" [size]="30" errorMessage="Records not found" [forceSelection]="true" [minLength]="1" [dropdown]="true" #shipCustomerName="ngModel" required>
@@ -897,6 +897,7 @@
                                     </ng-template>
                                 </p-autoComplete>-->
                                 <p-autoComplete field="vendorName" class="pautocomp-cstm"
+                                (onClear)="clearInputShipTo()"
                                                 (onKeyUp)=eventHandler($event) [(ngModel)]="sourcePoApproval.shipToUserId" name="shipVendorName" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onVendorselectedForShipTo($event)" errorMessage="Records not found" [forceSelection]="true" #shipVendorName="ngModel" required>
                                     <!-- <ng-template let-vendorName pTemplate="item">
                                         <div class="ui-helper-clearfix">{{vendorName}}</div>
@@ -917,6 +918,7 @@
                         <div class="form-row" *ngIf="sourcePoApproval.shipToUserTypeId==3">
                             <div class="col-sm-12">
                                     <p-autoComplete field="label" class="pautocomp-cstm"
+                                    (onClear)="clearInputShipTo()"
                                      [(ngModel)]="sourcePoApproval.shipToUserId" name="shipCompanyName" 
                                      [suggestions]="legalEntityList_ForShipping" 
                                      (completeMethod)="filterCompanyNameforShipping($event)" 
@@ -1050,8 +1052,8 @@
                         <div class="form-group">
                             <label>
                                 Ship Via <span class="clr-red">*</span>
-                                <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#shipToShipVia"></a></span>
-                                <span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" data-toggle="modal" data-target="#shipToShipVia"></a></span>
+                                <span style="margin-left:3px;cursor:pointer;"><a *ngIf="sourcePoApproval.shipToUserId" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#shipToShipVia"></a></span>
+                                <span style="margin-left:5px;cursor:pointer;"><a *ngIf="sourcePoApproval.shipToUserId" class="fa fa-edit fa-lg" data-toggle="modal" data-target="#shipToShipVia"></a></span>
                             </label>
                             <select class="form-control" name="cusShipViaId"  (ngModelChange)="getShipViaDetails($event)" [(ngModel)]="sourcePoApproval.shipViaId" #cusShipViaId="ngModel" required> <!--required-->
                                 <option value="0">-- Select --</option>
@@ -1193,6 +1195,7 @@
                         <div class="form-row" *ngIf="sourcePoApproval.billToUserTypeId==1">
                             <div class="col-sm-11">
                                     <p-autoComplete field="name" class="pautocomp-cstm" 
+                                    (onClear)="clearInputBillTo()"
                                     [(ngModel)]="sourcePoApproval.billToUserId" name="billToUserName" [suggestions]="customerNames" 
                                     (completeMethod)="filterNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onBillToCustomerNameselected($event)" #billCustomerName="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
                               
@@ -1215,7 +1218,7 @@
                                         <div class="ui-helper-clearfix">{{vendorName}}</div>
                                     </ng-template>
                                 </p-autoComplete>-->
-                                <p-autoComplete field="vendorName" class="pautocomp-cstm" (onKeyUp)=eventHandler($event) [(ngModel)]="sourcePoApproval.billToUserId" name="billToUserName" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onVendorselectedForBillTo($event)" errorMessage="Records not found" [forceSelection]="true" #billVendorName="ngModel" required>
+                                <p-autoComplete    (onClear)="clearInputBillTo()" field="vendorName" class="pautocomp-cstm" (onKeyUp)=eventHandler($event) [(ngModel)]="sourcePoApproval.billToUserId" name="billToUserName" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onVendorselectedForBillTo($event)" errorMessage="Records not found" [forceSelection]="true" #billVendorName="ngModel" required>
                                     <!-- <ng-template let-vendorName pTemplate="item">
                                         <div class="ui-helper-clearfix">{{vendorName}}</div>
                                     </ng-template> -->
@@ -1237,6 +1240,7 @@
                             <div class="col-sm-12">
 
                                     <p-autoComplete field="label" class="pautocomp-cstm"
+                                    (onClear)="clearInputBillTo()"
                                     [(ngModel)]="sourcePoApproval.billToUserId" name="shipCompanyName" 
                                     [suggestions]="legalEntityList_ForBilling" 
                                     (completeMethod)="filterCompanyNameforBilling($event)" 
