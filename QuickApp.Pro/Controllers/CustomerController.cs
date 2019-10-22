@@ -12,6 +12,7 @@ using QuickApp.Pro.ViewModels;
 using System.Linq.Dynamic.Core;
 using DAL.Common;
 using Microsoft.AspNetCore.Http;
+using Remotion.Linq.Parsing.ExpressionVisitors.Transformation.PredefinedTransformations;
 using Spire.Pdf.Exporting.XPS.Schema;
 
 namespace QuickApp.Pro.Controllers
@@ -2534,20 +2535,23 @@ namespace QuickApp.Pro.Controllers
 		#region customerDocument
 		[HttpPost("customerDocumentUpload")]
 		[Produces("application/json")]
-		public IActionResult DocumentUploadAction([FromBody] CustomerViewModel customerViewModel)
+		public IActionResult DocumentUploadAction()
 		{
 
 			try
 			{
+				Customer objCustomer = new Customer();
 				if (ModelState.IsValid)
 				{
-					if (customerViewModel == null && Request.Form == null)
-						return BadRequest($"{nameof(customerViewModel)} cannot be null");
-					DAL.Models.Customer actionobject = new DAL.Models.Customer();
-					actionobject.CustomerId = customerViewModel.CustomerId;
-					customerViewModel.MasterCompanyId = 1;
-					actionobject.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, customerViewModel.CustomerId, Convert.ToInt32(ModuleEnum.Customer), Convert.ToString(ModuleEnum.Customer), customerViewModel.UpdatedBy, customerViewModel.MasterCompanyId);
-					return Ok(actionobject);
+					if (Request.Form == null)
+						return BadRequest($"{nameof(objCustomer)} cannot be null");
+
+					objCustomer.CustomerId = Convert.ToInt64(Request.Form["CustomerId"]);
+					objCustomer.MasterCompanyId = 1;
+					objCustomer.UpdatedBy = Request.Form["UpdatedBy"];
+					objCustomer.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objCustomer.CustomerId, 
+																		Convert.ToInt32(ModuleEnum.Customer), Convert.ToString(ModuleEnum.Customer), objCustomer.UpdatedBy, objCustomer.MasterCompanyId);
+					return Ok(objCustomer);
 				}
 				return Ok(ModelState);
 			}
@@ -2581,16 +2585,16 @@ namespace QuickApp.Pro.Controllers
 			return Ok(allCusbilldetails);
 
 		}
-        [HttpGet("getCustomerShippingHistory/{id}")]
-        [Produces(typeof(List<CustomerShippingAddress>))]
-        public IActionResult getCustomerShippingHistory(long id, CustomerShippingAddress cstomerShippingAddress)
-        {
-            var allCusShippingdetails = _unitOfWork.CustomerShippingAddress.GetAllCusShippingHistory(id); //.GetAllCustomersData();
-            return Ok(allCusShippingdetails);
+		[HttpGet("getCustomerShippingHistory/{id}")]
+		[Produces(typeof(List<CustomerShippingAddress>))]
+		public IActionResult getCustomerShippingHistory(long id, CustomerShippingAddress cstomerShippingAddress)
+		{
+			var allCusShippingdetails = _unitOfWork.CustomerShippingAddress.GetAllCusShippingHistory(id); //.GetAllCustomersData();
+			return Ok(allCusShippingdetails);
 
-        }
+		}
 
-    }
+	}
 }
 
 
