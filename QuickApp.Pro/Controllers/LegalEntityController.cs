@@ -64,7 +64,7 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<LegalEntityViewModel>))]
         public IActionResult Get()
         {
-            var allentity = _unitOfWork.legalEntity.GetAllLegalEntityData();
+            var allentity = _unitOfWork.LegalEntity.GetAllLegalEntityData();
             //return Ok(Mapper.Map<IEnumerable<LegalEntityViewModel>>(allentity));
             return Ok(allentity);
 
@@ -200,7 +200,7 @@ namespace QuickApp.Pro.Controllers
                     entityobject.ACHId = ach.ACHId;
                 }
 
-                _unitOfWork.legalEntity.Add(entityobject);
+                _unitOfWork.LegalEntity.Add(entityobject);
                 _unitOfWork.SaveChanges();
                // if (legalEntityViewModel.ParentId == null) { UpdateToParent(entityobject); }
                
@@ -421,6 +421,131 @@ namespace QuickApp.Pro.Controllers
                 return BadRequest(ModelState);
             }
 
+        }
+
+
+        [HttpPost("createlegalentitybillingaddress")]
+        public IActionResult CreateLegalEntityBillingAddress([FromBody] LegalEntityBillingAddress billingAddress)
+        {
+            if (ModelState.IsValid)
+            {
+                billingAddress.LegalEntityBillingAddressId = _unitOfWork.LegalEntity.CreateLegalEntityBillingAddress(billingAddress);
+                return Ok(billingAddress);
+            }
+            return BadRequest(ModelState);
+        }
+
+        [HttpPost("updatelegalentitybillingaddress")]
+        public IActionResult UpdateLegalEntityBillingAddress([FromBody] LegalEntityBillingAddress billingAddress)
+        {
+            if (ModelState.IsValid)
+            {
+                _unitOfWork.LegalEntity.UpdateLegalEntityBillingAddress(billingAddress);
+                return Ok(billingAddress);
+            }
+            return BadRequest(ModelState);
+        }
+
+
+        [HttpGet("deletelegalentitybillingaddress")]
+        public IActionResult DeleteLegalEntityBillingAddress(long billingAddressId, string updatedBy)
+        {
+            _unitOfWork.LegalEntity.DeleteLegalEntityBillingAddress(billingAddressId, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("legalentitybillingaddressstatus")]
+        public IActionResult LegalEntityBillingAddressStatus(long billingAddressId, bool status, string updatedBy)
+        {
+            _unitOfWork.LegalEntity.LegalEntityBillingAddressStatus(billingAddressId, status, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("legalentitybillingaddress")]
+        public IActionResult GetLegalEntityBillingAddress()
+        {
+            _unitOfWork.LegalEntity.GetLegalEntityBillingAddress();
+            return Ok();
+        }
+
+        [HttpGet("legalentitybillingaddressbyid")]
+        public IActionResult LegalEntityBillingAddressById(long billingAddressId)
+        {
+            _unitOfWork.LegalEntity.LegalEntityBillingAddressById(billingAddressId);
+            return Ok();
+        }
+
+
+        [HttpPost("createlegalentityshippingaddress")]
+        public IActionResult CreateLegalEntityshippingAddress([FromBody] LegalEntityShippingAddress shippingAddress)
+        {
+            if (ModelState.IsValid)
+            {
+                shippingAddress.LegalEntityShippingAddressId = _unitOfWork.LegalEntity.CreateLegalEntityShippingAddress(shippingAddress);
+                return Ok(shippingAddress);
+            }
+            return BadRequest(ModelState);
+        }
+
+        [HttpPost("updatelegalentityshippingaddress")]
+        public IActionResult UpdateLegalEntityshippingAddress([FromBody] LegalEntityShippingAddress shippingAddress)
+        {
+            if (ModelState.IsValid)
+            {
+                _unitOfWork.LegalEntity.UpdateLegalEntityShippingAddress(shippingAddress);
+                return Ok(shippingAddress);
+            }
+            return BadRequest(ModelState);
+        }
+
+
+        [HttpGet("deletelegalentityshippingaddress")]
+        public IActionResult DeleteLegalEntityshippingAddress(long shippingAddressId, string updatedBy)
+        {
+            _unitOfWork.LegalEntity.DeleteLegalEntityShippingAddress(shippingAddressId, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("legalentityshippingaddressstatus")]
+        public IActionResult LegalEntityshippingAddressStatus(long shippingAddressId, bool status, string updatedBy)
+        {
+            _unitOfWork.LegalEntity.LegalEntityShippingAddressStatus(shippingAddressId, status, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("legalentityshippingaddress")]
+        public IActionResult GetLegalEntityshippingAddress()
+        {
+            _unitOfWork.LegalEntity.GetLegalEntityShippingAddress();
+            return Ok();
+        }
+
+        [HttpGet("legalentityshippingaddressbyid")]
+        public IActionResult LegalEntityshippingAddressById(long shippingAddressId)
+        {
+            _unitOfWork.LegalEntity.LegalEntityShippingAddressById(shippingAddressId);
+            return Ok();
+        }
+
+        [HttpGet("legalentitysitenames")]
+        public IActionResult GetLegalEntitySiteNames(long legalEntityId)
+        {
+            var result = _unitOfWork.LegalEntity.GetLegalEntitySiteNames(legalEntityId);
+            return Ok(result);
+        }
+
+        [HttpGet("legalentityaddress")]
+        public IActionResult GetLegalEntityAddress(long addressId)
+        {
+            var result = _unitOfWork.LegalEntity.GetLegalEntityAddress(addressId);
+            return Ok(result);
+        }
+
+        [HttpGet("legalentitycontacts")]
+        public IActionResult GetLegalEntityContacts(long legalEntityId)
+        {
+            var result = _unitOfWork.LegalEntity.GetLegalEntityContacts(legalEntityId);
+            return Ok(result);
         }
     }
 }

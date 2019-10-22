@@ -97,13 +97,6 @@ namespace DAL
         IGlCashFlowRepository _glCashFlowRepository;
         IEmployeeLeaveType _employeeLeaveType;
         IEmployeeTrainingTypeRepository _EmployeeTrainingType;
-        ICompany _company;
-
-        IDivision _division;
-
-        IDepartment _department;
-
-        IBusinessUnit _businessUnit;
 
         IEmployeeLicenseType _employeeLicenseType;
 
@@ -1045,36 +1038,7 @@ namespace DAL
                 return _CustomerWarning;
             }
         }
-        public ICompany Company
-        {
-            get
-            {
-                if (_company == null)
-                    _company = new CompanyRepository(_context);
-                return _company;
-
-            }
-        }
-
-        public IDivision division
-        {
-            get
-            {
-                if (_division == null)
-                    _division = new DivisionRepository(_context);
-                return _division;
-            }
-        }
-
-        public IDepartment department
-        {
-            get
-            {
-                if (_department == null)
-                    _department = new DepartmentRepository(_context);
-                return _department;
-            }
-        }
+       
 
         public ICountriesRepository Countries
         {
@@ -1085,15 +1049,7 @@ namespace DAL
                 return _Countries;
             }
         }
-        public IBusinessUnit businessUnit
-        {
-            get
-            {
-                if (_businessUnit == null)
-                    _businessUnit = new BusinessUnitRepository(_context);
-                return _businessUnit;
-            }
-        }
+        
 
         public IEmployeeLicenseType employeeLicenseType
         {
@@ -1248,7 +1204,7 @@ namespace DAL
             }
         }
 
-        public ILegalEntity legalEntity
+        public ILegalEntity LegalEntity
 
         {
 

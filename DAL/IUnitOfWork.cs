@@ -142,14 +142,6 @@ namespace DAL
         IEmployeeLeaveType EmployeeLeaveType { get; }
         IEmployeeTrainingTypeRepository EmployeeTrainingType { get; }
         
-        ICompany Company { get; }
-
-        IDivision division { get; }
-
-        IDepartment department { get; }
-
-        IBusinessUnit businessUnit { get; }
-
         IEmployeeLicenseType employeeLicenseType { get; }
 
         IEmployeeLicensure employeeLicensure { get; }
@@ -191,7 +183,7 @@ namespace DAL
 
         IReceivingCustomerWork receivingCustomerWork { get; }
 
-        ILegalEntity legalEntity { get; }
+        ILegalEntity LegalEntity { get; }
 
        // IGLAccountClassRespository gLAccountClass { get; }
 

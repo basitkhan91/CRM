@@ -16,13 +16,13 @@ namespace DAL.Repositories
 
         public IEnumerable<Document> GetDocuments()
         {
-            return _appContext.Document.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.DocumentId).ToList();
+            return _appContext.Document.Include("MasterCompany").Where(c => c.IsDeleted == false).OrderByDescending(c => c.DocumentId).ToList();
         }
 
         override
         public IQueryable<DAL.Models.Document> GetPaginationData()
         {
-            return _appContext.Document.Where(c => (c.IsDelete == false || c.IsDelete == null))
+            return _appContext.Document.Where(c => c.IsDeleted == false)
                 .OrderByDescending(c => c.DocumentId).ToList().AsQueryable();
         }
 

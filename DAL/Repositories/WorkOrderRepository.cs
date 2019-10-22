@@ -1135,19 +1135,12 @@ namespace DAL.Repositories
             {
 
                 var result = (from wd in _appContext.WorkOrderDocuments
-                              join c in _appContext.Company on wd.CompanyId equals c.CompanyId
-                              join bu in _appContext.BusinessUnit on wd.BusinessUnitId equals bu.BusinessUnitId
-                              join div in _appContext.Division on wd.DivisionId equals div.DivisionId
-                              join dept in _appContext.Department on wd.DepartmentId equals dept.DepartmentId
+                              
                               join doc in _appContext.Document on wd.DocumentId equals doc.DocumentId
                               where wd.IsDeleted == false && (wd.WorkFlowWorkOrderId == wfwoId || wd.WorkOrderId == workOrderId)
                               select new
                               {
                                   WorkOrderDocuments = wd,
-                                  Company = c.CompanyName,
-                                  BusinessUnit = bu.BusinessUnitName,
-                                  Divison = div.DivisionName,
-                                  Department = dept.DepartmentName,
                                   DocumentCode = doc.DocumentCode
                               })
                              .ToList();
@@ -1159,10 +1152,6 @@ namespace DAL.Repositories
                     {
                         workOrderDocuments = new WorkOrderDocuments();
                         workOrderDocuments = item.WorkOrderDocuments;
-                        workOrderDocuments.Company = item.Company;
-                        workOrderDocuments.BusinessUnit = item.BusinessUnit;
-                        workOrderDocuments.Divison = item.Divison;
-                        workOrderDocuments.Department = item.Department;
                         workOrderDocuments.DocumentCode = item.DocumentCode;
 
                         workOrderDocumentsList.Add(workOrderDocuments);

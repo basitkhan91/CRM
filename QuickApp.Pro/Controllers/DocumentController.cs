@@ -72,14 +72,6 @@ namespace QuickApp.Pro.Controllers
                 actionattributeobject.Description = actionAttributeViewModel.Description;
                 actionattributeobject.Memo = actionAttributeViewModel.Memo;
                 actionattributeobject.Link = actionAttributeViewModel.Link;
-                actionattributeobject.Customer = actionAttributeViewModel.Customer;
-                actionattributeobject.ItemMaster = actionAttributeViewModel.ItemMaster;
-                actionattributeobject.PurchaseOrder = actionAttributeViewModel.PurchaseOrder;
-                actionattributeobject.RepairOrder = actionAttributeViewModel.RepairOrder;
-                actionattributeobject.SL = actionAttributeViewModel.SL;
-                actionattributeobject.SalesOrder = actionAttributeViewModel.SalesOrder;
-                actionattributeobject.WorkOrder = actionAttributeViewModel.WorkOrder;
-                actionattributeobject.Vendor = actionAttributeViewModel.Vendor;
                 actionattributeobject.MasterCompanyId = actionAttributeViewModel.MasterCompanyId;
                 actionattributeobject.IsActive = actionAttributeViewModel.IsActive;
                 actionattributeobject.CreatedDate = DateTime.Now;
@@ -111,18 +103,9 @@ namespace QuickApp.Pro.Controllers
                 existingResult.UpdatedBy = actionAttributeViewModel.UpdatedBy;
                 existingResult.DocumentCode = actionAttributeViewModel.DocumentCode;
                 existingResult.Description = actionAttributeViewModel.Description;
-                existingResult.Customer = actionAttributeViewModel.Customer;
 
                 existingResult.Memo = actionAttributeViewModel.Memo;
                 existingResult.Link = actionAttributeViewModel.Link;
-                existingResult.ItemMaster = actionAttributeViewModel.ItemMaster;
-                existingResult.PurchaseOrder = actionAttributeViewModel.PurchaseOrder;
-                existingResult.RepairOrder = actionAttributeViewModel.RepairOrder;
-                existingResult.SL = actionAttributeViewModel.SL;
-                existingResult.SalesOrder = actionAttributeViewModel.SalesOrder;
-                existingResult.WorkOrder = actionAttributeViewModel.WorkOrder;
-                existingResult.Vendor = actionAttributeViewModel.Vendor;
-                existingResult.SalesOrder = actionAttributeViewModel.SalesOrder;
                 existingResult.IsActive = actionAttributeViewModel.IsActive;
                 existingResult.MasterCompanyId = actionAttributeViewModel.MasterCompanyId;
 
@@ -141,7 +124,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult DeleteAction(long id)
         {
             var existingResult = _unitOfWork.Document.GetSingleOrDefault(c => c.DocumentId == id);
-            existingResult.IsDelete = true;
+            existingResult.IsDeleted = true;
             _unitOfWork.Document.Update(existingResult);
 
             //_unitOfWork.Document.Remove(existingResult);
@@ -184,14 +167,6 @@ namespace QuickApp.Pro.Controllers
                     document.DocumentId = item.DocumentId;
                     document.DocumentCode = item.DocumentCode;
                     document.Description = item.Description;
-                    document.Customer = item.Customer;
-                    document.ItemMaster = item.ItemMaster;
-                    document.PurchaseOrder = item.PurchaseOrder;
-                    document.RepairOrder = item.RepairOrder;
-                    document.SL = item.SL;
-                    document.SalesOrder = item.SalesOrder;
-                    document.WorkOrder = item.WorkOrder;
-                    document.Vendor = item.Vendor;
                     document.CreatedDate = item.CreatedDate;
                     document.CreatedBy = item.CreatedBy;
                     document.UpdatedDate = item.UpdatedDate;
@@ -227,14 +202,6 @@ namespace QuickApp.Pro.Controllers
                     document.DocumentId = item.DocumentId;
                     document.DocumentCode = item.DocumentCode;
                     document.Description = item.Description;
-                    document.Customer = item.Customer;
-                    document.ItemMaster = item.ItemMaster;
-                    document.PurchaseOrder = item.PurchaseOrder;
-                    document.RepairOrder = item.RepairOrder;
-                    document.SL = item.SL;
-                    document.SalesOrder = item.SalesOrder;
-                    document.WorkOrder = item.WorkOrder;
-                    document.Vendor = item.Vendor;
                     document.CreatedDate = item.CreatedDate;
                     document.CreatedBy = item.CreatedBy;
                     document.UpdatedDate = item.UpdatedDate;

@@ -141,10 +141,6 @@ namespace DAL
         public DbSet<Employee> Employee { get; set; }
         public DbSet<shift> Shift { get; set; }
         public DbSet<Countries> Countries { get; set; }
-        public DbSet<Company> Company { get; set; }
-        public DbSet<Division> Division { get; set; }
-        public DbSet<Department> Department { get; set; }
-        public DbSet<BusinessUnit> BusinessUnit { get; set; }
         public DbSet<EmployeeLeaveType> EmployeeLeaveType { get; set; }
 
         public DbSet<EmployeeLicensure> EmployeeLicensure { get; set; }
@@ -413,8 +409,9 @@ namespace DAL
         public DbSet<PurchaseOrderAddress> PurchaseOrderAddress { get; set; }
         public DbSet<VendorBillingAddress> VendorBillingAddress { get; set; }
         public DbSet<PurchaseOrderShipVia> PurchaseOrderShipVia { get; set; }
-        public DbSet<CompanyBillingAddress> CompanyBillingAddress { get; set; }
-        public DbSet<CompanyShippingAddress> CompanyShippingAddress { get; set; }
+        public DbSet<LegalEntityBillingAddress> LegalEntityBillingAddress { get; set; }
+        public DbSet<LegalEntityShippingAddress> LegalEntityShippingAddress { get; set; }
+        public DbSet<LegalEntityContact> LegalEntityContact { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
