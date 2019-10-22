@@ -8,8 +8,8 @@ using System.Linq;
 namespace QuickApp.Pro.Controllers
 {
 
-    [Route("api/AssetIntangibleType")]
-    public class AssetIntangibleTypeController : Controller
+    [Route("api/AssetType")]
+    public class AssetTypeController : Controller
     {
         #region Private Members
 
@@ -19,7 +19,7 @@ namespace QuickApp.Pro.Controllers
 
         #region Constructor
 
-        public AssetIntangibleTypeController(IUnitOfWork unitOfWork)
+        public AssetTypeController(IUnitOfWork unitOfWork)
         {
             this._unitOfWork = unitOfWork;
         }
@@ -31,19 +31,19 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getAll")]
         public IActionResult getAll()
         {
-            List<AssetIntangibleType> items = _unitOfWork.Repository<AssetIntangibleType>().GetAll().Where(x => !x.IsDelete).OrderByDescending(x => x.AssetIntangibleTypeId).ToList();
+            List<AssetType> items = _unitOfWork.Repository<AssetType>().GetAll().Where(x => !x.IsDelete).OrderByDescending(x => x.AssetTypeId).ToList();
             return Ok(items);
         }
 
         [HttpGet("getById/{id}")]
         public IActionResult getById(long id)
         {
-            AssetIntangibleType item = _unitOfWork.Repository<AssetIntangibleType>().Find(x => x.AssetIntangibleTypeId == id && !x.IsDelete).FirstOrDefault();
+            AssetType item = _unitOfWork.Repository<AssetType>().Find(x => x.AssetTypeId == id && !x.IsDelete).FirstOrDefault();
             return Ok(item);
         }
 
         [HttpPost("add")]
-        public IActionResult add([FromBody]AssetIntangibleType item)
+        public IActionResult add([FromBody]AssetType item)
         {
             if (item != null)
             {
@@ -51,10 +51,10 @@ namespace QuickApp.Pro.Controllers
                 {
                     item.CreatedDate = DateTime.Now;
                     item.UpdatedDate = DateTime.Now;
-                    item.UpdatedBy = item.CreatedBy;      //[dbo].[AssetIntangibleType].[UpdatedBy] not null in schema definition
+                    item.UpdatedBy = item.CreatedBy;      //[dbo].[AssetType].[UpdatedBy] not null in schema definition
                     item.IsActive = true;
                     item.MasterCompanyId = 1;
-                    _unitOfWork.Repository<AssetIntangibleType>().Add(item);
+                    _unitOfWork.Repository<AssetType>().Add(item);
                     _unitOfWork.SaveChanges();
                     return Ok(item);
                 }
@@ -71,14 +71,14 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("update")]
-        public IActionResult update([FromBody]AssetIntangibleType item)
+        public IActionResult update([FromBody]AssetType item)
         {
             if (item != null)
             {
                 if (ModelState.IsValid)
                 {
                     item.UpdatedDate = DateTime.Now;
-                    _unitOfWork.Repository<AssetIntangibleType>().Update(item);
+                    _unitOfWork.Repository<AssetType>().Update(item);
                     _unitOfWork.SaveChanges();
                     return Ok(item);
                 }
@@ -98,11 +98,11 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("removeById/{id}")]
         public IActionResult removeById(long id)
         {
-            var item = _unitOfWork.Repository<AssetIntangibleType>().Find(x => x.AssetIntangibleTypeId == id).FirstOrDefault();
+            var item = _unitOfWork.Repository<AssetType>().Find(x => x.AssetTypeId == id).FirstOrDefault();
             if (item != null)
             {
                 item.IsDelete = true;
-                _unitOfWork.Repository<AssetIntangibleType>().Update(item);
+                _unitOfWork.Repository<AssetType>().Update(item);
                 _unitOfWork.SaveChanges();
                 return Ok();
             }
@@ -115,7 +115,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("audit/{id}")]
         public IActionResult AuditDetails(long id)
         {
-            List<AssetIntangibleTypeAudit> audits = _unitOfWork.Repository<AssetIntangibleTypeAudit>().Find(x => x.AssetIntangibleTypeId == id).OrderByDescending(x => x.AssetIntangibleTypeAuditId).ToList();
+            List<AssetTypeAudit> audits = _unitOfWork.Repository<AssetTypeAudit>().Find(x => x.AssetTypeId == id).OrderByDescending(x => x.AssetTypeAuditId).ToList();
 
             return Ok(audits);
         }

@@ -585,7 +585,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                     },
                     {
                         label: 'Work Orders', items: [
-                            { label: 'Stage Code and Status', routerLink: '/#' },
+                            { label: 'Stage Code and Status', routerLink: '/singlepages/singlepages/app-stage-code' },
                             { label: 'Charges', routerLink: '/singlepages/singlepages/app-charges' },
                             { label: 'Reasons', routerLink: '/singlepages/singlepages/app-reason' },
                             { label: 'Findings', routerLink: '/#' },
