@@ -641,7 +641,18 @@ namespace QuickApp.Pro.Controllers
 
 		}
 
-		[HttpPost("CustomerContactPost")]
+        [HttpGet("GetCustomerWarnings/{Selectedrow}")]
+        [Produces(typeof(List<CustomerWarning>[]))]
+        public IActionResult GetCustomerWarningsWithid(long Selectedrow)
+        {
+
+            var allWarningCustomerwarning = _unitOfWork.CustomerWarning.GetCustomerwarning(Selectedrow); //.GetAllCustomersData();
+            return Ok(allWarningCustomerwarning);
+
+        }
+
+
+        [HttpPost("CustomerContactPost")]
 		public IActionResult CreateContact([FromBody] ContactViewModel contactViewModel, CustomercontactViewModel customercontactViewModel)
 		{
 			if (ModelState.IsValid)

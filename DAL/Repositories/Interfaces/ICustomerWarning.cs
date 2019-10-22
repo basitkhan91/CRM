@@ -9,6 +9,7 @@ namespace DAL.Repositories.Interfaces
     {
         IEnumerable<CustomerWarning> GetCustomerWarnings();
         IEnumerable<object> GetCustomerwarningWithid(long CustomerId);
+        IEnumerable<object> GetCustomerwarning(long CustomerId);
     }
     
 }
