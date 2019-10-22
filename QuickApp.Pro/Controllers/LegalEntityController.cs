@@ -133,10 +133,8 @@ namespace QuickApp.Pro.Controllers
                 address.PostalCode = legalEntityViewModel.PostalCode;
                 address.StateOrProvince = legalEntityViewModel.BankProvince;
                 address.Country = legalEntityViewModel.Country;
-                address.RecordModifiedDate = legalEntityViewModel.RecordModifiedDate;
                 address.MasterCompanyId = 1;
                 address.IsActive = legalEntityViewModel.IsActive;
-                address.RecordCreateDate = DateTime.Now;
                 address.CreatedBy = legalEntityViewModel.CreatedBy;
                 address.UpdatedBy = legalEntityViewModel.UpdatedBy;
                 address.CreatedDate = DateTime.Now;
@@ -219,10 +217,8 @@ namespace QuickApp.Pro.Controllers
             address.StateOrProvince = legalEntityViewModel.BankProvince;
             //address.City = legalEntityViewModel.BankCity;
             address.Country = legalEntityViewModel.Country;
-            address.RecordModifiedDate = legalEntityViewModel.RecordModifiedDate;
             address.MasterCompanyId = 1;
             address.IsActive = true;
-            address.RecordCreateDate = DateTime.Now;
             address.CreatedBy = legalEntityViewModel.CreatedBy;
             address.UpdatedBy = legalEntityViewModel.UpdatedBy;
             address.CreatedDate = DateTime.Now;
@@ -282,9 +278,7 @@ namespace QuickApp.Pro.Controllers
                         address.PostalCode = legalEntityViewModel.PostalCode;
                         address.StateOrProvince = legalEntityViewModel.BankProvince;
                         address.Country = legalEntityViewModel.Country;
-                        address.RecordModifiedDate = legalEntityViewModel.RecordModifiedDate;
                         address.MasterCompanyId = 1;
-                        address.RecordCreateDate = DateTime.Now;
                         address.CreatedBy = legalEntityViewModel.CreatedBy;
                         address.UpdatedBy = legalEntityViewModel.UpdatedBy;
                         address.CreatedDate = DateTime.Now;
@@ -304,9 +298,8 @@ namespace QuickApp.Pro.Controllers
                         lockAddress.City = legalEntityViewModel.BankCity;
                         lockAddress.Country = legalEntityViewModel.Country;
                         lockAddress.PostalCode = legalEntityViewModel.PostalCode;
-                        lockAddress.Country = legalEntityViewModel.Country;lockAddress.RecordModifiedDate = legalEntityViewModel.RecordModifiedDate;
+                        lockAddress.Country = legalEntityViewModel.Country;
                         lockAddress.MasterCompanyId = 1;
-                        lockAddress.RecordCreateDate = DateTime.Now;
                         lockAddress.CreatedBy = legalEntityViewModel.CreatedBy;
                         lockAddress.UpdatedBy = legalEntityViewModel.UpdatedBy;
                         lockAddress.CreatedDate = DateTime.Now;
