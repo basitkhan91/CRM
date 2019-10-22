@@ -20,6 +20,7 @@ import { Site } from '../../models/site.model';
 import { Warehouse } from '../../models/warehouse.model';
 import { TreeNode, MenuItem } from 'primeng/api';
 import { LegalEntityService } from '../../services/legalentity.service';
+import { ConfigurationService } from '../../services/configuration.service';
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 import { take } from 'rxjs/operators';
 
@@ -154,7 +155,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	/** site ctor */
-    constructor(public manageMentService: LegalEntityService,public workFlowtService1: SiteService,private breadCrumb: SingleScreenBreadcrumbService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: WarehouseService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(public manageMentService: LegalEntityService, private configurations: ConfigurationService, public workFlowtService1: SiteService,private breadCrumb: SingleScreenBreadcrumbService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: WarehouseService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 		this.dataSource = new MatTableDataSource();
 		this.sourceWarehouse = new Warehouse(); //change
 
@@ -185,7 +186,12 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 			//alert(e);
 		}
 
-	}
+    }
+    sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=Warehouse&fileName=Warehouse.xlsx`;
+
+        window.location.assign(url);
+    }
 
 	siteValueChange(data) //Site Valu Selection in Form
 	{
