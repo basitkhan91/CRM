@@ -212,7 +212,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
         //new emp form
 
-        this.empCreationForm.controls['companyId'].patchValue('0');
+        // this.empCreationForm.controls['companyId'].patchValue('0');
 
         this.loadCompanyData()
 
@@ -489,6 +489,12 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
 
     onSubmit2() {
+
+
+
+
+        console.log(this.empCreationForm);
+
         this.supervisorId;
         this.sourceEmployee.firstName = this.empCreationForm.get('firstName').value;
         this.sourceEmployee.lastName = this.empCreationForm.get('lastName').value;
@@ -499,6 +505,13 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
         this.sourceEmployee.startDate = this.empCreationForm.get('startDate').value;
         this.sourceEmployee.SupervisorId = this.supervisorId;
+
+        // if (this.sourceEmployee.firstName !== '' && this.sourceEmployee.lastName && this.sourceEmployee.middleName && this.sourceEmployee.jobTitleId && this.sourceEmployee.employeeExpertiseId && this.sourceEmployee.JobTypeId
+        //     && this.sourceEmployee.startDate
+        // ) {
+
+
+
 
         if (this.empCreationForm.get('departmentId').value != null) {
 
@@ -601,7 +614,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             );
         }
 
-
+        // }
     }
 
     employeeShifttypeAdd(employeeId) {

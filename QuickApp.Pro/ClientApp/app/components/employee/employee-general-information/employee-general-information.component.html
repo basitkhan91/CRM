@@ -82,9 +82,9 @@
                                                     <div class="form-group col-sm-12">
                                                         <label class="control-label col-sm-4">Emp ID<span style="color:red">*</span></label>
                                                         <div class="col-sm-7">
-                                                            <input #sourceEmpID="ngModel" class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeId" readonly required
-                                                                   [class.is-invalid]="sourceEmpID.invalid && sourceEmpID.touched"
-                                                                   pattern="^[a-zA-Z0-9][a-zA-Z0-9 ]+">
+                                                            <input #sourceEmpID="ngModel" class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeId" readonly 
+                                                                 
+                                                                   >
                                                         </div>
                                                         <!-- <div *ngIf="sourceEmpID.errors && (sourceEmpID.valid || sourceEmpID.touched)">
                                                             <small class="text-danger" *ngIf="sourceEmpID.errors.required">Employee ID is required</small>
@@ -104,7 +104,7 @@
                                                         <label class="control-label col-sm-4">Job Title<span style="color:red">*</span></label>
                                                         <div class="inner-addon col-sm-7 inline-block display-flex">
                                                             <select id="" [formControl]="empCreationForm.controls['jobTitleId']" required>
-                                                                <option value ="0"> Select JOB Title</option>
+                                                                <option value ="0"> Select Job Title</option>
                                                                 <option *ngFor="let jobtitleName of allJobTitlesinfo" [ngValue]="jobtitleName.jobTitleId">{{jobtitleName.description}}</option>
                                                             </select>
                                                             <a href="#" data-toggle="modal" data-target="#addJobTitle" class="add-icon" (click)="openjobtitle(content)"><i class="fa fa-plus"></i></a>
@@ -228,7 +228,7 @@
                                                     <label class="control-label col-sm-4">Date Of Birth</label>
                                                     <div class="col-sm-7">
                                                         <!--<input class="form-control datepicker" type="date" valueAsDate="sourceEmployee.dateofBirth"   id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.dateofBirth"/>-->
-                                                        <p-calendar [showIcon]="true" [dataType]="date" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.dateOfBirth"  (onSelect)="onSelectMethod($event)"></p-calendar>
+                                                        <p-calendar [showIcon]="true"  [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.dateOfBirth"  (onSelect)="onSelectMethod($event)"></p-calendar>
 
                                                     </div>
                                                 </div>
@@ -246,7 +246,7 @@
                                                     <label class="control-label col-sm-4">Start Date<span style="color:red">*</span></label>
                                                     <div class="col-sm-7">
                                                         <!--<input class="form-control datepicker" type="date" valueAsDate="sourceEmployee.dateofBirth"   id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.dateofBirth"/>-->
-                                                        <p-calendar [dataType]="date"  [formControl]="empCreationForm.controls['startDate']" [ngClass]="{'error-border':!empCreationForm.controls['startDate'].valid}" [showIcon]="true" [(ngModel)]="sourceEmployee.startDate"></p-calendar>
+                                                        <p-calendar   [formControl]="empCreationForm.controls['startDate']"  [showIcon]="true" [(ngModel)]="sourceEmployee.startDate"></p-calendar>
 
                                                     </div>
                                                 </div>
@@ -392,7 +392,7 @@
     </p-autoComplete>
     -->
 
-                                                        <a class="add-icon"><i class="fa fa-plus"></i></a>
+                                                        <!-- <a class="add-icon"><i class="fa fa-plus"></i></a> -->
 
                                                     </div>
 
@@ -598,8 +598,8 @@
 
         </div>
         <!-- <button type="button" class="btn btn-success pull-right submit-btn" (click)="nextClick()">Next</button>-->
-      
-        <button type="button"  [disabled]="!empCreationForm.valid "  class="btn btn-success pull-right submit-btn" (click)="onSubmit2()">Save & Next</button>
+   
+        <button type="button"   [disabled]="!empCreationForm.valid" class="btn btn-success pull-right submit-btn" (click)="onSubmit2()">Save & Next</button>
     </div>
 
 </div>
