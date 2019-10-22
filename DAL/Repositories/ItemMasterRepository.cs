@@ -448,7 +448,7 @@ namespace DAL.Repositories
                                 join ach in _appContext.ACH on e.ACHId equals ach.ACHId into achdetails
                                 from achdata in achdetails.DefaultIfEmpty()
 
-                                where e.IsDelete == false || e.IsDelete == null
+                                where e.IsDeleted == false || e.IsDeleted == null
 
 
                                 select new

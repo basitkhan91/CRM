@@ -768,7 +768,7 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<EmployeeShiftMappingViewModel>))]
         public IActionResult getShift(int id)
         {
-            var employeeleaveType = _unitOfWork.employee.getEmployeeShiftData(id); //.GetAllCustomersData();
+            var employeeleaveType = _unitOfWork.employee.getEmployeeShiftData(id);
             return Ok(employeeleaveType);
 
         }
