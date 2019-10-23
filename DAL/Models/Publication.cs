@@ -27,10 +27,10 @@ namespace DAL.Models
         [Required(ErrorMessage = "Please select Employee")]
         public long? EmployeeId { get; set; }
         public int? VerifiedBy { get; set; }
-
+        public long EmployeeId { get; set; }
+        public int? VerifiedBy { get; set; }
         public int? RevisionNum { get; set; }
         public Nullable<DateTime> VerifiedDate { get; set; }
-
         [ForeignKey("MasterCompanyId")]
         public Int32 MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
@@ -39,10 +39,8 @@ namespace DAL.Models
         public DateTime UpdatedDate { get; set; }
         public bool? IsActive { get; set; }
         public bool? IsDeleted { get; set; }
-        
         [NotMapped]
         public long AttachmentId { get; set; }
-        
         [NotMapped]
         public List<AttachmentDetails> AttachmentDetails { get; set; }
     }

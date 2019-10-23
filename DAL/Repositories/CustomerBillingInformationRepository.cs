@@ -50,6 +50,35 @@ namespace DAL.Repositories.Interfaces
             return data;
         }
 
+
+        public IEnumerable<Object> GetAllCusBillingHistory(long id)
+        {
+            var data = (from v in _appContext.CustomerBillingAddress
+                join ad in _appContext.Address on v.AddressId equals ad.AddressId
+                where v.CustomerId == id
+
+                select new
+                {
+                    Address1 = ad.Line1,
+                    Address2 = ad.Line2,
+                    Address3 = ad.Line3,
+                    ad.AddressId,
+                    ad.Country,
+                    ad.PostalCode,
+                    ad.City,
+                    ad.StateOrProvince,
+                    v.SiteName,
+                    v.CustomerBillingAddressId,
+                    v.CreatedDate,
+                    v.UpdatedDate,
+                    v.CustomerId,
+                    v.IsActive,
+                    v.IsDelete,
+                    v.IsPrimary
+                }).ToList();
+            return data;
+        }
+
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }
 }

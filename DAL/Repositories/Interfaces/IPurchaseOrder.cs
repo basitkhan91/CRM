@@ -1,4 +1,5 @@
-﻿using DAL.Models;
+﻿using DAL.Common;
+using DAL.Models;
 using System;
 using System.Collections.Generic;
 
@@ -7,7 +8,7 @@ namespace DAL.Repositories.Interfaces
 
     public interface IPurchaseOrder : IRepository<DAL.Models.PurchaseOrder>
     {
-        IEnumerable<PurchaseOrder> GetPurchaseOrderlist();
+        IEnumerable<object> GetPurchaseOrderlist(Filters<PurchaseOrderFilters> poFilters);
         IEnumerable<PurchaseOrder> GetPurchaseOrderListLite();
         int GetLastIdNumber(long puchaseOrderId, long purchaseOrderPartId);
         long CreatePOApprovers(PurchaseOrderApprover poApprover);
@@ -20,5 +21,6 @@ namespace DAL.Repositories.Interfaces
         long CreatePurchaseOrderShipvia(PurchaseOrderShipVia poShipvia);
         void UpdatePurchaseOrderShipvia(PurchaseOrderShipVia poShipvia);
         object GetPurchaseOrderShipvia(long purchaseOrderId, int userType);
+        IEnumerable<object> GetVendorCapabilities(long vendorId);
     }
 }

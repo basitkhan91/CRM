@@ -18,6 +18,7 @@ import { SingleScreenBreadcrumbService } from "../../services/single-screens-bre
 import { Site } from '../../models/site.model';
 import { LegalEntityService } from '../../services/legalentity.service';
 import { TreeNode, MenuItem } from 'primeng/api';
+import { ConfigurationService } from '../../services/configuration.service';
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 
 @Component({
@@ -134,7 +135,7 @@ export class SiteComponent implements OnInit, AfterViewInit {
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	/** site ctor */
-	constructor(public manageMentService: LegalEntityService, private breadCrumb: SingleScreenBreadcrumbService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: SiteService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(public manageMentService: LegalEntityService, private configurations: ConfigurationService, private breadCrumb: SingleScreenBreadcrumbService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: SiteService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 		this.dataSource = new MatTableDataSource();
 		this.sourceSite = new Site();
 
@@ -142,7 +143,12 @@ export class SiteComponent implements OnInit, AfterViewInit {
 
 	closethis() {
 		this.closeCmpny = false;
-	}
+    }
+    sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=Site&fileName=Site.xlsx`;
+
+        window.location.assign(url);
+    }
 
 
 	public allWorkFlows: Site[] = [];

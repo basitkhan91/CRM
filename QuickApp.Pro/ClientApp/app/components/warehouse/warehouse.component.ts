@@ -20,6 +20,7 @@ import { Site } from '../../models/site.model';
 import { Warehouse } from '../../models/warehouse.model';
 import { TreeNode, MenuItem } from 'primeng/api';
 import { LegalEntityService } from '../../services/legalentity.service';
+import { ConfigurationService } from '../../services/configuration.service';
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 import { take } from 'rxjs/operators';
 
@@ -111,6 +112,8 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 	AuditDetails: any[];
 	HasAuditDetails: boolean;
 	AuditHistoryTitle: string = 'History of Ware House'
+	formData:FormData = null;
+	uploadedRecords: Object = null
 	ngOnInit(): void
 	{
 		this.cols = [
@@ -137,6 +140,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-warehouse';
 		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
 		this.selectedColumns = this.cols;
+		this.formData  = new FormData();
 	}
 
 	ngAfterViewInit() {
@@ -151,7 +155,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	/** site ctor */
-    constructor(public manageMentService: LegalEntityService,public workFlowtService1: SiteService,private breadCrumb: SingleScreenBreadcrumbService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: WarehouseService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(public manageMentService: LegalEntityService, private configurations: ConfigurationService, public workFlowtService1: SiteService,private breadCrumb: SingleScreenBreadcrumbService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: WarehouseService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 		this.dataSource = new MatTableDataSource();
 		this.sourceWarehouse = new Warehouse(); //change
 
@@ -182,7 +186,12 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 			//alert(e);
 		}
 
-	}
+    }
+    sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=Warehouse&fileName=Warehouse.xlsx`;
+
+        window.location.assign(url);
+    }
 
 	siteValueChange(data) //Site Valu Selection in Form
 	{
@@ -788,6 +797,42 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 				this.HasAuditDetails = this.AuditDetails.length > 0;
             }
         });
-    }
+	}
+	
+	/* 
+	    Bulk site upload
+	*/
+
+	bulkUpload(event) {
+
+		this.formData = new FormData();
+
+		this.uploadedRecords = null;
+
+		const file = event.target.files;
+		
+        console.log(file);
+		
+		if (file.length > 0) {
+
+			this.formData.append('file', file[0])
+			
+            this.workFlowtService.bulkUpload(this.formData).subscribe(response => {
+				
+				event.target.value = '';
+
+                this.uploadedRecords = response;
+				
+				this.loadData();
+				
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+            })
+        }
+
+	}
 
 }

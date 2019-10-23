@@ -8,7 +8,7 @@ namespace DAL.Models
         [Key]
         public long CustomerAircraftMappingId { get; set; }
         public long CustomerId { get; set; }
-        public long AircraftModelId { get; set; }
+        public long? AircraftModelId { get; set; }
         public int AircraftTypeId { get; set; }
         public long? DashNumberId { get; set; }
         public string DashNumber { get; set; }

@@ -2,10 +2,11 @@
 using DAL.Models;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.AspNetCore.Http;
 
 namespace DAL.Repositories.Interfaces
 {
-    public interface ILocationRepository : IRepository<Location>
+    public interface ILocationRepository : IRepository<Location>, IBulkUpload<Location>
     {
         IEnumerable<object> GetAllLocationData();
 

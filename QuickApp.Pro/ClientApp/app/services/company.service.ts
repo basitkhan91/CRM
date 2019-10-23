@@ -36,4 +36,20 @@ export class CompanyService {
     addNewBillingAddress(object) {
         return this.companyEndpoint.postNewBillingAddress<any>(object);
     }
+    getShippingCompanySiteNames(legalEntityId) {
+        return this.companyEndpoint.getShippingCompanySiteNames(legalEntityId);
+    }
+
+    getBillingCompanySiteNames(legalEntityId) {
+        return this.companyEndpoint.getBillingCompanySiteNames(legalEntityId);
+    }
+    getShippingAddress(legalEntityAddressId) {
+        return this.companyEndpoint.getShippingAddress(legalEntityAddressId);
+    }
+    getBillingAddress(legalEntityAddressId) {
+        return this.companyEndpoint.getBillingAddress(legalEntityAddressId)
+    }
+    getCompanyContacts(legalEntityId) {
+        return this.companyEndpoint.getCompanyContacts(legalEntityId);
+    }
 }

@@ -51,7 +51,7 @@ namespace DAL.Repositories.Interfaces
         
         IEnumerable<PublicationsList> getPublicationDropdownData();
 
-        IEnumerable<Publication> UploadUOMCustomData(IFormFile file);
+        IEnumerable<Publication> UploadCustomData(IFormFile file);
         IEnumerable<object> PublicationHistory(long publicationId);
     }
 }

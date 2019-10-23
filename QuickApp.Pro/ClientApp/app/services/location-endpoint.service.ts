@@ -1,169 +1,232 @@
-﻿import { Injectable, Injector } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
+﻿import { Injectable, Injector } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs/Observable";
+import "rxjs/add/operator/map";
 
-import { EndpointFactory } from './endpoint-factory.service';
-import { ConfigurationService } from './configuration.service';
+import { EndpointFactory } from "./endpoint-factory.service";
+import { ConfigurationService } from "./configuration.service";
 
 @Injectable()
 export class LocationEndpoint extends EndpointFactory {
+  private readonly _actionsUrl: string = "/api/Location/Get";
+  private readonly _actionsUrlNew: string = "/api/Location/locationPost";
+  private readonly __managementWarwhouseURL: string =
+    "/api/Location/GetManagementWareHouse";
+  private readonly _actionsManagemetUrl: string =
+    "/api/Location/GetMangementLocation"; //change
+  private readonly _actionsUrlNew1: string = "/api/Location/GetAddress";
+  private readonly _actionsUrlNew2: string = "/api/Location/GetWarehouse";
+  private readonly _actionLOcationStock: string =
+    "/api/Location/GetLocationStockData";
+  private readonly _actionsUrlAuditHistory: string =
+    "/api/Location/ataauditHistoryById";
+  private readonly _actionsUrlManagementPost: string =
+    "/api/Location/managementLocationPost"; //change
 
+  private readonly getLocationDataAuditById: string = "/api/Location/audits";
+  //private readonly _countryUrl: string = "/api/Site/GetcountryList";
+  //private readonly _countryUrlNew: string = "api/Site/postCountryList";
+  private readonly bulkLocationUpload = "/api/location/bulkupload";
 
-	private readonly _actionsUrl: string = "/api/Location/Get";
-	private readonly _actionsUrlNew: string = "/api/Location/locationPost";
-	private readonly __managementWarwhouseURL: string = "/api/Location/GetManagementWareHouse";
-	private readonly _actionsManagemetUrl: string = "/api/Location/GetMangementLocation"; //change
-	private readonly _actionsUrlNew1: string = "/api/Location/GetAddress";
-	private readonly _actionsUrlNew2: string = "/api/Location/GetWarehouse";
-	private readonly _actionLOcationStock: string = "/api/Location/GetLocationStockData";
-    private readonly _actionsUrlAuditHistory: string = "/api/Location/ataauditHistoryById";
-    private readonly _actionsUrlManagementPost: string = "/api/Location/managementLocationPost"; //change
+  get actionsUrl() {
+    return this.configurations.baseUrl + this._actionsUrl;
+  }
 
-    private readonly getLocationDataAuditById: string = "/api/Location/audits";
-	//private readonly _countryUrl: string = "/api/Site/GetcountryList";
-	//private readonly _countryUrlNew: string = "api/Site/postCountryList";
+  get actionsMangementLocationUrl() {
+    return this.configurations.baseUrl + this._actionsManagemetUrl;
+  } //change
 
+  constructor(
+    http: HttpClient,
+    configurations: ConfigurationService,
+    injector: Injector
+  ) {
+    super(http, configurations, injector);
+  }
 
-	get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
+  getLocationStockEndpoint<T>(locationId: number): Observable<T> {
+    let endpointUrl = `${this._actionLOcationStock}/${locationId}`;
 
-	get actionsMangementLocationUrl() { return this.configurations.baseUrl + this._actionsManagemetUrl; } //change
+    return this.http
+      .get<T>(endpointUrl, this.getRequestHeaders())
+      .catch(error => {
+        return this.handleError(error, () =>
+          this.getLocationStockEndpoint(locationId)
+        );
+      });
+  }
 
-	constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
+  getLocationEndpoint<T>(): Observable<T> {
+    return this.http
+      .get<T>(this.actionsUrl, this.getRequestHeaders())
+      .catch(error => {
+        return this.handleError(error, () => this.getLocationEndpoint());
+      });
+  }
 
-		super(http, configurations, injector);
-	}
+  getManagementWareHouseEndpoint<T>(wareHouseID: any): Observable<T> {
+    let endpointUrl = `${this.__managementWarwhouseURL}/${wareHouseID}`;
 
-	getLocationStockEndpoint<T>(locationId: number): Observable<T> {
-		let endpointUrl = `${this._actionLOcationStock}/${locationId}`;
+    return this.http
+      .get<T>(endpointUrl, this.getRequestHeaders())
+      .catch(error => {
+        return this.handleError(error, () =>
+          this.getManagementWareHouseEndpoint(wareHouseID)
+        );
+      });
+  }
 
-		return this.http.get<T>(endpointUrl, this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getLocationStockEndpoint(locationId));
-			});
-	}
+  //edit data ManagementSite Data Retrive based on location id
+  getManagementLocationEditEndpoint<T>(locationId: number): Observable<T> {
+    let endpointUrl = `${this._actionsManagemetUrl}/${locationId}`;
 
-	getLocationEndpoint<T>(): Observable<T> {
+    return this.http
+      .get<T>(endpointUrl, this.getRequestHeaders())
+      .catch(error => {
+        return this.handleError(error, () =>
+          this.getManagementLocationEditEndpoint(locationId)
+        );
+      });
+  }
 
-		return this.http.get<T>(this.actionsUrl, this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getLocationEndpoint());
-			});
-	}
+  getnewManagementLocationData<T>(userObject: any): Observable<T> {
+    return this.http
+      .post<T>(
+        this._actionsUrlManagementPost,
+        JSON.stringify(userObject),
+        this.getRequestHeaders()
+      )
+      .catch(error => {
+        return this.handleError(error, () =>
+          this.getnewManagementLocationData(userObject)
+        );
+      });
+  }
 
-	getManagementWareHouseEndpoint<T>(wareHouseID: any): Observable<T> {
-		let endpointUrl = `${this.__managementWarwhouseURL}/${wareHouseID}`;
+  //Delete management Location Before Edit
+  getDeleteManagementLocationEndpoint<T>(locationId: number): Observable<T> {
+    let endpointUrl = `${this._actionsUrlManagementPost}/${locationId}`;
+    return this.http
+      .delete<T>(endpointUrl, this.getRequestHeaders())
+      .catch(error => {
+        return this.handleError(error, () =>
+          this.getDeleteManagementLocationEndpoint(locationId)
+        );
+      });
+  }
 
-		return this.http.get<T>(endpointUrl, this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getManagementWareHouseEndpoint(wareHouseID));
-			});
-	}
+  getNewLocationEndpoint<T>(userObject: any): Observable<T> {
+    return this.http
+      .post<T>(
+        this._actionsUrlNew,
+        JSON.stringify(userObject),
+        this.getRequestHeaders()
+      )
+      .catch(error => {
+        return this.handleError(error, () =>
+          this.getNewLocationEndpoint(userObject)
+        );
+      });
+  }
 
-	//edit data ManagementSite Data Retrive based on location id
-	getManagementLocationEditEndpoint<T>(locationId: number): Observable<T> {
-		let endpointUrl = `${this._actionsManagemetUrl}/${locationId}`;
+  //getcountryListEndpoint<T>(): Observable<T> {
 
-		return this.http.get<T>(endpointUrl, this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getManagementLocationEditEndpoint(locationId));
-			});
-	}
+  //	return this.http.get<T>(this.countryUrl, this.getRequestHeaders())
+  //		.catch(error => {
+  //			return this.handleError(error, () => this.getcountryListEndpoint());
+  //		});
+  //}
 
-    getnewManagementLocationData<T>(userObject: any): Observable<T>
-    {
-        return this.http.post<T>(this._actionsUrlManagementPost, JSON.stringify(userObject), this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getnewManagementLocationData(userObject));
-            });
-	}
+  getHistoryLocationEndpoint<T>(locationId: number): Observable<T> {
+    let endpointUrl = `${this._actionsUrlAuditHistory}/${locationId}`;
 
-	//Delete management Location Before Edit
-	getDeleteManagementLocationEndpoint<T>(locationId: number): Observable<T> {
-		let endpointUrl = `${this._actionsUrlManagementPost}/${locationId}`;
-		return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getDeleteManagementLocationEndpoint(locationId));
-			});
-	}
+    return this.http
+      .get<T>(endpointUrl, this.getRequestHeaders())
+      .catch(error => {
+        return this.handleError(error, () =>
+          this.getHistoryLocationEndpoint(locationId)
+        );
+      });
+  }
 
-	getNewLocationEndpoint<T>(userObject: any): Observable<T> {
+  getEditLocationEndpoint<T>(locationId?: number): Observable<T> {
+    let endpointUrl = locationId
+      ? `${this._actionsUrlNew}/${locationId}`
+      : this._actionsUrlNew;
 
-		return this.http.post<T>(this._actionsUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getNewLocationEndpoint(userObject));
-			});
-	}
+    return this.http
+      .get<T>(endpointUrl, this.getRequestHeaders())
+      .catch(error => {
+        return this.handleError(error, () =>
+          this.getEditLocationEndpoint(locationId)
+        );
+      });
+  }
 
-	//getcountryListEndpoint<T>(): Observable<T> {
+  getUpdateLocationEndpoint<T>(
+    roleObject: any,
+    locationId: number
+  ): Observable<T> {
+    let endpointUrl = `${this._actionsUrlNew}/${locationId}`;
 
-	//	return this.http.get<T>(this.countryUrl, this.getRequestHeaders())
-	//		.catch(error => {
-	//			return this.handleError(error, () => this.getcountryListEndpoint());
-	//		});
-	//}
+    return this.http
+      .put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+      .catch(error => {
+        return this.handleError(error, () =>
+          this.getUpdateLocationEndpoint(roleObject, locationId)
+        );
+      });
+  }
 
-	getHistoryLocationEndpoint<T>(locationId: number): Observable<T> {
-		let endpointUrl = `${this._actionsUrlAuditHistory}/${locationId}`;
+  getDeleteLocationEndpoint<T>(locationId: number): Observable<T> {
+    let endpointUrl = `${this._actionsUrlNew}/${locationId}`;
 
-		return this.http.get<T>(endpointUrl, this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getHistoryLocationEndpoint(locationId));
-			});
-	}
+    return this.http
+      .delete<T>(endpointUrl, this.getRequestHeaders())
+      .catch(error => {
+        return this.handleError(error, () =>
+          this.getDeleteLocationEndpoint(locationId)
+        );
+      });
+  }
 
-	getEditLocationEndpoint<T>(locationId?: number): Observable<T> {
-		let endpointUrl = locationId ? `${this._actionsUrlNew}/${locationId}` : this._actionsUrlNew;
+  getAddressDataWarehouseEndpoint<T>(locationId: any): Observable<T> {
+    let endpointUrl = `${this._actionsUrlNew1}/${locationId}`;
 
-		return this.http.get<T>(endpointUrl, this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getEditLocationEndpoint(locationId));
-			});
-	}
+    return this.http
+      .get<T>(endpointUrl, this.getRequestHeaders())
+      .catch(error => {
+        return this.handleError(error, () =>
+          this.getAddressDataWarehouseEndpoint(locationId)
+        );
+      });
+  }
 
-	getUpdateLocationEndpoint<T>(roleObject: any, locationId: number): Observable<T> {
-		let endpointUrl = `${this._actionsUrlNew}/${locationId}`;
+  getWareHouseDataEndpoint<T>(locationId: any): Observable<T> {
+    let endpointUrl = `${this._actionsUrlNew2}/${locationId}`;
 
-		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getUpdateLocationEndpoint(roleObject, locationId));
-			});
-	}
+    return this.http
+      .get<T>(endpointUrl, this.getRequestHeaders())
+      .catch(error => {
+        return this.handleError(error, () =>
+          this.getWareHouseDataEndpoint(locationId)
+        );
+      });
+  }
 
-	getDeleteLocationEndpoint<T>(locationId: number): Observable<T> {
-		let endpointUrl = `${this._actionsUrlNew}/${locationId}`;
+  getLocationAuditById<T>(locationId: number): Observable<T> {
+    let endpointUrl = `${this.getLocationDataAuditById}/${locationId}`;
 
-		return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getDeleteLocationEndpoint(locationId));
-			});
-	}
+    return this.http
+      .get<T>(endpointUrl, this.getRequestHeaders())
+      .catch(error => {
+        return this.handleError(error, () =>
+          this.getLocationAuditById(locationId)
+        );
+      });
+  }
 
-	getAddressDataWarehouseEndpoint<T>(locationId: any): Observable<T> {
-		let endpointUrl = `${this._actionsUrlNew1}/${locationId}`;
-
-		return this.http.get<T>(endpointUrl, this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getAddressDataWarehouseEndpoint(locationId));
-			});
-	}
-
-	getWareHouseDataEndpoint<T>(locationId: any): Observable<T> {
-		let endpointUrl = `${this._actionsUrlNew2}/${locationId}`;
-
-		return this.http.get<T>(endpointUrl, this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getWareHouseDataEndpoint(locationId));
-			});
-	}
-
-    
-    getLocationAuditById<T>(locationId: number): Observable<T> {
-        let endpointUrl = `${this.getLocationDataAuditById}/${locationId}`;
-
-        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getLocationAuditById(locationId));
-            });
-    }
+  bulkUpload(file: any): Observable<object> {
+    return this.http.post(this.bulkLocationUpload, file);
+  }
 }

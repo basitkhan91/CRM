@@ -12,6 +12,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using MimeKit.Encodings;
 using RepairOrderPartChild = QuickApp.Pro.ViewModels.RepairOrderPartChild;
+using DAL.Common;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -88,15 +89,14 @@ namespace QuickApp.Pro.Controllers
         }
 
 
-        [HttpGet("polist")]
-        [Produces(typeof(List<PurchaseOrderViewModel>))]
-
-        public IActionResult polist()
+        [HttpPost("polist")]
+        public IActionResult polist(Filters<PurchaseOrderFilters> poFilters)
         {
-            var allActions = _unitOfWork.purchaseOrder.GetPurchaseOrderlist(); //.GetAllCustomersData();
+            var allActions = _unitOfWork.purchaseOrder.GetPurchaseOrderlist(poFilters); //.GetAllCustomersData();
             return Ok(allActions);
 
         }
+
         [HttpGet("rolist")]
         [Produces(typeof(List<RepairOrderViewModel>))]
 
@@ -593,7 +593,8 @@ namespace QuickApp.Pro.Controllers
         private void MapPOVMToEntity(PurchaseOrderViewModel poViewModel, PurchaseOrder actionobject)
         {
             actionobject.PriorityId = poViewModel.PriorityId;
-            actionobject.DateRequested = poViewModel.OpenDate;
+            actionobject.OpenDate = poViewModel.OpenDate;
+            actionobject.ClosedDate = poViewModel.ClosedDate;
 
             actionobject.PurchaseOrderNumber = poViewModel.PurchaseOrderNumber;
             actionobject.RequestedBy = poViewModel.RequisitionerId;
@@ -1315,7 +1316,6 @@ namespace QuickApp.Pro.Controllers
                 address.City = vendorViewModel.City;
                 address.Country = vendorViewModel.Country;
                 address.MasterCompanyId = 1;
-                address.RecordCreateDate = DateTime.Now;
                 address.CreatedBy = vendorViewModel.CreatedBy ?? "Admin"; //Hotfix
                 address.UpdatedBy = vendorViewModel.UpdatedBy ?? "Admin";//Hotfix
                 address.CreatedDate = DateTime.Now;
@@ -1374,7 +1374,6 @@ namespace QuickApp.Pro.Controllers
             address.Country = vendorViewModel.Country;
             address.MasterCompanyId = 1;
             address.IsActive = true;
-            address.RecordCreateDate = DateTime.Now;
             address.CreatedBy = vendorViewModel.CreatedBy ?? "Admin"; //Hotfix
             address.UpdatedBy = vendorViewModel.UpdatedBy ?? "Admin"; //Hotfix
             address.CreatedDate = DateTime.Now;
@@ -1661,7 +1660,6 @@ namespace QuickApp.Pro.Controllers
                 address.Country = vendorshipping.Country;
                 address.MasterCompanyId = 1;
                 address.IsActive = true;
-                address.RecordCreateDate = DateTime.Now;
                 address.CreatedBy = vendorshipping.CreatedBy ?? "Admin"; //Hotfix
                 address.UpdatedBy = vendorshipping.UpdatedBy ?? "Admin";//Hotfix
                 address.CreatedDate = DateTime.Now;
@@ -1762,7 +1760,6 @@ namespace QuickApp.Pro.Controllers
                 address.City = checkPaymentViewModel.City;
                 address.Country = checkPaymentViewModel.Country;
                 address.MasterCompanyId = 1;
-                address.RecordCreateDate = DateTime.Now;
                 address.CreatedBy = checkPaymentViewModel.CreatedBy ?? "Admin"; //HotFix
                 address.UpdatedBy = checkPaymentViewModel.UpdatedBy ?? "Admin"; //HotFix
                 address.CreatedDate = DateTime.Now;
@@ -1805,7 +1802,6 @@ namespace QuickApp.Pro.Controllers
                 addressObj.City = checkPaymentViewModel.City;
                 addressObj.Country = checkPaymentViewModel.Country;
                 addressObj.MasterCompanyId = 1;
-                addressObj.RecordCreateDate = DateTime.Now;
                 addressObj.CreatedBy = checkPaymentViewModel.CreatedBy;
                 addressObj.UpdatedBy = checkPaymentViewModel.UpdatedBy;
                 addressObj.CreatedDate = DateTime.Now;
@@ -1870,7 +1866,6 @@ namespace QuickApp.Pro.Controllers
                 address.City = domesticWirePaymentViewModel.City;
                 address.Country = domesticWirePaymentViewModel.Country;
                 address.MasterCompanyId = 1;
-                address.RecordCreateDate = DateTime.Now;
                 address.CreatedBy = domesticWirePaymentViewModel.CreatedBy ?? "Admin";//Hotfix
                 address.UpdatedBy = domesticWirePaymentViewModel.UpdatedBy ?? "Admin";//Hotfix
                 address.CreatedDate = DateTime.Now;
@@ -1916,7 +1911,6 @@ namespace QuickApp.Pro.Controllers
                 address.City = domesticWirePaymentViewModel.City;
                 address.Country = domesticWirePaymentViewModel.Country;
                 address.MasterCompanyId = 1;
-                address.RecordCreateDate = DateTime.Now;
                 address.CreatedBy = domesticWirePaymentViewModel.CreatedBy ?? "Admin";//Hotfix
                 address.UpdatedBy = domesticWirePaymentViewModel.UpdatedBy ?? "Admin";//Hotfix
                 address.CreatedDate = DateTime.Now;
@@ -1960,7 +1954,6 @@ namespace QuickApp.Pro.Controllers
                 address.City = internationalWirePaymentmodel.City;
                 address.Country = internationalWirePaymentmodel.Country;
                 address.MasterCompanyId = 1;
-                address.RecordCreateDate = DateTime.Now;
                 address.CreatedBy = internationalWirePaymentmodel.CreatedBy ?? "Admin"; //Hotfix
                 address.UpdatedBy = internationalWirePaymentmodel.UpdatedBy ?? "Admin"; //Hotfix
                 address.CreatedDate = DateTime.Now;
@@ -2028,7 +2021,6 @@ namespace QuickApp.Pro.Controllers
                 address.City = internationalWirePaymentViewModel.City;
                 address.Country = internationalWirePaymentViewModel.Country;
                 address.MasterCompanyId = 1;
-                address.RecordCreateDate = DateTime.Now;
                 address.CreatedBy = internationalWirePaymentViewModel.CreatedBy ?? "Admin";
                 address.UpdatedBy = internationalWirePaymentViewModel.UpdatedBy ?? "Admin";//Hotfix
                 address.CreatedDate = DateTime.Now;

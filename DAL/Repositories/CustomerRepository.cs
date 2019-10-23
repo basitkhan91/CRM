@@ -1194,30 +1194,30 @@ namespace DAL.Repositories
 			}
 		}
 
-        public static int? ToNullableInt(string s)
-        {
-            int i;
-            if (int.TryParse(s, out i)) return i;
-            return null;
-        }
+		public static int? ToNullableInt(string s)
+		{
+			int i;
+			if (int.TryParse(s, out i)) return i;
+			return null;
+		}
 
 
-        public IEnumerable<object> searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID(long CustomerId, string AircraftTypeId, string AircraftModelId, string DashNumberId)
+		public IEnumerable<object> searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID(long CustomerId, string AircraftTypeId, string AircraftModelId, string DashNumberId)
 		{
 			long[] myAircraftTypeId = null;
-			long[] myAircraftModelId = null;
+			long?[] myAircraftModelId = null;
 			long?[] myDashNumberId = null;
-            
-            if (AircraftTypeId != null && AircraftTypeId != "")
+			
+			if (AircraftTypeId != null && AircraftTypeId != "")
 				myAircraftTypeId = AircraftTypeId.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
 			if (AircraftModelId != null && AircraftModelId != "")
-				myAircraftModelId = AircraftModelId.Split(',').Select(y => Convert.ToInt64(y)).ToArray();
-            if (DashNumberId != null && DashNumberId != "")
-            
-                myDashNumberId = DashNumberId.Split(',').Select(x => (long?)Convert.ToInt64(x)).ToArray();
-            
+				myAircraftModelId = AircraftModelId.Split(',').Select(y => (long?)Convert.ToInt64(y)).ToArray();
+			if (DashNumberId != null && DashNumberId != "")
+			
+				myDashNumberId = DashNumberId.Split(',').Select(x => (long?)Convert.ToInt64(x)).ToArray();
+			
 
-            if (AircraftTypeId != null && AircraftModelId != null && myDashNumberId != null)
+			if (AircraftTypeId != null && AircraftModelId != null && myDashNumberId != null)
 			{
 				var data = (from cam in _appContext.CustomerAircraftMapping
 							where cam.CustomerId == CustomerId && myAircraftTypeId.Contains(cam.AircraftTypeId) && myAircraftModelId.Contains(cam.AircraftModelId) && myDashNumberId.Contains(cam.DashNumberId) && cam.IsDeleted != true

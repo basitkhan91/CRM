@@ -34,6 +34,34 @@ namespace DAL.Repositories
             //return _appContext.CustomerWarning.Include("MasterCompany").OrderByDescending(c => c.CustomerWarningId).ToList();
         }
 
+        public IEnumerable<object> GetCustomerwarning(long CustomerId)
+        {
+
+            var data = (from t in _appContext.CustomerWarning
+
+                where t.CustomerId == CustomerId
+                select new
+                {
+                    t.CustomerId,
+                    t.CustomerWarningId,
+                    t.SourceModule,
+                    t.Allow,
+                    t.Warning,
+                    t.Restrict,
+                    t.WarningMessage,
+                    t.RestrictMessage,
+                    t.MasterCompanyId,
+                    t.CreatedBy,
+                    t.UpdatedBy,
+                    t.CreatedDate,
+                    t.UpdatedDate,
+                    t.IsActive,
+                    t.IsRestrict,
+                    t.IsAllow,
+                    t.IsWarning
+                }).ToList();
+            return data;
+        }
 
 
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);

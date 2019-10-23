@@ -21,7 +21,7 @@ namespace QuickApp.Pro.Controllers
         readonly IEmailer _emailer;
         private const string GetActionByIdActionName = "GetActionById";
 
-        public PriorityController(IUnitOfWork unitOfWork, ILogger<GateCodeController> logger, IEmailer emailer)
+        public PriorityController(IUnitOfWork unitOfWork, ILogger<StageCodeController> logger, IEmailer emailer)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;

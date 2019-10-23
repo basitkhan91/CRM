@@ -79,7 +79,6 @@ namespace DAL
 
         IActionAttributeRepository ActionAttribute { get; }
 
-        IGatecodeRepository Gatecode { get; }
 
         IIntegration Integration { get; }
         IPriority Priority { get; }
@@ -142,14 +141,6 @@ namespace DAL
         IEmployeeLeaveType EmployeeLeaveType { get; }
         IEmployeeTrainingTypeRepository EmployeeTrainingType { get; }
         
-        ICompany Company { get; }
-
-        IDivision division { get; }
-
-        IDepartment department { get; }
-
-        IBusinessUnit businessUnit { get; }
-
         IEmployeeLicenseType employeeLicenseType { get; }
 
         IEmployeeLicensure employeeLicensure { get; }
@@ -191,7 +182,7 @@ namespace DAL
 
         IReceivingCustomerWork receivingCustomerWork { get; }
 
-        ILegalEntity legalEntity { get; }
+        ILegalEntity LegalEntity { get; }
 
        // IGLAccountClassRespository gLAccountClass { get; }
 
@@ -231,9 +222,10 @@ namespace DAL
 
         IGLAccount gLAccount { get; }
 
-        IAssetIntangibleType assetIntangibleType { get; }
 
-        IAssetType assetType { get; }
+        IAssetTypeRepository AssetTypeRepository { get; }
+        IAssetIntangibleTypeRepository AssetIntangibleTypeRepository { get; }
+        IStageCodeRepository StageCodeRepository { get; }
 
         IEmployeeShiftRepository EmployeeShiftMappingRepository { get; }
         IWorkFlowRepositoryTest workFlowRepositoryTest { get; }

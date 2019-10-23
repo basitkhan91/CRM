@@ -25,6 +25,7 @@ namespace DAL.Models
         [ForeignKey("MasterCompanyId")]
         public Int32? MasterCompanyId { get; set; }
         public bool? IsActive { get; set; }
+        public bool? IsDelete { get; set; }
 
 
 

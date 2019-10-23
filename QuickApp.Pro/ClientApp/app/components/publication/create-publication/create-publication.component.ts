@@ -23,6 +23,7 @@ import { AtaSubChapter1Service } from '../../../services/atasubchapter1.service'
 import { EmployeeService } from '../../../services/employee.service';
 import * as moment from 'moment';
 import { getValueFromArrayOfObjectById } from '../../../generic/autocomplete';
+import { CommonService } from '../../../services/common.service';
 
 @Component({
   selector: 'app-create-publication',
@@ -41,24 +42,26 @@ export class CreatePublicationComponent implements OnInit {
   pubType: string;
   uploadedFiles: any[] = [];
   private isSaving: boolean;
-  isEditMode: boolean = false;
+  isEditMode: boolean = false;  
   selectedFile: File = null;
   publicationId: number;
+  data: any;
 
   publicationGeneralInformation = {
     entryDate: new Date(),
     publicationId: '',
     description: '',
-    publicationTypeId: '',
+    publicationTypeId: null,
     asd: '',
-    sequence: '',
+    sequence: null,
     publishby: '',
     location: '',
     revisionDate: new Date(),
+    revisionNum: null,
     expirationDate: new Date(),
     nextReviewDate: new Date(),
     employeeId: null,
-    verifiedBy: '',
+    verifiedBy: null,
     verifiedDate: new Date(),
     masterCompanyId: 1,
   }
@@ -77,7 +80,7 @@ export class CreatePublicationComponent implements OnInit {
   selectedPartNumbers = [];
   pnMappingList = [];
   publicationRecordId: any;
-  employeeList = [];
+  employeeList:any = [];
   ataList = [];
   headersforPNMapping = [
     { field: 'partNumber', header: 'PN ID/Code' },
@@ -120,9 +123,9 @@ export class CreatePublicationComponent implements OnInit {
 
   atacols = [
     { field: 'ataChapter', header: 'ATA Chapter' },
-    { field: 'ataChapterCode', header: 'ATA Chapter Code' },
+    //{ field: 'ataChapterCode', header: 'ATA Chapter Code' },
     { field: 'ataSubChapter', header: 'ATA SubChapter' },
-    { field: 'ataSubChapterCode', header: 'ATA SubChapter Code' }
+    //{ field: 'ataSubChapterCode', header: 'ATA SubChapter Code' }
   ];
   status = [
     { label: 'Select Status ', value: 'Select Status' },
@@ -147,7 +150,8 @@ export class CreatePublicationComponent implements OnInit {
     private Dashnumservice: DashNumberService,
     private employeeService: EmployeeService,
     private route: Router,
-    private _actRoute: ActivatedRoute
+    private _actRoute: ActivatedRoute,
+    private commonService: CommonService,
   ) { }
   aircraftInformationCols: any[] = [
     { field: 'aircraft', header: 'Aircraft' },
@@ -163,6 +167,10 @@ export class CreatePublicationComponent implements OnInit {
   ngOnInit() {
     // this.itemMasterId = this._actRoute.snapshot.params['id'];
     this.publicationRecordId = this._actRoute.snapshot.params['id'];
+    this.sourcePublication.sequence = 1;
+    if(!this.isEditMode) {
+      this.sourcePublication.revisionNum = 1;
+    }
     this.getAllEmployeeList();
     this.getPublicationTypes();
 
@@ -285,16 +293,21 @@ export class CreatePublicationComponent implements OnInit {
 
 
   async getAllEmployeeList() {
-    await this.employeeService.getEmployeeList().subscribe(res => {
-      const responseData = res[0];
-      this.employeeList = responseData.map(x => {
-        return {
-          label: x.firstName,
-          value: x.employeeId
-        };
-      });
+    this.commonService.smartDropDownList('Employee', 'employeeId', 'firstName').subscribe(res => {
+			console.log(res);
+      this.employeeList = res;
       this.employeeList = [{ label: 'Select Employee', value: null }, ...this.employeeList]
-    });
+		})
+    // await this.employeeService.getEmployeeList().subscribe(res => {
+    //   const responseData = res[0];
+    //   this.employeeList = responseData.map(x => {
+    //     return {
+    //       label: x.firstName,
+    //       value: x.employeeId
+    //     };
+    //   });
+    //   this.employeeList = [{ label: 'Select Employee', value: null }, ...this.employeeList]
+    // });
   }
   private saveSuccessHelper(role?: any) {
     this.isSaving = false;
@@ -380,9 +393,10 @@ export class CreatePublicationComponent implements OnInit {
   }
 
   saveGeneralInfo() {    
-    const data = this.sourcePublication;
+    this.data = this.sourcePublication;
+    this.data.employeeId = this.data.employeeId ? this.data.employeeId : 0;
     this.publicationType = getValueFromArrayOfObjectById('label', 'value', this.sourcePublication.publicationTypeId.toString(), this.publicationTypes);
-    console.log(this.publicationType);
+    
     // entryDate: new Date(),
     // PublicationId: '',
     // description: '',
@@ -400,25 +414,29 @@ export class CreatePublicationComponent implements OnInit {
     // const files: Array<File> = this.uploadedFiles;
 
 
-    this.formData.append('entryDate', moment(data.entryDate).format('DD/MM/YYYY'));
-    this.formData.append('publicationId', data.publicationId);
-    this.formData.append('description', data.description);
-    this.formData.append('publicationTypeId', data.publicationTypeId);
-    this.formData.append('asd', data.asd);
-    this.formData.append('sequence', data.sequence);
-    this.formData.append('publishby', data.publishby);
-    this.formData.append('location', data.location);
-    this.formData.append('revisionDate', moment(data.revisionDate).format('DD/MM/YYYY'));
-    this.formData.append('expirationDate', moment(data.expirationDate).format('DD/MM/YYYY'));
-    this.formData.append('nextReviewDate', moment(data.nextReviewDate).format('DD/MM/YYYY'));
-    this.formData.append('employeeId', data.employeeId);
-    this.formData.append('verifiedBy', data.verifiedBy);
-    this.formData.append('verifiedDate', moment(data.verifiedDate).format('DD/MM/YYYY'));
-    this.formData.append('masterCompanyId', data.masterCompanyId);
+    this.formData.append('entryDate', moment(this.data.entryDate).format('DD/MM/YYYY'));
+    this.formData.append('publicationId', this.data.publicationId);
+    this.formData.append('description', this.data.description);
+    this.formData.append('publicationTypeId', this.data.publicationTypeId);
+    this.formData.append('asd', this.data.asd);
+    this.formData.append('sequence', this.data.sequence);
+    this.formData.append('publishby', this.data.publishby);
+    this.formData.append('location', this.data.location);
+    this.formData.append('revisionDate', moment(this.data.revisionDate).format('DD/MM/YYYY'));
+    //this.formData.append('revisionNum', this.data.revisionNum);
+    this.formData.append('expirationDate', moment(this.data.expirationDate).format('DD/MM/YYYY'));
+    this.formData.append('nextReviewDate', moment(this.data.nextReviewDate).format('DD/MM/YYYY'));
+    this.formData.append('employeeId', this.data.employeeId);
+    this.formData.append('verifiedBy', this.data.verifiedBy);
+    this.formData.append('verifiedDate', moment(this.data.verifiedDate).format('DD/MM/YYYY'));
+    this.formData.append('masterCompanyId', this.data.masterCompanyId);
     this.formData.append('CreatedBy', this.userName);
     this.formData.append('UpdatedBy', this.userName);
     this.formData.append('IsActive', 'true');
     this.formData.append('IsDeleted', 'false');
+    if(!this.isEditMode) {
+      this.formData.append('revisionNum', this.data.revisionNum);
+    }
 
 
     if (this.sourcePublication.PublicationId != '' && this.publicationRecordId == null) {
@@ -452,11 +470,17 @@ export class CreatePublicationComponent implements OnInit {
       this.changeOfTab('PnMap');
     }
 
-    if (this.isEditMode) {
-      console.log(data)
-      this.formData.append('publicationRecordId', this.publicationRecordId);
+    //if (this.isEditMode) {
+        // console.log(this.sourcePublication);
+        // if(!this.sourcePublication.revisionNum) {
+        //   this.updatePublicationGeneralInfo();
+        // }
+    //}
+  }
 
-      this.publicationService
+  updatePublicationGeneralInfo() {
+    this.formData.append('publicationRecordId', this.publicationRecordId);
+    this.publicationService
         .updateAction(this.formData)
         .subscribe(res => {
           // const { publicationRecordId } = res;
@@ -469,14 +493,23 @@ export class CreatePublicationComponent implements OnInit {
             role => this.saveSuccessHelper(role),
             error => this.saveFailedHelper(error);
         });
-    }
-
-
   }
-  private loadCustomerClassifiData() { }
-  private onDataLoadClassifiSuccessful(
-    getCustomerClassificationList: CustomerClassification[]
-  ) { }
+
+  changeRevisionNum(value) {
+    if(value === 'Yes') {
+      this.data.revisionNum = this.data.revisionNum + 1;
+      this.formData.append('revisionNum', this.data.revisionNum);
+      this.updatePublicationGeneralInfo();
+    }
+    if(value === 'No') {
+      this.formData.append('revisionNum', this.data.revisionNum);
+      this.updatePublicationGeneralInfo();
+    }
+  }
+  // private loadCustomerClassifiData() { }
+  // private onDataLoadClassifiSuccessful(
+  //   getCustomerClassificationList: CustomerClassification[]
+  // ) { }
 
   // get PartNumbers
   async getPartNumberList() {
@@ -626,7 +659,7 @@ export class CreatePublicationComponent implements OnInit {
             aircraft: x.aircraftType,
             model: x.aircraftModel,
             dashNumber: x.dashNumber,
-            memo: x.memo
+            //memo: x.memo
           };
         });
       });
@@ -751,10 +784,10 @@ export class CreatePublicationComponent implements OnInit {
         const responseData = res;
         this.ataList = responseData.map(x => {
           return {
-            ataChapter: x.ataChapterName,
-            ataSubChapter: x.ataSubChapterDescription,
-            ataChapterCode: x.ataChapterCode,
-            ataSubChapterCode: x.ataSubChapterCode,
+            ataChapter: `${x.ataChapterCode} - ${x.ataChapterName}`,
+            ataSubChapter: `${x.ataSubChapterCode} - ${x.ataSubChapterDescription}`,
+            //ataChapterCode: x.ataChapterCode,
+            //ataSubChapterCode: x.ataSubChapterCode,
             //ataSubChapterId: x.ataSubChapterId,
             //ataChapterId: x.ataChapterId
           };
@@ -865,14 +898,12 @@ export class CreatePublicationComponent implements OnInit {
         this.publicationRecordId
       )
       .subscribe(res => {
-
         this.ataList = res.map(x => {
           return {
-            ataChapter: x.ataChapterName,
-            ataSubChapter: x.ataSubChapterDescription,
-            ataChapterCode: x.ataChapterCode,
-            ataSubChapterId: x.ataSubChapterId,
-            ataChapterId: x.ataChapterId
+            ataChapter: `${x.ataChapterCode} - ${x.ataChapterName}`,
+            ataSubChapter: `${x.ataSubChapterCode} - ${x.ataSubChapterDescription}`,            
+            //ataSubChapterId: x.ataSubChapterId,
+            //ataChapterId: x.ataChapterId
           };
         });
       });
@@ -899,6 +930,8 @@ export class CreatePublicationComponent implements OnInit {
                 ItemClassification: x.itemClassification
               };
             });
+            this.getAtaChapterByPublicationId();
+            this.getAircraftInformationByPublicationId();
           });
         this.alertService.showMessage(
           'Success',

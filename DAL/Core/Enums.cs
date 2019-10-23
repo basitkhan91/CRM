@@ -18,6 +18,15 @@ namespace DAL.Core
     public enum DataExtractorType
     {
         None = 1,  
-        Excel,  
+        Excel,
+    }
+    public enum UploadTag
+    {
+        Queued = 1,
+        Invalid,
+        Duplicate,
+        Unique,
+        Success,
+        Failed,
     }
 }
