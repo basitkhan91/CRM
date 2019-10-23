@@ -27,8 +27,6 @@ namespace DAL.Models
         [Required(ErrorMessage = "Please select Employee")]
         public long? EmployeeId { get; set; }
         public int? VerifiedBy { get; set; }
-        public long EmployeeId { get; set; }
-        public int? VerifiedBy { get; set; }
         public int? RevisionNum { get; set; }
         public Nullable<DateTime> VerifiedDate { get; set; }
         [ForeignKey("MasterCompanyId")]
