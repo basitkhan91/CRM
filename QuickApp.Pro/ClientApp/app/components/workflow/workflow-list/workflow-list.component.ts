@@ -615,6 +615,7 @@ export class WorkflowListComponent implements OnInit {
             var materialTotalQty = 0;
             var materialTotalExtendedCost = 0;
             var materialTotalPrice = 0;
+            var materialTotalExtendedPrice = 0;
 
             task.materialList = this.sourceWorkFlow.materialList.filter(x => {
                 if (x.taskId == task.Id) {
@@ -625,6 +626,7 @@ export class WorkflowListComponent implements OnInit {
                     materialTotalQty += x.quantity == undefined || x.quantity == '' ? 0 : x.quantity;
                     materialTotalExtendedCost += x.extendedCost == undefined || x.extendedCost == '' ? 0 : x.extendedCost;
                     materialTotalPrice += x.price == undefined || x.price == '' ? 0 : x.price;
+                    materialTotalExtendedPrice += x.extendedPrice == undefined || x.extendedPrice == '' ? 0 : x.extendedPrice;
                 }
                 return x.taskId == task.Id;
             });
@@ -632,6 +634,7 @@ export class WorkflowListComponent implements OnInit {
             task.materialTotalQty = materialTotalQty;
             task.materialTotalExtendedCost = materialTotalExtendedCost;
             task.materialTotalPrice = materialTotalPrice;
+            task.materialTotalExtendedPrice = materialTotalExtendedPrice;
 
             task.measurements = this.sourceWorkFlow.measurements.filter(x => {
                 this.setMeasurementDropdownText(x);
