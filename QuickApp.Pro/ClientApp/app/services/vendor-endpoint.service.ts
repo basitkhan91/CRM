@@ -133,7 +133,9 @@ export class VendorEndpointService extends EndpointFactory {
 	private readonly _vendorContactsGetByID: string = "/api/Common/vendorcontacts";
 	private readonly getVendor: string = "/api/vendor/pagination";
 	private readonly _saveCreatePOApproval: string = "/api/purchaseorder/createpoapprover";
-	private readonly _updatePOApproval: string = "/api/purchaseorder/updatepoapprover";
+    private readonly _updatePOApproval: string = "/api/purchaseorder/updatepoapprover";
+    private readonly _vendorsForDropDown: string = "/api/Vendor/GetVendorsForDropDown";
+    
 
 	get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
 	get vendorlistsUrl() { return this.configurations.baseUrl + this._vendrUrl; }
@@ -146,7 +148,9 @@ export class VendorEndpointService extends EndpointFactory {
 	get partDetailswithidForsinglePart() { return this.configurations.baseUrl + this._partDetailswithidForsinglePart; }
 	get vendorDomestic() { return this.configurations.baseUrl + this._domesticWIthVendor; }
 	get internationalWIthVendor() { return this.configurations.baseUrl + this._internationalWIthVendor; }
-	get defaultVendor() { return this.configurations.baseUrl + this._defaultwithVendor; }
+    get defaultVendor() { return this.configurations.baseUrl + this._defaultwithVendor; }
+    get vendorsForDropDownURL() { return this.configurations.baseUrl + this._vendorsForDropDown; }
+
 
 	get VendorShipDetails() { return this.configurations.baseUrl + this._vendorShipViaDetails; }
 	get vendorShipAddressUrl() { return this.configurations.baseUrl + this._vendorShipAddressGetUrl; }
@@ -1259,5 +1263,12 @@ export class VendorEndpointService extends EndpointFactory {
 				return <any>response;
 
 			}).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
-	}
+    }
+
+    getVendorsForDropdownEndPoint<T>(): Observable<T> {
+        return this.http.get<T>(this.vendorsForDropDownURL, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getVendorsForDropdownEndPoint());
+            });
+    }
 }
