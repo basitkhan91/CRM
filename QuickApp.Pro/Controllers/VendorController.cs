@@ -379,7 +379,7 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        
+
 
 
 
@@ -784,7 +784,7 @@ namespace QuickApp.Pro.Controllers
                         }
                         _unitOfWork.SaveChanges();
                         poPartSplit.PurchaseOrderPartRecordId = popSplitEnt.PurchaseOrderPartRecordId;
-                    }                   
+                    }
                 }
                 return Ok(poViewModels);
             }
@@ -2964,9 +2964,9 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("createvendorbillingaddress")]
         public IActionResult CreateVendorBillingAddress([FromBody] VendorBillingAddress billingAddress)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                billingAddress.VendorBillingAddressId= _unitOfWork.Vendor.CreateVendorBillingAddress(billingAddress);
+                billingAddress.VendorBillingAddressId = _unitOfWork.Vendor.CreateVendorBillingAddress(billingAddress);
                 return Ok(billingAddress);
             }
             return BadRequest(ModelState);
@@ -2977,7 +2977,7 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
-                 _unitOfWork.Vendor.UpdateVendorBillingAddress(billingAddress);
+                _unitOfWork.Vendor.UpdateVendorBillingAddress(billingAddress);
                 return Ok(billingAddress);
             }
             return BadRequest(ModelState);
@@ -2987,8 +2987,8 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("deletevendorbillingaddress")]
         public IActionResult DeleteVendorBillingAddress(long billingAddressId, string updatedBy)
         {
-                _unitOfWork.Vendor.DeleteVendorBillingAddress(billingAddressId, updatedBy);
-                return Ok();
+            _unitOfWork.Vendor.DeleteVendorBillingAddress(billingAddressId, updatedBy);
+            return Ok();
         }
 
         [HttpGet("vendorbillingaddressstatus")]
@@ -3012,7 +3012,22 @@ namespace QuickApp.Pro.Controllers
             return Ok();
         }
 
+        [HttpGet("GetVendorsForDropDown")]
+        public IActionResult GetVendorsForDropDown()
+        {
 
+            var vendors = _unitOfWork.Vendor.getVendorsForDropdown()
+                .Select(x => new
+                {
+                    VendorId = x.VendorId,
+                    VendorName = x.VendorName
+                }).ToList();
+
+            if (vendors == null || vendors.Count() == 0)
+                return NoContent();
+
+            return Ok(vendors);
+        }
 
         #endregion
 

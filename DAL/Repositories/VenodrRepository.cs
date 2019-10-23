@@ -653,6 +653,11 @@ namespace DAL.Repositories
             return data;
         }
 
-     
+        public IEnumerable<Vendor> getVendorsForDropdown() {
+            return _appContext.Vendor.Where(x => 
+            (x.IsActive != null && x.IsActive == true) && 
+            (x.IsDelete == null || x.IsDelete == false));
+        }
+
     }
 }
