@@ -1,4 +1,5 @@
 ﻿using DAL;
+using DAL.Core;
 using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -31,7 +32,9 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("add")]
         public IActionResult add([FromBody]StageCode item)
         {
-            if (item != null)
+            bool isValid = _unitOfWork.StageCodeRepository.IsValid(item);
+            var existingItems = _unitOfWork.StageCodeRepository.GetAllItems();
+            if (isValid)
             {
                 if (ModelState.IsValid)
                 {
@@ -40,9 +43,19 @@ namespace QuickApp.Pro.Controllers
                     item.UpdatedBy = item.CreatedBy;      //[dbo].[StageCode].[UpdatedBy] not null in schema definition
                     item.IsActive = true;
                     item.MasterCompanyId = 1;
-                    _unitOfWork.Repository<StageCode>().Add(item);
-                    _unitOfWork.SaveChanges();
-                    return Ok(item);
+                    bool isDuplicate = _unitOfWork.StageCodeRepository.IsDuplicate(item, existingItems);
+                    if (!isDuplicate)
+                    {
+                        _unitOfWork.Repository<StageCode>().Add(item);
+                        _unitOfWork.SaveChanges();
+                        item.UploadTag = UploadTag.Success;
+                        return Ok(item);
+                    }
+                    else
+                    {
+                        item.UploadTag = UploadTag.Duplicate;
+                        return BadRequest(item);
+                    }
                 }
                 else
                 {
@@ -52,7 +65,8 @@ namespace QuickApp.Pro.Controllers
             }
             else
             {
-                return BadRequest();
+                item.UploadTag = UploadTag.Invalid;
+                return BadRequest(item);
             }
         }
 
@@ -75,7 +89,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getAll")]
         public IActionResult getAll()
         {
-            IEnumerable<StageCode> items = _unitOfWork.StageCodeRepository.getAllItems();
+            IEnumerable<StageCode> items = _unitOfWork.StageCodeRepository.GetAllItems();
             return Ok(items);
         }
 
@@ -106,14 +120,43 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("update")]
         public IActionResult update([FromBody]StageCode item)
         {
-            if (item != null)
+
+            bool isValid = _unitOfWork.StageCodeRepository.IsValid(item);
+            var existingItems = _unitOfWork.StageCodeRepository.GetAllItems();
+            if (isValid)
             {
                 if (ModelState.IsValid)
                 {
-                    item.UpdatedDate = DateTime.Now;
-                    _unitOfWork.Repository<StageCode>().Update(item);
-                    _unitOfWork.SaveChanges();
-                    return Ok(item);
+                    bool isDuplicate = _unitOfWork.StageCodeRepository.IsDuplicate(item, existingItems);
+                    if (!isDuplicate)
+                    {
+                        try
+                        {
+                            StageCode existingItem = _unitOfWork.Repository<StageCode>().Find(x => x.StageCodeId == item.StageCodeId).FirstOrDefault();
+                            existingItem.UpdatedDate = DateTime.Now;
+                            existingItem.UpdatedBy = item.UpdatedBy;
+                            existingItem.IsActive = item.IsActive;
+                            existingItem.GateCode = item.GateCode;
+                            existingItem.Description = item.Description;
+                            existingItem.Sequence = item.Sequence;
+                            existingItem.Memo = item.Memo;
+                            existingItem.IsDelete = item.IsDelete;
+                            _unitOfWork.Repository<StageCode>().Update(existingItem);
+                            _unitOfWork.SaveChanges();
+                            item.UploadTag = UploadTag.Success;
+                            return Ok(item);
+                        }
+                        catch (Exception ex)
+                        {
+
+                            throw ex;
+                        }
+                    }
+                    else
+                    {
+                        item.UploadTag = UploadTag.Duplicate;
+                        return BadRequest(item);
+                    }
                 }
                 else
                 {
@@ -123,7 +166,8 @@ namespace QuickApp.Pro.Controllers
             }
             else
             {
-                return BadRequest();
+                item.UploadTag = UploadTag.Invalid;
+                return BadRequest(item);
             }
 
         }
