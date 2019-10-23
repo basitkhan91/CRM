@@ -56,7 +56,7 @@ namespace DAL.Models
         public System.DateTime UpdatedDate { get; set; }
         public Nullable<bool> IsActive { get; set; }
         public bool isParent { get; set; }
-        public long ParentId { get; set; }
+        public long ParentId { get; set; } 
 
 		public int MasterCompanyId { get; set; }
 
