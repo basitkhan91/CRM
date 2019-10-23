@@ -46,7 +46,7 @@ export class GLAccountCategoryComponent implements OnInit {
 
     //Step E1: Open row up for editing
     addNewItem(): void {
-        this.currentRow = this.newItem(0);
+        this.currentRow = new GLAccountCategory();
         this.currentModeOfOperation = ModeOfOperation.Add;
     }
 
@@ -62,14 +62,14 @@ export class GLAccountCategoryComponent implements OnInit {
     //Check if asset type exists before add/delete
     checkItemExists(rowData): boolean {
         this.getItemList();
-        let item = this.newItem(rowData);
+        let item = rowData as GLAccountCategory;
         const exists = this.itemList.some(existingItem => existingItem.glcid === item.glcid && existingItem.glAccountCategoryName === item.glAccountCategoryName);
         return exists;
     }
 
     //Open the confirmation to delete
     confirmItemDelete(rowData) {
-        this.currentRow = this.newItem(rowData);
+        this.currentRow = rowData as GLAccountCategory;
         this.currentModeOfOperation = ModeOfOperation.Delete;
     }
 
@@ -91,7 +91,7 @@ export class GLAccountCategoryComponent implements OnInit {
 
     //Close open modal
     dismissModal() {
-        this.currentRow = this.newItem(0);
+        this.currentRow = new GLAccountCategory();
         this.auditHistory = [];
         this.currentModeOfOperation = ModeOfOperation.None;
     }
@@ -102,8 +102,8 @@ export class GLAccountCategoryComponent implements OnInit {
             const responseData = res[0];
             const itemList = [];
             responseData.forEach(function (item) {
-                let newItem = this.newItem(item);
-                itemList.push(newItem);
+                let nItem = item as GLAccountCategory;
+                itemList.push(nItem);
             });
             this.itemList = itemList;
             this.totalRecords = responseData.length;
@@ -112,22 +112,16 @@ export class GLAccountCategoryComponent implements OnInit {
     }
 
     newItem(rowData): GLAccountCategory {
-        let item = new GLAccountCategory();
-        let defaultUserName = "admin";
-        if (rowData) {
-            item.glAccountCategoryId = rowData.glAccountCategoryId || 0;
-            item.glAccountCategoryName = rowData.glAccountCategoryName || (rowData.glAccountCategoryName || "");
-            item.glcid = rowData.glcid || (rowData.glcid || 0);
-            item.updatedBy = this.userName || defaultUserName;
-            item.createdBy = this.userName || defaultUserName;
-            item.isActive = rowData.isActive || false;
-            item.isDelete = rowData.isDelete || false;
-        }
+        let userName = this.userName || "admin";
+        rowData.isActive = rowData.isActive || false;
+        rowData.isDelete = rowData.isDelete || false;
+        let item = new GLAccountCategory(rowData.glAccountCategoryId, rowData.glAccountCategoryName, rowData.glcid, rowData.createdBy, rowData.createdDate, rowData.updatedDate, userName, rowData.isActive, rowData.isDelete);
+        debugger;
         return item;
     }
 
     openItemForEdit(rowData): void {
-        this.currentRow = this.newItem(rowData);
+        this.currentRow = rowData as GLAccountCategory;
         this.currentModeOfOperation = ModeOfOperation.Update;
     }
 
@@ -146,7 +140,7 @@ export class GLAccountCategoryComponent implements OnInit {
     }
 
     saveExistingItem(rowData): void {
-        let item = this.newItem(rowData);
+        let item = rowData as GLAccountCategory;
         var itemExists = this.checkItemExists(item);
         if (itemExists) {
             this.currentModeOfOperation = ModeOfOperation.Update;
@@ -164,7 +158,7 @@ export class GLAccountCategoryComponent implements OnInit {
     //Open the audit history modal.
     showHistory(rowData): void {
         this.currentModeOfOperation = ModeOfOperation.Audit;
-        let item = this.newItem(rowData);
+        let item = rowData as GLAccountCategory;
         this.coreDataService.getItemAuditById(item.glAccountCategoryId).subscribe(audits => {
             if (audits[0].length > 0) {
                 this.auditHistory = audits[0];
@@ -173,13 +167,13 @@ export class GLAccountCategoryComponent implements OnInit {
     }
 
     showItemEdit(rowData): void {
-        this.currentRow = this.newItem(rowData);
+        this.currentRow = rowData as GLAccountCategory;
         this.currentModeOfOperation = ModeOfOperation.Update;
     }
 
     //turn the item active/inActive
     toggleActiveStatus(rowData) {
-        this.currentRow = this.newItem(rowData);
+        this.currentRow = rowData as GLAccountCategory;
         this.saveExistingItem(this.currentRow);
     }
 
@@ -205,7 +199,7 @@ export class GLAccountCategoryComponent implements OnInit {
         ];
         this.currentModeOfOperation = ModeOfOperation.None;
         this.selectedColumns = this.columnHeaders;
-        this.currentRow = this.newItem(0);
+        this.currentRow = new GLAccountCategory();
     }
 
 }
