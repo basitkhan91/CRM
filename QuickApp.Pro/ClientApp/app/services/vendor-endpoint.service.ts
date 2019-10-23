@@ -1103,6 +1103,12 @@ export class VendorEndpointService extends EndpointFactory {
 				return this.handleError(error, () => this.getPurchaseOrderList());
 			});
 	}
+	getPOList(data) {
+        return this.http.post(this.polisturl, JSON.stringify(data), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getPOList(data));
+            });
+    }
 	getcountryListEndpoint<T>(): Observable<T> {
 
 		return this.http.get<T>(this.countryUrl, this.getRequestHeaders())

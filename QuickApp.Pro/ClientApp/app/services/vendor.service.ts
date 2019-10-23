@@ -459,6 +459,11 @@ export class VendorService {
         return Observable.forkJoin(
             this.actionEndpoint.getPurchaseOrderList<any>());
     }
+    getPOList(data) {
+        return Observable.forkJoin(
+            this.actionEndpoint.getPOList(data));
+    }
+
     getCountrylist() {
         return Observable.forkJoin(
             this.actionEndpoint.getcountryListEndpoint<any[]>());
