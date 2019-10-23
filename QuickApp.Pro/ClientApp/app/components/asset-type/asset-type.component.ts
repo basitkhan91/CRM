@@ -19,6 +19,7 @@ import { UploadTag } from "../../models/UploadTag.enum";
     animations: [fadeInOut]
 })
 export class AssetTypeComponent implements OnInit {
+    display = true;
     auditHistory: any[];
     columnHeaders: any[];
     currentModeOfOperation: ModeOfOperation;

@@ -141,14 +141,14 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                 <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'chargeName', audit.chargeName)  ? 'black' : 'red'  }">{{audit.chargeName}}</td>
                                 <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'quantity', audit.quantity)  ? 'black' : 'red'  }">{{audit.quantity}}</td>
                                 <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'description', audit.description)  ? 'black' : 'red'  }">{{audit.description}}</td>
-                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'currencyId', audit.currencyId)  ? 'black' : 'red'  }">{{audit.currencyId}}</td>
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'currencySymbol', audit.currencySymbol)  ? 'black' : 'red'  }">{{audit.currencySymbol}}</td>
                                 <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'cost', audit.cost)  ? 'black' : 'red'  }">{{audit.cost}}</td>
                                 <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'markUpPercentage', audit.markUpPercentage)  ? 'black' : 'red'  }">{{audit.markUpPercentage}}</td>
-                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'functionalCurrencyId', audit.functionalCurrencyId)  ? 'black' : 'red'  }">{{audit.functionalCurrencyId}}</td>
-                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'purchaseOrderId', audit.purchaseOrderId)  ? 'black' : 'red'  }">{{audit.purchaseOrderId}}</td>
-                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'vendorId', audit.vendorId)  ? 'black' : 'red'  }">{{audit.vendorId}}</td>
-                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'integrationPortalId', audit.integrationPortalId)  ? 'black' : 'red'  }">{{audit.integrationPortalId}}</td>
-                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'glAccountId', audit.glAccountId)  ? 'black' : 'red'  }">{{audit.glAccountId}}</td>
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'functionalCurrencySymbol', audit.functionalCurrencySymbol)  ? 'black' : 'red'  }">{{audit.functionalCurrencySymbol}}</td>
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'purchaseOrderNumber', audit.purchaseOrderNumber)  ? 'black' : 'red'  }">{{audit.purchaseOrderNumber}}</td>
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'vendorName', audit.vendorName)  ? 'black' : 'red'  }">{{audit.vendorName}}</td>
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'integrationName', audit.integrationName)  ? 'black' : 'red'  }">{{audit.integrationName}}</td>
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'glAccountName', audit.glAccountName)  ? 'black' : 'red'  }">{{audit.glAccountName}}</td>
                                 <td [ngStyle]="{'color': getColorCodeForHistory(i, 'memo', audit.memo)  ? 'black' : 'red'  }">{{audit.memo}}</td>
                                 <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
                                 <td>{{audit.updatedBy}}</td>

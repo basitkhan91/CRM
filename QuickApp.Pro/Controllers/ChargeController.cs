@@ -155,12 +155,41 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("audits/{id}")]
-        [Produces(typeof(List<ChargeAudit>))]
+        [Produces(typeof(List<ChargeAuditViewModel>))]
         public IActionResult AuditDetails(long id)
         {
-            var audits = _unitOfWork.Repository<ChargeAudit>()
-                .Find(x => x.ChargeId == id)
-                .OrderByDescending(x => x.ChargeAuditId);
+            var audits = (from ca in _context.ChargeAudit
+                                 join cur in _context.Currency on ca.CurrencyId equals cur.CurrencyId
+                                 join fcur in _context.Currency on ca.FunctionalCurrencyId equals fcur.CurrencyId
+                                 join glac in _context.GLAccount on ca.GLAccountId equals glac.GLAccountId
+                                 join ven in _context.Vendor on ca.VendorId equals ven.VendorId into venjoin
+                                 join po in _context.PurchaseOrder on ca.PurchaseOrderId equals po.PurchaseOrderId into purjoin
+                                 join ip in _context.IntegrationPortal on ca.IntegrationPortalId equals ip.IntegrationPortalId into intjoin
+                                 from subvendor in venjoin.DefaultIfEmpty()
+                                 from subPO in purjoin.DefaultIfEmpty()
+                                 from subInt in intjoin.DefaultIfEmpty()
+                                 where ca.ChargeId == id
+                                 select new ChargeAuditViewModel
+                                 {
+                                     ChargeName = ca.ChargeName,
+                                     Quantity = ca.Quantity,
+                                     Description = ca.Description,
+                                     CurrencySymbol = cur.Symbol,
+                                     FunctionalCurrencySymbol = fcur.Symbol,
+                                     Cost = ca.Cost,
+                                     MarkUpPercentage = ca.MarkUpPercentage,
+                                     PurchaseOrderNumber = subPO.PurchaseOrderNumber,
+                                     VendorName = subvendor.VendorName,
+                                     IntegrationName = subInt.Description,
+                                     GLAccountName = glac.AccountName,
+                                     Memo = ca.Memo,
+                                     IsActive = ca.IsActive,
+                                     UpdatedBy = ca.UpdatedBy,
+                                     UpdatedDate = ca.UpdatedDate
+
+
+                                 }).ToList();
+           
             return Ok(audits);
         }
 
