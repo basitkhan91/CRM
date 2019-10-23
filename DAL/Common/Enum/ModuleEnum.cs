@@ -13,6 +13,9 @@
         Site, 
         WareHouse,
         Location,
-        Shelf
+        Shelf,
+        AssetType,
+        AssetIntangibleType,
+        StageCode
     }
 }

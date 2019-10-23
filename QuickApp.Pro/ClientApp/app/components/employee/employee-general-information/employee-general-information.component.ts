@@ -46,49 +46,49 @@ import { CompanyService } from '../../../services/company.service';
 
 
 @Component({
-	selector: 'app-employee-general-information',
-	templateUrl: './employee-general-information.component.html',
-	styleUrls: ['./employee-general-information.component.scss'],
-	animations: [fadeInOut]
+    selector: 'app-employee-general-information',
+    templateUrl: './employee-general-information.component.html',
+    styleUrls: ['./employee-general-information.component.scss'],
+    animations: [fadeInOut]
 })
 
-export class EmployeeGeneralInformationComponent implements OnInit, AfterViewInit {    
+export class EmployeeGeneralInformationComponent implements OnInit, AfterViewInit {
 
-    
-	local: any;
-	activeIndex: number;
-	allLeaves: EmployeeLeaveType[];
-	allCountries: any[];
-	yearly: boolean;
-	hourly: boolean;
-	showsingle: boolean;
-	showMultiple: boolean;
-	shiftValues: any[] = [];
-	allManufacturerInfo: any[];
-	selectedCars1: any;
-	divisionId: any;
-	departmentId: any;
-	businessUnitId: any;
-	companyId: any;
-	allEmployeeExpertiseInfo: EmployeeExpertise[];
+
+    local: any;
+    activeIndex: number;
+    allLeaves: EmployeeLeaveType[];
+    allCountries: any[];
+    yearly: boolean;
+    hourly: boolean;
+    showsingle: boolean;
+    showMultiple: boolean;
+    shiftValues: any[] = [];
+    allManufacturerInfo: any[];
+    selectedCars1: any;
+    divisionId: any;
+    departmentId: any;
+    businessUnitId: any;
+    companyId: any;
+    allEmployeeExpertiseInfo: EmployeeExpertise[];
     allJobTitlesinfo: JobTitle[];
     allJobTypesinfo: JobType[];
-	jobName: string;
-	_divisionlist: any[];
-	_departmentList: any[];
-	leavemultiValues: any[] = [];
-	allLeaveDetails: any[];
+    jobName: string;
+    _divisionlist: any[];
+    _departmentList: any[];
+    leavemultiValues: any[] = [];
+    allLeaveDetails: any[];
     selectedshiftValues: any[];
-    allShiftValues: any[]=[];
+    allShiftValues: any[] = [];
     collectionofItemMaster: any;
-	allleaveInfo: any[] = [];
-	selectedLeaveValues: any[];
+    allleaveInfo: any[] = [];
+    selectedLeaveValues: any[];
     description: any;
-	localleaveCollection: any[] = [];
-	allLeavesinfo: EmployeeLeaveType[];
+    localleaveCollection: any[] = [];
+    allLeavesinfo: EmployeeLeaveType[];
     employeeLeaveTypeId: any;
     allmultiLeaves: any[];
-    allMultipleLeaves: any[]=[];
+    allMultipleLeaves: any[] = [];
     managementStructureData: any[];
     selectedFirstName: any;
     disableSaveFirstName: boolean;
@@ -110,82 +110,88 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     public jobTypeDescription: any;
 
 
-   
+
 
     ngOnInit(): void {
 
 
-		this.employeeService.currentUrl = '/employeesmodule/employeepages/app-employee-general-information';
-		this.employeeService.bredcrumbObj.next(this.employeeService.currentUrl);
-		this.employeeService.ShowPtab = true;
-		this.employeeService.alertObj.next(this.employeeService.ShowPtab); //steps
-		this.activeIndex = 0;
-		this.employeeService.indexObj.next(this.activeIndex);
-		this.loadManagementdata();
-		this.loadData();
-		this.loadJobtitlesData();
-		this.loademployeesexperties();
-		this.multiLeavelist();
-		this.EmployeeTrainingType();
-		this.shift();
-		this.Countries();
+        this.employeeService.currentUrl = '/employeesmodule/employeepages/app-employee-general-information';
+        this.employeeService.bredcrumbObj.next(this.employeeService.currentUrl);
+        this.employeeService.ShowPtab = true;
+        this.employeeService.alertObj.next(this.employeeService.ShowPtab); //steps
+        this.activeIndex = 0;
+        this.employeeService.indexObj.next(this.activeIndex);
+        this.sourceEmployee.employeeId = 'Creating';
+        this.loadManagementdata();
+        this.loadData();
+        this.loadJobtitlesData();
+        this.loademployeesexperties();
+        this.multiLeavelist();
+        this.EmployeeTrainingType();
+        this.shift();
+        this.Countries();
         this.EmployeeLeaveType();
         this.loadjobtypesData();
         this.loadLegalEntityData();
-        
-	}
-	@ViewChild(MatPaginator) paginator: MatPaginator;
-	@ViewChild(MatSort) sort: MatSort;
 
-	displayedColumns = ['employeeId', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
-	dataSource: MatTableDataSource<any>;
-	allEmployeeinfo: any[] = [];
-	allShiftdetails: any;
-	allComapnies: MasterCompany[] = [];
-	private isSaving: boolean;
-	public sourceAction: any = {};
-	public auditHisory: AuditHistory[] = [];
-	private bodyText: string;
-	loadingIndicator: boolean;
-	closeResult: string;
-	selectedColumn: any[];
-	selectedColumns: any[];
-	cols: any[];
-	title: string = "Create";
-	id: number;
-	errorMessage: any;
-	modal: NgbModalRef;
-	employeeName: string;
-	filteredBrands: any[];
-	localCollection: any[] = [];
-	firstCollection: any[];
-	lastNameCollection: any[];
-	empIdCollection: any[];
-	middleNameCollection: any[];
-	/** Actions ctor */
+
+
+
+
+    }
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
+
+    displayedColumns = ['employeeId', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
+    dataSource: MatTableDataSource<any>;
+    allEmployeeinfo: any[] = [];
+    allShiftdetails: any;
+    allComapnies: MasterCompany[] = [];
+    private isSaving: boolean;
+    public sourceAction: any = {};
+    public auditHisory: AuditHistory[] = [];
+    private bodyText: string;
+    loadingIndicator: boolean;
+    closeResult: string;
+    selectedColumn: any[];
+    selectedColumns: any[];
+    cols: any[];
+    title: string = "Create";
+    id: number;
+    errorMessage: any;
+    modal: NgbModalRef;
+    employeeName: string;
+    filteredBrands: any[];
+    localCollection: any[] = [];
+    firstCollection: any[];
+    lastNameCollection: any[];
+    empIdCollection: any[];
+    middleNameCollection: any[];
+    /** Actions ctor */
     allManagemtninfo: any[] = [];
     alllegalEntityInfo: any[] = [];
-	maincompanylist: any[] = [];
-	private isEditMode: boolean = false;
-	private isDeleteMode: boolean = false;
-	departmentList: any[] = [];
-	bulist: any[] = [];
-	divisionlist: any[] = [];
-	Active: string = "Active";
+    maincompanylist: any[] = [];
+    private isEditMode: boolean = false;
+    private isDeleteMode: boolean = false;
+    departmentList: any[] = [];
+    bulist: any[] = [];
+    divisionlist: any[] = [];
+    Active: string = "Active";
     allAircraftManufacturer: any[] = [];
     sourceEmployee: any = {};
-	updateMode: boolean = false;
-	showMsg: boolean = false;
-	showTitle: string;
+    updateMode: boolean = false;
+    showMsg: boolean = false;
+    showTitle: string;
     sourceEmpFirst: {
-        firstName: any;};
+        firstName: any;
+    };
     sourceEmpLast: {
         lastName: any;
     };
     public userInfo: any;
     public userA: any;
     public companylist: any;
-    public supervisorId: any;
+    public supervisorId: any = 0;
 
 
     empCreationForm = new FormGroup({
@@ -197,7 +203,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         JobTypeId: new FormControl('JobTypeId', Validators.minLength(1)),
         companyId: new FormControl('companyId', Validators.minLength(1)),
         startDate: new FormControl('companyId', Validators.minLength(1)),
-       
+
     });
 
 
@@ -205,6 +211,8 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.displayedColumns.push('action');
 
         //new emp form
+
+        // this.empCreationForm.controls['companyId'].patchValue('0');
 
         this.loadCompanyData()
 
@@ -216,25 +224,25 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
 
         //console.log(
-           // this.userInfo[0].name);
+        // this.userInfo[0].name);
 
         this.empCreationForm = fb.group({
-            'firstName': [null, Validators.compose([Validators.required,  Validators.minLength(1), this.checkfirstNameExists('firstName')])],
+            'firstName': [null, Validators.compose([Validators.required, Validators.minLength(1), this.checkfirstNameExists('firstName')])],
             'middleName': [null],
             'lastName': [null, Validators.compose([Validators.required, Validators.minLength(1), this.checklasttNameExists('lastName')])],
-            'jobTitleId': [null, Validators.compose([Validators.required, Validators.minLength(1)])],
-            'employeeExpertiseId': [null, Validators.compose([Validators.required, Validators.minLength(1)])],
-            'JobTypeId': [null, Validators.compose([Validators.required, Validators.minLength(1)])],
-            'companyId': [null, Validators.compose([Validators.required, Validators.minLength(1)])],
-            'startDate': [null, Validators.compose([Validators.required, Validators.minLength(1)])],
-            'BusinessUnitId': [null],
-            'divisionId': [null],
-            'departmentId': [null],
-            
-            
-            
-            
-       
+            'jobTitleId': [0, Validators.compose([Validators.required, Validators.minLength(1)])],
+            'employeeExpertiseId': [0, Validators.compose([Validators.required, Validators.minLength(1)])],
+            'JobTypeId': [0, Validators.compose([Validators.required, Validators.minLength(1)])],
+            'companyId': [0, Validators.compose([Validators.required, Validators.minLength(1)])],
+            'startDate': [0, Validators.compose([Validators.required, Validators.minLength(1)])],
+            'BusinessUnitId': [0],
+            'divisionId': [0],
+            'departmentId': [0],
+
+
+
+
+
         });
 
 
@@ -243,17 +251,17 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         console.log(control.errors);
 
         this.dataSource = new MatTableDataSource();
-   
+
         console.log(this.employeeService.listCollection);
 
-		if (this.employeeService.listCollection != null && this.employeeService.isEditMode == true) {
+        if (this.employeeService.listCollection != null && this.employeeService.isEditMode == true) {
 
-            if (  this.sourceEmployee.employeeId) {
+            if (this.sourceEmployee.employeeId) {
                 this.empId = this.sourceEmployee.employeeId;
             }
 
-           
-             
+
+
             this.sourceEmployee = this.employeeService.listCollection;
 
             console.log("setting jpo1b title*" + this.sourceEmployee.jobTitleId);
@@ -261,46 +269,46 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             console.log("setting jpob title*")
 
             this.empCreationForm.controls['jobTitleId'].setValue(this.sourceEmployee.jobTitleId);
-          
+
 
             this.empCreationForm.controls['employeeExpertiseId'].setValue(this.sourceEmployee.employeeExpertiseId);
             this.empCreationForm.controls['JobTypeId'].setValue(this.sourceEmployee.jobTypeId);
             this.supervisorId = this.sourceEmployee.supervisorId;
-            
 
-            
 
-            
+
+
+
             this.updateMode = true;
-			this.sourceEmployee.startDate = new Date();
-			this.sourceEmployee.dateOfBirth = new Date(this.sourceEmployee.dateOfBirth);
-			if (this.local) {
+            this.sourceEmployee.startDate = new Date();
+            this.sourceEmployee.dateOfBirth = new Date(this.sourceEmployee.dateOfBirth);
+            if (this.local) {
                 this.employeeService.employeeCollection = this.local;
-             
-			}
 
-			if (this.sourceEmployee.inMultipleShifts == true) {
-				this.sourceEmployee.multiShift = "multiShift";
-				this.showsingle = false;
-				this.showMultiple = true;
-			}
-			if (this.sourceEmployee.inMultipleShifts == false) {
-				this.sourceEmployee.singleShift = "singleShift";
-				this.showsingle = true;
-				this.showMultiple = false;
-			}
-			if (this.sourceEmployee.isHourly == true) {
-				this.sourceEmployee.hourlypayType = "Hourly";
-				this.hourly = true
-			}
+            }
+
+            if (this.sourceEmployee.inMultipleShifts == true) {
+                this.sourceEmployee.multiShift = "multiShift";
+                this.showsingle = false;
+                this.showMultiple = true;
+            }
+            if (this.sourceEmployee.inMultipleShifts == false) {
+                this.sourceEmployee.singleShift = "singleShift";
+                this.showsingle = true;
+                this.showMultiple = false;
+            }
+            if (this.sourceEmployee.isHourly == true) {
+                this.sourceEmployee.hourlypayType = "Hourly";
+                this.hourly = true
+            }
 
 
 
-			if (this.sourceEmployee.isHourly == false) {
-				this.sourceEmployee.yearlypayType = "Yearly";
-				this.yearly = true
-			}
-		}
+            if (this.sourceEmployee.isHourly == false) {
+                this.sourceEmployee.yearlypayType = "Yearly";
+                this.yearly = true
+            }
+        }
         this.translationService.closeCmpny = false;
 
         this.Actroute.queryParams
@@ -323,13 +331,13 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
 
                 }
-              
+
             });
 
         //new code
 
 
-     
+
 
     }
 
@@ -383,7 +391,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     }
     checkfirstName(value) {
 
-      
+
 
         const arr = this.allEmployeeinfo;
 
@@ -391,7 +399,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
         return arr.find(e => e.firstName === value);
 
-       
+
 
     }
 
@@ -413,24 +421,24 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
                 var msg = true;
 
                 if (res == undefined) {
-                  
+
                     return null;
                 }
                 else {
-                   
-                    return { notSame: true } 
+
+                    return { notSame: true }
 
                 }
 
-               
-               
 
-            
+
+
+
 
                 //console.log("hellox");
-             
+
             }
-         
+
         }
     }
     checklasttNameExists(field_name): ValidatorFn {
@@ -466,21 +474,27 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     getEmpInfo(res: any) {
         console.log("getEmpInfo");
         console.log(res[0][0]);
-      
+
         this.sourceEmployee = res[0][0];
-   
+
         console.log(res[0][0].firstName);
         this.sourceEmpFirst.firstName = res[0][0].firstName;
         console.log(res[0][0].firstName);
         console.log(this.sourceEmpFirst.firstName);
         this.sourceEmpLast.lastName = res[0][0].lastName;
-        
+
     }
 
 
-  
+
 
     onSubmit2() {
+
+
+
+
+        console.log(this.empCreationForm);
+
         this.supervisorId;
         this.sourceEmployee.firstName = this.empCreationForm.get('firstName').value;
         this.sourceEmployee.lastName = this.empCreationForm.get('lastName').value;
@@ -491,6 +505,13 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
         this.sourceEmployee.startDate = this.empCreationForm.get('startDate').value;
         this.sourceEmployee.SupervisorId = this.supervisorId;
+
+        // if (this.sourceEmployee.firstName !== '' && this.sourceEmployee.lastName && this.sourceEmployee.middleName && this.sourceEmployee.jobTitleId && this.sourceEmployee.employeeExpertiseId && this.sourceEmployee.JobTypeId
+        //     && this.sourceEmployee.startDate
+        // ) {
+
+
+
 
         if (this.empCreationForm.get('departmentId').value != null) {
 
@@ -593,7 +614,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             );
         }
 
-
+        // }
     }
 
     employeeShifttypeAdd(employeeId) {
@@ -663,18 +684,18 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     }
 
     onSubmit() {
-		this.sourceEmployee.firstName;
-	
-		//console.log(this.sourceEmpFirst.firstName);
+        this.sourceEmployee.firstName;
 
-		//console.log(this.selectedFirstName);
+        //console.log(this.sourceEmpFirst.firstName);
 
-		
-		this.employeeService.newAddEmployee(this.sourceEmployee).subscribe(
+        //console.log(this.selectedFirstName);
+
+
+        this.employeeService.newAddEmployee(this.sourceEmployee).subscribe(
             results => this.empAdd(this.sourceEmployee, results),
-            
-          error => this.onDataLoadFailed(error)
-       );
+
+            error => this.onDataLoadFailed(error)
+        );
     }
 
 
@@ -712,8 +733,8 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     }
     empAdd(obj: any, res: any) {
 
-		this.showMsg = true;
-		//this.sourceEmployee.reser
+        this.showMsg = true;
+        //this.sourceEmployee.reser
 
         if (res.employeeId) {
             this.empId = res.employeeId;
@@ -741,223 +762,223 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
         }
 
-       
-	}
+
+    }
 
 
 
-	singleClick(click) {
-		if (click == 'single') {
-			this.showsingle = true;
-			this.showMultiple = false;
-			this.sourceEmployee.inMultipleShifts = true;
+    singleClick(click) {
+        if (click == 'single') {
+            this.showsingle = true;
+            this.showMultiple = false;
+            this.sourceEmployee.inMultipleShifts = true;
 
-		}
-		if (click == 'multiple') {
-			this.showMultiple = true;
-			this.showsingle = false;
-			this.sourceEmployee.inMultipleShifts = false;
-		}
+        }
+        if (click == 'multiple') {
+            this.showMultiple = true;
+            this.showsingle = false;
+            this.sourceEmployee.inMultipleShifts = false;
+        }
 
-	}
-	paytypeclick(click) {
-		if (click == 'hourly') {
-			this.hourly = true;
-			this.yearly = false;
-			this.sourceEmployee.isHourly = true;
-		}
-		if (click == 'yearly') {
-			this.yearly = true;
-			this.hourly = false;
-			this.sourceEmployee.isHourly = false;
-		}
+    }
+    paytypeclick(click) {
+        if (click == 'hourly') {
+            this.hourly = true;
+            this.yearly = false;
+            this.sourceEmployee.isHourly = true;
+        }
+        if (click == 'yearly') {
+            this.yearly = true;
+            this.hourly = false;
+            this.sourceEmployee.isHourly = false;
+        }
 
-	}
-	
+    }
 
-	ngAfterViewInit() {
-		this.dataSource.paginator = this.paginator;
-		this.dataSource.sort = this.sort;
-	}
-	public allWorkFlows: any[] = [];
 
-	private loadData() {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
+    ngAfterViewInit() {
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+    }
+    public allWorkFlows: any[] = [];
 
-		this.employeeService.getEmployeeList().subscribe(
-			results => this.onDataLoadSuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
-		this.selectedColumns = this.cols;
+    private loadData() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
 
-	}
+        this.employeeService.getEmployeeList().subscribe(
+            results => this.onDataLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+        this.selectedColumns = this.cols;
 
-	private loadMasterCompanies() {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
-		this.masterComapnyService.getMasterCompanies().subscribe(
-			results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
+    }
 
-	}
+    private loadMasterCompanies() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.masterComapnyService.getMasterCompanies().subscribe(
+            results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
 
-	private shift() {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
-		this.employeeService.getshift().subscribe(
-			results => this.onshiftData(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
-	}
+    }
 
-	private Countries() {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
-		this.employeeService.getCountries().subscribe(
-			results => this.onCountryloadsuccessfull(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
-	}
+    private shift() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.employeeService.getshift().subscribe(
+            results => this.onshiftData(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
 
-	private EmployeeTrainingType() {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
-		this.employeeService.getEmployeeTrainingType().subscribe(
-			results => this.onDataLoadSuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
-	}
+    private Countries() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.employeeService.getCountries().subscribe(
+            results => this.onCountryloadsuccessfull(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private EmployeeTrainingType() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.employeeService.getEmployeeTrainingType().subscribe(
+            results => this.onDataLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
     private EmployeeLeaveType() {
 
         console.log("leave type()")
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
-		this.employeeService.getEmployeeLeaveType().subscribe(
-			results => this.onLeavedata(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
-	}
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.employeeService.getEmployeeLeaveType().subscribe(
+            results => this.onLeavedata(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
 
 
-	public applyFilter(filterValue: string) {
-		this.dataSource.filter = filterValue;
-	}
+    public applyFilter(filterValue: string) {
+        this.dataSource.filter = filterValue;
+    }
 
-	private refresh() {
-		// Causes the filter to refresh there by updating with recently added data.
-		this.applyFilter(this.dataSource.filter);
-	}
-	private onDataLoadSuccessful(getEmployeeCerficationList: any[]) {
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
+    private refresh() {
+        // Causes the filter to refresh there by updating with recently added data.
+        this.applyFilter(this.dataSource.filter);
+    }
+    private onDataLoadSuccessful(getEmployeeCerficationList: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
         this.dataSource.data = getEmployeeCerficationList;
 
-  
+
         this.allEmployeeinfo = getEmployeeCerficationList;
         console.log("this.allEmployeeinfo")
         console.log(this.allEmployeeinfo);
-	}
+    }
     private onLeavedata(getEmployeeCerficationList: any[]) {
         console.log("on levae data");
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.dataSource.data = getEmployeeCerficationList;
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = getEmployeeCerficationList;
         this.allLeaves = getEmployeeCerficationList;
-     //   this.leavemultiValues = getEmployeeCerficationList;
+        //   this.leavemultiValues = getEmployeeCerficationList;
         console.log(getEmployeeCerficationList);
-	}
-	private onCountryloadsuccessfull(getEmployeeCerficationList: any[]) {
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.dataSource.data = getEmployeeCerficationList;
-		this.allCountries = getEmployeeCerficationList;
-	}
-	private onshiftData(getEmployeeCerficationList: any[]) {
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.dataSource.data = getEmployeeCerficationList;
-		this.allShiftdetails = getEmployeeCerficationList;
-		if (this.allShiftdetails.length > 0) {
-			this.shiftValues = [];
-			for (let i = 0; i < this.allShiftdetails.length; i++)
-				this.shiftValues.push(
-					{ value: this.allShiftdetails[i].shiftId, label: this.allShiftdetails[i].description },
-					
+    }
+    private onCountryloadsuccessfull(getEmployeeCerficationList: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = getEmployeeCerficationList;
+        this.allCountries = getEmployeeCerficationList;
+    }
+    private onshiftData(getEmployeeCerficationList: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = getEmployeeCerficationList;
+        this.allShiftdetails = getEmployeeCerficationList;
+        if (this.allShiftdetails.length > 0) {
+            this.shiftValues = [];
+            for (let i = 0; i < this.allShiftdetails.length; i++)
+                this.shiftValues.push(
+                    { value: this.allShiftdetails[i].shiftId, label: this.allShiftdetails[i].description },
 
-				);
-		}
-		let valAirCraft = [];
-		this.employeeService.getemployeeshiftsList(this.sourceEmployee.employeeId)
-			.subscribe(results => {
-				this.allAircraftManufacturer = results[0];
-				if (results != null) {
-					for (let i = 0; i < this.allAircraftManufacturer.length; i++) {
-						valAirCraft.push(this.allAircraftManufacturer[i].shiftId);
-					}
-					this.selectedshiftValues = valAirCraft; 
-					console.log(this.selectedshiftValues);
-				}
 
-			},
-				error => this.onDataLoadFailed(error)
-			);
-	}
+                );
+        }
+        let valAirCraft = [];
+        this.employeeService.getemployeeshiftsList(this.sourceEmployee.employeeId)
+            .subscribe(results => {
+                this.allAircraftManufacturer = results[0];
+                if (results != null) {
+                    for (let i = 0; i < this.allAircraftManufacturer.length; i++) {
+                        valAirCraft.push(this.allAircraftManufacturer[i].shiftId);
+                    }
+                    this.selectedshiftValues = valAirCraft;
+                    console.log(this.selectedshiftValues);
+                }
 
-	
-	private onmultiLeavedata(getMultiLeaveList: any[]) {
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.dataSource.data = getMultiLeaveList;
-		this.allLeaveDetails = getMultiLeaveList;
-		if (this.allLeaveDetails.length > 0) {
-			for (let i = 0; i < this.allLeaveDetails.length; i++)
-				this.leavemultiValues.push(
-					{ value: this.allLeaveDetails[i].employeeLeaveTypeId, label: this.allLeaveDetails[i].description },
-					
-				);
-		}
-		let valAirCraft = [];
-		this.employeeService.getmultileaves(this.sourceEmployee.employeeId)
-			.subscribe(results => {
-				this.allMultipleLeaves = results;
-				if (results != null) {
-					for (let i = 0; i < this.allMultipleLeaves.length; i++) {
-						valAirCraft.push(this.allMultipleLeaves[i].employeeLeaveTypeId);
-					}
-					this.selectedLeaveValues = valAirCraft;
-					console.log(this.selectedLeaveValues);
-				}
+            },
+                error => this.onDataLoadFailed(error)
+            );
+    }
 
-			},
-				error => this.onDataLoadFailed(error)
-			);
-	}
+
+    private onmultiLeavedata(getMultiLeaveList: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = getMultiLeaveList;
+        this.allLeaveDetails = getMultiLeaveList;
+        if (this.allLeaveDetails.length > 0) {
+            for (let i = 0; i < this.allLeaveDetails.length; i++)
+                this.leavemultiValues.push(
+                    { value: this.allLeaveDetails[i].employeeLeaveTypeId, label: this.allLeaveDetails[i].description },
+
+                );
+        }
+        let valAirCraft = [];
+        this.employeeService.getmultileaves(this.sourceEmployee.employeeId)
+            .subscribe(results => {
+                this.allMultipleLeaves = results;
+                if (results != null) {
+                    for (let i = 0; i < this.allMultipleLeaves.length; i++) {
+                        valAirCraft.push(this.allMultipleLeaves[i].employeeLeaveTypeId);
+                    }
+                    this.selectedLeaveValues = valAirCraft;
+                    console.log(this.selectedLeaveValues);
+                }
+
+            },
+                error => this.onDataLoadFailed(error)
+            );
+    }
 
     private loadJobtitlesData() {
-   
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
+
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
 
         this.jobTitleService.getAllJobTitleList().subscribe(
-			results => this.onJobtitlesDataLoadSuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
-        
+            results => this.onJobtitlesDataLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+
     }
 
     private loadjobtypesData() {
 
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        
-        
+
+
         this.jobTypeService.getAllJobTypeList().subscribe(
             results => this.onJobtypeDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
-        
+
     }
 
     onJobtypeDataLoadSuccessful(jobTypes: JobType[]) {
@@ -969,140 +990,140 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     }
 
 
-	private onJobtitlesDataLoadSuccessful(jobTitles: JobTitle[]) {
-		// alert('success');
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
+    private onJobtitlesDataLoadSuccessful(jobTitles: JobTitle[]) {
+        // alert('success');
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
         this.dataSource.data = jobTitles;
         this.allJobTitlesinfo = jobTitles;
-	}
+    }
 
 
 
-	filterJobs(event) {
+    filterJobs(event) {
 
-		this.localCollection = [];
-		for (let i = 0; i < this.allJobTitlesinfo.length; i++) {
-			let jobName = this.allJobTitlesinfo[i].description;
-			if (jobName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-				this.localCollection.push(jobName);
-			}
-		}
-	}
+        this.localCollection = [];
+        for (let i = 0; i < this.allJobTitlesinfo.length; i++) {
+            let jobName = this.allJobTitlesinfo[i].description;
+            if (jobName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.localCollection.push(jobName);
+            }
+        }
+    }
 
-	filterLeaves(event) {
+    filterLeaves(event) {
 
-		this.localleaveCollection = [];
-		for (let i = 0; i < this.allLeaves.length; i++) {
-			let description = this.allLeaves[i].description;
-			if (description.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-				this.localleaveCollection.push(description);
-			}
-		}
-	}
+        this.localleaveCollection = [];
+        for (let i = 0; i < this.allLeaves.length; i++) {
+            let description = this.allLeaves[i].description;
+            if (description.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.localleaveCollection.push(description);
+            }
+        }
+    }
 
     private loademployeesexperties() {
-      
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
 
-		this.empservice.getWorkFlows().subscribe(
-			results => this.onEmpDataLoadSuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
 
-	}
-	private onEmpDataLoadSuccessful(allWorkFlows: EmployeeExpertise[]) {
-		// alert('success');
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.dataSource.data = allWorkFlows;
-		this.allEmployeeExpertiseInfo = allWorkFlows;
-	}
+        this.empservice.getWorkFlows().subscribe(
+            results => this.onEmpDataLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
 
-
-	filterEmployeeNames(event) {
-
-		this.localCollection = [];
-		for (let i = 0; i < this.allEmployeeExpertiseInfo.length; i++) {
-			let employeeName = this.allEmployeeExpertiseInfo[i].description;
-			if (employeeName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-				this.localCollection.push(employeeName);
-			}
-		}
-	}
+    }
+    private onEmpDataLoadSuccessful(allWorkFlows: EmployeeExpertise[]) {
+        // alert('success');
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = allWorkFlows;
+        this.allEmployeeExpertiseInfo = allWorkFlows;
+    }
 
 
+    filterEmployeeNames(event) {
+
+        this.localCollection = [];
+        for (let i = 0; i < this.allEmployeeExpertiseInfo.length; i++) {
+            let employeeName = this.allEmployeeExpertiseInfo[i].description;
+            if (employeeName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.localCollection.push(employeeName);
+            }
+        }
+    }
 
 
-	private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.auditHisory = auditHistory;
-		this.modal = this.modalService.open(content, { size: 'lg' });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
 
 
-	}
-
-	private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.allComapnies = allComapnies;
-
-	}
-
-	private onDataLoadFailed(error: any) {
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-
-	}
-	handleChange(rowData, e) {
-		if (e.checked == false) {
-			this.sourceAction = rowData;
-			this.sourceAction.updatedBy = this.userName;
-			this.Active = "In Active";
-			this.sourceAction.isActive == false;
-			this.employeeService.updateEmployee(this.sourceAction).subscribe(
-				response => this.saveCompleted(this.sourceAction),
-				error => this.saveFailedHelper(error));
-		}
-		else {
-			this.sourceAction = rowData;
-			this.sourceAction.updatedBy = this.userName;
-			this.Active = "Active";
-			this.sourceAction.isActive == true;
-			this.employeeService.updateEmployee(this.sourceAction).subscribe(
-				response => this.saveCompleted(this.sourceAction),
-				error => this.saveFailedHelper(error));
-		}
-
-	}
-
-	open(content) {
-		this.isEditMode = false;
-		this.isDeleteMode = false;
-		this.isSaving = true;
-		this.loadMasterCompanies();
-		this.sourceAction.isActive = true;
-		this.employeeName = "";
-		this.modal = this.modalService.open(content, { size: 'lg' });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-	}
+    private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.auditHisory = auditHistory;
+        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
 
 
-	openDelete(content, row) {
-		this.isEditMode = false;
-		this.isDeleteMode = true;
-		this.sourceAction = row;
-		this.modal = this.modalService.open(content, { size: 'sm' });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
+    }
+
+    private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allComapnies = allComapnies;
+
+    }
+
+    private onDataLoadFailed(error: any) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+
+    }
+    handleChange(rowData, e) {
+        if (e.checked == false) {
+            this.sourceAction = rowData;
+            this.sourceAction.updatedBy = this.userName;
+            this.Active = "In Active";
+            this.sourceAction.isActive == false;
+            this.employeeService.updateEmployee(this.sourceAction).subscribe(
+                response => this.saveCompleted(this.sourceAction),
+                error => this.saveFailedHelper(error));
+        }
+        else {
+            this.sourceAction = rowData;
+            this.sourceAction.updatedBy = this.userName;
+            this.Active = "Active";
+            this.sourceAction.isActive == true;
+            this.employeeService.updateEmployee(this.sourceAction).subscribe(
+                response => this.saveCompleted(this.sourceAction),
+                error => this.saveFailedHelper(error));
+        }
+
+    }
+
+    open(content) {
+        this.isEditMode = false;
+        this.isDeleteMode = false;
+        this.isSaving = true;
+        this.loadMasterCompanies();
+        this.sourceAction.isActive = true;
+        this.employeeName = "";
+        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+
+    openDelete(content, row) {
+        this.isEditMode = false;
+        this.isDeleteMode = true;
+        this.sourceAction = row;
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
     }
     openjobtype(content) {
         this.isEditMode = false;
@@ -1119,89 +1140,89 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         }, () => { console.log('Backdrop click') })
     }
 
-	openjobtitle(content) {
-		this.isEditMode = false;
-		this.isDeleteMode = false;
-		this.isSaving = true;
-		this.loadMasterCompanies();
-		this.sourceAction = new JobTitle();
-		this.sourceAction.isActive = true;
-		this.jobName = "";
-		this.modal = this.modalService.open(content, { size: 'sm' });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-	}
-
-	openLeaveType(content) {
-		this.isEditMode = false;
-		this.isDeleteMode = false;
-		this.isSaving = true;
-		this.loadMasterCompanies();
-		this.sourceAction = new EmployeeLeaveType();
-		this.sourceAction.isActive = true;
-		this.description = "";
-		this.modal = this.modalService.open(content, { size: 'sm' });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-	}
-
-
-	openemployeeExpertise(content) {
-		this.isEditMode = false;
-		this.isDeleteMode = false;
-		this.isSaving = true;
-		this.loadMasterCompanies();
-		this.sourceAction = new EmployeeExpertise();
-		this.sourceAction.isActive = true;
-		this.employeeName = "";
-		this.modal = this.modalService.open(content, { size: 'sm' });
-		this.modal.result.then(() => {
+    openjobtitle(content) {
+        this.isEditMode = false;
+        this.isDeleteMode = false;
+        this.isSaving = true;
+        this.loadMasterCompanies();
+        this.sourceAction = new JobTitle();
+        this.sourceAction.isActive = true;
+        this.jobName = "";
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
             console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
+        }, () => { console.log('Backdrop click') })
+    }
+
+    openLeaveType(content) {
+        this.isEditMode = false;
+        this.isDeleteMode = false;
+        this.isSaving = true;
+        this.loadMasterCompanies();
+        this.sourceAction = new EmployeeLeaveType();
+        this.sourceAction.isActive = true;
+        this.description = "";
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
 
 
-	}
-
-	
-	openEdit(content, row) {
-		this.isEditMode = true;
-		this.isSaving = true;
-		this.loadMasterCompanies();
-		this.sourceAction = row;
-		this.employeeName = this.sourceAction.employeeName;
-		this.loadMasterCompanies();
-		this.modal = this.modalService.open(content, { size: 'sm' });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-	}
-	
-	openHelpText(content) {
-		this.modal = this.modalService.open(content, { size: 'sm' });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-	}
+    openemployeeExpertise(content) {
+        this.isEditMode = false;
+        this.isDeleteMode = false;
+        this.isSaving = true;
+        this.loadMasterCompanies();
+        this.sourceAction = new EmployeeExpertise();
+        this.sourceAction.isActive = true;
+        this.employeeName = "";
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
 
 
-
-	openHist(content, row) {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
-		this.sourceAction = row;
-		this.employeeService.historyEmployee(this.sourceAction.employeeId).subscribe(
-			results => this.onHistoryLoadSuccessful(results[0], content),
-			error => this.saveFailedHelper(error));
+    }
 
 
-	}
+    openEdit(content, row) {
+        this.isEditMode = true;
+        this.isSaving = true;
+        this.loadMasterCompanies();
+        this.sourceAction = row;
+        this.employeeName = this.sourceAction.employeeName;
+        this.loadMasterCompanies();
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+    openHelpText(content) {
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+
+
+    openHist(content, row) {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.sourceAction = row;
+        this.employeeService.historyEmployee(this.sourceAction.employeeId).subscribe(
+            results => this.onHistoryLoadSuccessful(results[0], content),
+            error => this.saveFailedHelper(error));
+
+
+    }
 
 
     editItemAndCloseModel() {
         if (!(this.sourceEmployee.firstName && this.sourceEmployee.middleName && this.sourceEmployee.employeeIdAsPerPayroll && this.sourceEmployee.stationId
-            && this.sourceEmployee.workPhone && this.sourceEmployee. employeeCertifyingStaff
+            && this.sourceEmployee.workPhone && this.sourceEmployee.employeeCertifyingStaff
         )) {
             this.display = true;
             this.modelValue = true;
@@ -1323,78 +1344,78 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             this.alertService.showMessage("Failure", this.showTitle, MessageSeverity.error);
         }
 
-       // if (this.jobTypeName == null || this.jobTypeName == undefined) {
-          
+        // if (this.jobTypeName == null || this.jobTypeName == undefined) {
 
-       // }
+
+        // }
         //else {
-           
-      //  }
 
-       
+        //  }
+
+
 
 
     }
 
-	editItemJobCloseModel() {
-		this.isSaving = true;
+    editItemJobCloseModel() {
+        this.isSaving = true;
 
         if (this.isEditMode == false) {
 
             console.log(this.jobName);
 
             console.log("new action");
-			this.sourceAction.createdBy = this.userName;
-			this.sourceAction.updatedBy = this.userName;
-			this.sourceAction.description = this.jobName;
+            this.sourceAction.createdBy = this.userName;
+            this.sourceAction.updatedBy = this.userName;
+            this.sourceAction.description = this.jobName;
             this.sourceAction.masterCompanyId = 1;
             console.log(this.sourceAction);
             this.sourceAction.jobTitleId = this.jobName;
             console.log(this.sourceAction);
-			this.jobTitleService.newJobTitle(this.sourceAction).subscribe(data => { this.loadJobtitlesData() })
-		}
-		else {
+            this.jobTitleService.newJobTitle(this.sourceAction).subscribe(data => { this.loadJobtitlesData() })
+        }
+        else {
 
-			this.sourceAction.updatedBy = this.userName;
-			this.sourceAction.description = this.jobName;
-			this.sourceAction.masterCompanyId = 1;
-			this.jobTitleService.updateAction(this.sourceAction).subscribe(
-				response => this.saveCompleted(this.sourceAction),
-				error => this.saveFailedHelper(error));
-		}
-	}
+            this.sourceAction.updatedBy = this.userName;
+            this.sourceAction.description = this.jobName;
+            this.sourceAction.masterCompanyId = 1;
+            this.jobTitleService.updateAction(this.sourceAction).subscribe(
+                response => this.saveCompleted(this.sourceAction),
+                error => this.saveFailedHelper(error));
+        }
+    }
 
     editItemLeaveCloseModel() {
         console.log("hii2");
-		this.isSaving = true;
+        this.isSaving = true;
 
-		if (this.isEditMode == false) {
-			this.sourceAction.createdBy = this.userName;
-			this.sourceAction.updatedBy = this.userName;
-			this.sourceAction.description = this.description;
-			this.sourceAction.masterCompanyId = 1;
-			this.employeeService.newActionforLeave(this.sourceAction).subscribe(data => {
-				this.saveCompleted(this.sourceAction);
+        if (this.isEditMode == false) {
+            this.sourceAction.createdBy = this.userName;
+            this.sourceAction.updatedBy = this.userName;
+            this.sourceAction.description = this.description;
+            this.sourceAction.masterCompanyId = 1;
+            this.employeeService.newActionforLeave(this.sourceAction).subscribe(data => {
+                this.saveCompleted(this.sourceAction);
                 this.sourceEmployee.employeeLeaveTypeId = data.employeeLeaveTypeId;
                 this.EmployeeLeaveType();
                 this.multiLeavelist();
-			})
-		}
-		else {
+            })
+        }
+        else {
 
-			this.sourceAction.updatedBy = this.userName;
-			this.sourceAction.description = this.description;
-			this.sourceAction.masterCompanyId = 1;
-			this.employeeService.newActionforLeave(this.sourceAction).subscribe(data => {
-				this.saveCompleted(this.sourceAction);
+            this.sourceAction.updatedBy = this.userName;
+            this.sourceAction.description = this.description;
+            this.sourceAction.masterCompanyId = 1;
+            this.employeeService.newActionforLeave(this.sourceAction).subscribe(data => {
+                this.saveCompleted(this.sourceAction);
                 this.sourceEmployee.employeeLeaveTypeId = data.employeeLeaveTypeId;
                 this.EmployeeLeaveType();
                 this.multiLeavelist();
-			});
-			
-		}
+            });
 
-		this.modal.close();
+        }
+
+        this.modal.close();
     }
 
     saveEmpExpertise() {
@@ -1413,155 +1434,155 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         })
     }
 
-	editItemExpertiesCloseModel() {
+    editItemExpertiesCloseModel() {
 
-		this.isSaving = true;
+        this.isSaving = true;
 
-		if (this.isEditMode == false) {
-			this.sourceAction.createdBy = this.userName;
-			this.sourceAction.updatedBy = this.userName;
-			this.sourceAction.description = this.employeeName;
-			this.sourceAction.masterCompanyId = 1;
-			this.empservice.newAction(this.sourceAction).subscribe(data => { this.loademployeesexperties() })
+        if (this.isEditMode == false) {
+            this.sourceAction.createdBy = this.userName;
+            this.sourceAction.updatedBy = this.userName;
+            this.sourceAction.description = this.employeeName;
+            this.sourceAction.masterCompanyId = 1;
+            this.empservice.newAction(this.sourceAction).subscribe(data => { this.loademployeesexperties() })
 
-		}
-		else {
+        }
+        else {
 
-			this.sourceAction.updatedBy = this.userName;
-			this.sourceAction.description = this.employeeName;
-			this.sourceAction.masterCompanyId = 1;
-			this.jobTitleService.updateAction(this.sourceAction).subscribe(
-				response => this.saveCompleted(this.sourceAction),
-				error => this.saveFailedHelper(error));
-		}
+            this.sourceAction.updatedBy = this.userName;
+            this.sourceAction.description = this.employeeName;
+            this.sourceAction.masterCompanyId = 1;
+            this.jobTitleService.updateAction(this.sourceAction).subscribe(
+                response => this.saveCompleted(this.sourceAction),
+                error => this.saveFailedHelper(error));
+        }
 
-		//s this.modal.close();
-	}
-	filterfirstName(event) {
+        //s this.modal.close();
+    }
+    filterfirstName(event) {
 
-		this.firstCollection = [];
-		for (let i = 0; i < this.allEmployeeinfo.length; i++) {
-			let firstName = this.allEmployeeinfo[i].firstName;
-			if (firstName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-				this.firstCollection.push(firstName);
-			}
-		}
-	}
+        this.firstCollection = [];
+        for (let i = 0; i < this.allEmployeeinfo.length; i++) {
+            let firstName = this.allEmployeeinfo[i].firstName;
+            if (firstName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.firstCollection.push(firstName);
+            }
+        }
+    }
 
-	filterlastName(event) {
+    filterlastName(event) {
 
-		this.lastNameCollection = [];
-		for (let i = 0; i < this.allEmployeeinfo.length; i++) {
-			let lastName = this.allEmployeeinfo[i].lastName;
-			if (lastName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-				this.lastNameCollection.push(lastName);
-			}
-		}
-	}
-	filtermiddleName(event) {
+        this.lastNameCollection = [];
+        for (let i = 0; i < this.allEmployeeinfo.length; i++) {
+            let lastName = this.allEmployeeinfo[i].lastName;
+            if (lastName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.lastNameCollection.push(lastName);
+            }
+        }
+    }
+    filtermiddleName(event) {
 
-		this.middleNameCollection = [];
-		for (let i = 0; i < this.allEmployeeinfo.length; i++) {
-			let middleName = this.allEmployeeinfo[i].middleName;
-			if (middleName) {
-				if (middleName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-					this.middleNameCollection.push(middleName);
-				}
-			}
-		}
-	}
+        this.middleNameCollection = [];
+        for (let i = 0; i < this.allEmployeeinfo.length; i++) {
+            let middleName = this.allEmployeeinfo[i].middleName;
+            if (middleName) {
+                if (middleName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                    this.middleNameCollection.push(middleName);
+                }
+            }
+        }
+    }
 
-	filterempIdName(event) {
+    filterempIdName(event) {
 
-		this.empIdCollection = [];
-		for (let i = 0; i < this.allEmployeeinfo.length; i++) {
-			let employeeId = this.allEmployeeinfo[i].employeeId;
-			if (employeeId) {
-				if (employeeId.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-					this.empIdCollection.push(employeeId);
-				}
-			}
-		}
-	}
-	deleteItemAndCloseModel() {
-		this.isSaving = true;
-		this.sourceAction.updatedBy = this.userName;
-		this.employeeService.deleteEmployee(this.sourceAction.employeeId).subscribe(
-			response => this.saveCompleted(this.sourceAction),
-			error => this.saveFailedHelper(error));
-		this.modal.close();
-	}
-	filterEmployees(event) {
+        this.empIdCollection = [];
+        for (let i = 0; i < this.allEmployeeinfo.length; i++) {
+            let employeeId = this.allEmployeeinfo[i].employeeId;
+            if (employeeId) {
+                if (employeeId.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                    this.empIdCollection.push(employeeId);
+                }
+            }
+        }
+    }
+    deleteItemAndCloseModel() {
+        this.isSaving = true;
+        this.sourceAction.updatedBy = this.userName;
+        this.employeeService.deleteEmployee(this.sourceAction.employeeId).subscribe(
+            response => this.saveCompleted(this.sourceAction),
+            error => this.saveFailedHelper(error));
+        this.modal.close();
+    }
+    filterEmployees(event) {
 
-		this.localCollection = [];
-		for (let i = 0; i < this.allEmployeeinfo.length; i++) {
-			let employeeName = this.allEmployeeinfo[i].employeeName;
-			if (employeeName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-				this.localCollection.push(employeeName);
-			}
-		}
-	}
+        this.localCollection = [];
+        for (let i = 0; i < this.allEmployeeinfo.length; i++) {
+            let employeeName = this.allEmployeeinfo[i].employeeName;
+            if (employeeName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.localCollection.push(employeeName);
+            }
+        }
+    }
 
-	dismissModel() {
-		this.isDeleteMode = false;
-		this.isEditMode = false;
-		this.modal.close();
-	}
+    dismissModel() {
+        this.isDeleteMode = false;
+        this.isEditMode = false;
+        this.modal.close();
+    }
 
-	private saveCompleted(user?: any) {
-		this.isSaving = false;
+    private saveCompleted(user?: any) {
+        this.isSaving = false;
 
-		if (this.isDeleteMode == true) {
-			this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
-			this.isDeleteMode = false;
-		}
-		else {
-			this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
+        if (this.isDeleteMode == true) {
+            this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
+            this.isDeleteMode = false;
+        }
+        else {
+            this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
 
-		}
+        }
 
-		this.loadData();
-	}
+        this.loadData();
+    }
 
-	private saveSuccessHelper(role?: any) {
-		this.isSaving = false;
-		this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
+    private saveSuccessHelper(role?: any) {
+        this.isSaving = false;
+        this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 
-		this.loadData();
+        this.loadData();
 
-	}
+    }
 
-	get userName(): string {
-		return this.authService.currentUser ? this.authService.currentUser.userName : "";
-	}
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    }
 
-	private saveFailedHelper(error: any) {
-		this.isSaving = false;
-		this.alertService.stopLoadingMessage();
-		this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
-		this.alertService.showStickyMessage(error, null, MessageSeverity.error);
-	}
+    private saveFailedHelper(error: any) {
+        this.isSaving = false;
+        this.alertService.stopLoadingMessage();
+        this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
+        this.alertService.showStickyMessage(error, null, MessageSeverity.error);
+    }
 
-	private getDismissReason(reason: any): string {
-		if (reason === ModalDismissReasons.ESC) {
-			return 'by pressing ESC';
-		} else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-			return 'by clicking on a backdrop';
-		} else {
-			return `with: ${reason}`;
-		}
-	}
+    private getDismissReason(reason: any): string {
+        if (reason === ModalDismissReasons.ESC) {
+            return 'by pressing ESC';
+        } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+            return 'by clicking on a backdrop';
+        } else {
+            return `with: ${reason}`;
+        }
+    }
 
-	private loadManagementdata() {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
+    private loadManagementdata() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
 
-		this.jobTitleService1.getManagemententity().subscribe(
-			results => this.onManagemtntdataLoad(results[0]),
-			error => this.onDataLoadFailed(error)
+        this.jobTitleService1.getManagemententity().subscribe(
+            results => this.onManagemtntdataLoad(results[0]),
+            error => this.onDataLoadFailed(error)
         );
 
-	}
+    }
 
     private onManagemtntdataLoad(getAtaMainList: any[]) {
         // alert('success');
@@ -1621,7 +1642,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
         this.setManagementStrucureData(this.sourceEmployee);
     }
-	
+
 
     getBUList(event) {
 
@@ -1819,28 +1840,28 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
     private multiLeavelist() {
         console.log("multList")
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
 
-		this.employeeService.getEmployeeLeaveType().subscribe(
-			results => this.onmultiLeavedata(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
-	}
-//	nextClick() {
-		//this.employeeService.listCollection = this.local;
-		//this.activeIndex = 1;
-		//this.employeeService.indexObj.next(this.activeIndex);
-	//	this.route.navigateByUrl('/employeesmodule/employeepages/app-employee-certification');
-//
-	//}
+        this.employeeService.getEmployeeLeaveType().subscribe(
+            results => this.onmultiLeavedata(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+    //	nextClick() {
+    //this.employeeService.listCollection = this.local;
+    //this.activeIndex = 1;
+    //this.employeeService.indexObj.next(this.activeIndex);
+    //	this.route.navigateByUrl('/employeesmodule/employeepages/app-employee-certification');
+    //
+    //}
     nextClick() {
 
         console.log("next Click")
 
         console.log(this.local);
 
-    
+
 
         console.log(this.employeeService.listCollection);
         this.employeeService.listCollection = this.local;
@@ -1858,33 +1879,33 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         var stringData = JSON.stringify(data);
 
         console.log(stringData)
-       
-      
+
+
         var encryptedData = btoa(JSON.stringify(data));
 
         console.log(encryptedData);
 
 
-        
+
         this.route.navigate(['/employeesmodule/employeepages/app-employee-certification'], { queryParams: { order: this.empId, 'firstName': this.firstName, 'lastName': this.lastName }, skipLocationChange: true });
-       // this.route.navigate(['/employeesmodule/employeepages/app-employee-certification'], { queryParams: { order: stringData } });
+        // this.route.navigate(['/employeesmodule/employeepages/app-employee-certification'], { queryParams: { order: stringData } });
 
     }
-	public AddLeavedata(imObj) {
-		for (let i = 0; i < this.selectedLeaveValues.length; i++) {
-			imObj.employeeLeaveTypeId = this.selectedLeaveValues[i];
-			this.employeeService.Addmultileaves(imObj).subscribe(data => {
-				this.localCollection = data;
-			})
-		}
-	}
-	public AddShiftsdata(employeeObject) {
-		for (let i = 0; i < this.selectedshiftValues.length; i++) {
-			employeeObject.employeeShiftId = this.selectedshiftValues[i];
-			this.employeeService.AddShifts(employeeObject).subscribe(data => {
-				this.localCollection = data;
-			})
-		}
+    public AddLeavedata(imObj) {
+        for (let i = 0; i < this.selectedLeaveValues.length; i++) {
+            imObj.employeeLeaveTypeId = this.selectedLeaveValues[i];
+            this.employeeService.Addmultileaves(imObj).subscribe(data => {
+                this.localCollection = data;
+            })
+        }
+    }
+    public AddShiftsdata(employeeObject) {
+        for (let i = 0; i < this.selectedshiftValues.length; i++) {
+            employeeObject.employeeShiftId = this.selectedshiftValues[i];
+            this.employeeService.AddShifts(employeeObject).subscribe(data => {
+                this.localCollection = data;
+            })
+        }
     }
 
     setManagementStrucureData(obj) {
@@ -1931,17 +1952,17 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     }
     onKeyUpFirstNames(event) {
         if (event.target.value != "") {
-			let value = event.target.value.toLowerCase();
-			console.log(this.sourceEmployee.firstName);
-			console.log(value);
-			this.sourceEmployee.firstName = value;
-			console.log(this.sourceEmployee.firstName);
-			if (this.selectedFirstName) {
+            let value = event.target.value.toLowerCase();
+            console.log(this.sourceEmployee.firstName);
+            console.log(value);
+            this.sourceEmployee.firstName = value;
+            console.log(this.sourceEmployee.firstName);
+            if (this.selectedFirstName) {
 
-			
+
                 if (value == this.selectedFirstName.toLowerCase()) {
                     this.disableSaveFirstName = true;
-			
+
                 }
                 else {
                     this.disableSaveFirstName = false;
@@ -1950,14 +1971,14 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             }
 
         }
-	}
-	handlePayType(evt) {
-		var target = evt.target.value;
-		
-		this.sourceEmployee.hourlyPay = null;
-	
+    }
+    handlePayType(evt) {
+        var target = evt.target.value;
 
-	}
+        this.sourceEmployee.hourlyPay = null;
+
+
+    }
 
     onSelectFirstName(event) {
         if (this.allEmployeeinfo) {
@@ -2006,8 +2027,8 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
     onKeyUpLastNames(event) {
         if (event.target.value != "") {
-			let value = event.target.value.toLowerCase();
-			this.sourceEmployee.lastName = value;
+            let value = event.target.value.toLowerCase();
+            this.sourceEmployee.lastName = value;
             if (this.disableSaveName) {
                 if (value == this.disableSaveName.toLowerCase()) {
                     this.disableSaveLastName = true;
@@ -2067,8 +2088,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     }
 
 
-    onKeyJob(event)
-    {
+    onKeyJob(event) {
         if (event.target.value != "") {
             let value = event.target.value.toLowerCase();
             if (this.selectedActionName) {
@@ -2083,8 +2103,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         }
     }
 
-    onSelectJob(event)
-    {
+    onSelectJob(event) {
         if (this.allJobTitlesinfo) {
             for (let i = 0; i < this.allJobTitlesinfo.length; i++) {
                 if (event == this.allJobTitlesinfo[i].description) {

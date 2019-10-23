@@ -32,7 +32,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getAllAssetTypes")]
         public IActionResult getAll()
         {
-            var assetTypeData = unitOfWork.assetType.GetAllAsset();
+            var assetTypeData = unitOfWork.AssetTypeRepository.GetAll();
             return Ok(assetTypeData);
         }
 

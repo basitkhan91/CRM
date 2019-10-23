@@ -88,6 +88,34 @@ namespace DAL.Repositories
             return data;
         }
 
+        public IEnumerable<Object> GetAllCusShippingHistory(long id)
+        {
+            var data = (from v in _appContext.CustomerShippingAddress
+                join ad in _appContext.Address on v.AddressId equals ad.AddressId
+                where v.CustomerId == id
+
+                select new
+                {
+                    Address1 = ad.Line1,
+                    Address2 = ad.Line2,
+                    Address3 = ad.Line3,
+                    ad.AddressId,
+                    ad.Country,
+                    ad.PostalCode,
+                    ad.City,
+                    ad.StateOrProvince,
+                    v.SiteName,
+                    v.CustomerShippingAddressId,
+                    v.CreatedDate,
+                    v.UpdatedDate,
+                    v.CustomerId,
+                    v.IsActive,
+                    v.IsDelete,
+                    v.IsPrimary
+                }).ToList();
+            return data;
+        }
+
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

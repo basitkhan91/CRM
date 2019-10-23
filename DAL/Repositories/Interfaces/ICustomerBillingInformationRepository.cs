@@ -9,6 +9,7 @@ namespace DAL.Repositories.Interfaces
     {
         IEnumerable<CustomerBillingAddress> GetAllCustomerBillingAddress();
         IEnumerable<object> GetAllCusBillingDetails(long selectedrow);
+        IEnumerable<object> GetAllCusBillingHistory(long selectedrow);
     }
     
 }
