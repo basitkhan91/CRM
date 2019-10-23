@@ -32,10 +32,10 @@ export class CommonService {
         return this.http.get<any>(`${this.baseUrl}/api/Common/shippingviadetails?shippingViaId=${shipViaId}`, this.authService.getRequestHeaders())
 
     }
-    createAddress(object){
+    createAddress(object) {
         return this.http.post(`${this.baseUrl}/api/Common/createaddress`, JSON.stringify(object), this.authService.getRequestHeaders())
     }
-    smartFileUpload(file) {
+    smartExcelFileUpload(file) {
         return this.http.post(`${this.baseUrl}/api/FileUpload/uploadcustomFile`, file, this.authService.getRequestHeaders())
     }
 
