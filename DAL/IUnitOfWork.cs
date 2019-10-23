@@ -79,7 +79,6 @@ namespace DAL
 
         IActionAttributeRepository ActionAttribute { get; }
 
-        IGatecodeRepository Gatecode { get; }
 
         IIntegration Integration { get; }
         IPriority Priority { get; }
@@ -223,9 +222,10 @@ namespace DAL
 
         IGLAccount gLAccount { get; }
 
-        IAssetIntangibleType assetIntangibleType { get; }
 
-        IAssetType assetType { get; }
+        IAssetTypeRepository AssetTypeRepository { get; }
+        IAssetIntangibleTypeRepository AssetIntangibleTypeRepository { get; }
+        IStageCodeRepository StageCodeRepository { get; }
 
         IEmployeeShiftRepository EmployeeShiftMappingRepository { get; }
         IWorkFlowRepositoryTest workFlowRepositoryTest { get; }

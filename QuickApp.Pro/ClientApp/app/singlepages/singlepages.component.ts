@@ -43,7 +43,25 @@ export class SingleComponent {
 	loadmethod(url) {
 
 		this.currentUrl = url;
-		if (this.currentUrl) {
+        if (this.currentUrl) {
+            let itemLabel = '';
+            switch (this.currentUrl) {
+                case '/singlepages/singlepages/app-asset-type':
+                    itemLabel = 'Asset Type';
+                    break;
+                case '/singlepages/singlepages/app-asset-intangible-type':
+                    itemLabel = 'Asset Intangible Type';
+                    break;
+                case '/singlepages/singlepages/app-stage-code':
+                    itemLabel = 'Stage Code';
+                    break;
+                default:
+            }
+            this.items = [
+                { label: 'Single Screens' },
+                { label: itemLabel }
+            ];
+
 			if (this.currentUrl == '/singlepages/singlepages/app-actions') {
 				this.items = [
 					{ label: 'Single Screens' },
@@ -62,15 +80,6 @@ export class SingleComponent {
 					{ label: 'Vendor Capabilities' }
 				];
             }
-
-
-            else if (this.currentUrl == '/singlepages/singlepages/app-asset-intangible-type-single-screen') {
-                this.items = [
-                    { label: 'Single Screens' },
-                    { label: 'Intangible Type' }
-                ];
-            }
-
 
             else if (this.currentUrl == '/singlepages/singlepages/app-disposal-type') {
                 this.items = [
@@ -104,13 +113,6 @@ export class SingleComponent {
                 this.items = [
                     { label: 'Single Screens' },
                     { label: 'Asset Status ' }
-                ];
-            }
-
-            else if (this.currentUrl == '/singlepages/singlepages/app-asset-type-single-screen') {
-                this.items = [
-                    { label: 'Single Screens' },
-                    { label: 'Asset Type ' }
                 ];
             }
 
@@ -218,14 +220,6 @@ export class SingleComponent {
 					{ label: 'Finding' }
 				];
 			}
-
-			else if (this.currentUrl == '/singlepages/singlepages/app-gate-code') {
-				this.items = [
-					{ label: 'Single Screens' },
-					{ label: 'Status Code' }
-				];
-			}
-
 			else if (this.currentUrl == '/singlepages/singlepages/app-integration') {
 				this.items = [
 					{ label: 'Single Screens' },
@@ -441,7 +435,26 @@ export class SingleComponent {
 		}
 
 		
-		if (this.otherurl) {
+        if (this.otherurl) {
+
+            let itemLabel = '';
+            switch (this.currentUrl) {
+                case '/singlepages/singlepages/app-asset-type':
+                    itemLabel = 'Asset Type';
+                    break;
+                case '/singlepages/singlepages/app-asset-intangible-type':
+                    itemLabel = 'Asset Intangible Type';
+                    break;
+                case '/singlepages/singlepages/app-stage-code':
+                    itemLabel = 'Stage Code';
+                    break;
+                default:
+            }
+            this.items = [
+                { label: 'Single Screens' },
+                { label: itemLabel }
+            ];
+
 			if (this.currentUrl == '/singlepages/singlepages/app-actions') {
 				this.items = [
 					{ label: 'Single Screens' },
@@ -761,15 +774,6 @@ export class SingleComponent {
 				];
             }
 
-
-            else if (this.currentUrl == '/singlepages/singlepages/app-asset-intangible-type-single-screen') {
-                this.items = [
-                    { label: 'Single Screens' },
-                    { label: 'Intangible Type' }
-                ];
-            }
-
-
             else if (this.currentUrl == '/singlepages/singlepages/app-disposal-type') {
                 this.items = [
                     { label: 'Single Screens' },
@@ -803,13 +807,6 @@ export class SingleComponent {
                 this.items = [
                     { label: 'Single Screens' },
                     { label: 'Asset Status ' }
-                ];
-            }
-
-            else if (this.currentUrl == '/singlepages/singlepages/app-asset-type-single-screen') {
-                this.items = [
-                    { label: 'Single Screens' },
-                    { label: 'Asset Type ' }
                 ];
             }
 

@@ -7,10 +7,10 @@ import { UnitOfMeasureService } from '../../../../services/unitofmeasure.service
 import { Currency } from '../../../../models/currency.model';
 import { CurrencyService } from '../../../../services/currency.service';
 import { AuthService } from '../../../../services/auth.service';
-import { AssetIntangibleTypeService } from '../../../../services/AssetIntangibleType/AssetIntangibleType.service';
+import { AssetIntangibleTypeService } from '../../../../services/asset-intangible-type/asset-intangible-type.service';
 import { GlAccount } from '../../../../models/GlAccount.model';
 import { GlAccountService } from '../../../../services/glAccount/glAccount.service';
-import { AssetTypeService } from '../../../../services/AssetType/assettype.service';
+import { AssetTypeService } from '../../../../services/asset-type/asset-type.service';
 import { DepriciationMethodService } from '../../../../services/depriciation-method/depriciation.service';
 import { DepriciationMethod } from '../../../../models/depriciation-method.model';
 import { Router } from '@angular/router';
