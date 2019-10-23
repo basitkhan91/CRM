@@ -175,6 +175,20 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("pobyid")]
+        public IActionResult PurchaseOrderById(long purchaseOrderId)
+        {
+            var result = _unitOfWork.purchaseOrder.PurchaseOrderById(purchaseOrderId);
+            return Ok(result);
+        }
+
+        [HttpGet("purchaseorderparts")]
+        public IActionResult GetPurchaseOrderParts(long purchaseOrderId)
+        {
+            var result = _unitOfWork.purchaseOrder.GetPurchaseOrderParts(purchaseOrderId);
+            return Ok(result);
+        }
+
     }
 
 }
