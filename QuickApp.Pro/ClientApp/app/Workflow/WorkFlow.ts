@@ -34,7 +34,7 @@ export interface IWorkFlow {
     totalChargesCost: number;
     totalMaterialCost: number;
     totalMaterialCostValue: number;
-
+   
     qtySummation: number;
     extendedCostSummation: number;
 

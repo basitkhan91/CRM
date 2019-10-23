@@ -90,11 +90,10 @@ namespace QuickApp.Pro.Controllers
 
 
         [HttpPost("polist")]
-        public IActionResult polist(Filters<PurchaseOrderFilters> poFilters)
+        public IActionResult polist([FromBody]Filters<PurchaseOrderFilters> poFilters)
         {
             var allActions = _unitOfWork.purchaseOrder.GetPurchaseOrderlist(poFilters); //.GetAllCustomersData();
             return Ok(allActions);
-
         }
 
         [HttpGet("rolist")]
@@ -762,6 +761,8 @@ namespace QuickApp.Pro.Controllers
                         _context.PurchaseOrderPart.Add(actionobject);
                         _unitOfWork.SaveChanges();
                     }
+
+                    
                     poViewModel.PurchaseOrderPartRecordId = actionobject.PurchaseOrderPartRecordId;
                     foreach (var poPartSplit in poViewModel.POPartSplits)
                     {
@@ -773,6 +774,7 @@ namespace QuickApp.Pro.Controllers
 
                             MapAddress(poPartSplit);
                             MapPOPSplitVMtoEntity(poPartSplit, poViewModel, popSplitEnt);
+                            popSplitEnt.ParentId = poViewModel.PurchaseOrderPartRecordId;
                             _context.PurchaseOrderPart.Add(popSplitEnt);
 
                         }
@@ -781,6 +783,7 @@ namespace QuickApp.Pro.Controllers
                             MapAddress(poPartSplit);
                             popSplitEnt.isParent = false;
                             MapPOPSplitVMtoEntity(poPartSplit, poViewModel, popSplitEnt);
+                            actionobject.ParentId = poViewModel.PurchaseOrderPartRecordId;
                             _context.PurchaseOrderPart.Update(actionobject);
                         }
                         _unitOfWork.SaveChanges();

@@ -242,9 +242,11 @@ namespace QuickApp.Pro.Controllers
             DAL.Models.EmployeeLeaveTypeMapping integrationTypes = new DAL.Models.EmployeeLeaveTypeMapping();
             integrationTypes.EmployeeLeaveTypeId = employeetypeViewModel.LeaveTypeId;
             integrationTypes.MasterCompanyId = 1;
-            // integrationTypes.EmployeeId = empId;
-            //integrationTypes.EmployeeId = aarayEmpid;
-            integrationTypes.EmployeeId = employeetypeViewModel.EmployeeId;
+			// integrationTypes.EmployeeId = empId;
+			//integrationTypes.EmployeeId = aarayEmpid;
+			//  integrationTypes2.EmployeeId = ShiftaarayEmpid;
+			integrationTypes.JobTypeId = employeetypeViewModel.JobTypeId;
+			integrationTypes.EmployeeId = employeetypeViewModel.EmployeeId;
             integrationTypes.CreatedBy = employeetypeViewModel.CreatedBy;
             integrationTypes.UpdatedBy = employeetypeViewModel.UpdatedBy;
             integrationTypes.CreatedDate = DateTime.Now;
@@ -268,8 +270,9 @@ namespace QuickApp.Pro.Controllers
             //integrationTypes.EmployeeId = aarayEmpid;
             integrationTypes.ShiftId = employeetypeViewModel.ShiftTypeId;
             integrationTypes.MasterCompanyId = 1;
-            //  integrationTypes2.EmployeeId = ShiftaarayEmpid;
-            integrationTypes.EmployeeId = employeetypeViewModel.EmployeeId;
+			//  integrationTypes2.EmployeeId = ShiftaarayEmpid;
+			integrationTypes.JobTypeId = employeetypeViewModel.JobTypeId;
+			integrationTypes.EmployeeId = employeetypeViewModel.EmployeeId;
             integrationTypes.CreatedBy = employeetypeViewModel.CreatedBy;
             integrationTypes.UpdatedBy = employeetypeViewModel.UpdatedBy;
             integrationTypes.CreatedDate = DateTime.Now;

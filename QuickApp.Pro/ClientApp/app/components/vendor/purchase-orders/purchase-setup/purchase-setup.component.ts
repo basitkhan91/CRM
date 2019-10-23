@@ -26,7 +26,7 @@ import { NgForm } from '@angular/forms';
 import * as $ from 'jquery';
 import { GlAccountService } from '../../../../services/glAccount/glAccount.service';
 import { GlAccount } from '../../../../models/GlAccount.model';
-import { getValueFromObjectByKey, getObjectByValue, getValueFromArrayOfObjectById, getObjectById } from '../../../../generic/autocomplete';
+import { getValueFromObjectByKey, getObjectByValue, getValueFromArrayOfObjectById, getObjectById, editValueAssignByCondition } from '../../../../generic/autocomplete';
 import { AuthService } from '../../../../services/auth.service';
 import { CommonService } from '../../../../services/common.service';
 import { CustomerShippingModel } from '../../../../models/customer-shipping.model';
@@ -616,7 +616,7 @@ export class PurchaseSetupComponent {
 			shipToUserId: this.sourcePoApproval.shipToUserId ? this.getShipToBillToUserId(this.sourcePoApproval.shipToUserId) : 0,
 			shipToAddressId: this.sourcePoApproval.shipToAddressId ? this.sourcePoApproval.shipToAddressId : 0,
 			//shipToContactId: this.sourcePoApproval.shipToContactId ? this.getShipBillContactId(this.sourcePoApproval.shipToContactId) : 0,
-			shipToContactId: this.sourcePoApproval.shipToContactId ? this.sourcePoApproval.shipToContactId : 0,
+			shipToContactId: this.sourcePoApproval.shipToContactId ? editValueAssignByCondition('contactId', this.sourcePoApproval.shipToContactId) : 0,
 			shipViaId: this.sourcePoApproval.shipViaId,
 			shippingCost: this.sourcePoApproval.shippingCost,
 			handlingCost: this.sourcePoApproval.handlingCost,
@@ -627,7 +627,7 @@ export class PurchaseSetupComponent {
 			billToUserId: this.sourcePoApproval.billToUserId ? this.getShipToBillToUserId(this.sourcePoApproval.billToUserId) : 0,
 			billToAddressId: this.sourcePoApproval.billToAddressId ? this.sourcePoApproval.billToAddressId : 0,
 			//billToContactId: this.sourcePoApproval.billToContactId ? this.getShipBillContactId(this.sourcePoApproval.billToContactId) : 0,
-			billToContactId: this.sourcePoApproval.billToContactId ? this.sourcePoApproval.billToContactId : 0,
+			billToContactId: this.sourcePoApproval.billToContactId ? editValueAssignByCondition('contactId', this.sourcePoApproval.billToContactId) : 0,
 			billToMemo: this.sourcePoApproval.billToMemo ? this.sourcePoApproval.billToMemo : '',
 			createdBy: this.userName,
 			updatedBy: this.userName

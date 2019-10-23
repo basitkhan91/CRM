@@ -108,6 +108,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
     public jobTypeName: any;
     public jobTypeDescription: any;
+    employeeIdTemp = "create"
 
 
 
@@ -121,7 +122,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.employeeService.alertObj.next(this.employeeService.ShowPtab); //steps
         this.activeIndex = 0;
         this.employeeService.indexObj.next(this.activeIndex);
-        this.sourceEmployee.employeeId = 'Creating';
+        // this.sourceEmployee.employeeId = 1;
         this.loadManagementdata();
         this.loadData();
         this.loadJobtitlesData();
@@ -263,6 +264,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
 
             this.sourceEmployee = this.employeeService.listCollection;
+            console.log(this.sourceEmployee)
 
             console.log("setting jpo1b title*" + this.sourceEmployee.jobTitleId);
 
@@ -546,14 +548,19 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
 
 
+        console.log(this.sourceEmployee.ShiftId);
 
-        this.selectedshiftValues.push(this.sourceEmployee.shifId);
+        if (this.sourceEmployee.shifId !== undefined) {
+            this.selectedshiftValues.push(this.sourceEmployee.shifId);
+            this.sourceEmployee.ShiftId = this.selectedshiftValues;
+        }
 
 
 
 
 
-        this.sourceEmployee.ShiftId = this.selectedshiftValues;
+
+
 
 
 
@@ -585,7 +592,9 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
 
         if (this.sourceEmployee.employeeId) {
+            console.log(this.sourceEmployee)
             this.employeeService.updateEmployee(this.sourceEmployee).subscribe(
+
                 results => this.empUpdate(this.sourceEmployee, results),
 
                 error => this.onDataLoadFailed(error)
@@ -703,31 +712,35 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.showMsg = true;
         //this.sourceEmployee.reser
 
-        if (res.employeeId) {
-            this.empId = res.employeeId;
-            console.log(res.employeeId);
-            this.firstName = res.firstName;
-            this.lastName = res.lastName;
+        // if (res.employeeId) {
+        this.empId = res.employeeId;
+        console.log(res.employeeId);
+        this.firstName = res.firstName;
+        this.lastName = res.lastName;
 
-            console.log(this.empId);
-            this.showTitle = 'Employee Updated Sucessfully';
+        console.log(this.empId);
+        this.showTitle = 'Employee Updated Sucessfully';
 
-            ///this.sourceEmployee.reset();
-            this.alertService.showMessage("Success", this.showTitle, MessageSeverity.success);
-            //this.nextClick();
-            this.sourceEmpFirst = null;
-            //window.location.reload();
+        ///this.sourceEmployee.reset();
+        // this.nextClick();
+        this.router.navigate(['/employeesmodule/employeepages/app-employee-certification'])
+        this.alertService.showMessage("Success", this.showTitle, MessageSeverity.success);
+        this.activeIndex = 1;
+        this.employeeService.indexObj.next(this.activeIndex);
+        //this.nextClick();
+        this.sourceEmpFirst = null;
+        //window.location.reload();
 
-            this.loadData();
+        this.loadData();
 
-        }
-        else {
-            this.showTitle = 'Some thing went wrong please try again later';
+        // }
+        // else {
+        //     this.showTitle = 'Some thing went wrong please try again later';
 
-            ///this.sourceEmployee.reset();
-            this.alertService.showMessage("Failure", this.showTitle, MessageSeverity.success);
+        //     ///this.sourceEmployee.reset();
+        //     this.alertService.showMessage("Failure", this.showTitle, MessageSeverity.success);
 
-        }
+        // }
 
 
     }
