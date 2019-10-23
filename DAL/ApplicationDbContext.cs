@@ -207,8 +207,8 @@ namespace DAL
 
         public DbSet<ManagementStructure> ManagementStructure { get; set; }
 
-        public DbSet<GLAccountCategories> GLAccountCategory { get; set; }
-        public DbSet<GLAccountCategoriesAudit> GLAccountCategoryAudit { get; set; }
+        public DbSet<GLAccountCategory> GLAccountCategory { get; set; }
+        public DbSet<GLAccountCategoryAudit> GLAccountCategoryAudit { get; set; }
         public DbSet<GlClassFlowClassification> GlClassFlowClassification { get; set; }
         public DbSet<GlClassFlowClassificationAudit> GlClassFlowClassificationAudit { get; set; }
         public DbSet<UIRoleEntity> UIRoleEntity { get; set; }

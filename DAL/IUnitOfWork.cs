@@ -191,7 +191,6 @@ namespace DAL
         IPurchaseOrder purchaseOrder { get; }
 
         ICustomerAffliationRepository CustomerAffliationRepository { get; }
-        IGLAccountCategoriesRepository GLAccountCategories { get; }
        IDiscountRepository Discount { get; }
         IManufacturerRepository Manufacturer { get; }
         ILaborAndOverheadCostRepository LaborAndOverheadCost { get; }
@@ -226,6 +225,8 @@ namespace DAL
         IAssetTypeRepository AssetTypeRepository { get; }
         IAssetIntangibleTypeRepository AssetIntangibleTypeRepository { get; }
         IStageCodeRepository StageCodeRepository { get; }
+        IGLAccountCategoryRepository GLAccountCategoryRepository { get; }
+
 
         IEmployeeShiftRepository EmployeeShiftMappingRepository { get; }
         IWorkFlowRepositoryTest workFlowRepositoryTest { get; }
