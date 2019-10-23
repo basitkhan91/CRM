@@ -30,6 +30,7 @@ namespace DAL.Models
         public bool IsDelete { get; set; }
 
         public virtual MasterCompany MasterCompany { get; set; }
+        [NotMapped]
         public UploadTag UploadTag { get; set; }
     }
 }

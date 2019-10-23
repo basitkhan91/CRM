@@ -149,7 +149,6 @@ namespace DAL
         IPurchaseOrder _purchaseOrder;
         IStocklineAdjustmentRepository _stocklineAdjustmentRepository;
         //IWarehouseRepository _warehouseRepository;
-        IGLAccountCategoryRepository _GLAccountCategoryRepository;
         ICertificationTypeRepository _ICertificationTypeRepository;
         IStocklineAdjustmentReasonRepository _stocklineAdjustmentReason;
 
@@ -172,6 +171,7 @@ namespace DAL
         IAssetTypeRepository _assetTypeRepository;
         IAssetIntangibleTypeRepository _assetIntangibleTypeRepository;
         IStageCodeRepository _stageCodeRepository;
+        IGLAccountCategoryRepository _GLAccountCategoryRepository;
 
         IGLAccount _gLAccount;
 

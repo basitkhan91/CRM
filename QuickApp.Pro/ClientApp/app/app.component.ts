@@ -597,7 +597,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Currency', routerLink: '/singlepages/singlepages/app-currency' },
                             { label: 'GL Account Type', routerLink: '/singlepages/singlepages/app-gl-account-class' },
                             { label: 'Gl Account Classification', routerLink: '/singlepages/singlepages/app-gl-cash-flow-classification' },
-                            { label: 'GL Account Category', routerLink: '/singlepages/singlepages/app-glaccount-category' },
+                            { label: 'GL Account Category', routerLink: '/singlepages/singlepages/app-gl-account-category' },
                             { label: 'Credit Terms', routerLink: '/singlepages/singlepages/app-credit-terms' },
                             { label: 'Tax Rate', routerLink: '/singlepages/singlepages/app-tax-rate' },
                             { label: 'Tax Type', routerLink: '/singlepages/singlepages/app-tax-type' },
