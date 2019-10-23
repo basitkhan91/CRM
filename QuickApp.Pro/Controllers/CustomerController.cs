@@ -1476,9 +1476,17 @@ namespace QuickApp.Pro.Controllers
 				address.CreatedDate = DateTime.Now;
 				address.UpdatedDate = DateTime.Now;
 				address.IsActive = customerBillingAddressViewModel.IsActive;
-				_unitOfWork.Address.Add(address);
-				_unitOfWork.SaveChanges();
-				long? id = address.AddressId;
+
+                if (customerBillingAddressViewModel.AddressId > 0)
+                {
+                    address.AddressId = customerBillingAddressViewModel.AddressId;
+                    _unitOfWork.Address.Update(address);
+                }
+                else
+                    _unitOfWork.Address.Add(address);
+                _unitOfWork.SaveChanges();
+
+                long? id = address.AddressId;
 				updateCustomerbillingAddress(customerBillingAddressViewModel, id, address);
 				return Ok(customerBillingAddressViewModel);
 			}
@@ -1596,7 +1604,17 @@ namespace QuickApp.Pro.Controllers
 				CustomerShippingAddressObj.UpdatedDate = DateTime.Now;
 				CustomerShippingAddressObj.CreatedBy = customerBillingAddressViewModel.CreatedBy;
 				CustomerShippingAddressObj.UpdatedBy = customerBillingAddressViewModel.UpdatedBy;
-				_unitOfWork.CustomerBillingInformation.Add(CustomerShippingAddressObj);
+
+                if(customerBillingAddressViewModel.CustomerBillingAddressId>0)
+                {
+                    CustomerShippingAddressObj.CustomerBillingAddressId = customerBillingAddressViewModel.CustomerBillingAddressId;
+                    _unitOfWork.CustomerBillingInformation.Update(CustomerShippingAddressObj);
+                }
+                else
+                {
+                    _unitOfWork.CustomerBillingInformation.Add(CustomerShippingAddressObj);
+                }
+				
 				_unitOfWork.SaveChanges();
 				long? venAddressid = CustomerShippingAddressObj.CustomerBillingAddressId;
 				cbs.CustomerBillingAddressId = CustomerShippingAddressObj.CustomerBillingAddressId;

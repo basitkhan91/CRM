@@ -605,7 +605,57 @@ namespace DAL.Repositories
             }
         }
 
-        
+        public void DeletePurchaseOrder(long purchaseOrderId,string updatedBy)
+        {
+            try
+            {
+                PurchaseOrder purchaseOrder = new PurchaseOrder();
+                purchaseOrder.PurchaseOrderId = purchaseOrderId;
+                purchaseOrder.IsDeleted = true;
+                purchaseOrder.UpdatedDate = DateTime.Now;
+                purchaseOrder.UpdatedBy = updatedBy;
+
+                _appContext.PurchaseOrder.Attach(purchaseOrder);
+
+                _context.Entry(purchaseOrder).Property(p => p.IsDeleted).IsModified = true;
+                _context.Entry(purchaseOrder).Property(p => p.UpdatedDate).IsModified = true;
+                _context.Entry(purchaseOrder).Property(p => p.UpdatedBy).IsModified = true;
+
+                _context.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void PurchaseOrderStatus(long purchaseOrderId,bool status, string updatedBy)
+        {
+            try
+            {
+                PurchaseOrder purchaseOrder = new PurchaseOrder();
+                purchaseOrder.PurchaseOrderId = purchaseOrderId;
+                purchaseOrder.IsActive = status;
+                purchaseOrder.UpdatedDate = DateTime.Now;
+                purchaseOrder.UpdatedBy = updatedBy;
+
+                _appContext.PurchaseOrder.Attach(purchaseOrder);
+
+                _context.Entry(purchaseOrder).Property(p => p.IsActive).IsModified = true;
+                _context.Entry(purchaseOrder).Property(p => p.UpdatedDate).IsModified = true;
+                _context.Entry(purchaseOrder).Property(p => p.UpdatedBy).IsModified = true;
+
+                _context.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
     }
