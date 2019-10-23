@@ -80,8 +80,8 @@ namespace DAL.Repositories
         private bool IsValid(AssetType item)
         {
             return
-                string.IsNullOrWhiteSpace(item.AssetTypeName) &&
-                string.IsNullOrWhiteSpace(item.AssetTypeMemo);
+                !string.IsNullOrWhiteSpace(item.AssetTypeName) &&
+                !string.IsNullOrWhiteSpace(item.AssetTypeMemo);
         }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

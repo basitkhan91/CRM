@@ -41,7 +41,19 @@ export class AssetTypeComponent implements OnInit {
     }
     ngOnInit(): void {
         //Get page-rendering payload
-        this.loadData();
+        this.getItemList();
+        this.rowName = "Asset Type";
+        this.header = "Asset Type";
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-asset-type';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
+        //Required details for dropdown options/column header
+        this.columnHeaders = [
+            { field: 'assetTypeName', header: 'Name', index: 1, showByDefault: true },
+            { field: 'assetTypeMemo', header: 'Memo', index: 2, showByDefault: true }
+        ];
+        this.currentModeOfOperation = ModeOfOperation.None;
+        this.selectedColumns = this.columnHeaders;
+        this.selectedRowforEdit = new AssetType();
     }
 
     //for auditing
@@ -204,22 +216,5 @@ export class AssetTypeComponent implements OnInit {
         this.itemDetails = rowData;
     }
 
-    //
-    private loadData() {
-        this.getItemList();
-        //
-        this.rowName = "Asset Type";
-        this.header = "Asset Type";
-        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-asset-type';
-        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
-        //Required details for dropdown options/column header
-        this.columnHeaders = [
-            { field: 'assetTypeName', header: 'Name', index: 1, showByDefault: true },
-            { field: 'assetTypeMemo', header: 'Memo', index: 2, showByDefault: true }
-        ];
-        this.currentModeOfOperation = ModeOfOperation.None;
-        this.selectedColumns = this.columnHeaders;
-        this.selectedRowforEdit = new AssetType();
-    }
 
 }
