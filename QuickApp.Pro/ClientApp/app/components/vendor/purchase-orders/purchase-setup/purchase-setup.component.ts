@@ -10,7 +10,7 @@ import { AlertService, MessageSeverity } from '../../../../services/alert.servic
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MasterComapnyService } from '../../../../services/mastercompany.service';
 import { MasterCompany } from '../../../../models/mastercompany.model';
-import { Router } from '@angular/router'
+import { Router, ActivatedRoute } from '@angular/router'
 import { ModalService } from '../../../../services/Index';
 import { empty } from 'rxjs/observable/empty';
 import { EmployeeService } from '../../../../services/employee.service';
@@ -33,6 +33,7 @@ import { CustomerShippingModel } from '../../../../models/customer-shipping.mode
 import { CompanyService } from '../../../../services/company.service';
 import { CustomerInternationalShipVia } from '../../../../models/customer-internationalshipping.model';
 import { getModuleNameById } from '../../../../generic/enums';
+import { PurchaseOrderService } from '../../../../services/purchase-order.service';
 
 @Component({
 	selector: 'app-purchase-setup',
@@ -257,6 +258,10 @@ export class PurchaseSetupComponent {
 	companySiteList_Billing: any;
 	contactListForCompanyBilling: any;
 	contactListForBillingCompany: any;
+	poId: any;
+	tempPOHeaderAddress: any = {}; 
+	vendorList: any = [];
+	tempShipTOAddressId: any;
 
 
 	// this.siteName ="";
@@ -289,7 +294,9 @@ export class PurchaseSetupComponent {
 		private authService: AuthService,
 		private customerService: CustomerService,
 		private companyService: CompanyService,
-		private commonService: CommonService) {
+		private commonService: CommonService,
+		private _actRoute: ActivatedRoute,
+		private purchaseOrderService: PurchaseOrderService) {
 
 		//this.loadcustomerData();
 		//this.loadData();
@@ -405,6 +412,7 @@ export class PurchaseSetupComponent {
 		this.employeedata();
 		this.ptnumberlistdata();
 		this.loadcustomerData();
+		this.loadvendorData();
 		this.glAccountData();
 		this.getLegalEntity();
 		//this.getAllPartNumbers();
@@ -412,7 +420,6 @@ export class PurchaseSetupComponent {
 		this.sourcePoApproval.buId = 0;
 		this.sourcePoApproval.divisionId = 0;
 		this.sourcePoApproval.departmentId = 0;
-		console.log('x');
 		if (this.sourcePoApproval.purchaseOrderNumber == "" || this.sourcePoApproval.purchaseOrderNumber == undefined) {
 			this.sourcePoApproval.purchaseOrderNumber = 'Creating';
 		}
@@ -449,6 +456,99 @@ export class PurchaseSetupComponent {
 			}
 		}
 
+			this.poId = this._actRoute.snapshot.params['id'];
+			if(this.poId) {
+				this.isEditMode = true;
+				this.getVendorPOById(this.poId);
+			}
+		
+	}
+
+	getVendorPOById(poId) {
+		this.vendorService.getWorkFlows().subscribe(
+			response => {
+				console.log(response);
+				this.vendorList = response[0];
+
+				this.purchaseOrderService.getVendorPOById(poId).subscribe(res => {
+					console.log(res);
+					this.tempPOHeaderAddress = {
+						purchaseOrderNumber: res.purchaseOrderNumber,
+						openDate: new Date(res.openDate),
+						needByDate: new Date(res.needByDate),
+						priorityId: getObjectById('priorityId', res.priorityId, this.allPriorityInfo),
+						deferredReceiver: res.deferredReceiver,
+						vendorId: getObjectById('vendorId', res.vendorId, this.vendorList),
+						vendorCode: getObjectById('vendorId', res.vendorId, this.vendorList),
+						vendorContactId: this.getVendorContactsListByID(res.vendorId),
+						vendorContactPhone: this.getVendorContactsListByID(res.vendorId),
+						creditLimit: res.creditLimit,
+						//creditTerms: getValueFromArrayOfObjectById('name', 'creditTermsId', res.creditTermsId, this.allcreditTermInfo),
+						requisitionerId: getObjectById('value', res.requestedBy, this.allEmployeeList),						
+						approverId: getObjectById('value', res.approverId, this.allEmployeeList),
+						approvedDate: new Date(res.dateApproved),
+						statusId: res.statusId,
+						resale: res.resale,
+						companyId: res.managementStructureId,
+						buId: 0,
+						divisionId: 0,
+						departmentId: 0,
+						poMemo: res.notes,
+						shipToUserTypeId: res.shipToUserType,
+						//shipToUserId: res.shipToUserId,
+						shipToUserId: this.getShipToUserIdEdit(res),
+						shipToAddressId: this.tempShipTOAddressId ? this.tempShipTOAddressId : 0,
+						shipToContactId: res.shipToContactId,
+						shipToMemo: res.shipToMemo,
+						shipViaId: res.shipViaAccountId,
+						//shippingCost: res.shippingCost,
+						//handlingCost: res.handlingCost,
+						//shippingAcctNum: res.shippingAcctNum,
+						//shippingId: res.shippingId,
+						//shippingURL: res.shippingURL,
+						billToUserTypeId: res.billToUserType,
+						//billToUserId: res.billToUserId,
+						billToUserId: this.getBillToUserIdEdit(res.billToUserType, res.billToUserId),
+						billToAddressId: res.billToAddressId,
+						billToContactId: res.billToContactId,
+						billToMemo: res.billToMemo,		
+		
+					};	
+					console.log(this.tempPOHeaderAddress);
+					this.sourcePoApproval = this.tempPOHeaderAddress;
+				})
+			}
+		);
+
+		
+	}
+
+	getShipToUserIdEdit(data) {
+		if(data.shipToUserType === 1) {
+			this.tempShipTOAddressId = data.shipToAddressId;
+			//this.onshipCustomerNameselected(data.shipToUserId);
+			return getObjectById('customerId', data.shipToUserId, this.allCustomers);
+
+			
+		}
+		if(data.shipToUserType === 2) {
+			return getObjectById('vendorId', data.shipToUserId, this.vendorList);
+		}
+		if(data.shipToUserType === 3) {
+			return getObjectById('value', data.shipToUserId, this.legalEntity);
+		}
+	}
+
+	getBillToUserIdEdit(billToUserTypeId, billToUserId) {
+		if(billToUserTypeId === 1) {
+			return getObjectById('customerId', billToUserId, this.allCustomers);
+		}
+		if(billToUserTypeId === 2) {
+			return getObjectById('vendorId', billToUserId, this.vendorList);
+		}
+		if(billToUserTypeId === 3) {
+			return getObjectById('value', billToUserId, this.legalEntity);
+		}
 	}
 
 	getLegalEntity() {
@@ -587,7 +687,7 @@ export class PurchaseSetupComponent {
 
 	get userName(): string {
 		return this.authService.currentUser ? this.authService.currentUser.userName : "";
-	}
+	}	
 
 	savePurchaseOrder() {
 		console.log(this.sourcePoApproval);
@@ -728,12 +828,16 @@ export class PurchaseSetupComponent {
 	}
 
 	private loadvendorData() {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
+		//this.alertService.startLoadingMessage();
+		//this.loadingIndicator = true;
 
 		this.vendorService.getWorkFlows().subscribe(
-			results => this.oncusDataLoadSuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
+			// res => {
+			// 	console.log(res);				
+			// 	this.allVendors = res;
+			// }
+			// results => this.oncusDataLoadSuccessful(results[0]),
+			// error => this.onDataLoadFailed(error)
 		);
 	}
 
@@ -1385,10 +1489,11 @@ export class PurchaseSetupComponent {
 		}
 
 	}
-	onshipCustomerNameselected(event) {
+	onshipCustomerNameselected(customerId) {
+		console.log(event);		
 		for (let i = 0; i < this.customerNames.length; i++) {
-			if (event.name == this.customerNames[i].name) {
-
+			//if (event.name == this.customerNames[i].name) {
+			if (customerId == this.customerNames[i].customerId) {
 				this.customerService.getCustomerShipAddressGet(this.customerNames[i].customerId).subscribe(
 					returnddataforbill => {
 						this.shipToCusData = returnddataforbill[0];
@@ -2828,11 +2933,11 @@ export class PurchaseSetupComponent {
 		}
 
 	}
-	private loadData() {
+	 private loadData() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
 
-		this.vendorService.getWorkFlows().subscribe(
+		 this.vendorService.getWorkFlows().subscribe(
 			results => this.onDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
