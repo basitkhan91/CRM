@@ -8,6 +8,8 @@ namespace DAL.Repositories.Interfaces
     {
         IEnumerable<AssetIntangibleType> GetAllItems();
         IEnumerable<AssetIntangibleType> BulkUpload(IFormFile file);
+        bool IsValid(AssetIntangibleType item);
+        bool IsDuplicate(AssetIntangibleType item, IEnumerable<AssetIntangibleType> existingItems);
 
     }
 }

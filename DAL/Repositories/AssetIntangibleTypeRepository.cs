@@ -20,12 +20,6 @@ namespace DAL.Repositories
             AppSettings = settings.Value;
         }
 
-        public IEnumerable<AssetIntangibleType> GetAllItems()
-        {
-            var data = _appContext.AssetIntangibleType.Where(c => !c.IsDelete).OrderByDescending(c => c.AssetIntangibleTypeId).ToList();
-            return data;
-        }
-
         public IEnumerable<AssetIntangibleType> BulkUpload(IFormFile file)
         {
             IEnumerable<AssetIntangibleType> items;
@@ -50,6 +44,30 @@ namespace DAL.Repositories
             }
 
             return items;
+        }
+
+        public IEnumerable<AssetIntangibleType> GetAllItems()
+        {
+            var data = _appContext.AssetIntangibleType.Where(c => !c.IsDelete).OrderByDescending(c => c.AssetIntangibleTypeId).ToList();
+            return data;
+        }
+
+        public bool IsDuplicate(AssetIntangibleType item, IEnumerable<AssetIntangibleType> existingItems = null)
+        {
+            if (existingItems == null || !existingItems.Any())
+            {
+                existingItems = GetAllItems();
+            }
+            return existingItems.Any(existingItem =>
+                                            existingItem.AssetIntangibleName == item.AssetIntangibleName &&
+                                            existingItem.AssetIntangibleMemo == item.AssetIntangibleMemo);
+        }
+
+        public bool IsValid(AssetIntangibleType item)
+        {
+            return
+                !string.IsNullOrWhiteSpace(item.AssetIntangibleName) &&
+                !string.IsNullOrWhiteSpace(item.AssetIntangibleMemo);
         }
 
         private IEnumerable<AssetIntangibleType> TagItems(IEnumerable<AssetIntangibleType> items)
@@ -77,12 +95,6 @@ namespace DAL.Repositories
             return items;
         }
 
-        private bool IsValid(AssetIntangibleType item)
-        {
-            return
-                string.IsNullOrWhiteSpace(item.AssetIntangibleName) &&
-                string.IsNullOrWhiteSpace(item.AssetIntangibleMemo);
-        }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 

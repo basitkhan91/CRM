@@ -1,4 +1,5 @@
 ﻿using DAL;
+using DAL.Core;
 using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -31,7 +32,9 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("add")]
         public IActionResult add([FromBody]AssetIntangibleType item)
         {
-            if (item != null)
+            bool isValid = _unitOfWork.AssetIntangibleTypeRepository.IsValid(item);
+            var existingItems = _unitOfWork.AssetIntangibleTypeRepository.GetAllItems();
+            if (isValid)
             {
                 if (ModelState.IsValid)
                 {
@@ -40,9 +43,19 @@ namespace QuickApp.Pro.Controllers
                     item.UpdatedBy = item.CreatedBy;      //[dbo].[AssetIntangibleType].[UpdatedBy] not null in schema definition
                     item.IsActive = true;
                     item.MasterCompanyId = 1;
-                    _unitOfWork.Repository<AssetIntangibleType>().Add(item);
-                    _unitOfWork.SaveChanges();
-                    return Ok(item);
+                    bool isDuplicate = _unitOfWork.AssetIntangibleTypeRepository.IsDuplicate(item, existingItems);
+                    if (!isDuplicate)
+                    {
+                        _unitOfWork.Repository<AssetIntangibleType>().Add(item);
+                        _unitOfWork.SaveChanges();
+                        item.UploadTag = UploadTag.Success;
+                        return Ok(item);
+                    }
+                    else
+                    {
+                        item.UploadTag = UploadTag.Duplicate;
+                        return BadRequest(item);
+                    }
                 }
                 else
                 {
@@ -52,7 +65,8 @@ namespace QuickApp.Pro.Controllers
             }
             else
             {
-                return BadRequest();
+                item.UploadTag = UploadTag.Invalid;
+                return BadRequest(item);
             }
         }
 
@@ -111,7 +125,13 @@ namespace QuickApp.Pro.Controllers
                 if (ModelState.IsValid)
                 {
                     item.UpdatedDate = DateTime.Now;
-                    _unitOfWork.Repository<AssetIntangibleType>().Update(item);
+                    AssetIntangibleType existingItem = _unitOfWork.Repository<AssetIntangibleType>().Find(x => x.AssetIntangibleTypeId == item.AssetIntangibleTypeId).FirstOrDefault(x => !(x?.IsDelete ?? false));
+                    existingItem.UpdatedDate = DateTime.Now;
+                    existingItem.UpdatedBy = item.UpdatedBy;
+                    existingItem.IsActive = item.IsActive;
+                    existingItem.AssetIntangibleName = item.AssetIntangibleName;
+                    existingItem.AssetIntangibleMemo = item.AssetIntangibleMemo;
+                    _unitOfWork.Repository<AssetIntangibleType>().Update(existingItem);
                     _unitOfWork.SaveChanges();
                     return Ok(item);
                 }
