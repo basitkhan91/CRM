@@ -13,7 +13,7 @@ namespace QuickApp.Pro.ViewModels
         public long CustomerAircraftMappingId { get; set; }
         public long CustomerId { get; set; }
         public int AircraftTypeId { get; set; }
-        public long AircraftModelId { get; set; }
+        public long? AircraftModelId { get; set; }
         public long? DashNumberId { get; set; }
         public string DashNumber { get; set; }
         public string ModelNumber { get; set; }

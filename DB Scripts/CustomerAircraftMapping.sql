@@ -16,11 +16,11 @@ GO
 ALTER TABLE [dbo].[CustomerAircraftMapping] DROP CONSTRAINT [DF_CustomerAircraftMapping_Inventory]
 GO
 
-/****** Object:  Table [dbo].[CustomerAircraftMapping]    Script Date: 10/20/2019 12:23:49 PM ******/
+/****** Object:  Table [dbo].[CustomerAircraftMapping]    Script Date: 10/22/2019 10:38:01 AM ******/
 DROP TABLE [dbo].[CustomerAircraftMapping]
 GO
 
-/****** Object:  Table [dbo].[CustomerAircraftMapping]    Script Date: 10/20/2019 12:23:49 PM ******/
+/****** Object:  Table [dbo].[CustomerAircraftMapping]    Script Date: 10/22/2019 10:38:01 AM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -31,7 +31,7 @@ CREATE TABLE [dbo].[CustomerAircraftMapping](
 	[CustomerAircraftMappingId] [bigint] IDENTITY(1,1) NOT NULL,
 	[CustomerId] [bigint] NOT NULL,
 	[AircraftTypeId] [int] NOT NULL,
-	[AircraftModelId] [bigint] NOT NULL,
+	[AircraftModelId] [bigint] NULL,
 	[DashNumberId] [bigint] NULL,
 	[DashNumber] [varchar](250) NOT NULL,
 	[AircraftType] [varchar](250) NOT NULL,
