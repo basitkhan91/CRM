@@ -140,5 +140,14 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [HttpGet]
+        [Route("managementstructure")]
+        public IActionResult GetManagementStructure(long manmgStrucId)
+        {
+            var result = _unitOfWork.CommonRepository.GetManagementStructure(manmgStrucId);
+            return Ok(result);
+
+        }
+
     }
 }

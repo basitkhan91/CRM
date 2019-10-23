@@ -48,6 +48,8 @@ namespace DAL.Repositories.Interfaces
         void UpdateAddress(Address address);
         object GetAddressDetails(long addressId);
 
+        Dictionary<string, long> GetManagementStructure(long manmgStrucId);
+
 
     }
 }
