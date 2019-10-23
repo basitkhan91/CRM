@@ -84,6 +84,10 @@
                     <input type="text" class="form-control" pInputText pKeyFilter="money" [disabled]="true" value="{{material.extendedCost}}" [(ngModel)]="material.extendedCost" />
                 </td>
                 <td>
+                    <input type="text" class="form-control" pInputText pKeyFilter="money" value="{{material.price}}" [(ngModel)]="material.price" (input)="calculatePriceSummation();calculateExtendedPrice(material);" />
+                </td>
+                <td>
+                    <input type="text" class="form-control" disabled pInputText pKeyFilter="money" value="{{material.extendedPrice}}" [(ngModel)]="material.extendedPrice" />
                     <input type="text" class="form-control" pInputText pKeyFilter="money" value="{{material.price}}" [(ngModel)]="material.price" (input)="calculatePriceSummation();calculateExtendedPrice();" />
                 </td>
                 <td>
@@ -106,10 +110,10 @@
         </tbody>
         <tfoot *ngIf="workFlow.materialList.length > 0" >
             <tr>
-            <td>
-             Total  
-            </td>
-            <td> &nbsp;</td>
+                <td>
+                    Total
+                </td>
+                <td> &nbsp;</td>
 
                 <td> &nbsp;</td>
                 <td> &nbsp;</td>
@@ -120,8 +124,9 @@
                 <td> &nbsp;</td>
                 <td>{{workFlow.materialExtendedCostSummation}}</td>
                 <td>{{workFlow.totalMaterialCost}}</td>
+                <td>{{workFlow.materialExtendedPriceSummation}}</td>
                 <td> &nbsp;</td>
-                <td> &nbsp;</td>               
+                <td> &nbsp;</td>
                 <td> &nbsp;</td>
             </tr>
         </tfoot>

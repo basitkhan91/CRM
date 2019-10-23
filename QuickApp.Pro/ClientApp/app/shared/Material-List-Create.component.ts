@@ -84,6 +84,7 @@ export class MaterialListCreateComponent implements OnInit {
         this.calculateExtendedCostSummation();
         this.calculateQtySummation();
         this.calculatePriceSummation();
+        this.calculateExtendedPriceSummation();
     }
 
     filterpartItems(event) {
