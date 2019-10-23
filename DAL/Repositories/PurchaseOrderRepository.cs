@@ -88,8 +88,8 @@ namespace DAL.Repositories
 
         public IEnumerable<DAL.Models.PurchaseOrder> GetPurchaseOrderListLite()
         {
-            var purchaseOrderList = _appContext.PurchaseOrder.Where(c=> c.IsActive==true).OrderByDescending(c => c.PurchaseOrderId)
-                .Select(c=>new PurchaseOrder { PurchaseOrderId=c.PurchaseOrderId, PurchaseOrderNumber=c.PurchaseOrderNumber }).ToList();
+            var purchaseOrderList = _appContext.PurchaseOrder.Where(c => c.IsActive == true).OrderByDescending(c => c.PurchaseOrderId)
+                .Select(c => new PurchaseOrder { PurchaseOrderId = c.PurchaseOrderId, PurchaseOrderNumber = c.PurchaseOrderNumber }).ToList();
             return purchaseOrderList;
         }
 
@@ -410,6 +410,40 @@ namespace DAL.Repositories
                 return data;
             }
 
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+        public IEnumerable<object> GetVendorCapabilities(long vendorId)
+        {
+            try
+            {
+                var list = (from vc in _appContext.VendorCapabiliy
+                            join vct in _appContext.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId
+                            join c in _appContext.capabilityType on vct.CapabilityTypeId equals c.CapabilityTypeId
+                            join im in _appContext.ItemMaster on vc.ItemMasterId equals im.ItemMasterId
+                            join mp in _appContext.MasterParts on im.MasterPartId equals mp.MasterPartId
+                            join ma in _appContext.Manufacturer on mp.ManufacturerId equals ma.ManufacturerId
+                            select new
+                            {
+                                VCId = vc.VendorCapabilityId,
+                                Ranking = vc.VendorRanking == null ? "" : vc.VendorRanking,
+                                mp.PartNumber,
+                                PartDescription = mp.Description,
+                                CapabilityType = c.Description,
+                                vc.Cost,
+                                TAT = vc.TAT == null ? 0 : vc.TAT,
+                                ma.Name
+
+                            })
+                            .Distinct()
+                            .ToList();
+                return list;
+            }
             catch (Exception)
             {
 

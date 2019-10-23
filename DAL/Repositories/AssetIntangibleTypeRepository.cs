@@ -1,26 +1,100 @@
-﻿using DAL.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
+﻿using DAL.Common;
+using DAL.Core;
+using DAL.Core.DataExtractors;
+using DAL.Models;
+using DAL.Repositories.Interfaces;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace DAL.Repositories
 {
-  public  class AssetIntangibleTypeRepository : Repository<DAL.Models.AssetIntangibleType>, IAssetIntangibleType
+    public class AssetIntangibleTypeRepository : Repository<AssetIntangibleType>, IAssetIntangibleTypeRepository
     {
-        public AssetIntangibleTypeRepository(ApplicationDbContext context) : base(context)
-        { }
+        private AppSettings AppSettings { get; set; }
 
-        public IEnumerable<DAL.Models.AssetIntangibleType> GetAllIntangibleType()
+        public AssetIntangibleTypeRepository(ApplicationDbContext context, IOptions<AppSettings> settings) : base(context)
         {
-            var data = _appContext.AssetIntangibleType.Include("AssetIntangibleAttributeType").Where(c => c.IsDelete == false || c.IsDelete == null).
-               OrderByDescending(c => c.AssetIntangibleTypeId).ToList();
+            AppSettings = settings.Value;
+        }
+
+        public IEnumerable<AssetIntangibleType> BulkUpload(IFormFile file)
+        {
+            IEnumerable<AssetIntangibleType> items;
+
+            var dataExtractor = new AssetIntangibleTypeDataExtractor(AppSettings);
+            items = dataExtractor.Extract(file, ModuleEnum.AssetIntangibleType);
+
+            items = TagItems(items);
+            foreach (var item in items.Where(item => item.UploadTag == UploadTag.Unique))
+            {
+                try
+                {
+                    _appContext.AssetIntangibleType.Add(item);
+                    _appContext.SaveChanges();
+                    item.UploadTag = UploadTag.Success;
+                }
+                catch (Exception ex)
+                {
+                    item.UploadTag = UploadTag.Failed;
+                    //log exception
+                }
+            }
+
+            return items;
+        }
+
+        public IEnumerable<AssetIntangibleType> GetAllItems()
+        {
+            var data = _appContext.AssetIntangibleType.Where(c => !c.IsDelete).OrderByDescending(c => c.AssetIntangibleTypeId).ToList();
             return data;
         }
 
+        public bool IsDuplicate(AssetIntangibleType item, IEnumerable<AssetIntangibleType> existingItems = null)
+        {
+            if (existingItems == null || !existingItems.Any())
+            {
+                existingItems = GetAllItems();
+            }
+            return existingItems.Any(existingItem =>
+                                            existingItem.AssetIntangibleName == item.AssetIntangibleName &&
+                                            existingItem.AssetIntangibleMemo == item.AssetIntangibleMemo);
+        }
 
-        //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
+        public bool IsValid(AssetIntangibleType item)
+        {
+            return
+                !string.IsNullOrWhiteSpace(item.AssetIntangibleName) &&
+                !string.IsNullOrWhiteSpace(item.AssetIntangibleMemo);
+        }
+
+        private IEnumerable<AssetIntangibleType> TagItems(IEnumerable<AssetIntangibleType> items)
+        {
+            IEnumerable<AssetIntangibleType> existingItems = GetAllItems();
+            bool isItemUnique = false;
+            bool isItemValid = false;
+
+            foreach (var item in items)
+            {
+                isItemValid = IsValid(item);
+                if (isItemValid)
+                {
+                    isItemUnique = existingItems.Any(existingItem =>
+                                                                    existingItem.AssetIntangibleName == item.AssetIntangibleName ||
+                                                                    existingItem.AssetIntangibleMemo == item.AssetIntangibleMemo
+                                                                    );
+                    item.UploadTag = isItemUnique ? UploadTag.Unique : UploadTag.Duplicate;
+                }
+                else
+                {
+                    item.UploadTag = UploadTag.Invalid;
+                }
+            }
+            return items;
+        }
+
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 

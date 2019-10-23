@@ -1,13 +1,15 @@
 ﻿using DAL.Models;
-using System;
+using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DAL.Repositories.Interfaces
 {
-    public interface IAssetIntangibleType : IRepository<AssetIntangibleType>
+    public interface IAssetIntangibleTypeRepository : IRepository<AssetIntangibleType>
     {
-        IEnumerable<AssetIntangibleType> GetAllIntangibleType();
+        IEnumerable<AssetIntangibleType> GetAllItems();
+        IEnumerable<AssetIntangibleType> BulkUpload(IFormFile file);
+        bool IsValid(AssetIntangibleType item);
+        bool IsDuplicate(AssetIntangibleType item, IEnumerable<AssetIntangibleType> existingItems);
 
     }
 }

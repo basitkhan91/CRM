@@ -53,7 +53,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
     allEmployeeinfo: any[] = [];
 
     AuditDetails: SingleScreenAuditDetails[];
-    auditHisory: AuditHistory[];
+    auditHistory: AuditHistory[];
     Active: string = "Active";
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -90,6 +90,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
     aircraftList: any = [];
     ataList = [];
     formData = new FormData()
+    totalPages: number;
 
     headersforPNMapping = [
         { field: 'partNumber', header: 'PN ID/Code' },
@@ -100,7 +101,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         { field: 'aircraft', header: 'Aircraft' },
         { field: 'model', header: 'Model' },
         { field: 'dashNumber', header: 'Dash Numbers' },
-        { field: 'memo', header: 'Memo' }
+        //{ field: 'memo', header: 'Memo' }
     ];
     atacols = [
         { field: 'ataChapter', header: 'AtaChapter' },
@@ -188,6 +189,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
                 this.onDataLoadSuccessful(results[0]['paginationList']);
                 console.log(results[0]['totalRecordsCount']);
                 this.totalRecords = results[0]['totalRecordsCount'];
+                this.totalPages = Math.ceil(this.totalRecords / this.pagesize);
             },
             error => this.onDataLoadFailed(error)
         );
@@ -401,7 +403,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
                         aircraft: x.aircraftType,
                         model: x.aircraftModel,
                         dashNumber: x.dashNumber,
-                        memo: x.memo
+                        //memo: x.memo
                     };
                 });
             });
@@ -413,11 +415,13 @@ export class PublicationComponent implements OnInit, AfterViewInit {
                 const responseData = res;
                 this.ataList = responseData.map(x => {
                     return {
-                        ataChapter: x.ataChapterName,
-                        ataSubChapter: x.ataSubChapterDescription,
-                        ataChapterCode: x.ataChapterCode,
-                        ataSubChapterId: x.ataSubChapterId,
-                        ataChapterId: x.ataChapterId
+                        ataChapter: `${x.ataChapterCode} - ${x.ataChapterName}`,
+                        ataSubChapter: `${x.ataSubChapterCode} - ${x.ataSubChapterDescription}`,
+                        // ataChapter: x.ataChapterName,
+                        // ataSubChapter: x.ataSubChapterDescription,
+                        // ataChapterCode: x.ataChapterCode,
+                        // ataSubChapterId: x.ataSubChapterId,
+                        // ataChapterId: x.ataChapterId
                     };
                 });
             });
@@ -462,40 +466,40 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         }
     }
 
-    openHist(content, row) {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
+    // openHist(content, row) {
+    //     this.alertService.startLoadingMessage();
+    //     this.loadingIndicator = true;
 
 
-        this.sourceAction = row;
+    //     this.sourceAction = row;
 
 
 
-        //this.isSaving = true;
-        // debugger;
-        this.publicationService.historyAcion(this.sourceAction.publicationRecordId).subscribe(
-            results => this.onHistoryLoadSuccessful(results[0], content),
-            error => this.saveFailedHelper(error));
+    //     //this.isSaving = true;
+    //     // debugger;
+    //     this.publicationService.historyAcion(this.sourceAction.publicationRecordId).subscribe(
+    //         results => this.onHistoryLoadSuccessful(results[0], content),
+    //         error => this.saveFailedHelper(error));
 
 
-    }
-    private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
+    // }
+    // private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
 
-        // debugger;
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
+    //     // debugger;
+    //     this.alertService.stopLoadingMessage();
+    //     this.loadingIndicator = false;
 
-        this.auditHisory = auditHistory;
-
-
-        this.modal = this.modalService.open(content, { size: 'lg' });
-
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+    //     this.auditHisory = auditHistory;
 
 
-    }
+    //     this.modal = this.modalService.open(content, { size: 'lg' });
+
+    //     this.modal.result.then(() => {
+    //         console.log('When user closes');
+    //     }, () => { console.log('Backdrop click') })
+
+
+    // }
 
     /*editItemAndCloseModel() {
 
@@ -606,20 +610,20 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         }
     }
 
-    showAuditPopup(template, id): void {
-        this.auditAssetStatus(id);
-        this.modal = this.modalService.open(template, { size: 'sm' });
-    }
+    // showAuditPopup(template, id): void {
+    //     this.auditAssetStatus(id);
+    //     this.modal = this.modalService.open(template, { size: 'sm' });
+    // }
 
-    auditAssetStatus(publicationId: number): void {
-        this.AuditDetails = [];
-        this.publicationService.getPublicationAudit(publicationId).subscribe(audits => {
-            if (audits.length > 0) {
-                this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["publicationAuditId", "publicationRecordId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
-            }
-        });
-    }
+    // auditAssetStatus(publicationId: number): void {
+    //     this.AuditDetails = [];
+    //     this.publicationService.getPublicationAudit(publicationId).subscribe(audits => {
+    //         if (audits.length > 0) {
+    //             this.AuditDetails = audits;
+    //             this.AuditDetails[0].ColumnsToAvoid = ["publicationAuditId", "publicationRecordId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
+    //         }
+    //     });
+    // }
 
     private employeedata() {
         this.alertService.startLoadingMessage();
@@ -853,17 +857,35 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         if (file.length > 0) {
 
             this.formData.append('file', file[0])
-            // this.publicationService.UOMFileUpload(this.formData).subscribe(res => {
-            //     event.target.value = '';
+            this.publicationService.publicationFileUpload(this.formData).subscribe(res => {
+                event.target.value = '';
 
-            //     this.formData = new FormData();
-            //     this.loadData();
-            //     this.alertService.showMessage(
-            //         'Success',
-            //         `Successfully Uploaded  `,
-            //         MessageSeverity.success
-            //     );
-            // })
+                this.formData = new FormData();
+                this.loadData();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+            })
+        }
+    }
+
+    getAuditHistoryById(rowData) {
+        this.publicationService.getPublicationAuditDetails(rowData.publicationRecordId).subscribe(res => {
+            console.log(res);            
+            this.auditHistory = res;
+        })
+    }
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
         }
     }
 }

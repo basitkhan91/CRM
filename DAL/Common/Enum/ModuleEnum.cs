@@ -10,6 +10,12 @@
         UnitOfMeasure,
         Manufacturer,
         ItemClassfication, 
-        Site
+        Site, 
+        WareHouse,
+        Location,
+        Shelf,
+        AssetType,
+        AssetIntangibleType,
+        StageCode
     }
 }

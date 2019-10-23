@@ -12,6 +12,7 @@ using QuickApp.Pro.ViewModels;
 using System.Linq.Dynamic.Core;
 using DAL.Common;
 using Microsoft.AspNetCore.Http;
+using Remotion.Linq.Parsing.ExpressionVisitors.Transformation.PredefinedTransformations;
 using Spire.Pdf.Exporting.XPS.Schema;
 
 namespace QuickApp.Pro.Controllers
@@ -302,10 +303,10 @@ namespace QuickApp.Pro.Controllers
 				// actionobject.IntegrationPortalId = customerViewModel.IntegrationPortalId;
 				actionobject.RestrictBERMemo = customerViewModel.RestrictBERMemo;
 
-                if (customerViewModel.CustomerClassificationIds !=null)
-                { actionobject.CustomerClassificationId = customerViewModel.CustomerClassificationIds[0] ?? null;}
+				if (customerViewModel.CustomerClassificationIds !=null)
+				{ actionobject.CustomerClassificationId = customerViewModel.CustomerClassificationIds[0] ?? null;}
 
-                actionobject.CustomerTypeId = customerViewModel.CustomerTypeId;
+				actionobject.CustomerTypeId = customerViewModel.CustomerTypeId;
 				actionobject.CustomerType = customerViewModel.CustomerType;
 				actionobject.IsCustomerAlsoVendor = customerViewModel.IsCustomerAlsoVendor;
 				actionobject.IsPBHCustomer = customerViewModel.IsPBHCustomer;
@@ -378,30 +379,30 @@ namespace QuickApp.Pro.Controllers
 				if (actionobject.RestrictBER == true)
 					_unitOfWork.CommonRepository.CreateRestrictedParts(customerViewModel.RestrictedDERParts, actionobject.CustomerId, Convert.ToInt32(ModuleEnum.Customer));
 
-                if (customerViewModel.CustomerTaxTypeRateMapping != null)
-                {
-                    actionobject.CustomerTaxTypeRateMapping = customerViewModel.CustomerTaxTypeRateMapping;
-                    _unitOfWork.CommonRepository.CreateCustomerTaxTypeRateMapping(
-                        actionobject.CustomerTaxTypeRateMapping, actionobject.CustomerId);
+				if (customerViewModel.CustomerTaxTypeRateMapping != null)
+				{
+					actionobject.CustomerTaxTypeRateMapping = customerViewModel.CustomerTaxTypeRateMapping;
+					_unitOfWork.CommonRepository.CreateCustomerTaxTypeRateMapping(
+						actionobject.CustomerTaxTypeRateMapping, actionobject.CustomerId);
 
-                }
+				}
 
-                //actionobject.RestrictsPmaLists = customerViewModel.RestrictsPmaList;
-                //_unitOfWork.CommonRepository.CreateRestrictPmaList(actionobject.RestrictsPmaLists, actionobject.CustomerId);
+				//actionobject.RestrictsPmaLists = customerViewModel.RestrictsPmaList;
+				//_unitOfWork.CommonRepository.CreateRestrictPmaList(actionobject.RestrictsPmaLists, actionobject.CustomerId);
 
-                //actionobject.RestrictsDerLists = customerViewModel.restrictBERList;
-                //_unitOfWork.CommonRepository.CreateRestrictDerList(actionobject.RestrictsDerLists, actionobject.CustomerId);
+				//actionobject.RestrictsDerLists = customerViewModel.restrictBERList;
+				//_unitOfWork.CommonRepository.CreateRestrictDerList(actionobject.RestrictsDerLists, actionobject.CustomerId);
 
-                if (customerViewModel.CustomerClassificationIds != null)
-                {
-                    List<ClassificationMapping> listofEClassificationMappings = customerViewModel
-                        .CustomerClassificationIds
-                        .Select(item => new ClassificationMapping() {ClasificationId = item.Value}
-                        ).ToList();
-                    _unitOfWork.CommonRepository.CreateClassificationMappings(listofEClassificationMappings,
-                        actionobject.CustomerId);
-                }
-                // _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, attachmentDetails, actionobject.CustomerId,Convert.ToInt32(DAL.Common.ModuleEnum.Customer), Convert.ToString(DAL.Common.ModuleEnum.Customer), actionobject.CreatedBy, actionobject.MasterCompanyId);
+				if (customerViewModel.CustomerClassificationIds != null)
+				{
+					List<ClassificationMapping> listofEClassificationMappings = customerViewModel
+						.CustomerClassificationIds
+						.Select(item => new ClassificationMapping() {ClasificationId = item.Value}
+						).ToList();
+					_unitOfWork.CommonRepository.CreateClassificationMappings(listofEClassificationMappings,
+						actionobject.CustomerId);
+				}
+				// _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, attachmentDetails, actionobject.CustomerId,Convert.ToInt32(DAL.Common.ModuleEnum.Customer), Convert.ToString(DAL.Common.ModuleEnum.Customer), actionobject.CreatedBy, actionobject.MasterCompanyId);
 
 				return Ok(actionobject);
 			}
@@ -467,7 +468,6 @@ namespace QuickApp.Pro.Controllers
 			address.City = customerViewModel.City;
 			address.Country = customerViewModel.Country;
 			address.MasterCompanyId = 1;
-			address.RecordCreateDate = DateTime.Now;
 			address.CreatedBy = customerViewModel.CreatedBy;
 			address.UpdatedBy = customerViewModel.UpdatedBy;
 			address.CreatedDate = DateTime.Now;
@@ -563,7 +563,6 @@ namespace QuickApp.Pro.Controllers
 			address.Country = customerViewModel.Country;
 			address.MasterCompanyId = 1;
 			address.IsActive = true;
-			address.RecordCreateDate = DateTime.Now;
 			address.CreatedBy = customerViewModel.CreatedBy;
 			address.UpdatedBy = customerViewModel.UpdatedBy;
 			address.CreatedDate = DateTime.Now;
@@ -640,6 +639,17 @@ namespace QuickApp.Pro.Controllers
 			return Ok(allShipViaDetails);
 
 		}
+
+		[HttpGet("GetCustomerWarnings/{Selectedrow}")]
+		[Produces(typeof(List<CustomerWarning>[]))]
+		public IActionResult GetCustomerWarningsWithid(long Selectedrow)
+		{
+
+			var allWarningCustomerwarning = _unitOfWork.CustomerWarning.GetCustomerwarning(Selectedrow); //.GetAllCustomersData();
+			return Ok(allWarningCustomerwarning);
+
+		}
+
 
 		[HttpPost("CustomerContactPost")]
 		public IActionResult CreateContact([FromBody] ContactViewModel contactViewModel, CustomercontactViewModel customercontactViewModel)
@@ -804,6 +814,29 @@ namespace QuickApp.Pro.Controllers
 
 		}
 
+		//[HttpGet("getBillingHistory/{id}", Name = "getBillingHistoryById")]
+		//[Produces(typeof(List<AuditHistory>))]
+
+		//[ApiExplorerSettings(IgnoreApi = true)]
+		//public IActionResult GetBillingAuditHistoryById(long id)
+		//{
+		//    var result = _unitOfWork.AuditHistory.GetAllHistory("CustomerBillingAddress", id); 
+
+
+		//    try
+		//    {
+		//        var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
+
+		//        return Ok(resul1);
+		//    }
+		//    catch (Exception ex)
+		//    {
+
+		//        throw;
+		//    }
+		//}
+
+
 		[HttpDelete("CustomerContact/{id}")]
 		[Produces(typeof(CustomercontactViewModel))]
 		public IActionResult DeleteAction(long id)
@@ -841,12 +874,12 @@ namespace QuickApp.Pro.Controllers
 				address.PostalCode = Customershipping.PostalCode;
 				address.Country = Customershipping.Country;
 				address.MasterCompanyId = 1;
-				address.RecordCreateDate = DateTime.Now;
 				address.CreatedBy = Customershipping.CreatedBy;
 				address.UpdatedBy = Customershipping.UpdatedBy;
 				address.CreatedDate = DateTime.Now;
 				address.UpdatedDate = DateTime.Now;
 				address.IsActive = Customershipping.IsActive;
+
 				_unitOfWork.Address.Add(address);
 				_unitOfWork.SaveChanges();
 				long? id = address.AddressId;
@@ -1438,7 +1471,6 @@ namespace QuickApp.Pro.Controllers
 				address.City = customerBillingAddressViewModel.City;
 				address.Country = customerBillingAddressViewModel.Country;
 				address.MasterCompanyId = 1;
-				address.RecordCreateDate = DateTime.Now;
 				address.CreatedBy = customerBillingAddressViewModel.CreatedBy;
 				address.UpdatedBy = customerBillingAddressViewModel.UpdatedBy;
 				address.CreatedDate = DateTime.Now;
@@ -1893,27 +1925,27 @@ namespace QuickApp.Pro.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-                foreach (var customerContactTaxMapping in customerTaxTypeRateMapping)
-                {
+				foreach (var customerContactTaxMapping in customerTaxTypeRateMapping)
+				{
 
-                    customerContactTaxMapping.MasterCompanyId = 1;
-                        customerContactTaxMapping.CreatedBy = customerContactTaxMapping.CreatedBy ?? "admin";
-                        customerContactTaxMapping.UpdatedBy = customerContactTaxMapping.UpdatedBy ?? "admin";
-                        customerContactTaxMapping.CreatedDate = System.DateTime.Now;
-                        customerContactTaxMapping.UpdatedDate = System.DateTime.Now;
-                        customerContactTaxMapping.IsDeleted = customerContactTaxMapping.IsDeleted;
-                    
+					customerContactTaxMapping.MasterCompanyId = 1;
+						customerContactTaxMapping.CreatedBy = customerContactTaxMapping.CreatedBy ?? "admin";
+						customerContactTaxMapping.UpdatedBy = customerContactTaxMapping.UpdatedBy ?? "admin";
+						customerContactTaxMapping.CreatedDate = System.DateTime.Now;
+						customerContactTaxMapping.UpdatedDate = System.DateTime.Now;
+						customerContactTaxMapping.IsDeleted = customerContactTaxMapping.IsDeleted;
+					
 					_unitOfWork.Repository<CustomerTaxTypeRateMapping>().Add(customerContactTaxMapping);
 					_unitOfWork.SaveChanges();
 				}
 			}
-            else
-            {
-                return BadRequest($"{nameof(customerTaxTypeRateMapping)} cannot be null");
-            }
+			else
+			{
+				return BadRequest($"{nameof(customerTaxTypeRateMapping)} cannot be null");
+			}
 
-            return Ok(ModelState);
-        }
+			return Ok(ModelState);
+		}
 
 		[HttpDelete("DeleteCustomerTaxTypeRateMappint/{id}")]
 		public IActionResult DeleteCustomerTaxTypeRate(long id)
@@ -2502,20 +2534,23 @@ namespace QuickApp.Pro.Controllers
 		#region customerDocument
 		[HttpPost("customerDocumentUpload")]
 		[Produces("application/json")]
-		public IActionResult DocumentUploadAction([FromBody] CustomerViewModel customerViewModel)
+		public IActionResult DocumentUploadAction()
 		{
 
 			try
 			{
+				Customer objCustomer = new Customer();
 				if (ModelState.IsValid)
 				{
-					if (customerViewModel == null && Request.Form == null)
-						return BadRequest($"{nameof(customerViewModel)} cannot be null");
-					DAL.Models.Customer actionobject = new DAL.Models.Customer();
-					actionobject.CustomerId = customerViewModel.CustomerId;
-					customerViewModel.MasterCompanyId = 1;
-					actionobject.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, customerViewModel.CustomerId, Convert.ToInt32(ModuleEnum.Customer), Convert.ToString(ModuleEnum.Customer), customerViewModel.UpdatedBy, customerViewModel.MasterCompanyId);
-					return Ok(actionobject);
+					if (Request.Form == null)
+						return BadRequest($"{nameof(objCustomer)} cannot be null");
+
+					objCustomer.CustomerId = Convert.ToInt64(Request.Form["CustomerId"]);
+					objCustomer.MasterCompanyId = 1;
+					objCustomer.UpdatedBy = Request.Form["UpdatedBy"];
+					objCustomer.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objCustomer.CustomerId, 
+																		Convert.ToInt32(ModuleEnum.Customer), Convert.ToString(ModuleEnum.Customer), objCustomer.UpdatedBy, objCustomer.MasterCompanyId);
+					return Ok(objCustomer);
 				}
 				return Ok(ModelState);
 			}
@@ -2541,7 +2576,22 @@ namespace QuickApp.Pro.Controllers
 
 		#endregion
 
+		[HttpGet("getCustomerBillingHistory/{id}")]
+		[Produces(typeof(List<CustomerBillingAddress>))]
+		public IActionResult getCustomerBillingHistory(long id, CustomerBillingAddress cstomerBillingAddress)
+		{
+			var allCusbilldetails = _unitOfWork.CustomerBillingInformation.GetAllCusBillingHistory(id); //.GetAllCustomersData();
+			return Ok(allCusbilldetails);
 
+		}
+		[HttpGet("getCustomerShippingHistory/{id}")]
+		[Produces(typeof(List<CustomerShippingAddress>))]
+		public IActionResult getCustomerShippingHistory(long id, CustomerShippingAddress cstomerShippingAddress)
+		{
+			var allCusShippingdetails = _unitOfWork.CustomerShippingAddress.GetAllCusShippingHistory(id); //.GetAllCustomersData();
+			return Ok(allCusShippingdetails);
+
+		}
 
 	}
 }

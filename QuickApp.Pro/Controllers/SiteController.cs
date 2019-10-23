@@ -95,7 +95,6 @@ namespace QuickApp.Pro.Controllers
             address.City = siteViewModel.City;
             address.Country = siteViewModel.Country;
             address.MasterCompanyId = 1;
-            address.RecordCreateDate = DateTime.Now;
             address.CreatedBy = siteViewModel.CreatedBy;
             address.UpdatedBy = siteViewModel.UpdatedBy;
             address.CreatedDate = DateTime.Now;
@@ -170,7 +169,6 @@ namespace QuickApp.Pro.Controllers
                 address.City = siteViewModel.City;
                 address.Country = siteViewModel.Country;
                 address.MasterCompanyId = 1;
-                address.RecordCreateDate = DateTime.Now;
                 address.CreatedBy = siteViewModel.CreatedBy;
                 address.UpdatedBy = siteViewModel.UpdatedBy;
                 address.CreatedDate = DateTime.Now;

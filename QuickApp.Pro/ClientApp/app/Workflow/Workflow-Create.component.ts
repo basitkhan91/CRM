@@ -1764,10 +1764,11 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             unitCost: "",
             extendedCost: "",
             price: "",
+            extendedPrice: '',
             provisionId: '',
             isDeferred: '',
             memo: "",
-
+            
             taskId: "",
             workflowId: "",
             masterCompanyId: '',
@@ -1939,7 +1940,9 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
             return;
         }
-
+        if (this.workFlowList.length == 0) {
+            this.alertService.showMessage(this.title, "Atleast one task is required.", MessageSeverity.error);
+        }
         this.actionService.getNewWorkFlow(this.sourceWorkFlow).subscribe(
             result => {
 

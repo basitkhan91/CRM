@@ -21,5 +21,6 @@ namespace DAL.Repositories.Interfaces
         long CreatePurchaseOrderShipvia(PurchaseOrderShipVia poShipvia);
         void UpdatePurchaseOrderShipvia(PurchaseOrderShipVia poShipvia);
         object GetPurchaseOrderShipvia(long purchaseOrderId, int userType);
+        IEnumerable<object> GetVendorCapabilities(long vendorId);
     }
 }

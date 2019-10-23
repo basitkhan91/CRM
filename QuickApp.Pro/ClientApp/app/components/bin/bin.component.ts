@@ -24,6 +24,7 @@ import { BinService } from '../../services/bin.service';
 import { Bin } from '../../models/bin.model';
 import { TreeNode, MenuItem } from 'primeng/api';
 import { LegalEntityService } from '../../services/legalentity.service';
+import { ConfigurationService } from '../../services/configuration.service';
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 
 @Component({
@@ -157,7 +158,7 @@ export class BinComponent {
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	/** bin ctor */
-	constructor(public manageMentService: LegalEntityService,public workFlowtService: BinService, public shelfService: ShelfService, public locationService: LocationService, public wareHouseService: WarehouseService, public siteService: SiteService, private breadCrumb: SingleScreenBreadcrumbService, private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(public manageMentService: LegalEntityService, private configurations: ConfigurationService,public workFlowtService: BinService, public shelfService: ShelfService, public locationService: LocationService, public wareHouseService: WarehouseService, public siteService: SiteService, private breadCrumb: SingleScreenBreadcrumbService, private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 		this.dataSource = new MatTableDataSource();
 		this.sourceBin = new Bin();
 
@@ -165,7 +166,12 @@ export class BinComponent {
 
 	closethis() {
 		this.closeCmpny = false;
-	}
+    }
+    sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=Bin&fileName=Bin.xlsx`;
+
+        window.location.assign(url);
+    }
 
 	handleChange(rowData, e) {
 		if (e.checked == false) {

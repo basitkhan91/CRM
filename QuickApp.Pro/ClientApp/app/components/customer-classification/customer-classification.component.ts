@@ -56,8 +56,8 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
     errorMessage: any;
     cols: any[];
     selectedColumns: any[];
-    private isEditMode: boolean = false;
-    private isDeleteMode: boolean = false;
+    isEditMode: boolean = false;
+    isDeleteMode: boolean = false;
     allComapnies: MasterCompany[];
     private isSaving: boolean;
     modal: NgbModalRef;
