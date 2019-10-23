@@ -37,8 +37,8 @@ namespace DAL.Repositories
                                 join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId
                                 where po.IsDeleted == false
                                 && po.PurchaseOrderNumber.Contains(!String.IsNullOrEmpty(poFilters.filters.PurchaseOrderNo) ? poFilters.filters.PurchaseOrderNo : po.PurchaseOrderNumber)
-                                && Convert.ToString(po.OpenDate).Contains(!String.IsNullOrEmpty(Convert.ToString(poFilters.filters.OpenDate)) ? Convert.ToString(poFilters.filters.OpenDate) : Convert.ToString(po.OpenDate))
-                                && Convert.ToString(po.ClosedDate).Contains(!String.IsNullOrEmpty(Convert.ToString(poFilters.filters.ClosedDate)) ? Convert.ToString(poFilters.filters.ClosedDate) : Convert.ToString(po.ClosedDate))
+                                && Convert.ToString(po.OpenDate) == (Convert.ToString(poFilters.filters.OpenDate) == "1/1/0001 12:00:00 AM" ? Convert.ToString(po.OpenDate) : Convert.ToString(poFilters.filters.OpenDate))
+                                && Convert.ToString(po.ClosedDate) == (Convert.ToString(poFilters.filters.ClosedDate) == "1/1/0001 12:00:00 AM" ? Convert.ToString(po.ClosedDate) : Convert.ToString(poFilters.filters.ClosedDate))
                                 && v.VendorName.Contains(!String.IsNullOrEmpty(poFilters.filters.VendorName) ? poFilters.filters.VendorName : v.VendorName)
                                 && v.VendorCode.Contains(!String.IsNullOrEmpty(poFilters.filters.VendorCode) ? poFilters.filters.VendorCode : v.VendorCode)
                                 && po.StatusId == (poFilters.filters.StatusId > 0 ? poFilters.filters.StatusId : po.StatusId)
@@ -56,8 +56,8 @@ namespace DAL.Repositories
                                      join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId
                                      where po.IsDeleted == false
                                      && po.PurchaseOrderNumber.Contains(!String.IsNullOrEmpty(poFilters.filters.PurchaseOrderNo) ? poFilters.filters.PurchaseOrderNo : po.PurchaseOrderNumber)
-                                     && Convert.ToString(po.OpenDate).Contains(!String.IsNullOrEmpty(Convert.ToString(poFilters.filters.OpenDate)) ? Convert.ToString(poFilters.filters.OpenDate) : Convert.ToString(po.OpenDate))
-                                     && Convert.ToString(po.ClosedDate).Contains(!String.IsNullOrEmpty(Convert.ToString(poFilters.filters.ClosedDate)) ? Convert.ToString(poFilters.filters.ClosedDate) : Convert.ToString(po.ClosedDate))
+                                     && Convert.ToString(po.OpenDate) == (Convert.ToString(poFilters.filters.OpenDate) == "1/1/0001 12:00:00 AM" ? Convert.ToString(po.OpenDate) : Convert.ToString(poFilters.filters.OpenDate))
+                                     && Convert.ToString(po.ClosedDate) == (Convert.ToString(poFilters.filters.ClosedDate) == "1/1/0001 12:00:00 AM" ? Convert.ToString(po.ClosedDate) : Convert.ToString(poFilters.filters.ClosedDate))
                                      && v.VendorName.Contains(!String.IsNullOrEmpty(poFilters.filters.VendorName) ? poFilters.filters.VendorName : v.VendorName)
                                      && v.VendorCode.Contains(!String.IsNullOrEmpty(poFilters.filters.VendorCode) ? poFilters.filters.VendorCode : v.VendorCode)
                                      && po.StatusId == (poFilters.filters.StatusId > 0 ? poFilters.filters.StatusId : po.StatusId)
@@ -451,8 +451,165 @@ namespace DAL.Repositories
             }
         }
 
+        public object PurchaseOrderById(long purchaseOrderId)
+        {
+            var data = (from po in _appContext.PurchaseOrder
+                        join v in _appContext.Vendor on po.VendorId equals v.VendorId
+                        join vc in _appContext.VendorContact on v.VendorId equals vc.VendorId
+                        join con in _appContext.Contact on vc.ContactId equals con.ContactId
+                        where po.PurchaseOrderId == purchaseOrderId
+                        select new
+                        {
+                            po.PurchaseOrderNumber,
+                            po.VendorId,
+                            po.RequestedBy,
+                            po.OpenDate,
+                            v.VendorCode,
+                            po.ApproverId,
+                            po.NeedByDate,
+                            po.VendorContactId,
+                            po.DateApproved,
+                            po.PriorityId,
+                            con.WorkPhone,
+                            con.WorkPhoneExtn,
+                            po.StatusId,
+                            po.DeferredReceiver,
+                            po.CreditLimit,
+                            po.CreditTermsId,
+                            po.Resale,
+                            po.Notes,
+                            po.ManagementStructureId,
+                            po.ClosedDate,
+                            po.BillToAddressId,
+                            po.BillToContactName,
+                            po.BillToMemo,
+                            po.BillToSiteName,
+                            po.BillToUserId,
+                            po.BillToUserType,
+                            po.ShipToAddressId,
+                            po.ShipToCompanyId,
+                            po.ShipToContactId,
+                            po.ShipToMemo,
+                            po.ShipToSiteName,
+                            po.ShipToUserId,
+                            po.ShipToUserType,
+                            po.ShipViaAccountId,
+                            po.MasterCompanyId,
+                            po.CreatedDate,
+                            po.CreatedBy,
+                            po.UpdatedBy,
+                            po.UpdatedDate,
+                            po.IsActive,
+                            po.IsDeleted
+                        }).FirstOrDefault();
+
+            return data;
+        }
+
+        public List<PurchaseOrderPart> GetPurchaseOrderParts(long purchaseOrderId)
+        {
+            List<PurchaseOrderPart> purchaseOrderParts = new List<PurchaseOrderPart>();
+            List<PurchaseOrderSplitParts> purchaseOrderSplitParts = new List<PurchaseOrderSplitParts>();
+            
+            PurchaseOrderPart purchaseOrderPart;
+            PurchaseOrderSplitParts purchaseOrderSplitPart;
+            try
+            {
+                var list = (from pop in _appContext.PurchaseOrderPart
+                            join po in _appContext.PurchaseOrder on pop.PurchaseOrderId equals po.PurchaseOrderId
+                            where pop.PurchaseOrderId==purchaseOrderId 
+                            select new
+                            {
+                                pop
+                            }).ToList();
+
+                if(list!=null && list.Count>0)
+                {
+                    foreach(var part in list)
+                    {
+                        purchaseOrderPart = new PurchaseOrderPart();
+                        if (part.pop.isParent)
+                        {
+                            purchaseOrderPart.PurchaseOrderId = part.pop.PurchaseOrderId;
+                            purchaseOrderPart.isParent = true;
+                            purchaseOrderPart.SerialNumber = part.pop.SerialNumber;
+                            purchaseOrderPart.ItemMasterId = part.pop.ItemMasterId;
+                            purchaseOrderPart.ManufacturerId = part.pop.ManufacturerId;
+                            purchaseOrderPart.GeneralLedgerAccounId = part.pop.GeneralLedgerAccounId;
+                            purchaseOrderPart.UOMId = part.pop.UOMId;
+                            purchaseOrderPart.NeedByDate = part.pop.NeedByDate;
+                            purchaseOrderPart.ConditionId = part.pop.ConditionId;
+                            purchaseOrderPart.QuantityOrdered = part.pop.QuantityOrdered;
+                            purchaseOrderPart.UnitCost = part.pop.UnitCost;
+                            purchaseOrderPart.DiscountCostPerUnit = part.pop.DiscountCostPerUnit;
+                            purchaseOrderPart.DiscountPerUnit = part.pop.DiscountPerUnit;
+                            purchaseOrderPart.ExtendedCost = part.pop.ExtendedCost;
+                            purchaseOrderPart.FunctionalCurrencyId = part.pop.FunctionalCurrencyId;
+                            purchaseOrderPart.ForeignExchangeRate = part.pop.ForeignExchangeRate;
+                            purchaseOrderPart.TransactionalCurrencyId = part.pop.TransactionalCurrencyId;
+                            purchaseOrderPart.WorkOrderId = part.pop.WorkOrderId;
+                            purchaseOrderPart.RepairOrderId = part.pop.RepairOrderId;
+                            purchaseOrderPart.SalesOrderId = part.pop.SalesOrderId;
+                            purchaseOrderPart.ManagementStructureId = part.pop.ManagementStructureId;
+                            purchaseOrderPart.Memo = part.pop.Memo;
+                            purchaseOrderPart.MasterCompanyId = part.pop.MasterCompanyId;
+                            purchaseOrderPart.CreatedBy = part.pop.CreatedBy;
+                            purchaseOrderPart.CreatedDate = part.pop.CreatedDate;
+                            purchaseOrderPart.UpdatedBy = part.pop.UpdatedBy;
+                            purchaseOrderPart.UpdatedDate = part.pop.UpdatedDate;
+                            purchaseOrderPart.IsActive = part.pop.IsActive;
+                        }
+                        else
+                        {
+                            purchaseOrderPart.PurchaseOrderSplitParts = new List<PurchaseOrderSplitParts>();
+                            purchaseOrderSplitPart = new PurchaseOrderSplitParts();
+                            var splitParts = list.Where(p => p.pop.ParentId == part.pop.ParentId).ToList();
+
+                            if(splitParts != null && splitParts.Count>0)
+                            {
+                                foreach(var splitPart in splitParts)
+                                {
+                                    purchaseOrderSplitPart.AssetId = 0;
+                                    purchaseOrderSplitPart.isParent = false;
+                                    purchaseOrderSplitPart.ItemMasterId = splitPart.pop.ItemMasterId;
+                                    purchaseOrderSplitPart.ManagementStructureId = splitPart.pop.ManagementStructureId;
+                                    purchaseOrderSplitPart.NeedByDate = splitPart.pop.NeedByDate;
+                                    purchaseOrderSplitPart.PartNumberId = splitPart.pop.ItemMasterId;
+                                    purchaseOrderSplitPart.POPartSplitAddressId = splitPart.pop.POPartSplitAddressId;
+                                    purchaseOrderSplitPart.POPartSplitUserId = splitPart.pop.POPartSplitUserId;
+                                    purchaseOrderSplitPart.POPartSplitUserTypeId = splitPart.pop.POPartSplitUserTypeId;
+                                    purchaseOrderSplitPart.PurchaseOrderId = splitPart.pop.PurchaseOrderId;
+                                    purchaseOrderSplitPart.PurchaseOrderPartRecordId = splitPart.pop.PurchaseOrderPartRecordId;
+                                    purchaseOrderSplitPart.QuantityOrdered = splitPart.pop.QuantityOrdered;
+                                    purchaseOrderSplitPart.SerialNumber = splitPart.pop.SerialNumber;
+                                    purchaseOrderSplitPart.UOMId = splitPart.pop.UOMId;
+
+                                    purchaseOrderPart.PurchaseOrderSplitParts.Add(purchaseOrderSplitPart);
+                                }
+                                
+                            }
+                        }
+
+
+
+                        purchaseOrderParts.Add(purchaseOrderPart);
+                    }
+                }
+
+                return purchaseOrderParts;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
     }
+
+    
 }
 
