@@ -8,7 +8,6 @@ import { SingleScreenBreadcrumbService } from "../../services/single-screens-bre
 import { StageCode } from "../../models/stage-code.model";
 import { StageCodeService } from "../../services/stage-code/stage-code.service";
 import { ModeOfOperation } from "../../models/ModeOfOperation.enum";
-import { UploadTag } from "../../models/UploadTag.enum";
 
 @Component({
     selector: 'app-stage-code',
@@ -32,8 +31,6 @@ export class StageCodeComponent implements OnInit {
     modal: NgbModalRef;
     selectedColumns: any[];
     auditHistory: any[];
-    formData: FormData;
-    uploadedRecords: Object;
     constructor(private breadCrumb: SingleScreenBreadcrumbService, private alertService: AlertService, private coreDataService: StageCodeService, private modalService: NgbModal, private authService: AuthService) {
     }
     ngOnInit(): void {
@@ -49,7 +46,7 @@ export class StageCodeComponent implements OnInit {
 
     //Step E1: Open row up for editing
     addNewItem(): void {
-        this.currentRow = new StageCode();
+        this.currentRow = this.newItem(0);
         this.currentModeOfOperation = ModeOfOperation.Add;
     }
 
@@ -83,7 +80,8 @@ export class StageCodeComponent implements OnInit {
         if (itemExists) {
             this.currentModeOfOperation = ModeOfOperation.Update;
             item.updatedBy = this.userName;
-            this.coreDataService.remove(item.stageCodeId).subscribe(response => {
+            item.isDelete = true;
+            this.coreDataService.update(item).subscribe(response => {
                 this.alertService.showMessage('Success', this.rowName + " removed successfully.", MessageSeverity.success);
                 this.getItemList();
             });
@@ -93,7 +91,7 @@ export class StageCodeComponent implements OnInit {
 
     //Close open modal
     dismissModal() {
-        this.currentRow = new StageCode();
+        this.currentRow = this.newItem(0);
         this.auditHistory = [];
         this.currentModeOfOperation = ModeOfOperation.None;
     }
@@ -113,10 +111,10 @@ export class StageCodeComponent implements OnInit {
         let defaultUserName = "admin";
         if (rowData) {
             item.stageCodeId = rowData.stageCodeId || 0;
-            item.gateCode = rowData.gateCode || "";
-            item.description = rowData.description || "";
-            item.sequence = rowData.sequence || "";
-            item.memo = rowData.memo || "";
+            item.gateCode = rowData.gateCode || (rowData.gateCode || "");
+            item.description = rowData.description || (rowData.description || "");
+            item.sequence = rowData.sequence || (rowData.sequence || "");
+            item.memo = rowData.memo || (rowData.memo || "");
             item.updatedBy = this.userName || defaultUserName;
             item.createdBy = this.userName || defaultUserName;
             item.isActive = rowData.isActive || false;
@@ -158,15 +156,6 @@ export class StageCodeComponent implements OnInit {
             this.saveNewItem();
         }
         this.dismissModal();
-    }
-
-    showBulkUploadResult(items: any) {
-        let successCount = items.filter(item => item.UploadTag == UploadTag.Success);
-        let failedCount = items.filter(item => item.UploadTag == UploadTag.Failed);
-        let duplicateCount = items.filter(item => item.UploadTag == UploadTag.Duplicate);
-        this.alertService.showMessage('Success', `${successCount} ${this.rowName}${successCount > 1 ? 's' : ''} uploaded successfully.`, MessageSeverity.success);
-        this.alertService.showMessage('Error', `${failedCount} ${this.rowName}${failedCount > 1 ? 's' : ''} failed to upload.`, MessageSeverity.error);
-        this.alertService.showMessage('Info', `${duplicateCount} ${duplicateCount > 1 ? 'duplicates' : 'duplicate'} ignored.`, MessageSeverity.info);
     }
 
     //Open the audit history modal.
@@ -215,7 +204,7 @@ export class StageCodeComponent implements OnInit {
         ];
         this.currentModeOfOperation = ModeOfOperation.None;
         this.selectedColumns = this.columnHeaders;
-        this.currentRow = new StageCode();
+        this.currentRow = this.newItem(0);
     }
 
 }
