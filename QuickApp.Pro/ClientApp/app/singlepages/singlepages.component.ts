@@ -61,6 +61,9 @@ export class SingleComponent {
                 case '/singlepages/singlepages/app-expenditure-category':
                     itemLabel = 'Expenditure Category';
                     break;
+                case '/singlepages/singlepages/app-asset-attribute-type':
+                    itemLabel = 'Asset Attribute Type';
+                    break;
                 default:
             }
             this.items = [
@@ -445,6 +448,9 @@ export class SingleComponent {
                     break;
                 case '/singlepages/singlepages/app-expenditure-category':
                     itemLabel = 'Expenditure Category';
+                    break;
+                case '/singlepages/singlepages/app-asset-attribute-type':
+                    itemLabel = 'Asset Attribute Type';
                     break;
                 default:
             }

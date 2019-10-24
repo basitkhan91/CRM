@@ -115,6 +115,9 @@ import { GLAccountCategoryService } from "../services/gl-account-category/gl-acc
 import { ExpenditureCategoryComponent } from '../components/expenditure-category/expenditure-category.component';
 import { ExpenditureCategoryEndpointService } from "../services/expenditure-category/expenditure-category-endpoint.service";
 import { ExpenditureCategoryService } from "../services/expenditure-category/expenditure-category.service";
+import { AssetAttributeTypeComponent } from '../components/asset-attribute-type/asset-attribute-type.component';
+import { AssetAttributeTypeEndpointService } from "../services/asset-attribute-type/asset-attribute-type-endpoint.service";
+import { AssetAttributeTypeService } from "../services/asset-attribute-type/asset-attribute-type.service";
 
 import { AuditModule } from "../audit/audit.module";
 import { AircraftManufacturerComponent } from "../components/aircraft-manufacturer/aircraft-manufacturer.component";
@@ -176,6 +179,7 @@ import { CommonService } from "../services/common.service";
         StageCodeComponent,
         GLAccountCategoryComponent,
         ExpenditureCategoryComponent,
+        AssetAttributeTypeComponent,
         IntegrationComponent,
         ItemClassificationComponent,
         ItemGroupComponent,
@@ -250,6 +254,8 @@ import { CommonService } from "../services/common.service";
         GLAccountCategoryEndpointService,
         ExpenditureCategoryService,
         ExpenditureCategoryEndpointService,
+        AssetAttributeTypeService,
+        AssetAttributeTypeEndpointService,
         AircraftManufacturerService,
         AircraftManufacturerEndpointService,
         AircraftModelService,

@@ -635,12 +635,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                     },
                     {
                         label: 'Asset Attributes', items: [
-                            {
-                                label: 'Asset Attribute Type', items: [
-                                    { label: 'Asset Attribute List', routerLink: '/singlepages/singlepages/app-asset-type' },
-                                    { label: 'Create Attribute Asset', routerLink: '/#' },
-                                ]
-                            },
+                            { label: 'Asset Attribute Type', routerLink: '/singlepages/singlepages/app-asset-attribute-type' },
                             {
                                 label: 'Intangible Type', items: [
                                     { label: 'Intangible Type List', routerLink: '/#' },

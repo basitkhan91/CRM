@@ -22,6 +22,7 @@ import { AssetTypeComponent } from "../components/asset-type/asset-type.componen
 import { StageCodeComponent } from "../components/stage-code/stage-code.component";
 import { GLAccountCategoryComponent } from "../components/gl-account-category/gl-account-category.component";
 import { ExpenditureCategoryComponent } from "../components/expenditure-category/expenditure-category.component";
+import { AssetAttributeTypeComponent } from "../components/asset-attribute-type/asset-attribute-type.component";
 
 import { IntegrationComponent } from "../components/integration/integration.component";
 import { ItemClassificationComponent } from "../components/item-classification/item-classification.component";
@@ -174,6 +175,11 @@ const singlePagesRoutes: Routes = [
                 path: "app-expenditure-category",
                 component: ExpenditureCategoryComponent,
                 data: { title: "Expenditure Category" }
+            },
+            {
+                path: "app-asset-attribute-type",
+                component: AssetAttributeTypeComponent,
+                data: { title: "Asset Attribute Type" }
             },
             {
                 path: "app-integration",

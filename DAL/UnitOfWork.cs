@@ -63,6 +63,7 @@ namespace DAL
         IJobTitle _jobTitle;
         IJobType _jobType;
         IExpenditureCategoryRepository _expenditureCategoryRepository;
+        IAssetAttributeTypeRepository _assetAttributeTypeRepository;
         IDefaultMessage _defaultMessage;
         IDocument _document;
         IVendor _vendor;
@@ -1554,6 +1555,16 @@ namespace DAL
             }
         }
 
+        public IAssetAttributeTypeRepository AssetAttributeTypeRepository
+
+        {
+            get
+            {
+                if (_assetAttributeTypeRepository == null)
+                    _assetAttributeTypeRepository = new AssetAttributeTypeRepository(_context, _appSettings);
+                return _assetAttributeTypeRepository;
+            }
+        }
         public IGLAccountNodeShareWithEntityMapper GLAccountNodeShareWithEntityMapper
         {
             get

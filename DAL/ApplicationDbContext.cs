@@ -288,11 +288,12 @@ namespace DAL
         public DbSet<GLAccountCategoryAudit> GLAccountCategoryAudit { get; set; }
         public DbSet<ExpenditureCategory> ExpenditureCategory { get; set; }
         public DbSet<ExpenditureCategoryAudit> ExpenditureCategoryAudit { get; set; }
+        public DbSet<AssetAttributeType> AssetAttributeType { get; set; }
+        public DbSet<AssetAttributeTypeAudit> AssetAttributeTypeAudit { get; set; }
 
         public DbSet<Asset> Asset { get; set; }
         public DbSet<GLAccountMiscCategory> GLAccountMiscCategory { get; set; }
         public DbSet<GLAccount> GLAccount { get; set; }
-        public DbSet<AssetAttributeType> AssetAttributeType { get; set; }
 
         public DbSet<AccountingCalendar> AccountingCalendar { get; set; }
         public DbSet<PartStockLineMapper> PartStockLineMapper { get; set; }

@@ -226,6 +226,7 @@ namespace DAL
         IStageCodeRepository StageCodeRepository { get; }
         IGLAccountCategoryRepository GLAccountCategoryRepository { get; }
         IExpenditureCategoryRepository ExpenditureCategoryRepository { get; }
+        IAssetAttributeTypeRepository AssetAttributeTypeRepository { get; }
 
 
         IEmployeeShiftRepository EmployeeShiftMappingRepository { get; }
