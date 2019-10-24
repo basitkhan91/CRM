@@ -229,15 +229,6 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             'firstName': [null, Validators.compose([Validators.required, Validators.minLength(1), this.checkfirstNameExists('firstName')])],
             'middleName': [null],
             'lastName': [null, Validators.compose([Validators.required, Validators.minLength(1), this.checklasttNameExists('lastName')])],
-            'jobTitleId': [null, Validators.compose([Validators.required, Validators.minLength(1)])],
-            'employeeExpertiseId': [null, Validators.compose([Validators.required, Validators.minLength(1)])],
-            'JobTypeId': [null, Validators.compose([Validators.required, Validators.minLength(1)])],
-            'companyId': [null, Validators.compose([Validators.required, Validators.minLength(1)])],
-            'startDate': [null, Validators.compose([Validators.required, Validators.minLength(1)])],
-            'email': [null, Validators.compose([Validators.pattern('[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{3,}')])],
-            'BusinessUnitId': [null],
-            'divisionId': [null],
-            'departmentId': [null],
             'jobTitleId': [0, Validators.compose([Validators.required, Validators.minLength(1)])],
             'employeeExpertiseId': [0, Validators.compose([Validators.required, Validators.minLength(1)])],
             'JobTypeId': [0, Validators.compose([Validators.required, Validators.minLength(1)])],
@@ -246,7 +237,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             'BusinessUnitId': [0],
             'divisionId': [0],
             'departmentId': [0],
-
+            'email': [null, Validators.compose([Validators.pattern('[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{3,}')])],
 
 
 
@@ -690,37 +681,37 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             console.log(this.sourceEmployee)
             this.employeeService.updateEmployee(this.sourceEmployee).subscribe(
 
-                results => this.empUpdate(this.sourceEmployee, results),
+                results => {
+                    this.empUpdate(this.sourceEmployee, results),
 
-        console.log("value to be removed" + selectedLevae);
-        this.sourceEmployee.LeaveTypeId = selectedLevae;
-        this.sourceEmployee.EmployeeId = this.sourceEmployee.employeeId;
+                        //console.log("value to be removed" + selectedLevae);
+                        this.sourceEmployee.LeaveTypeId = selectedLevae;
+                    this.sourceEmployee.EmployeeId = this.sourceEmployee.employeeId;
+                    this.employeeService.employeeLeavetypeRemove(this.sourceEmployee).subscribe(
+                        results => {
+                            console.log("Leave value added sucessfully")
+                        },
+                        error => this.onDataLoadFailed(error))
+                });
 
-        this.employeeService.employeeLeavetypeRemove(this.sourceEmployee).subscribe(
-            results => {
-                console.log("Leave value added sucessfully")
-            },
-
-            error => this.onDataLoadFailed(error)
-        );
-
+        }
     }
 
-    shiftTypeValueRemoved(selectedLevae) {
+        shiftTypeValueRemoved(selectedLevae) {
 
-        console.log("value to be removed shift " + selectedLevae);
-        this.sourceEmployee.ShiftTypeId = selectedLevae;
-        this.sourceEmployee.EmployeeId = this.sourceEmployee.employeeId;
+            console.log("value to be removed shift " + selectedLevae);
+            this.sourceEmployee.ShiftTypeId = selectedLevae;
+            this.sourceEmployee.EmployeeId = this.sourceEmployee.employeeId;
 
-        this.employeeService.employeeshifttypeRemove(this.sourceEmployee).subscribe(
-            results => {
-                console.log("Leave value removed sucessfully")
-            },
+            this.employeeService.employeeshifttypeRemove(this.sourceEmployee).subscribe(
+                results => {
+                    console.log("Leave value removed sucessfully")
+                },
 
-            error => this.onDataLoadFailed(error)
-        );
+                error => this.onDataLoadFailed(error)
+            );
 
-    }
+        }
     removeEmployeeShiftValues() {
         for (var i = 0; i < this.sessionShiftValues.length; i++) {
 
@@ -944,42 +935,42 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     }
 
 
-    empUpdate(obj: any, res: any) {
-        this.showMsg = true;
-        //this.sourceEmployee.reser
+        empUpdate(obj: any, res: any) {
+            this.showMsg = true;
+            //this.sourceEmployee.reser
 
-        // if (res.employeeId) {
-        this.empId = res.employeeId;
-        console.log(res.employeeId);
-        this.firstName = res.firstName;
-        this.lastName = res.lastName;
+            // if (res.employeeId) {
+            this.empId = res.employeeId;
+            console.log(res.employeeId);
+            this.firstName = res.firstName;
+            this.lastName = res.lastName;
 
-        console.log(this.empId);
-        this.showTitle = 'Employee Updated Sucessfully';
+            console.log(this.empId);
+            this.showTitle = 'Employee Updated Sucessfully';
 
-        ///this.sourceEmployee.reset();
-        // this.nextClick();
-        this.router.navigate(['/employeesmodule/employeepages/app-employee-certification'])
-        this.alertService.showMessage("Success", this.showTitle, MessageSeverity.success);
-        this.activeIndex = 1;
-        this.employeeService.indexObj.next(this.activeIndex);
-        //this.nextClick();
-        this.sourceEmpFirst = null;
-        //window.location.reload();
+            ///this.sourceEmployee.reset();
+            // this.nextClick();
+            this.router.navigate(['/employeesmodule/employeepages/app-employee-certification'])
+            this.alertService.showMessage("Success", this.showTitle, MessageSeverity.success);
+            this.activeIndex = 1;
+            this.employeeService.indexObj.next(this.activeIndex);
+            //this.nextClick();
+            this.sourceEmpFirst = null;
+            //window.location.reload();
 
-        this.loadData();
+            this.loadData();
 
-        // }
-        // else {
-        //     this.showTitle = 'Some thing went wrong please try again later';
+            // }
+            // else {
+            //     this.showTitle = 'Some thing went wrong please try again later';
 
-        //     ///this.sourceEmployee.reset();
-        //     this.alertService.showMessage("Failure", this.showTitle, MessageSeverity.success);
+            //     ///this.sourceEmployee.reset();
+            //     this.alertService.showMessage("Failure", this.showTitle, MessageSeverity.success);
 
-        // }
+            // }
 
 
-    }
+        }
     empAdd(obj: any, res: any) {
 
         this.showMsg = true;
@@ -1039,12 +1030,13 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             this.sourceEmployee.isHourly = true;
         }
         if (click == 'monthly') {
-        if (click == 'yearly') {
-            this.yearly = true;
-            this.hourly = false;
-            this.sourceEmployee.isHourly = false;
-        }
+            if (click == 'yearly') {
+                this.yearly = true;
+                this.hourly = false;
+                this.sourceEmployee.isHourly = false;
+            }
 
+        }
     }
 
 
@@ -1276,7 +1268,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             let description = this.allLeaves[i].description;
             if (description.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                 this.localleaveCollection.push(description);
-            }
+            }   
         }
     }
 
@@ -1314,108 +1306,108 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
 
 
-    private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.auditHisory = auditHistory;
-        this.modal = this.modalService.open(content, { size: 'lg' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+    //private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
+    //    this.alertService.stopLoadingMessage();
+    //    this.loadingIndicator = false;
+    //    this.auditHisory = auditHistory;
+    //    this.modal = this.modalService.open(content, { size: 'lg' });
+    //    this.modal.result.then(() => {
+    //        console.log('When user closes');
+    //    }, () => { console.log('Backdrop click') })
 
 
-    }
+    //}
 
-    private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.allComapnies = allComapnies;
+    //private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
+    //    this.alertService.stopLoadingMessage();
+    //    this.loadingIndicator = false;
+    //    this.allComapnies = allComapnies;
 
-    }
+    //}
 
-    private onDataLoadFailed(error: any) {
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
+    //private onDataLoadFailed(error: any) {
+    //    this.alertService.stopLoadingMessage();
+    //    this.loadingIndicator = false;
 
-    }
-    handleChange(rowData, e) {
-        if (e.checked == false) {
-            this.sourceAction = rowData;
-            this.sourceAction.updatedBy = this.userName;
-            this.Active = "In Active";
-            this.sourceAction.isActive == false;
-            this.employeeService.updateEmployee(this.sourceAction).subscribe(
-                response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));
-        }
-        else {
-            this.sourceAction = rowData;
-            this.sourceAction.updatedBy = this.userName;
-            this.Active = "Active";
-            this.sourceAction.isActive == true;
-            this.employeeService.updateEmployee(this.sourceAction).subscribe(
-                response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));
-        }
+    //}
+    //handleChange(rowData, e) {
+    //    if (e.checked == false) {
+    //        this.sourceAction = rowData;
+    //        this.sourceAction.updatedBy = this.userName;
+    //        this.Active = "In Active";
+    //        this.sourceAction.isActive == false;
+    //        this.employeeService.updateEmployee(this.sourceAction).subscribe(
+    //            response => this.saveCompleted(this.sourceAction),
+    //            error => this.saveFailedHelper(error));
+    //    }
+    //    else {
+    //        this.sourceAction = rowData;
+    //        this.sourceAction.updatedBy = this.userName;
+    //        this.Active = "Active";
+    //        this.sourceAction.isActive == true;
+    //        this.employeeService.updateEmployee(this.sourceAction).subscribe(
+    //            response => this.saveCompleted(this.sourceAction),
+    //            error => this.saveFailedHelper(error));
+    //    }
 
-    }
+    //}
 
-    open(content) {
-        this.isEditMode = false;
-        this.isDeleteMode = false;
-        this.isSaving = true;
-        this.loadMasterCompanies();
-        this.sourceAction.isActive = true;
-        this.employeeName = "";
-        this.modal = this.modalService.open(content, { size: 'lg' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
-
-
-
-    filterLeaves(event) {
-
-        this.localleaveCollection = [];
-        for (let i = 0; i < this.allLeaves.length; i++) {
-            let description = this.allLeaves[i].description;
-            if (description.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                this.localleaveCollection.push(description);
-            }
-        }
-    }
-
-    private loademployeesexperties() {
-
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-
-        this.empservice.getWorkFlows().subscribe(
-            results => this.onEmpDataLoadSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-
-    }
-    private onEmpDataLoadSuccessful(allWorkFlows: EmployeeExpertise[]) {
-        // alert('success');
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.dataSource.data = allWorkFlows;
-        this.allEmployeeExpertiseInfo = allWorkFlows;
-    }
+    //open(content) {
+    //    this.isEditMode = false;
+    //    this.isDeleteMode = false;
+    //    this.isSaving = true;
+    //    this.loadMasterCompanies();
+    //    this.sourceAction.isActive = true;
+    //    this.employeeName = "";
+    //    this.modal = this.modalService.open(content, { size: 'lg' });
+    //    this.modal.result.then(() => {
+    //        console.log('When user closes');
+    //    }, () => { console.log('Backdrop click') })
+    //}
 
 
-    filterEmployeeNames(event) {
 
-        this.localCollection = [];
-        for (let i = 0; i < this.allEmployeeExpertiseInfo.length; i++) {
-            let employeeName = this.allEmployeeExpertiseInfo[i].description;
-            if (employeeName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                this.localCollection.push(employeeName);
-            }
-        }
-    }
+    //filterLeaves(event) {
+
+    //    this.localleaveCollection = [];
+    //    for (let i = 0; i < this.allLeaves.length; i++) {
+    //        let description = this.allLeaves[i].description;
+    //        if (description.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+    //            this.localleaveCollection.push(description);
+    //        }
+    //    }
+    //}
+
+    //private loademployeesexperties() {
+
+    //    this.alertService.startLoadingMessage();
+    //    this.loadingIndicator = true;
+
+    //    this.empservice.getWorkFlows().subscribe(
+    //        results => this.onEmpDataLoadSuccessful(results[0]),
+    //        error => this.onDataLoadFailed(error)
+    //    );
+
+    //}
+    //private onEmpDataLoadSuccessful(allWorkFlows: EmployeeExpertise[]) {
+    //    // alert('success');
+    //    this.alertService.stopLoadingMessage();
+    //    this.loadingIndicator = false;
+    //    this.dataSource.data = allWorkFlows;
+    //    this.allEmployeeExpertiseInfo = allWorkFlows;
+    //}
+
+
+    //filterEmployeeNames(event) {
+
+    //    this.localCollection = [];
+    //    for (let i = 0; i < this.allEmployeeExpertiseInfo.length; i++) {
+    //        let employeeName = this.allEmployeeExpertiseInfo[i].description;
+    //        if (employeeName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+    //            this.localCollection.push(employeeName);
+    //        }
+    //    }
+    //}
 
 
 
@@ -1518,19 +1510,19 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         }, () => { console.log('Backdrop click') })
     }
 
-    openLeaveType(content) {
-        this.isEditMode = false;
-        this.isDeleteMode = false;
-        this.isSaving = true;
-        this.loadMasterCompanies();
-        this.sourceAction = new EmployeeLeaveType();
-        this.sourceAction.isActive = true;
-        this.description = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
+    //openLeaveType(content) {
+    //    this.isEditMode = false;
+    //    this.isDeleteMode = false;
+    //    this.isSaving = true;
+    //    this.loadMasterCompanies();
+    //    this.sourceAction = new EmployeeLeaveType();
+    //    this.sourceAction.isActive = true;
+    //    this.description = "";
+    //    this.modal = this.modalService.open(content, { size: 'sm' });
+    //    this.modal.result.then(() => {
+    //        console.log('When user closes');
+    //    }, () => { console.log('Backdrop click') })
+    //}
 
 
     openemployeeExpertise(content) {
@@ -1543,11 +1535,13 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.employeeName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+            //    console.log('When user closes');
+            //}, () => { console.log('Backdrop click') })
+            //    console.log('When user closes');
+            //}, () => { console.log('Backdrop click') 
+        });
     }
+
 
     openLeaveType(content) {
         this.isEditMode = false;
@@ -1559,52 +1553,13 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.description = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+            //    console.log('When user closes');
+            //}, () => { console.log('Backdrop click') 
+        });
     }
 
-    }
+    
 
-
-    openEdit(content, row) {
-        this.isEditMode = true;
-        this.isSaving = true;
-        this.loadMasterCompanies();
-        this.sourceAction = row;
-        this.employeeName = this.sourceAction.employeeName;
-        this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
-
-    openHelpText(content) {
-
-    openemployeeExpertise(content) {
-        this.isEditMode = false;
-        this.isDeleteMode = false;
-        this.isSaving = true;
-        this.loadMasterCompanies();
-        this.sourceAction = new EmployeeExpertise();
-        this.sourceAction.isActive = true;
-        this.employeeName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
-
-
-    }
-
-    openHist(content, row) {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-        this.sourceAction = row;
-        this.employeeService.historyEmployee(this.sourceAction.employeeId).subscribe(
-            results => this.onHistoryLoadSuccessful(results[0], content),
-            error => this.saveFailedHelper(error));
 
     openEdit(content, row) {
         this.isEditMode = true;
@@ -1626,7 +1581,23 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         }, () => { console.log('Backdrop click') })
     }
 
+    //openemployeeExpertise(content) {
+    //    this.isEditMode = false;
+    //    this.isDeleteMode = false;
+    //    this.isSaving = true;
+    //    this.loadMasterCompanies();
+    //    this.sourceAction = new EmployeeExpertise();
+    //    this.sourceAction.isActive = true;
+    //    this.employeeName = "";
+    //    this.modal = this.modalService.open(content, { size: 'sm' });
+    //        this.modal.result.then(() => {
+    //            //    console.log('When user closes');
+    //            //}, () => { console.log('Backdrop click') 
+    //        });
+    //}
 
+
+    
 
     openHist(content, row) {
         this.alertService.startLoadingMessage();
@@ -1635,9 +1606,41 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.employeeService.historyEmployee(this.sourceAction.employeeId).subscribe(
             results => this.onHistoryLoadSuccessful(results[0], content),
             error => this.saveFailedHelper(error));
-
-
     }
+
+    //openEdit(content, row) {
+    //    this.isEditMode = true;
+    //    this.isSaving = true;
+    //    this.loadMasterCompanies();
+    //    this.sourceAction = row;
+    //    this.employeeName = this.sourceAction.employeeName;
+    //    this.loadMasterCompanies();
+    //    this.modal = this.modalService.open(content, { size: 'sm' });
+    //        this.modal.result.then(() => {
+    //            //    console.log('When user closes');
+    //            //}, () => { console.log('Backdrop click') 
+    //        });
+    //}
+
+    //openHelpText(content) {
+    //    this.modal = this.modalService.open(content, { size: 'sm' });
+    //    this.modal.result.then(() => {
+    //        console.log('When user closes');
+    //    }, () => { console.log('Backdrop click') })
+    //}
+
+
+
+    //openHist(content, row) {
+    //    this.alertService.startLoadingMessage();
+    //    this.loadingIndicator = true;
+    //    this.sourceAction = row;
+    //    this.employeeService.historyEmployee(this.sourceAction.employeeId).subscribe(
+    //        results => this.onHistoryLoadSuccessful(results[0], content),
+    //        error => this.saveFailedHelper(error));
+
+
+    //}
 
 
     editItemAndCloseModel() {
