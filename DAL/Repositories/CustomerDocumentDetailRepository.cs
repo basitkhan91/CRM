@@ -19,7 +19,35 @@ namespace DAL.Repositories
 
         }
 
+        public IEnumerable<object> GetAllDataById(long Id)
+        {
 
+            var data = (from v in _appContext.CustomerDocumentDetails
+                where v.CustomerId == Id
+                select new
+                {
+                   
+                    v.CustomerDocumentDetailId,
+                    v.AttachmentId,
+                    v.MasterCompanyId,
+                    v.CreatedBy,
+                    v.UpdatedBy,
+                    v.CreatedDate,
+                    v.CustomerId,
+                    v.DocDescription,
+                    v.DocMemo,
+                    v.DocName,
+                    v.UpdatedDate,
+                    v.IsActive,
+                    v.IsDeleted
+                }).ToList();
+            return data;
+
+
+
+           
+
+        }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }
