@@ -259,6 +259,27 @@ namespace QuickApp.Pro.Controllers
             return Ok(integrationTypes);
         }
 
+        [HttpPost("employeepostRemoveLeaveType")]
+        public IActionResult employeepostRemoveLeaveType([FromBody] EmployeeViewModel employeetypeViewModel)
+        {
+
+            if (employeetypeViewModel == null)
+                return BadRequest($"{nameof(employeetypeViewModel)} cannot be null");
+            DAL.Models.EmployeeShiftMapping integrationTypes = new DAL.Models.EmployeeShiftMapping();
+            var x = (from y in _appContext.EmployeeLeaveTypeMapping
+
+                     where y.EmployeeId == employeetypeViewModel.EmployeeId && y.EmployeeLeaveTypeId == employeetypeViewModel.LeaveTypeId
+                     orderby y.EmployeeId descending 
+                     select y).FirstOrDefault();
+
+            _appContext.EmployeeLeaveTypeMapping.Remove(x);
+            _appContext.SaveChanges();
+          
+            integrationTypes.ShiftId = employeetypeViewModel.ShiftTypeId;
+            integrationTypes.MasterCompanyId = 1;
+            return Ok(integrationTypes);
+        }
+
         [HttpPost("employeepostAddShiftType")]
         public IActionResult employeepostAddShiftType([FromBody] EmployeeViewModel employeetypeViewModel)
         {
@@ -284,11 +305,35 @@ namespace QuickApp.Pro.Controllers
             return Ok(integrationTypes);
         }
 
+        [HttpPost("employeepostRemoveShiftType")]
+        public IActionResult employeepostRemoveShiftType([FromBody] EmployeeViewModel employeetypeViewModel)
+        {
+
+            if (employeetypeViewModel == null)
+                return BadRequest($"{nameof(employeetypeViewModel)} cannot be null");
+            DAL.Models.EmployeeShiftMapping integrationTypes = new DAL.Models.EmployeeShiftMapping();
+            var x = (from y in _appContext.EmployeeShiftMapping
+
+                     where y.EmployeeId == employeetypeViewModel.EmployeeId && y.ShiftId == employeetypeViewModel.ShiftTypeId
+                     orderby y.EmployeeId descending
+                     select y).FirstOrDefault();
+
+            _appContext.EmployeeShiftMapping.Remove(x);
+            _appContext.SaveChanges();
+
+            integrationTypes.ShiftId = employeetypeViewModel.ShiftTypeId;
+            integrationTypes.MasterCompanyId = 1;
+            return Ok(integrationTypes);
+        }
+
+
+
         [HttpPut("employeelistgpost/{id}")]
         public IActionResult UpdateAction(long id, [FromBody] EmployeeViewModel employeeViewModel)
         {
             if (ModelState.IsValid)
             {
+                Console.WriteLine("This is C#"+ employeeViewModel.IsHourly);
                 if (employeeViewModel == null)
                     return BadRequest($"{nameof(EmployeeViewModel)} cannot be null");
                 var entityobject = _context.ManagementStructure.Where(a => a.ManagementStructureId == employeeViewModel.ManagementStructureId).SingleOrDefault();
@@ -366,8 +411,8 @@ namespace QuickApp.Pro.Controllers
                             integrationTypes.CreatedDate = DateTime.Now;
                             integrationTypes.UpdatedDate = DateTime.Now;
                             integrationTypes.IsActive = true;
-                            _unitOfWork.EmployeeShiftMappingRepository.Add(integrationTypes);
-                            _unitOfWork.SaveChanges();
+                          //  _unitOfWork.EmployeeShiftMappingRepository.Add(integrationTypes);
+                        //    _unitOfWork.SaveChanges();
                             return Ok(integrationTypes);
                         }
 
@@ -923,5 +968,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
 
         }
+
+        private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }
 }

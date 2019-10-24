@@ -3,11 +3,11 @@
     <div class="right_col" role="main">
         <div class="x_content">
             <!--<nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a routerLink="/">Dashboard</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Vendor's List</li>
-            </ol>
-        </nav>-->
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a routerLink="/">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Vendor's List</li>
+                </ol>
+            </nav>-->
             <h4 class="page-heading clr-green">Employee's List</h4>
             <div class="right_col" role="main">
 
@@ -76,12 +76,12 @@
                                 </button>
 
                                 <!--
-    <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="deleteItemAndCloseModel(rowData)">
+                                <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="deleteItemAndCloseModel(rowData)">
 
-                                       <mat-icon color="warn">delete</mat-icon>
-                                   </button>
-       -->
-                                
+                                                                   <mat-icon color="warn">delete</mat-icon>
+                                                               </button>
+                                   -->
+
                                 <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="openDelete(content,rowData)">
 
                                     <mat-icon color="warn">delete</mat-icon>
@@ -200,12 +200,12 @@
 
                             <div class="col-sm-12">
                                 <label class="w150">Job Title</label>
-                                
+
                                 <span class="value">{{jobTitleName}}</span>
                             </div>
                             <div class="col-sm-12">
                                 <label class="w150">Job Type</label>
-                                
+
                                 <span class="value">{{jobTypeName}}</span>
                             </div>
                             <div class="col-sm-12">
@@ -262,32 +262,44 @@
                             </div>
                             <div class="col-sm-12">
                                 <label class="w150">Shift Type</label>
-                                <span class="value">{{shiftId}}</span>
+                                <div style="text-align:center;" *ngFor="let shift of shiftMapArray">
+                                    <span class="value">{{shift.shiftId}}</span>
+                                </div>
+
+
                             </div>
                             <div class="col-sm-12">
                                 <label class="w150">Extra Hours</label>
                                 <span class="value">{{allEmployeelist.allowOvertime}}</span>
                             </div>
                             <!--<div class="col-sm-12">
-                            <label class="w150">Pay Type</label>
-                            <span class="value">{{allEmployeelist.yearlypayType}}</span>
-                        </div>-->
-                            <div class="col-sm-12">
-                                <label class="w150">Hourly Pay</label>
-                                <span class="value">{{allEmployeelist.hourlyPay}}</span>
-                            </div>
+                                <label class="w150">Pay Type</label>
+                                <span class="value">{{allEmployeelist.yearlypayType}}</span>
+                            </div>-->
+                        <div class="col-sm-12">
+                            <label *ngIf="allEmployeelist.isHourly == true" class="w150">Hourly Pay</label>
+                            <label *ngIf="allEmployeelist.isHourly == false" class="w150">Monthly Pay</label>
+                            <span class="value">{{allEmployeelist.hourlyPay}}</span>
+                        </div>
                             <div class="col-sm-12">
                                 <label class="w150">Leave</label>
-                                <span class="value">{{employeeLeaveType}}</span>
+                                <div style="text-align:center;" *ngFor="let leave of leaveMapArray">
+                                    <span class="value">{{leave.employeeLeaveTypeId}}</span>
+                                </div>
+
                             </div>
                             <div class="col-sm-12">
                                 <label class="w150">Employee Certifying Staff?</label>
                                 <span class="value">{{allEmployeelist.employeeCertifyingStaff}}</span>
                             </div>
-                            <!--<div class="col-sm-12">
-                            <label class="w150">Supervisor Name</label>
-                            <span class="value">{{allEmployeelist.customerCode}}</span>
-                        </div>-->
+                            <!--
+
+                                 <div class="col-sm-12">
+                                <label class="w150">Supervisor Name</label>
+                                <span class="value">{{supervisiorname}}</span>
+                            </div>
+                                -->
+
                         </div>
                         <div class="clear"></div>
                         <hr>
@@ -305,9 +317,9 @@
                                 <span class="value">{{allEmployeelist.employeeLicensure?.licenseNumber}}</span>
                             </div>
                             <!--<div class="col-sm-12">
-                            <label class="w150">Certification Type</label>
-                            <span class="value">{{allEmployeelist.employeeLicensure?.employeeCertifyingStaff}}</span>
-                        </div>-->
+                                <label class="w150">Certification Type</label>
+                                <span class="value">{{allEmployeelist.employeeLicensure?.employeeCertifyingStaff}}</span>
+                            </div>-->
                             <div class="col-sm-12">
                                 <label class="w150">Certifying Institution</label>
                                 <span class="value">{{allEmployeelist.employeeLicensure?.certifyingInstitution}}</span>
@@ -337,7 +349,7 @@
                             </div>
                             <div class="col-sm-12">
                                 <label class="w150">Training Type</label>
-                                <span class="value">{{allEmployeelist.employeeTraining?.employeeTrainingTypeId }}</span>
+                                <span class="value">{{empTrainningInfo }}</span>
                             </div>
                             <div class="col-sm-12">
                                 <label class="w150">Schedule Date</label>
@@ -374,98 +386,98 @@
                                 <span class="value">{{allEmployeelist.employeeTraining?.expirationDate}}</span>
                             </div>
                             <!--<div class="col-sm-12">
-                            <label class="w150">Certification Received</label>
-                            <span>Certification</span>
-                        </div>-->
+                                <label class="w150">Certification Received</label>
+                                <span>Certification</span>
+                            </div>-->
                         </div>
                         <div class="clear"></div>
                         <hr>
                         <!--<div class="col-sm-12">
-                        <h4>Management Structure</h4>
-                        <div class="clear"></div>
-                        <hr>
-                    </div>
-                    <div class="col-sm-5 left-block">
-                        <div class="col-sm-12">
-                            <label class="w150">Roles</label>
-                            <span>Accountant, HR, Legal, Mechanic</span>
+                            <h4>Management Structure</h4>
+                            <div class="clear"></div>
+                            <hr>
                         </div>
-                        <div class="col-sm-12">
-                            <label class="w150">Memo</label>
-                            <span>Sample Memo</span>
+                        <div class="col-sm-5 left-block">
+                            <div class="col-sm-12">
+                                <label class="w150">Roles</label>
+                                <span>Accountant, HR, Legal, Mechanic</span>
+                            </div>
+                            <div class="col-sm-12">
+                                <label class="w150">Memo</label>
+                                <span>Sample Memo</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-sm-6 right-block">
+                        <div class="col-sm-6 right-block">
 
-                        <div class="tree-structure col-sm-12">
-                            <h4 style="margin-bottom: -10px;">ABC Holding Inc. (Management Structure)</h4>
-                            <ul style="margin-top: 13px;">
-                                <li class="hasSubmenu">
-                                    <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a class="addBorderBefore">Total Management View ( 2 )</a>
-                                    <ul style="margin-top: 13px;">
-                                        <li class="hasSubmenu" style="border-left: 1px solid gray;">
-                                            <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a>Total Operation - ( 2 )</a>
-                                            <ul style="margin-top: 13px;">
-                                                <li class="hasSubmenu" style="border-left: 1px solid gray;">
-                                                    <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a>456-AirFrame - ( 2 )</a>
-                                                    <ul style="margin-top: 13px;">
-                                                        <li class="hasSubmenu" style="border-left: 1px solid gray;">
-                                                            <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a>1234-Repair - ( 2 )</a>
-                                                            <ul style="margin-top: 13px; border-left: 1px solid gray;">
-                                                                <li><a>9999-Flight Controls - <span class="market-tags">Tag 1, Tag 2, Tag 3</span> - <span class="le-tags">GBB Inc</span></a></li>
-                                                                <li><a>2345-Hydraulic Power - <span class="market-tags">Tag 1, Tag 2, Tag 3</span> - <span class="le-tags">TXH Inc.</span></a></li>
-                                                            </ul>
-                                                        </li>
-                                                        <li class="hasSubmenu">
-                                                            <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a class="addBorderBefore">5678-Parts Sales - ( 1 )</a>
-                                                            <ul style="margin-top: 13px; border-left: 1px solid gray;">
-                                                                <li><a>9999-Flight Controls - <span class="market-tags">Tag 1, Tag 2, Tag 3</span> - <span class="le-tags">GBB Inc</span></a></li>
-                                                            </ul>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                                <li class="hasSubmenu">
-                                                    <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a class="addBorderBefore">123-Structure - ( 1 )</a>
-                                                    <ul style="margin-top: 13px;">
-                                                        <li class="hasSubmenu">
-                                                            <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a class="addBorderBefore">5678-Parts Sales - ( 2 )</a>
-                                                            <ul style="margin-top: 13px; border-left: 1px solid gray;">
-                                                                <li><a>3333-Doors - <span class="market-tags">Tag 1, Tag 2, Tag 3</span> - <span class="le-tags">GBB Inc</span></a></li>
-                                                                <li><a>1111-Fuselage - <span class="market-tags">Tag 1, Tag 2, Tag 3</span> - <span class="le-tags">GBB Inc</span></a></li>
-                                                            </ul>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li class="hasSubmenu">
-                                            <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a class="addBorderBefore">Admin and Sales - ( 2 )</a>
-                                            <ul style="margin-top: 13px;">
-                                                <li class="hasSubmenu" style="border-left: 1px solid gray;">
-                                                    <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a>654-Administration - ( 3 )</a>
-                                                    <ul style="margin-top: 13px; border-left: 1px solid gray;">
-                                                        <li><a>1100-Information Technology Dept - <span class="market-tags">Tag 1, Tag 2, Tag 3</span> - <span class="le-tags">GBB Inc</span></a></li>
-                                                        <li><a>2200-Accounting and Finance - <span class="market-tags">Tag 1, Tag 2, Tag 3</span> - <span class="le-tags">GBB Inc</span></a></li>
-                                                        <li><a>3300-Legal - <span class="market-tags">Tag 1, Tag 2, Tag 3</span> - <span class="le-tags">GBB Inc</span></a></li>
-                                                    </ul>
-                                                </li>
-                                                <li class="hasSubmenu">
-                                                    <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a class="addBorderBefore">987-Sales and Marketing - ( 1 )</a>
-                                                    <ul style="margin-top: 13px; border-left: 1px solid gray;">
-                                                        <li><a>4040-Corporate Sales - <span class="market-tags">Tag 1, Tag 2, Tag 3</span> - <span class="le-tags">GBB Inc</span></a></li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                            <br>
-                            <br>
-                            <br>
-                        </div>
+                            <div class="tree-structure col-sm-12">
+                                <h4 style="margin-bottom: -10px;">ABC Holding Inc. (Management Structure)</h4>
+                                <ul style="margin-top: 13px;">
+                                    <li class="hasSubmenu">
+                                        <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a class="addBorderBefore">Total Management View ( 2 )</a>
+                                        <ul style="margin-top: 13px;">
+                                            <li class="hasSubmenu" style="border-left: 1px solid gray;">
+                                                <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a>Total Operation - ( 2 )</a>
+                                                <ul style="margin-top: 13px;">
+                                                    <li class="hasSubmenu" style="border-left: 1px solid gray;">
+                                                        <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a>456-AirFrame - ( 2 )</a>
+                                                        <ul style="margin-top: 13px;">
+                                                            <li class="hasSubmenu" style="border-left: 1px solid gray;">
+                                                                <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a>1234-Repair - ( 2 )</a>
+                                                                <ul style="margin-top: 13px; border-left: 1px solid gray;">
+                                                                    <li><a>9999-Flight Controls - <span class="market-tags">Tag 1, Tag 2, Tag 3</span> - <span class="le-tags">GBB Inc</span></a></li>
+                                                                    <li><a>2345-Hydraulic Power - <span class="market-tags">Tag 1, Tag 2, Tag 3</span> - <span class="le-tags">TXH Inc.</span></a></li>
+                                                                </ul>
+                                                            </li>
+                                                            <li class="hasSubmenu">
+                                                                <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a class="addBorderBefore">5678-Parts Sales - ( 1 )</a>
+                                                                <ul style="margin-top: 13px; border-left: 1px solid gray;">
+                                                                    <li><a>9999-Flight Controls - <span class="market-tags">Tag 1, Tag 2, Tag 3</span> - <span class="le-tags">GBB Inc</span></a></li>
+                                                                </ul>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="hasSubmenu">
+                                                        <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a class="addBorderBefore">123-Structure - ( 1 )</a>
+                                                        <ul style="margin-top: 13px;">
+                                                            <li class="hasSubmenu">
+                                                                <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a class="addBorderBefore">5678-Parts Sales - ( 2 )</a>
+                                                                <ul style="margin-top: 13px; border-left: 1px solid gray;">
+                                                                    <li><a>3333-Doors - <span class="market-tags">Tag 1, Tag 2, Tag 3</span> - <span class="le-tags">GBB Inc</span></a></li>
+                                                                    <li><a>1111-Fuselage - <span class="market-tags">Tag 1, Tag 2, Tag 3</span> - <span class="le-tags">GBB Inc</span></a></li>
+                                                                </ul>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li class="hasSubmenu">
+                                                <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a class="addBorderBefore">Admin and Sales - ( 2 )</a>
+                                                <ul style="margin-top: 13px;">
+                                                    <li class="hasSubmenu" style="border-left: 1px solid gray;">
+                                                        <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a>654-Administration - ( 3 )</a>
+                                                        <ul style="margin-top: 13px; border-left: 1px solid gray;">
+                                                            <li><a>1100-Information Technology Dept - <span class="market-tags">Tag 1, Tag 2, Tag 3</span> - <span class="le-tags">GBB Inc</span></a></li>
+                                                            <li><a>2200-Accounting and Finance - <span class="market-tags">Tag 1, Tag 2, Tag 3</span> - <span class="le-tags">GBB Inc</span></a></li>
+                                                            <li><a>3300-Legal - <span class="market-tags">Tag 1, Tag 2, Tag 3</span> - <span class="le-tags">GBB Inc</span></a></li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="hasSubmenu">
+                                                        <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a class="addBorderBefore">987-Sales and Marketing - ( 1 )</a>
+                                                        <ul style="margin-top: 13px; border-left: 1px solid gray;">
+                                                            <li><a>4040-Corporate Sales - <span class="market-tags">Tag 1, Tag 2, Tag 3</span> - <span class="le-tags">GBB Inc</span></a></li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <br>
+                                <br>
+                                <br>
+                            </div>
 
-                    </div>-->
+                        </div>-->
 
                         <div class="clear"></div>
                     </form>
@@ -488,18 +500,18 @@
             </div>
         </ng-template>
         <!--<ng-template #content let-c="close" let-d="dismiss">
-        <div class="modal-header">
-            <h4 class="modal-title">Are You Sure Want to Delete 'Receive' Action ?</h4>
-            <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
+            <div class="modal-header">
+                <h4 class="modal-title">Are You Sure Want to Delete 'Receive' Action ?</h4>
+                <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
 
-        <div class="modal-footer">
-            <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
-            <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
-        </div>
-    </ng-template>-->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
+                <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+            </div>
+        </ng-template>-->
 
     </div>
 
