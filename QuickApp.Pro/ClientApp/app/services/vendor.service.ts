@@ -572,6 +572,10 @@ export class VendorService {
     getVendorsForDropdown() {
         return this.actionEndpoint.getVendorsForDropdownEndPoint<any[]>();
     }
+
+    getReceivingPOListing(){
+        return this.actionEndpoint.getReceivingPOListing();
+    }
 }
 
 

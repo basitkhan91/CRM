@@ -1327,6 +1327,31 @@ namespace DAL.Repositories
 			}
 		}
 
+        public IEnumerable<object> GetCustomerShipviaDetails(long customerId,long addressId)
+        {
+            try
+            {
+                var list = (from csv in _appContext.CustomerShipping
+                            where csv.CustomerId == customerId && csv.CustomerShippingAddressId == addressId
+                            select new
+                            {
+                                csv.CustomerShippingId,
+                                csv.IsActive,
+                                csv.Memo,
+                                csv.ShippingAccountinfo,
+                                csv.ShippingId,
+                                csv.ShippingURL,
+                                csv.ShipVia,
+                            }).ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
 
 		private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 	}

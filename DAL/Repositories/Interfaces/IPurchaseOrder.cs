@@ -27,5 +27,7 @@ namespace DAL.Repositories.Interfaces
         List<PurchaseOrderPart> GetPurchaseOrderParts(long purchaseOrderId);
         void DeletePurchaseOrder(long purchaseOrderId, string updatedBy);
         void PurchaseOrderStatus(long purchaseOrderId, bool status, string updatedBy);
+
+        IEnumerable<object> RecevingPolist();
     }
 }
