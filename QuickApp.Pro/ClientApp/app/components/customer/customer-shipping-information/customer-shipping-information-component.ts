@@ -124,7 +124,7 @@ export class CustomerShippingInformationComponent implements OnInit {
             ...this.domesticShippingInfo,
             createdBy: this.userName,
             updatedBy: this.userName,
-            country : editValueAssignByCondition('nice_name' , this.domesticShippingInfo.country),
+            country: getValueFromObjectByKey('nice_name', this.domesticShippingInfo.country),
             masterCompanyId: 1,
             isPrimary: false,
             isActive: true,
