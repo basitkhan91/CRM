@@ -97,6 +97,8 @@ import { StageCodeEndpointService } from './services/stage-code/stage-code-endpo
 import { StageCodeService } from './services/stage-code/stage-code.service';
 import { GLAccountCategoryEndpointService } from './services/gl-account-category/gl-account-category-endpoint.service';
 import { GLAccountCategoryService } from './services/gl-account-category/gl-account-category.service';
+import { ExpenditureCategoryEndpointService } from './services/expenditure-category/expenditure-category-endpoint.service';
+import { ExpenditureCategoryService } from './services/expenditure-category/expenditure-category.service';
 import { IntegrationService } from './services/integration-service';
 import { IntegrationEndpointService } from './services/integration.endpoint-service';
 import { PriorityService } from './services/priority.service';
@@ -117,8 +119,6 @@ import { WorkScopeService } from './services/workscope.service';
 import { WorkScopeEndpointService } from './services/workscope-endpoint.service';
 import { EmployeeExpertiseService } from './services/employeeexpertise.service';
 import { EmployeeExpertiseEndpointService } from './services/employeeexpertise-endpoint.service';
-import { ExpenditureCategoryEndpoint } from './services/expenditurecategory-endpoint.service';
-import { ExpenditureCategoryService } from './services/expenditurecategory.service';
 import { DefaultMessageEndpoint } from './services/defaultmessage-endpoint.service';
 import { DefaultMessageService } from './services/defaultmessage.service';
 import { DocumentEndpointService } from './services/document-endpoint.service';
@@ -309,6 +309,8 @@ import { GLAccountEndpoint } from './services/glAccount-endpoint.service';
         StageCodeEndpointService,
         GLAccountCategoryService,
         GLAccountCategoryEndpointService,
+        ExpenditureCategoryService,
+        ExpenditureCategoryEndpointService,
         IntegrationService,
         IntegrationEndpointService,
         PriorityService,
@@ -333,8 +335,6 @@ import { GLAccountEndpoint } from './services/glAccount-endpoint.service';
         WorkScopeEndpointService,
         EmployeeExpertiseService,
         EmployeeExpertiseEndpointService,
-        ExpenditureCategoryEndpoint,
-        ExpenditureCategoryService,
         DefaultMessageEndpoint,
         DefaultMessageService,
         DocumentService,
