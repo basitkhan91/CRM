@@ -1,21 +1,21 @@
 ﻿/// <reference path="../../../../node_modules/@types/jasmine/index.d.ts" />
 import { TestBed, async, ComponentFixture, ComponentFixtureAutoDetect } from '@angular/core/testing';
 import { BrowserModule, By } from "@angular/platform-browser";
-import { GLAccountCategoryComponent } from './gl-account-categories.component';
+import { GLAccountCategoryComponent } from './gl-account-category.component';
 
 let component: GLAccountCategoryComponent;
 let fixture: ComponentFixture<GLAccountCategoryComponent>;
 
-describe('gl-account-categories component', () => {
+describe('GLAccountCategory component', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-			declarations: [GLAccountCategoryComponent ],
+            declarations: [ GLAccountCategoryComponent ],
             imports: [ BrowserModule ],
             providers: [
                 { provide: ComponentFixtureAutoDetect, useValue: true }
             ]
         });
-		fixture = TestBed.createComponent(GLAccountCategoryComponent);
+        fixture = TestBed.createComponent(GLAccountCategoryComponent);
         component = fixture.componentInstance;
     }));
 

@@ -16,6 +16,7 @@
         Shelf,
         AssetType,
         AssetIntangibleType,
-        StageCode
+        StageCode,
+        GLAccountCategory
     }
 }

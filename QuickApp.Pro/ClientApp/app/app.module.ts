@@ -95,6 +95,8 @@ import { AssetTypeEndpointService } from './services/asset-type/asset-type-endpo
 import { AssetTypeService } from './services/asset-type/asset-type.service';
 import { StageCodeEndpointService } from './services/stage-code/stage-code-endpoint.service';
 import { StageCodeService } from './services/stage-code/stage-code.service';
+import { GLAccountCategoryEndpointService } from './services/gl-account-category/gl-account-category-endpoint.service';
+import { GLAccountCategoryService } from './services/gl-account-category/gl-account-category.service';
 import { IntegrationService } from './services/integration-service';
 import { IntegrationEndpointService } from './services/integration.endpoint-service';
 import { PriorityService } from './services/priority.service';
@@ -146,8 +148,6 @@ import { GLAccountClassService } from './services/glaccountclass.service';
 import { GLAccountClassEndpoint } from './services/glaccountclass-endpoint.service';
 import { WarehouseService } from './services/warehouse.service';
 import { WarehouseEndpoint } from './services/warehouse-endpoint.service';
-import { GLAccountCategoryService } from './services/glaccount-category.service';
-import { GLAccountCategoryEndpointservice } from './services/glaccountcategory-endpoint.service';
 import { SingleScreenBreadcrumbService } from './services/single-screens-breadcrumb.service';
 import { AuthService } from './services/auth.service';
 import { GlCashFlowClassificationEndpoint } from './services/gl-cash-flow-classification-endpoint.service';
@@ -282,8 +282,6 @@ import { GLAccountEndpoint } from './services/glAccount-endpoint.service';
         WarehouseEndpoint,
         BinService,
         BinEndpoint,
-        GLAccountCategoryService,
-        GLAccountCategoryEndpointservice,
         NgbActiveModal,
         MasterCompanyEndpoint,
         MasterComapnyService,
@@ -309,6 +307,8 @@ import { GLAccountEndpoint } from './services/glAccount-endpoint.service';
         AssetTypeService,
         StageCodeService,
         StageCodeEndpointService,
+        GLAccountCategoryService,
+        GLAccountCategoryEndpointService,
         IntegrationService,
         IntegrationEndpointService,
         PriorityService,
