@@ -51,7 +51,7 @@
                                                     <span style="margin-left:3px;cursor:pointer;"><a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addcredit" ></a></span>
                                                 </label>
                                                 <select name="creditTermsId" [(ngModel)]="savedGeneralInformationData.creditTermsId" required>
-                                                    <option *ngFor="let creditTermsId of creditTermList" [ngValue]="creditTermsId.creditTermsId">{{creditTermsId.name}}</option>
+                                                    <option *ngFor="let creditTermsId of creditTermList" [ngValue]="creditTermsId.value">{{creditTermsId.label}}</option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
@@ -517,8 +517,8 @@
                                 <p-autoComplete class="p-dropdown-custom-2" name="classificationName"  
                                  [(ngModel)]="addNewCreditTerms.name" 
                                  (onSelect)="selectedCreditTerm()"
-                                 (onKeyUp)="checkCreditTermsExists('name',$event.target.value)"
-                                 [suggestions]="_creditTermList" field="name" (completeMethod)="filterCreditTerms($event)" 
+                                 (onKeyUp)="checkCreditTermsExists('field',$event.target.value)"
+                                 [suggestions]="_creditTermList" field="label" (completeMethod)="filterCreditTerms($event)" 
                                  [size]="30"[minLength]="1" [dropdown]="true" required>
                                 </p-autoComplete>
                                <div *ngIf="isCreditTermsExists" class="clr-red">Entry Already Exists</div>  

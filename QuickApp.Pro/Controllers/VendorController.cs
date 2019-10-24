@@ -10,6 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using MimeKit.Encodings;
+using RepairOrderPartChild = QuickApp.Pro.ViewModels.RepairOrderPartChild;
+using DAL.Common;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -42,7 +45,18 @@ namespace QuickApp.Pro.Controllers
             return Ok(allActions);
 
         }
-
+        /// <summary>
+        /// Method that gets basic info namely id and name only
+        /// </summary>
+        /// <returns>List with basic info</returns>
+        [HttpGet("basic")]
+        [Produces(typeof(List<VendorBaseViewModel>))]
+        public IActionResult GetBasicList()
+        {
+            var basicvendorList = _unitOfWork.Vendor.GetVendorsLite();
+            var mappedList= Mapper.Map <IEnumerable<VendorBaseViewModel>>(basicvendorList);
+            return Ok(mappedList);                  
+        }
 
         [HttpGet("GetmanagementSiteList/{companyId}")]
         [Produces(typeof(List<SiteViewModel>))]
@@ -75,15 +89,13 @@ namespace QuickApp.Pro.Controllers
         }
 
 
-        [HttpGet("polist")]
-        [Produces(typeof(List<PurchaseOrderViewModel>))]
-
-        public IActionResult polist()
+        [HttpPost("polist")]
+        public IActionResult polist([FromBody]Filters<PurchaseOrderFilters> poFilters)
         {
-            var allActions = _unitOfWork.purchaseOrder.GetPurchaseOrderlist(); //.GetAllCustomersData();
+            var allActions = _unitOfWork.purchaseOrder.GetPurchaseOrderlist(poFilters); //.GetAllCustomersData();
             return Ok(allActions);
-
         }
+
         [HttpGet("rolist")]
         [Produces(typeof(List<RepairOrderViewModel>))]
 
@@ -215,22 +227,22 @@ namespace QuickApp.Pro.Controllers
             return Ok(allContacts);
 
         }
+
         [HttpGet("AddressGet")]
         [Produces(typeof(List<Address>))]
         public IActionResult GetAddress()
         {
             var alladdresses = _unitOfWork.Address.GetAddresses(); //.GetAllCustomersData();
             return Ok(alladdresses);
-
         }
+
         [HttpGet("Getpartdetails")]
-        [Produces(typeof(List<Address>))]
         public IActionResult Getpartdetails()
         {
             var allPartDetails = _context.ItemMaster.Where(a => a.IsDelete == false || a.IsDelete == null).OrderByDescending(a => a.ItemMasterId).ToList(); //.GetAllCustomersData();
             return Ok(allPartDetails);
-
         }
+
         [HttpGet("getSitesAddress")]
         [Produces(typeof(List<Address>))]
         public IActionResult getSitesAddress()
@@ -366,7 +378,7 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        
+
 
 
 
@@ -580,7 +592,8 @@ namespace QuickApp.Pro.Controllers
         private void MapPOVMToEntity(PurchaseOrderViewModel poViewModel, PurchaseOrder actionobject)
         {
             actionobject.PriorityId = poViewModel.PriorityId;
-            actionobject.DateRequested = poViewModel.OpenDate;
+            actionobject.OpenDate = poViewModel.OpenDate;
+            actionobject.ClosedDate = poViewModel.ClosedDate;
 
             actionobject.PurchaseOrderNumber = poViewModel.PurchaseOrderNumber;
             actionobject.RequestedBy = poViewModel.RequisitionerId;
@@ -748,6 +761,8 @@ namespace QuickApp.Pro.Controllers
                         _context.PurchaseOrderPart.Add(actionobject);
                         _unitOfWork.SaveChanges();
                     }
+
+                    
                     poViewModel.PurchaseOrderPartRecordId = actionobject.PurchaseOrderPartRecordId;
                     foreach (var poPartSplit in poViewModel.POPartSplits)
                     {
@@ -759,19 +774,21 @@ namespace QuickApp.Pro.Controllers
 
                             MapAddress(poPartSplit);
                             MapPOPSplitVMtoEntity(poPartSplit, poViewModel, popSplitEnt);
+                            popSplitEnt.ParentId = poViewModel.PurchaseOrderPartRecordId;
                             _context.PurchaseOrderPart.Add(popSplitEnt);
-                            
+
                         }
                         else
                         {
                             MapAddress(poPartSplit);
                             popSplitEnt.isParent = false;
                             MapPOPSplitVMtoEntity(poPartSplit, poViewModel, popSplitEnt);
+                            actionobject.ParentId = poViewModel.PurchaseOrderPartRecordId;
                             _context.PurchaseOrderPart.Update(actionobject);
                         }
                         _unitOfWork.SaveChanges();
                         poPartSplit.PurchaseOrderPartRecordId = popSplitEnt.PurchaseOrderPartRecordId;
-                    }                   
+                    }
                 }
                 return Ok(poViewModels);
             }
@@ -787,11 +804,11 @@ namespace QuickApp.Pro.Controllers
                 {
                     return BadRequest($"{nameof(poViewModel)} cannot be null");
                 }
-                   
+
 
                 if (_context.RepairOrder.Any(o => o.RepairOrderId == poViewModel.RepairOrderId))
                 {
-                    
+
                     var repairOrderModel = _context.RepairOrder.Where(a => a.RepairOrderId == poViewModel.RepairOrderId).SingleOrDefault();
 
                     repairOrderModel.RepairOrderNumber = poViewModel.RepairOrderNumber;
@@ -889,116 +906,226 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("saveVendorrepairpart")]
-        public IActionResult saveVendorrepairpart([FromBody] RepairOrderPartViewModel poViewModel, Address address, VendorType vt)
+        public IActionResult saveVendorrepairpart([FromBody] List<RepairOrderPartViewModel>  poViewModels, Address address, VendorType vt)
         {
             if (ModelState.IsValid)
             {
-                if (_context.RepairOrderPart.Any(o => o.RepairOrderPartRecordId == poViewModel.RepairOrderPartRecordId))
+                //var repairOrderPartList = new List<RepairOrderPart>();
+                foreach (var poViewModel in poViewModels)
+                {       
+                    if (_context.RepairOrderPart.Any(o => o.RepairOrderId == poViewModel.RepairOrderId))
+                    {
+                        if (poViewModel == null)
+                            return BadRequest($"{nameof(poViewModel)} cannot be null");
+                        var actionobject = _context.RepairOrderPart.Where(a => a.RepairOrderId == poViewModel.RepairOrderId).SingleOrDefault();
+                        actionobject.RepairOrderId = poViewModel.RepairOrderId;
+                        actionobject.IsParent = poViewModel.IsParent;
+                        actionobject.ItemMasterId = poViewModel.ItemMasterId;
+                        actionobject.SerialNumber = poViewModel.SerialNumber;
+                        actionobject.NeedByDate = poViewModel.NeedByDate;
+                        actionobject.UOMId = poViewModel.UOMId;
+                        actionobject.QuantityOrdered = poViewModel.QuantityOrdered;
+                        actionobject.UnitCost = poViewModel.UnitCost;
+                        actionobject.DiscountPerUnit = poViewModel.DiscountPerUnit;
+                        actionobject.ExtendedCost = poViewModel.ExtendedCost;
+                        actionobject.FunctionalCurrencyId = poViewModel.FunctionalCurrencyId;
+                        actionobject.ForeignExchangeRate = poViewModel.ForeignExchangeRate;
+                        actionobject.WorkOrderId = poViewModel.WorkOrderId;
+                        actionobject.SalesOrderId = poViewModel.SalesOrderId;
+                        actionobject.Memo = poViewModel.Memo;
+                        actionobject.ManagementStructureId = poViewModel.ManagementStructureId;
+                        actionobject.CreatedBy = poViewModel.CreatedBy;
+                        actionobject.UpdatedBy = poViewModel.UpdatedBy;
+                        actionobject.CreatedDate = poViewModel.CreatedDate;
+                        actionobject.UpdatedDate = poViewModel.UpdatedDate;
+                        actionobject.AssetId = poViewModel.AssetId;
+                        actionobject.PartNumberId = poViewModel.PartNumberId;
+                        actionobject.AlternatePartNumberId = poViewModel.AlternatePartNumberId;
+                        actionobject.ItemTypeId = poViewModel.ItemTypeId;
+                        actionobject.MenufacturerId = poViewModel.MenufacturerId;
+                        actionobject.GlAccountId = poViewModel.GlAccountId;
+                        actionobject.ConditionId = poViewModel.ConditionId;
+                        actionobject.DiscountAmount = poViewModel.DiscountAmount;
+                        actionobject.ReportCurrencyId = poViewModel.ReportCurrencyId;
+                        actionobject.MasterCompanyId = poViewModel.MasterCompanyId;
+                        
+                        // GET THIS FROM ADDRESS_T
+                        var roModel = _context.RepairOrder.Where(a => a.RepairOrderId == poViewModel.RepairOrderId).SingleOrDefault();
+                        if (roModel != null)
+                        {
+                            // FILL SHIPPING ADDRESS
+                            if (roModel.ShipToAddressId != null)
+                            {
+                                var shipAddressModel =  _context.Address.Where(a => a.AddressId == roModel.ShipToAddressId).SingleOrDefault();
+                                if (shipAddressModel != null)
+                                {
+                                    actionobject.ShipToPOBox = shipAddressModel.PoBox;
+                                    actionobject.ShipToLine1 = shipAddressModel.Line1;
+                                    actionobject.ShipToLine2 = shipAddressModel.Line2;
+                                    actionobject.ShipToLine3 = shipAddressModel.Line3;
+                                    actionobject.ShipToCity = shipAddressModel.City;
+                                    actionobject.ShipToStateOrProvince = shipAddressModel.StateOrProvince;
+                                    actionobject.ShipToPostalCode = shipAddressModel.PostalCode;
+                                    actionobject.ShipToCountry = shipAddressModel.Country;
+                                    //actionobject.ShipToLatitude = shipAddressModel.;
+                                    //actionobject.ShipToLongitude = shipAddressModel.ShipToLongitude;
+                                }
+                            }  
 
-                {
-                    if (poViewModel == null)
-                        return BadRequest($"{nameof(poViewModel)} cannot be null");
-                    var actionobject = _context.RepairOrderPart.Where(a => a.RepairOrderPartRecordId == poViewModel.RepairOrderPartRecordId).SingleOrDefault();
-                    //DAL.Models.PurchaseOrderPart actionobject = new DAL.Models.PurchaseOrderPart();
+                            // FILL BILLING ADDRESS
+                            if (roModel.BillToUserId != null)
+                            {
+                                var billingAddressModel =  _context.Address.Where(a => a.AddressId == roModel.BillToUserId).SingleOrDefault();
+                                if (billingAddressModel != null)
+                                {
+                                    actionobject.ShipToPOBox = billingAddressModel.PoBox;
+                                    actionobject.ShipToLine1 = billingAddressModel.Line1;
+                                    actionobject.ShipToLine2 = billingAddressModel.Line2;
+                                    actionobject.ShipToLine3 = billingAddressModel.Line3;
+                                    actionobject.ShipToCity = billingAddressModel.City;
+                                    actionobject.ShipToStateOrProvince = billingAddressModel.StateOrProvince;
+                                    actionobject.ShipToPostalCode = billingAddressModel.PostalCode;
+                                    actionobject.ShipToCountry = billingAddressModel.Country;
+                                    //actionobject.ShipToLatitude = billingAddressModel.;
+                                    //actionobject.ShipToLongitude = billingAddressModel.ShipToLongitude;
+                                }
+                            }  
+                        }
 
-                    actionobject.RepairOrderId = poViewModel.RepairOrderId;
-                    actionobject.ItemMasterId = poViewModel.ItemMasterId;
-                    actionobject.SerialNumber = poViewModel.SerialNumber;
-                    actionobject.NonInventory = poViewModel.NonInventory;
-                    actionobject.RequisitionedBy = poViewModel.RequisitionedBy;
-                    actionobject.RequisitionedDate = poViewModel.RequisitionedDate;
+                        #region MyRegion
+                           //repairOrderPartList.Add(actionobject);
 
-                    actionobject.Approver = poViewModel.Approver;
-                    actionobject.ApprovedDate = poViewModel.ApprovedDate;
-                    actionobject.NeedByDate = poViewModel.NeedByDate;
-                    actionobject.Manufacturer = poViewModel.Manufacturer;
-                    actionobject.Status = poViewModel.Status;
-                    actionobject.Trace = poViewModel.Trace;
-                    actionobject.ConditionCode = poViewModel.ConditionCode;
-                    actionobject.isParent = poViewModel.isParent;
-                    actionobject.QuantityOrdered = poViewModel.QuantityOrdered;
-                    actionobject.UnitCost = poViewModel.UnitCost;
-                    actionobject.DiscountCostPerUnit = poViewModel.DiscountCostPerUnit;
-                    actionobject.DiscountPerUnit = poViewModel.DiscountPerUnit;
-                    actionobject.ExtendedCost = poViewModel.ExtendedCost;
-                    actionobject.TransactionalCurrencyId = poViewModel.TransactionalCurrencyId;
-                    actionobject.FunctionalCurrencyId = poViewModel.FunctionalCurrencyId;
-                    actionobject.ForeignExchangeRate = poViewModel.ForeignExchangeRate;
-                    actionobject.WorkOrderId = poViewModel.WorkOrderId;
-                    actionobject.RepairOrderId = poViewModel.RepairOrderId;
-                    actionobject.SalesOrderId = poViewModel.SalesOrderId;
-                    actionobject.GeneralLedgerAccounId = poViewModel.GeneralLedgerAccounId;
-                    actionobject.Memo = poViewModel.Memo;
-                    actionobject.ROPartSplitUserTypeId = poViewModel.ROPartSplitUserTypeId;
-                    actionobject.ROPartSplitUserName = poViewModel.ROPartSplitUserName;
-                    actionobject.DiscountPerUnit = poViewModel.DiscountPerUnit;
-                    actionobject.ROPartSplitAddress1 = poViewModel.ROPartSplitAddress1;
-                    actionobject.ROPartSplitAddress2 = poViewModel.ROPartSplitAddress2;
-                    actionobject.ROPartSplitAddress3 = poViewModel.ROPartSplitAddress3;
-                    actionobject.ROPartSplitCity = poViewModel.ROPartSplitCity;
-                    actionobject.ROPartSplitCountry = poViewModel.ROPartSplitCountry;
-                    actionobject.ROPartSplitPostalCode = poViewModel.ROPartSplitPostalCode;
-                    actionobject.ManagementStructureId = poViewModel.ManagementStructureId;
-                    actionobject.CreatedDate = DateTime.Now;
-                    actionobject.UpdatedDate = DateTime.Now;
-                    actionobject.CreatedBy = "admin";
-                    actionobject.UpdatedBy = "admin";
-                    _context.RepairOrderPart.Update(actionobject);
-                    _unitOfWork.SaveChanges();
-                    return Ok(actionobject);
+                        //if (actionobject.ChildObjects != null && actionobject.ChildObjects.Any())
+                        //{
+                        //    foreach (var childObject in actionobject.ChildObjects)
+                        //    {
+                        //        //var repairOrderChild = new RepairOrderPart()
+                        //        //{
+                        //        //    RepairOrderId = childObject.RepairOrderId,
+                        //        //    IsParent = childObject.IsParent,
+                        //        //    ItemMasterId = childObject.ItemMasterId,
+                        //        //    SerialNumber = childObject.SerialNumber,
+                        //        //    AssetId = childObject.AssetId,
+                        //        //    PartNumberId = childObject.PartNumberId,
+                        //        //    UOMId = childObject.UOMId,
+                        //        //    QuantityOrdered = childObject.QuantityOrdered,
+                        //        //    ManagementStructureId = childObject.ManagementStructureId,
+                        //        //    NeedByDate = childObject.NeedByDate,
+                        //        //    RoPartSplitUserTypeId = childObject.RoPartSplitUserTypeId,
+                        //        //    RoPartSplitUserId = childObject.RoPartSplitUserId,
+                        //        //    RoPartSplitAddressId = childObject.RoPartSplitAddressId,
+                        //        //    CreatedBy = childObject.CreatedBy,
+                        //        //    UpdatedBy = childObject.UpdatedBy
+                        //        //};
+
+                        //        //repairOrderPartList.Add(repairOrderChild);
+
+                        //    }
+                        //}
+
+                        //foreach (var repairOrderPart in repairOrderPartList)
+                        //{
+                        //    if (repairOrderPart.RoPartSplitUserTypeId != null)
+                        //    {
+                        //        _context.RepairOrderPart
+                        //            .Where(x => x.RoPartSplitUserTypeId == repairOrderPart.RoPartSplitUserTypeId)
+                        //            .Update(y => y.RoPartSplitUserTypeId);
+                        //    }
+                        //}
+                        
+
+                        #endregion
+                     
+
+                        _context.RepairOrderPart.Update(actionobject);
+                        _unitOfWork.SaveChanges();
+                        return Ok(actionobject);
+                    }
+                    else
+                    {
+                        DAL.Models.RepairOrderPart actionobject = new DAL.Models.RepairOrderPart();
+
+                        actionobject.RepairOrderId = poViewModel.RepairOrderId;
+                        actionobject.IsParent = poViewModel.IsParent;
+                        actionobject.ItemMasterId = poViewModel.ItemMasterId;
+                        actionobject.SerialNumber = poViewModel.SerialNumber;
+                        actionobject.NeedByDate = poViewModel.NeedByDate;
+                        actionobject.UOMId = poViewModel.UOMId;
+                        actionobject.QuantityOrdered = poViewModel.QuantityOrdered;
+                        actionobject.UnitCost = poViewModel.UnitCost;
+                        actionobject.DiscountPerUnit = poViewModel.DiscountPerUnit;
+                        actionobject.ExtendedCost = poViewModel.ExtendedCost;
+                        actionobject.FunctionalCurrencyId = poViewModel.FunctionalCurrencyId;
+                        actionobject.ForeignExchangeRate = poViewModel.ForeignExchangeRate;
+                        actionobject.WorkOrderId = poViewModel.WorkOrderId;
+                        actionobject.SalesOrderId = poViewModel.SalesOrderId;
+                        actionobject.Memo = poViewModel.Memo;
+                        actionobject.ManagementStructureId = poViewModel.ManagementStructureId;
+                        actionobject.CreatedBy = poViewModel.CreatedBy;
+                        actionobject.UpdatedBy = poViewModel.UpdatedBy;
+                        actionobject.CreatedDate = poViewModel.CreatedDate;
+                        actionobject.UpdatedDate = poViewModel.UpdatedDate;
+                        actionobject.AssetId = poViewModel.AssetId;
+                        actionobject.PartNumberId = poViewModel.PartNumberId;
+                        actionobject.AlternatePartNumberId = poViewModel.AlternatePartNumberId;
+                        actionobject.ItemTypeId = poViewModel.ItemTypeId;
+                        actionobject.MenufacturerId = poViewModel.MenufacturerId;
+                        actionobject.GlAccountId = poViewModel.GlAccountId;
+                        actionobject.ConditionId = poViewModel.ConditionId;
+                        actionobject.DiscountAmount = poViewModel.DiscountAmount;
+                        actionobject.ReportCurrencyId = poViewModel.ReportCurrencyId;
+                        actionobject.MasterCompanyId = poViewModel.MasterCompanyId;
+
+                        // GET THIS FROM ADDRESS_T
+                        var roModel = _context.RepairOrder.Where(a => a.RepairOrderId == poViewModel.RepairOrderId).SingleOrDefault();
+                        if (roModel != null)
+                        {
+                            // FILL SHIPPING ADDRESS
+                            if (roModel.ShipToAddressId != null)
+                            {
+                                var shipAddressModel =  _context.Address.Where(a => a.AddressId == roModel.ShipToAddressId).SingleOrDefault();
+                                if (shipAddressModel != null)
+                                {
+                                    actionobject.ShipToPOBox = shipAddressModel.PoBox;
+                                    actionobject.ShipToLine1 = shipAddressModel.Line1;
+                                    actionobject.ShipToLine2 = shipAddressModel.Line2;
+                                    actionobject.ShipToLine3 = shipAddressModel.Line3;
+                                    actionobject.ShipToCity = shipAddressModel.City;
+                                    actionobject.ShipToStateOrProvince = shipAddressModel.StateOrProvince;
+                                    actionobject.ShipToPostalCode = shipAddressModel.PostalCode;
+                                    actionobject.ShipToCountry = shipAddressModel.Country;
+                                    //actionobject.ShipToLatitude = shipAddressModel.;
+                                    //actionobject.ShipToLongitude = shipAddressModel.ShipToLongitude;
+                                }
+                            }  
+
+                            // FILL BILLING ADDRESS
+                            if (roModel.BillToUserId != null)
+                            {
+                                var billingAddressModel =  _context.Address.Where(a => a.AddressId == roModel.BillToUserId).SingleOrDefault();
+                                if (billingAddressModel != null)
+                                {
+                                    actionobject.ShipToPOBox = billingAddressModel.PoBox;
+                                    actionobject.ShipToLine1 = billingAddressModel.Line1;
+                                    actionobject.ShipToLine2 = billingAddressModel.Line2;
+                                    actionobject.ShipToLine3 = billingAddressModel.Line3;
+                                    actionobject.ShipToCity = billingAddressModel.City;
+                                    actionobject.ShipToStateOrProvince = billingAddressModel.StateOrProvince;
+                                    actionobject.ShipToPostalCode = billingAddressModel.PostalCode;
+                                    actionobject.ShipToCountry = billingAddressModel.Country;
+                                    //actionobject.ShipToLatitude = billingAddressModel.;
+                                    //actionobject.ShipToLongitude = billingAddressModel.ShipToLongitude;
+                                }
+                            }  
+                        }
+
+                        _context.RepairOrderPart.Add(actionobject);
+                        _unitOfWork.SaveChanges();
+                        return Ok(actionobject);
+
+                    }
                 }
 
-                else
-                {
-                    DAL.Models.RepairOrderPart actionobject = new DAL.Models.RepairOrderPart();
-
-                    actionobject.RepairOrderId = poViewModel.RepairOrderId;
-                    actionobject.ItemMasterId = poViewModel.ItemMasterId;
-                    actionobject.SerialNumber = poViewModel.SerialNumber;
-                    actionobject.NonInventory = poViewModel.NonInventory;
-                    actionobject.RequisitionedBy = poViewModel.RequisitionedBy;
-                    actionobject.RequisitionedDate = poViewModel.RequisitionedDate;
-
-                    actionobject.Approver = poViewModel.Approver;
-                    actionobject.ApprovedDate = poViewModel.ApprovedDate;
-                    actionobject.NeedByDate = poViewModel.NeedByDate;
-                    actionobject.Manufacturer = poViewModel.Manufacturer;
-                    actionobject.Status = poViewModel.Status;
-                    actionobject.Trace = poViewModel.Trace;
-                    actionobject.ConditionCode = poViewModel.ConditionCode;
-                    actionobject.isParent = poViewModel.isParent;
-                    actionobject.QuantityOrdered = poViewModel.QuantityOrdered;
-                    actionobject.UnitCost = poViewModel.UnitCost;
-                    actionobject.DiscountCostPerUnit = poViewModel.DiscountCostPerUnit;
-                    actionobject.DiscountPerUnit = poViewModel.DiscountPerUnit;
-                    actionobject.ExtendedCost = poViewModel.ExtendedCost;
-                    actionobject.TransactionalCurrencyId = poViewModel.TransactionalCurrencyId;
-                    actionobject.FunctionalCurrencyId = poViewModel.FunctionalCurrencyId;
-                    actionobject.ForeignExchangeRate = poViewModel.ForeignExchangeRate;
-                    actionobject.WorkOrderId = poViewModel.WorkOrderId;
-                    actionobject.RepairOrderId = poViewModel.RepairOrderId;
-                    actionobject.SalesOrderId = poViewModel.SalesOrderId;
-                    actionobject.GeneralLedgerAccounId = poViewModel.GeneralLedgerAccounId;
-                    actionobject.Memo = poViewModel.Memo;
-                    actionobject.ROPartSplitUserTypeId = poViewModel.ROPartSplitUserTypeId;
-                    actionobject.ROPartSplitUserName = poViewModel.ROPartSplitUserName;
-                    actionobject.DiscountPerUnit = poViewModel.DiscountPerUnit;
-                    actionobject.ROPartSplitAddress1 = poViewModel.ROPartSplitAddress1;
-                    actionobject.ROPartSplitAddress2 = poViewModel.ROPartSplitAddress2;
-                    actionobject.ROPartSplitAddress3 = poViewModel.ROPartSplitAddress3;
-                    actionobject.ROPartSplitCity = poViewModel.ROPartSplitCity;
-                    actionobject.ROPartSplitCountry = poViewModel.ROPartSplitCountry;
-                    actionobject.ROPartSplitPostalCode = poViewModel.ROPartSplitPostalCode;
-                    actionobject.ManagementStructureId = poViewModel.ManagementStructureId;
-                    actionobject.CreatedDate = DateTime.Now;
-                    actionobject.UpdatedDate = DateTime.Now;
-                    actionobject.CreatedBy = "admin";
-                    actionobject.UpdatedBy = "admin";
-                    _context.RepairOrderPart.Add(actionobject);
-                    _unitOfWork.SaveChanges();
-                    return Ok(actionobject);
-
-                }
             }
 
             return Ok(ModelState);
@@ -1192,7 +1319,6 @@ namespace QuickApp.Pro.Controllers
                 address.City = vendorViewModel.City;
                 address.Country = vendorViewModel.Country;
                 address.MasterCompanyId = 1;
-                address.RecordCreateDate = DateTime.Now;
                 address.CreatedBy = vendorViewModel.CreatedBy ?? "Admin"; //Hotfix
                 address.UpdatedBy = vendorViewModel.UpdatedBy ?? "Admin";//Hotfix
                 address.CreatedDate = DateTime.Now;
@@ -1251,7 +1377,6 @@ namespace QuickApp.Pro.Controllers
             address.Country = vendorViewModel.Country;
             address.MasterCompanyId = 1;
             address.IsActive = true;
-            address.RecordCreateDate = DateTime.Now;
             address.CreatedBy = vendorViewModel.CreatedBy ?? "Admin"; //Hotfix
             address.UpdatedBy = vendorViewModel.UpdatedBy ?? "Admin"; //Hotfix
             address.CreatedDate = DateTime.Now;
@@ -1538,7 +1663,6 @@ namespace QuickApp.Pro.Controllers
                 address.Country = vendorshipping.Country;
                 address.MasterCompanyId = 1;
                 address.IsActive = true;
-                address.RecordCreateDate = DateTime.Now;
                 address.CreatedBy = vendorshipping.CreatedBy ?? "Admin"; //Hotfix
                 address.UpdatedBy = vendorshipping.UpdatedBy ?? "Admin";//Hotfix
                 address.CreatedDate = DateTime.Now;
@@ -1639,7 +1763,6 @@ namespace QuickApp.Pro.Controllers
                 address.City = checkPaymentViewModel.City;
                 address.Country = checkPaymentViewModel.Country;
                 address.MasterCompanyId = 1;
-                address.RecordCreateDate = DateTime.Now;
                 address.CreatedBy = checkPaymentViewModel.CreatedBy ?? "Admin"; //HotFix
                 address.UpdatedBy = checkPaymentViewModel.UpdatedBy ?? "Admin"; //HotFix
                 address.CreatedDate = DateTime.Now;
@@ -1682,7 +1805,6 @@ namespace QuickApp.Pro.Controllers
                 addressObj.City = checkPaymentViewModel.City;
                 addressObj.Country = checkPaymentViewModel.Country;
                 addressObj.MasterCompanyId = 1;
-                addressObj.RecordCreateDate = DateTime.Now;
                 addressObj.CreatedBy = checkPaymentViewModel.CreatedBy;
                 addressObj.UpdatedBy = checkPaymentViewModel.UpdatedBy;
                 addressObj.CreatedDate = DateTime.Now;
@@ -1747,7 +1869,6 @@ namespace QuickApp.Pro.Controllers
                 address.City = domesticWirePaymentViewModel.City;
                 address.Country = domesticWirePaymentViewModel.Country;
                 address.MasterCompanyId = 1;
-                address.RecordCreateDate = DateTime.Now;
                 address.CreatedBy = domesticWirePaymentViewModel.CreatedBy ?? "Admin";//Hotfix
                 address.UpdatedBy = domesticWirePaymentViewModel.UpdatedBy ?? "Admin";//Hotfix
                 address.CreatedDate = DateTime.Now;
@@ -1793,7 +1914,6 @@ namespace QuickApp.Pro.Controllers
                 address.City = domesticWirePaymentViewModel.City;
                 address.Country = domesticWirePaymentViewModel.Country;
                 address.MasterCompanyId = 1;
-                address.RecordCreateDate = DateTime.Now;
                 address.CreatedBy = domesticWirePaymentViewModel.CreatedBy ?? "Admin";//Hotfix
                 address.UpdatedBy = domesticWirePaymentViewModel.UpdatedBy ?? "Admin";//Hotfix
                 address.CreatedDate = DateTime.Now;
@@ -1837,7 +1957,6 @@ namespace QuickApp.Pro.Controllers
                 address.City = internationalWirePaymentmodel.City;
                 address.Country = internationalWirePaymentmodel.Country;
                 address.MasterCompanyId = 1;
-                address.RecordCreateDate = DateTime.Now;
                 address.CreatedBy = internationalWirePaymentmodel.CreatedBy ?? "Admin"; //Hotfix
                 address.UpdatedBy = internationalWirePaymentmodel.UpdatedBy ?? "Admin"; //Hotfix
                 address.CreatedDate = DateTime.Now;
@@ -1905,7 +2024,6 @@ namespace QuickApp.Pro.Controllers
                 address.City = internationalWirePaymentViewModel.City;
                 address.Country = internationalWirePaymentViewModel.Country;
                 address.MasterCompanyId = 1;
-                address.RecordCreateDate = DateTime.Now;
                 address.CreatedBy = internationalWirePaymentViewModel.CreatedBy ?? "Admin";
                 address.UpdatedBy = internationalWirePaymentViewModel.UpdatedBy ?? "Admin";//Hotfix
                 address.CreatedDate = DateTime.Now;
@@ -2841,9 +2959,9 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("createvendorbillingaddress")]
         public IActionResult CreateVendorBillingAddress([FromBody] VendorBillingAddress billingAddress)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                billingAddress.VendorBillingAddressId= _unitOfWork.Vendor.CreateVendorBillingAddress(billingAddress);
+                billingAddress.VendorBillingAddressId = _unitOfWork.Vendor.CreateVendorBillingAddress(billingAddress);
                 return Ok(billingAddress);
             }
             return BadRequest(ModelState);
@@ -2854,7 +2972,7 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
-                 _unitOfWork.Vendor.UpdateVendorBillingAddress(billingAddress);
+                _unitOfWork.Vendor.UpdateVendorBillingAddress(billingAddress);
                 return Ok(billingAddress);
             }
             return BadRequest(ModelState);
@@ -2864,8 +2982,8 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("deletevendorbillingaddress")]
         public IActionResult DeleteVendorBillingAddress(long billingAddressId, string updatedBy)
         {
-                _unitOfWork.Vendor.DeleteVendorBillingAddress(billingAddressId, updatedBy);
-                return Ok();
+            _unitOfWork.Vendor.DeleteVendorBillingAddress(billingAddressId, updatedBy);
+            return Ok();
         }
 
         [HttpGet("vendorbillingaddressstatus")]
@@ -2889,7 +3007,22 @@ namespace QuickApp.Pro.Controllers
             return Ok();
         }
 
+        [HttpGet("GetVendorsForDropDown")]
+        public IActionResult GetVendorsForDropDown()
+        {
 
+            var vendors = _unitOfWork.Vendor.getVendorsForDropdown()
+                .Select(x => new
+                {
+                    VendorId = x.VendorId,
+                    VendorName = x.VendorName
+                }).ToList();
+
+            if (vendors == null || vendors.Count() == 0)
+                return NoContent();
+
+            return Ok(vendors);
+        }
 
         #endregion
 

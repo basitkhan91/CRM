@@ -26,10 +26,14 @@ import { NgForm } from '@angular/forms';
 import * as $ from 'jquery';
 import { GlAccountService } from '../../../../services/glAccount/glAccount.service';
 import { GlAccount } from '../../../../models/GlAccount.model';
-import { getValueFromObjectByKey, getObjectByValue, getValueFromArrayOfObjectById, getObjectById } from '../../../../generic/autocomplete';
+import { getValueFromObjectByKey, getObjectByValue, getValueFromArrayOfObjectById, getObjectById, editValueAssignByCondition } from '../../../../generic/autocomplete';
 import { AuthService } from '../../../../services/auth.service';
 import { CommonService } from '../../../../services/common.service';
 import { CustomerShippingModel } from '../../../../models/customer-shipping.model';
+import { CompanyService } from '../../../../services/company.service';
+import { CustomerInternationalShipVia } from '../../../../models/customer-internationalshipping.model';
+import { getModuleNameById } from '../../../../generic/enums';
+import { AddressNew } from '../../../../models/address-new-model';
 
 @Component({
 	selector: 'app-purchase-setup',
@@ -47,7 +51,7 @@ export class PurchaseSetupComponent {
 	firstNamesbillTo: any[] = [];
 	billToContactData: any[] = [];
 	firstNames: any[];
-	shipToContactData: any[] = [];
+	shipToContactData: any = [];
 	testData: any[] = [];
 	editChildList: any[] = [];
 	vendorSelectedforSplit: any[];
@@ -217,7 +221,7 @@ export class PurchaseSetupComponent {
 	addressSiteNameHeader: string;
 	addressSiteName: any = {};
 	splitUserTypeAddress: any = {};
-	shipToShipViaDetails: any = {};
+	// shipToShipViaDetails: any = {};
 	tempMultiplePNArray: any[];
 	partNumberNames: any[];
 	tempPartListData: any[];
@@ -243,6 +247,25 @@ export class PurchaseSetupComponent {
 	newObjectForParent = new CreatePOPartsList();
 	addressFormForShipping = new CustomerShippingModel()
 	addressFormForBilling = new CustomerShippingModel()
+	legalEntity: any;
+	legalEntityList_ForShipping: Object;
+	legalEntityList_ForBilling: Object;
+	addShipViaFormForShipping = new CustomerInternationalShipVia()
+	shipViaList: Object;
+	companySiteList_Shipping: any;
+	contactListForShippingCompany: any;
+	contactListForCompanyShipping: any;
+	companySiteList_Billing: any;
+	contactListForCompanyBilling: any;
+	contactListForBillingCompany: any;
+	shipToSelectedvalue: any;
+	billToSelectedvalue: any;
+	addNewAddress = new AddressNew();
+	gridSelectedVendorId: any;
+	gridSelectedCustomerId: any;
+	legalEntityList_Forgrid: any;
+
+
 	// this.siteName ="";
 	// this.address1 ="";
 	// this.address3 ="";
@@ -272,6 +295,7 @@ export class PurchaseSetupComponent {
 		public glAccountService: GlAccountService,
 		private authService: AuthService,
 		private customerService: CustomerService,
+		private companyService: CompanyService,
 		private commonService: CommonService) {
 
 		//this.loadcustomerData();
@@ -389,11 +413,13 @@ export class PurchaseSetupComponent {
 		this.ptnumberlistdata();
 		this.loadcustomerData();
 		this.glAccountData();
+		this.getLegalEntity();
 		//this.getAllPartNumbers();
 		this.sourcePoApproval.companyId = 0;
 		this.sourcePoApproval.buId = 0;
 		this.sourcePoApproval.divisionId = 0;
 		this.sourcePoApproval.departmentId = 0;
+		console.log('x');
 		if (this.sourcePoApproval.purchaseOrderNumber == "" || this.sourcePoApproval.purchaseOrderNumber == undefined) {
 			this.sourcePoApproval.purchaseOrderNumber = 'Creating';
 		}
@@ -432,6 +458,42 @@ export class PurchaseSetupComponent {
 
 	}
 
+	getLegalEntity() {
+		this.commonService.smartDropDownList('LegalEntity', 'LegalEntityId', 'Name').subscribe(res => {
+			this.legalEntity = res;
+		})
+	}
+
+	filterCompanyNameforgrid(event){
+		this.legalEntityList_Forgrid = this.legalEntity;
+
+
+		const legalFilter = [...this.legalEntity.filter(x => {
+			return x.label.toLowerCase().includes(event.query.toLowerCase())
+		})]
+
+		this.legalEntityList_Forgrid = legalFilter;
+	}
+	filterCompanyNameforShipping(event) {
+		this.legalEntityList_ForShipping = this.legalEntity;
+
+
+		const legalFilter = [...this.legalEntity.filter(x => {
+			return x.label.toLowerCase().includes(event.query.toLowerCase())
+		})]
+
+		this.legalEntityList_ForShipping = legalFilter;
+	}
+
+	filterCompanyNameforBilling(event) {
+		this.legalEntityList_ForBilling = this.legalEntity;
+		const legalFilter = [...this.legalEntity.filter(x => {
+			return x.label.toLowerCase().includes(event.query.toLowerCase())
+		})]
+
+		this.legalEntityList_ForBilling = legalFilter;
+
+	}
 	/*getAllPartNumbers() {
 		this.commonService.smartDropDownList('ItemMaster', 'ItemMasterId', 'partnumber').subscribe(res => {
 			console.log(res);			
@@ -572,23 +634,26 @@ export class PurchaseSetupComponent {
 			shipToUserId: this.sourcePoApproval.shipToUserId ? this.getShipToBillToUserId(this.sourcePoApproval.shipToUserId) : 0,
 			shipToAddressId: this.sourcePoApproval.shipToAddressId ? this.sourcePoApproval.shipToAddressId : 0,
 			//shipToContactId: this.sourcePoApproval.shipToContactId ? this.getShipBillContactId(this.sourcePoApproval.shipToContactId) : 0,
-			shipToContactId: 2,
-			shipViaId: 0,
-			shippingCost: 0,
-			handlingCost: 0,
-			shippingId: 0,
-			shippingURL: '',
+			shipToContactId: this.sourcePoApproval.shipToContactId ? editValueAssignByCondition('contactId', this.sourcePoApproval.shipToContactId) : 0,
+			shipViaId: this.sourcePoApproval.shipViaId,
+			shippingCost: this.sourcePoApproval.shippingCost,
+			handlingCost: this.sourcePoApproval.handlingCost,
+			shippingId: this.sourcePoApproval.shippingId,
+			shippingURL: this.sourcePoApproval.shippingURL,
 			shipToMemo: this.sourcePoApproval.shipToMemo ? this.sourcePoApproval.shipToMemo : '',
 			billToUserTypeId: this.sourcePoApproval.billToUserTypeId ? parseInt(this.sourcePoApproval.billToUserTypeId) : 0,
 			billToUserId: this.sourcePoApproval.billToUserId ? this.getShipToBillToUserId(this.sourcePoApproval.billToUserId) : 0,
 			billToAddressId: this.sourcePoApproval.billToAddressId ? this.sourcePoApproval.billToAddressId : 0,
 			//billToContactId: this.sourcePoApproval.billToContactId ? this.getShipBillContactId(this.sourcePoApproval.billToContactId) : 0,
-			billToContactId: 2,
+			billToContactId: this.sourcePoApproval.billToContactId ? editValueAssignByCondition('contactId', this.sourcePoApproval.billToContactId) : 0,
 			billToMemo: this.sourcePoApproval.billToMemo ? this.sourcePoApproval.billToMemo : '',
+			shipToSiteName: this.postSiteNameForShipping(this.sourcePoApproval.shipToUserTypeId, this.sourcePoApproval.shipToAddressId),
+			billToSiteName: this.postSiteNameForBilling(this.sourcePoApproval.billToUserTypeId, this.sourcePoApproval.billToAddressId),
 			createdBy: this.userName,
 			updatedBy: this.userName
 		}
 		console.log(this.sourcePoApprovalObj);
+		console.log(this.sourcePoApproval.shipToUserId)
 
 		if (this.createPOForm.invalid) { //invalid
 			//  $('.createPO-form input.ng-invalid, .createPO-form select.ng-invalid, .createPO-form p-calendar.ng-invalid input').addClass('border-red-clr');
@@ -631,6 +696,44 @@ export class PurchaseSetupComponent {
 			});
 		}
 
+	}
+
+
+	postSiteNameForShipping(moduleId, currentshipToAddressId) {
+
+		console.log(moduleId, currentshipToAddressId);
+
+
+		if (moduleId !== undefined && currentshipToAddressId !== undefined) {
+
+			moduleId = parseInt(moduleId)
+			if (moduleId == 1) {
+				return getValueFromArrayOfObjectById('siteName', 'customerShippingAddressId', currentshipToAddressId, this.shipToCusData);
+			} else
+				if (moduleId == 2) {
+					return getValueFromArrayOfObjectById('siteName', 'vendorShippingAddressId', currentshipToAddressId, this.vendorSelected);
+				} else
+					if (moduleId == 3) {
+						return getValueFromArrayOfObjectById('siteName', 'legalEntityShippingAddressId', currentshipToAddressId, this.companySiteList_Shipping);
+					}
+		}
+
+	}
+
+	postSiteNameForBilling(moduleId, currentbillToAddressId) {
+
+		if (moduleId !== undefined && currentbillToAddressId !== undefined) {
+			moduleId = parseInt(moduleId)
+			if (moduleId == 1) {
+				return getValueFromArrayOfObjectById('siteName', 'customerShippingAddressId', currentbillToAddressId, this.billToCusData);
+			} else
+				if (moduleId == 2) {
+					return getValueFromArrayOfObjectById('siteName', 'vendorShippingAddressId', currentbillToAddressId, this.vendorSelectedForBillTo);
+				} else
+					if (moduleId == 3) {
+						return getValueFromArrayOfObjectById('siteName', 'legalEntityBillingAddressId', currentbillToAddressId, this.companySiteList_Billing);
+					}
+		}
 	}
 
 	savePOApproverData(purchaseOrderId) {
@@ -873,7 +976,7 @@ export class PurchaseSetupComponent {
 	// 	}}
 
 	partnmId(parentdata) {
-		console.log(parentdata, event)
+		console.log(parentdata)
 
 		this.showInput = true;
 
@@ -884,8 +987,12 @@ export class PurchaseSetupComponent {
 		//this.allSelectedParts.push(this.itemclaColl[i][0].partId);
 		//this.selectedActionName = event;
 
+
 		const itemMasterId = getValueFromObjectByKey('itemMasterId', parentdata.partNumberId)
+		console.log(itemMasterId);
+
 		this.sourcePoApproval.itemMasterId = itemMasterId;
+
 		this.partWithId = [];
 		this.itemTypeId = 1;
 
@@ -894,8 +1001,8 @@ export class PurchaseSetupComponent {
 		this.vendorService.getPartDetailsWithidForSinglePart(this.sourcePoApproval.itemMasterId).subscribe(
 			data1 => {
 				console.log(data1);
-				if (data1[0][0]) {
-					this.partWithId = data1[0][0];
+				if (data1[0]) {
+					this.partWithId = data1[0];
 					parentdata.partId = this.partWithId.itemMasterId;
 					parentdata.altPartNumberId = this.partWithId.partAlternatePartId;
 					parentdata.partDescription = this.partWithId.partDescription;
@@ -1103,11 +1210,12 @@ export class PurchaseSetupComponent {
 
 		}
 	}
-	onCustomerNameChange(part, customer): void {
+	onCustomerNameChange(part?, customer?): void {
+		this.gridSelectedCustomerId = customer ? customer.customerId : this.gridSelectedCustomerId;
 		console.log(part, customer)
 		// part.poPartSplitUserId = customer.customerId;
 
-		this.customerService.getCustomerShipAddressGet(customer.customerId).subscribe(returnedcustomerAddressses => {
+		this.customerService.getCustomerShipAddressGet(this.gridSelectedCustomerId).subscribe(returnedcustomerAddressses => {
 			this.spiltshipmentData = returnedcustomerAddressses[0];
 			part.addressData = returnedcustomerAddressses[0];
 			//part.poPartSplitAddressId = 0;
@@ -1145,16 +1253,20 @@ export class PurchaseSetupComponent {
 
 		}
 	}
-	onVendorNameChange(part, vendor): void {
+	onVendorNameChange(part?, vendor?): void {
 		console.log(part, vendor)
+		this.gridSelectedVendorId =  vendor ? vendor.vendorId : this.gridSelectedVendorId;
 		//part.poPartSplitUserId = vendor.vendorId;
-		this.vendorService.getVendorShipAddressGet(vendor.vendorId).subscribe(
+		this.vendorService.getVendorShipAddressGet(this.gridSelectedVendorId).subscribe(
 			vendorAddresses => {
 				this.vendorSelectedforSplit = vendorAddresses[0];
 				part.addressData = vendorAddresses[0];;
 			})
 	}
+    onCompanyNameChange(part? , company? ){
+		// this.
 
+	}
 
 	// getVendorPartyNames(part, event): void {
 	// 	if (this.allActions && this.allActions.length > 0) {
@@ -1259,6 +1371,23 @@ export class PurchaseSetupComponent {
 		// 	}
 		// }
 	}
+	filterShippingContacts(event) {
+		this.contactListForShippingCompany = this.contactListForCompanyShipping;
+		const customerContacts = [...this.contactListForCompanyShipping.filter(x => {
+			return x.firstName.toLowerCase().includes(event.query.toLowerCase())
+		})]
+		this.contactListForShippingCompany = customerContacts;
+	}
+
+	filterBillingContact(event) {
+		this.contactListForBillingCompany = this.contactListForCompanyBilling;
+		const customerContacts = [...this.contactListForCompanyBilling.filter(x => {
+			return x.firstName.toLowerCase().includes(event.query.toLowerCase())
+		})]
+		this.contactListForBillingCompany = customerContacts;
+	}
+
+
 	filterCustomerContactsForBillTo(event) {
 		this.firstNamesbillTo = this.billToContactData;
 
@@ -1314,24 +1443,6 @@ export class PurchaseSetupComponent {
 					});
 				this.customerService.getContacts(this.customerNames[i].customerId).subscribe(data => {
 					this.billToContactData = data[0];//shipToContactData
-				});
-				break;
-			}
-		}
-
-	}
-	onshipCustomerNameselected(event) {
-		for (let i = 0; i < this.customerNames.length; i++) {
-			if (event.name == this.customerNames[i].name) {
-
-				this.customerService.getCustomerShipAddressGet(this.customerNames[i].customerId).subscribe(
-					returnddataforbill => {
-						this.shipToCusData = returnddataforbill[0];
-					});
-				this.customerService.getContacts(this.customerNames[i].customerId).subscribe(data => {
-
-					this.shipToContactData = data[0];
-					// this.adressPOPUPDropdown = this.shipToContactData ;
 				});
 				break;
 			}
@@ -1904,21 +2015,24 @@ export class PurchaseSetupComponent {
 	}
 
 	addAvailableParts() {
-		console.log(this.partListData)
-		console.log(this.newData);
+		// console.log(this.partListData)
+		// console.log(this.newData);
 		this.tempNewPNArray = [];
 		let newParentObject = new CreatePOPartsList()
 		if (this.newData) {
 			const data = this.newData.map(x => {
 				if (x.addAllMultiPNRows) {
-					this.partListData = [...this.partListData, {
+
+					const newObject = {
 						...newParentObject,
 						partNumberId: getObjectById('itemMasterId', x.itemMasterId, this.allPartnumbersInfo)
-					}]
+					}
+					this.partnmId(newObject)
+					this.partListData = [...this.partListData, newObject]
+
+
 				}
-				// this.partListData.map(x => {
-				// 	this.partnmId(x)
-				// })
+
 
 
 			})
@@ -2320,6 +2434,14 @@ export class PurchaseSetupComponent {
 
 
 	}
+	clearInputShipTo() {
+		this.sourcePoApproval.shipToUserId = '';
+
+
+	}
+	clearInputBillTo() {
+		this.sourcePoApproval.billToUserId = '';
+	}
 	getValueforShipTo(data, id) {
 		console.log(data, id);
 
@@ -2380,7 +2502,13 @@ export class PurchaseSetupComponent {
 
 			console.log(this.vendorContactsForshipTo);
 
+			this.commonService.getShipViaDetailsByModule(this.sourcePoApproval.shipToUserTypeId, event.vendorId).subscribe(res => {
+				this.shipViaList = res;
+			})
+
 		});
+
+
 		//for (let i = 0; i < this.VendorNamecoll.length; i++) {
 		//	if (event == this.VendorNamecoll[i][0].vendorName) {
 		//		this.vendorService.getVendorShipAddressGet(this.VendorNamecoll[i][0].vendorId).subscribe(
@@ -2395,7 +2523,16 @@ export class PurchaseSetupComponent {
 		//	}
 		//}
 	}
+	getShipViaDetails(id) {
 
+		this.commonService.getShipViaDetailsById(id).subscribe(res => {
+			const responseData = res;
+			this.sourcePoApproval.shippingAcctNum = responseData.shippingAccountInfo;
+			this.sourcePoApproval.shippingURL = responseData.shippingURL;
+			this.sourcePoApproval.shippingId = responseData.shippingId;
+			console.log(res)
+		})
+	}
 
     /*onshipCustomerNameselected(event) {
 
@@ -3452,11 +3589,14 @@ export class PurchaseSetupComponent {
 		if (obj.customerId) {
 			return obj.customerId;
 		}
+		// if (obj.value) {
+		// 	return obj.value;
+		// }
 	}
 
 	getEmployeeId(obj) {
-		if (obj.employeeId) {
-			return obj.employeeId;
+		if (obj.value) {
+			return obj.value;
 		} else {
 			return 0;
 		}
@@ -3502,7 +3642,132 @@ export class PurchaseSetupComponent {
 		}
 	}
 
-	saveShippingAddress() {
+
+	onshipCustomerNameselected(event) {
+		for (let i = 0; i < this.customerNames.length; i++) {
+			if (event.name == this.customerNames[i].name) {
+
+				this.customerService.getCustomerShipAddressGet(this.customerNames[i].customerId).subscribe(
+					returnddataforbill => {
+						this.shipToCusData = returnddataforbill[0];
+					});
+				this.customerService.getContacts(this.customerNames[i].customerId).subscribe(data => {
+
+
+					this.shipToContactData = data[0];
+					// this.sourcePoApproval.shipToContactId = data[0];
+					// this.adressPOPUPDropdown = this.shipToContactData ;
+				});
+
+				// let moduleId = 0;
+				// if(this.sourcePoApproval.shipToUserId == 1){
+
+				// 	moduleId = getValueFromObjectByKey('customerId', this.sourcePoApproval.shipToUserId)
+				// } else if(this.sourcePoApproval.shipToUserId == 2){
+
+				// 	moduleId = getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId)
+				// }else if(this.sourcePoApproval.shipToUserId == 2){
+
+				// 	moduleId = getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId)
+				// }
+
+
+				this.commonService.getShipViaDetailsByModule(this.sourcePoApproval.shipToUserTypeId, this.customerNames[i].customerId).subscribe(res => {
+					this.shipViaList = res;
+				})
+			}
+		}
+
+	}
+	onShipCompanySelected(object?) {
+		this.shipToSelectedvalue = object ? object.value : this.shipToSelectedvalue;
+		this.companyService.getShippingCompanySiteNames(this.shipToSelectedvalue).subscribe(res => {
+			this.companySiteList_Shipping = res;
+		})
+		this.companyService.getCompanyContacts(this.shipToSelectedvalue).subscribe(res => {
+			this.contactListForCompanyShipping = res;
+		})
+		this.getShipViaDetailsForShipTo();
+	}
+
+	getShipViaDetailsForShipTo() {
+		this.commonService.getShipViaDetailsByModule(this.sourcePoApproval.shipToUserTypeId, this.shipToSelectedvalue).subscribe(res => {
+			this.shipViaList = res;
+		})
+	}
+
+	onBillCompanySelected(object?) {
+		this.billToSelectedvalue = object ? object.value : this.billToSelectedvalue;
+
+		this.companyService.getBillingCompanySiteNames(this.billToSelectedvalue).subscribe(res => {
+			this.companySiteList_Billing = res;
+		})
+		this.companyService.getCompanyContacts(this.billToSelectedvalue).subscribe(res => {
+			this.contactListForCompanyBilling = res;
+		})
+
+		this.commonService.getShipViaDetailsByModule(this.sourcePoApproval.billToUserTypeId, this.billToSelectedvalue).subscribe(res => {
+			this.shipViaList = res;
+		})
+	}
+
+
+
+
+	shippingSiteNameChange(id) {
+		this.companyService.getShippingAddress(id).subscribe(res => {
+			const resp = res;
+			if (resp) {
+				this.shipToAddress.address1 = resp.line1;
+				this.shipToAddress.address2 = resp.line2;
+				this.shipToAddress.address3 = resp.line3;
+				this.shipToAddress.city = resp.city;
+				this.shipToAddress.stateOrProvince = resp.stateOrProvince;
+				this.shipToAddress.postalCode = resp.postalCode;
+				this.shipToAddress.country = resp.country;
+			} else {
+				this.shipToAddress.address1 = '';
+				this.shipToAddress.address2 = '';
+				this.shipToAddress.address3 = '';
+				this.shipToAddress.city = '';
+				this.shipToAddress.stateOrProvince = '';
+				this.shipToAddress.postalCode = '';
+				this.shipToAddress.country = '';
+			}
+
+
+		})
+	}
+	billingSiteNameChange(id) {
+		this.companyService.getBillingAddress(id).subscribe(res => {
+			const resp = res;
+			if (resp) {
+				this.billToAddress.address1 = resp.line1;
+				this.billToAddress.address2 = resp.line2;
+				this.billToAddress.address3 = resp.line3;
+				this.billToAddress.city = resp.city;
+				this.billToAddress.stateOrProvince = resp.stateOrProvince;
+				this.billToAddress.postalCode = resp.postalCode;
+				this.billToAddress.country = resp.country;
+			} else {
+				this.billToAddress.address1 = '';
+				this.billToAddress.address2 = '';
+				this.billToAddress.address3 = '';
+				this.billToAddress.city = '';
+				this.billToAddress.stateOrProvince = '';
+				this.billToAddress.postalCode = '';
+				this.billToAddress.country = '';
+			}
+		})
+	}
+	resetAddressShippingForm() {
+		this.addressFormForShipping = new CustomerShippingModel()
+	}
+
+	resetAddressBillingForm() {
+		this.addressFormForBilling = new CustomerShippingModel()
+	}
+	async saveShippingAddress() {
 		const data = {
 			...this.addressFormForShipping,
 			createdBy: this.userName,
@@ -3512,11 +3777,12 @@ export class PurchaseSetupComponent {
 
 		}
 		if (this.sourcePoApproval.shipToUserTypeId == 1) {
-			const customeraddressData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('customerId', this.sourcePoApproval.shipToUserId) }
+			const customerData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('customerId', this.sourcePoApproval.shipToUserId) }
 
+			await this.customerService.newShippingAdd(customerData).subscribe(() => {
 
-			this.customerService.newShippingAdd(customeraddressData).subscribe(() => {
-				this.addressFormForShipping = new CustomerShippingModel()
+				this.onShipCompanySelected();
+				// this.addressFormForShipping = new CustomerShippingModel()
 				this.alertService.showMessage(
 					'Success',
 					`Saved  Shipping Information Sucessfully `,
@@ -3526,10 +3792,11 @@ export class PurchaseSetupComponent {
 			})
 		}
 		if (this.sourcePoApproval.shipToUserTypeId == 2) {
-			const vendoraddressData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId) }
+			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId) }
 
-			this.vendorService.newShippingAdd(vendoraddressData).subscribe(() => {
-				this.addressFormForShipping = new CustomerShippingModel()
+			await this.vendorService.newShippingAdd(vendorData).subscribe(() => {
+				this.onShipCompanySelected();
+				// this.addressFormForShipping = new CustomerShippingModel()
 				this.alertService.showMessage(
 					'Success',
 					`Saved  Shipping Information Sucessfully `,
@@ -3538,22 +3805,91 @@ export class PurchaseSetupComponent {
 
 			})
 		}
+		if (this.sourcePoApproval.shipToUserTypeId == 3) {
+			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId) }
+			await this.companyService.addNewShippingAddress(companyData).subscribe(() => {
+				this.onShipCompanySelected();
+				// this.addressFormForShipping = new CustomerShippingModel()
+				this.alertService.showMessage(
+					'Success',
+					`Saved  Shipping Information Sucessfully `,
+					MessageSeverity.success
+				);
+
+			})
+		}
+		// this.onShipCompanySelected();
+
+
 
 	}
 
-	saveBillingAddress() {
+	saveShippingAddressToPO() {
 		const data = {
-			...this.addressFormForBilling,
+			...this.addressFormForShipping,
 			createdBy: this.userName,
 			updatedBy: this.userName,
 			masterCompanyId: 1,
 			isActive: true,
 
 		}
+		if (this.sourcePoApproval.shipToUserTypeId == 1) {
+			const customerData = { ...data, customerId: getValueFromObjectByKey('customerId', this.sourcePoApproval.shipToUserId) }
+
+			this.commonService.createAddress(customerData).subscribe(() => {
+				// this.addressFormForShipping = new CustomerShippingModel()
+				this.alertService.showMessage(
+					'Success',
+					`Saved  Shipping Information Sucessfully `,
+					MessageSeverity.success
+				);
+
+			})
+		}
+		if (this.sourcePoApproval.shipToUserTypeId == 2) {
+			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId) }
+
+			this.commonService.createAddress(vendorData).subscribe(() => {
+				// this.addressFormForShipping = new CustomerShippingModel()
+				this.alertService.showMessage(
+					'Success',
+					`Saved  Shipping Information Sucessfully `,
+					MessageSeverity.success
+				);
+
+			})
+		}
+		if (this.sourcePoApproval.shipToUserTypeId == 3) {
+			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId) }
+			this.commonService.createAddress(companyData).subscribe(() => {
+				// this.addressFormForShipping = new CustomerShippingModel()
+				this.alertService.showMessage(
+					'Success',
+					`Saved  Shipping Information Sucessfully `,
+					MessageSeverity.success
+				);
+
+			})
+		}
+	}
+
+
+
+	async saveBillingAddress() {
+		const data = {
+			...this.addressFormForBilling,
+			createdBy: this.userName,
+			updatedBy: this.userName,
+			masterCompanyId: 1,
+			isActive: true,
+			isPrimary: true
+
+		}
 		if (this.sourcePoApproval.billToUserTypeId == 1) {
-			const customeraddressData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('customerId', this.sourcePoApproval.billToUserId) }
-			this.customerService.newBillingAdd(customeraddressData).subscribe(() => {
-				this.addressFormForBilling = new CustomerShippingModel()
+			const customerData = { ...data, customerId: getValueFromObjectByKey('customerId', this.sourcePoApproval.billToUserId) }
+			await this.customerService.newBillingAdd(customerData).subscribe(() => {
+				this.onBillCompanySelected();
+				// this.addressFormForBilling = new CustomerShippingModel()
 				this.alertService.showMessage(
 					'Success',
 					`Saved  Billing Information Sucessfully `,
@@ -3563,12 +3899,87 @@ export class PurchaseSetupComponent {
 			})
 		}
 		if (this.sourcePoApproval.billToUserTypeId == 2) {
-			const vendoraddressData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.billToUserId) }
-			this.vendorService.newShippingAdd(vendoraddressData).subscribe(() => {
-				this.addressFormForBilling = new CustomerShippingModel()
+			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.billToUserId) }
+			await this.vendorService.addNewBillingAddress(vendorData).subscribe(() => {
+				this.onBillCompanySelected();
+				// this.addressFormForBilling = new CustomerShippingModel()
 				this.alertService.showMessage(
 					'Success',
 					`Saved  Billing Information Sucessfully `,
+					MessageSeverity.success
+				);
+
+			})
+		}
+		if (this.sourcePoApproval.billToUserTypeId == 3) {
+			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourcePoApproval.billToUserId) }
+			await this.companyService.addNewBillingAddress(companyData).subscribe(() => {
+				this.onBillCompanySelected();
+				// this.addressFormForBilling = new CustomerShippingModel()
+				this.alertService.showMessage(
+					'Success',
+					`Saved  Billing Information Sucessfully `,
+					MessageSeverity.success
+				);
+
+			})
+		}
+		// this.onBillCompanySelected();
+
+	}
+
+
+	resetAddressShipViaForm() {
+		this.addShipViaFormForShipping = new CustomerInternationalShipVia()
+	}
+
+	async saveShipViaForShipTo() {
+		const data = {
+			...this.addShipViaFormForShipping,
+			name: this.addShipViaFormForShipping.shipVia,
+			createdBy: this.userName,
+			updatedBy: this.userName,
+			masterCompanyId: 1,
+			isActive: true,
+			UserType: parseInt(this.sourcePoApproval.shipToUserTypeId)
+		}
+
+		if (this.sourcePoApproval.shipToUserTypeId == 1) {
+			const customerData = { ...data, ReferenceId: getValueFromObjectByKey('customerId', this.sourcePoApproval.shipToUserId) }
+
+			await this.commonService.createShipVia(customerData).subscribe(() => {
+				this.getShipViaDetailsForShipTo();
+				// this.addressFormForShipping = new CustomerShippingModel()
+				this.alertService.showMessage(
+					'Success',
+					`Saved  Ship Via Information Sucessfully `,
+					MessageSeverity.success
+				);
+
+			})
+		}
+		if (this.sourcePoApproval.shipToUserTypeId == 2) {
+			const vendorData = { ...data, ReferenceId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId) }
+
+			await this.commonService.createShipVia(vendorData).subscribe(() => {
+				this.getShipViaDetailsForShipTo();
+				// this.addressFormForShipping = new CustomerShippingModel()
+				this.alertService.showMessage(
+					'Success',
+					`Saved  Ship Via Information Sucessfully `,
+					MessageSeverity.success
+				);
+
+			})
+		}
+		if (this.sourcePoApproval.shipToUserTypeId == 3) {
+			const companyData = { ...data, ReferenceId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId) }
+			await this.commonService.createShipVia(companyData).subscribe(() => {
+				this.getShipViaDetailsForShipTo();
+				// this.addressFormForShipping = new CustomerShippingModel()
+				this.alertService.showMessage(
+					'Success',
+					`Saved  Ship Via Information Sucessfully `,
 					MessageSeverity.success
 				);
 
@@ -3579,22 +3990,43 @@ export class PurchaseSetupComponent {
 
 
 
-	saveAddressSiteNameToPO() {
 
+
+	// saveSplitAddress() {
+	// 	console.log(this.splitUserTypeAddress);
+
+	// }
+	resetAddressForm(){
+		this.addNewAddress = new AddressNew();
 	}
+	createNewAddress(){
+		const data = {
+			...this.addNewAddress,
+        createdBy: this.userName,
+		updatedBy: this.userName,
+		masterCompanyId: 1,
+		isActive: true,
+		}
+		this.commonService.createAddress(data).subscribe(res =>{
+			this.onCustomerNameChange();
+			this.onVendorNameChange();
 
-	saveSplitAddress() {
-		console.log(this.splitUserTypeAddress);
-
+			// this.resetAddressForm();
+			this.alertService.showMessage(
+				'Success',
+				`Saved Address  Sucessfully `,
+				MessageSeverity.success
+			);
+		})
 	}
 
 	saveSplitAddressToPO() {
 
 	}
 
-	saveShipToShipViaDetails() {
+	// saveShipToShipViaDetails() {
 
-	}
+	// }
 
 	saveShipToShipViaDetailsToPO() {
 

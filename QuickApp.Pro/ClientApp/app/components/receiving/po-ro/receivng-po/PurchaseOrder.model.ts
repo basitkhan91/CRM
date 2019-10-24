@@ -260,6 +260,7 @@ export class StockLine {
     visible: boolean;
     serialNumberNotProvided: boolean;
     isDisabledSNboxes: boolean;
+    currentDate: Date;
 }
 
 export class ReceiveParts {

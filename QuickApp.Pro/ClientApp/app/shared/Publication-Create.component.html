@@ -5,11 +5,11 @@
     <table class="table table-bordered table-fixed workflow-table-pub">
         <thead class="thead-light">
             <tr>
-                <th>S.No</th>
-                <th>Pub ID*</th>
-                <th>Pub Desc</th>
+                <th> S.No </th>
+                <th> Pub ID* </th>
+                <th> Pub Desc </th>
+                <th> Pub Type </th>
                 <th> Revision Date </th>
-                <th> Pub Type *</th>
                 <th> Sequence  </th>
                 <th> Source  </th>
                 <th> Aircraft Manufacturer </th>
@@ -20,7 +20,7 @@
                 <th> Verified Date  </th>
                 <th> Status </th>
                 <th> Image </th>
-                <th>Action</th>
+                <th> Action </th>
             </tr>
         </thead>
         <tbody>
@@ -35,7 +35,6 @@
                     </select>
                 </td>
                 <td><input type="text" class="form-control" [(ngModel)]="publ.publicationDescription" [disabled]="true"></td>
-                <td><input type="text" class="form-control" [(ngModel)]="publ.revisionDate" value="{{publ.revisionDate}}" [disabled]="true"></td>
                 <td>
                     <select class="form-control custom-select" id="ddlPublicationTypes" [(ngModel)]="publ.publicationType" disabled="disabled">
                         <option value="0">select</option>
@@ -45,6 +44,7 @@
                     </select>
 
                 </td>
+                <td><input type="text" class="form-control" [(ngModel)]="publ.revisionDate" value="{{publ.revisionDate}}" [disabled]="true"></td>
                 <td><input type="text" class="form-control" [(ngModel)]="publ.sequence" value="{{publ.sequence}}" [disabled]="true"></td>
                 <td><input type="text" class="form-control" [(ngModel)]="publ.source" value="{{publ.source}}" [disabled]="true"></td>
                 <td>

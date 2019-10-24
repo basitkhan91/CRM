@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 
 namespace QuickApp.Pro.ViewModels
 {
-    public class PurchaseOrderViewModel
+    public class PurchaseOrderViewModel:PurchaseOrderBaseViewModel
     {
 
-        public long PurchaseOrderId { get; set; }
-        public string PurchaseOrderNumber { get; set; }
+
         public string ReferenceId { get; set; }
         public Nullable<long> PriorityId { get; set; }
         public long RequisitionerId { get; set; }
         public System.DateTime OpenDate { get; set; }
+        public DateTime? ClosedDate { get; set; }
         public long ApproverId { get; set; }
         public Nullable<System.DateTime> ApprovedDate { get; set; }
         public Nullable<System.DateTime> NeedByDate { get; set; }

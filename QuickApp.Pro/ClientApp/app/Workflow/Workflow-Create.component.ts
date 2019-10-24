@@ -86,7 +86,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
     allconditioninfo: any[] = [];
     allPartDetails: any[] = [];
-    allPartnumbersInfo: any[] = [];
+    allParts: any[] = [];
     //sourceWorkFlow: any = {};
     workflowactionAttributes: any[] = [];
     //actionAttributes: any[] = [];
@@ -216,8 +216,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         this.loadCurrencyData();
         this.loadWorkScopedata();
         this.loadItemClassData();
-        this.loadPartData();
-        this.ptnumberlistdata();
+        this.GetPartNumberList();        
         this.getMaterialMandatory();
         this.loadUOMData();
         this.sourceWorkFlow.workflowCreateDate = new Date();
@@ -507,6 +506,10 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                                             return acc + parseFloat(x.price == undefined || x.price === '' ? 0 : x.price)
                                         }, 0);
 
+                                        wf.materialExtendedPriceSummation = wf.materialList.reduce((acc, x) => {
+                                            return acc + parseFloat(x.extendedPrice == undefined || x.extendedPrice === '' ? 0 : x.extendedPrice)
+                                        }, 0);
+
                                     }
                                     if (workFlow[0].measurements != undefined && workFlow[0].measurements.length > 0) {
                                         var measurement = workFlow[0].measurements.filter(measurement => measurement.taskId == action.taskId);
@@ -598,10 +601,11 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                 this.getSelectedWorkflowActions();
         });
     }
+
     private filterpartItems(event) {
         this.partCollection = [];
-        if (this.allPartnumbersInfo != undefined && this.allPartnumbersInfo.length > 0) {
-            for (let part of this.allPartnumbersInfo) {
+        if (this.allParts != undefined && this.allParts.length > 0) {
+            for (let part of this.allParts) {
                 if (part.partNumber != undefined && part.partNumber.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                     this.partCollection.push({
                         "partId": part.itemMasterId,
@@ -615,8 +619,8 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
     private filterChangedPartItems(event) {
         this.changedPartCollection = [];
-        if (this.allPartnumbersInfo != undefined && this.allPartnumbersInfo.length > 0) {
-            for (let part of this.allPartnumbersInfo) {
+        if (this.allParts != undefined && this.allParts.length > 0) {
+            for (let part of this.allParts) {
                 if (part.partNumber != undefined && this.sourceWorkFlow.itemMasterId != part.itemMasterId && part.partNumber.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                     this.changedPartCollection.push({
                         "partId": part.itemMasterId,
@@ -997,56 +1001,65 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
 
         });
-
     }
 
-    private ptnumberlistdata() {
+    private GetPartNumberList() {
+        this.itemser.getPartDetailsDropdown().subscribe(
+            results => {
+                this.allParts = results;
+                if (this.updateMode) {
+                    var currentSelectedPart = this.allParts.filter(x => x.itemMasterId == this.sourceWorkFlow.itemMasterId);
 
+                    if (currentSelectedPart.length > 0) {
+                        this.sourceWorkFlow.part = {
+                            "partId": currentSelectedPart[0].itemMasterId,
+                            "partName": currentSelectedPart[0].partNumber,
+                            "description": currentSelectedPart[0].partDescription
+                        };
+                    }
 
-        this.itemser.getPrtnumberslistList().subscribe(
-            results => this.onptnmbersSuccessful(results[0]),
+                    if (this.sourceWorkFlow.changedPartNumberId != undefined && this.sourceWorkFlow.changedPartNumberId != null && this.sourceWorkFlow.changedPartNumberId != '' ) {
+                        var currentSelectedChangedPart = this.allParts.filter(x => x.itemMasterId == this.sourceWorkFlow.changedPartNumberId);
+                        if (currentSelectedChangedPart.length > 0) {
+                            this.sourceWorkFlow.changedPart = {
+                                "partId": currentSelectedChangedPart[0].itemMasterId,
+                                "partName": currentSelectedChangedPart[0].partNumber,
+                                "description": currentSelectedChangedPart[0].partDescription
+                            };
+                        }
+                    }
+                }
+            },
             error => this.onDataLoadFailed(error)
         );
     }
 
-    private onptnmbersSuccessful(allWorkFlows: any[]) {
+    //private loadPartData() {
+    //    this.vendorService.getPartDetails().subscribe(
+    //        data => {
+    //            this.allPartDetails = data[0];
+    //            if (this.vendorService.isEditMode == false) {
+    //                debugger;
+    //                for (let i = 0; i < this.partListData.length; i++) {
+    //                    this.partListData[i].partListObj = this.allPartDetails;
+    //                }
 
-        // TODO : New Change test this
-        const filterByIsActive = allWorkFlows.filter(x => {
-            if (x.isActive) {
-                return x;
-            }
-        })
-        this.allPartnumbersInfo = filterByIsActive;
+    //                if (this.updateMode) {
+    //                    this.sourceWorkFlow.part = {
+    //                        "partId": this.sourceWorkFlow.itemMasterId,
+    //                        "partName": this.sourceWorkFlow.partNumber,
+    //                        "description": this.sourceWorkFlow.partNumberDescription
+    //                    };
 
-    }
-
-    private loadPartData() {
-        this.vendorService.getPartDetails().subscribe(
-            data => {
-                this.allPartDetails = data[0];
-                if (this.vendorService.isEditMode == false) {
-
-                    for (let i = 0; i < this.partListData.length; i++) {
-                        this.partListData[i].partListObj = this.allPartDetails;
-                    }
-
-                    if (this.updateMode) {
-                        this.sourceWorkFlow.part = {
-                            "partId": this.sourceWorkFlow.itemMasterId,
-                            "partName": this.sourceWorkFlow.partNumber,
-                            "description": this.sourceWorkFlow.partNumberDescription
-                        };
-
-                        this.sourceWorkFlow.changedPart = {
-                            "partId": this.sourceWorkFlow.changedPartNumberId,
-                            "partName": this.sourceWorkFlow.changedPartNumber,
-                            "description": this.sourceWorkFlow.changedPartNumberDescription
-                        };
-                    }
-                }
-            })
-    }
+    //                    this.sourceWorkFlow.changedPart = {
+    //                        "partId": this.sourceWorkFlow.changedPartNumberId,
+    //                        "partName": this.sourceWorkFlow.changedPartNumber,
+    //                        "description": this.sourceWorkFlow.changedPartNumberDescription
+    //                    };
+    //                }
+    //            }
+    //        })
+    //}
 
     private getDefaultConditionId(name: string): string {
 
@@ -1755,10 +1768,11 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             unitCost: "",
             extendedCost: "",
             price: "",
+            extendedPrice: '',
             provisionId: '',
             isDeferred: '',
             memo: "",
-
+            
             taskId: "",
             workflowId: "",
             masterCompanyId: '',
@@ -1879,13 +1893,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
             return;
         }
-        else {
-            var tasks = this.workFlowList.filter(x => x.selectedItems.length > 0);
-            if (tasks.length == 0) {
-                this.alertService.showMessage(this.title, "Atleast one Work Flow Task Attribute is needed", MessageSeverity.error);
-            }
-        }
-
+      
         this.actionService.getNewWorkFlow(this.sourceWorkFlow).subscribe(
             data => {
                 this.alertService.showMessage(this.title, "Work Flow added successfully.", MessageSeverity.success);
@@ -1930,7 +1938,9 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
             return;
         }
-
+        if (this.workFlowList.length == 0) {
+            this.alertService.showMessage(this.title, "Atleast one task is required.", MessageSeverity.error);
+        }
         this.actionService.getNewWorkFlow(this.sourceWorkFlow).subscribe(
             result => {
 

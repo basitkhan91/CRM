@@ -41,7 +41,6 @@ namespace DAL
         ICurrencyRepository _currencyRepository;
         IMasterCompanyRepository _masterCompanyRepository;
         IActionAttributeRepository _actionAttributeRepository;
-        IGatecodeRepository _gateCodeRepository;
         IIntegration _integrationRepository;
         IPriority _priority;
         ICreditTermsRepository _CreditTermsRepository;
@@ -97,13 +96,6 @@ namespace DAL
         IGlCashFlowRepository _glCashFlowRepository;
         IEmployeeLeaveType _employeeLeaveType;
         IEmployeeTrainingTypeRepository _EmployeeTrainingType;
-        ICompany _company;
-
-        IDivision _division;
-
-        IDepartment _department;
-
-        IBusinessUnit _businessUnit;
 
         IEmployeeLicenseType _employeeLicenseType;
 
@@ -157,7 +149,6 @@ namespace DAL
         IPurchaseOrder _purchaseOrder;
         IStocklineAdjustmentRepository _stocklineAdjustmentRepository;
         //IWarehouseRepository _warehouseRepository;
-        IGLAccountCategoriesRepository _GLAccountCategories;
         ICertificationTypeRepository _ICertificationTypeRepository;
         IStocklineAdjustmentReasonRepository _stocklineAdjustmentReason;
 
@@ -177,11 +168,13 @@ namespace DAL
 
         IAccountingCalendar _accountingCalendar;
 
-        IAssetIntangibleType _assetIntangibleType;
+        IAssetTypeRepository _assetTypeRepository;
+        IAssetIntangibleTypeRepository _assetIntangibleTypeRepository;
+        IStageCodeRepository _stageCodeRepository;
+        IGLAccountCategoryRepository _GLAccountCategoryRepository;
 
         IGLAccount _gLAccount;
 
-        IAssetType _assetType;
 
         IGLAccountNodeShareWithEntityMapper gLAccountNodeShareWithEntityMapper;
 
@@ -203,6 +196,11 @@ namespace DAL
         
         IAssetIntangibleAttributeType _assetIntangibleAttributeType;
         IAssetDepreciationInterval _assetDepreciationInterval;
+
+        IAssetDepreciationMethod _assetDepreciationMethod;
+        IAssetDisposalType _assetDisposalType;
+        IAssetStatus _assetStatus;
+        IAssetDepConvention _assetDepConvention;
 
         IPublicationTypesRepository _publicationTypesRepository;
         IPercentageRepository _percentageRepository;
@@ -304,18 +302,6 @@ namespace DAL
             }
         }
 
-
-        public IGLAccountCategoriesRepository GLAccountCategories
-
-        {
-            get
-            {
-                if (_GLAccountCategories == null)
-                    _GLAccountCategories = new GLAccountCategoriesRepository(_context);
-                return _GLAccountCategories;
-            }
-        }
-
        
 
         public IVendorCapabilitiesRepository VendorCapabilities
@@ -405,7 +391,7 @@ namespace DAL
             get
             {
                 if (_siteRepository == null)
-                    _siteRepository = new SiteRepository(_context);
+                    _siteRepository = new SiteRepository(_context, _appSettings);
                 return _siteRepository;
             }
         }
@@ -414,7 +400,7 @@ namespace DAL
             get
             {
                 if (_warehouseRepository == null)
-                    _warehouseRepository = new WarehouseRepository(_context);
+                    _warehouseRepository = new WarehouseRepository(_context, _appSettings);
                 return _warehouseRepository;
             }
         }
@@ -423,7 +409,7 @@ namespace DAL
             get
             {
                 if (_locationRepository == null)
-                    _locationRepository = new LocationRepository(_context);
+                    _locationRepository = new LocationRepository(_context, _appSettings);
                 return _locationRepository;
             }
         }
@@ -432,7 +418,7 @@ namespace DAL
             get
             {
                 if (_shelfRepository == null)
-                    _shelfRepository = new ShelfRepository(_context);
+                    _shelfRepository = new ShelfRepository(_context, _appSettings);
                 return _shelfRepository;
             }
         }
@@ -511,7 +497,7 @@ namespace DAL
 
         public int SaveChanges()
         {
-            //AuditChanges();
+            AuditChanges();
             return _context.SaveChanges();
         }
 
@@ -577,16 +563,6 @@ namespace DAL
                 if (_actionAttributeRepository == null)
                     _actionAttributeRepository = new ActionAttributeRepository(_context);
                 return _actionAttributeRepository;
-            }
-        }
-
-        public IGatecodeRepository Gatecode
-        {
-            get
-            {
-                if (_gateCodeRepository == null)
-                    _gateCodeRepository = new GatecodeRepository(_context);
-                return _gateCodeRepository;
             }
         }
 
@@ -684,7 +660,7 @@ namespace DAL
             get
             {
                 if (_publication == null)
-                    _publication = new PublicationRepository(_context);
+                    _publication = new PublicationRepository(_context,_appSettings);
                 return _publication;
 
             }
@@ -1040,36 +1016,7 @@ namespace DAL
                 return _CustomerWarning;
             }
         }
-        public ICompany Company
-        {
-            get
-            {
-                if (_company == null)
-                    _company = new CompanyRepository(_context);
-                return _company;
-
-            }
-        }
-
-        public IDivision division
-        {
-            get
-            {
-                if (_division == null)
-                    _division = new DivisionRepository(_context);
-                return _division;
-            }
-        }
-
-        public IDepartment department
-        {
-            get
-            {
-                if (_department == null)
-                    _department = new DepartmentRepository(_context);
-                return _department;
-            }
-        }
+       
 
         public ICountriesRepository Countries
         {
@@ -1080,15 +1027,7 @@ namespace DAL
                 return _Countries;
             }
         }
-        public IBusinessUnit businessUnit
-        {
-            get
-            {
-                if (_businessUnit == null)
-                    _businessUnit = new BusinessUnitRepository(_context);
-                return _businessUnit;
-            }
-        }
+        
 
         public IEmployeeLicenseType employeeLicenseType
         {
@@ -1243,7 +1182,7 @@ namespace DAL
             }
         }
 
-        public ILegalEntity legalEntity
+        public ILegalEntity LegalEntity
 
         {
 
@@ -1564,25 +1503,46 @@ namespace DAL
             }
         }
 
-        public IAssetIntangibleType assetIntangibleType
+        public IAssetTypeRepository AssetTypeRepository
         {
             get
             {
-                if (_assetIntangibleType == null)
-                    _assetIntangibleType = new AssetIntangibleTypeRepository(_context);
-                return _assetIntangibleType;
+                if (_assetTypeRepository == null)
+                    _assetTypeRepository = new AssetTypeRepository(_context, _appSettings);
+                return _assetTypeRepository;
             }
         }
 
-        IAssetType IUnitOfWork.assetType
+        public IAssetIntangibleTypeRepository AssetIntangibleTypeRepository
         {
             get
             {
-                if (_assetType == null)
-                    _assetType = new AssetTypeRepository(_context);
-                return _assetType;
+                if (_assetIntangibleTypeRepository == null)
+                    _assetIntangibleTypeRepository = new AssetIntangibleTypeRepository(_context, _appSettings);
+                return _assetIntangibleTypeRepository;
             }
         }
+
+        public IStageCodeRepository StageCodeRepository
+        {
+            get
+            {
+                if (_stageCodeRepository == null)
+                    _stageCodeRepository = new StageCodeRepository(_context, _appSettings);
+                return _stageCodeRepository;
+            }
+        }
+        public IGLAccountCategoryRepository GLAccountCategoryRepository
+
+        {
+            get
+            {
+                if (_GLAccountCategoryRepository == null)
+                    _GLAccountCategoryRepository = new GLAccountCategoryRepository(_context, _appSettings);
+                return _GLAccountCategoryRepository;
+            }
+        }
+
 
         public IGLAccountNodeShareWithEntityMapper GLAccountNodeShareWithEntityMapper
         {
@@ -1725,6 +1685,46 @@ namespace DAL
                 if (_assetDepreciationInterval == null)
                     _assetDepreciationInterval = new AssetDepreciationIntervalRepository(_context);
                 return _assetDepreciationInterval;
+            }
+        }
+
+        IAssetDepreciationMethod IUnitOfWork.AssetDepreciationMethod
+        {
+            get
+            {
+                if (_assetDepreciationMethod == null)
+                    _assetDepreciationMethod = new AssetDepreciationMethodRepository(_context);
+                return _assetDepreciationMethod;
+            }
+        }
+
+        IAssetDisposalType IUnitOfWork.AssetDisposalType
+        {
+            get
+            {
+                if (_assetDisposalType == null)
+                    _assetDisposalType = new AssetDisposalTypeRepository(_context);
+                return _assetDisposalType;
+            }
+        }
+
+        IAssetStatus IUnitOfWork.AssetStatus
+        {
+            get
+            {
+                if (_assetStatus == null)
+                    _assetStatus = new AssetStatusRepository(_context);
+                return _assetStatus;
+            }
+        }
+
+        IAssetDepConvention IUnitOfWork.AssetDepConvention
+        {
+            get
+            {
+                if (_assetDepConvention == null)
+                    _assetDepConvention = new AssetDepConventionRepository(_context);
+                return _assetDepConvention;
             }
         }
 

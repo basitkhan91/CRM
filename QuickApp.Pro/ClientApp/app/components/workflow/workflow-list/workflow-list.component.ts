@@ -71,6 +71,8 @@ export class WorkflowListComponent implements OnInit {
     materialUOM: any[];
     materialMandatory: any[];
     itemClassification: any[];
+    publications: any[];
+    allVendors: any[];
 
     constructor(private actionService: ActionService,
         private router: ActivatedRoute,
@@ -101,7 +103,6 @@ export class WorkflowListComponent implements OnInit {
         this.getWorkFlowActions();
         this.LoadParts();
     }
-
 
     public allWorkFlows: any[] = [];
 
@@ -195,7 +196,8 @@ export class WorkflowListComponent implements OnInit {
     }
 
     dismissModel() {
-        this.modal.close();
+        if (this.modal != undefined)
+            this.modal.close();
     }
 
     get userName(): string {
@@ -244,7 +246,9 @@ export class WorkflowListComponent implements OnInit {
         this.actionService.getWorkFlow(rowData.workflowId).subscribe(
             workflow => {
                 this.sourceWorkFlow = workflow[0];
-                this.sourceWorkFlow.changedPartNumber = rowData.changedPartNumber;
+                var part = this.allParts.filter(x => x.itemMasterId == rowData.changedPartNumberId)[0];
+                this.sourceWorkFlow.changedPartNumber = part != undefined ? part.partNumber : '';
+
                 this.sourceWorkFlow.workflowCreateDate = new Date(this.sourceWorkFlow.workflowCreateDate).toLocaleDateString();
                 this.sourceWorkFlow.workflowCreateDate = this.sourceWorkFlow.workflowExpirationDate != null && this.sourceWorkFlow.workflowExpirationDate != '' ? new Date(this.sourceWorkFlow.workflowCreateDate).toLocaleDateString() : '';
 
@@ -274,13 +278,14 @@ export class WorkflowListComponent implements OnInit {
 
     getWorkFlowActions() {
         this.workFlowtService.getWorkFlowMaterial().subscribe(
-            results => console.log(results[0]),
+            results => { },
             error => { }
         );
     }
 
     private setPublicationData(selectedPublication: any, row: any) {
         if (selectedPublication != null) {
+            row.publicationName = selectedPublication.publicationId;
             row.publicationDescription = selectedPublication.description != null ? selectedPublication.description : '';
             row.revisionDate = selectedPublication.revisionDate != null ? new Date(selectedPublication.revisionDate).toLocaleDateString() : '';
             row.publicationType = selectedPublication.publicationTypeId != null ? selectedPublication.publicationTypeId : '';
@@ -410,7 +415,8 @@ export class WorkflowListComponent implements OnInit {
 
         this.Total = parseFloat((this.MaterialCost + this.TotalCharges + this.TotalExpertiseCost + parseFloat(((this.sourceWorkFlow.otherCost == undefined || this.sourceWorkFlow.otherCost == '') ? 0 : this.sourceWorkFlow.otherCost).toFixed(2))).toFixed(2));
 
-        this.PercentBERThreshold = parseFloat((this.Total / this.sourceWorkFlow.berThresholdAmount).toFixed(2));
+        if (this.sourceWorkFlow.berThresholdAmount != 0)
+            this.PercentBERThreshold = parseFloat((this.Total / this.sourceWorkFlow.berThresholdAmount).toFixed(2));
     }
 
     private calculateWorkFlowTotalMaterialCost(): void {
@@ -422,7 +428,6 @@ export class WorkflowListComponent implements OnInit {
 
         this.MaterialCost = parseFloat((this.MaterialCost).toFixed(2));
     }
-
 
     private getUniqueTask(): any[] {
         var tasks = [];
@@ -539,11 +544,9 @@ export class WorkflowListComponent implements OnInit {
                 this.organiseTaskAndTaskAttributes();
                 this.loadPublicationTypes();
             },
-            error => { console.log(error); }
+            error => { }
         );
     }
-
-    publications: any[];
 
     private organiseTaskAndTaskAttributes() {
         this.addedTasks = this.getUniqueTask();
@@ -562,6 +565,7 @@ export class WorkflowListComponent implements OnInit {
                 }
                 return x.taskId == task.Id
             });
+
             task.chargesTotalQty = chargesTotalQty;
             task.chargesTotalExtendedCost = chargesTotalExtendedCost;
             task.chargesTotalChargesCost = chargesTotalChargesCost;
@@ -613,6 +617,7 @@ export class WorkflowListComponent implements OnInit {
             var materialTotalQty = 0;
             var materialTotalExtendedCost = 0;
             var materialTotalPrice = 0;
+            var materialTotalExtendedPrice = 0;
 
             task.materialList = this.sourceWorkFlow.materialList.filter(x => {
                 if (x.taskId == task.Id) {
@@ -623,6 +628,7 @@ export class WorkflowListComponent implements OnInit {
                     materialTotalQty += x.quantity == undefined || x.quantity == '' ? 0 : x.quantity;
                     materialTotalExtendedCost += x.extendedCost == undefined || x.extendedCost == '' ? 0 : x.extendedCost;
                     materialTotalPrice += x.price == undefined || x.price == '' ? 0 : x.price;
+                    materialTotalExtendedPrice += x.extendedPrice == undefined || x.extendedPrice == '' ? 0 : x.extendedPrice;
                 }
                 return x.taskId == task.Id;
             });
@@ -630,6 +636,7 @@ export class WorkflowListComponent implements OnInit {
             task.materialTotalQty = materialTotalQty;
             task.materialTotalExtendedCost = materialTotalExtendedCost;
             task.materialTotalPrice = materialTotalPrice;
+            task.materialTotalExtendedPrice = materialTotalExtendedPrice;
 
             task.measurements = this.sourceWorkFlow.measurements.filter(x => {
                 this.setMeasurementDropdownText(x);
@@ -641,36 +648,55 @@ export class WorkflowListComponent implements OnInit {
             });
 
             for (var pub of task.publication) {
-                this.aircraftManufacturerService.getById(pub.aircraftManufacturer).subscribe(
-                    result => {
-                        if (result[0][0] != undefined && result[0][0] != null) {
-                            pub.aircraftManufacturerName = result[0][0].description;
-                        }
-                    },
-                    error => {
-                        [0]
-                    }
-                );
-                this.aircraftmodelService.getById(pub.model).subscribe(
-                    result => {
-                        if (result[0][0] != undefined && result[0][0] != null) {
-                            pub.modelName = result[0][0].modelName;
-                        }
-                    },
-                    error => {
+                if (pub.aircraftManufacturer != null && pub.aircraftManufacturer != '') {
 
-                    }
-                );
-                this.dashNumberService.getDashNumberByModelTypeId(pub.model.toString(), pub.aircraftManufacturer.toString()).subscribe((dashnumberValues) => {
-                    pub.allDashNumbers = '';
+                    this.aircraftManufacturerService.getById(pub.aircraftManufacturer).subscribe(
+                        result => {
+                            for (var task of this.addedTasks) {
+                                for (var publication of task.publication) {
+                                    if (publication.aircraftManufacturer == result[0][0].aircraftTypeId) {
+                                        publication.aircraftManufacturerName = result[0][0].description;
+                                    }
+                                }
+                            }
+                        },
+                        error => {
 
-                    for (var dashNum of dashnumberValues) {
-                        var workFlowDashNumber = pub.workflowPublicationDashNumbers.filter(x => x.aircraftDashNumberId == dashNum.dashNumberId);
-                        if (workFlowDashNumber.length > 0) {
-                            pub.allDashNumbers += dashNum.dashNumber.toString() + ', ';
                         }
+                    );
+
+                    if (pub.model != null && pub.model != '') {
+                        this.aircraftmodelService.getById(pub.model).subscribe(
+                            result => {
+                                for (var publication of task.publication) {
+                                    if (publication.model == result[0][0].aircraftModelId) {
+                                        publication.modelName = result[0][0].modelName;
+                                    }
+                                }
+                            },
+                            error => {
+
+                            }
+                        );
+
+                        this.dashNumberService.getDashNumberByModelTypeId(pub.model.toString(), pub.aircraftManufacturer.toString()).subscribe((dashnumberValues) => {
+                            for (var publication of task.publication) {
+                                if (dashnumberValues.length > 0 && dashnumberValues[0].aircraftModelId == publication.model && dashnumberValues[0].aircraftTypeId == publication.aircraftManufacturer) {
+                                    publication.allDashNumbers = '';
+
+                                    for (var dashNum of dashnumberValues) {
+                                        var workFlowDashNumber = publication.workflowPublicationDashNumbers.filter(x => x.aircraftDashNumberId == dashNum.dashNumberId);
+                                        if (workFlowDashNumber.length > 0) {
+                                            publication.allDashNumbers += dashNum.dashNumber.toString() + ', ';
+                                        }
+                                    }
+                                }
+
+                            }
+                        });
                     }
-                });
+
+                }
 
                 if (this.publications != undefined) {
                     var selectedPublication = this.publications.filter(function (publication) {
@@ -690,6 +716,7 @@ export class WorkflowListComponent implements OnInit {
             }
         }
     }
+
     private loadPublicationById(wfPublication: any) {
         this.publicationService.getPublicationForWorkFlow(wfPublication.publicationId).subscribe(
             result => {
@@ -701,7 +728,6 @@ export class WorkflowListComponent implements OnInit {
         );
     }
 
-
     private setChargesTypeDropdownText(charge: any): void {
         var chargesType = this.chargesTypes.filter(x => x.id == charge.workflowChargeTypeId);
         if (chargesType.length > 0) {
@@ -710,9 +736,9 @@ export class WorkflowListComponent implements OnInit {
     }
 
     private setChargesVendorDropdownText(charge: any): void {
-        var vendor = this.vendors.filter(x => x.vendorId == charge.vendorId);
-        if (vendor.length > 0) {
-            charge.vendorName = vendor[0].assetTypeName;
+        var vendor = this.vendors.filter(x => x.vendorId == charge.vendorId)[0];
+        if (vendor != undefined) {
+            charge.vendorName = vendor != undefined ? vendor.vendorName : '';
         }
     }
 
@@ -775,9 +801,9 @@ export class WorkflowListComponent implements OnInit {
     }
 
     private LoadParts(): void {
-        this.itemMasterService.getPrtnumberslistList().subscribe(
+        this.itemMasterService.getPartDetailsDropdown().subscribe(
             results => {
-                this.allParts = results[0];
+                this.allParts = results;
             },
             error => { }
         );
@@ -798,6 +824,7 @@ export class WorkflowListComponent implements OnInit {
             this.actionService.getEquipmentAssetType().subscribe(
                 allAssetTypes => {
                     this.assetTypes = allAssetTypes;
+                    this.setEquipmentAssetTypeDropdownText(equipment);
                 },
                 error => {
                 }
@@ -884,7 +911,6 @@ export class WorkflowListComponent implements OnInit {
             this.actionService.GetMaterialMandatory().subscribe(
                 mandatory => {
                     this.materialMandatory = mandatory;
-                    console.log(this.materialMandatory);
                     this.setMaterialMandatoryText(material);
                 },
                 error => {

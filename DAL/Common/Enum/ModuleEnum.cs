@@ -9,6 +9,14 @@
         Publication,
         UnitOfMeasure,
         Manufacturer,
-        ItemClassfication
+        ItemClassfication, 
+        Site, 
+        WareHouse,
+        Location,
+        Shelf,
+        AssetType,
+        AssetIntangibleType,
+        StageCode,
+        GLAccountCategory
     }
 }

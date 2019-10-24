@@ -98,6 +98,15 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [HttpGet]
+        [Route("bindshipviadetails")]
+        public IActionResult BindShipViaDetails(int userType, long referenceId)
+        {
+            var result = _unitOfWork.CommonRepository.BindShipViaDetails(userType, referenceId);
+            return Ok(result);
+
+        }
+
         [HttpPost]
         [Route("createaddress")]
         public IActionResult CreateAddress([FromBody] Address address)
@@ -127,6 +136,15 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetAddressDetails(long addressId)
         {
             var result = _unitOfWork.CommonRepository.GetAddressDetails(addressId);
+            return Ok(result);
+
+        }
+
+        [HttpGet]
+        [Route("managementstructure")]
+        public IActionResult GetManagementStructure(long manmgStrucId)
+        {
+            var result = _unitOfWork.CommonRepository.GetManagementStructure(manmgStrucId);
             return Ok(result);
 
         }

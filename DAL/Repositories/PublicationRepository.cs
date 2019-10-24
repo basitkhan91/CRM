@@ -11,13 +11,21 @@ using System.Threading.Tasks;
 using DAL.Core;
 using DAL.Models;
 using DAL.Common;
+using Microsoft.AspNetCore.Http;
+using ExcelDataReader;
+using System.IO;
+using System.Net.Http.Headers;
+using Microsoft.Extensions.Options;
 
 namespace DAL.Repositories
 {
     public class PublicationRepository : Repository<DAL.Models.Publication>, IPublication
     {
-        public PublicationRepository(ApplicationDbContext context) : base(context)
-        { }
+        private AppSettings AppSettings { get; set; }
+        public PublicationRepository(ApplicationDbContext context, IOptions<AppSettings> settings) : base(context)
+        {
+            AppSettings = settings.Value;
+        }
 
         public Publication GetPublicationsById(long ID)
         {
@@ -127,14 +135,14 @@ namespace DAL.Repositories
             var data = (from PublicationItemMaster in _appContext.PublicationItemMasterMapping
                         join it in _appContext.ItemMasterAircraftMapping on PublicationItemMaster.ItemMasterId equals it.ItemMasterId
                         join pub in _appContext.Publication on PublicationItemMaster.PublicationRecordId equals pub.PublicationRecordId
-                        where it.IsDeleted==false && PublicationItemMaster.PublicationRecordId == PublicationID
-
+                        where PublicationItemMaster.IsDeleted == false && PublicationItemMaster.PublicationRecordId == PublicationID
+                        && PublicationItemMaster.IsActive == true
                         select new
                         {
                             it.DashNumber,
                             it.AircraftType,
                             it.AircraftModel
-                            
+
                         }).Distinct()
                         .ToList();
             return data;
@@ -146,14 +154,14 @@ namespace DAL.Repositories
                         join it in _appContext.ItemMasterATAMapping on PublicationItemMaster.ItemMasterId equals it.ItemMasterId
                         join pub in _appContext.Publication on PublicationItemMaster.PublicationRecordId equals pub.PublicationRecordId
                         join sc in _appContext.ATASubChapter on it.ATASubChapterId equals sc.ATASubChapterId
-                        where it.IsDeleted==false && PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true
+                        where PublicationItemMaster.IsDeleted == false && PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true
                         select new
                         {
                             it.ATAChapterName,
                             it.ATASubChapterDescription,
                             it.ATAChapterCode,
                             sc.ATASubChapterCode
-                            
+
                         }).Distinct()
                         .ToList();
             return data;
@@ -383,7 +391,7 @@ namespace DAL.Repositories
                 var data = (from it in _appContext.ItemMasterAircraftMapping
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             join pub in _appContext.Publication on PublicationItemMaster.PublicationRecordId equals pub.PublicationRecordId
-                            where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftTypeId.Contains(it.AircraftTypeId) && myAircraftModelId.Contains(it.AircraftModelId.Value) && myDashNumberId.Contains(it.DashNumberId.Value) && it.IsDeleted != true
+                            where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftTypeId.Contains(it.AircraftTypeId) && myAircraftModelId.Contains(it.AircraftModelId.Value) && myDashNumberId.Contains(it.DashNumberId.Value) && PublicationItemMaster.IsDeleted != true
                             select new { PublicationItemMaster.ItemMasterId, pub.PublicationId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, it.DashNumber, it.AircraftType, it.AircraftModel, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -393,7 +401,7 @@ namespace DAL.Repositories
                 var data = (from it in _appContext.ItemMasterAircraftMapping
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             join pub in _appContext.Publication on PublicationItemMaster.PublicationRecordId equals pub.PublicationRecordId
-                            where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftTypeId.Contains(it.AircraftTypeId) && myAircraftModelId.Contains(it.AircraftModelId.Value) && it.IsDeleted != true
+                            where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftTypeId.Contains(it.AircraftTypeId) && myAircraftModelId.Contains(it.AircraftModelId.Value) && PublicationItemMaster.IsDeleted != true
                             select new { PublicationItemMaster.ItemMasterId, pub.PublicationId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, it.DashNumber, it.AircraftType, it.AircraftModel, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -403,7 +411,7 @@ namespace DAL.Repositories
                 var data = (from it in _appContext.ItemMasterAircraftMapping
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             join pub in _appContext.Publication on PublicationItemMaster.PublicationRecordId equals pub.PublicationRecordId
-                            where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftTypeId.Contains(it.AircraftTypeId) && it.IsDeleted != true
+                            where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftTypeId.Contains(it.AircraftTypeId) && PublicationItemMaster.IsDeleted != true
                             select new { PublicationItemMaster.ItemMasterId, pub.PublicationId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, it.DashNumber, it.AircraftType, it.AircraftModel, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -413,7 +421,7 @@ namespace DAL.Repositories
                 var data = (from it in _appContext.ItemMasterAircraftMapping
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             join pub in _appContext.Publication on PublicationItemMaster.PublicationRecordId equals pub.PublicationRecordId
-                            where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftTypeId.Contains(it.AircraftTypeId) && myDashNumberId.Contains(it.DashNumberId.Value) && it.IsDeleted != true
+                            where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftTypeId.Contains(it.AircraftTypeId) && myDashNumberId.Contains(it.DashNumberId.Value) && PublicationItemMaster.IsDeleted != true
                             select new { PublicationItemMaster.ItemMasterId, pub.PublicationId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, it.DashNumber, it.AircraftType, it.AircraftModel, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -423,7 +431,7 @@ namespace DAL.Repositories
                 var data = (from it in _appContext.ItemMasterAircraftMapping
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             join pub in _appContext.Publication on PublicationItemMaster.PublicationRecordId equals pub.PublicationRecordId
-                            where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftModelId.Contains(it.AircraftModelId.Value) && myDashNumberId.Contains(it.DashNumberId.Value) && it.IsDeleted != true
+                            where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftModelId.Contains(it.AircraftModelId.Value) && myDashNumberId.Contains(it.DashNumberId.Value) && PublicationItemMaster.IsDeleted != true
                             select new { PublicationItemMaster.ItemMasterId, pub.PublicationId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, it.DashNumber, it.AircraftType, it.AircraftModel, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -433,7 +441,7 @@ namespace DAL.Repositories
                 var data = (from it in _appContext.ItemMasterAircraftMapping
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             join pub in _appContext.Publication on PublicationItemMaster.PublicationRecordId equals pub.PublicationRecordId
-                            where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftModelId.Contains(it.AircraftModelId.Value) && it.IsDeleted != true
+                            where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myAircraftModelId.Contains(it.AircraftModelId.Value) && PublicationItemMaster.IsDeleted != true
                             select new { PublicationItemMaster.ItemMasterId, pub.PublicationId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, it.DashNumber, it.AircraftType, it.AircraftModel, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -443,7 +451,7 @@ namespace DAL.Repositories
                 var data = (from it in _appContext.ItemMasterAircraftMapping
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             join pub in _appContext.Publication on PublicationItemMaster.PublicationRecordId equals pub.PublicationRecordId
-                            where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myDashNumberId.Contains(it.DashNumberId.Value) && it.IsDeleted != true
+                            where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && myDashNumberId.Contains(it.DashNumberId.Value) && PublicationItemMaster.IsDeleted != true
                             select new { PublicationItemMaster.ItemMasterId, pub.PublicationId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, it.DashNumber, it.AircraftType, it.AircraftModel, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -454,7 +462,7 @@ namespace DAL.Repositories
                 var data = (from it in _appContext.ItemMasterAircraftMapping
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             join pub in _appContext.Publication on PublicationItemMaster.PublicationRecordId equals pub.PublicationRecordId
-                            where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && it.IsDeleted != true
+                            where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && PublicationItemMaster.IsDeleted != true
 
                             select new { PublicationItemMaster.ItemMasterId, pub.PublicationId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, it.DashNumber, it.AircraftType, it.AircraftModel, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
@@ -478,8 +486,9 @@ namespace DAL.Repositories
                 var data = (from it in _appContext.ItemMasterATAMapping
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             join pub in _appContext.Publication on PublicationItemMaster.PublicationRecordId equals pub.PublicationRecordId
-                            where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && it.IsDeleted != true && myATAChapterId.Contains(it.ATAChapterId) && myATASubChapterID.Contains(it.ATASubChapterId)
-                            select new { PublicationItemMaster.ItemMasterId, pub.PublicationId, it.PartNumber, it.ATAChapterId, it.ATAChapterCode, it.ATAChapterName, it.ATASubChapterId, it.ATASubChapterDescription, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
+                            join asc in _appContext.ATASubChapter on it.ATASubChapterId equals asc.ATASubChapterId
+                            where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && PublicationItemMaster.IsDeleted != true && myATAChapterId.Contains(it.ATAChapterId) && myATASubChapterID.Contains(it.ATASubChapterId)
+                            select new { PublicationItemMaster.ItemMasterId, pub.PublicationId, it.PartNumber, it.ATAChapterId, it.ATAChapterCode, it.ATAChapterName, it.ATASubChapterId, it.ATASubChapterDescription, it.MasterCompanyId, PublicationItemMaster.IsActive, PublicationItemMaster.IsDeleted,asc.ATASubChapterCode }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return uniquedata;
             }
@@ -488,8 +497,9 @@ namespace DAL.Repositories
                 var data = (from it in _appContext.ItemMasterATAMapping
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             join pub in _appContext.Publication on PublicationItemMaster.PublicationRecordId equals pub.PublicationRecordId
-                            where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && it.IsDeleted != true && myATAChapterId.Contains(it.ATAChapterId)
-                            select new { PublicationItemMaster.ItemMasterId, pub.PublicationId, it.PartNumber, it.ATAChapterId, it.ATAChapterCode, it.ATAChapterName, it.ATASubChapterId, it.ATASubChapterDescription, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
+                            join asc in _appContext.ATASubChapter on it.ATASubChapterId equals asc.ATASubChapterId
+                            where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && PublicationItemMaster.IsDeleted != true && myATAChapterId.Contains(it.ATAChapterId)
+                            select new { PublicationItemMaster.ItemMasterId, pub.PublicationId, it.PartNumber, it.ATAChapterId, it.ATAChapterCode, it.ATAChapterName, it.ATASubChapterId, it.ATASubChapterDescription, it.MasterCompanyId, PublicationItemMaster.IsActive, PublicationItemMaster.IsDeleted,asc.ATASubChapterCode }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return uniquedata;
             }
@@ -498,8 +508,9 @@ namespace DAL.Repositories
                 var data = (from it in _appContext.ItemMasterATAMapping
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             join pub in _appContext.Publication on PublicationItemMaster.PublicationRecordId equals pub.PublicationRecordId
-                            where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && it.IsDeleted != true && myATASubChapterID.Contains(it.ATASubChapterId)
-                            select new { PublicationItemMaster.ItemMasterId, pub.PublicationId, it.PartNumber, it.ATAChapterId, it.ATAChapterCode, it.ATAChapterName, it.ATASubChapterId, it.ATASubChapterDescription, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
+                            join asc in _appContext.ATASubChapter on it.ATASubChapterId equals asc.ATASubChapterId
+                            where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && PublicationItemMaster.IsDeleted != true && myATASubChapterID.Contains(it.ATASubChapterId)
+                            select new { PublicationItemMaster.ItemMasterId, pub.PublicationId, it.PartNumber, it.ATAChapterId, it.ATAChapterCode, it.ATAChapterName, it.ATASubChapterId, it.ATASubChapterDescription, it.MasterCompanyId, it.IsActive, it.IsDeleted,asc.ATASubChapterCode }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return uniquedata;
 
@@ -509,8 +520,9 @@ namespace DAL.Repositories
                 var data = (from it in _appContext.ItemMasterATAMapping
                             join PublicationItemMaster in _appContext.PublicationItemMasterMapping on it.ItemMasterId equals PublicationItemMaster.ItemMasterId
                             join pub in _appContext.Publication on PublicationItemMaster.PublicationRecordId equals pub.PublicationRecordId
-                            where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && it.IsDeleted != true
-                            select new { PublicationItemMaster.ItemMasterId, pub.PublicationId, it.PartNumber, it.ATAChapterId, it.ATAChapterCode, it.ATAChapterName, it.ATASubChapterId, it.ATASubChapterDescription, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
+                            join asc in _appContext.ATASubChapter on it.ATASubChapterId equals asc.ATASubChapterId
+                            where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && PublicationItemMaster.IsDeleted != true
+                            select new { PublicationItemMaster.ItemMasterId, pub.PublicationId, it.PartNumber, it.ATAChapterId, it.ATAChapterCode, it.ATAChapterName, it.ATASubChapterId, it.ATASubChapterDescription, it.MasterCompanyId, PublicationItemMaster.IsActive, PublicationItemMaster.IsDeleted,asc.ATASubChapterCode }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return uniquedata;
 
@@ -906,6 +918,7 @@ namespace DAL.Repositories
                           VerifiedBy = p.p1.p.VerifiedBy,
                           VerifiedDate = p.p1.p.VerifiedDate,
                           EmployeeName = p.e.FirstName + ' ' + p.e.LastName,
+                          RevisionNum = p.p1.p.RevisionNum,
                           AttachmentDetails = GetAttachmentDetails(publicationRecordId)
                       })
                  .Where(p => p.PublicationRecordId == publicationRecordId)
@@ -1014,34 +1027,176 @@ namespace DAL.Repositories
         {
             List<AttachmentDetails> attachmentDetailsList = new List<AttachmentDetails>();
             AttachmentDetails attachmentDetails;
-            var attachment = _appContext.Attachment.Where(p => p.ReferenceId == publicationRecordId && p.ModuleId == Convert.ToInt32(ModuleEnum.Publication)).FirstOrDefault();
-            if (attachment != null)
+            var details = _appContext.Attachment
+              .Join(_appContext.AttachmentDetails,
+                     a => a.AttachmentId,
+                     ad => ad.AttachmentId,
+                     (a, ad) => new { a, ad })
+              .Where(p => p.ad.IsDeleted == false && p.a.ModuleId == Convert.ToInt32(ModuleEnum.Publication) && p.a.ReferenceId == publicationRecordId)
+              .Select(p => new
+              {
+                  AttachmentDetails = p.ad
+              })
+              .ToList();
+
+            if (details != null && details.Count > 0)
             {
-                var details = _appContext.Attachment
-                  .Join(_appContext.AttachmentDetails,
-                         a => a.AttachmentId,
-                         ad => ad.AttachmentId,
-                         (a, ad) => new { a, ad })
-                  .Where(p => p.ad.IsDeleted == false && p.a.AttachmentId == attachment.AttachmentId && p.a.ModuleId == Convert.ToInt32(ModuleEnum.Publication) && p.a.ReferenceId == publicationRecordId)
-                  .Select(p => new
-                  {
-                      AttachmentDetails = p.ad
-                  })
-                  .ToList();
 
-                if (details != null && details.Count > 0)
+                foreach (var item in details)
                 {
+                    attachmentDetails = new AttachmentDetails();
+                    attachmentDetails = item.AttachmentDetails;
+                    attachmentDetailsList.Add(attachmentDetails);
+                }
+            }
+            return attachmentDetailsList;
+        }
 
-                    foreach (var item in details)
+        public IEnumerable<Publication> UploadCustomData(IFormFile file)
+        {
+            string description = string.Empty;
+            string shortName = string.Empty;
+            string standard = string.Empty;
+            string memo = string.Empty;
+            List<Publication> publications = new List<Publication>();
+            long? employeeId = 0;
+            int count = 0;
+            try
+            {
+                Publication publication;
+
+                string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                string filePath = Path.Combine(AppSettings.CustomUploadFilePath, Convert.ToString(ModuleEnum.Publication), DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss"));
+
+                if (!Directory.Exists(filePath))
+                {
+                    Directory.CreateDirectory(filePath);
+                }
+
+                string fullPath = Path.Combine(filePath, fileName);
+
+                var publicationTypes = _appContext.PublicationType.Where(p => p.IsDeleted == false && p.IsActive == true).ToList();
+                var employees = _appContext.Employee.Where(p => p.IsDeleted == false && p.IsActive == true).ToList();
+
+                using (var stream = File.Open(fullPath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
                     {
-                        attachmentDetails = new AttachmentDetails();
-                        attachmentDetails = item.AttachmentDetails;
-                        attachmentDetailsList.Add(attachmentDetails);
+                        using (var reader = ExcelReaderFactory.CreateReader(stream))
+                        {
+                            do
+                            {
+                                while (reader.Read())
+                                {
+                                    employeeId = 0;
+                                    if (count > 0 && reader.GetValue(0) != null && reader.GetValue(1) != null)
+                                    {
+                                        var publicationType = publicationTypes.Where(p => p.Name == reader.GetValue(2).ToString()).FirstOrDefault();
+                                        var employee = employees.Where(p => p.FirstName == reader.GetValue(4).ToString()).FirstOrDefault();
+                                        if(employee!=null)
+                                            employeeId = employee.EmployeeId;
+                                        else
+                                            employeeId=0;
+                                        if (publicationType != null)
+                                        {
+                                            var flag = _appContext.Publication.Any(p => p.IsDeleted == false && p.PublicationId == Convert.ToString(reader.GetValue(0)).Trim() && p.PublicationTypeId == publicationType.PublicationTypeId);
+                                            if (!flag)
+                                            {
+                                                publication = new Publication();
+                                                if (reader.GetValue(0) != null)
+                                                    publication.PublicationId = Convert.ToString(reader.GetValue(0));
+                                                if (reader.GetValue(1) != null)
+                                                    publication.Description = Convert.ToString(reader.GetValue(1));
+                                                if (reader.GetValue(2) != null)
+                                                   publication.PublicationTypeId = publicationType.PublicationTypeId;
+                                                if (reader.GetValue(3) != null)
+                                                    publication.Publishby = Convert.ToString(reader.GetValue(3));
+                                                if (reader.GetValue(4) != null)
+                                                    publication.EmployeeId = Convert.ToInt64(employeeId);
+                                                if (reader.GetValue(5) != null)
+                                                    publication.Location = Convert.ToString(reader.GetValue(5));
+
+                                                publication.MasterCompanyId = 1;
+                                                publication.IsActive = true;
+                                                publication.IsDeleted = false;
+                                                publication.CreatedBy = publication.UpdatedBy = "System";
+                                                publication.UpdatedDate = publication.CreatedDate = DateTime.Now;
+                                                publication.EntryDate = publication.ExpirationDate = DateTime.Now;
+                                                publication.NextReviewDate = publication.RevisionDate = DateTime.Now;
+                                                publication.VerifiedDate = DateTime.Now;
+
+                                                _appContext.Publication.Add(publication);
+                                                _appContext.SaveChanges();
+                                                //publication.UploadStatus = "Success";
+                                                publications.Add(publication);
+                                            }
+                                            else
+                                            {
+                                                publication = new Publication();
+                                                if (reader.GetValue(0) != null)
+                                                    publication.PublicationId = Convert.ToString(reader.GetValue(0));
+                                                if (reader.GetValue(1) != null)
+                                                    publication.Description = Convert.ToString(reader.GetValue(1));
+                                                if (reader.GetValue(2) != null)
+                                                    publication.PublicationTypeId = publicationType.PublicationTypeId;
+                                                if (reader.GetValue(3) != null)
+                                                    publication.Publishby = Convert.ToString(reader.GetValue(3));
+                                                if (reader.GetValue(4) != null)
+                                                    publication.EmployeeId = Convert.ToInt64(employeeId);
+                                                if (reader.GetValue(5) != null)
+                                                    publication.Location = Convert.ToString(reader.GetValue(5));
+                                                publications.Add(publication);
+                                            }
+                                        }
+
+
+                                    }
+                                    count++;
+                                }
+                            } while (reader.NextResult());
+
+                        }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+            }
+            return publications;
+        } 
 
-            return attachmentDetailsList;
+        public IEnumerable<object> PublicationHistory(long publicationId)
+        {
+            try
+            {
+                var list = (from pa in _appContext.PublicationAudit
+                            join pt in _appContext.PublicationType on pa.PublicationTypeId equals pt.PublicationTypeId
+                            join e in _appContext.Employee on pa.EmployeeId equals e.EmployeeId into emp
+                            from e in emp.DefaultIfEmpty()
+                            where pa.PublicationRecordId == publicationId
+                            select new
+                            {
+                                pa.PublicationId,
+                                pa.Description,
+                                PublicationType=pt.Name,
+                                pa.Publishby,
+                                EmployeeName=e==null?" ":e.FirstName,
+                                pa.Location,
+                                pa.IsActive,
+                                pa.UpdatedBy,
+                                pa.UpdatedDate,
+                                pa.RevisionNum
+                            }
+                          ).OrderByDescending(p => p.UpdatedDate).ToList();
+
+
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

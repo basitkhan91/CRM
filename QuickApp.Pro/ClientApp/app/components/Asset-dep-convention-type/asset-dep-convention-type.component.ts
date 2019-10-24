@@ -28,6 +28,7 @@ export class AssetDepConventionTypeComponent implements OnInit {
     assetDepConventionToUpdate: AssetDepConvention;
     updateMode: boolean;
     selectedData: any;
+    HasAuditDetails: boolean;
     formData = new FormData();
     existingRecordsResponse: Object;
     public auditHisory: AuditHistory[] = [];
@@ -344,15 +345,15 @@ export class AssetDepConventionTypeComponent implements OnInit {
         };
         if (e.checked == false) {
             this.Active = "In Active";
-            /*this.assetDepConventionTypeService.update(params).subscribe(
+            this.assetDepConventionTypeService.update(params).subscribe(
                 response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));*/
+                error => this.saveFailedHelper(error));
         }
         else {
             this.Active = "Active";
-            /*this.assetDepConventionTypeService.update(params).subscribe(
+            this.assetDepConventionTypeService.update(params).subscribe(
                 response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));*/
+                error => this.saveFailedHelper(error));
         }
 
     }
@@ -385,25 +386,22 @@ export class AssetDepConventionTypeComponent implements OnInit {
         }, () => { console.log('Backdrop click') })
     }
 
-    //showAuditPopup(template, id): void {
-    //    this.auditDepConvention(id);
-    //    this.modal = this.modalService.open(template, { size: 'sm' });
-    //}
-
-    //auditDepConvention(assetDepConventionTypeId: number): void {
-    //    this.AuditDetails = [];
-    //    this.assetDepConventionTypeService.getAudit(assetDepConventionTypeId).subscribe(audits => {
-    //        if (audits.length > 0) {
-    //            this.AuditDetails = audits;
-    //            this.AuditDetails[0].ColumnsToAvoid = ["assetDepConventionTypeAuditId", "assetDepConventionTypeId", "createdBy", "createdDate", "updatedDate", "masterCompanyId"];
-    //        }
-    //    });
-    //}
-
     getAuditHistoryById(rowData) {
         this.assetDepConventionTypeService.getAudit(rowData.assetDepConventionId).subscribe(res => {
             this.auditHistory = res;
         })
+    }
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
     }
 
     sampleExcelDownload() {

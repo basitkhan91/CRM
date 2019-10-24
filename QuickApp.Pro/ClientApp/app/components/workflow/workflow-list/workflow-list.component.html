@@ -281,7 +281,7 @@
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label>Other: </label>${{sourceWorkFlow.otherCost != undefined && sourceWorkFlow.otherCost != null && sourceWorkFlow.otherCost > 0 ? '$' + sourceWorkFlow.otherCost.toString() : 0 }}
+                                                <label>Other: </label>{{sourceWorkFlow.otherCost != undefined && sourceWorkFlow.otherCost != null && sourceWorkFlow.otherCost > 0 ? '$' + sourceWorkFlow.otherCost.toString() : 0 }}
                                             </div>
                                         </div>
                                     </div>
@@ -338,7 +338,7 @@
                                     <tbody>
                                         <tr *ngFor="let publication of task.publication;let i = index">
                                             <td>{{(i+1)}}</td>
-                                            <td>{{publication.publicationId}}</td>
+                                            <td>{{publication.publicationName}}</td>
                                             <td>{{publication.publicationDescription}}</td>
                                             <td>{{publication.revisionDate}}</td>
                                             <td>{{publication.publicationTypeName}}</td>
@@ -582,7 +582,8 @@
                                             <th>UOM</th>
                                             <th>Unit Cost</th>
                                             <th>Extended Cost</th>
-                                            <th>Price</th>
+                                            <th>Unit Price</th>
+                                            <th>Extended Price</th>
                                             <th>Memo</th>
                                             <th>Deferred</th>
                                         </tr>
@@ -600,8 +601,9 @@
                                             <td>{{material.unitCost}}</td>
                                             <td>{{material.extendedCost}}</td>
                                             <td>{{material.price}}</td>
+                                            <td>{{material.extendedPrice}}</td>
                                             <td>{{material.memo}}</td>
-                                            <td>{{material.isDeferred != null || material.isDeferred != ''  ? material.isDeferred : false }}</td>
+                                            <td>{{material.isDeferred != null && material.isDeferred != ''  ? material.isDeferred : false }}</td>
                                         </tr>
                                         <tr>
                                             <td><b>Total</b></td>
@@ -615,6 +617,7 @@
                                             <td></td>
                                             <td>{{task.materialTotalExtendedCost}}</td>
                                             <td>{{task.materialTotalPrice}}</td>
+                                            <td>{{task.materialTotalExtendedPrice}}</td>
                                             <td></td>
                                             <td></td>
                                         </tr>

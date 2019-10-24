@@ -95,7 +95,6 @@ namespace QuickApp.Pro.Controllers
             address.City = siteViewModel.City;
             address.Country = siteViewModel.Country;
             address.MasterCompanyId = 1;
-            address.RecordCreateDate = DateTime.Now;
             address.CreatedBy = siteViewModel.CreatedBy;
             address.UpdatedBy = siteViewModel.UpdatedBy;
             address.CreatedDate = DateTime.Now;
@@ -170,7 +169,6 @@ namespace QuickApp.Pro.Controllers
                 address.City = siteViewModel.City;
                 address.Country = siteViewModel.Country;
                 address.MasterCompanyId = 1;
-                address.RecordCreateDate = DateTime.Now;
                 address.CreatedBy = siteViewModel.CreatedBy;
                 address.UpdatedBy = siteViewModel.UpdatedBy;
                 address.CreatedDate = DateTime.Now;
@@ -263,6 +261,14 @@ namespace QuickApp.Pro.Controllers
             auditResult.Add(new AuditResult<SiteAudit> { AreaName = "Site", Result = audits.ToList() });
 
             return Ok(auditResult);
+        }
+
+        [HttpPost("bulkupload")]
+        public IActionResult BulkUpload()
+        {
+            var result = _unitOfWork.Sites.BulkUpload(Request.Form.Files[0]);
+
+            return Ok(result);
         }
     }
 

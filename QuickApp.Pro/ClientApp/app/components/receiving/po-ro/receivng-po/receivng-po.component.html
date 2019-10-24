@@ -51,14 +51,14 @@
                             </p-autoComplete>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <!--<div class="col-md-3">
                         <div class="form-group">
                             <label>Company</label>
                             <select disabled="disabled" class="form-control" [(ngModel)]="poSelectedCompanyId" #selects="ngModel" [ngModelOptions]="{standalone: true}" required>
                                 <option *ngFor="let company of poCompanyList" [value]="company.Key">{{company.Value}}</option>
                             </select>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
 
                 <div class="form-row">
@@ -84,14 +84,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <!--<div class="col-md-3">
                         <div class="form-group">
                             <label>BU</label>
                             <select disabled="disabled" class="form-control" [(ngModel)]="poSelectedBusinessUnitId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
                                 <option *ngFor="let businessUnit of poBusinessUnitList" [value]="businessUnit.Key">{{businessUnit.Value}}</option>
                             </select>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
 
                 <div class="form-row">
@@ -115,14 +115,14 @@
                             <p-calendar disabled="disabled" class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.dateApprovied" [required]="true"></p-calendar>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <!--<div class="col-md-3">
                         <div class="form-group">
                             <label>Division</label>
                             <select disabled="disabled" class="form-control" [(ngModel)]="poSelectedDivisionId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
                                 <option *ngFor="let division of poDivisionList " [value]="division.Key">{{division.Value}}</option>
                             </select>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
 
                 <div class="form-row">
@@ -147,17 +147,17 @@
                             <label>Credit Limit &amp; Terms</label>
                             <div class="form-row">
                                 <div class="col-sm-5">
-                                    <input class="form-control" type="text" placeholder="limit" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.terms" required>
+                                    <input class="form-control" type="text" disabled placeholder="limit" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.terms" required>
                                 </div>
                                 <div class="col-sm-7">
-                                    <select class="form-control" #selects="ngModel" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.creditLimit" required>
+                                    <select class="form-control" disabled #selects="ngModel" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.creditLimit" required>
                                         <option *ngFor="let creditTerm of poCreditTermInfo" [value]="creditTerm.Key">{{creditTerm.Value}}</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <!--<div class="col-md-3">
                         <div class="form-group">
                             <label>Dept</label>
                             <select disabled="disabled" class="form-control" [(ngModel)]="poSelectedDepartmentId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
@@ -165,14 +165,14 @@
                             </select>
                             
                         </div>
-                    </div>
+                    </div>-->
                 </div>
 
                 <div class="form-row">
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Deferred Receiver</label>
-                            <input type="checkbox" [checked]="purchaseOrderData.deferredReceiver" class="form-control names ui-autocomplete-input">
+                            <input type="checkbox" disabled [checked]="purchaseOrderData.deferredReceiver" class="form-control names ui-autocomplete-input">
                             <!--<div class="checkbox-cstm" style="margin-top: 4px">
                                 <label>
                                     <span class="cr"><i class="cr-icon pi pi-check"></i></span>
@@ -183,7 +183,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Resale</label>
-                            <input type="checkbox" [checked]="purchaseOrderData.resale" class="form-control names ui-autocomplete-input">
+                            <input type="checkbox" disabled [checked]="purchaseOrderData.resale" class="form-control names ui-autocomplete-input">
                             <!--<div class="checkbox-cstm" style="margin-top: 4px">
                                 <label>
                                     <input type="checkbox" [checked]="purchaseOrderData.resale" class="form-control names ui-autocomplete-input">
@@ -195,7 +195,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Memo</label>
-                            <textarea class="form-control h100 scroll-x" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.notes"></textarea>
+                            <textarea disabled class="form-control h100 scroll-x" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.notes"></textarea>
                         </div>
                     </div>
                 </div>
@@ -340,7 +340,7 @@
                                                     <div class="form-group">
                                                         <label>Cond <span class="clr-red">*</span></label>
                                                         <select class="form-control" required
-                                                                [(ngModel)]="part.conditionCode"
+                                                                [(ngModel)]="part.conditionId"
                                                                 #selects="ngModel"
                                                                 [ngModelOptions]="{standalone: true}">
                                                             <option value="0">Select</option>
@@ -382,7 +382,7 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-2">
+                                                <!--<div class="col-md-2">
                                                     <div class="form-group">
                                                         <label matTooltip="Export Control Classification Number">ECCN</label>
                                                         <input class="form-control" [(ngModel)]="part.itemMaster.exportECCN" disabled="{{part.eCCNAlreadyExist}}" type="text" pInputText pKeyFilter="pnum" [maxLength]="25">
@@ -405,18 +405,18 @@
                                                         <label matTooltip="Top Level Assembly">TLA</label>
                                                         <input class="form-control" [(ngModel)]="part.itemMaster.TopLevelAssembly" type="text" pInputText [maxLength]="25">
                                                     </div>
-                                                </div>
+                                                </div>-->
 
                                             </div>
 
-                                            <div class="form-row" style="margin-top: 10px;padding: 0px 7px;">
+                                            <!--<div class="form-row" style="margin-top: 10px;padding: 0px 7px;">
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label matTooltip="Next Higher Assembly">NHA</label>
                                                         <input class="form-control" [(ngModel)]="part.itemMaster.nha" type="text" pInputText>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div>-->
                                             <div style="margin-left: 6px;" *ngIf="part.stocklineListObj != undefined && part.stocklineListObj.length > 0">
                                                 <h3 class="add-details-heading">{{ part.itemMaster?.partNumber }} receiving Qty  {{ (part.currentSLIndex + 1) }} of {{ part.stocklineListObj.length }} </h3>
                                                 <div class="pull-right" style="margin-top: -37px;margin-right: 85px;" *ngIf="part.itemMaster.isSerialized">
@@ -676,15 +676,15 @@
                                                             </div>
 
                                                             <div class="form-group">
-                                                                <label>MFG <span class="clr-red">*</span></label>
-                                                                <select class="form-control" required [(ngModel)]="part.stocklineListObj[part.currentSLIndex].manufacturerId">
-                                                                    <option value="0">Select</option>
-                                                                    <option *ngFor="let manufacturer of ManufacturerList" [value]="manufacturer.Key">{{manufacturer.Value}}</option>
+                                                                <label>MFG <span class="clr-red"></span></label>
+                                                                <select class="form-control" disabled [(ngModel)]="part.stocklineListObj[part.currentSLIndex].manufacturerId">
+                                                                    <option [value]="0">Select</option>
+                                                                    <option [value]="manufacturer.Key" *ngFor="let manufacturer of ManufacturerList" >{{manufacturer.Value}}</option>
                                                                 </select>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>MFG Lot Num</label>
-                                                                <input class="form-control" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].manufacturerLotNumber" type="text" pInputText pKeyFilter="pnum">
+                                                                <input class="form-control" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].manufacturerLotNumber" type="text" pInputText [maxLength]="200" >
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>MFG Date</label>
@@ -692,13 +692,13 @@
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>MFG Trace</label>
-                                                                <input class="form-control" type="text" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].manufacturingTrace" pInputText value="Map pending">
+                                                                <input class="form-control" type="text" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].manufacturingTrace" pInputText value="Map pending" [maxLength]="200">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3">
                                                             <div class="form-group">
                                                                 <label>MFG Batch Num</label>
-                                                                <input class="form-control" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].manufacturingBatchNumber" type="text" pInputText pKeyFilter="pnum">
+                                                                <input class="form-control" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].manufacturingBatchNumber" type="text" pInputText [maxLength]="200">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Expiration Date</label>
@@ -706,27 +706,27 @@
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Unit Cost</label>
-                                                                <input type="text" class="form-control" pInputText pKeyFilter="pnum" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].purchaseOrderUnitCost">
+                                                                <input type="text" class="form-control" pInputText pKeyFilter="pnum" (focusout)="calculateExtendedCost($event, part)"  [(ngModel)]="part.stocklineListObj[part.currentSLIndex].purchaseOrderUnitCost">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Extended Cost</label>
-                                                                <input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].purchaseOrderExtendedCost">
+                                                                <input class="form-control" type="text" disabled pInputText pKeyFilter="pnum" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].purchaseOrderExtendedCost">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Parts Cert Num</label>
-                                                                <input class="form-control" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].partCertificationNumber">
+                                                                <input class="form-control" type="text" pInputText [(ngModel)]="part.stocklineListObj[part.currentSLIndex].partCertificationNumber" [maxLength]="200">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Cert By</label>
-                                                                <input class="form-control" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].certifiedBy" type="text" pInputText>
+                                                                <input class="form-control" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].certifiedBy" type="text" pInputText [maxLength]="200"> 
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Certified Date</label>
-                                                                <p-calendar class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].certifiedDate"></p-calendar>
+                                                                <p-calendar class="pas-clder" [maxDate]="part.stocklineListObj[part.currentSLIndex].currentDate"  [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].certifiedDate"></p-calendar>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Certified Due Date</label>
-                                                                <p-calendar class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].certifiedDueDate"></p-calendar>
+                                                                <p-calendar class="pas-clder" [maxDate]="part.stocklineListObj[part.currentSLIndex].currentDate" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].certifiedDueDate"></p-calendar>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3">
@@ -741,8 +741,12 @@
                                                                 <p-calendar class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].tagDate"></p-calendar>
                                                             </div>
                                                             <div class="form-group">
-                                                                <label>Shipping Ref</label>
-                                                                <input class="form-control" type="text" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].shippingReference" pInputText [maxLength]="200">
+                                                                <label matTooltip="Engine Serial Number">ESN</label>
+                                                                <input class="form-control" type="text" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].engineSerialNumber" pInputText [maxLength]="25">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Aircraft Tail Num</label>
+                                                                <input class="form-control" type="text" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].aircraftTailNumber" pInputText [maxLength]="25">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Ship Via</label>
@@ -752,17 +756,14 @@
                                                                 </select>
                                                             </div>
                                                             <div class="form-group">
+                                                                <label>Shipping Ref</label>
+                                                                <input class="form-control" type="text" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].shippingReference" pInputText [maxLength]="200">
+                                                            </div>
+                                                            <div class="form-group">
                                                                 <label>Shipping Account</label>
                                                                 <input class="form-control" type="text" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].shippingAccount" pInputText [maxLength]="200">
                                                             </div>
-                                                            <div class="form-group">
-                                                                <label matTooltip="Engine Serial Number">ESN</label>
-                                                                <input class="form-control" type="text" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].engineSerialNumber" pInputText [maxLength]="25">
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label>Aircraft Tail Num</label>
-                                                                <input class="form-control" type="text" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].aircraftTailNumber" pInputText [maxLength]="25">
-                                                            </div>
+
                                                         </div>
                                                     </div>
                                                 </section>
@@ -779,7 +780,7 @@
                                                         <div class="col-md-3">
                                                             <div class="form-group">
                                                                 <label>Serial Num</label>
-                                                                <input class="form-control" disabled="{{part.stocklineListObj[part.currentSERIndex].serialNumberNotProvided}}" [(ngModel)]="part.stocklineListObj[part.currentSERIndex].serialNumber" type="text" pInputText pKeyFilter="pnum">
+                                                                <input class="form-control" disabled="{{part.stocklineListObj[part.currentSERIndex].serialNumberNotProvided}}" [(ngModel)]="part.stocklineListObj[part.currentSERIndex].serialNumber" type="text" pInputText [maxLength]="25">
                                                                 <div class="checkbox-cstm" style="margin-top: 4px">
                                                                     <label style="width: 200px;">
                                                                         <input type="checkbox" class="form-control" [(ngModel)]="part.stocklineListObj[part.currentSERIndex].serialNumberNotProvided" (click)="onSerialNumberNotProvided(part.stocklineListObj[part.currentSERIndex])">

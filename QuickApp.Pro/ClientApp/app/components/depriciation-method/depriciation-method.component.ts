@@ -54,6 +54,7 @@ export class DepriciationMethodComponent implements OnInit, AfterViewInit{
     updatedDate: any = "";
     selectedColumns: any[];
     allreasn: any[] = [];
+    HasAuditDetails: boolean;
     loadingIndicator: boolean;
     displayedColumns = ['Code', 'Name', 'DepreciationMethod', 'Memo'];
     cols: any[];
@@ -291,6 +292,35 @@ export class DepriciationMethodComponent implements OnInit, AfterViewInit{
         this.modal.close();
     }
 
+    handleChange(rowData, e) {
+
+        const params = <any>{
+            createdBy: this.userName,
+            updatedBy: this.userName,
+            AssetDepreciationMethodId: rowData.assetDepreciationMethodId,
+            AssetDepreciationMethodCode: rowData.code,
+            AssetDepreciationMethodName: rowData.name,
+            AssetDepreciationMemo: rowData.memo,
+            AssetDepreciationMethodBasis: rowData.depreciationMethod,
+            IsActive: rowData.isActive,
+            IsDeleted: this.isDelete,
+            masterCompanyId: 1
+        };
+        if (e.checked == false) {
+            this.Active = "In Active";
+            this.depriciationMethodService.update(params).subscribe(
+                response => this.saveCompleted(this.sourceAction),
+                error => this.saveFailedHelper(error));
+        }
+        else {
+            this.Active = "Active";
+            this.depriciationMethodService.update(params).subscribe(
+                response => this.saveCompleted(this.sourceAction),
+                error => this.saveFailedHelper(error));
+        }
+
+    }
+
     private saveSuccessHelper(role?: DepriciationMethod) {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
@@ -346,25 +376,23 @@ export class DepriciationMethodComponent implements OnInit, AfterViewInit{
         }, () => { console.log('Backdrop click') })
     }
 
-    //showAuditPopup(template, id): void {
-    //    this.getAssetDepreciationAudits(id);
-    //    this.modal = this.modalService.open(template, { size: 'sm' });
-    //}
-
-    //getAssetDepreciationAudits(assetdepreciationMethodId: number): void {
-    //    this.AuditDetails = [];
-    //    this.depriciationMethodService.getAssetDepriciationMethodAudits(assetdepreciationMethodId).subscribe(audits => {
-    //        if (audits.length > 0) {
-    //            this.AuditDetails = audits;
-    //            this.AuditDetails[0].ColumnsToAvoid = ["assetDepreciationMethodAuditId", "assetDepreciationMethodId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
-    //        }
-    //    });
-    //}
 
     getAuditHistoryById(rowData) {
         this.depriciationMethodService.getAssetDepriciationMethodAudits(rowData.assetDepreciationMethodId).subscribe(res => {
             this.auditHistory = res;
         })
+    }
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
     }
 
     sampleExcelDownload() {

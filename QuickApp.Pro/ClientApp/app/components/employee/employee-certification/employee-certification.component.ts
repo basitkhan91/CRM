@@ -156,9 +156,9 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
     bindData(data: any) {
 
         var newData: any = console.log(data[0]);
-   
 
-        
+
+
         console.log(newData);
 
         console.log("bind data");
@@ -167,13 +167,13 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
         console.log(data[0].t.expirationDate);
         this.sourceEmployee.ExpirationDate = new Date(this.sourceEmployee.expirationDate);
         this.sourceEmployee.IsExpirationDate = data[0].t.isExpirationDate;
-     
+
 
         console.log(this.sourceEmployee);
-        
+
 
     }
-   
+
 
     ngOnInit(): void {
         this.employeeService.currentUrl = '/employeesmodule/employeepages/app-employee-certification';
@@ -183,11 +183,11 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
             .subscribe(params => {
                 console.log(params); // {order: "popular"}
                 //  console.log(params.order);
-               // var decodeString = atob(params.order);
+                // var decodeString = atob(params.order);
 
-             //   var myNewObj = JSON.parse(decodeString);
+                //   var myNewObj = JSON.parse(decodeString);
 
-            //    console.log(myNewObj);
+                //    console.log(myNewObj);
                 this.empId = params.order;
 
                 if (this.empId) {
@@ -210,7 +210,7 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
         this.loadDataforCertification();
         if (this.local) {
             this.loadData();
-         // this.loadDataforCertification();
+            // this.loadDataforCertification();
         }
     }
 
@@ -223,9 +223,9 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
             this.sourceEmployee.isLicenseInForce = false;
         }
 
-        console.log("EmpLicenseId"+this.sourceEmployee.EmployeeLicenseTypeId);
+        console.log("EmpLicenseId" + this.sourceEmployee.EmployeeLicenseTypeId);
 
-        
+
 
         this.isSaving = true;
         if (!this.sourceEmployee.employeeLicensureId) {
@@ -576,7 +576,7 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
         this.employeeService.listCollection = this.local;
         this.activeIndex = 2;
         this.employeeService.indexObj.next(this.activeIndex);
-       // this.router.navigateByUrl('/employeesmodule/employeepages/app-employee-training');
+        // this.router.navigateByUrl('/employeesmodule/employeepages/app-employee-training');
 
         this.router.navigate(['/employeesmodule/employeepages/app-employee-training'], { queryParams: { order: this.empId, 'firstName': this.firstName, 'lastName': this.lastName } });
 
@@ -586,8 +586,8 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
         this.employeeService.listCollection = this.local;
         this.activeIndex = 0;
         this.employeeService.indexObj.next(this.activeIndex);
-        this.router.navigate(['/employeesmodule/employeepages/app-employee-general-information'], { queryParams: { order: this.empId, 'firstName': this.firstName, 'lastName': this.lastName  } });
-       // this.router.navigateByUrl('/employeesmodule/employeepages/app-employee-general-information');
+        this.router.navigate(['/employeesmodule/employeepages/app-employee-general-information'], { queryParams: { order: this.empId, 'firstName': this.firstName, 'lastName': this.lastName } });
+        // this.router.navigateByUrl('/employeesmodule/employeepages/app-employee-general-information');
 
     }
     certificationType(event) {
@@ -653,8 +653,12 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
             this.sourceEmployee.description = this.description;
             this.sourceEmployee.masterCompanyId = 1;
             this.certificationser.updateCertificationtype(this.sourceEmployee).subscribe(
-                response => this.saveCompleted(this.sourceEmployee),
-                error => this.saveFailedHelper(error));
+
+                response => {
+                    this.router.navigate(['/employeesmodule/employeepages/app-employee-training']);
+                    this.saveCompleted(this.sourceEmployee),
+                        error => this.saveFailedHelper(error)
+                });
         }
 
         this.modal.close();

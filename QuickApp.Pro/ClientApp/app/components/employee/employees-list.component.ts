@@ -128,6 +128,10 @@ export class EmployeesListComponent implements OnInit {
 
     }
 
+    loadCustomerPages(event) {
+
+    }
+
 
     public navigateTogeneralInfo() {
         //this.workFlowtService.listCollection = [];

@@ -20,6 +20,8 @@ namespace DAL.Repositories.Interfaces
         void UpdateRestrictedParts(List<RestrictedParts> restrictedParts, long referenceId, int moduleId);
         List<RestrictedParts> GetRestrictedParts(int moduleId, long? referenceId, string partType);
 
+        void CreateCustomerTaxTypeRateMapping(List<CustomerTaxTypeRateMapping> customerTaxTypeRateMappings ,long referenceId);
+
         void CreateRestrictPmaList(List<RestrictsPMAList> restrictsPmaLists, long referenceId);
         void UpdateRestrictPmaList(List<RestrictsPMAList> restrictsPmaLists, long referenceId);
         List<RestrictsPMAList> GetRestrictPmaList(int itemMasterId, long? customerId);
@@ -40,10 +42,13 @@ namespace DAL.Repositories.Interfaces
         long CreateShippingVia(ShippingVia shippingVia);
         void UpdateShippingVia(ShippingVia shippingVia);
         object GetShippingViaDetails(long shippingViaId);
+        IEnumerable<object> BindShipViaDetails(int userType, long referenceId);
 
         long? CreateAddress(Address address);
         void UpdateAddress(Address address);
         object GetAddressDetails(long addressId);
+
+        Dictionary<string, long> GetManagementStructure(long manmgStrucId);
 
 
     }

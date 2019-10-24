@@ -1,5 +1,6 @@
 ﻿using DAL.Common;
 using DAL.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,7 +9,7 @@ namespace DAL.Repositories.Interfaces
 {
     public interface IPublication : IRepository<DAL.Models.Publication>
     {
-        Publication GetPublicationsById(long id);
+        Publication GetPublicationsById(long id); 
         
         IEnumerable<object> GetPubPNMappingData(string id);
         
@@ -49,5 +50,8 @@ namespace DAL.Repositories.Interfaces
         object GetPublicationForWorkFlow(long publicationRecordId);
         
         IEnumerable<PublicationsList> getPublicationDropdownData();
+
+        IEnumerable<Publication> UploadCustomData(IFormFile file);
+        IEnumerable<object> PublicationHistory(long publicationId);
     }
 }

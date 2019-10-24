@@ -14,10 +14,10 @@ import { AlertService, MessageSeverity } from "../services/alert.service";
     styleUrls: ['./Charges-Create.component.css']
 })
 export class ChargesCreateComponent implements OnInit, OnChanges {
-    VendorCodesColl: any[] = [];
+    vendorCollection: any[] = [];
     ccRegex: RegExp = /[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}$/;
     vendorCodes: any[] = [];
-    allActions: any[] = [];
+    allVendors: any[] = [];
     @Input() workFlow: IWorkFlow;
     @Input() UpdateMode: boolean;
 
@@ -37,30 +37,31 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
     }
 
     ngOnInit(): void {
-        //if (this.workFlow.charges.length > 0) {
-            this.row = this.workFlow.charges[0];
-            this.row.taskId = this.workFlow.taskId;
-            this.actionService.getChargesType().subscribe(
-                chargesTypes => {
-                    this.chargesTypes = chargesTypes;
-                },
-                error => this.errorMessage = <any>error
-            );
+        this.row = this.workFlow.charges[0];
+        if (this.row == undefined) {
+            this.row = {};
+        }
+        this.row.taskId = this.workFlow.taskId;
+        this.actionService.getChargesType().subscribe(
+            chargesTypes => {
+                this.chargesTypes = chargesTypes;
+            },
+            error => this.errorMessage = <any>error
+        );
 
-            this.currencyService.getCurrencyList().subscribe(
-                chargesCurrencies => {
-                    this.chargesCurrency = chargesCurrencies[0];
-                },
-                error => this.errorMessage = <any>error
-            );
-            this.loadData();
+        this.currencyService.getCurrencyList().subscribe(
+            chargesCurrencies => {
+                this.chargesCurrency = chargesCurrencies[0];
+            },
+            error => this.errorMessage = <any>error
+        );
 
-            // summation of all values in edit mode 
-            if (this.UpdateMode) {
-                this.reCalculate();
-            }
-        //}
-       
+        this.loadAllVendors();
+
+        if (this.UpdateMode) {
+            this.reCalculate();
+        }
+
     }
 
     ngOnChanges(): void {
@@ -73,21 +74,12 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         this.calculateExtendedPriceSummation();
     }
 
-    filterVendorCodes(event) {
-
-        this.vendorCodes = [];
-        for (let i = 0; i < this.allActions.length; i++) {
-            let vendorCode = this.allActions[i].vendorCode;
-
-            if (vendorCode.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                this.VendorCodesColl.push([{
-                    "vendorId": this.allActions[i].vendorClassificationId,
-                    "vendorCode": vendorCode
-                }]);
-                this.vendorCodes.push(vendorCode);
-
+    filterVendor(event) {
+        this.vendorCollection = this.allVendors.filter(x => {
+            if (x.vendorName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                return x;
             }
-        }
+        });
     }
 
     onChargeTypeChange(event, charge): void {
@@ -96,34 +88,44 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
             event.target.value = '0';
             charge.workflowChargeTypeId = "0";
             this.alertService.showMessage("Work Flow", "Type is already in use in Charges List.", MessageSeverity.error);
-            
+
         }
     }
 
-    private loadData() {
-        this.vendorservice.getWorkFlows().subscribe(
-            results => this.onDataLoadSuccessful(results[0])
-        );
-
-
-    }
-    private onDataLoadSuccessful(allWorkFlows: any[]) {
-        this.allActions = allWorkFlows;
-    }
-
-    onVendorCodeselected(charge, event) {
-        for (let i = 0; i < this.VendorCodesColl.length; i++) {
-            if (event == this.VendorCodesColl[i][0].vendorCode) {
-                charge.vendorName = this.VendorCodesColl[i][0].vendorCode;
-                charge.vendorId = this.VendorCodesColl[i][0].vendorId;
+    private loadAllVendors() {
+        this.vendorservice.getVendorsForDropdown().subscribe(
+            results => {
+                this.allVendors = results;
+                if (this.UpdateMode) {
+                    for (var charge of this.workFlow.charges) {
+                        var vendor = this.allVendors.filter(x => x.vendorId == charge.vendorId)[0];
+                        if (vendor != undefined) {
+                            charge.vendor = {
+                                vendorId: vendor.vendorId,
+                                vendorName: vendor.vendorName
+                            };
+                        }
+                    }
+                }
             }
+        );
+    }
+
+    onVendorSelected(charge, event) {
+        if (charge.vendor != undefined) {
+            charge.vendorId = charge.vendor.vendorId;
+            charge.vendorName = charge.vendor.vendorName;
+        }
+        else {
+            charge.vendorId = '';
+            charge.vendorName = '';
         }
     }
 
     addRow(): void {
         var newRow = Object.assign({}, this.row);
-        var newRow = Object.assign({}, this.row);
         newRow.workflowChargesListId = "0";
+        newRow.vendor = {};
         newRow.taskId = this.workFlow.taskId;
         newRow.currencyId = "0";
         newRow.description = "";
@@ -146,7 +148,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         var value = Number.parseFloat(charge.quantity) * Number.parseFloat(charge.unitCost);
         if (value > 0) {
             charge.extendedCost = value;
-            
+
         }
         else {
             charge.extendedCost = "";
@@ -167,7 +169,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
 
     // sum of the qty
     calculateQtySummation() {
-        var charges = this.workFlow.charges.filter(x => x.isDelete != true );
+        var charges = this.workFlow.charges.filter(x => x.isDelete != true);
         this.workFlow.qtySummation = charges.reduce((acc, x) => {
             return acc + parseFloat(x.quantity == undefined || x.quantity === '' ? 0 : x.quantity)
         }, 0);
