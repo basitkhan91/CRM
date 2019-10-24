@@ -168,7 +168,7 @@ namespace DAL
 
 
         ICustomerAircraftType customerAircraftType { get; }
-
+        ICustomerDocumentDetail CreateDocumentDetails { get; }
 
         IItemMaster itemMaster { get; }
 

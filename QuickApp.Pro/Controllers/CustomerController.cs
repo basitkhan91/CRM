@@ -2557,18 +2557,24 @@ namespace QuickApp.Pro.Controllers
 
 			try
 			{
-				Customer objCustomer = new Customer();
-				if (ModelState.IsValid)
+                CustomerDocumentDetail objCustomerDocumentDetail = new CustomerDocumentDetail();
+                if (ModelState.IsValid)
 				{
 					if (Request.Form == null)
-						return BadRequest($"{nameof(objCustomer)} cannot be null");
+						return BadRequest($"{nameof(objCustomerDocumentDetail)} cannot be null");
 
-					objCustomer.CustomerId = Convert.ToInt64(Request.Form["CustomerId"]);
-					objCustomer.MasterCompanyId = 1;
-					objCustomer.UpdatedBy = Request.Form["UpdatedBy"];
-					objCustomer.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objCustomer.CustomerId, 
-																		Convert.ToInt32(ModuleEnum.Customer), Convert.ToString(ModuleEnum.Customer), objCustomer.UpdatedBy, objCustomer.MasterCompanyId);
-					return Ok(objCustomer);
+                    objCustomerDocumentDetail.CustomerId = Convert.ToInt64(Request.Form["CustomerId"]);
+                    objCustomerDocumentDetail.MasterCompanyId = 1;
+                    objCustomerDocumentDetail.UpdatedBy = Request.Form["UpdatedBy"];
+                    objCustomerDocumentDetail.DocName = Request.Form["DocName"];
+                    objCustomerDocumentDetail.DocMemo = Request.Form["DocMemo"];
+                    objCustomerDocumentDetail.DocDescription = Request.Form["DocDescription"];
+                    objCustomerDocumentDetail.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objCustomerDocumentDetail.CustomerId, 
+																		Convert.ToInt32(ModuleEnum.Customer), Convert.ToString(ModuleEnum.Customer), objCustomerDocumentDetail.UpdatedBy, objCustomerDocumentDetail.MasterCompanyId);
+                    _unitOfWork.CreateDocumentDetails.Add(objCustomerDocumentDetail);
+                    _unitOfWork.SaveChanges();
+
+                    return Ok(objCustomerDocumentDetail);
 				}
 				return Ok(ModelState);
 			}

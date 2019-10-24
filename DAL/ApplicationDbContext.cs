@@ -380,6 +380,7 @@ namespace DAL
 
         public DbSet<CustomerInternationalShipping> CustomerInternationalShipping { get; set; }
         public DbSet<ShippingViaDetails> ShippingViaDetails { get; set; }
+        public DbSet<CustomerDocumentDetail> CustomerDocumentDetails { get; set; }
         public DbSet<Attachment> Attachment { get; set; }
         public DbSet<AttachmentDetails> AttachmentDetails { get; set; }
         public DbSet<ClassificationMapping> ClassificationMapping { get; set; }
