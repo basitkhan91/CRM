@@ -58,9 +58,11 @@ namespace QuickApp.Pro.ViewModels
         public int ManagementStructureId { get; set; }
         public decimal ShippingCost { get; set; }
         public decimal HandlingCost { get; set; }
-        public long ShippingId { get; set; }
+        public string ShippingId { get; set; }
         public string ShippingURL{get;set;}
         public long BillToContactId { get; set; }
+        public string ShipToSiteName { get; set; }
+        public string BillToSiteName { get; set; }
 
 
     }

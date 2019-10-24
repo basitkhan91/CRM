@@ -642,6 +642,10 @@ namespace QuickApp.Pro.Controllers
             actionobject.CreatedBy = "admin";
             actionobject.UpdatedBy = "admin";
 
+            actionobject.Notes = poViewModel.PoMemo;
+
+            actionobject.ShipToSiteName = poViewModel.ShipToSiteName;
+            actionobject.BillToSiteName = poViewModel.BillToSiteName;
             actionobject.IsActive = true;
 
         }

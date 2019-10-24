@@ -1092,7 +1092,7 @@
                         </div>
                         <div class="form-group">
                             <label>Shipping Id (AWB) <span class="clr-red">*</span></label>
-                            <input class="form-control" type="number" name="cusShippingId" [(ngModel)]="sourcePoApproval.shippingId" #cusShippingId="ngModel" required disabled><!--required-->
+                            <input class="form-control" type="text" name="cusShippingId" [(ngModel)]="sourcePoApproval.shippingId" #cusShippingId="ngModel" required disabled><!--required-->
                             <div *ngIf="cusShippingId.invalid && (cusShippingId.dirty || cusShippingId.touched)" class="alert alert-danger alert-danger-cstm">
                                 <div *ngIf="cusShippingId.errors.required">
                                     <small> Shipping Id is required </small>
@@ -1155,7 +1155,7 @@
                         </div>
                         <div class="form-group">
                             <label>Shipping Id (AWB) <span class="clr-red">*</span></label>
-                            <input class="form-control" type="number" name="cusShippingId" [(ngModel)]="sourcePoApproval.shippingId" #cusShippingId="ngModel" required><!--required-->
+                            <input class="form-control" type="text" name="cusShippingId" [(ngModel)]="sourcePoApproval.shippingId" #cusShippingId="ngModel" required><!--required-->
                             <div *ngIf="cusShippingId.invalid && (cusShippingId.dirty || cusShippingId.touched)" class="alert alert-danger alert-danger-cstm">
                                 <div *ngIf="cusShippingId.errors.required">
                                     <small> Shipping Id is required </small>
@@ -1217,7 +1217,7 @@
                         </div>
                         <div class="form-group">
                             <label>Shipping Id (AWB) <span class="clr-red">*</span></label>
-                            <input class="form-control" type="number" name="cusShippingId" [(ngModel)]="sourcePoApproval.shippingId" #cusShippingId="ngModel" required disabled><!--required-->
+                            <input class="form-control" type="text" name="cusShippingId" [(ngModel)]="sourcePoApproval.shippingId" #cusShippingId="ngModel" required disabled><!--required-->
                             <div *ngIf="cusShippingId.invalid && (cusShippingId.dirty || cusShippingId.touched)" class="alert alert-danger alert-danger-cstm">
                                 <div *ngIf="cusShippingId.errors.required">
                                     <small> Shipping Id is required </small>
