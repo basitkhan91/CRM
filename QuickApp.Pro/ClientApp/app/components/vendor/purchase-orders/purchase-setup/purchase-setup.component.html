@@ -636,7 +636,23 @@
                                     </div>
                                     <div class="inner-addon right-addon autosuggesions-add inline-block w100" *ngIf="partChildList.partListUserTypeId==3">
                                         <i class="fa fa-search"></i>
-                                         <input type="text" [(ngModel)]="partChildList.partListUserId" class="form-control names ui-autocomplete-input" name="cCompanyName{{row_no}}" autocomplete="off" > <!-- #cCompanyName="ngModel" required -->
+
+                                        <p-autoComplete field="label" class="pautocomp-cstm"
+                                  
+                                        (onSelect)="onCompanyNameChange(partChildList,$event)"
+                                         [(ngModel)]="partChildList.partListUserId" name="shipCompanyName" 
+                                         [suggestions]="legalEntityList_Forgrid" 
+    
+                                         (completeMethod)="filterCompanyNameforgrid($event)" 
+                                         [size]="30" 
+                                         [minLength]="1"
+                                         [dropdown]="true"
+                                         errorMessage="Records not found" 
+                                         [forceSelection]="true" 
+                                         #shipCompanyName="ngModel" required>
+    
+                                        </p-autoComplete>
+                                         <!-- <input type="text" [(ngModel)]="partChildList.partListUserId" class="form-control names ui-autocomplete-input" name="cCompanyName{{row_no}}" autocomplete="off" > #cCompanyName="ngModel" required -->
                                         <!-- <div *ngIf="cCompanyName.invalid && (cCompanyName.dirty || cCompanyName.touched)" class="alert alert-danger alert-danger-cstm">
                                                 <div *ngIf="cCompanyName.errors.required">
                                                     <small> Company Name is required </small>
@@ -2890,7 +2906,7 @@
         <div class="modal-dialog modal-sm partsList-modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <button type="button" class="close" data-dismiss="modal" (click)="resetAddressForm()">&times;</button>
                     <h4 class="modal-title">{{addressHeader}}</h4>
                 </div>
                 <div class="modal-body">
@@ -2898,34 +2914,34 @@
                         <form #userForm="ngForm" class="form-horizontal">
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">Address 1:</label>
-                                <input type="text" class="form-control col-md-6" name="address1" [(ngModel)]="splitUserTypeAddress.address1">
+                                <input type="text" class="form-control col-md-6" name="address1" [(ngModel)]="addNewAddress.line1">
                             </div>
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">Address 2:</label>
-                                <input type="text" class="form-control col-md-6" name="address2" [(ngModel)]="splitUserTypeAddress.address2">
+                                <input type="text" class="form-control col-md-6" name="address2" [(ngModel)]="addNewAddress.line2">
                             </div>
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">Address 3:</label>
-                                <input type="text" class="form-control col-md-6" name="address3" [(ngModel)]="splitUserTypeAddress.address3">
+                                <input type="text" class="form-control col-md-6" name="address3" [(ngModel)]="addNewAddress.line3">
                             </div>
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">City:</label>
-                                <input type="text" class="form-control col-md-6" name="city" [(ngModel)]="splitUserTypeAddress.city">
+                                <input type="text" class="form-control col-md-6" name="city" [(ngModel)]="addNewAddress.city">
                             </div>
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">State:</label>
-                                <input type="text" class="form-control col-md-6" name="stateOrProvince" [(ngModel)]="splitUserTypeAddress.stateOrProvince">
+                                <input type="text" class="form-control col-md-6" name="stateOrProvince" [(ngModel)]="addNewAddress.stateOrProvince">
                             </div>
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">Postal:</label>
-                                <input type="text" class="form-control col-md-6" name="postalCode" [(ngModel)]="splitUserTypeAddress.postalCode">
+                                <input type="text" class="form-control col-md-6" name="postalCode" [(ngModel)]="addNewAddress.postalCode">
                             </div>
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">Country:</label>
-                                <input type="text" class="form-control col-md-6" name="country" [(ngModel)]="splitUserTypeAddress.country">
+                                <input type="text" class="form-control col-md-6" name="country" [(ngModel)]="addNewAddress.country">
                             </div>
                             <div class="form-group col-md-12" style="margin-top: 8px;">
-                                <button type="button" class="btn btn-primary-cstm" [disabled]="!userForm.valid" (click)="saveSplitAddress()">Save</button>
+                                <button type="button" class="btn btn-primary-cstm" [disabled]="!userForm.valid" (click)="createNewAddress(); resetAddressForm();">Save</button>
                                 <button type="button" class="btn btn-primary-cstm" [disabled]="!userForm.valid" (click)="saveSplitAddressToPO()">Save to this PO</button>
                             </div> <!--saveToThisPO(sourceissued)-->
     
@@ -3107,8 +3123,8 @@
                                 <input type="text" class="form-control col-md-6" name="shipviamemo" [(ngModel)]="addShipViaFormForShipping.memo">
                             </div>
                             <div class="form-group col-md-12" style="margin-top: 8px;">
-                                <button type="button" class="btn btn-primary-cstm" [disabled]="!addShipViaForm.valid" (click)="saveShipViaForShipTo(); resetAddressShipViaForm();">Save</button>
-                                <button type="button" class="btn btn-primary-cstm" [disabled]="!addShipViaForm.valid" (click)="saveShipToShipViaDetailsToPO()">Save to this PO</button>
+                                <button type="button" class="btn btn-primary-cstm"  data-dismiss="modal" [disabled]="!addShipViaForm.valid" (click)="saveShipViaForShipTo(); resetAddressShipViaForm();">Save</button>
+                                <button type="button" class="btn btn-primary-cstm" data-dismiss="modal"  [disabled]="!addShipViaForm.valid" (click)="saveShipToShipViaDetailsToPO()">Save to this PO</button>
                             </div>
     
                         </form>
