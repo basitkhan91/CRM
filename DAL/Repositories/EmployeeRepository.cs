@@ -54,6 +54,19 @@ namespace DAL.Repositories
                            join compmanagmentLegalEntity in _appContext.ManagementStructure on biumanagmentLegalEntity.ParentId equals compmanagmentLegalEntity.ManagementStructureId into comivCompany
                            from compmanagmentLegalEntity in comivCompany.DefaultIfEmpty()
 
+                           //join empSupervisor in _appContext.Employee on t.EmployeeId  equals empSupervisor.SupervisorId into employeesupervisiorInfo
+                          // from empSupervisor in employeesupervisiorInfo.DefaultIfEmpty()
+
+                        
+
+                           join employeetraingInfo in _appContext.EmployeeTraining on t.EmployeeId equals employeetraingInfo.EmployeeId into employeeTraingInfo
+                           from employeetraingInfo in employeeTraingInfo.DefaultIfEmpty()
+
+                           join employeetraingType in _appContext.EmployeeTrainingType on employeetraingInfo.EmployeeTrainingTypeId equals employeetraingType.EmployeeTrainingTypeId into employeeTraingTypeInfo
+                           from employeetraingType in employeeTraingTypeInfo.DefaultIfEmpty()
+
+      
+
 
 
                            where t.IsDeleted == false || t.IsDeleted == null
@@ -81,6 +94,9 @@ namespace DAL.Repositories
                                nationalCountryId,
                                managementStructeInfo,
                                employeeExpertise,
+                            
+                         
+                              // empSupervisor,
                                jobtitle,
                                jobtype,
                                t.Fax,
@@ -93,6 +109,8 @@ namespace DAL.Repositories
                                divmanagmentLegalEntity,
                                biumanagmentLegalEntity,
                                compmanagmentLegalEntity,
+                               employeetraingInfo,
+                               employeetraingType,
 
                                t.InMultipleShifts,
                                t.AllowOvertime,
@@ -114,7 +132,7 @@ namespace DAL.Repositories
                                t.UpdatedDate,
 
                                //cc.Description
-                           }).ToList();
+                           }).Distinct().ToList();
 
 
 
