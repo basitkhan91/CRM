@@ -391,10 +391,11 @@ export class CustomerGeneralInformationComponent implements OnInit {
             this.customerService.getCustomerdataById(this.id).subscribe(response => {
                 console.log(response);
 
-                const res = response[0][0]
-
+                const res = response[0];
+                
                 this.editGeneralInformation.emit(res);
                 this.editData = res;
+       ;
                 this.generalInformation = {
                     ...this.editData,
                     name: getObjectByValue('name', res.name, this.customerListOriginal),
