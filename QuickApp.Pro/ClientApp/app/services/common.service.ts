@@ -38,6 +38,9 @@ export class CommonService {
     smartExcelFileUpload(file) {
         return this.http.post(`${this.baseUrl}/api/FileUpload/uploadcustomFile`, file, this.authService.getRequestHeaders())
     }
+    getManagementStructureDetails(id) {
+        return this.http.get<any>(`${this.baseUrl}/api/Common/managementstructure?manmgStrucId=${id}`, this.authService.getRequestHeaders())
+    }
 
 
 

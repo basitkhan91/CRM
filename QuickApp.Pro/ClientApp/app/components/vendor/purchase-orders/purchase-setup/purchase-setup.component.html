@@ -177,7 +177,7 @@
                                 <label>Approver</label>
                                 <div class="inner-addon right-addon inline-block">
                                         <p-autoComplete field="label" class="pautocomp-cstm" 
-                                        [(ngModel)]="sourcePoApproval.approverId" name="approver" [suggestions]="approverList" (completeMethod)="filterApprover($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" #requisitionerId="ngModel">
+                                        [(ngModel)]="sourcePoApproval.approverId" name="approver" [suggestions]="approverList" (completeMethod)="filterApprover($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true">
                                         </p-autoComplete>
                                     <!-- <input type="text" class="form-control" name="approver" [(ngModel)]="sourcePoApproval.approver"> -->
                                     <!--<p-autoComplete field="firstName" class="pautocomp-cstm" [(ngModel)]="sourcePoApproval.approverId" name="approverId" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
@@ -824,13 +824,11 @@
                             {{col.header}}
                             <p-sortIcon [field]="col.field"></p-sortIcon>
                         </th>
-                        <th style="width: 70px;"></th>
                     </tr>
                     <tr>
                         <th *ngFor="let col of columns" [ngSwitch]="col.field">
                             <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
                         </th>
-                        <th></th>
                     </tr>
                 </ng-template>
     
@@ -838,27 +836,6 @@
                     <tr [pSelectableRow]="rowData">
                         <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                             {{rowData[col.field]}}
-                        </td>
-                        <td>
-                            <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']" name="isActive"></p-inputSwitch>
-                            <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']" name="isActive"></p-inputSwitch>
-                            <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']" name="isActive"></p-inputSwitch>
-                            <span>
-                                <a data-toggle="tooltip" pTooltip="Delete" tooltipPosition="bottom" title="" class="btn-delete nobg" data-original-title="">
-                                    <i class="fa fa-trash" style="color: red;font-size: 14px;margin-left: 3px;"></i>
-                                </a>
-                            </span>
-    
-                            <!--<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-                            <button class="btn-edit" mat-icon-button (click)="openEdit(car)" matTooltip="Edit">
-                                <mat-icon>edit</mat-icon>
-                            </button>
-                            <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="openDelete(content,rowData)">
-                                <mat-icon color="warn">delete</mat-icon>
-                            </button>
-                            <button class="btn-history" mat-icon-button matTooltip="History" (click)="openHist()">
-                                <mat-icon color="green">history</mat-icon>
-                            </button>-->
                         </td>
                     </tr>
                 </ng-template>
@@ -887,7 +864,7 @@
                             <div class="col-sm-11">
                                     <p-autoComplete field="name" class="pautocomp-cstm" (onClear)="clearInputShipTo()"
                                     [(ngModel)]="sourcePoApproval.shipToUserId" name="shipCustomerName" [suggestions]="customerNames" 
-                                    (completeMethod)="filterNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onshipCustomerNameselected($event)" #shipCustomerName="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
+                                    (completeMethod)="filterNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onshipCustomerNameselected($event.customerId)" #shipCustomerName="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
                                 <!--<p-autoComplete field="name" class="pautocomp-cstm" (onSelect)="onshipCustomerNameselected($event)" (onKeyUp)=customereventHandler($event) [(ngModel)]="sourcePoApproval.shipToUserId" name="shipCustomerName" [suggestions]="customerNames" (completeMethod)="filterNames($event)" [size]="30" errorMessage="Records not found" [forceSelection]="true" [minLength]="1" [dropdown]="true" #shipCustomerName="ngModel" required>
                                      <ng-template let-name pTemplate="item">
                                         <div class="ui-helper-clearfix">{{name}}</div>
