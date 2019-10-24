@@ -1051,7 +1051,25 @@ namespace DAL.Repositories
 			}
 		}
 
-		public void UpdateShippingViaDetails(ShippingViaDetails model)
+        public void CreateDocumentDetails(CustomerDocumentDetail customerDocument)
+        {
+            try
+            {
+                customerDocument.CreatedDate =  DateTime.Now;
+                customerDocument.IsActive = true;
+                customerDocument.IsDeleted = false;
+                _appContext.CustomerDocumentDetails.Add(customerDocument);
+                _appContext.SaveChanges();
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void UpdateShippingViaDetails(ShippingViaDetails model)
 		{
 			try
 			{

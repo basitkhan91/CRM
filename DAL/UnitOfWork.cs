@@ -122,6 +122,7 @@ namespace DAL
         ICustomerAircraftModel _customerAircraftModel;
 
         ICustomerAircraftType _customerAircraftType;
+        ICustomerDocumentDetail _customerDocumentDetail;
 
         IItemMaster _itemMaster;
        // IRepairOrder _repairOrder;
@@ -1127,6 +1128,16 @@ namespace DAL
                 if (_customerAircraftType == null)
                     _customerAircraftType = new CustomerAircraftTypeRepository(_context);
                 return _customerAircraftType;
+            }
+        }
+
+        public ICustomerDocumentDetail CreateDocumentDetails
+        {
+            get
+            {
+                if (_customerDocumentDetail == null)
+                    _customerDocumentDetail = new CustomerDocumentDetailRepository(_context);
+                return _customerDocumentDetail;
             }
         }
 
