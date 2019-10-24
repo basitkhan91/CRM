@@ -280,14 +280,13 @@
                             <div class="form-group">
                                 <label>First Name <span class="clr-red">*</span></label>
                                 <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                    <p-autoComplete class="autocomp-customer-cstm" 
+                                    <input type="text" class="form-control" [(ngModel)]="contactInformation.firstName"  name="firstName" required>
+                                    <!-- <p-autoComplete class="autocomp-customer-cstm" 
                                                     [(ngModel)]="contactInformation.firstName"  name="firstName" field="firstName" [suggestions]="firstNamesList" (completeMethod)="filterFirstNames($event)" [size]="30"
                                                     [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}" required>
 
-                                        <!-- <ng-template let-firstName pTemplate="item">
-                                            <div class="ui-helper-clearfix">{{firstName}}</div>
-                                        </ng-template> -->
-                                    </p-autoComplete>
+
+                                    </p-autoComplete> -->
                                 </div>
                                 <!-- <div *ngIf="disableSaveFirstName" class="clr-red">Entry Already Exists</div> -->
                                 <!-- <div class="form-group col-sm-12 Customer-details-heading" *ngIf="showFirstName">
@@ -299,13 +298,12 @@
                             <div class="form-group">
                                 <label>Middle Name</label>
                                 <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                    <p-autoComplete class="autocomp-customer-cstm" [(ngModel)]="contactInformation.middleName" 
+                                    <input type="text" class="form-control" [(ngModel)]="contactInformation.middleName"  name="middleName" required>
+                                    <!-- <p-autoComplete class="autocomp-customer-cstm" [(ngModel)]="contactInformation.middleName" 
                                                     name="middleName"  [suggestions]="middleNamesList" field="middleName" (completeMethod)="filterMiddleNames($event)" [size]="30"
                                                     [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}">
-                                        <!-- <ng-template let-middleName pTemplate="item">
-                                            <div class="ui-helper-clearfix">{{middleName}}</div>
-                                        </ng-template> -->
-                                    </p-autoComplete>
+
+                                    </p-autoComplete> -->
                                 </div>
 
                                 <!-- <div *ngIf="disableSaveMiddleName" class="clr-red">Entry Already Exists</div> -->
@@ -313,14 +311,13 @@
                             <div class="form-group">
                                 <label>Last Name <span class="clr-red">*</span></label>
                                 <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                    <p-autoComplete class="autocomp-customer-cstm"  [(ngModel)]="contactInformation.lastName"
+                                    <input type="text" class="form-control" [(ngModel)]="contactInformation.lastName"  name="lastName" required>
+                                    <!-- <p-autoComplete class="autocomp-customer-cstm"  [(ngModel)]="contactInformation.lastName"
                                      name="lastName" [suggestions]="lastNamesList" field="lastName" (completeMethod)="filterLastNames($event)"
                                                           
                                                     [size]="30" [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}" required>
-                                        <!-- <ng-template let-lastName pTemplate="item">
-                                            <div class="ui-helper-clearfix">{{lastName}}</div>
-                                        </ng-template> -->
-                                    </p-autoComplete>
+
+                                    </p-autoComplete> -->
                                     <!-- <div *ngIf="disableSaveLastName" class="clr-red">Entry Already Exists</div> -->
                                 </div>
                                 <!-- <div class="form-group col-sm-12 Customer-details-heading" *ngIf="showLastName">
@@ -367,7 +364,12 @@
                             </div>
                             <div class="form-group">
                                 <label>Web Site</label>
-                                <input class="form-control" type="text" name="websiteURL" [pattern]="urlPattern" [(ngModel)]="contactInformation.websiteURL">
+                                <input class="form-control" type="text" name="websiteURL" #url="ngModel" [pattern]="urlPattern" [(ngModel)]="contactInformation.websiteURL">
+                                <div *ngIf="url.errors" [ngClass]="'error'">
+                                    <div *ngIf="url.errors.pattern">
+                                        <span style="color:red">URL not valid</span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label>Mobile Phone</label>

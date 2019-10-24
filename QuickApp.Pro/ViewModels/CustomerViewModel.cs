@@ -198,7 +198,7 @@ namespace QuickApp.Pro.ViewModels
 		public virtual List<RestrictedParts> RestrictedPMAParts { get; set; }
 		public virtual List<RestrictedParts> RestrictedDERParts { get; set; }
 
-        public virtual  List<CustomerTaxTypeRateMapping> CustomerTaxTypeRateMapping { get; set; }
+        public  List<CustomerTaxTypeRateMapping> CustomerTaxTypeRateMapping { get; set; }
         //public virtual List<RestrictsPMAList> RestrictsPmaList { get; set; }
         //      public virtual List<RestrictsBERList> restrictBERList { get; set; }
 
