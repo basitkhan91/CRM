@@ -134,15 +134,94 @@
                     <div class="col-sm-12">
                         <p>
                             <span class="label">
+                                <b>Asset Type: </b>
+                            </span>
+                            <span class="value">{{itemDetails.assetTypeId}}</span>
+                        </p>
+                        <p>
+                            <span class="label">
                                 <b>Name: </b>
                             </span>
                             <span class="value">{{itemDetails.assetAttributeTypeName}}</span>
                         </p>
+
                         <p>
                             <span class="label">
                                 <b>Description: </b>
                             </span>
                             <span class="value">{{itemDetails.description}}</span>
+                        </p>
+                        <p>
+                            <span class="label">
+                                <b>Convention Type: </b>
+                            </span>
+                            <span class="value">{{itemDetails.conventionType}}</span>
+                        </p>
+                        <p>
+                            <span class="label">
+                                <b>Depreciation Method: </b>
+                            </span>
+                            <span class="value">{{itemDetails.depreciationMethod}}</span>
+                        </p>
+                        <p>
+                            <span class="label">
+                                <b>Residual Percentage: </b>
+                            </span>
+                            <span class="value">{{itemDetails.residualPercentage}}</span>
+                        </p>
+                        <p>
+                            <span class="label">
+                                <b>Residual Value: </b>
+                            </span>
+                            <span class="value">{{itemDetails.residualValue}}</span>
+                        </p>
+                        <p>
+                            <span class="label">
+                                <b>Asset Life: </b>
+                            </span>
+                            <span class="value">{{itemDetails.assetLife}}</span>
+                        </p>
+                        <p>
+                            <span class="label">
+                                <b>Depreciation Frequency: </b>
+                            </span>
+                            <span class="value">{{itemDetails.depreciationFrequencyId}}</span>
+                        </p>
+                        <p>
+                            <span class="label">
+                                <b>Acquired GL Account: </b>
+                            </span>
+                            <span class="value">{{itemDetails.acquiredGLAccountId}}</span>
+                        </p>
+                        <p>
+                            <span class="label">
+                                <b>Depr Expense GL Account: </b>
+                            </span>
+                            <span class="value">{{itemDetails.deprExpenseGLAccountId}}</span>
+                        </p>
+                        <p>
+                            <span class="label">
+                                <b>Ad Deps GL Account: </b>
+                            </span>
+                            <span class="value">{{itemDetails.adDepsGLAccountId}}</span>
+                        </p>
+                        <p>
+                            <span class="label">
+                                <b>Asset Sale: </b>
+                            </span>
+                            <span class="value">{{itemDetails.assetSale}}</span>
+                        </p>
+                        <p>
+                            <span class="label">
+                                <b>Asset WriteOff: </b>
+                            </span>
+                            <span class="value">{{itemDetails.assetWriteOff}}</span>
+                        </p>
+                        <p>
+                            <span class="label">
+                                <b>Asset WriteDown: </b>
+                            </span>
+                            <span class="value">{{itemDetails.assetWriteDown}}</span>
                         </p>
                         <p>
                             <span class="label">
@@ -199,6 +278,14 @@
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
+                                    <label for="assetTypeId" class="control-label">Asset Type</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <textarea class="text-item" #memo="ngModel" id="assetTypeId" name="assetTypeId" [(ngModel)]="currentRow.assetTypeId" minlength="2" format="number" (onChange)="check"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
                                     <label for="description" class="control-label">Description</label>
                                 </div>
                                 <div class="col-sm-5">
@@ -207,10 +294,107 @@
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="memo" class="control-label">Memo</label>
+                                    <label for="assetAttributeTypeName" class="control-label">Name</label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea class="text-item" #memo="ngModel" id="memo" name="memo" [(ngModel)]="currentRow.memo" minlength="2"></textarea>
+                                    <textarea class="text-item" #memo="ngModel" id="assetAttributeTypeName" name="assetAttributeTypeName" [(ngModel)]="currentRow.assetAttributeTypeName" minlength="2" format="number" (onChange)="check"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="conventionType" class="control-label">Convention Type</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <textarea class="text-item" #memo="ngModel" id="conventionType" name="conventionType" [(ngModel)]="currentRow.conventionType" minlength="2" format="number" (onChange)="check"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="depreciationMethod" class="control-label">Depreciation Method</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <textarea class="text-item" #memo="ngModel" id="depreciationMethod" name="depreciationMethod" [(ngModel)]="currentRow.depreciationMethod" minlength="2" format="number" (onChange)="check"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="residualPercentage" class="control-label">Residual Percentage</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <textarea class="text-item" #memo="ngModel" id="residualPercentage" name="residualPercentage" [(ngModel)]="currentRow.residualPercentage" minlength="2" format="number" (onChange)="check"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="residualValue" class="control-label">Residual Value</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <textarea class="text-item" #memo="ngModel" id="residualValue" name="residualValue" [(ngModel)]="currentRow.residualValue" minlength="2" format="number" (onChange)="check"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="assetLife" class="control-label">Asset Life</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <textarea class="text-item" #memo="ngModel" id="assetLife" name="assetLife" [(ngModel)]="currentRow.assetLife" minlength="2" format="number" (onChange)="check"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="depreciationFrequencyId" class="control-label">Depreciation Frequency</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <textarea class="text-item" #memo="ngModel" id="depreciationFrequencyId" name="depreciationFrequencyId" [(ngModel)]="currentRow.depreciationFrequencyId" minlength="2" format="number" (onChange)="check"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="acquiredGLAccountId" class="control-label">Acquired GL Account</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <textarea class="text-item" #memo="ngModel" id="acquiredGLAccountId" name="acquiredGLAccountId" [(ngModel)]="currentRow.acquiredGLAccountId" minlength="2" format="number" (onChange)="check"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="deprExpenseGLAccountId" class="control-label">Depr Expense GL Account</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <textarea class="text-item" #memo="ngModel" id="deprExpenseGLAccountId" name="deprExpenseGLAccountId" [(ngModel)]="currentRow.deprExpenseGLAccountId" minlength="2" format="number" (onChange)="check"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="adDepsGLAccountId" class="control-label">Ad Deps GL Account</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <textarea class="text-item" #adDepsGLAccountId="ngModel" id="adDepsGLAccountId" name="adDepsGLAccountId" [(ngModel)]="currentRow.adDepsGLAccountId" minlength="2"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="assetSale" class="control-label">Asset Sale</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <textarea class="text-item" #assetSale="ngModel" id="assetSale" name="assetSale" [(ngModel)]="currentRow.assetSale" minlength="2"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="assetWriteOff" class="control-label">Asset WriteOff</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <textarea class="text-item" #assetWriteOff="ngModel" id="assetWriteOff" name="assetWriteOff" [(ngModel)]="currentRow.assetWriteOff" minlength="2"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="assetWriteDown" class="control-label">Asset WriteDown</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <textarea class="text-item" #assetWriteDown="ngModel" id="assetWriteDown" name="assetWriteDown" [(ngModel)]="currentRow.assetWriteDown" minlength="2"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -238,7 +422,6 @@
 
         </div>
     </div>
-
     <!--Modal for delete only-->
     <div #delete *ngIf="currentModeOfOperation === 4" id="delete" class="modal fade" role="dialog">
         <div class="modal-dialog">
@@ -271,12 +454,30 @@
                     <h4 class="modal-title">History of {{rowName}}</h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
+
                 <div class="modal-body">
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead>
+                                <!--<tr *ngFor="let item of currentRow | keyvalue">
+                                    <th>{{item.key | titlecase}}</th>-->
                                 <tr>
+                                    <th>Asset Type</th>
                                     <th>Description</th>
+                                    <th>Name</th>
+                                    <th>Convention Type</th>
+                                    <th>Depreciation Method</th>
+                                    <th>Residual Percentage</th>
+                                    <th>Residual Value</th>
+                                    <th>Asset Life</th>
+                                    <th>Depreciation Frequency</th>
+                                    <th>Acquired GL Account</th>
+                                    <th>Depreciation Frequency</th>
+                                    <th>Depr Expense GL Account</th>
+                                    <th>Ad Deps GL Account</th>
+                                    <th>Asset Sale</th>
+                                    <th>Asset WriteOff</th>
+                                    <th>Asset WriteDown</th>
                                     <th>Memo</th>
                                     <th>Active</th>
                                     <th>Last Updated By</th>
@@ -284,7 +485,20 @@
                                 </tr>
                             </thead>
                             <tr *ngFor="let audit of auditHistory">
+                                <td>{{audit.assetTypeId}}</td>
                                 <td>{{audit.description}}</td>
+                                <td>{{audit.assetAttributeTypeName}}</td>
+                                <td>{{audit.conventionType}}</td>
+                                <td>{{audit.residualPercentage}}</td>
+                                <td>{{audit.residualValue}}</td>
+                                <td>{{audit.assetLife}}</td>
+                                <td>{{audit.depreciationFrequencyId}}</td>
+                                <td>{{audit.acquiredGLAccountId}}</td>
+                                <td>{{audit.deprExpenseGLAccountId}}</td>
+                                <td>{{audit.adDepsGLAccountId}}</td>
+                                <td>{{audit.assetSale}}</td>
+                                <td>{{audit.assetWriteOff}}</td>
+                                <td>{{audit.assetWriteDown}}</td>
                                 <td>{{audit.memo}}</td>
                                 <td>{{audit.isActive ? 'true' : 'false'}}</td>
                                 <td>{{audit.updatedBy}}</td>
