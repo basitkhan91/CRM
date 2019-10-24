@@ -1657,6 +1657,21 @@ namespace QuickApp.Pro.Controllers
 				customerObj.UpdatedDate = DateTime.Now;
 				customerObj.CreatedBy = customerViewModel.CreatedBy;
 				customerObj.UpdatedBy = customerViewModel.UpdatedBy;
+
+
+				foreach (var customerContactTaxMapping in customerViewModel.CustomerTaxTypeRateMapping)
+				{
+
+					customerContactTaxMapping.MasterCompanyId = 1;
+					customerContactTaxMapping.CreatedBy = customerContactTaxMapping.CreatedBy ?? "admin";
+					customerContactTaxMapping.UpdatedBy = customerContactTaxMapping.UpdatedBy ?? "admin";
+					customerContactTaxMapping.CreatedDate = System.DateTime.Now;
+					customerContactTaxMapping.UpdatedDate = System.DateTime.Now;
+					customerContactTaxMapping.IsDeleted = false;
+
+					_unitOfWork.Repository<CustomerTaxTypeRateMapping>().Add(customerContactTaxMapping);
+					_unitOfWork.SaveChanges();
+				}
 				_unitOfWork.Customer.Update(customerObj);
 				_unitOfWork.SaveChanges();
 				return Ok(customerObj);
@@ -2608,6 +2623,7 @@ namespace QuickApp.Pro.Controllers
 			return Ok(allCusbilldetails);
 
 		}
+
 		[HttpGet("getCustomerShippingHistory/{id}")]
 		[Produces(typeof(List<CustomerShippingAddress>))]
 		public IActionResult getCustomerShippingHistory(long id, CustomerShippingAddress cstomerShippingAddress)
@@ -2617,7 +2633,16 @@ namespace QuickApp.Pro.Controllers
 
 		}
 
-	}
+
+        [HttpGet("customershipviadetails")]
+        [Produces(typeof(List<CustomerShippingAddress>))]
+        public IActionResult GetCustomerShipviaDetails(long customerId, long addressId)
+        {
+            var allCusShippingdetails = _unitOfWork.Customer.GetCustomerShipviaDetails(customerId, addressId); 
+            return Ok(allCusShippingdetails);
+
+        }
+    }
 }
 
 

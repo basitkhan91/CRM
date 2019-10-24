@@ -75,7 +75,7 @@
                         </ng-template>
 
                         <ng-template pTemplate="body" let-rowData let-columns="columns">
-                            <tr [pSelectableRow]="rowData" (dblclick)="toggledbldisplay(rowData)">
+                            <tr [pSelectableRow]="rowData" (dblclick)="toggledbldisplay(rowData)"  [ngStyle]="{'background-color' : rowData.isPrimary === true ? '#79ffe3'  : 'white'  }">
 
 
                                 <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>

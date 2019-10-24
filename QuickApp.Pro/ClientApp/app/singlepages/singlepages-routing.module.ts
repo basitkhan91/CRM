@@ -21,6 +21,8 @@ import { FindingsComponent } from "../components/findings/findings.component";
 import { AssetIntangibleTypeComponent } from "../components/asset-intangible-type/asset-intangible-type.component";
 import { AssetTypeComponent } from "../components/asset-type/asset-type.component";
 import { StageCodeComponent } from "../components/stage-code/stage-code.component";
+import { GLAccountCategoryComponent } from "../components/gl-account-category/gl-account-category.component";
+
 import { IntegrationComponent } from "../components/integration/integration.component";
 import { ItemClassificationComponent } from "../components/item-classification/item-classification.component";
 import { ItemGroupComponent } from "../components/item-group/item-group.component";
@@ -63,7 +65,6 @@ import { SiteComponent } from "../components/site/site.component";
 //import { Warehouse } from '../models/warehouse.model';
 import { WarehouseComponent } from "../components/warehouse/warehouse.component";
 
-import { GLAccountCategoryComponent } from "../components/gl-account-categories/gl-account-categories.component";
 import { ManufacturerComponent } from "../components/manufacturer/manufacturer.component";
 import { VendorcapabilitiesComponent } from "../components/vendorcapabilities/vendorcapabilities.component";
 import { LaberAndOverheadCostSetupComponent } from "../components/laber-and-overhead-cost-setup/laber-and-overhead-cost-setup.component";
@@ -168,6 +169,11 @@ const singlePagesRoutes: Routes = [
                 path: "app-stage-code",
                 component: StageCodeComponent,
                 data: { title: "Stage Code" }
+            },
+            {
+                path: "app-gl-account-category",
+                component: GLAccountCategoryComponent,
+                data: { title: "GL Account Category" }
             },
             {
                 path: "app-integration",

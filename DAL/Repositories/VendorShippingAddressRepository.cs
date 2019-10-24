@@ -24,21 +24,21 @@ namespace DAL.Repositories
         public IEnumerable<Object> GetAllShippingAddressDetails(long id)
         {
             var data = (from v in _appContext.VendorShippingAddress
-                        join ad in _appContext.Address on v.AddressId equals ad.AddressId
+                        //join ad in _appContext.Address on v.AddressId equals ad.AddressId
                         
                       where ((v.IsDelete == false || v.IsDelete == null) && (v.VendorId==id))
 
                         // select new { t, ad, vt }).ToList();
                         select new
                         {
-                            Address1 = ad.Line1,
-                            Address2 = ad.Line2,
-                            Address3 = ad.Line3,
-                            ad.AddressId,
-                            ad.Country,
-                            ad.PostalCode,
-                            ad.City,
-                            ad.StateOrProvince,
+                            //Address1 = ad.Line1,
+                            //Address2 = ad.Line2,
+                            //Address3 = ad.Line3,
+                            //ad.AddressId,
+                            //ad.Country,
+                            //ad.PostalCode,
+                            //ad.City,
+                            //ad.StateOrProvince,
                             v.SiteName,
                             v.VendorShippingAddressId,
                             v.CreatedDate,

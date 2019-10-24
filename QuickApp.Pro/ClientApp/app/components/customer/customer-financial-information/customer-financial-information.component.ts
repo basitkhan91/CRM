@@ -328,11 +328,12 @@ export class CustomerFinancialInformationComponent implements OnInit {
         })
         this.selectedTaxRates = [];
         this.selectedTaxType = undefined;
-        console.log(JSON.stringify(this.taxTypeRateMapping));
+
     }
 
 
     saveFinancialInformation() {
+        
         this.customerService.updatefinanceinfo({
             ...this.savedGeneralInformationData,
             CustomerTaxTypeRateMapping: this.taxTypeRateMapping,

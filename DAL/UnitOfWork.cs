@@ -150,7 +150,6 @@ namespace DAL
         IPurchaseOrder _purchaseOrder;
         IStocklineAdjustmentRepository _stocklineAdjustmentRepository;
         //IWarehouseRepository _warehouseRepository;
-        IGLAccountCategoriesRepository _GLAccountCategories;
         ICertificationTypeRepository _ICertificationTypeRepository;
         IStocklineAdjustmentReasonRepository _stocklineAdjustmentReason;
 
@@ -173,6 +172,7 @@ namespace DAL
         IAssetTypeRepository _assetTypeRepository;
         IAssetIntangibleTypeRepository _assetIntangibleTypeRepository;
         IStageCodeRepository _stageCodeRepository;
+        IGLAccountCategoryRepository _GLAccountCategoryRepository;
 
         IGLAccount _gLAccount;
 
@@ -300,18 +300,6 @@ namespace DAL
                     _products = new ProductRepository(_context);
 
                 return _products;
-            }
-        }
-
-
-        public IGLAccountCategoriesRepository GLAccountCategories
-
-        {
-            get
-            {
-                if (_GLAccountCategories == null)
-                    _GLAccountCategories = new GLAccountCategoriesRepository(_context);
-                return _GLAccountCategories;
             }
         }
 
@@ -1555,6 +1543,17 @@ namespace DAL
                 return _stageCodeRepository;
             }
         }
+        public IGLAccountCategoryRepository GLAccountCategoryRepository
+
+        {
+            get
+            {
+                if (_GLAccountCategoryRepository == null)
+                    _GLAccountCategoryRepository = new GLAccountCategoryRepository(_context, _appSettings);
+                return _GLAccountCategoryRepository;
+            }
+        }
+
 
         public IGLAccountNodeShareWithEntityMapper GLAccountNodeShareWithEntityMapper
         {

@@ -26,6 +26,12 @@ export class EmployeeEndpoint extends EndpointFactory {
     
     private readonly _certificationUrlNew: string = "/api/Employee/employeecertificationpost";
     private readonly _actionsUrlLeaveTypeMap: string = "/api/Employee/employeepostAddLeaveType";
+    private readonly _actionsUrlLeaveTypeMapRemove: string = "/api/Employee/employeepostRemoveLeaveType";
+    
+
+    private readonly _actionsUrlShiftTypeMapRemove: string = "/api/Employee/employeepostRemoveShiftType";
+
+    
     private readonly _actionsUrlShiftTypeMap: string = "/api/Employee/employeepostAddShiftType";
 	private readonly _trainUrlNew: string = "/api/Employee/EmpTrainingGet";
 	private readonly _trainingTypeUrlNew: string = "/api/Employee/empTrainingTypesGet";
@@ -123,6 +129,21 @@ export class EmployeeEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getNewEmployeeEndpoint(userObject));
             });
     }
+    employeeLeavetypeRemove<T>(userObject: any): Observable<T> {
+
+        return this.http.post<T>(this._actionsUrlLeaveTypeMapRemove, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getNewEmployeeEndpoint(userObject));
+            });
+    }
+    employeeshifttypeRemove<T>(userObject: any): Observable<T> {
+
+        return this.http.post<T>(this._actionsUrlShiftTypeMapRemove, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getNewEmployeeEndpoint(userObject));
+            });
+    }
+
     employeeShifttypeAdd<T>(userObject: any): Observable<T> {
 
         return this.http.post<T>(this._actionsUrlShiftTypeMap, JSON.stringify(userObject), this.getRequestHeaders())

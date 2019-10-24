@@ -196,6 +196,9 @@ export class VendorEndpointService extends EndpointFactory {
 		super(http, configurations, injector);
 	}
 
+	getReceivingPOListing(){
+		return this.http.get(`${this.configurations.baseUrl}/api/vendor/recevingpolist`)
+	}
 
 	postNewBillingAddress<T>(object) {
 		let url = `${this.configurations.baseUrl}/api/Vendor/createvendorbillingaddress`
@@ -1103,6 +1106,12 @@ export class VendorEndpointService extends EndpointFactory {
 				return this.handleError(error, () => this.getPurchaseOrderList());
 			});
 	}
+	getPOList(data) {
+        return this.http.post(this.polisturl, JSON.stringify(data), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getPOList(data));
+            });
+    }
 	getcountryListEndpoint<T>(): Observable<T> {
 
 		return this.http.get<T>(this.countryUrl, this.getRequestHeaders())
@@ -1270,5 +1279,14 @@ export class VendorEndpointService extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.getVendorsForDropdownEndPoint());
             });
-    }
+	}
+	
+	getVendorbillingsitenames(vendorId){
+		return this.http.get(`${this.configurations.baseUrl}/api/Vendor/vendorbillingsitenames?vendorId=${vendorId}`)
+	}
+
+	getVendorAddressById(vendorId){
+		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/vendorbillingaddressbyid?billingAddressId=${vendorId}`)
+	
+	}
 }

@@ -55,6 +55,9 @@ export class SingleComponent {
                 case '/singlepages/singlepages/app-stage-code':
                     itemLabel = 'Stage Code';
                     break;
+                case '/singlepages/singlepages/app-gl-account-category':
+                    itemLabel = 'GL Account Category';
+                    break;
                 default:
             }
             this.items = [
@@ -120,13 +123,6 @@ export class SingleComponent {
 				this.items = [
 					{ label: 'Single Screens' },
 					{ label: 'Labor And Overhead Cost Setup' }
-				];
-			}
-
-			else if (this.currentUrl == '/singlepages/singlepages/app-glaccount-category') {
-				this.items = [
-					{ label: 'Single Screens' },
-					{ label: 'Expenditure Type' }
 				];
 			}
 
@@ -448,6 +444,9 @@ export class SingleComponent {
                 case '/singlepages/singlepages/app-stage-code':
                     itemLabel = 'Stage Code';
                     break;
+                case '/singlepages/singlepages/app-gl-account-category':
+                    itemLabel = 'GL Account Category';
+                    break;
                 default:
             }
             this.items = [
@@ -700,13 +699,6 @@ export class SingleComponent {
 					{ label: 'GL Account Class' }
 				];
 			}
-			else if (this.currentUrl == '/singlepages/singlepages/app-glaccount-category') {
-				this.items = [
-					{ label: 'Single Screens' },
-					{ label: 'Expenditure Type' }
-				];
-			}
-
 			else if (this.currentUrl == '/singlepages/singlepages/app-app-certification-type') {
 				this.items = [
 					{ label: 'Single Screens' },

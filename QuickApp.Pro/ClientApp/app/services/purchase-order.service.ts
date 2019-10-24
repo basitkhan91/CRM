@@ -18,5 +18,12 @@ export class PurchaseOrderService {
     getPurchaseOrdersBasic() {
 		return Observable.forkJoin(
 			this.purchaseORderEndpoint.getPurchaseOrderBasicList<any[]>());
-	}
+  }
+  
+  /*vendor PO*/
+  getVendorPOById(Id: number) {
+    return this.purchaseORderEndpoint.getVendorPOById<any>(Id);
+  }
+  /*./vendor PO*/
+
 }

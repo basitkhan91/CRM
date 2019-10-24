@@ -459,6 +459,11 @@ export class VendorService {
         return Observable.forkJoin(
             this.actionEndpoint.getPurchaseOrderList<any>());
     }
+    getPOList(data) {
+        return Observable.forkJoin(
+            this.actionEndpoint.getPOList(data));
+    }
+
     getCountrylist() {
         return Observable.forkJoin(
             this.actionEndpoint.getcountryListEndpoint<any[]>());
@@ -566,6 +571,17 @@ export class VendorService {
 
     getVendorsForDropdown() {
         return this.actionEndpoint.getVendorsForDropdownEndPoint<any[]>();
+    }
+
+    getVendorSiteNames(vendorId){
+        return this.actionEndpoint.getVendorbillingsitenames(vendorId);
+    }
+    getVendorAddressById(vendorId){
+        return this.actionEndpoint.getVendorAddressById(vendorId)
+    }
+
+    getReceivingPOListing(){
+        return this.actionEndpoint.getReceivingPOListing();
     }
 }
 

@@ -38,6 +38,7 @@ namespace DAL.Repositories.Interfaces
 
         //  void CreateAction(DAL.Models.Action action);
 
+        IEnumerable<object> GetVendorBillingSiteNames(long vendorId);
         IEnumerable<Vendor> getVendorsForDropdown();
     }
 }
