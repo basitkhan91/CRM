@@ -598,6 +598,25 @@ namespace DAL.Repositories
             }
         }
 
+        public IEnumerable<object> GetVendorBillingSiteNames(long vendorId)
+        {
+            try
+            {
+                var list = (from vba in _appContext.VendorBillingAddress
+                            where vba.IsDeleted == false && vba.VendorId == vendorId
+                            select new {
+                                vba.VendorBillingAddressId,
+                                vba.SiteName
+                            }).ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         public object VendorBillingAddressById(long billingAddressId)
         {
             try

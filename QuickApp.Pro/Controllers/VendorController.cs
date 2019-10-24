@@ -3000,15 +3000,24 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("vendorbillingaddress")]
         public IActionResult GetVendorBillingAddress()
         {
-            _unitOfWork.Vendor.GetVendorBillingAddress();
-            return Ok();
+           var result= _unitOfWork.Vendor.GetVendorBillingAddress();
+            return Ok(result);
         }
+
+        [HttpGet("vendorbillingsitenames")]
+        public IActionResult GetVendorBillingSiteNames(long vendorId)
+        {
+            var result=_unitOfWork.Vendor.GetVendorBillingSiteNames(vendorId);
+            return Ok(result);
+        }
+
+        
 
         [HttpGet("vendorbillingaddressbyid")]
         public IActionResult VendorBillingAddressById(long billingAddressId)
         {
-            _unitOfWork.Vendor.VendorBillingAddressById(billingAddressId);
-            return Ok();
+           var result= _unitOfWork.Vendor.VendorBillingAddressById(billingAddressId);
+            return Ok(result);
         }
 
         [HttpGet("GetVendorsForDropDown")]
@@ -3082,6 +3091,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         #endregion Private Methods
+
 
     }
     //[HttpGet("GetvendorList/{vendorName}")]

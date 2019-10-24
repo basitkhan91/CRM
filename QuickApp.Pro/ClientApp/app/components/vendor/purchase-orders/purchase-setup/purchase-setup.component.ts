@@ -60,7 +60,7 @@ export class PurchaseSetupComponent {
 	vendorSelectedForBillTo: any[];
 	shipToCusData: any[] = [];
 	vendorSelected: any[] = [];
-	billToCusData: any[] = [];
+	billToCusData: any;
 	array: any[];
 	returnPartsListArray: any = [];
 	allCustomers: any[];
@@ -450,7 +450,8 @@ export class PurchaseSetupComponent {
 
 		console.log(this.sourcePoApproval);
 		this.sourcePoApproval.statusId = 1;
-		this.sourcePoApproval.openDate = new Date()
+		this.sourcePoApproval.openDate = new Date();
+		this.sourcePoApproval.closedDate = new Date();
 		this.sourcePoApproval.dateRequested = new Date();
 		this.sourcePoApproval.shipToUserTypeId = 3;
 		this.sourcePoApproval.billToUserTypeId = 3;
@@ -477,18 +478,25 @@ export class PurchaseSetupComponent {
 			if(res.Level1) {
 				this.tempPOHeaderAddress.companyId = res.Level1;
 				this.getBUList(res.Level1);
-			}
+			} else 
+				this.tempPOHeaderAddress.companyId = 0;
+
 			if(res.Level2) {
 				this.tempPOHeaderAddress.buId = res.Level2;
 				this.getDivisionlist(res.Level2);
-			}
+			} else
+				this.tempPOHeaderAddress.buId = 0;
+
 			if(res.Level3) {
 				this.tempPOHeaderAddress.divisionId = res.Level3;
 				this.getDepartmentlist(res.Level3);
-			}
+			} else 
+				this.tempPOHeaderAddress.divisionId = 0;
+
 			if(res.Level4) {
 				this.tempPOHeaderAddress.departmentId = res.Level4;
-			}
+			} else
+				this.tempPOHeaderAddress.departmentId = 0;
 
 		})
 	}
@@ -504,6 +512,7 @@ export class PurchaseSetupComponent {
 					this.tempPOHeaderAddress = {
 						purchaseOrderNumber: res.purchaseOrderNumber,
 						openDate: new Date(res.openDate),
+						closedDate: new Date(res.closedDate),
 						needByDate: new Date(res.needByDate),
 						priorityId: getObjectById('priorityId', res.priorityId, this.allPriorityInfo),
 						deferredReceiver: res.deferredReceiver,
@@ -512,7 +521,7 @@ export class PurchaseSetupComponent {
 						vendorContactId: this.getVendorContactsListByID(res.vendorId),
 						vendorContactPhone: this.getVendorContactsListByID(res.vendorId),
 						creditLimit: res.creditLimit,
-						creditTerms: getValueFromArrayOfObjectById('name', 'creditTermsId', res.creditTermsId, this.allcreditTermInfo),
+						creditTerms: res.creditTermsId ? getValueFromArrayOfObjectById('name', 'creditTermsId', res.creditTermsId, this.allcreditTermInfo) : null,
 						requisitionerId: getObjectById('value', res.requestedBy, this.allEmployeeList),						
 						approverId: getObjectById('value', res.approverId, this.allEmployeeList),
 						approvedDate: new Date(res.dateApproved),
@@ -555,7 +564,7 @@ export class PurchaseSetupComponent {
 	getShipToUserIdEdit(data) {
 		if(data.shipToUserType === 1) {
 			this.tempShipTOAddressId = data.shipToAddressId;
-			this.onshipCustomerNameselected(data.shipToUserId);
+			//this.onshipCustomerNameselected(data.shipToUserId);
 			this.getValueforShipTo(data, data.shipToAddressId);
 			return getObjectById('customerId', data.shipToUserId, this.allCustomers);
 
@@ -736,6 +745,7 @@ export class PurchaseSetupComponent {
 		this.sourcePoApprovalObj = {
 			purchaseOrderNumber: this.sourcePoApproval.purchaseOrderNumber,
 			openDate: new Date(this.sourcePoApproval.openDate),
+			closedDate: new Date(this.sourcePoApproval.closedDate),
 			needByDate: new Date(this.sourcePoApproval.needByDate),
 			priorityId: this.sourcePoApproval.priorityId ? this.getPriorityId(this.sourcePoApproval.priorityId) : 0,
 			deferredReceiver: this.sourcePoApproval.deferredReceiver ? this.sourcePoApproval.deferredReceiver : false,
@@ -1560,15 +1570,16 @@ export class PurchaseSetupComponent {
 		// 	}
 		// }
 	}
-	onBillToCustomerNameselected(event) {
-		for (let i = 0; i < this.customerNames.length; i++) {
-			if (event.name == this.customerNames[i].name) {
+	onBillToCustomerNameselected(customerId) {
+		this.billToSelectedvalue = customerId;
+		for (let i = 0; i < this.allCustomers.length; i++) {
+			if (customerId == this.allCustomers[i].customerId) {
 
-				this.customerService.getCustomerShipAddressGet(this.customerNames[i].customerId).subscribe(
+				this.customerService.getCustomerBillViaDetails(customerId).subscribe(
 					returnddataforbill => {
 						this.billToCusData = returnddataforbill[0];
 					});
-				this.customerService.getContacts(this.customerNames[i].customerId).subscribe(data => {
+				this.customerService.getContacts(customerId).subscribe(data => {
 					this.billToContactData = data[0];//shipToContactData
 				});
 				break;
@@ -1577,6 +1588,7 @@ export class PurchaseSetupComponent {
 
 	}
 	onshipCustomerNameselected(customerId) {
+		this.shipToSelectedvalue = customerId;
 		//console.log(event);		
 		for (let i = 0; i < this.allCustomers.length; i++) {
 			//if (event.name == this.customerNames[i].name) {
@@ -1590,6 +1602,7 @@ export class PurchaseSetupComponent {
 					// this.sourcePoApproval.shipToContactId = data[0];
 					// this.adressPOPUPDropdown = this.shipToContactData ;
 				});
+				this.getShipViaDetailsForShipTo();
 
 				// for (let i = 0; i < this.customerNames.length; i++) {
 				// 	//if (event.name == this.customerNames[i].name) {
@@ -1619,9 +1632,9 @@ export class PurchaseSetupComponent {
 				// }
 
 
-				this.commonService.getShipViaDetailsByModule(this.sourcePoApproval.shipToUserTypeId, customerId).subscribe(res => {
-					this.shipViaList = res; //this.customerNames[i].customerId
-				})
+				// this.commonService.getShipViaDetailsByModule(this.sourcePoApproval.shipToUserTypeId, customerId).subscribe(res => {
+				// 	this.shipViaList = res; //this.customerNames[i].customerId
+				// })				
 			}
 		}
 
@@ -2694,21 +2707,22 @@ export class PurchaseSetupComponent {
 		}
 
 	}
-	onVendorselectedForShipTo(event) {
+	onVendorselectedForShipTo(vendorId) {
+		this.shipToSelectedvalue = vendorId;
 		this.showInput = true;
-		this.vendorService.getVendorShipAddressGet(event.vendorId).subscribe(
+		this.vendorService.getVendorShipAddressGet(vendorId).subscribe(
 			returdaa => {
 				this.vendorSelected = returdaa[0];
 			});
-		this.vendorService.getContacts(event.vendorId).subscribe(data => {
+		this.vendorService.getContacts(vendorId).subscribe(data => {
 			this.vendorContactsForshipTo = data[0]; //vendorContactsForshipTo
 
 			console.log(this.vendorContactsForshipTo);
 
-			this.commonService.getShipViaDetailsByModule(this.sourcePoApproval.shipToUserTypeId, event.vendorId).subscribe(res => {
-				this.shipViaList = res;
-			})
-
+			// this.commonService.getShipViaDetailsByModule(this.sourcePoApproval.shipToUserTypeId, vendorId).subscribe(res => {
+			// 	this.shipViaList = res;
+			// })
+			this.getShipViaDetailsForShipTo();
 		});
 
 
@@ -2756,7 +2770,7 @@ export class PurchaseSetupComponent {
 
     }*/
 
-	onVendorselectedForBillTo(event) {
+	async onVendorselectedForBillTo(vendorId) {
 		// this.showInput = true;
 		// for (let i = 0; i < this.VendorNamecoll.length; i++) {
 		// 	if (event == this.VendorNamecoll[i][0].vendorName) {
@@ -2772,19 +2786,17 @@ export class PurchaseSetupComponent {
 		// 	}
 
 		// }
-
+		this.billToSelectedvalue = vendorId;
 		this.showInput = true;
 		//console.log(this.VendorNamecoll)
-		this.vendorService.getVendorShipAddressGet(event.vendorId).subscribe(
+	await 	this.vendorService.getVendorSiteNames(vendorId).subscribe(
 			returdaa => {
 				this.vendorSelectedForBillTo = returdaa[0];
 			})
-		this.vendorService.getContacts(event.vendorId).subscribe(
+		this.vendorService.getContacts(vendorId).subscribe(
 			returdaa => {
 				this.vendorContactsForBillTO = returdaa[0];
 			})
-
-
 	}
 
 	eventHandler(event) {
@@ -3984,7 +3996,8 @@ export class PurchaseSetupComponent {
 
 			await this.customerService.newShippingAdd(customerData).subscribe(() => {
 
-				this.onShipCompanySelected();
+				//this.onShipCompanySelected();
+				this.onshipCustomerNameselected(customerData.customerId);
 				// this.addressFormForShipping = new CustomerShippingModel()
 				this.alertService.showMessage(
 					'Success',
@@ -3998,7 +4011,8 @@ export class PurchaseSetupComponent {
 			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId) }
 
 			await this.vendorService.newShippingAdd(vendorData).subscribe(() => {
-				this.onShipCompanySelected();
+				this.onVendorselectedForShipTo(vendorData.vendorId);				
+				//this.onShipCompanySelected();
 				// this.addressFormForShipping = new CustomerShippingModel()
 				this.alertService.showMessage(
 					'Success',
@@ -4091,20 +4105,21 @@ export class PurchaseSetupComponent {
 		if (this.sourcePoApproval.billToUserTypeId == 1) {
 			const customerData = { ...data, customerId: getValueFromObjectByKey('customerId', this.sourcePoApproval.billToUserId) }
 			await this.customerService.newBillingAdd(customerData).subscribe(() => {
-				this.onBillCompanySelected();
+				this.onBillToCustomerNameselected(customerData.customerId);
+				//this.onBillCompanySelected();
 				// this.addressFormForBilling = new CustomerShippingModel()
 				this.alertService.showMessage(
 					'Success',
 					`Saved  Billing Information Sucessfully `,
 					MessageSeverity.success
 				);
-
 			})
 		}
 		if (this.sourcePoApproval.billToUserTypeId == 2) {
 			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.billToUserId) }
 			await this.vendorService.addNewBillingAddress(vendorData).subscribe(() => {
-				this.onBillCompanySelected();
+				this.onVendorselectedForBillTo(vendorData.vendorId);
+				//this.onBillCompanySelected();
 				// this.addressFormForBilling = new CustomerShippingModel()
 				this.alertService.showMessage(
 					'Success',

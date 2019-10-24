@@ -572,6 +572,12 @@ export class VendorService {
     getVendorsForDropdown() {
         return this.actionEndpoint.getVendorsForDropdownEndPoint<any[]>();
     }
+    getVendorSiteNames(vendorId){
+        return this.actionEndpoint.getVendorbillingsitenames(vendorId);
+    }
+    getVendorAddressById(vendorId){
+        return this.actionEndpoint.getVendorAddressById(vendorId)
+    }
 }
 
 
