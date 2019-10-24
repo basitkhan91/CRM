@@ -820,6 +820,7 @@ export class PurchaseSetupComponent {
 				priorityId: this.sourcePoApproval.priorityId.priorityId !== undefined ? this.sourcePoApproval.priorityId.priorityId : 0,
 				creditTermsId: this.sourcePoApproval.creditTermsId !== undefined ? this.sourcePoApproval.creditTermsId.creditTermsId : 0*/
 			}).subscribe(saveddata => {
+				this.route.navigate(['/vendorsmodule/vendorpages/app-polist'])
 				this.purchaseOrderId = saveddata.purchaseOrderId;
 				this.savedInfo = saveddata;
 				console.log(saveddata);
@@ -858,10 +859,10 @@ export class PurchaseSetupComponent {
 		if (moduleId !== undefined && currentbillToAddressId !== undefined) {
 			moduleId = parseInt(moduleId)
 			if (moduleId == 1) {
-				return getValueFromArrayOfObjectById('siteName', 'customerShippingAddressId', currentbillToAddressId, this.billToCusData);
+				return getValueFromArrayOfObjectById('siteName', 'customerBillingAddressId', currentbillToAddressId, this.billToCusData);
 			} else
 				if (moduleId == 2) {
-					return getValueFromArrayOfObjectById('siteName', 'vendorShippingAddressId', currentbillToAddressId, this.vendorSelectedForBillTo);
+					return getValueFromArrayOfObjectById('siteName', 'vendorBillingAddressId', currentbillToAddressId, this.vendorSelectedForBillTo);
 				} else
 					if (moduleId == 3) {
 						return getValueFromArrayOfObjectById('siteName', 'legalEntityBillingAddressId', currentbillToAddressId, this.companySiteList_Billing);
@@ -2763,6 +2764,7 @@ export class PurchaseSetupComponent {
 		this.showInput = true;
 		this.vendorService.getVendorShipAddressGet(vendorId).subscribe(
 			returdaa => {
+				console.log(returdaa);
 				this.vendorSelected = returdaa[0];
 			});
 		this.vendorService.getContacts(vendorId).subscribe(data => {
