@@ -33,6 +33,7 @@ import { LazyLoadEvent, SortEvent } from 'primeng/api';
 /** CustomersList component*/
 export class CustomersListComponent implements OnInit {
 
+
     // property: string;
     // showPaginator = true;
     // totelPages: number;
@@ -152,9 +153,70 @@ export class CustomersListComponent implements OnInit {
     data: any;
     pageSize: number = 10;
     pageIndex: number = 0;
+    first = 0;
     @ViewChild('dt')
     private table: Table;
     lazyLoadEventData: any;
+    viewData: any[];
+    viewDataGeneralInformation: any[];
+    customerContacts: any;
+    customerContactsColumns = [
+        { field: 'tag', header: 'TAG' },
+        { field: 'firstName', header: 'First Name' },
+        { field: 'lastName', header: 'Last Name' },
+        { field: 'contactTitle', header: 'Contact Title' },
+        { field: 'email', header: 'Email' },
+        { field: 'workPhone', header: 'Work Phone' },
+        { field: 'mobilePhone', header: 'Mobile Phone' },
+        { field: 'fax', header: 'Fax' },
+
+    ];
+    colsaircraftLD: any = [
+        { field: "aircraftType", header: "Aircraft" },
+        { field: "aircraftModel", header: "Model" },
+        { field: "dashNumber", header: "Dash Numbers" },
+        { field: "inventory", header: "Inventory" },
+        { field: "memo", header: "Memo" }
+
+    ]
+
+    ataHeaders = [
+        { field: 'ataChapterName', header: 'ATA Chapter' },
+        { field: 'ataSubChapterDescription', header: 'ATA Sub-Chapter' }
+    ]
+    billingInfoTableHeaders = [
+        { field: 'siteName', header: 'Site Name' },
+        { field: 'address1', header: 'Address1' },
+        { field: 'address2', header: 'Address2' },
+        { field: 'address3', header: 'Address3' },
+        { field: 'city', header: 'City' },
+        { field: 'stateOrProvince', header: 'State/Prov' },
+        { field: 'postalCode', header: 'Postal Code' },
+        { field: 'country', header: 'Country' }
+    ]
+    domesticShippingHeaders = [
+        { field: 'siteName', header: 'Site Name' },
+        { field: 'address1', header: 'Address1' },
+        { field: 'address2', header: 'Address2' },
+        { field: 'address3', header: 'Address3' },
+        { field: 'city', header: 'City' },
+        { field: 'stateOrProvince', header: 'State Or Province' },
+        { field: 'postalCode', header: 'Postal Code' },
+        { field: 'country', header: 'Country' }
+    ]
+    internationalShippingHeaders = [
+        { field: 'exportLicense', header: 'Export License' },
+        { field: 'description', header: 'Description' },
+        { field: 'isPrimary', header: 'IsDefault' },
+        { field: 'startDate', header: 'Start Date' },
+        { field: 'expirationDate', header: 'Expiration Date' },
+        { field: 'amount', header: 'Amount' }
+    ]
+    aircraftListDataValues: any;
+    ataListDataValues: any;
+    billingInfoList: any;
+    domesticShippingData: any[];
+    internationalShippingData: any;
     constructor(private _route: Router,
         private authService: AuthService,
         private modalService: NgbModal,
@@ -227,7 +289,70 @@ export class CustomersListComponent implements OnInit {
 
         })
     }
-    viewSelectedRow(rowData) { }
+    viewSelectedRow(rowData) {
+        const { customerId } = rowData;
+        this.customerService.getCustomerdataById(customerId).subscribe(res => {
+            this.viewDataGeneralInformation = res[0];
+        })
+        this.getAllCustomerContact(customerId);
+        this.getAircraftMappedDataByCustomerId(customerId);
+        this.getMappedATAByCustomerId(customerId);
+        this.getBillingDataById(customerId);
+        this.getDomesticShippingByCustomerId(customerId);
+        this.getInternationalShippingByCustomerId(customerId);
+
+    }
+
+    getAllCustomerContact(customerId) {
+        // get Customer Contatcs 
+        this.customerService.getContacts(customerId).subscribe(res => {
+            this.customerContacts = res[0]
+        })
+    }
+
+    getAircraftMappedDataByCustomerId(customerId) {
+        // const id = this.savedGeneralInformationData.customerId;
+        this.customerService.getMappedAirCraftDetails(customerId).subscribe(res => {
+            this.aircraftListDataValues = res;
+        })
+    }
+    getMappedATAByCustomerId(customerId) {
+        // const id = this.savedGeneralInformationData.customerId;
+        this.customerService.getATAMappedByCustomerId(customerId).subscribe(res => {
+            this.ataListDataValues = res;
+            console.log(res);
+
+        })
+    }
+    getBillingDataById(customerId) {
+        this.customerService.getCustomerBillViaDetails(customerId).subscribe(res => {
+            this.billingInfoList = res[0]
+        })
+    }
+
+
+    // get domestic shipping by customer Id 
+    getDomesticShippingByCustomerId(customerId) {
+        // const id = this.savedGeneralInformationData.customerId;
+        this.customerService.getCustomerShipAddressGet(customerId).subscribe(res => {
+            console.log(res);
+            this.domesticShippingData = res[0];
+        })
+    }
+
+    getInternationalShippingByCustomerId(customerId) {
+
+        // const id = this.savedGeneralInformationData.customerId;
+
+        this.customerService.getInternationalShippingByCustomerId(customerId, 0, 20).subscribe(res => {
+            console.log(res);
+            this.internationalShippingData = res.paginationList;
+            // this.totalRecordsForInternationalShipping = res.totalRecordsCount;
+        })
+
+
+
+    }
     // changePage(event: { first: any; rows: number }) {
     //     console.log(event);
     //     this.pageIndex = (event.first / event.rows);

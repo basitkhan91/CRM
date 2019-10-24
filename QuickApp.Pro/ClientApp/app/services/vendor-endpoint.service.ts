@@ -196,6 +196,9 @@ export class VendorEndpointService extends EndpointFactory {
 		super(http, configurations, injector);
 	}
 
+	getReceivingPOListing(){
+		return this.http.get(`${this.configurations.baseUrl}/api/vendor/recevingpolist`)
+	}
 
 	postNewBillingAddress<T>(object) {
 		let url = `${this.configurations.baseUrl}/api/Vendor/createvendorbillingaddress`
