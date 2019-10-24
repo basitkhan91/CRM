@@ -526,7 +526,8 @@ export class PurchaseSetupComponent {
 	getShipToUserIdEdit(data) {
 		if(data.shipToUserType === 1) {
 			this.tempShipTOAddressId = data.shipToAddressId;
-			//this.onshipCustomerNameselected(data.shipToUserId);
+			this.onshipCustomerNameselected(data.shipToUserId);
+			this.getValueforShipTo(data, data.shipToAddressId);
 			return getObjectById('customerId', data.shipToUserId, this.allCustomers);
 
 			
@@ -1490,21 +1491,34 @@ export class PurchaseSetupComponent {
 
 	}
 	onshipCustomerNameselected(customerId) {
-		console.log(event);		
-		for (let i = 0; i < this.customerNames.length; i++) {
+		//console.log(event);		
+		for (let i = 0; i < this.allCustomers.length; i++) {
 			//if (event.name == this.customerNames[i].name) {
-			if (customerId == this.customerNames[i].customerId) {
-				this.customerService.getCustomerShipAddressGet(this.customerNames[i].customerId).subscribe(
+			if (customerId == this.allCustomers[i].customerId) {
+				this.customerService.getCustomerShipAddressGet(customerId).subscribe(
 					returnddataforbill => {
 						this.shipToCusData = returnddataforbill[0];
 					});
-				this.customerService.getContacts(this.customerNames[i].customerId).subscribe(data => {
-
-
+				this.customerService.getContacts(customerId).subscribe(data => {
 					this.shipToContactData = data[0];
 					// this.sourcePoApproval.shipToContactId = data[0];
 					// this.adressPOPUPDropdown = this.shipToContactData ;
 				});
+
+				// for (let i = 0; i < this.customerNames.length; i++) {
+				// 	//if (event.name == this.customerNames[i].name) {
+				// 	if (customerId == this.customerNames[i].customerId) {
+				// 		this.customerService.getCustomerShipAddressGet(this.customerNames[i].customerId).subscribe(
+				// 			returnddataforbill => {
+				// 				this.shipToCusData = returnddataforbill[0];
+				// 			});
+				// 		this.customerService.getContacts(this.customerNames[i].customerId).subscribe(data => {
+		
+		
+				// 			this.shipToContactData = data[0];
+				// 			// this.sourcePoApproval.shipToContactId = data[0];
+				// 			// this.adressPOPUPDropdown = this.shipToContactData ;
+				// 		});
 
 				// let moduleId = 0;
 				// if(this.sourcePoApproval.shipToUserId == 1){
@@ -1519,8 +1533,8 @@ export class PurchaseSetupComponent {
 				// }
 
 
-				this.commonService.getShipViaDetailsByModule(this.sourcePoApproval.shipToUserTypeId, this.customerNames[i].customerId).subscribe(res => {
-					this.shipViaList = res;
+				this.commonService.getShipViaDetailsByModule(this.sourcePoApproval.shipToUserTypeId, customerId).subscribe(res => {
+					this.shipViaList = res; //this.customerNames[i].customerId
 				})
 			}
 		}
@@ -2575,6 +2589,14 @@ export class PurchaseSetupComponent {
 			this.shipToAddress = getObjectById('customerShippingAddressId', id, this.shipToCusData);
 		} else if (data.shipToUserTypeId == 2) {
 			this.shipToAddress = getObjectById('vendorShippingAddressId', id, this.vendorSelected);
+		}
+
+		if(this.isEditMode) {
+			if (data.shipToUserType == 1) {
+				this.shipToAddress = getObjectById('customerShippingAddressId', id, this.shipToCusData);				
+			} else if (data.shipToUserType == 2) {
+				this.shipToAddress = getObjectById('vendorShippingAddressId', id, this.vendorSelected);
+			}
 		}
 		// if (data.customerShippingAddressId) {
 		// 	this.sourcePoApproval.shipToAddressId = data.customerShippingAddressId;
