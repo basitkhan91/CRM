@@ -246,6 +246,10 @@ namespace DAL.Repositories
                     UploadGLAccountClass(BindCustomData<GLAccountClass>(file, "GLAccountClassId", moduleName));
                     break;
 
+                case "JobType":
+                    UploadJobType(BindCustomData<JobType>(file, "JobTypeId", moduleName));
+                    break;
+
                 default:
                     break;
             }
@@ -669,6 +673,22 @@ namespace DAL.Repositories
                 if (!flag)
                 {
                     _appContext.GLAccountClass.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+
+        private void UploadJobType(List<JobType> jobTypeList)
+        {
+
+            foreach (var item in jobTypeList)
+            {
+
+                var flag = _appContext.JobType.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.JobTypeName)
+                && p.JobTypeName.ToLower() == item.JobTypeName.Trim().ToLower());
+                if (!flag)
+                {
+                    _appContext.JobType.Add(item);
                     _appContext.SaveChanges();
                 }
             }
