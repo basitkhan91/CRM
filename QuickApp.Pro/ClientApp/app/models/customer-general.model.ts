@@ -78,9 +78,9 @@ export class CustomerGeneralInformation {
         // this.restictPMAIds = [];
         // this.restrictPMAMemo = '';
         this.restrictBER = false;
-        this.restrictedPMAParts = []
-        this.restrictedDERParts = []
-        this.integrationPortalId = []
+        this.restrictedPMAParts = [];
+        this.restrictedDERParts = [];
+        this.integrationPortalId = [];
         // this.restictBERIds = [];
         // this.restrictBERMemo = '';
         // this.scanDocuments = false;
