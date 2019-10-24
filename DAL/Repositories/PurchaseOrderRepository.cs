@@ -34,11 +34,12 @@ namespace DAL.Repositories
             var totalRecords = (from po in _appContext.PurchaseOrder
                                 join emp in _appContext.Employee on po.RequestedBy equals emp.EmployeeId
                                 join v in _appContext.Vendor on po.VendorId equals v.VendorId
-                                join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId
+                                join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
+                                from appr in approver.DefaultIfEmpty()
                                 where po.IsDeleted == false
                                 && po.PurchaseOrderNumber.Contains(!String.IsNullOrEmpty(poFilters.filters.PurchaseOrderNo) ? poFilters.filters.PurchaseOrderNo : po.PurchaseOrderNumber)
-                                && Convert.ToString(po.OpenDate) == (Convert.ToString(poFilters.filters.OpenDate) == "1/1/0001 12:00:00 AM" ? Convert.ToString(po.OpenDate) : Convert.ToString(poFilters.filters.OpenDate))
-                                && Convert.ToString(po.ClosedDate) == (Convert.ToString(poFilters.filters.ClosedDate) == "1/1/0001 12:00:00 AM" ? Convert.ToString(po.ClosedDate) : Convert.ToString(poFilters.filters.ClosedDate))
+                                //&& Convert.ToString(po.OpenDate) == (Convert.ToString(poFilters.filters.OpenDate) == "1/1/0001 12:00:00 AM" ? Convert.ToString(po.OpenDate) : Convert.ToString(poFilters.filters.OpenDate))
+                                //&& Convert.ToString(po.ClosedDate) == (Convert.ToString(poFilters.filters.ClosedDate) == "1/1/0001 12:00:00 AM" ? Convert.ToString(po.ClosedDate) : Convert.ToString(poFilters.filters.ClosedDate))
                                 && v.VendorName.Contains(!String.IsNullOrEmpty(poFilters.filters.VendorName) ? poFilters.filters.VendorName : v.VendorName)
                                 && v.VendorCode.Contains(!String.IsNullOrEmpty(poFilters.filters.VendorCode) ? poFilters.filters.VendorCode : v.VendorCode)
                                 && po.StatusId == (poFilters.filters.StatusId > 0 ? poFilters.filters.StatusId : po.StatusId)
@@ -53,11 +54,12 @@ namespace DAL.Repositories
             var purchaseOrderList = (from po in _appContext.PurchaseOrder
                                      join emp in _appContext.Employee on po.RequestedBy equals emp.EmployeeId
                                      join v in _appContext.Vendor on po.VendorId equals v.VendorId
-                                     join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId
+                                     join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
+                                     from appr in approver.DefaultIfEmpty()
                                      where po.IsDeleted == false
                                      && po.PurchaseOrderNumber.Contains(!String.IsNullOrEmpty(poFilters.filters.PurchaseOrderNo) ? poFilters.filters.PurchaseOrderNo : po.PurchaseOrderNumber)
-                                     && Convert.ToString(po.OpenDate) == (Convert.ToString(poFilters.filters.OpenDate) == "1/1/0001 12:00:00 AM" ? Convert.ToString(po.OpenDate) : Convert.ToString(poFilters.filters.OpenDate))
-                                     && Convert.ToString(po.ClosedDate) == (Convert.ToString(poFilters.filters.ClosedDate) == "1/1/0001 12:00:00 AM" ? Convert.ToString(po.ClosedDate) : Convert.ToString(poFilters.filters.ClosedDate))
+                                     //&& Convert.ToString(po.OpenDate) == (Convert.ToString(poFilters.filters.OpenDate) == "1/1/0001 12:00:00 AM" ? Convert.ToString(po.OpenDate) : Convert.ToString(poFilters.filters.OpenDate))
+                                     //&& Convert.ToString(po.ClosedDate) == (Convert.ToString(poFilters.filters.ClosedDate) == "1/1/0001 12:00:00 AM" ? Convert.ToString(po.ClosedDate) : Convert.ToString(poFilters.filters.ClosedDate))
                                      && v.VendorName.Contains(!String.IsNullOrEmpty(poFilters.filters.VendorName) ? poFilters.filters.VendorName : v.VendorName)
                                      && v.VendorCode.Contains(!String.IsNullOrEmpty(poFilters.filters.VendorCode) ? poFilters.filters.VendorCode : v.VendorCode)
                                      && po.StatusId == (poFilters.filters.StatusId > 0 ? poFilters.filters.StatusId : po.StatusId)
@@ -72,13 +74,44 @@ namespace DAL.Repositories
                                          v.VendorCode,
                                          Status = po.StatusId == 1 ? "Open" : (po.StatusId == 2 ? "Pending" : (po.StatusId == 3 ? "Fulfilling" : "Closed")),
                                          RequestedBy = emp.FirstName,
-                                         ApprovedBy = appr.FirstName,
+                                         ApprovedBy = appr==null?"": appr.FirstName,
                                          po.CreatedDate,
                                          po.IsActive,
                                          TotalRecords = totalRecords
                                      }).Distinct().OrderByDescending(p => p.CreatedDate)
                                      .Skip(skip)
                                     .Take(take)
+                                    .ToList();
+
+
+
+            return purchaseOrderList;
+        }
+
+        public IEnumerable<object> RecevingPolist()
+        {
+            
+
+            var purchaseOrderList = (from po in _appContext.PurchaseOrder
+                                     join emp in _appContext.Employee on po.RequestedBy equals emp.EmployeeId
+                                     join v in _appContext.Vendor on po.VendorId equals v.VendorId
+                                     join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
+                                     from appr in approver.DefaultIfEmpty()
+                                     where po.IsDeleted == false
+                                     select new
+                                     {
+                                         po.PurchaseOrderId,
+                                         po.PurchaseOrderNumber,
+                                         OpenDate = po.OpenDate,
+                                         ClosedDate = po.ClosedDate,
+                                         v.VendorName,
+                                         v.VendorCode,
+                                         Status = po.StatusId == 1 ? "Open" : (po.StatusId == 2 ? "Pending" : (po.StatusId == 3 ? "Fulfilling" : "Closed")),
+                                         RequestedBy = emp.FirstName,
+                                         ApprovedBy = appr == null ? "" : appr.FirstName,
+                                         po.CreatedDate,
+                                         po.IsActive,
+                                     }).Distinct().OrderByDescending(p => p.CreatedDate)
                                     .ToList();
 
 

@@ -240,3 +240,481 @@
     </p-table>
   </div>
 </div>
+
+<div
+  id="view"
+  class="modal fade"
+  role="dialog"
+ 
+>
+  <div class="modal-dialog modal-lg">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+        <h4 class="modal-title">Details of Customer</h4>
+      </div>
+      <div class="modal-body"  *ngIf="viewDataGeneralInformation">
+        <div class="panel-group" id="accordion">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a class="collapsed" data-toggle="collapse" href="#step1"
+                  >General Information</a
+                >
+              </h4>
+            </div>
+            <div id="step1" class="panel-collapse collapse in">
+              <div class="panel-body">
+                <div class="modal-content">
+                  <div class="table-responsive default-bg clear">
+                    <div class="col-sm-6">
+                      <p>
+                        <span class="label"><b>Customer Name: </b></span
+                        ><span class="value">{{
+                          viewDataGeneralInformation.name
+                        }}</span>
+                      </p>
+                      <p>
+                        <span class="label"><b>Customer Code: </b></span
+                        ><span class="value">{{
+                          viewDataGeneralInformation.customerCode
+                        }}</span>
+                      </p>
+                      <p>
+                        <span class="label"><b>Internal/External: </b></span
+                        ><span class="value">{{
+                          viewDataGeneralInformation.description
+                        }}</span>
+                      </p>
+                      <p>
+                        <span class="label"><b>D/b/a: </b></span
+                        ><span class="value">{{
+                          viewDataGeneralInformation.doingBuinessAsName
+                        }}</span>
+                      </p>
+                      <p>
+                        <span class="label"><b>Parent: </b></span
+                        ><span class="value">{{
+                          viewDataGeneralInformation.parent
+                        }}</span>
+                      </p>
+                      <p>
+                        <span class="label"><b>Address 1: </b></span
+                        ><span class="value">{{
+                          viewDataGeneralInformation.address1
+                        }}</span>
+                      </p>
+                      <p>
+                        <span class="label"><b>Address 2: </b></span
+                        ><span class="value">{{
+                          viewDataGeneralInformation.address2
+                        }}</span>
+                      </p>
+                      <p>
+                        <span class="label"><b>Address 3: </b></span
+                        ><span class="value">{{
+                          viewDataGeneralInformation.address3
+                        }}</span>
+                      </p>
+                      <p>
+                        <span class="label"><b>City: </b></span
+                        ><span class="value">{{
+                          viewDataGeneralInformation.city
+                        }}</span>
+                      </p>
+                      <p>
+                        <span class="label"><b>State/Province: </b></span
+                        ><span class="value">{{
+                          viewDataGeneralInformation.stateOrProvince
+                        }}</span>
+                      </p>
+                      <p>
+                        <span class="label"><b>Postal: </b></span
+                        ><span class="value">{{
+                          viewDataGeneralInformation.postalCode
+                        }}</span>
+                      </p>
+                      <p>
+                        <span class="label"><b>Country: </b></span
+                        ><span class="value">{{
+                          viewDataGeneralInformation.country
+                        }}</span>
+                      </p>
+                      <p>
+                        <span class="label"><b>Email: </b></span
+                        ><span class="value">{{
+                          viewDataGeneralInformation.email
+                        }}</span>
+                      </p>
+                    </div>
+                    <div class="col-sm-6">
+                      <p>
+                        <span class="label"><b>Classification: </b></span
+                        ><span class="value">{{
+                          viewDataGeneralInformation.customerClassificationId
+                        }}</span>
+                      </p>
+                      <p>
+                        <span class="label"><b>Contract Ref: </b></span
+                        ><span class="value">{{
+                          viewDataGeneralInformation.contractReference
+                        }}</span>
+                      </p>
+                      <p>
+                        <span class="label"><b>PBH Customer: </b></span
+                        ><span class="value">{{
+                          viewDataGeneralInformation.pbhCustomerMemo
+                        }}</span>
+                      </p>
+                      <p>
+                        <span class="label"><b>Restrict PMA: </b></span
+                        ><span class="value">{{
+                          viewDataGeneralInformation.restrictPMAMemo
+                        }}</span>
+                      </p>
+                      <p>
+                        <span class="label"><b>URL to Customer site: </b></span
+                        ><span class="value">{{
+                          viewDataGeneralInformation.customerURL
+                        }}</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step2">Contact</a> </h4>
+              </div>
+              <div id="step2" class="panel-collapse  collapse">
+                  <div class="panel-body">
+                      <div class="col-sm-12">
+                          <div class="shadow-Box">
+                            <p-table
+                              class="rpo-table-cstm"
+                              [columns]="customerContactsColumns"
+                              [value]="customerContacts"
+                              [paginator]="true"
+                              [rows]="10"
+                              [first]="first"
+                            >
+                              <ng-template pTemplate="header" let-columns>
+                                <tr>
+                      
+                                  <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
+                                    {{ col.header }}
+                                  </th>
+                                </tr>
+                              </ng-template>
+                              <ng-template
+                                pTemplate="body"
+                                let-rowData
+                                let-columns="columns"
+                                let-rowIndex="rowIndex"
+                              >
+                                <tr>
+                    
+                                  <td *ngFor="let col of columns">
+                                    {{ rowData[col.field] }}
+                                  </td>
+                                </tr>
+                              </ng-template>
+                            </p-table>
+                          </div>
+                        </div>
+                  </div>
+              </div>
+          </div>
+
+
+          <div class="panel panel-default">
+              <div class="panel-heading">
+                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step3">Aircraft Information</a> </h4>
+              </div>
+              <div id="step3" class="panel-collapse  collapse">
+                  <div class="panel-body">
+                      <div class="col-sm-12">
+                          <div class="shadow-Box">
+                            <p-table
+                              class="rpo-table-cstm"
+                              [columns]="colsaircraftLD"
+                              [value]="aircraftListDataValues"
+                              [paginator]="true"
+                              [rows]="10"
+                              [first]="first"
+                            >
+                              <ng-template pTemplate="header" let-columns>
+                                <tr>
+                      
+                                  <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
+                                    {{ col.header }}
+                                  </th>
+                                </tr>
+                              </ng-template>
+                              <ng-template
+                                pTemplate="body"
+                                let-rowData
+                                let-columns="columns"
+                                let-rowIndex="rowIndex"
+                              >
+                                <tr>
+                    
+                                  <td *ngFor="let col of columns">
+                                    {{ rowData[col.field] }}
+                                  </td>
+                                </tr>
+                              </ng-template>
+                            </p-table>
+                          </div>
+                        </div>
+                  </div>
+              </div>
+          </div>
+
+          <div class="panel panel-default">
+              <div class="panel-heading">
+                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step4">ATA Information</a> </h4>
+              </div>
+              <div id="step4" class="panel-collapse  collapse">
+                  <div class="panel-body">
+                      <div class="col-sm-12">
+                          <div class="shadow-Box">
+                            <p-table
+                              class="rpo-table-cstm"
+                              [columns]="ataHeaders"
+                              [value]="ataListDataValues"
+                              [paginator]="true"
+                              [rows]="10"
+                              [first]="first"
+                            >
+                              <ng-template pTemplate="header" let-columns>
+                                <tr>
+                      
+                                  <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
+                                    {{ col.header }}
+                                  </th>
+                                </tr>
+                              </ng-template>
+                              <ng-template
+                                pTemplate="body"
+                                let-rowData
+                                let-columns="columns"
+                                let-rowIndex="rowIndex"
+                              >
+                                <tr>
+                    
+                                  <td *ngFor="let col of columns">
+                                    {{ rowData[col.field] }}
+                                  </td>
+                                </tr>
+                              </ng-template>
+                            </p-table>
+                          </div>
+                        </div>
+                  </div>
+              </div>
+          </div>
+
+
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step5">Financial Information</a> </h4>
+              </div>
+              <div id="step5" class="panel-collapse collapse">
+                  <div class="panel-body">
+                      <div class="col-sm-6">
+                          <p><span class="label"><b>MarkUp %: </b></span><span class="value">{{viewDataGeneralInformation.markUpPercent}}</span></p>
+                          <p><span class="label"><b>Credit Limit:: </b></span><span class="value">{{viewDataGeneralInformation.creditLimit}}</span></p>
+                          <p><span class="label"><b>Credit Terms: </b></span><span class="value">{{viewDataGeneralInformation.creditTermsId}}</span></p>
+                          <p><span class="label"><b>Allow Netting of AP/AR: </b></span><span class="value">{{viewDataGeneralInformation.allowNettingOfAPAR}}</span></p>
+                          <p><span class="label"><b>Taxable Exempt: </b></span><span class="value">{{viewDataGeneralInformation.isTaxExempt}}</span></p>
+                          <p><span class="label"><b>Tax Rate - State/Prov: </b></span><span class="value">{{viewDataGeneralInformation.taxRateStateOrProvince}}</span></p>
+                          <p><span class="label"><b>Tax Rate - Other: </b></span><span class="value">{{viewDataGeneralInformation.taxRateOther}}</span></p>
+                      </div>
+                      <div class="col-sm-6">
+                          <p><span class="label"><b>EDI: </b></span><span class="value">{{viewDataGeneralInformation.ediDescription}}</span></p>
+                          <!--<p><span class="label"><b>Deferred PO: </b></span><span class="value">{{customerVfinanceiewFeilds.customerCode}}</span></p>
+                  <p><span class="label"><b>Deferred RO: </b></span><span class="value">{{customerViewFeilds.customerCode}}</span></p>-->
+                          <p><span class="label"><b>Currency: </b></span><span class="value">{{viewDataGeneralInformation.currencyId}}</span></p>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+
+          <div class="panel panel-default">
+              <div class="panel-heading">
+                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step6">Bill Information</a> </h4>
+              </div>
+              <div id="step6" class="panel-collapse  collapse">
+                  <div class="panel-body">
+                      <div class="col-sm-12">
+                          <div class="shadow-Box">
+                            <p-table
+                              class="rpo-table-cstm"
+                              [columns]="billingInfoTableHeaders"
+                              [value]="billingInfoList"
+                              [paginator]="true"
+                              [rows]="10"
+                              [first]="first"
+                            >
+                              <ng-template pTemplate="header" let-columns>
+                                <tr>
+                      
+                                  <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
+                                    {{ col.header }}
+                                  </th>
+                                </tr>
+                              </ng-template>
+                              <ng-template
+                                pTemplate="body"
+                                let-rowData
+                                let-columns="columns"
+                                let-rowIndex="rowIndex"
+                              >
+                                <tr>
+                    
+                                  <td *ngFor="let col of columns">
+                                    {{ rowData[col.field] }}
+                                  </td>
+                                </tr>
+                              </ng-template>
+                            </p-table>
+                          </div>
+                        </div>
+                  </div>
+              </div>
+          </div>
+
+
+          <div class="panel panel-default">
+              <div class="panel-heading">
+                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step7">Shipping Information</a> </h4>
+              </div>
+              <div id="step7" class="panel-collapse  collapse">
+                  <div class="panel-body">
+                      <div class="col-sm-12">
+                          <h4> Shipping Site Information List </h4>
+                          <div class="shadow-Box">
+                            <p-table
+                              class="rpo-table-cstm"
+                              [columns]="domesticShippingHeaders"
+                              [value]="domesticShippingData"
+                              [paginator]="true"
+                              [rows]="10"
+                              [first]="first"
+                            >
+                              <ng-template pTemplate="header" let-columns>
+                                <tr>
+                      
+                                  <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
+                                    {{ col.header }}
+                                  </th>
+                                </tr>
+                              </ng-template>
+                              <ng-template
+                                pTemplate="body"
+                                let-rowData
+                                let-columns="columns"
+                                let-rowIndex="rowIndex"
+                              >
+                                <tr>
+                    
+                                  <td *ngFor="let col of columns">
+                                    {{ rowData[col.field] }}
+                                  </td>
+                                </tr>
+                              </ng-template>
+                            </p-table>
+                          </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                          <h4> International Shipping Details </h4>
+                            <div class="shadow-Box">
+                              <p-table
+                                class="rpo-table-cstm"
+                                [columns]="internationalShippingHeaders"
+                                [value]="internationalShippingData"
+                                [paginator]="true"
+                                [rows]="10"
+                                [first]="first"
+                              >
+                                <ng-template pTemplate="header" let-columns>
+                                  <tr>
+                        
+                                    <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
+                                      {{ col.header }}
+                                    </th>
+                                  </tr>
+                                </ng-template>
+                                <ng-template
+                                  pTemplate="body"
+                                  let-rowData
+                                  let-columns="columns"
+                                  let-rowIndex="rowIndex"
+                                >
+                                  <tr>
+                      
+                                    <td *ngFor="let col of columns">
+                                      {{ rowData[col.field] }}
+                                    </td>
+                                  </tr>
+                                </ng-template>
+                              </p-table>
+                            </div>
+                          </div>
+                  </div>
+              </div>
+          </div>
+ 
+
+
+          <div class="panel panel-default">
+              <div class="panel-heading">
+                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step8">Sales Person/Agent Information</a> </h4>
+              </div>
+              <div id="step8" class="panel-collapse collapse">
+                  <div class="panel-body">
+                      <div class="col-sm-10">
+                          <p><span class="label"><b>Primary Sales Person Name: </b></span><span class="value">{{viewDataGeneralInformation.primarySalesPersonFirstName}}</span></p>
+                          <p><span class="label"><b>Secondary Sales Person Name: </b></span><span class="value">{{viewDataGeneralInformation.secondarySalesPersonName}}</span></p>
+                          <p><span class="label"><b>CSR Name: </b></span><span class="value">{{viewDataGeneralInformation.csrName}}</span></p>
+                          <p><span class="label"><b>Agent Name: </b></span><span class="value">{{viewDataGeneralInformation.agentName}}</span></p>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

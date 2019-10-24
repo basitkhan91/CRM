@@ -7,6 +7,7 @@ import { SingleScreenBreadcrumbService } from "../../services/single-screens-bre
 import { validateRecordExistsOrNot, editValueAssignByCondition, getObjectById, selectedValueValidate, getObjectByValue } from '../../generic/autocomplete';
 import { Table } from 'primeng/table';
 import { ConfigurationService } from '../../services/configuration.service';
+import { CommonService } from '../../services/common.service';
 
 @Component({
     selector: 'app-job-type',
@@ -50,7 +51,9 @@ export class JobTypeComponent implements OnInit {
     disableSaveForShortName: boolean = false;
     shortNameList: any;
 
-    constructor(private breadCrumb: SingleScreenBreadcrumbService, private configurations: ConfigurationService, private authService: AuthService, private alertService: AlertService, private jobTypeService: JobTypeService) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService,
+        private commonService: CommonService,
+        private configurations: ConfigurationService, private authService: AuthService, private alertService: AlertService, private jobTypeService: JobTypeService) {
 
     }
 
@@ -79,23 +82,21 @@ export class JobTypeComponent implements OnInit {
         console.log(file);
         if (file.length > 0) {
 
+            this.formData.append('ModuleName', 'JobType')
             this.formData.append('file', file[0])
-            //this.jobTypeService.jobTypeFileUpload(this.formData).subscribe(res => {
-            //    event.target.value = '';
+            
+            
+            this.commonService.smartExcelFileUpload(this.formData).subscribe(res => {
 
-            //    this.formData = new FormData();
-            //    this.existingRecordsResponse = res;
-            //    this.getJobTypeList();
-            //    this.alertService.showMessage(
-            //        'Success',
-            //        `Successfully Uploaded  `,
-            //        MessageSeverity.success
-            //    );
+                this.formData = new FormData();
+                this.getJobTypeList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
 
-            //    // $('#duplicateRecords').modal('show');
-            //    // document.getElementById('duplicateRecords').click();
-
-            //})
+            })
         }
 
     }

@@ -2617,6 +2617,7 @@ namespace QuickApp.Pro.Controllers
 			return Ok(allCusbilldetails);
 
 		}
+
 		[HttpGet("getCustomerShippingHistory/{id}")]
 		[Produces(typeof(List<CustomerShippingAddress>))]
 		public IActionResult getCustomerShippingHistory(long id, CustomerShippingAddress cstomerShippingAddress)
@@ -2626,7 +2627,16 @@ namespace QuickApp.Pro.Controllers
 
 		}
 
-	}
+
+        [HttpGet("customershipviadetails")]
+        [Produces(typeof(List<CustomerShippingAddress>))]
+        public IActionResult GetCustomerShipviaDetails(long customerId, long addressId)
+        {
+            var allCusShippingdetails = _unitOfWork.Customer.GetCustomerShipviaDetails(customerId, addressId); 
+            return Ok(allCusShippingdetails);
+
+        }
+    }
 }
 
 

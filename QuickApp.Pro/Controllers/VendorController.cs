@@ -96,6 +96,14 @@ namespace QuickApp.Pro.Controllers
             return Ok(allActions);
         }
 
+
+        [HttpGet("recevingpolist")]
+        public IActionResult RecevingPolist()
+        {
+            var allActions = _unitOfWork.purchaseOrder.RecevingPolist(); //.GetAllCustomersData();
+            return Ok(allActions);
+        }
+
         [HttpGet("rolist")]
         [Produces(typeof(List<RepairOrderViewModel>))]
 
