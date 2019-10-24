@@ -53,8 +53,8 @@
 
                         <tr>
                             <th *ngFor="let col of columns" [ngSwitch]="col.field">
-                                <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
-
+                                    <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
+                                <!-- <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)"> -->
                             </th>
                             <th></th>
                         </tr>

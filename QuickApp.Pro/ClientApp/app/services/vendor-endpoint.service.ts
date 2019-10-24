@@ -1279,5 +1279,14 @@ export class VendorEndpointService extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.getVendorsForDropdownEndPoint());
             });
-    }
+	}
+	
+	getVendorbillingsitenames(vendorId){
+		return this.http.get(`${this.configurations.baseUrl}/api/Vendor/vendorbillingsitenames?vendorId=${vendorId}`)
+	}
+
+	getVendorAddressById(vendorId){
+		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/vendorbillingaddressbyid?billingAddressId=${vendorId}`)
+	
+	}
 }

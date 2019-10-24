@@ -347,17 +347,17 @@
                                                 <div class="form-group col-sm-12">
                                                     <label class="control-label col-sm-4">Pay Type</label>
                                                     <div class="col-sm-7">
-                                                        <label class="radio-inline"><input type="radio" (change)="handlePayType($event)" name="paytype" id="hourpay" value="Hourly" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.hourlypayType" (click)="paytypeclick('hourly')">Hourly</label>
-                                                        <label class="radio-inline"><input type="radio" name="paytype" id="salarypay" (change)="handlePayType($event)" value="Monthly" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.yearlypayType" (click)="paytypeclick('monthly')">Monthly</label>
+                                                        <label class="radio-inline"><input type="radio" (change)="handlePayType('hourly')" name="paytype" id="hourpay" value="Hourly" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.hourlypayType">Hourly</label> <!--(click)="paytypeclick('hourly')"-->
+                                                        <label class="radio-inline"><input type="radio" name="paytype" id="salarypay" (change)="handlePayType('monthly')" value="Monthly" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.yearlypayType">Monthly</label> <!--(click)="paytypeclick('monthly')"-->
                                                     </div>
                                                 </div>
-                                                <div class="form-group col-sm-12 hourpay-block" *ngIf="hourly">
+                                                <div class="form-group col-sm-12 hourpay-block" *ngIf="hourly"> <!--hourly-->
                                                     <label class="control-label col-sm-4">Hourly Pay</label>
                                                     <div class="col-sm-7">
                                                         <input class="form-control amount" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.hourlyPay">
                                                     </div>
                                                 </div>
-                                                <div class="form-group col-sm-12 salarypay-block" *ngIf="yearly">
+                                                <div class="form-group col-sm-12 salarypay-block" *ngIf="yearly"> <!--yearly-->
                                                     <label class="control-label col-sm-4">Monthly Pay</label>
                                                     <div class="col-sm-7">
                                                         <input class="form-control amount" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.hourlyPay">

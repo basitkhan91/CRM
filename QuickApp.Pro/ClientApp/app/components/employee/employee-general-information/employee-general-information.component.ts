@@ -1023,21 +1023,21 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         }
 
     }
-    paytypeclick(click) {
-        if (click == 'hourly') {
-            this.hourly = true;
-            this.yearly = false;
-            this.sourceEmployee.isHourly = true;
-        }
-        if (click == 'monthly') {
-            if (click == 'yearly') {
-                this.yearly = true;
-                this.hourly = false;
-                this.sourceEmployee.isHourly = false;
-            }
+    // paytypeclick(click) {
+    //     if (click == 'hourly') {
+    //         this.hourly = true;
+    //         this.yearly = false;
+    //         this.sourceEmployee.isHourly = true;
+    //     }
+    //     if (click == 'monthly') {
+    //        // if (click == 'yearly') {
+    //             this.yearly = true;
+    //             this.hourly = false;
+    //             this.sourceEmployee.isHourly = false;
+    //        // }
 
-        }
-    }
+    //     }
+    // }
 
 
 
@@ -2428,13 +2428,25 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
         }
     }
-    handlePayType(evt) {
-        var target = evt.target.value;
+    handlePayType(value) {
+        //var target = evt.target.value;
 
         this.sourceEmployee.hourlyPay = null;
-
-
         this.sourceEmployee.hourlyPay = null;
+
+        if (value == 'hourly') {
+            this.hourly = true;
+            this.yearly = false;
+            this.sourceEmployee.isHourly = true;
+        }
+        if (value == 'monthly') {
+           // if (click == 'yearly') {
+                this.yearly = true;
+                this.hourly = false;
+                this.sourceEmployee.isHourly = false;
+           // }
+
+        }
 
 
     }
