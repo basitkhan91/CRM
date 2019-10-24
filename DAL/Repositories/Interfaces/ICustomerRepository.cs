@@ -59,6 +59,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID(long CustomerId, string AircraftTypeId, string AircraftModelId, string DashNumberId);
         IEnumerable<object> searchgetCustomerATAMappingDataByMultiTypeIdATAIDATASUBID(long contactId, string ATAChapterId, string ATASubChapterID);
         IEnumerable<object> GetCustomerShipviaDetails(long customerId, long addressId);
+        void CreateDocumentDetails(CustomerDocumentDetail model);
 
     }
 }
