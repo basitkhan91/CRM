@@ -107,6 +107,7 @@ namespace DAL.Repositories
                                          v.VendorName,
                                          v.VendorCode,
                                          Status = po.StatusId == 1 ? "Open" : (po.StatusId == 2 ? "Pending" : (po.StatusId == 3 ? "Fulfilling" : "Closed")),
+                                         StatusId = po.StatusId,
                                          RequestedBy = emp.FirstName,
                                          ApprovedBy = appr == null ? "" : appr.FirstName,
                                          po.CreatedDate,
