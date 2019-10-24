@@ -471,6 +471,28 @@ export class PurchaseSetupComponent {
 		
 	}
 
+	getManagementStructureDetails(id) {
+		this.commonService.getManagementStructureDetails(id).subscribe(res => {
+			console.log(res);
+			if(res.Level1) {
+				this.tempPOHeaderAddress.companyId = res.Level1;
+				this.getBUList(res.Level1);
+			}
+			if(res.Level2) {
+				this.tempPOHeaderAddress.buId = res.Level2;
+				this.getDivisionlist(res.Level2);
+			}
+			if(res.Level3) {
+				this.tempPOHeaderAddress.divisionId = res.Level3;
+				this.getDepartmentlist(res.Level3);
+			}
+			if(res.Level4) {
+				this.tempPOHeaderAddress.departmentId = res.Level4;
+			}
+
+		})
+	}
+
 	getVendorPOById(poId) {
 		this.vendorService.getWorkFlows().subscribe(
 			response => {
@@ -490,16 +512,16 @@ export class PurchaseSetupComponent {
 						vendorContactId: this.getVendorContactsListByID(res.vendorId),
 						vendorContactPhone: this.getVendorContactsListByID(res.vendorId),
 						creditLimit: res.creditLimit,
-						//creditTerms: getValueFromArrayOfObjectById('name', 'creditTermsId', res.creditTermsId, this.allcreditTermInfo),
+						creditTerms: getValueFromArrayOfObjectById('name', 'creditTermsId', res.creditTermsId, this.allcreditTermInfo),
 						requisitionerId: getObjectById('value', res.requestedBy, this.allEmployeeList),						
 						approverId: getObjectById('value', res.approverId, this.allEmployeeList),
 						approvedDate: new Date(res.dateApproved),
 						statusId: res.statusId,
 						resale: res.resale,
-						companyId: res.managementStructureId,
-						buId: 0,
-						divisionId: 0,
-						departmentId: 0,
+						companyId: this.getManagementStructureDetails(res.managementStructureId),
+						// buId: 0,
+						// divisionId: 0,
+						// departmentId: 0,
 						poMemo: res.notes,
 						shipToUserTypeId: res.shipToUserType,
 						//shipToUserId: res.shipToUserId,
