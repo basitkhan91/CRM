@@ -5,59 +5,10 @@ namespace QuickApp.Pro.ViewModels
 {
     public class RepairOrderPartViewModel
     {
-        #region OLD
-
-        //public long RepairOrderPartRecordId { get; set; }
-        //public long RepairOrderId { get; set; }
-        //public long ItemMasterId { get; set; }
-        //public string SerialNumber { get; set; }
-        //public bool NonInventory { get; set; }
-        //public string RequisitionedBy { get; set; }
-        //public Nullable<System.DateTime> RequisitionedDate { get; set; }
-        //public string Approver { get; set; }
-        //public Nullable<System.DateTime> ApprovedDate { get; set; }
-        //public Nullable<System.DateTime> NeedByDate { get; set; }
-        //public string Manufacturer { get; set; }
-        //public string Status { get; set; }
-        //public string Trace { get; set; }
-        //public string ConditionCode { get; set; }
-        //public Nullable<long> UOMId { get; set; }
-        //public Nullable<short> QuantityOrdered { get; set; }
-        //public Nullable<decimal> UnitCost { get; set; }
-        //public Nullable<short> DiscountPerUnit { get; set; }
-        //public Nullable<short> DiscountCostPerUnit { get; set; }
-        //public Nullable<decimal> ExtendedCost { get; set; }
-        //public Nullable<int> TransactionalCurrencyId { get; set; }
-        //public Nullable<int> FunctionalCurrencyId { get; set; }
-        //public Nullable<decimal> ForeignExchangeRate { get; set; }
-        //public Nullable<long> WorkOrderId { get; set; }
-
-        //public Nullable<long> SalesOrderId { get; set; }
-        //public Nullable<int> GeneralLedgerAccounId { get; set; }
-        //public string Memo { get; set; }
-        //public Nullable<short> ROPartSplitUserTypeId { get; set; }
-        //public string ROPartSplitUserName { get; set; }
-        //public string ROPartSplitAddress1 { get; set; }
-        //public string ROPartSplitAddress2 { get; set; }
-        //public string ROPartSplitAddress3 { get; set; }
-        //public string ROPartSplitCity { get; set; }
-        //public string ROPartSplitState { get; set; }
-        //public string ROPartSplitPostalCode { get; set; }
-        //public string ROPartSplitCountry { get; set; }
-        //public Nullable<long> ManagementStructureId { get; set; }
-        //public string CreatedBy { get; set; }
-        //public string UpdatedBy { get; set; }
-        //public System.DateTime CreatedDate { get; set; }
-        //public System.DateTime UpdatedDate { get; set; }
-        //public Nullable<bool> IsActive { get; set; }
-        //public bool? isParent { get; set; }
-
-        #endregion
-
         public long RepairOrderId { get; set; }
         public bool? IsParent { get; set; }
         public long ItemMasterId { get; set; }
-        public string SerialNumber { get; set; }
+        public int SerialNumber { get; set; }
         public DateTime? NeedByDate { get; set; }
         public int? UOMId { get; set; }
         public int? QuantityOrdered { get; set; }
@@ -72,16 +23,13 @@ namespace QuickApp.Pro.ViewModels
         public int? ManagementStructureId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
-
-        #region NEW FIELDS
-
         public string AssetId { get; set; }
         public int? PartNumberId { get; set; }
         public int? AlternatePartNumberId { get; set; }
         public int? ItemTypeId { get; set; }
-        public int? MenufacturerId { get; set; }
+        public int? ManufacturerId { get; set; }
         public int? GlAccountId { get; set; }
         public int? ConditionId { get; set; }
         public decimal? DiscountAmount { get; set; }
@@ -110,18 +58,16 @@ namespace QuickApp.Pro.ViewModels
         public string RoPartSplitUserTypeId { get; set; }
         public int? RoPartSplitUserId { get; set; }
         public int? RoPartSplitAddressId { get; set; }
-
-        public List<RepairOrderPartChild> ChildObjects { get; set; }
-
-        #endregion
+        public int? ParentId { get; set; }
+        public List<ChildObj> childobj { get; set; }
     }
 
-    public class RepairOrderPartChild
+    public class ChildObj
     {
         public long RepairOrderId { get; set; }
         public bool? IsParent { get; set; }
         public long ItemMasterId { get; set; }
-        public string SerialNumber { get; set; }
+        public int SerialNumber { get; set; }
         public string AssetId { get; set; }
         public int? PartNumberId { get; set; }
         public int? UOMId { get; set; }
