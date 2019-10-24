@@ -721,8 +721,12 @@ namespace DAL.Repositories
                             select new
                             {
                                 sv.ShippingViaId,
-                                sv.Name
-                            }).OrderBy(p => p.Name).ToList();
+                                sv.Name,
+								sv.ShippingAccountInfo,
+								sv.ShippingURL,
+								sv.ShippingId,
+								sv.Memo
+							}).OrderBy(p => p.Name).ToList();
                 return list;
             }
             catch (Exception)

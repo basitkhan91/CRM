@@ -263,6 +263,8 @@ namespace DAL.Repositories
 
 		}
 
+
+
 		public IEnumerable<object> GetAllCustomersData()
 		{
 			var data = (from t in _appContext.Customer
@@ -1351,6 +1353,9 @@ namespace DAL.Repositories
                 throw;
             }
         }
+
+
+
 
 
 		private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

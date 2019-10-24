@@ -175,8 +175,8 @@ export class CustomerService {
     }
 
     getCustomerdataById(customerId: any) {
-        return Observable.forkJoin(
-            this.customerEndpoint.getCustomerListByid<any>(customerId));
+
+        return this.customerEndpoint.getCustomerListByid<any>(customerId);
     }
 
     getSalespersondata(customerId: any) {
