@@ -134,15 +134,21 @@
                     <div class="col-sm-12">
                         <p>
                             <span class="label">
-                                <b>Id: </b>
+                                <b>Description: </b>
                             </span>
                             <span class="value">{{itemDetails.description}}</span>
                         </p>
                         <p>
                             <span class="label">
-                                <b>Name: </b>
+                                <b>Memo: </b>
                             </span>
                             <span class="value">{{itemDetails.memo}}</span>
+                        </p>
+                        <p>
+                            <span class="label">
+                                <b>Active: </b>
+                            </span>
+                            <span class="value">{{itemDetails.isActive ? 'true' : 'false'}}</span>
                         </p>
                         <p>
                             <span class="label">
@@ -193,7 +199,7 @@
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="description" class="control-label">GLC Id</label>
+                                    <label for="description" class="control-label">Description</label>
                                 </div>
                                 <div class="col-sm-5">
                                     <textarea class="text-item" #memo="ngModel" id="description" name="description" [(ngModel)]="currentRow.description" minlength="2" format="number" (onChange)="check"></textarea>
@@ -270,8 +276,8 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>GLC Id</th>
-                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>Memo</th>
                                     <th>Active</th>
                                     <th>Last Updated By</th>
                                     <th>Last Updated Time</th>

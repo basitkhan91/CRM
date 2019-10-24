@@ -42,6 +42,7 @@ namespace QuickApp.Pro.Controllers
                     item.UpdatedDate = DateTime.Now;
                     item.UpdatedBy = item.CreatedBy;      //[dbo].[ExpenditureCategory].[UpdatedBy] not null in schema definition
                     item.IsActive = true;
+                    item.IsDelete = false;
                     item.MasterCompanyId = 1;
                     bool isDuplicate = _unitOfWork.ExpenditureCategoryRepository.IsDuplicate(item, existingItems);
                     if (!isDuplicate)
@@ -128,6 +129,7 @@ namespace QuickApp.Pro.Controllers
                 existingItem.UpdatedDate = DateTime.Now;
                 existingItem.UpdatedBy = item.UpdatedBy;
                 existingItem.IsActive = item.IsActive;
+                existingItem.IsDelete = false;
                 existingItem.Description = item.Description;
                 existingItem.Memo = item.Memo;
                 //_unitOfWork.Repository<ExpenditureCategory>().Update(item);

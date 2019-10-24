@@ -80,8 +80,8 @@ export class ExpenditureCategoryComponent implements OnInit {
         if (itemExists) {
             this.currentModeOfOperation = ModeOfOperation.Update;
             item.updatedBy = this.userName;
-            item.isDelete = true;
-            this.coreDataService.update(item).subscribe(response => {
+            //item.isDelete = true;
+            this.coreDataService.remove(item.expenditureCategoryId).subscribe(response => {
                 this.alertService.showMessage('Success', this.rowName + " removed successfully.", MessageSeverity.success);
                 this.getItemList();
             });
@@ -188,14 +188,14 @@ export class ExpenditureCategoryComponent implements OnInit {
     //Step x: load all the required data for the page to function
     private loadData() {
         this.getItemList();
-        this.rowName = "GL Account Category";
-        this.header = "GL Account Category";
+        this.rowName = "Expenditure Category";
+        this.header = "Expenditure Category";
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-expenditure-category';
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
         //Step x: Add the required details for dropdown options/column header
         this.columnHeaders = [
-            { field: 'glcid', header: 'GLC Id', index: 1, showByDefault: true },
-            { field: 'ExpenditureCategoryName', header: 'Name', index: 2, showByDefault: true }
+            { field: 'description', header: 'Description', index: 1, showByDefault: true },
+            { field: 'memo', header: 'Memo', index: 2, showByDefault: true }
         ];
         this.currentModeOfOperation = ModeOfOperation.None;
         this.selectedColumns = this.columnHeaders;
