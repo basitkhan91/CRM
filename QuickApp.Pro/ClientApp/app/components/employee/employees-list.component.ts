@@ -64,7 +64,7 @@ export class EmployeesListComponent implements OnInit {
     public compnayname: any;
     public shiftId: any;
     public supervisiorname: any;
-    public empTrainningInfo: any; 
+    public empTrainningInfo: any;
     public leaveMapArray: any;
     public shiftMapArray: any;
 
@@ -110,6 +110,7 @@ export class EmployeesListComponent implements OnInit {
 
     }
     private onemployeeDataLoadSuccessful(allWorkFlows: any[]) {
+        console.log(allWorkFlows);
         if (allWorkFlows[0].employeeLeaveTypeMapping != null) {
             this.employeeLeaveType = allWorkFlows[0].employeeLeaveTypeMapping.employeeLeaveTypeId;
             this.shiftId = allWorkFlows[0].employeeShiftMapping.shiftId;
@@ -294,8 +295,8 @@ export class EmployeesListComponent implements OnInit {
         if (row.empSupervisor != null) {
             this.supervisiorname = row.empSupervisor.firstName
         }
-        this.originationCounty = row.orgCountries.countries_name;
-        this.nationalCountry = row.nationalCountryId.countries_name;
+        this.originationCounty = row.orgCountries ? row.orgCountries.countries_name : '';
+        this.nationalCountry = row.nationalCountryId ? row.nationalCountryId.countries_name : '';
 
         if (row.employeeExpertise != null) {
             this.empExpertisedescription = row.employeeExpertise.description
