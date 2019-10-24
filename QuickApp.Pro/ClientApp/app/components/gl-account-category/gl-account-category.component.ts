@@ -5,21 +5,21 @@ import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { AuthService } from "../../services/auth.service";
 import { AuditHistory } from '../../models/audithistory.model';
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
-import { StageCode } from "../../models/stage-code.model";
-import { StageCodeService } from "../../services/stage-code/stage-code.service";
+import { GLAccountCategory } from "../../models/gl-account-category.model";
+import { GLAccountCategoryService } from "../../services/gl-account-category/gl-account-category.service";
 import { ModeOfOperation } from "../../models/ModeOfOperation.enum";
 
 @Component({
-    selector: 'app-stage-code',
-    templateUrl: './stage-code.component.html',
+    selector: 'app-gl-account-category',
+    templateUrl: './gl-account-category.component.html',
     styleUrls: [],
     animations: [fadeInOut]
 })
-export class StageCodeComponent implements OnInit {
-    itemList: StageCode[];
+export class GLAccountCategoryComponent implements OnInit {
+    itemList: GLAccountCategory[];
     columnHeaders: any[];
     itemDetails: any;
-    currentRow: StageCode;
+    currentRow: GLAccountCategory;
     currentModeOfOperation: ModeOfOperation;
     rowName: string;
     header: string;
@@ -31,7 +31,7 @@ export class StageCodeComponent implements OnInit {
     modal: NgbModalRef;
     selectedColumns: any[];
     auditHistory: any[];
-    constructor(private breadCrumb: SingleScreenBreadcrumbService, private alertService: AlertService, private coreDataService: StageCodeService, private modalService: NgbModal, private authService: AuthService) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private alertService: AlertService, private coreDataService: GLAccountCategoryService, private modalService: NgbModal, private authService: AuthService) {
     }
     ngOnInit(): void {
         //gather up all the required data to be displayed on the screen 
@@ -46,7 +46,7 @@ export class StageCodeComponent implements OnInit {
 
     //Step E1: Open row up for editing
     addNewItem(): void {
-        this.currentRow = this.newItem(0);
+        this.currentRow = new GLAccountCategory();
         this.currentModeOfOperation = ModeOfOperation.Add;
     }
 
@@ -62,14 +62,14 @@ export class StageCodeComponent implements OnInit {
     //Check if asset type exists before add/delete
     checkItemExists(rowData): boolean {
         this.getItemList();
-        let item = this.newItem(rowData);
-        const exists = this.itemList.some(existingItem => existingItem.stageCodeId === item.stageCodeId);
+        let item = rowData as GLAccountCategory;
+        const exists = this.itemList.some(existingItem => existingItem.glcid === item.glcid && existingItem.glAccountCategoryName === item.glAccountCategoryName);
         return exists;
     }
 
     //Open the confirmation to delete
     confirmItemDelete(rowData) {
-        this.currentRow = this.newItem(rowData);
+        this.currentRow = rowData as GLAccountCategory;
         this.currentModeOfOperation = ModeOfOperation.Delete;
     }
 
@@ -91,7 +91,7 @@ export class StageCodeComponent implements OnInit {
 
     //Close open modal
     dismissModal() {
-        this.currentRow = this.newItem(0);
+        this.currentRow = new GLAccountCategory();
         this.auditHistory = [];
         this.currentModeOfOperation = ModeOfOperation.None;
     }
@@ -100,31 +100,28 @@ export class StageCodeComponent implements OnInit {
     getItemList() {
         this.coreDataService.getAll().subscribe(res => {
             const responseData = res[0];
-            this.itemList = responseData;
+            const itemList = [];
+            responseData.forEach(function (item) {
+                let nItem = item as GLAccountCategory;
+                itemList.push(nItem);
+            });
+            this.itemList = itemList;
             this.totalRecords = responseData.length;
             this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
         })
     }
 
-    newItem(rowData): StageCode {
-        let item = new StageCode();
-        let defaultUserName = "admin";
-        if (rowData) {
-            item.stageCodeId = rowData.stageCodeId || 0;
-            item.gateCode = rowData.gateCode || (rowData.gateCode || "");
-            item.description = rowData.description || (rowData.description || "");
-            item.sequence = rowData.sequence || (rowData.sequence || "");
-            item.memo = rowData.memo || (rowData.memo || "");
-            item.updatedBy = this.userName || defaultUserName;
-            item.createdBy = this.userName || defaultUserName;
-            item.isActive = rowData.isActive || false;
-            item.isDelete = rowData.isDelete || false;
-        }
+    newItem(rowData): GLAccountCategory {
+        let userName = this.userName || "admin";
+        rowData.isActive = rowData.isActive || false;
+        rowData.isDelete = rowData.isDelete || false;
+        let item = new GLAccountCategory(rowData.glAccountCategoryId, rowData.glAccountCategoryName, rowData.glcid, rowData.createdBy, rowData.createdDate, rowData.updatedDate, userName, rowData.isActive, rowData.isDelete);
+        debugger;
         return item;
     }
 
     openItemForEdit(rowData): void {
-        this.currentRow = this.newItem(rowData);
+        this.currentRow = rowData as GLAccountCategory;
         this.currentModeOfOperation = ModeOfOperation.Update;
     }
 
@@ -143,7 +140,7 @@ export class StageCodeComponent implements OnInit {
     }
 
     saveExistingItem(rowData): void {
-        let item = this.newItem(rowData);
+        let item = rowData as GLAccountCategory;
         var itemExists = this.checkItemExists(item);
         if (itemExists) {
             this.currentModeOfOperation = ModeOfOperation.Update;
@@ -161,8 +158,8 @@ export class StageCodeComponent implements OnInit {
     //Open the audit history modal.
     showHistory(rowData): void {
         this.currentModeOfOperation = ModeOfOperation.Audit;
-        let item = this.newItem(rowData);
-        this.coreDataService.getItemAuditById(item.stageCodeId).subscribe(audits => {
+        let item = rowData as GLAccountCategory;
+        this.coreDataService.getItemAuditById(item.glAccountCategoryId).subscribe(audits => {
             if (audits[0].length > 0) {
                 this.auditHistory = audits[0];
             }
@@ -170,13 +167,13 @@ export class StageCodeComponent implements OnInit {
     }
 
     showItemEdit(rowData): void {
-        this.currentRow = this.newItem(rowData);
+        this.currentRow = rowData as GLAccountCategory;
         this.currentModeOfOperation = ModeOfOperation.Update;
     }
 
     //turn the item active/inActive
     toggleActiveStatus(rowData) {
-        this.currentRow = this.newItem(rowData);
+        this.currentRow = rowData as GLAccountCategory;
         this.saveExistingItem(this.currentRow);
     }
 
@@ -191,20 +188,18 @@ export class StageCodeComponent implements OnInit {
     //Step x: load all the required data for the page to function
     private loadData() {
         this.getItemList();
-        this.rowName = "Stage Code";
-        this.header = "Stage Code";
-        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-stage-code';
+        this.rowName = "GL Account Category";
+        this.header = "GL Account Category";
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-gl-account-category';
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
         //Step x: Add the required details for dropdown options/column header
         this.columnHeaders = [
-            { field: 'gateCode', header: 'Gate Code', index: 1, showByDefault: true },
-            { field: 'description', header: 'Description', index: 2, showByDefault: true },
-            { field: 'sequence', header: 'Sequence', index: 3, showByDefault: true },
-            { field: 'memo', header: 'Memo', index: 4, showByDefault: true }
+            { field: 'glcid', header: 'GLC Id', index: 1, showByDefault: true },
+            { field: 'glAccountCategoryName', header: 'Name', index: 2, showByDefault: true }
         ];
         this.currentModeOfOperation = ModeOfOperation.None;
         this.selectedColumns = this.columnHeaders;
-        this.currentRow = this.newItem(0);
+        this.currentRow = new GLAccountCategory();
     }
 
 }

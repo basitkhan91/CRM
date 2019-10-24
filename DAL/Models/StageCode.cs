@@ -24,7 +24,6 @@ namespace DAL.Models
         public bool? IsDelete { get; set; }
 
         [NotMapped]
-        public UploadTag UploadStatus { get; set; }
-
+        public UploadTag UploadTag { get; set; }
     }
 }

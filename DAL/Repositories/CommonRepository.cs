@@ -246,16 +246,17 @@ namespace DAL.Repositories
             {
                 if (restrictedParts != null && restrictedParts.Count > 0)
                 {
-                    
+
                     restrictedParts.ForEach(p =>
                     {
                         p.ReferenceId = referenceId;
-                        p.PartNumber = GetRestrictedPartName(p.MasterPartId,moduleId);
+                        p.PartNumber = GetRestrictedPartName(p.MasterPartId, moduleId);
                         p.ModuleId = moduleId;
                         p.IsDeleted = false;
                         p.IsActive = true;
-                        p.CreatedDate = p.UpdatedDate = DateTime.Now; });
-                    
+                        p.CreatedDate = p.UpdatedDate = DateTime.Now;
+                    });
+
                     _appContext.RestrictedParts.AddRange(restrictedParts);
                     _appContext.SaveChanges();
                 }
@@ -273,15 +274,17 @@ namespace DAL.Repositories
             {
                 if (customerTaxTypeRateMappings != null && customerTaxTypeRateMappings.Count > 0)
                 {
-                    
+
                     customerTaxTypeRateMappings
-                        .ForEach(p => { p.CustomerId = referenceId;
-                                        p.IsDeleted = false;
-                                        p.CreatedDate =  DateTime.Now;
-                                        p.MasterCompanyId = 1;
-                                        p.CreatedBy = p.CreatedBy ?? "admin";
-                                        p.UpdatedBy = p.UpdatedBy ?? "admin";
-                                        p.UpdatedDate = System.DateTime.Now;
+                        .ForEach(p =>
+                        {
+                            p.CustomerId = referenceId;
+                            p.IsDeleted = false;
+                            p.CreatedDate = DateTime.Now;
+                            p.MasterCompanyId = 1;
+                            p.CreatedBy = p.CreatedBy ?? "admin";
+                            p.UpdatedBy = p.UpdatedBy ?? "admin";
+                            p.UpdatedDate = System.DateTime.Now;
                         });
                     _appContext.CustomerTaxTypeRateMapping.AddRange(customerTaxTypeRateMappings);
                     _appContext.SaveChanges();
@@ -294,11 +297,11 @@ namespace DAL.Repositories
             }
         }
 
-        public void UpdateRestrictedParts(List<RestrictedParts> restrictedParts, long referenceId,int moduleId)
+        public void UpdateRestrictedParts(List<RestrictedParts> restrictedParts, long referenceId, int moduleId)
         {
             try
             {
-               
+
                 if (restrictedParts != null && restrictedParts.Count > 0)
                 {
                     foreach (var item in restrictedParts)
@@ -306,7 +309,7 @@ namespace DAL.Repositories
                         item.PartNumber = GetRestrictedPartName(item.MasterPartId, moduleId);
                         if (item.RestrictedPartId > 0)
                         {
-                           
+
                             _appContext.RestrictedParts.Update(item);
                         }
                         else
@@ -645,11 +648,11 @@ namespace DAL.Repositories
         }
 
 
-        public IEnumerable<object> BindDropdowns(string tableName, string primaryColumn, string textColumn,long count)
+        public IEnumerable<object> BindDropdowns(string tableName, string primaryColumn, string textColumn, long count)
         {
             try
             {
-                var result = _appContext.Dropdowns.FromSql("BindDropdowns @p0,@p1,@p2,@p3", tableName, primaryColumn, textColumn,count).ToList();
+                var result = _appContext.Dropdowns.FromSql("BindDropdowns @p0,@p1,@p2,@p3", tableName, primaryColumn, textColumn, count).ToList();
                 return result;
             }
             catch (Exception)
@@ -709,7 +712,7 @@ namespace DAL.Repositories
         }
 
 
-        public IEnumerable<object> BindShipViaDetails(int userType,long referenceId)
+        public IEnumerable<object> BindShipViaDetails(int userType, long referenceId)
         {
             try
             {
@@ -719,7 +722,7 @@ namespace DAL.Repositories
                             {
                                 sv.ShippingViaId,
                                 sv.Name
-                            }).OrderBy(p=>p.Name).ToList();
+                            }).OrderBy(p => p.Name).ToList();
                 return list;
             }
             catch (Exception)
@@ -797,13 +800,13 @@ namespace DAL.Repositories
             try
             {
                 var data = (from im in _appContext.ItemMaster
-                    join mp in _appContext.MasterParts on im.MasterPartId equals mp.MasterPartId 
-                    where (im.MasterCompanyId == masterCompanyId)
-                    select new
-                    {
-                        mp.PartNumber,
-                        mp.MasterPartId
-                    }).Where(m => m.MasterPartId == masterPartId).Select(p=>p.PartNumber).SingleOrDefault();
+                            join mp in _appContext.MasterParts on im.MasterPartId equals mp.MasterPartId
+                            where (im.MasterCompanyId == masterCompanyId)
+                            select new
+                            {
+                                mp.PartNumber,
+                                mp.MasterPartId
+                            }).Where(m => m.MasterPartId == masterPartId).Select(p => p.PartNumber).SingleOrDefault();
                 if (!String.IsNullOrWhiteSpace(data))
                     return data;
                 else return null;
@@ -815,6 +818,61 @@ namespace DAL.Repositories
             }
         }
 
+
+        public Dictionary<string, long> GetManagementStructure(long manmgStrucId)
+        {
+            Dictionary<string, long> keyValuePairs = new Dictionary<string, long>();
+            ManagementStructure level4 = null;
+            ManagementStructure level3=null;
+            ManagementStructure level2 = null;
+            ManagementStructure level1 = null;
+            try
+            {
+                level4 = _appContext.ManagementStructure.Where(p => p.IsDelete == false && p.ManagementStructureId == manmgStrucId).FirstOrDefault();
+                if (level4 != null && level4.ParentId > 0)
+                {
+                    level3 = _appContext.ManagementStructure.Where(p => p.IsDelete == false && p.ManagementStructureId == level4.ParentId).FirstOrDefault();
+                }
+                if (level3 != null && level3.ParentId > 0)
+                {
+                    level2 = _appContext.ManagementStructure.Where(p => p.IsDelete == false && p.ManagementStructureId == level3.ParentId).FirstOrDefault();
+                }
+                if (level2 != null && level2.ParentId > 0)
+                {
+                    level1 = _appContext.ManagementStructure.Where(p => p.IsDelete == false && p.ManagementStructureId == level2.ParentId).FirstOrDefault();
+                }
+                
+
+                if (level4 != null && level3 != null && level2 != null && level1 != null)
+                {
+                    keyValuePairs.Add("Level4", level4.ManagementStructureId);
+                    keyValuePairs.Add("Level3", level3.ManagementStructureId);
+                    keyValuePairs.Add("Level2", level2.ManagementStructureId);
+                    keyValuePairs.Add("Level1", level1.ManagementStructureId);
+                }
+                else if(level4 != null && level2 != null && level3 != null)
+                {
+                    keyValuePairs.Add("Level3", level4.ManagementStructureId);
+                    keyValuePairs.Add("Level2", level3.ManagementStructureId);
+                    keyValuePairs.Add("Level1", level2.ManagementStructureId);
+                }
+                else if (level4 != null && level3 != null)
+                {
+                    keyValuePairs.Add("Level2", level4.ManagementStructureId);
+                    keyValuePairs.Add("Level1", level3.ManagementStructureId);
+                }
+                else if (level4 != null)
+                {
+                    keyValuePairs.Add("Level1", level4.ManagementStructureId);
+                }
+                return keyValuePairs;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }

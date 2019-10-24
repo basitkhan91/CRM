@@ -189,6 +189,20 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("deletepo")]
+        public IActionResult DeletePurchaseOrder(long purchaseOrderId, string updatedBy)
+        {
+            _unitOfWork.purchaseOrder.DeletePurchaseOrder(purchaseOrderId, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("postatus")]
+        public IActionResult PurchaseOrderStatus(long purchaseOrderId,bool status, string updatedBy)
+        {
+            _unitOfWork.purchaseOrder.PurchaseOrderStatus(purchaseOrderId, status, updatedBy);
+            return Ok();
+        }
+
     }
 
 }

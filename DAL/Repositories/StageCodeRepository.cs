@@ -20,12 +20,6 @@ namespace DAL.Repositories
             AppSettings = settings.Value;
         }
 
-        public IEnumerable<StageCode> getAllItems()
-        {
-            var data = _appContext.StageCode.Where(c => !(c.IsDelete ?? false)).OrderByDescending(c => c.StageCodeId).ToList();
-            return data;
-        }
-
         public IEnumerable<StageCode> BulkUpload(IFormFile file)
         {
             IEnumerable<StageCode> items;
@@ -34,17 +28,17 @@ namespace DAL.Repositories
             items = dataExtractor.Extract(file, ModuleEnum.StageCode);
 
             items = TagItems(items);
-            foreach (var item in items.Where(item => item.UploadStatus == UploadTag.Unique))
+            foreach (var item in items.Where(item => item.UploadTag == UploadTag.Unique))
             {
                 try
                 {
                     _appContext.StageCode.Add(item);
                     _appContext.SaveChanges();
-                    item.UploadStatus = UploadTag.Success;
+                    item.UploadTag = UploadTag.Success;
                 }
                 catch (Exception ex)
                 {
-                    item.UploadStatus = UploadTag.Failed;
+                    item.UploadTag = UploadTag.Failed;
                     //log exception
                 }
             }
@@ -52,9 +46,37 @@ namespace DAL.Repositories
             return items;
         }
 
+        public IEnumerable<StageCode> GetAllItems()
+        {
+            var data = _appContext.StageCode.Where(c => !(c.IsDelete ?? false)).OrderByDescending(c => c.StageCodeId).ToList();
+            return data;
+        }
+
+        public bool IsDuplicate(StageCode item, IEnumerable<StageCode> existingItems = null)
+        {
+            if (existingItems == null || !existingItems.Any())
+            {
+                existingItems = GetAllItems();
+            }
+            return existingItems.Any(existingItem => existingItem.StageCodeId != item.StageCodeId &&
+                                            existingItem.GateCode == item.GateCode &&
+                                            existingItem.Description == item.Description &&
+                                            existingItem.Sequence == item.Sequence &&
+                                            existingItem.Memo == item.Memo);
+        }
+
+        public bool IsValid(StageCode item)
+        {
+            return
+                !string.IsNullOrWhiteSpace(item.GateCode) &&
+                !string.IsNullOrWhiteSpace(item.Description) &&
+                !string.IsNullOrWhiteSpace(item.Sequence) &&
+                !string.IsNullOrWhiteSpace(item.Memo);
+        }
+
         private IEnumerable<StageCode> TagItems(IEnumerable<StageCode> items)
         {
-            IEnumerable<StageCode> existingItems = getAllItems();
+            IEnumerable<StageCode> existingItems = GetAllItems();
             bool isItemUnique = false;
             bool isItemValid = false;
 
@@ -64,29 +86,21 @@ namespace DAL.Repositories
                 if (isItemValid)
                 {
                     isItemUnique = existingItems.Any(existingItem =>
-                                                                    existingItem.GateCode == item.GateCode ||
-                                                                    existingItem.Description == item.Description ||
-                                                                    existingItem.Sequence == item.Sequence ||
+                                                                    existingItem.GateCode == item.GateCode &&
+                                                                    existingItem.Description == item.Description &&
+                                                                    existingItem.Sequence == item.Sequence &&
                                                                     existingItem.Memo == item.Memo
                                                                     );
-                    item.UploadStatus = isItemUnique ? UploadTag.Unique : UploadTag.Duplicate;
+                    item.UploadTag = isItemUnique ? UploadTag.Unique : UploadTag.Duplicate;
                 }
                 else
                 {
-                    item.UploadStatus = UploadTag.Invalid;
+                    item.UploadTag = UploadTag.Invalid;
                 }
             }
             return items;
         }
 
-        private bool IsValid(StageCode item)
-        {
-            return
-                string.IsNullOrWhiteSpace(item.GateCode) &&
-                string.IsNullOrWhiteSpace(item.Description) &&
-                string.IsNullOrWhiteSpace(item.Sequence) &&
-                string.IsNullOrWhiteSpace(item.Memo);
-        }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 

@@ -124,6 +124,12 @@ export class EmployeeService {
     employeeLeavetypeAdd(employee: any) {
         return this.employeeEndpoint.employeeLeavetypeAdd<any>(employee);
     }
+    employeeLeavetypeRemove(employee: any) {
+        return this.employeeEndpoint.employeeLeavetypeRemove<any>(employee);
+    }
+    employeeshifttypeRemove(employee: any) {
+        return this.employeeEndpoint.employeeshifttypeRemove<any>(employee);
+    }
     employeeShifttypeAdd(employee: any) {
         return this.employeeEndpoint.employeeShifttypeAdd<any>(employee);
     }

@@ -6,7 +6,10 @@ namespace DAL.Repositories.Interfaces
 {
     public interface IStageCodeRepository : IRepository<StageCode>
     {
-        IEnumerable<StageCode> getAllItems();
+        IEnumerable<StageCode> GetAllItems();
         IEnumerable<StageCode> BulkUpload(IFormFile file);
+        bool IsValid(StageCode item);
+        bool IsDuplicate(StageCode item, IEnumerable<StageCode> existingItems);
+
     }
 }

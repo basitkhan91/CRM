@@ -25,5 +25,7 @@ namespace DAL.Repositories.Interfaces
 
         object PurchaseOrderById(long purchaseOrderId);
         List<PurchaseOrderPart> GetPurchaseOrderParts(long purchaseOrderId);
+        void DeletePurchaseOrder(long purchaseOrderId, string updatedBy);
+        void PurchaseOrderStatus(long purchaseOrderId, bool status, string updatedBy);
     }
 }

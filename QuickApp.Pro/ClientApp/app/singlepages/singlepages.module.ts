@@ -74,7 +74,6 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { BreadcrumbModule } from 'primeng/breadcrumb'; //bread crumb
 import { SingleScreenBreadcrumbService } from "../services/single-screens-breadcrumb.service";
 import { WarehouseComponent } from "../components/warehouse/warehouse.component";
-import { GLAccountCategoryComponent } from "../components/gl-account-categories/gl-account-categories.component";
 import { ManufacturerComponent } from "../components/manufacturer/manufacturer.component";
 import { VendorcapabilitiesComponent } from "../components/vendorcapabilities/vendorcapabilities.component";
 //import { VendorcapabilitiesComponent } from "../components/vendor-capabilities/vendor-capabilities.component";
@@ -111,7 +110,9 @@ import { AssetIntangibleTypeComponent } from "../components/asset-intangible-typ
 import { StageCodeEndpointService } from "../services/stage-code/stage-code-endpoint.service";
 import { StageCodeService } from "../services/stage-code/stage-code.service";
 import { StageCodeComponent } from "../components/stage-code/stage-code.component";
-import { CreateAssetComponent } from "../components/Asset-Management/Asset-pages/create-asset/create-asset.component";
+import { GLAccountCategoryComponent } from "../components/gl-account-category/gl-account-category.component";
+import { GLAccountCategoryEndpointService } from "../services/gl-account-category/gl-account-category-endpoint.service";
+import { GLAccountCategoryService } from "../services/gl-account-category/gl-account-category.service";
 import { AuditModule } from "../audit/audit.module";
 import { AircraftManufacturerComponent } from "../components/aircraft-manufacturer/aircraft-manufacturer.component";
 import { AircraftManufacturerService } from "../services/aircraft-manufacturer/aircraftManufacturer.service";
@@ -171,6 +172,7 @@ import { CommonService } from "../services/common.service";
         AssetIntangibleTypeComponent,
         AssetTypeComponent,
         StageCodeComponent,
+        GLAccountCategoryComponent,
         IntegrationComponent,
         ItemClassificationComponent,
         ItemGroupComponent,
@@ -241,6 +243,8 @@ import { CommonService } from "../services/common.service";
         AssetIntangibleTypeEndpointService,
         StageCodeService,
         StageCodeEndpointService,
+        GLAccountCategoryService,
+        GLAccountCategoryEndpointService,
         AircraftManufacturerService,
         AircraftManufacturerEndpointService,
         AircraftModelService,

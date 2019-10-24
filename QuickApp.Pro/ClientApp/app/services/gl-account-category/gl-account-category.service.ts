@@ -3,35 +3,35 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
-import { StageCode } from '../../models/stage-code.model';
-import { StageCodeEndpointService } from './stage-code-endpoint.service';
+import { GLAccountCategory } from '../../models/gl-account-category.model';
+import { GLAccountCategoryEndpointService } from './gl-account-category-endpoint.service';
 @Injectable()
-export class StageCodeService {
+export class GLAccountCategoryService {
 
-    constructor(private endpointService: StageCodeEndpointService) {
+    constructor(private endpointService: GLAccountCategoryEndpointService) {
     }
 
     getAll() {
         return Observable.forkJoin(
-            this.endpointService.getAllItems<StageCode[]>()
+            this.endpointService.getAllItems<GLAccountCategory[]>()
         );
     }
 
     getById(id: number) {
         return Observable.forkJoin(
-            this.endpointService.getItemById<StageCode>(id)
+            this.endpointService.getItemById<GLAccountCategory>(id)
         );
     }
 
-    add(item: StageCode) {
+    add(item: GLAccountCategory) {
         return Observable.forkJoin(
-            this.endpointService.addItem<StageCode>(item)
+            this.endpointService.addItem<GLAccountCategory>(item)
         );
     }
 
-    update(item: StageCode) {
+    update(item: GLAccountCategory) {
         return Observable.forkJoin(
-            this.endpointService.updateItem<StageCode>(item)
+            this.endpointService.updateItem<GLAccountCategory>(item)
         );
     }
 
@@ -42,7 +42,6 @@ export class StageCodeService {
     }
 
     getItemAuditById(id: number) {
-        debugger;
         return Observable.forkJoin(
             this.endpointService.getItemAudit<any[]>(id)
         );
