@@ -1283,7 +1283,7 @@ export class VendorEndpointService extends EndpointFactory {
 	}
 
 	getVendorAddressById(vendorId){
-		return this.http.get(`${this.configurations.baseUrl}/api/Vendor/vendorbillingaddressbyid?billingAddressId=${vendorId}`)
+		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/vendorbillingaddressbyid?billingAddressId=${vendorId}`)
 	
 	}
 }

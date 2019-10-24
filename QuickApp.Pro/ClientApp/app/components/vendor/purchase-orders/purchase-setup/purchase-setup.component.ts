@@ -57,7 +57,7 @@ export class PurchaseSetupComponent {
 	editChildList: any[] = [];
 	vendorSelectedforSplit: any[];
 	spiltshipmentData: any[][];
-	vendorSelectedForBillTo: any[];
+	vendorSelectedForBillTo: any;
 	shipToCusData: any[] = [];
 	vendorSelected: any[] = [];
 	billToCusData: any;
@@ -2678,9 +2678,60 @@ export class PurchaseSetupComponent {
 	getValueforBillTo(data, id) {
 		console.log(data, id);
 		if (data.billToUserTypeId == 1) {
-			this.billToAddress = getObjectById('customerShippingAddressId', id, this.billToCusData);
+
+
+
+				// this.customerService.getCustomerBillViaDetails(id).subscribe(res => {
+			 
+
+					const resp =  getObjectById('customerBillingAddressId', id , this.billToCusData );
+					console.log(resp , id )
+			
+				if (resp) {
+					this.billToAddress.address1 = resp.address1;
+					this.billToAddress.address2 = resp.address2;
+					this.billToAddress.address3 = resp.address3;
+					this.billToAddress.city = resp.city;
+					this.billToAddress.stateOrProvince = resp.stateOrProvince;
+					this.billToAddress.postalCode = resp.postalCode;
+					this.billToAddress.country = resp.country;
+				} else {
+					this.billToAddress.address1 = '';
+					this.billToAddress.address2 = '';
+					this.billToAddress.address3 = '';
+					this.billToAddress.city = '';
+					this.billToAddress.stateOrProvince = '';
+					this.billToAddress.postalCode = '';
+					this.billToAddress.country = '';
+				}
+
+				// })
+
+
+			// this.billToAddress = getObjectById('customerShippingAddressId', id, this.billToCusData);
 		} else if (data.billToUserTypeId == 2) {
-			this.billToAddress = getObjectById('vendorShippingAddressId', id, this.vendorSelectedForBillTo);
+             this.vendorService.getVendorAddressById(id).subscribe(res => {
+				const resp = res;
+				if (resp) {
+					this.billToAddress.address1 = resp.line1;
+					this.billToAddress.address2 = resp.line2;
+					this.billToAddress.address3 = resp.line3;
+					this.billToAddress.city = resp.city;
+					this.billToAddress.stateOrProvince = resp.stateOrProvince;
+					this.billToAddress.postalCode = resp.postalCode;
+					this.billToAddress.country = resp.country;
+				} else {
+					this.billToAddress.address1 = '';
+					this.billToAddress.address2 = '';
+					this.billToAddress.address3 = '';
+					this.billToAddress.city = '';
+					this.billToAddress.stateOrProvince = '';
+					this.billToAddress.postalCode = '';
+					this.billToAddress.country = '';
+				}
+			})
+
+			// this.billToAddress = getObjectById('vendorShippingAddressId', id, this.vendorSelectedForBillTo);
 		}
 
 		// if (data.customerShippingAddressId) {
@@ -2791,7 +2842,7 @@ export class PurchaseSetupComponent {
 		//console.log(this.VendorNamecoll)
 	await 	this.vendorService.getVendorSiteNames(vendorId).subscribe(
 			returdaa => {
-				this.vendorSelectedForBillTo = returdaa[0];
+				this.vendorSelectedForBillTo = returdaa;
 			})
 		this.vendorService.getContacts(vendorId).subscribe(
 			returdaa => {

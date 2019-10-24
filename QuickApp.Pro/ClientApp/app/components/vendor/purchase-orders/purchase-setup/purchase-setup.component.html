@@ -1335,7 +1335,7 @@
                         </label>
                         <select class="form-control" (change)="getValueforBillTo(sourcePoApproval , sourcePoApproval.billToAddressId)" name="billCusSiteName" [(ngModel)]="sourcePoApproval.billToAddressId" #billCusSiteName="ngModel" required>
                             <option>-- Select --</option>
-                            <option *ngFor="let object of billToCusData" [ngValue]="object.customerShippingAddressId">{{object.siteName}} </option>
+                            <option *ngFor="let object of billToCusData" [ngValue]="object.customerBillingAddressId">{{object.siteName}} </option>
                         </select>
                         <div *ngIf="billCusSiteName.invalid && (billCusSiteName.dirty || billCusSiteName.touched)" class="alert alert-danger alert-danger-cstm">
                                 <div *ngIf="billCusSiteName.errors.required">
