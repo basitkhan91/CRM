@@ -2599,7 +2599,17 @@ namespace QuickApp.Pro.Controllers
 			}
 		}
 
-		[HttpDelete("customerDocumentDelete/{id}")]
+        [HttpGet("getCustomerDocumentDetail/{id}")]
+        [Produces(typeof(List<CustomerDocumentDetail>))]
+        public IActionResult GetCustomerDocumentDetail(long id, CustomerDocumentDetail cstomerDocumentDetail)
+        {
+            var allcusDoc = _unitOfWork.CreateDocumentDetails.GetAllDataById(id); 
+            return Ok(allcusDoc);
+
+        }
+
+
+        [HttpDelete("customerDocumentDelete/{id}")]
 		[Produces(typeof(CustomerViewModel))]
 		public IActionResult DeleteDocumentAction(long id)
 		{
