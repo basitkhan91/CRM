@@ -242,6 +242,14 @@ namespace DAL.Repositories
                     UploadDepInterval(BindCustomData<AssetDepreciationInterval>(file, "AssetDepreciationIntervalId", moduleName));
                     break;
 
+                case "GLAccountClass":
+                    UploadGLAccountClass(BindCustomData<GLAccountClass>(file, "GLAccountClassId", moduleName));
+                    break;
+
+                case "JobType":
+                    UploadJobType(BindCustomData<JobType>(file, "JobTypeId", moduleName));
+                    break;
+
                 default:
                     break;
             }
@@ -575,7 +583,7 @@ namespace DAL.Repositories
             {
 
                 var flag = _appContext.AssetDisposalType.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.AssetDisposalCode)
-                && !string.IsNullOrEmpty(p.AssetDisposalName) && 
+                && !string.IsNullOrEmpty(p.AssetDisposalCode) && 
                 p.AssetDisposalCode.ToLower() == item.AssetDisposalCode.Trim().ToLower());
                 if (!flag)
                 {
@@ -592,7 +600,7 @@ namespace DAL.Repositories
             {
 
                 var flag = _appContext.AssetDepreciationMethod.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.AssetDepreciationMethodCode)
-                && !string.IsNullOrEmpty(p.AssetDepreciationMethodName) &&
+                && !string.IsNullOrEmpty(p.AssetDepreciationMethodCode) &&
                 p.AssetDepreciationMethodCode.ToLower() == item.AssetDepreciationMethodCode.Trim().ToLower());
                 if (!flag)
                 {
@@ -609,7 +617,7 @@ namespace DAL.Repositories
             {
 
                 var flag = _appContext.AssetStatus.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.Code)
-                && !string.IsNullOrEmpty(p.Name) &&
+                && !string.IsNullOrEmpty(p.Code) &&
                 p.Code.ToLower() == item.Code.Trim().ToLower());
                 if (!flag)
                 {
@@ -626,7 +634,7 @@ namespace DAL.Repositories
             {
 
                 var flag = _appContext.AssetDepConvention.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.AssetDepConventionCode)
-                && !string.IsNullOrEmpty(p.AssetDepConventionName) &&
+                && !string.IsNullOrEmpty(p.AssetDepConventionCode) &&
                 p.AssetDepConventionCode.ToLower() == item.AssetDepConventionCode.Trim().ToLower());
                 if (!flag)
                 {
@@ -643,11 +651,44 @@ namespace DAL.Repositories
             {
 
                 var flag = _appContext.AssetDepreciationInterval.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.AssetDepreciationIntervalCode)
-                && !string.IsNullOrEmpty(p.AssetDepreciationIntervalName) &&
+                && !string.IsNullOrEmpty(p.AssetDepreciationIntervalCode) &&
                 p.AssetDepreciationIntervalCode.ToLower() == item.AssetDepreciationIntervalCode.Trim().ToLower());
                 if (!flag)
                 {
                     _appContext.AssetDepreciationInterval.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+
+        private void UploadGLAccountClass(List<GLAccountClass> glAccountCLassList)
+        {
+
+            foreach (var item in glAccountCLassList)
+            {
+
+                var flag = _appContext.GLAccountClass.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.GLAccountClassName)
+                && !string.IsNullOrEmpty(p.GLAccountClassName) &&
+                p.GLAccountClassName.ToLower() == item.GLAccountClassName.Trim().ToLower());
+                if (!flag)
+                {
+                    _appContext.GLAccountClass.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+
+        private void UploadJobType(List<JobType> jobTypeList)
+        {
+
+            foreach (var item in jobTypeList)
+            {
+
+                var flag = _appContext.JobType.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.JobTypeName)
+                && p.JobTypeName.ToLower() == item.JobTypeName.Trim().ToLower());
+                if (!flag)
+                {
+                    _appContext.JobType.Add(item);
                     _appContext.SaveChanges();
                 }
             }

@@ -234,4 +234,12 @@ export class PublicationService {
             this.publicationEndpoint.getPublicationForWorkFlowEndpoint<any>(publicationId)
         );
     }
+
+    publicationFileUpload(file){
+      return this.publicationEndpoint.publicationCustomUpload(file);
+  }
+
+    getPublicationAuditDetails(Id: number) {
+      return this.publicationEndpoint.getPublicationAuditDetails<any[]>(Id);
+  }
 }

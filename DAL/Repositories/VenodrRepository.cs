@@ -23,6 +23,10 @@ namespace DAL.Repositories
             return _appContext.Vendor.OrderByDescending(c => c.VendorId).ToList();
         }
 
+        public IEnumerable<Vendor> GetVendorsLite()
+        {
+            return _appContext.Vendor.Where(v => v.IsActive == true && v.IsDelete == false).Select(v => new  Vendor{ VendorId= v.VendorId, VendorName=v.VendorName }).OrderBy(c=>c.VendorName).ToList();
+        }
 
         public IEnumerable<object> GetVendorListDetails()
         {
@@ -182,7 +186,7 @@ namespace DAL.Repositories
                                 po.ReferenceId,
                                 po.PriorityId,
                                 po.RequestedBy,
-                                po.DateRequested,
+                                po.OpenDate,
                                 po.ApproverId,
                                 po.DeferredReceiver,
                                 po.Resale,
@@ -594,6 +598,25 @@ namespace DAL.Repositories
             }
         }
 
+        public IEnumerable<object> GetVendorBillingSiteNames(long vendorId)
+        {
+            try
+            {
+                var list = (from vba in _appContext.VendorBillingAddress
+                            where vba.IsDeleted == false && vba.VendorId == vendorId
+                            select new {
+                                vba.VendorBillingAddressId,
+                                vba.SiteName
+                            }).ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         public object VendorBillingAddressById(long billingAddressId)
         {
             try
@@ -648,5 +671,12 @@ namespace DAL.Repositories
                         }).ToList();
             return data;
         }
+
+        public IEnumerable<Vendor> getVendorsForDropdown() {
+            return _appContext.Vendor.Where(x => 
+            (x.IsActive != null && x.IsActive == true) && 
+            (x.IsDelete == null || x.IsDelete == false));
+        }
+
     }
 }

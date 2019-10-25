@@ -25,7 +25,6 @@ import { DocumentsComponent } from '../components/documents/documents.component'
 import { EmployeeExpertiseComponent } from '../components/employee-expertise/employee-expertise.component';
 import { ExpenditureComponent } from '../components/expenditure/expenditure.component';
 import { FindingsComponent } from '../components/findings/findings.component';
-import { GateCodeComponent } from '../components/gate-code/gate-code.component';
 import { IntegrationComponent } from '../components/integration/integration.component';
 import { ItemClassificationComponent } from '../components/item-classification/item-classification.component';
 import { ItemGroupComponent } from '../components/item-group/item-group.component';
@@ -75,7 +74,6 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { BreadcrumbModule } from 'primeng/breadcrumb'; //bread crumb
 import { SingleScreenBreadcrumbService } from "../services/single-screens-breadcrumb.service";
 import { WarehouseComponent } from "../components/warehouse/warehouse.component";
-import { GLAccountCategoryComponent } from "../components/gl-account-categories/gl-account-categories.component";
 import { ManufacturerComponent } from "../components/manufacturer/manufacturer.component";
 import { VendorcapabilitiesComponent } from "../components/vendorcapabilities/vendorcapabilities.component";
 //import { VendorcapabilitiesComponent } from "../components/vendor-capabilities/vendor-capabilities.component";
@@ -103,13 +101,18 @@ import { DepreciationIntervalsEndpoint } from "../services/Depreciation -interva
 import { AssetDepConventionTypeService } from "../services/assetDepConventionType/assetDepConventionType.service";
 import { AssetDepConventionTypeEndpointService } from "../services/assetDepConventionType/assetDepConventionType-endpoint.service";
 import { DepreciationIntervalsComponent } from "../components/depreciation-intervals/depreciation-intervals.component";
-import { AssetIntangibleTypeSingleScreenEndpointService } from "../services/AssetIntangibleTypeSingleScreen/assetIntangibleTypeSingleScreen-endpoint";
-import { AssetIntangibleTypeSingleScreenService } from "../services/AssetIntangibleTypeSingleScreen/assetIntangibleTypeSingleScreen.service";
-import { AssetIntangibleTypeSingleScreenComponent } from "../components/asset-intangible-type-single-screen/asset-intangible-type-single-screen.component";
-import { AssetTypeSingleScreenEndpointService } from "../services/AssetTypeSingleScreen/assettypesinglescreen-endpoint.service";
-import { AssetTypeSingleScreenService } from "../services/AssetTypeSingleScreen/assettypesinglescreen.service";
-import { AssetTypeSingleScreenComponent } from "../components/asset-type-single-screen/asset-type-single-screen.component";
-import { CreateAssetComponent } from "../components/Asset-Management/Asset-pages/create-asset/create-asset.component";
+import { AssetTypeEndpointService } from "../services/asset-type/asset-type-endpoint.service";
+import { AssetTypeService } from "../services/asset-type/asset-type.service";
+import { AssetTypeComponent } from "../components/asset-type/asset-type.component";
+import { AssetIntangibleTypeEndpointService } from "../services/asset-intangible-type/asset-intangible-type-endpoint.service";
+import { AssetIntangibleTypeService } from "../services/asset-intangible-type/asset-intangible-type.service";
+import { AssetIntangibleTypeComponent } from "../components/asset-intangible-type/asset-intangible-type.component";
+import { StageCodeEndpointService } from "../services/stage-code/stage-code-endpoint.service";
+import { StageCodeService } from "../services/stage-code/stage-code.service";
+import { StageCodeComponent } from "../components/stage-code/stage-code.component";
+import { GLAccountCategoryComponent } from "../components/gl-account-category/gl-account-category.component";
+import { GLAccountCategoryEndpointService } from "../services/gl-account-category/gl-account-category-endpoint.service";
+import { GLAccountCategoryService } from "../services/gl-account-category/gl-account-category.service";
 import { AuditModule } from "../audit/audit.module";
 import { AircraftManufacturerComponent } from "../components/aircraft-manufacturer/aircraft-manufacturer.component";
 import { AircraftManufacturerService } from "../services/aircraft-manufacturer/aircraftManufacturer.service";
@@ -130,6 +133,7 @@ import { PercentComponent } from "../components/percent/percent.component";
 import { JobTypeComponent } from '../components/job-type/job-type.component';
 import { PercentService } from "../services/percent.service";
 import { PercentEndpoint } from "../services/percent-endpoint.service";
+import { CommonService } from "../services/common.service";
 
 @NgModule({
 	imports: [
@@ -165,7 +169,10 @@ import { PercentEndpoint } from "../services/percent-endpoint.service";
         EmployeeExpertiseComponent,
         ExpenditureComponent,
         FindingsComponent,
-        GateCodeComponent,
+        AssetIntangibleTypeComponent,
+        AssetTypeComponent,
+        StageCodeComponent,
+        GLAccountCategoryComponent,
         IntegrationComponent,
         ItemClassificationComponent,
         ItemGroupComponent,
@@ -210,13 +217,10 @@ import { PercentEndpoint } from "../services/percent-endpoint.service";
         DepriciationMethodComponent,
         AssetDepConventionTypeComponent,
         DepreciationIntervalsComponent,
-        AssetIntangibleTypeSingleScreenComponent,
-        AssetTypeSingleScreenComponent,
         AircraftManufacturerComponent,
         AircraftModelComponent,
         DashnumberComponent,
-        PaginationComponent,
-       
+        PaginationComponent
     ],
     providers: [
         PercentService,
@@ -233,17 +237,22 @@ import { PercentEndpoint } from "../services/percent-endpoint.service";
         DepreciationIntervalsEndpoint,
         AssetDepConventionTypeService,
         AssetDepConventionTypeEndpointService,
-        AssetIntangibleTypeSingleScreenEndpointService,
-        AssetIntangibleTypeSingleScreenService,
-        AssetTypeSingleScreenEndpointService,
-        AssetTypeSingleScreenService,
+        AssetTypeService,
+        AssetTypeEndpointService,
+        AssetIntangibleTypeService,
+        AssetIntangibleTypeEndpointService,
+        StageCodeService,
+        StageCodeEndpointService,
+        GLAccountCategoryService,
+        GLAccountCategoryEndpointService,
         AircraftManufacturerService,
         AircraftManufacturerEndpointService,
         AircraftModelService,
         AircraftModelEndpointService,
         DashNumberService,
         DashNumberEndpointService,
-        PaginationService
+        PaginationService,
+        CommonService
     ],
     exports: [
         FlexLayoutModule,

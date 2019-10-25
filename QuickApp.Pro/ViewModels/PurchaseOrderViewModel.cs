@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 
 namespace QuickApp.Pro.ViewModels
 {
-    public class PurchaseOrderViewModel
+    public class PurchaseOrderViewModel:PurchaseOrderBaseViewModel
     {
 
-        public long PurchaseOrderId { get; set; }
-        public string PurchaseOrderNumber { get; set; }
+
         public string ReferenceId { get; set; }
         public Nullable<long> PriorityId { get; set; }
         public long RequisitionerId { get; set; }
         public System.DateTime OpenDate { get; set; }
+        public DateTime? ClosedDate { get; set; }
         public long ApproverId { get; set; }
         public Nullable<System.DateTime> ApprovedDate { get; set; }
         public Nullable<System.DateTime> NeedByDate { get; set; }
@@ -58,9 +58,11 @@ namespace QuickApp.Pro.ViewModels
         public int ManagementStructureId { get; set; }
         public decimal ShippingCost { get; set; }
         public decimal HandlingCost { get; set; }
-        public long ShippingId { get; set; }
+        public string ShippingId { get; set; }
         public string ShippingURL{get;set;}
         public long BillToContactId { get; set; }
+        public string ShipToSiteName { get; set; }
+        public string BillToSiteName { get; set; }
 
 
     }

@@ -32,14 +32,40 @@ namespace DAL.Repositories
 
                            join managementStructeInfo in _appContext.ManagementStructure on t.ManagementStructureId equals managementStructeInfo.ManagementStructureId into managmentCompany
                            from managementStructeInfo in managmentCompany.DefaultIfEmpty()
-                        
+
                            join employeeExpertise in _appContext.EmployeeExpertise on t.EmployeeExpertiseId equals employeeExpertise.EmployeeExpertiseId into employeeExpertiseInfos
                            from employeeExpertise in employeeExpertiseInfos.DefaultIfEmpty()
 
                            join jobtype in _appContext.JobType on t.JobTypeId equals jobtype.JobTypeId into jobTypeInfos
                            from jobtype in jobTypeInfos.DefaultIfEmpty()
 
+                           join jobtitle in _appContext.JobTitle on t.JobTitleId equals jobtitle.JobTitleId into jobTitleInfos
+                           from jobtitle in jobTitleInfos.DefaultIfEmpty()
 
+                           join managmentLegalEntity in _appContext.ManagementStructure on t.ManagementStructureId equals managmentLegalEntity.ManagementStructureId into mainCompanyTree
+                           from managmentLegalEntity in mainCompanyTree.DefaultIfEmpty()
+
+                           join divmanagmentLegalEntity in _appContext.ManagementStructure on managmentLegalEntity.ParentId equals divmanagmentLegalEntity.ManagementStructureId into mainDivCompany
+                           from divmanagmentLegalEntity in mainDivCompany.DefaultIfEmpty()
+
+                           join biumanagmentLegalEntity in _appContext.ManagementStructure on divmanagmentLegalEntity.ParentId equals biumanagmentLegalEntity.ManagementStructureId into BIUDivCompany
+                           from biumanagmentLegalEntity in BIUDivCompany.DefaultIfEmpty()
+
+                           join compmanagmentLegalEntity in _appContext.ManagementStructure on biumanagmentLegalEntity.ParentId equals compmanagmentLegalEntity.ManagementStructureId into comivCompany
+                           from compmanagmentLegalEntity in comivCompany.DefaultIfEmpty()
+
+                           //join empSupervisor in _appContext.Employee on t.EmployeeId  equals empSupervisor.SupervisorId into employeesupervisiorInfo
+                          // from empSupervisor in employeesupervisiorInfo.DefaultIfEmpty()
+
+                        
+
+                           join employeetraingInfo in _appContext.EmployeeTraining on t.EmployeeId equals employeetraingInfo.EmployeeId into employeeTraingInfo
+                           from employeetraingInfo in employeeTraingInfo.DefaultIfEmpty()
+
+                           join employeetraingType in _appContext.EmployeeTrainingType on employeetraingInfo.EmployeeTrainingTypeId equals employeetraingType.EmployeeTrainingTypeId into employeeTraingTypeInfo
+                           from employeetraingType in employeeTraingTypeInfo.DefaultIfEmpty()
+
+      
 
 
 
@@ -68,10 +94,23 @@ namespace DAL.Repositories
                                nationalCountryId,
                                managementStructeInfo,
                                employeeExpertise,
+                            
+                         
+                              // empSupervisor,
+                               jobtitle,
                                jobtype,
                                t.Fax,
                                t.Email,
                                t.SSN,
+
+                               //legal entrities
+
+                               managmentLegalEntity,
+                               divmanagmentLegalEntity,
+                               biumanagmentLegalEntity,
+                               compmanagmentLegalEntity,
+                               employeetraingInfo,
+                               employeetraingType,
 
                                t.InMultipleShifts,
                                t.AllowOvertime,
@@ -93,12 +132,14 @@ namespace DAL.Repositories
                                t.UpdatedDate,
 
                                //cc.Description
-                           }).ToList();
+                           }).Distinct().ToList();
 
 
 
 
 
+
+            //  var empData = _appContext.Employee.Include("EmployeeShiftMapping").join(countriesRep.GetCountries()).ToList().Where(t => t.IsDelete == null || t.IsDelete == false);
             return empData;
 
 

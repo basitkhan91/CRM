@@ -14,7 +14,8 @@ namespace DAL.Models
         public string ReferenceId { get; set; }
         public Nullable<long> PriorityId { get; set; }
         public long RequestedBy { get; set; }
-        public System.DateTime DateRequested { get; set; }
+        public DateTime OpenDate { get; set; }
+        public DateTime? ClosedDate { get; set; }
         public long ApproverId { get; set; }
         public Nullable<System.DateTime> DateApproved { get; set; }
         public Nullable<System.DateTime> NeedByDate { get; set; }
@@ -52,6 +53,7 @@ namespace DAL.Models
         public Nullable<bool> IsActive { get; set; }
         public string ShipToSiteName { get; set; }
         public string BillToSiteName { get; set; }
+        public bool IsDeleted { get; set; }
 
         public virtual ICollection<PurchaseOrderPart> PurchaseOderPart { get; set; }
         public virtual List<StockLine> StockLine { get; set; }

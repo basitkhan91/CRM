@@ -67,7 +67,7 @@ namespace QuickApp.Pro.ViewModels
         public DateTime? CreatedDate { get; set; }
         public virtual Condition Condition { get; set; }
         public virtual ItemMaster ItemMaster { get; set; }
-        public virtual Company Company { get; set; }
+        public virtual LegalEntity LegalEntity { get; set; }
         public virtual Site Site { get; set; }
         public virtual Warehouse Warehouse { get; set; }
         public virtual Customer Customer { get; set; }

@@ -20,5 +20,8 @@ namespace DAL.Models
         public bool? IsDelete { get; set; }
         public virtual ManagementSite ManagementSite { get; set; }
         public virtual Address Address { get; set; }
+
+        [NotMapped]
+        public string UploadStatus { get; set; }
     }
 }

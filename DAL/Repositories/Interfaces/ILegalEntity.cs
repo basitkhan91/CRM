@@ -9,5 +9,27 @@ namespace DAL.Repositories.Interfaces
     {
         IEnumerable<object> GetAllLegalEntityData();
 
-    }
+        long CreateLegalEntityBillingAddress(LegalEntityBillingAddress billingAddress);
+        void UpdateLegalEntityBillingAddress(LegalEntityBillingAddress billingAddress);
+        void DeleteLegalEntityBillingAddress(long billingAddressId, string updatedBy);
+        void LegalEntityBillingAddressStatus(long billingAddressId, bool status, string updatedBy);
+        IEnumerable<object> GetLegalEntityBillingAddress();
+        object LegalEntityBillingAddressById(long billingAddressId);
+
+        long CreateLegalEntityShippingAddress(LegalEntityShippingAddress ShippingAddress);
+        void UpdateLegalEntityShippingAddress(LegalEntityShippingAddress ShippingAddress);
+        void DeleteLegalEntityShippingAddress(long shippingAddressId, string updatedBy);
+        void LegalEntityShippingAddressStatus(long shippingAddressId, bool status, string updatedBy);
+        IEnumerable<object> GetLegalEntityShippingAddress();
+        object LegalEntityShippingAddressById(long ShippingAddressId);
+
+        IEnumerable<object> GetLegalEntitySiteNames(long legalEntityId);
+        object GetLegalEntityAddress(long addressId);
+        IEnumerable<object> GetLegalEntityContacts(long legalEntityId);
+
+		IEnumerable<object> GetLegalEntityShippingSiteNames(long legalEntityId);
+		object GetLegalEntityShippingAddress(long addressId);
+
+
+	}
 }

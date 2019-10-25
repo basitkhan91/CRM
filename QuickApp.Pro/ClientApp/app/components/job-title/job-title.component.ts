@@ -7,6 +7,7 @@ import { SingleScreenBreadcrumbService } from "../../services/single-screens-bre
 import { validateRecordExistsOrNot, editValueAssignByCondition, getObjectById, selectedValueValidate, getObjectByValue } from '../../generic/autocomplete';
 import { Table } from 'primeng/table';
 import { ConfigurationService } from '../../services/configuration.service';
+import { CommonService } from '../../services/common.service';
 
 @Component({
     selector: 'app-job-title',
@@ -48,7 +49,9 @@ export class JobTitleComponent implements OnInit {
     existingRecordsResponse: Object;
     selectedRecordForEdit: any;
 
-    constructor(private breadCrumb: SingleScreenBreadcrumbService, private configurations: ConfigurationService, private authService: AuthService, private alertService: AlertService, private jobTitleService: JobTitleService) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService,
+        private commonService: CommonService,
+        private configurations: ConfigurationService, private authService: AuthService, private alertService: AlertService, private jobTitleService: JobTitleService) {
 
     }
 
@@ -62,6 +65,28 @@ export class JobTitleComponent implements OnInit {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
 
+    customExcelUpload(event) {
+
+        const file = event.target.files;
+
+        if (file.length > 0) {
+
+            this.formData.append('ModuleName', 'JobTitle')
+            this.formData.append('file', file[0])
+            this.commonService.smartExcelFileUpload(this.formData).subscribe(res => {
+
+                this.formData = new FormData();
+                this.getJobTitleList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+
+            })
+        }
+    }
+
     columnsChanges() {
         this.refreshList();
     }
@@ -71,32 +96,7 @@ export class JobTitleComponent implements OnInit {
         this.getJobTitleList();
     }
 
-    customExcelUpload(event) {
-        const file = event.target.files;
-
-        console.log(file);
-        if (file.length > 0) {
-
-            this.formData.append('file', file[0])
-            //this.jobTitleService.jobTitleFileUpload(this.formData).subscribe(res => {
-            //    event.target.value = '';
-
-            //    this.formData = new FormData();
-            //    this.existingRecordsResponse = res;
-            //    this.getJobTitleList();
-            //    this.alertService.showMessage(
-            //        'Success',
-            //        `Successfully Uploaded  `,
-            //        MessageSeverity.success
-            //    );
-
-            //    // $('#duplicateRecords').modal('show');
-            //    // document.getElementById('duplicateRecords').click();
-
-            //})
-        }
-
-    }
+     
 
     sampleExcelDownload() {
         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=JobTitle&fileName=JobTitle.xlsx`;

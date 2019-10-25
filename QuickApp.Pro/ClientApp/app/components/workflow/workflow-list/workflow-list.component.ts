@@ -71,6 +71,8 @@ export class WorkflowListComponent implements OnInit {
     materialUOM: any[];
     materialMandatory: any[];
     itemClassification: any[];
+    publications: any[];
+    allVendors: any[];
 
     constructor(private actionService: ActionService,
         private router: ActivatedRoute,
@@ -101,7 +103,6 @@ export class WorkflowListComponent implements OnInit {
         this.getWorkFlowActions();
         this.LoadParts();
     }
-
 
     public allWorkFlows: any[] = [];
 
@@ -196,7 +197,7 @@ export class WorkflowListComponent implements OnInit {
 
     dismissModel() {
         if (this.modal != undefined)
-        this.modal.close();
+            this.modal.close();
     }
 
     get userName(): string {
@@ -245,7 +246,9 @@ export class WorkflowListComponent implements OnInit {
         this.actionService.getWorkFlow(rowData.workflowId).subscribe(
             workflow => {
                 this.sourceWorkFlow = workflow[0];
-                this.sourceWorkFlow.changedPartNumber = rowData.changedPartNumber;
+                var part = this.allParts.filter(x => x.itemMasterId == rowData.changedPartNumberId)[0];
+                this.sourceWorkFlow.changedPartNumber = part != undefined ? part.partNumber : '';
+
                 this.sourceWorkFlow.workflowCreateDate = new Date(this.sourceWorkFlow.workflowCreateDate).toLocaleDateString();
                 this.sourceWorkFlow.workflowCreateDate = this.sourceWorkFlow.workflowExpirationDate != null && this.sourceWorkFlow.workflowExpirationDate != '' ? new Date(this.sourceWorkFlow.workflowCreateDate).toLocaleDateString() : '';
 
@@ -412,7 +415,8 @@ export class WorkflowListComponent implements OnInit {
 
         this.Total = parseFloat((this.MaterialCost + this.TotalCharges + this.TotalExpertiseCost + parseFloat(((this.sourceWorkFlow.otherCost == undefined || this.sourceWorkFlow.otherCost == '') ? 0 : this.sourceWorkFlow.otherCost).toFixed(2))).toFixed(2));
 
-        this.PercentBERThreshold = parseFloat((this.Total / this.sourceWorkFlow.berThresholdAmount).toFixed(2));
+        if (this.sourceWorkFlow.berThresholdAmount != 0)
+            this.PercentBERThreshold = parseFloat((this.Total / this.sourceWorkFlow.berThresholdAmount).toFixed(2));
     }
 
     private calculateWorkFlowTotalMaterialCost(): void {
@@ -424,7 +428,6 @@ export class WorkflowListComponent implements OnInit {
 
         this.MaterialCost = parseFloat((this.MaterialCost).toFixed(2));
     }
-
 
     private getUniqueTask(): any[] {
         var tasks = [];
@@ -541,11 +544,9 @@ export class WorkflowListComponent implements OnInit {
                 this.organiseTaskAndTaskAttributes();
                 this.loadPublicationTypes();
             },
-            error => {}
+            error => { }
         );
     }
-
-    publications: any[];
 
     private organiseTaskAndTaskAttributes() {
         this.addedTasks = this.getUniqueTask();
@@ -556,7 +557,7 @@ export class WorkflowListComponent implements OnInit {
             var chargesTotalChargesCost = 0;
 
             task.charges = this.sourceWorkFlow.charges.filter(x => {
-                if (x.taskId == task.Id) {  
+                if (x.taskId == task.Id) {
                     this.LoadChargesDropDownValues(x);
                     chargesTotalQty += x.quantity == undefined || x.quantity == '' ? 0 : x.quantity;
                     chargesTotalExtendedCost += x.extendedCost == undefined || x.extendedCost == '' ? 0 : x.extendedCost;
@@ -564,6 +565,7 @@ export class WorkflowListComponent implements OnInit {
                 }
                 return x.taskId == task.Id
             });
+
             task.chargesTotalQty = chargesTotalQty;
             task.chargesTotalExtendedCost = chargesTotalExtendedCost;
             task.chargesTotalChargesCost = chargesTotalChargesCost;
@@ -615,6 +617,7 @@ export class WorkflowListComponent implements OnInit {
             var materialTotalQty = 0;
             var materialTotalExtendedCost = 0;
             var materialTotalPrice = 0;
+            var materialTotalExtendedPrice = 0;
 
             task.materialList = this.sourceWorkFlow.materialList.filter(x => {
                 if (x.taskId == task.Id) {
@@ -625,6 +628,7 @@ export class WorkflowListComponent implements OnInit {
                     materialTotalQty += x.quantity == undefined || x.quantity == '' ? 0 : x.quantity;
                     materialTotalExtendedCost += x.extendedCost == undefined || x.extendedCost == '' ? 0 : x.extendedCost;
                     materialTotalPrice += x.price == undefined || x.price == '' ? 0 : x.price;
+                    materialTotalExtendedPrice += x.extendedPrice == undefined || x.extendedPrice == '' ? 0 : x.extendedPrice;
                 }
                 return x.taskId == task.Id;
             });
@@ -632,6 +636,7 @@ export class WorkflowListComponent implements OnInit {
             task.materialTotalQty = materialTotalQty;
             task.materialTotalExtendedCost = materialTotalExtendedCost;
             task.materialTotalPrice = materialTotalPrice;
+            task.materialTotalExtendedPrice = materialTotalExtendedPrice;
 
             task.measurements = this.sourceWorkFlow.measurements.filter(x => {
                 this.setMeasurementDropdownText(x);
@@ -652,7 +657,7 @@ export class WorkflowListComponent implements OnInit {
                                     if (publication.aircraftManufacturer == result[0][0].aircraftTypeId) {
                                         publication.aircraftManufacturerName = result[0][0].description;
                                     }
-                                } 
+                                }
                             }
                         },
                         error => {
@@ -686,7 +691,7 @@ export class WorkflowListComponent implements OnInit {
                                         }
                                     }
                                 }
-                                
+
                             }
                         });
                     }
@@ -711,6 +716,7 @@ export class WorkflowListComponent implements OnInit {
             }
         }
     }
+
     private loadPublicationById(wfPublication: any) {
         this.publicationService.getPublicationForWorkFlow(wfPublication.publicationId).subscribe(
             result => {
@@ -722,7 +728,6 @@ export class WorkflowListComponent implements OnInit {
         );
     }
 
-
     private setChargesTypeDropdownText(charge: any): void {
         var chargesType = this.chargesTypes.filter(x => x.id == charge.workflowChargeTypeId);
         if (chargesType.length > 0) {
@@ -731,9 +736,9 @@ export class WorkflowListComponent implements OnInit {
     }
 
     private setChargesVendorDropdownText(charge: any): void {
-        var vendor = this.vendors.filter(x => x.vendorId == charge.vendorId);
-        if (vendor.length > 0) {
-            charge.vendorName = vendor[0].assetTypeName;
+        var vendor = this.vendors.filter(x => x.vendorId == charge.vendorId)[0];
+        if (vendor != undefined) {
+            charge.vendorName = vendor != undefined ? vendor.vendorName : '';
         }
     }
 

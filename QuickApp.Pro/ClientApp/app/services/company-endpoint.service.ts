@@ -9,7 +9,7 @@ import { ConfigurationService } from './configuration.service';
 @Injectable()
 export class CompanyEndpoint extends EndpointFactory {
 
-    private readonly _getCompany: string = "/api/company/get";
+    private readonly _getCompany: string = "/api/LegalEntity/get";
 
     get getCompanyUrl() { return this.configurations.baseUrl + this._getCompany; }
 
@@ -34,19 +34,36 @@ export class CompanyEndpoint extends EndpointFactory {
     }
 
     postNewShippingAddress<T>(object) {
-        let url = `${this.configurations.baseUrl}/api/Company/createcompanyshippingaddress`
+        let url = `${this.configurations.baseUrl}/api/LegalEntity/createlegalentityshippingaddress`
         return this.http.post<T>(url, JSON.stringify(object), this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.postNewShippingAddress(object));
             });
     }
     postNewBillingAddress<T>(object) {
-        let url = `${this.configurations.baseUrl}/api/Company/companybillingaddressbyid`
+        let url = `${this.configurations.baseUrl}/api/LegalEntity/createlegalentitybillingaddress`
         return this.http.post<T>(url, JSON.stringify(object), this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.postNewBillingAddress(object));
             });
     }
+    getShippingCompanySiteNames(id) {
+        return this.http.get(`${this.configurations.baseUrl}/api/LegalEntity/legalentityshippingsitenames?legalEntityId=${id}`, this.getRequestHeaders())
+    }
+    getBillingCompanySiteNames(id) {
+        return this.http.get(`${this.configurations.baseUrl}/api/LegalEntity/legalentitysitenames?legalEntityId=${id}`, this.getRequestHeaders())
+
+    }
+    getShippingAddress(legalEntityaddressId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/LegalEntity/legalentityshippingaddress?addressId=${legalEntityaddressId}`)
+    }
+    getCompanyContacts(legalEntityId) {
+        return this.http.get(`${this.configurations.baseUrl}/api/LegalEntity/legalentitycontacts?legalEntityId=${legalEntityId}`)
+    }
+    getBillingAddress(legalEntityaddressId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/LegalEntity/legalentityaddress?addressId=${legalEntityaddressId}`)
+    }
+
 
 }
 

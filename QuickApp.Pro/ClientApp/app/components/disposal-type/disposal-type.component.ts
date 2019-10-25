@@ -402,10 +402,24 @@ export class DisposalTypeComponent implements OnInit {
     //    });
     //}
 
+
     getAuditHistoryById(rowData) {
         this.disposalTypeService.getDisposalAudit(rowData.assetDisposalTypeId).subscribe(res => {
             this.auditHistory = res;
         })
+    }
+
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
     }
 
     sampleExcelDownload() {

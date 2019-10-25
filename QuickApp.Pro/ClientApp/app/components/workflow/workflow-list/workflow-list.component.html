@@ -582,7 +582,8 @@
                                             <th>UOM</th>
                                             <th>Unit Cost</th>
                                             <th>Extended Cost</th>
-                                            <th>Price</th>
+                                            <th>Unit Price</th>
+                                            <th>Extended Price</th>
                                             <th>Memo</th>
                                             <th>Deferred</th>
                                         </tr>
@@ -600,8 +601,9 @@
                                             <td>{{material.unitCost}}</td>
                                             <td>{{material.extendedCost}}</td>
                                             <td>{{material.price}}</td>
+                                            <td>{{material.extendedPrice}}</td>
                                             <td>{{material.memo}}</td>
-                                            <td>{{material.isDeferred != null || material.isDeferred != ''  ? material.isDeferred : false }}</td>
+                                            <td>{{material.isDeferred != null && material.isDeferred != ''  ? material.isDeferred : false }}</td>
                                         </tr>
                                         <tr>
                                             <td><b>Total</b></td>
@@ -615,6 +617,7 @@
                                             <td></td>
                                             <td>{{task.materialTotalExtendedCost}}</td>
                                             <td>{{task.materialTotalPrice}}</td>
+                                            <td>{{task.materialTotalExtendedPrice}}</td>
                                             <td></td>
                                             <td></td>
                                         </tr>

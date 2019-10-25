@@ -15,8 +15,9 @@ export class VendorEndpointService extends EndpointFactory {
 
 
 	private readonly _vendorUrl: string = "/api/Vendor/Get";
-	private readonly _vendorCapabilityUrl: string = "/api/Vendor/getVendorCapabilityList";
-	private readonly _vendorUrlNew: string = "/api/Vendor/vendor";
+	private readonly _vendorLiteUrl: string="/api/Vendor/basic"
+    private readonly _vendorCapabilityUrl: string = "/api/Vendor/getVendorCapabilityList";
+    private readonly _vendorUrlNew: string = "/api/Vendor/vendor";
 
 
 	private readonly _partDetails: string = "/api/Vendor/Getpartdetails";
@@ -132,10 +133,13 @@ export class VendorEndpointService extends EndpointFactory {
 	private readonly _vendorContactsGetByID: string = "/api/Common/vendorcontacts";
 	private readonly getVendor: string = "/api/vendor/pagination";
 	private readonly _saveCreatePOApproval: string = "/api/purchaseorder/createpoapprover";
-	private readonly _updatePOApproval: string = "/api/purchaseorder/updatepoapprover";
+    private readonly _updatePOApproval: string = "/api/purchaseorder/updatepoapprover";
+    private readonly _vendorsForDropDown: string = "/api/Vendor/GetVendorsForDropDown";
+    
 
 	get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
 	get vendorlistsUrl() { return this.configurations.baseUrl + this._vendrUrl; }
+	get vendorBasicListUrl(){return this.configurations.baseUrl+ this._vendorLiteUrl}
 	get vendorListWithId() { return this.configurations.baseUrl + this._vendorsWithId; }
 	get vendorattributesUrl() { return this.configurations.baseUrl + this._vendorUrl; }
 	get vendorCapabilityListsUrl() { return this.configurations.baseUrl + this._vendorCapabilityUrl; }
@@ -144,7 +148,9 @@ export class VendorEndpointService extends EndpointFactory {
 	get partDetailswithidForsinglePart() { return this.configurations.baseUrl + this._partDetailswithidForsinglePart; }
 	get vendorDomestic() { return this.configurations.baseUrl + this._domesticWIthVendor; }
 	get internationalWIthVendor() { return this.configurations.baseUrl + this._internationalWIthVendor; }
-	get defaultVendor() { return this.configurations.baseUrl + this._defaultwithVendor; }
+    get defaultVendor() { return this.configurations.baseUrl + this._defaultwithVendor; }
+    get vendorsForDropDownURL() { return this.configurations.baseUrl + this._vendorsForDropDown; }
+
 
 	get VendorShipDetails() { return this.configurations.baseUrl + this._vendorShipViaDetails; }
 	get vendorShipAddressUrl() { return this.configurations.baseUrl + this._vendorShipAddressGetUrl; }
@@ -190,6 +196,9 @@ export class VendorEndpointService extends EndpointFactory {
 		super(http, configurations, injector);
 	}
 
+	getReceivingPOListing(){
+		return this.http.get(`${this.configurations.baseUrl}/api/vendor/recevingpolist`)
+	}
 
 	postNewBillingAddress<T>(object) {
 		let url = `${this.configurations.baseUrl}/api/Vendor/createvendorbillingaddress`
@@ -265,7 +274,13 @@ export class VendorEndpointService extends EndpointFactory {
 			});
 	}
 
-
+    getvendorBasicEndpoint<T>(): Observable<T> {
+        return this.http.get<T>(this.vendorBasicListUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getvendorBasicEndpoint());
+            });
+	}
+	
 	getCapabilityTypeListEndpoint<T>(): Observable<T> {
 		return this.http.get<T>(this.capabilityTypeListUrl, this.getRequestHeaders())
 			.catch(error => {
@@ -1091,6 +1106,12 @@ export class VendorEndpointService extends EndpointFactory {
 				return this.handleError(error, () => this.getPurchaseOrderList());
 			});
 	}
+	getPOList(data) {
+        return this.http.post(this.polisturl, JSON.stringify(data), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getPOList(data));
+            });
+    }
 	getcountryListEndpoint<T>(): Observable<T> {
 
 		return this.http.get<T>(this.countryUrl, this.getRequestHeaders())
@@ -1251,5 +1272,21 @@ export class VendorEndpointService extends EndpointFactory {
 				return <any>response;
 
 			}).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+    }
+
+    getVendorsForDropdownEndPoint<T>(): Observable<T> {
+        return this.http.get<T>(this.vendorsForDropDownURL, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getVendorsForDropdownEndPoint());
+            });
+	}
+	
+	getVendorbillingsitenames(vendorId){
+		return this.http.get(`${this.configurations.baseUrl}/api/Vendor/vendorbillingsitenames?vendorId=${vendorId}`)
+	}
+
+	getVendorAddressById(vendorId){
+		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/vendorbillingaddressbyid?billingAddressId=${vendorId}`)
+	
 	}
 }

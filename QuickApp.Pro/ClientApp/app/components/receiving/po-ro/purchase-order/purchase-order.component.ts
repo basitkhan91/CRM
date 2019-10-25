@@ -68,7 +68,7 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
     currencyName: string;
     filteredBrands: any[];
     localCollection: any[] = [];
-    allPolistInfo: any[] = [];
+    allPolistInfo: any;
     allPurchaseorderInfo: PurchaseOrder;
     /** Currency ctor */
     constructor(private receivingService: ReceivingService, private authService: AuthService, private _fb: FormBuilder, public _router: Router, private alertService: AlertService, private masterComapnyService: MasterComapnyService, private modalService: NgbModal, public vendorservice: VendorService, private dialog: MatDialog) {
@@ -83,19 +83,30 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
         //this.purchaseorderlist();
         this.loadData();
         this.cols = [
-            //{ field: 'statusId', header: 'Status' },
-            { field: 'status', header: 'Status' },
-            { field: 'noOfItems', header: '# of Items' },
-            { field: 'purchaseOrderNumber', header: 'PO Number' },
-            { field: 'currency', header: 'Currency' },
-            { field: 'poTotalCost', header: 'PO Total Cost' },
-            { field: 'vendorName', header: 'Vendor Name' },
-            { field: 'vendorContact', header: 'Vendor Contact' },
-            { field: 'employeeName', header: 'Employee Name' },
-            { field: 'contactPhone', header: 'Contact Phone' },
-            { field: 'dateRequested', header: 'Open Date' },
-            { field: 'reference', header: 'Ref' },
-            { field: 'requestedBy', header: 'Requested By' },
+
+           
+                { field: 'purchaseOrderNumber', header: 'PO Num' },
+                { field: 'openDate', header: 'Open Date' },
+                { field: 'closedDate', header: 'Closed/Cancelled Date' },
+                { field: 'vendorName', header: 'Vendor Name' },
+                { field: 'vendorCode', header: 'Vendor Code' },
+                { field: 'status', header: 'Status' },
+                { field: 'requestedBy', header: 'Requested By' },
+                { field: 'approvedBy', header: 'Approved By' },
+            
+            // //{ field: 'statusId', header: 'Status' },
+            // { field: 'status', header: 'Status' },
+            // { field: 'noOfItems', header: '# of Items' },
+            // { field: 'purchaseOrderNumber', header: 'PO Number' },
+            // { field: 'currency', header: 'Currency' },
+            // { field: 'poTotalCost', header: 'PO Total Cost' },
+            // { field: 'vendorName', header: 'Vendor Name' },
+            // { field: 'vendorContact', header: 'Vendor Contact' },
+            // { field: 'employeeName', header: 'Employee Name' },
+            // { field: 'contactPhone', header: 'Contact Phone' },
+            // { field: 'dateRequested', header: 'Open Date' },
+            // { field: 'reference', header: 'Ref' },
+            // { field: 'requestedBy', header: 'Requested By' },
 
 
             //{ field: 'dateApprovied', header: ' Date Approvied ' },
@@ -116,12 +127,14 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
 
     private loadData() {
         // debugger;
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
+       // this.alertService.startLoadingMessage();
+       // this.loadingIndicator = true;
 
-        this.vendorservice.getPurchaseOrderlist().subscribe(
-            results => this.onDataLoadSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
+        this.vendorservice.getReceivingPOListing().subscribe(res => {
+            this.allPolistInfo = res;
+        }
+            // results => this.onDataLoadSuccessful(results[0]),
+            // error => this.onDataLoadFailed(error)
         );
 
     }

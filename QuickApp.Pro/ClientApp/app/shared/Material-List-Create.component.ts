@@ -84,6 +84,7 @@ export class MaterialListCreateComponent implements OnInit {
         this.calculateExtendedCostSummation();
         this.calculateQtySummation();
         this.calculatePriceSummation();
+        this.calculateExtendedPriceSummation();
     }
 
     filterpartItems(event) {
@@ -211,7 +212,7 @@ export class MaterialListCreateComponent implements OnInit {
         newRow.unitCost = "";
         newRow.unitOfMeasureId = this.defaultUOMId;
         newRow.isDelete = false;
-
+        newRow.extendedPrice = '';
         this.workFlow.materialList.push(newRow);
     }
 
@@ -225,21 +226,6 @@ export class MaterialListCreateComponent implements OnInit {
         this.reCalculate();
     }
 
-    // Unused Function in both ts and html
-    // calculateTotalCost(): void {
-    //     this.workFlow.totalMaterialCost = 0;
-    //     for (let material of this.workFlow.materialList) {
-    //         var value = material.extendedCost;
-    //         if (value > 0) {
-    //             this.workFlow.totalMaterialCost += value;
-    //         }
-    //         else {
-    //             this.workFlow.totalMaterialCost = 0;
-    //         }
-    //     }
-
-    // }
-
     calculateExtendedCost(material): void {
         if (material.quantity != "" && material.unitCost) {
             material.extendedCost = material.quantity * material.unitCost;
@@ -249,12 +235,32 @@ export class MaterialListCreateComponent implements OnInit {
         }
         this.calculateExtendedCostSummation();
     }
+
+
     // sum of extended cost
     calculateExtendedCostSummation() {
         this.workFlow.materialExtendedCostSummation = this.workFlow.materialList.reduce((acc, x) => {
             return acc + parseFloat(x.extendedCost == undefined || x.extendedCost === '' ? 0 : x.extendedCost)
         }, 0);
         this.workFlow.totalMaterialCostValue = this.workFlow.materialExtendedCostSummation;
+    }
+
+    calculateExtendedPrice(material): void {
+        if (material.quantity != "" && material.price != "") {
+            material.extendedPrice = material.quantity * material.price;
+        }
+        else {
+            material.extendedPrice = "";
+        }
+        this.calculateExtendedPriceSummation();
+    }
+
+
+    // sum of extended cost
+    calculateExtendedPriceSummation() {
+        this.workFlow.materialExtendedPriceSummation = this.workFlow.materialList.reduce((acc, x) => {
+            return acc + parseFloat(x.extendedPrice == undefined || x.extendedPrice === '' ? 0 : x.extendedPrice)
+        }, 0);
     }
 
     // sum of the qty

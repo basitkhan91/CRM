@@ -20,12 +20,14 @@ namespace QuickApp.Pro.Controllers
         private IUnitOfWork _unitOfWork;
         readonly ILogger _logger;
         readonly IEmailer _emailer;
+        private readonly ApplicationDbContext _context;
 
-        public JobTypeController(IUnitOfWork unitOfWork, ILogger<JobTitleController> logger, IEmailer emailer)
+        public JobTypeController(IUnitOfWork unitOfWork, ILogger<JobTitleController> logger, IEmailer emailer, ApplicationDbContext context)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
             _emailer = emailer;
+            _context = context;
         }
 
 
@@ -52,6 +54,7 @@ namespace QuickApp.Pro.Controllers
                 jobTypeObj.jobTypeDescription = jobTypeViewModel.jobTypeDescription;
                 jobTypeObj.JobTypeName = jobTypeViewModel.JobTypeName;
                 jobTypeObj.MasterCompanyId = jobTypeViewModel.MasterCompanyId;
+               
                 jobTypeObj.IsActive = jobTypeViewModel.IsActive;
                 jobTypeObj.CreatedDate = DateTime.Now;
                 jobTypeObj.UpdatedDate = DateTime.Now;
@@ -87,10 +90,11 @@ namespace QuickApp.Pro.Controllers
                 existingResult.UpdatedBy = jobTypeViewModel.UpdatedBy;
                 existingResult.IsActive = jobTypeViewModel.IsActive;
 
-           
+                _context.JobType.Update(existingResult);
+                _context.SaveChanges();
 
-                _unitOfWork.JobType.Update(existingResult);
-                _unitOfWork.SaveChanges();
+                //_unitOfWork.JobType.Update(existingResult);
+                //_unitOfWork.SaveChanges();
 
             }
 
@@ -105,8 +109,12 @@ namespace QuickApp.Pro.Controllers
             var existingResult = _unitOfWork.JobType.GetSingleOrDefault(c => c.JobTypeId == id);
 
             existingResult.IsDeleted = true;
-            _unitOfWork.JobType.Update(existingResult);
-            _unitOfWork.SaveChanges();
+
+            //_unitOfWork.JobType.Update(existingResult);
+            //_unitOfWork.SaveChanges();
+
+            _context.JobType.Update(existingResult);
+            _context.SaveChanges();
 
 
             return Ok(id);

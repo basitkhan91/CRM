@@ -506,6 +506,10 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                                             return acc + parseFloat(x.price == undefined || x.price === '' ? 0 : x.price)
                                         }, 0);
 
+                                        wf.materialExtendedPriceSummation = wf.materialList.reduce((acc, x) => {
+                                            return acc + parseFloat(x.extendedPrice == undefined || x.extendedPrice === '' ? 0 : x.extendedPrice)
+                                        }, 0);
+
                                     }
                                     if (workFlow[0].measurements != undefined && workFlow[0].measurements.length > 0) {
                                         var measurement = workFlow[0].measurements.filter(measurement => measurement.taskId == action.taskId);
@@ -1764,10 +1768,11 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             unitCost: "",
             extendedCost: "",
             price: "",
+            extendedPrice: '',
             provisionId: '',
             isDeferred: '',
             memo: "",
-
+            
             taskId: "",
             workflowId: "",
             masterCompanyId: '',
@@ -1888,13 +1893,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
             return;
         }
-        else {
-            var tasks = this.workFlowList.filter(x => x.selectedItems.length > 0);
-            if (tasks.length == 0) {
-                this.alertService.showMessage(this.title, "Atleast one Work Flow Task Attribute is needed", MessageSeverity.error);
-            }
-        }
-
+      
         this.actionService.getNewWorkFlow(this.sourceWorkFlow).subscribe(
             data => {
                 this.alertService.showMessage(this.title, "Work Flow added successfully.", MessageSeverity.success);
@@ -1939,7 +1938,9 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
             return;
         }
-
+        if (this.workFlowList.length == 0) {
+            this.alertService.showMessage(this.title, "Atleast one task is required.", MessageSeverity.error);
+        }
         this.actionService.getNewWorkFlow(this.sourceWorkFlow).subscribe(
             result => {
 

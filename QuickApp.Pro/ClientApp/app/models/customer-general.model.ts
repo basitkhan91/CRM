@@ -28,6 +28,7 @@ export class CustomerGeneralInformation {
     restrictPMA: boolean;
     restrictedPMAParts: Array<any>;
     restrictedDERParts: Array<any>;
+    integrationPortalId: Array<any>;
     // restictPMAIds: any
     // restrictPMAMemo: string;
     restrictBER: boolean;
@@ -77,11 +78,13 @@ export class CustomerGeneralInformation {
         // this.restictPMAIds = [];
         // this.restrictPMAMemo = '';
         this.restrictBER = false;
-        this.restrictedPMAParts = []
-        this.restrictedDERParts = []
+        this.restrictedPMAParts = [];
+        this.restrictedDERParts = [];
+        this.integrationPortalId = [];
         // this.restictBERIds = [];
         // this.restrictBERMemo = '';
         // this.scanDocuments = false;
+
         this.isCustomerAlsoVendor = false;
         // this.edi = false;
         // this.ediDescription = '';

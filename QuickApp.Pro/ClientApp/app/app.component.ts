@@ -585,7 +585,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                     },
                     {
                         label: 'Work Orders', items: [
-                            { label: 'Stage Code and Status', routerLink: '/#' },
+                            { label: 'Stage Code and Status', routerLink: '/singlepages/singlepages/app-stage-code' },
                             { label: 'Charges', routerLink: '/singlepages/singlepages/app-charges' },
                             { label: 'Reasons', routerLink: '/singlepages/singlepages/app-reason' },
                             { label: 'Findings', routerLink: '/#' },
@@ -597,7 +597,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Currency', routerLink: '/singlepages/singlepages/app-currency' },
                             { label: 'GL Account Type', routerLink: '/singlepages/singlepages/app-gl-account-class' },
                             { label: 'Gl Account Classification', routerLink: '/singlepages/singlepages/app-gl-cash-flow-classification' },
-                            { label: 'GL Account Category', routerLink: '/singlepages/singlepages/app-glaccount-category' },
+                            { label: 'GL Account Category', routerLink: '/singlepages/singlepages/app-gl-account-category' },
                             { label: 'Credit Terms', routerLink: '/singlepages/singlepages/app-credit-terms' },
                             { label: 'Tax Rate', routerLink: '/singlepages/singlepages/app-tax-rate' },
                             { label: 'Tax Type', routerLink: '/singlepages/singlepages/app-tax-type' },
@@ -619,6 +619,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Priority', routerLink: '/singlepages/singlepages/app-priority' },
                             { label: 'Work Scope', routerLink: '/singlepages/singlepages/app-work-scope' },
                             { label: 'Provision', routerLink: '/singlepages/singlepages/app-provision' },
+                            { label: 'Customer Classification', routerLink: '/singlepages/singlepages/app-customer-classification' },
                         ]
                     },
                     {
@@ -626,8 +627,8 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Depreciation Method', routerLink: '/singlepages/singlepages/app-depriciation-method' },
                             { label: 'Disposal Type', routerLink: '/singlepages/singlepages/app-disposal-type' },
                             { label: 'Asset Status', routerLink: '/singlepages/singlepages/asset-status' },
-                            { label: 'Asset Type', routerLink: '/singlepages/singlepages/app-asset-type-single-screen' },
-                            { label: 'Intagible Type', routerLink: '/singlepages/singlepages/app-asset-intangible-type-single-screen' },
+                            { label: 'Asset Type', routerLink: '/singlepages/singlepages/app-asset-type' },
+                            { label: 'Asset Intangible Type', routerLink: '/singlepages/singlepages/app-asset-intangible-type' },
                             { label: 'Depreciation Convension', routerLink: '/singlepages/singlepages/app-asset-dep-convention-type' },
                             { label: 'Depreciation Intervals', routerLink: '/singlepages/singlepages/app-depreciation-intervals' },]
                     },
@@ -635,7 +636,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                         label: 'Asset Attributes', items: [
                             {
                                 label: 'Asset Attribute Type', items: [
-                                    { label: 'Asset Attribute List', routerLink: '/singlepages/singlepages/app-asset-type-single-screen' },
+                                    { label: 'Asset Attribute List', routerLink: '/singlepages/singlepages/app-asset-type' },
                                     { label: 'Create Attribute Asset', routerLink: '/#' },
                                 ]
                             },

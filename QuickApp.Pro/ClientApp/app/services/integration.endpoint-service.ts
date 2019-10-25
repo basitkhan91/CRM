@@ -12,6 +12,7 @@ export class IntegrationEndpointService extends EndpointFactory {
 
 
     private readonly _integrationUrl: string = "/api/Integration/Get";
+    private readonly _integrationLiteUrl:string="/api/Integration/basic";
 	private readonly _integrationPostUrl: string = "/api/Integration/IntegrationPost";
     private readonly _getAuditById: string = "/api/Integration/audits";
 
@@ -28,6 +29,13 @@ export class IntegrationEndpointService extends EndpointFactory {
         return this.http.get<T>(this.integrationUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getIntegrationEndpoint());
+            });
+    }
+    getIntegrationLiteEndpoint<T>(): Observable<T> {
+
+        return this.http.get<T>(this._integrationLiteUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getIntegrationLiteEndpoint());
             });
     }
 

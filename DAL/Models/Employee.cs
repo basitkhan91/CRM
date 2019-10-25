@@ -54,9 +54,8 @@ namespace DAL.Models
         public long? ManagementStructureId { get; set; }
 
         public virtual MasterCompany MasterCompany { get; set; }
-        public virtual EmployeeLeaveTypeMapping EmployeeLeaveTypeMapping { get; set; }
-
-        public virtual EmployeeShiftMapping EmployeeShiftMapping { get; set; }
+        public ICollection<EmployeeLeaveTypeMapping> EmployeeLeaveTypeMapping { get; set; }
+        public ICollection<EmployeeShiftMapping> EmployeeShiftMapping { get; set; }
 
         public virtual EmployeeLicensure EmployeeLicensure { get; set; }
         public virtual EmployeeTraining EmployeeTraining { get; set; }

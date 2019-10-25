@@ -56,8 +56,9 @@ namespace DAL.Models
         public System.DateTime UpdatedDate { get; set; }
         public Nullable<bool> IsActive { get; set; }
         public bool isParent { get; set; }
+        public long? ParentId { get; set; } 
 
-		public int MasterCompanyId { get; set; }
+		public int? MasterCompanyId { get; set; }
 
 		public virtual PurchaseOrder PurchaseOrder { get; set; }
         public virtual ItemMaster ItemMaster { get; set; }
@@ -69,5 +70,25 @@ namespace DAL.Models
 
         [NotMapped]
         public long StockLineCount { get; set; }
+        [NotMapped]
+        public List<PurchaseOrderSplitParts> PurchaseOrderSplitParts { get; set; }
+    }
+
+    public class PurchaseOrderSplitParts
+    {
+        public long PurchaseOrderPartRecordId { get; set; }
+        public long PurchaseOrderId { get; set; }
+        public bool isParent { get; set; }
+        public string SerialNumber { get; set; }
+        public long ItemMasterId { get; set; }
+        public long AssetId { get; set; }
+        public long PartNumberId { get; set; }
+        public Nullable<short> POPartSplitUserTypeId { get; set; }
+        public long? POPartSplitUserId { get; set; }
+        public Nullable<long> POPartSplitAddressId { get; set; }
+        public Nullable<long> UOMId { get; set; }
+        public Nullable<short> QuantityOrdered { get; set; }
+        public DateTime? NeedByDate { get; set; }
+        public Nullable<long> ManagementStructureId { get; set; }
     }
 }

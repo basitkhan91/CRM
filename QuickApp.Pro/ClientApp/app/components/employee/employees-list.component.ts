@@ -25,6 +25,8 @@ import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Router } from '@angular/router';
 import { AppTranslationService } from '../../services/app-translation.service';
 
+
+
 @Component({
     selector: 'app-employees-list',
     templateUrl: './employees-list.component.html',
@@ -32,15 +34,15 @@ import { AppTranslationService } from '../../services/app-translation.service';
     animations: [fadeInOut]
 })
 /** employees-list component*/
-export class EmployeesListComponent implements OnInit{
-	activeIndex: number;
-	private isSaving: boolean;
-	isDeleteMode: boolean = false;
-	private isEditMode: boolean = false;
-	viewempDetails: any = {};
-	//viewempDetails: any = {};
-	viewTraining: any = {};
-	viewGeneralDetails: any = {};
+export class EmployeesListComponent implements OnInit {
+    activeIndex: number;
+    private isSaving: boolean;
+    isDeleteMode: boolean = false;
+    private isEditMode: boolean = false;
+    viewempDetails: any = {};
+    //viewempDetails: any = {};
+    viewTraining: any = {};
+    viewGeneralDetails: any = {};
     allEmployeelist: any[] = [];
     public originationCounty: any;
     public nationalCountry: any;
@@ -50,188 +52,251 @@ export class EmployeesListComponent implements OnInit{
     public divisionCode: any;
     public empExpertisedescription: any;
     public jobTypeName: any;
+    public jobTitleName: any;
     public employeeLeaveType: any;
     public deleteEmployeeId: any;
-	ngOnInit(): void {
+    totalRecords: any;
+    totalPages: number;
+    pageSize: number = 10;
+    public departname: any;
+    public divsioname: any;
+    public biuName: any;
+    public compnayname: any;
+    public shiftId: any;
+    public supervisiorname: any;
+    public empTrainningInfo: any;
+    public leaveMapArray: any;
+    public shiftMapArray: any;
 
-		// debugger;
-		this.loadData();
-		this.activeIndex = 0;
-		this.empService.currentUrl = '/employeesmodule/employeepages/app-employees-list';
-		this.empService.bredcrumbObj.next(this.empService.currentUrl);
+    ngOnInit(): void {
 
-		this.empService.ShowPtab = false;
+        // debugger;
+        this.loadData();
+        this.activeIndex = 0;
+        this.empService.currentUrl = '/employeesmodule/employeepages/app-employees-list';
+        this.empService.bredcrumbObj.next(this.empService.currentUrl);
 
-		this.empService.alertObj.next(this.empService.ShowPtab);
+        this.empService.ShowPtab = false;
 
-	}
-	allVendorList: any[];
-	dataSource: MatTableDataSource<any>;
-	selectedColumn: any[];
-	public sourceEmployee: any = {};
-	Active: string = "Active";
-	selectedColumns: any[];
-	cols: any[];
-	modal: NgbModalRef;
+        this.empService.alertObj.next(this.empService.ShowPtab);
+
+    }
+    allVendorList: any[];
+    dataSource: MatTableDataSource<any>;
+    selectedColumn: any[];
+    public sourceEmployee: any = {};
+    Active: string = "Active";
+    selectedColumns: any[];
+    cols: any[];
+    modal: NgbModalRef;
     /** employees-list ctor */
-	constructor(private modalService: NgbModal,private translationService: AppTranslationService, private empService: EmployeeService, private router: Router, private authService: AuthService, private alertService: AlertService) {
-		this.dataSource = new MatTableDataSource();
-		this.translationService.closeCmpny = false;
-		this.activeIndex = 0;
-		this.empService.listCollection = null;
-	
-	}
-	private onDataLoadSuccessful(allWorkFlows: any[]) {
-	//debugger;
-		//this.alertService.stopLoadingMessage();
-		//this.loadingIndicator = false;
-		this.dataSource.data = allWorkFlows;
-		this.allVendorList = allWorkFlows;
+    constructor(private modalService: NgbModal, private translationService: AppTranslationService, private empService: EmployeeService, private router: Router, private authService: AuthService, private alertService: AlertService) {
+        this.dataSource = new MatTableDataSource();
+        this.translationService.closeCmpny = false;
+        this.activeIndex = 0;
+        this.empService.listCollection = null;
+
+    }
+    private onDataLoadSuccessful(allWorkFlows: any[]) {
+        //debugger;
+        //this.alertService.stopLoadingMessage();
+        //this.loadingIndicator = false;
+        this.totalRecords = allWorkFlows.length;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+
+        this.dataSource.data = allWorkFlows;
+        this.allVendorList = allWorkFlows;
 
 
-	}
+    }
     private onemployeeDataLoadSuccessful(allWorkFlows: any[]) {
+        console.log(allWorkFlows);
         if (allWorkFlows[0].employeeLeaveTypeMapping != null) {
-            this.employeeLeaveType = allWorkFlows[0].employeeLeaveTypeMapping.employeeLeaveTypeId
+            this.employeeLeaveType = allWorkFlows[0].employeeLeaveTypeMapping.employeeLeaveTypeId;
+            this.shiftId = allWorkFlows[0].employeeShiftMapping.shiftId;
+            this.leaveMapArray = allWorkFlows[0].employeeLeaveTypeMapping;
+            this.shiftMapArray = allWorkFlows[0].employeeShiftMapping;
+
+            console.log("leaveMapArray" + this.leaveMapArray);
+
         }
-		//debugger;
-		//this.alertService.stopLoadingMessage();
-		//this.loadingIndicator = false;
-		this.dataSource.data = allWorkFlows;
-		this.allEmployeelist = allWorkFlows[0];
+        //debugger;
+        //this.alertService.stopLoadingMessage();
+        //this.loadingIndicator = false;
+        this.dataSource.data = allWorkFlows;
+        this.allEmployeelist = allWorkFlows[0];
 
 
     }
 
+    loadCustomerPages(event) {
 
-	public navigateTogeneralInfo() {
-		//this.workFlowtService.listCollection = [];
-		this.empService.isEditMode = false;
-		this.router.navigateByUrl('/employeesmodule/employeepages/app-employee-general-information')
+    }
 
-	}
+
+    public navigateTogeneralInfo() {
+        //this.workFlowtService.listCollection = [];
+        this.empService.isEditMode = false;
+        this.router.navigateByUrl('/employeesmodule/employeepages/app-employee-general-information')
+
+    }
     openEdit(row) {
 
         console.log(row);
 
         console.log("row");
 
-		//this.isEditMode = true;
-		this.empService.isEditMode = true;
-		//this.isSaving = true;
-		//this.sourceVendor = row;
-		//this.loadMasterCompanies();
-		this.empService.listCollection = row;
-		this.router.navigateByUrl('/employeesmodule/employeepages/app-employee-general-information');
-		// this.actionName = this.sourceVendor.description;
+        //this.isEditMode = true;
+        this.empService.isEditMode = true;
+        //this.isSaving = true;
+        //this.sourceVendor = row;
+        //this.loadMasterCompanies();
+        this.empService.listCollection = row;
+        this.router.navigateByUrl('/employeesmodule/employeepages/app-employee-general-information');
+        // this.actionName = this.sourceVendor.description;
 
-	}
-	private onDataLoadFailed(error: any) {
-		// alert(error);
-		//this.alertService.stopLoadingMessage();
-		//this.loadingIndicator = false;
+    }
+    private onDataLoadFailed(error: any) {
+        // alert(error);
+        //this.alertService.stopLoadingMessage();
+        //this.loadingIndicator = false;
 
-	}
-	get userName(): string {
-		return this.authService.currentUser ? this.authService.currentUser.userName : "";
-	}
+    }
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    }
 
-	//deleteItemAndCloseModel(rowData) {
-	//	this.isSaving = true;
-	//	this.sourceEmployee = rowData;
-	//	this.sourceEmployee.updatedBy = this.userName;
-	//	this.sourceEmployee.isActive = false;
-	//	this.sourceEmployee.employeeId = rowData.employeeId;
-	//	this.empService.updateListstatus(this.sourceEmployee).subscribe(
-	//		response => this.saveCompleted(this.sourceEmployee),
-	//		error => this.saveFailedHelper(error));
-		
-	//}
+    //deleteItemAndCloseModel(rowData) {
+    //	this.isSaving = true;
+    //	this.sourceEmployee = rowData;
+    //	this.sourceEmployee.updatedBy = this.userName;
+    //	this.sourceEmployee.isActive = false;
+    //	this.sourceEmployee.employeeId = rowData.employeeId;
+    //	this.empService.updateListstatus(this.sourceEmployee).subscribe(
+    //		response => this.saveCompleted(this.sourceEmployee),
+    //		error => this.saveFailedHelper(error));
 
-	private loadData() {
-	
+    //}
 
-		this.empService.getEmployeeList().subscribe(
-			results => this.onDataLoadSuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
+    private loadData() {
 
-		this.cols = [
-			{ field: 'employeeId', header: 'Employee Id' },
-			{ field: 'firstName', header: 'First Name' },
-			{ field: 'lastName', header: 'Last Name' },
-			{ field: 'email', header: 'Email' },
-			//{ field: 'companyId', header: 'Company' },
-			//{ field: 'businessUnitId', header: 'BU' },
-			//{ field: 'divisionId', header: 'Division' },
-			//{ field: 'departmentId', header: 'Department' },
-			//{ field: 'jobTitleId', header: 'Job Title' },
-			{ field: 'createdBy', header: 'Created By' },
-			{ field: 'updatedBy', header: 'Updated By' },
-			{ field: 'updatedDate', header: 'Updated Date' },
-			{ field: 'createdDate', header: 'Created Date' }
 
-		];
+        this.empService.getEmployeeList().subscribe(
+            results => this.onDataLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
 
-		this.selectedColumns = this.cols;
+        this.cols = [
+            { field: 'employeeId', header: 'Employee Id' },
+            { field: 'firstName', header: 'First Name' },
+            { field: 'lastName', header: 'Last Name' },
+            { field: 'email', header: 'Email' },
+            //{ field: 'companyId', header: 'Company' },
+            //{ field: 'businessUnitId', header: 'BU' },
+            //{ field: 'divisionId', header: 'Division' },
+            //{ field: 'departmentId', header: 'Department' },
+            //{ field: 'jobTitleId', header: 'Job Title' },
+            { field: 'createdBy', header: 'Created By' },
+            { field: 'updatedBy', header: 'Updated By' },
+            { field: 'updatedDate', header: 'Updated Date' },
+            { field: 'createdDate', header: 'Created Date' }
 
-	}
+        ];
 
-	deleteItemAndCloseModel() {
-		this.isSaving = true;
-		this.isDeleteMode = true;
-		this.sourceEmployee.isdelete = true;
-		//this.sourceVendor = content;
-		//this.sourceEmployee.employeeId = rowData.employeeId;
-        this.sourceEmployee.employeeId =this.deleteEmployeeId;
-		this.sourceEmployee.updatedBy = this.userName;
+        this.selectedColumns = this.cols;
+
+    }
+
+    deleteItemAndCloseModel() {
+        this.isSaving = true;
+        this.isDeleteMode = true;
+        this.sourceEmployee.isdelete = true;
+        //this.sourceVendor = content;
+        //this.sourceEmployee.employeeId = rowData.employeeId;
+        this.sourceEmployee.employeeId = this.deleteEmployeeId;
+        this.sourceEmployee.updatedBy = this.userName;
         this.empService.deleteEmployee(this.sourceEmployee).subscribe(data => {
             this.alertService.showMessage("Employee removed successfully.");
             this.modal.close();
             this.loadData();
         })
-		//this.modal.close();
-	}
+        //this.modal.close();
+    }
 
     openDelete(content, row) {
 
         console.log(row);
         this.deleteEmployeeId = row.employeeId
-		this.isEditMode = false;
-		this.isDeleteMode = true;
+        this.isEditMode = false;
+        this.isDeleteMode = true;
         this.sourceEmployee = row;
-     
-		this.modal = this.modalService.open(content, { size: 'sm' });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-	}
-	private saveCompleted(user?: any) {
-		this.isSaving = false;
-			
-		if (this.isDeleteMode == true) {
-			this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
-			this.isDeleteMode = false;
-		}
-		else {
-			this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
 
-		}
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+    private saveCompleted(user?: any) {
+        this.isSaving = false;
 
-	//	this.loadData();
-	}
-	private saveFailedHelper(error: any) {
-		this.isSaving = false;
-		this.alertService.stopLoadingMessage();
-		this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
-		this.alertService.showStickyMessage(error, null, MessageSeverity.error);
-	}
+        if (this.isDeleteMode == true) {
+            this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
+            this.isDeleteMode = false;
+        }
+        else {
+            this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
+
+        }
+
+        //	this.loadData();
+    }
+    private saveFailedHelper(error: any) {
+        this.isSaving = false;
+        this.alertService.stopLoadingMessage();
+        this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
+        this.alertService.showStickyMessage(error, null, MessageSeverity.error);
+    }
     openView(content, row) {
-        console.log("empInfo");
 
+
+        if (row.managmentLegalEntity != null && row.divmanagmentLegalEntity != null && row.biumanagmentLegalEntity != null && row.compmanagmentLegalEntity != null) {
+            this.departname = row.managementStructeInfo.name;
+            this.divsioname = row.divmanagmentLegalEntity.name;
+            this.biuName = row.biumanagmentLegalEntity.name;
+            this.compnayname = row.compmanagmentLegalEntity.name;
+
+        }
+        else if (row.biumanagmentLegalEntity != null && row.divmanagmentLegalEntity != null && row.managmentLegalEntity != null) {
+
+            this.divsioname = row.managmentLegalEntity.name;
+            this.biuName = row.divmanagmentLegalEntity.name;
+            this.compnayname = row.biumanagmentLegalEntity.name;
+
+
+
+        }
+        else if (row.divmanagmentLegalEntity != null && row.managmentLegalEntity != null) {
+            this.biuName = row.managmentLegalEntity.name;
+            this.compnayname = row.divmanagmentLegalEntity.name;
+
+
+        }
+        else if (row.managementStructeInfo != null) {
+
+            this.compnayname = row.managmentLegalEntity.name;
+
+        }
+        else {
+            console.log("no Info Presnts")
+        }
         console.log(row);
-        this.originationCounty = row.orgCountries.countries_name;
-        this.nationalCountry = row.nationalCountryId.countries_name;
+
+
+        if (row.empSupervisor != null) {
+            this.supervisiorname = row.empSupervisor.firstName
+        }
+        this.originationCounty = row.orgCountries ? row.orgCountries.countries_name : '';
+        this.nationalCountry = row.nationalCountryId ? row.nationalCountryId.countries_name : '';
 
         if (row.employeeExpertise != null) {
             this.empExpertisedescription = row.employeeExpertise.description
@@ -240,6 +305,16 @@ export class EmployeesListComponent implements OnInit{
         if (row.jobtype != null) {
             this.jobTypeName = row.jobtype.jobTypeName
         }
+
+        if (row.jobtitle != null) {
+            this.jobTitleName = row.jobtitle.description
+        }
+
+        if (row.employeetraingType != null) {
+            this.empTrainningInfo = row.employeetraingType.description
+
+        }
+
 
 
 
@@ -263,7 +338,7 @@ export class EmployeesListComponent implements OnInit{
         }
 
 
-
+        this.jobTypeName = row.jobtype.jobTypeName;
 
 
         this.viewGeneralDetails = row;
@@ -280,31 +355,46 @@ export class EmployeesListComponent implements OnInit{
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-	dismissModel() {
-		this.modal.close();
-	}
-	handleChange(rowData, e) {
-		if (e.checked == false) {
-			this.sourceEmployee = rowData;
-			this.sourceEmployee.updatedBy = this.userName;
-			this.Active = "In Active";
-			this.sourceEmployee.isActive == false;
-			this.empService.updateActionforActive(this.sourceEmployee).subscribe(
-				response => this.saveCompleted(this.sourceEmployee),
-				error => this.saveFailedHelper(error));
-			//alert(e);
-		}
-		else {
-			this.sourceEmployee = rowData;
-			this.sourceEmployee.updatedBy = this.userName;
-			this.Active = "Active";
-			this.sourceEmployee.isActive == true;
-			this.empService.updateActionforActive(this.sourceEmployee).subscribe(
-				response => this.saveCompleted(this.sourceEmployee),
-				error => this.saveFailedHelper(error));
-			//alert(e);
-		}
 
-	}
+    dismissModel() {
+        this.modal.close();
+    }
+    handleChange(rowData, e) {
+        if (e.checked == false) {
+
+            console.log("In active");
+            this.sourceEmployee = rowData;
+            this.sourceEmployee.updatedBy = this.userName;
+            this.sourceEmployee.IsActive = false;
+            var employpeeleaveTypeId = [];
+            employpeeleaveTypeId.push(this.sourceEmployee.employeeLeaveTypeId);
+
+            console.log(employpeeleaveTypeId);
+            this.sourceEmployee.employeeLeaveTypeId = employpeeleaveTypeId;
+
+            this.Active = "In Active";
+            this.sourceEmployee.isActive = false;
+            this.empService.updateActionforActive(this.sourceEmployee).subscribe(
+                response => this.saveCompleted(this.sourceEmployee),
+                error => this.saveFailedHelper(error));
+            //alert(e);
+        }
+        else {
+            console.log("active");
+            var employpeeleaveTypeId = [];
+            this.sourceEmployee = rowData;
+            employpeeleaveTypeId.push(this.sourceEmployee.employeeLeaveTypeId);
+            this.sourceEmployee.employeeLeaveTypeId = employpeeleaveTypeId;
+            this.sourceEmployee.updatedBy = this.userName;
+            this.sourceEmployee.IsActive = true;
+            this.Active = "Active";
+            this.sourceEmployee.isActive == true;
+            this.empService.updateActionforActive(this.sourceEmployee).subscribe(
+                response => this.saveCompleted(this.sourceEmployee),
+                error => this.saveFailedHelper(error));
+            //alert(e);
+        }
+
+    }
 
 }

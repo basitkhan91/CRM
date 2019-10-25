@@ -79,7 +79,6 @@ namespace DAL
 
         IActionAttributeRepository ActionAttribute { get; }
 
-        IGatecodeRepository Gatecode { get; }
 
         IIntegration Integration { get; }
         IPriority Priority { get; }
@@ -142,14 +141,6 @@ namespace DAL
         IEmployeeLeaveType EmployeeLeaveType { get; }
         IEmployeeTrainingTypeRepository EmployeeTrainingType { get; }
         
-        ICompany Company { get; }
-
-        IDivision division { get; }
-
-        IDepartment department { get; }
-
-        IBusinessUnit businessUnit { get; }
-
         IEmployeeLicenseType employeeLicenseType { get; }
 
         IEmployeeLicensure employeeLicensure { get; }
@@ -177,7 +168,7 @@ namespace DAL
 
 
         ICustomerAircraftType customerAircraftType { get; }
-
+        ICustomerDocumentDetail CreateDocumentDetails { get; }
 
         IItemMaster itemMaster { get; }
 
@@ -191,7 +182,7 @@ namespace DAL
 
         IReceivingCustomerWork receivingCustomerWork { get; }
 
-        ILegalEntity legalEntity { get; }
+        ILegalEntity LegalEntity { get; }
 
        // IGLAccountClassRespository gLAccountClass { get; }
 
@@ -200,7 +191,6 @@ namespace DAL
         IPurchaseOrder purchaseOrder { get; }
 
         ICustomerAffliationRepository CustomerAffliationRepository { get; }
-        IGLAccountCategoriesRepository GLAccountCategories { get; }
        IDiscountRepository Discount { get; }
         IManufacturerRepository Manufacturer { get; }
         ILaborAndOverheadCostRepository LaborAndOverheadCost { get; }
@@ -231,9 +221,12 @@ namespace DAL
 
         IGLAccount gLAccount { get; }
 
-        IAssetIntangibleType assetIntangibleType { get; }
 
-        IAssetType assetType { get; }
+        IAssetTypeRepository AssetTypeRepository { get; }
+        IAssetIntangibleTypeRepository AssetIntangibleTypeRepository { get; }
+        IStageCodeRepository StageCodeRepository { get; }
+        IGLAccountCategoryRepository GLAccountCategoryRepository { get; }
+
 
         IEmployeeShiftRepository EmployeeShiftMappingRepository { get; }
         IWorkFlowRepositoryTest workFlowRepositoryTest { get; }
@@ -260,6 +253,14 @@ namespace DAL
         IAssetIntangibleAttributeType AssetIntangibleAttributeType { get; }
         IAssetDepreciationInterval AssetDepreciationInterval { get; }
 
+        IAssetDepreciationMethod AssetDepreciationMethod { get; }
+
+        IAssetDisposalType AssetDisposalType { get; }
+
+        IAssetStatus AssetStatus { get; }
+
+        IAssetDepConvention AssetDepConvention { get; }
+        
         IPublicationTypesRepository PublicationTypesRepository { get; }
         IPercentageRepository PercentageRepository { get; }
         void SaveChanges(Employee employeeobject);

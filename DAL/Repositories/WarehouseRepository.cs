@@ -11,12 +11,21 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
+using DAL.Core.DataExtractors;
+using DAL.Common;
+using Microsoft.Extensions.Options;
+
 namespace DAL.Repositories
 {
     public class WarehouseRepository:Repository<Warehouse>, IWarehouseRepository
     {
-        public WarehouseRepository(ApplicationDbContext context) : base(context)
-        { }
+        private AppSettings AppSettings { get; set; }
+
+        public WarehouseRepository(ApplicationDbContext context, IOptions<AppSettings> settings) : base(context)
+        {
+            AppSettings = settings.Value;
+        }
+
         public IEnumerable<object> GetAllWarehouseData()
         {
             try
@@ -162,6 +171,73 @@ namespace DAL.Repositories
 
 
         }
+
+        public IEnumerable<Warehouse> BulkUpload(IFormFile file)
+        {
+            IEnumerable<Warehouse> wareHouses = Enumerable.Empty<Warehouse>();
+
+            var dataExtractor = new WareHouseDataExtractor(AppSettings);
+
+            wareHouses = dataExtractor.Extract(file, Common.ModuleEnum.WareHouse);
+
+            foreach (var wareHouse in wareHouses)
+            {
+                if (IsValid(wareHouse))
+                {
+                    var site = GetSiteByName(wareHouse.Site.Name);  
+
+                    if(site == null)
+                    {
+                        wareHouse.UploadStatus = "Site doesnot exist";
+
+                        continue;
+                    }
+
+                    wareHouse.SiteId = site.SiteId;
+
+                    wareHouse.Site = site;
+
+                    if (!WareHouseNameAlreadyExist(wareHouse.Name))
+                    {
+                        _appContext.Warehouse.Add(wareHouse);
+
+                        _appContext.SaveChanges();
+
+                        wareHouse.WarehouseId = wareHouse.WarehouseId;
+
+                        wareHouse.UploadStatus = "Success";
+                    }
+                    else
+                    {
+                        wareHouse.UploadStatus = "Duplicate";
+                    }
+                }
+                else
+                {
+                    wareHouse.UploadStatus = "Required fields are missing";
+                }
+            }
+
+            return wareHouses;
+        }
+
+        private bool IsValid(Warehouse warehouse)
+        {
+            return warehouse.Name != string.Empty && warehouse.Site.Name != string.Empty;  
+        }
+
+        private Site GetSiteByName(string name)
+        {
+            return _appContext.Site.Where(site => site.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+        }
+
+        private bool WareHouseNameAlreadyExist(string value)
+        {
+            return _appContext.Warehouse.Any(wareHouse => 
+                                            ((wareHouse.IsDelete.HasValue && wareHouse.IsDelete.Value == false) || (!wareHouse.IsDelete.HasValue))
+                                             && wareHouse.Name.Equals(value, StringComparison.InvariantCultureIgnoreCase));
+        }
+
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }
 }
