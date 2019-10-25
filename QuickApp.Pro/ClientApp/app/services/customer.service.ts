@@ -531,6 +531,9 @@ export class CustomerService {
     getCustomerContactAuditDetails(customerContactId) {
         return this.customerEndpoint.getCustomerContactAuditDetails<any>(customerContactId)
     }
+    getDocumentList(customerId) {
+        return this.customerEndpoint.getDocumentList(customerId)
+    }
 
 
 }

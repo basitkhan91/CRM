@@ -121,6 +121,7 @@ export class CustomerEndpoint extends EndpointFactory {
 
 
 
+
     get globalSearch() { return this.configurations.baseUrl + this.getGlobalCustomer; }
     get paginate() { return this.configurations.baseUrl + this.getCustomer; }
     get customerBillAddressUrl() { return this.configurations.baseUrl + this._customerBillAddressUrl; }
@@ -181,6 +182,10 @@ export class CustomerEndpoint extends EndpointFactory {
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
         super(http, configurations, injector);
+    }
+
+    getDocumentList(customerId) {
+        return this.http.get(`${this.configurations.baseUrl}/api/Customer//getCustomerDocumentDetail/${customerId}`, this.getRequestHeaders())
     }
 
     postDomesticShipVia<T>(postData) {
