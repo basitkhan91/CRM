@@ -323,7 +323,12 @@ namespace DAL.Repositories
                                                          && !property.Name.Equals("UploadStatus")
                                                          && reader.GetValue(propCount) != null)
                                                 {
-                                                    property.SetValue(model, reader.GetValue(propCount));
+                                                    if (reader.GetValue(propCount).GetType().Name == "Double" && property.PropertyType.Name == "Int64")
+                                                    {
+                                                        property.SetValue(model, Convert.ToInt64(reader.GetValue(propCount)));
+                                                    }
+                                                    else
+                                                        property.SetValue(model, reader.GetValue(propCount));
                                                     propCount++;
                                                 }
                                             }
