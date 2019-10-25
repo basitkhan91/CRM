@@ -36,7 +36,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     @Output() saveGeneralInformationData = new EventEmitter<any>();
     @Output() editGeneralInformation = new EventEmitter<any>();
 
-    generalInformation = new CustomerGeneralInformation()
+    generalInformation = new CustomerGeneralInformation();
     customertypes: any[];
     customerNames: { customerId: any; name: any; }[];
     //customerListOriginal: { customerId: any; name: any; }[];
@@ -81,13 +81,15 @@ export class CustomerGeneralInformationComponent implements OnInit {
     partListOriginal: any;
     // restrictsPMAList: any;
     // restrictBERList: any;
-    restictBERtempList: any = []
+    restictBERtempList: any = [];
     restictPMAtempList: any = [];
+    restrictedDERParts: any = [];
+    restrictedPMAParts: any = [];
     restrictHeaders = [
         { field: 'partNumber', header: 'PN' },
         { field: 'memo', header: 'Description' },
 
-    ]
+    ];
     // editData: any;
 
     // selectedCustomerCodeData: any;
@@ -391,10 +393,11 @@ export class CustomerGeneralInformationComponent implements OnInit {
             this.customerService.getCustomerdataById(this.id).subscribe(response => {
                 console.log(response);
 
-                const res = response[0][0]
-
+                const res = response[0];
+                
                 this.editGeneralInformation.emit(res);
                 this.editData = res;
+       ;
                 this.generalInformation = {
                     ...this.editData,
                     name: getObjectByValue('name', res.name, this.customerListOriginal),
@@ -536,7 +539,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     addRestrictPMA() {
 
-        this.generalInformation.restrictedPMAParts = this.restictPMAtempList
+        this.generalInformation.restrictedPMAParts = this.restictPMAtempList;
     }
     deleteRestirctPMA(i) {
         this.generalInformation.restrictedPMAParts.splice(i, 1);
@@ -553,9 +556,11 @@ export class CustomerGeneralInformationComponent implements OnInit {
     filterclassifications(event) {
         this.classificationList = this.allcustomerclassificationInfo;
 
-        this.classificationList = [...this.allcustomerclassificationInfo.filter(x => {
-            return x.description.toLowerCase().includes(event.query.toLowerCase())
-        })]
+        this.classificationList = [
+            ...this.allcustomerclassificationInfo.filter(x => {
+                return x.description.toLowerCase().includes(event.query.toLowerCase());
+            })
+        ];
 
     }
     filterCustomerNames(event) {
@@ -652,8 +657,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
             this.customerService.newAction({
                 ...this.generalInformation,
                 country: getValueFromObjectByKey('countries_id', this.generalInformation.country),
-                restrictedDERParts: this.generalInformation.restrictedDERParts.map(x => { return { ...x, partType: 'DER' } }),
-                restrictedPMAParts: this.generalInformation.restrictedPMAParts.map(x => { return { ...x, partType: 'PMA' } }),
+           
+                restrictedDERParts: (typeof this.generalInformation.restrictedDERParts === 'undefined') ? null : this.generalInformation.restrictedDERParts.map(x => { return { ...x, partType: 'DER' } }),
+                restrictedPMAParts: typeof this.generalInformation.restrictedPMAParts === 'undefined' ? null : this.generalInformation.restrictedPMAParts.map(x => { return { ...x, partType: 'PMA' } }),
                 customerParentName: getValueFromObjectByKey('name', this.generalInformation.customerParentName),
                 createdBy: this.userName, updatedBy: this.userName, masterCompanyId: 1
             }).subscribe(res => {
@@ -673,8 +679,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 ...this.generalInformation,
                 addressId: this.editData.addressId,
                 customerId: this.id,
-                restrictedDERParts: this.generalInformation.restrictedDERParts.map(x => { return { ...x, partType: 'DER' } }),
-                restrictedPMAParts: this.generalInformation.restrictedPMAParts.map(x => { return { ...x, partType: 'PMA' } }),
+                
+                restrictedDERParts: (typeof this.generalInformation.restrictedDERParts === 'undefined') ? null : this.generalInformation.restrictedDERParts.map(x => { return { ...x, partType: 'DER' } }),
+                restrictedPMAParts: typeof this.generalInformation.restrictedPMAParts === 'undefined' ? null:this.generalInformation.restrictedPMAParts.map(x => { return { ...x, partType: 'PMA' } }),
                 name: editValueAssignByCondition('name', this.generalInformation.name),
                 customerCode: editValueAssignByCondition('customerCode', this.generalInformation.customerCode),
                 country: getValueFromObjectByKey('nice_name', this.generalInformation.country),

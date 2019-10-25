@@ -517,6 +517,8 @@ namespace DAL.Repositories
 								customerId = t.CustomerId,
 								primarySalesPersonId = t.PrimarySalesPersonId,
 								csrName = t.CSRName,
+                                csrId = t.CsrId,
+                                saId = t.SaId,
 								secondarySalesPersonId = t.SecondarySalesPersonId,
 								annualQuota = t.AnnualQuota,
 								annualRevenuePotential = t.AnnualRevenuePotential,
@@ -1372,10 +1374,6 @@ namespace DAL.Repositories
             }
         }
 
-
-
-
-
-		private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
+        private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 	}
 }
