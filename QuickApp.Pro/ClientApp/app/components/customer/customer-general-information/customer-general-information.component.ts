@@ -405,6 +405,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
                     customerParentName: getObjectByValue('name', res.customerParentName, this.customerListOriginal),
                     customerCode: getObjectByValue('customerCode', res.customerCode, this.customerListOriginal),
                 };
+
+                
                 // this.editData = {
                 //     addressId: res.addressId,
                 //     isAddressForBilling: res.t.isAddressForBilling,
