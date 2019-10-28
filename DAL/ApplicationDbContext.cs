@@ -101,7 +101,6 @@ namespace DAL
         public DbSet<CertificationType> CertificationType { get; set; }
 
         public DbSet<DiscountModel> Discount { get; set; }
-        public DbSet<ExpenditureCategory> ExpenditureCategory { get; set; }
 
         public DbSet<DefaultMessage> DefaultMessage { get; set; }
         public DbSet<TaxType> TaxType { get; set; }
@@ -287,11 +286,14 @@ namespace DAL
         public DbSet<StageCodeAudit> StageCodeAudit { get; set; }
         public DbSet<GLAccountCategory> GLAccountCategory { get; set; }
         public DbSet<GLAccountCategoryAudit> GLAccountCategoryAudit { get; set; }
+        public DbSet<ExpenditureCategory> ExpenditureCategory { get; set; }
+        public DbSet<ExpenditureCategoryAudit> ExpenditureCategoryAudit { get; set; }
+        public DbSet<AssetAttributeType> AssetAttributeType { get; set; }
+        public DbSet<AssetAttributeTypeAudit> AssetAttributeTypeAudit { get; set; }
 
         public DbSet<Asset> Asset { get; set; }
         public DbSet<GLAccountMiscCategory> GLAccountMiscCategory { get; set; }
         public DbSet<GLAccount> GLAccount { get; set; }
-        public DbSet<AssetAttributeType> AssetAttributeType { get; set; }
 
         public DbSet<AccountingCalendar> AccountingCalendar { get; set; }
         public DbSet<PartStockLineMapper> PartStockLineMapper { get; set; }
@@ -342,7 +344,6 @@ namespace DAL
         public DbSet<ShelfAudit> ShelfAudit { get; set; }
         public DbSet<BinAudit> BinAudit { get; set; }
         public DbSet<ProvisionAudit> ProvisionAudit { get; set; }
-        public DbSet<ExpenditureCategoryAudit> ExpenditureCategoryAudit { get; set; }
 
 
         public DbSet<InterCompanySetup> InterCompanySetup { get; set; }
