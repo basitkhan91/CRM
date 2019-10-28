@@ -31,9 +31,6 @@ export class CreatePOPartsList {
     ifSplitShip: boolean;
     purchaseOrderPartRecordId: number;
     companyId: number;
-    //partBusinessUnitId: number;
-    //partDivisionId: number;
-    //partDepartmentId: number;
     parentBulist: any[];
     parentDivisionlist: any[];
     parentDepartmentlist: any[];
@@ -60,7 +57,7 @@ export class CreatePOPartsList {
         this.unitCost = null;
         this.discountPerUnit = null;
         this.discountAmount = null;
-        this.extendedCost = 2; //null
+        this.extendedCost = null; //null
         this.functionalCurrencyId = null;
         this.foreignExchangeRate = null;
         this.reportCurrencyId = null;
@@ -74,9 +71,6 @@ export class CreatePOPartsList {
         this.ifSplitShip = false;
         this.purchaseOrderPartRecordId = null;
         this.companyId = null;
-        //this.partBusinessUnitId = null;
-        //this.partDivisionId = null;
-        //this.partDepartmentId = null;
         this.parentBulist = [];
         this.parentDivisionlist = [];
         this.parentDepartmentlist = [];
