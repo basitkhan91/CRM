@@ -62,7 +62,8 @@ namespace DAL
         IEmployeeExpertiseRepository _employeeExpertiseRepository;
         IJobTitle _jobTitle;
         IJobType _jobType;
-        IExpenditureCategory _expenditureCategory;
+        IExpenditureCategoryRepository _expenditureCategoryRepository;
+        IAssetAttributeTypeRepository _assetAttributeTypeRepository;
         IDefaultMessage _defaultMessage;
         IDocument _document;
         IVendor _vendor;
@@ -727,17 +728,6 @@ namespace DAL
                 if (_jobType == null)
                     _jobType = new JobTypeRepository(_context);
                 return _jobType;
-            }
-        }
-
-
-        public IExpenditureCategory ExpenditureCategory
-        {
-            get
-            {
-                if (_expenditureCategory == null)
-                    _expenditureCategory = new ExpenditureCategoryRepository(_context);
-                return _expenditureCategory;
             }
         }
 
@@ -1554,7 +1544,27 @@ namespace DAL
             }
         }
 
+        public IExpenditureCategoryRepository ExpenditureCategoryRepository
 
+        {
+            get
+            {
+                if (_expenditureCategoryRepository == null)
+                    _expenditureCategoryRepository = new ExpenditureCategoryRepository(_context, _appSettings);
+                return _expenditureCategoryRepository;
+            }
+        }
+
+        public IAssetAttributeTypeRepository AssetAttributeTypeRepository
+
+        {
+            get
+            {
+                if (_assetAttributeTypeRepository == null)
+                    _assetAttributeTypeRepository = new AssetAttributeTypeRepository(_context, _appSettings);
+                return _assetAttributeTypeRepository;
+            }
+        }
         public IGLAccountNodeShareWithEntityMapper GLAccountNodeShareWithEntityMapper
         {
             get

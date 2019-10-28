@@ -58,6 +58,12 @@ export class SingleComponent {
                 case '/singlepages/singlepages/app-gl-account-category':
                     itemLabel = 'GL Account Category';
                     break;
+                case '/singlepages/singlepages/app-expenditure-category':
+                    itemLabel = 'Expenditure Category';
+                    break;
+                case '/singlepages/singlepages/app-asset-attribute-type':
+                    itemLabel = 'Asset Attribute Type';
+                    break;
                 default:
             }
             this.items = [
@@ -200,13 +206,6 @@ export class SingleComponent {
 				this.items = [
 					{ label: 'Single Screens' },
 					{ label: 'EmployeeExpertise' }
-				];
-			}
-
-			else if (this.currentUrl == '/singlepages/singlepages/app-expenditure') {
-				this.items = [
-					{ label: 'Single Screens' },
-					{ label: 'Expenditure' }
 				];
 			}
 
@@ -447,6 +446,12 @@ export class SingleComponent {
                 case '/singlepages/singlepages/app-gl-account-category':
                     itemLabel = 'GL Account Category';
                     break;
+                case '/singlepages/singlepages/app-expenditure-category':
+                    itemLabel = 'Expenditure Category';
+                    break;
+                case '/singlepages/singlepages/app-asset-attribute-type':
+                    itemLabel = 'Asset Attribute Type';
+                    break;
                 default:
             }
             this.items = [
@@ -528,13 +533,6 @@ export class SingleComponent {
 				this.items = [
 					{ label: 'Single Screens' },
 					{ label: 'EmployeeExpertise' }
-				];
-			}
-
-			else if (this.currentUrl == '/singlepages/singlepages/app-expenditure') {
-				this.items = [
-					{ label: 'Single Screens' },
-					{ label: 'Expenditure' }
 				];
 			}
 
