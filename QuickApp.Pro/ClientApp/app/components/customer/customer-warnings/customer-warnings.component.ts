@@ -52,6 +52,7 @@ export class CustomerWarningsComponent implements OnInit {
 	customerWarningId: any;
 	customerCode: any;
 	customerName: any;
+	customerWarningData: any = [];
 	// this.addNewWarning = {
 	//     ...this.labor,
 	//     tasks: [{ ...this.labor.tasks[0], [keysArray[i]]: [new AllTasks()] }]
@@ -156,6 +157,12 @@ export class CustomerWarningsComponent implements OnInit {
 			this.savedGeneralInformationData = this.editGeneralInformationData;
 			this.customerCode = this.editGeneralInformationData.customerCode;
 			this.customerName = this.editGeneralInformationData.name;
+               
+			this.getCustomerWarningsData()
+
+			if(this.customerWarningData.length > 0) {
+				this.warningMessages = this.customerWarningData;
+			}else{
 			this.warningMessages = this.types.map(x => {
 				return {
 					sourceModule: x,
@@ -166,6 +173,9 @@ export class CustomerWarningsComponent implements OnInit {
 					restrictMessage: '',
 				}
 			})
+			}
+
+
 		} else {
 			this.id = this.savedGeneralInformationData.customerId;
 			this.customerCode = this.savedGeneralInformationData.customerCode;
@@ -187,6 +197,12 @@ export class CustomerWarningsComponent implements OnInit {
 
 	get userName(): string {
 		return this.authService.currentUser ? this.authService.currentUser.userName : "";
+	}
+
+	async getCustomerWarningsData(){
+		await this.customerService.getCustomerWarningsById(this.id).subscribe(res => {
+			this.customerWarningData = res;
+		})
 	}
 	allowAll(value) {
 

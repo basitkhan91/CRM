@@ -237,6 +237,8 @@ export class CustomerStepsPrimengComponent {
 		this.savedGeneralInformationData = data;
 		this.isDisabledSteps = true;
 	}
+
+
 	updateInformationData(data) {
 		this.editGeneralInformationData = data;
 	}
