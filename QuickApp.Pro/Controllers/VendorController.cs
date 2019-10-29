@@ -652,6 +652,12 @@ namespace QuickApp.Pro.Controllers
 
             actionobject.ShipToSiteName = poViewModel.ShipToSiteName;
             actionobject.BillToSiteName = poViewModel.BillToSiteName;
+            actionobject.ShippingCost = poViewModel.ShippingCost;
+            actionobject.HandlingCost = poViewModel.HandlingCost;
+            actionobject.BillToContactId = poViewModel.BillToContactId;
+            actionobject.ShipViaId = poViewModel.ShipViaId;
+
+
             actionobject.IsActive = true;
 
         }

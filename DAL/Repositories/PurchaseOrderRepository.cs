@@ -212,7 +212,9 @@ namespace DAL.Repositories
                                 emp.EmployeeCode,
                                 emp.Email,
                                 pal.StatusId,
-                                pal.Level
+                                pal.Level,
+                                pa.POApproverId,
+                                pal.POApproverListId
                             }
                             ).ToList();
                 return list;
@@ -461,7 +463,9 @@ namespace DAL.Repositories
                             join c in _appContext.capabilityType on vct.CapabilityTypeId equals c.CapabilityTypeId
                             join im in _appContext.ItemMaster on vc.ItemMasterId equals im.ItemMasterId
                             join mp in _appContext.MasterParts on im.MasterPartId equals mp.MasterPartId
-                            join ma in _appContext.Manufacturer on mp.ManufacturerId equals ma.ManufacturerId
+                            //join ma in _appContext.Manufacturer on mp.ManufacturerId equals ma.ManufacturerId
+                            join ma in _appContext.Manufacturer on mp.ManufacturerId equals ma.ManufacturerId into manu
+                            from ma in manu.DefaultIfEmpty()
                             select new
                             {
                                 VCId = vc.VendorCapabilityId,
@@ -534,7 +538,12 @@ namespace DAL.Repositories
                             po.UpdatedBy,
                             po.UpdatedDate,
                             po.IsActive,
-                            po.IsDeleted
+                            po.IsDeleted,
+                            po.ShippingCost,
+                            po.HandlingCost,
+                            po.BillToContactId,
+                            po.ShipViaId
+                            
                         }).FirstOrDefault();
 
             return data;

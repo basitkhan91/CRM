@@ -488,7 +488,7 @@ namespace DAL.Repositories
                             join pub in _appContext.Publication on PublicationItemMaster.PublicationRecordId equals pub.PublicationRecordId
                             join asc in _appContext.ATASubChapter on it.ATASubChapterId equals asc.ATASubChapterId
                             where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && PublicationItemMaster.IsDeleted != true && myATAChapterId.Contains(it.ATAChapterId) && myATASubChapterID.Contains(it.ATASubChapterId)
-                            select new { PublicationItemMaster.ItemMasterId, pub.PublicationId, it.PartNumber, it.ATAChapterId, it.ATAChapterCode, it.ATAChapterName, it.ATASubChapterId, it.ATASubChapterDescription, it.MasterCompanyId, PublicationItemMaster.IsActive, PublicationItemMaster.IsDeleted,asc.ATASubChapterCode }).ToList();
+                            select new { PublicationItemMaster.ItemMasterId, pub.PublicationId, it.PartNumber, it.ATAChapterId, it.ATAChapterCode, it.ATAChapterName, it.ATASubChapterId, it.ATASubChapterDescription, it.MasterCompanyId, PublicationItemMaster.IsActive, PublicationItemMaster.IsDeleted, asc.ATASubChapterCode }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return uniquedata;
             }
@@ -499,7 +499,7 @@ namespace DAL.Repositories
                             join pub in _appContext.Publication on PublicationItemMaster.PublicationRecordId equals pub.PublicationRecordId
                             join asc in _appContext.ATASubChapter on it.ATASubChapterId equals asc.ATASubChapterId
                             where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && PublicationItemMaster.IsDeleted != true && myATAChapterId.Contains(it.ATAChapterId)
-                            select new { PublicationItemMaster.ItemMasterId, pub.PublicationId, it.PartNumber, it.ATAChapterId, it.ATAChapterCode, it.ATAChapterName, it.ATASubChapterId, it.ATASubChapterDescription, it.MasterCompanyId, PublicationItemMaster.IsActive, PublicationItemMaster.IsDeleted,asc.ATASubChapterCode }).ToList();
+                            select new { PublicationItemMaster.ItemMasterId, pub.PublicationId, it.PartNumber, it.ATAChapterId, it.ATAChapterCode, it.ATAChapterName, it.ATASubChapterId, it.ATASubChapterDescription, it.MasterCompanyId, PublicationItemMaster.IsActive, PublicationItemMaster.IsDeleted, asc.ATASubChapterCode }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return uniquedata;
             }
@@ -510,7 +510,7 @@ namespace DAL.Repositories
                             join pub in _appContext.Publication on PublicationItemMaster.PublicationRecordId equals pub.PublicationRecordId
                             join asc in _appContext.ATASubChapter on it.ATASubChapterId equals asc.ATASubChapterId
                             where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && PublicationItemMaster.IsDeleted != true && myATASubChapterID.Contains(it.ATASubChapterId)
-                            select new { PublicationItemMaster.ItemMasterId, pub.PublicationId, it.PartNumber, it.ATAChapterId, it.ATAChapterCode, it.ATAChapterName, it.ATASubChapterId, it.ATASubChapterDescription, it.MasterCompanyId, it.IsActive, it.IsDeleted,asc.ATASubChapterCode }).ToList();
+                            select new { PublicationItemMaster.ItemMasterId, pub.PublicationId, it.PartNumber, it.ATAChapterId, it.ATAChapterCode, it.ATAChapterName, it.ATASubChapterId, it.ATASubChapterDescription, it.MasterCompanyId, it.IsActive, it.IsDeleted, asc.ATASubChapterCode }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return uniquedata;
 
@@ -522,95 +522,77 @@ namespace DAL.Repositories
                             join pub in _appContext.Publication on PublicationItemMaster.PublicationRecordId equals pub.PublicationRecordId
                             join asc in _appContext.ATASubChapter on it.ATASubChapterId equals asc.ATASubChapterId
                             where PublicationItemMaster.PublicationRecordId == PublicationID && PublicationItemMaster.IsActive == true && PublicationItemMaster.IsDeleted != true
-                            select new { PublicationItemMaster.ItemMasterId, pub.PublicationId, it.PartNumber, it.ATAChapterId, it.ATAChapterCode, it.ATAChapterName, it.ATASubChapterId, it.ATASubChapterDescription, it.MasterCompanyId, PublicationItemMaster.IsActive, PublicationItemMaster.IsDeleted,asc.ATASubChapterCode }).ToList();
+                            select new { PublicationItemMaster.ItemMasterId, pub.PublicationId, it.PartNumber, it.ATAChapterId, it.ATAChapterCode, it.ATAChapterName, it.ATASubChapterId, it.ATASubChapterDescription, it.MasterCompanyId, PublicationItemMaster.IsActive, PublicationItemMaster.IsDeleted, asc.ATASubChapterCode }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return uniquedata;
 
             }
         }
 
-        public GetData<PublicationsList> GetPublicationsList(string publicationId, string description, long publicationTypeId, string publishedBy, long employeeId, string location, int pageNumber, int pageSize)
+        public IEnumerable<object> GetPublicationsList(string publicationId, string description, string publicationType, string publishedBy, string employee, string location, int pageNumber, int pageSize)
         {
             try
             {
-                if (publicationTypeId == null)
-                    publicationTypeId = 0;
+
                 pageNumber = pageNumber + 1;
                 var take = pageSize;
                 var skip = take * (pageNumber - 1);
 
-                GetData<PublicationsList> getData = new GetData<PublicationsList>();
-                PublicationsList publication;
+                var totalRecords = (from p in _appContext.Publication
+                                    join pt in _appContext.PublicationType on p.PublicationTypeId equals pt.PublicationTypeId
+                                    //join e in _appContext.Employee on p.EmployeeId equals e.EmployeeId
+                                    join e in _appContext.Employee on p.EmployeeId equals e.EmployeeId into emp
+                                    from e in emp.DefaultIfEmpty()
+                                    where p.IsDeleted == false
+                                    && p.PublicationId.Contains(!String.IsNullOrEmpty(publicationId) ? publicationId : p.PublicationId)
+                                    && p.Description.Contains(!String.IsNullOrEmpty(description) ? description : p.Description)
+                                    && pt.Name.Contains(!string.IsNullOrEmpty(publicationType) ? publicationType : pt.Name)
+                                    && p.Publishby.Contains(!String.IsNullOrEmpty(publishedBy) ? publishedBy : p.Publishby)
+                                    &&(e.FirstName == null || e.FirstName.Contains(!string.IsNullOrEmpty(employee) ? employee : e.FirstName))
+                                    
+                                    && p.Location == (!String.IsNullOrEmpty(location) ? location : p.Location)
+                                    select new
+                                    {
+                                        p.PublicationRecordId
+                                    }
+                          ).Distinct()
+                          .Count();
 
-                getData.TotalRecordsCount = _appContext.Publication
-                           .Join(_appContext.PublicationType,
-                           p => p.PublicationTypeId,
-                           pt => pt.PublicationTypeId,
-                           (p, pt) => new { p, pt })
-                            .Where(p => (p.p.IsDeleted == null || p.p.IsDeleted == false)
-                                   && p.p.PublicationId.Contains(!String.IsNullOrEmpty(publicationId) ? publicationId : p.p.PublicationId)
-                                   && p.p.Description.Contains(!String.IsNullOrEmpty(description) ? description : p.p.Description)
-                                   && p.p.PublicationTypeId == (publicationTypeId > 0 ? publicationTypeId : p.p.PublicationTypeId)
-                                   && p.p.Publishby.Contains(!String.IsNullOrEmpty(publishedBy) ? publishedBy : p.p.Publishby)
-                                   && p.p.EmployeeId == p.p.EmployeeId
-                                   && p.p.Location == (!String.IsNullOrEmpty(location) ? location : p.p.Location)
-                                   )
-                            .Count();
+                var list = (from p in _appContext.Publication
+                            join pt in _appContext.PublicationType on p.PublicationTypeId equals pt.PublicationTypeId
+                            // join e in _appContext.Employee on p.EmployeeId equals e.EmployeeId
+                            join e in _appContext.Employee on p.EmployeeId equals e.EmployeeId into emp
+                            from e in emp.DefaultIfEmpty()
+                            where p.IsDeleted == false
+                            && p.PublicationId.Contains(!String.IsNullOrEmpty(publicationId) ? publicationId : p.PublicationId)
+                            && p.Description.Contains(!String.IsNullOrEmpty(description) ? description : p.Description)
+                            && pt.Name.Contains(!string.IsNullOrEmpty(publicationType) ? publicationType : pt.Name)
+                            && p.Publishby.Contains(!String.IsNullOrEmpty(publishedBy) ? publishedBy : p.Publishby)
+                            //&&  e.FirstName.Contains(!string.IsNullOrEmpty(employee) ? employee : e.FirstName)
 
-                var result = _appContext.Publication
-                            .Join(_appContext.PublicationType,
-                            p => p.PublicationTypeId,
-                            pt => pt.PublicationTypeId,
-                            (p, pt) => new { p, pt })
-                            .Join(_appContext.Employee,
-                            p1 => p1.p.EmployeeId,
-                            e => e.EmployeeId,
-                            (p1, e) => new { p1, e })
-                             .Where(p => (p.p1.p.IsDeleted == null || p.p1.p.IsDeleted == false)
-                                    && p.p1.p.PublicationId.Contains(!String.IsNullOrEmpty(publicationId) ? publicationId : p.p1.p.PublicationId)
-                                    && p.p1.p.Description.Contains(!String.IsNullOrEmpty(description) ? description : p.p1.p.Description)
-                                    && p.p1.p.PublicationTypeId == (publicationTypeId > 0 ? publicationTypeId : p.p1.p.PublicationTypeId)
-                                    && p.p1.p.Publishby.Contains(!String.IsNullOrEmpty(publishedBy) ? publishedBy : p.p1.p.Publishby)
-                                    && p.p1.p.EmployeeId == p.p1.p.EmployeeId
-                                    && p.p1.p.Location == (!String.IsNullOrEmpty(location) ? location : p.p1.p.Location)
-                                    )
-                             .Select(p => new
-                             {
-                                 PublicationRecordId = p.p1.p.PublicationRecordId,
-                                 PublicationId = p.p1.p.PublicationId,
-                                 Description = p.p1.p.Description,
-                                 PublicationType = p.p1.pt.Name,
-                                 Publishby = p.p1.p.Publishby,
-                                 Location = p.p1.p.Location,
-                                 IsActive = p.p1.p.IsActive,
-                                 UpdatedDate = p.p1.p.UpdatedDate,
-                                 EmployeeName = p.e.FirstName + ' ' + p.e.LastName
+                            && (e.FirstName == null || e.FirstName.Contains(!string.IsNullOrEmpty(employee) ? employee : e.FirstName))
 
-                             })
-                             .OrderByDescending(p => p.UpdatedDate)
-                             .Skip(skip)
-                             .Take(take)
-                             .ToList();
+                            && p.Location == (!String.IsNullOrEmpty(location) ? location : p.Location)
+                            select new
+                            {
+                                p.PublicationRecordId,
+                                p.PublicationId,
+                                p.Description,
+                                PublicationType = pt.Name,
+                                p.Publishby,
+                                p.Location,
+                                 p.IsActive,
+                                p.CreatedDate,
+                                EmployeeName = e.FirstName==null ?"":e.FirstName,
+                                TotalRecords = totalRecords
+                            }
+                          ).Distinct()
+                          .OrderByDescending(p => p.CreatedDate)
+                          .Skip(skip)
+                          .Take(take)
+                          .ToList();
 
-                if (result != null && result.Count > 0)
-                {
-                    getData.PaginationList = new List<PublicationsList>();
-                    foreach (var item in result)
-                    {
-                        publication = new PublicationsList();
-                        publication.PublicationRecordId = item.PublicationRecordId;
-                        publication.PublicationId = item.PublicationId;
-                        publication.Description = item.Description;
-                        publication.PublicationType = item.PublicationType;
-                        publication.PublishedBy = item.Publishby;
-                        publication.Location = item.Location;
-                        publication.IsActive = item.IsActive;
-                        publication.EmployeeName = item.EmployeeName;
-
-                        getData.PaginationList.Add(publication);
-                    }
-                }
-                return getData;
+                return list;
             }
             catch (Exception ex)
             {
@@ -1093,10 +1075,10 @@ namespace DAL.Repositories
                                     {
                                         var publicationType = publicationTypes.Where(p => p.Name == reader.GetValue(2).ToString()).FirstOrDefault();
                                         var employee = employees.Where(p => p.FirstName == reader.GetValue(4).ToString()).FirstOrDefault();
-                                        if(employee!=null)
+                                        if (employee != null)
                                             employeeId = employee.EmployeeId;
                                         else
-                                            employeeId=0;
+                                            employeeId = 0;
                                         if (publicationType != null)
                                         {
                                             var flag = _appContext.Publication.Any(p => p.IsDeleted == false && p.PublicationId == Convert.ToString(reader.GetValue(0)).Trim() && p.PublicationTypeId == publicationType.PublicationTypeId);
@@ -1108,7 +1090,7 @@ namespace DAL.Repositories
                                                 if (reader.GetValue(1) != null)
                                                     publication.Description = Convert.ToString(reader.GetValue(1));
                                                 if (reader.GetValue(2) != null)
-                                                   publication.PublicationTypeId = publicationType.PublicationTypeId;
+                                                    publication.PublicationTypeId = publicationType.PublicationTypeId;
                                                 if (reader.GetValue(3) != null)
                                                     publication.Publishby = Convert.ToString(reader.GetValue(3));
                                                 if (reader.GetValue(4) != null)
@@ -1163,7 +1145,7 @@ namespace DAL.Repositories
             {
             }
             return publications;
-        } 
+        }
 
         public IEnumerable<object> PublicationHistory(long publicationId)
         {
@@ -1178,9 +1160,9 @@ namespace DAL.Repositories
                             {
                                 pa.PublicationId,
                                 pa.Description,
-                                PublicationType=pt.Name,
+                                PublicationType = pt.Name,
                                 pa.Publishby,
-                                EmployeeName=e==null?" ":e.FirstName,
+                                EmployeeName = e == null ? " " : e.FirstName,
                                 pa.Location,
                                 pa.IsActive,
                                 pa.UpdatedBy,
