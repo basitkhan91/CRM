@@ -40,10 +40,10 @@ namespace QuickApp.Pro.Controllers
         // GET: api/values
         [HttpGet("getpublicationslist")]
         [Produces(typeof(List<PublicationViewModel>))]
-        public IActionResult Get(string publicationId = "", string description = "", int publicationTypeId = 0, string publishedBy = "", long employeeId = 0, string location = "", int pageNumber = 0, int pageSize = 10)
+        public IActionResult Get(string publicationId = "", string description = "", string publicationType = "", string publishedBy = "", string employee = "", string location = "", int pageNumber = 0, int pageSize = 10)
         {
             //var allpublicationinfo = _unitOfWork.Publication.GetPublications(); //.GetAllCustomersData();
-            var allpublicationinfo = _unitOfWork.Publication.GetPublicationsList(publicationId, description, publicationTypeId, publishedBy, employeeId, location, pageNumber, pageSize); //.GetAllCustomersData();
+            var allpublicationinfo = _unitOfWork.Publication.GetPublicationsList(publicationId, description, publicationType, publishedBy, employee, location, pageNumber, pageSize); //.GetAllCustomersData();
 
             return Ok((allpublicationinfo));
 

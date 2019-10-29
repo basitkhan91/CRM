@@ -25,7 +25,7 @@ namespace DAL.Models
         public Nullable<long> VendorId { get; set; }
         public Nullable<long> VendorContactId { get; set; }
         public Nullable<int> ShipToCompanyId { get; set; }
-        public Nullable<int> ShipViaAccountId { get; set; }
+        public int? ShipViaAccountId { get; set; }
         public string Terms { get; set; }
         public Int16? CreditTermsId { get; set; }
         public Nullable<decimal> CreditLimit { get; set; }
@@ -53,6 +53,10 @@ namespace DAL.Models
         public Nullable<bool> IsActive { get; set; }
         public string ShipToSiteName { get; set; }
         public string BillToSiteName { get; set; }
+        public decimal ShippingCost { get; set; }
+        public decimal HandlingCost { get; set; }
+        public long BillToContactId { get; set; }
+        public long ShipViaId { get; set; }
         public bool IsDeleted { get; set; }
 
         public virtual ICollection<PurchaseOrderPart> PurchaseOderPart { get; set; }
