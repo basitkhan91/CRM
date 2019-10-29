@@ -33,7 +33,7 @@ namespace QuickApp.Pro.Controllers
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
-            _emailer = emailer;
+            _emailer = emailer; 
             _context = context;
         }
 

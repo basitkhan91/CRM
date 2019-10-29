@@ -581,7 +581,7 @@ namespace DAL.Repositories
                                 PublicationType = pt.Name,
                                 p.Publishby,
                                 p.Location,
-                                p.IsActive,
+                                 p.IsActive,
                                 p.CreatedDate,
                                 EmployeeName = e.FirstName==null ?"":e.FirstName,
                                 TotalRecords = totalRecords

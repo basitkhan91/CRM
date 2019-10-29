@@ -48,7 +48,7 @@ namespace DAL.Models
         public Int16? BillToUserType { get; set; }
         public long ShipToUserId { get; set; }
         public long BillToUserId { get; set; }
-        public bool? DeferredReceiver { get; set; }
+        public bool? DeferredReceiver { get; set; } 
         public bool? Resale { get; set; }
         public Nullable<bool> IsActive { get; set; }
         public string ShipToSiteName { get; set; }
