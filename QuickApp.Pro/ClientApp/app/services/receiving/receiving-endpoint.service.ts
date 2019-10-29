@@ -93,6 +93,7 @@ export class ReceivingEndpointService extends EndpointFactory {
     }
 
     getReceivingPODataForEditById<T>(receivingId: any): Observable<T> {
+
         let url = `${this.receivingPurchaseOrderForEditDataGet}/${receivingId}`;
         return this.http.get<T>(url, this.getRequestHeaders())
             .catch(error => {

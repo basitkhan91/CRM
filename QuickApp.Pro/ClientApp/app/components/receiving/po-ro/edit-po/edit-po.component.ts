@@ -84,6 +84,7 @@ export class EditPoComponent implements OnInit {
                 this.purchaseOrderData.needByDate = new Date(results[0].needByDate);
                 this.purchaseOrderData.dateApproved = new Date(results[0].dateApproved).toLocaleDateString();
 
+
                 this.getManagementStructure().subscribe(
                     results => {
                         this.managementStructure = results[0];
@@ -107,6 +108,7 @@ export class EditPoComponent implements OnInit {
                                 parent.hasChildren = false;
                             }
                         }
+
 
                         for (let part of this.purchaseOrderData.purchaseOderPart) {
                             let managementHierarchy: ManagementStructure[][] = [];

@@ -441,6 +441,7 @@ export class ReceivngPoComponent implements OnInit {
             stockLine.DivisionList = [];
             stockLine.DepartmentList = [];
 
+
             this.getManagementStructureHierarchy(managementStructureId, stockLineManagementStructureHierarchy, stockLineSelectedManagementStructureHierarchy);
             stockLineManagementStructureHierarchy.reverse();
             stockLineSelectedManagementStructureHierarchy.reverse();

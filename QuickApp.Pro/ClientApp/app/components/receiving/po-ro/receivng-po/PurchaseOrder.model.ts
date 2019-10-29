@@ -117,6 +117,7 @@ export class PurchaseOrderPart {
     // UI Properties
     // below properties does not play role on the server side and are being used to show the data on UI and should be limited to UI only.
 
+
     managementStructureName: string[];
     statusText: string;
     UOMText: string;

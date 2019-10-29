@@ -24,6 +24,7 @@ namespace DAL.Repositories
                                         .Where(x => x.PurchaseOrderId == id)
                                         .ToList();
 
+
                 purchaseOrder.PurchaseOderPart.ToList().ForEach(part =>
                 {
                     part.ItemMaster = _appContext.ItemMaster.Find(part.ItemMasterId);
