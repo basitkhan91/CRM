@@ -1,5 +1,5 @@
 ﻿<div class="x_panel" style="">
-    <div class="x_content">
+    <div class="x_content" *ngIf="purchaseOrderData != undefined && purchaseOrderData != null">
         <div class="card">
             <div class="card-header">
                 <nav class="pull-left" aria-label="breadcrumb">
@@ -21,34 +21,11 @@
                             <div class="form-group">
                                 <label style="float:left; width:auto; margin-right:20px; padding-top:3px;">Status:</label>
                                 <div>
-                                    <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
+                                    <div class="pull-left" style="margin-top: 4px; margin-right: 15px;" *ngFor="let status of poStatus">
                                         <label class="radio-cstm wauto">
-                                            <input type="radio" name="postatus" class="form-control" value="" checked disabled>
-                                            <span class="checkmark"></span> Open
-                                        </label>
-                                    </div>
-                                    <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
-                                        <label class="radio-cstm wauto">
-                                            <input type="radio" name="postatus" class="form-control" value="" disabled>
-                                            <span class="checkmark"></span> Pending Approval
-                                        </label>
-                                    </div>
-                                    <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
-                                        <label class="radio-cstm wauto">
-                                            <input type="radio" name="postatus" class="form-control" value="" disabled>
-                                            <span class="checkmark"></span> Approved
-                                        </label>
-                                    </div>
-                                    <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
-                                        <label class="radio-cstm wauto">
-                                            <input type="radio" name="postatus" class="form-control" value="" disabled>
-                                            <span class="checkmark"></span> Rejected
-                                        </label>
-                                    </div>
-                                    <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
-                                        <label class="radio-cstm wauto">
-                                            <input type="radio" name="postatus" class="form-control" value="" disabled>
-                                            <span class="checkmark"></span> Fulfilled
+                                            <input type="radio" [checked]="status.Key == purchaseOrderData.statusId" name="postatus" class="form-control" value="{{status.Key}}" disabled required>
+                                            <span class="checkmark"></span>
+                                            {{status.Value}}
                                         </label>
                                     </div>
                                 </div>
@@ -56,131 +33,118 @@
                         </div>
                     </div>
                     <hr />
-
-                    <div class="form-row">
-                        <div class="col-md-2">
+                    <div class="form-row" style="margin-top: 15px;">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label>PO Num</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.purchaseOrderNumber}}-->
+                                <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.purchaseOrderNumber" disabled="disabled" required>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
-                                <label>Vendor Name</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.vendorName}}-->
+                                <label>Vendor Num</label>
+                                <div class="inner-addon right-addon inline-block">
+                                    <input class="form-control" type="text" [value]="purchaseOrderData.vendor.vendorCode" disabled="disabled" required>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-2">
+
+                        <div class="col-md-3">
                             <div class="form-group">
-                                <label>Requistioner</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.requestedBy}}-->
+                                <label>Requisitioner</label>
+                                <p-autoComplete disabled="disabled" [size]="32" class="rpo-acomp-header"
+                                                [minLength]="1" [dropdown]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.requestedBy">
+                                </p-autoComplete>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <!--<div class="col-md-3">
                             <div class="form-group">
-                                <label>Approver</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.approver}}-->
+                                <label>Company</label>
+                                <select disabled="disabled" class="form-control" [(ngModel)]="poSelectedCompanyId" #selects="ngModel" [ngModelOptions]="{standalone: true}" required>
+                                    <option *ngFor="let company of poCompanyList" [value]="company.Key">{{company.Value}}</option>
+                                </select>
                             </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group memo-popup-cstm">
-                                <label>Memo</label> <!--{{editPoData.memo}}-->
-                                <span pTooltip="{{memoNotes}}" tooltipPosition="top"><input type="text" pInputText class="form-control" value="{{memoNotes}}" disabled /></span>
-                                <i class="fa fa-info-circle fa-lg" pTooltip="{{memoNotes}}" tooltipPosition="top"></i>
-                            </div>
-                        </div>
+                        </div>-->
                     </div>
 
-                    <div class="form-row" *ngIf="toggle_epo_header">
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label>Priority</label>
-                                <input class="form-control" type="text" value="" disabled="disabled">
-                            </div>
-                            <div class="form-group">
-                                <label>Date Requisitioned</label>
-                                <p-calendar class="pas-clder" [showIcon]="true" disabled="true"></p-calendar> <!--{{editPoData.purchaseOrderNumber}}-->
-                            </div>
-                            <div class="form-group">
-                                <label>Date Approved</label>
-                                <p-calendar class="pas-clder" [showIcon]="true" disabled="true"></p-calendar> <!--{{editPoData.purchaseOrderNumber}}-->
-                            </div>
-                        </div>
 
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label>Vendor Code</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.vendorCode}}-->
-                            </div>
-                            <div class="form-group">
-                                <label>Vendor Contact</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.vendorContact}}-->
-                            </div>
-                            <div class="form-group">
-                                <label>Contact Phone</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.purchaseOrderNumber}}-->
-                            </div>
-                        </div>
-
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label>Vendor Code</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.vendorCode}}-->
-                            </div>
-                            <div class="form-group">
-                                <label>Vendor Contact</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.vendorContact}}-->
-                            </div>
-                            <div class="form-group">
-                                <label>Contact Phone</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.purchaseOrderNumber}}-->
-                            </div>
-                        </div>
-
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label>Terms</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.terms}}-->
-                            </div>
-                            <div class="form-group">
-                                <label>Credit Limit</label>
-                                <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.creditLimit}}-->
-                            </div>
-                            <div class="form-group">
-                                <label>Currency</label>
-                                <input class="form-control" type="text" value="" disabled="disabled">
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="card">
-                                <div class="card-header" style="padding: 10px 12px;">
-                                    <h5 style="margin-bottom: 0; font-size: 12px;">Management Structure</h5>
+                    <div *ngIf="toggle_epo_header">
+                        <div class="form-row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Open Date</label>
+                                    <p-calendar disabled="disabled" class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.openDate" [required]="true"></p-calendar>
                                 </div>
-                                <div class="card-body" style="padding: 6px 12px 4px;">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Company</label>
-                                            <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.purchaseOrderNumber}}-->
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Business Unit</label>
-                                            <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.purchaseOrderNumber}}-->
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Division</label>
-                                            <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.purchaseOrderNumber}}-->
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Department</label>
-                                            <input class="form-control" type="text" value="" disabled="disabled"> <!--{{editPoData.purchaseOrderNumber}}-->
-                                        </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Vendor Name</label>
+                                    <div class="inner-addon right-addon inline-block">
+                                        <input type="text" class="form-control" [value]="purchaseOrderData.vendor.vendorName" disabled="disabled" required>
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Approver</label>
+                                    <div class="inner-addon">
+                                        <input disabled="disabled" type="text" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.approver" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--<div class="col-md-3">
+                                <div class="form-group">
+                                    <label>BU</label>
+                                    <select disabled="disabled" class="form-control" [(ngModel)]="poSelectedBusinessUnitId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
+                                        <option *ngFor="let businessUnit of poBusinessUnitList" [value]="businessUnit.Key">{{businessUnit.Value}}</option>
+                                    </select>
+                                </div>
+                            </div>-->
                         </div>
+
+                        <div class="form-row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Need By</label>
+                                    <p-calendar disabled="disabled" class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.needByDate" [required]="true"></p-calendar>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Vendor Contact</label>
+                                    <input class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.vendor.vendorName" type="text" disabled="disabled" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Approved Date</label>
+                                    <p-calendar disabled="disabled" class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.dateApproved" [required]="true"></p-calendar>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Deferred Receiver</label>
+                                    <input type="checkbox" disabled [checked]="purchaseOrderData.deferredReceiver" class="form-control names ui-autocomplete-input">
+
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Resale</label>
+                                    <input type="checkbox" disabled [checked]="purchaseOrderData.resale" class="form-control names ui-autocomplete-input">
+
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Memo</label>
+                                    <textarea disabled class="form-control h100 scroll-x" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.notes"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </form>
             </div>
@@ -198,10 +162,9 @@
                         <th>Change PN to</th>
                         <th>Manufacturer</th>
                         <th>Cond</th>
-                        <th>Qty to Repair</th>
-                        <th>Qty Reserved</th>
-                        <th>Qty Repaired</th>
-                        <th>Qty Reconciled</th>
+                        <th>UOM</th>
+                        <th>OEM, DER,PMA FLAG</th>
+                        <th>Qty Ordered</th>
                         <th>Unit Cost</th>
                         <th>Discount</th>
                         <th>Extended Cost</th>
@@ -209,137 +172,83 @@
                         <th>SO</th>
                         <th>Sub-WO</th>
                         <th colspan="4" style="text-align: center;">Management Structure</th>
-                        <!-- <th>BU</th>
-                        <th>Div</th>
-                        <th>Dep</th> -->
-                        <th>Site</th>
-                        <th>Warehouse</th>
-                        <th>Location</th>
-                        <th>Shelf</th>
-                        <th>Bin</th>
-                        <th colspan="51"></th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr *ngFor="let obj of localData" class="parent-data">
-                        <td><a data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit"><i class="fa fa-edit" (click)="onEditParentGridFields()"></i></a></td>
-                        <td></td>
-                        <td>{{obj.partNumber}}</td>
-                        <td>{{obj.partNumber}}</td>
-                        <td>{{obj.partDescription}}</td>
-                        <td></td> <!--{{obj.ItemTypeId}}-->
-                        <td>{{obj.manufacturer}}</td>
-                        <td>
-                            <select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.conditionId" [disabled]="rpoEditPF">
-                                <option *ngFor="let condition of allconditioninfo" [ngValue]="condition.conditionId">{{condition.description}}</option>
-                            </select>
-                        </td>
-                        <td>2</td>
-                        <td>2</td>
-                        <td>2</td>
-                        <td>2</td>
-                        <td>
-                            <select class="form-control" [disabled]="rpoEditPF">
-                                <!--{{obj.unitCost}}-->
-                                <option value="">Select</option>
-                            </select>
-                        </td>
-                        <td>discount</td>
-                        <td>extended cost</td>
-                        <td>
-                            <input type="text" class="form-control" value="WO-45450" [disabled]="rpoEditPF">
-                            <!-- <select class="form-control" [disabled]="rpoEditPF">
-                                <option value="">WO-45450</option>
-                            </select> -->
-                        </td>
-                        <td>
-                            <input type="text" class="form-control" value="SO-45450" [disabled]="rpoEditPF">
-                            <!-- <select class="form-control" [disabled]="rpoEditPF">
-                                <option value="">SO-45450</option>
-                                <option value="">SO-45451</option>
-                                <option value="">SO-45452</option>
-                                <option value="">SO-45453</option>
-                                <option value="">SO-45454</option>
-                                <option value="">SO-45455</option>
-                            </select> -->
-                        </td>
-                        <td>
-                            <input type="text" class="form-control" value="SWO-45450" [disabled]="rpoEditPF">
-                            <!-- <select class="form-control" [disabled]="rpoEditPF">
-                                <option value="">SWO-45450</option>
-                                <option value="">SWO-45451</option>
-                                <option value="">SWO-45452</option>
-                                <option value="">SWO-45453</option>
-                                <option value="">SWO-45454</option>
-                                <option value="">SWO-45455</option>
-                            </select> -->
-                        </td>
-                        <td>
-                            <label style="width:90px;">Company:</label>
-                            <select class="form-control" [disabled]="rpoEditPF">
-                                <option value="">Adso</option>
-                                <option value="">Aerospace</option>
-                                <option value="">ILS</option>
-                                <option value="">PArts Base</option>
-                                <option value="">PAS</option>
-                                <option value="">Silverxis</option>
-                            </select>
-                        </td>
-                        <td>
-                            <label style="width:90px;">BU:</label>
-                            <select class="form-control" [disabled]="rpoEditPF">
-                                <option value="">Adso</option>
-                                <option value="">Aerospace</option>
-                                <option value="">ILS</option>
-                                <option value="">PArts Base</option>
-                                <option value="">PAS</option>
-                                <option value="">Silverxis</option>
-                            </select>
-                        </td>
-                        <td>
+                <tbody *ngIf="purchaseOrderData != undefined && purchaseOrderData.purchaseOderPart != undefined">
+                    <ng-container *ngFor="let part of purchaseOrderData.purchaseOderPart;let row_index=index">
+                        <tr *ngIf="part.isParent || part.hasChildren" class="parent-data">
+                            <td><a data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit"><i class="fa fa-edit" (click)="onEditParentGridFields()"></i></a></td>
+                            <td>{{row_index + 1}}</td>
+                            <td>{{part.itemMaster.partNumber}}</td>
+                            <td>#######</td>
+                            <td>{{part.itemMaster.partDescription}}</td>
+                            <td>#######</td>
+                            <td>{{part.itemMaster.manufacturer?.name}}</td>
+                            <td>
+                                <select class="form-control"
+                                        [(ngModel)]="part.conditionId"
+                                        #selects="ngModel"
+                                        [ngModelOptions]="{standalone: true}">
+                                    <option value="0">Select</option>
+                                    <option *ngFor="let condition of ConditionList" [value]="condition.Key">{{condition.Value}}</option>
+                                </select>
+                            </td>
+                            <td>{{part.uomText}}</td>
+                            <td>{{part.itemMaster.pma ? "PMA," : '' + part.itemMaster.der ? "DER" : ''}}</td>
+                            <td>{{part.quantityOrdered}}</td>
+                            <td>{{part.unitCost}}</td>
+                            <td>{{part.DiscountPerUnit}}</td>
+                            <td>{{part.extendedCost}}</td>
+                            <td>
+                                <input type="text" class="form-control" value="Pending" [disabled]="true">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" value="Pending" [disabled]="true">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" value="Pending" [disabled]="true">
+                            </td>
+                            <td>
+                                <label style="width:90px;">Company:</label>
+                                <select class="form-control"
+                                        [(ngModel)]="part.companyId"
+                                        #selects="ngModel"
+                                        [ngModelOptions]="{standalone: true}"
+                                        (change)="getStockLineBusinessUnitList(part)"
+                                        [disabled]="rpoEditPF"
+                                        >
+                                    <option value="0">Select</option>
+                                    <option *ngFor="let company of part.CompanyList" [value]="company.Key">{{company.Value}}</option>
+                                </select>
+                            </td>
+                            <td>
+                                <label style="width:90px;">BU:</label>
+                                <select class="form-control"
+                                        [(ngModel)]="part.businessUnitId"
+                                        #selects="ngModel"
+                                        [ngModelOptions]="{standalone: true}"
+                                        [disabled]="rpoEditPF"
+                                        >
+                                    <option value="0">Select</option>
+                                    <option *ngFor="let businessUnit of part.BusinessUnitList" [value]="businessUnit.Key">{{businessUnit.Value}}</option>
+                                </select>
+                            </td>
+                            <td>
                                 <label style="width:90px;">Division:</label>
-                            <select class="form-control" [disabled]="rpoEditPF">
-                                <option value="">Designing</option>
-                                <option value="">Development</option>
-                                <option value="">Repear</option>
-                            </select>
-                        </td>
-                        <td>
+                                <select class="form-control" [disabled]="rpoEditPF">
+                                    <option value="0">Select</option>
+                                </select>
+                            </td>
+                            <td>
                                 <label style="width:90px;">Dept:</label>
-                            <select class="form-control" [disabled]="rpoEditPF">
-                                <option value="">.net</option>
-                                <option value="">HTML</option>
-                                <option value="">Java</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control" [(ngModel)]="obj.siteId" [ngModelOptions]="{standalone: true}" (change)="svalueChange(obj)" [disabled]="rpoEditPF">
-                                <option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control" [(ngModel)]="obj.warehouseId" [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange(obj)" [disabled]="rpoEditPF">
-                                <option *ngFor="let warehouse of obj.allWareHouses" [ngValue]="warehouse.warehouseId">{{warehouse.warehouseName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control" [(ngModel)]="obj.locationId" [ngModelOptions]="{standalone: true}" (change)="locationValueChange(obj)" [disabled]="rpoEditPF">
-                                <option *ngFor="let location of obj.allLocations" [ngValue]="location.locationId">{{location.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control" [(ngModel)]="obj.shelfId" [ngModelOptions]="{standalone: true}" (change)="shelfValueChange(obj)" [disabled]="rpoEditPF">
-                                <option *ngFor="let shelf of obj.allShelfs" [ngValue]="shelf.shelfId">{{shelf.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control" [(ngModel)]="obj.binId" [ngModelOptions]="{standalone: true}" (change)="binValueSelect(obj)" [disabled]="rpoEditPF">
-                                <option *ngFor="let bin of obj.allBins" [ngValue]="bin.binId">{{bin.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
-                            </select>
-                        </td>
-                        <td colspan="51"></td>
-                    </tr>
-                    <tr class="child-header">
+                                <select class="form-control" [disabled]="rpoEditPF">
+                                    <option value="0">Select</option>
+                                </select>
+                            </td>                         
+                        </tr>
+                    </ng-container>
+                  
+                    <!--<tr class="child-header">
                         <th></th>
                         <th></th>
                         <th>Stock Line</th>
@@ -381,15 +290,13 @@
                         <th>GL Account</th>
                         <th>Time Life</th>
                         <th colspan="4" style="text-align: center;">Management Structure</th>
-                        <!-- <th>BU</th>
-                        <th>Div</th>
-                        <th>Dep</th> -->
                         <th>Site</th>
                         <th>Warehouse</th>
                         <th>Location</th>
                         <th>Shelf</th>
                         <th>Bin</th>
                     </tr>
+
                     <tr class="child-data splitship-child">
                         <td><a href="javascript:void(0);" data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit"><i class="fa fa-edit" (click)="onEditChildGridFields()"></i></a></td>
                         <td></td>
@@ -417,37 +324,16 @@
                         <td> $400.00 </td>
                         <td>RO-55577</td>
                         <td>
-                                <input type="text" class="form-control" value="WO-45450" [disabled]="rpoEditCF">
-                            <!-- <select class="form-control" [disabled]="rpoEditCF">
-                                <option value="">WO-45450</option>
-                                <option value="">WO-45451</option>
-                                <option value="">WO-45452</option>
-                                <option value="">WO-45453</option>
-                                <option value="">WO-45454</option>
-                                <option value="">WO-45455</option>
-                            </select> -->
+                            <input type="text" class="form-control" value="WO-45450" [disabled]="rpoEditCF">
+
                         </td>
                         <td>
-                                <input type="text" class="form-control" value="SO-45450" [disabled]="rpoEditCF">
-                            <!-- <select class="form-control" [disabled]="rpoEditCF">
-                                <option value="">SO-45450</option>
-                                <option value="">SO-45451</option>
-                                <option value="">SO-45452</option>
-                                <option value="">SO-45453</option>
-                                <option value="">SO-45454</option>
-                                <option value="">SO-45455</option>
-                            </select> -->
+                            <input type="text" class="form-control" value="SO-45450" [disabled]="rpoEditCF">
+
                         </td>
                         <td>
-                                <input type="text" class="form-control" value="SWO-45450" [disabled]="rpoEditCF">
-                            <!-- <select class="form-control" [disabled]="rpoEditCF">
-                                <option value="">SWO-45450</option>
-                                <option value="">SWO-45451</option>
-                                <option value="">SWO-45452</option>
-                                <option value="">SWO-45453</option>
-                                <option value="">SWO-45454</option>
-                                <option value="">SWO-45455</option>
-                            </select> -->
+                            <input type="text" class="form-control" value="SWO-45450" [disabled]="rpoEditCF">
+
                         </td>
                         <td>
                             <select id="" name="" class="form-control disabled2 owner-selection" (change)="onOwnerChange($event)" [disabled]="rpoEditCF">
@@ -625,7 +511,7 @@
                             </div>
                         </td>
                         <td>
-                                <label style="width:90px;">Company:</label>
+                            <label style="width:90px;">Company:</label>
                             <select class="form-control" [disabled]="rpoEditCF">
                                 <option value="">Adso</option>
                                 <option value="">Aerospace</option>
@@ -636,7 +522,7 @@
                             </select>
                         </td>
                         <td>
-                                <label style="width:90px;">BU:</label>
+                            <label style="width:90px;">BU:</label>
                             <select class="form-control" [disabled]="rpoEditCF">
                                 <option value="">Adso</option>
                                 <option value="">Aerospace</option>
@@ -647,7 +533,7 @@
                             </select>
                         </td>
                         <td>
-                                <label style="width:90px;">Division:</label>
+                            <label style="width:90px;">Division:</label>
                             <select class="form-control" [disabled]="rpoEditCF">
                                 <option value="">Designing</option>
                                 <option value="">Development</option>
@@ -655,7 +541,7 @@
                             </select>
                         </td>
                         <td>
-                                <label style="width:90px;">Dept:</label>
+                            <label style="width:90px;">Dept:</label>
                             <select class="form-control" [disabled]="rpoEditCF">
                                 <option value="">.net</option>
                                 <option value="">HTML</option>
@@ -707,7 +593,8 @@
                                 <option value="">Bin 5</option>
                             </select>
                         </td>
-                    </tr>
+                    </tr>-->
+
                 </tbody>
             </table>
 
@@ -715,4 +602,4 @@
 
         <a class="btn btn-primary-cstm pull-right" (click)="onSubmit()">Submit</a>
     </div>
-        </div>
+</div>

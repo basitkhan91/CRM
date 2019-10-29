@@ -190,6 +190,7 @@ export class ReceivngPoComponent implements OnInit {
     ngOnInit() {
         this.receivingService.getPurchaseOrderDataById(this.receivingService.purchaseOrderId).subscribe(
             results => {
+                this.receivingService.purchaseOrder = results[0];
                 this.loadPurchaseOrderData(results[0])
             },
             error => {
@@ -428,7 +429,6 @@ export class ReceivngPoComponent implements OnInit {
     }
 
     private getManagementStructure() {
-        //this.alertService.startLoadingMessage();
         return this.legalEntityService.getManagemententity();
     }
     private setStockLineManagementStructure(managementStructureId: number, stockLine: StockLine) {
@@ -440,6 +440,7 @@ export class ReceivngPoComponent implements OnInit {
             stockLine.BusinessUnitList = [];
             stockLine.DivisionList = [];
             stockLine.DepartmentList = [];
+
 
             this.getManagementStructureHierarchy(managementStructureId, stockLineManagementStructureHierarchy, stockLineSelectedManagementStructureHierarchy);
             stockLineManagementStructureHierarchy.reverse();
@@ -1144,7 +1145,7 @@ export class ReceivngPoComponent implements OnInit {
         console.log(partsToPost);
         this.shippingService.receiveParts(partsToPost).subscribe(data => {
             this.alertService.showMessage(this.pageTitle, 'Parts Received successfully.', MessageSeverity.success);
-            return this.route.navigate(['/receivingmodule/receivingpages/app-purchase-order']);
+            return this.route.navigate(['/receivingmodule/receivingpages/app-edit-po']);
         },
             error => {
                 var message = '';
