@@ -142,7 +142,7 @@ namespace DAL.Repositories
                            wop => wop.WorkOrderId,
                            (wo1, wop) => new { wo1, wop })
                     .Join(_appContext.ItemMaster,
-                           wop1 => wop1.wop.ItemMasterId,
+                           wop1 => wop1.wop.MasterPartId,
                            im => im.ItemMasterId,
                            (wop1, im) => new { wop1, im })
                     .Join(_appContext.Workflow,
@@ -184,7 +184,7 @@ namespace DAL.Repositories
                            wop => wop.WorkOrderId,
                            (wo1, wop) => new { wo1, wop })
                     .Join(_appContext.ItemMaster,
-                           wop1 => wop1.wop.ItemMasterId,
+                           wop1 => wop1.wop.MasterPartId,
                            im => im.ItemMasterId,
                            (wop1, im) => new { wop1, im })
                     .Join(_appContext.Workflow,
