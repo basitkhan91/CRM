@@ -18,6 +18,7 @@ export type RolesChangedEventArg = { roles: Role[] | string[], operation: RolesC
 @Injectable()
 export class ReceivingService {
     selectedPurchaseorderCollection: PurchaseOrder;
+    purchaseOrder: PurchaseOrder;
     purchaseOrderId: number;
     public static readonly roleAddedOperation: RolesChangedOperation = "add";
     public static readonly roleDeletedOperation: RolesChangedOperation = "delete";
@@ -63,6 +64,11 @@ export class ReceivingService {
     getPurchaseOrderDataById(receivingId: any) {
         return Observable.forkJoin(
             this.receivingEndpoing.getReceivingPODataById<PurchaseOrder>(receivingId));
+    }
+
+    getPurchaseOrderDataForEditById(receivingId: any) {
+        return Observable.forkJoin(
+            this.receivingEndpoing.getReceivingPODataForEditById<any>(receivingId));
     }
 
     addPartStocklineMapper(mapperData: any) {

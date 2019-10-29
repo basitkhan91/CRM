@@ -42,7 +42,9 @@ export class PurchaseOrder {
     resale: boolean;
     isActive: boolean;
     managementStructureId: number;
-
+    openDate: string;
+    
+    dateApproved: string;
 
     purchaseOderPart: PurchaseOrderPart[];
     vendor: Vendor;
@@ -72,7 +74,8 @@ export class PurchaseOrderPart {
     conditionCode: string;
     quantityActuallyReceived: number;
     quantityRejected: string;
-    uOMId: number;
+    uomId: number;
+
     quantityOrdered: number;
     quantityBackOrdered: number;
     unitCost: number;
@@ -116,6 +119,10 @@ export class PurchaseOrderPart {
 
     managementStructureName: string[];
     statusText: string;
+    UOMText: string;
+    isPMA: true;
+    isOEM: true;
+    isDER: true;
     userTypeName: string;
     userName: string;
     addressText: string;
@@ -134,6 +141,20 @@ export class PurchaseOrderPart {
     currentSERIndex: number;
     isDisabledTLboxes: boolean;
     toggleIcon: boolean;
+
+    companyId: number;
+    businessUnitId: number;
+    divisionId: number;
+    departmentId: number;
+    CompanyList: DropDownData[];
+    BusinessUnitList: DropDownData[];
+    DivisionList: DropDownData[];
+    DepartmentList: DropDownData[];
+    SiteList: DropDownData[];
+    WareHouseList: DropDownData[];
+    LocationList: DropDownData[];
+    ShelfList: DropDownData[];
+    BinList: DropDownData[];
 }
 
 export class TimeLife {

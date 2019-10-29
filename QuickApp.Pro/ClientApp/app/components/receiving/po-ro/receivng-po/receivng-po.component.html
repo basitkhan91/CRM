@@ -106,7 +106,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Vendor Contact</label>
-                            <input class="form-control" [(ngModel)]="purchaseOrderData.vendor.vendorName" type="text" disabled="disabled" />
+                            <input class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.vendor.vendorName" type="text" disabled="disabled" />
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -344,7 +344,7 @@
                                                                 #selects="ngModel"
                                                                 [ngModelOptions]="{standalone: true}">
                                                             <option value="0">Select</option>
-                                                            <option *ngFor="let condition of ConditionList" [ngValue]="condition.Key">{{condition.Value}}</option>
+                                                            <option *ngFor="let condition of ConditionList" [value]="condition.Key">{{condition.Value}}</option>
                                                         </select>
                                                     </div>
                                                 </div>
