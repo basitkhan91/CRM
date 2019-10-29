@@ -64,6 +64,7 @@ namespace QuickApp.Pro.ViewModels
 
     public class ChildObj
     {
+        public long RepairOrderPartRecordId { get; set; }
         public long RepairOrderId { get; set; }
         public bool? IsParent { get; set; }
         public long ItemMasterId { get; set; }

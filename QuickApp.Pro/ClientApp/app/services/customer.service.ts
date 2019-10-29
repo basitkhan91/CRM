@@ -534,6 +534,15 @@ export class CustomerService {
     getDocumentList(customerId) {
         return this.customerEndpoint.getDocumentList(customerId)
     }
-
+    
+    getCustomerWarningsById(customerId){
+        return this.customerEndpoint.getCustomerWarningsById(customerId);
+    }
+    getShipViaByDomesticShippingId(customerShippingId){
+        return this.customerEndpoint.getShipViaByDomesticShippingId(customerShippingId);
+    }
+    getCustomerBillingHistory(customerBillingAddressId){
+        return this.customerEndpoint.getCustomerBillingHistory(customerBillingAddressId)
+    }
 
 }

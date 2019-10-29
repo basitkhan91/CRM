@@ -355,15 +355,23 @@ export class CustomerShippingInformationComponent implements OnInit {
             updatedBy: this.userName,
         }
 
+        this.shipViaDomestic = new CustomerInternationalShipVia()
         this.customerService.newShippingViaAdd(data).subscribe(res => {
 
+            this.getShipViaByDomesticShippingId(this.selectedShipViaDomestic.customerShippingAddressId)
 
-            this.shipViaDomestic = new CustomerInternationalShipVia()
             this.alertService.showMessage(
                 'Success',
                 `Sucessfully Updated Ship Via `,
                 MessageSeverity.success
             );
+        })
+    }
+
+    getShipViaByDomesticShippingId(customerShippingAddressId){
+        this.customerService.getShipViaByDomesticShippingId(customerShippingAddressId).subscribe(res => {
+            
+            
         })
     }
 

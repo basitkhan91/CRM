@@ -16,12 +16,13 @@ import { CurrencyComponent } from "../components/currency/currency.component";
 import { CustomerClassificationComponent } from "../components/customer-classification/customer-classification.component";
 import { DocumentsComponent } from "../components/documents/documents.component";
 import { EmployeeExpertiseComponent } from "../components/employee-expertise/employee-expertise.component";
-import { ExpenditureComponent } from "../components/expenditure/expenditure.component";
 import { FindingsComponent } from "../components/findings/findings.component";
 import { AssetIntangibleTypeComponent } from "../components/asset-intangible-type/asset-intangible-type.component";
 import { AssetTypeComponent } from "../components/asset-type/asset-type.component";
 import { StageCodeComponent } from "../components/stage-code/stage-code.component";
 import { GLAccountCategoryComponent } from "../components/gl-account-category/gl-account-category.component";
+import { ExpenditureCategoryComponent } from "../components/expenditure-category/expenditure-category.component";
+import { AssetAttributeTypeComponent } from "../components/asset-attribute-type/asset-attribute-type.component";
 
 import { IntegrationComponent } from "../components/integration/integration.component";
 import { ItemClassificationComponent } from "../components/item-classification/item-classification.component";
@@ -146,11 +147,6 @@ const singlePagesRoutes: Routes = [
                 data: { title: "Employee Expertise" }
             },
             {
-                path: "app-expenditure",
-                component: ExpenditureComponent,
-                data: { title: "Expenditure" }
-            },
-            {
                 path: "app-findings",
                 component: FindingsComponent,
                 data: { title: "Findings" }
@@ -174,6 +170,16 @@ const singlePagesRoutes: Routes = [
                 path: "app-gl-account-category",
                 component: GLAccountCategoryComponent,
                 data: { title: "GL Account Category" }
+            },
+            {
+                path: "app-expenditure-category",
+                component: ExpenditureCategoryComponent,
+                data: { title: "Expenditure Category" }
+            },
+            {
+                path: "app-asset-attribute-type",
+                component: AssetAttributeTypeComponent,
+                data: { title: "Asset Attribute Type" }
             },
             {
                 path: "app-integration",
@@ -311,11 +317,6 @@ const singlePagesRoutes: Routes = [
                 path: "app-gl-financial-statement",
                 component: GlFinancialStatementComponent,
                 data: { title: "GL Financial Statement" }
-            },
-            {
-                path: "app-glaccount-category",
-                component: GLAccountCategoryComponent,
-                data: { title: "Expenditure Type" }
             },
             {
                 path: "app-journal-approvals",
