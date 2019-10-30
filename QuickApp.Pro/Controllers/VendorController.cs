@@ -2907,9 +2907,35 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<VendorCapabiliy>))]
         public IActionResult deleteVendorCapability(long capabilityid)
         {
+            var deleteVendorCapabilityTyperecord = _context.vendorCapabilityType.Where(a => a.VendorCapabilityId == capabilityid).SingleOrDefault();
+            if (deleteVendorCapabilityTyperecord != null)
+            {
+                _context.Remove(deleteVendorCapabilityTyperecord);
+                _context.SaveChanges();
+            }
+
+            var deleteVendorCapabilityAircraftTyperecord = _context.vendorCapabilityAircraftType.Where(a => a.VendorCapabilityId == capabilityid).SingleOrDefault();
+            if (deleteVendorCapabilityAircraftTyperecord != null)
+            {
+                _context.Remove(deleteVendorCapabilityAircraftTyperecord);
+                _context.SaveChanges();
+            }
+
+
+            var deleteVendorCapabiltiyAircraftModelrecord = _context.vendorCapabiltiyAircraftModel.Where(a => a.VendorCapabilityId == capabilityid).SingleOrDefault();
+            if (deleteVendorCapabiltiyAircraftModelrecord != null)
+            {
+                _context.Remove(deleteVendorCapabiltiyAircraftModelrecord);
+                _context.SaveChanges();
+            }
+
+
             var deleterecord = _context.VendorCapabiliy.Where(a => a.VendorCapabilityId == capabilityid).SingleOrDefault();
-            _context.Remove(deleterecord);
-            _context.SaveChanges();
+            if (deleterecord != null)
+            {
+                _context.Remove(deleterecord);
+                _context.SaveChanges();
+            }
             return Ok(deleterecord);
 
         }
