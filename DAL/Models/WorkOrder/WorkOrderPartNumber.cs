@@ -27,7 +27,7 @@ namespace DAL.Models
         public long TearDownReport { get; set; }
         public int TATDaysStandard { get; set; }
         public long ConditionId { get; set; }
-        public long MappingPartId { get; set; }
+        public long MappingItemMasterId { get; set; }
 
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }

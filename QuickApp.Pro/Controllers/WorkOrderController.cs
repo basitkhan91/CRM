@@ -92,9 +92,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("workorderlist")]
-        public IActionResult GetWorkOrdersList(WorkOrderList workOrderList)
+        public IActionResult GetWorkOrdersList(int pageNo=0, int pageSize=10)
         {
-            var result = unitOfWork.WorkOrderRepository.GetWorkOrdersList(workOrderList);
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrdersList(pageNo, pageSize);
             return Ok(result);
         }
 

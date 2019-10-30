@@ -14,9 +14,9 @@ namespace DAL.Repositories.Interfaces
         WorkOrder UpdateWorkOrder(WorkOrder workOrder);
         void DeleteWorkOrder(long workOrderId);
         void WorkOrderStatus(long workOrderId, bool status, string updatedBy);
-        GetData<WorkOrderList> GetWorkOrdersList(WorkOrderList workOrderList);
+        IEnumerable<object> GetWorkOrdersList(int pageNo, int pageSize);
         WorkOrder WorkOrderById(long workOrderId);
-        Dictionary<long, string> GetWorkFlowNos(long partId, long workScopeId);
+        IEnumerable<object> GetWorkFlowNos(long partId, long workScopeId);
 
 
         long CreateWorkFlowWorkOrder(WorkFlowWorkOrder workFlowWorkOrder);

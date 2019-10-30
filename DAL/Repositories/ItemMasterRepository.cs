@@ -1092,11 +1092,11 @@ namespace DAL.Repositories
             try
             {
                 var data = (from p in _appContext.Nha_Tla_Alt_Equ_ItemMapping
-                            join im in _appContext.ItemMaster on p.MappingPartId equals im.ItemMasterId
+                            join im in _appContext.ItemMaster on p.MappingItemMasterId equals im.ItemMasterId
                             where p.IsDeleted == false && im.ItemMasterId == partId && p.MappingType==mappingType
                             select new
                             {
-                                p.MappingPartId,
+                                p.MappingItemMasterId,
                                 RevisedPartNo = im.PartNumber
                             }).ToList();
                 return data;
