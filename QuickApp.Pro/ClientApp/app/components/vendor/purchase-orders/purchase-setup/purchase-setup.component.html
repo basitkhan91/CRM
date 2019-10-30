@@ -365,6 +365,7 @@
                             <th>Cond <span class="clr-red">*</span></th>
                             <th>Order Qty <span class="clr-red">*</span></th>
                             <th>Unit Cost <span class="clr-red">*</span></th>
+                            <th>Disc Percent</th>
                             <th>Disc./unit</th>
                             <th>Disc. Amount</th> <!--Disc. Cost/unit-->
                             <th>Ext Cost <span class="clr-red">*</span></th>
@@ -401,31 +402,14 @@
                                 </td>
                                 <td>
                                     <div class="inner-addon inline-block">
-                                            <p-autoComplete field="partNumber" [(ngModel)]="partList.partNumberId"  name="partNumber{{row_index}}"
-                                            [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1"
-                                            [dropdown]="true" class="p-autoComplete-ctsm" #partNum="ngModel" errorMessage="Records not found" (onSelect)="partnmId(partList)" [forceSelection]="true"  required>
-                       
+                                        <p-autoComplete field="label" [(ngModel)]="partList.partNumberId"  name="partNumber{{row_index}}"
+                                        [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" #partNum="ngModel" errorMessage="Records not found" (onSelect)="getPNDetailsById(partList)" [forceSelection]="true"  required>                       
                                         </p-autoComplete>
-                                        <!--<select (change)="getPartValueForPart(partList,partList.partId)" [(ngModel)]="partList.partId">
-                                            <option *ngFor="let object of partList.partListObj" [ngValue]="object.partId">{{object.partNumber}}</option>
-                                        </select>-->
-
-                                        <!-- <p-autoComplete [(ngModel)]="partList.partNumberId" field=""  (onKeyUp)=eventHandler($event) (onSelect)="partnmId(partList,$event)" name="partName{{row_index}}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [dropdown]="true" #partNum="ngModel" errorMessage="Records not found" [forceSelection]="true" required>
-                                             <ng-template let-partName pTemplate="part">
-                                                <div class="ui-helper-clearfix">{{partName}}</div>
-                                            </ng-template> 
-                                        </p-autoComplete> -->
-                                        <!-- <p-autoComplete field="partNumber" class="pautocomp-cstm" (onKeyUp)=eventHandler($event) 
-                                    [(ngModel)]="partList.partNumberId" name="partName{{row_index}}" [suggestions]="partCollection" 
-                                    (completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1" [dropdown]="true" 
-                                    errorMessage="Records not found" [forceSelection]="true" #partNum=ngModel (onSelect)="partnmId(partList,$event)" required>
-                                    </p-autoComplete> -->
                                         <div *ngIf="partNum.invalid && (partNum.dirty || partNum.touched)" class="alert alert-danger alert-danger-cstm">
                                                 <div *ngIf="partNum.errors.required">
                                                     <small> PartNumber is required </small>
                                                 </div>
                                         </div>
-    
                                     </div>
                                 </td>
                                 <td>
@@ -438,7 +422,7 @@
                                 <td *ngIf="partList.itemTypeId==1">Stock</td>
                                 <td *ngIf="partList.itemTypeId==2">Non Stock</td>
                                 <td *ngIf="partList.itemTypeId==3">Equipment</td>
-                                <td *ngIf="partList.itemTypeId==0"></td>
+                                <td *ngIf="partList.itemTypeId==0 || !partList.itemTypeId"></td>
                                 <td>{{partList.manufacturerName}}</td>
                                 <td>
                                     <!--{{partList?.glAccountId}}-->
@@ -474,14 +458,14 @@
                                             </div>
                                     </div>     
                                 </td>
-                                <td><input type="number" class="form-control" [(ngModel)]="partList.quantityOrdered" name="parentQtyOrdered{{row_index}}" pKeyFilter="pint" #parentQtyOrdered="ngModel" (keyup)="onChangeParentQtyOrdered($event)" required>
+                                <td><input type="number" class="form-control" [(ngModel)]="partList.quantityOrdered" name="parentQtyOrdered{{row_index}}" pKeyFilter="pint" #parentQtyOrdered="ngModel" (keyup)="onChangeParentQtyOrdered($event); onGetDiscAmount(partList); onGetExtCost(partList);" required>
                                     <div *ngIf="parentQtyOrdered.invalid && (parentQtyOrdered.dirty || parentQtyOrdered.touched)" class="alert alert-danger alert-danger-cstm">
                                             <div *ngIf="parentQtyOrdered.errors.required">
                                                 <small> Order Qty is required </small>
                                             </div>
                                     </div> 
                                 </td>
-                                <td><input type="text" class="form-control" [(ngModel)]="partList.unitCost" name="unitCost{{row_index}}" pKeyFilter="pint" (change)="onGetDiscCostPerUnit(partList); onGetExtCost(partList);" #unitCost="ngModel" required>
+                                <td><input type="text" class="form-control" [(ngModel)]="partList.unitCost" name="unitCost{{row_index}}" pKeyFilter="pint" (keyup)="onGetExtCost(partList);" #unitCost="ngModel" required>
                                     <div *ngIf="unitCost.invalid && (unitCost.dirty || unitCost.touched)" class="alert alert-danger alert-danger-cstm">
                                             <div *ngIf="unitCost.errors.required">
                                                 <small> Unit Cost is required </small>
@@ -489,11 +473,13 @@
                                     </div> 
                                 </td>
                                 <td>
-                                    <!-- <p-autoComplete class="pautocomp-cstm" [(ngModel)]="partList.discountPerUnit" name="discountPerUnit{{row_index}}" [size]="30" [minLength]="1" [dropdown]="true" (change)="onGetDiscCostPerUnit(partList); onGetExtCost(partList);" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>  -->
-                                    <input type="text" class="form-control" [(ngModel)]="partList.discountPerUnit" name="discountPerUnit{{row_index}}" pKeyFilter="pint">
+                                    <p-autoComplete field="percentValue" class="pautocomp-cstm" 
+                                    [(ngModel)]="partList.discountPercent" name="discountPercent{{row_index}}" [suggestions]="discountPercentList" (completeMethod)="filterDiscountPercent($event)" (onSelect)="onGetDiscAmount(partList); onGetExtCost(partList); onGetDiscPerUnit(partList);" (onBlur)="onGetDiscAmount(partList); onGetExtCost(partList);" [size]="30" [minLength]="1" [dropdown]="true" [forceSelection]="true">
+                                    </p-autoComplete>
                                 </td>
-                                <td><input type="text" class="form-control" [(ngModel)]="partList.discountAmount" name="discountAmount{{row_index}}" pKeyFilter="pint" disabled></td>
-                                <td><input type="text" class="form-control" [(ngModel)]="partList.extendedCost" name="extendedCost{{row_index}}" pKeyFilter="pint" disabled required></td>
+                                <td><input type="number" class="form-control" [(ngModel)]="partList.discountPerUnit" name="discountPerUnit{{row_index}}" pKeyFilter="pint" disabled></td>
+                                <td><input type="number" class="form-control" [(ngModel)]="partList.discountAmount" name="discountAmount{{row_index}}" pKeyFilter="pint" disabled></td>
+                                <td><input type="number" class="form-control" [(ngModel)]="partList.extendedCost" name="extendedCost{{row_index}}" pKeyFilter="pint" disabled required></td>
                                 <td>
                                     <p-autoComplete field="symbol" class="pautocomp-cstm"
                                     [(ngModel)]="partList.functionalCurrencyId" name="functionalCurrencyId{{row_index}}" [suggestions]="functionalCurrList" (completeMethod)="filterFunctionalCurrency($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" required>
@@ -511,9 +497,9 @@
                                         <option *ngFor="let currencyName of allCurrencyData" [ngValue]="currencyName.currencyId">  {{currencyName.symbol}}</option>
                                     </select> -->
                                 </td>
-                                <td><input type="text" class="form-control" [(ngModel)]="partList.workOrderId" name="workOrderId{{row_index}}"></td>
-                                <td><input type="text" class="form-control" [(ngModel)]="partList.repairOrderId" name="repairOrderId{{row_index}}"></td>
-                                <td><input type="text" class="form-control" [(ngModel)]="partList.salesOrderId" name="salesOrderId{{row_index}}"></td>
+                                <td><input type="number" class="form-control" [(ngModel)]="partList.workOrderId" name="workOrderId{{row_index}}"></td>
+                                <td><input type="number" class="form-control" [(ngModel)]="partList.repairOrderId" name="repairOrderId{{row_index}}"></td>
+                                <td><input type="number" class="form-control" [(ngModel)]="partList.salesOrderId" name="salesOrderId{{row_index}}"></td>
                                 <td style="min-width: 90px;">
                                     <label style="width:90px;">Company:</label>
                                     <select class="form-control" [(ngModel)]="partList.parentCompanyId" name="parentCompanyName{{row_index}}" (change)="getParentBUList(partList)" #pcompanyName required>
@@ -549,7 +535,7 @@
                                         <option *ngFor="let department of partList.parentDepartmentlist " value="{{department.managementStructureId}}">{{department.code}}</option>
                                     </select>
                                 </td>
-                                <td><input type="text" class="form-control" [(ngModel)]="partList.memo" name="memo"></td>
+                                <td><input type="text" class="form-control" [(ngModel)]="partList.memo" name="memo{{row_index}}"></td>
                             </tr>
                             <tr class="child-header splitship-head" *ngIf="partList.ifSplitShip">
                                 <th></th>
@@ -594,7 +580,7 @@
                                                             (onSelect)="onCustomerNameChange(partChildList,$event)"
                                                             (onKeyUp)=customereventHandler($event)
                                                             [suggestions]="partChildList.customers"
-                                                            (completeMethod)="getPartyNames(partChildList,$event)"
+                                                            (completeMethod)="filterCustomersSplit(partChildList,$event)"
                                                             [size]="30" [minLength]="1" errorMessage="Records not found" [forceSelection]="true" [dropdown]="true"> <!--#cCustomerName="ngModel" required-->
     
                                             </p-autoComplete>
@@ -818,7 +804,7 @@
         </p-tabPanel>
         <p-tabPanel header="Vendor Capes">
             <p-table class="rpo-table-cstm" #dt [value]="vendorCapesInfo" [metaKeySelection]="true"
-                     [rows]="20" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]"
+                     [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]"
                      [columns]="vendorCapesCols" selectionMode="multiple"
                      [resizableColumns]="true" [reorderableColumns]="true" [responsive]="true">
     
@@ -919,7 +905,6 @@
                                     (onSelect)="onShipCompanySelected($event)" 
                                      [(ngModel)]="sourcePoApproval.shipToUserId" name="shipCompanyName" 
                                      [suggestions]="legalEntityList_ForShipping" 
-
                                      (completeMethod)="filterCompanyNameforShipping($event)" 
                                      [size]="30" 
                                      [minLength]="1"
@@ -1307,7 +1292,7 @@
                                     <p-autoComplete field="label" class="pautocomp-cstm"
                                     (onClear)="clearInputBillTo()"
                                     (onSelect)="onBillCompanySelected($event)" 
-                                    [(ngModel)]="sourcePoApproval.billToUserId" name="shipCompanyName" 
+                                    [(ngModel)]="sourcePoApproval.billToUserId" name="billCompanyName" 
                                     [suggestions]="legalEntityList_ForBilling" 
                                     (completeMethod)="filterCompanyNameforBilling($event)" 
                                     [size]="30" 
@@ -1446,7 +1431,7 @@
     </p-tabView>
     
     <div>
-        <button class="btn btn-primary-cstm pull-right" (click)="savePurchaseOrder()" style="margin-top: 10px;margin-bottom: 20px;">{{purchaseOrderId ? 'Update' : 'Save'}}</button> <!--[disabled]="!createPOForm.valid"-->
+        <button class="btn btn-primary-cstm pull-right" (click)="savePurchaseOrder()" style="margin-top: 10px;margin-bottom: 20px;">{{isEditMode ? 'Update' : 'Save'}}</button> <!--[disabled]="!createPOForm.valid"-->
     </div>
 </form>
     
@@ -2037,7 +2022,7 @@
         </div>
     </div>-->
     
-    <ng-template #contentEdits let-c="close" let-d="dismiss" style="width:auto">
+    <!-- <ng-template #contentEdits let-c="close" let-d="dismiss" style="width:auto">
         <div class="modal-header">
             <h4 class="modal-title" *ngIf="isEditMode">Edit Issued Details</h4>
             <h4 class="modal-title" *ngIf="!isEditMode">Add Issued Details</h4>
@@ -2108,7 +2093,7 @@
             </form>
         </div>
     
-    </ng-template>
+    </ng-template> -->
     
     <!--<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
         <div class="modal-header">
@@ -2183,7 +2168,7 @@
     </ng-template>-->
     
     
-    <ng-template #content let-c="close" let-d="dismiss" style="width:auto">
+    <!-- <ng-template #content let-c="close" let-d="dismiss" style="width:auto">
         <div class="modal-header">
             <h4 class="modal-title" *ngIf="isEditMode">Edit Bill To Details</h4>
             <h4 class="modal-title" *ngIf="!isEditMode">Add Bill To Details</h4>
@@ -2253,9 +2238,9 @@
             </form>
         </div>
     
-    </ng-template>
+    </ng-template> -->
     
-    <ng-template #contentmodel let-c="close" let-d="dismiss" style="width:auto">
+    <!-- <ng-template #contentmodel let-c="close" let-d="dismiss" style="width:auto">
         <div class="modal-header">
             <h4 class="modal-title" *ngIf="isEditMode">Edit Ship To Details</h4>
             <h4 class="modal-title" *ngIf="!isEditMode">Add Ship To Details</h4>
@@ -2325,9 +2310,9 @@
             </form>
         </div>
     
-    </ng-template>
+    </ng-template> -->
     
-    <ng-template #contentclose let-c="close" let-d="dismiss" style="width:auto">
+    <!-- <ng-template #contentclose let-c="close" let-d="dismiss" style="width:auto">
         <div class="modal-header">
             <h4 class="modal-title" *ngIf="isEditMode">Edit Issued To Details</h4>
             <h4 class="modal-title" *ngIf="!isEditMode">Add Issued To Details</h4>
@@ -2397,9 +2382,9 @@
             </form>
         </div>
     
-    </ng-template>
+    </ng-template> -->
     
-    <ng-template #cmodel let-c="close" let-d="dismiss" style="width:auto">
+    <!-- <ng-template #cmodel let-c="close" let-d="dismiss" style="width:auto">
         <div class="modal-header">
             <h4 class="modal-title" *ngIf="isEditMode">Edit Bill To Details</h4>
             <h4 class="modal-title" *ngIf="!isEditMode">Add Bill To Details</h4>
@@ -2469,7 +2454,7 @@
             </form>
         </div>
     
-    </ng-template>
+    </ng-template> -->
     
     <!-- <ng-template #contentMultipleParts let-c="close" let-d="dismiss" style="width:auto">
         <div class="modal-dialog modal-lg">
@@ -2533,7 +2518,7 @@
     
     <!-- Site Template -->
     
-    <ng-template #contentSiteEdit let-c="close" let-d="dismiss" style="width:auto">
+    <!-- <ng-template #contentSiteEdit let-c="close" let-d="dismiss" style="width:auto">
         <div class="modal-header">
             <h4 class="modal-title" *ngIf="isEditMode">Edit Site</h4>
             <h4 class="modal-title" *ngIf="!isEditMode">Add Site</h4>
@@ -2609,37 +2594,8 @@
                             <div class="clear"></div>
                         </div>
                     </div>
-                    <div class="col-6">
-                        <!-- Check Box Management Data -->
-                        <!--<p-treeTable [value]="gridData" [columns]="cols1" [(selection)]="selectedNodeTest" selectionMode="checkbox">
-                            <ng-template pTemplate="header" let-columns>
-                                <tr>
-                                    <th *ngFor="let col of columns">
-                                        {{col.header}}
-                                    </th>
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
-                                <tr>
-                                    <td *ngFor="let col of columns; let i = index">
-                                        <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
-                                        <p-treeTableCheckbox [value]="rowNode" *ngIf="i == 0" (click)="managementStructureClick(rowData)"></p-treeTableCheckbox>
-                                        {{rowData[col.field]}}
-                                    </td>
-                                </tr>
-                            </ng-template>
-    
-                        </p-treeTable>-->
-                        <!-- Check box Management Date End -->
-                    </div>
                 </div>
-    
-    
-    
-    
-    
-    
-    
+     
                 <div class="modal-footer">
     
                     <button class="btn btn-success" [disabled]="disableSaveManufacturer">Submit</button>
@@ -2649,10 +2605,10 @@
         </div>
     
     
-    </ng-template>
+    </ng-template> -->
     
     <!-- Split Shipment Address -->
-    <ng-template #contentSplitShipmentAddress let-c="close" let-d="dismiss" style="width:auto">
+    <!-- <ng-template #contentSplitShipmentAddress let-c="close" let-d="dismiss" style="width:auto">
         <div class="modal-header" id="createPOSplitAddress" role="dialog">
             <h4 class="modal-title" *ngIf="isEditMode">Edit Split Shipment Address</h4>
             <h4 class="modal-title" *ngIf="!isEditMode">Add Split Shipment Address</h4>
@@ -2665,17 +2621,6 @@
             <form #userForm="ngForm" class="form-horizontal">
                 <div class="row">
                     <div class="col-6">
-                        <!--<div class="form-group">
-                            <label for="actionname" class="control-label">Site Name<span class="clr-red">*</span></label>
-                            <p-autoComplete (onSelect)="Manufacturerdescription($event)" (onKeyUp)=ManufacturerHandler($event) (completeMethod)="filtermanufacturer($event)" [(ngModel)]="name" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" [size]="30"
-                                            [minLength]="2" [dropdown]="true">
-                                <ng-template let-name pTemplate="item">
-                                    <div class="ui-helper-clearfix">{{name}}</div>
-                                </ng-template>
-                            </p-autoComplete>
-                            <div *ngIf="disableSaveManufacturer" class="clr-red">Already Exists</div>
-                            <div class="clear"></div>
-                        </div>-->
                         <div class="form-group col-sm-12">
                             <label for="description" class="control-label col-sm-4">Address 1</label>
                             <div class="col-sm-7">
@@ -2721,29 +2666,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-6">
-                        <!-- Check Box Management Data -->
-                        <!--<p-treeTable [value]="gridData" [columns]="cols1" [(selection)]="selectedNodeTest" selectionMode="checkbox">
-                            <ng-template pTemplate="header" let-columns>
-                                <tr>
-                                    <th *ngFor="let col of columns">
-                                        {{col.header}}
-                                    </th>
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
-                                <tr>
-                                    <td *ngFor="let col of columns; let i = index">
-                                        <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
-                                        <p-treeTableCheckbox [value]="rowNode" *ngIf="i == 0" (click)="managementStructureClick(rowData)"></p-treeTableCheckbox>
-                                        {{rowData[col.field]}}
-                                    </td>
-                                </tr>
-                            </ng-template>
-    
-                        </p-treeTable>-->
-                        <!-- Check box Management Date End -->
-                    </div>
                 </div>
                 <div class="modal-footer">
     
@@ -2756,9 +2678,7 @@
                 <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>createPOSplitAddress
             </form>
         </div>
-    
-    
-    </ng-template>
+    </ng-template> -->
     
     <div class="modal fade" id="cpo-memo" role="dialog">
         <div class="modal-dialog modal-sm" style="max-width: 400px !important;">
@@ -2770,11 +2690,11 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Memo</label>
-                        <textarea class="form-control" name="tempMemo" [(ngModel)]="tempMemo" value={{tempMemo}}></textarea> <!-- (keyup)="memoData($event.target.value)" -->
+                        <textarea class="form-control" name="tempMemo" [(ngModel)]="tempMemo" value={{tempMemo}}></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success-cstm" data-dismiss="modal" (click)="onSaveMemo()">Save</button>
+                    <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="onSaveMemo()">Save</button>
                     <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
                 </div>
             </div>

@@ -6,7 +6,7 @@ namespace DAL.Models
     {
         public Int64 ID { get; set; }
         public Int64 WorkOrderId { get; set; }
-        public Int64 ItemMasterId { get; set; }
+        public Int64 MasterPartId { get; set; }
         public Int64 WorkOrderScopeId { get; set; }
         public string NTE { get; set; }
         public int Quantity { get; set; }
@@ -21,7 +21,7 @@ namespace DAL.Models
         public DateTime EstimatedCompletionDate { get; set; }
         public bool IsPMA { get; set; }
         public bool IsDER { get; set; }
-        public string TechnicianName { get; set; }
+        public long TechnicianId { get; set; }
         public Int64 TechStationId { get; set; }
         public Int64 TearDownReport { get; set; }
         public int TATDaysStandard { get; set; }

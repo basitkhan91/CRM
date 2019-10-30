@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+using DAL.Core;
 
 namespace DAL.Models
 {
-    public class ExpenditureCategory : PasBase,IAudit
+    public class ExpenditureCategory : PasBase
     {
         [Key]
         public long ExpenditureCategoryId { get; set; }
@@ -19,7 +18,8 @@ namespace DAL.Models
 
         public bool? IsActive { get; set; }
 
-        public virtual MasterCompany MasterCompany { get; set; }
         public bool? IsDelete { get; set; }
+        [NotMapped]
+        public UploadTag UploadTag { get; set; }
     }
 }

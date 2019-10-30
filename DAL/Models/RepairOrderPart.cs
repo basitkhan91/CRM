@@ -72,7 +72,7 @@ namespace DAL.Models
     [NotMapped]
     public class ChildObj
     {
-        //public long RepairOrderPartChildId { get; set; }
+        public long RepairOrderPartRecordId { get; set; }
         public long RepairOrderId { get; set; }
         public bool? IsParent { get; set; }
         public long ItemMasterId { get; set; }

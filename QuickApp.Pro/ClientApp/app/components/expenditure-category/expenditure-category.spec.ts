@@ -1,21 +1,21 @@
 ﻿/// <reference path="../../../../node_modules/@types/jasmine/index.d.ts" />
 import { TestBed, async, ComponentFixture, ComponentFixtureAutoDetect } from '@angular/core/testing';
 import { BrowserModule, By } from "@angular/platform-browser";
-import { ExpenditureComponent } from './expenditure.component';
+import { ExpenditureCategoryComponent } from './expenditure-category.component';
 
-let component: ExpenditureComponent;
-let fixture: ComponentFixture<ExpenditureComponent>;
+let component: ExpenditureCategoryComponent;
+let fixture: ComponentFixture<ExpenditureCategoryComponent>;
 
-describe('Expenditure component', () => {
+describe('ExpenditureCategory component', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ ExpenditureComponent ],
+            declarations: [ ExpenditureCategoryComponent ],
             imports: [ BrowserModule ],
             providers: [
                 { provide: ComponentFixtureAutoDetect, useValue: true }
             ]
         });
-        fixture = TestBed.createComponent(ExpenditureComponent);
+        fixture = TestBed.createComponent(ExpenditureCategoryComponent);
         component = fixture.componentInstance;
     }));
 

@@ -16,7 +16,7 @@ export class WorkOrderEndpointService extends EndpointFactory {
 
     private readonly getAllURL: string = "/api/WorkOrder/getAll";
     private readonly getByIdURL: string = "/api/WorkOrder/getWorkOrderDataByID";
-    private readonly addURL: string = "/api/WorkOrder/WorkOrderPost";
+    private readonly addURL: string = "/api/WorkOrder/createworkorder";
     private readonly updateURL: string = "/api/WorkOrder/updateWO";
     private readonly removeByIdURL: string = "/api/WorkOrder/remove";
     private readonly getAssetAuditById: string = "/api/WorkOrder/audits";
