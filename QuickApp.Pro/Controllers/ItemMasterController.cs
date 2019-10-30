@@ -1711,6 +1711,36 @@ namespace QuickApp.Pro.Controllers
                 }).OrderByDescending(a => a.ItemMasterId).ToList();
             return Ok(allPartDetails);
         }
+
+        [HttpGet("stocklinedetailsbypartno")]
+        public IActionResult GetStockLineDetailsByPartNo(string partNo)
+        {
+            var result = _unitOfWork.itemMaster.GetStockLineDetailsByPartNo(partNo);
+            return Ok(result);
+        }
+
+        [HttpGet("partserialno")]
+        public IActionResult GetPartSerialNo(long stockLineId, long conditionId)
+        {
+            var result = _unitOfWork.itemMaster.GetPartSerialNo(stockLineId, conditionId);
+            return Ok(result);
+        }
+
+        [HttpGet("partpublications")]
+        public IActionResult GetPartPublications(long partId)
+        {
+            var result = _unitOfWork.itemMaster.GetPartPublications(partId);
+            return Ok(result);
+        }
+
+        [HttpGet("revisedparts")]
+        public IActionResult GetRevisedParts(long partId, int mappingType)
+        {
+            var result = _unitOfWork.itemMaster.GetRevisedParts(partId, mappingType);
+            return Ok(result);
+        }
+
+        
     }
 
 }
