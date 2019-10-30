@@ -365,6 +365,7 @@
                             <th>Cond <span class="clr-red">*</span></th>
                             <th>Order Qty <span class="clr-red">*</span></th>
                             <th>Unit Cost <span class="clr-red">*</span></th>
+                            <th>Disc Percent</th>
                             <th>Disc./unit</th>
                             <th>Disc. Amount</th> <!--Disc. Cost/unit-->
                             <th>Ext Cost <span class="clr-red">*</span></th>
@@ -401,31 +402,14 @@
                                 </td>
                                 <td>
                                     <div class="inner-addon inline-block">
-                                            <p-autoComplete field="partNumber" [(ngModel)]="partList.partNumberId"  name="partNumber{{row_index}}"
-                                            [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1"
-                                            [dropdown]="true" class="p-autoComplete-ctsm" #partNum="ngModel" errorMessage="Records not found" (onSelect)="partnmId(partList)" [forceSelection]="true"  required>
-                       
+                                        <p-autoComplete field="label" [(ngModel)]="partList.partNumberId"  name="partNumber{{row_index}}"
+                                        [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" #partNum="ngModel" errorMessage="Records not found" (onSelect)="getPNDetailsById(partList)" [forceSelection]="true"  required>                       
                                         </p-autoComplete>
-                                        <!--<select (change)="getPartValueForPart(partList,partList.partId)" [(ngModel)]="partList.partId">
-                                            <option *ngFor="let object of partList.partListObj" [ngValue]="object.partId">{{object.partNumber}}</option>
-                                        </select>-->
-
-                                        <!-- <p-autoComplete [(ngModel)]="partList.partNumberId" field=""  (onKeyUp)=eventHandler($event) (onSelect)="partnmId(partList,$event)" name="partName{{row_index}}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [dropdown]="true" #partNum="ngModel" errorMessage="Records not found" [forceSelection]="true" required>
-                                             <ng-template let-partName pTemplate="part">
-                                                <div class="ui-helper-clearfix">{{partName}}</div>
-                                            </ng-template> 
-                                        </p-autoComplete> -->
-                                        <!-- <p-autoComplete field="partNumber" class="pautocomp-cstm" (onKeyUp)=eventHandler($event) 
-                                    [(ngModel)]="partList.partNumberId" name="partName{{row_index}}" [suggestions]="partCollection" 
-                                    (completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1" [dropdown]="true" 
-                                    errorMessage="Records not found" [forceSelection]="true" #partNum=ngModel (onSelect)="partnmId(partList,$event)" required>
-                                    </p-autoComplete> -->
                                         <div *ngIf="partNum.invalid && (partNum.dirty || partNum.touched)" class="alert alert-danger alert-danger-cstm">
                                                 <div *ngIf="partNum.errors.required">
                                                     <small> PartNumber is required </small>
                                                 </div>
                                         </div>
-    
                                     </div>
                                 </td>
                                 <td>
@@ -438,7 +422,7 @@
                                 <td *ngIf="partList.itemTypeId==1">Stock</td>
                                 <td *ngIf="partList.itemTypeId==2">Non Stock</td>
                                 <td *ngIf="partList.itemTypeId==3">Equipment</td>
-                                <td *ngIf="partList.itemTypeId==0"></td>
+                                <td *ngIf="partList.itemTypeId==0 || !partList.itemTypeId"></td>
                                 <td>{{partList.manufacturerName}}</td>
                                 <td>
                                     <!--{{partList?.glAccountId}}-->
@@ -490,12 +474,12 @@
                                 </td>
                                 <td>
                                     <p-autoComplete field="percentValue" class="pautocomp-cstm" 
-                                    [(ngModel)]="partList.discountPerUnit" name="discountPerUnit{{row_index}}" [suggestions]="discountPerUnitList" (completeMethod)="filterDiscountPerUnit($event)" (onSelect)="onGetDiscAmount(partList); onGetExtCost(partList);" (onBlur)="onGetDiscAmount(partList); onGetExtCost(partList);" [size]="30" [minLength]="1" [dropdown]="true" [forceSelection]="true">
+                                    [(ngModel)]="partList.discountPercent" name="discountPercent{{row_index}}" [suggestions]="discountPercentList" (completeMethod)="filterDiscountPercent($event)" (onSelect)="onGetDiscAmount(partList); onGetExtCost(partList); onGetDiscPerUnit(partList);" (onBlur)="onGetDiscAmount(partList); onGetExtCost(partList);" [size]="30" [minLength]="1" [dropdown]="true" [forceSelection]="true">
                                     </p-autoComplete>
-                                    <!-- <input type="text" class="form-control" [(ngModel)]="partList.discountPerUnit" name="discountPerUnit{{row_index}}" pKeyFilter="pint"> -->
                                 </td>
-                                <td><input type="text" class="form-control" [(ngModel)]="partList.discountAmount" name="discountAmount{{row_index}}" pKeyFilter="pint" disabled></td>
-                                <td><input type="text" class="form-control" [(ngModel)]="partList.extendedCost" name="extendedCost{{row_index}}" pKeyFilter="pint" disabled required></td>
+                                <td><input type="number" class="form-control" [(ngModel)]="partList.discountPerUnit" name="discountPerUnit{{row_index}}" pKeyFilter="pint" disabled></td>
+                                <td><input type="number" class="form-control" [(ngModel)]="partList.discountAmount" name="discountAmount{{row_index}}" pKeyFilter="pint" disabled></td>
+                                <td><input type="number" class="form-control" [(ngModel)]="partList.extendedCost" name="extendedCost{{row_index}}" pKeyFilter="pint" disabled required></td>
                                 <td>
                                     <p-autoComplete field="symbol" class="pautocomp-cstm"
                                     [(ngModel)]="partList.functionalCurrencyId" name="functionalCurrencyId{{row_index}}" [suggestions]="functionalCurrList" (completeMethod)="filterFunctionalCurrency($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" required>
@@ -551,7 +535,7 @@
                                         <option *ngFor="let department of partList.parentDepartmentlist " value="{{department.managementStructureId}}">{{department.code}}</option>
                                     </select>
                                 </td>
-                                <td><input type="text" class="form-control" [(ngModel)]="partList.memo" name="memo"></td>
+                                <td><input type="text" class="form-control" [(ngModel)]="partList.memo" name="memo{{row_index}}"></td>
                             </tr>
                             <tr class="child-header splitship-head" *ngIf="partList.ifSplitShip">
                                 <th></th>
@@ -820,7 +804,7 @@
         </p-tabPanel>
         <p-tabPanel header="Vendor Capes">
             <p-table class="rpo-table-cstm" #dt [value]="vendorCapesInfo" [metaKeySelection]="true"
-                     [rows]="20" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]"
+                     [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]"
                      [columns]="vendorCapesCols" selectionMode="multiple"
                      [resizableColumns]="true" [reorderableColumns]="true" [responsive]="true">
     
