@@ -88,7 +88,6 @@
                 </td>
                 <td>
                     <input type="text" class="form-control" disabled pInputText pKeyFilter="money" value="{{material.extendedPrice}}" [(ngModel)]="material.extendedPrice" />
-                    <input type="text" class="form-control" pInputText pKeyFilter="money" value="{{material.price}}" [(ngModel)]="material.price" (input)="calculatePriceSummation();calculateExtendedPrice();" />
                 </td>
                 <td>
                     <input type="text" class="form-control" pInputText pKeyFilter="money" value="{{material.extendedPrice}}" [(ngModel)]="material.price" (input)="calculatePriceSummation()" />
