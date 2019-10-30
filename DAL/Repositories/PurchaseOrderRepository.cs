@@ -589,8 +589,9 @@ namespace DAL.Repositories
                             purchaseOrderPart.DiscountPerUnit = part.pop.DiscountPerUnit;
                             purchaseOrderPart.ExtendedCost = part.pop.ExtendedCost;
                             purchaseOrderPart.FunctionalCurrencyId = part.pop.FunctionalCurrencyId;
+                            //purchaseOrderPart.TransactionalCurrencyId = part.pop.reportCurrencyId;
                             purchaseOrderPart.ForeignExchangeRate = part.pop.ForeignExchangeRate;
-                            purchaseOrderPart.TransactionalCurrencyId = part.pop.TransactionalCurrencyId;
+                            //purchaseOrderPart.TransactionalCurrencyId = part.pop.TransactionalCurrencyId;
                             purchaseOrderPart.WorkOrderId = part.pop.WorkOrderId;
                             purchaseOrderPart.RepairOrderId = part.pop.RepairOrderId;
                             purchaseOrderPart.SalesOrderId = part.pop.SalesOrderId;
