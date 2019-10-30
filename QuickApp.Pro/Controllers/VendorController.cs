@@ -1058,7 +1058,7 @@ namespace QuickApp.Pro.Controllers
                                 getRecentlyInsertedRecord.ManagementStructureId = poViewModelChild.ManagementStructureId;
                                 getRecentlyInsertedRecord.CreatedBy = poViewModelChild.CreatedBy;
                                 getRecentlyInsertedRecord.UpdatedBy = poViewModelChild.UpdatedBy;
-                                //getRecentlyInsertedRecord.ParentId = (int?) getRecentlyInsertedRecord.RepairOrderPartRecordId;
+                                getRecentlyInsertedRecord.ParentId = getRecentlyInsertedRecord.RepairOrderPartRecordId;
 
                                 _context.RepairOrderPart.Update(getRecentlyInsertedRecord);
                                 _unitOfWork.SaveChanges();
@@ -1081,7 +1081,8 @@ namespace QuickApp.Pro.Controllers
                                     ManagementStructureId = poViewModelChild.ManagementStructureId,
                                     CreatedBy = poViewModelChild.CreatedBy,
                                     UpdatedBy = poViewModelChild.UpdatedBy,
-                                    RepairOrderPartRecordId = getRecentlyInsertedRecord.RepairOrderPartRecordId
+                                    RepairOrderPartRecordId = getRecentlyInsertedRecord.RepairOrderPartRecordId,
+                                    ParentId = getRecentlyInsertedRecord.RepairOrderPartRecordId
                                 };
                                 childObjList.Add(childObj);
                             }
@@ -1098,6 +1099,7 @@ namespace QuickApp.Pro.Controllers
                         {
                             RepairOrderId = poViewModel.RepairOrderId,
                             IsParent = poViewModel.IsParent,
+                            ParentId = 0, // This parent so default is 0.
                             ItemMasterId = poViewModel.ItemMasterId,
                             SerialNumber = poViewModel.SerialNumber,
                             NeedByDate = poViewModel.NeedByDate,
@@ -1198,18 +1200,12 @@ namespace QuickApp.Pro.Controllers
                                     ManagementStructureId = poViewModelChild.ManagementStructureId,
                                     CreatedBy = poViewModelChild.CreatedBy,
                                     UpdatedBy = poViewModelChild.UpdatedBy,
-                                    //ParentId = (int?)getRecentlyInsertedRecord.RepairOrderPartRecordId,
+                                    ParentId = actionobject.RepairOrderPartRecordId,
                                     CreatedDate = DateTime.Now
                                 };
 
                                 _context.RepairOrderPart.Add(repairOrderPartObj);
                                 _unitOfWork.SaveChanges();
-
-                                // Get most recently added record and get RepairOrderPartRecordId.
-                                var getRecentlyInsertedRecord = _context.RepairOrderPart
-                                    .Where(a => a.RepairOrderId == poViewModelChild.RepairOrderId)
-                                    .OrderByDescending(t => t.CreatedDate)
-                                    .FirstOrDefault();
 
                                 // This is to return back to UI in same JSON format.
                                 var childObj = new DAL.Models.ChildObj
@@ -1229,7 +1225,8 @@ namespace QuickApp.Pro.Controllers
                                     ManagementStructureId = poViewModelChild.ManagementStructureId,
                                     CreatedBy = poViewModelChild.CreatedBy,
                                     UpdatedBy = poViewModelChild.UpdatedBy,
-                                    RepairOrderPartRecordId = getRecentlyInsertedRecord.RepairOrderPartRecordId
+                                    RepairOrderPartRecordId = repairOrderPartObj.RepairOrderPartRecordId,
+                                    ParentId = repairOrderPartObj.RepairOrderPartRecordId
                                 };
                                 childObjList.Add(childObj);
                             }
@@ -2907,9 +2904,35 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<VendorCapabiliy>))]
         public IActionResult deleteVendorCapability(long capabilityid)
         {
+            var deleteVendorCapabilityTyperecord = _context.vendorCapabilityType.Where(a => a.VendorCapabilityId == capabilityid).SingleOrDefault();
+            if (deleteVendorCapabilityTyperecord != null)
+            {
+                _context.Remove(deleteVendorCapabilityTyperecord);
+                _context.SaveChanges();
+            }
+
+            var deleteVendorCapabilityAircraftTyperecord = _context.vendorCapabilityAircraftType.Where(a => a.VendorCapabilityId == capabilityid).SingleOrDefault();
+            if (deleteVendorCapabilityAircraftTyperecord != null)
+            {
+                _context.Remove(deleteVendorCapabilityAircraftTyperecord);
+                _context.SaveChanges();
+            }
+
+
+            var deleteVendorCapabiltiyAircraftModelrecord = _context.vendorCapabiltiyAircraftModel.Where(a => a.VendorCapabilityId == capabilityid).SingleOrDefault();
+            if (deleteVendorCapabiltiyAircraftModelrecord != null)
+            {
+                _context.Remove(deleteVendorCapabiltiyAircraftModelrecord);
+                _context.SaveChanges();
+            }
+
+
             var deleterecord = _context.VendorCapabiliy.Where(a => a.VendorCapabilityId == capabilityid).SingleOrDefault();
-            _context.Remove(deleterecord);
-            _context.SaveChanges();
+            if (deleterecord != null)
+            {
+                _context.Remove(deleterecord);
+                _context.SaveChanges();
+            }
             return Ok(deleterecord);
 
         }

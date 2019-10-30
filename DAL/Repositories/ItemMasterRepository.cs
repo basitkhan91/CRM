@@ -980,7 +980,7 @@ namespace DAL.Repositories
             }
         }
 
-        public Nha_Tla_Alt_Equ_ItemMapping NhaTlaAltEquItemMappingById(long itemMappingId,int mappingType)
+        public Nha_Tla_Alt_Equ_ItemMapping NhaTlaAltEquItemMappingById(long itemMappingId, int mappingType)
         {
             Nha_Tla_Alt_Equ_ItemMapping itemMapping = new Nha_Tla_Alt_Equ_ItemMapping();
 
@@ -997,18 +997,109 @@ namespace DAL.Repositories
                     .Select(p => new
                     {
                         ItemMaster = p.im,
-                        ItemMapping=p.mp
+                        ItemMapping = p.mp
                     })
                     .FirstOrDefault();
-                    
 
-                if (result != null && result.ItemMapping!=null && result.ItemMapping.ItemMappingId>0)
+
+                if (result != null && result.ItemMapping != null && result.ItemMapping.ItemMappingId > 0)
                 {
                     itemMapping = result.ItemMapping;
                     itemMapping.ItemMaster = result.ItemMaster;
-                   
+
                 }
                 return itemMapping;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetStockLineDetailsByPartNo(string partNo)
+        {
+            try
+            {
+                var list = (from sl in _appContext.StockLine
+                            join c in _appContext.Condition on sl.ConditionId equals c.ConditionId
+                            where sl.PartNumber == partNo
+                            select new
+                            {
+                                sl.StockLineId,
+                                sl.StockLineNumber,
+                                sl.ConditionId,
+                                c.Description
+                            }).ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public string GetPartSerialNo(long stockLineId, long conditionId)
+        {
+            try
+            {
+                var serialNo = (from sl in _appContext.StockLine
+                                where sl.StockLineId == stockLineId && sl.ConditionId == conditionId
+                                select new
+                                {
+                                    sl.SerialNumber
+                                }).FirstOrDefault().SerialNumber;
+                return serialNo;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetPartPublications(long partId)
+        {
+            try
+            {
+
+                var list = (from a in _appContext.Attachment
+                            join ad in _appContext.AttachmentDetails on a.AttachmentId equals ad.AttachmentId
+                            join p in _appContext.Publication on a.ReferenceId equals p.PublicationRecordId
+                            join pim in _appContext.PublicationItemMasterMapping on p.PublicationRecordId equals pim.PublicationRecordId
+                            where a.IsDeleted == false && ad.IsDeleted == false && a.ModuleId == Convert.ToInt32(ModuleEnum.Publication)
+                            && pim.ItemMasterId == partId
+                            select new
+                            {
+                                p.PublicationId,
+                                p.PublicationRecordId,
+                                ad.FileName,
+                                ad.Link,
+                                ad.CreatedDate
+                            }).ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetRevisedParts(long partId,int mappingType)
+        {
+            try
+            {
+                var data = (from p in _appContext.Nha_Tla_Alt_Equ_ItemMapping
+                            join im in _appContext.ItemMaster on p.MappingPartId equals im.ItemMasterId
+                            where p.IsDeleted == false && im.ItemMasterId == partId && p.MappingType==mappingType
+                            select new
+                            {
+                                p.MappingPartId,
+                                RevisedPartNo = im.PartNumber
+                            }).ToList();
+                return data;
             }
             catch (Exception)
             {

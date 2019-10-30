@@ -2,29 +2,39 @@
 
 namespace DAL.Models
 {
-    public class WorkOrderPartNumber : PasBaseAuditing
+    public class WorkOrderPartNumber
     {
-        public Int64 ID { get; set; }
-        public Int64 WorkOrderId { get; set; }
-        public Int64 MasterPartId { get; set; }
-        public Int64 WorkOrderScopeId { get; set; }
+        public long ID { get; set; }
+        public long WorkOrderId { get; set; }
+        public long MasterPartId { get; set; }
+        public long WorkOrderScopeId { get; set; }
         public string NTE { get; set; }
         public int Quantity { get; set; }
-        public Int64 StockLineId { get; set; }
-        public Int64 CMMId { get; set; }
-        public Int64 WorkflowId { get; set; }
-        public Int64 WorkOrderStageId { get; set; }
-        public Int64 WorkOrderStatusId { get; set; }
-        public Int64 WorkOrderPriorityId { get; set; }
+        public long StockLineId { get; set; }
+        public long CMMId { get; set; }
+        public long WorkflowId { get; set; }
+        public long WorkOrderStageId { get; set; }
+        public long WorkOrderStatusId { get; set; }
+        public long WorkOrderPriorityId { get; set; }
         public DateTime CustomerRequestDate { get; set; }
         public DateTime PromisedDate { get; set; }
         public DateTime EstimatedCompletionDate { get; set; }
+        public DateTime EstimatedShipDate { get; set; }
         public bool IsPMA { get; set; }
         public bool IsDER { get; set; }
         public long TechnicianId { get; set; }
-        public Int64 TechStationId { get; set; }
-        public Int64 TearDownReport { get; set; }
+        public long TechStationId { get; set; }
+        public long TearDownReport { get; set; }
         public int TATDaysStandard { get; set; }
+        public long ConditionId { get; set; }
+        public long MappingPartId { get; set; }
+
         public int MasterCompanyId { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string UpdatedBy { get; set; }
+        public DateTime UpdatedDate { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }
