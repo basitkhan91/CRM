@@ -465,7 +465,7 @@
                                             </div>
                                     </div> 
                                 </td>
-                                <td><input type="text" class="form-control" [(ngModel)]="partList.unitCost" name="unitCost{{row_index}}" pKeyFilter="pint" (keyup)="onGetExtCost(partList);" #unitCost="ngModel" required>
+                                <td><input type="text" class="form-control" [(ngModel)]="partList.unitCost" name="unitCost{{row_index}}" pKeyFilter="pint" (keyup)="onGetExtCost(partList); onGetDiscPerUnit(partList);" #unitCost="ngModel" required>
                                     <div *ngIf="unitCost.invalid && (unitCost.dirty || unitCost.touched)" class="alert alert-danger alert-danger-cstm">
                                             <div *ngIf="unitCost.errors.required">
                                                 <small> Unit Cost is required </small>
@@ -474,7 +474,7 @@
                                 </td>
                                 <td>
                                     <p-autoComplete field="percentValue" class="pautocomp-cstm" 
-                                    [(ngModel)]="partList.discountPercent" name="discountPercent{{row_index}}" [suggestions]="discountPercentList" (completeMethod)="filterDiscountPercent($event)" (onSelect)="onGetDiscAmount(partList); onGetExtCost(partList); onGetDiscPerUnit(partList);" (onBlur)="onGetDiscAmount(partList); onGetExtCost(partList);" [size]="30" [minLength]="1" [dropdown]="true" [forceSelection]="true">
+                                    [(ngModel)]="partList.discountPercent" name="discountPercent{{row_index}}" [suggestions]="discountPercentList" (completeMethod)="filterDiscountPercent($event)" (onSelect)="onGetDiscPerUnit(partList);" (onBlur)="onGetDiscPerUnit(partList);" [size]="30" [minLength]="1" [dropdown]="true" [forceSelection]="true">
                                     </p-autoComplete>
                                 </td>
                                 <td><input type="number" class="form-control" [(ngModel)]="partList.discountPerUnit" name="discountPerUnit{{row_index}}" pKeyFilter="pint" disabled></td>

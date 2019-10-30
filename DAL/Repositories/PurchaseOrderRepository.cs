@@ -554,7 +554,7 @@ namespace DAL.Repositories
             List<PurchaseOrderPart> purchaseOrderParts = new List<PurchaseOrderPart>();
             List<PurchaseOrderSplitParts> purchaseOrderSplitParts = new List<PurchaseOrderSplitParts>();
             
-            PurchaseOrderPart purchaseOrderPart;
+            PurchaseOrderPart purchaseOrderPart=null;
             PurchaseOrderSplitParts purchaseOrderSplitPart;
             try
             {
@@ -570,9 +570,10 @@ namespace DAL.Repositories
                 {
                     foreach(var part in list)
                     {
-                        purchaseOrderPart = new PurchaseOrderPart();
                         if (part.pop.isParent)
                         {
+                            purchaseOrderPart = new PurchaseOrderPart();
+                            purchaseOrderPart.PurchaseOrderPartRecordId = part.pop.PurchaseOrderPartRecordId;
                             purchaseOrderPart.PurchaseOrderId = part.pop.PurchaseOrderId;
                             purchaseOrderPart.isParent = true;
                             purchaseOrderPart.SerialNumber = part.pop.SerialNumber;
@@ -601,6 +602,8 @@ namespace DAL.Repositories
                             purchaseOrderPart.UpdatedBy = part.pop.UpdatedBy;
                             purchaseOrderPart.UpdatedDate = part.pop.UpdatedDate;
                             purchaseOrderPart.IsActive = part.pop.IsActive;
+
+                            purchaseOrderParts.Add(purchaseOrderPart);
                         }
                         else
                         {
@@ -629,13 +632,15 @@ namespace DAL.Repositories
 
                                     purchaseOrderPart.PurchaseOrderSplitParts.Add(purchaseOrderSplitPart);
                                 }
-                                
+                               // purchaseOrderParts.Add(purchaseOrderPart);
+
+
                             }
                         }
 
 
 
-                        purchaseOrderParts.Add(purchaseOrderPart);
+                        
                     }
                 }
 
