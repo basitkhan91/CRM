@@ -5659,12 +5659,15 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         } else if (value === 'Atachapter') {
             this.currentTab = 'Atachapter';
             this.activeMenuItem = 3;
+        } else if(value=="Capes"){
+            this.currentTab = 'Capes';
+            this.activeMenuItem = 4;
         } else if (value === 'PurchaseSales') {
             this.currentTab = 'PurchaseSales';
-            this.activeMenuItem = 4;
+            this.activeMenuItem = 5;
         } else if (value === 'ExportInfo') {
             this.currentTab = 'ExportInfo';
-            this.activeMenuItem = 5;
+            this.activeMenuItem = 6;
         }
     }
     //New Priority

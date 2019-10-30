@@ -51,19 +51,28 @@
                         <div class="md-step-bar-right"></div>
                     </div>
                     <div class="md-step"
-                         [ngClass]="{ active: activeMenuItem >= 4 , editable : activeMenuItem === 4}"
+                            [ngClass]="{ active: activeMenuItem >= 4 , editable : activeMenuItem === 4 }"
+                            (click)="changeOfTab('Capes')"
+                            [class.isDisabled]="!isDisabledSteps">
+                        <div class="md-step-circle"><span>4</span></div>
+                        <div class="md-step-title">Capes</div>
+                        <div class="md-step-bar-left"></div>
+                        <div class="md-step-bar-right"></div>
+                    </div>
+                    <div class="md-step"
+                         [ngClass]="{ active: activeMenuItem >= 5 , editable : activeMenuItem === 5}"
                          (click)="changeOfTab('PurchaseSales')"
                          [class.isDisabled]="!isDisabledSteps">
-                        <div class="md-step-circle"><span>4</span></div>
+                        <div class="md-step-circle"><span>5</span></div>
                         <div class="md-step-title">Purchase and Sales</div>
                         <div class="md-step-bar-left"></div>
                         <div class="md-step-bar-right"></div>
                     </div>
                     <div class="md-step"
-                         [ngClass]="{ active: activeMenuItem >= 5 , editable : activeMenuItem === 5 }"
+                         [ngClass]="{ active: activeMenuItem >= 6 , editable : activeMenuItem === 6 }"
                          (click)="changeOfTab('ExportInfo')"
                          [class.isDisabled]="!isDisabledSteps">
-                        <div class="md-step-circle"><span>5</span></div>
+                        <div class="md-step-circle"><span>6</span></div>
                         <div class="md-step-title">Export Information</div>
                         <div class="md-step-bar-left"></div>
                         <div class="md-step-bar-right"></div>
@@ -920,7 +929,39 @@
                     </div>
 
                 </div>
-
+                <div  [ngClass]="{hideTab : currentTab !== 'Capes'}">
+                    <div class="card">
+                        <div class="col-sm-12 font-padding">
+                            <div class="col-sm-2">
+                                PN: <span style="color:red">{{pnvalue}}</span>
+                            </div>
+                            <div class="col-sm-3">
+                                PN Description: <span style="color:red">{{pnDescription}}</span>
+                            </div>
+                            <!-- <div class="col-sm-3">
+                                Alternate PN: <span style="color:red">{{alternatePn}}</span>
+                            </div> -->
+                            <div class="col-sm-3">
+                                Manufacturer: <span style="color:red">{{ManufacturerValue}}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-12 ">
+                                <div class="shadow-Box">
+                                    <div class="col-sm-12">
+                                        <h4 class="float-left">Cape Information</h4>
+                                        <h4 class="float-right">
+                                            Add 
+                                            <a class="plusicon-cstm" href="#" data-toggle="modal" data-target="#ModalViewCapes"><i class="fa fa-plus-circle fa-lg"></i></a>
+                                        </h4>
+                                    </div>
+                                    
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div [ngClass]="{hideTab : currentTab !== 'PurchaseSales'}">
                     <!--New Changes in Purchase and Sales page-->
                     <div class="card">
@@ -1481,6 +1522,9 @@
                             Capability Types: <span style="color:red"></span>
                         </div>
                         <div class="col-sm-3">
+                            <select>
+                                <option value="0">Select</option>
+                            </select>
                         </div>
                     </div>
                     <p-table [rows]="6" [columns]="Capes" [scrollable]="true" [responsive]="true" [style]="{width:'100%'}" [paginator]="true">
