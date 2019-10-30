@@ -39,10 +39,8 @@ namespace DAL.Repositories
             try
             {
                 workOrder.CreatedDate = workOrder.UpdatedDate = DateTime.Now;
-                workOrder.CreatedBy = workOrder.UpdatedBy = "admin";
                 workOrder.IsActive = true;
                 workOrder.IsDeleted = false;
-                workOrder.MasterCompanyId = 1;
                 _appContext.WorkOrder.Add(workOrder);
                 _appContext.SaveChanges();
 
@@ -267,7 +265,7 @@ namespace DAL.Repositories
                 var workOrder = _appContext.Set<WorkOrder>().Include("WorkOrderType").Include("WorkOrderStatus").Include("Customer").Where(x => x.ID == workOrderId).FirstOrDefault();
                 if (workOrder != null)
                 {
-                    workOrder.PartNumbers = _appContext.Set<WorkOrderPartNumber>().Where(x => x.WorkOrderId == workOrderId && (x.IsDelete == null || x.IsDelete != true)).OrderBy(x => x.ID).ToList();
+                    workOrder.PartNumbers = _appContext.Set<WorkOrderPartNumber>().Where(x => x.WorkOrderId == workOrderId && x.IsDeleted== false).OrderBy(x => x.ID).ToList();
                 }
                 return workOrder;
             }
@@ -1568,6 +1566,25 @@ namespace DAL.Repositories
 
 
         #endregion
+
+        public void GetPartDetails(long partId)
+        {
+            try
+            {
+                var data = (from mp in _appContext.MasterParts
+                            join im in _appContext.ItemMaster on mp.MasterPartId equals im.MasterPartId
+                            where mp.MasterPartId == partId
+                            select new
+                            {
+                                mp.Description
+                            }).FirstOrDefault();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 

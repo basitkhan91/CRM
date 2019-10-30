@@ -2652,6 +2652,15 @@ namespace QuickApp.Pro.Controllers
             return Ok(allCusShippingdetails);
 
         }
+
+
+        [HttpGet("customernameandcodes")]
+        public IActionResult GetCustomerNameAndCodes(string value)
+        {
+            var custmoerNameAndCodes = _unitOfWork.Customer.GetCustomerNameAndCodes(value);
+            return Ok(custmoerNameAndCodes);
+
+        }
     }
 }
 

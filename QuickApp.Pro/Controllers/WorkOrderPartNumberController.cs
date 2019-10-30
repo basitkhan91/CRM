@@ -32,7 +32,7 @@ namespace QuickApp.Pro.Controllers
         {
             var workOrderList = unitOfWork.Repository<WorkOrderPartNumber>()
                 .GetAll()
-                .Where(x => x.IsActive == true && x.IsDelete == false)
+                .Where(x => x.IsActive == true && x.IsDeleted == false)
                 .OrderByDescending(x => x.ID)
                 .ToList();
             return Ok(workOrderList);
@@ -56,7 +56,7 @@ namespace QuickApp.Pro.Controllers
                 if (existworkOrderPartNumber.Count() <= 0)
                 {
                     workOrderPartNumber.IsActive = true;
-                    workOrderPartNumber.IsDelete = false;
+                    workOrderPartNumber.IsDeleted = false;
                     workOrderPartNumber.CreatedDate = DateTime.Now;
                     unitOfWork.Repository<WorkOrderPartNumber>().Add(workOrderPartNumber);
                     unitOfWork.SaveChanges();
@@ -95,7 +95,7 @@ namespace QuickApp.Pro.Controllers
         {
             var workOrderPartNumber = unitOfWork.Repository<WorkOrderPartNumber>().Find(xx => xx.ID == id).FirstOrDefault();
             workOrderPartNumber.IsActive = false;
-            workOrderPartNumber.IsDelete = true;
+            workOrderPartNumber.IsDeleted = true;
             workOrderPartNumber.UpdatedDate = DateTime.Now;
 
             unitOfWork.Repository<WorkOrderPartNumber>().Update(workOrderPartNumber);
