@@ -953,4 +953,20 @@ export class ItemMasterEndpoint extends EndpointFactory {
             });
     }
 
+
+    getRevisedPartNumbers(itemMasterId) {
+        return this.http.get(`${this.configurations.baseUrl}/api/itemMaster/revisedparts?partId=${itemMasterId}&mappingType=${1}`, this.getRequestHeaders())
+    }
+    getStockLineByPartNumber(itemMasterId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/itemMaster/stocklinedetailsbypartno?partNo=${itemMasterId}`, this.getRequestHeaders())
+    }
+
+    getPartPublicationByItemMaster(itemMasterId){
+        return this.http.get(`${this.configurations.baseUrl}/api/itemMaster/partpublications?partId=${itemMasterId}` , this.getRequestHeaders() )
+    }
+
+    getSerialNoByStockLineId(stockLineId ,conditionId){
+        return this.http.get(`${this.configurations.baseUrl}/api/itemMaster/partserialno?stockLineId=${stockLineId}&conditionId=${conditionId}`)
+    }
+
 }

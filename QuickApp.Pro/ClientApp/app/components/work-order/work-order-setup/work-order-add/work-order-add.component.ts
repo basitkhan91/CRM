@@ -45,9 +45,9 @@ export class WorkOrderAddComponent implements OnInit {
   workOrder: WorkOrder;
   workOrderPartNumbers: WorkOrderPartNumber[];
   workOrderTypes: WorkOrderType[];
-  workOrderStatus: WorkOrderStatus[];
+  workOrderStatusList: any;
   workScopes: WorkScope[];
-  workOrderStages: WorkOrderStage[];
+  workOrderStagesList: any;
   creditTerms: any;
   // customers: Customer[];
   selectedCustomer: Customer;
@@ -201,6 +201,12 @@ export class WorkOrderAddComponent implements OnInit {
   technicianList: any[];
   partNumberList: any;
   partNumberOriginalData: any;
+  revisedPartOriginalData: Object;
+  revisedPartNumberList: any;
+  stockLineList: any;
+  conditionList: any;
+  cmmList: any;
+  priorityList: Object;
 
 
   constructor(
@@ -235,6 +241,7 @@ export class WorkOrderAddComponent implements OnInit {
     this.getAllWorkScpoes();
     this.getAllWorkOrderStages();
     this.getMultiplePartsNumbers();
+    this.getAllPriority();
     // this.getStockLines();
     this.addMPN();
   }
@@ -286,25 +293,6 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
 
-  getMultiplePartsNumbers() {
-    this.commonService.getItemMasterDetails().subscribe(res => {
-      this.partNumberOriginalData = res;
-    })
-  }
-  filterPartNumber(event) {
-    this.partNumberList = this.partNumberOriginalData;
-
-    if (event.query !== undefined && event.query !== null) {
-      const partNumbers = [...this.partNumberOriginalData.filter(x => {
-
-        return x.partNumber.toLowerCase().includes(event.query.toLowerCase())
-      })]
-      this.partNumberList = partNumbers;
-    }
-  }
-  onSelectedPartNumber(object){
-    
-  }
   addWorkOrder(): void {
     console.log(this.workOrderGeneralInformation);
     this.showTableGrid = true; // Show Grid Boolean
@@ -322,53 +310,91 @@ export class WorkOrderAddComponent implements OnInit {
             .add(this.workOrderPartNumbers[i])
             .subscribe(
               result => { },
-              error => {
-                var message = '';
-                if (error.error.constructor == Array) {
-                  message = error.error[0].errorMessage;
-                } else {
-                  if (
-                    error.error.Message != undefined &&
-                    error.error.Message != null
-                  ) {
-                    message = error.error.Message;
-                  } else {
-                    message = error.error;
-                  }
-                }
-                this.alertService.showMessage(
-                  this.moduleName,
-                  message,
-                  MessageSeverity.error
-                );
-              }
+
             );
         }
-
-        this.alertService.showMessage(
-          this.moduleName,
-          'Work Order Successfully Added : ' + this.workOrder.workOrderNum,
-          MessageSeverity.success
-        );
-      },
-      error => {
-        var message = '';
-        if (error.error.constructor == Array) {
-          message = error.error[0].errorMessage;
-        } else {
-          if (error.error.Message != undefined && error.error.Message != null) {
-            message = error.error.Message;
-          } else {
-            message = error.error;
-          }
-        }
-        this.alertService.showMessage(
-          this.moduleName,
-          message,
-          MessageSeverity.error
-        );
       }
     );
+  }
+
+
+  // grid Service Calls
+  getMultiplePartsNumbers() {
+    this.commonService.getItemMasterDetails().subscribe(res => {
+      this.partNumberOriginalData = res;
+    })
+  }
+  filterPartNumber(event) {
+    this.partNumberList = this.partNumberOriginalData;
+
+    if (event.query !== undefined && event.query !== null) {
+      const partNumbers = [...this.partNumberOriginalData.filter(x => {
+
+        return x.partNumber.toLowerCase().includes(event.query.toLowerCase())
+      })]
+      this.partNumberList = partNumbers;
+    }
+  }
+
+  // getWorkOrderStage(){
+
+  // }
+  onSelectedPartNumber(object, currentRecord) {
+    const { itemMasterId } = object;
+    const { partNumber } = object;
+
+    this.getRevisedpartNumberByItemMasterId(itemMasterId)
+    this.getStockLineByPartNumber(partNumber)
+    this.getPartPublicationByItemMasterId(itemMasterId)
+    console.log(object, currentRecord);
+    currentRecord.description = object.partDescription
+
+  }
+
+
+  async  getRevisedpartNumberByItemMasterId(itemMasterId) {
+
+    await this.itemMasterService.getRevisedPartNumbers(itemMasterId).subscribe(res => {
+      this.revisedPartOriginalData = res;
+    })
+
+  }
+  async getStockLineByPartNumber(partNumber) {
+    await this.itemMasterService.getStockLineByPartNumber(partNumber).subscribe(res => {
+      this.stockLineList = res.map(x => {
+        return {
+          label: x.stockLineNumber,
+          value: x.stockLineId,
+        }
+      });
+      this.conditionList = res.map(x => {
+        return {
+          label: x.description,
+          value: x.conditionId,
+        }
+      })
+    })
+  }
+  async getPartPublicationByItemMasterId(itemMasterId) {
+    await this.itemMasterService.getPartPublicationByItemMaster(itemMasterId).subscribe(res => {
+      this.cmmList = res;
+    })
+  }
+
+
+
+
+
+  filterRevisedPartNumber(event) {
+    this.revisedPartNumberList = this.revisedPartOriginalData;
+
+    if (event.query !== undefined && event.query !== null) {
+      const partNumbers = [...this.partNumberOriginalData.filter(x => {
+
+        return x.partNumber.toLowerCase().includes(event.query.toLowerCase())
+      })]
+      this.revisedPartNumberList = partNumbers;
+    }
   }
 
   // Change of Table Grid
@@ -402,18 +428,9 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
   getAllWorkOrderStatus(): void {
-    this.workOrderService.getAllWorkOrderStatus().subscribe(
-      result => {
-        this.workOrderStatus = result;
-      },
-      error => {
-        this.alertService.showMessage(
-          this.moduleName,
-          'Something Went Wrong',
-          MessageSeverity.error
-        );
-      }
-    );
+    this.commonService.smartDropDownList('WorkOrderStatus', 'ID', 'Description').subscribe(res => {
+      this.workOrderStatusList = res;
+    })
   }
 
   getAllCreditTerms(): void {
@@ -426,13 +443,6 @@ export class WorkOrderAddComponent implements OnInit {
     this.customerService.getAllCustomersInfo().subscribe(
       result => {
         this.customersOriginalData = result;
-      },
-      error => {
-        this.alertService.showMessage(
-          this.moduleName,
-          'Something Went Wrong',
-          MessageSeverity.error
-        );
       }
     );
   }
@@ -441,68 +451,60 @@ export class WorkOrderAddComponent implements OnInit {
     this.commonService.smartDropDownList('Employee', 'EmployeeId', 'FirstName').subscribe(res => {
       this.employeesOriginalData = res;
     })
-    // this.employeeService.getEmployeeList().subscribe(
-    //   result => {
-    //     this.employeesOriginalData = result[0];
-    //   },
-    //   error => {
-    //     this.alertService.showMessage(
-    //       this.moduleName,
-    //       'Something Went Wrong',
-    //       MessageSeverity.error
-    //     );
-    //   }
-    // );
   }
+
+
 
   getAllWorkScpoes(): void {
     this.workOrderService.getAllWorkScopes().subscribe(
       result => {
         this.workScopes = result;
-      },
-      error => {
-        this.alertService.showMessage(
-          this.moduleName,
-          'Something Went Wrong',
-          MessageSeverity.error
-        );
       }
     );
   }
 
   getAllWorkOrderStages(): void {
-    this.workOrderService.getAllWorkOrderStages().subscribe(
-      result => {
-        this.workOrderStages = result;
-      },
-      error => {
-        this.alertService.showMessage(
-          this.moduleName,
-          'Something Went Wrong',
-          MessageSeverity.error
-        );
-      }
-    );
+    this.commonService.smartDropDownList('WorkOrderStage', 'ID', 'Description').subscribe(res => {
+      this.workOrderStagesList = res;
+    })
   }
 
-  getStockLines(): void {
-    this.stocklineService.getStockLineList().subscribe(
-      result => { },
-      error => {
-        this.alertService.showMessage(
-          this.moduleName,
-          'Something Went Wrong',
-          MessageSeverity.error
-        );
-      }
-    );
+  getAllPriority() {
+    this.commonService.smartDropDownList('Priority', 'PriorityId', 'Description').subscribe(res => {
+      this.priorityList = res;
+    })
   }
 
-  getAllIterMasters(): void {
-    this.itemMasterService
-      .getItemMasterList()
-      .subscribe(result => { }, error => { });
+  getSerialNoByStockLineId(workOrderPart) {
+    const { stockLineId } = workOrderPart;
+    const { conditionId } = workOrderPart;
+    this.itemMasterService.getSerialNoByStockLineId(stockLineId, conditionId).subscribe(res => {
+      return workOrderPart.stockLineNumber = res;
+    })
   }
+
+
+
+  // getStockLines(): void {
+  //   this.stocklineService.getStockLineList().subscribe(
+  //     result => { },
+  //     error => {
+  //       this.alertService.showMessage(
+  //         this.moduleName,
+  //         'Something Went Wrong',
+  //         MessageSeverity.error
+  //       );
+  //     }
+  //   );
+  // }
+
+  // getAllIterMasters(): void {
+  //   this.itemMasterService
+  //     .getItemMasterList()
+  //     .subscribe(result => { }, error => { });
+  // }
+
+
 
   // onCustomerSelected(event, selectionType): void {
   //   if (selectionType == 'name') {

@@ -331,7 +331,7 @@ export class ItemMasterService {
     updateItemMasterSerialized<T>(itemMasterId: number, active: boolean): Observable<T> {
         return this.itemMasterEndpoint.updateItemMasterSerialized(itemMasterId, active);
     }
-    
+
     updateItemMasterTimeLife<T>(itemMasterId: number, active: boolean): Observable<T> {
         return this.itemMasterEndpoint.updateItemMasterTimeLife(itemMasterId, active);
     }
@@ -341,5 +341,17 @@ export class ItemMasterService {
     }
     getPartDetailsByid(partListArray: number) {
         return this.itemMasterEndpoint.getPartDetailsByid<any>(partListArray);
+    }
+    getRevisedPartNumbers(itemMasterId) {
+        return this.itemMasterEndpoint.getRevisedPartNumbers(itemMasterId)
+    }
+    getStockLineByPartNumber(itemMasterId) {
+        return this.itemMasterEndpoint.getStockLineByPartNumber(itemMasterId);
+    }
+    getPartPublicationByItemMaster(itemMasterId){
+        return this.itemMasterEndpoint.getPartPublicationByItemMaster(itemMasterId);
+    }
+    getSerialNoByStockLineId(stockLineId , conditionId ){
+        return this.itemMasterEndpoint.getSerialNoByStockLineId(stockLineId , conditionId)
     }
 }
