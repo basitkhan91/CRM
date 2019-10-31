@@ -280,6 +280,8 @@ export class PurchaseSetupComponent {
 	splitcustomersList: any = [];
 	splitAddressData: any = [];
 	approveListEdit: any = [];
+	poApproverId: number;
+	vendorIdByParams: number;
 
 	// this.siteName ="";
 	// this.address1 ="";
@@ -469,6 +471,9 @@ export class PurchaseSetupComponent {
 		this.sourcePoApproval.dateRequested = new Date();
 		this.sourcePoApproval.shipToUserTypeId = 3;
 		this.sourcePoApproval.billToUserTypeId = 3;
+
+		this.vendorIdByParams = this._actRoute.snapshot.params['vendorId'];
+		this.loadvendorDataById(this.vendorIdByParams);
 		
 		this.poId = this._actRoute.snapshot.params['id'];
 		if (this.poId) {
@@ -488,6 +493,21 @@ export class PurchaseSetupComponent {
 			}
 		}
 
+	}
+
+	loadvendorDataById(vendorId) {
+		this.vendorService.getWorkFlows().subscribe(res => {
+			this.allActions = res[0];
+			this.vendorContactList = [];
+		this.getVendorContactsListByID(vendorId);
+		this.getVendorCapesByID(vendorId);
+		//this.sourcePoApproval.vendorName = value.vendorName;
+		this.sourcePoApproval.vendorId = getObjectById('vendorId', vendorId, this.allActions);
+		this.sourcePoApproval.vendorCode = getObjectById('vendorId', vendorId, this.allActions);
+		//this.sourcePoApproval.creditLimit = value.creditLimit;
+		//this.sourcePoApproval.creditTermsId = value.creditTermsId;
+		//this.sourcePoApproval.creditTerms = getValueFromArrayOfObjectById('name', 'creditTermsId', value.creditTermsId, this.allcreditTermInfo);
+		});		
 	}
 
 	getManagementStructureDetails(id) {
@@ -516,18 +536,6 @@ export class PurchaseSetupComponent {
 				this.tempPOHeaderAddress.departmentId = 0;
 
 		})
-	}
-
-	getBUListEdit(companyId) {
-		this.sourcePoApproval.managementStructureId = companyId;
-		this.bulist = [];
-		this.divisionlist = [];
-		this.departmentList = [];
-		for (let i = 0; i < this.allManagemtninfo.length; i++) {
-			if (this.allManagemtninfo[i].parentId == companyId) {
-				this.bulist.push(this.allManagemtninfo[i]);
-			}
-		}
 	}
 
 	getVendorPOById(poId) {
@@ -610,10 +618,11 @@ export class PurchaseSetupComponent {
 							functionalCurrencyId: getObjectById('currencyId', x.functionalCurrencyId, this.allCurrencyData),
 							reportCurrencyId: getObjectById('currencyId', x.reportCurrencyId, this.allCurrencyData),
 							discountAmount: x.discountAmount,
-							parentCompanyId: this.getManagementStructureForParentEdit(x),
+							//parentCompanyId: this.getManagementStructureForParentEdit(x),
 							childList: this.getPurchaseOrderSplitPartsEdit(x),
 		
 						}
+						this.getManagementStructureForParentEdit(this.newPartsList);
 						console.log(this.newPartsList);
 						this.getPNDetailsById(this.newPartsList);
 						this.partListData.push(this.newPartsList);		
@@ -626,14 +635,15 @@ export class PurchaseSetupComponent {
 	getPurchaseOrderSplitPartsEdit(partList) {
 		if(partList.purchaseOrderSplitParts) {
 			return partList.purchaseOrderSplitParts.map(y => {
-				return {
+				const splitpart = {
 					...y,
 					partListUserTypeId: y.poPartSplitUserTypeId,
 					partListUserId: this.getPartSplitUserIdEdit(y),
 					partListAddressId: y.poPartSplitAddressId ? y.poPartSplitAddressId : 0,
-					childCompanyId: this.getManagementStructureForChildEdit(y),
-
+					//childCompanyId: this.getManagementStructureForChildEdit(y),
 				}
+				this.getManagementStructureForChildEdit(splitpart);
+				return splitpart;
 			})
 		}
 	}	
@@ -698,36 +708,78 @@ export class PurchaseSetupComponent {
 
 	getApproversListById(poId) {
 		this.purchaseOrderService.getPOApproverList(poId).subscribe(response => {
+			console.log(response);			
 			this.approveListEdit = response.map(x => {
 				return {
 					...x,
 					label: x.employeeName,
-					value: x.employeeId,
-					firstName: x.employeeName
+	 				value: x.employeeId,
+					// poApproverListId: x.poApproverListId,
+					// poApproverId: x.poApproverId,
+					// employeeId: x.employeeId,
+					// level: x.level,
+					// statusId: x.statusId,
+					// createdBy:"admin",
+         			// updatedBy:"admin"
 				}
+
 			});
 			if(this.approveListEdit) {
 				for(let i=0; i < this.approveListEdit.length; i++) {
+					this.poApproverId = this.approveListEdit[i].poApproverId;
 					if(this.approveListEdit[i].level == 1) {
 						this.approversData.approver1 = this.approveListEdit[i];
-						this.onSelectApproverEdit('approver1', this.approversData.approver1)
+						this.onSelectApprover('approver1', this.approversData.approver1)
 					} else if(this.approveListEdit[i].level == 2) {
 						this.approversData.approver2 = this.approveListEdit[i];
-						this.onSelectApproverEdit('approver2', this.approversData.approver2)
+						this.onSelectApprover('approver2', this.approversData.approver2)
 					} else if(this.approveListEdit[i].level == 3) {
 						this.approversData.approver3 = this.approveListEdit[i];
-						this.onSelectApproverEdit('approver3', this.approversData.approver3)
+						this.onSelectApprover('approver3', this.approversData.approver3)
 					} else if(this.approveListEdit[i].level == 4) {
 						this.approversData.approver4 = this.approveListEdit[i];
-						this.onSelectApproverEdit('approver4', this.approversData.approver4)
+						this.onSelectApprover('approver4', this.approversData.approver4)
 					} else if(this.approveListEdit[i].level == 5) {
 						this.approversData.approver5 = this.approveListEdit[i];
-						this.onSelectApproverEdit('approver5', this.approversData.approver5)
+						this.onSelectApprover('approver5', this.approversData.approver5)
 					}
 				}
-			}			
+			}		
 		})
 	}
+	
+	// getApproversListById(poId) {
+	// 	this.purchaseOrderService.getPOApproverList(poId).subscribe(response => {
+	// 		this.approveListEdit = response.map(x => {
+	// 			return {
+	// 				...x,
+	// 				label: x.employeeName,
+	// 				value: x.employeeId,
+	// 				firstName: x.employeeName
+	// 			}
+	// 		});
+	// 		if(this.approveListEdit) {
+	// 			for(let i=0; i < this.approveListEdit.length; i++) {
+	// 				if(this.approveListEdit[i].level == 1) {
+	// 					this.approversData.approver1 = this.approveListEdit[i];
+	// 					this.onSelectApproverEdit('approver1', this.approversData.approver1)
+	// 				} else if(this.approveListEdit[i].level == 2) {
+	// 					this.approversData.approver2 = this.approveListEdit[i];
+	// 					this.onSelectApproverEdit('approver2', this.approversData.approver2)
+	// 				} else if(this.approveListEdit[i].level == 3) {
+	// 					this.approversData.approver3 = this.approveListEdit[i];
+	// 					this.onSelectApproverEdit('approver3', this.approversData.approver3)
+	// 				} else if(this.approveListEdit[i].level == 4) {
+	// 					this.approversData.approver4 = this.approveListEdit[i];
+	// 					this.onSelectApproverEdit('approver4', this.approversData.approver4)
+	// 				} else if(this.approveListEdit[i].level == 5) {
+	// 					this.approversData.approver5 = this.approveListEdit[i];
+	// 					this.onSelectApproverEdit('approver5', this.approversData.approver5)
+	// 				}
+	// 			}
+	// 		}			
+	// 	})
+	// }
 	
 	// getApproversListById(poId) {
 	// 	this.purchaseOrderService.getPOApproverList(poId).subscribe(response => {
@@ -1117,12 +1169,6 @@ export class PurchaseSetupComponent {
 				updatedBy: "admin"
 			}
 			this.poApproverList.push(poapprover);
-			// const poapproverEdit = {
-			// 	...poapprover, 
-			// 	poApproverListId: this.approversData[i].poApproverListId,
-			// 	poApproverId: this.approversData[i].poApproverId
-			// }
-			// this.poApproverListEdit.push({...poapproverEdit});
 		}
 		this.poApproverData = {
 			purchaseOrderId: purchaseOrderId,
@@ -1135,6 +1181,38 @@ export class PurchaseSetupComponent {
 
 	updatePOApproverData() {
 		console.log(this.approversData);
+		if (this.approversData.approver1) {
+			this.approverIds.push(this.approversData.approver1.value);
+		}
+		if (this.approversData.approver2) {
+			this.approverIds.push(this.approversData.approver2.value);
+		}
+		if (this.approversData.approver3) {
+			this.approverIds.push(this.approversData.approver3.value);
+		}
+		if (this.approversData.approver4) {
+			this.approverIds.push(this.approversData.approver4.value);
+		}
+		if (this.approversData.approver5) {
+			this.approverIds.push(this.approversData.approver5.value);
+		}
+		console.log(this.approverIds);
+ 
+		for (let i = 0; i < this.approverIds.length; i++) {
+			const poapprover = {
+				employeeId: this.approverIds[i],
+				level: i + 1,
+				statusId: 1,
+				createdBy: "admin",
+				updatedBy: "admin"
+			}
+			this.poApproverList.push(poapprover);
+		}
+		this.poApproverData = {
+			purchaseOrderId: parseInt(this.poId),
+			poApproverId: this.poApproverId,
+			purchaseOrderApproverList: this.poApproverList
+		}
 
 
 		// this.poApproverData = {
@@ -1142,6 +1220,7 @@ export class PurchaseSetupComponent {
 		// 	poApproverId: this.approversData[0].poApproverId,
 		// 	purchaseOrderApproverList: this.poApproverListEdit
 		// }
+		console.log(this.poApproverData);
 		this.purchaseOrderService.updatePOApproval(this.poApproverData).subscribe(res => {
 			console.log(res);
 		})
@@ -4662,27 +4741,27 @@ export class PurchaseSetupComponent {
 			}
 		})
 	}
-	onSelectApproverEdit(value, data) {
-		console.log(data);
-		this.employeeService.getEmployeeDataById(data.employeeId).subscribe(response => {
-			console.log(response);
-			if (value === 'approver1') {
-				this.approver1 = response;
-			}
-			if (value === 'approver2') {
-				this.approver2 = response;
-			}
-			if (value === 'approver3') {
-				this.approver3 = response;
-			}
-			if (value === 'approver4') {
-				this.approver4 = response;
-			}
-			if (value === 'approver5') {
-				this.approver5 = response;
-			}
-		})
-	}
+	// onSelectApproverEdit(value, data) {
+	// 	console.log(data);
+	// 	this.employeeService.getEmployeeDataById(data.employeeId).subscribe(response => {
+	// 		console.log(response);
+	// 		if (value === 'approver1') {
+	// 			this.approver1 = response;
+	// 		}
+	// 		if (value === 'approver2') {
+	// 			this.approver2 = response;
+	// 		}
+	// 		if (value === 'approver3') {
+	// 			this.approver3 = response;
+	// 		}
+	// 		if (value === 'approver4') {
+	// 			this.approver4 = response;
+	// 		}
+	// 		if (value === 'approver5') {
+	// 			this.approver5 = response;
+	// 		}
+	// 	})
+	// }
 
 }
 

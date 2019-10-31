@@ -11,6 +11,7 @@ import { VendorService } from '../../../../services/vendor.service';
 import { fadeInOut } from '../../../../services/animations';
 import { Router } from '@angular/router';
 import { Table } from 'primeng/table';
+import { PurchaseOrderService } from '../../../../services/purchase-order.service';
 
 @Component({
 	selector: 'app-polist',
@@ -48,7 +49,8 @@ export class PolistComponent implements OnInit {
         private alertService: AlertService,
         public vendorService: VendorService,
         private dialog: MatDialog,
-        private masterComapnyService: MasterComapnyService) {
+        private masterComapnyService: MasterComapnyService,
+        private purchaseOrderService: PurchaseOrderService) {
         // this.displayedColumns.push('Customer');
         // this.dataSource = new MatTableDataSource();
         // this.activeIndex = 0;
@@ -97,9 +99,11 @@ export class PolistComponent implements OnInit {
     }
 
     changeStatus(rowData) {
-        // this.customerService.updateActionforActive(rowData, this.userName).subscribe(res => {
-        //     this.alertService.showMessage("Success", `Successfully Updated Status`, MessageSeverity.success);
-        // })
+        console.log(rowData);
+        
+        this.purchaseOrderService.getPOStatus(rowData.purchaseOrderId, rowData.isActive, this.userName).subscribe(res => {
+            this.alertService.showMessage("Success", `Successfully Updated Status`, MessageSeverity.success);
+        })
 
     }
     edit(rowData) {
