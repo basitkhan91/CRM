@@ -63,5 +63,13 @@ namespace DAL.Repositories.Interfaces
 
         void CreateWorkFlowWorkOrderForWorkFlow1(long workFlowId);
 
+
+        IEnumerable<object> GetWorkOrderPartDetails();
+        IEnumerable<object> GetStockLineDetailsByPartNo(long itemMasterId);
+        string GetPartSerialNo(long stockLineId, long conditionId);
+        IEnumerable<object> GetPartPublications(long itemMasterId);
+        IEnumerable<object> GetRevisedParts(long itemMasterId, int mappingType);
+        IEnumerable<object> GetConditionDetailsByPartNo(long itemMasterId);
+
     }
 }
