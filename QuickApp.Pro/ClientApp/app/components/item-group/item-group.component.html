@@ -7,7 +7,7 @@
                         <div class="inline-block display-flex">
                             <h3 class="po-head lead">Item Group</h3>
                             &nbsp;&nbsp;
-                            <a class="plusicon-cstm new-margin" pTooltip="Add Unit of Measure" tooltipPosition="right" (click)="resetForm()" data-target="#add" data-toggle="modal">
+                            <a class="plusicon-cstm new-margin" pTooltip="Add Item Group" tooltipPosition="right" (click)="resetForm()" data-target="#add" data-toggle="modal">
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
                         </div>
@@ -115,9 +115,9 @@
           <h4 class="modal-title">Are You Sure Want to Delete ?</h4>
         </div>
         <div class="modal-body">
-          <strong>Unit of Measure:
-            <span class="new-label">{{selectedRowforDelete.description}}</span>
-        </strong>
+            <strong>Item Group:
+                <span class="new-label">{{selectedRowforDelete.description}}</span>
+            </strong>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
@@ -262,7 +262,7 @@
                               <div class="modal-content">
                                 <div class="modal-header">
                                   <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                  <h4 class="modal-title">History of ItemGroup</h4>
+                                  <h4 class="modal-title">History of Item Group</h4>
                                 </div>
                                 <div class="modal-body">
                                     <div class="table-responsive rro-table-cstm">
@@ -318,13 +318,13 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" id="" name="" (click)="resetViewData()">×</button>
-            <h4 class="modal-title">ItemGroup Details</h4>
+            <h4 class="modal-title">Item Group Details</h4>
         </div>
         <div class="modal-body viewform ">
             <div class="col-sm-12">
                 <p>
                     <span class="label " >
-                        <b class="view-Header">itemGroupCode: </b>
+                        <b class="view-Header">Item GroupCode: </b>
                     </span>
                     <span class="value">{{ viewRowData.itemGroupCode}}</span>
                 </p>

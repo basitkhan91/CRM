@@ -105,7 +105,8 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="Customer Name">
-                                    Customer Name  <span style="margin-left:3px;cursor:pointer;"><i class="fa fa-plus-circle fa-lg" (click)="AddPageCustomer()"></i></span>
+                                    Customer Name  <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg"  target="_blank" 
+                                                [routerLink]="['/customersmodule/customerpages/app-customer-create']"></a></span>
                                 </label>
                                 <p class="c-workflow-select">
                                     <p-autoComplete class="wf-header-select" 
