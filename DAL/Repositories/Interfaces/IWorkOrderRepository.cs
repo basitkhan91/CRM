@@ -66,7 +66,7 @@ namespace DAL.Repositories.Interfaces
 
         IEnumerable<object> GetWorkOrderPartDetails();
         IEnumerable<object> GetStockLineDetailsByPartNo(long itemMasterId);
-        string GetPartSerialNo(long stockLineId, long conditionId);
+        object GetPartSerialNo(long stockLineId, long conditionId);
         IEnumerable<object> GetPartPublications(long itemMasterId);
         IEnumerable<object> GetRevisedParts(long itemMasterId, int mappingType);
         IEnumerable<object> GetConditionDetailsByPartNo(long itemMasterId);
