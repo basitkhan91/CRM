@@ -52,6 +52,7 @@ namespace DAL.Repositories.Interfaces
         string GetPartSerialNo(long stockLineId, long conditionId);
         IEnumerable<object> GetPartPublications(long partId);
         IEnumerable<object> GetRevisedParts(long partId, int mappingType);
+        IEnumerable<object> GetConditionDetailsByPartNo(string partNo);
 
     }
 }
