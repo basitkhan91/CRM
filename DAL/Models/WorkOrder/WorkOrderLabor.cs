@@ -17,8 +17,8 @@ namespace DAL.Models
         public long? ExpertiseId { get; set; }
         public long EmployeeId { get; set; }
         public bool IsBillable { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
         public decimal? Hours { get; set; }
         public decimal? Adjustments { get; set; }
         public decimal? AdjustmentHours { get; set; }
