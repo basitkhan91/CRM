@@ -110,7 +110,7 @@ namespace QuickApp.Pro.Controllers
         #region Work Flow Work Order
 
         [HttpPost("createworkflowworkorder")]
-        public IActionResult CreateWorkFlowWorkOrder(WorkFlowWorkOrder workFlowWorkOrder)
+        public IActionResult CreateWorkFlowWorkOrder([FromBody]WorkFlowWorkOrder workFlowWorkOrder)
         {
             if (ModelState.IsValid)
             {
@@ -138,7 +138,14 @@ namespace QuickApp.Pro.Controllers
             }
 
         }
-        
+
+        [HttpGet("workflowworkorderbyid")]
+        public IActionResult GetWorkFlowWorkOrderById(long workFlowWorkOrderId)
+        {
+                var result=unitOfWork.WorkOrderRepository.GetWorkFlowWorkOrderById(workFlowWorkOrderId);
+                return Ok(result);
+        }
+
         #endregion
 
         #region Work Order Labor
@@ -470,28 +477,6 @@ namespace QuickApp.Pro.Controllers
         #endregion
 
 
-        [HttpGet("createworkflowWorkorder1")]
-        public IActionResult CreateWorkFlowWorkOrder1(long workFlowId)
-        {
-            unitOfWork.WorkOrderRepository.CreateWorkFlowWorkOrderForWorkFlow1(workFlowId);
-            return Ok();
-        }
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         [HttpGet("getAll")]
         public IActionResult Index()
@@ -499,7 +484,7 @@ namespace QuickApp.Pro.Controllers
             var workOrderList = unitOfWork.Repository<WorkOrder>()
                 .GetAll()
                 .Where(x => x.IsActive == true && x.IsDeleted == false)
-                .OrderByDescending(x => x.ID)
+                .OrderByDescending(x => x.WorkOrderId)
                 .ToList();
             return Ok(workOrderList);
         }
