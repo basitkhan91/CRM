@@ -304,15 +304,15 @@ export class WorkOrderAddComponent implements OnInit {
           'Work Order Added Succesfully',
           MessageSeverity.success
         );
-        for (var i = 0; i < this.workOrderPartNumbers.length; i++) {
-          // this.workOrderPartNumbers[i].workOrderId = this.workOrder.iD;
-          this.workOrderPartNumberService
-            .add(this.workOrderPartNumbers[i])
-            .subscribe(
-              result => { },
+        // for (var i = 0; i < this.workOrderPartNumbers.length; i++) {
+        //   // this.workOrderPartNumbers[i].workOrderId = this.workOrder.iD;
+        //   this.workOrderPartNumberService
+        //     .add(this.workOrderPartNumbers[i])
+        //     .subscribe(
+        //       result => { },
 
-            );
-        }
+        //     );
+        // }
       }
     );
   }
