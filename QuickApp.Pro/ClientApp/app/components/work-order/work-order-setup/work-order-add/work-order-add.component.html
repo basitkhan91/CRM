@@ -354,7 +354,7 @@
                                     [forceSelection]="true"
                                     [dropdown]="true"
                                     [suggestions]="partNumberList" 
-                                    (onSelect)="onSelectedPartNumber($event, workOrderPartNumber)"
+                                    (onSelect)="onSelectedPartNumber($event, workOrderPartNumber); getWorkFlowByPNandScope(workOrderPartNumber)"
                                     (completeMethod)="filterPartNumber($event)"
                                      [size]="30" [minLength]="1"
                                     [dropdown]="true" class="p-autoComplete-ctsm" >
@@ -393,8 +393,8 @@
                                 </p-autoComplete> -->
                                 </td>
                                 <td>
-                                    <p-dropdown  placeholder="Select Work Scope" [options]="stockLineList" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.workOrderScopeId"
-                                    (onChange)="getSerialNoByStockLineId(workOrderPartNumber)"
+                                    <p-dropdown  placeholder="Select Work Scope" [options]="workScopesList" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.workOrderScopeId"
+                                    (onChange)="getWorkFlowByPNandScope(workOrderPartNumber)"
                                     
                                     >
                                       </p-dropdown>
@@ -550,7 +550,7 @@
                 </div>
                 
                 <div>
-                  <button class="btn btn-success pull-right" *ngIf="!showTableGrid" type="button" (click)="addWorkOrder()">Save</button>
+                  <button class="btn btn-success pull-right" *ngIf="!showTableGrid" type="button" (click)="saveWorkOrder()">Save</button>
                 <button  *ngIf="showTableGrid && workOrderGeneralInformation.workOrderType !== 'single' " class="btn btn-success pull-right" [routerLink]="['/workordersmodule/workorderspages/app-work-order-quote']"  >Create Quote</button>
                 </div>
             

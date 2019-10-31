@@ -134,6 +134,29 @@ export class WorkOrderEndpointService extends EndpointFactory {
                 return this.handleError(error, () => this.postLabourEndpoint(userObject));
             });
     }
-    
+
+    getWorkFlowByPNandScope(itemMasterId, workScopeId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workflownos?partId=${itemMasterId}&workScopeId=${workScopeId}`)
+    }
+
+    getRevisedPartNumbers(itemMasterId) {
+        return this.http.get(`${this.configurations.baseUrl}/api/workOrder/revisedparts?partId=${itemMasterId}&mappingType=${1}`, this.getRequestHeaders())
+    }
+    getStockLineByPartNumber(itemMasterId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/stocklinedetailsbypartno?partNo=${itemMasterId}`, this.getRequestHeaders())
+    }
+
+    getPartPublicationByItemMaster(itemMasterId) {
+        return this.http.get(`${this.configurations.baseUrl}/api/workOrder/partpublications?partId=${itemMasterId}`, this.getRequestHeaders())
+    }
+
+    getSerialNoByStockLineId(stockLineId, conditionId) {
+        return this.http.get(`${this.configurations.baseUrl}/api/workOrder/partserialno?stockLineId=${stockLineId}&conditionId=${conditionId}`)
+    }
+
+    getConditionByPartNumber(itemMasterId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/conditiondetailsbypartno=${itemMasterId}`, this.getRequestHeaders())
+    }
+
 
 }

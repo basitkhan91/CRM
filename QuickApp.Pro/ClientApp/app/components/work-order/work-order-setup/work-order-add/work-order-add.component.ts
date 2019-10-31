@@ -32,7 +32,7 @@ import {
   AllTasks
 } from '../../../../models/work-order-labor.modal';
 import { CommonService } from '../../../../services/common.service';
-import { validateRecordExistsOrNot, selectedValueValidate } from '../../../../generic/autocomplete';
+import { validateRecordExistsOrNot, selectedValueValidate, getValueFromObjectByKey } from '../../../../generic/autocomplete';
 
 @Component({
   selector: 'app-work-order-add',
@@ -46,7 +46,7 @@ export class WorkOrderAddComponent implements OnInit {
   workOrderPartNumbers: WorkOrderPartNumber[];
   workOrderTypes: WorkOrderType[];
   workOrderStatusList: any;
-  workScopes: any ;
+  workScopesList: any;
   workOrderStagesList: any;
   creditTerms: any;
   // customers: Customer[];
@@ -83,20 +83,7 @@ export class WorkOrderAddComponent implements OnInit {
   // labor Object Modal
   labor: WorkOrderLabor;
 
-  workFlowItems = [
-    {
-      label: 'WO123',
-      value: 'WO123'
-    },
-    {
-      label: 'WO124',
-      value: 'WO124'
-    },
-    {
-      label: 'WO125',
-      value: 'WO125'
-    }
-  ];
+  workFlowItems: any;
 
   technicalStationsList = [
     {
@@ -109,93 +96,6 @@ export class WorkOrderAddComponent implements OnInit {
     value: 20
   }]
   WorkOrderMPN = new WorkOrderPartNumber();
-  // workOrderMPN = {
-
-
-
-  //    workOrderScopeId:1,
-  //    promisedDate: new Date(),
-  //    estimatedShipDate : new Date(),
-  //    customerRequestDate : new Date(),
-  //    estimatedCompletionDate : new Date(),
-  //    nTE : '' , 
-  //    quantity : 1,
-  //    stockLineId: 0,
-  //    cMMId : 0 ,
-  //    workflowId : 0,
-  //    workOrderStageId : 0,
-  //    workOrderStatusId: 0,
-  //    workOrderPriorityId: 0,
-  //    isPMA: false,
-  //    isDER: false,
-  //    techStationId: 0,
-  //    tearDownReport: 0,
-  //    tATDaysStandard: 0,
-  //    technicianId : 0,
-  //    mappingPartId: 0,
-  //    conditionId : 0,
-
-
-
-  //   // "EstimatedShipDate":"2019-10-28T06:02:16.016Z",
-  //   // "CustomerRequestDate":"2019-10-28T06:02:16.016Z",
-  //   // "PromisedDate":"2019-10-28T06:02:16.016Z",
-  //   // "EstimatedCompletionDate":"2019-10-28T06:02:16.016Z",
-  //   // "NTE":"NTE",
-  //   // "Quantity":1,
-  //   // "StockLineId":1,
-  //   // "CMMId":1,
-  //   // "WorkflowId":1,
-  //   // "WorkOrderStageId":1,
-  //   // "WorkOrderStatusId":1,
-  //   // "WorkOrderPriorityId":1,
-  //   // "IsPMA":true,
-  //   // "IsDER":false,
-  //   // "TechStationId":1,
-  //   // "TearDownReport":1,
-  //   // "TATDaysStandard":1,
-  //   // "masterCompanyId":1,
-  //   // "createdBy":"admin",
-  //   // "updatedBy":"admin",
-  //   // "MasterPartId":720,
-  //   // "TechnicianId":1,
-  //   // "UpdatedDate":"2019-10-28T06:02:16.016Z",
-  //   // "CreatedDate":"2019-10-28T06:02:16.016Z",
-  //   // "IsActive":true,
-  //   // "IsDelete":false
-
-
-  //   // iD: 0,
-  //   // description: '',
-  //   // workOrderId: 0,
-  //   // itemMasterId: 0,
-  //   // workOrderScopeId: 0,
-  //   // nTE: '',
-  //   // quantity: 0,
-  //   // stockLineId: 0,
-  //   // cMMId: 0,
-  //   // workflowId: 0,
-  //   // workOrderStageId: 0,
-  //   // workOrderStatusId: 0,
-  //   // workOrderPriorityId: 0,
-  //   // customerRequestDate: new Date(),
-  //   // promisedDate: new Date(),
-  //   // estimatedCompletionDate: new Date(),
-  //   // estimatedShipDate: new Date(),
-  //   // isPMA: false,
-  //   // isDER: false,
-  //   // technicianName: '',
-  //   // techStationId: 0,
-  //   // tearDownReport: 0,
-  //   // tATDaysStandard: 0,
-  //   // masterCompanyId: 1,
-  //   // createdBy: 'Admin',
-  //   // updatedBy: '',
-  //   // createdDate: new Date(),
-  //   // updatedDate: new Date(),
-  //   // isActive: true,
-  //   // isDelete: false
-  // };
   employeeList: any[];
   salesPersonList: any[];
   technicianList: any[];
@@ -258,7 +158,6 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
   generateLaborForm() {
-    console.log('Test');
     const keysArray = Object.keys(this.labor.tasks[0]);
     for (let i = 0; i < keysArray.length; i++) {
       this.labor = {
@@ -268,6 +167,119 @@ export class WorkOrderAddComponent implements OnInit {
     }
     console.log(this.labor);
   }
+
+
+
+
+
+  getAllWorkOrderTypes(): void {
+    this.workOrderService.getAllWorkOrderTypes().subscribe(
+      result => {
+        this.workOrderTypes = result;
+      }
+    );
+  }
+
+  getAllWorkOrderStatus(): void {
+    this.commonService.smartDropDownList('WorkOrderStatus', 'ID', 'Description').subscribe(res => {
+      this.workOrderStatusList = res;
+    })
+  }
+
+  getAllCreditTerms(): void {
+    this.commonService.smartDropDownList('CreditTerms', 'CreditTermsId', 'Name').subscribe(res => {
+      this.creditTerms = res;
+    })
+  }
+
+  getAllCustomers(): void {
+    this.customerService.getAllCustomersInfo().subscribe(
+      result => {
+        this.customersOriginalData = result;
+      }
+    );
+  }
+
+  filterCustomerName(event) {
+    const value = event.query.toLowerCase()
+    this.commonService.getCustomerNameandCode(value).subscribe(res => {
+      this.customerNamesList = res;
+    })
+  }
+
+
+  getAllEmployees(): void {
+    this.commonService.smartDropDownList('Employee', 'EmployeeId', 'FirstName').subscribe(res => {
+      this.employeesOriginalData = res;
+    })
+  }
+
+
+  filterEmployee(event): void {
+
+    this.employeeList = this.employeesOriginalData;
+
+    if (event.query !== undefined && event.query !== null) {
+      const employee = [...this.employeesOriginalData.filter(x => {
+        return x.label.toLowerCase().includes(event.query.toLowerCase())
+      })]
+      this.employeeList = employee;
+    }
+  }
+
+  filterSalesPerson(event): void {
+
+    this.salesPersonList = this.employeesOriginalData;
+
+    if (event.query !== undefined && event.query !== null) {
+      const salesPerson = [...this.employeesOriginalData.filter(x => {
+        return x.label.toLowerCase().includes(event.query.toLowerCase())
+      })]
+      this.salesPersonList = salesPerson;
+    }
+
+  }
+
+  filterTechnician(event): void {
+
+    this.technicianList = this.employeesOriginalData;
+
+    if (event.query !== undefined && event.query !== null) {
+      const technician = [...this.employeesOriginalData.filter(x => {
+        return x.label.toLowerCase().includes(event.query.toLowerCase())
+      })]
+      this.technicianList = technician;
+    }
+  }
+
+
+  getAllWorkScpoes(): void {
+    this.workOrderService.getAllWorkScopes().subscribe(
+      result => {
+        this.workScopesList = result.map(x => {
+          return {
+            label: x.workScopeCode,
+            value: x.workScopeId
+          }
+        })
+      }
+    );
+  }
+
+  getAllWorkOrderStages(): void {
+    this.commonService.smartDropDownList('WorkOrderStage', 'ID', 'Description').subscribe(res => {
+      this.workOrderStagesList = res;
+    })
+  }
+
+  getAllPriority() {
+    this.commonService.smartDropDownList('Priority', 'PriorityId', 'Description').subscribe(res => {
+      this.priorityList = res;
+    })
+  }
+
+
+
 
   toggleDisplayMode(): void {
     this.isDetailedView = !this.isDetailedView;
@@ -293,7 +305,7 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
 
-  addWorkOrder(): void {
+  saveWorkOrder(): void {
     console.log(this.workOrderGeneralInformation);
     this.showTableGrid = true; // Show Grid Boolean
     this.workOrderService.add(this.workOrder).subscribe(
@@ -304,18 +316,11 @@ export class WorkOrderAddComponent implements OnInit {
           'Work Order Added Succesfully',
           MessageSeverity.success
         );
-        // for (var i = 0; i < this.workOrderPartNumbers.length; i++) {
-        //   // this.workOrderPartNumbers[i].workOrderId = this.workOrder.iD;
-        //   this.workOrderPartNumberService
-        //     .add(this.workOrderPartNumbers[i])
-        //     .subscribe(
-        //       result => { },
-
-        //     );
-        // }
       }
     );
   }
+
+
 
 
   // grid Service Calls
@@ -324,6 +329,7 @@ export class WorkOrderAddComponent implements OnInit {
       this.partNumberOriginalData = res;
     })
   }
+
   filterPartNumber(event) {
     this.partNumberList = this.partNumberOriginalData;
 
@@ -336,17 +342,14 @@ export class WorkOrderAddComponent implements OnInit {
     }
   }
 
-  // getWorkOrderStage(){
-
-  // }
   onSelectedPartNumber(object, currentRecord) {
     const { itemMasterId } = object;
     const { partNumber } = object;
 
     this.getRevisedpartNumberByItemMasterId(itemMasterId)
-    this.getStockLineByPartNumber(partNumber)
+    this.getStockLineByPartNumber(itemMasterId)
+    this.getConditionByPartNumber(itemMasterId)
     this.getPartPublicationByItemMasterId(itemMasterId)
-    console.log(object, currentRecord);
     currentRecord.description = object.partDescription
 
   }
@@ -354,19 +357,25 @@ export class WorkOrderAddComponent implements OnInit {
 
   async  getRevisedpartNumberByItemMasterId(itemMasterId) {
 
-    await this.itemMasterService.getRevisedPartNumbers(itemMasterId).subscribe(res => {
+    await this.workOrderService.getRevisedPartNumbers(itemMasterId).subscribe(res => {
       this.revisedPartOriginalData = res;
     })
 
   }
-  async getStockLineByPartNumber(partNumber) {
-    await this.itemMasterService.getStockLineByPartNumber(partNumber).subscribe(res => {
+  async getStockLineByPartNumber(itemMasterId) {
+    await this.workOrderService.getStockLineByPartNumber(itemMasterId).subscribe(res => {
       this.stockLineList = res.map(x => {
         return {
           label: x.stockLineNumber,
           value: x.stockLineId,
         }
       });
+      
+    })
+  }
+
+  async getConditionByPartNumber(itemMasterId){
+    await this.workOrderService.getConditionByPartNumber(itemMasterId).subscribe(res => {
       this.conditionList = res.map(x => {
         return {
           label: x.description,
@@ -375,8 +384,9 @@ export class WorkOrderAddComponent implements OnInit {
       })
     })
   }
+  
   async getPartPublicationByItemMasterId(itemMasterId) {
-    await this.itemMasterService.getPartPublicationByItemMaster(itemMasterId).subscribe(res => {
+    await this.workOrderService.getPartPublicationByItemMaster(itemMasterId).subscribe(res => {
       this.cmmList = res;
     })
   }
@@ -397,6 +407,35 @@ export class WorkOrderAddComponent implements OnInit {
     }
   }
 
+
+  getSerialNoByStockLineId(workOrderPart) {
+    const { stockLineId } = workOrderPart;
+    const { conditionId } = workOrderPart;
+    if (stockLineId !== 0 && conditionId !== 0) {
+      this.workOrderService.getSerialNoByStockLineId(stockLineId, conditionId).subscribe(res => {
+        return workOrderPart.stockLineNumber = res;
+      })
+    }
+  }
+
+  getWorkFlowByPNandScope(workOrderPart) {
+    const itemMasterId = getValueFromObjectByKey('itemMasterId', workOrderPart.masterPartId)
+    const { workOrderScopeId } = workOrderPart;
+    console.log(workOrderPart);
+
+
+    if (itemMasterId !== 0 && workOrderScopeId !== 0) {
+      this.workOrderService.getWorkFlowByPNandScope(itemMasterId, workOrderScopeId).subscribe(res => {
+        this.workFlowItems = res.map(x => {
+
+        })
+      })
+    }
+
+  }
+
+
+
   // Change of Table Grid
   gridTabChange(value) {
     this.gridActiveTab = value;
@@ -410,81 +449,6 @@ export class WorkOrderAddComponent implements OnInit {
     this.workOrder.workOrderTypeId = Number.parseInt(
       event.target.value.split('_')[1]
     );
-  }
-
-  getAllWorkOrderTypes(): void {
-    this.workOrderService.getAllWorkOrderTypes().subscribe(
-      result => {
-        this.workOrderTypes = result;
-      },
-      error => {
-        this.alertService.showMessage(
-          this.moduleName,
-          'Something Went Wrong',
-          MessageSeverity.error
-        );
-      }
-    );
-  }
-
-  getAllWorkOrderStatus(): void {
-    this.commonService.smartDropDownList('WorkOrderStatus', 'ID', 'Description').subscribe(res => {
-      this.workOrderStatusList = res;
-    })
-  }
-
-  getAllCreditTerms(): void {
-    this.commonService.smartDropDownList('CreditTerms', 'CreditTermsId', 'Name').subscribe(res => {
-      this.creditTerms = res;
-    })
-  }
-
-  getAllCustomers(): void {
-    this.customerService.getAllCustomersInfo().subscribe(
-      result => {
-        this.customersOriginalData = result;
-      }
-    );
-  }
-
-  getAllEmployees(): void {
-    this.commonService.smartDropDownList('Employee', 'EmployeeId', 'FirstName').subscribe(res => {
-      this.employeesOriginalData = res;
-    })
-  }
-
-
-
-  getAllWorkScpoes(): void {
-    this.workOrderService.getAllWorkScopes().subscribe(
-      result => {
-        this.workScopes = result.map(x =>{
-          return {
-
-          }
-        })
-      }
-    );
-  }
-
-  getAllWorkOrderStages(): void {
-    this.commonService.smartDropDownList('WorkOrderStage', 'ID', 'Description').subscribe(res => {
-      this.workOrderStagesList = res;
-    })
-  }
-
-  getAllPriority() {
-    this.commonService.smartDropDownList('Priority', 'PriorityId', 'Description').subscribe(res => {
-      this.priorityList = res;
-    })
-  }
-
-  getSerialNoByStockLineId(workOrderPart) {
-    const { stockLineId } = workOrderPart;
-    const { conditionId } = workOrderPart;
-    this.itemMasterService.getSerialNoByStockLineId(stockLineId, conditionId).subscribe(res => {
-      return workOrderPart.stockLineNumber = res;
-    })
   }
 
 
@@ -531,61 +495,5 @@ export class WorkOrderAddComponent implements OnInit {
   //   }
   // }
 
-
-
-
-  filterCustomerName(event) {
-    const value = event.query.toLowerCase()
-    this.commonService.getCustomerNameandCode(value).subscribe(res => {
-      this.customerNamesList = res;
-    })
-    // this.customerNames = this.customers;
-
-    // if (event.query !== undefined && event.query !== null) {
-    // 	const customers = [...this.customers.filter(x => {
-    // 		return x.name.toLowerCase().includes(event.query.toLowerCase())
-    // 	})]
-    // 	this.customerNames = customers;
-    // }
-  }
-
-
-
-  filterEmployee(event): void {
-
-    this.employeeList = this.employeesOriginalData;
-
-    if (event.query !== undefined && event.query !== null) {
-      const employee = [...this.employeesOriginalData.filter(x => {
-        return x.label.toLowerCase().includes(event.query.toLowerCase())
-      })]
-      this.employeeList = employee;
-    }
-  }
-
-  filterSalesPerson(event): void {
-
-    this.salesPersonList = this.employeesOriginalData;
-
-    if (event.query !== undefined && event.query !== null) {
-      const salesPerson = [...this.employeesOriginalData.filter(x => {
-        return x.label.toLowerCase().includes(event.query.toLowerCase())
-      })]
-      this.salesPersonList = salesPerson;
-    }
-
-  }
-
-  filterTechnician(event): void {
-
-    this.technicianList = this.employeesOriginalData;
-
-    if (event.query !== undefined && event.query !== null) {
-      const technician = [...this.employeesOriginalData.filter(x => {
-        return x.label.toLowerCase().includes(event.query.toLowerCase())
-      })]
-      this.technicianList = technician;
-    }
-  }
 
 }

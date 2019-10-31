@@ -32,24 +32,24 @@
         // this.updatedDate = new Date();
         // this.isActive = true;
         // this.isDelete = false;
-        this. workOrderScopeId =1;
+        this.workOrderScopeId = 0;
         this.promisedDate = new Date();
         this.estimatedShipDate = new Date();
         this.customerRequestDate = new Date();
         this.estimatedCompletionDate = new Date();
-        this.nTE = '' ; 
+        this.nTE = '';
         this.quantity = 1;
-        this.stockLineId= 0;
-        this.cMMId  = 0 ;
+        this.stockLineId = 0;
+        this.cMMId = 0;
         this.workflowId = 0;
-        this.workOrderStageId  = 0;
-        this.workOrderStatusId =  0;
+        this.workOrderStageId = 0;
+        this.workOrderStatusId = 0;
         this.workOrderPriorityId = 0;
         this.isPMA = false;
         this.isDER = false;
         this.techStationId = 0;
-        this.tearDownReport =  0;
-        this.tATDaysStandard =  0;
+        this.tearDownReport = 0;
+        this.tATDaysStandard = 0;
         this.technicianId = 0;
         this.mappingPartId = 0;
         this.conditionId = 0;
@@ -57,28 +57,28 @@
 
     }
 
-    masterPartId : number;
+    masterPartId: number;
     workOrderScopeId: number;
-    promisedDate: Date ;
-    estimatedShipDate :  Date ;
-    customerRequestDate : Date ;
-    estimatedCompletionDate : Date ;
-    nTE : string;
-    quantity : number ;
-    stockLineId:  number ;
-    cMMId : number ;
-    workflowId : number ;
-    workOrderStageId : number ;
-    workOrderStatusId: number ;
-    workOrderPriorityId: number ;
+    promisedDate: Date;
+    estimatedShipDate: Date;
+    customerRequestDate: Date;
+    estimatedCompletionDate: Date;
+    nTE: string;
+    quantity: number;
+    stockLineId: number;
+    cMMId: number;
+    workflowId: number;
+    workOrderStageId: number;
+    workOrderStatusId: number;
+    workOrderPriorityId: number;
     isPMA: boolean;
-    isDER:  boolean ;
-    techStationId : number ;
-    tearDownReport : number ; 
-    tATDaysStandard : number ;
-    technicianId  : number ; 
-    mappingPartId  : number ;
-    conditionId : number ;
+    isDER: boolean;
+    techStationId: number;
+    tearDownReport: number;
+    tATDaysStandard: number;
+    technicianId: number;
+    mappingPartId: number;
+    conditionId: number;
 
 
 
