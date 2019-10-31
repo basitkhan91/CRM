@@ -46,7 +46,7 @@ export class WorkOrderAddComponent implements OnInit {
   workOrderPartNumbers: WorkOrderPartNumber[];
   workOrderTypes: WorkOrderType[];
   workOrderStatusList: any;
-  workScopes: WorkScope[];
+  workScopes: any ;
   workOrderStagesList: any;
   creditTerms: any;
   // customers: Customer[];
@@ -458,7 +458,11 @@ export class WorkOrderAddComponent implements OnInit {
   getAllWorkScpoes(): void {
     this.workOrderService.getAllWorkScopes().subscribe(
       result => {
-        this.workScopes = result;
+        this.workScopes = result.map(x =>{
+          return {
+
+          }
+        })
       }
     );
   }
