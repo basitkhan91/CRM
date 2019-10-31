@@ -45,12 +45,12 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
 
 
-                workOrder.WorkOrderNum = "WO" + workOrder.ID;
+                workOrder.WorkOrderNum = "WO" + workOrder.WorkOrderId;
                 _appContext.WorkOrder.Update(workOrder);
                 _appContext.SaveChanges();
 
                 // Creating WorkflowWorkOrder From Work Flow
-                CreateWorkFlowWorkOrderFromWorkFlow(workOrder.PartNumbers, workOrder.ID, workOrder.CreatedBy);
+                CreateWorkFlowWorkOrderFromWorkFlow(workOrder.PartNumbers, workOrder.WorkOrderId, workOrder.CreatedBy);
 
                 return workOrder;
             }
@@ -123,7 +123,7 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetWorkOrdersList(int pageNo,int pageSize)
+        public IEnumerable<object> GetWorkOrdersList(int pageNo, int pageSize)
         {
             var pageNumber = pageNo + 1;
             var take = pageSize;
@@ -132,7 +132,7 @@ namespace DAL.Repositories
             try
             {
                 var totalRecords = (from wo in _appContext.WorkOrder
-                                    join wop in _appContext.WorkOrderPartNumber on wo.ID equals wop.WorkOrderId
+                                    join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
                                     join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
                                     join pr in _appContext.Priority on wop.WorkOrderPriorityId equals pr.PriorityId
                                     join im in _appContext.ItemMaster on wop.MasterPartId equals im.MasterPartId
@@ -145,12 +145,12 @@ namespace DAL.Repositories
                                     where wo.IsDeleted == false && wo.IsSinglePN == true
                                     select new
                                     {
-                                        wo.ID,
+                                        wo.WorkOrderId,
                                     }
                           ).Distinct().Count();
 
                 var list = (from wo in _appContext.WorkOrder
-                            join wop in _appContext.WorkOrderPartNumber on wo.ID equals wop.WorkOrderId
+                            join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
                             join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
                             join pr in _appContext.Priority on wop.WorkOrderPriorityId equals pr.PriorityId
                             join im in _appContext.ItemMaster on wop.MasterPartId equals im.MasterPartId
@@ -160,17 +160,17 @@ namespace DAL.Repositories
                             join wos in _appContext.WorkOrderStage on wop.WorkOrderStageId equals wos.ID
                             join wost in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals wost.Id
 
-                            where wo.IsDeleted == false && wo.IsSinglePN==true
+                            where wo.IsDeleted == false && wo.IsSinglePN == true
                             select new
                             {
-                                wo.ID,
+                                wo.WorkOrderId,
                                 wo.WorkOrderNum,
                                 wo.OpenDate,
                                 WorkScope = ws.Description,
                                 Priority = pr.Description,
                                 im.PartNumber,
                                 im.PartDescription,
-                                RevisedPartNo=im1.PartNumber,
+                                RevisedPartNo = im1.PartNumber,
                                 cust.Name,
                                 cust.CustomerCode,
                                 WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Shop(Internal)" : (wo.WorkOrderTypeId == 3 ? "Liquidation" : "Services")),
@@ -178,14 +178,14 @@ namespace DAL.Repositories
                                 wop.PromisedDate,
                                 wop.EstimatedShipDate,
                                 wop.EstimatedCompletionDate,
-                                WorkOrderStage= wos.Description,
-                                WorkOrderStatus= wost.Description,
+                                WorkOrderStage = wos.Description,
+                                WorkOrderStatus = wost.Description,
                                 wo.IsActive,
                                 wo.CreatedDate,
-                                TotalRecords= totalRecords
+                                TotalRecords = totalRecords
                             }
                           ).Distinct()
-                          .OrderByDescending(p=>p.CreatedDate)
+                          .OrderByDescending(p => p.CreatedDate)
                           .Skip(skip)
                           .Take(take)
                           .ToList();
@@ -202,36 +202,12 @@ namespace DAL.Repositories
         {
             try
             {
-                var workOrder = _appContext.Set<WorkOrder>().Where(x => x.ID == workOrderId).FirstOrDefault();
+                var workOrder = _appContext.Set<WorkOrder>().Where(x => x.WorkOrderId == workOrderId).FirstOrDefault();
                 if (workOrder != null)
                 {
                     workOrder.PartNumbers = _appContext.Set<WorkOrderPartNumber>().Where(x => x.WorkOrderId == workOrderId && x.IsDeleted == false).OrderBy(x => x.ID).ToList();
                 }
                 return workOrder;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-        public IEnumerable<object> GetWorkFlowNos(long partId, long workScopeId)
-        {
-            try
-            {
-
-                var workFlowNos = (from wf in _appContext.Workflow
-                                   join im in _appContext.ItemMaster on wf.ItemMasterId equals im.ItemMasterId
-                                   join ws in _appContext.WorkScope on wf.WorkScopeId equals ws.WorkScopeId
-                                   where wf.IsDelete == false && wf.IsActive==true && im.ItemMasterId == partId && wf.WorkScopeId == workScopeId
-                                   select new
-                                   {
-                                       WorkFlowNo = wf.WorkOrderNumber,
-                                       WorkFlowId = wf.WorkflowId
-                                   }).Distinct().ToList();
-
-                return workFlowNos;
             }
             catch (Exception)
             {
@@ -255,7 +231,7 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
                 return workFlowWorkOrder.WorkFlowWorkOrderId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 throw;
@@ -279,85 +255,24 @@ namespace DAL.Repositories
             }
         }
 
-        /// <summary>
-        /// Creating Workflow WorkOrder FROM Work Flow
-        /// </summary>
-        /// <param name="workOrderPartNumbers"></param>
-        /// <param name="workOrderId"></param>
-        /// <param name="createdBy"></param>
-        private void CreateWorkFlowWorkOrderFromWorkFlow(List<WorkOrderPartNumber> workOrderPartNumbers, long workOrderId, string createdBy)
+        public WorkFlowWorkOrder GetWorkFlowWorkOrderById(long workFlowWorkOrderId)
         {
             try
             {
-                if (workOrderPartNumbers != null && workOrderPartNumbers.Count > 0)
+                var workFlowWorkOrder = _appContext.WorkFlowWorkOrder.Where(p => p.WorkFlowWorkOrderId == workFlowWorkOrderId).FirstOrDefault();
+                if (workFlowWorkOrder != null)
                 {
-                    foreach (var item in workOrderPartNumbers)
+                    workFlowWorkOrder.Charges = _appContext.WorkOrderCharges.Where(p => p.WorkFlowWorkOrderId == workFlowWorkOrderId).ToList();
+                    workFlowWorkOrder.Assets = _appContext.WorkOrderAssets.Where(p => p.WorkFlowWorkOrderId == workFlowWorkOrderId).ToList();
+                    workFlowWorkOrder.Exclusions = _appContext.WorkOrderExclusions.Where(p => p.WorkFlowWorkOrderId == workFlowWorkOrderId).ToList();
+                    workFlowWorkOrder.Expertise = _appContext.WorkOrderLaborHeader.Where(p => p.WorkFlowWorkOrderId == workFlowWorkOrderId).FirstOrDefault();
+                    if (workFlowWorkOrder.Expertise != null)
                     {
-                        var workFlowId = item.WorkflowId;
-                        if (workFlowId > 0)
-                        {
-                            var isExists = _appContext.WorkFlowWorkOrder.Any(p => p.WorkflowId == workFlowId);
-                            if (!isExists)
-                            {
-                                WorkFlowWorkOrder workFlowWorkOrder = new WorkFlowWorkOrder();
-                                var workFlow = _appContext.Set<Workflow>().Where(x => x.WorkflowId == workFlowId).FirstOrDefault();
-
-                                if (workFlow != null)
-                                {
-                                    workFlow.Charges = _appContext.Set<WorkflowChargesList>().Where(x => x.WorkflowId == workFlowId && (x.IsDelete == null || x.IsDelete != true)).OrderBy(x => x.WorkflowChargesListId).ToList();
-                                    //workFlow.Directions = _appContext.Set<WorkFlowDirection>().Where(x => x.WorkflowId == workFlowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowDirectionId).ToList();
-                                    workFlow.Equipments = _appContext.Set<WorkflowEquipmentList>().Where(x => x.WorkflowId == workFlowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowEquipmentListId).ToList();
-                                    workFlow.Exclusions = _appContext.Set<WorkFlowExclusion>().Where(x => x.WorkflowId == workFlowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowExclusionId).ToList();
-                                    workFlow.Expertise = _appContext.Set<WorkflowExpertiseList>().Where(x => x.WorkflowId == workFlowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowExpertiseListId).ToList();
-                                    workFlow.MaterialList = _appContext.Set<WorkflowMaterial>().Where(x => x.WorkflowId == workFlowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowActionId).ToList();
-                                    // workFlow.Measurements = _appContext.Set<WorkflowMeasurement>().Where(x => x.WorkflowId == workFlowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowMeasurementId).ToList();
-                                    // workFlow.Publication = _appContext.Set<Publications>().Where(x => x.WorkflowId == workFlowId && (x.IsDeleted == null || x.IsDeleted.Value != true)).OrderBy(x => x.Id).ToList();
-                                    //workFlow.Publication.ForEach(publ =>
-                                    //{
-                                    //    publ.WorkflowPublicationDashNumbers = _appContext.WorkflowPublicationDashNumber.Where(x => x.PublicationsId == publ.Id && x.WorkflowId == publ.WorkflowId).ToList();
-                                    //});
-
-
-                                    workFlowWorkOrder.WorkOrderId = workOrderId;
-                                    workFlowWorkOrder.CreatedDate = workFlowWorkOrder.UpdatedDate = DateTime.Now;
-                                    workFlowWorkOrder.CreatedBy = workFlowWorkOrder.UpdatedBy = createdBy;
-                                    workFlowWorkOrder.IsActive = true;
-                                    workFlowWorkOrder.IsDeleted = false;
-                                    workFlowWorkOrder.MasterCompanyId = item.MasterCompanyId;
-
-                                    workFlowWorkOrder = BIndWorkFlowWorkOrderDetails(workFlowWorkOrder, workFlow);
-
-                                    if (workFlow.Charges != null && workFlow.Charges.Count > 0)
-                                    {
-                                        workFlowWorkOrder.Charges = BindWorkFlowWorkOrderCharges(workFlow.Charges, workOrderId, createdBy, item.MasterCompanyId);
-                                    }
-                                    if (workFlow.Equipments != null && workFlow.Equipments.Count > 0)
-                                    {
-                                        workFlowWorkOrder.Assets = BindWorkFlowWorkOrderAssets(workFlow.Equipments, workOrderId, createdBy, item.MasterCompanyId);
-                                    }
-                                    if (workFlow.Exclusions != null && workFlow.Exclusions.Count > 0)
-                                    {
-                                        workFlowWorkOrder.Exclusions = BindWorkFlowWorkOrderExclusions(workFlow.Exclusions, workOrderId, createdBy, item.MasterCompanyId);
-                                    }
-                                    if (workFlow.Expertise != null && workFlow.Expertise.Count > 0)
-                                    {
-                                        workFlowWorkOrder.Expertise = BindWorkFlowWorkOrderExpertise(workFlow.Expertise, workOrderId, createdBy, item.MasterCompanyId);
-                                    }
-                                    if (workFlow.MaterialList != null && workFlow.MaterialList.Count > 0)
-                                    {
-                                        workFlowWorkOrder.MaterialList = BindWorkFlowWorkOrderMaterials(workFlow.MaterialList, workOrderId, createdBy, item.MasterCompanyId);
-                                    }
-
-                                    _appContext.WorkFlowWorkOrder.Add(workFlowWorkOrder);
-                                    _appContext.SaveChanges();
-                                }
-
-
-
-                            }
-                        }
+                        workFlowWorkOrder.Expertise.WorkOrderLaborList = _appContext.WorkOrderLabor.Where(p => p.WorkOrderLaborHeaderId == workFlowWorkOrder.Expertise.WorkOrderLaborHeaderId).ToList();
                     }
+                    workFlowWorkOrder.MaterialList = _appContext.WorkOrderMaterials.Where(p => p.WorkFlowWorkOrderId == workFlowWorkOrderId).ToList();
                 }
+                return workFlowWorkOrder;
             }
             catch (Exception)
             {
@@ -366,273 +281,6 @@ namespace DAL.Repositories
             }
         }
 
-        private WorkFlowWorkOrder BIndWorkFlowWorkOrderDetails(WorkFlowWorkOrder workFlowWorkOrder, Workflow workFlow)
-        {
-            workFlowWorkOrder.BERThresholdAmount = workFlow.BERThresholdAmount;
-            //workFlowWorkOrder.ChangedPartNumber = workFlow.ChangedPartNumber;
-            workFlowWorkOrder.ChangedPartNumberDescription = workFlow.ChangedPartNumberDescription;
-            workFlowWorkOrder.CostOfNew = workFlow.CostOfNew;
-            workFlowWorkOrder.CostOfReplacement = workFlow.CostOfReplacement;
-            workFlowWorkOrder.CurrencyId = workFlow.CurrencyId;
-            workFlowWorkOrder.CustomerId = workFlow.CustomerId;
-            workFlowWorkOrder.FixedAmount = workFlow.FixedAmount;
-            workFlowWorkOrder.FlatRate = workFlow.FlatRate;
-            workFlowWorkOrder.IsCalculatedBERThreshold = workFlow.IsCalculatedBERThreshold;
-            workFlowWorkOrder.IsFixedAmount = workFlow.IsFixedAmount;
-            workFlowWorkOrder.IsPercentageOfNew = workFlow.IsPercentageOfNew;
-            workFlowWorkOrder.IsPercentageOfReplacement = workFlow.IsPercentageOfReplacement;
-            workFlowWorkOrder.ItemMasterId = workFlow.ItemMasterId;
-            workFlowWorkOrder.ManagementStructureId = workFlow.ManagementStructureId;
-            workFlowWorkOrder.Memo = workFlow.Memo;
-            workFlowWorkOrder.OtherCost = workFlow.OtherCost;
-            workFlowWorkOrder.PartNumberDescription = workFlow.PartNumberDescription;
-            workFlowWorkOrder.PercentageOfNew = workFlow.PercentageOfNew;
-            workFlowWorkOrder.PercentageOfReplacement = workFlow.PercentageOfReplacement;
-            workFlowWorkOrder.Version = workFlow.Version;
-            workFlowWorkOrder.WorkflowDescription = workFlow.WorkflowDescription;
-            workFlowWorkOrder.WorkflowCreateDate = workFlow.WorkflowCreateDate;
-            workFlowWorkOrder.WorkflowExpirationDate = workFlow.WorkflowExpirationDate;
-            workFlowWorkOrder.WorkflowId = workFlow.WorkflowId;
-
-            return workFlowWorkOrder;
-        }
-
-        private List<WorkOrderCharges> BindWorkFlowWorkOrderCharges(List<WorkflowChargesList> charges, long workOrderId, string createdBy, int? masterCompanyId)
-        {
-            try
-            {
-                List<WorkOrderCharges> workOrderCharges = new List<WorkOrderCharges>();
-                WorkOrderCharges workOrderCharge;
-                foreach (var item in charges)
-                {
-                    workOrderCharge = new WorkOrderCharges();
-                    workOrderCharge.Amount = 0;
-                    workOrderCharge.CostPlusAmount = 0;
-                    workOrderCharge.CreatedBy = createdBy;
-                    workOrderCharge.CreatedDate = DateTime.Now;
-                    workOrderCharge.FixedAmount = 0;
-                    workOrderCharge.IsActive = true;
-                    workOrderCharge.IsDeleted = false;
-                    workOrderCharge.ItemMasterId = 1;
-                    workOrderCharge.MarkupPercentageId = 1;
-                    workOrderCharge.MasterCompanyId = masterCompanyId;
-                    workOrderCharge.PartNumber = "";
-                    workOrderCharge.Quantity = item.Quantity;
-                    workOrderCharge.UpdatedBy = createdBy;
-                    workOrderCharge.UpdatedDate = DateTime.Now;
-                    workOrderCharge.VendorId = item.VendorId;
-                    workOrderCharge.WorkOrderId = workOrderId;
-                    workOrderCharges.Add(workOrderCharge);
-                }
-
-                return workOrderCharges;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-        private List<WorkOrderAssets> BindWorkFlowWorkOrderAssets(List<WorkflowEquipmentList> equipments, long workOrderId, string createdBy, int? masterCompanyId)
-        {
-            try
-            {
-                List<WorkOrderAssets> WorkOrderAssetsList = new List<WorkOrderAssets>();
-                WorkOrderAssets workOrderAsset;
-                foreach (var item in equipments)
-                {
-                    workOrderAsset = new WorkOrderAssets();
-                    workOrderAsset.AssetRecordId = item.AssetId;
-                    workOrderAsset.AssetTypeId = item.AssetTypeId;
-                    workOrderAsset.UpdatedBy = workOrderAsset.CreatedBy = createdBy;
-                    workOrderAsset.UpdatedDate = workOrderAsset.CreatedDate = DateTime.Now;
-                    workOrderAsset.IsActive = true;
-                    workOrderAsset.IsDeleted = false;
-                    workOrderAsset.MasterCompanyId = masterCompanyId;
-                    workOrderAsset.Quantity = item.Quantity;
-                    workOrderAsset.WorkOrderId = workOrderId;
-                    WorkOrderAssetsList.Add(workOrderAsset);
-                }
-
-                return WorkOrderAssetsList;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-        private List<WorkOrderExclusions> BindWorkFlowWorkOrderExclusions(List<WorkFlowExclusion> exclusions, long workOrderId, string createdBy, int? masterCompanyId)
-        {
-            try
-            {
-                List<WorkOrderExclusions> WorkOrderExclusionsList = new List<WorkOrderExclusions>();
-                WorkOrderExclusions workOrderExclusion;
-                foreach (var item in exclusions)
-                {
-                    workOrderExclusion = new WorkOrderExclusions();
-                    workOrderExclusion.UpdatedBy = workOrderExclusion.CreatedBy = createdBy;
-                    workOrderExclusion.UpdatedDate = workOrderExclusion.CreatedDate = DateTime.Now;
-                    workOrderExclusion.IsActive = true;
-                    workOrderExclusion.IsDeleted = false;
-                    workOrderExclusion.MasterCompanyId = masterCompanyId;
-                    workOrderExclusion.WorkOrderId = workOrderId;
-
-                    workOrderExclusion.ItemMasterId = item.ItemMasterId;
-                    workOrderExclusion.ExtendedCost = item.ExtendedCost;
-                    workOrderExclusion.Memo = item.Memo;
-                    workOrderExclusion.Quantity = item.Quantity;
-                    workOrderExclusion.UnitCost = item.UnitCost;
-
-                    WorkOrderExclusionsList.Add(workOrderExclusion);
-                }
-
-                return WorkOrderExclusionsList;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-        private WorkOrderLaborHeader BindWorkFlowWorkOrderExpertise(List<WorkflowExpertiseList> expertise, long workOrderId, string createdBy, int? masterCompanyId)
-        {
-            try
-            {
-                WorkOrderLaborHeader workOrderLaborHeader = new WorkOrderLaborHeader();
-                workOrderLaborHeader.WorkOrderLaborList = new List<WorkOrderLabor>();
-                WorkOrderLabor workOrderLabor;
-
-                workOrderLaborHeader.UpdatedBy = workOrderLaborHeader.CreatedBy = createdBy;
-                workOrderLaborHeader.UpdatedDate = workOrderLaborHeader.CreatedDate = DateTime.Now;
-                workOrderLaborHeader.IsActive = true;
-                workOrderLaborHeader.IsDeleted = false;
-                workOrderLaborHeader.MasterCompanyId = masterCompanyId;
-
-
-                workOrderLaborHeader.WorkOrderId = workOrderId;
-
-                foreach (var item in expertise)
-                {
-                    workOrderLabor = new WorkOrderLabor();
-                    workOrderLabor.UpdatedBy = workOrderLabor.CreatedBy = createdBy;
-                    workOrderLabor.UpdatedDate = workOrderLabor.CreatedDate = DateTime.Now;
-                    workOrderLabor.IsActive = true;
-                    workOrderLabor.IsDeleted = false;
-
-                    workOrderLabor.ExpertiseId = item.ExpertiseTypeId;
-                    workOrderLabor.Hours = item.EstimatedHours;
-                    workOrderLabor.TaskId = item.TaskId;
-
-                    workOrderLaborHeader.WorkOrderLaborList.Add(workOrderLabor);
-                }
-
-                return workOrderLaborHeader;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-        private List<WorkOrderMaterials> BindWorkFlowWorkOrderMaterials(List<WorkflowMaterial> materialList, long workOrderId, string createdBy, int? masterCompanyId)
-        {
-            try
-            {
-                List<WorkOrderMaterials> WorkOrderMaterialList = new List<WorkOrderMaterials>();
-                WorkOrderMaterials workOrderMaterial;
-                foreach (var item in materialList)
-                {
-                    workOrderMaterial = new WorkOrderMaterials();
-                    workOrderMaterial.UpdatedBy = workOrderMaterial.CreatedBy = createdBy;
-                    workOrderMaterial.UpdatedDate = workOrderMaterial.CreatedDate = DateTime.Now;
-                    workOrderMaterial.IsActive = true;
-                    workOrderMaterial.IsDeleted = false;
-                    workOrderMaterial.MasterCompanyId = masterCompanyId;
-                    workOrderMaterial.WorkOrderId = workOrderId;
-
-                    workOrderMaterial.ItemMasterId = item.ItemMasterId;
-
-                    WorkOrderMaterialList.Add(workOrderMaterial);
-                }
-
-                return WorkOrderMaterialList;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-
-        public void CreateWorkFlowWorkOrderForWorkFlow1(long workFlowId)
-        {
-            long workOrderId = 10033;
-            string createdBy = "admin";
-            int masterCompanyId = 1;
-            try
-            {
-                WorkFlowWorkOrder workFlowWorkOrder = new WorkFlowWorkOrder();
-                var workFlow = _appContext.Set<Workflow>().Where(x => x.WorkflowId == workFlowId).FirstOrDefault();
-
-                workFlow.Charges = _appContext.Set<WorkflowChargesList>().Where(x => x.WorkflowId == workFlowId && (x.IsDelete == null || x.IsDelete != true)).OrderBy(x => x.WorkflowChargesListId).ToList();
-                // workFlow.Directions = _appContext.Set<WorkFlowDirection>().Where(x => x.WorkflowId == workFlowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowDirectionId).ToList();
-                workFlow.Equipments = _appContext.Set<WorkflowEquipmentList>().Where(x => x.WorkflowId == workFlowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowEquipmentListId).ToList();
-                workFlow.Exclusions = _appContext.Set<WorkFlowExclusion>().Where(x => x.WorkflowId == workFlowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowExclusionId).ToList();
-                workFlow.Expertise = _appContext.Set<WorkflowExpertiseList>().Where(x => x.WorkflowId == workFlowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowExpertiseListId).ToList();
-                workFlow.MaterialList = _appContext.Set<WorkflowMaterial>().Where(x => x.WorkflowId == workFlowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowActionId).ToList();
-                //workFlow.Measurements = _appContext.Set<WorkflowMeasurement>().Where(x => x.WorkflowId == workFlowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowMeasurementId).ToList();
-                //workFlow.Publication = _appContext.Set<Publications>().Where(x => x.WorkflowId == workFlowId && (x.IsDeleted == null || x.IsDeleted.Value != true)).OrderBy(x => x.Id).ToList();
-                //workFlow.Publication.ForEach(publ =>
-                //{
-                //    publ.WorkflowPublicationDashNumbers = _appContext.WorkflowPublicationDashNumber.Where(x => x.PublicationsId == publ.Id && x.WorkflowId == publ.WorkflowId).ToList();
-                //});
-
-
-                workFlowWorkOrder.WorkOrderId = 10033;
-                workFlowWorkOrder.CreatedDate = workFlowWorkOrder.UpdatedDate = DateTime.Now;
-                workFlowWorkOrder.CreatedBy = workFlowWorkOrder.UpdatedBy = createdBy;
-                workFlowWorkOrder.IsActive = true;
-                workFlowWorkOrder.IsDeleted = false;
-                workFlowWorkOrder.MasterCompanyId = masterCompanyId;
-
-                workFlowWorkOrder = BIndWorkFlowWorkOrderDetails(workFlowWorkOrder, workFlow);
-
-                if (workFlow.Charges != null && workFlow.Charges.Count > 0)
-                {
-                    workFlowWorkOrder.Charges = BindWorkFlowWorkOrderCharges(workFlow.Charges, workOrderId, createdBy, masterCompanyId);
-                }
-                if (workFlow.Equipments != null && workFlow.Equipments.Count > 0)
-                {
-                    workFlowWorkOrder.Assets = BindWorkFlowWorkOrderAssets(workFlow.Equipments, workOrderId, createdBy, masterCompanyId);
-                }
-                if (workFlow.Exclusions != null && workFlow.Exclusions.Count > 0)
-                {
-                    workFlowWorkOrder.Exclusions = BindWorkFlowWorkOrderExclusions(workFlow.Exclusions, workOrderId, createdBy, masterCompanyId);
-                }
-                if (workFlow.Expertise != null && workFlow.Expertise.Count > 0)
-                {
-                    workFlowWorkOrder.Expertise = BindWorkFlowWorkOrderExpertise(workFlow.Expertise, workOrderId, createdBy, masterCompanyId);
-                }
-                if (workFlow.MaterialList != null && workFlow.MaterialList.Count > 0)
-                {
-                    workFlowWorkOrder.MaterialList = BindWorkFlowWorkOrderMaterials(workFlow.MaterialList, workOrderId, createdBy, masterCompanyId);
-                }
-
-                _appContext.WorkFlowWorkOrder.Add(workFlowWorkOrder);
-                _appContext.SaveChanges();
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
         #endregion
 
         #region Work Order Labour
@@ -1342,7 +990,7 @@ namespace DAL.Repositories
             {
                 WorkOrderQuote workOrderQuote = new WorkOrderQuote();
                 var result = (from wq in _appContext.WorkOrderQuote
-                              join wo in _appContext.WorkOrder on wq.WorkOrderId equals wo.ID
+                              join wo in _appContext.WorkOrder on wq.WorkOrderId equals wo.WorkOrderId
                               join cust in _appContext.Customer on wq.CustomerId equals cust.CustomerId
                               join cur in _appContext.Currency on wq.CurrencyId equals cur.CurrencyId
                               join emp in _appContext.Employee on wq.EmployeeId equals emp.EmployeeId
@@ -1485,6 +1133,32 @@ namespace DAL.Repositories
 
         #endregion
 
+        #region Dropdowns
+
+        public IEnumerable<object> GetWorkFlowNos(long partId, long workScopeId)
+        {
+            try
+            {
+
+                var workFlowNos = (from wf in _appContext.Workflow
+                                   join im in _appContext.ItemMaster on wf.ItemMasterId equals im.ItemMasterId
+                                   join ws in _appContext.WorkScope on wf.WorkScopeId equals ws.WorkScopeId
+                                   where wf.IsDelete == false && wf.IsActive == true && im.ItemMasterId == partId && wf.WorkScopeId == workScopeId
+                                   select new
+                                   {
+                                       WorkFlowNo = wf.WorkOrderNumber,
+                                       WorkFlowId = wf.WorkflowId
+                                   }).Distinct().ToList();
+
+                return workFlowNos;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         public IEnumerable<object> GetWorkOrderPartDetails()
         {
             try
@@ -1507,7 +1181,7 @@ namespace DAL.Repositories
                 throw;
             }
         }
-        
+
         public IEnumerable<object> GetStockLineDetailsByPartNo(long itemMasterId)
         {
             try
@@ -1561,8 +1235,9 @@ namespace DAL.Repositories
                                 where sl.StockLineId == stockLineId && sl.ConditionId == conditionId
                                 select new
                                 {
-                                    sl.SerialNumber
-                                }).FirstOrDefault().SerialNumber;
+                                    SerialNumber = sl.SerialNumber
+                                }).FirstOrDefault();
+
                 return serialNo;
             }
             catch (Exception)
@@ -1623,9 +1298,297 @@ namespace DAL.Repositories
             }
         }
 
+        #endregion
+
+        #region Private Methods
+
+        private void CreateWorkFlowWorkOrderFromWorkFlow(List<WorkOrderPartNumber> workOrderPartNumbers, long workOrderId, string createdBy)
+        {
+            try
+            {
+                if (workOrderPartNumbers != null && workOrderPartNumbers.Count > 0)
+                {
+                    foreach (var item in workOrderPartNumbers)
+                    {
+                        var workFlowId = item.WorkflowId;
+                        if (workFlowId > 0)
+                        {
+                            var isExists = _appContext.WorkFlowWorkOrder.Any(p => p.WorkflowId == workFlowId);
+                            if (!isExists)
+                            {
+                                WorkFlowWorkOrder workFlowWorkOrder = new WorkFlowWorkOrder();
+                                var workFlow = _appContext.Set<Workflow>().Where(x => x.WorkflowId == workFlowId).FirstOrDefault();
+
+                                if (workFlow != null)
+                                {
+                                    workFlow.Charges = _appContext.Set<WorkflowChargesList>().Where(x => x.WorkflowId == workFlowId && (x.IsDelete == null || x.IsDelete != true)).OrderBy(x => x.WorkflowChargesListId).ToList();
+                                    //workFlow.Directions = _appContext.Set<WorkFlowDirection>().Where(x => x.WorkflowId == workFlowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowDirectionId).ToList();
+                                    workFlow.Equipments = _appContext.Set<WorkflowEquipmentList>().Where(x => x.WorkflowId == workFlowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowEquipmentListId).ToList();
+                                    workFlow.Exclusions = _appContext.Set<WorkFlowExclusion>().Where(x => x.WorkflowId == workFlowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowExclusionId).ToList();
+                                    workFlow.Expertise = _appContext.Set<WorkflowExpertiseList>().Where(x => x.WorkflowId == workFlowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowExpertiseListId).ToList();
+                                    workFlow.MaterialList = _appContext.Set<WorkflowMaterial>().Where(x => x.WorkflowId == workFlowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowActionId).ToList();
+                                    // workFlow.Measurements = _appContext.Set<WorkflowMeasurement>().Where(x => x.WorkflowId == workFlowId && (x.IsDelete == null || x.IsDelete.Value != true)).OrderBy(x => x.WorkflowMeasurementId).ToList();
+                                    // workFlow.Publication = _appContext.Set<Publications>().Where(x => x.WorkflowId == workFlowId && (x.IsDeleted == null || x.IsDeleted.Value != true)).OrderBy(x => x.Id).ToList();
+                                    //workFlow.Publication.ForEach(publ =>
+                                    //{
+                                    //    publ.WorkflowPublicationDashNumbers = _appContext.WorkflowPublicationDashNumber.Where(x => x.PublicationsId == publ.Id && x.WorkflowId == publ.WorkflowId).ToList();
+                                    //});
+
+
+                                    workFlowWorkOrder.WorkOrderId = workOrderId;
+                                    workFlowWorkOrder.CreatedDate = workFlowWorkOrder.UpdatedDate = DateTime.Now;
+                                    workFlowWorkOrder.CreatedBy = workFlowWorkOrder.UpdatedBy = createdBy;
+                                    workFlowWorkOrder.IsActive = true;
+                                    workFlowWorkOrder.IsDeleted = false;
+                                    workFlowWorkOrder.MasterCompanyId = item.MasterCompanyId;
+
+                                    workFlowWorkOrder = BIndWorkFlowWorkOrderDetails(workFlowWorkOrder, workFlow);
+
+                                    if (workFlow.Charges != null && workFlow.Charges.Count > 0)
+                                    {
+                                        workFlowWorkOrder.Charges = BindWorkFlowWorkOrderCharges(workFlow.Charges, workOrderId, createdBy, item.MasterCompanyId);
+                                    }
+                                    if (workFlow.Equipments != null && workFlow.Equipments.Count > 0)
+                                    {
+                                        workFlowWorkOrder.Assets = BindWorkFlowWorkOrderAssets(workFlow.Equipments, workOrderId, createdBy, item.MasterCompanyId);
+                                    }
+                                    if (workFlow.Exclusions != null && workFlow.Exclusions.Count > 0)
+                                    {
+                                        workFlowWorkOrder.Exclusions = BindWorkFlowWorkOrderExclusions(workFlow.Exclusions, workOrderId, createdBy, item.MasterCompanyId);
+                                    }
+                                    if (workFlow.Expertise != null && workFlow.Expertise.Count > 0)
+                                    {
+                                        workFlowWorkOrder.Expertise = BindWorkFlowWorkOrderExpertise(workFlow.Expertise, workOrderId, createdBy, item.MasterCompanyId);
+                                    }
+                                    if (workFlow.MaterialList != null && workFlow.MaterialList.Count > 0)
+                                    {
+                                        workFlowWorkOrder.MaterialList = BindWorkFlowWorkOrderMaterials(workFlow.MaterialList, workOrderId, createdBy, item.MasterCompanyId);
+                                    }
+
+                                    _appContext.WorkFlowWorkOrder.Add(workFlowWorkOrder);
+                                    _appContext.SaveChanges();
+                                }
+
+
+
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        private WorkFlowWorkOrder BIndWorkFlowWorkOrderDetails(WorkFlowWorkOrder workFlowWorkOrder, Workflow workFlow)
+        {
+            workFlowWorkOrder.BERThresholdAmount = workFlow.BERThresholdAmount;
+            //workFlowWorkOrder.ChangedPartNumber = workFlow.ChangedPartNumber;
+            workFlowWorkOrder.ChangedPartNumberDescription = workFlow.ChangedPartNumberDescription;
+            workFlowWorkOrder.CostOfNew = workFlow.CostOfNew;
+            workFlowWorkOrder.CostOfReplacement = workFlow.CostOfReplacement;
+            workFlowWorkOrder.CurrencyId = workFlow.CurrencyId;
+            workFlowWorkOrder.CustomerId = workFlow.CustomerId;
+            workFlowWorkOrder.FixedAmount = workFlow.FixedAmount;
+            workFlowWorkOrder.FlatRate = workFlow.FlatRate;
+            workFlowWorkOrder.IsCalculatedBERThreshold = workFlow.IsCalculatedBERThreshold;
+            workFlowWorkOrder.IsFixedAmount = workFlow.IsFixedAmount;
+            workFlowWorkOrder.IsPercentageOfNew = workFlow.IsPercentageOfNew;
+            workFlowWorkOrder.IsPercentageOfReplacement = workFlow.IsPercentageOfReplacement;
+            workFlowWorkOrder.ItemMasterId = workFlow.ItemMasterId;
+            workFlowWorkOrder.ManagementStructureId = workFlow.ManagementStructureId;
+            workFlowWorkOrder.Memo = workFlow.Memo;
+            workFlowWorkOrder.OtherCost = workFlow.OtherCost;
+            workFlowWorkOrder.PartNumberDescription = workFlow.PartNumberDescription;
+            workFlowWorkOrder.PercentageOfNew = workFlow.PercentageOfNew;
+            workFlowWorkOrder.PercentageOfReplacement = workFlow.PercentageOfReplacement;
+            workFlowWorkOrder.Version = workFlow.Version;
+            workFlowWorkOrder.WorkflowDescription = workFlow.WorkflowDescription;
+            workFlowWorkOrder.WorkflowCreateDate = workFlow.WorkflowCreateDate;
+            workFlowWorkOrder.WorkflowExpirationDate = workFlow.WorkflowExpirationDate;
+            workFlowWorkOrder.WorkflowId = workFlow.WorkflowId;
+
+            return workFlowWorkOrder;
+        }
+
+        private List<WorkOrderCharges> BindWorkFlowWorkOrderCharges(List<WorkflowChargesList> charges, long workOrderId, string createdBy, int? masterCompanyId)
+        {
+            try
+            {
+                List<WorkOrderCharges> workOrderCharges = new List<WorkOrderCharges>();
+                WorkOrderCharges workOrderCharge;
+                foreach (var item in charges)
+                {
+                    workOrderCharge = new WorkOrderCharges();
+                    workOrderCharge.Amount = 0;
+                    workOrderCharge.CostPlusAmount = 0;
+                    workOrderCharge.CreatedBy = createdBy;
+                    workOrderCharge.CreatedDate = DateTime.Now;
+                    workOrderCharge.FixedAmount = 0;
+                    workOrderCharge.IsActive = true;
+                    workOrderCharge.IsDeleted = false;
+                    workOrderCharge.ItemMasterId = 1;
+                    workOrderCharge.MarkupPercentageId = 1;
+                    workOrderCharge.MasterCompanyId = masterCompanyId;
+                    workOrderCharge.PartNumber = "";
+                    workOrderCharge.Quantity = item.Quantity;
+                    workOrderCharge.UpdatedBy = createdBy;
+                    workOrderCharge.UpdatedDate = DateTime.Now;
+                    workOrderCharge.VendorId = item.VendorId;
+                    workOrderCharge.WorkOrderId = workOrderId;
+                    workOrderCharges.Add(workOrderCharge);
+                }
+
+                return workOrderCharges;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        private List<WorkOrderAssets> BindWorkFlowWorkOrderAssets(List<WorkflowEquipmentList> equipments, long workOrderId, string createdBy, int? masterCompanyId)
+        {
+            try
+            {
+                List<WorkOrderAssets> WorkOrderAssetsList = new List<WorkOrderAssets>();
+                WorkOrderAssets workOrderAsset;
+                foreach (var item in equipments)
+                {
+                    workOrderAsset = new WorkOrderAssets();
+                    workOrderAsset.AssetRecordId = item.AssetId;
+                    workOrderAsset.AssetTypeId = item.AssetTypeId;
+                    workOrderAsset.UpdatedBy = workOrderAsset.CreatedBy = createdBy;
+                    workOrderAsset.UpdatedDate = workOrderAsset.CreatedDate = DateTime.Now;
+                    workOrderAsset.IsActive = true;
+                    workOrderAsset.IsDeleted = false;
+                    workOrderAsset.MasterCompanyId = masterCompanyId;
+                    workOrderAsset.Quantity = item.Quantity;
+                    workOrderAsset.WorkOrderId = workOrderId;
+                    WorkOrderAssetsList.Add(workOrderAsset);
+                }
+
+                return WorkOrderAssetsList;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        private List<WorkOrderExclusions> BindWorkFlowWorkOrderExclusions(List<WorkFlowExclusion> exclusions, long workOrderId, string createdBy, int? masterCompanyId)
+        {
+            try
+            {
+                List<WorkOrderExclusions> WorkOrderExclusionsList = new List<WorkOrderExclusions>();
+                WorkOrderExclusions workOrderExclusion;
+                foreach (var item in exclusions)
+                {
+                    workOrderExclusion = new WorkOrderExclusions();
+                    workOrderExclusion.UpdatedBy = workOrderExclusion.CreatedBy = createdBy;
+                    workOrderExclusion.UpdatedDate = workOrderExclusion.CreatedDate = DateTime.Now;
+                    workOrderExclusion.IsActive = true;
+                    workOrderExclusion.IsDeleted = false;
+                    workOrderExclusion.MasterCompanyId = masterCompanyId;
+                    workOrderExclusion.WorkOrderId = workOrderId;
+
+                    workOrderExclusion.ItemMasterId = item.ItemMasterId;
+                    workOrderExclusion.ExtendedCost = item.ExtendedCost;
+                    workOrderExclusion.Memo = item.Memo;
+                    workOrderExclusion.Quantity = item.Quantity;
+                    workOrderExclusion.UnitCost = item.UnitCost;
+
+                    WorkOrderExclusionsList.Add(workOrderExclusion);
+                }
+
+                return WorkOrderExclusionsList;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        private WorkOrderLaborHeader BindWorkFlowWorkOrderExpertise(List<WorkflowExpertiseList> expertise, long workOrderId, string createdBy, int? masterCompanyId)
+        {
+            try
+            {
+                WorkOrderLaborHeader workOrderLaborHeader = new WorkOrderLaborHeader();
+                workOrderLaborHeader.WorkOrderLaborList = new List<WorkOrderLabor>();
+                WorkOrderLabor workOrderLabor;
+
+                workOrderLaborHeader.UpdatedBy = workOrderLaborHeader.CreatedBy = createdBy;
+                workOrderLaborHeader.UpdatedDate = workOrderLaborHeader.CreatedDate = DateTime.Now;
+                workOrderLaborHeader.IsActive = true;
+                workOrderLaborHeader.IsDeleted = false;
+                workOrderLaborHeader.MasterCompanyId = masterCompanyId;
+
+
+                workOrderLaborHeader.WorkOrderId = workOrderId;
+
+                foreach (var item in expertise)
+                {
+                    workOrderLabor = new WorkOrderLabor();
+                    workOrderLabor.UpdatedBy = workOrderLabor.CreatedBy = createdBy;
+                    workOrderLabor.UpdatedDate = workOrderLabor.CreatedDate = DateTime.Now;
+                    workOrderLabor.IsActive = true;
+                    workOrderLabor.IsDeleted = false;
+
+                    workOrderLabor.ExpertiseId = item.ExpertiseTypeId;
+                    workOrderLabor.Hours = item.EstimatedHours;
+                    workOrderLabor.TaskId = item.TaskId;
+
+                    workOrderLaborHeader.WorkOrderLaborList.Add(workOrderLabor);
+                }
+
+                return workOrderLaborHeader;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        private List<WorkOrderMaterials> BindWorkFlowWorkOrderMaterials(List<WorkflowMaterial> materialList, long workOrderId, string createdBy, int? masterCompanyId)
+        {
+            try
+            {
+                List<WorkOrderMaterials> WorkOrderMaterialList = new List<WorkOrderMaterials>();
+                WorkOrderMaterials workOrderMaterial;
+                foreach (var item in materialList)
+                {
+                    workOrderMaterial = new WorkOrderMaterials();
+                    workOrderMaterial.UpdatedBy = workOrderMaterial.CreatedBy = createdBy;
+                    workOrderMaterial.UpdatedDate = workOrderMaterial.CreatedDate = DateTime.Now;
+                    workOrderMaterial.IsActive = true;
+                    workOrderMaterial.IsDeleted = false;
+                    workOrderMaterial.MasterCompanyId = masterCompanyId;
+                    workOrderMaterial.WorkOrderId = workOrderId;
+
+                    workOrderMaterial.ItemMasterId = item.ItemMasterId;
+
+                    WorkOrderMaterialList.Add(workOrderMaterial);
+                }
+
+                return WorkOrderMaterialList;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+        #endregion
+
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
-
-
-
     }
 }

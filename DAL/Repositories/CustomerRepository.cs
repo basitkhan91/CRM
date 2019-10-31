@@ -1393,7 +1393,8 @@ namespace DAL.Repositories
                                 cust.CreditLimit,
                                 cust.CreditTermsId,
                                 CustomerContact= con==null?" ":con.FirstName,
-                                CustomerRef=cust.ContractReference
+                                CustomerRef=cust.ContractReference==null?"": cust.ContractReference,
+                                CSRName =cust.CSRName
                             }
                             ).Distinct().ToList();
                 return list;
