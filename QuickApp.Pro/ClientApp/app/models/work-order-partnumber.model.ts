@@ -54,9 +54,11 @@
         this.mappingPartId = 0;
         this.conditionId = 0;
         this.masterPartId = 0;
+        this.stockLineNumber = '';
 
     }
 
+    stockLineNumber : string;
     masterPartId: number;
     workOrderScopeId: number;
     promisedDate: Date;

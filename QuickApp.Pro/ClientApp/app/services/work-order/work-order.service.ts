@@ -71,11 +71,15 @@ export class WorkOrderService {
         return this.workOrderEndpointService.getWorkFlowByPNandScope(itemMasterId, workScopeId)
     }
 
+    getMultipleParts() {
+        return this.workOrderEndpointService.getMultipleParts()
+    }
+
     getRevisedPartNumbers(itemMasterId) {
         return this.workOrderEndpointService.getRevisedPartNumbers(itemMasterId)
     }
-    getStockLineByPartNumber(itemMasterId) {
-        return this.workOrderEndpointService.getStockLineByPartNumber(itemMasterId);
+    getStockLineByItemMasterId(itemMasterId) {
+        return this.workOrderEndpointService.getStockLineByItemMasterId(itemMasterId);
     }
     getPartPublicationByItemMaster(itemMasterId) {
         return this.workOrderEndpointService.getPartPublicationByItemMaster(itemMasterId);
@@ -83,8 +87,8 @@ export class WorkOrderService {
     getSerialNoByStockLineId(stockLineId, conditionId) {
         return this.workOrderEndpointService.getSerialNoByStockLineId(stockLineId, conditionId)
     }
-    getConditionByPartNumber(itemMasterId) {
-        return this.workOrderEndpointService.getConditionByPartNumber(itemMasterId);
+    getConditionByItemMasterId(itemMasterId) {
+        return this.workOrderEndpointService.getConditionByItemMasterId(itemMasterId);
     }
 
 

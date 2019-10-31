@@ -325,9 +325,12 @@ export class WorkOrderAddComponent implements OnInit {
 
   // grid Service Calls
   getMultiplePartsNumbers() {
-    this.commonService.getItemMasterDetails().subscribe(res => {
+    this.workOrderService.getMultipleParts().subscribe(res => {
       this.partNumberOriginalData = res;
     })
+    // this.commonService.getItemMasterDetails().subscribe(res => {
+    //   this.partNumberOriginalData = res;
+    // })
   }
 
   filterPartNumber(event) {
@@ -347,8 +350,8 @@ export class WorkOrderAddComponent implements OnInit {
     const { partNumber } = object;
 
     this.getRevisedpartNumberByItemMasterId(itemMasterId)
-    this.getStockLineByPartNumber(itemMasterId)
-    this.getConditionByPartNumber(itemMasterId)
+    this.getStockLineByItemMasterId(itemMasterId)
+    this.getConditionByItemMasterId(itemMasterId)
     this.getPartPublicationByItemMasterId(itemMasterId)
     currentRecord.description = object.partDescription
 
@@ -362,20 +365,20 @@ export class WorkOrderAddComponent implements OnInit {
     })
 
   }
-  async getStockLineByPartNumber(itemMasterId) {
-    await this.workOrderService.getStockLineByPartNumber(itemMasterId).subscribe(res => {
+  async getStockLineByItemMasterId(itemMasterId) {
+    await this.workOrderService.getStockLineByItemMasterId(itemMasterId).subscribe(res => {
       this.stockLineList = res.map(x => {
         return {
           label: x.stockLineNumber,
           value: x.stockLineId,
         }
       });
-      
+
     })
   }
 
-  async getConditionByPartNumber(itemMasterId){
-    await this.workOrderService.getConditionByPartNumber(itemMasterId).subscribe(res => {
+  async getConditionByItemMasterId(itemMasterId) {
+    await this.workOrderService.getConditionByItemMasterId(itemMasterId).subscribe(res => {
       this.conditionList = res.map(x => {
         return {
           label: x.description,
@@ -384,7 +387,7 @@ export class WorkOrderAddComponent implements OnInit {
       })
     })
   }
-  
+
   async getPartPublicationByItemMasterId(itemMasterId) {
     await this.workOrderService.getPartPublicationByItemMaster(itemMasterId).subscribe(res => {
       this.cmmList = res;
@@ -413,7 +416,9 @@ export class WorkOrderAddComponent implements OnInit {
     const { conditionId } = workOrderPart;
     if (stockLineId !== 0 && conditionId !== 0) {
       this.workOrderService.getSerialNoByStockLineId(stockLineId, conditionId).subscribe(res => {
-        return workOrderPart.stockLineNumber = res;
+        console.log(res);
+
+        workOrderPart.stockLineNumber = res;
       })
     }
   }

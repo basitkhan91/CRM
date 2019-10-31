@@ -139,23 +139,28 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workflownos?partId=${itemMasterId}&workScopeId=${workScopeId}`)
     }
 
-    getRevisedPartNumbers(itemMasterId) {
-        return this.http.get(`${this.configurations.baseUrl}/api/workOrder/revisedparts?partId=${itemMasterId}&mappingType=${1}`, this.getRequestHeaders())
+    // get Part Number Bases on Repair Order and Purchase Orders
+    getMultipleParts() {
+        return this.http.get(`${this.configurations.baseUrl}/api/workOrder/workorderpartdetails`, this.getRequestHeaders())
     }
-    getStockLineByPartNumber(itemMasterId) {
-        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/stocklinedetailsbypartno?partNo=${itemMasterId}`, this.getRequestHeaders())
+
+    getRevisedPartNumbers(itemMasterId) {
+        return this.http.get(`${this.configurations.baseUrl}/api/workOrder/revisedparts?itemMasterId=${itemMasterId}&mappingType=${1}`, this.getRequestHeaders())
+    }
+    getStockLineByItemMasterId(itemMasterId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/stocklinedetailsbypartno?itemMasterId=${itemMasterId}`, this.getRequestHeaders())
     }
 
     getPartPublicationByItemMaster(itemMasterId) {
-        return this.http.get(`${this.configurations.baseUrl}/api/workOrder/partpublications?partId=${itemMasterId}`, this.getRequestHeaders())
+        return this.http.get(`${this.configurations.baseUrl}/api/workOrder/partpublications?itemMasterId=${itemMasterId}`, this.getRequestHeaders())
     }
 
     getSerialNoByStockLineId(stockLineId, conditionId) {
-        return this.http.get(`${this.configurations.baseUrl}/api/workOrder/partserialno?stockLineId=${stockLineId}&conditionId=${conditionId}`)
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/partserialno?stockLineId=${stockLineId}&conditionId=${conditionId}`, this.getRequestHeaders())
     }
 
-    getConditionByPartNumber(itemMasterId) {
-        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/conditiondetailsbypartno=${itemMasterId}`, this.getRequestHeaders())
+    getConditionByItemMasterId(itemMasterId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/conditiondetailsbypartno?itemMasterId=${itemMasterId}`, this.getRequestHeaders())
     }
 
 

@@ -431,7 +431,7 @@
                                   <!-- <a [(ngModel)]="workOrderPartNumber.publicationPart" target="_blank" class="clr-red">View</a> -->
                                 </td>
 
-                                <td><input type="text" class="form-control w100" value="12345" disabled="">
+                                <td><input type="text" class="form-control w100" [(ngModel)]="workOrderPartNumber.stockLineNumber" disabled >
                                 </td>
                                 <td>
                                     <p-dropdown placeholder="Select CMM" [options]="cmmList" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.cMMId">
