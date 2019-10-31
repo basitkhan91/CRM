@@ -28,8 +28,8 @@ export class WorkOrderService {
         return this.workOrderEndpointService.getWorkOrderById<WorkOrder>(workOrderId);
     }
 
-    add(workOrder: WorkOrder) {
-        return this.workOrderEndpointService.addWorkOrder<WorkOrder>(workOrder);
+    createNewWorkOrder(workOrder) {
+        return this.workOrderEndpointService.createNewWorkOrder<any>(workOrder);
     }
 
     update<T>(workOrder: WorkOrder) {
@@ -53,7 +53,7 @@ export class WorkOrderService {
     }
 
     getAllWorkOrderStatus() {
-        return this.workOrderEndpointService.getAllWorkOrderStatus<WorkOrderStatus[]>(); 
+        return this.workOrderEndpointService.getAllWorkOrderStatus<WorkOrderStatus[]>();
     }
 
     getAllWorkScopes() {
@@ -66,4 +66,33 @@ export class WorkOrderService {
     postLabour(action: any) {
         return this.workOrderEndpointService.postLabourEndpoint<any>(action);
     }
+
+    getWorkFlowByPNandScope(itemMasterId, workScopeId) {
+        return this.workOrderEndpointService.getWorkFlowByPNandScope(itemMasterId, workScopeId)
+    }
+
+    getMultipleParts() {
+        return this.workOrderEndpointService.getMultipleParts()
+    }
+
+    getRevisedPartNumbers(itemMasterId) {
+        return this.workOrderEndpointService.getRevisedPartNumbers(itemMasterId)
+    }
+    getStockLineByItemMasterId(itemMasterId) {
+        return this.workOrderEndpointService.getStockLineByItemMasterId(itemMasterId);
+    }
+    getPartPublicationByItemMaster(itemMasterId) {
+        return this.workOrderEndpointService.getPartPublicationByItemMaster(itemMasterId);
+    }
+    getSerialNoByStockLineId(stockLineId, conditionId) {
+        return this.workOrderEndpointService.getSerialNoByStockLineId(stockLineId, conditionId)
+    }
+    getConditionByItemMasterId(itemMasterId) {
+        return this.workOrderEndpointService.getConditionByItemMasterId(itemMasterId);
+    }
+
+    getWorkOrderList(pageIndex, pageSize){
+        return this.workOrderEndpointService.getWorkOrderList(pageIndex,pageSize);
+    }
+
 }
