@@ -545,7 +545,7 @@ namespace QuickApp.Pro.Controllers
                     ////vt.VendorTypeId = 1;
                     ////poViewModel.MasterCompanyId = 1;
                     ///
-                    poViewModel.PurchaseOrderNumber = Guid.NewGuid().ToString();
+                   // poViewModel.PurchaseOrderNumber = Guid.NewGuid().ToString();
                     poViewModel.MasterCompanyId = 1;
                     MapPOVMToEntity(poViewModel, actionobject);
 
@@ -656,7 +656,7 @@ namespace QuickApp.Pro.Controllers
             actionobject.HandlingCost = poViewModel.HandlingCost;
             actionobject.BillToContactId = poViewModel.BillToContactId;
             actionobject.ShipViaId = poViewModel.ShipViaId;
-
+            
 
             actionobject.IsActive = true;
 
@@ -708,6 +708,7 @@ namespace QuickApp.Pro.Controllers
             actionobject.UnitCost = poViewModel.UnitCost;
             actionobject.DiscountAmount = poViewModel.DiscountAmount;
             actionobject.DiscountPercent = poViewModel.DiscountPercent;
+            actionobject.DiscountPerUnit = poViewModel.DiscountPerUnit;
             actionobject.ExtendedCost = poViewModel.ExtendedCost;
             actionobject.ReportCurrencyId = poViewModel.ReportCurrencyId;
             actionobject.FunctionalCurrencyId = poViewModel.FunctionalCurrencyId;

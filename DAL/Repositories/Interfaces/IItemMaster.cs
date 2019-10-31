@@ -48,11 +48,7 @@ namespace DAL.Repositories.Interfaces
         GetData<Nha_Tla_Alt_Equ_ItemMapping_List> NhaTlaAltEquItemMappingList(int mappingType, int pageNumber, int pageSize);
         Nha_Tla_Alt_Equ_ItemMapping NhaTlaAltEquItemMappingById(long itemMappingId, int mappingType);
 
-        IEnumerable<object> GetStockLineDetailsByPartNo(string partNo);
-        string GetPartSerialNo(long stockLineId, long conditionId);
-        IEnumerable<object> GetPartPublications(long partId);
-        IEnumerable<object> GetRevisedParts(long partId, int mappingType);
-        IEnumerable<object> GetConditionDetailsByPartNo(string partNo);
+        
 
     }
 }

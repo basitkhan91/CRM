@@ -57,8 +57,10 @@ namespace DAL.Models
         public Nullable<bool> IsActive { get; set; }
         public bool isParent { get; set; }
         public long? ParentId { get; set; } 
+        public decimal? DiscountPerUnit { get; set; }
 
-		public int? MasterCompanyId { get; set; }
+
+        public int? MasterCompanyId { get; set; }
 
 		public virtual PurchaseOrder PurchaseOrder { get; set; }
         public virtual ItemMaster ItemMaster { get; set; }

@@ -1485,17 +1485,136 @@ namespace DAL.Repositories
 
         #endregion
 
-        public void GetPartDetails(long partId)
+        public IEnumerable<object> GetWorkOrderPartDetails()
         {
             try
             {
-                var data = (from mp in _appContext.MasterParts
-                            join im in _appContext.ItemMaster on mp.MasterPartId equals im.MasterPartId
-                            where mp.MasterPartId == partId
+                var list = (from sl in _appContext.StockLine
+                            join im in _appContext.ItemMaster on sl.ItemMasterId equals im.ItemMasterId
                             select new
                             {
-                                mp.Description
-                            }).FirstOrDefault();
+                                sl.ItemMasterId,
+                                sl.PartNumber,
+                                im.PartDescription
+                            })
+                            .Distinct()
+                            .ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        
+        public IEnumerable<object> GetStockLineDetailsByPartNo(long itemMasterId)
+        {
+            try
+            {
+                var list = (from sl in _appContext.StockLine
+                            where sl.ItemMasterId == itemMasterId
+                            select new
+                            {
+                                sl.StockLineId,
+                                sl.StockLineNumber
+                            })
+                            .Distinct()
+                            .ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetConditionDetailsByPartNo(long itemMasterId)
+        {
+            try
+            {
+                var list = (from sl in _appContext.StockLine
+                            join c in _appContext.Condition on sl.ConditionId equals c.ConditionId
+                            where sl.ItemMasterId == itemMasterId
+                            select new
+                            {
+                                sl.ConditionId,
+                                c.Description
+                            })
+                            .Distinct()
+                            .ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public string GetPartSerialNo(long stockLineId, long conditionId)
+        {
+            try
+            {
+                var serialNo = (from sl in _appContext.StockLine
+                                where sl.StockLineId == stockLineId && sl.ConditionId == conditionId
+                                select new
+                                {
+                                    sl.SerialNumber
+                                }).FirstOrDefault().SerialNumber;
+                return serialNo;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetPartPublications(long itemMasterId)
+        {
+            try
+            {
+
+                var list = (from a in _appContext.Attachment
+                            join ad in _appContext.AttachmentDetails on a.AttachmentId equals ad.AttachmentId
+                            join p in _appContext.Publication on a.ReferenceId equals p.PublicationRecordId
+                            join pim in _appContext.PublicationItemMasterMapping on p.PublicationRecordId equals pim.PublicationRecordId
+                            where a.IsDeleted == false && ad.IsDeleted == false && a.ModuleId == Convert.ToInt32(ModuleEnum.Publication)
+                            && pim.ItemMasterId == itemMasterId
+                            select new
+                            {
+                                p.PublicationId,
+                                p.PublicationRecordId,
+                                ad.FileName,
+                                ad.Link,
+                                ad.CreatedDate
+                            }).ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetRevisedParts(long itemMasterId, int mappingType)
+        {
+            try
+            {
+                var data = (from p in _appContext.Nha_Tla_Alt_Equ_ItemMapping
+                            join im in _appContext.ItemMaster on p.MappingItemMasterId equals im.ItemMasterId
+                            where p.IsDeleted == false && im.ItemMasterId == itemMasterId && p.MappingType == mappingType
+                            select new
+                            {
+                                p.MappingItemMasterId,
+                                RevisedPartNo = im.PartNumber
+                            })
+                            .Distinct()
+                            .ToList();
+                return data;
             }
             catch (Exception)
             {
