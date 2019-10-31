@@ -602,6 +602,8 @@ namespace DAL.Repositories
                             purchaseOrderPart.UpdatedBy = part.pop.UpdatedBy;
                             purchaseOrderPart.UpdatedDate = part.pop.UpdatedDate;
                             purchaseOrderPart.IsActive = part.pop.IsActive;
+                            purchaseOrderPart.DiscountPerUnit = part.pop.DiscountPerUnit;
+                            
 
                             purchaseOrderParts.Add(purchaseOrderPart);
                         }

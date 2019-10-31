@@ -576,5 +576,47 @@ namespace QuickApp.Pro.Controllers
                 .ToList();
             return Ok(workOrderStages);
         }
+
+        [HttpGet("stocklinedetailsbypartno")]
+        public IActionResult GetStockLineDetailsByPartNo(long itemMasterId)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetStockLineDetailsByPartNo(itemMasterId);
+            return Ok(result);
+        }
+
+        [HttpGet("workorderpartdetails")]
+        public IActionResult GetWorkOrderPartDetails()
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderPartDetails();
+            return Ok(result);
+        }
+
+        [HttpGet("partserialno")]
+        public IActionResult GetPartSerialNo(long stockLineId, long conditionId)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetPartSerialNo(stockLineId, conditionId);
+            return Ok(result);
+        }
+
+        [HttpGet("partpublications")]
+        public IActionResult GetPartPublications(long itemMasterId)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetPartPublications(itemMasterId);
+            return Ok(result);
+        }
+
+        [HttpGet("revisedparts")]
+        public IActionResult GetRevisedParts(long itemMasterId, int mappingType)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetRevisedParts(itemMasterId, mappingType);
+            return Ok(result);
+        }
+
+        [HttpGet("conditiondetailsbypartno")]
+        public IActionResult GetConditionDetailsByPartNo(long itemMasterId)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetConditionDetailsByPartNo(itemMasterId);
+            return Ok(result);
+        }
     }
 }
