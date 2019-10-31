@@ -1022,15 +1022,37 @@ namespace DAL.Repositories
             try
             {
                 var list = (from sl in _appContext.StockLine
-                            join c in _appContext.Condition on sl.ConditionId equals c.ConditionId
                             where sl.PartNumber == partNo
                             select new
                             {
                                 sl.StockLineId,
-                                sl.StockLineNumber,
+                                sl.StockLineNumber
+                            })
+                            .Distinct()
+                            .ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetConditionDetailsByPartNo(string partNo)
+        {
+            try
+            {
+                var list = (from sl in _appContext.StockLine
+                            join c in _appContext.Condition on sl.ConditionId equals c.ConditionId
+                            where sl.PartNumber == partNo
+                            select new
+                            {
                                 sl.ConditionId,
                                 c.Description
-                            }).ToList();
+                            })
+                            .Distinct()
+                            .ToList();
                 return list;
             }
             catch (Exception)
