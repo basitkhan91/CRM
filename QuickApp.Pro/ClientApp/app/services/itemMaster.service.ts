@@ -342,16 +342,8 @@ export class ItemMasterService {
     getPartDetailsByid(partListArray: number) {
         return this.itemMasterEndpoint.getPartDetailsByid<any>(partListArray);
     }
-    getRevisedPartNumbers(itemMasterId) {
-        return this.itemMasterEndpoint.getRevisedPartNumbers(itemMasterId)
-    }
-    getStockLineByPartNumber(itemMasterId) {
-        return this.itemMasterEndpoint.getStockLineByPartNumber(itemMasterId);
-    }
-    getPartPublicationByItemMaster(itemMasterId){
-        return this.itemMasterEndpoint.getPartPublicationByItemMaster(itemMasterId);
-    }
-    getSerialNoByStockLineId(stockLineId , conditionId ){
-        return this.itemMasterEndpoint.getSerialNoByStockLineId(stockLineId , conditionId)
-    }
+
+
+
+
 }
