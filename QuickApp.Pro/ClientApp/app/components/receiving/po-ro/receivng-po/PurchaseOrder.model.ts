@@ -142,6 +142,7 @@ export class PurchaseOrderPart {
     currentSERIndex: number;
     isDisabledTLboxes: boolean;
     toggleIcon: boolean;
+    isEnabled: boolean;
 
     companyId: number;
     businessUnitId: number;
@@ -268,6 +269,7 @@ export class StockLine {
     purchaseOrderPartRecordId: number;
 
     //View Properties
+    isEnabled: boolean;
     CompanyList: DropDownData[];
     BusinessUnitList: DropDownData[];
     DivisionList: DropDownData[];

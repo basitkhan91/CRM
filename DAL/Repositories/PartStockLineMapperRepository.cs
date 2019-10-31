@@ -61,6 +61,7 @@ namespace DAL.Repositories
             {
                 var purchaseOrder = _appContext.PurchaseOrder
                                    .Include("Vendor")
+                                   .Include("StockLine")
                                    .Where(x => x.PurchaseOrderId == id).FirstOrDefault();
 
                 purchaseOrder.PurchaseOderPart = _appContext.PurchaseOrderPart
@@ -69,12 +70,10 @@ namespace DAL.Repositories
 
                 purchaseOrder.PurchaseOderPart.ToList().ForEach(part =>
                 {
-                    part.ItemMaster = _appContext.ItemMaster.Find(part.ItemMasterId);
-
-                    var stockLines = _appContext.StockLine.Where(x => x.PurchaseOrderPartRecordId != null && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId).ToList();
-                    if (stockLines != null && stockLines.Count > 0)
+                    part.ItemMaster = _appContext.ItemMaster.Include("Manufacturer").Where(x => x.ItemMasterId == part.ItemMasterId).FirstOrDefault();//.Find(part.ItemMasterId);
+                    if (part.StockLine != null && part.StockLine.Count > 0)
                     {
-                        part.StockLineCount = (long)stockLines.Sum(x => x.Quantity);
+                        part.StockLineCount = (long)part.StockLine.Sum(x => x.Quantity);
                     }
 
                     if (!part.isParent)
@@ -83,12 +82,8 @@ namespace DAL.Repositories
                     }
                 });
 
-                foreach (var part in purchaseOrder.PurchaseOderPart)
-                {
-                    part.ItemMaster.Manufacturer = _appContext.Manufacturer.Where(x => x.ManufacturerId == part.ItemMaster.ManufacturerId).FirstOrDefault();
-                }
-
                 var approver = purchaseOrder.ApproverId != null ? _appContext.Employee.Find(purchaseOrder.ApproverId) : null;
+
                 return new
                 {
                     StatusId = purchaseOrder.StatusId,
@@ -98,8 +93,12 @@ namespace DAL.Repositories
                     Vendor = purchaseOrder.Vendor,
                     OpenDate = purchaseOrder.OpenDate,
                     Approver = approver != null ? approver.FirstName + " " + approver.LastName : "",
-                    PurchaseOderPart = purchaseOrder.PurchaseOderPart.Select(x => 
-                    new {
+                    NeedByDate = purchaseOrder.NeedByDate,
+                    DateApproved = purchaseOrder.DateApproved,
+                    DeferredReceiver = purchaseOrder.DeferredReceiver,
+                    Resale = purchaseOrder.Resale,
+                    Notes = purchaseOrder.Notes,
+                    PurchaseOderPart = purchaseOrder.PurchaseOderPart.Select(x => new {
                         ItemMaster = x.ItemMaster,
                         PurchaseOrderId = x.PurchaseOrderId,
                         PurchaseOrderPartRecordId = x.PurchaseOrderPartRecordId,
@@ -111,13 +110,46 @@ namespace DAL.Repositories
                         DiscountPerUnit = x.DiscountPerUnit,
                         ExtendedCost = x.ExtendedCost,
                         UnitCost = x.UnitCost,
-                    }),
-                    NeedByDate = purchaseOrder.NeedByDate,
-                    DateApproved = purchaseOrder.DateApproved,
-                    DeferredReceiver  = purchaseOrder.DeferredReceiver,
-                    Resale = purchaseOrder.Resale,
-                    Notes = purchaseOrder.Notes,
-
+                        StockLine = x.StockLine == null ? null : x.StockLine.Select(part => new
+                        {
+                            StockLineNumber = part.StockLineNumber,
+                            ControlNumber = part.ControlNumber,
+                            IdNumber = part.IdNumber,
+                            ConditionId = part.ConditionId,
+                            SerialNumber = part.SerialNumber,
+                            Quantity = part.Quantity,
+                            UnitCost = part.PurchaseOrderUnitCost,
+                            ExtendedCost = part.PurchaseOrderExtendedCost,
+                            ReceiverNumber = part.ReceiverNumber,
+                            WorkOrder = 0,
+                            SalesOrder = 0,
+                            SubWorkOrder = 0,
+                            Owner = part.Owner,
+                            OwnerType = part.OwnerType == 1 ? "Customer" : part.OwnerType == 2 ? "Other" : part.OwnerType == 3 ? "Vendor" : "",
+                            ObtainFrom = part.ObtainFrom,
+                            ObtainFromType = part.ObtainFromType == 1 ? "Customer" : part.ObtainFromType == 2 ? "Other" : part.ObtainFromType == 3 ? "Vendor" : "",
+                            TraceableTo = part.TraceableTo,
+                            TraceableToType = part.TraceableToType == 1 ? "Customer" : part.TraceableToType == 2 ? "Other" : part.TraceableToType == 3 ? "Vendor" : "",
+                            Trace = part.ManufacturingTrace,
+                            ManufacturerId = part.ManufacturerId,
+                            ManufacturerLotNumber = part.ManufacturerLotNumber,
+                            ManufacturingDate = Convert.ToDateTime(part.ManufacturingDate).ToShortDateString(),
+                            ManufacturingBatchNumber = part.ManufacturingBatchNumber,
+                            PartCertificationNumber = part.PartCertificationNumber,
+                            CertifiedDate = Convert.ToDateTime( part.CertifiedDate).ToShortDateString(),
+                            TaggedBy = part.TagType,
+                            TagDate = part.TagDate,
+                            TagExpiryDate = part.ExpirationDate,
+                            CertifiedDueDate = part.CertifiedDueDate,
+                            GLAccountId  = part.GLAccountId,
+                            ManagementStructureId = part.ManagementStructureEntityId,
+                            SiteId = part.SiteId,
+                            WarehouseId = part.WarehouseId,
+                            LocationId = part.LocationId,
+                            ShelfId = part.ShelfId,
+                            BinId = part.BinId
+                        })
+                    })
                 };
             }
             catch (Exception ex)

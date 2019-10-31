@@ -154,7 +154,9 @@
             <table class="table table-bordered " id="po-table">
                 <thead>
                     <tr>
-                        <th><a href="javascript:void(0);" data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit" style="padding-bottom:0; color:#fff;"><i class="fa fa-edit" (click)="onEditGridFields()"></i></a></th>
+                        <th>
+                        <a href="javascript:void(0);" data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit" style="padding-bottom:0; color:#fff;"><i class="fa fa-edit" (click)="editPart(part)"></i></a>
+                        </th>
                         <th>Item Num</th>
                         <th>PN</th>
                         <th>Alt PN</th>
@@ -188,7 +190,8 @@
                                 <select class="form-control"
                                         [(ngModel)]="part.conditionId"
                                         #selects="ngModel"
-                                        [ngModelOptions]="{standalone: true}">
+                                        [ngModelOptions]="{standalone: true}"
+                                        [disabled]="part.isEnabled">
                                     <option value="0">Select</option>
                                     <option *ngFor="let condition of ConditionList" [value]="condition.Key">{{condition.Value}}</option>
                                 </select>
@@ -215,8 +218,7 @@
                                         #selects="ngModel"
                                         [ngModelOptions]="{standalone: true}"
                                         (change)="getStockLineBusinessUnitList(part)"
-                                        [disabled]="rpoEditPF"
-                                        >
+                                        [disabled]="part.isEnabled">
                                     <option value="0">Select</option>
                                     <option *ngFor="let company of part.CompanyList" [value]="company.Key">{{company.Value}}</option>
                                 </select>
@@ -227,74 +229,141 @@
                                         [(ngModel)]="part.businessUnitId"
                                         #selects="ngModel"
                                         [ngModelOptions]="{standalone: true}"
-                                        [disabled]="rpoEditPF"
-                                        >
+                                        [disabled]="part.isEnabled"
+                                        (change)="getStockLineDivision(part)">
                                     <option value="0">Select</option>
                                     <option *ngFor="let businessUnit of part.BusinessUnitList" [value]="businessUnit.Key">{{businessUnit.Value}}</option>
                                 </select>
                             </td>
                             <td>
                                 <label style="width:90px;">Division:</label>
-                                <select class="form-control" [disabled]="rpoEditPF">
+                                <select class="form-control"
+                                        [(ngModel)]="part.divisionId"
+                                        #selects="ngModel"
+                                        [ngModelOptions]="{standalone: true}"
+                                        [disabled]="part.isEnabled"
+                                        (change)="getStockLineDepartment(part)">
                                     <option value="0">Select</option>
+                                    <option *ngFor="let division of part.DivisionList" [value]="division.Key">{{division.Value}}</option>
                                 </select>
                             </td>
                             <td>
                                 <label style="width:90px;">Dept:</label>
-                                <select class="form-control" [disabled]="rpoEditPF">
+                                <select class="form-control"
+                                        [(ngModel)]="part.departmentId"
+                                        #selects="ngModel"
+                                        [ngModelOptions]="{standalone: true}"
+                                        [disabled]="part.isEnabled"
+                                        (change)="setStockLineDepartmentManagementStructureId(part)">
                                     <option value="0">Select</option>
+                                    <option *ngFor="let department of part.DepartmentList" [value]="department.Key">{{department.Value}}</option>
                                 </select>
-                            </td>                         
+                            </td>
                         </tr>
+                        <ng-container >
+                            <tr *ngIf="part.stockLine != null">
+                                <th></th>
+                                <th></th>
+                                <th>Stock Line</th>
+                                <th>PN</th>
+                                <th>PN Description</th>
+                                <th>Control Num</th>
+                                <th>ID</th>
+                                <th>Cond</th>
+                                <th>Serial Num</th>
+                                <th>Qty Ordered</th>
+                                <th>Qty Receieved</th>
+                                <th>Qty BackOrdered</th>
+                                <th>Unit Cost</th>
+                                <th>Extended Cost</th>
+                                <th>Receiver no.</th>
+                                <th>WO </th>
+                                <th>SO </th>
+                                <th>Sub-WO </th>
+                                <th>Owner</th>
+                                <th>Name</th>
+                                <th>Obtain From</th>
+                                <th>Name</th>
+                                <th>Traceable to</th>
+                                <th>Name</th>
+                                <th>Trace</th>
+                                <th>Mfg</th>
+                                <th>Mfg Lot Num</th>
+                                <th>Mfg Date</th>
+                                <th>Mfg Batch Num</th>
+                                <th>Part Cert Num </th>
+                                <th>Certified Date</th>
+                                <th>Tagged By </th>
+                                <th class="date">Date Tagged </th>
+                                <th class="date">Tag Exp Date </th>
+                                <th class="date">Core Due Date</th>
+                                <th>GL Account</th>
+                                <th>Time Life</th>
+                                <th colspan="4" style="text-align: center;">Management Structure</th>
+                                <th>Site</th>
+                                <th>Warehouse</th>
+                                <th>Location</th>
+                                <th>Shelf</th>
+                                <th>Bin</th>
+                            </tr>
+                            <tr *ngFor="let SL of part.stockLine;let stockline_row_index=index">
+                                <td><a href="javascript:void(0);" data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit"><i class="fa fa-edit" (click)="onEditChildGridFields()"></i></a></td>
+                                <td></td>
+                                <td>{{SL.stockLineNumber}}</td>
+                                <td>{{part.itemMaster.partNumber}}</td>
+                                <td>{{part.itemMaster.partDescription}}</td>
+                                <td>{{SL.controlNumber}}</td>
+                                <td>{{SL.idNumber}}</td>
+                                <td>
+                                    <select class="form-control"
+                                            [(ngModel)]="SL.conditionId"
+                                            #selects="ngModel"
+                                            [ngModelOptions]="{standalone: true}"
+                                            [disabled]="SL.isEnabled">
+                                        <option value="0">Select</option>
+                                        <option *ngFor="let condition of ConditionList" [value]="condition.Key">{{condition.Value}}</option>
+                                    </select>
+                                </td>
+                                <td>{{SL.serialNumber}}</td>
+                                <td>{{part.quantityOrdered}}</td>
+                                <td>{{SL.quantity}}</td>
+                                <td>{{part.quantityOrdered -  SL.quantity}}</td>
+                                <td>{{SL.unitCost}}</td>
+                                <td>{{SL.extendedCost}}</td>
+                                <td>{{SL.ReceiverNumber}}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>{{SL.ownerType}}</td>
+                                <td>{{SL.owner}}</td>
+                                <td>{{SL.obtainFrom}}</td>
+                                <td>{{SL.obtainFromType}}</td>
+                                <td>{{SL.traceableToType}}</td>
+                                <td>{{SL.traceableTo}}</td>
+                                <td>{{SL.trace}}</td>
+                                <td>
+                                    <select class="form-control" disabled [(ngModel)]="SL.manufacturerId">
+                                        <option [value]="0">Select</option>
+                                        <option [value]="manufacturer.Key" *ngFor="let manufacturer of ManufacturerList">{{manufacturer.Value}}</option>
+                                    </select>
+                                </td>
+                                <td>{{SL.manufacturerLotNumber}}</td>
+                                <td>{{SL.manufacturingDate}}</td>
+                                <td>{{SL.manufacturingBatchNumber}}</td>
+                                <td>{{SL.partCertificationNumber}}</td>
+                                <td>{{SL.certifiedDate}}</td>
+                                <td>{{SL.taggedBy}}</td>
+                                <td>{{SL.tagDate}}</td>
+                                <td>{{SL.tagExpiryDate}}</td>
+                                <td>{{SL.certifiedDueDate}}</td>
+                                <td>{{SL.gLAccountId}}</td>
+                                <td colspan="17"></td>
+                            </tr>
+                        </ng-container>
                     </ng-container>
-                  
+                    
                     <!--<tr class="child-header">
-                        <th></th>
-                        <th></th>
-                        <th>Stock Line</th>
-                        <th>PN</th>
-                        <th>PN Description</th>
-                        <th>Control Num</th>
-                        <th>ID</th>
-                        <th>Cond</th>
-                        <th>UOM</th>
-                        <th>Serial Num</th>
-                        <th>Out for Repair</th>
-                        <th>Qty Repaired</th>
-                        <th>Inventory Cost</th>
-                        <th>Repair Cost</th>
-                        <th>Extended Cost</th>
-                        <th>Receiver no.</th>
-                        <th>WO </th>
-                        <th>SO </th>
-                        <th>Sub-WO </th>
-                        <th>Owner</th>
-                        <th>Name</th>
-                        <th>Obtain From</th>
-                        <th>Name</th>
-                        <th>Traceable to</th>
-                        <th>Name</th>
-                        <th>Trace</th>
-                        <th>Mfg</th>
-                        <th>Mfg Lot Num</th>
-                        <th>Mfg Date</th>
-                        <th>Mfg Batch Num</th>
-                        <th>Part Cert Num </th>
-                        <th>Certified Date</th>
-                        <th>Tagged By </th>
-                        <th class="date">Date Tagged </th>
-                        <th class="date">Tag Exp Date </th>
-                        <th class="date">Core Due Date</th>
-                        <th class="date">Core Returned Date</th>
-                        <th>Core SO</th>
-                        <th>GL Account</th>
-                        <th>Time Life</th>
-                        <th colspan="4" style="text-align: center;">Management Structure</th>
-                        <th>Site</th>
-                        <th>Warehouse</th>
-                        <th>Location</th>
-                        <th>Shelf</th>
-                        <th>Bin</th>
+                        
                     </tr>
 
                     <tr class="child-data splitship-child">

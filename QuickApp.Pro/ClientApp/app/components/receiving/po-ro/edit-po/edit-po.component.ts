@@ -8,7 +8,7 @@ import { BinService } from '../../../../services/bin.service';
 import { SiteService } from '../../../../services/site.service';
 import { PriorityService } from '../../../../services/priority.service';
 import { ReceivingService } from '../../../../services/receiving/receiving.service';
-import { PurchaseOrder, DropDownData, PurchaseOrderPart } from '../receivng-po/PurchaseOrder.model';
+import { PurchaseOrder, DropDownData, PurchaseOrderPart, StockLine } from '../receivng-po/PurchaseOrder.model';
 import { MessageSeverity, AlertService } from '../../../../services/alert.service';
 import { ManagementStructure } from '../receivng-po/managementstructure.model';
 import { UnitOfMeasureService } from '../../../../services/unitofmeasure.service';
@@ -54,6 +54,7 @@ export class EditPoComponent implements OnInit {
     managementStructureHierarchy: ManagementStructure[][] = [];
     selectedManagementStructure: ManagementStructure[] = [];
     UOMList: any[];
+    ManufacturerList: DropDownData[] = [];
     /** edit-po ctor */
     constructor(public receivingService: ReceivingService,
         public priority: PriorityService,
@@ -112,9 +113,13 @@ export class EditPoComponent implements OnInit {
 
                         for (let part of this.purchaseOrderData.purchaseOderPart) {
                             let managementHierarchy: ManagementStructure[][] = [];
-                            this.getManagementStructureHierarchy(part.managementStructureId, managementHierarchy, null);
+                            let selectedManagementStructure: ManagementStructure[] = [];
+                            this.getManagementStructureHierarchy(part.managementStructureId, managementHierarchy, selectedManagementStructure);
                             managementHierarchy.reverse();
+                            selectedManagementStructure.reverse();
+
                             if (managementHierarchy[0] != undefined && managementHierarchy[0].length > 0) {
+                                part.companyId = selectedManagementStructure[0].managementStructureId;
                                 part.CompanyList = [];
                                 for (let managementStruct of managementHierarchy[0]) {
                                     var dropdown = new DropDownData();
@@ -124,6 +129,7 @@ export class EditPoComponent implements OnInit {
                                 }
                             }
                             if (managementHierarchy[1] != undefined && managementHierarchy[1].length > 0) {
+                                part.businessUnitId = selectedManagementStructure[1].managementStructureId;
                                 part.BusinessUnitList = [];
                                 for (let managementStruct of managementHierarchy[1]) {
                                     var dropdown = new DropDownData();
@@ -133,6 +139,7 @@ export class EditPoComponent implements OnInit {
                                 }
                             }
                             if (managementHierarchy[2] != undefined && managementHierarchy[2].length > 0) {
+                                part.divisionId = selectedManagementStructure[2].managementStructureId;
                                 part.DivisionList = [];
                                 for (let managementStruct of managementHierarchy[2]) {
                                     var dropdown = new DropDownData();
@@ -142,6 +149,7 @@ export class EditPoComponent implements OnInit {
                                 }
                             }
                             if (managementHierarchy[3] != undefined && managementHierarchy[3].length > 0) {
+                                part.departmentId = selectedManagementStructure[3].managementStructureId;
                                 part.DepartmentList = [];
                                 for (let managementStruct of managementHierarchy[3]) {
                                     var dropdown = new DropDownData();
@@ -297,6 +305,63 @@ export class EditPoComponent implements OnInit {
         }
     }
 
+    getStockLineDivision(part: PurchaseOrderPart): void {
+        if (part.businessUnitId != undefined && part.businessUnitId > 0) {
+            part.managementStructureId = part.businessUnitId;
+        }
+        else {
+            part.managementStructureId = part.companyId;
+        }
+
+        var divisions = this.managementStructure.filter(function (management) {
+            return management.parentId == part.businessUnitId;
+        });
+
+        part.DivisionList = [];
+        part.DepartmentList = [];
+        part.divisionId = 0;
+        part.departmentId = 0;
+
+        for (let division of divisions) {
+            var dropdown = new DropDownData();
+            dropdown.Key = division.managementStructureId.toLocaleString();
+            dropdown.Value = division.code;
+            part.DivisionList.push(dropdown);
+        }
+    }
+
+    getStockLineDepartment(part: PurchaseOrderPart): void {
+
+        if (part.divisionId != undefined && part.divisionId > 0) {
+            part.managementStructureId = part.divisionId;
+        }
+        else {
+            part.managementStructureId = part.businessUnitId;
+        }
+
+        var departments = this.managementStructure.filter(function (management) {
+            return management.parentId == part.divisionId;
+        });
+
+        part.DepartmentList = [];
+        part.departmentId = 0;
+        for (let deparment of departments) {
+            var dropdown = new DropDownData();
+            dropdown.Key = deparment.managementStructureId.toLocaleString();
+            dropdown.Value = deparment.code;
+            part.DepartmentList.push(dropdown);
+        }
+    }
+
+    setStockLineDepartmentManagementStructureId(part: PurchaseOrderPart) {
+        if (part.departmentId != undefined && part.departmentId > 0) {
+            part.managementStructureId = part.departmentId;
+        }
+        else {
+            part.managementStructureId = part.divisionId;
+        }
+    }
+   
     loadManufacturerData() {
 
         this.manufacturerService.getWorkFlows().subscribe(data => {
@@ -440,13 +505,33 @@ export class EditPoComponent implements OnInit {
         this.rpoEditCF = false;
     }
     //remove once add dynamic content
-    onEditGridFields() {
-        this.rpoEditPF = false;
-        this.rpoEditCF = false;
+    editPart(part: PurchaseOrderPart) {
+        part.isEnabled = !part.isEnabled;
+    }
+
+    editStockLine(stockLine: StockLine) {
+        stockLine.isEnabled = !stockLine.isEnabled;        
     }
 
     onSubmit() {
         return this.route.navigate(['/receivingmodule/receivingpages/app-view-po']);
+    }
+
+  
+
+    getManufacturers() {
+        this.ManufacturerList = [];
+        this.manufacturerService.getManufacturers().subscribe(
+            results => {
+                for (let manufacturer of results[0]) {
+                    var dropdown = new DropDownData();
+                    dropdown.Key = manufacturer.manufacturerId.toLocaleString();
+                    dropdown.Value = manufacturer.name;
+                    this.ManufacturerList.push(dropdown);
+                }
+            },
+            error => this.onDataLoadFailed(error)
+        );
     }
 }
 
