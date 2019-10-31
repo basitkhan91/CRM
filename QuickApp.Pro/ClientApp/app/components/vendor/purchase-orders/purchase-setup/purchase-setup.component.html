@@ -47,7 +47,7 @@
                                     <!-- <select class="form-control" name="priorityId" [(ngModel)]="sourcePoApproval.priorityId" required>
                                         <option *ngFor="let priorityName of allPriorityInfo" [ngValue]="priorityName.priorityId">{{priorityName.description}}</option>
                                     </select> -->
-                                    <p-autoComplete field="description" class="pautocomp-cstm" 
+                                    <p-autoComplete field="label" class="pautocomp-cstm" 
                                     [(ngModel)]="sourcePoApproval.priorityId" name="priorityName" [suggestions]="allPriorityDetails" 
                                     (completeMethod)="filterPriorityNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" #priorityId="ngModel" errorMessage="Records not found" [forceSelection]="true" required>                   </p-autoComplete>
                                     <div *ngIf="priorityId.invalid && (priorityId.dirty || priorityId.touched)" class="alert alert-danger alert-danger-cstm">
@@ -600,7 +600,7 @@
                                     <div class="inner-addon right-addon autosuggesions-add inline-block w175" *ngIf="partChildList.partListUserTypeId==2">
                                         <div class="col-sm-11">
                                                 <p-autoComplete field="vendorName" class="pautocomp-cstm" 
-                                                [(ngModel)]="partChildList.partListUserId" name="splitVendorNames" [suggestions]="splitVendorNames" (completeMethod)="filterSplitVendorNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="onVendorNameChange(partChildList,$event)" > <!--required #cVendorName="ngModel"-->
+                                                [(ngModel)]="partChildList.partListUserId" name="splitVendorNames{{row_no}}" [suggestions]="splitVendorNames" (completeMethod)="filterSplitVendorNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="onVendorNameChange(partChildList,$event.vendorId)" > <!--required #cVendorName="ngModel"-->
                                             </p-autoComplete>
                                                
                                             <!-- <p-autoComplete field="vendorName"
@@ -627,14 +627,11 @@
                                         </div>
                                     </div>
                                     <div class="inner-addon right-addon autosuggesions-add inline-block w100" *ngIf="partChildList.partListUserTypeId==3">
-                                        <i class="fa fa-search"></i>
-
-                                        <p-autoComplete field="label" class="pautocomp-cstm"
-                                  
-                                        (onSelect)="onCompanyNameChange(partChildList,$event)"
+                                        <!-- <i class="fa fa-search"></i> -->
+                                        <p-autoComplete field="label" class="pautocomp-cstm"                                  
+                                        (onSelect)="onCompanyNameChange(partChildList,$event.value)"
                                          [(ngModel)]="partChildList.partListUserId" name="shipCompanyName" 
-                                         [suggestions]="legalEntityList_Forgrid" 
-    
+                                         [suggestions]="legalEntityList_Forgrid"
                                          (completeMethod)="filterCompanyNameforgrid($event)" 
                                          [size]="30" 
                                          [minLength]="1"
@@ -642,7 +639,6 @@
                                          errorMessage="Records not found" 
                                          [forceSelection]="true" 
                                          #shipCompanyName="ngModel" required>
-    
                                         </p-autoComplete>
                                          <!-- <input type="text" [(ngModel)]="partChildList.partListUserId" class="form-control names ui-autocomplete-input" name="cCompanyName{{row_no}}" autocomplete="off" > #cCompanyName="ngModel" required -->
                                         <!-- <div *ngIf="cCompanyName.invalid && (cCompanyName.dirty || cCompanyName.touched)" class="alert alert-danger alert-danger-cstm">
@@ -801,8 +797,10 @@
                             </div>
                         </div>
                     </div>
+                    <div *ngIf="isEditMode" class="form-row">
+                        <button class="btn btn-primary-cstm pull-right" (click)="updatePOApproverData()" style="margin-top: 10px;margin-bottom: 20px;">Update</button>
                     </div>
-
+                    </div>
         </p-tabPanel>
         <p-tabPanel header="Vendor Capes">
             <p-table class="rpo-table-cstm" #dt [value]="vendorCapesInfo" [metaKeySelection]="true"
@@ -929,7 +927,7 @@
                         <label>
                             Site Name <span class="clr-red">*</span>
                             <span style="margin-left:3px;cursor:pointer;"><a *ngIf="sourcePoApproval.shipToUserId"  class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('AddCusSiteName')"></a></span>
-                            <!-- <span style="margin-left:5px;cursor:pointer;"><a *ngIf="sourcePoApproval.shipToUserId" class="fa fa-edit fa-lg" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('EditCusSiteName')"></a></span> -->
+                            <span style="margin-left:5px;cursor:pointer;"><a *ngIf="sourcePoApproval.shipToAddressId" class="fa fa-edit fa-lg" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('EditCusSiteName', sourcePoApproval)"></a></span>
                         </label>
                         <select class="form-control" (change)="getValueforShipTo(sourcePoApproval , sourcePoApproval.shipToAddressId)" name="shipCusSiteName" [(ngModel)]="sourcePoApproval.shipToAddressId" #shipCusSiteName="ngModel" required>
                             <option>-- Select --</option>
@@ -2906,7 +2904,7 @@
                                 <input type="text" class="form-control col-md-6" name="country" [(ngModel)]="addressFormForShipping.country">
                             </div>
                             <div class="form-group col-md-12" style="margin-top: 8px;">
-                                <button type="button" class="btn btn-primary-cstm" [disabled]="!addSiteNameForm.valid" (click)="saveShippingAddress(); resetAddressShippingForm();" data-dismiss="modal">Save</button>
+                                <button type="button" class="btn btn-primary-cstm" [disabled]="!addSiteNameForm.valid" (click)="saveShippingAddress(); " data-dismiss="modal">Save</button> <!--resetAddressShippingForm();-->
                                 <button type="button" class="btn btn-primary-cstm" [disabled]="!addSiteNameForm.valid" (click)="saveShippingAddressToPO(); resetAddressShippingForm();" data-dismiss="modal">Save to this PO</button>
                             </div>
     

@@ -79,6 +79,7 @@ export class PurchaseSetupComponent {
 	allPartDetails: any[] = [];
 	billToAddress: any = {};
 	shipToAddress: any = {};
+	tempshipToAddress: any = {};
 	issuedToAddress: any;
 	allActions: any[] = [];
 	selectedActionName: any;
@@ -87,7 +88,7 @@ export class PurchaseSetupComponent {
 	partListData: any[] = [];
 	modal: NgbModalRef;
 	selectedValue: any;
-	allPriorityInfo: any[];
+	allPriorityInfo: any = [];
 	selectedValue1: any = {};
 	selectedValue2: any = {};
 	sourcePoApproval: any = {};
@@ -245,6 +246,7 @@ export class PurchaseSetupComponent {
 	allEmployeeList: any = [];
 	poApproverData: any = {};
 	poApproverList: any = [];
+	poApproverListEdit: any = [];
 	approverIds: any = [];
 	multiplePNIdArray: any = [];
 	tempNewPNArray: any = [];
@@ -277,6 +279,7 @@ export class PurchaseSetupComponent {
 	allPercentData: any = [];
 	splitcustomersList: any = [];
 	splitAddressData: any = [];
+	approveListEdit: any = [];
 
 	// this.siteName ="";
 	// this.address1 ="";
@@ -515,6 +518,18 @@ export class PurchaseSetupComponent {
 		})
 	}
 
+	getBUListEdit(companyId) {
+		this.sourcePoApproval.managementStructureId = companyId;
+		this.bulist = [];
+		this.divisionlist = [];
+		this.departmentList = [];
+		for (let i = 0; i < this.allManagemtninfo.length; i++) {
+			if (this.allManagemtninfo[i].parentId == companyId) {
+				this.bulist.push(this.allManagemtninfo[i]);
+			}
+		}
+	}
+
 	getVendorPOById(poId) {
 		this.vendorService.getWorkFlows().subscribe(
 			response => {
@@ -526,7 +541,7 @@ export class PurchaseSetupComponent {
 						openDate: new Date(res.openDate),
 						closedDate: new Date(res.closedDate),
 						needByDate: new Date(res.needByDate),
-						priorityId: getObjectById('priorityId', res.priorityId, this.allPriorityInfo),
+						priorityId: getObjectById('value', res.priorityId, this.allPriorityInfo),
 						deferredReceiver: res.deferredReceiver,
 						vendorId: getObjectById('vendorId', res.vendorId, this.vendorList),
 						vendorCode: getObjectById('vendorId', res.vendorId, this.vendorList),
@@ -573,34 +588,39 @@ export class PurchaseSetupComponent {
 	}
 
 	getPurchaseOrderPartsById(poId) {
-		this.purchaseOrderService.getPurchaseOrderPartsById(poId).subscribe(res => {
-			console.log(res);
-			this.newPartsList = [this.newObjectForParent];
-			//this.partListData = res;
-			res.map(x => {
-				this.newPartsList = {
-					...x,
-					partNumberId: getObjectById('value', x.itemMasterId, this.allPartnumbersInfo),					
-					ifSplitShip: x.purchaseOrderSplitParts ? true : false,
-					partNumber: x.partNumber,
-					partDescription: x.partDescription,
-					needByDate: new Date(x.needByDate),
-					conditionId: getObjectById('conditionId', x.conditionId, this.allconditioninfo),
-					//discountPerUnit: getObjectById('percentId', x.discountPerUnit, this.allPercentData),
-					discountPerUnit: x.discountPerUnit,
-					functionalCurrencyId: getObjectById('currencyId', x.functionalCurrencyId, this.allCurrencyData),
-					reportCurrencyId: getObjectById('currencyId', x.transactionalCurrencyId, this.allCurrencyData),
-					discountAmount: x.discountCostPerUnit,
-					parentCompanyId: this.getManagementStructureForParentEdit(x),
-					childList: this.getPurchaseOrderSplitPartsEdit(x),
+		this.vendorService.getWorkFlows().subscribe(
+			response => {
+				this.vendorList = response[0];
 
-				}
-				console.log(this.newPartsList);
-				this.getPNDetailsById(this.newPartsList);
-				this.partListData.push(this.newPartsList);		
-			})
-			console.log(this.partListData);	
-		})		
+				this.purchaseOrderService.getPurchaseOrderPartsById(poId).subscribe(res => {
+					console.log(res);
+					this.newPartsList = [this.newObjectForParent];
+					//this.partListData = res;
+					res.map(x => {
+						this.newPartsList = {
+							...x,
+							partNumberId: getObjectById('value', x.itemMasterId, this.allPartnumbersInfo),					
+							ifSplitShip: x.purchaseOrderSplitParts ? true : false,
+							partNumber: x.partNumber,
+							partDescription: x.partDescription,
+							needByDate: new Date(x.needByDate),
+							conditionId: getObjectById('conditionId', x.conditionId, this.allconditioninfo),
+							discountPercent: getObjectById('percentId', x.discountPercent, this.allPercentData),
+							discountPerUnit: x.discountPerUnit,
+							functionalCurrencyId: getObjectById('currencyId', x.functionalCurrencyId, this.allCurrencyData),
+							reportCurrencyId: getObjectById('currencyId', x.reportCurrencyId, this.allCurrencyData),
+							discountAmount: x.discountAmount,
+							parentCompanyId: this.getManagementStructureForParentEdit(x),
+							childList: this.getPurchaseOrderSplitPartsEdit(x),
+		
+						}
+						console.log(this.newPartsList);
+						this.getPNDetailsById(this.newPartsList);
+						this.partListData.push(this.newPartsList);		
+					})
+					console.log(this.partListData);	
+				})	
+			});			
 	}
 
 	getPurchaseOrderSplitPartsEdit(partList) {
@@ -622,8 +642,7 @@ export class PurchaseSetupComponent {
 		this.commonService.getManagementStructureDetails(partList.managementStructureId).subscribe(msparent => {
 			if (msparent.Level1) {
 				partList.parentCompanyId = msparent.Level1;
-				this.getParentBUList(partList);
-				
+				this.getParentBUList(partList);				
 			} else 
 				partList.parentCompanyId = 0;
 
@@ -679,7 +698,7 @@ export class PurchaseSetupComponent {
 
 	getApproversListById(poId) {
 		this.purchaseOrderService.getPOApproverList(poId).subscribe(response => {
-			const approverList = response.map(x => {
+			this.approveListEdit = response.map(x => {
 				return {
 					...x,
 					label: x.employeeName,
@@ -687,28 +706,61 @@ export class PurchaseSetupComponent {
 					firstName: x.employeeName
 				}
 			});
-			if(approverList) {
-				for(let i=0; i < approverList.length; i++) {
-					if(approverList[i].level == 1) {
-						this.approversData.approver1 = approverList[i];
+			if(this.approveListEdit) {
+				for(let i=0; i < this.approveListEdit.length; i++) {
+					if(this.approveListEdit[i].level == 1) {
+						this.approversData.approver1 = this.approveListEdit[i];
 						this.onSelectApproverEdit('approver1', this.approversData.approver1)
-					} else if(approverList[i].level == 2) {
-						this.approversData.approver2 = approverList[i];
+					} else if(this.approveListEdit[i].level == 2) {
+						this.approversData.approver2 = this.approveListEdit[i];
 						this.onSelectApproverEdit('approver2', this.approversData.approver2)
-					} else if(approverList[i].level == 3) {
-						this.approversData.approver3 = approverList[i];
+					} else if(this.approveListEdit[i].level == 3) {
+						this.approversData.approver3 = this.approveListEdit[i];
 						this.onSelectApproverEdit('approver3', this.approversData.approver3)
-					} else if(approverList[i].level == 4) {
-						this.approversData.approver4 = approverList[i];
+					} else if(this.approveListEdit[i].level == 4) {
+						this.approversData.approver4 = this.approveListEdit[i];
 						this.onSelectApproverEdit('approver4', this.approversData.approver4)
-					} else if(approverList[i].level == 5) {
-						this.approversData.approver5 = approverList[i];
+					} else if(this.approveListEdit[i].level == 5) {
+						this.approversData.approver5 = this.approveListEdit[i];
 						this.onSelectApproverEdit('approver5', this.approversData.approver5)
 					}
 				}
 			}			
 		})
 	}
+	
+	// getApproversListById(poId) {
+	// 	this.purchaseOrderService.getPOApproverList(poId).subscribe(response => {
+	// 		this.approveListEdit = response.map(x => {
+	// 			return {
+	// 				...x,
+	// 				label: x.employeeName,
+	// 				value: x.employeeId,
+	// 				firstName: x.employeeName
+	// 			}
+	// 		});
+	// 		if(this.approveListEdit) {
+	// 			for(let i=0; i < this.approveListEdit.length; i++) {
+	// 				if(this.approveListEdit[i].level == 1) {
+	// 					this.approversData.approver1 = this.approveListEdit[i];
+	// 					this.onSelectApproverEdit('approver1', this.approversData.approver1)
+	// 				} else if(this.approveListEdit[i].level == 2) {
+	// 					this.approversData.approver2 = this.approveListEdit[i];
+	// 					this.onSelectApproverEdit('approver2', this.approversData.approver2)
+	// 				} else if(this.approveListEdit[i].level == 3) {
+	// 					this.approversData.approver3 = this.approveListEdit[i];
+	// 					this.onSelectApproverEdit('approver3', this.approversData.approver3)
+	// 				} else if(this.approveListEdit[i].level == 4) {
+	// 					this.approversData.approver4 = this.approveListEdit[i];
+	// 					this.onSelectApproverEdit('approver4', this.approversData.approver4)
+	// 				} else if(this.approveListEdit[i].level == 5) {
+	// 					this.approversData.approver5 = this.approveListEdit[i];
+	// 					this.onSelectApproverEdit('approver5', this.approversData.approver5)
+	// 				}
+	// 			}
+	// 		}			
+	// 	})
+	// }
 
 	getShipToUserIdEdit(data) {
 		if (data.shipToUserType === 1) {
@@ -790,7 +842,12 @@ export class PurchaseSetupComponent {
 			return getObjectById('value', data.poPartSplitUserId, this.allCustomers);			
 		}
 		if (data.poPartSplitUserTypeId === 2) {
+			this.onVendorNameChange(data, data.poPartSplitUserId);
 			return getObjectById('vendorId', data.poPartSplitUserId, this.vendorList);
+		}
+		if (data.poPartSplitUserTypeId === 3) {
+			this.onCompanyNameChange(data, data.poPartSplitUserId);
+			return getObjectById('value', data.poPartSplitUserId, this.legalEntity);
 		}
 	}
 
@@ -877,11 +934,13 @@ export class PurchaseSetupComponent {
 
 
 	private priorityData() {
-
-		this.priority.getPriorityList().subscribe(
-			results => this.onprioritySuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
+		this.commonService.smartDropDownList('Priority', 'PriorityId', 'Description').subscribe(res => {
+			this.allPriorityInfo = res;
+		  })
+		// this.priority.getPriorityList().subscribe(
+		// 	results => this.onprioritySuccessful(results[0]),
+		// 	error => this.onDataLoadFailed(error)
+		// );
 	}
 
 	private glAccountData() {
@@ -984,7 +1043,7 @@ export class PurchaseSetupComponent {
 					console.log(saveddata);
 					this.tempVendorId = null;
 					this.savePurchaseorderPart(saveddata.purchaseOrderId);
-					this.savePOApproverData(saveddata.purchaseOrderId);
+					//this.savePOApproverData(saveddata.purchaseOrderId);
 				});
 			}
 			
@@ -1048,7 +1107,7 @@ export class PurchaseSetupComponent {
 			this.approverIds.push(this.approversData.approver5.value);
 		}
 		console.log(this.approverIds);
-
+ 
 		for (let i = 0; i < this.approverIds.length; i++) {
 			const poapprover = {
 				employeeId: this.approverIds[i],
@@ -1058,12 +1117,32 @@ export class PurchaseSetupComponent {
 				updatedBy: "admin"
 			}
 			this.poApproverList.push(poapprover);
+			// const poapproverEdit = {
+			// 	...poapprover, 
+			// 	poApproverListId: this.approversData[i].poApproverListId,
+			// 	poApproverId: this.approversData[i].poApproverId
+			// }
+			// this.poApproverListEdit.push({...poapproverEdit});
 		}
 		this.poApproverData = {
 			purchaseOrderId: purchaseOrderId,
 			purchaseOrderApproverList: this.poApproverList
 		}
 		this.purchaseOrderService.saveCreatePOApproval(this.poApproverData).subscribe(res => {
+			console.log(res);
+		})		
+	}
+
+	updatePOApproverData() {
+		console.log(this.approversData);
+
+
+		// this.poApproverData = {
+		// 	purchaseOrderId: parseInt(this.poId),
+		// 	poApproverId: this.approversData[0].poApproverId,
+		// 	purchaseOrderApproverList: this.poApproverListEdit
+		// }
+		this.purchaseOrderService.updatePOApproval(this.poApproverData).subscribe(res => {
 			console.log(res);
 		})
 	}
@@ -1372,7 +1451,7 @@ export class PurchaseSetupComponent {
 					quantityOrdered: this.partListData[i].quantityOrdered ? this.partListData[i].quantityOrdered : 0,
 					unitCost: this.partListData[i].unitCost ? this.partListData[i].unitCost : 0,
 					discountPerUnit: this.partListData[i].discountPerUnit ? this.partListData[i].discountPerUnit : 0,
-					//discountPerUnit: this.partListData[i].discountPerUnit ? this.getDiscPerUnitIdByObject(this.partListData[i].discountPerUnit) : 0,
+					discountPercent: this.partListData[i].discountPercent ? this.getDiscPercentIdByObject(this.partListData[i].discountPercent) : 0,
 					discountAmount: this.partListData[i].discountAmount ? this.partListData[i].discountAmount : 0,
 					extendedCost: this.partListData[i].extendedCost ? this.partListData[i].extendedCost : 0,
 					functionalCurrencyId: this.partListData[i].functionalCurrencyId ? this.getCurrencyIdByObject(this.partListData[i].functionalCurrencyId) : 1,
@@ -1559,20 +1638,22 @@ export class PurchaseSetupComponent {
 
 	// 	}
 	// }
-	onVendorNameChange(part?, vendor?): void {
-		console.log(part, vendor)
-		this.gridSelectedVendorId = vendor ? vendor.vendorId : this.gridSelectedVendorId;
+	onVendorNameChange(part?, vendorId?): void {
+		//console.log(part, vendor)
+		//this.gridSelectedVendorId = vendor ? vendor.vendorId : this.gridSelectedVendorId;
 		//part.poPartSplitUserId = vendor.vendorId;
-		this.vendorService.getVendorShipAddressGet(this.gridSelectedVendorId).subscribe(
+		this.vendorService.getVendorShipAddressGet(vendorId).subscribe(
 			vendorAddresses => {
 				this.vendorSelectedforSplit = vendorAddresses[0];
-				part.addressData = vendorAddresses[0];;
+				//part.addressData = vendorAddresses[0];;
+				this.splitAddressData = vendorAddresses[0];
 			})
 	}
-	// onCompanyNameChange(part?, company?) {
-	// 	// this.
-
-	// }
+	onCompanyNameChange(part?, companyId?) {
+		this.legalEntityService.getLegalEntityAddressById(companyId).subscribe(response => {
+			this.splitAddressData = response[0];
+		})
+	}
 
 	// getVendorPartyNames(part, event): void {
 	// 	if (this.allActions && this.allActions.length > 0) {
@@ -2217,10 +2298,10 @@ export class PurchaseSetupComponent {
 			this.onPartDepartmentChange(this.partListData[i]);
 		}
 	}*/
-	private onprioritySuccessful(getPriorityList: any[]) {
+	// private onprioritySuccessful(getPriorityList: any[]) {
 
-		this.allPriorityInfo = getPriorityList;
-	}
+	// 	this.allPriorityInfo = getPriorityList;
+	// }
 	private onDataLoadFailed(error: any) {
 
 
@@ -3161,7 +3242,7 @@ export class PurchaseSetupComponent {
 
 		if (event.query !== undefined && event.query !== null) {
 			const priority = [...this.allPriorityInfo.filter(x => {
-				return x.description.toLowerCase().includes(event.query.toLowerCase())
+				return x.label.toLowerCase().includes(event.query.toLowerCase())
 			})]
 			this.allPriorityDetails = priority;
 		}
@@ -3991,11 +4072,11 @@ export class PurchaseSetupComponent {
 		}
 	}
 
-	// getDiscPerUnitIdByObject(obj) {
-	// 	if (obj.percentId) {
-	// 		return obj.percentId;
-	// 	}
-	// }
+	getDiscPercentIdByObject(obj) {
+		if (obj.percentId) {
+			return obj.percentId;
+		}
+	}
 
 	getCurrencyIdByObject(obj) {
 		if (obj.currencyId) {
@@ -4048,8 +4129,8 @@ export class PurchaseSetupComponent {
 	}
 
 	getPriorityId(obj) {
-		if (obj.priorityId) {
-			return obj.priorityId;
+		if (obj.value) {
+			return obj.value;
 		} else {
 			return 0;
 		}
@@ -4190,17 +4271,17 @@ export class PurchaseSetupComponent {
 	resetAddressBillingForm() {
 		this.addressFormForBilling = new CustomerShippingModel()
 	}
-	async saveShippingAddress() {
+	async saveShippingAddress() {		
 		const data = {
 			...this.addressFormForShipping,
 			createdBy: this.userName,
 			updatedBy: this.userName,
 			masterCompanyId: 1,
 			isActive: true,
-
+			customerShippingAddressId: null,
 		}
-		if (this.sourcePoApproval.shipToUserTypeId == 1) {
-			const customerData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('customerId', this.sourcePoApproval.shipToUserId) }
+		if (this.addressSiteNameHeader == 'Add Ship To Customer Details') {
+			const customerData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId) }
 
 			await this.customerService.newShippingAdd(customerData).subscribe(() => {
 
@@ -4243,59 +4324,80 @@ export class PurchaseSetupComponent {
 
 			})
 		}
-		// this.onShipCompanySelected();
+		// this.onShipCompanySelected();		
 
-
+		if(this.addressSiteNameHeader == 'Edit Ship To Customer Details') {
+			console.log(this.addressFormForShipping);	
+			const dataEdit = {
+				...this.addressFormForShipping,
+				createdBy: this.userName,
+				updatedBy: this.userName,
+				masterCompanyId: 1,
+				isActive: true
+			}
+			await this.customerService.newShippingAdd(dataEdit).subscribe(() => {
+				this.onshipCustomerNameselected(this.addressFormForShipping.customerId);
+				this.alertService.showMessage(
+					'Success',
+					`Updated Site Name Sucessfully`,
+					MessageSeverity.success
+				);
+			})
+		}
 
 	}
 
 	saveShippingAddressToPO() {
-		const data = {
-			...this.addressFormForShipping,
-			createdBy: this.userName,
-			updatedBy: this.userName,
-			masterCompanyId: 1,
-			isActive: true,
-
-		}
 		if (this.sourcePoApproval.shipToUserTypeId == 1) {
-			const customerData = { ...data, customerId: getValueFromObjectByKey('customerId', this.sourcePoApproval.shipToUserId) }
+			
+		}		
 
-			this.commonService.createAddress(customerData).subscribe(() => {
-				// this.addressFormForShipping = new CustomerShippingModel()
-				this.alertService.showMessage(
-					'Success',
-					`Saved  Shipping Information Sucessfully `,
-					MessageSeverity.success
-				);
+		// const data = {
+		// 	...this.addressFormForShipping,
+		// 	createdBy: this.userName,
+		// 	updatedBy: this.userName,
+		// 	masterCompanyId: 1,
+		// 	isActive: true,
 
-			})
-		}
-		if (this.sourcePoApproval.shipToUserTypeId == 2) {
-			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId) }
+		// }
+		// if (this.sourcePoApproval.shipToUserTypeId == 1) {
+		// 	const customerData = { ...data, customerId: getValueFromObjectByKey('customerId', this.sourcePoApproval.shipToUserId) }
 
-			this.commonService.createAddress(vendorData).subscribe(() => {
-				// this.addressFormForShipping = new CustomerShippingModel()
-				this.alertService.showMessage(
-					'Success',
-					`Saved  Shipping Information Sucessfully `,
-					MessageSeverity.success
-				);
+		// 	this.commonService.createAddress(customerData).subscribe(() => {
+		// 		// this.addressFormForShipping = new CustomerShippingModel()
+		// 		this.alertService.showMessage(
+		// 			'Success',
+		// 			`Saved  Shipping Information Sucessfully `,
+		// 			MessageSeverity.success
+		// 		);
 
-			})
-		}
-		if (this.sourcePoApproval.shipToUserTypeId == 3) {
-			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId) }
-			this.commonService.createAddress(companyData).subscribe(() => {
-				// this.addressFormForShipping = new CustomerShippingModel()
-				this.alertService.showMessage(
-					'Success',
-					`Saved  Shipping Information Sucessfully `,
-					MessageSeverity.success
-				);
+		// 	})
+		// }
+		// if (this.sourcePoApproval.shipToUserTypeId == 2) {
+		// 	const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId) }
 
-			})
-		}
+		// 	this.commonService.createAddress(vendorData).subscribe(() => {
+		// 		// this.addressFormForShipping = new CustomerShippingModel()
+		// 		this.alertService.showMessage(
+		// 			'Success',
+		// 			`Saved  Shipping Information Sucessfully `,
+		// 			MessageSeverity.success
+		// 		);
+
+		// 	})
+		// }
+		// if (this.sourcePoApproval.shipToUserTypeId == 3) {
+		// 	const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId) }
+		// 	this.commonService.createAddress(companyData).subscribe(() => {
+		// 		// this.addressFormForShipping = new CustomerShippingModel()
+		// 		this.alertService.showMessage(
+		// 			'Success',
+		// 			`Saved  Shipping Information Sucessfully `,
+		// 			MessageSeverity.success
+		// 		);
+
+		// 	})
+		// }
 	}
 
 
@@ -4311,7 +4413,7 @@ export class PurchaseSetupComponent {
 
 		}
 		if (this.sourcePoApproval.billToUserTypeId == 1) {
-			const customerData = { ...data, customerId: getValueFromObjectByKey('customerId', this.sourcePoApproval.billToUserId) }
+			const customerData = { ...data, customerId: getValueFromObjectByKey('value', this.sourcePoApproval.billToUserId) }
 			await this.customerService.newBillingAdd(customerData).subscribe(() => {
 				this.onBillToCustomerNameselected(customerData.customerId);
 				//this.onBillCompanySelected();
@@ -4371,7 +4473,7 @@ export class PurchaseSetupComponent {
 		}
 
 		if (this.sourcePoApproval.shipToUserTypeId == 1) {
-			const customerData = { ...data, ReferenceId: getValueFromObjectByKey('customerId', this.sourcePoApproval.shipToUserId) }
+			const customerData = { ...data, ReferenceId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId) }
 
 			await this.commonService.createShipVia(customerData).subscribe(() => {
 				this.getShipViaDetailsForShipTo();
@@ -4410,7 +4512,7 @@ export class PurchaseSetupComponent {
 				);
 
 			})
-		}
+		}		
 
 	}
 
@@ -4468,12 +4570,20 @@ export class PurchaseSetupComponent {
 		}
 	}
 
-	onClickShipSiteName(value) {
+	onClickShipSiteName(value, data?) {
+		this.resetAddressShippingForm();
 		if (value === 'AddCusSiteName') {
 			this.addressSiteNameHeader = 'Add Ship To Customer Details';
 		}
 		if (value === 'EditCusSiteName') {
 			this.addressSiteNameHeader = 'Edit Ship To Customer Details';
+			if (data.shipToUserTypeId == 1) {
+				this.tempshipToAddress = getObjectById('customerShippingAddressId', data.shipToAddressId, this.shipToCusData);
+				this.addressFormForShipping = this.tempshipToAddress;
+				
+			} else if (data.shipToUserTypeId == 2) {
+				this.tempshipToAddress = getObjectById('vendorShippingAddressId', data.shipToAddressId, this.vendorSelected);
+			}
 		}
 		if (value === 'AddVenSiteName') {
 			this.addressSiteNameHeader = 'Add Ship To Vendor Details';
