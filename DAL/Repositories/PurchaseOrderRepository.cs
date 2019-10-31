@@ -585,13 +585,12 @@ namespace DAL.Repositories
                             purchaseOrderPart.ConditionId = part.pop.ConditionId;
                             purchaseOrderPart.QuantityOrdered = part.pop.QuantityOrdered;
                             purchaseOrderPart.UnitCost = part.pop.UnitCost;
-                            purchaseOrderPart.DiscountCostPerUnit = part.pop.DiscountCostPerUnit;
-                            purchaseOrderPart.DiscountPerUnit = part.pop.DiscountPerUnit;
+                            purchaseOrderPart.DiscountAmount = part.pop.DiscountAmount;
+                            purchaseOrderPart.DiscountPercent = part.pop.DiscountPercent;
                             purchaseOrderPart.ExtendedCost = part.pop.ExtendedCost;
                             purchaseOrderPart.FunctionalCurrencyId = part.pop.FunctionalCurrencyId;
-                            //purchaseOrderPart.TransactionalCurrencyId = part.pop.reportCurrencyId;
+                            purchaseOrderPart.ReportCurrencyId = part.pop.ReportCurrencyId;
                             purchaseOrderPart.ForeignExchangeRate = part.pop.ForeignExchangeRate;
-                            //purchaseOrderPart.TransactionalCurrencyId = part.pop.TransactionalCurrencyId;
                             purchaseOrderPart.WorkOrderId = part.pop.WorkOrderId;
                             purchaseOrderPart.RepairOrderId = part.pop.RepairOrderId;
                             purchaseOrderPart.SalesOrderId = part.pop.SalesOrderId;
@@ -702,6 +701,56 @@ namespace DAL.Repositories
 
                 throw;
             }
+        }
+
+        public IEnumerable<object> GetPurchaseOrderlistByVendor(long vendorId,int pageNo,int pageSize)
+        {
+            var pageNumber = pageNo + 1;
+            var take = pageSize;
+            var skip = take * (pageNumber - 1);
+
+            var totalRecords = (from po in _appContext.PurchaseOrder
+                                join emp in _appContext.Employee on po.RequestedBy equals emp.EmployeeId
+                                join v in _appContext.Vendor on po.VendorId equals v.VendorId
+                                join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
+                                from appr in approver.DefaultIfEmpty()
+                                where po.IsDeleted == false && po.VendorId==vendorId
+                               
+                                select new
+                                {
+                                    po.PurchaseOrderId
+
+                                }).Distinct()
+                                  .Count();
+
+            var purchaseOrderList = (from po in _appContext.PurchaseOrder
+                                     join emp in _appContext.Employee on po.RequestedBy equals emp.EmployeeId
+                                     join v in _appContext.Vendor on po.VendorId equals v.VendorId
+                                     join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
+                                     from appr in approver.DefaultIfEmpty()
+                                     where po.IsDeleted == false && po.VendorId == vendorId
+                                     select new
+                                     {
+                                         po.PurchaseOrderId,
+                                         po.PurchaseOrderNumber,
+                                         OpenDate = po.OpenDate,
+                                         ClosedDate = po.ClosedDate,
+                                         v.VendorName,
+                                         v.VendorCode,
+                                         Status = po.StatusId == 1 ? "Open" : (po.StatusId == 2 ? "Pending" : (po.StatusId == 3 ? "Fulfilling" : "Closed")),
+                                         RequestedBy = emp.FirstName,
+                                         ApprovedBy = appr == null ? "" : appr.FirstName,
+                                         po.CreatedDate,
+                                         po.IsActive,
+                                         TotalRecords = totalRecords
+                                     }).Distinct().OrderByDescending(p => p.CreatedDate)
+                                     .Skip(skip)
+                                    .Take(take)
+                                    .ToList();
+
+
+
+            return purchaseOrderList;
         }
 
 

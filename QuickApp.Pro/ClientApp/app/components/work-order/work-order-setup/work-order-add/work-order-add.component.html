@@ -393,12 +393,17 @@
                                 </p-autoComplete> -->
                                 </td>
                                 <td>
-                                    <select class="w100" [(ngModel)]="workOrderPartNumber.workOrderScopeId">
+                                    <p-dropdown  placeholder="Select Work Scope" [options]="stockLineList" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.workOrderScopeId"
+                                    (onChange)="getSerialNoByStockLineId(workOrderPartNumber)"
+                                    
+                                    >
+                                      </p-dropdown>
+                                    <!-- <select class="w100" [(ngModel)]="workOrderPartNumber.workOrderScopeId">
                                       <option value="0">Select Work Scope</option>
                                         <option *ngFor="let workScope of workScopes"
                                             [ngValue]="workScope.workScopeId">
                                             {{workScope.workScopeCode}}</option>
-                                    </select>
+                                    </select> -->
                                 </td>
                                 <td><input type="text" class="form-control w50" [(ngModel)]="workOrderPartNumber.nTE"></td>
                                 <!-- <td><input type="number" class="form-control w50"  [(ngModel)]="workOrderPartNumber.Quantity"  ></td> -->

@@ -1740,7 +1740,12 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
-        
+        [HttpGet("conditiondetailsbypartno")]
+        public IActionResult GetConditionDetailsByPartNo(string partNo)
+        {
+            var result = _unitOfWork.itemMaster.GetConditionDetailsByPartNo(partNo);
+            return Ok(result);
+        }
     }
 
 }
