@@ -66,14 +66,14 @@
                                 <div class="col-md-12 row">
                                     <div class="col-md-3 col-offset-3">
                                         <label style="width: auto;">
-                                            <input type="radio" [value]="true"  id="single" name="type"
-                                                [(ngModel)]="workOrderGeneralInformation.isSinglePN" [checked]='selectedRadioButtonValue'
-                                                (click)="toggleWorkOrderType($event.target.value)">
+                                            <input type="radio" [value]=true   name="type"
+                                                [(ngModel)]="workOrderGeneralInformation.isSinglePN" 
+                                                >
                                             Single MPN
                                         </label>
                                         <label style="width: auto;">
-                                            <input type="radio" [value]="false" id="multiple" name="type"
-                                                [(ngModel)]="workOrderGeneralInformation.isSinglePN" (click)="toggleWorkOrderType($event.target.value)">
+                                            <input type="radio" [value]=false name="type"
+                                                [(ngModel)]="workOrderGeneralInformation.isSinglePN" >
                                             Multiple MPN
                                         </label>
                                     </div>
@@ -113,7 +113,7 @@
                                             <div *ngFor="let workOrderType of workOrderTypes">
                                                 <label data-toggle="tooltip" title="External" style="width: auto;">
                                                     <input type="radio" name="work-type"
-                                                        (change)="changeWorkOrderType($event)"
+                                                 
                                                         value="workOrder_{{workOrderType.id}}"
                                                         [checked]="workOrder.workOrderTypeId == workOrderType.id">
                                                     {{workOrderType.description}}
@@ -140,15 +140,16 @@
                                                 [(ngModel)]="workOrderGeneralInformation.openDate"></p-calendar>
                                         </div>
                                         <div class="form-group">
-                                            <label for="wostatus">WO Status
-                                                <span class="clr-red">*</span>
-                                            </label>
-                                            <select [(ngModel)]="workOrderGeneralInformation.workOrderStatusId"
+                                            <label for="credit" style="width: 100%;">WO Status
+                                                <span class="clr-red">*</span> </label>
+                                            <p-dropdown [options]="workOrderStatusList"  placeholder="Select Status" class="p-dropdown-custom-md-Header" [(ngModel)]="workOrderGeneralInformation.workOrderStatusId">
+                                              </p-dropdown>
+                                            <!-- <select [(ngModel)]="workOrderGeneralInformation.workOrderStatusId"
                                                 title="Status can be: Open, Closed, Cancelled, Delayed. This auto populate based on the mapping of Stages to Status. If multiple MPNs on work order, this status only change for ALL MPN… example status remained in open unless ALL MPN is closed">
                                                 <option value="0">Select Status</option>
                                                 <option *ngFor="let status of workOrderStatus" [ngValue]="status.id">
                                                     {{status.description}}</option>
-                                            </select>
+                                            </select> -->
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -162,10 +163,11 @@
                                                     </span>
                                             </label>
                                             <p-autoComplete field="customerName" [(ngModel)]="workOrderGeneralInformation.customerId"
-                                            
+                                          
                                               name="customerNames"
                                               errorMessage="Records not found" 
                                               [forceSelection]="true"
+                                              (onSelect)="selectCustomer($event, workOrderGeneralInformation )"
                                               [suggestions]="customerNamesList" 
                                               (completeMethod)="filterCustomerName($event)"
                                                [size]="30" [minLength]="1"
@@ -202,7 +204,7 @@
                                                 <span class="clr-red">*</span>
                                             </label>
 
-                                            <input type="text" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="workOrderGeneralInformation.customerReference">
+                                            <input type="text" class="form-control" name="contactRef" [(ngModel)]="workOrderGeneralInformation.customerReference">
                                         </div>
                                         
                                     </div>
@@ -300,9 +302,10 @@
 
                 <button *ngIf="!workOrderGeneralInformation.isSinglePN" class="btn btn-primary-cstm pull-right" (click)="addMPN()">Add MPN</button>
               </div>
-                <div class="table-responsive">
+                <div class="table-responsive" style="height: 300px;">
                  
-                    <table class="table table-bordered table-striped table-sorting mpn-list-table"
+                    <!-- <table class="table table-bordered table-striped table-sorting mpn-list-table mpn-list-table-cstm" -->
+                        <table class="table table-bordered table-striped table-fixed table-sorting mpn-list-table"
                         id="mpn-list-table">
                         <thead>
                             <tr>
@@ -344,7 +347,7 @@
                         </thead>
                         <tbody>
                             <tr class="mpn-row" style="display: table-row;"
-                                *ngFor="let workOrderPartNumber of workOrderPartNumbers">
+                                *ngFor="let workOrderPartNumber of workOrderGeneralInformation.partNumbers">
                                 <td>
 
                                     <p-autoComplete field="partNumber" [(ngModel)]="workOrderPartNumber.masterPartId"
@@ -371,7 +374,7 @@
                                 </td>
                                 <td><input type="text"  class="form-control" [(ngModel)]="workOrderPartNumber.description" ></td>
                                 <td>
-                                    <p-autoComplete field="partNumber" [(ngModel)]="workOrderPartNumber.mappingPartId"
+                                    <p-autoComplete field="revisedPartNo" [(ngModel)]="workOrderPartNumber.mappingItemMasterId"
                                             
                                     name=""
                                     errorMessage="Records not found" 

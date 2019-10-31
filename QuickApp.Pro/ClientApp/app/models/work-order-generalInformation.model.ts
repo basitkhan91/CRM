@@ -1,6 +1,9 @@
+import { WorkOrderPartNumber } from './work-order-partnumber.model';
+
+
 export class workOrderGeneralInfo {
   isSinglePN: boolean;
-  customerContactId: number;
+  // customerContactId: number;
   customerId: number;
   employeeId: number;
   workOrderTypeId: string;
@@ -11,7 +14,8 @@ export class workOrderGeneralInfo {
   salesPersonId: number;
   workOrderNum: string;
   isContractAvl: boolean;
-  contract: string
+  contract: string;
+  partNumbers: WorkOrderPartNumber[]
 
   // workOrderType: string;
   // workOrderDealerType: string;
@@ -32,18 +36,19 @@ export class workOrderGeneralInfo {
 
 
     this.isSinglePN = true;
-    this.customerContactId = null;
+    // this.customerContactId = null;
     this.customerId = null;
     this.employeeId = null;
     this.workOrderTypeId = "1";
     this.openDate = new Date();
     this.creditTermsId = null;
     this.creditLimit = null;
-    this.workOrderStatusId = null;
+    this.workOrderStatusId = 0;
     this.salesPersonId = null;
     this.workOrderNum = '';
     this.isContractAvl = false;
     this.contract = '';
+    this.partNumbers = []
 
     // this.workOrderType = 'single';
     // this.workOrderDealerType = 'customer';

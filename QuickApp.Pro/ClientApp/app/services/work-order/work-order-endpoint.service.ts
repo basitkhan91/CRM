@@ -57,14 +57,11 @@ export class WorkOrderEndpointService extends EndpointFactory {
             });
     }
 
-    addWorkOrder<T>(workOrder: WorkOrder): Observable<T> {
-        debugger;
-        let endpointUrl = this.add;
+    createNewWorkOrder<T>(workOrder: WorkOrder): Observable<T> {
 
-        return this.http.post<T>(endpointUrl, JSON.stringify(workOrder), this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.addWorkOrder(workOrder));
-            });
+
+        return this.http.post<T>(`${this.configurations.baseUrl}/api/workOrder/createworkorder` , JSON.stringify(workOrder), this.getRequestHeaders())
+
     }
 
     updateWorkOrder<T>(workOrder: WorkOrder): Observable<T> {
@@ -161,6 +158,10 @@ export class WorkOrderEndpointService extends EndpointFactory {
 
     getConditionByItemMasterId(itemMasterId) {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/conditiondetailsbypartno?itemMasterId=${itemMasterId}`, this.getRequestHeaders())
+    }
+
+    getWorkOrderList(pageIndex, pageSize){
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderlist?pageNo=${pageIndex}&pageSize=${pageSize}` , this.getRequestHeaders())
     }
 
 

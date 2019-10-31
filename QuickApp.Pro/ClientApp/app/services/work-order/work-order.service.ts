@@ -28,8 +28,8 @@ export class WorkOrderService {
         return this.workOrderEndpointService.getWorkOrderById<WorkOrder>(workOrderId);
     }
 
-    add(workOrder: WorkOrder) {
-        return this.workOrderEndpointService.addWorkOrder<WorkOrder>(workOrder);
+    createNewWorkOrder(workOrder) {
+        return this.workOrderEndpointService.createNewWorkOrder<any>(workOrder);
     }
 
     update<T>(workOrder: WorkOrder) {
@@ -91,5 +91,8 @@ export class WorkOrderService {
         return this.workOrderEndpointService.getConditionByItemMasterId(itemMasterId);
     }
 
+    getWorkOrderList(pageIndex, pageSize){
+        return this.workOrderEndpointService.getWorkOrderList(pageIndex,pageSize);
+    }
 
 }
