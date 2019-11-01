@@ -102,6 +102,13 @@ namespace QuickApp.Pro.Controllers
             return Ok(allActions);
         }
 
+        [HttpGet("recevingRoList")]
+        public IActionResult RecevingRolist()
+        {
+            var roList = _unitOfWork.repairOrder.RecevingRolist();
+            return Ok(roList);
+        }
+
         [HttpGet("rolist")]
         [Produces(typeof(List<RepairOrderViewModel>))]
 
@@ -656,7 +663,7 @@ namespace QuickApp.Pro.Controllers
             actionobject.HandlingCost = poViewModel.HandlingCost;
             actionobject.BillToContactId = poViewModel.BillToContactId;
             actionobject.ShipViaId = poViewModel.ShipViaId;
-            
+
 
             actionobject.IsActive = true;
 
@@ -718,7 +725,7 @@ namespace QuickApp.Pro.Controllers
             actionobject.SalesOrderId = poViewModel.SalesOrderId;
             actionobject.GeneralLedgerAccounId = poViewModel.GLAccounId;
             actionobject.Memo = poViewModel.Memo;
-            
+
 
 
             actionobject.UOMId = poViewModel.UOMId;
@@ -863,6 +870,7 @@ namespace QuickApp.Pro.Controllers
                     repairOrderModel.BillToMemo = poViewModel.BillToMemo;
                     repairOrderModel.CreatedBy = "admin";
                     repairOrderModel.UpdatedBy = "admin";
+                    repairOrderModel.UpdatedDate = DateTime.Now;
                     _context.SaveChanges();
                     return Ok(repairOrderModel);
                 }
@@ -905,6 +913,7 @@ namespace QuickApp.Pro.Controllers
                     repairOrderModel.BillToMemo = poViewModel.BillToMemo;
                     repairOrderModel.CreatedBy = "admin";
                     repairOrderModel.UpdatedBy = "admin";
+                    repairOrderModel.CreatedDate = DateTime.Now;
                     _context.RepairOrder.Add(repairOrderModel);
                     _context.SaveChanges();
 

@@ -43,5 +43,7 @@ namespace DAL.Models
         public int? ShippingId { get; set; }
         public string ShippingUrl { get; set; }
         public string ShipToMemo { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
     }
 }
