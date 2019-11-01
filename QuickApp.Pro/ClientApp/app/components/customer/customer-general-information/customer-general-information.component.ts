@@ -17,7 +17,7 @@ import { VendorService } from '../../../services/vendor.service';
 import { Currency } from '../../../models/currency.model';
 import { CurrencyService } from '../../../services/currency.service';
 import { CustomerGeneralInformation } from '../../../models/customer-general.model';
-import { getValueFromObjectByKey, getObjectByValue, validateRecordExistsOrNot, editValueAssignByCondition, getObjectById } from '../../../generic/autocomplete';
+import { getValueFromObjectByKey, getObjectByValue, validateRecordExistsOrNot, editValueAssignByCondition, getObjectById, selectedValueValidate } from '../../../generic/autocomplete';
 import { ItemMasterService } from '../../../services/itemMaster.service';
 
 @Component({
@@ -90,6 +90,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
         { field: 'memo', header: 'Description' },
 
     ];
+    selectedClassificationRecordForEdit: any;
     // editData: any;
 
     // selectedCustomerCodeData: any;
@@ -394,19 +395,19 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 console.log(response);
 
                 const res = response[0];
-                
+
                 this.editGeneralInformation.emit(res);
                 this.editData = res;
-       ;
+                ;
                 this.generalInformation = {
                     ...this.editData,
                     name: getObjectByValue('name', res.name, this.customerListOriginal),
-                    country: getObjectByValue('nice_name', res.country, this.countryListOriginal),
+                    country: getObjectById('countries_id', res.country, this.countryListOriginal),
                     customerParentName: getObjectByValue('name', res.customerParentName, this.customerListOriginal),
                     customerCode: getObjectByValue('customerCode', res.customerCode, this.customerListOriginal),
                 };
 
-                
+
                 // this.editData = {
                 //     addressId: res.addressId,
                 //     isAddressForBilling: res.t.isAddressForBilling,
@@ -659,7 +660,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
             this.customerService.newAction({
                 ...this.generalInformation,
                 country: getValueFromObjectByKey('countries_id', this.generalInformation.country),
-           
+
                 restrictedDERParts: (typeof this.generalInformation.restrictedDERParts === 'undefined') ? null : this.generalInformation.restrictedDERParts.map(x => { return { ...x, partType: 'DER' } }),
                 restrictedPMAParts: typeof this.generalInformation.restrictedPMAParts === 'undefined' ? null : this.generalInformation.restrictedPMAParts.map(x => { return { ...x, partType: 'PMA' } }),
                 customerParentName: getValueFromObjectByKey('name', this.generalInformation.customerParentName),
@@ -681,9 +682,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 ...this.generalInformation,
                 addressId: this.editData.addressId,
                 customerId: this.id,
-                
+
                 restrictedDERParts: (typeof this.generalInformation.restrictedDERParts === 'undefined') ? null : this.generalInformation.restrictedDERParts.map(x => { return { ...x, partType: 'DER' } }),
-                restrictedPMAParts: typeof this.generalInformation.restrictedPMAParts === 'undefined' ? null:this.generalInformation.restrictedPMAParts.map(x => { return { ...x, partType: 'PMA' } }),
+                restrictedPMAParts: typeof this.generalInformation.restrictedPMAParts === 'undefined' ? null : this.generalInformation.restrictedPMAParts.map(x => { return { ...x, partType: 'PMA' } }),
                 name: editValueAssignByCondition('name', this.generalInformation.name),
                 customerCode: editValueAssignByCondition('customerCode', this.generalInformation.customerCode),
                 country: getValueFromObjectByKey('nice_name', this.generalInformation.country),
@@ -717,6 +718,13 @@ export class CustomerGeneralInformationComponent implements OnInit {
             this.isClassificationAlreadyExists = false;
         }
     }
+
+    selectedClassification(object) {
+        const exists = selectedValueValidate('label', object, this.selectedClassificationRecordForEdit)
+
+        this.isClassificationAlreadyExists = !exists;
+    }
+
 
     addClassification() {
         const data = {
