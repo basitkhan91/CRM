@@ -210,6 +210,13 @@ namespace QuickApp.Pro.Controllers
             return Ok();
         }
 
+        [HttpGet("pohistory")]
+        public IActionResult GetPurchaseOrderHistory(long purchaseOrderId)
+        {
+            var result=_unitOfWork.purchaseOrder.GetPurchaseOrderHistory(purchaseOrderId);
+            return Ok(result);
+        }
+
 
 
 

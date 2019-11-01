@@ -756,6 +756,43 @@ namespace DAL.Repositories
         }
 
 
+        public IEnumerable<object> GetPurchaseOrderHistory(long purchaseOrderId)
+        {
+            try
+            {
+                var purchaseOrderList = (from po in _appContext.PurchaseOrderAudit
+                                         join emp in _appContext.Employee on po.RequestedBy equals emp.EmployeeId
+                                         join v in _appContext.Vendor on po.VendorId equals v.VendorId
+                                         join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
+                                         from appr in approver.DefaultIfEmpty()
+                                         where po.IsDeleted == false && po.PurchaseOrderId==purchaseOrderId
+                                         select new
+                                         {
+                                             po.PurchaseOrderId,
+                                             po.PurchaseOrderNumber,
+                                             OpenDate = po.OpenDate,
+                                             ClosedDate = po.ClosedDate,
+                                             v.VendorName,
+                                             v.VendorCode,
+                                             Status = po.StatusId == 1 ? "Open" : (po.StatusId == 2 ? "Pending" : (po.StatusId == 3 ? "Fulfilling" : "Closed")),
+                                             RequestedBy = emp.FirstName,
+                                             ApprovedBy = appr == null ? "-" : appr.FirstName,
+                                             po.UpdatedDate,
+                                             po.IsActive,
+                                         }).OrderByDescending(p => p.UpdatedDate)
+                                    .ToList();
+
+
+
+                return purchaseOrderList;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
     }
