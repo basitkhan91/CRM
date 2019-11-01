@@ -59,7 +59,7 @@ namespace DAL.Repositories
         public IEnumerable<Object> GetAllShipViaDetails(long Selectedrow)
         {
             var data = (from cs in _appContext.CustomerShipping
-                        join csa in _appContext.CustomerShippingAddress on Selectedrow equals csa.CustomerShippingAddressId
+                        join csa in _appContext.CustomerShippingAddress on cs.CustomerShippingAddressId equals csa.CustomerShippingAddressId
                         where ((cs.CustomerShippingAddressId == Selectedrow) && (cs.IsActive == true))
 
                         // select new { t, ad, vt }).ToList();
