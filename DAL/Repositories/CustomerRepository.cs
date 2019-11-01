@@ -522,7 +522,8 @@ namespace DAL.Repositories
                                 secondarySalesPersonId = t.SecondarySalesPersonId,
                                 annualQuota = t.AnnualQuota,
                                 annualRevenuePotential = t.AnnualRevenuePotential,
-                                AgentName = t.AgentName
+                                AgentName = t.AgentName,
+								t.CustomerPhoneExt
 
 
 
