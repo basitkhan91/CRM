@@ -414,6 +414,7 @@ namespace DAL
         public DbSet<LegalEntityBillingAddress> LegalEntityBillingAddress { get; set; }
         public DbSet<LegalEntityShippingAddress> LegalEntityShippingAddress { get; set; }
         public DbSet<LegalEntityContact> LegalEntityContact { get; set; }
+        public DbSet<PurchaseOrderAudit> PurchaseOrderAudit { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
