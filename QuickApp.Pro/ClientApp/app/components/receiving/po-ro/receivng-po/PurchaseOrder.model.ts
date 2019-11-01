@@ -157,6 +157,7 @@ export class PurchaseOrderPart {
     LocationList: DropDownData[];
     ShelfList: DropDownData[];
     BinList: DropDownData[];
+    stockLine: StockLine[];
 }
 
 export class TimeLife {
@@ -234,6 +235,7 @@ export class StockLine {
     unitSalesPrice: number;
     coreUnitCost: number;
     gLAccountId: number;
+    glAccountId: number;
     assetId: number;
     isHazardousMaterial: boolean;
     isPMA: boolean;
@@ -241,6 +243,7 @@ export class StockLine {
     oEM: boolean;
     memo: string;
     managementStructureEntityId: number;
+    managementStructureId: number;
     timeLifeCyclesId: number;
     site: string;
     shelf: string;
@@ -285,6 +288,7 @@ export class StockLine {
     serialNumberNotProvided: boolean;
     isDisabledSNboxes: boolean;
     currentDate: Date;
+    glAccountText: string;
 }
 
 export class ReceiveParts {
