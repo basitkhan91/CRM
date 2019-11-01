@@ -1227,7 +1227,7 @@ namespace DAL.Repositories
             }
         }
 
-        public string GetPartSerialNo(long stockLineId, long conditionId)
+        public object GetPartSerialNo(long stockLineId, long conditionId)
         {
             try
             {
