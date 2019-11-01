@@ -540,9 +540,35 @@ namespace DAL.Repositories
 				throw;
 			}
 		}
-		//Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 
-		private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
+        public IEnumerable<object> GetLegalEntityAddressById(long legalEntityId)
+        {
+            try
+            {
+                var data = (from lsa in _appContext.LegalEntityShippingAddress
+                            join ad in _appContext.Address on lsa.AddressId equals ad.AddressId
+                            where lsa.LegalEntityId == legalEntityId
+                            select new
+                            {
+                                ad.Line1,
+                                ad.Line2,
+                                ad.Line3,
+                                ad.City,
+                                ad.StateOrProvince,
+                                ad.PostalCode,
+                                ad.Country
+                            }).Distinct().ToList();
+                return data;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
+
+        private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
     }
 

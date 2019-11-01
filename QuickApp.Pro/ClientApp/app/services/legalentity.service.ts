@@ -180,6 +180,10 @@ export class LegalEntityService {
 
     updateLegalEntityForActive(action: any) {
         return this.legalEntityEndpont.getUpdateLegalEntityActive(action, action.legalEntityId);
+	}
+	
+	getLegalEntityAddressById(entityId: number) {
+        return Observable.forkJoin(this.legalEntityEndpont.getLegalEntityAddressById<any>(entityId));
     }
 
 }
