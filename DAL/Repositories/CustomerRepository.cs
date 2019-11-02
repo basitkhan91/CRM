@@ -1071,6 +1071,42 @@ namespace DAL.Repositories
             }
         }
 
+        public void UpdateDocumentDetails(CustomerDocumentDetail customerDocument)
+        {
+            try
+            {
+                customerDocument.CreatedDate = DateTime.Now;
+                customerDocument.IsActive = true;
+                customerDocument.IsDeleted = false;
+                _appContext.CustomerDocumentDetails.Update(customerDocument);
+                _appContext.SaveChanges();
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public CustomerDocumentDetail GetCustomerDocumentDetailById(long id)
+        {
+            try
+            {
+                CustomerDocumentDetail CustomerDocumentDetails = new CustomerDocumentDetail();
+                CustomerDocumentDetails = _appContext.CustomerDocumentDetails
+                    .Where(p => p.IsDeleted == false && p.CustomerId == id)
+                    .OrderByDescending(p => p.UpdatedDate)
+                    .FirstOrDefault();
+                return CustomerDocumentDetails;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         public void UpdateShippingViaDetails(ShippingViaDetails model)
 		{
 			try
