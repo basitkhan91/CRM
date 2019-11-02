@@ -89,7 +89,9 @@ export class DashnumberComponent implements OnInit {
     ngOnInit(): void {
         this.getList();
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-dashnumber';
+        
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
+        
 
     }
     get userName(): string {

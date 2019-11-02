@@ -13986,8 +13986,16 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     font-size: 12px !important;
   }
 .p-dropdown-custom-md .ui-dropdown{
-    width: 148px !important;
+    width: 138px !important;
 }
+.p-dropdown-custom-md-Header .ui-dropdown{
+    width: 100%!important;
+}
+.p-dropdown-custom-md-Header .ui-dropdown label.ui-dropdown-label {
+    text-align: left;
+    font-size: 12px !important;
+}
+
 .p-dropdown-custom-md .ui-dropdown label.ui-dropdown-label {
     text-align: left;
     font-size: 12px !important;

@@ -66,14 +66,14 @@
                                 <div class="col-md-12 row">
                                     <div class="col-md-3 col-offset-3">
                                         <label style="width: auto;">
-                                            <input type="radio" value="single" id="single" name="type"
-                                                [(ngModel)]="workOrderGeneralInformation.workOrderType" [checked]='selectedRadioButtonValue'
-                                                (click)="toggleWorkOrderType($event.target.value)">
+                                            <input type="radio" [value]=true   name="type"
+                                                [(ngModel)]="workOrderGeneralInformation.isSinglePN" 
+                                                >
                                             Single MPN
                                         </label>
                                         <label style="width: auto;">
-                                            <input type="radio" value="multiple" id="multiple" name="type"
-                                                [(ngModel)]="workOrderGeneralInformation.workOrderType" (click)="toggleWorkOrderType($event.target.value)">
+                                            <input type="radio" [value]=false name="type"
+                                                [(ngModel)]="workOrderGeneralInformation.isSinglePN" >
                                             Multiple MPN
                                         </label>
                                     </div>
@@ -81,26 +81,26 @@
 
                                         <label class="control-label col-sm-4 w80">WO Type</label>
                                         <label style="width: auto;">
-                                            <input type="radio" value="customer" name="dealer"
-                                                [(ngModel)]="workOrderGeneralInformation.workOrderDealerType"
+                                            <input type="radio" value="1" name="dealer"
+                                                [(ngModel)]="workOrderGeneralInformation.workOrderTypeId"
                                                 (click)="woDealerChange($event.target.value)">
                                             Customer
                                         </label>
                                         <label style="width: auto;">
-                                            <input type="radio" value="shop" name="dealer" [(ngModel)]="workOrderGeneralInformation.workOrderDealerType"
+                                            <input type="radio" value="2" name="dealer" [(ngModel)]="workOrderGeneralInformation.workOrderTypeId"
                                                 (click)="woDealerChange($event.target.value)">
                                             Shop(Internal)
                                         </label>
 
                                         <label style="width: auto;">
-                                            <input type="radio" value="liquidation" name="dealer"
-                                                [(ngModel)]="workOrderGeneralInformation.workOrderDealerType"
+                                            <input type="radio" value="3" name="dealer"
+                                                [(ngModel)]="workOrderGeneralInformation.workOrderTypeId"
                                                 (click)="woDealerChange($event.target.value)">
                                             Liquidation
                                         </label>
                                         <label style="width: auto;">
-                                            <input type="radio" value="services" name="dealer"
-                                                [(ngModel)]="workOrderGeneralInformation.workOrderDealerType"
+                                            <input type="radio" value="4" name="dealer"
+                                                [(ngModel)]="workOrderGeneralInformation.workOrderTypeId"
                                                 (click)="woDealerChange($event.target.value)">
                                             Services
                                         </label>
@@ -113,7 +113,7 @@
                                             <div *ngFor="let workOrderType of workOrderTypes">
                                                 <label data-toggle="tooltip" title="External" style="width: auto;">
                                                     <input type="radio" name="work-type"
-                                                        (change)="changeWorkOrderType($event)"
+                                                 
                                                         value="workOrder_{{workOrderType.id}}"
                                                         [checked]="workOrder.workOrderTypeId == workOrderType.id">
                                                     {{workOrderType.description}}
@@ -140,15 +140,16 @@
                                                 [(ngModel)]="workOrderGeneralInformation.openDate"></p-calendar>
                                         </div>
                                         <div class="form-group">
-                                            <label for="wostatus">WO Status
-                                                <span class="clr-red">*</span>
-                                            </label>
-                                            <select [(ngModel)]="workOrderGeneralInformation.workOrderStatus"
+                                            <label for="credit" style="width: 100%;">WO Status
+                                                <span class="clr-red">*</span> </label>
+                                            <p-dropdown [options]="workOrderStatusList"  placeholder="Select Status" class="p-dropdown-custom-md-Header" [(ngModel)]="workOrderGeneralInformation.workOrderStatusId">
+                                              </p-dropdown>
+                                            <!-- <select [(ngModel)]="workOrderGeneralInformation.workOrderStatusId"
                                                 title="Status can be: Open, Closed, Cancelled, Delayed. This auto populate based on the mapping of Stages to Status. If multiple MPNs on work order, this status only change for ALL MPN… example status remained in open unless ALL MPN is closed">
                                                 <option value="0">Select Status</option>
                                                 <option *ngFor="let status of workOrderStatus" [ngValue]="status.id">
                                                     {{status.description}}</option>
-                                            </select>
+                                            </select> -->
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -161,16 +162,30 @@
                                                         </a>
                                                     </span>
                                             </label>
-                                            <p-autoComplete class="p-autoComplete-ctsm"
+                                            <p-autoComplete field="customerName" [(ngModel)]="workOrderGeneralInformation.customerId"
+                                          
+                                              name="customerNames"
+                                              errorMessage="Records not found" 
+                                              [forceSelection]="true"
+                                              (onSelect)="selectCustomer($event, workOrderGeneralInformation )"
+                                              [suggestions]="customerNamesList" 
+                                              (completeMethod)="filterCustomerName($event)"
+                                               [size]="30" [minLength]="1"
+                                              [dropdown]="false" class="p-autoComplete-ctsm" >
+                       
+                                        </p-autoComplete>
+                                
+                                        <div class="clear"></div>
+                                            <!-- <p-autoComplete class="p-autoComplete-ctsm"
                                                     emptyMessage="Not Records Found"
                                                 (onSelect)="onCustomerSelected($event,'name')"
                                                 [suggestions]="customerNames"
                                                 (completeMethod)="filterCustomer($event,'name')" [size]="30"
                                                 [minLength]="1" [dropdown]="true" [(ngModel)]="workOrderGeneralInformation.customerId">
-                                            </p-autoComplete>
+                                            </p-autoComplete> -->
                                         </div>
                                   
-                                        <div class="form-group ">
+                                        <!-- <div class="form-group ">
                                             <label for="customercode">Customer Code
                                                 <span class="clr-red">*</span>
                                             </label>
@@ -183,13 +198,13 @@
 
                                                 [(ngModel)]="workOrderGeneralInformation.customerCodeId">
                                             </p-autoComplete>
-                                        </div>
+                                        </div> -->
                                         <div class="form-group ">
                                             <label for="customerref">Customer Ref
                                                 <span class="clr-red">*</span>
                                             </label>
 
-                                            <input type="text" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="workOrderGeneralInformation.customerReference">
+                                            <input type="text" class="form-control" name="contactRef" [(ngModel)]="workOrderGeneralInformation.customerReference">
                                         </div>
                                         
                                     </div>
@@ -197,11 +212,11 @@
                                             <div class="form-group">
                                                     <div class="checkbox-cstm">
                                                         <label>
-                                                            <input type="checkbox" name="contract" [(ngModel)]="workOrderGeneralInformation.isContract">
+                                                            <input type="checkbox" name="contract" [(ngModel)]="workOrderGeneralInformation.isContractAvl">
                                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                                             Contract
                                                         </label>
-                                                        <input *ngIf="workOrderGeneralInformation.isContract" type="text" class="form-control" [(ngModel)]="workOrderGeneralInformation.contract">
+                                                        <input *ngIf="workOrderGeneralInformation.isContractAvl" type="text" class="form-control" [(ngModel)]="workOrderGeneralInformation.contract">
                                                     </div>
                                                 </div>
                                                     <div class="form-group ">
@@ -219,10 +234,10 @@
                                                 <span class="clr-red">*</span> </label>
                                             <div class="col-md-12">
                                                 <div class="col-md-4">
-                                                    <input type="text" class="form-control"  [(ngModel)]="workOrderGeneralInformation.creditTerms">
+                                                    <input type="text" class="form-control"  [(ngModel)]="workOrderGeneralInformation.creditLimit">
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <p-dropdown class="p-dropdown-custom-md "  placeholder="Select CreditTerms" [options]="creditTerms" name="creditTerms" [(ngModel)]="workOrderGeneralInformation.creditTermsandLimitId "></p-dropdown>
+                                                    <p-dropdown class="p-dropdown-custom-md "  placeholder="Select CreditTerms" [options]="creditTerms" name="creditTerms" [(ngModel)]="workOrderGeneralInformation.creditTermsId "></p-dropdown>
                                                     <!-- <select [(ngModel)]="workOrderGeneralInformation.creditTermsandLimitId ">
                                                         <option [ngValue]="0">Select Terms</option>
                                                         <option *ngFor="let creditTerm of creditTerms"
@@ -236,23 +251,42 @@
                                             <label for="employee" style="margin-top: 10px;">Employee
                                                 <span class="clr-red">*</span> </label>
 
-                                            <p-autoComplete class="p-autoComplete-ctsm"
-                                                (onSelect)="onEmployeeSelected($event,'employee')"
-                                                [suggestions]="employeeNames" (completeMethod)="filterEmployee($event)"
-                                                [size]="30" [minLength]="1" [dropdown]="true"
-                                                [(ngModel)]="workOrderGeneralInformation.employeeId">
-                                            </p-autoComplete>
+                                                <p-autoComplete field="label" [(ngModel)]="workOrderGeneralInformation.employeeId"
+                                            
+                                              name="employees"
+                                              errorMessage="Records not found" 
+                                              [forceSelection]="true"
+                                              [dropdown]="true"
+                                              [suggestions]="employeeList" 
+                                              (completeMethod)="filterEmployee($event)"
+                                               [size]="30" [minLength]="1"
+                                              [dropdown]="true" class="p-autoComplete-ctsm" >
+                       
+                                        </p-autoComplete>
                                         </div>
                                         <div class="form-group ">
 
                                             <label for="employee">Salesperson
                                                 <span class="clr-red">*</span> </label>
-                                            <p-autoComplete class="p-autoComplete-ctsm"
+
+                                                <p-autoComplete field="label" [(ngModel)]="workOrderGeneralInformation.salesPersonId"
+                                            
+                                                name="salesPerson"
+                                                errorMessage="Records not found" 
+                                                [forceSelection]="true"
+                                                [dropdown]="true"
+                                                [suggestions]="salesPersonList" 
+                                                (completeMethod)="filterSalesPerson($event)"
+                                                 [size]="30" [minLength]="1"
+                                                [dropdown]="true" class="p-autoComplete-ctsm" >
+                         
+                                          </p-autoComplete>
+                                            <!-- <p-autoComplete class="p-autoComplete-ctsm"
                                                 [(ngModel)]="workOrderGeneralInformation.salesPersonId"
                                                 (onSelect)="onEmployeeSelected($event,'salesPerson')"
                                                 [suggestions]="employeeNames" (completeMethod)="filterEmployee($event)"
                                                 [size]="30" [minLength]="1" [dropdown]="true">
-                                            </p-autoComplete>
+                                            </p-autoComplete> -->
                                         </div>
                                     </div>
                                     <div class="clear"></div>
@@ -266,11 +300,12 @@
                 </div>
                 <div > 
 
-                <button *ngIf="workOrderGeneralInformation.workOrderType !== 'single'" class="btn btn-primary-cstm pull-right" (click)="addMPN()">Add MPN</button>
+                <button *ngIf="!workOrderGeneralInformation.isSinglePN" class="btn btn-primary-cstm pull-right" (click)="addMPN()">Add MPN</button>
               </div>
-                <div class="table-responsive">
+                <div class="table-responsive" style="height: 300px;">
                  
-                    <table class="table table-bordered table-striped table-sorting mpn-list-table"
+                    <!-- <table class="table table-bordered table-striped table-sorting mpn-list-table mpn-list-table-cstm" -->
+                        <table class="table table-bordered table-striped table-fixed table-sorting mpn-list-table"
                         id="mpn-list-table">
                         <thead>
                             <tr>
@@ -279,11 +314,12 @@
                                 <th rowspan="2">Revised MPN</th>
                                 <th rowspan="2">Work Scope *</th>
                                 <th rowspan="2">NTE</th>
-                                <th rowspan="2">Qty *</th>
+                                <!-- <th rowspan="2">Qty *</th> -->
                                 <th rowspan="2">Stock Line Num *</th>
+                                <th rowspan="2">Condition Id *</th>
                                 <th rowspan="2">Serial Num *</th>
                                 <th rowspan="2">CMM/Pub Ref</th>
-                                <th rowspan="2">Workflow ID *</th>
+                                <th rowspan="2">Workflow ID </th>
                                 <th rowspan="2">Stage *</th>
                                 <th rowspan="2">Status *</th>
                                 <th rowspan="2">Priority *</th>
@@ -311,81 +347,137 @@
                         </thead>
                         <tbody>
                             <tr class="mpn-row" style="display: table-row;"
-                                *ngFor="let workOrderPartNumber of workOrderPartNumbers">
+                                *ngFor="let workOrderPartNumber of workOrderGeneralInformation.partNumbers">
                                 <td>
-                                    <p-autoComplete class="p-autoComplete-ctsm"
+
+                                    <p-autoComplete field="partNumber" [(ngModel)]="workOrderPartNumber.masterPartId"
+                                            
+                                    name="MPN"
+                                    errorMessage="Records not found" 
+                                    [forceSelection]="true"
+                                    [dropdown]="true"
+                                    [suggestions]="partNumberList" 
+                                    (onSelect)="onSelectedPartNumber($event, workOrderPartNumber); getWorkFlowByPNandScope(workOrderPartNumber)"
+                                    (completeMethod)="filterPartNumber($event)"
+                                     [size]="30" [minLength]="1"
+                                    [dropdown]="true" class="p-autoComplete-ctsm" >
+             
+                              </p-autoComplete>
+                                    <!-- <p-autoComplete class="p-autoComplete-ctsm"
                                     (onSelect)="onCustomerSelected($event,'code')"
                                     [suggestions]="customerCodes"
                                     (completeMethod)="filterCustomer($event,'code')" [size]="30"
                                     [minLength]="1" [dropdown]="true"
 
                                    >
-                                </p-autoComplete>
+                                </p-autoComplete> -->
                                 </td>
-                                <td><input type="text"  class="form-control" value="Gyro" ></td>
+                                <td><input type="text"  class="form-control" [(ngModel)]="workOrderPartNumber.description" ></td>
                                 <td>
-                                    <p-autoComplete class="p-autoComplete-ctsm"
+                                    <p-autoComplete field="revisedPartNo" [(ngModel)]="workOrderPartNumber.mappingItemMasterId"
+                                            
+                                    name=""
+                                    errorMessage="Records not found" 
+                                    [forceSelection]="true"
+                                    [dropdown]="true"
+                                    [suggestions]="revisedPartNumberList" 
+                                    (completeMethod)="filterRevisedPartNumber($event)"
+                                     [size]="30" [minLength]="1"
+                                    [dropdown]="true" class="p-autoComplete-ctsm" >
+                                  </p-autoComplete>
+                                    <!-- <p-autoComplete class="p-autoComplete-ctsm"
+                                    [(ngModel)]="workOrderPartNumber.mappingPartId"
                                     (onSelect)="onCustomerSelected($event,'code')"
                                     [suggestions]="customerCodes"
                                     (completeMethod)="filterCustomer($event,'code')" [size]="30"
                                     [minLength]="1" [dropdown]="true"
 
                                     >
-                                </p-autoComplete>
+                                </p-autoComplete> -->
                                 </td>
                                 <td>
-                                    <select class="w100" [(ngModel)]="workOrderPartNumber.workOrderScopeId">
+                                    <p-dropdown  placeholder="Select Work Scope" [options]="workScopesList" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.workOrderScopeId"
+                                    (onChange)="getWorkFlowByPNandScope(workOrderPartNumber)"
+                                    
+                                    >
+                                      </p-dropdown>
+                                    <!-- <select class="w100" [(ngModel)]="workOrderPartNumber.workOrderScopeId">
+                                      <option value="0">Select Work Scope</option>
                                         <option *ngFor="let workScope of workScopes"
                                             [ngValue]="workScope.workScopeId">
                                             {{workScope.workScopeCode}}</option>
-                                    </select>
+                                    </select> -->
                                 </td>
-                                <td><input type="text" class="form-control w50" value="10000"></td>
-                                <td><input type="number" class="form-control w50" value="10"></td>
+                                <td><input type="text" class="form-control w50" [(ngModel)]="workOrderPartNumber.nTE"></td>
+                                <!-- <td><input type="number" class="form-control w50"  [(ngModel)]="workOrderPartNumber.Quantity"  ></td> -->
                                 <td>
-                                    <select class="w100" [(ngModel)]="workOrderPartNumber.stockLineId">
+                                    <p-dropdown  placeholder="Select StockLine" [options]="stockLineList" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.stockLineId"
+                                    (onChange)="getSerialNoByStockLineId(workOrderPartNumber)"
+                                    
+                                    >
+                                      </p-dropdown>
+                                    <!-- <select class="w100" [(ngModel)]="workOrderPartNumber.stockLineId">
                                         <option value="SL123">SL123</option>
                                         <option value="SL124">SL124</option>
                                         <option value="SL125">SL125</option>
                                         <option value="SL126">SL126</option>
                                         <option value="SL127">SL127</option>
                                         <option value="SL128">SL128</option>
-                                    </select>
+                                    </select> -->
                                 </td>
-                                <td><input type="text" class="form-control w100" value="12345" disabled="">
+
+                                <td>
+                                    <p-dropdown  placeholder="Select Condition" [options]="conditionList"  (onChange)="getSerialNoByStockLineId(workOrderPartNumber)"
+                                     class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.conditionId">
+                                      </p-dropdown>
+                                   
+                                  <!-- <a [(ngModel)]="workOrderPartNumber.publicationPart" target="_blank" class="clr-red">View</a> -->
                                 </td>
-                                <td><a href="sample-document.pdf" target="_blank" class="clr-red">View</a>
+
+                                <td><input type="text" class="form-control w100" [(ngModel)]="workOrderPartNumber.stockLineNumber" disabled >
+                                </td>
+                                <td>
+                                    <p-dropdown placeholder="Select CMM" [options]="cmmList" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.cMMId">
+                                      </p-dropdown>
+                                   
+                                  <!-- <a [(ngModel)]="workOrderPartNumber.publicationPart" target="_blank" class="clr-red">View</a> -->
                                 </td>
                                 <td>
                                     <span class="inline-block">
-                                        <p-dropdown [options]="workFlowItems" class="p-dropdown-custom-md">
+                                        <p-dropdown [options]="workFlowItems" placeholder="Select WorkFlow" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.workflowId">
                                         </p-dropdown>
                                     </span>
                                 </td>
                                 <td>
-                                    <select class="w100" [(ngModel)]="workOrderPartNumber.workOrderStageId">
+                                    <p-dropdown [options]="workOrderStagesList"  placeholder="Select Stage" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.workOrderStageId">
+                                      </p-dropdown>
+                                    <!-- <select class="w100" [(ngModel)]="workOrderPartNumber.workOrderStageId">
                                         <option value="0" selected>Select</option>
                                         <option *ngFor="let workOrderStage of workOrderStages"
                                             [ngValue]="workOrderStage.workOrderStageId   ">
                                             {{workOrderStage.description}}</option>
-                                    </select>
+                                    </select> -->
                                 </td>
                                 <td>
-                                    <select class="w100"
+                                    <p-dropdown [options]="workOrderStatusList"  placeholder="Select Status" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.workOrderStatusId">
+                                      </p-dropdown>
+                                    <!-- <select class="w100"
                                         [(ngModel)]="workOrderPartNumber.workOrderStatusId">
                                         <option value="0">Select Status</option>
                                         <option *ngFor="let status of workOrderStatus"
                                             [ngValue]="status.id">
                                             {{status.description}}</option>
-                                    </select>
+                                    </select> -->
                                 </td>
                                 <td>
-                                    <select class="w100"
+                                    <p-dropdown [options]="priorityList"  placeholder="Select Status" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.workOrderPriorityId">
+                                      </p-dropdown>
+                                    <!-- <select class="w100"
                                         [(ngModel)]="workOrderPartNumber.workOrderPriorityId">
                                         <option value="">AOG</option>
                                         <option value="">Critical</option>
                                         <option value="">Routine</option>
-                                    </select>
+                                    </select> -->
                                 </td>
                                 <td>
                                         <p-calendar [showIcon]="true" 
@@ -401,32 +493,52 @@
                                         <p-calendar [showIcon]="true" 
                                         [(ngModel)]="workOrderPartNumber.estimatedShipDate"></p-calendar>
                                    </td>
-                                <td><input type="checkbox" class="form-control w60" value="" disabled="">
+                                <td><input type="checkbox" class="form-control w60"  [(ngModel)]="workOrderPartNumber.isPMA" >
                                 </td>
-                                <td><input type="checkbox" class="form-control w60" value="" disabled="">
-                                </td>
-                                <td>
-                                    <div class="inner-addon right-addon inline-block w100">
-                                        <input type="text" class="form-control" value="Shabbir"
-                                            autocomplete="off">
-                                    </div>
+                                <td><input type="checkbox" class="form-control w60"  [(ngModel)]="workOrderPartNumber.isDER" >
                                 </td>
                                 <td>
-                                    <select class="w80">
+                                  
+                                    <p-autoComplete field="label" [(ngModel)]="workOrderPartNumber.technicianId"
+                                            
+                                    name="technician"
+                                    errorMessage="Records not found" 
+                                    [forceSelection]="true"
+                                    [dropdown]="true"
+                                    [suggestions]="technicianList" 
+                                    (completeMethod)="filterTechnician($event)"
+                                     [size]="30" [minLength]="1"
+                                    [dropdown]="true" class="p-autoComplete-ctsm" >
+             
+                              </p-autoComplete>
+
+                                    <!-- <div class="inner-addon right-addon inline-block w100">
+
+                                         <input type="text" class="form-control" 
+                                            autocomplete="off"> 
+                                    </div> -->
+                                </td>
+                                <td>
+                                    <p-dropdown placeholder="Select Tech Station"  [options]="technicalStationsList" class="p-dropdown-custom-md"  [(ngModel)]="workOrderPartNumber.techStationId">
+                                      </p-dropdown>
+                                   
+                                    <!-- <select class="w80" >
                                         <option value="">Station 1</option>
                                         <option value="">Station 2</option>
                                         <option value="">Station 3</option>
-                                    </select>
+                                    </select> -->
                                 </td>
                                 <td>
-                                    <select class="w80">
+                                    <p-dropdown  placeholder="Select Tear Down" [options]="tearDownReportList" class="p-dropdown-custom-md"  [(ngModel)]="workOrderPartNumber.tearDownReport" >
+                                      </p-dropdown>
+                                    <!-- <select class="w80">
                                         <option value="">Teardown 1</option>
                                         <option value="">Teardown 2</option>
                                         <option value="">Teardown 3</option>
-                                    </select>
+                                    </select> -->
                                 </td>
-                                <td><input type="text" class="form-control w50" value="10" disabled=""></td>
-                                <td><input type="text" class="form-control w50" value="15"></td>
+                                <td><input type="text" class="form-control w50" ></td>
+                                <td><input type="text" class="form-control w50"  [(ngModel)]="workOrderPartNumber.tATDaysStandard"></td>
                                 <td><span class="delete-row-btn"> <a
                                             class="btn btn-danger boxed-float-btn nobg"
                                             data-toggle="tooltip" title="Delete"><i
@@ -441,7 +553,7 @@
                 </div>
                 
                 <div>
-                  <button class="btn btn-success pull-right" *ngIf="!showTableGrid" type="button" (click)="addWorkOrder()">Save</button>
+                  <button class="btn btn-success pull-right" *ngIf="!showTableGrid" type="button" (click)="saveWorkOrder()">Save</button>
                 <button  *ngIf="showTableGrid && workOrderGeneralInformation.workOrderType !== 'single' " class="btn btn-success pull-right" [routerLink]="['/workordersmodule/workorderspages/app-work-order-quote']"  >Create Quote</button>
                 </div>
             

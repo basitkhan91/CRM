@@ -980,7 +980,7 @@ namespace DAL.Repositories
             }
         }
 
-        public Nha_Tla_Alt_Equ_ItemMapping NhaTlaAltEquItemMappingById(long itemMappingId,int mappingType)
+        public Nha_Tla_Alt_Equ_ItemMapping NhaTlaAltEquItemMappingById(long itemMappingId, int mappingType)
         {
             Nha_Tla_Alt_Equ_ItemMapping itemMapping = new Nha_Tla_Alt_Equ_ItemMapping();
 
@@ -997,16 +997,16 @@ namespace DAL.Repositories
                     .Select(p => new
                     {
                         ItemMaster = p.im,
-                        ItemMapping=p.mp
+                        ItemMapping = p.mp
                     })
                     .FirstOrDefault();
-                    
 
-                if (result != null && result.ItemMapping!=null && result.ItemMapping.ItemMappingId>0)
+
+                if (result != null && result.ItemMapping != null && result.ItemMapping.ItemMappingId > 0)
                 {
                     itemMapping = result.ItemMapping;
                     itemMapping.ItemMaster = result.ItemMaster;
-                   
+
                 }
                 return itemMapping;
             }
@@ -1016,5 +1016,6 @@ namespace DAL.Repositories
                 throw;
             }
         }
+
     }
 }

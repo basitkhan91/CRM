@@ -14,12 +14,12 @@ namespace DAL.Models
             Charges = new List<WorkOrderCharges>();
             Assets = new List<WorkOrderAssets>();
             Exclusions = new List<WorkOrderExclusions>();
-            Expertise = new WorkOrderLaborHeader();
+            //Expertise = new WorkOrderLaborHeader();
             MaterialList = new List<WorkOrderMaterials>();
             Documents = new List<WorkOrderDocuments>();
             WorkOrderAddress = new List<WorkOrderAddress>();
-            WorkOrderQuote = new WorkOrderQuote();
-            WorkOrderFreight = new List<WorkOrderFreight>();
+           // WorkOrderQuote = new WorkOrderQuote();
+           WorkOrderFreight = new List<WorkOrderFreight>();
         }
 
         [Key]
@@ -38,11 +38,9 @@ namespace DAL.Models
 
         public string Version { get; set; }
 
-        [Required(ErrorMessage = "Work Scope is required")]
         [ForeignKey("WorkScopeId")]
         public Nullable<long> WorkScopeId { get; set; }
 
-        [Required(ErrorMessage = "Part Number is required")]
         [ForeignKey("ItemMasterId")]
         public Nullable<long> ItemMasterId { get; set; }
 
@@ -55,10 +53,8 @@ namespace DAL.Models
         [ForeignKey("CustomerId")]
         public Nullable<long> CustomerId { get; set; }
 
-        [Required(ErrorMessage = "Currency is required")]
         public Nullable<int> CurrencyId { get; set; }
 
-        [Required(ErrorMessage = "Work Flow Create Date is required")]
         public Nullable<System.DateTime> WorkflowCreateDate { get; set; }
 
         public Nullable<System.DateTime> WorkflowExpirationDate { get; set; }
@@ -93,7 +89,7 @@ namespace DAL.Models
 
         public Nullable<long> ManagementStructureId { get; set; }
 
-        public int? MasterCompanyId { get; set; }
+        public int MasterCompanyId { get; set; }
 
         public string CreatedBy { get; set; }
 
@@ -109,9 +105,9 @@ namespace DAL.Models
 
         public Nullable<bool> IsDeleted { get; set; }
 
-        public virtual WorkOrder WorkOrder { get; set; }
-        public virtual WorkScope WorkScope { get; set; }
-        public virtual ItemMaster ItemMaster { get; set; }
+        //public virtual WorkOrder WorkOrder { get; set; }
+        //public virtual WorkScope WorkScope { get; set; }
+        //public virtual ItemMaster ItemMaster { get; set; }
 
         public virtual List<WorkOrderCharges> Charges { get; set; }
         public virtual List<WorkOrderAssets> Assets { get; set; }
