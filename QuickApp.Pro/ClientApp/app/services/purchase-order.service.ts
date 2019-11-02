@@ -14,15 +14,35 @@ export class PurchaseOrderService {
     constructor(
         private router: Router,
         private http: HttpClient,
-       	private purchaseORderEndpoint: PurchaseOrderEndpoint) { let currentUrl = this.router.url; }
+       	private purchaseOrderEndpoint: PurchaseOrderEndpoint) { let currentUrl = this.router.url; }
     getPurchaseOrdersBasic() {
 		return Observable.forkJoin(
-			this.purchaseORderEndpoint.getPurchaseOrderBasicList<any[]>());
+			this.purchaseOrderEndpoint.getPurchaseOrderBasicList<any[]>());
   }
   
   /*vendor PO*/
   getVendorPOById(Id: number) {
-    return this.purchaseORderEndpoint.getVendorPOById<any>(Id);
+    return this.purchaseOrderEndpoint.getVendorPOById<any>(Id);
+  }
+
+  saveCreatePOApproval(action: any) {
+    return this.purchaseOrderEndpoint.saveCreatePOApproval<any>(action);
+  }
+
+  updatePOApproval(action: any) {
+      return this.purchaseOrderEndpoint.updatePOApproval<any>(action);
+  }
+
+  getPOApproverList(purchaseOrderId){
+    return this.purchaseOrderEndpoint.getPOApproverList(purchaseOrderId);
+  }
+
+  getPurchaseOrderPartsById(purchaseOrderId){
+    return this.purchaseOrderEndpoint.getPurchaseOrderPartsById(purchaseOrderId);
+  }
+
+  getPOStatus(purchaseOrderId, status, updatedBy){
+    return this.purchaseOrderEndpoint.getPOStatus(purchaseOrderId, status, updatedBy);
   }
   /*./vendor PO*/
 

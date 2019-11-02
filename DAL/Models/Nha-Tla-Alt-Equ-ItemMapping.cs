@@ -10,6 +10,8 @@ namespace DAL.Models
         public long ItemMappingId { get; set; }
         [ForeignKey("MasterCompanyId")]
         public long ItemMasterId { get; set; }
+        public long MappingItemMasterId { get; set; }
+        
         public string Memo { get; set; }
         public int MappingType { get; set; } //NHA,TLA,ALT,EQU
         [ForeignKey("MasterCompanyId")]

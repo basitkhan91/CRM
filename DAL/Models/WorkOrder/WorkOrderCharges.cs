@@ -14,7 +14,7 @@ namespace DAL.Models
         public long WorkFlowWorkOrderId { get; set; }
         public long ItemMasterId { get; set; }
         public long? VendorId { get; set; }
-        public short? Quantity { get; set; }
+        public int? Quantity { get; set; }
         public int RoNumberId { get; set; }
         public string InvoiceNo { get; set; }
         public decimal Amount { get; set; }

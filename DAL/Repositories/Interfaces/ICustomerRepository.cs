@@ -62,6 +62,7 @@ namespace DAL.Repositories.Interfaces
         void CreateDocumentDetails(CustomerDocumentDetail model);
         void UpdateDocumentDetails(CustomerDocumentDetail customerDocument);
         CustomerDocumentDetail GetCustomerDocumentDetailById(long id);
+        IEnumerable<object> GetCustomerNameAndCodes(string value);
 
     }
 }

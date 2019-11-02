@@ -13,7 +13,7 @@ namespace DAL.Models
             PartNumbers = new List<WorkOrderPartNumber>();
         }
         [Key]
-        public long ID { get; set; }
+        public long WorkOrderId { get; set; }
 
         public string WorkOrderNum { get; set; }
 
@@ -23,22 +23,6 @@ namespace DAL.Models
 
         [Required(ErrorMessage = "Open date is required")]
         public DateTime OpenDate { get; set; }
-
-        //[Required(ErrorMessage = "Customer Request date is required")]
-        //public DateTime CustomerRequestDate { get; set; }
-
-        //[Required(ErrorMessage = "Promise date is required")]
-        //public DateTime PromiseDate { get; set; }
-
-        //[Required(ErrorMessage = "Estimated completion date is required")]
-        //public DateTime EstimatedCompletionDate { get; set; }
-
-        //[Required(ErrorMessage = "Estimated ship date is required")]
-        //public DateTime EstimatedShipDate { get; set; }
-
-        [Required(ErrorMessage = "Quantity is required")]
-        public int Quantity { get; set; }
-
 
         public long CustomerId { get; set; }
 
@@ -52,7 +36,6 @@ namespace DAL.Models
 
         public decimal CreditLimit { get; set; }
 
-        //public long WorkOrderPriorityId { get; set; }
 
         [Required(ErrorMessage = "Status is required")]
         [ForeignKey("WorkOrderStatusId")]
@@ -63,7 +46,7 @@ namespace DAL.Models
         public long EmployeeId { get; set; }
 
         [Required(ErrorMessage = "Sales person is required")]
-        public string SalesPerson { get; set; }
+        public long SalesPersonId { get; set; }
 
         public int MasterCompanyId { get; set; }
 

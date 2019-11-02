@@ -1711,6 +1711,8 @@ namespace QuickApp.Pro.Controllers
                 }).OrderByDescending(a => a.ItemMasterId).ToList();
             return Ok(allPartDetails);
         }
+
+       
     }
 
 }

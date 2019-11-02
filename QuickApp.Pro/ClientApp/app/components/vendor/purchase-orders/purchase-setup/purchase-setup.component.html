@@ -47,7 +47,7 @@
                                     <!-- <select class="form-control" name="priorityId" [(ngModel)]="sourcePoApproval.priorityId" required>
                                         <option *ngFor="let priorityName of allPriorityInfo" [ngValue]="priorityName.priorityId">{{priorityName.description}}</option>
                                     </select> -->
-                                    <p-autoComplete field="description" class="pautocomp-cstm" 
+                                    <p-autoComplete field="label" class="pautocomp-cstm" 
                                     [(ngModel)]="sourcePoApproval.priorityId" name="priorityName" [suggestions]="allPriorityDetails" 
                                     (completeMethod)="filterPriorityNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" #priorityId="ngModel" errorMessage="Records not found" [forceSelection]="true" required>                   </p-autoComplete>
                                     <div *ngIf="priorityId.invalid && (priorityId.dirty || priorityId.touched)" class="alert alert-danger alert-danger-cstm">
@@ -365,6 +365,7 @@
                             <th>Cond <span class="clr-red">*</span></th>
                             <th>Order Qty <span class="clr-red">*</span></th>
                             <th>Unit Cost <span class="clr-red">*</span></th>
+                            <th>Disc Percent</th>
                             <th>Disc./unit</th>
                             <th>Disc. Amount</th> <!--Disc. Cost/unit-->
                             <th>Ext Cost <span class="clr-red">*</span></th>
@@ -401,31 +402,14 @@
                                 </td>
                                 <td>
                                     <div class="inner-addon inline-block">
-                                            <p-autoComplete field="partNumber" [(ngModel)]="partList.partNumberId"  name="partNumber{{row_index}}"
-                                            [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1"
-                                            [dropdown]="true" class="p-autoComplete-ctsm" #partNum="ngModel" errorMessage="Records not found" (onSelect)="partnmId(partList)" [forceSelection]="true"  required>
-                       
+                                        <p-autoComplete field="label" [(ngModel)]="partList.partNumberId"  name="partNumber{{row_index}}"
+                                        [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" #partNum="ngModel" errorMessage="Records not found" (onSelect)="getPNDetailsById(partList)" [forceSelection]="true"  required>                       
                                         </p-autoComplete>
-                                        <!--<select (change)="getPartValueForPart(partList,partList.partId)" [(ngModel)]="partList.partId">
-                                            <option *ngFor="let object of partList.partListObj" [ngValue]="object.partId">{{object.partNumber}}</option>
-                                        </select>-->
-
-                                        <!-- <p-autoComplete [(ngModel)]="partList.partNumberId" field=""  (onKeyUp)=eventHandler($event) (onSelect)="partnmId(partList,$event)" name="partName{{row_index}}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [dropdown]="true" #partNum="ngModel" errorMessage="Records not found" [forceSelection]="true" required>
-                                             <ng-template let-partName pTemplate="part">
-                                                <div class="ui-helper-clearfix">{{partName}}</div>
-                                            </ng-template> 
-                                        </p-autoComplete> -->
-                                        <!-- <p-autoComplete field="partNumber" class="pautocomp-cstm" (onKeyUp)=eventHandler($event) 
-                                    [(ngModel)]="partList.partNumberId" name="partName{{row_index}}" [suggestions]="partCollection" 
-                                    (completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1" [dropdown]="true" 
-                                    errorMessage="Records not found" [forceSelection]="true" #partNum=ngModel (onSelect)="partnmId(partList,$event)" required>
-                                    </p-autoComplete> -->
                                         <div *ngIf="partNum.invalid && (partNum.dirty || partNum.touched)" class="alert alert-danger alert-danger-cstm">
                                                 <div *ngIf="partNum.errors.required">
                                                     <small> PartNumber is required </small>
                                                 </div>
                                         </div>
-    
                                     </div>
                                 </td>
                                 <td>
@@ -438,7 +422,7 @@
                                 <td *ngIf="partList.itemTypeId==1">Stock</td>
                                 <td *ngIf="partList.itemTypeId==2">Non Stock</td>
                                 <td *ngIf="partList.itemTypeId==3">Equipment</td>
-                                <td *ngIf="partList.itemTypeId==0"></td>
+                                <td *ngIf="partList.itemTypeId==0 || !partList.itemTypeId"></td>
                                 <td>{{partList.manufacturerName}}</td>
                                 <td>
                                     <!--{{partList?.glAccountId}}-->
@@ -474,14 +458,14 @@
                                             </div>
                                     </div>     
                                 </td>
-                                <td><input type="number" class="form-control" [(ngModel)]="partList.quantityOrdered" name="parentQtyOrdered{{row_index}}" pKeyFilter="pint" #parentQtyOrdered="ngModel" (keyup)="onChangeParentQtyOrdered($event)" required>
+                                <td><input type="number" class="form-control" [(ngModel)]="partList.quantityOrdered" name="parentQtyOrdered{{row_index}}" pKeyFilter="pint" #parentQtyOrdered="ngModel" (keyup)="onChangeParentQtyOrdered($event); onGetDiscAmount(partList); onGetExtCost(partList);" required>
                                     <div *ngIf="parentQtyOrdered.invalid && (parentQtyOrdered.dirty || parentQtyOrdered.touched)" class="alert alert-danger alert-danger-cstm">
                                             <div *ngIf="parentQtyOrdered.errors.required">
                                                 <small> Order Qty is required </small>
                                             </div>
                                     </div> 
                                 </td>
-                                <td><input type="text" class="form-control" [(ngModel)]="partList.unitCost" name="unitCost{{row_index}}" pKeyFilter="pint" (change)="onGetDiscCostPerUnit(partList); onGetExtCost(partList);" #unitCost="ngModel" required>
+                                <td><input type="text" class="form-control" [(ngModel)]="partList.unitCost" name="unitCost{{row_index}}" pKeyFilter="pint" (keyup)="onGetExtCost(partList); onGetDiscPerUnit(partList);" #unitCost="ngModel" required>
                                     <div *ngIf="unitCost.invalid && (unitCost.dirty || unitCost.touched)" class="alert alert-danger alert-danger-cstm">
                                             <div *ngIf="unitCost.errors.required">
                                                 <small> Unit Cost is required </small>
@@ -489,11 +473,13 @@
                                     </div> 
                                 </td>
                                 <td>
-                                    <!-- <p-autoComplete class="pautocomp-cstm" [(ngModel)]="partList.discountPerUnit" name="discountPerUnit{{row_index}}" [size]="30" [minLength]="1" [dropdown]="true" (change)="onGetDiscCostPerUnit(partList); onGetExtCost(partList);" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>  -->
-                                    <input type="text" class="form-control" [(ngModel)]="partList.discountPerUnit" name="discountPerUnit{{row_index}}" pKeyFilter="pint">
+                                    <p-autoComplete field="percentValue" class="pautocomp-cstm" 
+                                    [(ngModel)]="partList.discountPercent" name="discountPercent{{row_index}}" [suggestions]="discountPercentList" (completeMethod)="filterDiscountPercent($event)" (onSelect)="onGetDiscPerUnit(partList); onGetDiscAmount(partList); onGetExtCost(partList);" (onBlur)="onGetDiscPerUnit(partList); onGetDiscAmount(partList); onGetExtCost(partList);" [size]="30" [minLength]="1" [dropdown]="true" [forceSelection]="true">
+                                    </p-autoComplete>
                                 </td>
-                                <td><input type="text" class="form-control" [(ngModel)]="partList.discountAmount" name="discountAmount{{row_index}}" pKeyFilter="pint" disabled></td>
-                                <td><input type="text" class="form-control" [(ngModel)]="partList.extendedCost" name="extendedCost{{row_index}}" pKeyFilter="pint" disabled required></td>
+                                <td><input type="number" class="form-control" [(ngModel)]="partList.discountPerUnit" name="discountPerUnit{{row_index}}" pKeyFilter="pint" disabled></td>
+                                <td><input type="number" class="form-control" [(ngModel)]="partList.discountAmount" name="discountAmount{{row_index}}" pKeyFilter="pint" disabled></td>
+                                <td><input type="number" class="form-control" [(ngModel)]="partList.extendedCost" name="extendedCost{{row_index}}" pKeyFilter="pint" disabled required></td>
                                 <td>
                                     <p-autoComplete field="symbol" class="pautocomp-cstm"
                                     [(ngModel)]="partList.functionalCurrencyId" name="functionalCurrencyId{{row_index}}" [suggestions]="functionalCurrList" (completeMethod)="filterFunctionalCurrency($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" required>
@@ -511,10 +497,11 @@
                                         <option *ngFor="let currencyName of allCurrencyData" [ngValue]="currencyName.currencyId">  {{currencyName.symbol}}</option>
                                     </select> -->
                                 </td>
-                                <td><input type="text" class="form-control" [(ngModel)]="partList.workOrderId" name="workOrderId{{row_index}}"></td>
-                                <td><input type="text" class="form-control" [(ngModel)]="partList.repairOrderId" name="repairOrderId{{row_index}}"></td>
-                                <td><input type="text" class="form-control" [(ngModel)]="partList.salesOrderId" name="salesOrderId{{row_index}}"></td>
+                                <td><input type="number" class="form-control" [(ngModel)]="partList.workOrderId" name="workOrderId{{row_index}}"></td>
+                                <td><input type="number" class="form-control" [(ngModel)]="partList.repairOrderId" name="repairOrderId{{row_index}}"></td>
+                                <td><input type="number" class="form-control" [(ngModel)]="partList.salesOrderId" name="salesOrderId{{row_index}}"></td>
                                 <td style="min-width: 90px;">
+                                
                                     <label style="width:90px;">Company:</label>
                                     <select class="form-control" [(ngModel)]="partList.parentCompanyId" name="parentCompanyName{{row_index}}" (change)="getParentBUList(partList)" #pcompanyName required>
                                         <option value="0">Select</option>
@@ -549,7 +536,7 @@
                                         <option *ngFor="let department of partList.parentDepartmentlist " value="{{department.managementStructureId}}">{{department.code}}</option>
                                     </select>
                                 </td>
-                                <td><input type="text" class="form-control" [(ngModel)]="partList.memo" name="memo"></td>
+                                <td><input type="text" class="form-control" [(ngModel)]="partList.memo" name="memo{{row_index}}"></td>
                             </tr>
                             <tr class="child-header splitship-head" *ngIf="partList.ifSplitShip">
                                 <th></th>
@@ -564,7 +551,7 @@
                                 <th>Order Qty</th>
                                 <th>Need By</th>
                                 <th colspan="4">Management Structure <span class="clr-red">*</span></th>
-                                <th colspan="9"></th>
+                                <th colspan="10"></th>
                             </tr>
                             <tr class="child-data splitship-child" *ngFor="let partChildList of partList.childList; let row_no = index"  >
                                 <!--enablePNChildRow-->
@@ -588,16 +575,17 @@
                                 <td>
                                     <div class="inner-addon right-addon autosuggesions-add inline-block w175" *ngIf="partChildList.partListUserTypeId==1">
                                         <div class="col-sm-11">
-                                            <p-autoComplete field="customername"
+                                            <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="partChildList.partListUserId" name="cCustomerName{{row_no}}" [suggestions]="splitcustomersList" (completeMethod)="filterCustomersSplit($event)" [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onCustomerNameChange(partChildList, $event.value)" #cCustomerName="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
+                                            <!-- <p-autoComplete field="customername"
                                                             name="cCustomerName{{row_no}}"
                                                             [(ngModel)]="partChildList.partListUserId"
                                                             (onSelect)="onCustomerNameChange(partChildList,$event)"
                                                             (onKeyUp)=customereventHandler($event)
                                                             [suggestions]="partChildList.customers"
-                                                            (completeMethod)="getPartyNames(partChildList,$event)"
-                                                            [size]="30" [minLength]="1" errorMessage="Records not found" [forceSelection]="true" [dropdown]="true"> <!--#cCustomerName="ngModel" required-->
+                                                            (completeMethod)="filterCustomersSplit(partChildList,$event)"
+                                                            [size]="30" [minLength]="1" errorMessage="Records not found" [forceSelection]="true" [dropdown]="true"> #cCustomerName="ngModel" required
     
-                                            </p-autoComplete>
+                                            </p-autoComplete> -->
                                             <!-- <div *ngIf="cCustomerName.invalid && (cCustomerName.dirty || cCustomerName.touched)" class="alert alert-danger alert-danger-cstm">
                                                     <div *ngIf="cCustomerName.errors.required">
                                                         <small> Customer Name is required </small>
@@ -612,7 +600,7 @@
                                     <div class="inner-addon right-addon autosuggesions-add inline-block w175" *ngIf="partChildList.partListUserTypeId==2">
                                         <div class="col-sm-11">
                                                 <p-autoComplete field="vendorName" class="pautocomp-cstm" 
-                                                [(ngModel)]="partChildList.partListUserId" name="splitVendorNames" [suggestions]="splitVendorNames" (completeMethod)="filterSplitVendorNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="onVendorNameChange(partChildList,$event)" > <!--required #cVendorName="ngModel"-->
+                                                [(ngModel)]="partChildList.partListUserId" name="splitVendorNames{{row_no}}" [suggestions]="splitVendorNames" (completeMethod)="filterSplitVendorNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="onVendorNameChange(partChildList,$event.vendorId)" > <!--required #cVendorName="ngModel"-->
                                             </p-autoComplete>
                                                
                                             <!-- <p-autoComplete field="vendorName"
@@ -639,14 +627,11 @@
                                         </div>
                                     </div>
                                     <div class="inner-addon right-addon autosuggesions-add inline-block w100" *ngIf="partChildList.partListUserTypeId==3">
-                                        <i class="fa fa-search"></i>
-
-                                        <p-autoComplete field="label" class="pautocomp-cstm"
-                                  
-                                        (onSelect)="onCompanyNameChange(partChildList,$event)"
+                                        <!-- <i class="fa fa-search"></i> -->
+                                        <p-autoComplete field="label" class="pautocomp-cstm"                                  
+                                        (onSelect)="onCompanyNameChange(partChildList,$event.value)"
                                          [(ngModel)]="partChildList.partListUserId" name="shipCompanyName" 
-                                         [suggestions]="legalEntityList_Forgrid" 
-    
+                                         [suggestions]="legalEntityList_Forgrid"
                                          (completeMethod)="filterCompanyNameforgrid($event)" 
                                          [size]="30" 
                                          [minLength]="1"
@@ -654,7 +639,6 @@
                                          errorMessage="Records not found" 
                                          [forceSelection]="true" 
                                          #shipCompanyName="ngModel" required>
-    
                                         </p-autoComplete>
                                          <!-- <input type="text" [(ngModel)]="partChildList.partListUserId" class="form-control names ui-autocomplete-input" name="cCompanyName{{row_no}}" autocomplete="off" > #cCompanyName="ngModel" required -->
                                         <!-- <div *ngIf="cCompanyName.invalid && (cCompanyName.dirty || cCompanyName.touched)" class="alert alert-danger alert-danger-cstm">
@@ -669,7 +653,7 @@
                                         <div class="col-sm-10">
                                             <select class="inner-addon right-addon autosuggesions-add inline-block mw400" [(ngModel)]="partChildList.partListAddressId" name="partListAddressId{{row_no}}">
                                                 <option value="0">Select</option>
-                                                <option *ngFor="let object of partChildList.addressData" value="{{object.addressId}}">{{object.address1}} {{object.city}} {{object.country}} {{object.postalCode}}</option>
+                                                <option *ngFor="let object of splitAddressData" value="{{object.addressId}}">{{object.address1}} {{object.city}} {{object.country}} {{object.postalCode}}</option>
                                             </select>
                                         </div>
                                         <div class="col-sm-1" style="margin: 2px -10px;">
@@ -727,7 +711,7 @@
                                         <option *ngFor="let department of partChildList.childDepartmentlist" value="{{department.managementStructureId}}">{{department.code}}</option>
                                     </select>
                                 </td>
-                                <td colspan="9"></td>
+                                <td colspan="10"></td>
                             </tr>
                         </ng-container>
                     </tbody>
@@ -813,12 +797,14 @@
                             </div>
                         </div>
                     </div>
+                    <div *ngIf="isEditMode" class="form-row">
+                        <button class="btn btn-primary-cstm pull-right" (click)="updatePOApproverData()" style="margin-top: 10px;margin-bottom: 20px;">Update</button>
                     </div>
-
+                    </div>
         </p-tabPanel>
         <p-tabPanel header="Vendor Capes">
             <p-table class="rpo-table-cstm" #dt [value]="vendorCapesInfo" [metaKeySelection]="true"
-                     [rows]="20" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]"
+                     [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]"
                      [columns]="vendorCapesCols" selectionMode="multiple"
                      [resizableColumns]="true" [reorderableColumns]="true" [responsive]="true">
     
@@ -866,9 +852,9 @@
                     <div class="form-group">
                         <div class="form-row" *ngIf="sourcePoApproval.shipToUserTypeId==1">
                             <div class="col-sm-11">
-                                    <p-autoComplete field="name" class="pautocomp-cstm" (onClear)="clearInputShipTo()"
+                                    <p-autoComplete field="label" class="pautocomp-cstm" (onClear)="clearInputShipTo()"
                                     [(ngModel)]="sourcePoApproval.shipToUserId" name="shipCustomerName" [suggestions]="customerNames" 
-                                    (completeMethod)="filterNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onshipCustomerNameselected($event.customerId)" #shipCustomerName="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
+                                    (completeMethod)="filterNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onshipCustomerNameselected($event.value)" #shipCustomerName="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
                                 <!--<p-autoComplete field="name" class="pautocomp-cstm" (onSelect)="onshipCustomerNameselected($event)" (onKeyUp)=customereventHandler($event) [(ngModel)]="sourcePoApproval.shipToUserId" name="shipCustomerName" [suggestions]="customerNames" (completeMethod)="filterNames($event)" [size]="30" errorMessage="Records not found" [forceSelection]="true" [minLength]="1" [dropdown]="true" #shipCustomerName="ngModel" required>
                                      <ng-template let-name pTemplate="item">
                                         <div class="ui-helper-clearfix">{{name}}</div>
@@ -919,7 +905,6 @@
                                     (onSelect)="onShipCompanySelected($event)" 
                                      [(ngModel)]="sourcePoApproval.shipToUserId" name="shipCompanyName" 
                                      [suggestions]="legalEntityList_ForShipping" 
-
                                      (completeMethod)="filterCompanyNameforShipping($event)" 
                                      [size]="30" 
                                      [minLength]="1"
@@ -942,7 +927,7 @@
                         <label>
                             Site Name <span class="clr-red">*</span>
                             <span style="margin-left:3px;cursor:pointer;"><a *ngIf="sourcePoApproval.shipToUserId"  class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('AddCusSiteName')"></a></span>
-                            <!-- <span style="margin-left:5px;cursor:pointer;"><a *ngIf="sourcePoApproval.shipToUserId" class="fa fa-edit fa-lg" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('EditCusSiteName')"></a></span> -->
+                            <span style="margin-left:5px;cursor:pointer;"><a *ngIf="sourcePoApproval.shipToAddressId" class="fa fa-edit fa-lg" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('EditCusSiteName', sourcePoApproval)"></a></span>
                         </label>
                         <select class="form-control" (change)="getValueforShipTo(sourcePoApproval , sourcePoApproval.shipToAddressId)" name="shipCusSiteName" [(ngModel)]="sourcePoApproval.shipToAddressId" #shipCusSiteName="ngModel" required>
                             <option>-- Select --</option>
@@ -1042,8 +1027,8 @@
                         </div>
                     </div>
                     <div class="form-group memo-popup-cstm">
-                        <label>Memo <span class="clr-red">*</span></label>
-                        <span pTooltip="{{sourcePoApproval.shipToMemo}}" tooltipPosition="top"><input type="text" pInputText class="form-control" value="{{sourcePoApproval.shipToMemo}}" disabled required /></span>
+                        <label>Memo</label>
+                        <span pTooltip="{{sourcePoApproval.shipToMemo}}" tooltipPosition="top"><input type="text" pInputText class="form-control" value="{{sourcePoApproval.shipToMemo}}" disabled /></span>
                         <i class="fa fa-info-circle fa-lg" pTooltip="{{sourcePoApproval.shipToMemo}}" tooltipPosition="top" data-toggle="modal" data-target="#address-memo" (click)="onClickShipMemo()"></i>
                         <!-- <div *ngIf="shipToMemoD.invalid && (shipToMemoD.dirty || shipToMemoD.touched)" class="alert alert-danger alert-danger-cstm">
                                 <div *ngIf="shipToMemoD.errors.required">
@@ -1259,10 +1244,9 @@
                     <div class="form-group">
                         <div class="form-row" *ngIf="sourcePoApproval.billToUserTypeId==1">
                             <div class="col-sm-11">
-                                    <p-autoComplete field="name" class="pautocomp-cstm" 
-                                    (onClear)="clearInputBillTo()"
+                                    <p-autoComplete field="label" class="pautocomp-cstm" (onClear)="clearInputBillTo()"
                                     [(ngModel)]="sourcePoApproval.billToUserId" name="billToUserName" [suggestions]="customerNames" 
-                                    (completeMethod)="filterNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onBillToCustomerNameselected($event.customerId)" #billCustomerName="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
+                                    (completeMethod)="filterNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onBillToCustomerNameselected($event.value)" #billCustomerName="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
                               
                                 <div *ngIf="billCustomerName.invalid && (billCustomerName.dirty || billCustomerName.touched)" class="alert alert-danger alert-danger-cstm">
                                         <div *ngIf="billCustomerName.errors.required">
@@ -1307,7 +1291,7 @@
                                     <p-autoComplete field="label" class="pautocomp-cstm"
                                     (onClear)="clearInputBillTo()"
                                     (onSelect)="onBillCompanySelected($event)" 
-                                    [(ngModel)]="sourcePoApproval.billToUserId" name="shipCompanyName" 
+                                    [(ngModel)]="sourcePoApproval.billToUserId" name="billCompanyName" 
                                     [suggestions]="legalEntityList_ForBilling" 
                                     (completeMethod)="filterCompanyNameforBilling($event)" 
                                     [size]="30" 
@@ -1429,8 +1413,8 @@
                     </div>
     
                     <div class="form-group memo-popup-cstm">
-                        <label>Memo <span class="clr-red">*</span></label>
-                        <span pTooltip="{{sourcePoApproval.billToMemo}}" tooltipPosition="top"><input type="text" pInputText class="form-control" value="{{sourcePoApproval.billToMemo}}" disabled required /></span>
+                        <label>Memo</label>
+                        <span pTooltip="{{sourcePoApproval.billToMemo}}" tooltipPosition="top"><input type="text" pInputText class="form-control" value="{{sourcePoApproval.billToMemo}}" disabled /></span>
                         <i class="fa fa-info-circle fa-lg" pTooltip="{{sourcePoApproval.billToMemo}}" tooltipPosition="top" data-toggle="modal" data-target="#address-memo" (click)="onClickBillMemo()"></i>
                     </div>
 
@@ -1446,7 +1430,7 @@
     </p-tabView>
     
     <div>
-        <button class="btn btn-primary-cstm pull-right" (click)="savePurchaseOrder()" style="margin-top: 10px;margin-bottom: 20px;">{{purchaseOrderId ? 'Update' : 'Save'}}</button> <!--[disabled]="!createPOForm.valid"-->
+        <button class="btn btn-primary-cstm pull-right" (click)="savePurchaseOrder()" style="margin-top: 10px;margin-bottom: 20px;">{{isEditMode ? 'Update' : 'Save'}}</button> <!--[disabled]="!createPOForm.valid"-->
     </div>
 </form>
     
@@ -2037,7 +2021,7 @@
         </div>
     </div>-->
     
-    <ng-template #contentEdits let-c="close" let-d="dismiss" style="width:auto">
+    <!-- <ng-template #contentEdits let-c="close" let-d="dismiss" style="width:auto">
         <div class="modal-header">
             <h4 class="modal-title" *ngIf="isEditMode">Edit Issued Details</h4>
             <h4 class="modal-title" *ngIf="!isEditMode">Add Issued Details</h4>
@@ -2108,7 +2092,7 @@
             </form>
         </div>
     
-    </ng-template>
+    </ng-template> -->
     
     <!--<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
         <div class="modal-header">
@@ -2183,7 +2167,7 @@
     </ng-template>-->
     
     
-    <ng-template #content let-c="close" let-d="dismiss" style="width:auto">
+    <!-- <ng-template #content let-c="close" let-d="dismiss" style="width:auto">
         <div class="modal-header">
             <h4 class="modal-title" *ngIf="isEditMode">Edit Bill To Details</h4>
             <h4 class="modal-title" *ngIf="!isEditMode">Add Bill To Details</h4>
@@ -2253,9 +2237,9 @@
             </form>
         </div>
     
-    </ng-template>
+    </ng-template> -->
     
-    <ng-template #contentmodel let-c="close" let-d="dismiss" style="width:auto">
+    <!-- <ng-template #contentmodel let-c="close" let-d="dismiss" style="width:auto">
         <div class="modal-header">
             <h4 class="modal-title" *ngIf="isEditMode">Edit Ship To Details</h4>
             <h4 class="modal-title" *ngIf="!isEditMode">Add Ship To Details</h4>
@@ -2325,9 +2309,9 @@
             </form>
         </div>
     
-    </ng-template>
+    </ng-template> -->
     
-    <ng-template #contentclose let-c="close" let-d="dismiss" style="width:auto">
+    <!-- <ng-template #contentclose let-c="close" let-d="dismiss" style="width:auto">
         <div class="modal-header">
             <h4 class="modal-title" *ngIf="isEditMode">Edit Issued To Details</h4>
             <h4 class="modal-title" *ngIf="!isEditMode">Add Issued To Details</h4>
@@ -2397,9 +2381,9 @@
             </form>
         </div>
     
-    </ng-template>
+    </ng-template> -->
     
-    <ng-template #cmodel let-c="close" let-d="dismiss" style="width:auto">
+    <!-- <ng-template #cmodel let-c="close" let-d="dismiss" style="width:auto">
         <div class="modal-header">
             <h4 class="modal-title" *ngIf="isEditMode">Edit Bill To Details</h4>
             <h4 class="modal-title" *ngIf="!isEditMode">Add Bill To Details</h4>
@@ -2469,7 +2453,7 @@
             </form>
         </div>
     
-    </ng-template>
+    </ng-template> -->
     
     <!-- <ng-template #contentMultipleParts let-c="close" let-d="dismiss" style="width:auto">
         <div class="modal-dialog modal-lg">
@@ -2533,7 +2517,7 @@
     
     <!-- Site Template -->
     
-    <ng-template #contentSiteEdit let-c="close" let-d="dismiss" style="width:auto">
+    <!-- <ng-template #contentSiteEdit let-c="close" let-d="dismiss" style="width:auto">
         <div class="modal-header">
             <h4 class="modal-title" *ngIf="isEditMode">Edit Site</h4>
             <h4 class="modal-title" *ngIf="!isEditMode">Add Site</h4>
@@ -2609,37 +2593,8 @@
                             <div class="clear"></div>
                         </div>
                     </div>
-                    <div class="col-6">
-                        <!-- Check Box Management Data -->
-                        <!--<p-treeTable [value]="gridData" [columns]="cols1" [(selection)]="selectedNodeTest" selectionMode="checkbox">
-                            <ng-template pTemplate="header" let-columns>
-                                <tr>
-                                    <th *ngFor="let col of columns">
-                                        {{col.header}}
-                                    </th>
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
-                                <tr>
-                                    <td *ngFor="let col of columns; let i = index">
-                                        <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
-                                        <p-treeTableCheckbox [value]="rowNode" *ngIf="i == 0" (click)="managementStructureClick(rowData)"></p-treeTableCheckbox>
-                                        {{rowData[col.field]}}
-                                    </td>
-                                </tr>
-                            </ng-template>
-    
-                        </p-treeTable>-->
-                        <!-- Check box Management Date End -->
-                    </div>
                 </div>
-    
-    
-    
-    
-    
-    
-    
+     
                 <div class="modal-footer">
     
                     <button class="btn btn-success" [disabled]="disableSaveManufacturer">Submit</button>
@@ -2649,10 +2604,10 @@
         </div>
     
     
-    </ng-template>
+    </ng-template> -->
     
     <!-- Split Shipment Address -->
-    <ng-template #contentSplitShipmentAddress let-c="close" let-d="dismiss" style="width:auto">
+    <!-- <ng-template #contentSplitShipmentAddress let-c="close" let-d="dismiss" style="width:auto">
         <div class="modal-header" id="createPOSplitAddress" role="dialog">
             <h4 class="modal-title" *ngIf="isEditMode">Edit Split Shipment Address</h4>
             <h4 class="modal-title" *ngIf="!isEditMode">Add Split Shipment Address</h4>
@@ -2665,17 +2620,6 @@
             <form #userForm="ngForm" class="form-horizontal">
                 <div class="row">
                     <div class="col-6">
-                        <!--<div class="form-group">
-                            <label for="actionname" class="control-label">Site Name<span class="clr-red">*</span></label>
-                            <p-autoComplete (onSelect)="Manufacturerdescription($event)" (onKeyUp)=ManufacturerHandler($event) (completeMethod)="filtermanufacturer($event)" [(ngModel)]="name" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" [size]="30"
-                                            [minLength]="2" [dropdown]="true">
-                                <ng-template let-name pTemplate="item">
-                                    <div class="ui-helper-clearfix">{{name}}</div>
-                                </ng-template>
-                            </p-autoComplete>
-                            <div *ngIf="disableSaveManufacturer" class="clr-red">Already Exists</div>
-                            <div class="clear"></div>
-                        </div>-->
                         <div class="form-group col-sm-12">
                             <label for="description" class="control-label col-sm-4">Address 1</label>
                             <div class="col-sm-7">
@@ -2721,29 +2665,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-6">
-                        <!-- Check Box Management Data -->
-                        <!--<p-treeTable [value]="gridData" [columns]="cols1" [(selection)]="selectedNodeTest" selectionMode="checkbox">
-                            <ng-template pTemplate="header" let-columns>
-                                <tr>
-                                    <th *ngFor="let col of columns">
-                                        {{col.header}}
-                                    </th>
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
-                                <tr>
-                                    <td *ngFor="let col of columns; let i = index">
-                                        <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
-                                        <p-treeTableCheckbox [value]="rowNode" *ngIf="i == 0" (click)="managementStructureClick(rowData)"></p-treeTableCheckbox>
-                                        {{rowData[col.field]}}
-                                    </td>
-                                </tr>
-                            </ng-template>
-    
-                        </p-treeTable>-->
-                        <!-- Check box Management Date End -->
-                    </div>
                 </div>
                 <div class="modal-footer">
     
@@ -2756,9 +2677,7 @@
                 <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>createPOSplitAddress
             </form>
         </div>
-    
-    
-    </ng-template>
+    </ng-template> -->
     
     <div class="modal fade" id="cpo-memo" role="dialog">
         <div class="modal-dialog modal-sm" style="max-width: 400px !important;">
@@ -2770,7 +2689,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Memo</label>
-                        <textarea class="form-control" name="tempMemo" [(ngModel)]="tempMemo" value={{tempMemo}}></textarea> <!-- (keyup)="memoData($event.target.value)" -->
+                        <textarea class="form-control" name="tempMemo" [(ngModel)]="tempMemo" value={{tempMemo}}></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -2985,7 +2904,7 @@
                                 <input type="text" class="form-control col-md-6" name="country" [(ngModel)]="addressFormForShipping.country">
                             </div>
                             <div class="form-group col-md-12" style="margin-top: 8px;">
-                                <button type="button" class="btn btn-primary-cstm" [disabled]="!addSiteNameForm.valid" (click)="saveShippingAddress(); resetAddressShippingForm();" data-dismiss="modal">Save</button>
+                                <button type="button" class="btn btn-primary-cstm" [disabled]="!addSiteNameForm.valid" (click)="saveShippingAddress(); " data-dismiss="modal">Save</button> <!--resetAddressShippingForm();-->
                                 <button type="button" class="btn btn-primary-cstm" [disabled]="!addSiteNameForm.valid" (click)="saveShippingAddressToPO(); resetAddressShippingForm();" data-dismiss="modal">Save to this PO</button>
                             </div>
     
