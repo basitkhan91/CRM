@@ -42,6 +42,7 @@ import { AtaSubChapter1Service } from '../../../services/atasubchapter1.service'
 import { CustomerService } from '../../../services/customer.service';
 import { PublicationService } from '../../../services/publication.service';
 import { DashNumberService } from '../../../services/dash-number/dash-number.service';
+import {CommonService} from '../../../services/common.service';
 
 @Component({
     selector: 'app-item-master-stock',
@@ -381,13 +382,19 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     isItemMasterCreated: boolean = false;
     isValidClassification: boolean = false;
     oemPnData: any;
-    // errorLogForPS: string = '';
+    //capes
+    capabilityTypeList:any=[];
+    selectedCapabilityTypes:any=[];
+      // errorLogForPS: string = '';
 
     constructor(private fb: FormBuilder, public priorityService: PriorityService, public countryservice: CustomerService, private Dashnumservice: DashNumberService, private atasubchapter1service: AtaSubChapter1Service, private atamain: AtaMainService, private aircraftManufacturerService: AircraftManufacturerService, private aircraftModelService: AircraftModelService, private Publicationservice: PublicationService, public integrationService: IntegrationService, private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
         private authService: AuthService, public unitService: UnitOfMeasureService, private modalService: NgbModal, private glAccountService: GlAccountService, public vendorser: VendorService,
         public itemser: ItemMasterService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public ataMainSer: AtaMainService,
         public currency: CurrencyService, private _actRoute: ActivatedRoute,
-        public priority: PriorityService, public inteService: IntegrationService, public workFlowtService: ItemClassificationService, public itemservice: ItemGroupService, public proService: ProvisionService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+        public priority: PriorityService, public inteService: IntegrationService,
+        public workFlowtService: ItemClassificationService, public itemservice: ItemGroupService,
+        public proService: ProvisionService, private dialog: MatDialog, 
+        private masterComapnyService: MasterComapnyService, public commonService:CommonService) {
         this.itemser.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-stock';
         this.itemser.bredcrumbObj.next(this.itemser.currentUrl);//Bread Crumb
         this.displayedColumns.push('action');
@@ -618,7 +625,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         { field: "AircraftModel", header: "Model" },
         { field: "DashNumber", header: "Dash Numbers" },
     ];
-    Capes: any[] = [
+    capesColumns: any[] = [
         { field: 'capability', header: "CAPABILITY TYPES" },
         { field: 'company', header: "COMPANY" },
         { field: 'bu', header: "BU" },
@@ -641,6 +648,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         { field: 'memo', header: "MEMO" },
     ];
     aircraftListDataValues: any;
+    capesListDataValues: any;
+
     ngOnInit(): void {
         this.ataform = this.fb.group({
             atanumber: new FormControl('', Validators.required),
@@ -730,7 +739,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.getAllATAChapter();
         this.getAllATASubChapter();
         this.getAllSubChapters();
-
+        this.getCapabilityType();
 
 
 
@@ -4502,6 +4511,11 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         }
     }
 
+    getCapabilityType(){
+        this.commonService.smartDropDownList("CapabilityType","CapabilityTypeId","Description").subscribe(data=>{
+            this.capabilityTypeList=data;
+        });
+    }
 
 
     async searchATA() {

@@ -47,6 +47,7 @@ import { DashnumberComponent } from "../components/dashnumber/dashnumber.compone
 import { DashNumberService } from "../services/dash-number/dash-number.service";
 import { DashNumberEndpointService } from "../services/dash-number/dash-number-endpoint.service";
 import { TooltipModule } from "primeng/tooltip";
+import {CommonService} from '../services/common.service';
 
 
 @NgModule({
@@ -100,7 +101,8 @@ import { TooltipModule } from "primeng/tooltip";
         PublicationService,
         PublicationEndpointService,
         DashNumberService,
-        DashNumberEndpointService
+        DashNumberEndpointService,
+        CommonService
       
     ],
     entryComponents: [
