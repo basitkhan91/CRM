@@ -545,7 +545,7 @@ namespace QuickApp.Pro.Controllers
                     ////vt.VendorTypeId = 1;
                     ////poViewModel.MasterCompanyId = 1;
                     ///
-                    poViewModel.PurchaseOrderNumber = Guid.NewGuid().ToString();
+                   // poViewModel.PurchaseOrderNumber = Guid.NewGuid().ToString();
                     poViewModel.MasterCompanyId = 1;
                     MapPOVMToEntity(poViewModel, actionobject);
 
@@ -652,6 +652,12 @@ namespace QuickApp.Pro.Controllers
 
             actionobject.ShipToSiteName = poViewModel.ShipToSiteName;
             actionobject.BillToSiteName = poViewModel.BillToSiteName;
+            actionobject.ShippingCost = poViewModel.ShippingCost;
+            actionobject.HandlingCost = poViewModel.HandlingCost;
+            actionobject.BillToContactId = poViewModel.BillToContactId;
+            actionobject.ShipViaId = poViewModel.ShipViaId;
+            
+
             actionobject.IsActive = true;
 
         }
@@ -700,10 +706,11 @@ namespace QuickApp.Pro.Controllers
             //actionobject.isParent = poViewModel.isParent;
             actionobject.QuantityOrdered = poViewModel.QuantityOrdered;
             actionobject.UnitCost = poViewModel.UnitCost;
-            actionobject.DiscountCostPerUnit = poViewModel.DiscountAmount;
+            actionobject.DiscountAmount = poViewModel.DiscountAmount;
+            actionobject.DiscountPercent = poViewModel.DiscountPercent;
             actionobject.DiscountPerUnit = poViewModel.DiscountPerUnit;
             actionobject.ExtendedCost = poViewModel.ExtendedCost;
-            actionobject.TransactionalCurrencyId = poViewModel.ReportCurrencyId;
+            actionobject.ReportCurrencyId = poViewModel.ReportCurrencyId;
             actionobject.FunctionalCurrencyId = poViewModel.FunctionalCurrencyId;
             actionobject.ForeignExchangeRate = poViewModel.ForeignExchangeRate;
             actionobject.WorkOrderId = poViewModel.WorkOrderId;
@@ -711,7 +718,7 @@ namespace QuickApp.Pro.Controllers
             actionobject.SalesOrderId = poViewModel.SalesOrderId;
             actionobject.GeneralLedgerAccounId = poViewModel.GLAccounId;
             actionobject.Memo = poViewModel.Memo;
-            actionobject.DiscountPerUnit = poViewModel.DiscountPerUnit;
+            
 
 
             actionobject.UOMId = poViewModel.UOMId;
@@ -920,15 +927,26 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
-                //var repairOrderPartList = new List<RepairOrderPart>();
+                if (poViewModels == null || poViewModels.Count == 0)
+                {
+                    return BadRequest($"{nameof(poViewModels)} cannot be null or need atleast one content.");
+                }
+
+                var returnObjects = new List<RepairOrderPart>();
                 foreach (var poViewModel in poViewModels)
                 {
                     if (_context.RepairOrderPart.Any(o => o.RepairOrderId == poViewModel.RepairOrderId))
                     {
-                        if (poViewModel == null)
-                            return BadRequest($"{nameof(poViewModel)} cannot be null");
-                        var actionobject = _context.RepairOrderPart.Where(a => a.RepairOrderId == poViewModel.RepairOrderId
-                                                                               && a.IsParent == true).SingleOrDefault();
+                        var actionobject = _context
+                            .RepairOrderPart
+                            .Where(a => a.RepairOrderId == poViewModel.RepairOrderId && a.IsParent == true)
+                            .SingleOrDefault();
+
+                        if (actionobject == null)
+                        {
+                            return BadRequest($"{nameof(actionobject)} no record found.");
+                        }
+
                         actionobject.RepairOrderId = poViewModel.RepairOrderId;
                         actionobject.IsParent = poViewModel.IsParent;
                         if (poViewModel.IsParent.HasValue && poViewModel.IsParent.Value)
@@ -1010,83 +1028,109 @@ namespace QuickApp.Pro.Controllers
                         _context.RepairOrderPart.Update(actionobject);
                         _unitOfWork.SaveChanges();
 
-                        if (actionobject.RepairOrderId != 0)
+                        // UPDATE childObj AS SEPARATE ENTRY IN DB
+                        if (poViewModel.childobj != null && poViewModel.childobj.Any())
                         {
-                            var exists = _context.RepairOrderPart.Where(a => a.RepairOrderId == actionobject.RepairOrderId
-                                                                             && a.IsParent == false).ToList();
-                            if (exists != null && exists.Any())
+                            var childObjList = new List<DAL.Models.ChildObj>();
+                            foreach (var poViewModelChild in poViewModel.childobj)
                             {
-                                foreach (var exist in exists)
+                                var getRecentlyInsertedRecord = _context
+                                    .RepairOrderPart
+                                    .Where(a => a.RepairOrderPartRecordId == poViewModelChild.RepairOrderPartRecordId)
+                                    .SingleOrDefault();
+
+                                if (getRecentlyInsertedRecord == null)
                                 {
-                                    if (poViewModel.childobj != null && poViewModel.childobj.Any())
-                                    {
-                                        foreach (var child in poViewModel.childobj)
-                                        {
-                                            exist.RepairOrderId = child.RepairOrderId;
-                                            exist.IsParent = child.IsParent;
-                                            exist.SerialNumber = child.SerialNumber;
-                                            exist.ItemMasterId = child.ItemMasterId;
-                                            exist.AssetId = child.AssetId;
-                                            exist.PartNumberId = child.PartNumberId;
-                                            exist.RoPartSplitAddressId = child.RoPartSplitAddressId;
-                                            exist.RoPartSplitUserId = child.RoPartSplitUserId;
-                                            exist.RoPartSplitUserTypeId = child.RoPartSplitUserTypeId;
-                                            exist.UOMId = child.UOMId;
-                                            exist.QuantityOrdered = child.QuantityOrdered;
-                                            exist.NeedByDate = child.NeedByDate;
-                                            exist.ManagementStructureId = child.ManagementStructureId;
-                                            exist.CreatedBy = child.CreatedBy;
-                                            exist.UpdatedBy = child.UpdatedBy;
-                                            //exist.ParentId = child.RepairOrderPartRecordId;
-
-                                            _context.RepairOrderPart.Update(exist);
-                                            _unitOfWork.SaveChanges();
-                                        }
-                                    }
-
+                                    return BadRequest($"{nameof(getRecentlyInsertedRecord)} no childObj with given RepairOrderPartRecordId found.");
                                 }
+
+                                getRecentlyInsertedRecord.IsParent = poViewModelChild.IsParent;
+                                getRecentlyInsertedRecord.RepairOrderId = poViewModelChild.RepairOrderId;
+                                getRecentlyInsertedRecord.RoPartSplitAddressId = poViewModelChild.RoPartSplitAddressId;
+                                getRecentlyInsertedRecord.RoPartSplitUserId = poViewModelChild.RoPartSplitUserId;
+                                getRecentlyInsertedRecord.RoPartSplitUserTypeId = poViewModelChild.RoPartSplitUserTypeId;
+                                getRecentlyInsertedRecord.ItemMasterId = poViewModelChild.ItemMasterId;
+                                getRecentlyInsertedRecord.UOMId = poViewModelChild.UOMId;
+                                getRecentlyInsertedRecord.PartNumberId = poViewModelChild.PartNumberId;
+                                getRecentlyInsertedRecord.SerialNumber = poViewModelChild.SerialNumber;
+                                getRecentlyInsertedRecord.AssetId = poViewModelChild.AssetId;
+                                getRecentlyInsertedRecord.QuantityOrdered = poViewModelChild.QuantityOrdered;
+                                getRecentlyInsertedRecord.NeedByDate = poViewModelChild.NeedByDate;
+                                getRecentlyInsertedRecord.ManagementStructureId = poViewModelChild.ManagementStructureId;
+                                getRecentlyInsertedRecord.CreatedBy = poViewModelChild.CreatedBy;
+                                getRecentlyInsertedRecord.UpdatedBy = poViewModelChild.UpdatedBy;
+                                getRecentlyInsertedRecord.ParentId = getRecentlyInsertedRecord.RepairOrderPartRecordId;
+
+                                _context.RepairOrderPart.Update(getRecentlyInsertedRecord);
+                                _unitOfWork.SaveChanges();
+
+                                // This is to return back to UI in same JSON format.
+                                var childObj = new DAL.Models.ChildObj
+                                {
+                                    IsParent = poViewModelChild.IsParent,
+                                    RepairOrderId = poViewModelChild.RepairOrderId,
+                                    RoPartSplitAddressId = poViewModelChild.RoPartSplitAddressId,
+                                    RoPartSplitUserId = poViewModelChild.RoPartSplitUserId,
+                                    RoPartSplitUserTypeId = poViewModelChild.RoPartSplitUserTypeId,
+                                    ItemMasterId = poViewModelChild.ItemMasterId,
+                                    UOMId = poViewModelChild.UOMId,
+                                    PartNumberId = poViewModelChild.PartNumberId,
+                                    SerialNumber = poViewModelChild.SerialNumber,
+                                    AssetId = poViewModelChild.AssetId,
+                                    QuantityOrdered = poViewModelChild.QuantityOrdered,
+                                    NeedByDate = poViewModelChild.NeedByDate,
+                                    ManagementStructureId = poViewModelChild.ManagementStructureId,
+                                    CreatedBy = poViewModelChild.CreatedBy,
+                                    UpdatedBy = poViewModelChild.UpdatedBy,
+                                    RepairOrderPartRecordId = getRecentlyInsertedRecord.RepairOrderPartRecordId,
+                                    ParentId = getRecentlyInsertedRecord.RepairOrderPartRecordId
+                                };
+                                childObjList.Add(childObj);
                             }
+
+                            actionobject.childobj = childObjList;
+
                         }
 
-                        return Ok(actionobject);
+                        returnObjects.Add(actionobject);
                     }
                     else
                     {
-                        var actionobject = new RepairOrderPart();
-                        actionobject.RepairOrderId = poViewModel.RepairOrderId;
-                        actionobject.IsParent = poViewModel.IsParent;
-                        if (poViewModel.IsParent.HasValue && poViewModel.IsParent.Value)
+                        var actionobject = new RepairOrderPart
                         {
-                            actionobject.ParentId = 0;
-                        }
-                        actionobject.ItemMasterId = poViewModel.ItemMasterId;
-                        actionobject.SerialNumber = poViewModel.SerialNumber;
-                        actionobject.NeedByDate = poViewModel.NeedByDate;
-                        actionobject.UOMId = poViewModel.UOMId;
-                        actionobject.QuantityOrdered = poViewModel.QuantityOrdered;
-                        actionobject.UnitCost = poViewModel.UnitCost;
-                        actionobject.DiscountPerUnit = poViewModel.DiscountPerUnit;
-                        actionobject.ExtendedCost = poViewModel.ExtendedCost;
-                        actionobject.FunctionalCurrencyId = poViewModel.FunctionalCurrencyId;
-                        actionobject.ForeignExchangeRate = poViewModel.ForeignExchangeRate;
-                        actionobject.WorkOrderId = poViewModel.WorkOrderId;
-                        actionobject.SalesOrderId = poViewModel.SalesOrderId;
-                        actionobject.Memo = poViewModel.Memo;
-                        actionobject.ManagementStructureId = poViewModel.ManagementStructureId;
-                        actionobject.CreatedBy = poViewModel.CreatedBy;
-                        actionobject.UpdatedBy = poViewModel.UpdatedBy;
-                        actionobject.CreatedDate = poViewModel.CreatedDate;
-                        actionobject.UpdatedDate = poViewModel.UpdatedDate;
-                        actionobject.AssetId = poViewModel.AssetId;
-                        actionobject.PartNumberId = poViewModel.PartNumberId;
-                        actionobject.AlternatePartNumberId = poViewModel.AlternatePartNumberId;
-                        actionobject.ItemTypeId = poViewModel.ItemTypeId;
-                        actionobject.ManufacturerId = poViewModel.ManufacturerId;
-                        actionobject.GlAccountId = poViewModel.GlAccountId;
-                        actionobject.ConditionId = poViewModel.ConditionId;
-                        actionobject.DiscountAmount = poViewModel.DiscountAmount;
-                        actionobject.ReportCurrencyId = poViewModel.ReportCurrencyId;
-                        actionobject.MasterCompanyId = poViewModel.MasterCompanyId;
+                            RepairOrderId = poViewModel.RepairOrderId,
+                            IsParent = poViewModel.IsParent,
+                            ParentId = 0, // This parent so default is 0.
+                            ItemMasterId = poViewModel.ItemMasterId,
+                            SerialNumber = poViewModel.SerialNumber,
+                            NeedByDate = poViewModel.NeedByDate,
+                            UOMId = poViewModel.UOMId,
+                            QuantityOrdered = poViewModel.QuantityOrdered,
+                            UnitCost = poViewModel.UnitCost,
+                            DiscountPerUnit = poViewModel.DiscountPerUnit,
+                            ExtendedCost = poViewModel.ExtendedCost,
+                            FunctionalCurrencyId = poViewModel.FunctionalCurrencyId,
+                            ForeignExchangeRate = poViewModel.ForeignExchangeRate,
+                            WorkOrderId = poViewModel.WorkOrderId,
+                            SalesOrderId = poViewModel.SalesOrderId,
+                            Memo = poViewModel.Memo,
+                            ManagementStructureId = poViewModel.ManagementStructureId,
+                            CreatedBy = poViewModel.CreatedBy,
+                            UpdatedBy = poViewModel.UpdatedBy,
+                            CreatedDate = poViewModel.CreatedDate,
+                            UpdatedDate = poViewModel.UpdatedDate,
+                            AssetId = poViewModel.AssetId,
+                            PartNumberId = poViewModel.PartNumberId,
+                            AlternatePartNumberId = poViewModel.AlternatePartNumberId,
+                            ItemTypeId = poViewModel.ItemTypeId,
+                            ManufacturerId = poViewModel.ManufacturerId,
+                            GlAccountId = poViewModel.GlAccountId,
+                            ConditionId = poViewModel.ConditionId,
+                            DiscountAmount = poViewModel.DiscountAmount,
+                            ReportCurrencyId = poViewModel.ReportCurrencyId,
+                            MasterCompanyId = poViewModel.MasterCompanyId
+                        };
+
 
                         // GET THIS FROM ADDRESS_T
                         var roModel = _context.RepairOrder.Where(a => a.RepairOrderId == poViewModel.RepairOrderId).SingleOrDefault();
@@ -1134,44 +1178,68 @@ namespace QuickApp.Pro.Controllers
                         _context.RepairOrderPart.Add(actionobject);
                         _unitOfWork.SaveChanges();
 
-                        if (actionobject.RepairOrderId != 0)
+                        // SAVE childObj AS SEPARATE ENTRY IN DB
+                        if (poViewModel.childobj != null && poViewModel.childobj.Any())
                         {
-                            var exists = _context.RepairOrderPart.Where(a => a.RepairOrderId == actionobject.RepairOrderId).SingleOrDefault();
-                            if (exists != null)
+                            var childObjList = new List<DAL.Models.ChildObj>();
+                            foreach (var poViewModelChild in poViewModel.childobj)
                             {
-                                if (poViewModel.childobj != null && poViewModel.childobj.Any())
+                                var repairOrderPartObj = new RepairOrderPart
                                 {
-                                    foreach (var child in poViewModel.childobj)
-                                    {
-                                        var childRepairOrderPart = new RepairOrderPart();
-                                        childRepairOrderPart.RepairOrderId = exists.RepairOrderId;
-                                        childRepairOrderPart.IsParent = child.IsParent;
-                                        childRepairOrderPart.SerialNumber = child.SerialNumber;
-                                        childRepairOrderPart.ItemMasterId = child.ItemMasterId;
-                                        childRepairOrderPart.AssetId = child.AssetId;
-                                        childRepairOrderPart.PartNumberId = child.PartNumberId;
-                                        childRepairOrderPart.RoPartSplitAddressId = child.RoPartSplitAddressId;
-                                        childRepairOrderPart.RoPartSplitUserId = child.RoPartSplitUserId;
-                                        childRepairOrderPart.RoPartSplitUserTypeId = child.RoPartSplitUserTypeId;
-                                        childRepairOrderPart.UOMId = child.UOMId;
-                                        childRepairOrderPart.QuantityOrdered = child.QuantityOrdered;
-                                        childRepairOrderPart.NeedByDate = child.NeedByDate;
-                                        childRepairOrderPart.ManagementStructureId = child.ManagementStructureId;
-                                        childRepairOrderPart.CreatedBy = child.CreatedBy;
-                                        childRepairOrderPart.UpdatedBy = child.UpdatedBy;
-                                        childRepairOrderPart.ParentId = (int?)exists.RepairOrderPartRecordId;
+                                    IsParent = poViewModelChild.IsParent,
+                                    RepairOrderId = poViewModelChild.RepairOrderId,
+                                    RoPartSplitAddressId = poViewModelChild.RoPartSplitAddressId,
+                                    RoPartSplitUserId = poViewModelChild.RoPartSplitUserId,
+                                    RoPartSplitUserTypeId = poViewModelChild.RoPartSplitUserTypeId,
+                                    ItemMasterId = poViewModelChild.ItemMasterId,
+                                    UOMId = poViewModelChild.UOMId,
+                                    PartNumberId = poViewModelChild.PartNumberId,
+                                    SerialNumber = poViewModelChild.SerialNumber,
+                                    AssetId = poViewModelChild.AssetId,
+                                    QuantityOrdered = poViewModelChild.QuantityOrdered,
+                                    NeedByDate = poViewModelChild.NeedByDate,
+                                    ManagementStructureId = poViewModelChild.ManagementStructureId,
+                                    CreatedBy = poViewModelChild.CreatedBy,
+                                    UpdatedBy = poViewModelChild.UpdatedBy,
+                                    ParentId = actionobject.RepairOrderPartRecordId,
+                                    CreatedDate = DateTime.Now
+                                };
 
-                                        _context.RepairOrderPart.Add(childRepairOrderPart);
-                                        _unitOfWork.SaveChanges();
-                                    }
-                                }
+                                _context.RepairOrderPart.Add(repairOrderPartObj);
+                                _unitOfWork.SaveChanges();
 
+                                // This is to return back to UI in same JSON format.
+                                var childObj = new DAL.Models.ChildObj
+                                {
+                                    IsParent = poViewModelChild.IsParent,
+                                    RepairOrderId = poViewModelChild.RepairOrderId,
+                                    RoPartSplitAddressId = poViewModelChild.RoPartSplitAddressId,
+                                    RoPartSplitUserId = poViewModelChild.RoPartSplitUserId,
+                                    RoPartSplitUserTypeId = poViewModelChild.RoPartSplitUserTypeId,
+                                    ItemMasterId = poViewModelChild.ItemMasterId,
+                                    UOMId = poViewModelChild.UOMId,
+                                    PartNumberId = poViewModelChild.PartNumberId,
+                                    SerialNumber = poViewModelChild.SerialNumber,
+                                    AssetId = poViewModelChild.AssetId,
+                                    QuantityOrdered = poViewModelChild.QuantityOrdered,
+                                    NeedByDate = poViewModelChild.NeedByDate,
+                                    ManagementStructureId = poViewModelChild.ManagementStructureId,
+                                    CreatedBy = poViewModelChild.CreatedBy,
+                                    UpdatedBy = poViewModelChild.UpdatedBy,
+                                    RepairOrderPartRecordId = repairOrderPartObj.RepairOrderPartRecordId,
+                                    ParentId = repairOrderPartObj.RepairOrderPartRecordId
+                                };
+                                childObjList.Add(childObj);
                             }
+
+                            actionobject.childobj = childObjList;
                         }
 
-                        return Ok(actionobject);
+                        returnObjects.Add(actionobject);
                     }
                 }
+
+                return Ok(returnObjects);
             }
 
             return Ok(ModelState);
@@ -2837,9 +2905,35 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<VendorCapabiliy>))]
         public IActionResult deleteVendorCapability(long capabilityid)
         {
+            var deleteVendorCapabilityTyperecord = _context.vendorCapabilityType.Where(a => a.VendorCapabilityId == capabilityid).SingleOrDefault();
+            if (deleteVendorCapabilityTyperecord != null)
+            {
+                _context.Remove(deleteVendorCapabilityTyperecord);
+                _context.SaveChanges();
+            }
+
+            var deleteVendorCapabilityAircraftTyperecord = _context.vendorCapabilityAircraftType.Where(a => a.VendorCapabilityId == capabilityid).SingleOrDefault();
+            if (deleteVendorCapabilityAircraftTyperecord != null)
+            {
+                _context.Remove(deleteVendorCapabilityAircraftTyperecord);
+                _context.SaveChanges();
+            }
+
+
+            var deleteVendorCapabiltiyAircraftModelrecord = _context.vendorCapabiltiyAircraftModel.Where(a => a.VendorCapabilityId == capabilityid).SingleOrDefault();
+            if (deleteVendorCapabiltiyAircraftModelrecord != null)
+            {
+                _context.Remove(deleteVendorCapabiltiyAircraftModelrecord);
+                _context.SaveChanges();
+            }
+
+
             var deleterecord = _context.VendorCapabiliy.Where(a => a.VendorCapabilityId == capabilityid).SingleOrDefault();
-            _context.Remove(deleterecord);
-            _context.SaveChanges();
+            if (deleterecord != null)
+            {
+                _context.Remove(deleterecord);
+                _context.SaveChanges();
+            }
             return Ok(deleterecord);
 
         }
@@ -3042,23 +3136,23 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("vendorbillingaddress")]
         public IActionResult GetVendorBillingAddress()
         {
-           var result= _unitOfWork.Vendor.GetVendorBillingAddress();
+            var result = _unitOfWork.Vendor.GetVendorBillingAddress();
             return Ok(result);
         }
 
         [HttpGet("vendorbillingsitenames")]
         public IActionResult GetVendorBillingSiteNames(long vendorId)
         {
-            var result=_unitOfWork.Vendor.GetVendorBillingSiteNames(vendorId);
+            var result = _unitOfWork.Vendor.GetVendorBillingSiteNames(vendorId);
             return Ok(result);
         }
 
-        
+
 
         [HttpGet("vendorbillingaddressbyid")]
         public IActionResult VendorBillingAddressById(long billingAddressId)
         {
-           var result= _unitOfWork.Vendor.VendorBillingAddressById(billingAddressId);
+            var result = _unitOfWork.Vendor.VendorBillingAddressById(billingAddressId);
             return Ok(result);
         }
 

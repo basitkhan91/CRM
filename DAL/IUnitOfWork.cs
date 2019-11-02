@@ -93,7 +93,6 @@ namespace DAL
 
         IEmployeeExpertiseRepository EmployeeExpertise { get; }
 
-        IExpenditureCategory ExpenditureCategory { get; }
         IDefaultMessage DefaultMessage { get; }
         IGlCashFlowRepository GlClassFlowClassification { get; }
 
@@ -226,6 +225,8 @@ namespace DAL
         IAssetIntangibleTypeRepository AssetIntangibleTypeRepository { get; }
         IStageCodeRepository StageCodeRepository { get; }
         IGLAccountCategoryRepository GLAccountCategoryRepository { get; }
+        IExpenditureCategoryRepository ExpenditureCategoryRepository { get; }
+        IAssetAttributeTypeRepository AssetAttributeTypeRepository { get; }
 
 
         IEmployeeShiftRepository EmployeeShiftMappingRepository { get; }

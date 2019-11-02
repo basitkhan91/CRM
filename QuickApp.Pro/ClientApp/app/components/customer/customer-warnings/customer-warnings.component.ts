@@ -52,6 +52,8 @@ export class CustomerWarningsComponent implements OnInit {
 	customerWarningId: any;
 	customerCode: any;
 	customerName: any;
+	customerWarningData: any = [];
+	warningsUpdateBoolean: boolean = false;
 	// this.addNewWarning = {
 	//     ...this.labor,
 	//     tasks: [{ ...this.labor.tasks[0], [keysArray[i]]: [new AllTasks()] }]
@@ -149,23 +151,36 @@ export class CustomerWarningsComponent implements OnInit {
 		// }
 	}
 	ngOnInit() {
-
 		if (this.editMode) {
+			console.log('Test')
 
 			this.id = this.editGeneralInformationData.customerId
 			this.savedGeneralInformationData = this.editGeneralInformationData;
 			this.customerCode = this.editGeneralInformationData.customerCode;
 			this.customerName = this.editGeneralInformationData.name;
-			this.warningMessages = this.types.map(x => {
-				return {
-					sourceModule: x,
-					allow: false,
-					warning: false,
-					restrict: false,
-					warningMessage: '',
-					restrictMessage: '',
+
+			// this.getCustomerWarningsData()
+			this.customerService.getCustomerWarningsById(this.id).subscribe(res => {
+				this.customerWarningData = res;
+
+				if (this.customerWarningData.length > 0) {
+					this.warningsUpdateBoolean = true;
+					this.warningMessages = this.customerWarningData;
+
+				} else {
+					this.warningMessages = this.types.map(x => {
+						return {
+							sourceModule: x,
+							allow: false,
+							warning: false,
+							restrict: false,
+							warningMessage: '',
+							restrictMessage: '',
+						}
+					})
 				}
 			})
+
 		} else {
 			this.id = this.savedGeneralInformationData.customerId;
 			this.customerCode = this.savedGeneralInformationData.customerCode;
@@ -187,6 +202,12 @@ export class CustomerWarningsComponent implements OnInit {
 
 	get userName(): string {
 		return this.authService.currentUser ? this.authService.currentUser.userName : "";
+	}
+
+	async getCustomerWarningsData() {
+		await this.customerService.getCustomerWarningsById(this.id).subscribe(res => {
+			this.customerWarningData = res;
+		})
 	}
 	allowAll(value) {
 
@@ -261,6 +282,8 @@ export class CustomerWarningsComponent implements OnInit {
 
 	}
 	saveWarnings() {
+		console.log(this.warningMessages);
+
 		const data = this.warningMessages.map(x => {
 			return {
 				...x,
@@ -274,14 +297,15 @@ export class CustomerWarningsComponent implements OnInit {
 				createdDate: new Date(),
 				updatedDate: new Date(),
 				isActive: true,
-				customerWarningId: this.customerWarningId
+				customerWarningId: x.customerWarningId
 			}
 		})
 
-		if (!this.customerWarningId) {
+		if (!this.warningsUpdateBoolean) {
 			this.customerService.saveCustomerwarnings(data).subscribe(res => {
 				this.router.navigateByUrl('/customersmodule/customerpages/app-customers-list')
-				this.customerWarningId = res.customerWarningId;
+				this.warningMessages = res;
+				// this.customerWarningId = res.customerWarningId;
 				this.alertService.showMessage(
 					'Success',
 					`Saved Warning Messages Successfully `,
@@ -289,7 +313,7 @@ export class CustomerWarningsComponent implements OnInit {
 				);
 			})
 		} else {
-			this.customerService.updateCustomerWarnings(data, this.customerWarningId).subscribe(res => {
+			this.customerService.updateCustomerWarnings(data, this.id).subscribe(res => {
 				this.router.navigateByUrl('/customersmodule/customerpages/app-customers-list')
 				this.alertService.showMessage(
 					'Success',

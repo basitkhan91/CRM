@@ -29,5 +29,7 @@ namespace DAL.Repositories.Interfaces
         void PurchaseOrderStatus(long purchaseOrderId, bool status, string updatedBy);
 
         IEnumerable<object> RecevingPolist();
+        IEnumerable<object> GetPurchaseOrderlistByVendor(long vendorId, int pageNo, int pageSize);
+        IEnumerable<object> GetPurchaseOrderHistory(long purchaseOrderId);
     }
 }

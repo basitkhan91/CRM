@@ -60,6 +60,7 @@ const vendorPagesRoutes: Routes = [
 			{ path: "app-po-approval", component: PoApprovalComponent, data: { title: "Po Approval" } },
 			{ path: "app-purchase-setup", component: PurchaseSetupComponent, data: { title: "Purchase Setup" } },
 			{ path: "app-purchase-setup/edit/:id", component: PurchaseSetupComponent, data: { title: "Purchase Setup" } },
+			{ path: "app-purchase-setup/vendor/:vendorId", component: PurchaseSetupComponent, data: { title: "Purchase Setup" } },
 			{ path: "app-create-ro", component: CreateRoComponent, data: { title: "Create-Ro" } },
 			{ path: "app-ro-list", component: RoListComponent, data: { title: "Ro-List" } },
 			{ path: "app-ro-setup", component: RoSetupComponent, data: { title: "RO-setup" } },

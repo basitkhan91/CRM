@@ -36,6 +36,7 @@ export class CustomerBillingInformationComponent {
 	customerCode: any;
 	customerName: any;
 	isEditMode: boolean = false;
+	billingHistoryData: Object;
 	// isViewModel : boolean = false
 
 
@@ -230,6 +231,13 @@ export class CustomerBillingInformationComponent {
 	openEdit(rowData) {
 		this.isEditMode = true;
 		this.billingInfo = { ...rowData, country: getObjectByValue('nice_name', rowData.country, this.countryListOriginal) };
+	}
+
+	getCustomerBillingHistory(rowData){
+	  const {customerBillingAddressId} = rowData;
+		this.customerService.getCustomerBillingHistory(customerBillingAddressId).subscribe(res => {
+			this.billingHistoryData = res;
+		})
 	}
 
 	// openEdit(data){

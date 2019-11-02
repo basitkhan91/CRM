@@ -598,6 +598,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'GL Account Type', routerLink: '/singlepages/singlepages/app-gl-account-class' },
                             { label: 'Gl Account Classification', routerLink: '/singlepages/singlepages/app-gl-cash-flow-classification' },
                             { label: 'GL Account Category', routerLink: '/singlepages/singlepages/app-gl-account-category' },
+                            { label: 'Expenditure Category', routerLink: '/singlepages/singlepages/app-expenditure-category' },
                             { label: 'Credit Terms', routerLink: '/singlepages/singlepages/app-credit-terms' },
                             { label: 'Tax Rate', routerLink: '/singlepages/singlepages/app-tax-rate' },
                             { label: 'Tax Type', routerLink: '/singlepages/singlepages/app-tax-type' },
@@ -634,12 +635,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                     },
                     {
                         label: 'Asset Attributes', items: [
-                            {
-                                label: 'Asset Attribute Type', items: [
-                                    { label: 'Asset Attribute List', routerLink: '/singlepages/singlepages/app-asset-type' },
-                                    { label: 'Create Attribute Asset', routerLink: '/#' },
-                                ]
-                            },
+                            { label: 'Asset Attribute Type', routerLink: '/singlepages/singlepages/app-asset-attribute-type' },
                             {
                                 label: 'Intangible Type', items: [
                                     { label: 'Intangible Type List', routerLink: '/#' },

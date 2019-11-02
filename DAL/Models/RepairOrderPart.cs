@@ -64,17 +64,17 @@ namespace DAL.Models
         public string RoPartSplitUserTypeId { get; set; }
         public int? RoPartSplitUserId { get; set; }
         public int? RoPartSplitAddressId { get; set; }
-        //[NotMapped]
-        public int? ParentId { get; set; }
+        public long ParentId { get; set; }
         public List<ChildObj> childobj { get; set; }
     }
 
     [NotMapped]
     public class ChildObj
     {
-        //public long RepairOrderPartChildId { get; set; }
+        public long RepairOrderPartRecordId { get; set; }
         public long RepairOrderId { get; set; }
         public bool? IsParent { get; set; }
+        public long ParentId { get; set; }
         public long ItemMasterId { get; set; }
         public int SerialNumber { get; set; }
         public string AssetId { get; set; }

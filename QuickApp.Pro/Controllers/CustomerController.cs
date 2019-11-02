@@ -399,8 +399,8 @@ namespace QuickApp.Pro.Controllers
 						.CustomerClassificationIds
 						.Select(item => new ClassificationMapping() {ClasificationId = item.Value}
 						).ToList();
-					_unitOfWork.CommonRepository.CreateClassificationMappings(listofEClassificationMappings,
-						actionobject.CustomerId);
+					_unitOfWork.CommonRepository.CreateClassificationMappings(listofEClassificationMappings,Convert.ToInt32(ModuleEnum.Customer),
+						actionobject.CustomerId, actionobject.CreatedBy);
 				}
 				// _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, attachmentDetails, actionobject.CustomerId,Convert.ToInt32(DAL.Common.ModuleEnum.Customer), Convert.ToString(DAL.Common.ModuleEnum.Customer), actionobject.CreatedBy, actionobject.MasterCompanyId);
 
@@ -543,7 +543,7 @@ namespace QuickApp.Pro.Controllers
 				.Select(item => new ClassificationMapping() { ClasificationId = item.Value }
 				).ToList();
 
-			_unitOfWork.CommonRepository.UpdateClassificationMappings(listofEClassificationMappings, actionobject.CustomerId);
+			_unitOfWork.CommonRepository.UpdateClassificationMappings(listofEClassificationMappings, Convert.ToInt32(ModuleEnum.Customer), actionobject.CustomerId, actionobject.CreatedBy);
 			return Ok(actionobject);
 
 
@@ -1153,7 +1153,7 @@ namespace QuickApp.Pro.Controllers
 				actionobject.ShippingId = CustomerShippingDetailsViewModel.ShippingId;
 				actionobject.ShippingURL = CustomerShippingDetailsViewModel.ShippingURL;
 				actionobject.MasterCompanyId = CustomerShippingDetailsViewModel.MasterCompanyId;
-				actionobject.IsActive = CustomerShippingDetailsViewModel.IsActive;
+				actionobject.IsActive = true;
 				actionobject.Memo = CustomerShippingDetailsViewModel.Memo;
 				actionobject.CreatedDate = DateTime.Now;
 				actionobject.UpdatedDate = DateTime.Now;
@@ -2650,6 +2650,24 @@ namespace QuickApp.Pro.Controllers
         {
             var allCusShippingdetails = _unitOfWork.Customer.GetCustomerShipviaDetails(customerId, addressId); 
             return Ok(allCusShippingdetails);
+
+        }
+
+
+        [HttpGet("customernameandcodes")]
+        public IActionResult GetCustomerNameAndCodes(string value)
+        {
+            var custmoerNameAndCodes = _unitOfWork.Customer.GetCustomerNameAndCodes(value);
+            return Ok(custmoerNameAndCodes);
+
+        }
+
+
+        [HttpGet("customerclassificationmappings")]
+        public IActionResult GetCustomerClassificationMappings(long referenceId)
+        {
+            var result = _unitOfWork.CommonRepository.GetCustomerClassificationMappings(Convert.ToInt32(ModuleEnum.Customer),referenceId);
+            return Ok(result);
 
         }
     }
