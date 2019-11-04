@@ -252,7 +252,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("Getpartdetails")]
         public IActionResult Getpartdetails()
         {
-            var allPartDetails = _context.ItemMaster.Where(a => a.IsDelete == false || a.IsDelete == null).OrderByDescending(a => a.ItemMasterId).ToList(); //.GetAllCustomersData();
+            var allPartDetails = _context.ItemMaster.Where(a => a.IsDeleted == false || a.IsDeleted == null).OrderByDescending(a => a.ItemMasterId).ToList(); //.GetAllCustomersData();
             return Ok(allPartDetails);
         }
 
@@ -663,6 +663,31 @@ namespace QuickApp.Pro.Controllers
             actionobject.HandlingCost = poViewModel.HandlingCost;
             actionobject.BillToContactId = poViewModel.BillToContactId;
             actionobject.ShipViaId = poViewModel.ShipViaId;
+            actionobject.ShipToSiteId = poViewModel.ShipToSiteId;
+            actionobject.BillToSiteId = poViewModel.BillToSiteId;
+            actionobject.ShipVia = poViewModel.ShipVia;
+            actionobject.ShippingAccountNo = poViewModel.ShippingAccountNo;
+            actionobject.ShippingId = poViewModel.ShippingId;
+            actionobject.ShippingURL = poViewModel.ShippingURL;
+            actionobject.ShipToContact = poViewModel.ShipToContact;
+            actionobject.BillToContact = poViewModel.BillToContact;
+            actionobject.ShipToAddress1 = poViewModel.ShipToAddress1;
+            actionobject.ShipToAddress2 = poViewModel.ShipToAddress2;
+            actionobject.ShipToAddress3 = poViewModel.ShipToAddress3;
+            actionobject.ShipToCity = poViewModel.ShipToCity;
+            actionobject.ShipToState = poViewModel.ShipToState;
+            actionobject.ShipToPostalCode = poViewModel.ShipToPostalCode;
+            actionobject.ShipToCountry = poViewModel.ShipToCountry;
+            actionobject.BillToAddress1 = poViewModel.BillToAddress1;
+            actionobject.BillToAddress2 = poViewModel.BillToAddress2;
+            actionobject.BillToAddress3 = poViewModel.BillToAddress3;
+            actionobject.BillToCity = poViewModel.BillToCity;
+            actionobject.BillToState = poViewModel.BillToState;
+            actionobject.BillToPostalCode = poViewModel.BillToPostalCode;
+            actionobject.BillToCountry = poViewModel.BillToCountry;
+
+
+
 
 
             actionobject.IsActive = true;

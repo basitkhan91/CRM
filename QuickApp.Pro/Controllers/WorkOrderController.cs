@@ -84,7 +84,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-        [HttpGet("workorderstatus")]
+        [HttpGet("updateworkorderstatus")]
         public IActionResult WorkOrderStatus(long workOrderId,bool status,string updatedBy)
         {
             unitOfWork.WorkOrderRepository.WorkOrderStatus(workOrderId, status, updatedBy);
