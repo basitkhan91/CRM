@@ -2410,13 +2410,11 @@ export class PurchaseSetupComponent implements OnInit {
 			createdBy: this.userName,
 			updatedBy: this.userName,
 			masterCompanyId: 1,
-			isActive: true,
-			customerShippingAddressId: null,
+			isActive: true,			
 		}
 		if (this.sourcePoApproval.shipToUserTypeId == 1) {
+			const customerData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId), customerShippingAddressId: null,}
 			if(!this.isEditModeShipping) {
-				const customerData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId) }
-
 			await this.customerService.newShippingAdd(customerData).subscribe(() => {
 				this.onShipToCustomerSelected(customerData.customerId);
 				// this.addressFormForShipping = new CustomerShippingModel()
@@ -2428,33 +2426,21 @@ export class PurchaseSetupComponent implements OnInit {
 
 			})
 			} else {
-				//if(this.addressSiteNameHeader == 'Edit Ship To Customer Details') {
-					console.log(this.addressFormForShipping);	
-					const dataEdit = {
-						...this.addressFormForShipping,
-						createdBy: this.userName,
-						updatedBy: this.userName,
-						masterCompanyId: 1,
-						isActive: true
-					}
-					await this.customerService.newShippingAdd(dataEdit).subscribe(() => {
-						this.onShipToCustomerSelected(this.addressFormForShipping.customerId);
-						this.alertService.showMessage(
-							'Success',
-							`Updated Shipping Information Successfully`,
-							MessageSeverity.success
-						);
-					})
-				//}
+				await this.customerService.newShippingAdd(customerData).subscribe(() => {
+					this.onShipToCustomerSelected(this.addressFormForShipping.customerId);
+					this.alertService.showMessage(
+						'Success',
+						`Updated Shipping Information Successfully`,
+						MessageSeverity.success
+					);
+				})
 			}			
 		}
 		if (this.sourcePoApproval.shipToUserTypeId == 2) {
-			if(!this.isEditModeShipping) {
-				const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId) }
-
+			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId) }
+			if(!this.isEditModeShipping) {			
 				await this.vendorService.newShippingAdd(vendorData).subscribe(() => {
 					this.onShipToVendorSelected(vendorData.vendorId);				
-					//this.onShipCompanySelected();
 					// this.addressFormForShipping = new CustomerShippingModel()
 					this.alertService.showMessage(
 						'Success',
@@ -2464,15 +2450,7 @@ export class PurchaseSetupComponent implements OnInit {
 	
 				})
 			} else {
-				console.log(this.addressFormForShipping);	
-				const dataEdit = {
-					...this.addressFormForShipping,
-					createdBy: this.userName,
-					updatedBy: this.userName,
-					masterCompanyId: 1,
-					isActive: true
-				}
-				await this.vendorService.newShippingAdd(dataEdit).subscribe(() => {
+				await this.vendorService.newShippingAdd(vendorData).subscribe(() => {
 					this.onShipToVendorSelected(this.addressFormForShipping.vendorId);
 					this.alertService.showMessage(
 						'Success',
@@ -2484,8 +2462,8 @@ export class PurchaseSetupComponent implements OnInit {
 			
 		}
 		if (this.sourcePoApproval.shipToUserTypeId == 3) {
-			if(!this.isEditModeShipping) {
-				const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId) }
+			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId) }
+			if(!this.isEditModeShipping) {				
 				await this.companyService.addNewShippingAddress(companyData).subscribe(() => {
 					this.onShipToCompanySelected();
 					// this.addressFormForShipping = new CustomerShippingModel()
@@ -2496,15 +2474,7 @@ export class PurchaseSetupComponent implements OnInit {
 					);
 				})
 			} else {
-				console.log(this.addressFormForShipping);	
-				const dataEdit = {
-					...this.addressFormForShipping,
-					createdBy: this.userName,
-					updatedBy: this.userName,
-					masterCompanyId: 1,
-					isActive: true
-				}
-				await this.companyService.addNewShippingAddress(dataEdit).subscribe(() => {
+				await this.companyService.addNewShippingAddress(companyData).subscribe(() => {
 					this.onShipToCompanySelected();
 					this.alertService.showMessage(
 						'Success',
@@ -2582,14 +2552,12 @@ export class PurchaseSetupComponent implements OnInit {
 			masterCompanyId: 1,
 			isActive: true,
 			isPrimary: true
-
 		}
 		if (this.sourcePoApproval.billToUserTypeId == 1) {
-			if(!this.isEditModeBilling) {
-				const customerData = { ...data, customerId: getValueFromObjectByKey('value', this.sourcePoApproval.billToUserId) }
+			const customerData = { ...data, customerId: getValueFromObjectByKey('value', this.sourcePoApproval.billToUserId) }
+			if(!this.isEditModeBilling) {				
 				await this.customerService.newBillingAdd(customerData).subscribe(() => {
 					this.onBillToCustomerSelected(customerData.customerId);
-					//this.onBillCompanySelected();
 					// this.addressFormForBilling = new CustomerShippingModel()
 					this.alertService.showMessage(
 						'Success',
@@ -2598,13 +2566,20 @@ export class PurchaseSetupComponent implements OnInit {
 					);
 				})
 			} else {
-				
+					await this.customerService.newBillingAdd(customerData).subscribe(() => {
+						this.onBillToCustomerSelected(this.addressFormForBilling.customerId);
+						this.alertService.showMessage(
+							'Success',
+							`Updated Billing Information Successfully`,
+							MessageSeverity.success
+						);
+					})
 			}
 			
 		}
 		if (this.sourcePoApproval.billToUserTypeId == 2) {
-			if(!this.isEditModeBilling) {
-				const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.billToUserId) }
+			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.billToUserId) }
+			if(!this.isEditModeBilling) {				
 				await this.vendorService.addNewBillingAddress(vendorData).subscribe(() => {
 					this.onBillToVendorSelected(vendorData.vendorId);
 					//this.onBillCompanySelected();
@@ -2614,15 +2589,21 @@ export class PurchaseSetupComponent implements OnInit {
 						`Saved  Billing Information Sucessfully `,
 						MessageSeverity.success
 					);
-	
 				})
 			} else {
-				
+				await this.vendorService.addNewBillingAddress(vendorData).subscribe(() => {
+					this.onBillToVendorSelected(this.addressFormForBilling.vendorId);
+					this.alertService.showMessage(
+						'Success',
+						`Updated Billing Information Successfully`,
+						MessageSeverity.success
+					);
+				})
 			}			
 		}
 		if (this.sourcePoApproval.billToUserTypeId == 3) {
-			if(this.isEditModeBilling) {
-				const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourcePoApproval.billToUserId) }
+			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourcePoApproval.billToUserId) }
+			if(this.isEditModeBilling) {				
 				await this.companyService.addNewBillingAddress(companyData).subscribe(() => {
 					this.onBillToCompanySelected();
 					// this.addressFormForBilling = new CustomerShippingModel()
@@ -2630,11 +2611,17 @@ export class PurchaseSetupComponent implements OnInit {
 						'Success',
 						`Saved  Billing Information Sucessfully `,
 						MessageSeverity.success
-					);
-	
+					);	
 				})
 			} else {
-				
+				await this.companyService.addNewBillingAddress(companyData).subscribe(() => {
+					this.onBillToCompanySelected();
+					this.alertService.showMessage(
+						'Success',
+						`Updated Billing Information Successfully`,
+						MessageSeverity.success
+					);
+				})
 			}			
 		}
 		// this.onBillCompanySelected();
@@ -2715,42 +2702,31 @@ export class PurchaseSetupComponent implements OnInit {
 		}
 
 		if (this.sourcePoApproval.shipToUserTypeId == 1) {
-			if(!this.isEditModeShipVia) {
-				const customerData = { ...data, ReferenceId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId) }
-
+			const customerData = { ...data, ReferenceId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId) }
+			if(!this.isEditModeShipVia) {				
 			await this.commonService.createShipVia(customerData).subscribe(() => {
 				this.getShipViaDetailsForShipTo();
 				// this.addressFormForShipping = new CustomerShippingModel()
 				this.alertService.showMessage(
 					'Success',
-					`Saved  Ship Via Information Sucessfully `,
+					`Saved Ship Via Information Sucessfully `,
 					MessageSeverity.success
 				);
-
 			})
-			} else {
-				// console.log(this.addressFormForShipping);	
-				// const dataEdit = {
-				// 	...this.addressFormForShipping,
-				// 	createdBy: this.userName,
-				// 	updatedBy: this.userName,
-				// 	masterCompanyId: 1,
-				// 	isActive: true
-				// }
-				// await this.customerService.newShippingAdd(dataEdit).subscribe(() => {
-				// 	this.onShipToCustomerSelected(this.addressFormForShipping.customerId);
-				// 	this.alertService.showMessage(
-				// 		'Success',
-				// 		`Updated Site Name Sucessfully`,
-				// 		MessageSeverity.success
-				// 	);
-				// })
+			} else {				
+				await this.commonService.createShipVia(customerData).subscribe(() => {
+					this.getShipViaDetailsForShipTo();
+					this.alertService.showMessage(
+						'Success',
+						`Updated Ship Via Information Sucessfully`,
+						MessageSeverity.success
+					);
+				})
 			}
 		}
 		if (this.sourcePoApproval.shipToUserTypeId == 2) {
-			if(!this.isEditModeShipVia) {
-				const vendorData = { ...data, ReferenceId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId) }
-
+			const vendorData = { ...data, ReferenceId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId) }
+			if(!this.isEditModeShipVia) {				
 				await this.commonService.createShipVia(vendorData).subscribe(() => {
 					this.getShipViaDetailsForShipTo();
 					// this.addressFormForShipping = new CustomerShippingModel()
@@ -2762,13 +2738,20 @@ export class PurchaseSetupComponent implements OnInit {
 	
 				})
 			} else {
-
+				await this.commonService.createShipVia(vendorData).subscribe(() => {
+					this.getShipViaDetailsForShipTo();
+					this.alertService.showMessage(
+						'Success',
+						`Updated Ship Via Information Sucessfully`,
+						MessageSeverity.success
+					);
+				})
 			}
 			
 		}
 		if (this.sourcePoApproval.shipToUserTypeId == 3) {
-			if(!this.isEditModeShipVia) {
-				const companyData = { ...data, ReferenceId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId) }
+			const companyData = { ...data, ReferenceId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId) }
+			if(!this.isEditModeShipVia) {				
 				await this.commonService.createShipVia(companyData).subscribe(() => {
 					this.getShipViaDetailsForShipTo();
 					// this.addressFormForShipping = new CustomerShippingModel()
@@ -2776,11 +2759,17 @@ export class PurchaseSetupComponent implements OnInit {
 						'Success',
 						`Saved  Ship Via Information Sucessfully `,
 						MessageSeverity.success
-					);
-	
+					);	
 				})
 			} else {
-
+				await this.commonService.createShipVia(companyData).subscribe(() => {
+					this.getShipViaDetailsForShipTo();
+					this.alertService.showMessage(
+						'Success',
+						`Updated Ship Via Information Sucessfully`,
+						MessageSeverity.success
+					);
+				})
 			}			
 		}		
 	}
@@ -2823,9 +2812,8 @@ export class PurchaseSetupComponent implements OnInit {
 			//customerShippingAddressId: null,
 		}
 		if (this.tempSplitPart.partListUserTypeId == 1) {
-			if(!this.isEditModeSplitAddress) {
-				const customerData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('value', this.tempSplitPart.partListUserId) }
-
+			const customerData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('value', this.tempSplitPart.partListUserId) }
+			if(!this.isEditModeSplitAddress) {				
 				await this.customerService.newShippingAdd(customerData).subscribe(res => {
 					this.onCustomerNameChange(res.customerId);
 					this.alertService.showMessage(
@@ -2835,13 +2823,19 @@ export class PurchaseSetupComponent implements OnInit {
 					);
 				})
 			} else {
-
+				await this.customerService.newShippingAdd(customerData).subscribe(res => {
+					this.onCustomerNameChange(res.customerId);
+					this.alertService.showMessage(
+						'Success',
+						`Updated Address Sucessfully`,
+						MessageSeverity.success
+					);
+				})
 			}			
 		}
 		if (this.tempSplitPart.partListUserTypeId == 2) {
-			if(!this.isEditModeSplitAddress) {
-				const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.tempSplitPart.partListUserId) }
-
+			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.tempSplitPart.partListUserId) }
+			if(!this.isEditModeSplitAddress) {				
 				await this.vendorService.newShippingAdd(vendorData).subscribe(res => {
 					this.onVendorNameChange(res.vendorId);
 					this.alertService.showMessage(
@@ -2851,12 +2845,19 @@ export class PurchaseSetupComponent implements OnInit {
 					);
 				})
 			} else {
-
+				await this.vendorService.newShippingAdd(vendorData).subscribe(res => {
+					this.onVendorNameChange(res.vendorId);
+					this.alertService.showMessage(
+						'Success',
+						`Updated Address Sucessfully`,
+						MessageSeverity.success
+					);
+				})
 			}			
 		}
 		if (this.tempSplitPart.partListUserTypeId == 3) {
-			if(!this.isEditModeSplitAddress) {
-				const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.tempSplitPart.partListUserId), siteName: "" }
+			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.tempSplitPart.partListUserId), siteName: "" }
+			if(!this.isEditModeSplitAddress) {				
 				await this.companyService.addNewShippingAddress(companyData).subscribe(res => {
 					this.onCompanyNameChange(res.legalEntityId);
 					this.alertService.showMessage(
@@ -2866,7 +2867,14 @@ export class PurchaseSetupComponent implements OnInit {
 					);
 				})
 			} else {
-
+				await this.companyService.addNewShippingAddress(companyData).subscribe(res => {
+					this.onCompanyNameChange(res.legalEntityId);
+					this.alertService.showMessage(
+						'Success',
+						`Updated Address Sucessfully`,
+						MessageSeverity.success
+					);
+				})
 			}			
 		}
 	}
