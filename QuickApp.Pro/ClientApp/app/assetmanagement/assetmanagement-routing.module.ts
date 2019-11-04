@@ -10,6 +10,7 @@ import { AssetCapesComponent } from '../components/Asset-Management/Asset-pages/
 import { AssetGeneralInformationComponent } from '../components/Asset-Management/Asset-pages/asset-general-information/asset-general-information.component';
 import { AssetMaintenanceWarrantyComponent } from '../components/Asset-Management/Asset-pages/asset-maintenance-warranty/asset-maintenance-warranty.component';
 import { CreateAssetComponent } from '../components/Asset-Management/Asset-pages/create-asset/create-asset.component';
+import { ViewAssetComponent } from '../components/Asset-Management/Asset-pages/view-asset/view-asset.component';
 
 const assetPagesRoutes: Routes = [
     {
@@ -22,7 +23,7 @@ const assetPagesRoutes: Routes = [
             { path: "app-asset-general-information", component: AssetGeneralInformationComponent, data: { title: "Asset GeneralInformation" } },
             { path: "app-asset-maintenance-warranty", component: AssetMaintenanceWarrantyComponent, data: { title: "Asset Maintenance-Warranty" } },
             { path: "app-create-asset", component: CreateAssetComponent, data: { title: "Asset Create" } },
-
+            { path: "app-view-asset", component: ViewAssetComponent, data: { title: "Asset View" } },
         ]
     }
 ];
