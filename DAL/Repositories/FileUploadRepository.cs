@@ -250,6 +250,9 @@ namespace DAL.Repositories
                     UploadJobType(BindCustomData<JobType>(file, "JobTypeId", moduleName));
                     break;
 
+                case "StocklineAdjustmentReason":
+                    UploadStockAdjustmentReason(BindCustomData<StocklineAdjustmentReason>(file, "AdjustmentReasonId", moduleName));
+                    break;
                 default:
                     break;
             }
@@ -678,6 +681,22 @@ namespace DAL.Repositories
                 if (!flag)
                 {
                     _appContext.GLAccountClass.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+        private void UploadStockAdjustmentReason(List<StocklineAdjustmentReason> stocklineAdjustmentReasonList)
+        {
+
+            foreach (var item in stocklineAdjustmentReasonList)
+            {
+
+                var flag = _appContext.stocklineAdjustmentReason.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.Description)
+                && !string.IsNullOrEmpty(p.Description) &&
+                p.Description.ToLower() == item.Description.Trim().ToLower());
+                if (!flag)
+                {
+                    _appContext.stocklineAdjustmentReason.Add(item);
                     _appContext.SaveChanges();
                 }
             }

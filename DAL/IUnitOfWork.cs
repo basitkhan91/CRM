@@ -203,7 +203,7 @@ namespace DAL
         IStocklineAdjustmentRepository stocklineAdjustmentRepository { get; }
 
         //ICertificationTypeRepository CertificationTypeRepository { get; }
-        IStocklineAdjustmentReasonRepository stocklineAdjustmentReasonRepository { get; }
+        IStocklineAdjustmentReasonRepository StocklineAdjustmentReasonRepository { get; }
 
         IItemMasterAircraftManafacturerRepository ItemMasterAircraftManafacturerRepository { get; }
 
@@ -261,7 +261,9 @@ namespace DAL
         IAssetStatus AssetStatus { get; }
 
         IAssetDepConvention AssetDepConvention { get; }
-        
+
+       // IStocklineAdjustmentReasonRepository StocklineAdjustmentReason { get; }
+
         IPublicationTypesRepository PublicationTypesRepository { get; }
         IPercentageRepository PercentageRepository { get; }
         void SaveChanges(Employee employeeobject);

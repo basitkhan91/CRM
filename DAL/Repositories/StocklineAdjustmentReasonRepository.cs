@@ -11,30 +11,14 @@ namespace DAL.Repositories
     {
         public StocklineAdjustmentReasonRepository(ApplicationDbContext context) : base(context)
         { }
-        public IEnumerable<object> GetAllAdjustmentReasonData()
+        public IEnumerable<DAL.Models.StocklineAdjustmentReason> GetAllAdjustmentReasonData(long adjustmentReasonId)
         {
-            try
-            {
-                var result = (from ar in _appContext.stocklineAdjustmentReason
-                             
-                              select new
-                              {
+            return _appContext.stocklineAdjustmentReason.Where(c => c.AdjustmentReasonId == adjustmentReasonId).OrderByDescending(p => p.UpdatedDate).ToList();
+        }
+        public IEnumerable<DAL.Models.StocklineAdjustmentReasonAudit> GetStocklineAdjustmentReasonAuditDetails(long iD)
+        {
+            return _appContext.stocklineAdjustmentReasonAudit.Where(c => c.AdjustmentReasonId == iD).OrderByDescending(p => p.UpdatedDate).ToList();
 
-                                  ar.AdjustmentReasonId,
-                                  ar.Description,
-                                  ar.IsActive,
-                                  ar.CreatedDate,
-                                  ar.UpdatedDate,
-                                  
-
-                              }).ToList();
-                return result;
-            }
-            catch (Exception ex)
-            {
-
-                return null;
-            }
         }
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }

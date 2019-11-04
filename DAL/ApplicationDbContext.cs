@@ -220,6 +220,7 @@ namespace DAL
         //public DbSet<PurchaseOrder> PurchaseOrder { get; set; }
         public DbSet<RepairOrder> RepairOrder { get; set; }
         public DbSet<StocklineAdjustmentReason> stocklineAdjustmentReason { get; set; }
+        public DbSet<StocklineAdjustmentReasonAudit> stocklineAdjustmentReasonAudit { get; set; }
 
         public DbSet<ItemMasterAircraftManufacturer> ItemMasterAircraftManufacturer { get; set; }
         public DbSet<EmployeeLeaveTypeMapping> EmployeeLeaveTypeMapping { get; set; }
