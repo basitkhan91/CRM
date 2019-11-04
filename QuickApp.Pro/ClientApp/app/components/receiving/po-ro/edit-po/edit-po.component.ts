@@ -82,19 +82,16 @@ export class EditPoComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this.receivingService.getPurchaseOrderDataForEditById(126).subscribe(
+        this.receivingService.getPurchaseOrderDataForEditById(this.receivingService.purchaseOrderId).subscribe(
             results => {
-                console.log(results[0]);
                 this.purchaseOrderData = results[0];
                 this.purchaseOrderData.openDate = new Date(results[0].openDate).toLocaleDateString();
                 this.purchaseOrderData.needByDate = new Date(results[0].needByDate);
                 this.purchaseOrderData.dateApproved = new Date(results[0].dateApproved).toLocaleDateString();
 
-
                 this.getManagementStructure().subscribe(
                     results => {
                         this.managementStructure = results[0];
-                        let parentPart: PurchaseOrderPart;
                         var allParentParts = this.purchaseOrderData.purchaseOderPart.filter(x => x.isParent == true);
                         for (let parent of allParentParts) {
                             var splitParts = this.purchaseOrderData.purchaseOderPart.filter(x => !x.isParent && x.itemMaster.partNumber == parent.itemMaster.partNumber);
@@ -117,6 +114,8 @@ export class EditPoComponent implements OnInit {
 
 
                         for (let part of this.purchaseOrderData.purchaseOderPart) {
+                            part.isEnabled = false;
+                            part.conditionId = 0;
                             let managementHierarchy: ManagementStructure[][] = [];
                             let selectedManagementStructure: ManagementStructure[] = [];
                             this.getManagementStructureHierarchy(part.managementStructureId, managementHierarchy, selectedManagementStructure);
@@ -166,7 +165,7 @@ export class EditPoComponent implements OnInit {
 
                             if (part.stockLine != null) {
                                 for (var SL of part.stockLine) {
-
+                                    SL.isEnabled = false;
                                     let stockLinemanagementHierarchy: ManagementStructure[][] = [];
                                     let stockLineSelectedManagementStructure: ManagementStructure[] = [];
                                     this.getManagementStructureHierarchy(SL.managementStructureId, stockLinemanagementHierarchy, stockLineSelectedManagementStructure);
@@ -214,6 +213,20 @@ export class EditPoComponent implements OnInit {
                                         }
                                     }
 
+                                    // TODO : Async call not setting proper values.
+                                    //debugger;
+                                    //if (SL.siteId > 0) {
+                                    //    this.getStockLineWareHouse(SL, true);
+                                    //}
+                                    //if (SL.warehouseId > 0) {
+                                    //    this.getStockLineLocation(SL, true);
+                                    //}
+                                    //if (SL.locationId > 0) {
+                                    //    this.getStockLineShelf(SL, true);
+                                    //}
+                                    //if (SL.shelfId > 0) {
+                                    //    this.getStockLineBin(SL, true);
+                                    //}
 
                                 }
 
@@ -230,8 +243,6 @@ export class EditPoComponent implements OnInit {
                         this.getConditionList();
                         this.loadManagementdata();
                         this.loadManufacturerData();
-                        this.loadSiteData();
-                        this.priorityData();
                         this.loadReceivingPOEditGrid();
                         this.getAllSite();
                         this.getAllGLAccount();
@@ -347,7 +358,7 @@ export class EditPoComponent implements OnInit {
         });
     }
 
-    getPartBusinessUnitList(part: PurchaseOrderPart): void {
+    private getPartBusinessUnitList(part: PurchaseOrderPart): void {
         part.managementStructureId = part.companyId;
         var businessUnits = this.managementStructure.filter(function (management) {
             return management.parentId == part.companyId;
@@ -368,7 +379,7 @@ export class EditPoComponent implements OnInit {
         }
     }
 
-    getPartDivision(part: PurchaseOrderPart): void {
+    private getPartDivision(part: PurchaseOrderPart): void {
         if (part.businessUnitId != undefined && part.businessUnitId > 0) {
             part.managementStructureId = part.businessUnitId;
         }
@@ -393,7 +404,7 @@ export class EditPoComponent implements OnInit {
         }
     }
 
-    getPartDepartment(part: PurchaseOrderPart): void {
+    private getPartDepartment(part: PurchaseOrderPart): void {
 
         if (part.divisionId != undefined && part.divisionId > 0) {
             part.managementStructureId = part.divisionId;
@@ -416,7 +427,7 @@ export class EditPoComponent implements OnInit {
         }
     }
 
-    setPartDepartmentManagementStructureId(part: PurchaseOrderPart) {
+    private setPartDepartmentManagementStructureId(part: PurchaseOrderPart) {
         if (part.departmentId != undefined && part.departmentId > 0) {
             part.managementStructureId = part.departmentId;
         }
@@ -425,7 +436,7 @@ export class EditPoComponent implements OnInit {
         }
     }
 
-    getStockLineBusinessUnitList(SL: StockLine): void {
+    private getStockLineBusinessUnitList(SL: StockLine): void {
         SL.managementStructureId = SL.companyId;
         var businessUnits = this.managementStructure.filter(function (management) {
             return management.parentId == SL.companyId;
@@ -446,7 +457,7 @@ export class EditPoComponent implements OnInit {
         }
     }
 
-    getStockLineDivision(SL: StockLine): void {
+    private getStockLineDivision(SL: StockLine): void {
         if (SL.businessUnitId != undefined && SL.businessUnitId > 0) {
             SL.managementStructureId = SL.businessUnitId;
         }
@@ -471,7 +482,7 @@ export class EditPoComponent implements OnInit {
         }
     }
 
-    getStockLineDepartment(SL: StockLine): void {
+    private getStockLineDepartment(SL: StockLine): void {
 
         if (SL.divisionId != undefined && SL.divisionId > 0) {
             SL.managementStructureId = SL.divisionId;
@@ -494,7 +505,7 @@ export class EditPoComponent implements OnInit {
         }
     }
 
-    setStockLineDepartmentManagementStructureId(SL: StockLine) {
+    private setStockLineDepartmentManagementStructureId(SL: StockLine) {
         if (SL.departmentId != undefined && SL.departmentId > 0) {
             SL.managementStructureId = SL.departmentId;
         }
@@ -503,21 +514,35 @@ export class EditPoComponent implements OnInit {
         }
     }
 
-
-    getAllSite(): void {
+    private getAllSite(): void {
         this.siteService.getSiteList().subscribe(
             results => {
                 this.SiteList = results[0];
                 for (var part of this.purchaseOrderData.purchaseOderPart) {
                     if (part.stockLine) {
+                        part.siteId = 0;
+                        part.warehouseId = 0;
+                        part.locationId = 0;
+                        part.shelfId = 0;
+                        part.binId = 0;
+                        part.SiteList = [];
+                        for (var site of results[0]) {
+                            var row = new DropDownData();
+                            row.Key = site.siteId.toLocaleString();
+                            row.Value = site.name;
+                            part.SiteList.push(row);
+                        }
+
                         for (var SL of part.stockLine) {
                             SL.SiteList = [];
+
                             for (var site of results[0]) {
                                 var row = new DropDownData();
                                 row.Key = site.siteId.toLocaleString();
                                 row.Value = site.name;
                                 SL.SiteList.push(row);
                             }
+
                             if (SL.warehouseId > 0) {
                                 this.getStockLineWareHouse(SL, true);
                             }
@@ -532,16 +557,13 @@ export class EditPoComponent implements OnInit {
                             }
                         }
                     }
-
                 }
             },
             error => this.onDataLoadFailed(error)
         );
     }
 
-
-
-    getStockLineSite(stockLine: StockLine, onPageLoad: boolean): void {
+    private getStockLineSite(stockLine: StockLine, onPageLoad: boolean): void {
         stockLine.SiteList = [];
         stockLine.WareHouseList = [];
         stockLine.LocationList = [];
@@ -564,7 +586,7 @@ export class EditPoComponent implements OnInit {
         }
     }
 
-    getStockLineWareHouse(stockLine: StockLine, onPageLoad: boolean): void {
+    private getStockLineWareHouse(stockLine: StockLine, onPageLoad: boolean): void {
         stockLine.WareHouseList = [];
         stockLine.LocationList = [];
         stockLine.ShelfList = [];
@@ -590,7 +612,7 @@ export class EditPoComponent implements OnInit {
         );
     }
 
-    getStockLineLocation(stockLine: StockLine, onPageLoad: boolean): void {
+    private getStockLineLocation(stockLine: StockLine, onPageLoad: boolean): void {
         stockLine.LocationList = [];
         stockLine.ShelfList = [];
         stockLine.BinList = [];
@@ -615,7 +637,7 @@ export class EditPoComponent implements OnInit {
         );
     }
 
-    getStockLineShelf(stockLine: StockLine, onPageLoad: boolean): void {
+    private getStockLineShelf(stockLine: StockLine, onPageLoad: boolean): void {
         stockLine.ShelfList = [];
         stockLine.BinList = [];
 
@@ -626,7 +648,7 @@ export class EditPoComponent implements OnInit {
 
         this.binservice.getShelfByLocationId(stockLine.locationId).subscribe(
             results => {
-                console.log(results);
+                
                 for (let shelf of results) {
                     var dropdown = new DropDownData();
                     dropdown.Key = shelf.shelfId.toLocaleString();
@@ -638,7 +660,173 @@ export class EditPoComponent implements OnInit {
         );
     }
 
-    getStockLineBin(stockLine: StockLine, onPageLoad: boolean): void {
+    private getPartWareHouse(part: PurchaseOrderPart): void {
+        part.WareHouseList = [];
+        part.LocationList = [];
+        part.ShelfList = [];
+        part.BinList = [];
+
+        part.warehouseId = 0;
+        part.locationId = 0;
+        part.shelfId = 0;
+        part.binId = 0;
+
+        if (part.stockLine) {
+            for (var SL of part.stockLine) {
+                SL.siteId = part.siteId;
+                SL.warehouseId = 0;
+                SL.locationId = 0;
+                SL.shelfId = 0;
+                SL.binId = 0;
+
+                SL.WareHouseList = [];
+                SL.LocationList = [];
+                SL.ShelfList = [];
+                SL.BinList = [];
+            }
+        }
+
+        this.binservice.getWareHouseBySiteId(part.siteId).subscribe(
+            results => {
+                for (let wareHouse of results) {
+                    var dropdown = new DropDownData();
+                    dropdown.Key = wareHouse.warehouseId.toLocaleString();
+                    dropdown.Value = wareHouse.warehouseName;
+                    part.WareHouseList.push(dropdown);
+
+                    if (part.stockLine) {
+                        for (var SL of part.stockLine) {
+                            SL.WareHouseList.push(dropdown);
+                        }
+                    }
+                }
+
+
+            },
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private getPartLocation(part: PurchaseOrderPart): void {
+        part.LocationList = [];
+        part.ShelfList = [];
+        part.BinList = [];
+
+        part.locationId = 0;
+        part.shelfId = 0;
+        part.binId = 0;
+
+        if (part.stockLine) {
+            for (var SL of part.stockLine) {
+                SL.warehouseId = part.warehouseId;
+                SL.locationId = 0;
+                SL.shelfId = 0;
+                SL.binId = 0;
+                SL.LocationList = [];
+                SL.ShelfList = [];
+                SL.BinList = [];
+            }
+        }
+
+        this.binservice.getLocationByWareHouseId(part.warehouseId).subscribe(
+            results => {
+                for (let loc of results) {
+                    var dropdown = new DropDownData();
+                    dropdown.Key = loc.locationId.toLocaleString();
+                    dropdown.Value = loc.name;
+                    part.LocationList.push(dropdown);
+
+                    if (part.stockLine) {
+                        for (var SL of part.stockLine) {
+                            SL.LocationList.push(dropdown);
+                        }
+                    }
+                }
+            },
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private getPartShelf(part: PurchaseOrderPart): void {
+        part.ShelfList = [];
+        part.BinList = [];
+
+        part.shelfId = 0;
+        part.binId = 0;
+
+        if (part.stockLine) {
+            for (var SL of part.stockLine) {
+                SL.locationId = part.locationId;
+                SL.shelfId = 0;
+                SL.binId = 0;
+
+                SL.ShelfList = [];
+                SL.BinList = [];
+            }
+        }
+
+        this.binservice.getShelfByLocationId(part.locationId).subscribe(
+            results => {
+                for (let shelf of results) {
+                    var dropdown = new DropDownData();
+                    dropdown.Key = shelf.shelfId.toLocaleString();
+                    dropdown.Value = shelf.name;
+                    part.ShelfList.push(dropdown);
+
+                    if (part.stockLine) {
+                        for (var SL of part.stockLine) {
+                            SL.ShelfList.push(dropdown);
+                        }
+                    }
+                }
+            },
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private getPartBin(part: PurchaseOrderPart): void {
+        part.BinList = [];
+        part.binId = 0;
+
+        if (part.stockLine) {
+            for (var SL of part.stockLine) {
+                SL.shelfId = part.shelfId;
+                SL.binId = 0;
+                SL.BinList = [];
+            }
+        }
+
+        this.binservice.getBinByShelfId(part.shelfId).subscribe(
+            results => {
+                for (let bin of results) {
+                    var dropdown = new DropDownData();
+                    dropdown.Key = bin.binId.toLocaleString();
+                    dropdown.Value = bin.name;
+                    part.BinList.push(dropdown);
+                }
+            },
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private setPartBinIdToStockline(part: PurchaseOrderPart): void {
+        if (part.stockLine) {
+            for (var SL of part.stockLine) {
+                SL.binId = part.binId;
+            }
+        }
+    }
+
+    private conditionChange(part: PurchaseOrderPart) {
+        if (part.stockLine) {
+            for (var SL of part.stockLine) {
+                SL.conditionId = part.conditionId;
+            }
+        }
+
+    }
+
+    private getStockLineBin(stockLine: StockLine, onPageLoad: boolean): void {
         stockLine.BinList = [];
 
         if (!onPageLoad) {
@@ -658,9 +846,7 @@ export class EditPoComponent implements OnInit {
         );
     }
 
-   
-
-    getAllGLAccount(): void {
+    private getAllGLAccount(): void {
         this.glAccountService.getAll().subscribe(glAccountData => {
             this.GLAccountList = glAccountData[0];
 
@@ -678,84 +864,45 @@ export class EditPoComponent implements OnInit {
         });
     }
 
-    loadManufacturerData() {
+    calculateExtendedCost(part: any, stockLine: any) : void {
+        if (stockLine.purchaseOrderUnitCost == undefined || stockLine.purchaseOrderUnitCost == '') {
+            return;
+        }
+        if (part.itemMaster.isSerialized) {
+            stockLine.purchaseOrderExtendedCost = stockLine.purchaseOrderUnitCost;
+        }
+        else {
+            stockLine.purchaseOrderExtendedCost = stockLine.purchaseOrderUnitCost * part.quantityActuallyReceived;
+        }
+    }
+
+    calculatePartExtendedCost(part: any) : void {
+        if (part.unitCost == undefined || part.unitCost == '') {
+            return;
+        }
+        if (part.itemMaster.isSerialized) {
+            part.extendedCost = part.unitCost;
+        }
+        else {
+            part.extendedCost = part.unitCost * part.quantityActuallyReceived;
+        }
+
+        if (part.stockLine) {
+            for (var SL of part.stockLine) {
+                SL.purchaseOrderUnitCost = part.unitCost;
+                SL.purchaseOrderExtendedCost = part.extendedCost;
+            }
+        }
+    }
+
+    private loadManufacturerData() {
 
         this.manufacturerService.getWorkFlows().subscribe(data => {
             this.allManufacturerInfo = data[0];
         });
     }
 
-    private loadSiteData()  //retriving SIte Information
-    {
-
-        this.siteService.getSiteList().subscribe(   //Getting Site List Hear
-            results => this.onSaiteDataLoadSuccessful(results[0]), //Pasing first Array and calling Method
-            error => this.onDataLoadFailed(error)
-        );
-    }
-    private onSaiteDataLoadSuccessful(getSiteList: any[]) { //Storing Site Data
-
-        //this.dataSource.data = getSiteList; //need
-        this.allSites = getSiteList; //Contain first array of Loaded table Data will put in Html as [value]
-    }
-    svalueChange(data) //Site Valu Selection in Form
-    {
-
-        data.allWareHouses = [];
-        data.allLocations = [];
-        data.allShelfs = [];
-        data.allBins = [];
-        data.warehouseId = 0
-        data.locationId = 0;
-        data.shelfId = 0;
-        data.binId = 0;
-
-        this.binservice.getWareHouseDate(data.siteId).subscribe(warehousedata => {
-            data.allWareHouses = warehousedata;
-        })
-
-
-    }
-
-    wareHouseValueChange(data) {
-        data.allLocations = [];
-        data.allShelfs = [];
-        data.allBins = [];
-        data.locationId = 0;
-        data.shelfId = 0;
-        data.binId = 0;
-        this.binservice.getLocationDate(data.warehouseId).subscribe(locationdata => { data.allLocations = locationdata })
-
-    }
-    locationValueChange(data) {
-        data.allShelfs = [];
-        data.allBins = [];
-        data.shelfId = 0;
-        data.binId = 0;
-        this.binservice.getShelfDate(data.locationId).subscribe(shelfdata => { data.allShelfs = shelfdata })
-
-    }
-    shelfValueChange(data) {
-        data.allBins = [];
-        data.binId = 0;
-        this.binservice.getBinDataById(data.shelfId).subscribe(bindata => { data.allBins = bindata })
-    }
-
-    private priorityData() {
-
-        this.priority.getPriorityList().subscribe(
-            results => this.onprioritySuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-    }
-
-    private onprioritySuccessful(getPriorityList: any[]) {
-
-        this.allPriorityInfo = getPriorityList;
-    }
     private onDataLoadFailed(error: any) {
-
-
     }
 
     onObtainFromChange(event) {
@@ -813,20 +960,21 @@ export class EditPoComponent implements OnInit {
     }
 
     //remove once add dynamic content
-    onEditParentGridFields() {
-        this.rpoEditPF = false;
-    }
-    //remove once add dynamic content
-    onEditChildGridFields() {
-        this.rpoEditCF = false;
-    }
-    //remove once add dynamic content
     editPart(part: PurchaseOrderPart) {
         part.isEnabled = !part.isEnabled;
+        if (part.stockLine) {
+            for (var sl of part.stockLine) {
+                sl.isEnabled = part.isEnabled;
+            }
+        }
     }
 
     editStockLine(stockLine: StockLine) {
         stockLine.isEnabled = !stockLine.isEnabled;
+    }
+
+    updateStockLines() {
+
     }
 
     onSubmit() {

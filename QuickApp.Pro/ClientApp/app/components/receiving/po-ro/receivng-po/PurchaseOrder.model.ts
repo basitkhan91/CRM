@@ -116,7 +116,11 @@ export class PurchaseOrderPart {
     poPartSplitAddress: AddressModel;
     // UI Properties
     // below properties does not play role on the server side and are being used to show the data on UI and should be limited to UI only.
-
+    siteId: number;
+    shelfId: number;
+    binId: number;
+    warehouseId: number;
+    locationId: number;
 
     managementStructureName: string[];
     statusText: string;
@@ -158,6 +162,7 @@ export class PurchaseOrderPart {
     ShelfList: DropDownData[];
     BinList: DropDownData[];
     stockLine: StockLine[];
+
 }
 
 export class TimeLife {

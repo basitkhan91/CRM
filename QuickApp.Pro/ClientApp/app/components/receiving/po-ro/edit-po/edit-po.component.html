@@ -167,20 +167,25 @@
                         <th>UOM</th>
                         <th>OEM, DER,PMA FLAG</th>
                         <th>Qty Ordered</th>
-                        <th>Unit Cost</th>
                         <th>Discount</th>
+                        <th>Unit Cost</th>
                         <th>Extended Cost</th>
                         <th>WO</th>
                         <th>SO</th>
                         <th>Sub-WO</th>
                         <th colspan="4" style="text-align: center;">Management Structure</th>
-                        <th colspan="28"></th>
+                        <th>Site</th>
+                        <th>Warehouse</th>
+                        <th>Location</th>
+                        <th>Shelf</th>
+                        <th>Bin</th>
+                        <th colspan="23"></th>
                     </tr>
                 </thead>
                 <tbody *ngIf="purchaseOrderData != undefined && purchaseOrderData.purchaseOderPart != undefined">
                     <ng-container *ngFor="let part of purchaseOrderData.purchaseOderPart;let row_index=index">
-                        <tr *ngIf="part.isParent || part.hasChildren" class="parent-data">
-                            <td><a data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit"><i class="fa fa-edit" (click)="onEditParentGridFields()"></i></a></td>
+                        <tr *ngIf="part.stockLine != null && part.stockLine.length > 0" class="parent-data">
+                            <td><a data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit"><i class="fa fa-edit" (click)="editPart(part)"></i></a></td>
                             <td>{{row_index + 1}}</td>
                             <td>{{part.itemMaster.partNumber}}</td>
                             <td>#######</td>
@@ -192,7 +197,8 @@
                                         [(ngModel)]="part.conditionId"
                                         #selects="ngModel"
                                         [ngModelOptions]="{standalone: true}"
-                                        [disabled]="part.isEnabled">
+                                        [disabled]="!part.isEnabled"
+                                        (change)="conditionChange(part)">
                                     <option value="0">Select</option>
                                     <option *ngFor="let condition of ConditionList" [value]="condition.Key">{{condition.Value}}</option>
                                 </select>
@@ -200,9 +206,19 @@
                             <td>{{part.uomText}}</td>
                             <td>{{part.itemMaster.pma ? "PMA," : '' + part.itemMaster.der ? "DER" : ''}}</td>
                             <td>{{part.quantityOrdered}}</td>
-                            <td>{{part.unitCost}}</td>
                             <td>{{part.DiscountPerUnit}}</td>
-                            <td>{{part.extendedCost}}</td>
+                            <td>
+                                <input type="text" class="form-control" pInputText pKeyFilter="pnum"
+                                       (focusout)="calculatePartExtendedCost(part, SL)"
+                                       [disabled]="!part.isEnabled"
+                                       [(ngModel)]="part.unitCost">
+                            </td>
+                            <td>
+                                <input class="form-control" type="text" disabled pInputText pKeyFilter="pnum"
+                                       [(ngModel)]="part.extendedCost"
+                                       [disabled]="!part.isEnabled">
+
+                            </td>
                             <td>
                                 <input type="text" class="form-control" value="Pending" [disabled]="true">
                             </td>
@@ -219,7 +235,7 @@
                                         #selects="ngModel"
                                         [ngModelOptions]="{standalone: true}"
                                         (change)="getPartBusinessUnitList(part)"
-                                        [disabled]="part.isEnabled">
+                                        [disabled]="!part.isEnabled">
                                     <option value="0">Select</option>
                                     <option *ngFor="let company of part.CompanyList" [value]="company.Key">{{company.Value}}</option>
                                 </select>
@@ -230,7 +246,7 @@
                                         [(ngModel)]="part.businessUnitId"
                                         #selects="ngModel"
                                         [ngModelOptions]="{standalone: true}"
-                                        [disabled]="part.isEnabled"
+                                        [disabled]="!part.isEnabled"
                                         (change)="getPartDivision(part)">
                                     <option value="0">Select</option>
                                     <option *ngFor="let businessUnit of part.BusinessUnitList" [value]="businessUnit.Key">{{businessUnit.Value}}</option>
@@ -242,7 +258,7 @@
                                         [(ngModel)]="part.divisionId"
                                         #selects="ngModel"
                                         [ngModelOptions]="{standalone: true}"
-                                        [disabled]="part.isEnabled"
+                                        [disabled]="!part.isEnabled"
                                         (change)="getPartDepartment(part)">
                                     <option value="0">Select</option>
                                     <option *ngFor="let division of part.DivisionList" [value]="division.Key">{{division.Value}}</option>
@@ -254,34 +270,95 @@
                                         [(ngModel)]="part.departmentId"
                                         #selects="ngModel"
                                         [ngModelOptions]="{standalone: true}"
-                                        [disabled]="part.isEnabled"
+                                        [disabled]="!part.isEnabled"
                                         (change)="setPartDepartmentManagementStructureId(part)">
                                     <option value="0">Select</option>
                                     <option *ngFor="let department of part.DepartmentList" [value]="department.Key">{{department.Value}}</option>
                                 </select>
                             </td>
-                            <th colspan="28"></th>
+                            <td>
+                                <select class="form-control"
+                                        [(ngModel)]="part.siteId"
+                                        #selects="ngModel"
+                                        [ngModelOptions]="{standalone: true}"
+                                        [disabled]="!part.isEnabled"
+                                        (change)="getPartWareHouse(part)">
+                                    <option value="0">Select</option>
+                                    <option *ngFor="let site of part.SiteList" [value]="site.Key">{{site.Value}}</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control"
+                                        [(ngModel)]="part.warehouseId"
+                                        #selects="ngModel"
+                                        [ngModelOptions]="{standalone: true}"
+                                        [disabled]="!part.isEnabled"
+                                        (change)="getPartLocation(part)">
+                                    <option value="0">Select</option>
+                                    <option *ngFor="let warehouse of part.WareHouseList" [value]="warehouse.Key">{{warehouse.Value}}</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control"
+                                        [(ngModel)]="part.locationId"
+                                        #selects="ngModel"
+                                        [ngModelOptions]="{standalone: true}"
+                                        [disabled]="!part.isEnabled"
+                                        (change)="getPartShelf(part)">
+                                    <option value="0">Select</option>
+                                    <option *ngFor="let loc of part.LocationList" [value]="loc.Key">{{loc.Value}}</option>
+                                </select>
+                            </td>
+                            <td>
+
+                                <select class="form-control"
+                                        [(ngModel)]="part.shelfId"
+                                        #selects="ngModel"
+                                        [ngModelOptions]="{standalone: true}"
+                                        [disabled]="!part.isEnabled"
+                                        (change)="getPartBin(part)">
+                                    <option value="0">Select</option>
+                                    <option *ngFor="let shelf of part.ShelfList" [value]="shelf.Key">{{shelf.Value}}</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control"
+                                        [(ngModel)]="part.binId"
+                                        #selects="ngModel"
+                                        [ngModelOptions]="{standalone: true}"
+                                        [disabled]="!part.isEnabled"
+                                        (change)="setPartBinIdToStockline(part)">
+                                    <option value="0">Select</option>
+                                    <option *ngFor="let bin of part.BinList" [value]="bin.Key">{{bin.Value}}</option>
+                                </select>
+                            </td>
+                            <th colspan="23"></th>
                         </tr>
                         <ng-container>
                             <tr *ngIf="part.stockLine != null">
-                                <th></th>
                                 <th></th>
                                 <th>Stock Line</th>
                                 <th>PN</th>
                                 <th>PN Description</th>
                                 <th>Control Num</th>
                                 <th>ID</th>
-                                <th>Cond</th>
                                 <th>Serial Num</th>
+                                <th>Cond</th>
                                 <th>Qty Ordered</th>
                                 <th>Qty Receieved</th>
                                 <th>Qty BackOrdered</th>
+                                <th>Receiver No.</th>
                                 <th>Unit Cost</th>
                                 <th>Extended Cost</th>
-                                <th>Receiver no.</th>
                                 <th>WO </th>
                                 <th>SO </th>
                                 <th>Sub-WO </th>
+                                <th colspan="4" style="text-align: center;">Management Structure</th>
+                                <th>Site</th>
+                                <th>Warehouse</th>
+                                <th>Location</th>
+                                <th>Shelf</th>
+                                <th>Bin</th>
                                 <th>Owner</th>
                                 <th>Name</th>
                                 <th>Obtain From</th>
@@ -301,41 +378,152 @@
                                 <th class="date">Core Due Date</th>
                                 <th>GL Account</th>
                                 <th>Time Life</th>
-                                <th colspan="4" style="text-align: center;">Management Structure</th>
-                                <th>Site</th>
-                                <th>Warehouse</th>
-                                <th>Location</th>
-                                <th>Shelf</th>
-                                <th>Bin</th>
+
                             </tr>
                             <tr *ngFor="let SL of part.stockLine;let stockline_row_index=index">
-                                <td><a href="javascript:void(0);" data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit"><i class="fa fa-edit" (click)="onEditChildGridFields()"></i></a></td>
-                                <td></td>
+                                <td><a href="javascript:void(0);" data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit"><i class="fa fa-edit" (click)="editStockLine(SL)"></i></a></td>
                                 <td>{{SL.stockLineNumber}}</td>
                                 <td>{{part.itemMaster.partNumber}}</td>
                                 <td>{{part.itemMaster.partDescription}}</td>
                                 <td>{{SL.controlNumber}}</td>
                                 <td>{{SL.idNumber}}</td>
+                                <td>{{SL.serialNumber}}</td>
                                 <td>
                                     <select class="form-control"
                                             [(ngModel)]="SL.conditionId"
                                             #selects="ngModel"
                                             [ngModelOptions]="{standalone: true}"
-                                            [disabled]="SL.isEnabled">
+                                            [disabled]="!SL.isEnabled">
                                         <option value="0">Select</option>
                                         <option *ngFor="let condition of ConditionList" [value]="condition.Key">{{condition.Value}}</option>
                                     </select>
                                 </td>
-                                <td>{{SL.serialNumber}}</td>
                                 <td>{{part.quantityOrdered}}</td>
                                 <td>{{SL.quantity}}</td>
                                 <td>{{part.quantityOrdered -  SL.quantity}}</td>
-                                <td>{{SL.unitCost}}</td>
-                                <td>{{SL.extendedCost}}</td>
                                 <td>{{SL.ReceiverNumber}}</td>
+                                <td>
+                                    <input type="text" class="form-control" pInputText pKeyFilter="pnum"
+                                           (focusout)="calculateExtendedCost(part, SL)"
+                                           [disabled]="!SL.isEnabled"
+                                           [(ngModel)]="SL.purchaseOrderUnitCost">
+                                </td>
+                                <td>
+                                    <input class="form-control" type="text" disabled pInputText pKeyFilter="pnum"
+                                           [(ngModel)]="SL.purchaseOrderExtendedCost"
+                                           [disabled]="!SL.isEnabled">
+
+                                </td>
+
                                 <td></td>
                                 <td></td>
                                 <td></td>
+                                <td>
+                                    <label style="width:90px;">Company:</label>
+                                    <select class="form-control"
+                                            [(ngModel)]="SL.companyId"
+                                            #selects="ngModel"
+                                            [ngModelOptions]="{standalone: true}"
+                                            (change)="getStockLineBusinessUnitList(SL)"
+                                            [disabled]="!SL.isEnabled">
+                                        <option value="0">Select</option>
+                                        <option *ngFor="let company of SL.CompanyList" [value]="company.Key">{{company.Value}}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <label style="width:90px;">BU:</label>
+                                    <select class="form-control"
+                                            [(ngModel)]="SL.businessUnitId"
+                                            #selects="ngModel"
+                                            [ngModelOptions]="{standalone: true}"
+                                            [disabled]="!SL.isEnabled"
+                                            (change)="getStockLineDivision(SL)">
+                                        <option value="0">Select</option>
+                                        <option *ngFor="let businessUnit of SL.BusinessUnitList" [value]="businessUnit.Key">{{businessUnit.Value}}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <label style="width:90px;">Division:</label>
+                                    <select class="form-control"
+                                            [(ngModel)]="SL.divisionId"
+                                            #selects="ngModel"
+                                            [ngModelOptions]="{standalone: true}"
+                                            [disabled]="!SL.isEnabled"
+                                            (change)="getStockLineDepartment(SL)">
+                                        <option value="0">Select</option>
+                                        <option *ngFor="let division of part.DivisionList" [value]="division.Key">{{division.Value}}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <label style="width:90px;">Dept:</label>
+                                    <select class="form-control"
+                                            [(ngModel)]="SL.departmentId"
+                                            #selects="ngModel"
+                                            [ngModelOptions]="{standalone: true}"
+                                            [disabled]="!SL.isEnabled"
+                                            (change)="setStockLineDepartmentManagementStructureId(SL)">
+                                        <option value="0">Select</option>
+                                        <option *ngFor="let department of SL.DepartmentList" [value]="department.Key">{{department.Value}}</option>
+                                    </select>
+                                </td>
+                                <td>
+
+                                    <select class="form-control"
+                                            [(ngModel)]="SL.siteId"
+                                            #selects="ngModel"
+                                            [ngModelOptions]="{standalone: true}"
+                                            [disabled]="!SL.isEnabled"
+                                            (change)="getStockLineWareHouse(SL)">
+                                        <option value="0">Select</option>
+                                        <option *ngFor="let site of SL.SiteList" [value]="site.Key">{{site.Value}}</option>
+                                    </select>
+                                </td>
+                                <td>
+
+                                    <select class="form-control"
+                                            [(ngModel)]="SL.warehouseId"
+                                            #selects="ngModel"
+                                            [ngModelOptions]="{standalone: true}"
+                                            [disabled]="!SL.isEnabled"
+                                            (change)="getStockLineLocation(SL)">
+                                        <option value="0">Select</option>
+                                        <option *ngFor="let warehouse of SL.WareHouseList" [value]="warehouse.Key">{{warehouse.Value}}</option>
+                                    </select>
+                                </td>
+                                <td>
+
+                                    <select class="form-control"
+                                            [(ngModel)]="SL.locationId"
+                                            #selects="ngModel"
+                                            [disabled]="!SL.isEnabled"
+                                            [ngModelOptions]="{standalone: true}"
+                                            (change)="getStockLineShelf(SL)">
+                                        <option value="0">Select</option>
+                                        <option *ngFor="let loc of SL.LocationList" [value]="loc.Key">{{loc.Value}}</option>
+                                    </select>
+                                </td>
+                                <td>
+
+                                    <select class="form-control"
+                                            [(ngModel)]="SL.shelfId"
+                                            #selects="ngModel"
+                                            [disabled]="!SL.isEnabled"
+                                            [ngModelOptions]="{standalone: true}"
+                                            (change)="getStockLineBin(SL)">
+                                        <option value="0">Select</option>
+                                        <option *ngFor="let shelf of SL.ShelfList" [value]="shelf.Key">{{shelf.Value}}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control"
+                                            [(ngModel)]="SL.binId"
+                                            #selects="ngModel"
+                                            [disabled]="!SL.isEnabled"
+                                            [ngModelOptions]="{standalone: true}">
+                                        <option value="0">Select</option>
+                                        <option *ngFor="let bin of SL.BinList" [value]="bin.Key">{{bin.Value}}</option>
+                                    </select>
+                                </td>
                                 <td>{{SL.ownerType}}</td>
                                 <td>{{SL.owner}}</td>
                                 <td>{{SL.obtainFrom}}</td>
@@ -359,108 +547,11 @@
                                 <td>{{SL.tagExpiryDate}}</td>
                                 <td>{{SL.certifiedDueDate}}</td>
                                 <td>{{SL.glAccountText}}</td>
-                                <td>{{part.itemMaster.isTimeLife != false ? 'True' : 'False'}}</td>
                                 <td>
-                                    <label style="width:90px;">Company:</label>
-                                    <select class="form-control"
-                                            [(ngModel)]="SL.companyId"
-                                            #selects="ngModel"
-                                            [ngModelOptions]="{standalone: true}"
-                                            (change)="getStockLineBusinessUnitList(SL)"
-                                            [disabled]="SL.isEnabled">
-                                        <option value="0">Select</option>
-                                        <option *ngFor="let company of SL.CompanyList" [value]="company.Key">{{company.Value}}</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <label style="width:90px;">BU:</label>
-                                    <select class="form-control"
-                                            [(ngModel)]="SL.businessUnitId"
-                                            #selects="ngModel"
-                                            [ngModelOptions]="{standalone: true}"
-                                            [disabled]="SL.isEnabled"
-                                            (change)="getStockLineDivision(SL)">
-                                        <option value="0">Select</option>
-                                        <option *ngFor="let businessUnit of SL.BusinessUnitList" [value]="businessUnit.Key">{{businessUnit.Value}}</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <label style="width:90px;">Division:</label>
-                                    <select class="form-control"
-                                            [(ngModel)]="SL.divisionId"
-                                            #selects="ngModel"
-                                            [ngModelOptions]="{standalone: true}"
-                                            [disabled]="SL.isEnabled"
-                                            (change)="getStockLineDepartment(SL)">
-                                        <option value="0">Select</option>
-                                        <option *ngFor="let division of part.DivisionList" [value]="division.Key">{{division.Value}}</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <label style="width:90px;">Dept:</label>
-                                    <select class="form-control"
-                                            [(ngModel)]="SL.departmentId"
-                                            #selects="ngModel"
-                                            [ngModelOptions]="{standalone: true}"
-                                            [disabled]="SL.isEnabled"
-                                            (change)="setStockLineDepartmentManagementStructureId(SL)">
-                                        <option value="0">Select</option>
-                                        <option *ngFor="let department of SL.DepartmentList" [value]="department.Key">{{department.Value}}</option>
-                                    </select>
-                                </td>
-                                <td>
+                                    <input type="checkbox" [checked]="part.itemMaster.isTimeLife != false" />
                                     
-                                    <select class="form-control"
-                                            [(ngModel)]="SL.siteId"
-                                            #selects="ngModel"
-                                            [ngModelOptions]="{standalone: true}"
-                                            (change)="getStockLineWareHouse(SL)">
-                                        <option value="0">Select</option>
-                                        <option *ngFor="let site of SL.SiteList" [value]="site.Key">{{site.Value}}</option>
-                                    </select>
                                 </td>
-                                <td>
-                                    
-                                    <select class="form-control"
-                                            [(ngModel)]="SL.warehouseId"
-                                            #selects="ngModel"
-                                            [ngModelOptions]="{standalone: true}"
-                                            (change)="getStockLineLocation(SL)">
-                                        <option value="0">Select</option>
-                                        <option *ngFor="let warehouse of SL.WareHouseList" [value]="warehouse.Key">{{warehouse.Value}}</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    
-                                    <select class="form-control"
-                                            [(ngModel)]="SL.locationId"
-                                            #selects="ngModel"
-                                            [ngModelOptions]="{standalone: true}"
-                                            (change)="getStockLineShelf(SL)">
-                                        <option value="0">Select</option>
-                                        <option *ngFor="let loc of SL.LocationList" [value]="loc.Key">{{loc.Value}}</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    
-                                    <select class="form-control"
-                                            [(ngModel)]="SL.shelfId"
-                                            #selects="ngModel"
-                                            [ngModelOptions]="{standalone: true}"
-                                            (change)="getStockLineBin(SL)">
-                                        <option value="0">Select</option>
-                                        <option *ngFor="let shelf of SL.ShelfList" [value]="shelf.Key">{{shelf.Value}}</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <select class="form-control"
-                                            [(ngModel)]="SL.binId"
-                                            #selects="ngModel"
-                                            [ngModelOptions]="{standalone: true}">
-                                        <option value="0">Select</option>
-                                        <option *ngFor="let bin of SL.BinList" [value]="bin.Key">{{bin.Value}}</option>
-                                    </select>
-                                </td>
+
                             </tr>
                         </ng-container>
                     </ng-container>
