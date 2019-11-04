@@ -14,7 +14,11 @@ export class workOrderGeneralInfo {
   salesPersonId: number;
   workOrderNum: string;
   isContractAvl: boolean;
-  contract: string;
+    contract: string;
+    workOrderNumber: string;
+    customerReference: string;
+    csr: string;
+    workOrderType: string;
   partNumbers: WorkOrderPartNumber[]
 
   // workOrderType: string;
@@ -47,7 +51,11 @@ export class workOrderGeneralInfo {
     this.salesPersonId = null;
     this.workOrderNum = '';
     this.isContractAvl = false;
-    this.contract = '';
+      this.contract = '';
+      this.workOrderNumber= '';
+      this.customerReference= '';
+      this.csr= '';
+      this.workOrderType= '';
     this.partNumbers = []
 
     // this.workOrderType = 'single';

@@ -54,12 +54,12 @@ namespace QuickApp.Pro.Controllers
 
         [HttpGet("GetAdjustmentReason")]
         [Produces(typeof(List<StocklineAdjustmnetReasonViewModel>))]
-        public IActionResult GetAdjustmentReason()
+        public IActionResult GetAdjustmentReason(long adjustmentReasonId)
         {
 
             try
             {
-                var result = _unitOfWork.stocklineAdjustmentReasonRepository.GetAllAdjustmentReasonData();
+                var result = _unitOfWork.StocklineAdjustmentReasonRepository.GetAllAdjustmentReasonData(adjustmentReasonId);
 
                 return Ok(result);
             }
@@ -231,7 +231,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult stockLineAdjustmentReasonPut(long id, [FromBody] StocklineAdjustmnetReasonViewModel stocklineAdjustmnetReasonViewModel)
         {
 
-            var actionobject = _unitOfWork.stocklineAdjustmentReasonRepository.GetSingleOrDefault(a => a.AdjustmentReasonId == id);
+            var actionobject = _unitOfWork.StocklineAdjustmentReasonRepository.GetSingleOrDefault(a => a.AdjustmentReasonId == id);
 
 
 
@@ -253,8 +253,8 @@ namespace QuickApp.Pro.Controllers
         public IActionResult stockLineAdjustmentReasonDelete(long id)
         {
            // var existingResult = _unitOfWork.stocklineAdjustmentReasonRepository.GetSingleOrDefault(c => c.AdjustmentReasonId == id);
-            var existingResultofstocklineList = _unitOfWork.stocklineAdjustmentReasonRepository.GetSingleOrDefault(c => c.AdjustmentReasonId == id);
-            _unitOfWork.stocklineAdjustmentReasonRepository.Remove(existingResultofstocklineList);
+            var existingResultofstocklineList = _unitOfWork.StocklineAdjustmentReasonRepository.GetSingleOrDefault(c => c.AdjustmentReasonId == id);
+            _unitOfWork.StocklineAdjustmentReasonRepository.Remove(existingResultofstocklineList);
             _unitOfWork.SaveChanges();
             //_unitOfWork.stocklineAdjustmentReasonRepository.Remove(existingResult);
             _unitOfWork.SaveChanges();
