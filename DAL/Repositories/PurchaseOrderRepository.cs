@@ -498,52 +498,10 @@ namespace DAL.Repositories
                         where po.PurchaseOrderId == purchaseOrderId
                         select new
                         {
-                            po.PurchaseOrderNumber,
-                            po.VendorId,
-                            po.RequestedBy,
-                            po.OpenDate,
+                            po,
                             v.VendorCode,
-                            po.ApproverId,
-                            po.NeedByDate,
-                            po.VendorContactId,
-                            po.DateApproved,
-                            po.PriorityId,
                             con.WorkPhone,
-                            con.WorkPhoneExtn,
-                            po.StatusId,
-                            po.DeferredReceiver,
-                            po.CreditLimit,
-                            po.CreditTermsId,
-                            po.Resale,
-                            po.Notes,
-                            po.ManagementStructureId,
-                            po.ClosedDate,
-                            po.BillToAddressId,
-                            po.BillToContactName,
-                            po.BillToMemo,
-                            po.BillToSiteName,
-                            po.BillToUserId,
-                            po.BillToUserType,
-                            po.ShipToAddressId,
-                            po.ShipToCompanyId,
-                            po.ShipToContactId,
-                            po.ShipToMemo,
-                            po.ShipToSiteName,
-                            po.ShipToUserId,
-                            po.ShipToUserType,
-                            po.ShipViaAccountId,
-                            po.MasterCompanyId,
-                            po.CreatedDate,
-                            po.CreatedBy,
-                            po.UpdatedBy,
-                            po.UpdatedDate,
-                            po.IsActive,
-                            po.IsDeleted,
-                            po.ShippingCost,
-                            po.HandlingCost,
-                            po.BillToContactId,
-                            po.ShipViaId
-                            
+                            con.WorkPhoneExtn
                         }).FirstOrDefault();
 
             return data;
@@ -631,6 +589,14 @@ namespace DAL.Repositories
                                     purchaseOrderSplitPart.QuantityOrdered = splitPart.pop.QuantityOrdered;
                                     purchaseOrderSplitPart.SerialNumber = splitPart.pop.SerialNumber;
                                     purchaseOrderSplitPart.UOMId = splitPart.pop.UOMId;
+                                    purchaseOrderSplitPart.POPartSplitAddress1 = splitPart.pop.POPartSplitAddress1;
+                                    purchaseOrderSplitPart.POPartSplitAddress2 = splitPart.pop.POPartSplitAddress2;
+                                    purchaseOrderSplitPart.POPartSplitAddress3 = splitPart.pop.POPartSplitAddress3;
+                                    purchaseOrderSplitPart.POPartSplitCity = splitPart.pop.POPartSplitCity;
+                                    purchaseOrderSplitPart.POPartSplitState = splitPart.pop.POPartSplitState;
+                                    purchaseOrderSplitPart.POPartSplitCountry = splitPart.pop.POPartSplitCountry;
+                                    purchaseOrderSplitPart.POPartSplitPostalCode = splitPart.pop.POPartSplitPostalCode;
+                                    purchaseOrderSplitPart.POPartSplitAddressId = splitPart.pop.POPartSplitAddressId;
 
                                     purchaseOrderPart.PurchaseOrderSplitParts.Add(purchaseOrderSplitPart);
                                 }
@@ -785,6 +751,244 @@ namespace DAL.Repositories
 
 
                 return purchaseOrderList;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public object PurchaseOrderView(long purchaseOrderId)
+        {
+            try
+            {
+                var data = (from po in _appContext.PurchaseOrder
+                            join v in _appContext.Vendor on po.VendorId equals v.VendorId
+                            join req in _appContext.Employee on po.RequestedBy equals req.EmployeeId
+
+                            join app in _appContext.Employee on po.ApproverId equals app.EmployeeId into approver
+                            from app in approver.DefaultIfEmpty()
+
+                            join pr in _appContext.Priority on po.PriorityId equals pr.PriorityId
+                            join vc in _appContext.VendorContact on v.VendorId equals vc.VendorId
+                            join con in _appContext.Contact on vc.ContactId equals con.ContactId
+                            join ct in _appContext.CreditTerms on v.CreditTermsId equals ct.CreditTermsId
+                            join shcust in _appContext.Customer on po.ShipToUserId equals shcust.CustomerId into shipToCust
+                            from shcust in shipToCust.DefaultIfEmpty()
+                            join shcomp in _appContext.LegalEntity on po.ShipToUserId equals shcomp.LegalEntityId into shipToComp
+                            from shcomp in shipToComp.DefaultIfEmpty()
+                            join shv in _appContext.Vendor on po.ShipToUserId equals shv.VendorId into shipToVen
+                            from shv in shipToVen.DefaultIfEmpty()
+                            join blcust in _appContext.Customer on po.ShipToUserId equals blcust.CustomerId into billToCust
+                            from blcust in billToCust.DefaultIfEmpty()
+                            join blcomp in _appContext.LegalEntity on po.ShipToUserId equals blcomp.LegalEntityId into billToComp
+                            from blcomp in billToComp.DefaultIfEmpty()
+                            join blv in _appContext.Vendor on po.ShipToUserId equals blv.VendorId into billToVen
+                            from blv in billToVen.DefaultIfEmpty()
+
+                            where po.PurchaseOrderId == purchaseOrderId
+                            select new
+                            {
+                                po.PurchaseOrderNumber,
+                                v.VendorName,
+                                Requisitioner = req.FirstName,
+                                po.OpenDate,
+                                v.VendorCode,
+                                Approver = app.FirstName,
+                                po.ClosedDate,
+                                con.WorkPhone,
+                                Status = po.StatusId == 1 ? "Open" : (po.StatusId == 2 ? "Pending" : (po.StatusId == 3 ? "Fulfilling" : "Closed")),
+                                pr.Description,
+                                v.CreditLimit,
+                                CreditTerm = ct.Name,
+                                po.Resale,
+                                po.Notes,
+                                po.DeferredReceiver,
+                                ShipToUserType = po.ShipToUserType == 1 ? "Customer" : (po.ShipToUserType == 2 ? "Vendor" : "Company"),
+                                ShipToUser = po.ShipToUserId == 1 ? shcust.Name : (po.ShipToUserType == 2 ? shv.VendorName : shcomp.Name),
+                                po.ShipToSiteName,
+                                po.ShipToAddress1,
+                                po.ShipToAddress2,
+                                po.ShipToAddress3,
+                                po.ShipToCity,
+                                po.ShipToState,
+                                po.ShipToCountry,
+                                po.ShipToPostalCode,
+                                po.ShipToContact,
+                                po.ShipToMemo,
+                                po.ShipVia,
+                                po.ShippingCost,
+                                po.HandlingCost,
+                                po.ShippingAccountNo,
+                                po.ShippingId,
+                                po.ShippingURL,
+
+                                BillToToUserType = po.BillToUserType == 1 ? "Customer" : (po.BillToUserType == 2 ? "Vendor" : "Company"),
+                                BillToUser = po.BillToUserId == 1 ? blcust.Name : (po.BillToUserType == 2 ? blv.VendorName : blcomp.Name),
+                                po.BillToSiteName,
+                                po.BillToAddress1,
+                                po.BillToAddress2,
+                                po.BillToAddress3,
+                                po.BillToCity,
+                                po.BillToState,
+                                po.BillToCountry,
+                                po.BillToPostalCode,
+                                po.BillToContact,
+                                po.BillToMemo
+                            }).FirstOrDefault();
+
+                return data;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public List<PurchaseOrderPart> GetPurchaseOrderPartsView(long purchaseOrderId)
+        {
+            List<PurchaseOrderPart> purchaseOrderParts = new List<PurchaseOrderPart>();
+            List<PurchaseOrderSplitParts> purchaseOrderSplitParts = new List<PurchaseOrderSplitParts>();
+
+            PurchaseOrderPart purchaseOrderPart = null;
+            PurchaseOrderSplitParts purchaseOrderSplitPart;
+            try
+            {
+                var list = (from pop in _appContext.PurchaseOrderPart
+                            join po in _appContext.PurchaseOrder on pop.PurchaseOrderId equals po.PurchaseOrderId
+                            join im in _appContext.ItemMaster on pop.ItemMasterId equals im.ItemMasterId
+                            join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId
+                            join gla in _appContext.GLAccount on im.GLAccountId equals gla.GLAccountId into glacc
+                            from gla in glacc.DefaultIfEmpty()
+                            join uom in _appContext.UnitOfMeasure on im.PurchaseUnitOfMeasureId equals uom.UnitOfMeasureId into uoms
+                            from uom in uoms.DefaultIfEmpty()
+                            join cond in _appContext.Condition on pop.ConditionId equals cond.ConditionId
+                            join fcurr in _appContext.Currency on pop.FunctionalCurrencyId equals fcurr.CurrencyId
+                            join rcurr in _appContext.Currency on pop.ReportCurrencyId equals rcurr.CurrencyId
+
+                            join wo in _appContext.WorkOrder on pop.WorkOrderId equals wo.WorkOrderId into won
+                            from wo in won.DefaultIfEmpty()
+                                //join wo in _appContext.SalesOrder on pop.SalesOrderId equals wo.WorkOrderId into won
+                                //from wo in won.DefaultIfEmpty()
+                            join ro in _appContext.RepairOrder on pop.RepairOrderId equals ro.RepairOrderId into ron
+                            join shcust in _appContext.Customer on po.ShipToUserId equals shcust.CustomerId into shipToCust
+                            from shcust in shipToCust.DefaultIfEmpty()
+                            join shcomp in _appContext.LegalEntity on po.ShipToUserId equals shcomp.LegalEntityId into shipToComp
+                            from shcomp in shipToComp.DefaultIfEmpty()
+                            join shv in _appContext.Vendor on po.ShipToUserId equals shv.VendorId into shipToVen
+                            from shv in shipToVen.DefaultIfEmpty()
+                            from ro in ron.DefaultIfEmpty()
+
+
+
+
+
+                            where pop.PurchaseOrderId == purchaseOrderId
+                            select new
+                            {
+                                pop,
+                                im.PartNumber,
+                                im.PartAlternatePartId,
+                                im.PartDescription,
+                                Manufacturer = man.Name,
+                                GLAccount = gla.AccountName,
+                                UnitOfMeasure = uom.Description,
+                                Condition = cond.Description,
+                                FunctionalCurrency = fcurr.DisplayName,
+                                ReportCurrency = rcurr.DisplayName,
+                                WorkOrderNo = wo.WorkOrderNum,
+                                SalesOrderNo = "",
+                                ReapairOrderNo=ro.RepairOrderNumber,
+                                CustomerName=shcust.Name,
+                                VendorName=shv.VendorName,
+                                ComapnyName=shcomp.Name
+
+                            }).ToList();
+
+                if (list != null && list.Count > 0)
+                {
+                    foreach (var part in list)
+                    {
+                        if (part.pop.isParent)
+                        {
+                            purchaseOrderPart = new PurchaseOrderPart();
+
+                            purchaseOrderPart.PartNumber = part.PartNumber;
+                            purchaseOrderPart.AltPartNumber = "";
+                            purchaseOrderPart.PartDescription = part.PartDescription;
+                            purchaseOrderPart.Manufacturer = part.Manufacturer;
+                            purchaseOrderPart.GLAccount = part.GLAccount;
+                            purchaseOrderPart.UnitOfMeasure = part.UnitOfMeasure;
+                            purchaseOrderPart.NeedByDate = part.pop.NeedByDate;
+                            purchaseOrderPart.Condition = part.Condition;
+                            purchaseOrderPart.QuantityOrdered = part.pop.QuantityOrdered;
+                            purchaseOrderPart.UnitCost = part.pop.UnitCost;
+                            purchaseOrderPart.DiscountAmount = part.pop.DiscountAmount;
+                            purchaseOrderPart.DiscountPercent = part.pop.DiscountPercent;
+                            purchaseOrderPart.DiscountPerUnit = part.pop.DiscountPerUnit;
+                            purchaseOrderPart.ExtendedCost = part.pop.ExtendedCost;
+                            purchaseOrderPart.FunctionalCurrency = part.FunctionalCurrency;
+                            purchaseOrderPart.ForeignExchangeRate = part.pop.ForeignExchangeRate;
+                            purchaseOrderPart.ReportCurrency = part.ReportCurrency;
+                            purchaseOrderPart.ReportCurrency = part.WorkOrderNo;
+                            purchaseOrderPart.ReportCurrency = part.SalesOrderNo;
+                            purchaseOrderPart.ReportCurrency = part.ReapairOrderNo;
+                            purchaseOrderPart.Memo = part.pop.Memo;
+                            purchaseOrderPart.isParent=true;
+                            purchaseOrderPart.PurchaseOrderPartRecordId = part.pop.PurchaseOrderPartRecordId;
+                            purchaseOrderPart.ParentId = part.pop.ParentId;
+
+
+                            purchaseOrderParts.Add(purchaseOrderPart);
+                        }
+                        else
+                        {
+                            purchaseOrderPart.PurchaseOrderSplitParts = new List<PurchaseOrderSplitParts>();
+                            purchaseOrderSplitPart = new PurchaseOrderSplitParts();
+                            var splitParts = list.Where(p => p.pop.ParentId == part.pop.ParentId).ToList();
+
+                            if (splitParts != null && splitParts.Count > 0)
+                            {
+                                foreach (var splitPart in splitParts)
+                                {
+                                    purchaseOrderSplitPart.AssetId = 0;
+                                    purchaseOrderSplitPart.isParent = false;
+                                    purchaseOrderSplitPart.AltPartNumber = "";
+                                    purchaseOrderSplitPart.PartDescription = part.PartDescription;
+                                    purchaseOrderSplitPart.Manufacturer = part.Manufacturer;
+                                    purchaseOrderSplitPart.UserType = splitPart.pop.POPartSplitUserTypeId == 1 ? "Customer" : (splitPart.pop.POPartSplitUserTypeId == 2 ? "Vendor" : "Company");
+                                    purchaseOrderSplitPart.User = splitPart.pop.POPartSplitUserId == 1 ? splitPart.CustomerName : (splitPart.pop.POPartSplitUserId == 2 ? splitPart.VendorName : splitPart.ComapnyName);
+                                    purchaseOrderSplitPart.POPartSplitAddress1 = splitPart.pop.POPartSplitAddress1;
+                                    purchaseOrderSplitPart.POPartSplitAddress2 = splitPart.pop.POPartSplitAddress2;
+                                    purchaseOrderSplitPart.POPartSplitAddress3 = splitPart.pop.POPartSplitAddress3;
+                                    purchaseOrderSplitPart.POPartSplitCity = splitPart.pop.POPartSplitCity;
+                                    purchaseOrderSplitPart.POPartSplitState = splitPart.pop.POPartSplitState;
+                                    purchaseOrderSplitPart.POPartSplitCountry = splitPart.pop.POPartSplitCountry;
+                                    purchaseOrderSplitPart.POPartSplitPostalCode = splitPart.pop.POPartSplitPostalCode;
+                                    purchaseOrderSplitPart.NeedByDate = splitPart.pop.NeedByDate;
+                                    purchaseOrderSplitPart.QuantityOrdered = splitPart.pop.QuantityOrdered;
+                                    purchaseOrderSplitPart.UnitOfMeasure = splitPart.UnitOfMeasure;
+                                    purchaseOrderSplitPart.SerialNumber = splitPart.pop.SerialNumber;
+                                    purchaseOrderSplitPart.PurchaseOrderId = splitPart.pop.PurchaseOrderId;
+                                    purchaseOrderSplitPart.PurchaseOrderPartRecordId = splitPart.pop.PurchaseOrderPartRecordId;
+                                    
+                                    purchaseOrderPart.PurchaseOrderSplitParts.Add(purchaseOrderSplitPart);
+                                }
+                                // purchaseOrderParts.Add(purchaseOrderPart);
+
+
+                            }
+                        }
+
+
+
+
+                    }
+                }
+
+                return purchaseOrderParts;
             }
             catch (Exception)
             {
