@@ -30,7 +30,7 @@ namespace DAL.Models
         public string UpdatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
-        public string AssetId { get; set; }
+        public int? AssetId { get; set; }
         public int? PartNumberId { get; set; }
         [NotMapped]
         public int? AlternatePartNumberId { get; set; }
@@ -77,7 +77,7 @@ namespace DAL.Models
         public long ParentId { get; set; }
         public long ItemMasterId { get; set; }
         public int SerialNumber { get; set; }
-        public string AssetId { get; set; }
+        public int? AssetId { get; set; }
         public int? PartNumberId { get; set; }
         public int? UOMId { get; set; }
         public int? QuantityOrdered { get; set; }
