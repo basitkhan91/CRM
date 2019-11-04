@@ -41,6 +41,7 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
     isSaving: boolean;
     public sourceAction: any = {};
     sourcePORPCategory: any;
+    selectedstockColumn: any;
 
     constructor(private alertService: AlertService, private poroCategoryService: POROCategoryService, private modalService: NgbModal, private authService: AuthService) {
         this.poroCategoryService.currentUrl = '/generalledgermodule/generalledgerpage/app-po-ro-category';

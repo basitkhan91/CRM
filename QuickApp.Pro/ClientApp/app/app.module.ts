@@ -140,6 +140,8 @@ import { ItemMasterService } from './services/itemMaster.service';
 import { ItemMasterEndpoint } from './services/itemMaster-endpoint.service';
 import { StocklineService } from './services/stockline.service';
 import { StocklineEndpoint } from './services/stockline-endpoint.service';
+import { StocklineAdjustmentReasonEndpoint } from './services/stocklineadjustment-endpoint.service';
+import { StocklineAdjustReasonService } from './services/stockLineAdjustmentReason.service';
 import { ReceivingCustomerWorkService } from './services/receivingcustomerwork.service';
 import { ReceivingCustomerWorkEndpoint } from './services/receivingcustomerWork-endpoint.service';
 import { LegalEntityService } from './services/legalentity.service';
@@ -359,6 +361,8 @@ import { GLAccountEndpoint } from './services/glAccount-endpoint.service';
         ItemMasterService,
         StocklineService,
         StocklineEndpoint,
+        StocklineAdjustReasonService,
+        StocklineAdjustmentReasonEndpoint,
         ReceivingCustomerWorkService,
         ReceivingCustomerWorkEndpoint,
         LegalEntityService,

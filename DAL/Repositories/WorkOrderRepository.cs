@@ -84,6 +84,7 @@ namespace DAL.Repositories
             WorkOrder workOrder = new WorkOrder();
             try
             {
+                workOrder.WorkOrderId = workOrderId;
                 workOrder.UpdatedDate = DateTime.Now;
                 workOrder.UpdatedBy = "admin";
                 workOrder.IsDeleted = true;
@@ -106,6 +107,7 @@ namespace DAL.Repositories
             WorkOrder workOrder = new WorkOrder();
             try
             {
+                workOrder.WorkOrderId = workOrderId;
                 workOrder.UpdatedDate = DateTime.Now;
                 workOrder.UpdatedBy = updatedBy;
                 workOrder.IsActive = status;
@@ -1321,12 +1323,13 @@ namespace DAL.Repositories
             try
             {
                 var data = (from p in _appContext.Nha_Tla_Alt_Equ_ItemMapping
-                            join im in _appContext.ItemMaster on p.MappingItemMasterId equals im.ItemMasterId
+                            join im in _appContext.ItemMaster on p.ItemMasterId equals im.ItemMasterId
+                            join im1 in _appContext.ItemMaster on p.MappingItemMasterId equals im1.ItemMasterId
                             where p.IsDeleted == false && im.ItemMasterId == itemMasterId && p.MappingType == mappingType
                             select new
                             {
                                 p.MappingItemMasterId,
-                                RevisedPartNo = im.PartNumber
+                                RevisedPartNo = im1.PartNumber
                             })
                             .Distinct()
                             .ToList();
