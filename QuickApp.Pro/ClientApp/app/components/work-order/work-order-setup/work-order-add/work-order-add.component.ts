@@ -83,6 +83,7 @@ export class WorkOrderAddComponent implements OnInit {
   quote: WorkOrderQuote;
   // labor Object Modal
   labor: WorkOrderLabor;
+  isWorkOrder : boolean = true;
 
   workFlowItems: any;
 
@@ -108,6 +109,7 @@ export class WorkOrderAddComponent implements OnInit {
   conditionList: any;
   cmmList: any;
   priorityList: Object;
+  savedWorkOrderData: any;
 
 
   constructor(
@@ -325,6 +327,7 @@ export class WorkOrderAddComponent implements OnInit {
 
 
   saveWorkOrder(): void {
+    // this.showTableGrid = true; // Show Grid Boolean
     const generalInfo = this.workOrderGeneralInformation
     const data = {
       ...generalInfo,
@@ -340,7 +343,8 @@ export class WorkOrderAddComponent implements OnInit {
           ...x,
 
           masterPartId: getValueFromObjectByKey('itemMasterId', x.masterPartId),
-          mappingItemMasterId: getValueFromObjectByKey('mappingItemMasterId', x.mappingItemMasterId),
+          mappingItemMasterId : getValueFromObjectByKey('itemMasterId', x.masterPartId),
+          // mappingItemMasterId: getValueFromObjectByKey('mappingItemMasterId', x.mappingItemMasterId),
           technicianId: getValueFromObjectByKey('value', x.technicianId),
           createdBy: this.userName,
           updatedBy: this.userName
@@ -350,6 +354,7 @@ export class WorkOrderAddComponent implements OnInit {
 
     this.workOrderService.createNewWorkOrder(data).subscribe(
       result => {
+        this.savedWorkOrderData = result;
         this.showTableGrid = true; // Show Grid Boolean
         // this.workOrder = result;
         this.alertService.showMessage(
