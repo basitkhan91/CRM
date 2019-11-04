@@ -101,5 +101,9 @@ export class WorkOrderService {
         return this.workOrderEndpointService.deleteWorkOrder(workOrderId);
     }
 
+    createWorkFlowWorkOrder(data){
+        return this.workOrderEndpointService.createWorkFlowWorkOrder(data);
+    }
+
 
 }
