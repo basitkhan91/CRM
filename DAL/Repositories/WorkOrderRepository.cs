@@ -123,44 +123,39 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetWorkOrdersList(int pageNo, int pageSize)
+        public IEnumerable<object> GetWorkOrderPartList(long workOrderId)
         {
-            var pageNumber = pageNo + 1;
-            var take = pageSize;
-            var skip = take * (pageNumber - 1);
 
             try
             {
                 var totalRecords = (from wo in _appContext.WorkOrder
                                     join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
-                                    join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
                                     join pr in _appContext.Priority on wop.WorkOrderPriorityId equals pr.PriorityId
+                                    join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
                                     join im in _appContext.ItemMaster on wop.MasterPartId equals im.MasterPartId
                                     join rp in _appContext.Nha_Tla_Alt_Equ_ItemMapping on wop.MappingItemMasterId equals rp.MappingItemMasterId
                                     join im1 in _appContext.ItemMaster on rp.MappingItemMasterId equals im1.ItemMasterId
-                                    join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
                                     join wos in _appContext.WorkOrderStage on wop.WorkOrderStageId equals wos.ID
                                     join wost in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals wost.Id
-
-                                    where wo.IsDeleted == false && wo.IsSinglePN == true
+                                    where wo.WorkOrderId == workOrderId
                                     select new
                                     {
                                         wo.WorkOrderId,
                                     }
-                          ).Distinct().Count();
+                          )
+                          .Distinct()
+                          .Count();
 
                 var list = (from wo in _appContext.WorkOrder
                             join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
-                            join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
                             join pr in _appContext.Priority on wop.WorkOrderPriorityId equals pr.PriorityId
+                            join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
                             join im in _appContext.ItemMaster on wop.MasterPartId equals im.MasterPartId
                             join rp in _appContext.Nha_Tla_Alt_Equ_ItemMapping on wop.MappingItemMasterId equals rp.MappingItemMasterId
                             join im1 in _appContext.ItemMaster on rp.MappingItemMasterId equals im1.ItemMasterId
-                            join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
                             join wos in _appContext.WorkOrderStage on wop.WorkOrderStageId equals wos.ID
                             join wost in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals wost.Id
-
-                            where wo.IsDeleted == false && wo.IsSinglePN == true
+                            where wo.WorkOrderId == workOrderId
                             select new
                             {
                                 wo.WorkOrderId,
@@ -171,8 +166,6 @@ namespace DAL.Repositories
                                 im.PartNumber,
                                 im.PartDescription,
                                 RevisedPartNo = im1.PartNumber,
-                                cust.Name,
-                                cust.CustomerCode,
                                 WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Shop(Internal)" : (wo.WorkOrderTypeId == 3 ? "Liquidation" : "Services")),
                                 wop.CustomerRequestDate,
                                 wop.PromisedDate,
@@ -182,6 +175,54 @@ namespace DAL.Repositories
                                 WorkOrderStatus = wost.Description,
                                 wo.IsActive,
                                 wo.CreatedDate,
+                                TotalRecords = totalRecords
+                            }
+                          ).Distinct()
+                          .ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetWorkOrdersList(int pageNo, int pageSize)
+        {
+            var pageNumber = pageNo + 1;
+            var take = pageSize;
+            var skip = take * (pageNumber - 1);
+
+            try
+            {
+                var totalRecords = (from wo in _appContext.WorkOrder
+                                    join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
+                                    join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
+                                    join wost in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals wost.Id
+                                    where wo.IsDeleted == false
+                                    select new
+                                    {
+                                        wo.WorkOrderId,
+                                    }
+                          ).Distinct().Count();
+
+                var list = (from wo in _appContext.WorkOrder
+                            join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
+                            join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
+                            join wost in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals wost.Id
+                            where wo.IsDeleted == false 
+                            select new
+                            {
+                                wo.WorkOrderId,
+                                wo.WorkOrderNum,
+                                wo.OpenDate,
+                                cust.Name,
+                                cust.CustomerCode,
+                                WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Shop(Internal)" : (wo.WorkOrderTypeId == 3 ? "Liquidation" : "Services")),
+                                wo.IsActive,
+                                wo.CreatedDate,
+                                WorkOrderStatus = wost.Description,
                                 TotalRecords = totalRecords
                             }
                           ).Distinct()
