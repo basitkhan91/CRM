@@ -18,7 +18,7 @@ namespace DAL.Repositories
         {
          
            
-                return _appContext.CustomerClassification.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.CustomerClassificationId).ToList();
+                return _appContext.CustomerClassification.Include("MasterCompany").Where(c => c.IsDeleted == false || c.IsDeleted == null).OrderByDescending(c => c.CustomerClassificationId).ToList();
 
        }
 
