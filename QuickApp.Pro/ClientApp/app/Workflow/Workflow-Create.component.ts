@@ -1875,9 +1875,16 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
     addWorkFlow(isHeaderUpdate: boolean): void {
         this.sourceWorkFlow.workflowId = undefined;
-        if (!this.validateWorkFlowHeader() || !this.calculateTotalWorkFlowCost()) {
-            return;
+        // save Work Order Workflow
+        if(!this.isWorkOrder){
+            this.SaveWorkFlow();
+        }else {
+
+     // WorkFlow Create
+      if (!this.validateWorkFlowHeader() || !this.calculateTotalWorkFlowCost()) {
+         return;
         }
+
 
         this.SaveWorkFlow();
         if (isHeaderUpdate) {
@@ -1917,15 +1924,20 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                 this.alertService.showMessage(this.title, message, MessageSeverity.error);
             }
         );
+        }
     }
     title: string = "Work Flow";
 
     updateWorkFlow(isHeaderUpdate: boolean): void {
+        // save Work Order Workflow
 
-        if (!this.validateWorkFlowHeader() || !this.calculateTotalWorkFlowCost()) {
-            return;
-        }
-
+        if(!this.isWorkOrder){
+            this.SaveWorkFlow();
+        }else {
+                // WorkFlow Create 
+            if (!this.validateWorkFlowHeader() || !this.calculateTotalWorkFlowCost()) {
+                return;
+            }
         this.SaveWorkFlow();
         if (isHeaderUpdate) {
             this.sourceWorkFlow.charges = [];
@@ -1965,6 +1977,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                 this.alertService.showMessage(this.title, message, MessageSeverity.error);
             }
         )
+    }
     }
 
     SaveWorkFlow(): void {
@@ -2057,6 +2070,8 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                     }
                 }
             }
+
+          
 
             if(this.isWorkOrder){
                   this.workOrderService.createWorkFlowWorkOrder({...this.sourceWorkFlow , 
