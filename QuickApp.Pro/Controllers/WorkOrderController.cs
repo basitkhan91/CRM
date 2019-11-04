@@ -91,10 +91,19 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
+        
+
         [HttpGet("workorderlist")]
-        public IActionResult GetWorkOrdersList(int pageNo=0, int pageSize=10)
+        public IActionResult GetWorkOrdersList(int pageNo = 0, int pageSize = 10)
         {
             var result = unitOfWork.WorkOrderRepository.GetWorkOrdersList(pageNo, pageSize);
+            return Ok(result);
+        }
+
+        [HttpGet("workorderpartlist")]
+        public IActionResult GetWorkOrderPartList(long workOrderId)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderPartList(workOrderId);
             return Ok(result);
         }
 
