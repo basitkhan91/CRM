@@ -1,0 +1,99 @@
+<div class="card">
+        <div class="col-sm-12 font-padding">
+            <div class="col-sm-2">
+                PN: <span style="color:red">{{partNumber}}</span>
+            </div>
+            <div class="col-sm-3">
+                PN Description: <span style="color:red">{{partDescription}}</span>
+            </div>
+            <!-- <div class="col-sm-3">
+                Alternate PN: <span style="color:red">{{alternatePn}}</span>
+            </div> -->
+            <div class="col-sm-3">
+                Manufacturer: <span style="color:red">{{manufacturer}}</span>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="col-md-12 ">
+                <div class="shadow-Box">
+                    <div class="col-sm-12">
+                        <h4 class="float-left">Exchange and Loans</h4>
+                        <h4 class="float-right">
+                          
+                        </h4>
+                    </div>
+                    
+                    <div class="clear"></div>
+                </div>
+            </div>
+        </div>
+</div>
+<div class="col-sm-12">
+    <form #exchloan>
+    <div class="col-sm-6">
+        <div class="card">
+                <div class="card-header"> Exchange <input type="checkbox" name="chkExchange" [(ngModel)]="showExchange" /></div> 
+                <div class="card-body" *ngIf="showExchange">
+                        <div class="form-group">
+                                <label for="currencyExchange">Currency</label>
+                               <select name="currencyExchange" [(ngModel)]="currentItem.exchangeCurrencyId">
+                                   <option value="0">Select</option>
+                                   <option *ngFor="let excur of exchangeCurrencies" [ngValue]="excur.currencyId">{{excur.displayName}}</option>
+                                </select>   
+                        </div>
+                        <div class="form-group">
+                                <label for="exchListPRice">Exchange List Price</label>
+                                <input type="number" class="form-control" name="exchListPRice" [(ngModel)]="currentItem.exchangeListPrice" >
+                        </div>
+                        <div class="form-group">
+                                <label for="exchCorePrice">Core Price</label>
+                                <input type="number" class="form-control" name="exchCorePrice" [(ngModel)]="currentItem.exchangeCorePrice"  >
+                        </div>
+                        <div class="form-group">
+                                <label for="exchOverhaulPrice">Overhaul Price</label>
+                                <input type="number" class="form-control" name="exchOverhaulPrice" [(ngModel)]="currentItem.exchangeOverhaulPrice" >
+                        </div>
+                        <div class="form-group">
+                                <label for="exchOutrightPrice">Outright Price</label>
+                                <input type="number" class="form-control" name="exchOutrightPrice" [(ngModel)]="currentItem.exchangeOutrightPrice" >
+                        </div>
+                        <div class="form-group">
+                                <label for="exchCoreCost">Core Cost</label>
+                                <input type="number" class="form-control" name="exchCoreCost" [(ngModel)]="currentItem.exchangeCoreCost">
+                        </div>
+                </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="card">
+                <div class="card-header"> Loan <input type="checkbox" name="chkLoan" [(ngModel)]="showLoan" /></div> 
+                <div class="card-body" *ngIf="showLoan">
+                        <div class="form-group">
+                                <label for="currencyLoan">Currency</label>
+                               <select name="currencyLoan" [(ngModel)]="currentItem.loanCurrencyId">
+                                   <option value="0">Select</option>
+                                   <option *ngFor="let loancur of loanCurrencies" [ngValue]="loancur.currencyId">{{loancur.displayName}}</option>
+                                </select>   
+                        </div>
+                        <div class="form-group">
+                                <label for="loanFees">Loan Fees</label>
+                                <input type="number" class="form-control" name="loanFees" [(ngModel)]="currentItem.loanFees" >
+                        </div>
+                        <div class="form-group">
+                                <label for="loanCorePrice">Core Price</label>
+                                <input type="number" class="form-control" name="loanCorePrice" [(ngModel)]="currentItem.loanCorePrice">
+                        </div>
+
+                        <div class="form-group">
+                                <label for="loanOutrightPrice">Outright Price</label>
+                                <input type="number" class="form-control" name="loanOutrightPrice" [(ngModel)]="currentItem.loanOutrightPrice">
+                        </div>
+                </div>
+        </div>
+    </div>
+</form>
+</div>
+<div class="col-sm-12 mt8">
+        <button class="btn btn-primary-cstm float-left" pButton type="button" (click)=" moveTab('PurchaseSales');" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
+        <button class="btn btn-primary-cstm float-right" pButton (click)="saveAndMove()" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step" style="padding: 0 !important;"></button>
+</div>

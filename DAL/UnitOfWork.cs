@@ -206,6 +206,7 @@ namespace DAL
 
         IPublicationTypesRepository _publicationTypesRepository;
         IPercentageRepository _percentageRepository;
+        IItemMasterExchangeLoanRepository itemMasterExchangeLoanRepository;
 
         public UnitOfWork(ApplicationDbContext context, IOptions<AppSettings> appSettings)
         {
@@ -1798,6 +1799,17 @@ namespace DAL
                     _percentageRepository = new PercentageRepository(_context,_appSettings);
                 }
                 return _percentageRepository;
+            }
+        }
+        public IItemMasterExchangeLoanRepository ItemMasterExchangeLoan
+        {
+            get
+            {
+                if (itemMasterExchangeLoanRepository == null)
+                {
+                    itemMasterExchangeLoanRepository = new ItemMasterExchangeLoanRepository(_context, _appSettings);
+                }
+                return itemMasterExchangeLoanRepository;
             }
         }
     }

@@ -18,6 +18,7 @@ import { User } from '../models/user.model';
 import { Role } from '../models/role.model';
 //import { ItemMaster } from '../models/itemMaster.model';
 import { AuditHistory } from '../models/audithistory.model';
+import {ItemMasterLoanExchange} from '../models/item-master-loan-exchange.model';
 
 export type RolesChangedOperation = 'add' | 'delete' | 'modify';
 export type RolesChangedEventArg = {
@@ -27,6 +28,7 @@ export type RolesChangedEventArg = {
 
 @Injectable()
 export class ItemMasterService {
+ 
     enableExternal: boolean = false;
     listEquipmentCollection: any;
     itemmasterObj: any[];
@@ -58,6 +60,16 @@ export class ItemMasterService {
         private http: HttpClient,
         private authService: AuthService,
         private itemMasterEndpoint: ItemMasterEndpoint) { }
+
+
+    
+    getExchangeLoan(itemMasterId: number) {
+        return Observable.forkJoin(
+            this.itemMasterEndpoint.getItemMasterExchangeLoanEndpointId<ItemMasterLoanExchange>(itemMasterId));
+    }
+    updateExchangeLoan(item: ItemMasterLoanExchange) {
+        return this.itemMasterEndpoint.getUpdateItemMasterExchangeLoanEndpoint(item, item.itemMasterId);
+    }
 
     getItemMasterById(id: number) {
         return Observable.forkJoin(

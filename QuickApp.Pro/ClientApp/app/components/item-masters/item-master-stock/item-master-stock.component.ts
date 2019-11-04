@@ -385,6 +385,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     //capes
     capabilityTypeList:any=[];
     selectedCapabilityTypes:any=[];
+    capeBldList:any=[];
+    distinctAtaList:any[]= [];
+
       // errorLogForPS: string = '';
 
     constructor(private fb: FormBuilder, public priorityService: PriorityService, public countryservice: CustomerService, private Dashnumservice: DashNumberService, private atasubchapter1service: AtaSubChapter1Service, private atamain: AtaMainService, private aircraftManufacturerService: AircraftManufacturerService, private aircraftModelService: AircraftModelService, private Publicationservice: PublicationService, public integrationService: IntegrationService, private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
@@ -485,105 +488,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
         }
 
-        //end
-        // if (this.itemser.listCollection != null && this.itemser.isEditMode == true) {
-
-        //     this.isDisabledSteps = true;
-        //     this.showLable = true;
-        //     this.sourceItemMaster = this.itemser.listCollection;
-        //     this.sourceItemMaster.itemMasterId = this.itemser.listCollection.itemMasterId;
-        //     this.sourceItemMaster.partdescription = this.itemser.listCollection.partDescription;
-        //     this.sourceItemMaster.isHazardousMaterial = this.itemser.listCollection.isHazardousMaterial;
-
-        //     this.itemser.getMappedATADetails(this.sourceItemMaster.itemMasterId);
-        //     /* if (this.sourceItemMaster.ataChapterId) {
-        //          this.getATASubChapterData(this.sourceItemMaster.ataChapterId);
-        //      }*/
-        //     this.sourceItemMaster.expirationDate = this.itemser.listCollection.expirationDate;
-        //     if (this.sourceItemMaster.manufacturer) {
-        //         this.sourceItemMaster.manufacturerId = this.itemser.listCollection.manufacturer.manufacturerId;
-        //     }
-        //     if (this.sourceItemMaster.salesMarkUpOnPurchaseListPriceActive == true) {
-
-        //         this.markupListPrice();
-        //     }
-        //     else {
-        //         this.markUpListPriceAfterDisk();
-        //     }
-
-        //     if (this.sourceItemMaster.salesIsFixedPrice == true) {
-        //         this.onFixedSalesPrice()
-        //     }
-        //     else { this.onCalculatedUsingPurchasePrice() }
-        //     if (this.sourceItemMaster.purchaseLastListPriceDate == "0001-01-01T00:00:00" || this.sourceItemMaster.purchaseLastListPriceDate == undefined || this.sourceItemMaster.purchaseLastListPriceDate == "undefined") {
-        //         this.sourceItemMaster.purchaseLastListPriceDate = new Date();
-        //     }
-        //     else {
-        //         this.sourceItemMaster.purchaseLastListPriceDate = new Date(this.sourceItemMaster.purchaseLastListPriceDate);
-        //     }
-        //     if (this.sourceItemMaster.purchaseLastDiscountPercentDate == "0001-01-01T00:00:00" || this.sourceItemMaster.purchaseLastDiscountPercentDate == undefined || this.sourceItemMaster.purchaseLastDiscountPercentDate == "undefined") {
-        //         this.sourceItemMaster.purchaseLastDiscountPercentDate = new Date();
-        //     }
-        //     else {
-        //         this.sourceItemMaster.purchaseLastDiscountPercentDate = new Date(this.sourceItemMaster.purchaseLastDiscountPercentDate);
-        //     }
-        //     if (this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate == "0001-01-01T00:00:00" || this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate == undefined || this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate == "undefined") {
-        //         this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate = new Date();
-        //     }
-        //     else {
-        //         this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate = new Date(this.sourceItemMaster.purchaseLastListPriceAfterDiscountDate);
-        //     }
-        //     if (this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate == "0001-01-01T00:00:00" || this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate == undefined || this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate == "undefined") {
-        //         this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate = new Date();
-        //     }
-        //     else {
-        //         this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate = new Date(this.sourceItemMaster.salesLastMarkUpPercentOnListPriceDate);
-        //     }
-        //     if (this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate == "0001-01-01T00:00:00" || this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate == undefined || this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate == "undefined") {
-        //         this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate = new Date();
-        //     }
-        //     else {
-        //         this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate = new Date(this.sourceItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate);
-        //     }
-        //     if (this.sourceItemMaster.salesLastBaselineSalesPriceDate == "0001-01-01T00:00:00" || this.sourceItemMaster.salesLastBaselineSalesPriceDate == undefined || this.sourceItemMaster.salesLastBaselineSalesPriceDate == "undefined") {
-        //         this.sourceItemMaster.salesLastBaselineSalesPriceDate = new Date();
-        //     }
-        //     else {
-        //         this.sourceItemMaster.salesLastBaselineSalesPriceDate = new Date(this.sourceItemMaster.salesLastBaselineSalesPriceDate);
-        //     }
-        //     if (this.sourceItemMaster.salesLastSalesDiscountPercentDate == "0001-01-01T00:00:00") {
-        //         this.sourceItemMaster.salesLastSalesDiscountPercentDate = new Date();
-        //     }
-        //     else {
-        //         this.sourceItemMaster.salesLastSalesDiscountPercentDate = new Date(this.sourceItemMaster.salesLastSalesDiscountPercentDate);
-        //     }
-        //     if (this.sourceItemMaster.expirationDate == "0001-01-01T00:00:00" || this.sourceItemMaster.expirationDate == undefined || this.sourceItemMaster.expirationDate == "undefined") {
-        //         this.sourceItemMaster.expirationDate = new Date();
-        //     }
-        //     else {
-        //         this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate);
-        //     }
-        //     if (this.sourceItemMaster.expirationDate == "0001-01-01T00:00:00" || this.sourceItemMaster.expirationDate == undefined || this.sourceItemMaster.expirationDate == "undefined") {
-        //         this.sourceItemMaster.expirationDate = new Date();
-        //     }
-        //     else {
-        //         this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate);
-        //     }
-        //     if (this.sourceItemMaster.salesLastSalePriceDate == "0001-01-01T00:00:00" || this.sourceItemMaster.salesLastSalePriceDate == undefined || this.sourceItemMaster.salesLastSalePriceDate == "undefined") {
-        //         this.sourceItemMaster.salesLastSalePriceDate = new Date();
-        //         this.sourceItemMaster.salesLastSalePriceDate = Date.now();
-        //         //this.sourceItemMaster.salesLastSalePriceDate.setValue(new Date().toISOString());
-        //     }
-        //     else {
-        //         this.sourceItemMaster.salesLastSalePriceDate = new Date(this.sourceItemMaster.salesLastSalePriceDate);
-        //     }
-
-        //     //adding for Currency
-        //     if (this.sourceItemMaster.purchaseCurrencyId) {
-        //         this.currencySymbolSelection(this.sourceItemMaster.purchaseCurrencyId);
-        //     }
-
-        // }
 
 
     }
@@ -627,6 +531,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     ];
     capesColumns: any[] = [
         { field: 'capability', header: "CAPABILITY TYPES" },
+        { field: 'entity', header: "ENTITY" },
         { field: 'company', header: "COMPANY" },
         { field: 'bu', header: "BU" },
         { field: 'division', header: "DIVISION" },
@@ -4516,7 +4421,52 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.capabilityTypeList=data;
         });
     }
+  
+    onSelectAta( value){
+        console.log(value );
+    }
+    addCape(){
+        
+        this.capeBldList=[];
+        this.distinctAtaList = [];
+        const result = [];
+        const map = new Map();
+        for (const item of this.ataMappedList) 
+        {
+            if(!map.has(item.ataChapterId))
+            {
+                map.set(item.ataChapterId, true);    // set any value to Map
+                this.distinctAtaList.push({
+                    id: item.ataChapterId,
+                    name: item.ataChapterName
+                });
+            }
+        }
+        // need to get the list of aircraft and have to populate rows for each aircrat
+        this.selectedCapabilityTypes.forEach(cap=>{
+             this.aircraftListDataValues.forEach(x=>{
+                this.capeBldList.push(
+                    {
+                        capabilityType: this.capabilityTypeList.find(c=> c.value===cap),
+                        entity: 'ent1',
+                        companyId:1,
+                        buId:2,
+                        departmentId:3,
+                        aircraft: x
+   
+   
+                   }
 
+                )
+                
+            });
+        
+
+        });
+
+       
+        console.log(this.capeBldList);
+    }
 
     async searchATA() {
         await this.searchByFieldUrlCreateforATA();
@@ -4605,7 +4555,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 `Saved Purchase and Sale Successfully `,
                 MessageSeverity.success
             );
-            this.changeOfTab('ExportInfo');
+            this.changeOfTab('Exchange');
             // console.log(datas);
         })
 
@@ -5664,6 +5614,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     // }
 
     changeOfTab(value) {
+        console.log('invoked');
         if (value === 'General') {
             this.currentTab = 'General';
             this.activeMenuItem = 1;
@@ -5679,9 +5630,13 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         } else if (value === 'PurchaseSales') {
             this.currentTab = 'PurchaseSales';
             this.activeMenuItem = 5;
-        } else if (value === 'ExportInfo') {
-            this.currentTab = 'ExportInfo';
+        } else if(value==="Exchange"){
+            this.currentTab = 'Exchange';
             this.activeMenuItem = 6;
+        }
+        else if (value === 'ExportInfo') {
+            this.currentTab = 'ExportInfo';
+            this.activeMenuItem = 7;
         }
     }
     //New Priority

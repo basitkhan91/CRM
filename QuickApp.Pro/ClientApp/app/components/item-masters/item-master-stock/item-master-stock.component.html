@@ -69,10 +69,19 @@
                         <div class="md-step-bar-right"></div>
                     </div>
                     <div class="md-step"
-                         [ngClass]="{ active: activeMenuItem >= 6 , editable : activeMenuItem === 6 }"
+                        [ngClass]="{ active: activeMenuItem >= 6 , editable : activeMenuItem === 6 }"
+                        (click)="changeOfTab('Exchange')"
+                        [class.isDisabled]="!isDisabledSteps">
+                        <div class="md-step-circle"><span>6</span></div>
+                        <div class="md-step-title">Exchange and Loans</div>
+                        <div class="md-step-bar-left"></div>
+                        <div class="md-step-bar-right"></div>
+                    </div>
+                    <div class="md-step"
+                         [ngClass]="{ active: activeMenuItem >= 7 , editable : activeMenuItem === 7 }"
                          (click)="changeOfTab('ExportInfo')"
                          [class.isDisabled]="!isDisabledSteps">
-                        <div class="md-step-circle"><span>6</span></div>
+                        <div class="md-step-circle"><span>7</span></div>
                         <div class="md-step-title">Export Information</div>
                         <div class="md-step-bar-left"></div>
                         <div class="md-step-bar-right"></div>
@@ -853,47 +862,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="col-sm-12">
 
-
-
-
-                            <div class="col-md-6">
-                                <div class="col-sm-12 add-color">
-                                    <b class="add-name font">Search ATA chapters</b>
-                                    <br />
-                                    <div class="col-sm-12">
-                                        <div class="col-sm-3">
-                                            <label class="lab1">ATA Chapter</label>
-                                            <br />
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <label class="lab1">ATA Subchapter</label>
-                                            <br />
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <div class="col-sm-3 inline-block display-flex">
-                                            <p-multiSelect class="panel-style pub-multi4" [options]="LoadAtachapter"
-                                                           [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedATAchapter" (onChange)=" getSubChapterByATAChapter()"
-                                                           [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
-                                        </div>
-                                        <div class="col-sm-3 inline-block display-flex">
-                                            <p-multiSelect [options]="atasubchapterValues" [ngModelOptions]="{standalone: true}"
-                                                           [(ngModel)]="selectedATASubChapter" [panelStyle]="{minWidth:'12em'}"
-                                                           class="panel-style pub-multi4"></p-multiSelect>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <button type="button" class="btn btn-primary btn-search-new" (click)="searchATA()">
-                                                <i class="pi pi-search"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-12" style="margin-bottom:10px;"></div>
-                                    <br />
-                                </div>
-                            </div>
-                        </div> -->
                         <br />
                     </div>
                     <div class="col-sm-12">
@@ -1198,6 +1167,17 @@
                         </div>
                     </form>
                 </div>
+                <!--Exchange and loans Tab  -->
+                <div [ngClass]="{hideTab : currentTab !== 'Exchange'}">
+                        <app-item-master-exch-loan 
+                        (onTabChange)="changeOfTab($event)" 
+                        [partNumber]="pnvalue" 
+                        [partDescription]="pnDescription"
+                        [manufacturer]="ManufacturerValue"
+                        [itemMasterId]="itemMasterId"
+                        ></app-item-master-exch-loan>
+                </div>
+                <!-- End of exchange and loans tab-->
                 <div [ngClass]="{hideTab : currentTab !== 'ExportInfo'}">
 
                     <form #exportInformatiom="ngForm">
@@ -1339,7 +1319,7 @@
 
                         <div class="col-sm-12 mt8">
                             <div class="col-sm-6">
-                                <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="movePurchaseInformation()" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
+                                <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="changeOfTab('Exchange')" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
                             </div>
                             <div class="col-sm-6">
                                 <span class="float-right">
@@ -1499,43 +1479,6 @@
                     </form>
 
 
-
-                    <!-- <div class="card" *ngIf="viewTable">
-                        <p-table class="p-table-cstm" [value]="aircraftData" [rows]="6" [columns]="colaircraft" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
-                            <ng-template pTemplate="header" let-columns>
-                                <tr>
-                                    <th></th>
-                                    <th *ngFor="let col of columns">
-                                        {{col.header}}
-                                    </th>
-                                    <th>Memo</th>
-
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
-                                <tr>
-
-
-                                    <td>
-                                        <span class="checkbox-cstm">
-                                            <label style="width: 10px;">
-                                                <input type="checkbox"  [(ngModel)]="rowData.IsChecked" >
-
-                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                            </label>
-                                        </span>
-                                    </td>
-
-                                    <td *ngFor="let col of columns">
-                                        {{rowData[col.field]}}
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control input-value" [(ngModel)]="rowData.Memo" name="Memo" [disabled]="!rowData.IsChecked" />
-                                    </td>
-                                </tr>
-                            </ng-template>
-                        </p-table>
-                    </div> -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
@@ -1545,11 +1488,11 @@
     </div>
     <div id="ModalViewCapes"
          class="modal fade custom-popup"
-         role="dialog">
+          role="dialog">
         <div class="modal-dialog modal-full">
             <!-- Modal content-->
-            <form [formGroup]="capeform">
-            <div class="modal-content">
+            <form #capeForm="ngForm" >
+            <div class="modal-content" style="width:1200px">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">×</button>
                     <h4 class="modal-title">Capes</h4>
@@ -1566,11 +1509,15 @@
                             Capability Types: <span style="color:red"></span>
                         </div>
                         <div class="col-sm-3">
-                            <p-multiSelect [maxSelectedLabels]="2" [options]="capabilityTypeList" optionLabel="label" [(ngModel)]="selectedCapabilityTypes"
-                            class="pub-multi" [selectionLimit]="30" [ngModelOptions]="{standalone: true}"></p-multiSelect>
+                            <p-multiSelect  [options]="capabilityTypeList" [panelStyle]="{minWidth:'12em'}" [(ngModel)]="selectedCapabilityTypes"
+                            class="imstock-pmselect"   name="clist"></p-multiSelect>
+                        </div>
+                        <div class="col-sm-3">
+                            <button type="button" class="btn btn-primary"  (click)="addCape();" >Add</button>
                         </div>
                     </div>
-                    <p-table [rows]="6" [columns]="Capes" [scrollable]="true" [responsive]="true" [style]="{width:'100%'}" [paginator]="true">
+                    <div class="col-md-12">
+                    <p-table [rows]="20" [columns]="capesColumns"  [value]="capeBldList" [scrollable]="true" [responsive]="true" [style]="{width:'100%'}" [paginator]="true">
                         <ng-template pTemplate="header" let-columns>
                             <tr>
                                 <th *ngFor="let col of columns">
@@ -1581,12 +1528,64 @@
                         </ng-template>
                         <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
                             <tr>
-                                <td *ngFor="let col of columns">
-                                    {{rowData[col.field]}}
+                                <td>
+                                   <span style="font-weight:bold">{{rowData.capabilityType.label}}</span>
+                           
                                 </td>
+                                <td>
+                                    <select >
+                                        <option value="0">Select</option> 
+                                    </select>
+                                </td>
+                                <td>
+                                    <select >
+                                        <option value="0">Select</option> 
+                                    </select>
+                                </td>
+
+                                <td>
+                                    <select >
+                                        <option value="0">Select</option> 
+                                    </select>
+                                </td>
+                            
+                                <td>
+                                    <select >
+                                        <option value="0">Select</option> 
+                                    </select>
+                                </td>
+                                <td>
+                                    <select >
+                                        <option value="0">Select</option> 
+                                    </select>
+                                </td>   
+                                <td>
+                                   <span style="font-weight:bold">{{rowData.aircraft.aircraft}}</span>
+                                </td> 
+                                <td>
+                                    <span style="font-weight:bold">{{rowData.aircraft.aircraftModel}}</span>
+                                </td> 
+                                <td>
+                                     <span style="font-weight:bold">{{rowData.aircraft.dashNumber}}</span>
+                                 </td>
+                                 <td>
+                                       <input type="text" name="description" />
+                                </td>
+                                <td>
+                                    <select (change)="onSelectAta($event.target.value)">
+                                        <option *ngFor="let item of distinctAtaList"  [ngValue]="item.id">{{item.name}}</option>
+                                    </select>
+                                 </td>
+                                 <td>
+                                        <select>
+                                            <option *ngFor="let item of ataMappedList"  [ngValue]="0">{{item}}</option>
+                                        </select>>
+                                     </td>
                             </tr>
                         </ng-template>
                     </p-table>
+                    </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Edit</button>

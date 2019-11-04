@@ -7,6 +7,7 @@ import 'rxjs/add/operator/map';
 import { EndpointFactory } from './endpoint-factory.service';
 import { ConfigurationService } from './configuration.service';
 import { Url } from '../app.settings';
+import { ItemMasterLoanExchange } from '../models/item-master-loan-exchange.model';
 @Injectable()
 export class ItemMasterEndpoint extends EndpointFactory {
 
@@ -57,6 +58,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
     //get
     private readonly _getAircraftMapped: string = "/api/ItemMaster/getAircraftMapped";
     private readonly _getATAMapped: string = "/api/ItemMaster/getATAMapped";
+    private readonly _getExchangeLoan: string="/api/ItemMaster/exchangeloan";
     private readonly _ItemMasterExportInfoUrlNew: string = "/api/ItemMaster/ExportInfoPostBy_IMastID";
     //update
     private readonly _ItemMasterAircraftUpdate: string = "/api/ItemMaster/ItemMasterAircraftUpdate";
@@ -106,7 +108,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
     get UpdateItemMasterTimeLifeURL() { return this.configurations.baseUrl + this._updateItemMasterTimeLife }
     get GetPartsDropDownURL() { return this.configurations.baseUrl + this._getPartsDropDown }
     get getpartdetailsWithidUrl() { return this.configurations.baseUrl + this._getpartdetailsWithidUrl };
-
+    get ExchangeLoanUrl(){ return this.configurations.baseUrl+ this._getExchangeLoan};
 
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -114,7 +116,20 @@ export class ItemMasterEndpoint extends EndpointFactory {
         super(http, configurations, injector);
     }
 
+    getUpdateItemMasterExchangeLoanEndpoint<T>(exchObject: any, itemMasterId: number): Observable<T> {
+        let endpointUrl = `${this.ExchangeLoanUrl}/${itemMasterId}`;
 
+        return this.http.put<T>(endpointUrl, JSON.stringify(exchObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getUpdateItemMasterExchangeLoanEndpoint(exchObject, itemMasterId));
+            });
+    }
+    getItemMasterExchangeLoanEndpointId<T>(id: number): Observable<T> {
+        return this.http.get<T>(`${this.ExchangeLoanUrl}/${id}`, this.getRequestHeaders())
+            .catch(err => {
+                return this.handleError(err, () => this.getItemMasterExchangeLoanEndpointId(id));
+            })
+    }
     getItemMasterDetailsById<T>(id: number): Observable<T> {
         return this.http.get<T>(`${this.ItemMasterDetails}/${id}`, this.getRequestHeaders())
             .catch(err => {

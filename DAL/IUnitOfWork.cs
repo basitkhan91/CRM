@@ -264,6 +264,7 @@ namespace DAL
         
         IPublicationTypesRepository PublicationTypesRepository { get; }
         IPercentageRepository PercentageRepository { get; }
+        IItemMasterExchangeLoanRepository ItemMasterExchangeLoan { get; }
         void SaveChanges(Employee employeeobject);
     }
 }

@@ -415,6 +415,7 @@ namespace DAL
         public DbSet<LegalEntityShippingAddress> LegalEntityShippingAddress { get; set; }
         public DbSet<LegalEntityContact> LegalEntityContact { get; set; }
         public DbSet<PurchaseOrderAudit> PurchaseOrderAudit { get; set; }
+        public DbSet<ItemMasterExchangeLoan> ItemMasterExchangeLoan { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
