@@ -28,7 +28,8 @@ export class AssetListingComponent implements OnInit {
     unitOfMeasureId: any;
     assetTypeId: any;
     selectedColumn: any;
-    // comented for asset audit
+
+   // comented for asset audit
     //AuditDetails: SingleScreenAuditDetails[];
 
 
@@ -90,7 +91,7 @@ export class AssetListingComponent implements OnInit {
     openAssetToEdit(row) {
         this.assetService.isEditMode = true;
         this.isSaving = true;
-        // this.assetService.currentAssetId = row.assetRecordId;
+       // this.assetService.currentAssetId = row.assetRecordId;
         this.assetService.listCollection = row;
         this._route.navigateByUrl('assetmodule/assetpages/app-create-asset');
     }
@@ -166,21 +167,20 @@ export class AssetListingComponent implements OnInit {
         this.assetViewList.model = row.model;
         this.assetViewList.assetAcquisitionTypeId = row.assetAcquisitionTypeId;
         if (row.manufacturer) {
-            this.assetViewList.manufacturerId = row.manufacturer.name;
+            this.manufacturerId = row.manufacturer.name;
         }
-        else {
-            this.assetViewList.manufacturerId = "";
-        }
+        else { this.manufacturerId = "" }
         if (row.currency) {
-            this.assetViewList.currencyId = row.currency.symbol;
+            this.currencyId = row.currency.symbol;
         }
-        else {
-            this.assetViewList.currencyId = ""
+        else
+        {
+            this.currencyId = ""
         }
         if (row.glAccount) {
-            this.assetViewList.glAccountId = row.glAccount.accountName;
+            this.glAccountId = row.glAccount.accountName;
         }
-        else { this.assetViewList.glAccountId = "" }
+        else { this.glAccountId = "" }
         this.assetViewList.inspectionFrequencyMonths = row.inspectionFrequencyMonths;
         this.assetViewList.inspectionFrequencyDays = row.inspectionFrequencyDays;
         this.assetViewList.inspectionDefaultVendorId = row.inspectionDefaultVendorId;
@@ -188,24 +188,24 @@ export class AssetListingComponent implements OnInit {
         this.assetViewList.inspectionGlaAccountId = row.inspectionGlaAccountId;
         this.assetViewList.inspectionMemo = row.inspectionMemo;
         this.assetViewList.manufacturedDate = row.manufacturedDate;
-        this.assetViewList.isSerialized = row.isSerialized;
+        this.assetViewList.isSerialized = row.isSerialized;        
         if (row.unitOfMeasure) {
-            this.assetViewList.unitOfMeasureId = row.unitOfMeasure.description;
+            this.unitOfMeasureId = row.unitOfMeasure.description;
         }
-        else { this.assetViewList.unitOfMeasureId = "" }
+        else { this.unitOfMeasureId = "" }
 
         if (row.glAccount) {
-            this.assetViewList.glAccountId = row.glAccount.accountName;
+            this.glAccountId = row.glAccount.accountName;
         }
         else {
-            this.assetViewList.glAccountId = "";
+            this.glAccountId = "";
         }
 
         if (row.assetType) {
-            this.assetViewList.assetTypeId = row.assetType.assetTypeName;
+            this.assetTypeId = row.assetType.assetTypeName;
         }
         else {
-            this.assetViewList.assetTypeId = "";
+            this.assetTypeId = "";
         }
         this.assetViewList.unitCost = row.unitCost;
         this.assetViewList.expirationDate = row.expirationDate;
@@ -232,7 +232,7 @@ export class AssetListingComponent implements OnInit {
         }, () => { console.log('Backdrop click') })
     }
 
-    // AssetCreation Audit please check
+   // AssetCreation Audit please check
     //showAuditPopup(template, assetRecordId): void {
     //    this.audit(assetRecordId);
     //    this.modal = this.modalService.open(template, { size: 'sm' });
