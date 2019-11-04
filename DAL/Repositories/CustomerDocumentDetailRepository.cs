@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using DAL.Models;
+using Remotion.Linq.Clauses;
 
 
 namespace DAL.Repositories
@@ -23,12 +25,13 @@ namespace DAL.Repositories
         {
 
             var data = (from v in _appContext.CustomerDocumentDetails
+                join x in _appContext.AttachmentDetails on v.AttachmentId equals x.AttachmentId 
                 where v.CustomerId == Id
                 select new
                 {
-                   
                     v.CustomerDocumentDetailId,
                     v.AttachmentId,
+                    x.Link,
                     v.MasterCompanyId,
                     v.CreatedBy,
                     v.UpdatedBy,
@@ -44,8 +47,22 @@ namespace DAL.Repositories
             return data;
 
 
+        }
 
-           
+        public IEnumerable<object> GetAttachedDocumentById(long id)
+        {
+
+            var data = (from v in _appContext.AttachmentDetails
+                        where v.AttachmentId == id
+                        select new
+                {
+                    v.Link
+                }).ToList();
+            return data;
+
+
+
+
 
         }
 
