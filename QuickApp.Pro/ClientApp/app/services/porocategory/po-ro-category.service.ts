@@ -1,5 +1,7 @@
 ﻿import { Injectable } from '@angular/core';
+import { Router, NavigationExtras } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
@@ -9,7 +11,10 @@ import { POROCategoryEndpoint } from './po-ro-category-endpoint.service';
 @Injectable()
 export class POROCategoryService {
 
-    constructor(private POROCategoryEndpointService: POROCategoryEndpoint) {
+    public currentUrl = this.router.url;
+    public bredcrumbObj = new Subject<any>();
+
+    constructor(private router: Router, private POROCategoryEndpointService: POROCategoryEndpoint) {
     }
 
     getAll() {
@@ -35,6 +40,18 @@ export class POROCategoryService {
         return this.POROCategoryEndpointService.removePOROCategoryById(poroCategoryId);
     }
 
+    updateActionforActivePORO(poroCategory: any) {
+        return this.POROCategoryEndpointService.getUpdatePORPEndpointforActive(poroCategory);
+    }
+
+    //getRolesData() {
+    //    return Observable.forkJoin(
+    //        this.POROCategoryEndpointService.getRolesData<any[]>());
+    //}
+    //getRolesDataByUserId(event) {
+    //    return Observable.forkJoin(
+    //        this.POROCategoryEndpointService.getRolesDatayRoleId<any[]>(event));
+    //}
     getAudit(poroCategoryId: number) {
         return this.POROCategoryEndpointService.getAudit<any[]>(poroCategoryId);
     }
