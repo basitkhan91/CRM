@@ -170,5 +170,8 @@ export class WorkOrderEndpointService extends EndpointFactory {
     deleteWorkOrder(workOrderId){
         return this.http.get(`${this.configurations.baseUrl}/api/workOrder/deleteworkorder?workOrderId=${workOrderId}` , this.getRequestHeaders())
     }
+    createWorkFlowWorkOrder(object){
+        return this.http.post(`${this.configurations.baseUrl}/api/workOrder/createworkflowworkorder`, JSON.stringify(object), this.getRequestHeaders())
+    }
 
 }

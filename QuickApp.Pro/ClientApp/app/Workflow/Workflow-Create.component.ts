@@ -32,6 +32,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ChargesCreateComponent } from "../shared/Charges-Create.component";
 import { Percent } from "../models/Percent.model";
 import { PercentService } from "../services/percent.service";
+import { WorkOrderService } from "../services/work-order/work-order.service";
 
 @Component({
     selector: 'wf-create',
@@ -39,6 +40,8 @@ import { PercentService } from "../services/percent.service";
     styleUrls: ['./workflow-Create.component.css']
 })
 export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
+    @Input() isWorkOrder; 
+    @Input()  savedWorkOrderData;
     UpdateMode: boolean;
     workFlow: any;
     workFlowList: any[];
@@ -154,7 +157,9 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     TotalExpertiseCost: number;
     @ViewChild(ChargesCreateComponent) chargesCreateComponent: ChargesCreateComponent;
 
-    constructor(private actionService: ActionService, private router: ActivatedRoute, private route: Router, private expertiseService: EmployeeExpertiseService, private cusservice: CustomerService, public workscopeService: WorkScopeService, public currencyService: CurrencyService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService, private conditionService: ConditionService, private _workflowService: WorkFlowtService, private itemser: ItemMasterService, private vendorService: VendorService, private alertService: AlertService, private modalService: NgbModal, private percentService: PercentService) {
+    constructor(private actionService: ActionService,
+        private workOrderService: WorkOrderService,
+        private router: ActivatedRoute, private route: Router, private expertiseService: EmployeeExpertiseService, private cusservice: CustomerService, public workscopeService: WorkScopeService, public currencyService: CurrencyService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService, private conditionService: ConditionService, private _workflowService: WorkFlowtService, private itemser: ItemMasterService, private vendorService: VendorService, private alertService: AlertService, private modalService: NgbModal, private percentService: PercentService) {
     }
 
     public ngOnDestroy() {
@@ -212,6 +217,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     updateWorkFlowId: string;
 
     ngOnInit(): void {
+        console.log(this.isWorkOrder );
         this.isFixedcheck('');
         this.loadCurrencyData();
         this.loadWorkScopedata();
@@ -1893,6 +1899,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
             return;
         }
+
       
         this.actionService.getNewWorkFlow(this.sourceWorkFlow).subscribe(
             data => {
@@ -2049,6 +2056,19 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                         this.sourceWorkFlow.publication.push(publication);
                     }
                 }
+            }
+
+            if(this.isWorkOrder){
+                  this.workOrderService.createWorkFlowWorkOrder({...this.sourceWorkFlow , 
+                    workOrderId : this.savedWorkOrderData.workOrderId
+                }).subscribe(res => {
+
+                    this.alertService.showMessage(
+                        '',
+                        'Work Order Work Flow Saved Succesfully',
+                        MessageSeverity.success
+                      );
+                })
             }
         }
     }
