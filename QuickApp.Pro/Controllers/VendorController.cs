@@ -119,6 +119,13 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [HttpPost("roListWithFilters")]
+        public IActionResult rolist([FromBody]Filters<RepairOrderFilters> roFilters)
+        {
+            var allActions = _unitOfWork.repairOrder.GetRepairOrderlist(roFilters);
+            return Ok(allActions);
+        }
+
         [HttpGet("BencusAddress")]
         [Produces(typeof(List<VendorViewModel>))]
 
@@ -3019,6 +3026,67 @@ namespace QuickApp.Pro.Controllers
             public List<VendorRepairOrderSearchViewModel> VendorRepairOrderList { get; set; }
         }
 
+        [HttpGet("roHistory")]
+        public IActionResult RoHistory(int repairOrderId)
+        {
+            if (repairOrderId == 0)
+            {
+                return BadRequest(new Exception("Please pass valid RepairOrderId."));
+            }
+
+            var roHistoryList = _unitOfWork.repairOrder.RoHistoryList(repairOrderId);
+            return Ok(roHistoryList);
+
+        }
+
+        [HttpDelete("deleteRo")]
+        public IActionResult DeleteRepairOrder(int repairOrderId, string updatedBy)
+        {
+            if (repairOrderId == 0 || string.IsNullOrEmpty(updatedBy))
+            {
+                return BadRequest(new Exception("Please pass valid RepairOrderId to delete RO."));
+            }
+
+            if (ModelState.IsValid)
+            {
+                // Set isActive to false in RepairOrder table.
+                var repairOrderModel = _context
+                    .RepairOrder
+                    .Where(a => a.RepairOrderId == repairOrderId)
+                    .SingleOrDefault();
+
+                if (repairOrderModel != null)
+                {
+                    repairOrderModel.UpdatedBy = updatedBy;
+                    repairOrderModel.IsActive = false;
+                }
+
+                _context.RepairOrder.Update(repairOrderModel);
+                _unitOfWork.SaveChanges();
+
+                // TODO = if RepairOrderPart needs to be set as isActive to false, then can do that. Need to confirm.
+                //// Set isActive to false in RepairOrderPart table.
+                //var repairOrderPartModel = _context
+                //    .RepairOrderPart
+                //    .Where(a => a.RepairOrderId == repairOrderId)
+                //    .SingleOrDefault();
+
+                //if (repairOrderPartModel != null)
+                //{
+                //    repairOrderPartModel.UpdatedBy = updatedBy;
+                //    repairOrderPartModel.IsActive = false;
+                //}
+
+                //_context.RepairOrderPart.Update(repairOrderPartModel);
+                //_unitOfWork.SaveChanges();
+
+                return Ok(repairOrderModel);
+
+            }
+
+            return Ok(ModelState);
+        }
+
         #region Capes
 
         [HttpGet("GetVendorCapesDatawithMasterId/{id}")]
@@ -3209,8 +3277,6 @@ namespace QuickApp.Pro.Controllers
 
         #endregion
 
-
-
         #region Private Methods
 
         private void updateRanking(int rankId)
@@ -3262,17 +3328,5 @@ namespace QuickApp.Pro.Controllers
 
         #endregion Private Methods
 
-
     }
-    //[HttpGet("GetvendorList/{vendorName}")]
-    //[Produces(typeof(List<VendorViewModel>))]
-    //public IActionResult Vendorlist(string value, VendorViewModel venlist)
-    //{
-    //   if (ModelState.IsValid)
-    //    {
-    //        var vendorlist = _unot.Vendor.getAllItemMasterStockdata(); 
-    //        return Ok(vendorlist);           
-    //    }      
-    //}
-
 }
