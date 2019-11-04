@@ -13,7 +13,7 @@ namespace DAL.Models
             PartNumbers = new List<WorkOrderPartNumber>();
         }
         [Key]
-        public long ID { get; set; }
+        public long WorkOrderId { get; set; }
 
         public string WorkOrderNum { get; set; }
 

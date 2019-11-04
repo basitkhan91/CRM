@@ -57,14 +57,11 @@ export class WorkOrderEndpointService extends EndpointFactory {
             });
     }
 
-    addWorkOrder<T>(workOrder: WorkOrder): Observable<T> {
-        debugger;
-        let endpointUrl = this.add;
+    createNewWorkOrder<T>(workOrder: WorkOrder): Observable<T> {
 
-        return this.http.post<T>(endpointUrl, JSON.stringify(workOrder), this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.addWorkOrder(workOrder));
-            });
+
+        return this.http.post<T>(`${this.configurations.baseUrl}/api/workOrder/createworkorder` , JSON.stringify(workOrder), this.getRequestHeaders())
+
     }
 
     updateWorkOrder<T>(workOrder: WorkOrder): Observable<T> {
@@ -134,6 +131,44 @@ export class WorkOrderEndpointService extends EndpointFactory {
                 return this.handleError(error, () => this.postLabourEndpoint(userObject));
             });
     }
-    
+
+    getWorkFlowByPNandScope(itemMasterId, workScopeId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workflownos?partId=${itemMasterId}&workScopeId=${workScopeId}`)
+    }
+
+    // get Part Number Bases on Repair Order and Purchase Orders
+    getMultipleParts() {
+        return this.http.get(`${this.configurations.baseUrl}/api/workOrder/workorderpartdetails`, this.getRequestHeaders())
+    }
+
+    getRevisedPartNumbers(itemMasterId) {
+        return this.http.get(`${this.configurations.baseUrl}/api/workOrder/revisedparts?itemMasterId=${itemMasterId}&mappingType=${1}`, this.getRequestHeaders())
+    }
+    getStockLineByItemMasterId(itemMasterId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/stocklinedetailsbypartno?itemMasterId=${itemMasterId}`, this.getRequestHeaders())
+    }
+
+    getPartPublicationByItemMaster(itemMasterId) {
+        return this.http.get(`${this.configurations.baseUrl}/api/workOrder/partpublications?itemMasterId=${itemMasterId}`, this.getRequestHeaders())
+    }
+
+    getSerialNoByStockLineId(stockLineId, conditionId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/partserialno?stockLineId=${stockLineId}&conditionId=${conditionId}`, this.getRequestHeaders())
+    }
+
+    getConditionByItemMasterId(itemMasterId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/conditiondetailsbypartno?itemMasterId=${itemMasterId}`, this.getRequestHeaders())
+    }
+
+    getWorkOrderList(pageIndex, pageSize){
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderlist?pageNo=${pageIndex}&pageSize=${pageSize}` , this.getRequestHeaders())
+    }
+
+    updateWorkOrderStatus(data, login ){
+        return this.http.get(`${this.configurations.baseUrl}/api/workOrder/workorderstatus?workOrderId=${data.workOrderId}&status=${data.isActive}&updatedBy=${login}` , this.getRequestHeaders())
+    }
+    deleteWorkOrder(workOrderId){
+        return this.http.get(`${this.configurations.baseUrl}/api/workOrder/deleteworkorder?workOrderId=${workOrderId}` , this.getRequestHeaders())
+    }
 
 }

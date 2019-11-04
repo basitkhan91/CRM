@@ -3,20 +3,17 @@
 // www.ebenmonney.com/quickapp-pro
 // ===============================
 
+using DAL.Common;
+using DAL.Models;
+using DAL.Repositories;
+using DAL.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using DAL.Common;
-using DAL.Models;
-using DAL.Repositories;
-using DAL.Repositories.Interfaces;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace DAL
 {
@@ -78,7 +75,7 @@ namespace DAL
         IManufacturerRepository _manufacturerRepository;
         IVendorCheckPaymentRepository _vendorCheckPaymentRepository;
         IVendorCapabilitiesRepository _vendorCapabilitiesRepository;
-       
+
         IVendorDomesticPaymentRepository _vendorDomesticPaymentRepository;
 
         IVendorDomesticWirePaymentRepository _vendorDomesticWirePaymentRepository;
@@ -126,7 +123,7 @@ namespace DAL
         ICustomerDocumentDetail _customerDocumentDetail;
 
         IItemMaster _itemMaster;
-       // IRepairOrder _repairOrder;
+        // IRepairOrder _repairOrder;
 
         ITimeLife _timeLife;
 
@@ -149,6 +146,7 @@ namespace DAL
         ICustomerShipping _customershipping;
 
         IPurchaseOrder _purchaseOrder;
+        IRepairOrder _repairOrder;
         IStocklineAdjustmentRepository _stocklineAdjustmentRepository;
         //IWarehouseRepository _warehouseRepository;
         ICertificationTypeRepository _ICertificationTypeRepository;
@@ -181,7 +179,7 @@ namespace DAL
         IGLAccountNodeShareWithEntityMapper gLAccountNodeShareWithEntityMapper;
 
         IPartStockLineMapper partStockLineMapper;
-        
+
         IGLAccountNodeRepository glAccountNode;
 
         IDashNumberRepository dashNumberRepository;
@@ -195,7 +193,7 @@ namespace DAL
         IFileUploadRepository _fileUploadRepository { get; set; }
 
         IAssetCapes _assetCapes;
-        
+
         IAssetIntangibleAttributeType _assetIntangibleAttributeType;
         IAssetDepreciationInterval _assetDepreciationInterval;
 
@@ -304,7 +302,7 @@ namespace DAL
             }
         }
 
-       
+
 
         public IVendorCapabilitiesRepository VendorCapabilities
 
@@ -494,7 +492,7 @@ namespace DAL
             {
                 return _customerAircraftMapping;
             }
-           
+
         }
 
         public int SaveChanges()
@@ -596,7 +594,7 @@ namespace DAL
             get
             {
                 if (_itemclassfifcation == null)
-                    _itemclassfifcation = new ItemClassificationRepository(_context,_appSettings);
+                    _itemclassfifcation = new ItemClassificationRepository(_context, _appSettings);
                 return _itemclassfifcation;
             }
         }
@@ -662,7 +660,7 @@ namespace DAL
             get
             {
                 if (_publication == null)
-                    _publication = new PublicationRepository(_context,_appSettings);
+                    _publication = new PublicationRepository(_context, _appSettings);
                 return _publication;
 
             }
@@ -933,7 +931,7 @@ namespace DAL
             get
             {
                 if (_manufacturerRepository == null)
-                    _manufacturerRepository = new ManufacturerRepository(_context,_appSettings);
+                    _manufacturerRepository = new ManufacturerRepository(_context, _appSettings);
                 return _manufacturerRepository;
             }
         }
@@ -1007,7 +1005,7 @@ namespace DAL
                 return _CustomerWarning;
             }
         }
-       
+
 
         public ICountriesRepository Countries
         {
@@ -1018,7 +1016,7 @@ namespace DAL
                 return _Countries;
             }
         }
-        
+
 
         public IEmployeeLicenseType employeeLicenseType
         {
@@ -1330,10 +1328,10 @@ namespace DAL
         //    }
         //}
 
-        
 
 
-     
+
+
 
         public IGlCashFlowRepository glCashFlowRepository => throw new NotImplementedException();
 
@@ -1347,6 +1345,16 @@ namespace DAL
                 if (_purchaseOrder == null)
                     _purchaseOrder = new PurchaseOrderRepository(_context);
                 return _purchaseOrder;
+            }
+        }
+
+        public IRepairOrder repairOrder
+        {
+            get
+            {
+                if (_repairOrder == null)
+                    _repairOrder = new RepairOrderRepository(_context);
+                return _repairOrder;
             }
         }
 
@@ -1630,7 +1638,7 @@ namespace DAL
                 throw;
             }
         }
-        
+
         private void AuditRecord(object auditData)
         {
             var classType = typeof(Repository<>);
@@ -1673,7 +1681,8 @@ namespace DAL
         }
         IAssetCapes IUnitOfWork.AssetCapes
         {
-            get {
+            get
+            {
                 if (_assetCapes == null)
                     _assetCapes = new AssetCapesRepository(_context);
                 return _assetCapes;
@@ -1689,7 +1698,7 @@ namespace DAL
                 return _assetIntangibleAttributeType;
             }
         }
-        
+
         IAssetDepreciationInterval IUnitOfWork.AssetDepreciationInterval
         {
             get
@@ -1760,7 +1769,7 @@ namespace DAL
                 return _commonRepository;
             }
         }
-        
+
         //IAssetCapes IUnitOfWork.AssetCapes
         //{
         //    get {
@@ -1786,7 +1795,7 @@ namespace DAL
             get
             {
                 if (_publicationTypesRepository == null)
-                    _publicationTypesRepository = new PublicationTypesRepository(_context,_appSettings);
+                    _publicationTypesRepository = new PublicationTypesRepository(_context, _appSettings);
                 return _publicationTypesRepository;
             }
         }
@@ -1795,9 +1804,9 @@ namespace DAL
         {
             get
             {
-                if(_percentageRepository==null)
+                if (_percentageRepository == null)
                 {
-                    _percentageRepository = new PercentageRepository(_context,_appSettings);
+                    _percentageRepository = new PercentageRepository(_context, _appSettings);
                 }
                 return _percentageRepository;
             }
@@ -1805,4 +1814,4 @@ namespace DAL
     }
 }
 
-    
+

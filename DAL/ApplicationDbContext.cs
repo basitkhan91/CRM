@@ -241,7 +241,6 @@ namespace DAL
         public DbSet<MaterialUOM> MaterialUOMs { get; set; }
 
         public DbSet<PublicationType> PublicationType { get; set; }
-        public DbSet<PublicationModel> PublicationModels { get; set; }
         public DbSet<PublicationStatus> PublicationStatuses { get; set; }
         public DbSet<ExclusionEstimatedOccurance> ExclusionEstimatedOccurances { get; set; }
 
@@ -416,6 +415,7 @@ namespace DAL
         public DbSet<LegalEntityBillingAddress> LegalEntityBillingAddress { get; set; }
         public DbSet<LegalEntityShippingAddress> LegalEntityShippingAddress { get; set; }
         public DbSet<LegalEntityContact> LegalEntityContact { get; set; }
+        public DbSet<PurchaseOrderAudit> PurchaseOrderAudit { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {

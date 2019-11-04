@@ -25,7 +25,7 @@ namespace QuickApp.Pro.ViewModels
         public string UpdatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
-        public string AssetId { get; set; }
+        public int? AssetId { get; set; }
         public int? PartNumberId { get; set; }
         public int? AlternatePartNumberId { get; set; }
         public int? ItemTypeId { get; set; }
@@ -58,7 +58,7 @@ namespace QuickApp.Pro.ViewModels
         public string RoPartSplitUserTypeId { get; set; }
         public int? RoPartSplitUserId { get; set; }
         public int? RoPartSplitAddressId { get; set; }
-        public int? ParentId { get; set; }
+        public long ParentId { get; set; }
         public List<ChildObj> childobj { get; set; }
     }
 
@@ -67,9 +67,10 @@ namespace QuickApp.Pro.ViewModels
         public long RepairOrderPartRecordId { get; set; }
         public long RepairOrderId { get; set; }
         public bool? IsParent { get; set; }
+        public long ParentId { get; set; }
         public long ItemMasterId { get; set; }
         public int SerialNumber { get; set; }
-        public string AssetId { get; set; }
+        public int? AssetId { get; set; }
         public int? PartNumberId { get; set; }
         public int? UOMId { get; set; }
         public int? QuantityOrdered { get; set; }

@@ -30,7 +30,8 @@ namespace QuickApp.Pro.ViewModels
         public Nullable<short> QuantityOrdered { get; set; }
         
         public Nullable<decimal> UnitCost { get; set; }
-        public Nullable<short> DiscountPerUnit { get; set; }
+        public Nullable<short> DiscountPercent { get; set; }
+        public decimal? DiscountPerUnit { get; set; }
         //public Nullable<short> DiscountCostPerUnit { get; set; }
         public decimal? DiscountAmount { get; set; }
         public Nullable<decimal> ExtendedCost { get; set; }

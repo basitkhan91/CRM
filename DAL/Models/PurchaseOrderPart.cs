@@ -28,10 +28,10 @@ namespace DAL.Models
         public Nullable<short> QuantityOrdered { get; set; }
         public Nullable<short> QuantityBackOrdered { get; set; }
         public Nullable<decimal> UnitCost { get; set; }
-        public Nullable<short> DiscountPerUnit { get; set; }
-        public Nullable<decimal> DiscountCostPerUnit { get; set; }
+        public Nullable<short> DiscountPercent { get; set; }
+        public Nullable<decimal> DiscountAmount { get; set; }
         public Nullable<decimal> ExtendedCost { get; set; }
-        public Nullable<int> TransactionalCurrencyId { get; set; }
+        public Nullable<int> ReportCurrencyId { get; set; }
         public Nullable<int> FunctionalCurrencyId { get; set; }
         public Nullable<decimal> ForeignExchangeRate { get; set; }
         public Nullable<long> WorkOrderId { get; set; }
@@ -57,8 +57,10 @@ namespace DAL.Models
         public Nullable<bool> IsActive { get; set; }
         public bool isParent { get; set; }
         public long? ParentId { get; set; } 
+        public decimal? DiscountPerUnit { get; set; }
 
-		public int? MasterCompanyId { get; set; }
+
+        public int? MasterCompanyId { get; set; }
 
 		public virtual PurchaseOrder PurchaseOrder { get; set; }
         public virtual ItemMaster ItemMaster { get; set; }

@@ -554,7 +554,15 @@ namespace QuickApp.Pro.Controllers
 			var result = _unitOfWork.LegalEntity.GetLegalEntityShippingAddress(addressId);
 			return Ok(result);
 		}
-	}
+
+        [HttpGet("legalentityaddressbyid/{legalentityid}")]
+        public IActionResult GetLegalEntityAddressById(long legalEntityId)
+        {
+            var allVendShipdetails = _unitOfWork.LegalEntity.GetLegalEntityAddressById(legalEntityId); //.GetAllCustomersData();
+            return Ok(allVendShipdetails);
+
+        }
+    }
 }
 
     
