@@ -6,6 +6,10 @@
                         <div class="card-body">
                             <div class="inline-block display-flex">
                                 <h3 class="po-head lead">Publication</h3>
+                                &nbsp;&nbsp;
+                                <a class="plusicon-cstm new-margin" [routerLink]="['/singlepages/singlepages/app-create-publication']" pTooltip="Add Publication" tooltipPosition="right">
+                                    <i class="fa fa-plus-circle fa-lg"></i>
+                                </a>
                             </div>
 
                             <div class="form-row pub-global-filter">
@@ -43,8 +47,7 @@
                                     <button class="btn btn-primary-cstm" style="margin-top: 18px;" (click)="onSearchAircraftInfoAtaChapter()">Search</button>
                                     <button class="btn btn-primary-cstm" style="margin-top: 18px;" (click)="onReset()">Reset</button>
                                 </div>
-                            </div>
-            
+                            </div>            
             
                             <p-table #dt class="rpo-table-cstm rro-table-cstm pub-ptable-cstm" [first]="0" [rows]="pagesize" [value]="allpublicationInfo"  [metaKeySelection]="true" [paginator]="true"  [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [resizableColumns]="true" [reorderableColumns]="true"  [totalRecords]="totalRecords" (onLazyLoad)="publicationPagination($event)" [lazy]="true"> <!--onPage-->
                                 <ng-template pTemplate="caption">
@@ -59,7 +62,7 @@
                                         <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding: 5px 12px !important;"></button>
                                         <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 12px !important;"></button>
                                         <!-- <a (click)="open(contentEdit)" matTooltip="Add Publication" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a> -->
-                                        <a [routerLink]="['/singlepages/singlepages/app-create-publication']" matTooltip="Add Publication" class="btn btn-success nobg btn-cstm"><span><i class="fa fa-plus"></i></span></a>
+                                        <!-- <a [routerLink]="['/singlepages/singlepages/app-create-publication']" matTooltip="Add Publication" class="btn btn-success nobg btn-cstm"><span><i class="fa fa-plus"></i></span></a> -->
                                         <!-- <div class="excel-upload excel-upload-cstm">
                                             <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                                             <label for="upload">
@@ -88,9 +91,18 @@
                                         <th style="width:200px;position:sticky" *ngIf="selectedColumns.length> 0"> Actions</th>
                                     </tr>
                                     <tr>
+                                            <!-- <th style="width:120px">
+                                                <input style="width:100%;" name="publicationIdInput" pInputText type="text" (keyup)="onChangeInputField($event.target.value, 'publicationId')">
+                                            </th>
+                                            <th style="width:120px">
+                                                <input style="width:100%;" name="descriptionInput" pInputText type="text" (keyup)="onChangeInputField($event.target.value, 'description')">
+                                            </th> -->
                                         <th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
-                                            <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field,'contains')">
+                                            <input style="width:100%;" pInputText type="text" (keyup)="onChangeInputField($event.target.value, col.field)">
                                         </th>
+                                        <!-- <th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                            <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field,'contains')">
+                                        </th> -->
                                         <th  style="width:200px;position:sticky"></th>
                                     </tr>
                                 </ng-template>
