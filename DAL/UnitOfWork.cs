@@ -204,7 +204,7 @@ namespace DAL
 
         IPublicationTypesRepository _publicationTypesRepository;
         IPercentageRepository _percentageRepository;
-
+        
         public UnitOfWork(ApplicationDbContext context, IOptions<AppSettings> appSettings)
         {
             _context = context;
@@ -1391,15 +1391,6 @@ namespace DAL
         //    }
         //}
 
-        public IStocklineAdjustmentReasonRepository stocklineAdjustmentReasonRepository
-        {
-            get
-            {
-                if (_stocklineAdjustmentReason == null)
-                    _stocklineAdjustmentReason = new StocklineAdjustmentReasonRepository(_context);
-                return _stocklineAdjustmentReason;
-            }
-        }
 
         public IItemMasterIntegrationPortalRepository ItemMasterIntegrationPortalRepository
         {
@@ -1717,6 +1708,17 @@ namespace DAL
                 return _assetDepreciationInterval;
             }
         }
+
+        IStocklineAdjustmentReasonRepository IUnitOfWork.StocklineAdjustmentReasonRepository
+        {
+            get
+            {
+                if (_stocklineAdjustmentReason == null)
+                    _stocklineAdjustmentReason = new StocklineAdjustmentReasonRepository(_context);
+                return _stocklineAdjustmentReason;
+            }
+        }
+
 
         IAssetDepreciationMethod IUnitOfWork.AssetDepreciationMethod
         {

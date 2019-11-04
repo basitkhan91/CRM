@@ -1,5 +1,6 @@
 ﻿import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
+import * as $ from 'jquery';
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { fadeInOut } from '../../../services/animations';
 import { PageHeaderComponent } from '../../../shared/page-header.component';
@@ -9,11 +10,9 @@ import { AlertService, DialogType, MessageSeverity } from '../../../services/ale
 import { Action } from '../../../models/action.model';
 import { AuditHistory } from '../../../models/audithistory.model';
 import { AuthService } from '../../../services/auth.service';
-
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { MasterCompany } from '../../../models/mastercompany.model';
-
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
@@ -21,7 +20,11 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { MenuItem } from 'primeng/api';//bread crumb
-import { StocklineService } from '../../../services/stockline.service';
+import { StocklineAdjustReasonService } from '../../../services/stockLineAdjustmentReason.service';
+import { SingleScreenBreadcrumbService } from "../../../services/single-screens-breadcrumb.service";
+import { SingleScreenAuditDetails } from '../../../models/single-screen-audit-details.model';
+import { ConfigurationService } from '../../../services/configuration.service';
+import { StocklineAdjustmentReason } from '../../../models/stocklineadjustmentreason.model';
 
 @Component({
     selector: 'app-stockline-adjustment-reason',
@@ -33,30 +36,39 @@ import { StocklineService } from '../../../services/stockline.service';
 export class StocklineAdjustmentReasonComponent implements OnInit, AfterViewInit
 {
     public sourceAdjustmentReason: any = {};
+    dataSource: MatTableDataSource<StocklineAdjustmentReason>;
+    adjustmentReasonList: StocklineAdjustmentReason[] = [];
     selectedActionName: any;
     disableSave: boolean = false;
+    private isDelete: boolean = false;
     actionamecolle: any[] = [];
     action_name: any = "";
     memo: any = "";
     createdBy: any = "";
     updatedBy: any = "";
-    createddate: any = "";
+    createdDate: any = "";
+    formData = new FormData();
     updatedDate: any = "";
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     filteredBrands: any[];
     displayedColumns = ['actionId', 'companyName', 'description', 'memo', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
-    dataSource: MatTableDataSource<Action>;
     allActions: Action[] = [];
     allComapnies: MasterCompany[] = [];
     private isSaving: boolean;
-    public sourceAction: Action;
+    public sourceAction: StocklineAdjustmentReason;
     public auditHisory: any;
+    selectedColumns: any[];
     private bodyText: string;
     loadingIndicator: boolean;
     closeResult: string;
     selectedColumn: any[];
-    selectedColumns: any[];
+    auditHistory: any[] = [];
+    code_Name: any = "";
+    selectedData: any;
+    selectedreason: any;
+    StockAdjustmentReasonName: any = "";
+    ID: any = "";
     cols: any[];
     title: string = "Create";
     id: number;
@@ -65,76 +77,118 @@ export class StocklineAdjustmentReasonComponent implements OnInit, AfterViewInit
     actionName: string;
     Active: string = "Active";
     length: number;
+    allreasn: any[] = [];
     localCollection: any[] = [];
     stocklineAdjustmentReason: any;
+    stockAdjustmentReason: string = "";
     adjustmentReasonName: any;
     isActive: any;
+    allunitData: any;
+    AuditDetails: SingleScreenAuditDetails[];
+    pageIndex: number = 0;
+    pageSize: number = 10;
+    totalPages: number;
+
+    pageSearch: { query: any; field: any; };
+    first: number;
+    rows: number;
+    paginatorState: { rows: number; first: number; };
+    totalRecords: number;
+    //paginatorState: any;
 
     /** Actions ctor */
-
-    ngOnInit(): void {
-		this.loadData();
-		this.stocklineService.currentUrl = '/stocklinemodule/stocklinepages/app-stockline-adjustment-reason';
-		this.stocklineService.bredcrumbObj.next(this.stocklineService.currentUrl);
-        //this.breadCrumb.currentUrl = '';
-        //this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
-    }
-
-    ngAfterViewInit()
-    {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-    }
+        
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
 
     /** stockline-adjustment-reason ctor */
-    constructor(private stocklineService: StocklineService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService)
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private stocklineAdjustReasonService: StocklineAdjustReasonService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService)
     {
-       
+        this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
+        this.sourceAction = new StocklineAdjustmentReason();
     }
 
+    ngOnInit(): void {
+        this.loadData();
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-stockline-adjustment-reason';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
+    }
+    ngAfterViewInit() {
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+
+    }
+
+ 
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
+        this.stocklineAdjustReasonService.getStockLineAdjustmentReasonList().subscribe(data => {
+            this.allunitData = data[0].columHeaders;
+            this.adjustmentReasonList = data[0].columnData;
+            console.log(this.adjustmentReasonList);
+            this.totalRecords = this.adjustmentReasonList.length;
+            this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            this.cols = [
+                console.log(this.allunitData),
+                this.selectedColumns = this.allunitData
+            ];
+            this.selectedData = this.selectedColumns
+            this.alertService.stopLoadingMessage();
+        });
+    }
 
-        this.stocklineService.getStocklineAdjustmentreason().subscribe(
-            results => this.onDataLoadSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-
-        this.cols = [
-            { field: 'adjustmentReasonId', header: 'Adjustment Reason Id' },
-            { field: 'description', header: 'Adjustment Reason' },
-			{ field: 'createdDate', header: 'Created Date' },
-			{ field: 'updatedDate', header: 'Updated Date' },
-
-        ];
-
-        this.selectedColumns = this.cols;
-
+    changePage(event: { first: any; rows: number }) {
+        console.log(event);
+        const pageIndex = (event.first / event.rows);
+        // this.pageIndex = pageIndex;
+        this.pageSize = event.rows;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
     }
 
     private loadMasterCompanies() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
         this.masterComapnyService.getMasterCompanies().subscribe(
             results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
 
     }
-    
-    private onDataLoadSuccessful(allWorkFlows: Action[]) {
+    public applyFilter(filterValue: string) {
+        this.dataSource.filter = filterValue;
+    }
+    private refresh() {
+        this.applyFilter(this.dataSource.filter);
+    }
+
+    private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
         // alert('success');
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.dataSource.data = allWorkFlows;
+        this.allComapnies = allComapnies;
+
+    }
+    
+    private onDataLoadSuccessful(allWorkFlows: any[]) {
+        // alert('success');
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.totalRecords = allWorkFlows.length;
         this.allActions = allWorkFlows;
        
 
+    }
+
+    private onDataLoadFailed(error: any) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+
+    }
+
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
 
     private onHistoryLoadSuccessful(auditHistory: any, content) {
@@ -154,34 +208,16 @@ export class StocklineAdjustmentReasonComponent implements OnInit, AfterViewInit
 
 
     }
-
-    private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
-        // alert('success');
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.allComapnies = allComapnies;
-
-    }
-
-    private onDataLoadFailed(error: any) {
-        // alert(error);
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-
-
-
-    }
-
+    
     open(content) {
-
         this.isEditMode = false;
         this.isDeleteMode = false;
-
+        this.disableSave = false;
         this.isSaving = true;
         this.loadMasterCompanies();
-        this.sourceAdjustmentReason = {};
-        this.sourceAdjustmentReason.isActive = true;
-        this.actionName = "";
+        this.sourceAction = new StocklineAdjustmentReason();
+        this.sourceAction.isActive = true;
+        this.stockAdjustmentReason = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -189,38 +225,105 @@ export class StocklineAdjustmentReasonComponent implements OnInit, AfterViewInit
     }
 
     openDelete(content, row) {
-
         this.isEditMode = false;
         this.isDeleteMode = true;
-        this.sourceAdjustmentReason = row;
+        this.sourceAction = row;
+        this.code_Name = row.stockAdjustmentReason;
         this.modal = this.modalService.open(content, { size: 'sm' });
+        console.log(content);
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
 
 	openEdit(content, row) {
-
         this.isEditMode = true;
         this.disableSave = false;
-		this.isSaving = true;
-		this.actionName = row.description;
-		this.sourceAdjustmentReason = row;
+        this.isSaving = true;
         this.loadMasterCompanies();
-        this.stocklineAdjustmentReason = this.sourceAdjustmentReason.description;
+		this.sourceAction = row;       
+        this.stockAdjustmentReason = row.stockAdjustmentReason;
+        this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
+
+    handleChange(rowData, e) {
+
+        const params = <any>{
+            createdBy: this.userName,
+            updatedBy: this.userName,
+            AdjustmentReasonId: rowData.iD,
+            Description: rowData.stockAdjustmentReason,
+            Memo: rowData.memo,
+            isActive: rowData.isActive,
+            IsDeleted: false,
+            masterCompanyId: 1
+        };
+
+        if (e.checked == false) {
+            this.Active = "In Active";
+            this.stocklineAdjustReasonService.updateStocklineAdjReason(params).subscribe(
+                response => this.saveCompleted(this.sourceAction),
+                error => this.saveFailedHelper(error));
+        }
+        else {
+            this.Active = "Active";
+            this.stocklineAdjustReasonService.updateStocklineAdjReason(params).subscribe(
+                response => this.saveCompleted(this.sourceAction),
+                error => this.saveFailedHelper(error));
+        }
+
+    }
+
+    eventHandler(event) {
+        let value = event.target.value.toLowerCase()
+        if (this.selectedreason) {
+            if (value == this.selectedreason.toLowerCase()) {
+                this.disableSave = true;
+            }
+            else {
+                this.disableSave = false;
+            }
+        }
+    }
+
+    partnmId(event) {
+        for (let i = 0; i < this.allreasn.length; i++) {
+            if (event == this.allreasn[i][0].stockAdjustmentReason) {
+                this.disableSave = true;
+                this.selectedreason = event;
+            }
+        }
+    }
+
+    filterStockAdjReason(event) {
+
+        this.localCollection = [];
+        for (let i = 0; i < this.adjustmentReasonList.length; i++) {
+            let stockAdjustmentReason = this.adjustmentReasonList[i].stockAdjustmentReason;
+            if (stockAdjustmentReason.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.allreasn.push([{
+                    "adjustmentReasonId": this.adjustmentReasonList[i].iD,
+                    "stockAdjustmentReason": stockAdjustmentReason
+                }]),
+                    this.localCollection.push(stockAdjustmentReason)
+
+            }
+        }
+    }
     openView(content, row) {
 
         this.sourceAdjustmentReason = row;
-		this.adjustmentReasonName = row.description;
+        this.StockAdjustmentReasonName = row.stockAdjustmentReason;
+        this.ID = row.iD;
+        this.memo = row.memo;
 		this.isActive = row.isActive;
         this.createdBy = row.createdBy;
         this.updatedBy = row.updatedBy;
-        this.createddate = row.createdDate;
+        this.createdDate = row.createdDate;
         this.updatedDate = row.updatedDate;
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm' });
@@ -252,38 +355,43 @@ export class StocklineAdjustmentReasonComponent implements OnInit, AfterViewInit
 
     editItemAndCloseModel() {
 
-        // debugger;
-
+        
         this.isSaving = true;
 
-        if (this.isEditMode == false) {
-            this.sourceAdjustmentReason.createdBy = this.userName;
-            this.sourceAdjustmentReason.updatedBy = this.userName;
-            
-            this.sourceAdjustmentReason.masterCompanyId = 1;
-            this.stocklineService.newStockLineAdjustmentReason(this.sourceAdjustmentReason).subscribe(
-                role => this.saveSuccessHelper(role),
-              error => this.saveFailedHelper(error));
-            
-        }
-        else {
+        const params = <any>{
+            createdBy: this.userName,
+            updatedBy: this.userName,
+            Description: this.stockAdjustmentReason,
+            AdjustmentReasonId: this.sourceAction.iD,
+            Memo: this.sourceAction.memo,
 
-            this.sourceAdjustmentReason.updatedBy = this.userName;
-			//this.sourceAdjustmentReason.description = this.stocklineAdjustmentReason;
-            this.sourceAdjustmentReason.masterCompanyId = 1;
-            this.stocklineService.getUpdateStocklineAdjustmentReasonEndpoint(this.sourceAdjustmentReason).subscribe(
-                response => this.saveCompleted(this.sourceAdjustmentReason),
+            IsActive: this.sourceAction.isActive,
+            IsDeleted: this.isDelete,
+            masterCompanyId: 1
+        };
+
+        if (this.isEditMode == false) {
+
+            this.stocklineAdjustReasonService.newStocklineAdjReason(params).subscribe(
+                role => this.saveSuccessHelper(role),
                 error => this.saveFailedHelper(error));
         }
+        else {
+            params.iD = this.sourceAction.iD;
+            this.stocklineAdjustReasonService.updateStocklineAdjReason(params).subscribe(
+                response => this.saveCompleted(this.sourceAction),
+                error => this.saveFailedHelper(error));
+        }
+
 
         this.modal.close();
     }
 
     deleteItemAndCloseModel() {
         this.isSaving = true;
-        this.sourceAdjustmentReason.updatedBy = this.userName;
-		this.stocklineService.deleteStocklineAdjustment(this.sourceAdjustmentReason).subscribe(
-            response => this.saveCompleted(this.sourceAdjustmentReason),
+        this.sourceAction.updatedBy = this.userName;
+        this.stocklineAdjustReasonService.deleteStockLineAdjustmentReason(this.sourceAction.iD).subscribe(
+            response => this.saveCompleted(this.sourceAction),
             error => this.saveFailedHelper(error));
         this.modal.close();
     }
@@ -294,7 +402,7 @@ export class StocklineAdjustmentReasonComponent implements OnInit, AfterViewInit
         this.modal.close();
     }
 
-    private saveCompleted(user?: Action) {
+    private saveCompleted(user?: StocklineAdjustmentReason) {
         this.isSaving = false;
 
         if (this.isDeleteMode == true) {
@@ -317,10 +425,6 @@ export class StocklineAdjustmentReasonComponent implements OnInit, AfterViewInit
 
     }
 
-    get userName(): string {
-        return this.authService.currentUser ? this.authService.currentUser.userName : "";
-    }
-
     private saveFailedHelper(error: any) {
         this.isSaving = false;
         this.alertService.stopLoadingMessage();
@@ -328,37 +432,60 @@ export class StocklineAdjustmentReasonComponent implements OnInit, AfterViewInit
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
 	}
 
-	handleChange(rowData, e) {
-		if (e.checked == false) {
-			this.sourceAdjustmentReason = rowData;
-			this.sourceAdjustmentReason.updatedBy = this.userName;
-			this.Active = "In Active";
-			this.sourceAdjustmentReason.isActive == false;
-			this.stocklineService.getUpdateStocklineAdjustmentReasonEndpoint(this.sourceAdjustmentReason).subscribe(
-				response => this.saveCompleted(this.sourceAdjustmentReason),
-				error => this.saveFailedHelper(error));
-			//alert(e);
-		}
-		else {
-			this.sourceAdjustmentReason = rowData;
-			this.sourceAdjustmentReason.updatedBy = this.userName;
-			this.Active = "Active";
-			this.sourceAdjustmentReason.isActive == true;
-			this.stocklineService.getUpdateStocklineAdjustmentReasonEndpoint(this.sourceAdjustmentReason).subscribe(
-				response => this.saveCompleted(this.sourceAdjustmentReason),
-				error => this.saveFailedHelper(error));
-			//alert(e);
-		}
 
-	}
+    getAuditHistoryById(rowData) {
+        this.stocklineAdjustReasonService.getStockAdjReasonAudit(rowData.iD).subscribe(res => {
+            this.auditHistory = res;
+        })
+    }
 
-    private getDismissReason(reason: any): string {
-        if (reason === ModalDismissReasons.ESC) {
-            return 'by pressing ESC';
-        } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-            return 'by clicking on a backdrop';
-        } else {
-            return `with: ${reason}`;
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
         }
+    }
+
+    sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=StocklineAdjustmentReason&fileName=StocklineAdjustmentReason.xlsx`;
+
+        window.location.assign(url);
+    }
+
+    customExcelUpload(event) {
+        const file = event.target.files;
+
+        console.log(file);
+        if (file.length > 0) {
+
+            this.formData.append('file', file[0])
+            this.stocklineAdjustReasonService.stockLineAdjustmentCustomUpload(this.formData).subscribe(res => {
+                event.target.value = '';
+
+                this.formData = new FormData();
+                //this.existingRecordsResponse = res;
+                this.getLStockAdjustmentReasonist();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+
+                // $('#duplicateRecords').modal('show');
+                // document.getElementById('duplicateRecords').click();
+
+            })
+        }
+
+    }
+
+    getLStockAdjustmentReasonist() {
+
+        this.loadData();
     }
 }

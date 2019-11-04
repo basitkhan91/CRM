@@ -163,7 +163,7 @@ export class StocklineService {
 
     getStocklineAdjustmentreason() {
         return Observable.forkJoin(
-            this.stocklineEndpoint.getStocklineAdjustmentReasonEndpoint<any[]>());
+            this.stocklineEndpoint.getStocklineAdjustmentReasonEndpoint<any>());
     }
 
     newStockLineAdjustmentReason(stocklineAdjustmentReason: any)

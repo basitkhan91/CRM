@@ -652,6 +652,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
                     {
                         label: 'Stockline', items: [
+                            { label: 'Adjustment Reason', routerLink: '/singlepages/singlepages/app-stockline-adjustment-reason' },
                             { label: 'Ware House', routerLink: '/singlepages/singlepages/app-warehouse' },
                             { label: 'Location', routerLink: '/singlepages/singlepages/app-location' },
                             { label: 'Shelf', routerLink: '/singlepages/singlepages/app-shelf' },
