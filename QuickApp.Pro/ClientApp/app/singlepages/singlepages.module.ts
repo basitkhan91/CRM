@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common'; //<-- This one
 import { RouterModule, Routes } from '@angular/router';
 import { GroupByPipe } from '../pipes/group-by.pipe';
 
-import { SinglePagesRoutingModule   } from "./singlepages-routing.module";
+import { SinglePagesRoutingModule } from "./singlepages-routing.module";
 
 import { SingleComponent } from "./singlepages.component";
 import { ActionsComponent } from '../components/actions/actions.component';
@@ -73,6 +73,7 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { BreadcrumbModule } from 'primeng/breadcrumb'; //bread crumb
 import { SingleScreenBreadcrumbService } from "../services/single-screens-breadcrumb.service";
 import { WarehouseComponent } from "../components/warehouse/warehouse.component";
+import { StocklineAdjustmentReasonComponent } from '../components/stockline/stockline-adjustment-reason/stockline-adjustment-reason.component';
 import { ManufacturerComponent } from "../components/manufacturer/manufacturer.component";
 import { VendorcapabilitiesComponent } from "../components/vendorcapabilities/vendorcapabilities.component";
 //import { VendorcapabilitiesComponent } from "../components/vendor-capabilities/vendor-capabilities.component";
@@ -129,7 +130,7 @@ import { AircraftModelComponent } from "../components/aircraft-model/aircraft-mo
 import { DashnumberComponent } from "../components/dashnumber/dashnumber.component";
 import { DashNumberEndpointService } from "../services/dash-number/dash-number-endpoint.service";
 import { DashNumberService } from "../services/dash-number/dash-number.service";
-import { PaginatorModule} from 'primeng/paginator';
+import { PaginatorModule } from 'primeng/paginator';
 import { CreatePublicationComponent } from "../components/publication/create-publication/create-publication.component";
 import { PaginationComponent } from "../shared/pagination/pagination/pagination.component";
 import { PaginationService } from "../services/pagination/pagination.service";
@@ -142,7 +143,7 @@ import { PercentEndpoint } from "../services/percent-endpoint.service";
 import { CommonService } from "../services/common.service";
 
 @NgModule({
-	imports: [
+    imports: [
         FlexLayoutModule,
         KeyFilterModule,
         FormsModule, ReactiveFormsModule,
@@ -158,7 +159,7 @@ import { CommonService } from "../services/common.service";
         MultiSelectModule,
         AutoCompleteModule,
         InputSwitchModule,
-        CheckboxModule, BreadcrumbModule, TreeTableModule, CheckboxModule, TreeModule, DialogModule, 
+        CheckboxModule, BreadcrumbModule, TreeTableModule, CheckboxModule, TreeModule, DialogModule,
         AuditModule, PaginatorModule
     ],
     declarations: [
@@ -196,28 +197,30 @@ import { CommonService } from "../services/common.service";
         WorkScopeComponent,
         ActionsEditorComponent,
         DefaultMessageComponent,
-      	ChargesComponent,
+        ChargesComponent,
         TaxTypeComponent,
-		ConditionsComponent,
-		ActionAttributeMappingComponent,
-		AtaSubChapter1Component,
-		AtaSubChapter2Component,
-		SiteComponent,
-		BinComponent,
-		CapabilitiesComponent,
-		FinancialStatementMappingComponent,
-		GlAccountClassComponent,
-		GlCashFlowClassificationComponent,
-		GlFinancialStatementComponent,
-		JournalApprovalsComponent,
-		RfqEngineComponent,
-		WarehouseComponent,
+        ConditionsComponent,
+        ActionAttributeMappingComponent,
+        AtaSubChapter1Component,
+        AtaSubChapter2Component,
+        SiteComponent,
+        BinComponent,
+        CapabilitiesComponent,
+        FinancialStatementMappingComponent,
+        GlAccountClassComponent,
+        GlCashFlowClassificationComponent,
+        GlFinancialStatementComponent,
+        JournalApprovalsComponent,
+        RfqEngineComponent,
+        WarehouseComponent,
+
+        StocklineAdjustmentReasonComponent,
 		GLAccountCategoryComponent,
-		ManufacturerComponent,
-		VendorcapabilitiesComponent,
-		LocationComponent,
-		LaberAndOverheadCostSetupComponent,
-		ShelfComponent,
+        ManufacturerComponent,
+        VendorcapabilitiesComponent,
+        LocationComponent,
+        LaberAndOverheadCostSetupComponent,
+        ShelfComponent,
         CertificationTypeComponent,
         AssetStatusComponent,
         DisposalTypeComponent,
@@ -275,7 +278,7 @@ import { CommonService } from "../services/common.service";
     ],
     entryComponents: [
     ],
-   
+
 })
 export class SinglePgesModule {
 

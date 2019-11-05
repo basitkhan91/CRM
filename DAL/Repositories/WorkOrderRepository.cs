@@ -84,6 +84,7 @@ namespace DAL.Repositories
             WorkOrder workOrder = new WorkOrder();
             try
             {
+                workOrder.WorkOrderId = workOrderId;
                 workOrder.UpdatedDate = DateTime.Now;
                 workOrder.UpdatedBy = "admin";
                 workOrder.IsDeleted = true;
@@ -106,6 +107,7 @@ namespace DAL.Repositories
             WorkOrder workOrder = new WorkOrder();
             try
             {
+                workOrder.WorkOrderId = workOrderId;
                 workOrder.UpdatedDate = DateTime.Now;
                 workOrder.UpdatedBy = updatedBy;
                 workOrder.IsActive = status;
@@ -115,6 +117,71 @@ namespace DAL.Repositories
                 _appContext.Entry(workOrder).Property(x => x.UpdatedDate).IsModified = true;
                 _appContext.Entry(workOrder).Property(x => x.UpdatedBy).IsModified = true;
                 _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetWorkOrderPartList(long workOrderId)
+        {
+
+            try
+            {
+                var totalRecords = (from wo in _appContext.WorkOrder
+                                    join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
+                                    join pr in _appContext.Priority on wop.WorkOrderPriorityId equals pr.PriorityId
+                                    join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
+                                    join im in _appContext.ItemMaster on wop.MasterPartId equals im.MasterPartId
+                                    join rp in _appContext.Nha_Tla_Alt_Equ_ItemMapping on wop.MappingItemMasterId equals rp.MappingItemMasterId
+                                    join im1 in _appContext.ItemMaster on rp.MappingItemMasterId equals im1.ItemMasterId
+                                    join wos in _appContext.WorkOrderStage on wop.WorkOrderStageId equals wos.ID
+                                    join wost in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals wost.Id
+                                    where wo.WorkOrderId == workOrderId
+                                    select new
+                                    {
+                                        wo.WorkOrderId,
+                                    }
+                          )
+                          .Distinct()
+                          .Count();
+
+                var list = (from wo in _appContext.WorkOrder
+                            join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
+                            join pr in _appContext.Priority on wop.WorkOrderPriorityId equals pr.PriorityId
+                            join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
+                            join im in _appContext.ItemMaster on wop.MasterPartId equals im.MasterPartId
+                            join rp in _appContext.Nha_Tla_Alt_Equ_ItemMapping on wop.MappingItemMasterId equals rp.MappingItemMasterId
+                            join im1 in _appContext.ItemMaster on rp.MappingItemMasterId equals im1.ItemMasterId
+                            join wos in _appContext.WorkOrderStage on wop.WorkOrderStageId equals wos.ID
+                            join wost in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals wost.Id
+                            where wo.WorkOrderId == workOrderId
+                            select new
+                            {
+                                wo.WorkOrderId,
+                                wo.WorkOrderNum,
+                                wo.OpenDate,
+                                WorkScope = ws.Description,
+                                Priority = pr.Description,
+                                im.PartNumber,
+                                im.PartDescription,
+                                RevisedPartNo = im1.PartNumber,
+                                WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Shop(Internal)" : (wo.WorkOrderTypeId == 3 ? "Liquidation" : "Services")),
+                                wop.CustomerRequestDate,
+                                wop.PromisedDate,
+                                wop.EstimatedShipDate,
+                                wop.EstimatedCompletionDate,
+                                WorkOrderStage = wos.Description,
+                                WorkOrderStatus = wost.Description,
+                                wo.IsActive,
+                                wo.CreatedDate,
+                                TotalRecords = totalRecords
+                            }
+                          ).Distinct()
+                          .ToList();
+                return list;
             }
             catch (Exception)
             {
@@ -133,16 +200,9 @@ namespace DAL.Repositories
             {
                 var totalRecords = (from wo in _appContext.WorkOrder
                                     join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
-                                    join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
-                                    join pr in _appContext.Priority on wop.WorkOrderPriorityId equals pr.PriorityId
-                                    join im in _appContext.ItemMaster on wop.MasterPartId equals im.MasterPartId
-                                    join rp in _appContext.Nha_Tla_Alt_Equ_ItemMapping on wop.MappingItemMasterId equals rp.MappingItemMasterId
-                                    join im1 in _appContext.ItemMaster on rp.MappingItemMasterId equals im1.ItemMasterId
                                     join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
-                                    join wos in _appContext.WorkOrderStage on wop.WorkOrderStageId equals wos.ID
-                                    join wost in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals wost.Id
-
-                                    where wo.IsDeleted == false && wo.IsSinglePN == true
+                                    join wost in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals wost.Id
+                                    where wo.IsDeleted == false
                                     select new
                                     {
                                         wo.WorkOrderId,
@@ -151,37 +211,20 @@ namespace DAL.Repositories
 
                 var list = (from wo in _appContext.WorkOrder
                             join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
-                            join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
-                            join pr in _appContext.Priority on wop.WorkOrderPriorityId equals pr.PriorityId
-                            join im in _appContext.ItemMaster on wop.MasterPartId equals im.MasterPartId
-                            join rp in _appContext.Nha_Tla_Alt_Equ_ItemMapping on wop.MappingItemMasterId equals rp.MappingItemMasterId
-                            join im1 in _appContext.ItemMaster on rp.MappingItemMasterId equals im1.ItemMasterId
                             join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
-                            join wos in _appContext.WorkOrderStage on wop.WorkOrderStageId equals wos.ID
-                            join wost in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals wost.Id
-
-                            where wo.IsDeleted == false && wo.IsSinglePN == true
+                            join wost in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals wost.Id
+                            where wo.IsDeleted == false 
                             select new
                             {
                                 wo.WorkOrderId,
                                 wo.WorkOrderNum,
                                 wo.OpenDate,
-                                WorkScope = ws.Description,
-                                Priority = pr.Description,
-                                im.PartNumber,
-                                im.PartDescription,
-                                RevisedPartNo = im1.PartNumber,
                                 cust.Name,
                                 cust.CustomerCode,
                                 WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Shop(Internal)" : (wo.WorkOrderTypeId == 3 ? "Liquidation" : "Services")),
-                                wop.CustomerRequestDate,
-                                wop.PromisedDate,
-                                wop.EstimatedShipDate,
-                                wop.EstimatedCompletionDate,
-                                WorkOrderStage = wos.Description,
-                                WorkOrderStatus = wost.Description,
                                 wo.IsActive,
                                 wo.CreatedDate,
+                                WorkOrderStatus = wost.Description,
                                 TotalRecords = totalRecords
                             }
                           ).Distinct()
@@ -1280,12 +1323,13 @@ namespace DAL.Repositories
             try
             {
                 var data = (from p in _appContext.Nha_Tla_Alt_Equ_ItemMapping
-                            join im in _appContext.ItemMaster on p.MappingItemMasterId equals im.ItemMasterId
+                            join im in _appContext.ItemMaster on p.ItemMasterId equals im.ItemMasterId
+                            join im1 in _appContext.ItemMaster on p.MappingItemMasterId equals im1.ItemMasterId
                             where p.IsDeleted == false && im.ItemMasterId == itemMasterId && p.MappingType == mappingType
                             select new
                             {
                                 p.MappingItemMasterId,
-                                RevisedPartNo = im.PartNumber
+                                RevisedPartNo = im1.PartNumber
                             })
                             .Distinct()
                             .ToList();

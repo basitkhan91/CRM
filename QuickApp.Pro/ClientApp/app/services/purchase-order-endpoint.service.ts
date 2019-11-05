@@ -67,6 +67,14 @@ export class PurchaseOrderEndpoint extends EndpointFactory {
   
   getPOStatus(purchaseOrderId, status, updatedBy) {
 		return this.http.get<any>(`${this.configurations.baseUrl}/api/purchaseorder/postatus?purchaseOrderId=${purchaseOrderId}&status=${status}&updatedBy=${updatedBy}`)
-	}
+  }
+  
+  getPOHistory(purchaseOrderId) {
+		return this.http.get<any>(`${this.configurations.baseUrl}/api/purchaseorder/pohistory?purchaseOrderId=${purchaseOrderId}`)
+  }
+  
+  deletePO(purchaseOrderId, updatedBy) {
+		return this.http.get<any>(`${this.configurations.baseUrl}/api/purchaseorder/deletepo?purchaseOrderId=${purchaseOrderId}&updatedBy=${updatedBy}`)
+  }
     /* ./vendor PO*/
 }

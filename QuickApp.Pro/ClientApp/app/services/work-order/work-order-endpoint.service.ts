@@ -164,5 +164,14 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderlist?pageNo=${pageIndex}&pageSize=${pageSize}` , this.getRequestHeaders())
     }
 
+    updateWorkOrderStatus(data, login ){
+        return this.http.get(`${this.configurations.baseUrl}/api/workOrder/updateworkorderstatus?workOrderId=${data.workOrderId}&status=${data.isActive}&updatedBy=${login}` , this.getRequestHeaders())
+    }
+    deleteWorkOrder(workOrderId){
+        return this.http.get(`${this.configurations.baseUrl}/api/workOrder/deleteworkorder?workOrderId=${workOrderId}` , this.getRequestHeaders())
+    }
+    createWorkFlowWorkOrder(object){
+        return this.http.post(`${this.configurations.baseUrl}/api/workOrder/createworkflowworkorder`, JSON.stringify(object), this.getRequestHeaders())
+    }
 
 }

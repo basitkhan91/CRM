@@ -40,6 +40,8 @@ namespace QuickApp.Pro.ViewModels
         public decimal? HandlingCost { get; set; }
         public int? ShippingId { get; set; }
         public string ShippingUrl { get; set; }
-        public string ShipToMemo { get; set; }
+        public string ShipToMemo { get; set; }  
+        public DateTime? CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
     }
 }

@@ -41,6 +41,9 @@ export class PolistComponent implements OnInit {
     @ViewChild('dt')
     private table: Table;
     lazyLoadEventData: any;
+    auditHistory: AuditHistory[];
+    rowDataToDelete: any = {};
+
     constructor(private _route: Router,
         private authService: AuthService,
         private modalService: NgbModal,
@@ -112,13 +115,27 @@ export class PolistComponent implements OnInit {
         this._route.navigateByUrl(`vendorsmodule/vendorpages/app-purchase-setup/edit/${purchaseOrderId}`);
     }
     delete(rowData) {
-        // this.vendorService.updateListstatus(rowData.customerId).subscribe(res => {
-        //     this.getList(this.lazyLoadEventData);
-        //     this.alertService.showMessage("Success", `Successfully Deleted Record`, MessageSeverity.success);
-
-        // })
+        this.rowDataToDelete = rowData;
     }
-    viewSelectedRow(rowData) { }
+    deletePO() {
+        const { purchaseOrderId } = this.rowDataToDelete;
+        this.purchaseOrderService.deletePO(purchaseOrderId, this.userName).subscribe(res => {
+            this.getList(this.lazyLoadEventData);
+            this.alertService.showMessage("Success", `Successfully Deleted Record`, MessageSeverity.success);
+
+        })
+    }
+
+    viewSelectedRow(rowData) { 
+        console.log(rowData);
+        this.getVendorPOById(rowData.purchaseOrderId);
+    }
+
+    getVendorPOById(poId) {
+        this.purchaseOrderService.getVendorPOById(poId).subscribe(res => {
+            console.log(res);            
+        });
+    }
     // changePage(event: { first: any; rows: number }) {
     //     console.log(event);
     //     this.pageIndex = (event.first / event.rows);
@@ -137,6 +154,21 @@ export class PolistComponent implements OnInit {
         // })
     }
     getAuditHistoryById(rowData) {
+        this.purchaseOrderService.getPOHistory(rowData.purchaseOrderId).subscribe(res => {
+            console.log(res);            
+            this.auditHistory = res;
+        })
+    }
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
     }
 
 }

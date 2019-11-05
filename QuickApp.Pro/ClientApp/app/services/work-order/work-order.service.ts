@@ -90,9 +90,20 @@ export class WorkOrderService {
     getConditionByItemMasterId(itemMasterId) {
         return this.workOrderEndpointService.getConditionByItemMasterId(itemMasterId);
     }
-
     getWorkOrderList(pageIndex, pageSize){
         return this.workOrderEndpointService.getWorkOrderList(pageIndex,pageSize);
     }
+
+    updateActionforWorkOrder(action, login) {
+        return this.workOrderEndpointService.updateWorkOrderStatus(action, login);
+    }
+    deleteActionforWorkOrder(workOrderId){
+        return this.workOrderEndpointService.deleteWorkOrder(workOrderId);
+    }
+
+    createWorkFlowWorkOrder(data){
+        return this.workOrderEndpointService.createWorkFlowWorkOrder(data);
+    }
+
 
 }

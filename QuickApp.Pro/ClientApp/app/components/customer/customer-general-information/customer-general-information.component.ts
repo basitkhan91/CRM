@@ -19,6 +19,7 @@ import { CurrencyService } from '../../../services/currency.service';
 import { CustomerGeneralInformation } from '../../../models/customer-general.model';
 import { getValueFromObjectByKey, getObjectByValue, validateRecordExistsOrNot, editValueAssignByCondition, getObjectById, selectedValueValidate } from '../../../generic/autocomplete';
 import { ItemMasterService } from '../../../services/itemMaster.service';
+import { CommonService } from '../../../services/common.service';
 
 @Component({
     selector: 'app-customer-general-information',
@@ -330,7 +331,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
 
     constructor(public integrationService: IntegrationService, public customerClassificationService: CustomerClassificationService, public ataservice: AtaMainService, private authService: AuthService, private alertService: AlertService,
-        public customerService: CustomerService, public itemService: ItemMasterService, public vendorser: VendorService, private currencyService: CurrencyService) {
+        public customerService: CustomerService, public itemService: ItemMasterService, public vendorser: VendorService, private currencyService: CurrencyService, private commonService: CommonService) {
 
 
         //     this.dataSource = new MatTableDataSource();
@@ -513,19 +514,22 @@ export class CustomerGeneralInformationComponent implements OnInit {
     //     })
     // }
     async getAllCustomerClassification() {
-        await this.customerClassificationService.getCustomerClassificationList().subscribe(res => {
-            const responseData = res[0];
-            this.allcustomerclassificationInfo = responseData.map(x => {
-                return {
-                    label: x.description, value: x.customerClassificationId
-                }
-                // console.log(this.allcustomerclassificationInfo);
-                // if (x.isActive === true) {
-                //     return x;
-                // }
-            })
+        this.commonService.smartDropDownList('CustomerClassification', 'CustomerClassificationId', 'Description').subscribe(res => {
+            this.allcustomerclassificationInfo = res;
+        });
+        //await this.customerClassificationService.getCustomerClassificationList().subscribe(res => {
+        //    const responseData = res[0];
+        //    this.allcustomerclassificationInfo = responseData.map(x => {
+        //        return {
+        //            label: x.description, value: x.customerClassificationId
+        //        }
+        //        // console.log(this.allcustomerclassificationInfo);
+        //        // if (x.isActive === true) {
+        //        //     return x;
+        //        // }
+        //    })
 
-        })
+        //})
     }
     selectedPartForPMA(event) {
         console.log(event)
