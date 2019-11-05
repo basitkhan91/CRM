@@ -33,6 +33,7 @@ import { ChargesCreateComponent } from "../shared/Charges-Create.component";
 import { Percent } from "../models/Percent.model";
 import { PercentService } from "../services/percent.service";
 import { WorkOrderService } from "../services/work-order/work-order.service";
+import { AuthService } from "../services/auth.service";
 
 @Component({
     selector: 'wf-create',
@@ -157,6 +158,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     TotalExpertiseCost: number;
     @ViewChild(ChargesCreateComponent) chargesCreateComponent: ChargesCreateComponent;
     responseDataForHeader: any;
+    tasksData: any = [];
 
     constructor(private actionService: ActionService,
         private workOrderService: WorkOrderService,
@@ -1841,6 +1843,10 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
             this.workFlow = currentWF[0];
             this.selectedItems = currentWF[0].selectedItems;
+            
+            this.tasksData.push(this.workFlow);
+
+
         }
     }
 
@@ -2231,11 +2237,34 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                 updatdate : new Date() ,
                 isActive : true,
                 IsDeleted : false,
-                mastetcompanyId : 1
+                masterCompanyId : 1
 
             }
+            // const tasks = this.tasksData.map(x => {
+            //     return {
+            //             workOrderTask : {
+            //             workOrderId : this.savedWorkOrderData.workOrderId,
+            //              taskId:x.taskId,
+            //             ...excessParams ,
+            //             workOrderTaskAttribute: x.selectedItems.map(y => {
+            //                return {
+            //                 workOrderTaskAttributeId:0,
+            //                 workOrderTaskId:0,
+            //                 taskAttributeId: y.Id,
+            //                 ...excessParams ,
+            //                }
+            //             })
+                        
+
+            //     }
+            // }
+            // }
+            // );
+
               this.workOrderService.createWorkFlowWorkOrder(
-                  {...this.sourceWorkFlow , workOrderId : this.savedWorkOrderData.workOrderId , 
+                  {...this.sourceWorkFlow ,
+                    // ...tasks[0],
+                    workOrderId : this.savedWorkOrderData.workOrderId , 
                     charges : data.charges.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId , ...excessParams } }),
                     directions : data.directions.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId, ...excessParams } }),
                     equipments : data.equipments.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId ,...excessParams } }),
@@ -2316,6 +2345,13 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             this.SetCurrectTab(this.currenttaskId, 0);
             this.setSelectedItems(this.workFlow);
         }
+        console.log(this.currenttaskId)
+       this.tasksData =  this.tasksData.filter(x => {
+            if(x.taskId !== workFlow.taskId){
+                return x;
+            }
+        })
+        
         this.onActionChange();
     }
 
