@@ -155,6 +155,13 @@ namespace QuickApp.Pro.Controllers
                 return Ok(result);
         }
 
+        [HttpGet("workorderworkflownos")]
+        public IActionResult GetWorkOrderWorkFlowNos(long workOrderId)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderWorkFlowNos(workOrderId);
+            return Ok(result);
+        }
+
         #endregion
 
         #region Work Order Labor
