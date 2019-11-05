@@ -559,6 +559,16 @@
                                                                 <div class="form-row">
                                                                     <div class="col-sm-11">
                                                                         <p-autoComplete *ngIf="part.stocklineListObj[part.currentSLIndex].obtainFromType == 1"
+                                                                                        [(ngModel)]="part.stocklineListObj[part.currentSLIndex].obtainFromObject"
+                                                                                        [suggestions]="part.stocklineListObj[part.currentSLIndex].filteredRecords"
+                                                                                        (completeMethod)="onFilter($event, part.stocklineListObj[part.currentSLIndex], part.stocklineListObj[part.currentSLIndex].obtainFromType)"
+                                                                                        (onSelect)="onObtainSelect(part.stocklineListObj[part.currentSLIndex])"
+
+                                                                                        [dropdown]="true" [size]="32" [minLength]="1"
+                                                                                        field="Value" class="rpo-acomp">
+
+                                                                        </p-autoComplete>
+                                                                        <!--<p-autoComplete *ngIf="part.stocklineListObj[part.currentSLIndex].obtainFromType == 1"
                                                                                         class="rpo-acomp"
                                                                                         [size]="32"
                                                                                         (completeMethod)="onFilter($event, part.stocklineListObj[part.currentSLIndex], part.stocklineListObj[part.currentSLIndex].obtainFromType)"
@@ -569,7 +579,7 @@
                                                                             <ng-template let-Value pTemplate="customer">
                                                                                 <div class="ui-helper-clearfix">{{Value}}</div>
                                                                             </ng-template>
-                                                                        </p-autoComplete>
+                                                                        </p-autoComplete>-->
                                                                         <input *ngIf="part.stocklineListObj[part.currentSLIndex].obtainFromType == 2" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].obtainFrom" pInputText>
                                                                         <p-autoComplete *ngIf="part.stocklineListObj[part.currentSLIndex].obtainFromType == 3"
                                                                                         class="rpo-acomp"
@@ -807,7 +817,7 @@
                                                             <div class="form-group">
                                                                 <div class="checkbox-cstm" style="margin-top: 4px">
                                                                     <label style="width: 200px;">
-                                                                        <input type="checkbox" [(ngModel)]="part.timeLifeList[part.currentTLIndex].detailsNotProvided" class="form-control" (click)="onChangeTimeLife(part)">
+                                                                        <input type="checkbox" [(ngModel)]="part.stocklineListObj[part.currentSERIndex].timeLifeDetailsNotProvided" class="form-control" (click)="onChangeTimeLife(part)">
                                                                         <span class="cr"><i class="cr-icon pi pi-check"></i></span> Time Life details not provided
                                                                     </label>
                                                                 </div>
