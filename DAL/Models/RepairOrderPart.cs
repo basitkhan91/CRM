@@ -61,7 +61,7 @@ namespace DAL.Models
         public string BillToCountry { get; set; }
         public decimal? BillToLatitude { get; set; }
         public decimal? BillToLongitude { get; set; }
-        public string RoPartSplitUserTypeId { get; set; }
+        public int? RoPartSplitUserTypeId { get; set; }
         public int? RoPartSplitUserId { get; set; }
         public int? RoPartSplitAddressId { get; set; }
         public long ParentId { get; set; }
@@ -83,7 +83,7 @@ namespace DAL.Models
         public int? QuantityOrdered { get; set; }
         public int? ManagementStructureId { get; set; }
         public DateTime? NeedByDate { get; set; }
-        public string RoPartSplitUserTypeId { get; set; }
+        public int? RoPartSplitUserTypeId { get; set; }
         public int? RoPartSplitUserId { get; set; }
         public int? RoPartSplitAddressId { get; set; }
         public string CreatedBy { get; set; }
