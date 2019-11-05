@@ -227,7 +227,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("popartsview")]
         public IActionResult GetPurchaseOrderPartsView(long purchaseOrderId)
         {
-            var result = _unitOfWork.purchaseOrder.PurchaseOrderView(purchaseOrderId);
+            var result = _unitOfWork.purchaseOrder.GetPurchaseOrderPartsView(purchaseOrderId);
             return Ok(result);
         }
 

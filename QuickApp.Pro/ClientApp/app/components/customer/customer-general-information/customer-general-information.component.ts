@@ -92,6 +92,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     ];
     selectedClassificationRecordForEdit: any;
+    tempClassifciatonIds: any = [];
     // editData: any;
 
     // selectedCustomerCodeData: any;
@@ -456,6 +457,25 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
 
             });
+
+             this.customerService.getCustomerClassificationMapping(this.id).subscribe(res => {
+                console.log(res);
+                const response: any = res;
+                const tempClassMapping = response.map(x => {
+                    return {
+                        value: x.customerClassificationId,
+                        label: x.description
+                    }
+                });
+                console.log(tempClassMapping);
+
+                for (let j = 0; j < tempClassMapping.length; j++) {
+                    
+                            this.tempClassifciatonIds.push(tempClassMapping[j].value);
+                    }
+                this.generalInformation.customerClassificationIds = this.tempClassifciatonIds;
+                console.log(this.generalInformation.customerClassificationIds);
+            });
         }
     }
 
@@ -691,7 +711,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 restrictedPMAParts: typeof this.generalInformation.restrictedPMAParts === 'undefined' ? null : this.generalInformation.restrictedPMAParts.map(x => { return { ...x, partType: 'PMA' } }),
                 name: editValueAssignByCondition('name', this.generalInformation.name),
                 customerCode: editValueAssignByCondition('customerCode', this.generalInformation.customerCode),
-                country: getValueFromObjectByKey('nice_name', this.generalInformation.country),
+                //country: getValueFromObjectByKey('nice_name', this.generalInformation.country),
+                country: getValueFromObjectByKey('countries_id', this.generalInformation.country),
                 customerParentName: getValueFromObjectByKey('name', this.generalInformation.customerParentName),
                 createdBy: this.userName, updatedBy: this.userName, masterCompanyId: 1
             }).subscribe(res => {
