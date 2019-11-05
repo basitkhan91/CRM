@@ -324,6 +324,27 @@ namespace DAL.Repositories
             }
         }
 
+        public IEnumerable<object> GetWorkOrderWorkFlowNos(long workOrderId)
+        {
+            try
+            {
+                var list = (from w in _appContext.WorkFlowWorkOrder
+                            where w.IsDeleted == false && w.IsActive == true && w.WorkOrderId == workOrderId
+                            select new
+                            {
+                              value=  w.WorkFlowWorkOrderId,
+                              text=  w.WorkFlowWorkOrderNo
+                            }
+                          ).ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         #endregion
 
         #region Work Order Labour

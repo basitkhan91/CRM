@@ -21,6 +21,7 @@ namespace DAL.Repositories.Interfaces
         long CreateWorkFlowWorkOrder(WorkFlowWorkOrder workFlowWorkOrder);
         void UpdateWorkFlowWorkOrder(WorkFlowWorkOrder workFlowWorkOrder);
         WorkFlowWorkOrder GetWorkFlowWorkOrderById(long workFlowWorkOrderId);
+        IEnumerable<object> GetWorkOrderWorkFlowNos(long workOrderId);
 
         long CreateWorkOrderLabor(WorkOrderLaborHeader workOrderLabor);
         void UpdateWorkOrderLabor(WorkOrderLaborHeader workOrderLabor);

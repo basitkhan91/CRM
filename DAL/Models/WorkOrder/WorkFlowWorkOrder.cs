@@ -105,6 +105,8 @@ namespace DAL.Models
 
         public Nullable<bool> IsDeleted { get; set; }
 
+        public string WorkFlowWorkOrderNo { get; set; }
+
         //public virtual WorkOrder WorkOrder { get; set; }
         //public virtual WorkScope WorkScope { get; set; }
         //public virtual ItemMaster ItemMaster { get; set; }
