@@ -65,6 +65,7 @@ namespace DAL.Models
         public int? RoPartSplitUserId { get; set; }
         public int? RoPartSplitAddressId { get; set; }
         public long ParentId { get; set; }
+        public bool? IsActive { get; set; }
         public List<ChildObj> childobj { get; set; }
     }
 

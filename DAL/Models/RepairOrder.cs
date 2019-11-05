@@ -34,6 +34,7 @@ namespace DAL.Models
         public int? ManagementStructureId { get; set; }
         public int? CreditTermsId { get; set; }
         public DateTime? OpenDate { get; set; }
+        public DateTime? ClosedDate { get; set; }
         public string VendorName { get; set; }
         public string VendorCode { get; set; }
         public string VendorContactPhone { get; set; }
@@ -45,5 +46,6 @@ namespace DAL.Models
         public string ShipToMemo { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
+        public bool? IsActive { get; set; }
     }
 }
