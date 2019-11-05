@@ -219,6 +219,7 @@ export class ReceivngPoComponent implements OnInit {
                         part.timeLifeList = [];
 
                         for (var i = 0; i < part.stocklineListObj.length; i++) {
+                            part.stocklineListObj[i].timeLifeDetailsNotProvided = false;
                             let timeLife: TimeLife = new TimeLife();
                             timeLife.timeLifeCyclesId = 0;
                             timeLife.purchaseOrderId = part.purchaseOrderId;
@@ -764,7 +765,7 @@ export class ReceivngPoComponent implements OnInit {
                 stockLine.purchaseOrderUnitCost = 0;
                 stockLine.purchaseOrderExtendedCost = part.unitCost;
                 stockLine.currentDate = new Date();
-
+                stockLine.timeLifeDetailsNotProvided = false;
                 if (part.itemMaster != undefined) {
                     stockLine.purchaseOrderUnitCost = part.unitCost;
                     if (!part.itemMaster.isSerialized) {
@@ -802,7 +803,7 @@ export class ReceivngPoComponent implements OnInit {
             stockLine.purchaseOrderUnitCost = 0;
             stockLine.purchaseOrderExtendedCost = part.unitCost;
             stockLine.currentDate = new Date();
-
+            stockLine.timeLifeDetailsNotProvided = false;
             if (part.itemMaster != undefined) {
                 stockLine.purchaseOrderUnitCost = part.unitCost;
                 if (!part.itemMaster.isSerialized) {
@@ -1115,6 +1116,7 @@ export class ReceivngPoComponent implements OnInit {
     }
 
     onChangeTimeLife(part: PurchaseOrderPart) {
+            part.isDisabledTLboxes = part.stocklineListObj[part.currentSLIndex].timeLifeDetailsNotProvided;
             part.timeLifeList[part.currentTLIndex].timeLifeCyclesId = 0;
             part.timeLifeList[part.currentTLIndex].purchaseOrderId = part.purchaseOrderId;
             part.timeLifeList[part.currentTLIndex].purchaseOrderPartRecordId = part.purchaseOrderPartRecordId;
@@ -1142,7 +1144,6 @@ export class ReceivngPoComponent implements OnInit {
             return;
         }
         let partsToPost: ReceiveParts[] = this.extractAllAllStockLines();
-        console.log(partsToPost);
         this.shippingService.receiveParts(partsToPost).subscribe(data => {
             this.alertService.showMessage(this.pageTitle, 'Parts Received successfully.', MessageSeverity.success);
             return this.route.navigate(['/receivingmodule/receivingpages/app-edit-po']);
@@ -1238,7 +1239,7 @@ export class ReceivngPoComponent implements OnInit {
             if (item.timeLifeList != undefined && item.timeLifeList.length > 0) {
                 // need to have some check to make sure atleast one field is entered.
                 for (var i = 0; i < item.timeLifeList.length; i++) {
-                    if (item.isTimeLifeUpdateLater == undefined || !item.isTimeLifeUpdateLater) {
+                    if (item.isTimeLifeUpdateLater != undefined && !item.isTimeLifeUpdateLater) {
                         var timeLife = item.timeLifeList[i];
                         if (timeLife.cyclesRemaining == '' && timeLife.cyclesSinceNew == '' && timeLife.cyclesSinceOVH == '' && timeLife.cyclesSinceInspection == '' && timeLife.cyclesSinceRepair == '' &&
                             timeLife.timeRemaining == '' && timeLife.timeSinceNew == '' && timeLife.timeSinceOVH == '' && timeLife.timeSinceInspection == '' && timeLife.timeSinceRepair == '' &&
@@ -1317,10 +1318,14 @@ export class ReceivngPoComponent implements OnInit {
         if (dropdownSource != undefined && dropdownSource.length > 0) {
             for (let row of dropdownSource) {
                 if (row.Value != undefined && row.Value.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                    stockLine.filteredRecords.push(row.Value);
+                    stockLine.filteredRecords.push(row);
                 }
             }
         }
+    }
+
+    onObtainSelect(stockLine: StockLine): void {
+        stockLine.obtainFrom = stockLine.obtainFromObject.Key;
     }
 
     getConditionList(): void {
