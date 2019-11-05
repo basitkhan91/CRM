@@ -107,7 +107,7 @@ namespace DAL.Repositories
                         IsParent = x.isParent,
                         ManagementStructureId = x.ManagementStructureId,
                         QuantityOrdered = x.QuantityOrdered,
-                        DiscountPerUnit = x.DiscountPerUnit,
+                        DiscountPerUnit = x.DiscountPercent,
                         ExtendedCost = x.ExtendedCost,
                         UnitCost = x.UnitCost,
                         StockLine = x.StockLine == null ? null : x.StockLine.Select(SL => new

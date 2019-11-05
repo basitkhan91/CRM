@@ -81,4 +81,8 @@ export class VendorCapabilitiesEndpoint extends EndpointFactory {
             });
     }
 
+    getVendorCapesById(vendorId){
+		return this.http.get<any>(`${this.configurations.baseUrl}/api/purchaseorder/vendorcapabilities?vendorId=${vendorId}`)
+	}
+
 }

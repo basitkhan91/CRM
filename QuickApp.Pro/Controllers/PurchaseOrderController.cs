@@ -203,6 +203,37 @@ namespace QuickApp.Pro.Controllers
             return Ok();
         }
 
+        [HttpGet("purchaseorderlistbyvendor")]
+        public IActionResult GetPurchaseOrderlistByVendor(long vendorId, int pageNo=0, int pageSize=10)
+        {
+            _unitOfWork.purchaseOrder.GetPurchaseOrderlistByVendor(vendorId, pageNo, pageSize);
+            return Ok();
+        }
+
+        [HttpGet("pohistory")]
+        public IActionResult GetPurchaseOrderHistory(long purchaseOrderId)
+        {
+            var result=_unitOfWork.purchaseOrder.GetPurchaseOrderHistory(purchaseOrderId);
+            return Ok(result);
+        }
+
+        [HttpGet("poview")]
+        public IActionResult PurchaseOrderView(long purchaseOrderId)
+        {
+            var result = _unitOfWork.purchaseOrder.PurchaseOrderView(purchaseOrderId);
+            return Ok(result);
+        }
+
+        [HttpGet("popartsview")]
+        public IActionResult GetPurchaseOrderPartsView(long purchaseOrderId)
+        {
+            var result = _unitOfWork.purchaseOrder.GetPurchaseOrderPartsView(purchaseOrderId);
+            return Ok(result);
+        }
+
+
+
+
     }
 
 }

@@ -7,21 +7,30 @@
             <div class="form-group">
               <label for="woID">WO ID </label>
               <p-autoComplete
-                class="p-autoComplete-ctsm"
-                [size]="30"
-                [minLength]="1"
-                [dropdown]="true"
                 [(ngModel)]="laborForm.workOrderId"
+                field="label" 
+                name="workOrderWorkFlow"
+                errorMessage="Records not found" 
+                [forceSelection]="true"
+                [dropdown]="true"
+                [suggestions]="workOrderWorkFlowList" 
+                (completeMethod)="filterWorkFlowNumbers($event)"
+                [size]="30" [minLength]="1"
+                class="p-autoComplete-ctsm"
               >
               </p-autoComplete>
             </div>
             <div class="form-group">
               <label for="dataentered">Data Entered By </label>
               <p-autoComplete
-                class="p-autoComplete-ctsm"
-                [size]="30"
-                [minLength]="1"
-                [dropdown]="true"
+              field="label" 
+              name="dataEnteredBy"
+              [dropdown]="true"
+              errorMessage="Records not found" 
+              [forceSelection]="true"
+              [suggestions]="dataEnteredByList" 
+              (completeMethod)="filterDataEnteredBy($event)"
+              [size]="30" [minLength]="1"
                 [(ngModel)]="laborForm.dataEnteredBy"
               >
               </p-autoComplete>
@@ -29,7 +38,8 @@
             <div class="form-group">
               <label for="expertise">Expertise </label>
               <p-dropdown
-                [options]="expertiseDropdownMenu"
+              placeholder="Select Expertise Type"
+                [options]="expertiseTypeList"
                 class="p-dropdown-custom"
                 [(ngModel)]="laborForm.expertise"
               ></p-dropdown>
@@ -38,9 +48,14 @@
               <label for="employee">Employee </label>
               <p-autoComplete
                 class="p-autoComplete-ctsm"
-                [size]="30"
-                [minLength]="1"
+                field="label" 
+                name="dataEnteredBy"
                 [dropdown]="true"
+                errorMessage="Records not found" 
+                [forceSelection]="true"
+                [suggestions]="employeeList" 
+                (completeMethod)="filterEmployee($event)"
+                [size]="30" [minLength]="1"
                 [(ngModel)]="laborForm.employeeId"
               >
               </p-autoComplete>

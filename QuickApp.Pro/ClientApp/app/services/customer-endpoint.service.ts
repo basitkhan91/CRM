@@ -118,7 +118,7 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _customerGlobalSearch: string = '/api/Customer/ListGlobalSearch'
     private readonly _customerGetWarning : string = '/api/Customer/GetCustomerWarnings';
     private readonly _customerBillingHistory : string  ="/api/Customer/getCustomerBillingHistory"
-
+    private readonly _customerclassificationMapUrl: string = "/api/Customer/customerclassificationmappings";
 
 
 
@@ -182,6 +182,7 @@ export class CustomerEndpoint extends EndpointFactory {
     get deleteAircraftInvetory() { return this.configurations.baseUrl + this._deleteAircraftMappedInventory }
     get deleteTaxTypeRateMapped() { return this.configurations.baseUrl + this._deleteTaxTypeRateMapped }
     get domesticShipVia() { return this.configurations.baseUrl + this._addShipViaDetails }
+    get customerclassificationMapUrl() { return this.configurations.baseUrl + this._customerclassificationMapUrl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -1220,6 +1221,14 @@ export class CustomerEndpoint extends EndpointFactory {
         return this.http.get<T>(`${this.configurations.baseUrl}${this._customerGlobalSearch}?value=${value}&pageNumber=${pageIndex}&pageSize=${pageSize}`, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getGlobalCustomerRecords(value, pageIndex, pageSize));
+            });
+    }
+
+    getCustomerClassificationMapping<T>(customerId): Observable<T> {
+        let url = `${this.customerclassificationMapUrl}?referenceId=${customerId}`;
+        return this.http.get<T>(url, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getCustomerClassificationMapping(customerId));
             });
     }
 

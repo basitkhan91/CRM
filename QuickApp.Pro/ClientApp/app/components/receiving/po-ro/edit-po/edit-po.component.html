@@ -161,11 +161,9 @@
                         <th>PN</th>
                         <th>Alt PN</th>
                         <th>PN Description</th>
-                        <th>Change PN to</th>
+                        <!-- <th>Change PN to</th> -->
                         <th>Manufacturer</th>
                         <th>Cond</th>
-                        <th>UOM</th>
-                        <th>OEM, DER,PMA FLAG</th>
                         <th>Qty Ordered</th>
                         <th>Discount</th>
                         <th>Unit Cost</th>
@@ -253,6 +251,7 @@
                                 </select>
                             </td>
                             <td>
+
                                 <label style="width:90px;">Division:</label>
                                 <select class="form-control"
                                         [(ngModel)]="part.divisionId"
@@ -334,6 +333,7 @@
                             </td>
                             <th colspan="23"></th>
                         </tr>
+
                         <ng-container>
                             <tr *ngIf="part.stockLine != null">
                                 <th></th>
@@ -414,6 +414,7 @@
                                     <input class="form-control" type="text" disabled pInputText pKeyFilter="pnum"
                                            [(ngModel)]="SL.purchaseOrderExtendedCost"
                                            [disabled]="!SL.isEnabled">
+
 
                                 </td>
                                 <td></td>
@@ -621,7 +622,6 @@
                             </tr>
                         </ng-container>
                     </ng-container>
-
 
                 </tbody>
             </table>

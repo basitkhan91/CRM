@@ -28,7 +28,7 @@ namespace QuickApp.Pro.ViewModels
 
         public MasterCompany MasterCompany { get; set; }
 
-        public bool? IsDelete { get; set; }
+        public bool? IsDeleted { get; set; }
 
 
     }

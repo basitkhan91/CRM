@@ -91,6 +91,12 @@ export class PublicationComponent implements OnInit, AfterViewInit {
     ataList = [];
     formData = new FormData()
     totalPages: number;
+    publicationIdInput: string = "";
+    descriptionInput: string = "";
+    publicationTypeInput: string = "";
+    publishbyInput: string = "";
+    employeeNameInput: string = "";
+    locationInput: string = "";
 
     headersforPNMapping = [
         { field: 'partNumber', header: 'PN ID/Code' },
@@ -155,7 +161,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
             { field: 'publicationId', header: 'Publication ID' },
             { field: 'description', header: 'Description' },
             { field: 'publicationType', header: 'Publication Type' },
-            { field: 'publishedBy', header: 'Published By' },
+            { field: 'publishby', header: 'Published By' },
             { field: 'employeeName', header: 'Employee' },
             { field: 'location', header: 'Location' },
             //{ field: 'aircraftModel', header: 'Aircraft Model' },
@@ -186,9 +192,11 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         this.loadingIndicator = true;
         this.publicationService.getWorkFlows(this.pageIndex, this.pagesize).subscribe(
             results => {
-                this.onDataLoadSuccessful(results[0]['paginationList']);
-                console.log(results[0]['totalRecordsCount']);
-                this.totalRecords = results[0]['totalRecordsCount'];
+                console.log(results);                
+                //this.onDataLoadSuccessful(results[0]['paginationList']);
+                this.onDataLoadSuccessful(results[0]);
+                //console.log(results[0]['totalRecordsCount']);
+                this.totalRecords = results[0][0]['totalRecords'];
                 this.totalPages = Math.ceil(this.totalRecords / this.pagesize);
             },
             error => this.onDataLoadFailed(error)
@@ -887,5 +895,38 @@ export class PublicationComponent implements OnInit, AfterViewInit {
                 return data[i + 1][field] === value
             }
         }
+    }
+
+    onChangeInputField(value, field) {
+        //let value = "";
+       // value = event.target.value;
+        console.log(value, field);
+        
+        if(field == "publicationId") {
+            this.publicationIdInput = value;
+        }
+        if(field == "description") {
+            this.descriptionInput = value;
+        }
+        if(field == "publicationType") {
+            this.publicationTypeInput = value;
+        }
+        if(field == "publishby") {
+            this.publishbyInput = value;
+        }
+        if(field == "employeeName") {
+            this.employeeNameInput = value;
+        }
+        if(field == "location") {
+            this.locationInput = value;
+        }
+        this.publicationService.getpublicationListBySearchEndpoint(this.pageIndex, this.pagesize, this.publicationIdInput, this.descriptionInput, this.publicationTypeInput, this.publishbyInput, this.employeeNameInput, this.locationInput).subscribe(
+            results => {
+                this.onDataLoadSuccessful(results[0]);
+                this.totalRecords = results[0][0]['totalRecords'];
+                this.totalPages = Math.ceil(this.totalRecords / this.pagesize);                
+            },
+            error => this.onDataLoadFailed(error)
+        );
     }
 }

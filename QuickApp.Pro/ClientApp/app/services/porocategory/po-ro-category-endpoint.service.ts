@@ -19,6 +19,7 @@ export class POROCategoryEndpoint extends EndpointFactory {
     private readonly addURL: string = "/api/poroCategory/add";
     private readonly updateURL: string = "/api/poroCategory/update";
     private readonly removeByIdURL: string = "/api/poroCategory/removeById";
+    private readonly updatePOROforActive: string = "/api/poroCategory/UpdatePOROforActive";
     private readonly getAuditById: string = "/api/poroCategory/audits";
 
 
@@ -75,6 +76,15 @@ export class POROCategoryEndpoint extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.removePOROCategoryById(poroCategoryId));
+            });
+    }
+
+    getUpdatePORPEndpointforActive<T>(poroCategory: any): Observable<T> {
+        let endpointUrl = `${this.updatePOROforActive}/${poroCategory.poroCategoryId}`;
+
+        return this.http.put<T>(endpointUrl, JSON.stringify(poroCategory), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getUpdatePORPEndpointforActive(poroCategory));
             });
     }
 

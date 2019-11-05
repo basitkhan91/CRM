@@ -220,6 +220,7 @@ namespace DAL
         //public DbSet<PurchaseOrder> PurchaseOrder { get; set; }
         public DbSet<RepairOrder> RepairOrder { get; set; }
         public DbSet<StocklineAdjustmentReason> stocklineAdjustmentReason { get; set; }
+        public DbSet<StocklineAdjustmentReasonAudit> stocklineAdjustmentReasonAudit { get; set; }
 
         public DbSet<ItemMasterAircraftManufacturer> ItemMasterAircraftManufacturer { get; set; }
         public DbSet<EmployeeLeaveTypeMapping> EmployeeLeaveTypeMapping { get; set; }
@@ -240,7 +241,6 @@ namespace DAL
         public DbSet<MaterialUOM> MaterialUOMs { get; set; }
 
         public DbSet<PublicationType> PublicationType { get; set; }
-        public DbSet<PublicationModel> PublicationModels { get; set; }
         public DbSet<PublicationStatus> PublicationStatuses { get; set; }
         public DbSet<ExclusionEstimatedOccurance> ExclusionEstimatedOccurances { get; set; }
 
@@ -391,7 +391,7 @@ namespace DAL
         public DbSet<MasterParts> MasterParts { get; set; }
         public DbSet<Nha_Tla_Alt_Equ_ItemMapping> Nha_Tla_Alt_Equ_ItemMapping { get; set; }
 
-        public DbSet<WorkFlowWorkOrder> WorkFlowWorkOrder { get; set; }
+        public DbSet<WorkOrderWorkFlow> WorkOrderWorkFlow { get; set; }
         public DbSet<WorkOrderLaborHeader> WorkOrderLaborHeader { get; set; }
         public DbSet<WorkOrderCharges> WorkOrderCharges { get; set; }
         public DbSet<WorkOrderAssets> WorkOrderAssets { get; set; }
@@ -415,6 +415,9 @@ namespace DAL
         public DbSet<LegalEntityBillingAddress> LegalEntityBillingAddress { get; set; }
         public DbSet<LegalEntityShippingAddress> LegalEntityShippingAddress { get; set; }
         public DbSet<LegalEntityContact> LegalEntityContact { get; set; }
+        public DbSet<PurchaseOrderAudit> PurchaseOrderAudit { get; set; }
+        public DbSet<WorkOrderTask> WorkOrderTask { get; set; }
+        public DbSet<WorkOrderTaskAttribute> WorkOrderTaskAttribute { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {

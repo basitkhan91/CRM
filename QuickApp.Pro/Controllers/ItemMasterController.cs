@@ -50,7 +50,7 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<ItemMasterViewModel>))]
         public IActionResult Get()
         {
-            var allPartDetails = _context.ItemMaster.Where(a => a.IsActive == null && a.IsActive == true && a.IsDelete == false || a.IsDelete == null).OrderByDescending(a => a.ItemMasterId).ToList(); //.GetAllCustomersData();
+            var allPartDetails = _context.ItemMaster.Where(a => a.IsActive == null && a.IsActive == true && a.IsDeleted == false || a.IsDeleted == null).OrderByDescending(a => a.ItemMasterId).ToList(); //.GetAllCustomersData();
             return Ok(allPartDetails);
         }
 
@@ -182,7 +182,7 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<Manufacturer>))]
         public IActionResult GetParntnumberlist()
         {
-            var obj = _context.ItemMaster.Where(a => (a.IsActive == null || a.IsActive == true) && (a.IsDelete == false || a.IsDelete == null)).OrderByDescending(c => c.ItemMasterId).ToList();
+            var obj = _context.ItemMaster.Where(a => (a.IsActive == null || a.IsActive == true) && (a.IsDeleted == false || a.IsDeleted == null)).OrderByDescending(c => c.ItemMasterId).ToList();
             return Ok(obj);
         }
 
@@ -896,7 +896,7 @@ namespace QuickApp.Pro.Controllers
                 if (itemMasterViewModel == null)
                     return BadRequest($"{nameof(itemMasterViewModel)} cannot be null");
                 var itemmaserObj = _unitOfWork.itemMaster.GetSingleOrDefault(c => c.ItemMasterId == id);
-                itemmaserObj.IsDelete = true;
+                itemmaserObj.IsDeleted = true;
 
                 _unitOfWork.CommonRepository.DeleteMasterParts(itemmaserObj.MasterPartId, itemmaserObj.UpdatedBy);
 
@@ -1025,7 +1025,7 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<ItemMasterViewModel>))]
         public IActionResult GetListforCapes()
         {
-            var allTaxrateInfo = _context.ItemMaster.Include("Manufacturer").Include("Provision").Include("Priority").Include("ItemClassification").Include("Currency").Include("ExportClassification").Where(a => a.ItemTypeId == 1 && (a.IsDelete == true || a.IsDelete == null) || a.ItemTypeId == 3 && (a.IsDelete == true || a.IsDelete == null)).ToList(); //.GetAllCustomersData();
+            var allTaxrateInfo = _context.ItemMaster.Include("Manufacturer").Include("Provision").Include("Priority").Include("ItemClassification").Include("Currency").Include("ExportClassification").Where(a => a.ItemTypeId == 1 && (a.IsDeleted == true || a.IsDeleted == null) || a.ItemTypeId == 3 && (a.IsDeleted == true || a.IsDeleted == null)).ToList(); //.GetAllCustomersData();
             return Ok(allTaxrateInfo);
 
         }
@@ -1101,7 +1101,7 @@ namespace QuickApp.Pro.Controllers
         {
             var itemMasters = _unitOfWork.Repository<ItemMaster>()
                 .GetAll()
-                .Where(x => x.IsDelete == true || x.IsDelete == false)
+                .Where(x => x.IsDeleted == true || x.IsDeleted == false)
                 .Select(x =>
                 new ItemMaster
                 {
@@ -1702,7 +1702,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("GetPartDetailsDropDown")]
         public IActionResult GetPartDetailsDropDown()
         {
-            var allPartDetails = _context.ItemMaster.Where(a => (a.IsActive == null || a.IsActive == true) && (a.IsDelete == false || a.IsDelete == null))
+            var allPartDetails = _context.ItemMaster.Where(a => (a.IsActive == null || a.IsActive == true) && (a.IsDeleted == false || a.IsDeleted == null))
                 .Select(x => new {
                     ItemMasterId = x.ItemMasterId,
                     PartNumber = x.PartNumber,
@@ -1711,6 +1711,8 @@ namespace QuickApp.Pro.Controllers
                 }).OrderByDescending(a => a.ItemMasterId).ToList();
             return Ok(allPartDetails);
         }
+
+       
     }
 
 }

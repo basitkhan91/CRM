@@ -775,13 +775,13 @@
                 <div class="form-group">
                         <label>Name <span class="clr-red">*</span></label>
                         <div class="inner-addon right-addon inline-block">
-
-                            <p-autoComplete class="p-dropdown-custom-2" name="classificationName"  
-                             [(ngModel)]="addNewclassification.description" 
-                             (onKeyUp)="checkClassificationExists('description',$event.target.value)"
-                             [suggestions]="classificationList" field="description" (completeMethod)="filterclassifications($event)" 
-                             [size]="30"[minLength]="1" [dropdown]="true" required>
-                            </p-autoComplete>
+                                <p-autoComplete class="p-dropdown-custom-2" name="classificationName"  
+                                [(ngModel)]="addNewclassification.description" 
+                                (onSelect)="selectedClassification($event)"
+                                (onKeyUp)="checkClassificationExists('label',$event.target.value)"
+                                [suggestions]="classificationList" field="label" (completeMethod)="filterclassifications($event)" 
+                                [size]="30"[minLength]="1" [dropdown]="true" required> 
+                               </p-autoComplete> 
                            <div *ngIf="isClassificationAlreadyExists" class="clr-red">Entry Already Exists</div>  
                         </div>
                     </div>

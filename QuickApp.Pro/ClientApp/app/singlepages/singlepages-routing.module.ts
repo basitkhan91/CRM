@@ -65,6 +65,7 @@ import { ConditionsComponent } from "../components/conditions/conditions.compone
 import { SiteComponent } from "../components/site/site.component";
 //import { Warehouse } from '../models/warehouse.model';
 import { WarehouseComponent } from "../components/warehouse/warehouse.component";
+import { StocklineAdjustmentReasonComponent } from "../components/stockline/stockline-adjustment-reason/stockline-adjustment-reason.component";
 
 import { ManufacturerComponent } from "../components/manufacturer/manufacturer.component";
 import { VendorcapabilitiesComponent } from "../components/vendorcapabilities/vendorcapabilities.component";
@@ -357,6 +358,11 @@ const singlePagesRoutes: Routes = [
                 path: "app-depriciation-method",
                 component: DepriciationMethodComponent,
                 data: { title: "Depreciation Method" }
+            },
+            {
+                path: "app-stockline-adjustment-reason",
+                component: StocklineAdjustmentReasonComponent,
+                data: { title: "Adjustment Reason" }
             },
             {
                 path: "app-disposal-type",
