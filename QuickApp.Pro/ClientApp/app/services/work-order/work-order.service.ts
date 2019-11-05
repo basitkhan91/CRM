@@ -105,5 +105,8 @@ export class WorkOrderService {
         return this.workOrderEndpointService.createWorkFlowWorkOrder(data);
     }
 
+    getWorkOrderWorkFlowNumbers(){
+        return this.workOrderEndpointService.getWorkOrderWorkFlowNumbers();
+    }
 
 }
