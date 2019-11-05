@@ -872,18 +872,14 @@ namespace DAL.Repositories
                             from wo in won.DefaultIfEmpty()
                                 //join wo in _appContext.SalesOrder on pop.SalesOrderId equals wo.WorkOrderId into won
                                 //from wo in won.DefaultIfEmpty()
-                            join ro in _appContext.RepairOrder on pop.RepairOrderId equals ro.RepairOrderId into ron
+                            //join ro in _appContext.RepairOrder on pop.RepairOrderId equals ro.RepairOrderId into ron
+                            //from ro in ron.DefaultIfEmpty()
                             join shcust in _appContext.Customer on po.ShipToUserId equals shcust.CustomerId into shipToCust
                             from shcust in shipToCust.DefaultIfEmpty()
                             join shcomp in _appContext.LegalEntity on po.ShipToUserId equals shcomp.LegalEntityId into shipToComp
                             from shcomp in shipToComp.DefaultIfEmpty()
                             join shv in _appContext.Vendor on po.ShipToUserId equals shv.VendorId into shipToVen
                             from shv in shipToVen.DefaultIfEmpty()
-                            from ro in ron.DefaultIfEmpty()
-
-
-
-
 
                             where pop.PurchaseOrderId == purchaseOrderId
                             select new
@@ -900,7 +896,7 @@ namespace DAL.Repositories
                                 ReportCurrency = rcurr.DisplayName,
                                 WorkOrderNo = wo.WorkOrderNum,
                                 SalesOrderNo = "",
-                                ReapairOrderNo=ro.RepairOrderNumber,
+                               // ReapairOrderNo=ro.RepairOrderNumber,
                                 CustomerName=shcust.Name,
                                 VendorName=shv.VendorName,
                                 ComapnyName=shcomp.Name
@@ -932,9 +928,9 @@ namespace DAL.Repositories
                             purchaseOrderPart.FunctionalCurrency = part.FunctionalCurrency;
                             purchaseOrderPart.ForeignExchangeRate = part.pop.ForeignExchangeRate;
                             purchaseOrderPart.ReportCurrency = part.ReportCurrency;
-                            purchaseOrderPart.ReportCurrency = part.WorkOrderNo;
-                            purchaseOrderPart.ReportCurrency = part.SalesOrderNo;
-                            purchaseOrderPart.ReportCurrency = part.ReapairOrderNo;
+                            purchaseOrderPart.WorkOrderNo = part.WorkOrderNo;
+                            purchaseOrderPart.SalesOrderNo = part.SalesOrderNo;
+                            //  purchaseOrderPart.ReapairOrderNo = part.ReapairOrderNo;
                             purchaseOrderPart.Memo = part.pop.Memo;
                             purchaseOrderPart.isParent=true;
                             purchaseOrderPart.PurchaseOrderPartRecordId = part.pop.PurchaseOrderPartRecordId;

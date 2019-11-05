@@ -1820,12 +1820,22 @@ namespace QuickApp.Pro.Controllers
                 address.IsActive = true;
                 address.CreatedBy = vendorshipping.CreatedBy ?? "Admin"; //Hotfix
                 address.UpdatedBy = vendorshipping.UpdatedBy ?? "Admin";//Hotfix
-                address.CreatedDate = DateTime.Now;
+                
                 address.UpdatedDate = DateTime.Now;
-                _context.Address.Add(address);
+                if (vendorshipping.AddressId > 0)
+                {
+                    address.CreatedDate = vendorshipping.CreatedDate;
+                    address.AddressId = vendorshipping.AddressId;
+                    _context.Address.Update(address);
+                   
+                }
+                else
+                {
+                    address.CreatedDate = DateTime.Now;
+                    _context.Address.Add(address);
+                }
                 _context.SaveChanges();
-                long? id = address.AddressId;
-                updateVendorShippingAddress(vendorShippingAdressViewModel, id, vendorshipping, address);
+                updateVendorShippingAddress(vendorShippingAdressViewModel, address.AddressId, vendorshipping, address);
                 return Ok(vendorshipping);
             }
 
@@ -1876,11 +1886,23 @@ namespace QuickApp.Pro.Controllers
                 vendorShippingAddressObj.MasterCompanyId = 1;
                 vendorShippingAddressObj.IsActive = vendorshippingAddressViewModel.IsActive;
                 vendorShippingAddressObj.AddressId = id;
-                vendorShippingAddressObj.CreatedDate = DateTime.Now;
+                
                 vendorShippingAddressObj.UpdatedDate = DateTime.Now;
                 vendorShippingAddressObj.CreatedBy = vendorshippingAddressViewModel.CreatedBy;
                 vendorShippingAddressObj.UpdatedBy = vendorshippingAddressViewModel.UpdatedBy;
-                _unitOfWork.VendorShippingAddress.Add(vendorShippingAddressObj);
+
+                if(vendorshipping.VendorShippingAddressId>0)
+                {
+                    vendorShippingAddressObj.CreatedDate = vendorshipping.CreatedDate;
+                    vendorShippingAddressObj.VendorShippingAddressId = vendorshipping.VendorShippingAddressId;
+                    _unitOfWork.VendorShippingAddress.Update(vendorShippingAddressObj);
+                }
+                else
+                {
+                    vendorShippingAddressObj.CreatedDate = DateTime.Now;
+                    _unitOfWork.VendorShippingAddress.Add(vendorShippingAddressObj);
+                }
+                
                 _unitOfWork.SaveChanges();
                 long? venAddressid = vendorShippingAddressObj.VendorShippingAddressId;
                 vendorshipping.VendorShippingAddressId = vendorShippingAddressObj.VendorShippingAddressId;

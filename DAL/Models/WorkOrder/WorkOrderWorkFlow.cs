@@ -14,12 +14,14 @@ namespace DAL.Models
             Charges = new List<WorkOrderCharges>();
             Assets = new List<WorkOrderAssets>();
             Exclusions = new List<WorkOrderExclusions>();
-            //Expertise = new WorkOrderLaborHeader();
+            Expertise = new List<WorkOrderExpertise>();
             MaterialList = new List<WorkOrderMaterials>();
             Documents = new List<WorkOrderDocuments>();
             WorkOrderAddress = new List<WorkOrderAddress>();
            // WorkOrderQuote = new WorkOrderQuote();
            WorkOrderFreight = new List<WorkOrderFreight>();
+            WorkOrderDirections = new List<WorkOrderDirections>();
+            Publications = new List<WorkOrderPublications>();
         }
 
         [Key]
@@ -63,7 +65,7 @@ namespace DAL.Models
         public string UpdatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
-        public virtual Customer Customer { get; set; }
+        //public virtual Customer Customer { get; set; }
         public bool? IsActive { get; set; }
         public bool? IsDeleted { get; set; }
         public string WorkFlowWorkOrderNo { get; set; }
@@ -76,10 +78,13 @@ namespace DAL.Models
         public virtual List<WorkOrderDocuments> Documents { get; set; }
         public virtual List<WorkOrderAddress> WorkOrderAddress { get; set; }
         public virtual List<WorkOrderFreight> WorkOrderFreight { get; set; }
-        public virtual List<WorkOrderTask> WorkOrderTask { get; set; }
+        //public virtual List<WorkOrderTask> WorkOrderTask { get; set; }
+        public virtual List<WorkOrderExpertise> Expertise { get; set; }
+        public virtual List<WorkOrderDirections> WorkOrderDirections { get; set; }
+        public virtual List<WorkOrderPublications> Publications { get; set; }
 
         [NotMapped]
-        public WorkOrderLaborHeader Expertise { get; set; }
+        public WorkOrderLaborHeader WorkOrderLaborHeader { get; set; }
         [NotMapped]
         public WorkOrderQuote WorkOrderQuote { get; set; }
     }
