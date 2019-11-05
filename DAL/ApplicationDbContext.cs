@@ -391,7 +391,7 @@ namespace DAL
         public DbSet<MasterParts> MasterParts { get; set; }
         public DbSet<Nha_Tla_Alt_Equ_ItemMapping> Nha_Tla_Alt_Equ_ItemMapping { get; set; }
 
-        public DbSet<WorkFlowWorkOrder> WorkFlowWorkOrder { get; set; }
+        public DbSet<WorkOrderWorkFlow> WorkOrderWorkFlow { get; set; }
         public DbSet<WorkOrderLaborHeader> WorkOrderLaborHeader { get; set; }
         public DbSet<WorkOrderCharges> WorkOrderCharges { get; set; }
         public DbSet<WorkOrderAssets> WorkOrderAssets { get; set; }
@@ -416,6 +416,8 @@ namespace DAL
         public DbSet<LegalEntityShippingAddress> LegalEntityShippingAddress { get; set; }
         public DbSet<LegalEntityContact> LegalEntityContact { get; set; }
         public DbSet<PurchaseOrderAudit> PurchaseOrderAudit { get; set; }
+        public DbSet<WorkOrderTask> WorkOrderTask { get; set; }
+        public DbSet<WorkOrderTaskAttribute> WorkOrderTaskAttribute { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {

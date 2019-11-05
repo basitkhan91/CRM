@@ -119,7 +119,7 @@ namespace QuickApp.Pro.Controllers
         #region Work Flow Work Order
 
         [HttpPost("createworkflowworkorder")]
-        public IActionResult CreateWorkFlowWorkOrder([FromBody]WorkFlowWorkOrder workFlowWorkOrder)
+        public IActionResult CreateWorkFlowWorkOrder([FromBody]WorkOrderWorkFlow workFlowWorkOrder)
         {
             if (ModelState.IsValid)
             {
@@ -134,7 +134,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("updateworkflowworkorder")]
-        public IActionResult UpdateWorkFlowWorkOrder([FromBody]WorkFlowWorkOrder workFlowWorkOrder)
+        public IActionResult UpdateWorkFlowWorkOrder([FromBody]WorkOrderWorkFlow workFlowWorkOrder)
         {
             if (ModelState.IsValid)
             {
@@ -159,6 +159,13 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetWorkOrderWorkFlowNos(long workOrderId)
         {
             var result = unitOfWork.WorkOrderRepository.GetWorkOrderWorkFlowNos(workOrderId);
+            return Ok(result);
+        }
+
+        [HttpGet("Wotaskattributes")]
+        public IActionResult GetWorkOrderTaskAttributes(long workOrderTaskId)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderTaskAttributes(workOrderTaskId);
             return Ok(result);
         }
 
