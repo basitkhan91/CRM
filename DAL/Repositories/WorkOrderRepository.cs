@@ -341,7 +341,7 @@ namespace DAL.Repositories
                             select new
                             {
                               value=  w.WorkFlowWorkOrderId,
-                              text=  w.WorkFlowWorkOrderNo
+                              label=  w.WorkFlowWorkOrderNo
                             }
                           ).ToList();
                 return list;

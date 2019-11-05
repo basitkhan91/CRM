@@ -173,5 +173,8 @@ export class WorkOrderEndpointService extends EndpointFactory {
     createWorkFlowWorkOrder(object){
         return this.http.post(`${this.configurations.baseUrl}/api/workOrder/createworkflowworkorder`, JSON.stringify(object), this.getRequestHeaders())
     }
+    getWorkOrderWorkFlowNumbers(){
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderworkflownos`, this.getRequestHeaders())
+    }
 
 }
