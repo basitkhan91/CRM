@@ -160,6 +160,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
     constructor(private actionService: ActionService,
         private workOrderService: WorkOrderService,
+        private authService: AuthService,
         private router: ActivatedRoute, private route: Router, private expertiseService: EmployeeExpertiseService, private cusservice: CustomerService, public workscopeService: WorkScopeService, public currencyService: CurrencyService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService, private conditionService: ConditionService, private _workflowService: WorkFlowtService, private itemser: ItemMasterService, private vendorService: VendorService, private alertService: AlertService, private modalService: NgbModal, private percentService: PercentService) {
     }
 
@@ -217,6 +218,8 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
     updateWorkFlowId: string;
 
+
+
     ngOnInit(): void {
         console.log(this.isWorkOrder );
         this.isFixedcheck('');
@@ -262,6 +265,11 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         this.loadWorkFlow();
         this.getAllPercentages();
     }
+
+    
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
+      }
 
     private getAllPercentages(): void {
         this.percentService.getPercentages().subscribe(
@@ -1877,28 +1885,28 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     addWorkFlow(isHeaderUpdate: boolean): void {
         console.log(1);
         this.sourceWorkFlow.workflowId = undefined;
-        // save Work Order Workflow
-        console.log(this.validateWorkFlowHeader());
+        // // save Work Order Workflow
+        // console.log(this.validateWorkFlowHeader());
         
-        if(this.isWorkOrder && this.validateWorkFlowHeader()){
-            console.log(2);
-            // if(this.responseDataForHeader){
+        // if(this.isWorkOrder && this.validateWorkFlowHeader()){
+        //     console.log(2);
+        //     // if(this.responseDataForHeader){
 
-                this.actionService.addWorkFlowHeader(this.sourceWorkFlow).subscribe(result => {
-                    this.sourceWorkFlow.workflowId = result.workflowId;
-                    this.sourceWorkFlow.workOrderNumber = result.workOrderNumber;
-                    this.alertService.showMessage(this.title, "Work Flow header added successfully.", MessageSeverity.success);
-                     this.responseDataForHeader = result;
-                    this.UpdateMode = true;
-                    // this.SaveWorkFlow();
-                });
-            // } else {
-            //     this.SaveWorkFlow();
-            // }
+        //         this.actionService.addWorkFlowHeader(this.sourceWorkFlow).subscribe(result => {
+        //             this.sourceWorkFlow.workflowId = result.workflowId;
+        //             this.sourceWorkFlow.workOrderNumber = result.workOrderNumber;
+        //             this.alertService.showMessage(this.title, "Work Flow header added successfully.", MessageSeverity.success);
+        //              this.responseDataForHeader = result;
+        //             this.UpdateMode = true;
+        //             // this.SaveWorkFlow();
+        //         });
+        //     // } else {
+        //     //     this.SaveWorkFlow();
+        //     // }
 
 
-        }else {
-            console.log(3);
+        // }else {
+        //     console.log(3);
      // WorkFlow Create
       if (!this.validateWorkFlowHeader() || !this.calculateTotalWorkFlowCost()) {
          return;
@@ -1944,40 +1952,40 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                 this.alertService.showMessage(this.title, message, MessageSeverity.error);
             }
         )
-    }
+    // }
         
     }
     title: string = "Work Flow";
 
     updateWorkFlow(isHeaderUpdate: boolean): void {
-        // save Work Order Workflow
-        console.log(5);
+        // // save Work Order Workflow
+        // console.log(5);
 
-        console.log(this.isWorkOrder, this.validateWorkFlowHeader())
-        if(this.isWorkOrder  &&  this.validateWorkFlowHeader() ){
-            // this.SaveWorkFlow();
-            console.log(6);
+        // console.log(this.isWorkOrder, this.validateWorkFlowHeader())
+        // if(this.isWorkOrder  &&  this.validateWorkFlowHeader() ){
+        //     // this.SaveWorkFlow();
+        //     console.log(6);
 
-            if(this.responseDataForHeader){
-                console.log(7);
-                this.actionService.addWorkFlowHeader(this.sourceWorkFlow).subscribe(result => {
-                    this.sourceWorkFlow.workflowId = result.workflowId;
-                    this.sourceWorkFlow.workOrderNumber = result.workOrderNumber;
-                    this.alertService.showMessage(this.title, "Work Flow header added successfully.", MessageSeverity.success);
-                     this.responseDataForHeader = result;
-                    this.UpdateMode = true;
-                    this.SaveWorkFlow();
-                });
-            } else {
-                // this.SaveWorkFlow();
-            }
+        //     if(this.responseDataForHeader){
+        //         console.log(7);
+        //         this.actionService.addWorkFlowHeader(this.sourceWorkFlow).subscribe(result => {
+        //             this.sourceWorkFlow.workflowId = result.workflowId;
+        //             this.sourceWorkFlow.workOrderNumber = result.workOrderNumber;
+        //             this.alertService.showMessage(this.title, "Work Flow header added successfully.", MessageSeverity.success);
+        //              this.responseDataForHeader = result;
+        //             this.UpdateMode = true;
+        //             this.SaveWorkFlow();
+        //         });
+        //     } else {
+        //         // this.SaveWorkFlow();
+        //     }
 
-        }else {
-            console.log(8);
+        // }else {
+        //     console.log(8);
                 // WorkFlow Create 
-            if (!this.validateWorkFlowHeader() || !this.calculateTotalWorkFlowCost()) {
-                return;
-            }
+        if (!this.validateWorkFlowHeader() || !this.calculateTotalWorkFlowCost()) {
+            return;
+        }
         this.SaveWorkFlow();
         console.log(9);
         if (isHeaderUpdate) {
@@ -2018,7 +2026,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                 this.alertService.showMessage(this.title, message, MessageSeverity.error);
             }
         )
-    }
+    // }
     }
 
     SaveWorkFlow(): void {
@@ -2114,30 +2122,138 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
           
 
-            if(this.isWorkOrder && this.responseDataForHeader){
 
-                const data = this.sourceWorkFlow;
-                  this.workOrderService.createWorkFlowWorkOrder(
-                      {...this.responseDataForHeader , workOrderId : this.savedWorkOrderData.workOrderId , 
-                        charges : data.charges.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId } }),
-                        directions : data.directions.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId } }),
-                        equipments : data.equipments.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId } }),
-                        exclusions : data.exclusions.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId } }),
-                        expertise : data.expertise.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId } }),
-                        materialList : data.materialList.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId } }),
-                        measurements : data.measurements.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId } }),
-                        publication : data.publication.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId } })
+        }
+    }
 
-                    
-                }).subscribe(res => {
+    saveWorkFlowWorkOrder(){
+        if (this.workFlowList != undefined && this.workFlowList.length > 0) {
 
-                    this.alertService.showMessage(
-                        '',
-                        'Work Order Work Flow Saved Succesfully',
-                        MessageSeverity.success
-                      );
-                })
+            this.sourceWorkFlow.charges = [];
+            this.sourceWorkFlow.directions = [];
+            this.sourceWorkFlow.equipments = [];
+            this.sourceWorkFlow.exclusions = [];
+            this.sourceWorkFlow.expertise = [];
+            this.sourceWorkFlow.materialList = [];
+            this.sourceWorkFlow.measurements = [];
+            this.sourceWorkFlow.publication = [];
+
+            for (let workflow of this.workFlowList) {
+                if (workflow.charges != undefined) {
+                    for (let charge of workflow.charges) {
+                        charge.workflowChargesListId = charge.workflowChargesListId > 0 ? charge.workflowChargesListId : 0;
+                        charge.workflowId = workflow.workflowId;
+                        charge.taskId = workflow.taskId;
+                        this.sourceWorkFlow.charges.push(charge);
+                    }
+                }
+                if (workflow.directions != undefined) {
+                    for (let direction of workflow.directions) {
+                        direction.workflowDirectionId = direction.workflowDirectionId > 0 ? direction.workflowDirectionId : 0;
+                        direction.workflowId = workflow.workflowId;
+                        direction.taskId = workflow.taskId;
+                        this.sourceWorkFlow.directions.push(direction);
+                    }
+                }
+                if (workflow.equipments != undefined) {
+                    for (let equipment of workflow.equipments) {
+                        equipment.workflowEquipmentListId = equipment.workflowEquipmentListId > 0 ? equipment.workflowEquipmentListId : 0;
+                        equipment.workflowId = workflow.workflowId;
+                        equipment.taskId = workflow.taskId;
+                        this.sourceWorkFlow.equipments.push(equipment);
+                    }
+                }
+                if (workflow.exclusions != undefined) {
+                    for (let exclusion of workflow.exclusions) {
+                        exclusion.workflowExclusionId = exclusion.workflowExclusionId > 0 ? exclusion.workflowExclusionId : 0;
+                        exclusion.workflowId = workflow.workflowId;
+                        exclusion.taskId = workflow.taskId;
+                        this.sourceWorkFlow.exclusions.push(exclusion);
+                    }
+                }
+                if (workflow.expertise != undefined) {
+                    for (let expert of workflow.expertise) {
+                        expert.workflowExpertiseListId = expert.workflowExpertiseListId > 0 ? expert.workflowExpertiseListId : 0;
+                        expert.workflowId = workflow.workflowId;
+                        expert.taskId = workflow.taskId;
+                        this.sourceWorkFlow.expertise.push(expert);
+                    }
+                }
+                if (workflow.materialList != undefined) {
+                    for (let material of workflow.materialList) {
+                        material.workflowMaterialListId = material.workflowMaterialListId > 0 ? material.workflowMaterialListId : 0;
+                        material.workflowId = workflow.workflowId;
+                        material.taskId = workflow.taskId;
+                        this.sourceWorkFlow.materialList.push(material);
+                    }
+                }
+                if (workflow.measurements != undefined) {
+                    for (let measurement of workflow.measurements) {
+                        measurement.workflowMeasurementId = measurement.workflowMeasurementId > 0 ? measurement.workflowMeasurementId : 0;
+                        measurement.workflowId = workflow.workflowId;
+                        measurement.taskId = workflow.taskId;
+                        this.sourceWorkFlow.measurements.push(measurement);
+                    }
+                }
+                if (workflow.publication != undefined) {
+                    for (let publication of workflow.publication) {
+                        publication.id = publication.id > 0 ? publication.id : 0;
+                        publication.workflowId = workflow.workflowId;
+                        publication.taskId = workflow.taskId;
+                        if (publication.workflowPublicationDashNumbers != undefined) {
+                            for (let dashNumber of publication.workflowPublicationDashNumbers) {
+
+                                dashNumber.workflowId = this.workFlow.workflowId;
+                                dashNumber.aircraftDashNumberId = dashNumber.dashNumberId;
+                                dashNumber.taskId = this.workFlow.taskId;
+                                dashNumber.publicationsId = publication.id;
+                                dashNumber.dashNumberId = dashNumber.dashNumberId;
+                                dashNumber.dashNumber = dashNumber.dashNumber;
+                            }
+                        }
+                        this.sourceWorkFlow.publication.push(publication);
+                    }
+                }
             }
+
+          
+
+
+        }
+        if(this.isWorkOrder){
+          
+            // responseDataForHeader
+            const data = this.sourceWorkFlow;
+            const excessParams = {
+                createdBy : this.userName,
+                updated : this.userName,
+                createdate : new Date(),
+                updatdate : new Date() ,
+                isActive : true,
+                IsDeleted : false,
+                mastetcompanyId : 1
+
+            }
+              this.workOrderService.createWorkFlowWorkOrder(
+                  {...this.sourceWorkFlow , workOrderId : this.savedWorkOrderData.workOrderId , 
+                    charges : data.charges.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId , ...excessParams } }),
+                    directions : data.directions.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId, ...excessParams } }),
+                    equipments : data.equipments.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId ,...excessParams } }),
+                    exclusions : data.exclusions.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId, ...excessParams} }),
+                    expertise : data.expertise.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId, ...excessParams } }),
+                    materialList : data.materialList.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId, ...excessParams } }),
+                    measurements : data.measurements.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId, ...excessParams} }),
+                    publication : data.publication.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId, ...excessParams } })
+
+                
+            }).subscribe(res => {
+
+                this.alertService.showMessage(
+                    '',
+                    'Work Order Work Flow Saved Succesfully',
+                    MessageSeverity.success
+                  );
+            })
         }
     }
 
