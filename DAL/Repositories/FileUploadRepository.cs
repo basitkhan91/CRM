@@ -401,7 +401,7 @@ namespace DAL.Repositories
         {
             foreach (var item in priorityList)
             {
-                var flag = _appContext.Priority.Any(p => p.IsDelete == false
+                var flag = _appContext.Priority.Any(p => p.IsDeleted == false
                                                     && (p.Description.ToLower() == item.Description.Trim().ToLower()));
                 if (!flag)
                 {

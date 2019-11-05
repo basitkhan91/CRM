@@ -863,13 +863,16 @@ namespace QuickApp.Pro.Controllers
 				if (Customershipping == null)
 					return BadRequest($"{nameof(Customershipping)} cannot be null");
 
-				Customershipping.MasterCompanyId = 1;
+                long? id = 0;
+
+                Customershipping.MasterCompanyId = 1;
 				Customershipping.IsActive = true;
 				customerShippingAdressViewModel.IsActive = true;
 				Customershipping.CreatedBy = Customershipping.CreatedBy;
 				Customershipping.UpdatedBy = Customershipping.UpdatedBy;
 				Customershipping.CreatedDate = DateTime.Now;
 				Customershipping.UpdatedDate = DateTime.Now;
+
 				address.Line1 = Customershipping.Address1;
 				address.Line2 = Customershipping.Address2;
 				address.Line3 = Customershipping.Address3;
@@ -880,14 +883,37 @@ namespace QuickApp.Pro.Controllers
 				address.MasterCompanyId = 1;
 				address.CreatedBy = Customershipping.CreatedBy;
 				address.UpdatedBy = Customershipping.UpdatedBy;
-				address.CreatedDate = DateTime.Now;
+				
 				address.UpdatedDate = DateTime.Now;
 				address.IsActive = Customershipping.IsActive;
 
-				_unitOfWork.Address.Add(address);
+                
+
+                if (Customershipping.AddressId>0)
+                {
+                    //var existData = _context.Address.Where(p => p.AddressId == Customershipping.AddressId).FirstOrDefault();
+
+                    //existData.Line1 = Customershipping.Address1;
+                    //existData.Line2 = Customershipping.Address2;
+                    //existData.Line3 = Customershipping.Address3;
+                    //existData.City = Customershipping.City;
+                    //existData.StateOrProvince = Customershipping.StateOrProvince;
+                    //existData.PostalCode = Customershipping.PostalCode;
+                    //existData.Country = Customershipping.Country;
+                    address.CreatedDate = Customershipping.CreatedDate;
+                    address.AddressId = Customershipping.AddressId;
+                    _unitOfWork.Address.Update(address);
+                }
+                else
+                {
+                    address.CreatedDate = DateTime.Now;
+                    _unitOfWork.Address.Add(address);
+                }
+
+				
 				_unitOfWork.SaveChanges();
-				long? id = address.AddressId;
-				updateCusShipdetails(customerShippingAdressViewModel, id, Customershipping, address);
+				
+				updateCusShipdetails(customerShippingAdressViewModel, address.AddressId, Customershipping, address);
 				return Ok(Customershipping);
 			}
 
@@ -1084,13 +1110,27 @@ namespace QuickApp.Pro.Controllers
 				CustomerShippingAddressObj.Amount = Customershipping.Amount;
 				CustomerShippingAddressObj.MasterCompanyId = 1;
 				//CustomerShippingAddressObj.IsActive = Customershipping.IsActive;
-				CustomerShippingAddressObj.CreatedDate = DateTime.Now;
+				
 				CustomerShippingAddressObj.UpdatedDate = DateTime.Now;
 				CustomerShippingAddressObj.CreatedBy = Customershipping.CreatedBy;
 				CustomerShippingAddressObj.UpdatedBy = Customershipping.UpdatedBy;
 				//CustomerShippingAddressObj.IsPrimary = Customershipping.IsPrimary;
 				CustomerShippingAddressObj.IsPrimary = false;
-				_unitOfWork.CustomerShippingAddress.Add(CustomerShippingAddressObj);
+
+                if(Customershipping.CustomerShippingAddressId>0)
+                {
+                    CustomerShippingAddressObj.CreatedDate = Customershipping.CreatedDate;
+                    CustomerShippingAddressObj.CustomerShippingAddressId = Customershipping.CustomerShippingAddressId;
+                    _unitOfWork.CustomerShippingAddress.Update(CustomerShippingAddressObj);
+                }
+                else
+                {
+                    CustomerShippingAddressObj.CreatedDate = DateTime.Now;
+                    _unitOfWork.CustomerShippingAddress.Add(CustomerShippingAddressObj);
+                }
+
+
+				
 				_unitOfWork.SaveChanges();
 				long? venAddressid = CustomerShippingAddressObj.CustomerShippingAddressId;
 				Customershipping.CustomerShippingId = CustomerShippingAddressObj.CustomerShippingAddressId;
