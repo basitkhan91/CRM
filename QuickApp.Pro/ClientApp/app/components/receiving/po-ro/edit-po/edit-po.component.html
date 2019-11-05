@@ -372,10 +372,12 @@
                                 <th>Mfg Batch Num</th>
                                 <th>Part Cert Num </th>
                                 <th>Certified Date</th>
+                                <th class="date">Certified Due Date</th>
                                 <th>Tagged By </th>
                                 <th class="date">Date Tagged </th>
                                 <th class="date">Tag Exp Date </th>
                                 <th class="date">Core Due Date</th>
+                                <th class="date"> Core Returned Date</th>
                                 <th>GL Account</th>
                                 <th>Time Life</th>
 
@@ -414,7 +416,6 @@
                                            [disabled]="!SL.isEnabled">
 
                                 </td>
-
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -467,7 +468,6 @@
                                     </select>
                                 </td>
                                 <td>
-
                                     <select class="form-control"
                                             [(ngModel)]="SL.siteId"
                                             #selects="ngModel"
@@ -479,7 +479,6 @@
                                     </select>
                                 </td>
                                 <td>
-
                                     <select class="form-control"
                                             [(ngModel)]="SL.warehouseId"
                                             #selects="ngModel"
@@ -491,7 +490,6 @@
                                     </select>
                                 </td>
                                 <td>
-
                                     <select class="form-control"
                                             [(ngModel)]="SL.locationId"
                                             #selects="ngModel"
@@ -503,7 +501,6 @@
                                     </select>
                                 </td>
                                 <td>
-
                                     <select class="form-control"
                                             [(ngModel)]="SL.shelfId"
                                             #selects="ngModel"
@@ -530,339 +527,107 @@
                                 <td>{{SL.obtainFromType}}</td>
                                 <td>{{SL.traceableToType}}</td>
                                 <td>{{SL.traceableTo}}</td>
-                                <td>{{SL.trace}}</td>
                                 <td>
-                                    <select class="form-control" disabled [(ngModel)]="SL.manufacturerId">
+                                    <input class="form-control" type="text"
+                                           [disabled]="!SL.isEnabled"
+                                           [(ngModel)]="SL.manufacturingTrace"
+                                           pInputText [maxLength]="200">
+                                </td>
+                                <td>
+                                    <select class="form-control"
+                                            [(ngModel)]="SL.manufacturerId"
+                                            disabled>
                                         <option [value]="0">Select</option>
                                         <option [value]="manufacturer.Key" *ngFor="let manufacturer of ManufacturerList">{{manufacturer.Value}}</option>
                                     </select>
                                 </td>
-                                <td>{{SL.manufacturerLotNumber}}</td>
-                                <td>{{SL.manufacturingDate}}</td>
-                                <td>{{SL.manufacturingBatchNumber}}</td>
-                                <td>{{SL.partCertificationNumber}}</td>
-                                <td>{{SL.certifiedDate}}</td>
-                                <td>{{SL.taggedBy}}</td>
-                                <td>{{SL.tagDate}}</td>
-                                <td>{{SL.tagExpiryDate}}</td>
-                                <td>{{SL.certifiedDueDate}}</td>
+                                <td>
+                                    <input class="form-control"
+                                           [(ngModel)]="SL.manufacturerLotNumber"
+                                           type="text"
+                                           [disabled]="!SL.isEnabled"
+                                           pInputText [maxLength]="200">
+                                </td>
+                                <td>
+                                    <p-calendar class="pas-clder pas-clder-po-table"
+                                                [disabled]="!SL.isEnabled"
+                                                [(ngModel)]="SL.manufacturingDate"
+                                                [showIcon]="true"></p-calendar>
+
+                                </td>
+                                <td>
+                                    <input class="form-control"
+                                           [disabled]="!SL.isEnabled"
+                                           [(ngModel)]="SL.manufacturingBatchNumber"
+                                           type="text" pInputText
+                                           [maxLength]="200">
+                                </td>
+                                <td>
+                                    <input class="form-control"
+                                           type="text" pInputText
+                                           [disabled]="!SL.isEnabled"
+                                           [(ngModel)]="SL.partCertificationNumber"
+                                           [maxLength]="200">
+                                </td>
+                                <td>
+                                    <p-calendar class="pas-clder pas-clder-po-table"
+                                                [maxDate]="currentDate"
+                                                [disabled]="!SL.isEnabled"
+                                                [showIcon]="true"
+                                                [ngModelOptions]="{standalone: true}"
+                                                [(ngModel)]="SL.certifiedDate"></p-calendar>
+                                </td>
+                                <td>
+                                    <p-calendar class="pas-clder pas-clder-po-table"
+                                                [maxDate]="currentDate"
+                                                [disabled]="!SL.isEnabled"
+                                                [showIcon]="true"
+                                                [ngModelOptions]="{standalone: true}"
+                                                [(ngModel)]="SL.certifiedDueDate"></p-calendar>
+                                </td>
+                                <td>
+                                    <input class="form-control"
+                                           [(ngModel)]="SL.certifiedBy"
+                                           type="text" pInputText
+                                           [disabled]="!SL.isEnabled"
+                                           [maxLength]="200">
+                                </td>
+                                <td>
+                                    <p-calendar class="pas-clder pas-clder-po-table"
+                                                [maxDate]="currentDate"
+                                                [disabled]="!SL.isEnabled"
+                                                [showIcon]="true"
+                                                [ngModelOptions]="{standalone: true}"
+                                                [(ngModel)]="SL.tagDate"></p-calendar>
+                                </td>
+                                <td>
+                                    <p-calendar class="pas-clder pas-clder-po-table"
+                                                [showIcon]="true"
+                                                [disabled]="!SL.isEnabled"
+                                                [ngModelOptions]="{standalone: true}"
+                                                [(ngModel)]="SL.expirationDate"></p-calendar>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" disabled value="unknown field" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" disabled value="unknown field" />
+                                </td>
                                 <td>{{SL.glAccountText}}</td>
                                 <td>
-                                    <input type="checkbox" [checked]="part.itemMaster.isTimeLife != false" />
-                                    
+                                    <input type="checkbox" disabled [checked]="part.itemMaster.isTimeLife != false" />
                                 </td>
 
                             </tr>
                         </ng-container>
                     </ng-container>
 
-                    <!--<tr class="child-header">
-
-                    </tr>
-
-                    <tr class="child-data splitship-child">
-                        <td><a href="javascript:void(0);" data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit"><i class="fa fa-edit" (click)="onEditChildGridFields()"></i></a></td>
-                        <td></td>
-                        <td>SL-33653</td>
-                        <td>AA-10024000</td>
-                        <td></td>
-                        <td>CN-100557</td>
-                        <td>7</td>
-                        <td>
-                            <select class="form-control" [disabled]="rpoEditCF">
-                                <option>AR</option>
-                                <option>AS-IS</option>
-                                <option>NEW</option>
-                                <option>OVH</option>
-                                <option>REP</option>
-                                <option>SRV</option>
-                            </select>
-                        </td>
-                        <td>Each</td>
-                        <td>SN-10006</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>$<input type="text" class="form-control amount disabled2" value="100.00" style="max-width: calc(100% - 10px)!important;min-width: 80px;margin-left: 2px;" [disabled]="rpoEditCF"></td>
-                        <td>$<input type="text" class="form-control amount disabled2" value="400.00" style="max-width: calc(100% - 10px)!important;min-width: 80px;margin-left: 2px;" [disabled]="rpoEditCF"></td>
-                        <td> $400.00 </td>
-                        <td>RO-55577</td>
-                        <td>
-                            <input type="text" class="form-control" value="WO-45450" [disabled]="rpoEditCF">
-
-                        </td>
-                        <td>
-                            <input type="text" class="form-control" value="SO-45450" [disabled]="rpoEditCF">
-
-                        </td>
-                        <td>
-                            <input type="text" class="form-control" value="SWO-45450" [disabled]="rpoEditCF">
-
-                        </td>
-                        <td>
-                            <select id="" name="" class="form-control disabled2 owner-selection" (change)="onOwnerChange($event)" [disabled]="rpoEditCF">
-                                <option value="0">Select</option>
-                                <option value="1">Customer</option>
-                                <option value="2">Other </option>
-                                <option value="3">Vendor</option>
-                            </select>
-                        </td>
-                        <td>
-                            <div class="form-group" style="margin-bottom: 0;">
-                                <div class="form-row" *ngIf="ownercustomer" style="width: 140px;margin-right: 4px;">
-                                    <div class="col-sm-11">
-                                        <p-autoComplete class="rpo-acomp"
-                                                        [size]="32"
-                                                        [minLength]="1"
-                                                        [dropdown]="true">
-                                            <ng-template let-Value pTemplate="customer">
-                                                <div class="ui-helper-clearfix">{{Value}}</div>
-                                            </ng-template>
-                                        </p-autoComplete>
-                                    </div>
-                                    <div class="col-sm-1">
-                                        <div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" (click)="addPageCustomer()"></a></div>
-                                    </div>
-                                </div>
-                                <div class="form-row" *ngIf="ownerother">
-                                    <div class="col-sm-12">
-                                        <input class="form-control" type="text" pInputText>
-                                    </div>
-                                </div>
-                                <div class="form-row" *ngIf="ownervendor" style="width: 140px;margin-right: 4px;">
-                                    <div class="col-sm-11">
-                                        <p-autoComplete class="rpo-acomp"
-                                                        [size]="32"
-                                                        [minLength]="1"
-                                                        [dropdown]="true">
-                                            <ng-template let-Value pTemplate="vendor">
-                                                <div class="ui-helper-clearfix">{{Value}}</div>
-                                            </ng-template>
-                                        </p-autoComplete>
-                                    </div>
-                                    <div class="col-sm-1">
-                                        <div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg"></a></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <select id="" name="" class="form-control obtain-selection disabled2" (change)="onObtainFromChange($event)" [disabled]="rpoEditCF">
-                                <option value="0">Select</option>
-                                <option value="1">Customer</option>
-                                <option value="2">Other </option>
-                                <option value="3">Vendor</option>
-                            </select>
-                        </td>
-                        <td>
-                            <div class="form-group" style="margin-bottom: 0;">
-                                <div class="form-row" *ngIf="obtainfromcustomer" style="width: 140px;margin-right: 4px;">
-                                    <div class="col-sm-11">
-                                        <p-autoComplete class="rpo-acomp"
-                                                        [size]="32"
-                                                        [minLength]="1"
-                                                        [dropdown]="true">
-                                            <ng-template let-Value pTemplate="customer">
-                                                <div class="ui-helper-clearfix">{{Value}}</div>
-                                            </ng-template>
-                                        </p-autoComplete>
-                                    </div>
-                                    <div class="col-sm-1">
-                                        <div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" (click)="addPageCustomer()"></a></div>
-                                    </div>
-                                </div>
-                                <div class="form-row" *ngIf="obtainfromother">
-                                    <div class="col-sm-12">
-                                        <input class="form-control" type="text" pInputText>
-                                    </div>
-                                </div>
-                                <div class="form-row" *ngIf="obtainfromvendor" style="width: 140px;margin-right: 4px;">
-                                    <div class="col-sm-11">
-                                        <p-autoComplete class="rpo-acomp"
-                                                        [size]="32"
-                                                        [minLength]="1"
-                                                        [dropdown]="true">
-                                            <ng-template let-Value pTemplate="vendor">
-                                                <div class="ui-helper-clearfix">{{Value}}</div>
-                                            </ng-template>
-                                        </p-autoComplete>
-                                    </div>
-                                    <div class="col-sm-1">
-                                        <div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg"></a></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <select id="" name="" class="form-control traceable-selection disabled2" (change)="onTraceableToChange($event)" [disabled]="rpoEditCF">
-                                <option value="0">Select</option>
-                                <option value="1">Customer</option>
-                                <option value="2">Other </option>
-                                <option value="3">Vendor</option>
-                            </select>
-                        </td>
-                        <td>
-                            <div class="form-group" style="margin-bottom: 0;">
-                                <div class="form-row" *ngIf="traceabletocustomer" style="width: 140px;margin-right: 4px;">
-                                    <div class="col-sm-11">
-                                        <p-autoComplete class="rpo-acomp"
-                                                        [size]="32"
-                                                        [minLength]="1"
-                                                        [dropdown]="true">
-                                            <ng-template let-Value pTemplate="customer">
-                                                <div class="ui-helper-clearfix">{{Value}}</div>
-                                            </ng-template>
-                                        </p-autoComplete>
-                                    </div>
-                                    <div class="col-sm-1">
-                                        <div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" (click)="addPageCustomer()"></a></div>
-                                    </div>
-                                </div>
-                                <div class="form-row" *ngIf="traceabletoother">
-                                    <div class="col-sm-12">
-                                        <input class="form-control" type="text" pInputText>
-                                    </div>
-                                </div>
-                                <div class="form-row" *ngIf="traceabletovendor" style="width: 140px;margin-right: 4px;">
-                                    <div class="col-sm-11">
-                                        <p-autoComplete class="rpo-acomp"
-                                                        [size]="32"
-                                                        [minLength]="1"
-                                                        [dropdown]="true">
-                                            <ng-template let-Value pTemplate="vendor">
-                                                <div class="ui-helper-clearfix">{{Value}}</div>
-                                            </ng-template>
-                                        </p-autoComplete>
-                                    </div>
-                                    <div class="col-sm-1">
-                                        <div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg"></a></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                        <td><input class="form-control" type="text" value="12345" [disabled]="rpoEditCF"></td>
-                        <td>
-                            <select class="form-control" [disabled]="rpoEditCF">
-                                <option>MFG 1</option>
-                                <option>MFG 2</option>
-                                <option>MFG 3</option>
-                            </select>
-                        </td>
-                        <td><input class="form-control" type="text" value="12345" [disabled]="rpoEditCF"></td>
-                        <td><p-calendar class="pas-clder" [showIcon]="true" [disabled]="rpoEditCF"></p-calendar></td>
-                        <td><input class="form-control" type="text" value="12345" [disabled]="rpoEditCF"></td>
-                        <td><input class="form-control" type="text" value="12345" [disabled]="rpoEditCF"></td>
-                        <td><p-calendar class="pas-clder" [showIcon]="true" [disabled]="rpoEditCF"></p-calendar></td>
-                        <td><input class="form-control" type="text" value="Shabbir Ahmad" [disabled]="rpoEditCF"></td>
-                        <td><p-calendar class="pas-clder" [showIcon]="true" [disabled]="rpoEditCF"></p-calendar></td>
-                        <td><p-calendar class="pas-clder" [showIcon]="true" [disabled]="rpoEditCF"></p-calendar></td>
-                        <td><p-calendar class="pas-clder" [showIcon]="true" [disabled]="rpoEditCF"></p-calendar></td>
-                        <td><p-calendar class="pas-clder" [showIcon]="true" [disabled]="rpoEditCF"></p-calendar></td>
-                        <td>
-                            <select class="form-control" [disabled]="rpoEditCF">
-                                <option value="">123</option>
-                                <option value="">456</option>
-                                <option value="">789</option>
-                            </select>
-                        </td>
-                        <td>GL12345(Description)</td>
-                        <td>
-                            <div class="checkbox-cstm" style="margin-top: 4px">
-                                <label style="width: 50px;">
-                                    <input type="checkbox" class="form-control" [disabled]="rpoEditCF">
-                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                </label>
-                            </div>
-                        </td>
-                        <td>
-                            <label style="width:90px;">Company:</label>
-                            <select class="form-control" [disabled]="rpoEditCF">
-                                <option value="">Adso</option>
-                                <option value="">Aerospace</option>
-                                <option value="">ILS</option>
-                                <option value="">PArts Base</option>
-                                <option value="">PAS</option>
-                                <option value="">Silverxis</option>
-                            </select>
-                        </td>
-                        <td>
-                            <label style="width:90px;">BU:</label>
-                            <select class="form-control" [disabled]="rpoEditCF">
-                                <option value="">Adso</option>
-                                <option value="">Aerospace</option>
-                                <option value="">ILS</option>
-                                <option value="">PArts Base</option>
-                                <option value="">PAS</option>
-                                <option value="">Silverxis</option>
-                            </select>
-                        </td>
-                        <td>
-                            <label style="width:90px;">Division:</label>
-                            <select class="form-control" [disabled]="rpoEditCF">
-                                <option value="">Designing</option>
-                                <option value="">Development</option>
-                                <option value="">Repear</option>
-                            </select>
-                        </td>
-                        <td>
-                            <label style="width:90px;">Dept:</label>
-                            <select class="form-control" [disabled]="rpoEditCF">
-                                <option value="">.net</option>
-                                <option value="">HTML</option>
-                                <option value="">Java</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control" [disabled]="rpoEditCF">
-                                <option value="">Site 1</option>
-                                <option value="">Site 2</option>
-                                <option value="">Site 3</option>
-                                <option value="">Site 4</option>
-                                <option value="">Site 5</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control" [disabled]="rpoEditCF">
-                                <option value="">Warehouse 1</option>
-                                <option value="">Warehouse 2</option>
-                                <option value="">Warehouse 3</option>
-                                <option value="">Warehouse 4</option>
-                                <option value="">Warehouse 5</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control" [disabled]="rpoEditCF">
-                                <option value="">Location 1</option>
-                                <option value="">Location 2</option>
-                                <option value="">Location 3</option>
-                                <option value="">Location 4</option>
-                                <option value="">Location 5</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control" [disabled]="rpoEditCF">
-                                <option value="">Shelf 1</option>
-                                <option value="">Shelf 2</option>
-                                <option value="">Shelf 3</option>
-                                <option value="">Shelf 4</option>
-                                <option value="">Shelf 5</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control" [disabled]="rpoEditCF">
-                                <option value="">Bin 1</option>
-                                <option value="">Bin 2</option>
-                                <option value="">Bin 3</option>
-                                <option value="">Bin 4</option>
-                                <option value="">Bin 5</option>
-                            </select>
-                        </td>
-                    </tr>-->
 
                 </tbody>
             </table>
 
         </div>
 
-        <a class="btn btn-primary-cstm pull-right" (click)="onSubmit()">Submit</a>
+        <a class="btn btn-primary-cstm pull-right" (click)="updateStockLine()">Submit</a>
     </div>
 </div>

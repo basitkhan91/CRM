@@ -220,6 +220,7 @@ export class StockLine {
     manufacturingDate: Date;
     expirationDate: Date;
     manufacturingBatchNumber: string;
+    manufacturingTrace: string;
     partCertificationNumber: string;
     certifiedBy: string;
     certifiedDate: Date;
@@ -275,6 +276,7 @@ export class StockLine {
     engineSerialNumber: string;
     createdDate: Date;
     purchaseOrderPartRecordId: number;
+    timeLifeDetailsNotProvided: boolean;
 
     //View Properties
     isEnabled: boolean;
@@ -294,6 +296,7 @@ export class StockLine {
     isDisabledSNboxes: boolean;
     currentDate: Date;
     glAccountText: string;
+    obtainFromObject: DropDownData;
 }
 
 export class ReceiveParts {

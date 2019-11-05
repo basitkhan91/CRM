@@ -8,12 +8,13 @@ import { BinService } from '../../../../services/bin.service';
 import { SiteService } from '../../../../services/site.service';
 import { PriorityService } from '../../../../services/priority.service';
 import { ReceivingService } from '../../../../services/receiving/receiving.service';
-import { PurchaseOrder, DropDownData, PurchaseOrderPart, StockLine } from '../receivng-po/PurchaseOrder.model';
+import { PurchaseOrder, DropDownData, PurchaseOrderPart, StockLine, ReceiveParts } from '../receivng-po/PurchaseOrder.model';
 import { MessageSeverity, AlertService } from '../../../../services/alert.service';
 import { ManagementStructure } from '../receivng-po/managementstructure.model';
 import { UnitOfMeasureService } from '../../../../services/unitofmeasure.service';
 import { GlAccountService } from '../../../../services/glAccount/glAccount.service';
 import { GlAccount } from '../../../../models/GlAccount.model';
+import { ShippingService } from '../../../../services/shipping/shipping-service';
 
 @Component({
     selector: 'app-edit-po',
@@ -59,7 +60,7 @@ export class EditPoComponent implements OnInit {
     ManufacturerList: DropDownData[] = [];
     SiteList: any[];
     GLAccountList: GlAccount[];
-
+    currentDate: Date;
     /** edit-po ctor */
     constructor(public receivingService: ReceivingService,
         public priority: PriorityService,
@@ -73,16 +74,17 @@ export class EditPoComponent implements OnInit {
         private alertService: AlertService,
         private uomService: UnitOfMeasureService,
         private glAccountService: GlAccountService,
+        private shippingService: ShippingService,
     ) {
 
         this.localPoData = this.vendorService.selectedPoCollection;
         this.editPoData = this.localData[0];
-
+        this.currentDate = new Date();
     }
 
     ngOnInit(): void {
 
-        this.receivingService.getPurchaseOrderDataForEditById(this.receivingService.purchaseOrderId).subscribe(
+        this.receivingService.getPurchaseOrderDataForEditById(126).subscribe(
             results => {
                 this.purchaseOrderData = results[0];
                 this.purchaseOrderData.openDate = new Date(results[0].openDate).toLocaleDateString();
@@ -168,7 +170,7 @@ export class EditPoComponent implements OnInit {
                                     SL.isEnabled = false;
                                     let stockLinemanagementHierarchy: ManagementStructure[][] = [];
                                     let stockLineSelectedManagementStructure: ManagementStructure[] = [];
-                                    this.getManagementStructureHierarchy(SL.managementStructureId, stockLinemanagementHierarchy, stockLineSelectedManagementStructure);
+                                    this.getManagementStructureHierarchy(SL.managementStructureEntityId, stockLinemanagementHierarchy, stockLineSelectedManagementStructure);
                                     stockLinemanagementHierarchy.reverse();
                                     stockLineSelectedManagementStructure.reverse();
 
@@ -237,7 +239,7 @@ export class EditPoComponent implements OnInit {
                         this.purchaseOrderData.dateRequested = new Date(); //new Date(this.purchaseOrderData.dateRequested);
                         this.purchaseOrderData.dateApprovied = new Date(this.purchaseOrderData.dateApprovied);
                         this.purchaseOrderData.needByDate = new Date(); //new Date(this.purchaseOrderData.needByDate);
-
+                        this.getManufacturers();
                         this.getStatus();
                         this.getUOMList();
                         this.getConditionList();
@@ -437,7 +439,7 @@ export class EditPoComponent implements OnInit {
     }
 
     private getStockLineBusinessUnitList(SL: StockLine): void {
-        SL.managementStructureId = SL.companyId;
+        SL.managementStructureEntityId = SL.companyId;
         var businessUnits = this.managementStructure.filter(function (management) {
             return management.parentId == SL.companyId;
         });
@@ -459,10 +461,10 @@ export class EditPoComponent implements OnInit {
 
     private getStockLineDivision(SL: StockLine): void {
         if (SL.businessUnitId != undefined && SL.businessUnitId > 0) {
-            SL.managementStructureId = SL.businessUnitId;
+            SL.managementStructureEntityId = SL.businessUnitId;
         }
         else {
-            SL.managementStructureId = SL.companyId;
+            SL.managementStructureEntityId = SL.companyId;
         }
 
         var divisions = this.managementStructure.filter(function (management) {
@@ -485,10 +487,10 @@ export class EditPoComponent implements OnInit {
     private getStockLineDepartment(SL: StockLine): void {
 
         if (SL.divisionId != undefined && SL.divisionId > 0) {
-            SL.managementStructureId = SL.divisionId;
+            SL.managementStructureEntityId = SL.divisionId;
         }
         else {
-            SL.managementStructureId = SL.businessUnitId;
+            SL.managementStructureEntityId = SL.businessUnitId;
         }
 
         var departments = this.managementStructure.filter(function (management) {
@@ -507,10 +509,10 @@ export class EditPoComponent implements OnInit {
 
     private setStockLineDepartmentManagementStructureId(SL: StockLine) {
         if (SL.departmentId != undefined && SL.departmentId > 0) {
-            SL.managementStructureId = SL.departmentId;
+            SL.managementStructureEntityId = SL.departmentId;
         }
         else {
-            SL.managementStructureId = SL.divisionId;
+            SL.managementStructureEntityId = SL.divisionId;
         }
     }
 
@@ -648,7 +650,7 @@ export class EditPoComponent implements OnInit {
 
         this.binservice.getShelfByLocationId(stockLine.locationId).subscribe(
             results => {
-                
+
                 for (let shelf of results) {
                     var dropdown = new DropDownData();
                     dropdown.Key = shelf.shelfId.toLocaleString();
@@ -864,7 +866,7 @@ export class EditPoComponent implements OnInit {
         });
     }
 
-    calculateExtendedCost(part: any, stockLine: any) : void {
+    calculateExtendedCost(part: any, stockLine: any): void {
         if (stockLine.purchaseOrderUnitCost == undefined || stockLine.purchaseOrderUnitCost == '') {
             return;
         }
@@ -876,7 +878,7 @@ export class EditPoComponent implements OnInit {
         }
     }
 
-    calculatePartExtendedCost(part: any) : void {
+    calculatePartExtendedCost(part: any): void {
         if (part.unitCost == undefined || part.unitCost == '') {
             return;
         }
@@ -965,20 +967,57 @@ export class EditPoComponent implements OnInit {
         if (part.stockLine) {
             for (var sl of part.stockLine) {
                 sl.isEnabled = part.isEnabled;
+                sl.quantityRejected = 0;
             }
         }
     }
 
     editStockLine(stockLine: StockLine) {
         stockLine.isEnabled = !stockLine.isEnabled;
+        stockLine.quantityRejected = 0;
     }
 
     updateStockLines() {
 
     }
 
-    onSubmit() {
-        return this.route.navigate(['/receivingmodule/receivingpages/app-view-po']);
+    updateStockLine() {
+        let receiveParts: ReceiveParts[] = [];
+        for (var part of this.purchaseOrderData.purchaseOderPart) {
+            if (part.stockLine) {
+                var stockLineToUpdate = part.stockLine.filter(x => x.isEnabled);
+
+                if (stockLineToUpdate.length > 0) {
+                    let receivePart: ReceiveParts = new ReceiveParts();
+                    receivePart.purchaseOrderPartRecordId = part.purchaseOrderPartRecordId;
+                    receivePart.stockLines = stockLineToUpdate;
+                    receiveParts.push(receivePart);
+                }
+            }
+        }
+        if (receiveParts.length > 0) {
+            this.shippingService.updateStockLine(receiveParts).subscribe(data => {
+                this.alertService.showMessage(this.pageTitle, 'Stock Line updated successfully.', MessageSeverity.success);
+                return this.route.navigate(['/receivingmodule/receivingpages/app-purchase-order']);
+            },
+                error => {
+                    var message = '';
+                    if (error.error.constructor == Array) {
+                        message = error.error[0].errorMessage;
+                    }
+                    else {
+                        message = error.error.Message;
+                    }
+                    this.alertService.showMessage(this.pageTitle, message, MessageSeverity.error);
+                }
+            );
+        }
+        else {
+            this.alertService.showMessage(this.pageTitle, 'Please edit Stock Line to update.', MessageSeverity.info);
+        }
+
+        //this.alertService.showMessage(this.pageTitle, 'Stock Lines update successfully.', MessageSeverity.success)
+        //return this.route.navigate(['/receivingmodule/receivingpages/app-view-po']);
     }
 
     getManufacturers() {

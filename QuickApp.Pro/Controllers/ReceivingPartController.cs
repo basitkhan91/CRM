@@ -258,7 +258,7 @@ namespace QuickApp.Pro.Controllers
                         purchaseOrderId = (long)receivePart.StockLines.FirstOrDefault().PurchaseOrderId;
 
                     }
-                   
+
                     foreach (var receivePart in receiveParts)
                     {
                         foreach (var stockLine in receivePart.StockLines)
@@ -284,6 +284,59 @@ namespace QuickApp.Pro.Controllers
             }
         }
 
+        [HttpPost("UpdateStockLines")]
+        public IActionResult UpdateStockLines([FromBody] List<ReceiveParts> receiveParts)
+        {
+            try
+            {
+                if (receiveParts != null)
+                {
+                    foreach (var receivePart in receiveParts)
+                    {
+                        var stockLineIds = receivePart.StockLines.Select(s => s.StockLineId).ToArray();
+                        var stockLines = unitOfWork.stockLineList.getStockLinesByIds(stockLineIds);
+
+                        foreach (var dbStockLine in stockLines)
+                        {
+                            var stockLine = receivePart.StockLines.Where(x => x.StockLineId == dbStockLine.StockLineId).FirstOrDefault();
+                            dbStockLine.ManagementStructureEntityId = stockLine.ManagementStructureEntityId;
+                            dbStockLine.ShelfId = stockLine.ShelfId > 0 ? stockLine.ShelfId : null;
+                            dbStockLine.WarehouseId = stockLine.WarehouseId > 0 ? stockLine.WarehouseId : null;
+                            dbStockLine.BinId = stockLine.BinId > 0 ? stockLine.BinId : null;
+                            dbStockLine.PurchaseOrderUnitCost = stockLine.PurchaseOrderUnitCost;
+                            dbStockLine.PurchaseOrderExtendedCost= stockLine.PurchaseOrderExtendedCost;
+                            dbStockLine.LocationId = stockLine.LocationId > 0 ? stockLine.LocationId : null;
+                            dbStockLine.ConditionId = stockLine.ConditionId > 0 ? stockLine.ConditionId : null;
+                            dbStockLine.ManufacturingTrace = stockLine.ManufacturingTrace;
+                            dbStockLine.ManufacturerLotNumber = stockLine.ManufacturerLotNumber;
+                            dbStockLine.ManufacturingDate = stockLine.ManufacturingDate;
+                            dbStockLine.ManufacturingBatchNumber = stockLine.ManufacturingBatchNumber;
+                            dbStockLine.PartCertificationNumber = stockLine.PartCertificationNumber;
+                            dbStockLine.CertifiedDate = stockLine.CertifiedDate;
+                            dbStockLine.CertifiedBy = stockLine.CertifiedBy;
+                            dbStockLine.TagDate = stockLine.TagDate;
+                            dbStockLine.ExpirationDate = stockLine.ExpirationDate;
+                            dbStockLine.CertifiedDueDate = stockLine.CertifiedDueDate;
+                            dbStockLine.UpdatedBy = UserName;
+                            dbStockLine.UpdatedDate = DateTime.Now;
+                            receivePart.StockLines.Remove(stockLine);
+                            unitOfWork.Repository<StockLine>().Update(dbStockLine);
+                        }
+                    }
+
+                    unitOfWork.SaveChanges();
+                }
+                else
+                {
+                    return BadRequest("Unable to find any data to save. Please contact administrator");
+                }
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Something went wrong while adding part, Please contact administrator");
+            }
+        }
 
 
         #endregion Public Methods
