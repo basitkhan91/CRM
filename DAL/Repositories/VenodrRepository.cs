@@ -481,21 +481,40 @@ namespace DAL.Repositories
 				address.CreatedBy = billingAddress.CreatedBy;
 				address.UpdatedBy = billingAddress.UpdatedBy;
 
-				_appContext.Address.Add(address);
-				_appContext.SaveChanges();
+                if (billingAddress.AddressId > 0)
+                {
+                    address.CreatedDate = billingAddress.CreatedDate;
+                    address.AddressId = billingAddress.AddressId;
+                    _appContext.Address.Update(address);
+                }
+                else
+                {
+                    address.CreatedDate = DateTime.Now;
+                    _appContext.Address.Add(address);
+                }
+
+                _appContext.SaveChanges();
 
 
-				billingAddress.AddressId =Convert.ToInt64(address.AddressId);
-				billingAddress.CreatedDate = billingAddress.UpdatedDate = DateTime.Now;
+                billingAddress.AddressId = Convert.ToInt64(address.AddressId);
+
+                billingAddress.UpdatedDate = DateTime.Now;
                 billingAddress.IsActive = true;
                 billingAddress.IsDeleted = false;
-				billingAddress.IsPrimary = false;
+                billingAddress.IsPrimary = false;
 
+                if (billingAddress.VendorBillingAddressId > 0)
+                {
+                    _appContext.VendorBillingAddress.Update(billingAddress);
+                }
+                else
+                {
+                    billingAddress.CreatedDate = DateTime.Now;
+                    _appContext.VendorBillingAddress.Add(billingAddress);
+                }
 
-				
-
-				_appContext.VendorBillingAddress.Add(billingAddress);
                 _appContext.SaveChanges();
+
                 return billingAddress.VendorBillingAddressId;
             }
             catch (Exception)

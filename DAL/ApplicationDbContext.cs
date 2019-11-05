@@ -360,6 +360,9 @@ namespace DAL
         public DbSet<WorkOrderLabor> WorkOrderLabor { get; set; }
         public DbSet<WorkOrderStage> WorkOrderStage { get; set; }
         public DbSet<WorkOrderPartNumber> WorkOrderPartNumber { get; set; }
+        public DbSet<WorkOrderExpertise> WorkOrderExpertise { get; set; }
+        public DbSet<WorkOrderDirections> WorkOrderDirections { get; set; }
+        public DbSet<WorkOrderPublications> WorkOrderPublications { get; set; }
 
         public DbSet<VendorCapability> VendorCapability { get; set; }
         public DbSet<AircraftModelAudit> AircraftModelAudit { get; set; }

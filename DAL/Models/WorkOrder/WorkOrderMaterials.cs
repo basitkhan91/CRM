@@ -13,9 +13,8 @@ namespace DAL.Models
         [ForeignKey("WorkFlowWorkOrderId")]
         public long WorkFlowWorkOrderId { get; set; }
         public long? ItemMasterId { get; set; }
-
-
-        public int? MasterCompanyId { get; set; }
+        public long TaskId { get; set; }
+        public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime CreatedDate { get; set; }

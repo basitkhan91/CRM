@@ -4,23 +4,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Models
 {
-    public class WorkOrderCharges
+    public class WorkOrderExpertise
     {
         [Key]
-        public long WorkOrderChargesId { get; set; }
+        public long WorkOrderExpertiseId { get; set; }
         [ForeignKey("WorkOrderId")]
         public long WorkOrderId { get; set; }
         [ForeignKey("WorkFlowWorkOrderId")]
         public long WorkFlowWorkOrderId { get; set; }
-        public long ItemMasterId { get; set; }
-        public long? VendorId { get; set; }
-        public int? Quantity { get; set; }
-        public int RoNumberId { get; set; }
-        public string InvoiceNo { get; set; }
-        public decimal Amount { get; set; }
-        public int MarkupPercentageId { get; set; }
-        public decimal CostPlusAmount {get;set;}
-        public decimal FixedAmount { get; set; }
+        public int ExpertiseTypeId { get; set; }
+        public decimal? EstimatedHours { get; set; }
+        public decimal? StandardRate { get; set; }
+        public decimal? EstimatedCost { get; set; }
         public long TaskId { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
@@ -30,9 +25,5 @@ namespace DAL.Models
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
 
-        [NotMapped]
-        public string VendorName { get; set; }
-        [NotMapped]
-        public string PartNumber { get; set; }
     }
 }
