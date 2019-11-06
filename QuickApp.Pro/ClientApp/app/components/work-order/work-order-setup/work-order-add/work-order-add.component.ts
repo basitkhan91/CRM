@@ -110,6 +110,8 @@ export class WorkOrderAddComponent implements OnInit {
   cmmList: any;
   priorityList: Object;
   savedWorkOrderData: any;
+  workFlowWorkOrderData: any;
+  workOrderAssetList: any;
 
 
   constructor(
@@ -327,7 +329,7 @@ export class WorkOrderAddComponent implements OnInit {
 
 
   saveWorkOrder(): void {
-    // this.showTableGrid = true; // Show Grid Boolean
+    this.showTableGrid = true; // Show Grid Boolean
     const generalInfo = this.workOrderGeneralInformation
     const data = {
       ...generalInfo,
@@ -335,7 +337,7 @@ export class WorkOrderAddComponent implements OnInit {
       employeeId: getValueFromObjectByKey('value', generalInfo.employeeId),
       salesPersonId: getValueFromObjectByKey('value', generalInfo.salesPersonId),
       masterCompanyId: 1,
-      "customerContactId": 68,
+      customerContactId: 68,
       createdBy: this.userName,
       updatedBy: this.userName,
       partNumbers: generalInfo.partNumbers.map(x => {
@@ -364,6 +366,34 @@ export class WorkOrderAddComponent implements OnInit {
         );
       }
     );
+  }
+
+  savedWorkFlowData(responseData){
+    this.workFlowWorkOrderData = responseData;
+  }
+
+  getAllEquipment(){
+    if(this.workFlowWorkOrderData){
+      const {workFlowId } = this.workFlowWorkOrderData;
+      this.workOrderService.getWorkOrderAssetList(workFlowId).subscribe(
+        result => {
+            this.workOrderAssetList = result;
+        }
+    );
+    }
+
+  }
+
+
+
+  saveworkOrderLabor(data){
+    this.workOrderService.createWorkOrderLabor(data).subscribe(res => {
+      this.alertService.showMessage(
+        this.moduleName,
+        'Saved Work Order Labor  Succesfully',
+        MessageSeverity.success
+      );
+    })
   }
 
 

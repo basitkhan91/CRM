@@ -112,5 +112,8 @@ export class WorkOrderService {
     getWorkOrderAssetList(workflowId) {
         return this.workOrderEndpointService.getWorkOrderAssetList(workflowId);
     }
+    createWorkOrderLabor(data){
+        return this.workOrderEndpointService.createWorkOrderLabor(data);
+    }
 
 }

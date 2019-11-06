@@ -183,4 +183,8 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderassetlist?wfwoId=${workflofId}`, this.getRequestHeaders())
     }
 
+    createWorkOrderLabor(data){
+        return this.http.post(`${this.configurations.baseUrl}/api/workOrder/createworkorderlabor`,JSON.stringify(data) , this.getRequestHeaders())
+    }
+
 }

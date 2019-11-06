@@ -1,5 +1,5 @@
 export class WorkOrderLabor {
-  workOrderId: number;
+  workFlowWorkOrderId: number;
   dataEnteredBy: number;
   expertise: string;
   employeeId: null;
@@ -22,7 +22,7 @@ export class WorkOrderLabor {
   ];
 
   constructor() {
-    this.workOrderId = null;
+    this.workFlowWorkOrderId = null;
     this.dataEnteredBy = null;
     this.expertise = '';
     this.employeeId = null;
@@ -51,6 +51,8 @@ export class AllTasks {
   employeeId: number;
   billableorNonBillable: string;
   startDateandTime: Date;
+  startDateandTimeIsEdit: boolean;
+  endDateandTimeIsEdit: boolean;
   endDateandTime: Date;
   hoursandMinutes: string;
   adjustments: string;
@@ -62,7 +64,9 @@ export class AllTasks {
     this.employeeId = null;
     this.billableorNonBillable = 'billable';
     this.startDateandTime = null;
+    this.startDateandTimeIsEdit = false;
     this.endDateandTime = null;
+    this.endDateandTimeIsEdit = false;
     this.hoursandMinutes = '';
     this.adjustments = '';
     this.adjustmentedHours = '';

@@ -7,7 +7,7 @@
             <div class="form-group">
               <label for="woID">WO ID </label>
               <p-autoComplete
-                [(ngModel)]="laborForm.workOrderId"
+                [(ngModel)]="laborForm.workFlowWorkOrderId"
                 field="label" 
                 name="workOrderWorkFlow"
                 errorMessage="Records not found" 
@@ -23,6 +23,7 @@
             <div class="form-group">
               <label for="dataentered">Data Entered By </label>
               <p-autoComplete
+              class="p-autoComplete-ctsm"
               field="label" 
               name="dataEnteredBy"
               [dropdown]="true"
@@ -180,24 +181,27 @@
           </td>
           <td *ngIf="i >= 1">&nbsp;</td>
           <td>
-            <select class="w100" [(ngModel)]="rec.expertise" name="Technician">
-              <option value="">Select Expertise</option>
-              <option value="Technician">Technician</option>
-              <option value="Quality">Quality</option>
-              <option value="Mechanic">Mechanic</option>
-              <option value="Inspector">Inspector</option>
-              <option value="Receiver">Receiver</option>
-              <option value="Auditor">Auditor</option>
-              <option value="Engineer">Engineer</option>
-            </select>
+              <p-dropdown
+              placeholder="Select Expertise Type"
+                [options]="expertiseTypeList"
+                class="p-dropdown-custom-2"
+                [(ngModel)]="rec.expertise"
+              ></p-dropdown>
           </td>
           <td>
-            <p-dropdown
-              [options]="EmployeeList"
-              class="p-dropdown-custom-md"
+              <p-autoComplete
+              class="p-autocomplete-ctsm-1 "
+              field="label" 
+              name="recEmp"
+              [dropdown]="true"
+              errorMessage="Records not found" 
+              [forceSelection]="true"
+              [suggestions]="employeeList" 
+              (completeMethod)="filterEmployee($event)"
+              [size]="30" [minLength]="1"
               [(ngModel)]="rec.employeeId"
             >
-            </p-dropdown>
+            </p-autoComplete>
             <i
               *ngIf="!laborForm.isTaskCompletedByOne"
               class="float-right float-right fa fa-plus-circle fa-lg margintop"
@@ -225,15 +229,18 @@
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours'">
             <p-calendar
               [(ngModel)]="rec.startDateandTime"
+              [disabled]="!rec.startDateandTimeIsEdit"
               [showIcon]="true"
               showTime="true"
               hourFormat="24"
               class="w150"
             ></p-calendar>
+            <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(rec,'startDateandTimeIsEdit')"></i>
           </td>
             <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
-            <p-calendar [(ngModel)]="rec.endDateandTime" [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+            <p-calendar [(ngModel)]="rec.endDateandTime" [disabled]="!rec.endDateandTimeIsEdit" [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+          <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(rec,'endDateandTimeIsEdit')"></i>            
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
             {{ rec.hoursandMinutes }}
@@ -257,20 +264,28 @@
             <td *ngIf="i >= 1">&nbsp;</td>
     
           <td>
-            <select class="w100" [(ngModel)]="inspect.expertise" name="Technician">
-              <option value="">Select Expertise</option>
-              <option value="Technician">Technician</option>
-              <option value="Quality">Quality</option>
-              <option value="Mechanic">Mechanic</option>
-              <option value="Inspector">Inspector</option>
-              <option value="Receiver">Receiver</option>
-              <option value="Auditor">Auditor</option>
-              <option value="Engineer">Engineer</option>
-            </select>
+              <p-dropdown
+              placeholder="Select Expertise Type"
+                [options]="expertiseTypeList"
+                class="p-dropdown-custom-2"
+                [(ngModel)]="inspect.expertise"
+              ></p-dropdown>
           </td>
           <td>
-            <p-dropdown [options]="EmployeeList" class="p-dropdown-custom-md" [(ngModel)]="inspect.employeeId">
-            </p-dropdown>
+              <p-autoComplete
+              class="p-autocomplete-ctsm-1 "
+              field="label" 
+              name="inspectEmp"
+              [dropdown]="true"
+              errorMessage="Records not found" 
+              [forceSelection]="true"
+              [suggestions]="employeeList" 
+              (completeMethod)="filterEmployee($event)"
+              [size]="30" [minLength]="1"
+              [(ngModel)]="inspect.employeeId"
+            >
+            </p-autoComplete>
+ 
             <i *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg margintop" ></i>
           </td>
           <td>
@@ -287,11 +302,20 @@
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
-            <p-calendar [(ngModel)]="inspect.startDateandTime" [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+            <p-calendar [(ngModel)]="inspect.startDateandTime"
+            [disabled]="!inspect.startDateandTimeIsEdit"
+             [showIcon]="true" showTime="true" hourFormat="24" class="w150"
+            ></p-calendar>
+            <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(inspect,'startDateandTimeIsEdit')"></i>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
-            <p-calendar [(ngModel)]="inspect.endDateandTime" [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+            <p-calendar 
+            [disabled]="!inspect.endDateandTimeIsEdit" 
+            [(ngModel)]="inspect.endDateandTime" [showIcon]="true" showTime="true" 
+            hourFormat="24" class="w150"
+            ></p-calendar>
+            <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(inspect,'endDateandTimeIsEdit')"></i> 
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
             {{ inspect.hoursandMinutes }}
@@ -314,20 +338,29 @@
             <td *ngIf="i < 1">Evaluate <i  *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg" (click)="addNewTask('evaluate')"></i></td>
             <td *ngIf="i >= 1">&nbsp;</td>
           <td>
-            <select class="w100" [(ngModel)]="evaluate.expertise" name="Technician">
-              <option value="">Select Expertise</option>
-              <option value="Technician">Technician</option>
-              <option value="Quality">Quality</option>
-              <option value="Mechanic">Mechanic</option>
-              <option value="Inspector">Inspector</option>
-              <option value="Receiver">Receiver</option>
-              <option value="Auditor">Auditor</option>
-              <option value="Engineer">Engineer</option>
-            </select>
+
+              <p-dropdown
+              placeholder="Select Expertise Type"
+                [options]="expertiseTypeList"
+                class="p-dropdown-custom-2"
+                [(ngModel)]="evaluate.expertise"
+              ></p-dropdown>
+
           </td>
           <td>
-            <p-dropdown [options]="EmployeeList" class="p-dropdown-custom-md" [(ngModel)]="evaluate.employeeId">
-            </p-dropdown>
+            <p-autoComplete
+            class="p-autocomplete-ctsm-1 "
+            field="label" 
+            name="evaluateEmp"
+            [dropdown]="true"
+            errorMessage="Records not found" 
+            [forceSelection]="true"
+            [suggestions]="employeeList" 
+            (completeMethod)="filterEmployee($event)"
+            [size]="30" [minLength]="1"
+            [(ngModel)]="evaluate.employeeId"
+          >
+          </p-autoComplete>
             <i *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg margintop" ></i>
           </td>
           <td>
@@ -345,11 +378,16 @@
 
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
-            <p-calendar [(ngModel)]="evaluate.startDateandTime" [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+            <p-calendar [(ngModel)]="evaluate.startDateandTime"  [disabled]="!evaluate.startDateandTimeIsEdit" [showIcon]="true"
+             showTime="true" hourFormat="24" class="w150"></p-calendar>
+             <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(evaluate,'startDateandTimeIsEdit')"></i>  
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
-            <p-calendar [(ngModel)]="evaluate.endDateandTime" [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+            <p-calendar [(ngModel)]="evaluate.endDateandTime"
+              [disabled]="!evaluate.endDateandTimeIsEdit" 
+                [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+            <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(evaluate,'endDateandTimeIsEdit')"></i>  
           </td>
 
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
@@ -373,20 +411,27 @@
             <td *ngIf="i < 1">TearDown <i  *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg" (click)="addNewTask('tearDown')"></i></td>
             <td *ngIf="i >= 1">&nbsp;</td>
           <td>
-            <select class="w100" [(ngModel)]="teardown.expertise" name="Technician">
-              <option value="">Select Expertise</option>
-              <option value="Technician">Technician</option>
-              <option value="Quality">Quality</option>
-              <option value="Mechanic">Mechanic</option>
-              <option value="Inspector">Inspector</option>
-              <option value="Receiver">Receiver</option>
-              <option value="Auditor">Auditor</option>
-              <option value="Engineer">Engineer</option>
-            </select>
+              <p-dropdown
+              placeholder="Select Expertise Type"
+                [options]="expertiseTypeList"
+                class="p-dropdown-custom-2"
+                [(ngModel)]="teardown.expertise"
+              ></p-dropdown>
           </td>
           <td>
-            <p-dropdown [options]="EmployeeList" class="p-dropdown-custom-md" [(ngModel)]="teardown.employeeId">
-            </p-dropdown>
+              <p-autoComplete
+              class="p-autocomplete-ctsm-1 "
+              field="label" 
+              name="teardownEmp"
+              [dropdown]="true"
+              errorMessage="Records not found" 
+              [forceSelection]="true"
+              [suggestions]="employeeList" 
+              (completeMethod)="filterEmployee($event)"
+              [size]="30" [minLength]="1"
+              [(ngModel)]="teardown.employeeId"
+            >
+            </p-autoComplete>
             <i *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg margintop" ></i>
           </td>
           <td>
@@ -403,11 +448,20 @@
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
-            <p-calendar [(ngModel)]="teardown.startDateandTime" [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+            <p-calendar [(ngModel)]="teardown.startDateandTime" 
+            [showIcon]="true" showTime="true"
+            [disabled]="!teardown.startDateandTimeIsEdit"
+            hourFormat="24" class="w150"></p-calendar>
+           
+            <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(teardown,'startDateandTimeIsEdit')"></i>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
-            <p-calendar [(ngModel)]="teardown.endDateandTime" [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+            <p-calendar [(ngModel)]="teardown.endDateandTime" 
+            [showIcon]="true" showTime="true" hourFormat="24" 
+            [disabled]="!teardown.endDateandTimeIsEdit" 
+            class="w150"></p-calendar>
+            <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(teardown,'endDateandTimeIsEdit')"></i> 
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
             {{ teardown.hoursandMinutes }}
@@ -431,20 +485,29 @@
             <td *ngIf="i >= 1">&nbsp;</td>
       
           <td>
-            <select class="w100" [(ngModel)]="disassemble.expertise" name="Technician">
-              <option value="">Select Expertise</option>
-              <option value="Technician">Technician</option>
-              <option value="Quality">Quality</option>
-              <option value="Mechanic">Mechanic</option>
-              <option value="Inspector">Inspector</option>
-              <option value="Receiver">Receiver</option>
-              <option value="Auditor">Auditor</option>
-              <option value="Engineer">Engineer</option>
-            </select>
+              <p-dropdown
+              placeholder="Select Expertise Type"
+                [options]="expertiseTypeList"
+                class="p-dropdown-custom-2"
+                [(ngModel)]="disassemble.expertise"
+              ></p-dropdown>
+
           </td>
           <td>
-            <p-dropdown [options]="EmployeeList" class="p-dropdown-custom-md" [(ngModel)]="disassemble.employeeId">
-            </p-dropdown>
+
+              <p-autoComplete
+              class="p-autocomplete-ctsm-1 "
+              field="label" 
+              name="disassembleEmp"
+              [dropdown]="true"
+              errorMessage="Records not found" 
+              [forceSelection]="true"
+              [suggestions]="employeeList" 
+              (completeMethod)="filterEmployee($event)"
+              [size]="30" [minLength]="1"
+              [(ngModel)]="disassemble.employeeId"
+            >
+            </p-autoComplete>
             <i *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg margintop" ></i>
           </td>
           <td>
@@ -461,11 +524,19 @@
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
-            <p-calendar [(ngModel)]="disassemble.startDateandTime" [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+            <p-calendar [(ngModel)]="disassemble.startDateandTime" 
+            [disabled]="!disassemble.startDateandTimeIsEdit"
+            [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+           
+            <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(disassemble,'startDateandTimeIsEdit')"></i>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
-            <p-calendar [(ngModel)]="disassemble.endDateandTime" [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+            <p-calendar [(ngModel)]="disassemble.endDateandTime" 
+            [disabled]="!disassemble.endDateandTimeIsEdit" 
+            [showIcon]="true" showTime="true" hourFormat="24" 
+            class="w150"></p-calendar>
+            <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(disassemble,'endDateandTimeIsEdit')"></i>  
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
             {{ disassemble.hoursandMinutes }}
@@ -488,20 +559,27 @@
             <td *ngIf="i < 1">Assemble <i  *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg" (click)="addNewTask('assemble')"></i></td>
             <td *ngIf="i >= 1">&nbsp;</td>
           <td>
-            <select class="w100" [(ngModel)]="assemble.expertise" name="Technician">
-              <option value="">Select Expertise</option>
-              <option value="Technician">Technician</option>
-              <option value="Quality">Quality</option>
-              <option value="Mechanic">Mechanic</option>
-              <option value="Inspector">Inspector</option>
-              <option value="Receiver">Receiver</option>
-              <option value="Auditor">Auditor</option>
-              <option value="Engineer">Engineer</option>
-            </select>
+              <p-dropdown
+              placeholder="Select Expertise Type"
+                [options]="expertiseTypeList"
+                class="p-dropdown-custom-2"
+                [(ngModel)]="assemble.expertise"
+              ></p-dropdown>
           </td>
           <td>
-            <p-dropdown [options]="EmployeeList" class="p-dropdown-custom-md" [(ngModel)]="assemble.employeeId">
-            </p-dropdown>
+              <p-autoComplete
+              class="p-autocomplete-ctsm-1 "
+              field="label" 
+              name="assembleEmp"
+              [dropdown]="true"
+              errorMessage="Records not found" 
+              [forceSelection]="true"
+              [suggestions]="employeeList" 
+              (completeMethod)="filterEmployee($event)"
+              [size]="30" [minLength]="1"
+              [(ngModel)]="assemble.employeeId"
+            >
+            </p-autoComplete>
             <i *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg margintop" ></i>
           </td>
           <td>
@@ -517,11 +595,20 @@
             </button>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
-            <p-calendar [(ngModel)]="assemble.startDateandTime" [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+            <p-calendar [(ngModel)]="assemble.startDateandTime" 
+            [disabled]="!assemble.startDateandTimeIsEdit"
+            [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+
+            <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(assemble,'startDateandTimeIsEdit')"></i>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
-            <p-calendar [(ngModel)]="assemble.endDateandTime" [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+            <p-calendar [(ngModel)]="assemble.endDateandTime" 
+            [disabled]="!assemble.endDateandTimeIsEdit" 
+            [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+         
+            <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(assemble,'endDateandTimeIsEdit')"></i>  
+
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
             {{ assemble.hoursandMinutes }}
@@ -546,20 +633,27 @@
                 <td *ngIf="i < 1">Testing <i  *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg" (click)="addNewTask('testing')"></i></td>
                 <td *ngIf="i >= 1">&nbsp;</td>
           <td>
-            <select class="w100" [(ngModel)]="testing.expertise" name="Technician">
-              <option value="">Select Expertise</option>
-              <option value="Technician">Technician</option>
-              <option value="Quality">Quality</option>
-              <option value="Mechanic">Mechanic</option>
-              <option value="Inspector">Inspector</option>
-              <option value="Receiver">Receiver</option>
-              <option value="Auditor">Auditor</option>
-              <option value="Engineer">Engineer</option>
-            </select>
+              <p-dropdown
+              placeholder="Select Expertise Type"
+                [options]="expertiseTypeList"
+                class="p-dropdown-custom-2"
+                [(ngModel)]="testing.expertise"
+              ></p-dropdown>
           </td>
           <td>
-            <p-dropdown [options]="EmployeeList" class="p-dropdown-custom-md" [(ngModel)]="testing.employeeId">
-            </p-dropdown>
+              <p-autoComplete
+              class="p-autocomplete-ctsm-1 "
+              field="label" 
+              name="testingEmp"
+              [dropdown]="true"
+              errorMessage="Records not found" 
+              [forceSelection]="true"
+              [suggestions]="employeeList" 
+              (completeMethod)="filterEmployee($event)"
+              [size]="30" [minLength]="1"
+              [(ngModel)]="testing.employeeId"
+            >
+            </p-autoComplete>
             <i *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg margintop" ></i>
           </td>
           <td>
@@ -577,11 +671,17 @@
 
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
-            <p-calendar [(ngModel)]="testing.startDateandTime" [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+            <p-calendar [(ngModel)]="testing.startDateandTime" 
+            [disabled]="!testing.startDateandTimeIsEdit"
+            [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+            <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(testing,'startDateandTimeIsEdit')"></i>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
-          
-            <p-calendar [(ngModel)]="testing.endDateandTime" [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+            <p-calendar [(ngModel)]="testing.endDateandTime" 
+            [disabled]="!testing.endDateandTimeIsEdit" 
+            [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+         
+            <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(testing,'endDateandTimeIsEdit')"></i>  
           </td>
 
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
@@ -605,20 +705,27 @@
             <td *ngIf="i < 1">QualityControl <i  *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg" (click)="addNewTask('qualityControl')"></i></td>
             <td *ngIf="i >= 1">&nbsp;</td>
           <td>
-            <select class="w100" [(ngModel)]="qc.expertise" name="Technician">
-              <option value="">Select Expertise</option>
-              <option value="Technician">Technician</option>
-              <option value="Quality">Quality</option>
-              <option value="Mechanic">Mechanic</option>
-              <option value="Inspector">Inspector</option>
-              <option value="Receiver">Receiver</option>
-              <option value="Auditor">Auditor</option>
-              <option value="Engineer">Engineer</option>
-            </select>
+              <p-dropdown
+              placeholder="Select Expertise Type"
+                [options]="expertiseTypeList"
+                class="p-dropdown-custom-2"
+                [(ngModel)]="qc.expertise"
+              ></p-dropdown>
           </td>
           <td>
-            <p-dropdown [options]="EmployeeList" class="p-dropdown-custom-md" [(ngModel)]="qc.employeeId">
-            </p-dropdown>
+              <p-autoComplete
+              class="p-autocomplete-ctsm-1 "
+              field="label" 
+              name="qcEmp"
+              [dropdown]="true"
+              errorMessage="Records not found" 
+              [forceSelection]="true"
+              [suggestions]="employeeList" 
+              (completeMethod)="filterEmployee($event)"
+              [size]="30" [minLength]="1"
+              [(ngModel)]="qc.employeeId"
+            >
+            </p-autoComplete>
             <i *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg margintop" ></i>
           </td>
           <td>
@@ -635,11 +742,19 @@
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
-            <p-calendar [(ngModel)]="qc.startDateandTime" [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+            <p-calendar [(ngModel)]="qc.startDateandTime" 
+            [disabled]="!qc.startDateandTimeIsEdit"
+            [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+        
+            <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(qc,'startDateandTimeIsEdit')"></i>
+
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
-            <p-calendar [(ngModel)]="qc.endDateandTime" [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+            <p-calendar [(ngModel)]="qc.endDateandTime"
+            [disabled]="!qc.endDateandTimeIsEdit" 
+             [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+             <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(qc,'endDateandTimeIsEdit')"></i> 
           </td>
 
 
@@ -665,20 +780,27 @@
             <td *ngIf="i >= 1">&nbsp;</td>
       
           <td>
-            <select class="w100" [(ngModel)]="ship.expertise" name="Technician">
-              <option value="">Select Expertise</option>
-              <option value="Technician">Technician</option>
-              <option value="Quality">Quality</option>
-              <option value="Mechanic">Mechanic</option>
-              <option value="Inspector">Inspector</option>
-              <option value="Receiver">Receiver</option>
-              <option value="Auditor">Auditor</option>
-              <option value="Engineer">Engineer</option>
-            </select>
+              <p-dropdown
+              placeholder="Select Expertise Type"
+                [options]="expertiseTypeList"
+                class="p-dropdown-custom-2"
+                [(ngModel)]="ship.expertise"
+              ></p-dropdown>
           </td>
           <td>
-            <p-dropdown [options]="EmployeeList" class="p-dropdown-custom-md" [(ngModel)]="ship.employeeId">
-            </p-dropdown>
+              <p-autoComplete
+              class="p-autocomplete-ctsm-1 "
+              field="label" 
+              name="shipEmp"
+              [dropdown]="true"
+              errorMessage="Records not found" 
+              [forceSelection]="true"
+              [suggestions]="employeeList" 
+              (completeMethod)="filterEmployee($event)"
+              [size]="30" [minLength]="1"
+              [(ngModel)]="ship.employeeId"
+            >
+            </p-autoComplete>
             <i *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg margintop" ></i>
           </td>
           <td>
@@ -694,11 +816,17 @@
             </button>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
-            <p-calendar [(ngModel)]="ship.startDateandTime" [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+            <p-calendar [(ngModel)]="ship.startDateandTime" 
+            [disabled]="!ship.startDateandTimeIsEdit"
+            [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+            <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(ship,'startDateandTimeIsEdit')"></i>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
-            <p-calendar [(ngModel)]="ship.endDateandTime" [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+            <p-calendar [(ngModel)]="ship.endDateandTime"    
+            [disabled]="!ship.endDateandTimeIsEdit"  
+            [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+           <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(ship,'endDateandTimeIsEdit')"></i>  
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
             {{ ship.hoursandMinutes }}
@@ -721,20 +849,30 @@
             <td *ngIf="i < 1">Clean <i  *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg" (click)="addNewTask('clean')"></i></td>
             <td *ngIf="i >= 1">&nbsp;</td>
           <td>
-            <select class="w100" [(ngModel)]="clean.expertise" name="Technician">
-              <option value="">Select Expertise</option>
-              <option value="Technician">Technician</option>
-              <option value="Quality">Quality</option>
-              <option value="Mechanic">Mechanic</option>
-              <option value="Inspector">Inspector</option>
-              <option value="Receiver">Receiver</option>
-              <option value="Auditor">Auditor</option>
-              <option value="Engineer">Engineer</option>
-            </select>
+              <p-dropdown
+              placeholder="Select Expertise Type"
+                [options]="expertiseTypeList"
+                class="p-dropdown-custom-2"
+                [(ngModel)]="clean.expertise"
+              ></p-dropdown>
+
           </td>
           <td>
-            <p-dropdown [options]="EmployeeList" class="p-dropdown-custom-md" [(ngModel)]="clean.employeeId">
-            </p-dropdown>
+              <p-autoComplete
+              class="p-autocomplete-ctsm-1 "
+              field="label" 
+              name="cleanEmp"
+              [dropdown]="true"
+              errorMessage="Records not found" 
+              [forceSelection]="true"
+              [suggestions]="employeeList" 
+              (completeMethod)="filterEmployee($event)"
+              [size]="30" [minLength]="1"
+              [(ngModel)]="clean.employeeId"
+            >
+            </p-autoComplete>
+              
+
             <i *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg margintop" ></i>
           </td>
           <td>
@@ -750,10 +888,16 @@
             </button>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
-            <p-calendar [(ngModel)]="clean.startDateandTime" [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+            <p-calendar [(ngModel)]="clean.startDateandTime" 
+            [disabled]="!clean.startDateandTimeIsEdit"
+            [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+            <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(clean,'startDateandTimeIsEdit')"></i>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
-            <p-calendar [(ngModel)]="clean.endDateandTime" [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+            <p-calendar [(ngModel)]="clean.endDateandTime" 
+            [disabled]="!clean.endDateandTimeIsEdit" 
+            [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+            <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(clean,'endDateandTimeIsEdit')"></i>  
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
             {{ clean.hoursandMinutes }}

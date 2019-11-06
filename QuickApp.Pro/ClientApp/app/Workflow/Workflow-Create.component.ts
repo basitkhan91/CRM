@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, Input, OnDestroy } from "@angular/core";
+import { Component, OnInit, ViewChild, AfterViewInit, Input, OnDestroy, Output, EventEmitter } from "@angular/core";
 import { ActionService } from "./ActionService";
 import { ITask } from "./Action";
 import { IActionAttrbutes } from "./ActionAttributes";
@@ -43,6 +43,7 @@ import { AuthService } from "../services/auth.service";
 export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     @Input() isWorkOrder; 
     @Input()  savedWorkOrderData;
+    @Output() savedWorkFlowWorkOrderData = new EventEmitter()
     UpdateMode: boolean;
     workFlow: any;
     workFlowList: any[];
@@ -2276,7 +2277,8 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
                 
             }).subscribe(res => {
-
+                
+                this.savedWorkFlowWorkOrderData.emit(res);
                 this.alertService.showMessage(
                     '',
                     'Work Order Work Flow Saved Succesfully',
