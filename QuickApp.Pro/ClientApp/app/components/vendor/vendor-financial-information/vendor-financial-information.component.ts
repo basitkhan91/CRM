@@ -618,6 +618,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.loadMasterCompanies();
         this.sourceAction = new CreditTerms();
         this.sourceAction.isActive = true;
+        this.sourceAction.isDeleted = false;
         this.creditTermName = "";
         this.creditTermsId = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
@@ -736,11 +737,11 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
             error => this.onDataLoadFailed(error)
         );
     }
-    private onCreditTermsdata(getCreditTermsList: CreditTerms[]) {
+    private onCreditTermsdata(getCreditTermsList: any) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = getCreditTermsList;
-        this.allcreditTermInfo = getCreditTermsList;
+        this.allcreditTermInfo = getCreditTermsList.columnData;
     }
     saveCreditTermsdata() {
         this.isSaving = true;

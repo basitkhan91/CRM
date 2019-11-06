@@ -96,7 +96,7 @@ export class VendorContactsComponent implements OnInit {
     loadingIndicator: boolean;
     closeResult: string;
     selectedColumn: any[];
-    selectedColumns: any[];
+    
     cols: any[];
     title: string = "Create";
     id: number;
@@ -109,6 +109,20 @@ export class VendorContactsComponent implements OnInit {
     comName: string;
     isEditMode: boolean = false;
     isDeleteMode: boolean = false;
+    vendorContactsColumns = [
+        { field: 'firstName', header: 'First Name' },
+        { field: 'lastName', header: 'Last Name' },
+        { field: 'contactTitle', header: 'Contact Title' },
+        { field: 'email', header: 'Email' },
+        { field: 'workPhone', header: 'Work Phone' },
+        { field: 'mobilePhone', header: 'Mobile Phone' },
+        { field: 'fax', header: 'Fax' },
+        { field: 'isDefaultContact', header: 'Primary Contact' },
+        { field: 'notes', header: 'Memo' }
+        //{ field: 'updatedDate', header: 'Updated Date' },
+        //{ field: 'createdDate', header: 'Created Date' }
+    ];
+    selectedColumns = this.vendorContactsColumns;
     constructor(private router: ActivatedRoute, private route: Router, private customerser: CustomerService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         if (this.local) {
             this.workFlowtService.contactCollection = this.local;
@@ -183,21 +197,7 @@ export class VendorContactsComponent implements OnInit {
             error => this.onDataLoadFailed(error)
         );
 
-        this.cols = [
-            { field: 'firstName', header: 'First Name' },
-            { field: 'lastName', header: 'Last Name' },
-            { field: 'contactTitle', header: 'Contact Title' },
-            { field: 'email', header: 'Email' },
-            { field: 'workPhone', header: 'Mobile Phone' },
-            { field: 'fax', header: 'Fax' },
-            //{ field: 'createdBy', header: 'Created By' },
-            //{ field: 'updatedBy', header: 'Updated By' },
-            //{ field: 'updatedDate', header: 'Updated Date' },
-            //{ field: 'createdDate', header: 'Created Date' }
-        ];
-        if (!this.selectedColumns) {
-            this.selectedColumns = this.cols;
-        }
+        
     }
 
     private loadCompleteddata() {
@@ -247,7 +247,6 @@ export class VendorContactsComponent implements OnInit {
         this.applyFilter(this.dataSource.filter);
     }
     private onDataLoadSuccessful(allWorkFlows: any[]) {
-
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
