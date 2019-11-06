@@ -297,6 +297,8 @@ export class StockLine {
     currentDate: Date;
     glAccountText: string;
     obtainFromObject: DropDownData;
+    ownerObject: DropDownData;
+    traceableToObject: DropDownData;
 }
 
 export class ReceiveParts {

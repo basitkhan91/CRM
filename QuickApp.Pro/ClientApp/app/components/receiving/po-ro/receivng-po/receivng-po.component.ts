@@ -1254,7 +1254,10 @@ export class ReceivngPoComponent implements OnInit {
         return errorMessages;
     }
 
-    onObtainFromChange(event) {
+    onObtainFromChange(event, stockLine) {
+        stockLine.obtainFrom = '';
+        stockLine.obtainFromObject = {};
+
         if (event.target.value === '1') {
             this.obtainfromcustomer = true;
             this.obtainfromother = false;
@@ -1272,7 +1275,10 @@ export class ReceivngPoComponent implements OnInit {
         }
     }
 
-    onOwnerChange(event) {
+    onOwnerChange(event, stockLine) {
+        stockLine.owner = '';
+        stockLine.ownerObject = {};
+
         if (event.target.value === '1') {
             this.ownercustomer = true;
             this.ownerother = false;
@@ -1290,7 +1296,10 @@ export class ReceivngPoComponent implements OnInit {
         }
     }
 
-    onTraceableToChange(event) {
+    onTraceableToChange(event, stockLine) {
+        stockLine.traceableTo = '';
+        stockLine.traceableToObject = {};
+
         if (event.target.value === '1') {
             this.traceabletocustomer = true;
             this.traceabletoother = false;
@@ -1326,6 +1335,14 @@ export class ReceivngPoComponent implements OnInit {
 
     onObtainSelect(stockLine: StockLine): void {
         stockLine.obtainFrom = stockLine.obtainFromObject.Key;
+    }
+
+    onOwnerSelect(stockLine: StockLine): void {
+        stockLine.owner = stockLine.ownerObject.Key;
+    }
+
+    onTraceableToSelect(stockLine: StockLine): void {
+        stockLine.traceableTo = stockLine.traceableToObject.Key;
     }
 
     getConditionList(): void {
