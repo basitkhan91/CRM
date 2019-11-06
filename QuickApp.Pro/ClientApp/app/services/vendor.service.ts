@@ -19,6 +19,7 @@ import { VendorEndpointService } from './vendor-endpoint.service';
 import { Vendor } from '../models/vendor.model';
 import { DiscountValue } from '../models/discountvalue';
 import { ATASubChapter } from '../models/atasubchapter.model';
+import { BehaviorSubject } from 'rxjs';
 
 
 export type RolesChangedOperation = "add" | "delete" | "modify";
@@ -42,6 +43,8 @@ export class VendorService {
     financeCollection: any;
     ShowPtab: boolean = true;
     receiveSaveddata: any[] = [];
+    private stepDataSubject = new BehaviorSubject('');
+    public stepData$ = this.stepDataSubject.asObservable();
     public static readonly roleAddedOperation: RolesChangedOperation = "add";
     public static readonly roleDeletedOperation: RolesChangedOperation = "delete";
     public static readonly roleModifiedOperation: RolesChangedOperation = "modify";
@@ -75,7 +78,9 @@ export class VendorService {
     //	this.mySubject.next(data);
     //}
 
-
+    changeStep(stepVal) {
+        this.stepDataSubject.next(stepVal);
+    }
     getWorkFlows() {
         return Observable.forkJoin(
             this.actionEndpoint.getvendorEndpoint<any[]>());
