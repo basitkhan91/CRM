@@ -601,49 +601,26 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<WorkOrderAssets> GetWorkFlowWorkOrderAssetsList(long wfwoId = 0, long workOrderId = 0)
+        public IEnumerable<object> GetWorkOrderAssetList(long wfwoId, long workOrderId)
         {
-            List<WorkOrderAssets> workOrderAssetsList = new List<WorkOrderAssets>();
-            WorkOrderAssets workOrderAssets;
-
             try
             {
-                var result = _appContext.WorkOrderAssets
-                             .Join(_appContext.Asset,
-                            wo => wo.AssetRecordId,
-                            a => a.AssetRecordId,
-                            (wo, a) => new { wo, a })
-                             .Join(_appContext.AssetType,
-                            a1 => a1.a.AssetTypeId,
-                            at => at.AssetTypeId,
-                            (a1, at) => new { a1, at })
-                             .Where(p => (p.a1.wo.WorkFlowWorkOrderId == wfwoId || p.a1.wo.WorkOrderId == workOrderId) && p.a1.wo.IsDeleted == false)
-                             .Select(p => new
-                             {
-                                 WorkOrderAssets = p.a1.wo,
-                                 AssetId = p.a1.a.AssetId,
-                                 AssetName = p.a1.a.Name,
-                                 Description = p.a1.a.Description,
-                                 AssetTypeName = p.at.AssetTypeName,
-                                 AssetTypeId = p.at.AssetTypeId
-
-                             })
-                             .ToList();
-                if (result != null && result.Count > 0)
-                {
-                    foreach (var item in result)
-                    {
-                        workOrderAssets = new WorkOrderAssets();
-                        workOrderAssets = item.WorkOrderAssets;
-                        workOrderAssets.AssetId = item.AssetId;
-                        workOrderAssets.AssetName = item.AssetName;
-                        workOrderAssets.Description = item.Description;
-                        workOrderAssets.AssetTypeName = item.AssetTypeName;
-                        workOrderAssets.AssetTypeId = item.AssetTypeId;
-
-                        workOrderAssetsList.Add(workOrderAssets);
-                    }
-                }
+                var workOrderAssetsList = (from wa in _appContext.WorkOrderAssets
+                                           join a in _appContext.Asset on wa.AssetRecordId equals a.AssetRecordId
+                                           join at in _appContext.AssetType on a.AssetTypeId equals at.AssetTypeId
+                                           where wa.IsDeleted == false && (wa.WorkOrderId == workOrderId || wa.WorkFlowWorkOrderId == wfwoId)
+                                           select new
+                                           {
+                                               wa.WorkOrderAssetId,
+                                               Asset= a.Name,
+                                               a.Description,
+                                               at.AssetTypeName,
+                                               wa.Quantity,
+                                               wa.MinQuantity,
+                                               wa.MaxQuantity,
+                                               wa.ExpectedQuantity,
+                                               wa.Findings
+                                           }).Distinct().ToList();
 
                 return workOrderAssetsList;
             }
@@ -893,36 +870,78 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<WorkOrderMaterials> GetWorkFlowWorkOrderMaterialsList(long wfwoId = 0, long workOrderId = 0)
+        public IEnumerable<object> GetWorkOrderMaterialList(long wfwoId, long workOrderId )
         {
-            List<WorkOrderMaterials> workOrderMaterialsList = new List<WorkOrderMaterials>();
-            WorkOrderMaterials workOrderMaterials;
 
             try
             {
-                var result = _appContext.WorkOrderMaterials
-                             .Join(_appContext.ItemMaster,
-                            wm => wm.ItemMasterId,
-                            im => im.ItemMasterId,
-                            (wm, im) => new { wm, im })
-                             .Where(p => (p.wm.WorkFlowWorkOrderId == wfwoId || p.wm.WorkOrderId == workOrderId) && p.wm.IsDeleted == false)
-                             .Select(p => new
-                             {
-                                 ItemMaster = p.im,
-                                 WorkOrderMaterials = p.wm
-                             })
-                             .ToList();
-                if (result != null && result.Count > 0)
-                {
-                    foreach (var item in result)
-                    {
-                        workOrderMaterials = new WorkOrderMaterials();
-                        workOrderMaterials = item.WorkOrderMaterials;
-                        workOrderMaterials.ItemMaster = item.ItemMaster;
+                var workOrderMaterialsList = (from wom in _appContext.WorkOrderMaterials
+                                              join sl in _appContext.StockLine on wom.ItemMasterId equals sl.ItemMasterId
+                                              join im in _appContext.ItemMaster on wom.ItemMasterId equals im.ItemMasterId
+                                              join p in _appContext.Provision on im.ProvisionId equals p.ProvisionId into pro
+                                              from p in pro.DefaultIfEmpty()
+                                              join c in _appContext.Condition on wom.ConditionCodeId equals c.ConditionId
+                                              //join it in _appContext.ItemType 
+                                              join wo in _appContext.WorkOrderWorkFlow on wom.WorkFlowWorkOrderId equals wo.WorkFlowWorkOrderId
+                                              join cur in _appContext.Currency on wo.CurrencyId equals cur.CurrencyId into currs
+                                              from cur in currs.DefaultIfEmpty()
+                                              join pop in _appContext.PurchaseOrderPart on sl.PurchaseOrderId equals pop.PurchaseOrderId into pops
+                                              from pop in pops.DefaultIfEmpty()
+                                              join po in _appContext.PurchaseOrder on pop.PurchaseOrderId equals po.PurchaseOrderId into pod
+                                              from po in pod.DefaultIfEmpty()
+                                              join ro in _appContext.RepairOrder on sl.RepairOrderId equals ro.RepairOrderId into rod
+                                              from ro in rod.DefaultIfEmpty()
+                                              join tl in _appContext.TimeLife on sl.TimeLifeCyclesId equals tl.TimeLifeCyclesId into tlc
+                                              from tl in tlc.DefaultIfEmpty()
+                                              join wh in _appContext.Warehouse on sl.WarehouseId equals wh.WarehouseId into wah
+                                              from wh in wah.DefaultIfEmpty()
+                                              join lo in _appContext.Location on sl.LocationId equals lo.LocationId into loc
+                                               from lo in loc.DefaultIfEmpty()
+                                              join sh in _appContext.Shelf on sl.ShelfId equals sh.ShelfId into shf
+                                              from sh in shf.DefaultIfEmpty()
+                                              join bi in _appContext.Bin on sl.BinId equals bi.BinId into bin
+                                              from bi in bin.DefaultIfEmpty()
+                                              where wom.IsDeleted==false && (wom.WorkOrderId== workOrderId || wom.WorkFlowWorkOrderId==wfwoId)
+                                              select new
+                                              {
+                                                  sl.StockLineNumber,
+                                                  sl.PartNumber,
+                                                  im.PartDescription,
+                                                  pop.AltPartNumber,
+                                                  sl.SerialNumber,
+                                                  Provision = p.Description,
+                                                  Oem = im.PMA == true && im.DER == true ? "PMA&DER" : (im.PMA == true && im.DER == false ? "PMA" : (im.PMA == false && im.DER == true ? "DER" : "")),
+                                                  Control = sl.IdNumber,
+                                                  Condition = c.Description,
+                                                  ItemType = string.Empty,
+                                                  QunatityRequried = wom.Quantity,
+                                                  QunatityReserved = 0,
+                                                  QunatityTurnIn = 0,
+                                                  QunatityIssued = 0,
+                                                  QunatityBackOrder = 0,
+                                                  QunatityRemaining = 0,
+                                                  wom.UnitCost,
+                                                  wom.ExtendedCost,
+                                                  Currency = cur.DisplayName,
+                                                  po.PurchaseOrderNumber,
+                                                  ro.RepairOrderNumber,
+                                                  PartQuantityOnHand = 0,
+                                                  PartQuantityAvailable = 0,
+                                                  PartQuantityOnOrder = 0,
+                                                  AltPartQuantityOnHand = 0,
+                                                  AltPartQuantityAvailable = 0,
+                                                  AltPartQuantityOnOrder = 0,
+                                                  Receiver = string.Empty,
+                                                  wo.WorkOrderNumber,
+                                                  SubWorkOrder = string.Empty,
+                                                  SalesOrder=string.Empty,
+                                                  TimeLife=tl.TimeRemaining,
+                                                  WareHouse= wh.Name,
+                                                  Location=lo.Name,
+                                                  Shelf=sh.Name,
+                                                  Bin=bi.Name
 
-                        workOrderMaterialsList.Add(workOrderMaterials);
-                    }
-                }
+                                              }).Distinct().ToList();
 
                 return workOrderMaterialsList;
             }
