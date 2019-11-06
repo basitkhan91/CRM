@@ -77,6 +77,8 @@ import { AircraftModelEndpointService } from '../services/aircraft-model/aircraf
 import { AircraftModelService } from '../services/aircraft-model/aircraft-model.service';
 import { DashNumberService } from '../services/dash-number/dash-number.service';
 import { DashNumberEndpointService } from '../services/dash-number/dash-number-endpoint.service';
+import { WorkOrderService } from '../services/work-order/work-order.service';
+import { WorkOrderEndpointService } from '../services/work-order/work-order-endpoint.service';
 
 @NgModule({
   imports: [
@@ -161,7 +163,9 @@ import { DashNumberEndpointService } from '../services/dash-number/dash-number-e
         AircraftModelService,
         AircraftModelEndpointService,
         DashNumberService,
-        DashNumberEndpointService
+        DashNumberEndpointService,
+        WorkOrderService,
+        WorkOrderEndpointService
     ],
   entryComponents: []
 })
