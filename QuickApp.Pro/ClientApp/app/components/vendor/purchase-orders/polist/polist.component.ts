@@ -48,6 +48,7 @@ export class PolistComponent implements OnInit {
     poPartsList: any = [];
     approveList: any = [];
     vendorCapesInfo: any = [];
+    vendorCapesCols: any[];
 
     constructor(private _route: Router,
         private authService: AuthService,
@@ -69,6 +70,17 @@ export class PolistComponent implements OnInit {
     }
     ngOnInit() {
         // this.getList();
+        this.vendorCapesCols = [
+			{ field: 'vcId', header: 'VCID' },
+			{ field: 'ranking', header: 'Ranking' },
+			{ field: 'partNumber', header: 'PN' },
+			{ field: 'partDescription', header: 'PN Description' },
+			{ field: 'capabilityType', header: 'Capability Type' },
+			{ field: 'cost', header: 'Cost' },
+			{ field: 'tat', header: 'TAT' },
+			{ field: 'name', header: 'PN Mfg' },
+		];
+
     }
 
     getList(data) {

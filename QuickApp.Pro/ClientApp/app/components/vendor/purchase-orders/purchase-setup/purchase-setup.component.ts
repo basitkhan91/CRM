@@ -352,6 +352,7 @@ export class PurchaseSetupComponent implements OnInit {
 						poMemo: res.notes,
 						shipToUserTypeId: res.shipToUserType,
 						//shipToUserId: res.shipToUserId,
+						shipToSiteName: res.shipToSiteName,
 						shipToAddress1: res.shipToAddress1,
 						shipToAddress2: res.shipToAddress2,
 						shipToAddress3: res.shipToAddress3,
@@ -362,6 +363,7 @@ export class PurchaseSetupComponent implements OnInit {
 						//shipToContactId: getObjectById('contactId', res.shipToContactId, this.shipToContactData),
 						shipToMemo: res.shipToMemo,
 						shipViaId: res.shipViaId,
+						shipVia: res.shipVia,
 						shippingCost: res.shippingCost,
 						handlingCost: res.handlingCost,
 						//shippingAcctNum: res.shippingAcctNum,
@@ -567,7 +569,21 @@ export class PurchaseSetupComponent implements OnInit {
 				this.shipToSelectedvalue = data.shipToUserId;		
 				this.companyService.getShippingCompanySiteNames(this.shipToSelectedvalue).subscribe(response => {
 					this.companySiteList_Shipping = response;
-					this.onShipToGetCompanyAddress(this.companySiteList_Shipping[0].legalEntityShippingAddressId);
+					if(this.isEditMode) {
+						if(data.shipToAddressId == 0) {
+							this.companySiteList_Shipping.push({legalEntityShippingAddressId: 0, siteName: data.shipToSiteName});
+		
+							this.shipToAddress.address1 = data.shipToAddress1;
+							this.shipToAddress.address2 = data.shipToAddress2;
+							this.shipToAddress.address3 = data.shipToAddress3;
+							this.shipToAddress.city = data.shipToCity;
+							this.shipToAddress.stateOrProvince = data.shipToState;
+							this.shipToAddress.postalCode = data.shipToPostalCode;
+							this.shipToAddress.country = data.shipToCountry;
+						}
+					} else {
+						this.onShipToGetCompanyAddress(this.companySiteList_Shipping[0].legalEntityShippingAddressId);
+					}					
 				})
 				this.companyService.getCompanyContacts(this.shipToSelectedvalue).subscribe(response => {
 					this.contactListForCompanyShipping = response;
@@ -583,8 +599,15 @@ export class PurchaseSetupComponent implements OnInit {
 	getShipViaEdit(data) {
 		this.commonService.getShipViaDetailsByModule(data.shipToUserType, this.shipToSelectedvalue).subscribe(response => {
 			this.shipViaList = response;
-			this.tempPOHeaderAddress.shipViaId = data.shipViaId;
-			this.getShipViaDetails(data.shipViaId);
+			this.sourcePoApproval.shipViaId = data.shipViaId;
+				if(data.shipViaId == 0) {
+					this.shipViaList.push({shippingViaId: 0, name: data.shipVia, shippingAccountInfo: data.shippingAcctNum, shippingId: data.shippingId, shippingURL: data.shippingURL});
+					this.sourcePoApproval.shippingAcctNum = data.shippingAcctNum;
+					this.sourcePoApproval.shippingId = data.shippingId;
+					this.sourcePoApproval.shippingURL = data.shippingURL;
+				} else {
+					this.getShipViaDetails(data.shipViaId);
+				}
 		})
 	}
 
@@ -605,7 +628,21 @@ export class PurchaseSetupComponent implements OnInit {
 				this.billToSelectedvalue = data.billToUserId;		
 				this.companyService.getBillingCompanySiteNames(this.billToSelectedvalue).subscribe(response => {
 					this.companySiteList_Billing = response;
-					this.onBillToGetCompanyAddress(this.companySiteList_Billing[0].legalEntityBillingAddressId);
+					if(this.isEditMode) {
+						if(data.billToAddressId == 0) {
+							this.companySiteList_Billing.push({legalEntityBillingAddressId: 0, siteName: data.billToSiteName});
+		
+							this.billToAddress.address1 = data.billToAddress1;
+							this.billToAddress.address2 = data.billToAddress2;
+							this.billToAddress.address3 = data.billToAddress3;
+							this.billToAddress.city = data.billToCity;
+							this.billToAddress.stateOrProvince = data.billToState;
+							this.billToAddress.postalCode = data.billToPostalCode;
+							this.billToAddress.country = data.billToCountry;
+						}
+					} else {
+						this.onBillToGetCompanyAddress(this.companySiteList_Billing[0].legalEntityBillingAddressId);
+					}					
 				})
 				this.companyService.getCompanyContacts(this.billToSelectedvalue).subscribe(response => {
 					this.contactListForCompanyBilling = response;
@@ -624,15 +661,15 @@ export class PurchaseSetupComponent implements OnInit {
 			// 	this.allCustomers = res[0];
 				
 			// });
-			this.onCustomerNameChange(data.poPartSplitUserId);
+			this.onCustomerNameChange(data.poPartSplitUserId, data);			
 			return getObjectById('value', data.poPartSplitUserId, this.allCustomers);			
 		}
 		if (data.poPartSplitUserTypeId === 2) {
-			this.onVendorNameChange(data.poPartSplitUserId);
+			this.onVendorNameChange(data.poPartSplitUserId, data);
 			return getObjectById('vendorId', data.poPartSplitUserId, this.vendorList);
 		}
 		if (data.poPartSplitUserTypeId === 3) {
-			this.onCompanyNameChange(data.poPartSplitUserId);
+			this.onCompanyNameChange(data.poPartSplitUserId, data);
 			return getObjectById('value', data.poPartSplitUserId, this.legalEntity);
 		}
 	}
@@ -1131,13 +1168,19 @@ export class PurchaseSetupComponent implements OnInit {
 		}
 	}
 
-	onCustomerNameChange(customerId) {
+	onCustomerNameChange(customerId, data?) {
 		//this.gridSelectedCustomerId = customer ? customer.value : this.gridSelectedCustomerId;
 		//console.log(part, customer)
 		// part.poPartSplitUserId = customer.customerId;
 
 		this.customerService.getCustomerShipAddressGet(customerId).subscribe(returnedcustomerAddressses => {
 			this.splitAddressData = returnedcustomerAddressses[0];
+			if(this.isEditMode) {
+				if(data.poPartSplitAddressId == 0) {
+					this.splitAddressData.push({customerShippingAddressId: 0, address1: data.shipToAddress1, address2: data.shipToAddress2, address3: data.shipToAddress3, city: data.shipToCity, stateOrProvince: data.shipToStateOrProvince, postalCode: data.shipToPostalCode, country: data.shipToCountry, siteName: data.shipToSiteName})
+				}
+				//this.onShipToGetAddress(data, data.poPartSplitAddressId);
+			}
 			//part.poPartSplitAddressId = 0;
 		});
 	}
@@ -1153,7 +1196,7 @@ export class PurchaseSetupComponent implements OnInit {
 		}		
 	}
 
-	onVendorNameChange(vendorId): void {
+	onVendorNameChange(vendorId, data?): void {
 		//console.log(part, vendor)
 		//this.gridSelectedVendorId = vendor ? vendor.vendorId : this.gridSelectedVendorId;
 		//part.poPartSplitUserId = vendor.vendorId;
@@ -1162,10 +1205,16 @@ export class PurchaseSetupComponent implements OnInit {
 				this.vendorSelectedforSplit = vendorAddresses[0];
 				//part.addressData = vendorAddresses[0];;
 				this.splitAddressData = vendorAddresses[0];
+				if(this.isEditMode) {
+					if(data.poPartSplitAddressId == 0) {
+						this.splitAddressData.push({vendorShippingAddressId: 0, address1: data.shipToAddress1, address2: data.shipToAddress2, address3: data.shipToAddress3, city: data.shipToCity, stateOrProvince: data.shipToStateOrProvince, postalCode: data.shipToPostalCode, country: data.shipToCountry, siteName: data.shipToSiteName})
+					}
+					//this.onShipToGetAddress(data, data.poPartSplitAddressId);
+				}
 			})
 	}
 
-	onCompanyNameChange(companyId) {
+	onCompanyNameChange(companyId, data?) {
 		this.legalEntityService.getLegalEntityAddressById(companyId).subscribe(response => {
 			this.splitAddressData = response[0].map(x => {
 				return {
@@ -1175,6 +1224,13 @@ export class PurchaseSetupComponent implements OnInit {
 					address3: x.line3,
 				}
 			});
+			if(this.isEditMode) {
+				if(data.poPartSplitAddressId == 0) {
+					this.splitAddressData.push({legalEntityShippingAddressId: 0, siteName: data.shipToSiteName, address1: data.poPartSplitAddress1, address2: data.poPartSplitAddress2, address3: data.poPartSplitAddress3, city: data.poPartSplitCity, country: data.poPartSplitCountry, postalCode: data.poPartSplitPostalCode, stateOrProvince: data.poPartSplitState});
+				}
+			} else {
+				this.onShipToGetCompanyAddress(this.companySiteList_Shipping[0].legalEntityShippingAddressId);
+			}	
 		})	
 	}
 
@@ -1269,7 +1325,7 @@ export class PurchaseSetupComponent implements OnInit {
 			this.firstNamesbillTo1 = vendorContacts;
 		}
 	}	
-	
+
 	// ship to
 	onShipToCustomerSelected(customerId, res?) {
 		this.clearInputOnClickUserIdShipTo();
@@ -1278,6 +1334,9 @@ export class PurchaseSetupComponent implements OnInit {
 			returnddataforbill => {
 				this.shipToCusData = returnddataforbill[0];
 				if(this.isEditMode) {
+					if(res.shipToAddressId == 0) {
+						this.shipToCusData.push({customerShippingAddressId: 0, address1: res.shipToAddress1, address2: res.shipToAddress2, address3: res.shipToAddress3, city: res.shipToCity, stateOrProvince: res.shipToStateOrProvince, postalCode: res.shipToPostalCode, country: res.shipToCountry, siteName: res.shipToSiteName})
+					}
 					this.onShipToGetAddress(res, res.shipToAddressId);
 				}
 				
@@ -1299,6 +1358,9 @@ export class PurchaseSetupComponent implements OnInit {
 				console.log(returdaa);
 				this.vendorSelected = returdaa[0];
 				if(this.isEditMode) {
+					if(res.shipToAddressId == 0) {
+						this.vendorSelected.push({vendorShippingAddressId: 0, address1: res.shipToAddress1, address2: res.shipToAddress2, address3: res.shipToAddress3, city: res.shipToCity, stateOrProvince: res.shipToStateOrProvince, postalCode: res.shipToPostalCode, country: res.shipToCountry, siteName: res.shipToSiteName})
+					}
 					this.onShipToGetAddress(res, res.shipToAddressId);
 				}
 			});
@@ -1320,7 +1382,7 @@ export class PurchaseSetupComponent implements OnInit {
 		this.shipToSelectedvalue = object ? object.value : this.shipToSelectedvalue;
 
 		this.companyService.getShippingCompanySiteNames(this.shipToSelectedvalue).subscribe(response => {
-			this.companySiteList_Shipping = response;
+			this.companySiteList_Shipping = response;			
 		})
 		this.companyService.getCompanyContacts(this.shipToSelectedvalue).subscribe(response => {
 			this.contactListForCompanyShipping = response;
@@ -1451,11 +1513,14 @@ export class PurchaseSetupComponent implements OnInit {
 			returnddataforbill => {
 				this.billToCusData = returnddataforbill[0];
 				if(this.isEditMode) {
+					if(res.billToAddressId == 0) {
+						this.billToCusData.push({customerBillingAddressId: 0, address1: res.billToAddress1, address2: res.billToAddress2, address3: res.billToAddress3, city: res.billToCity, stateOrProvince: res.billToStateOrProvince, postalCode: res.billToPostalCode, country: res.billToCountry, siteName: res.billToSiteName})
+					}
 					this.onBillToGetAddress(res, res.billToAddressId);
 				}
 			});
 		this.customerService.getContacts(customerId).subscribe(data => {
-			this.billToContactData = data[0];//shipToContactData
+			this.billToContactData = data[0];
 			if(this.isEditMode) {
 				this.tempPOHeaderAddress.billToContactId = getObjectById('contactId', res.billToContactId, this.billToContactData);
 			}
@@ -1469,7 +1534,19 @@ export class PurchaseSetupComponent implements OnInit {
 			returdaa => {
 				this.vendorSelectedForBillTo = returdaa;
 				if(this.isEditMode) {
-					this.onBillToGetAddress(res, res.billToAddressId);
+					if(res.billToAddressId == 0) {
+						this.vendorSelectedForBillTo.push({vendorBillingAddressId: 0, siteName: res.billToSiteName});
+
+						this.billToAddress.address1 = res.billToAddress1;
+						this.billToAddress.address2 = res.billToAddress2;
+						this.billToAddress.address3 = res.billToAddress3;
+						this.billToAddress.city = res.billToCity;
+						this.billToAddress.stateOrProvince = res.billToState;
+						this.billToAddress.postalCode = res.billToPostalCode;
+						this.billToAddress.country = res.billToCountry;
+					} else {
+						this.onBillToGetAddress(res, res.billToAddressId);
+					}
 				}
 			})
 		this.vendorService.getContacts(vendorId).subscribe(
@@ -1485,7 +1562,7 @@ export class PurchaseSetupComponent implements OnInit {
 		this.billToSelectedvalue = object ? object.value : this.billToSelectedvalue;
 
 		this.companyService.getBillingCompanySiteNames(this.billToSelectedvalue).subscribe(res => {
-			this.companySiteList_Billing = res;
+			this.companySiteList_Billing = res;			
 		})
 		this.companyService.getCompanyContacts(this.billToSelectedvalue).subscribe(res => {
 			this.contactListForCompanyBilling = res;
@@ -2437,7 +2514,7 @@ export class PurchaseSetupComponent implements OnInit {
 
 	getShipViaDetailsForShipTo() {	
 		this.commonService.getShipViaDetailsByModule(this.sourcePoApproval.shipToUserTypeId, this.shipToSelectedvalue).subscribe(response => {
-			this.shipViaList = response;
+			this.shipViaList = response;			
 		})		
 	}	
 	
