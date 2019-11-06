@@ -427,7 +427,7 @@ namespace DAL.Repositories
             var data = _appContext.ItemMaster.Include("Manufacturer").Include("Provision").Include("GLAccount").
                 Include("Priority").Include("ItemClassification").Include("Currency").Include("ExportClassification")
 
-                   .Where(a => a.ItemTypeId == 1 && (a.IsDelete == false || a.IsDelete == null)).OrderByDescending(a => a.ItemMasterId).ToList();
+                   .Where(a => a.ItemTypeId == 1 && (a.IsDeleted == false || a.IsDeleted == null)).OrderByDescending(a => a.ItemMasterId).ToList();
 
 
             return data;
@@ -519,7 +519,7 @@ namespace DAL.Repositories
         {
 
             var data = _appContext.ItemMaster.Include("Manufacturer").Include("ItemClassification").Include("Currency")
-                .Where(a => a.ItemTypeId == 2 && (a.IsDelete == false || a.IsDelete == null)).OrderByDescending(a => a.ItemMasterId).ToList();
+                .Where(a => a.ItemTypeId == 2 && (a.IsDeleted == false || a.IsDeleted == null)).OrderByDescending(a => a.ItemMasterId).ToList();
             return data;
         }
 
@@ -527,7 +527,7 @@ namespace DAL.Repositories
         {
             var data = _appContext.ItemMaster.Include("Equipment").Include("EquipmentValidationType").Include("Manufacturer")
 
-                 .Where(a => a.ItemTypeId == 3 && (a.IsDelete == false || a.IsDelete == null)).OrderByDescending(a => a.ItemMasterId).ToList();
+                 .Where(a => a.ItemTypeId == 3 && (a.IsDeleted == false || a.IsDeleted == null)).OrderByDescending(a => a.ItemMasterId).ToList();
             return data;
 
         }
@@ -980,7 +980,7 @@ namespace DAL.Repositories
             }
         }
 
-        public Nha_Tla_Alt_Equ_ItemMapping NhaTlaAltEquItemMappingById(long itemMappingId,int mappingType)
+        public Nha_Tla_Alt_Equ_ItemMapping NhaTlaAltEquItemMappingById(long itemMappingId, int mappingType)
         {
             Nha_Tla_Alt_Equ_ItemMapping itemMapping = new Nha_Tla_Alt_Equ_ItemMapping();
 
@@ -997,16 +997,16 @@ namespace DAL.Repositories
                     .Select(p => new
                     {
                         ItemMaster = p.im,
-                        ItemMapping=p.mp
+                        ItemMapping = p.mp
                     })
                     .FirstOrDefault();
-                    
 
-                if (result != null && result.ItemMapping!=null && result.ItemMapping.ItemMappingId>0)
+
+                if (result != null && result.ItemMapping != null && result.ItemMapping.ItemMappingId > 0)
                 {
                     itemMapping = result.ItemMapping;
                     itemMapping.ItemMaster = result.ItemMaster;
-                   
+
                 }
                 return itemMapping;
             }
@@ -1016,5 +1016,6 @@ namespace DAL.Repositories
                 throw;
             }
         }
+
     }
 }

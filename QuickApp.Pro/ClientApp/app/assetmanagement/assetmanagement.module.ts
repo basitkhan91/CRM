@@ -35,6 +35,7 @@ import { AssetStepsComponent } from "../components/Asset-Management/Asset-Steps-
 import { AssetService } from "../services/asset/Assetservice";
 import { AssetEndpoint } from "../services/asset/Asset-endpoint.service";
 import { AuditModule } from "../audit/audit.module";
+import { ViewAssetComponent } from "../components/Asset-Management/Asset-pages/view-asset/view-asset.component";
 @NgModule({
     imports: [
         FlexLayoutModule,
@@ -65,6 +66,7 @@ import { AuditModule } from "../audit/audit.module";
        AssetMaintenanceWarrantyComponent,
         CreateAssetComponent,
         AssetStepsComponent,
+        ViewAssetComponent
     ],
     providers: [AssetService,
         AssetEndpoint

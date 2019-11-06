@@ -1,5 +1,5 @@
 
-<div class="card c-workflow">
+<div  class="card c-workflow">
     <div class="card-header">
         <nav class="pull-left" aria-label="breadcrumb">
             <ol class="breadcrumb c-wf-bcrumb" style="background-color: transparent;">
@@ -105,7 +105,8 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="Customer Name">
-                                    Customer Name  <span style="margin-left:3px;cursor:pointer;"><i class="fa fa-plus-circle fa-lg" (click)="AddPageCustomer()"></i></span>
+                                    Customer Name  <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg"  target="_blank" 
+                                                [routerLink]="['/customersmodule/customerpages/app-customer-create']"></a></span>
                                 </label>
                                 <p class="c-workflow-select">
                                     <p-autoComplete class="wf-header-select" 
@@ -268,7 +269,7 @@
             
         </div>
 
-        <div *ngIf="toggle_wf_header" style="margin-top: 15px;"></div>
+        <div *ngIf="toggle_wf_header " style="margin-top: 15px;"></div>
         <h4 class="total-wf-cost">Total Work Flow Cost</h4>
         <div class="form-row mar-top-10 total-wf-cost-form">
             <div class="col-md-2">

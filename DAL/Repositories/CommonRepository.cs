@@ -478,13 +478,13 @@ namespace DAL.Repositories
 
         #endregion
 
-        public void CreateClassificationMappings(List<ClassificationMapping> classificationMappings, long referenceId)
+        public void CreateClassificationMappings(List<ClassificationMapping> classificationMappings, int moduleId, long referenceId, string createdBy)
         {
             try
             {
                 if (classificationMappings != null && classificationMappings.Count > 0)
                 {
-                    classificationMappings.ForEach(p => p.CustomerId = referenceId);
+                    classificationMappings.ForEach(p => { p.ModuleId = moduleId; p.ReferenceId = referenceId; p.IsActive = true; p.IsDeleted = false; p.CreatedDate = DateTime.Now; p.UpdatedDate = DateTime.Now; p.CreatedBy = createdBy; p.UpdatedBy = createdBy; });
                     _appContext.ClassificationMapping.AddRange(classificationMappings);
                     _appContext.SaveChanges();
                 }
@@ -496,25 +496,23 @@ namespace DAL.Repositories
             }
         }
 
-        public void UpdateClassificationMappings(List<ClassificationMapping> classificationMappings, long referenceId)
+        public void UpdateClassificationMappings(List<ClassificationMapping> classificationMappings, int moduleId, long referenceId, string createdBy)
         {
             try
             {
+                var existingList = _appContext.ClassificationMapping.Where(p => p.ModuleId == moduleId && p.ReferenceId == referenceId).ToList();
+
+                if (existingList != null && existingList.Count > 0)
+                {
+                    _appContext.ClassificationMapping.RemoveRange(existingList);
+                    _appContext.SaveChanges();
+                }
+
                 if (classificationMappings != null && classificationMappings.Count > 0)
                 {
-                    foreach (var item in classificationMappings)
-                    {
-                        if (item.ClassificationMappingId > 0)
-                        {
-                            _appContext.ClassificationMapping.Update(item);
-                        }
-                        else
-                        {
-                            item.CustomerId = referenceId;
-                            _appContext.ClassificationMapping.Add(item);
-                        }
-                        _appContext.SaveChanges();
-                    }
+                    classificationMappings.ForEach(p => { p.ModuleId = moduleId; p.ReferenceId = referenceId; p.IsActive = true; p.IsDeleted = false; p.CreatedDate = DateTime.Now; p.UpdatedDate = DateTime.Now; p.CreatedBy = createdBy; p.UpdatedBy = createdBy; });
+                    _appContext.ClassificationMapping.AddRange(classificationMappings);
+                    _appContext.SaveChanges();
                 }
             }
             catch (Exception)
@@ -524,37 +522,24 @@ namespace DAL.Repositories
             }
         }
 
-        public List<ClassificationMapping> GetCustomerClassificationMappings(int moduleId, int referenceId)
+        public IEnumerable<object> GetCustomerClassificationMappings(int moduleId, long referenceId)
         {
-            List<ClassificationMapping> ClassificationMappingList = new List<ClassificationMapping>();
-            ClassificationMapping classificationMapping;
             try
             {
-                var result = _appContext.ClassificationMapping
-                             .Join(_appContext.CustomerClassification,
-                             cm => cm.ClasificationId,
-                             cc => cc.CustomerClassificationId,
-                             (cm, cc) => new { cm, cc })
-                             .Where(p => p.cm.IsDeleted == false && p.cm.ModuleId == moduleId && p.cm.CustomerId == referenceId)
-                             .Select(p => new
-                             {
-                                 p.cm.ClassificationMappingId,
-                                 p.cm.ClasificationId,
-                                 p.cc.Description
-                             })
-                             .ToList();
+                var ClassificationMappingList = (from cm in _appContext.ClassificationMapping
+                                                 join cc in _appContext.CustomerClassification on cm.ClasificationId equals cc.CustomerClassificationId
+                                                 where cm.IsDeleted == false && cm.ModuleId == moduleId && cm.ReferenceId == referenceId
+                                                 select new
+                                                 {
+                                                     cm.ClassificationMappingId,
+                                                     cm.ClasificationId,
+                                                     cc.Description,
+                                                     cc.CustomerClassificationId
+                                                 })
+                            .Distinct()
+                            .ToList();
 
-                if (result != null && result.Count > 0)
-                {
-                    foreach (var item in result)
-                    {
-                        classificationMapping = new ClassificationMapping();
-                        classificationMapping.ClassificationMappingId = item.ClassificationMappingId;
-                        classificationMapping.ClasificationId = item.ClasificationId;
-                        classificationMapping.Description = item.Description;
-                        ClassificationMappingList.Add(classificationMapping);
-                    }
-                }
+
 
                 return ClassificationMappingList;
             }
@@ -565,37 +550,23 @@ namespace DAL.Repositories
             }
         }
 
-        public List<ClassificationMapping> GetVendorClassificationMappings(int moduleId, int referenceId)
+        public IEnumerable<object> GetVendorClassificationMappings(int moduleId, long referenceId)
         {
-            List<ClassificationMapping> ClassificationMappingList = new List<ClassificationMapping>();
-            ClassificationMapping classificationMapping;
             try
             {
-                var result = _appContext.ClassificationMapping
-                             .Join(_appContext.VendorClassification,
-                             cm => cm.ClasificationId,
-                             vc => vc.VendorClassificationId,
-                             (cm, vc) => new { cm, vc })
-                             .Where(p => p.cm.IsDeleted == false && p.cm.ModuleId == moduleId && p.cm.ReferenceId == referenceId)
-                             .Select(p => new
-                             {
-                                 ClassificationMappingId = p.cm.ClassificationMappingId,
-                                 ClasificationId = p.cm.ClasificationId,
-                                 Description = p.vc.ClassificationName
-                             })
-                             .ToList();
 
-                if (result != null && result.Count > 0)
-                {
-                    foreach (var item in result)
-                    {
-                        classificationMapping = new ClassificationMapping();
-                        classificationMapping.ClassificationMappingId = item.ClassificationMappingId;
-                        classificationMapping.ClasificationId = item.ClasificationId;
-                        classificationMapping.Description = item.Description;
-                        ClassificationMappingList.Add(classificationMapping);
-                    }
-                }
+                var ClassificationMappingList = (from cm in _appContext.ClassificationMapping
+                                                 join vc in _appContext.VendorClassification on cm.ClasificationId equals vc.VendorClassificationId
+                                                 where cm.IsDeleted == false && cm.ModuleId == moduleId && cm.ReferenceId == referenceId
+                                                 select new
+                                                 {
+                                                     cm.ClassificationMappingId,
+                                                     cm.ClasificationId,
+                                                     vc.ClassificationName
+                                                 })
+                           .Distinct()
+                           .ToList();
+
 
                 return ClassificationMappingList;
             }
@@ -722,11 +693,11 @@ namespace DAL.Repositories
                             {
                                 sv.ShippingViaId,
                                 sv.Name,
-								sv.ShippingAccountInfo,
-								sv.ShippingURL,
-								sv.ShippingId,
-								sv.Memo
-							}).OrderBy(p => p.Name).ToList();
+                                sv.ShippingAccountInfo,
+                                sv.ShippingURL,
+                                sv.ShippingId,
+                                sv.Memo
+                            }).OrderBy(p => p.Name).ToList();
                 return list;
             }
             catch (Exception)
@@ -827,7 +798,7 @@ namespace DAL.Repositories
         {
             Dictionary<string, long> keyValuePairs = new Dictionary<string, long>();
             ManagementStructure level4 = null;
-            ManagementStructure level3=null;
+            ManagementStructure level3 = null;
             ManagementStructure level2 = null;
             ManagementStructure level1 = null;
             try
@@ -845,7 +816,7 @@ namespace DAL.Repositories
                 {
                     level1 = _appContext.ManagementStructure.Where(p => p.IsDelete == false && p.ManagementStructureId == level2.ParentId).FirstOrDefault();
                 }
-                
+
 
                 if (level4 != null && level3 != null && level2 != null && level1 != null)
                 {
@@ -854,7 +825,7 @@ namespace DAL.Repositories
                     keyValuePairs.Add("Level2", level2.ManagementStructureId);
                     keyValuePairs.Add("Level1", level1.ManagementStructureId);
                 }
-                else if(level4 != null && level2 != null && level3 != null)
+                else if (level4 != null && level2 != null && level3 != null)
                 {
                     keyValuePairs.Add("Level3", level4.ManagementStructureId);
                     keyValuePairs.Add("Level2", level3.ManagementStructureId);

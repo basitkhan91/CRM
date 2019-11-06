@@ -11,6 +11,7 @@ import { VendorService } from '../../../../services/vendor.service';
 import { fadeInOut } from '../../../../services/animations';
 import { Router } from '@angular/router';
 import { Table } from 'primeng/table';
+import { PurchaseOrderService } from '../../../../services/purchase-order.service';
 
 @Component({
 	selector: 'app-polist',
@@ -40,6 +41,9 @@ export class PolistComponent implements OnInit {
     @ViewChild('dt')
     private table: Table;
     lazyLoadEventData: any;
+    auditHistory: AuditHistory[];
+    rowDataToDelete: any = {};
+
     constructor(private _route: Router,
         private authService: AuthService,
         private modalService: NgbModal,
@@ -48,7 +52,8 @@ export class PolistComponent implements OnInit {
         private alertService: AlertService,
         public vendorService: VendorService,
         private dialog: MatDialog,
-        private masterComapnyService: MasterComapnyService) {
+        private masterComapnyService: MasterComapnyService,
+        private purchaseOrderService: PurchaseOrderService) {
         // this.displayedColumns.push('Customer');
         // this.dataSource = new MatTableDataSource();
         // this.activeIndex = 0;
@@ -97,9 +102,11 @@ export class PolistComponent implements OnInit {
     }
 
     changeStatus(rowData) {
-        // this.customerService.updateActionforActive(rowData, this.userName).subscribe(res => {
-        //     this.alertService.showMessage("Success", `Successfully Updated Status`, MessageSeverity.success);
-        // })
+        console.log(rowData);
+        
+        this.purchaseOrderService.getPOStatus(rowData.purchaseOrderId, rowData.isActive, this.userName).subscribe(res => {
+            this.alertService.showMessage("Success", `Successfully Updated Status`, MessageSeverity.success);
+        })
 
     }
     edit(rowData) {
@@ -108,13 +115,27 @@ export class PolistComponent implements OnInit {
         this._route.navigateByUrl(`vendorsmodule/vendorpages/app-purchase-setup/edit/${purchaseOrderId}`);
     }
     delete(rowData) {
-        // this.vendorService.updateListstatus(rowData.customerId).subscribe(res => {
-        //     this.getList(this.lazyLoadEventData);
-        //     this.alertService.showMessage("Success", `Successfully Deleted Record`, MessageSeverity.success);
-
-        // })
+        this.rowDataToDelete = rowData;
     }
-    viewSelectedRow(rowData) { }
+    deletePO() {
+        const { purchaseOrderId } = this.rowDataToDelete;
+        this.purchaseOrderService.deletePO(purchaseOrderId, this.userName).subscribe(res => {
+            this.getList(this.lazyLoadEventData);
+            this.alertService.showMessage("Success", `Successfully Deleted Record`, MessageSeverity.success);
+
+        })
+    }
+
+    viewSelectedRow(rowData) { 
+        console.log(rowData);
+        this.getVendorPOById(rowData.purchaseOrderId);
+    }
+
+    getVendorPOById(poId) {
+        this.purchaseOrderService.getVendorPOById(poId).subscribe(res => {
+            console.log(res);            
+        });
+    }
     // changePage(event: { first: any; rows: number }) {
     //     console.log(event);
     //     this.pageIndex = (event.first / event.rows);
@@ -133,6 +154,21 @@ export class PolistComponent implements OnInit {
         // })
     }
     getAuditHistoryById(rowData) {
+        this.purchaseOrderService.getPOHistory(rowData.purchaseOrderId).subscribe(res => {
+            console.log(res);            
+            this.auditHistory = res;
+        })
+    }
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
     }
 
 }

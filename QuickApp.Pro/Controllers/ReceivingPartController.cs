@@ -46,7 +46,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getById/{id}")]
         public IActionResult getItemMasterDataById(long id)
         {
-            var itemMasterData = unitOfWork.Repository<ItemMaster>().Find(x => x.ItemMasterId == id && x.IsDelete != true);
+            var itemMasterData = unitOfWork.Repository<ItemMaster>().Find(x => x.ItemMasterId == id && x.IsDeleted != true);
             return Ok(itemMasterData);
         }
 

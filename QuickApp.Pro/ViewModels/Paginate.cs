@@ -377,6 +377,39 @@ namespace QuickApp.Pro.ViewModels
 
     #endregion
 
+    #region Stockline Adjustment Reason
+    public class StocklineAdjustmentReasonColModel
+    {
+
+        public long ID { get; set; }
+        public string StockAdjustmentReason { get; set; }
+        public string Memo { get; set; }
+    }
+
+    public class StocklineAdjustmentReasonSPModel
+    {
+        public long? iD { get; set; }
+
+        public string StockAdjustmentReason { get; set; }
+
+        public string Memo { get; set; }
+
+
+        public Int32 MasterCompanyId { get; set; }
+
+        public bool? IsActive { get; set; }
+
+        public bool? IsDeleted { get; set; }
+
+        public virtual MasterCompany MasterCompany { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public string UpdatedBy { get; set; }
+    }
+    #endregion
+
     #region Currency - GLAccount
     public class GLAccountModel
     {

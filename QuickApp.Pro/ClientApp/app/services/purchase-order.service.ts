@@ -40,6 +40,18 @@ export class PurchaseOrderService {
   getPurchaseOrderPartsById(purchaseOrderId){
     return this.purchaseOrderEndpoint.getPurchaseOrderPartsById(purchaseOrderId);
   }
+
+  getPOStatus(purchaseOrderId, status, updatedBy){
+    return this.purchaseOrderEndpoint.getPOStatus(purchaseOrderId, status, updatedBy);
+  }
+
+  getPOHistory(purchaseOrderId){
+    return this.purchaseOrderEndpoint.getPOHistory(purchaseOrderId);
+  }
+
+  deletePO(purchaseOrderId, updatedBy){
+    return this.purchaseOrderEndpoint.deletePO(purchaseOrderId, updatedBy);
+  }
   /*./vendor PO*/
 
 }

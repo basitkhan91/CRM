@@ -194,13 +194,13 @@
                         <th>PN</th>
                         <th>Alt PN</th>
                         <th>PN Description</th>
-                        <th>Change PN to</th>
+                        <!-- <th>Change PN to</th> -->
                         <th>Manufacturer</th>
                         <th>Cond</th>
-                        <th>Qty to Repair</th>
-                        <th>Qty Reserved</th>
-                        <th>Qty Repaired</th>
-                        <th>Qty Reconciled</th>
+                        <th>Qty Ordered</th>
+                        <th>Qty Received</th>
+                        <th>Qty Rejected</th>
+                        <th>Qty Backordered</th>
                         <th>Unit Cost</th>
                         <th>Discount</th>
                         <th>Extended Cost</th>
@@ -225,7 +225,7 @@
                         <td>{{obj.partNumber}}</td>
                         <td>{{obj.partNumber}}</td>
                         <td>{{obj.partDescription}}</td>
-                        <td></td> <!--{{obj.ItemTypeId}}-->
+                        <!-- <td></td> {{obj.ItemTypeId}} -->
                         <td>{{obj.manufacturer}}</td>
                         <td> 
                             {{obj.conditionId}}
@@ -282,12 +282,13 @@
                         <th>Control Num</th>
                         <th>ID</th>
                         <th>Cond</th>
-                        <th>UOM</th>
+                        <!-- <th>UOM</th> -->
                         <th>Serial Num</th>
-                        <th>Out for Repair</th>
-                        <th>Qty Repaired</th>
-                        <th>Inventory Cost</th>
-                        <th>Repair Cost</th>
+                        <th>Qty Ordered</th>
+                        <th>Qty Received</th>
+                        <th>Qty Rejected</th>
+                        <th>Qty Backordered</th>
+                        <th>Unit Cost</th>
                         <th>Extended Cost</th>
                         <th>Receiver no.</th>
                         <th>WO </th>
@@ -341,13 +342,15 @@
                                 <option>SRV</option>
                             </select> -->
                         </td>
-                        <td>Each</td>
+                        <!-- <td>Each</td> -->
                         <td>SN-10006</td>
                         <td>1</td>
                         <td>1</td>
-                        <td>$
-                            <!-- <input type="text" class="form-control amount disabled2" style="max-width: calc(100% - 10px)!important;min-width: 80px;margin-left: 2px;" disabled="" value="100.00"> -->
-                        </td>
+                        <td>1</td>
+                        <td>1</td>
+                        <!-- <td>$
+                            <input type="text" class="form-control amount disabled2" style="max-width: calc(100% - 10px)!important;min-width: 80px;margin-left: 2px;" disabled="" value="100.00">
+                        </td> -->
                         <td>$
                             <!-- <input type="text" class="form-control amount disabled2" style="max-width: calc(100% - 10px)!important;min-width: 80px;margin-left: 2px;" disabled="" value="400.00"> -->
                         </td>

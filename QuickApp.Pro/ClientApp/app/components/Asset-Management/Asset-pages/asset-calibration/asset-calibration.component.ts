@@ -21,6 +21,10 @@ export class AssetCalibrationComponent implements OnInit {
     allGlInfo: GlAccount[];
     currentCalibration: any = {};
     showLable: boolean;
+    calibrationRequired: boolean;
+    certificationRequired: boolean;
+    inspectionRequired: boolean;
+    verificationRequired: boolean;
     currentAsset: any;
     loadingIndicator: boolean;
     allVendorInfo: Vendor[];

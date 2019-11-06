@@ -32,6 +32,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ChargesCreateComponent } from "../shared/Charges-Create.component";
 import { Percent } from "../models/Percent.model";
 import { PercentService } from "../services/percent.service";
+import { WorkOrderService } from "../services/work-order/work-order.service";
 
 @Component({
     selector: 'wf-create',
@@ -39,6 +40,8 @@ import { PercentService } from "../services/percent.service";
     styleUrls: ['./workflow-Create.component.css']
 })
 export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
+    @Input() isWorkOrder; 
+    @Input()  savedWorkOrderData;
     UpdateMode: boolean;
     workFlow: any;
     workFlowList: any[];
@@ -153,8 +156,11 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     TotalCharges: number;
     TotalExpertiseCost: number;
     @ViewChild(ChargesCreateComponent) chargesCreateComponent: ChargesCreateComponent;
+    responseDataForHeader: any;
 
-    constructor(private actionService: ActionService, private router: ActivatedRoute, private route: Router, private expertiseService: EmployeeExpertiseService, private cusservice: CustomerService, public workscopeService: WorkScopeService, public currencyService: CurrencyService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService, private conditionService: ConditionService, private _workflowService: WorkFlowtService, private itemser: ItemMasterService, private vendorService: VendorService, private alertService: AlertService, private modalService: NgbModal, private percentService: PercentService) {
+    constructor(private actionService: ActionService,
+        private workOrderService: WorkOrderService,
+        private router: ActivatedRoute, private route: Router, private expertiseService: EmployeeExpertiseService, private cusservice: CustomerService, public workscopeService: WorkScopeService, public currencyService: CurrencyService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService, private conditionService: ConditionService, private _workflowService: WorkFlowtService, private itemser: ItemMasterService, private vendorService: VendorService, private alertService: AlertService, private modalService: NgbModal, private percentService: PercentService) {
     }
 
     public ngOnDestroy() {
@@ -212,6 +218,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     updateWorkFlowId: string;
 
     ngOnInit(): void {
+        console.log(this.isWorkOrder );
         this.isFixedcheck('');
         this.loadCurrencyData();
         this.loadWorkScopedata();
@@ -1868,10 +1875,35 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     }
 
     addWorkFlow(isHeaderUpdate: boolean): void {
+        console.log(1);
         this.sourceWorkFlow.workflowId = undefined;
-        if (!this.validateWorkFlowHeader() || !this.calculateTotalWorkFlowCost()) {
-            return;
+        // save Work Order Workflow
+        console.log(this.validateWorkFlowHeader());
+        
+        if(this.isWorkOrder && this.validateWorkFlowHeader()){
+            console.log(2);
+            // if(this.responseDataForHeader){
+
+                this.actionService.addWorkFlowHeader(this.sourceWorkFlow).subscribe(result => {
+                    this.sourceWorkFlow.workflowId = result.workflowId;
+                    this.sourceWorkFlow.workOrderNumber = result.workOrderNumber;
+                    this.alertService.showMessage(this.title, "Work Flow header added successfully.", MessageSeverity.success);
+                     this.responseDataForHeader = result;
+                    this.UpdateMode = true;
+                    // this.SaveWorkFlow();
+                });
+            // } else {
+            //     this.SaveWorkFlow();
+            // }
+
+
+        }else {
+            console.log(3);
+     // WorkFlow Create
+      if (!this.validateWorkFlowHeader() || !this.calculateTotalWorkFlowCost()) {
+         return;
         }
+
 
         this.SaveWorkFlow();
         if (isHeaderUpdate) {
@@ -1883,6 +1915,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             this.sourceWorkFlow.materialList = [];
             this.sourceWorkFlow.measurements = [];
             this.sourceWorkFlow.publication = [];
+            console.log(4);
 
             this.actionService.addWorkFlowHeader(this.sourceWorkFlow).subscribe(result => {
                 this.alertService.showMessage(this.title, "Work Flow header added successfully.", MessageSeverity.success);
@@ -1893,6 +1926,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
             return;
         }
+
       
         this.actionService.getNewWorkFlow(this.sourceWorkFlow).subscribe(
             data => {
@@ -1909,17 +1943,43 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                 }
                 this.alertService.showMessage(this.title, message, MessageSeverity.error);
             }
-        );
+        )
+    }
+        
     }
     title: string = "Work Flow";
 
     updateWorkFlow(isHeaderUpdate: boolean): void {
+        // save Work Order Workflow
+        console.log(5);
 
-        if (!this.validateWorkFlowHeader() || !this.calculateTotalWorkFlowCost()) {
-            return;
-        }
+        console.log(this.isWorkOrder, this.validateWorkFlowHeader())
+        if(this.isWorkOrder  &&  this.validateWorkFlowHeader() ){
+            // this.SaveWorkFlow();
+            console.log(6);
 
+            if(this.responseDataForHeader){
+                console.log(7);
+                this.actionService.addWorkFlowHeader(this.sourceWorkFlow).subscribe(result => {
+                    this.sourceWorkFlow.workflowId = result.workflowId;
+                    this.sourceWorkFlow.workOrderNumber = result.workOrderNumber;
+                    this.alertService.showMessage(this.title, "Work Flow header added successfully.", MessageSeverity.success);
+                     this.responseDataForHeader = result;
+                    this.UpdateMode = true;
+                    this.SaveWorkFlow();
+                });
+            } else {
+                // this.SaveWorkFlow();
+            }
+
+        }else {
+            console.log(8);
+                // WorkFlow Create 
+            if (!this.validateWorkFlowHeader() || !this.calculateTotalWorkFlowCost()) {
+                return;
+            }
         this.SaveWorkFlow();
+        console.log(9);
         if (isHeaderUpdate) {
             this.sourceWorkFlow.charges = [];
             this.sourceWorkFlow.directions = [];
@@ -1958,6 +2018,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                 this.alertService.showMessage(this.title, message, MessageSeverity.error);
             }
         )
+    }
     }
 
     SaveWorkFlow(): void {
@@ -2049,6 +2110,33 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                         this.sourceWorkFlow.publication.push(publication);
                     }
                 }
+            }
+
+          
+
+            if(this.isWorkOrder && this.responseDataForHeader){
+
+                const data = this.sourceWorkFlow;
+                  this.workOrderService.createWorkFlowWorkOrder(
+                      {...this.responseDataForHeader , workOrderId : this.savedWorkOrderData.workOrderId , 
+                        charges : data.charges.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId } }),
+                        directions : data.directions.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId } }),
+                        equipments : data.equipments.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId } }),
+                        exclusions : data.exclusions.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId } }),
+                        expertise : data.expertise.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId } }),
+                        materialList : data.materialList.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId } }),
+                        measurements : data.measurements.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId } }),
+                        publication : data.publication.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId } })
+
+                    
+                }).subscribe(res => {
+
+                    this.alertService.showMessage(
+                        '',
+                        'Work Order Work Flow Saved Succesfully',
+                        MessageSeverity.success
+                      );
+                })
             }
         }
     }

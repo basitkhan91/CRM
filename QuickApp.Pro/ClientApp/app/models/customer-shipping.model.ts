@@ -13,6 +13,8 @@ export class CustomerShippingModel {
                 this.stateOrProvince = "";
                 this.postalCode ="";
                 this.country ="" ;
+                this.customerId = null;
+                this.vendorId = null;
         
         
                 // this.CustomerShippingId = CustomerShippingId;
@@ -37,6 +39,8 @@ export class CustomerShippingModel {
             public stateOrProvince : string;
             public postalCode: string;
             public country : string;
+            public customerId : number;
+            public vendorId : number;
         
             // public CustomerShippingId: number;
             // public CustomerId: number;
