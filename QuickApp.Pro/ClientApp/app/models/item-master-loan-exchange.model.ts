@@ -8,9 +8,9 @@ export class ItemMasterLoanExchange {
         exchangeOverhaulPrice?: number,exchangeOutrightPrice?: number,exchangeCoreCost?: number,loanFees?: number,
         loanCorePrice? :number, loanOutrightPrice?: number,isDeleted?: boolean,
          createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string
-		, memo?: string, itemMasterId?:number) {
+		, memo?: string, itemMasterId?:number,itemMasterLoanExchId?:number ) {
 
-        
+        this.itemMasterLoanExchId= itemMasterLoanExchId;
         this.itemMasterId=itemMasterId;
         this.isLoan = isLoan;
         this.isExchange = isExchange;
@@ -34,6 +34,7 @@ export class ItemMasterLoanExchange {
 	
     }
 
+    public itemMasterLoanExchId:number;
     public itemMasterId:number;
     public isLoan: boolean;
     public isExchange: boolean;

@@ -30,20 +30,28 @@
 </div>
 <div class="col-sm-12">
     <form #exchloan>
-    <div class="col-sm-6">
+    <div class="col-sm-3">
         <div class="card">
-                <div class="card-header"> Exchange <input type="checkbox" name="chkExchange" [(ngModel)]="showExchange" /></div> 
+                <div class="card-header"> Exchange <input type="checkbox" name="chkExchange" [(ngModel)]="showExchange"  (change)="handleExchangeCheck()"/></div> 
                 <div class="card-body" *ngIf="showExchange">
-                        <div class="form-group">
-                                <label for="currencyExchange">Currency</label>
-                               <select name="currencyExchange" [(ngModel)]="currentItem.exchangeCurrencyId">
-                                   <option value="0">Select</option>
-                                   <option *ngFor="let excur of exchangeCurrencies" [ngValue]="excur.currencyId">{{excur.displayName}}</option>
-                                </select>   
+                        <div class="col-md-12">
+                                        <div class="form-group">
+                                                        <label for="currencyExchange">Currency</label>
+                                                       <select name="currencyExchange" [(ngModel)]="currentItem.exchangeCurrencyId">
+                                                           <option value="0">Select</option>
+                                                           <option *ngFor="let excur of exchangeCurrencies" [ngValue]="excur.currencyId">{{excur.displayName}}</option>
+                                                        </select>   
+                                                </div>
                         </div>
-                        <div class="form-group">
-                                <label for="exchListPRice">Exchange List Price</label>
-                                <input type="number" class="form-control" name="exchListPRice" [(ngModel)]="currentItem.exchangeListPrice" >
+                   
+                        <div class="form-group col-sm-12">
+                               
+                                   <label for="exchListPRice" class="control-label" >Exchange List Price</label>
+                              
+                               
+                                 <input type="number" class="form-control" name="exchListPRice" [(ngModel)]="currentItem.exchangeListPrice" >
+                                
+                               
                         </div>
                         <div class="form-group">
                                 <label for="exchCorePrice">Core Price</label>
@@ -64,13 +72,13 @@
                 </div>
         </div>
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-3">
         <div class="card">
-                <div class="card-header"> Loan <input type="checkbox" name="chkLoan" [(ngModel)]="showLoan" /></div> 
+                <div class="card-header"> Loan <input type="checkbox" name="chkLoan" [(ngModel)]="showLoan"  (change)="handleLoanCheck()"/></div> 
                 <div class="card-body" *ngIf="showLoan">
                         <div class="form-group">
-                                <label for="currencyLoan">Currency</label>
-                               <select name="currencyLoan" [(ngModel)]="currentItem.loanCurrencyId">
+                                <label for="currencyLoan" class="control-label">Currency</label>
+                               <select name="currencyLoan" class="select-value-drop" [(ngModel)]="currentItem.loanCurrencyId">
                                    <option value="0">Select</option>
                                    <option *ngFor="let loancur of loanCurrencies" [ngValue]="loancur.currencyId">{{loancur.displayName}}</option>
                                 </select>   

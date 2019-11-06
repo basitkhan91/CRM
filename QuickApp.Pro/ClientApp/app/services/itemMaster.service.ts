@@ -29,6 +29,7 @@ export type RolesChangedEventArg = {
 @Injectable()
 export class ItemMasterService {
  
+ 
     enableExternal: boolean = false;
     listEquipmentCollection: any;
     itemmasterObj: any[];
@@ -70,7 +71,9 @@ export class ItemMasterService {
     updateExchangeLoan(item: ItemMasterLoanExchange) {
         return this.itemMasterEndpoint.getUpdateItemMasterExchangeLoanEndpoint(item, item.itemMasterId);
     }
-
+    AddExchangeLoan(currentItem: ItemMasterLoanExchange) {
+        return this.itemMasterEndpoint.AddItemMasterExchangeLoanEndpoint(currentItem);
+    }
     getItemMasterById(id: number) {
         return Observable.forkJoin(
             this.itemMasterEndpoint.getItemMasterById<any[]>(id));

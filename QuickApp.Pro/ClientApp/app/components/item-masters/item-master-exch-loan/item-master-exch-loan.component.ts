@@ -34,18 +34,21 @@ export class ItemMasterExchangeLoanComponent implements OnInit {
         this.onTabChange.emit(tabName);
     }
     ngOnInit() { 
-
-        console.log('initialized exch loan');
-        if(this.itemMasterId)
-        {
-            this.itemMasterService.getExchangeLoan(this.itemMasterId).subscribe(c=>{
-                this.currentItem=c[0];
-            });
-        }
-        this.currentItem=  {...new ItemMasterLoanExchange(), exchangeCurrencyId:0, 
+        this.currentItem=  {...new ItemMasterLoanExchange(), exchangeCurrencyId:0, itemMasterId:this.itemMasterId,
             loanCurrencyId:0,createdBy:this.userName,isActive:true, isDeleted:false,isExchange:true, isLoan:true};
         this.currentItem.exchangeCurrencyId=0;
         this.currentItem.loanCurrencyId=0;
+        if(this.itemMasterId)
+        {
+            this.itemMasterService.getExchangeLoan(this.itemMasterId).subscribe(c=>{
+               
+                if(c[0]!=null)
+                {
+                    this.currentItem=c[0];
+                }
+            });
+        }
+
         this.loadCurrency();
     }
 
@@ -56,17 +59,57 @@ export class ItemMasterExchangeLoanComponent implements OnInit {
             this.loanCurrencies=[...dat[0]];
         });
     }
+    handleExchangeCheck():void{
+        console.log('change');
+        if(!this.showExchange)
+        {
+            // clear the values
+            this.currentItem.isExchange=false;
+            this.currentItem.exchangeCoreCost=null;
+            this.currentItem.exchangeCorePrice=null;
+            this.currentItem.exchangeCurrencyId=0;
+            this.currentItem.exchangeListPrice=null;
+            this.currentItem.exchangeOutrightPrice=null;
+            this.currentItem.exchangeOverhaulPrice=null;
+
+
+        }
+    }
+    
+    handleLoanCheck():void{
+        console.log('change');
+        if(!this.showLoan)
+        {
+            // clear the values
+            this.currentItem.isLoan=false;
+            this.currentItem.loanCorePrice=null;
+            this.currentItem.loanFees=null;
+            this.currentItem.loanCurrencyId=0;
+            this.currentItem.loanOutrightPrice=null;
+        }
+    }
     saveAndMove():void
     {
         this.currentItem.updatedBy=this.userName;
         this.currentItem.isExchange=this.showExchange;
         this.currentItem.isLoan=this.showLoan;
         console.log( this.currentItem);
-       
+         if(this.currentItem.itemMasterLoanExchId)
+         {
+            this.itemMasterService.updateExchangeLoan(this.currentItem).subscribe(()=>{
+                //Show the message
+                this.moveTab('ExportInfo');
+            })
+         }else{
+             // Add new item
+             this.itemMasterService.AddExchangeLoan(this.currentItem).subscribe((data)=>{
+                 //Show the message
+                 this.currentItem.itemMasterLoanExchId=data.itemMasterLoanExchId;
+                 this.moveTab('ExportInfo');
+             });
+         }
         //save or update and then move to next tab
-        this.itemMasterService.updateExchangeLoan(this.currentItem).subscribe(()=>{
-            this.moveTab('ExportInfo');
-        })
+      
 
     }
 }

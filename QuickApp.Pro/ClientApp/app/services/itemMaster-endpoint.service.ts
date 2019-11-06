@@ -10,7 +10,7 @@ import { Url } from '../app.settings';
 import { ItemMasterLoanExchange } from '../models/item-master-loan-exchange.model';
 @Injectable()
 export class ItemMasterEndpoint extends EndpointFactory {
-
+    
 
     private readonly _actionsUrl: string = "/api/ItemMaster/Get";
     private readonly _actionsCapsUrl: string = "/api/ItemMaster/GetListforCapes";
@@ -114,6 +114,14 @@ export class ItemMasterEndpoint extends EndpointFactory {
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
         super(http, configurations, injector);
+    }
+    AddItemMasterExchangeLoanEndpoint(currentItem: ItemMasterLoanExchange) {
+        let endpointUrl = `${this.ExchangeLoanUrl}`;
+
+        return this.http.post(endpointUrl, JSON.stringify(currentItem), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.AddItemMasterExchangeLoanEndpoint(currentItem));
+            });
     }
 
     getUpdateItemMasterExchangeLoanEndpoint<T>(exchObject: any, itemMasterId: number): Observable<T> {
