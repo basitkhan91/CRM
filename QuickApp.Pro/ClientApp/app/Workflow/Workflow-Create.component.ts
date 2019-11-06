@@ -2232,7 +2232,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             const data = this.sourceWorkFlow;
             const excessParams = {
                 createdBy : this.userName,
-                updated : this.userName,
+                updatedBy : this.userName,
                 createdate : new Date(),
                 updatdate : new Date() ,
                 isActive : true,
