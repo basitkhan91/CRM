@@ -64,6 +64,9 @@ export class VendorStepsPrimeNgComponent {
             this.activeMenuItem = 7;
         }
     }
+    changeOfTab(value) {
+
+    }
 
 	ngOnInit() {
 		//alert('ngInit');

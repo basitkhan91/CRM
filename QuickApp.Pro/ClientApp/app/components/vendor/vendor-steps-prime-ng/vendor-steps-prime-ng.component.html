@@ -34,8 +34,7 @@
     </div>
     <div class="md-step"
          [ngClass]="{
-         active: activeMenuItem>
-        = 3,
+         active: activeMenuItem >= 3,
         editable: activeMenuItem === 3
         }"
         (click)="changeOfTab('Financial Information')"
@@ -48,8 +47,7 @@
     </div>
     <div class="md-step"
          [ngClass]="{
-         active: activeMenuItem>
-        = 4,
+         active: activeMenuItem >= 4,
         editable: activeMenuItem === 4
         }"
         (click)="changeOfTab('Payment Information')"
@@ -62,8 +60,7 @@
     </div>
     <div class="md-step"
          [ngClass]="{
-         active: activeMenuItem>
-        = 5,
+         active: activeMenuItem >= 5,
         editable: activeMenuItem === 5
         }"
         (click)="changeOfTab('Shipping Information')"
@@ -89,8 +86,7 @@
     </div>
     <div class="md-step"
          [ngClass]="{
-         active: activeMenuItem>
-        = 7,
+         active: activeMenuItem >= 7,
         editable: activeMenuItem === 7
         }"
         (click)="changeOfTab('Warnings')"
@@ -103,8 +99,7 @@
     </div>
     <div class="md-step"
          [ngClass]="{
-         active: activeMenuItem>
-        = 8,
+         active: activeMenuItem >= 8,
         editable: activeMenuItem === 8
         }"
         (click)="changeOfTab('Documents')"
