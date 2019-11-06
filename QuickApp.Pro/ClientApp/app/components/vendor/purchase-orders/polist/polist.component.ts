@@ -43,6 +43,7 @@ export class PolistComponent implements OnInit {
     lazyLoadEventData: any;
     auditHistory: AuditHistory[];
     rowDataToDelete: any = {};
+    poHeaderAdd: any = {};
 
     constructor(private _route: Router,
         private authService: AuthService,
@@ -128,12 +129,13 @@ export class PolistComponent implements OnInit {
 
     viewSelectedRow(rowData) { 
         console.log(rowData);
-        this.getVendorPOById(rowData.purchaseOrderId);
+        this.getPOViewById(rowData.purchaseOrderId);
     }
 
-    getVendorPOById(poId) {
-        this.purchaseOrderService.getVendorPOById(poId).subscribe(res => {
-            console.log(res);            
+    getPOViewById(poId) {
+        this.purchaseOrderService.getPOViewById(poId).subscribe(res => {
+            console.log(res);  
+            this.poHeaderAdd = res;
         });
     }
     // changePage(event: { first: any; rows: number }) {

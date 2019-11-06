@@ -498,10 +498,7 @@ namespace DAL.Repositories
                         where po.PurchaseOrderId == purchaseOrderId
                         select new
                         {
-                            po,
-                            v.VendorCode,
-                            con.WorkPhone,
-                            con.WorkPhoneExtn
+                            po
                         }).FirstOrDefault();
 
             return data;

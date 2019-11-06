@@ -638,10 +638,19 @@ namespace DAL.Repositories
         {
             try
             {
-                shippingVia.CreatedDate = shippingVia.UpdatedDate = DateTime.Now;
+                shippingVia.UpdatedDate = DateTime.Now;
                 shippingVia.IsActive = true;
                 shippingVia.IsDeleted = false;
-                _appContext.ShippingVia.Add(shippingVia);
+                if(shippingVia.ShippingViaId>0)
+                {
+                    _appContext.ShippingVia.Update(shippingVia);
+                }
+                else
+                {
+                    shippingVia.CreatedDate = DateTime.Now; 
+                    _appContext.ShippingVia.Add(shippingVia);
+                }
+                
                 _appContext.SaveChanges();
                 return shippingVia.ShippingViaId;
             }

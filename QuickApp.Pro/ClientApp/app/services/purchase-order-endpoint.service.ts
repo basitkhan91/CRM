@@ -76,5 +76,9 @@ export class PurchaseOrderEndpoint extends EndpointFactory {
   deletePO(purchaseOrderId, updatedBy) {
 		return this.http.get<any>(`${this.configurations.baseUrl}/api/purchaseorder/deletepo?purchaseOrderId=${purchaseOrderId}&updatedBy=${updatedBy}`)
   }
+
+  getPOViewById(purchaseOrderId) {
+    return this.http.get<any>(`${this.configurations.baseUrl}/api/purchaseorder/poview?purchaseOrderId=${purchaseOrderId}`)
+}
     /* ./vendor PO*/
 }
