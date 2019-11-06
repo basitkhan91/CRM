@@ -56,6 +56,10 @@ export class PurchaseOrderService {
   getPOViewById(purchaseOrderId){
     return this.purchaseOrderEndpoint.getPOViewById(purchaseOrderId);
   }
+
+  getPOPartsViewById(purchaseOrderId){
+    return this.purchaseOrderEndpoint.getPOPartsViewById(purchaseOrderId);
+  }
   /*./vendor PO*/
 
 }

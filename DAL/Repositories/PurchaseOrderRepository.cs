@@ -983,7 +983,7 @@ namespace DAL.Repositories
 
                 return purchaseOrderParts;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 throw;

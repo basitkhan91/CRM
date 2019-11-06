@@ -556,7 +556,7 @@ export class PurchaseSetupComponent implements OnInit {
 			return getObjectById('value', data.shipToUserId, this.allCustomers);
 		}
 		if (data.shipToUserType === 2) {
-			this.tempShipTOAddressId = data.shipToAddressId;
+			this.tempShipTOAddressId = data.shipToAddressId;			
 			this.onShipToVendorSelected(data.shipToUserId, data);
 			this.getShipViaEdit(data);
 			return getObjectById('vendorId', data.shipToUserId, this.vendorList);
@@ -1309,9 +1309,9 @@ export class PurchaseSetupComponent implements OnInit {
 			}
 			console.log(this.vendorContactsForshipTo);
 
-			// this.commonService.getShipViaDetailsByModule(this.sourcePoApproval.shipToUserTypeId, vendorId).subscribe(res => {
-			// 	this.shipViaList = res;
-			// })
+			this.commonService.getShipViaDetailsByModule(this.sourcePoApproval.shipToUserTypeId, vendorId).subscribe(res => {
+				this.shipViaList = res;
+			})
 			this.getShipViaDetailsForShipTo();
 		});
 	}
