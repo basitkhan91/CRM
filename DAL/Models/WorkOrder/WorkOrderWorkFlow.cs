@@ -12,7 +12,7 @@ namespace DAL.Models
         public WorkOrderWorkFlow()
         {
             Charges = new List<WorkOrderCharges>();
-            Assets = new List<WorkOrderAssets>();
+            Equipments = new List<WorkOrderAssets>();
             Exclusions = new List<WorkOrderExclusions>();
             Expertise = new List<WorkOrderExpertise>();
             MaterialList = new List<WorkOrderMaterials>();
@@ -20,8 +20,8 @@ namespace DAL.Models
             WorkOrderAddress = new List<WorkOrderAddress>();
            // WorkOrderQuote = new WorkOrderQuote();
            WorkOrderFreight = new List<WorkOrderFreight>();
-            WorkOrderDirections = new List<WorkOrderDirections>();
-            Publications = new List<WorkOrderPublications>();
+            Directions = new List<WorkOrderDirections>();
+            Publication = new List<WorkOrderPublications>();
         }
 
         [Key]
@@ -72,7 +72,7 @@ namespace DAL.Models
 
 
         public virtual List<WorkOrderCharges> Charges { get; set; }
-        public virtual List<WorkOrderAssets> Assets { get; set; }
+        public virtual List<WorkOrderAssets> Equipments { get; set; }
         public virtual List<WorkOrderExclusions> Exclusions { get; set; }
         public virtual List<WorkOrderMaterials> MaterialList { get; set; }
         public virtual List<WorkOrderDocuments> Documents { get; set; }
@@ -80,8 +80,8 @@ namespace DAL.Models
         public virtual List<WorkOrderFreight> WorkOrderFreight { get; set; }
         //public virtual List<WorkOrderTask> WorkOrderTask { get; set; }
         public virtual List<WorkOrderExpertise> Expertise { get; set; }
-        public virtual List<WorkOrderDirections> WorkOrderDirections { get; set; }
-        public virtual List<WorkOrderPublications> Publications { get; set; }
+        public virtual List<WorkOrderDirections> Directions { get; set; }
+        public virtual List<WorkOrderPublications> Publication { get; set; }
 
         [NotMapped]
         public WorkOrderLaborHeader WorkOrderLaborHeader { get; set; }
