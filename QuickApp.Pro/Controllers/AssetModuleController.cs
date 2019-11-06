@@ -59,10 +59,11 @@ namespace QuickApp.Pro.Controllers
             if (asset != null)
             {
                 asset.IsActive = true;
-                asset.AssetRecordId = 0;
+                //asset.AssetRecordId = 0;
                 asset.CreatedDate = DateTime.Now;
                 asset.UpdatedDate = DateTime.Now;
                 asset.MasterCompanyId = 1;
+                asset.IsDelete = false;
                 _context.Asset.Add(asset);
                 _context.SaveChanges();
             }
@@ -177,8 +178,8 @@ namespace QuickApp.Pro.Controllers
                 newAsset.UpdatedDate = DateTime.Now;
                 newAsset.MasterCompanyId = 1;
                 _unitOfWork.Repository<Asset>().Add(newAsset);
-                _unitOfWork.SaveChanges(); 
-            return Ok(newAsset);
+                _unitOfWork.SaveChanges();
+                 return Ok(newAsset);
             }
             else
             return Ok("Enter proper data");

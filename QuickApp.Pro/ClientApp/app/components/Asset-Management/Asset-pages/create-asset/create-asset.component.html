@@ -9,11 +9,11 @@
                 <label class="control-label col-sm-4"></label>
                 <div class="col-sm-7">
                     <label class="radio-inline">
-                        <input type="radio" value="1" name="assetRadio" class="form-check-inline" [checked]="currentAsset.isDepreciable == true" (change)="onDepreciable()"  >
+                        <input type="radio" value="1" name="assetRadio" class="form-check-inline" [checked]="currentAsset.isDepreciable == true" (change)="onDepreciable()">
                         Depreciable
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" value="2" name="assetRadio" (change)="onIntangible()" [checked]="currentAsset.isIntangible == true"  >
+                        <input type="radio" value="2" name="assetRadio" (change)="onIntangible()" [checked]="currentAsset.isIntangible == true">
                         Intangible
                     </label>
                 </div>
@@ -53,7 +53,7 @@
             </div>
 
             <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Company</label>
+                <label class="control-label col-sm-4">Company<span class="clr-red">*</span></label>
                 <div class="col-sm-7">
                     <select [(ngModel)]="currentAsset.companyId" [ngModelOptions]="{standalone: true}" (change)="getBUList(currentAsset.companyId)">
                         <option>--Select--</option>
@@ -62,7 +62,7 @@
                 </div>
             </div>
             <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">BU</label>
+                <label class="control-label col-sm-4">BU<span class="clr-red">*</span></label>
                 <div class="col-sm-7">
                     <select [(ngModel)]="currentAsset.buisinessUnitId" [ngModelOptions]="{standalone: true}" (change)="getDepartmentlist(currentAsset.buisinessUnitId)">
                         <option>--Select--</option>
@@ -71,7 +71,7 @@
                 </div>
             </div>
             <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Div</label>
+                <label class="control-label col-sm-4">Div<span class="clr-red">*</span></label>
                 <div class="col-sm-7">
                     <select [(ngModel)]="currentAsset.departmentId" [ngModelOptions]="{standalone: true}" (change)="getDivisionlist(currentAsset.departmentId)">
                         <option>--Select--</option>
@@ -80,7 +80,7 @@
                 </div>
             </div>
             <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Dept</label>
+                <label class="control-label col-sm-4">Dept<span class="clr-red">*</span></label>
                 <div class="col-sm-7">
                     <div>
                         <select [(ngModel)]="currentAsset.divisionId" [ngModelOptions]="{standalone: true}" (change)="divisionChange(currentAsset.divisionId)">
@@ -107,7 +107,7 @@
                     </div>
                 </div>
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">Manufacturer</label>
+                    <label class="control-label col-sm-4">Manufacturer<span class="clr-red">*</span></label>
                     <div class="col-sm-7">
                         <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.manufacturerId">
                             <option *ngFor="let name of allManufacturerInfo" [ngValue]="name.manufacturerId">{{name.name}}</option>
@@ -156,8 +156,8 @@
                 </div>
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Depreciation Method</label>
-                    <div class="col-sm-7">                        
-                            <input disabled class="form-control amount" type="text" [(ngModel)]="currentSelectedIntangibleAssetType.amortizationMethod">
+                    <div class="col-sm-7">
+                        <input disabled class="form-control amount" type="text" [(ngModel)]="currentSelectedIntangibleAssetType.amortizationMethod">
                     </div>
                 </div>
                 <div class="form-group col-sm-12">
@@ -290,7 +290,7 @@
                         <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.assetTypeId" (change)="getSelectedAssetType(currentAsset.assetTypeId)">
                             <option>--Select--</option>
                             <option class="form-control" *ngFor="let assetType of allAssetTypeInfo" [ngValue]="assetType.assetTypeId">
-                                {{assetType.assetTypeSingleScreen?.assetTypeName}}
+                                {{assetType.assetTypeName}}
                             </option>
                         </select>
                     </div>
@@ -321,6 +321,13 @@
                             </select>
                         </div>
                     </div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Residual Value</label>
+                        <div class="col-sm-7">
+                            <input class="form-control amount" type="text" disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetType.residualValue">
+                        </div>
+                    </div>
+
                     <div class="form-group col-sm-12">
                         <label class="control-label col-sm-4">Asset Life</label>
                         <div class="col-sm-7">
@@ -381,27 +388,27 @@
                         </div>
                     </div>
                     <div class="form-group col-sm-12">
-        <label class="control-label col-sm-4">Write Off GL</label>
-        <div class="col-sm-7">
-            <select disabled="" class="form-control" [(ngModel)]="currentSelectedAssetType.assetWriteOff" [ngModelOptions]="{standalone: true}">
-                <option></option>
-                <option>70000</option>
-                <option>80000</option>
-                <option>90000</option>
-            </select>
-        </div>
-    </div>
+                        <label class="control-label col-sm-4">Write Off GL</label>
+                        <div class="col-sm-7">
+                            <select disabled="" class="form-control" [(ngModel)]="currentSelectedAssetType.assetWriteOff" [ngModelOptions]="{standalone: true}">
+                                <option></option>
+                                <option>70000</option>
+                                <option>80000</option>
+                                <option>90000</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="form-group col-sm-12">
-        <label class="control-label col-sm-4">Write Down GL</label>
-        <div class="col-sm-7">
-            <select disabled="" class="form-control" [(ngModel)]="currentSelectedAssetType.assetWriteDown" [ngModelOptions]="{standalone: true}">
-                <option></option>
-                <option>70000</option>
-                <option>80000</option>
-                <option>90000</option>
-            </select>
-        </div>
-    </div>
+                        <label class="control-label col-sm-4">Write Down GL</label>
+                        <div class="col-sm-7">
+                            <select disabled="" class="form-control" [(ngModel)]="currentSelectedAssetType.assetWriteDown" [ngModelOptions]="{standalone: true}">
+                                <option></option>
+                                <option>70000</option>
+                                <option>80000</option>
+                                <option>90000</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="clear"></div>
                 </div>
 
