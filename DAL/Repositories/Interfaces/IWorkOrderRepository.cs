@@ -34,7 +34,7 @@ namespace DAL.Repositories.Interfaces
 
         long CreateWorkOrderAssets(WorkOrderAssets workOrderAssets);
         void UpdateWorkOrderAssets(WorkOrderAssets workOrderAssets);
-        IEnumerable<WorkOrderAssets> GetWorkFlowWorkOrderAssetsList(long wfwoId = 0, long workOrderId = 0);
+        IEnumerable<object> GetWorkOrderAssetList(long wfwoId, long workOrderId);
 
         long CreateWorkOrderExclusions(WorkOrderExclusions workOrderExclusions);
         void UpdateWorkOrderExclusions(WorkOrderExclusions workOrderExclusions);
@@ -63,6 +63,8 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetPartPublications(long itemMasterId);
         IEnumerable<object> GetRevisedParts(long itemMasterId, int mappingType);
         IEnumerable<object> GetConditionDetailsByPartNo(long itemMasterId);
+
+        IEnumerable<object> GetWorkOrderMaterialList(long wfwoId, long workOrderId);
 
     }
 }

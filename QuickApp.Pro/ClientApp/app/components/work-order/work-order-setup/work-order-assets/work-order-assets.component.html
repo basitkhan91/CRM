@@ -28,8 +28,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>A12345</td>
+                        <tr *ngFor="let asset of workOrderAssetList">
+                            <td>{{asset.Asset}}</td>
                             <td>Equipment Description</td>
                             <td>Equipmemt</td>
                             <td>4</td>

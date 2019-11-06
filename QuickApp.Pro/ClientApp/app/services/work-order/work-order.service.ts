@@ -109,4 +109,8 @@ export class WorkOrderService {
         return this.workOrderEndpointService.getWorkOrderWorkFlowNumbers();
     }
 
+    getWorkOrderAssetList(workflowId) {
+        return this.workOrderEndpointService.getWorkOrderAssetList(workflowId);
+    }
+
 }

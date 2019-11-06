@@ -285,10 +285,10 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        [HttpGet("getworkflowworkorderassetslist")]
-        public IActionResult GetWorkFlowWorkOrderAssetsList(long wfwoId = 0, long workOrderId = 0)
+        [HttpGet("workorderassetlist")]
+        public IActionResult GetWorkOrderAssetList(long wfwoId = 0, long workOrderId = 0)
         {
-            var result = unitOfWork.WorkOrderRepository.GetWorkFlowWorkOrderAssetsList(wfwoId, workOrderId);
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderAssetList(wfwoId, workOrderId);
             return Ok(result);
         }
 
@@ -624,6 +624,13 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetConditionDetailsByPartNo(long itemMasterId)
         {
             var result = unitOfWork.WorkOrderRepository.GetConditionDetailsByPartNo(itemMasterId);
+            return Ok(result);
+        }
+
+        [HttpGet("workordermateriallist")]
+        public IActionResult GetWorkOrderMaterialList(long wfwoId = 0, long workOrderId = 0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderMaterialList(wfwoId, workOrderId);
             return Ok(result);
         }
     }
