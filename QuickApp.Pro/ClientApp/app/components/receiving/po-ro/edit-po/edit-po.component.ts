@@ -84,7 +84,7 @@ export class EditPoComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this.receivingService.getPurchaseOrderDataForEditById(126).subscribe(
+        this.receivingService.getPurchaseOrderDataForEditById(this.receivingService.purchaseOrderId).subscribe(
             results => {
                 this.purchaseOrderData = results[0];
                 this.purchaseOrderData.openDate = new Date(results[0].openDate).toLocaleDateString();
