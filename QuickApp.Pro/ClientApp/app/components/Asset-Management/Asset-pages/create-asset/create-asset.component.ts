@@ -449,7 +449,7 @@ export class CreateAssetComponent implements OnInit {
         this.currentAsset.isDepreciable = false;
     }
     
-    saveAsset(): void {
+    saveAsset(): void { 
 
         if (this.currentAsset.isDepreciable == true) {
             if (!(this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.unitOfMeasureId
