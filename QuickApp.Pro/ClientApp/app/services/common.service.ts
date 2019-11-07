@@ -18,7 +18,7 @@ export class CommonService {
 
     smartDropDownList(tableName, primaryKeyColumn, labelColumn, count?) {
 
-        return this.http.get(`${this.baseUrl}/api/Common/binddropdowns?tableName=${tableName}&primaryColumn=${primaryKeyColumn}&textColumn=${labelColumn}&count=${count !== undefined ? count : 0}`, this.authService.getRequestHeaders())
+        return this.http.get<any>(`${this.baseUrl}/api/Common/binddropdowns?tableName=${tableName}&primaryColumn=${primaryKeyColumn}&textColumn=${labelColumn}&count=${count !== undefined ? count : 0}`, this.authService.getRequestHeaders())
 
     }
     createShipVia(object) {

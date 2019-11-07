@@ -109,11 +109,15 @@ export class WorkOrderService {
         return this.workOrderEndpointService.getWorkOrderWorkFlowNumbers();
     }
 
-    getWorkOrderAssetList(workflowId) {
-        return this.workOrderEndpointService.getWorkOrderAssetList(workflowId);
+    getWorkOrderAssetList(workFlowWorkOrderId) {
+        return this.workOrderEndpointService.getWorkOrderAssetList(workFlowWorkOrderId);
     }
     createWorkOrderLabor(data){
         return this.workOrderEndpointService.createWorkOrderLabor(data);
+    }
+    getAllTasks(){
+        return this.workOrderEndpointService.getTasks();
+
     }
 
 }

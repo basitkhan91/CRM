@@ -1,12 +1,12 @@
 export class WorkOrderLabor {
   workFlowWorkOrderId: number;
   dataEnteredBy: number;
-  expertise: string;
+  expertiseId: null;
   employeeId: null;
   isTaskCompletedByOne: false;
   workFloworSpecificTaskorWorkOrder: 'workFlow';
   hoursorClockorScan: 'labourHours';
-  tasks: [
+  workOrderLaborList: [
     {
       receive: AllTasks[];
       inspect: AllTasks[];
@@ -24,12 +24,12 @@ export class WorkOrderLabor {
   constructor() {
     this.workFlowWorkOrderId = null;
     this.dataEnteredBy = null;
-    this.expertise = '';
+    this.expertiseId = null;
     this.employeeId = null;
     this.isTaskCompletedByOne = false;
     this.workFloworSpecificTaskorWorkOrder = 'workFlow';
     this.hoursorClockorScan = 'labourHours';
-    this.tasks = [
+    this.workOrderLaborList = [
       {
         receive: [],
         inspect: [],
@@ -47,25 +47,27 @@ export class WorkOrderLabor {
 }
 
 export class AllTasks {
-  expertise: string;
+  expertiseId: string;
   employeeId: number;
-  billableorNonBillable: string;
-  startDateandTime: Date;
+  billableId: string;
+  startDate: Date;
   startDateandTimeIsEdit: boolean;
   endDateandTimeIsEdit: boolean;
-  endDateandTime: Date;
+  endDate: Date;
   hoursandMinutes: string;
   adjustments: string;
   adjustmentedHours: string;
   memo: string;
 
+
+
   constructor() {
-    this.expertise = '';
+    this.expertiseId = null;
     this.employeeId = null;
-    this.billableorNonBillable = 'billable';
-    this.startDateandTime = null;
+    this.billableId = '';
+    this.startDate = null;
     this.startDateandTimeIsEdit = false;
-    this.endDateandTime = null;
+    this.endDate = null;
     this.endDateandTimeIsEdit = false;
     this.hoursandMinutes = '';
     this.adjustments = '';

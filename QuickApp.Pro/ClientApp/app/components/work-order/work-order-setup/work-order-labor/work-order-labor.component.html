@@ -42,7 +42,7 @@
               placeholder="Select Expertise Type"
                 [options]="expertiseTypeList"
                 class="p-dropdown-custom"
-                [(ngModel)]="laborForm.expertise"
+                [(ngModel)]="laborForm.expertiseId"
               ></p-dropdown>
             </div>
             <div class="form-group">
@@ -170,7 +170,7 @@
       </thead>
       <tbody>
         <!-- Receive -->
-        <tr *ngFor="let rec of laborForm.tasks[0].receive; let i = index">
+        <tr *ngFor="let rec of laborForm.workOrderLaborList[0].receive; let i = index">
           <td *ngIf="i < 1">
             Receive
             <i
@@ -185,7 +185,7 @@
               placeholder="Select Expertise Type"
                 [options]="expertiseTypeList"
                 class="p-dropdown-custom-2"
-                [(ngModel)]="rec.expertise"
+                [(ngModel)]="rec.expertiseId"
               ></p-dropdown>
           </td>
           <td>
@@ -208,15 +208,13 @@
             ></i>
           </td>
           <td>
-            <select
-              class="w100"
-              [(ngModel)]="rec.billableorNonBillable"
-              name="billing"
-            >
-              <option value="">Select Billing Type</option>
-              <option value="billable">Billable</option>
-              <option value="non-billable">Non Billable</option>
-            </select>
+              <p-dropdown
+              placeholder="Select Billing Type"
+                [options]="billableList"
+                class="p-dropdown-custom-2"
+                name="billable-rec"
+                [(ngModel)]="rec.billableId"
+              ></p-dropdown>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' && laborForm.hoursorClockorScan !== 'scan'">
             <button
@@ -228,7 +226,7 @@
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours'">
             <p-calendar
-              [(ngModel)]="rec.startDateandTime"
+              [(ngModel)]="rec.startDate"
               [disabled]="!rec.startDateandTimeIsEdit"
               [showIcon]="true"
               showTime="true"
@@ -239,14 +237,14 @@
           </td>
             <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
-            <p-calendar [(ngModel)]="rec.endDateandTime" [disabled]="!rec.endDateandTimeIsEdit" [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
+            <p-calendar [(ngModel)]="rec.endDate" [disabled]="!rec.endDateandTimeIsEdit" [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
           <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(rec,'endDateandTimeIsEdit')"></i>            
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
-            {{ rec.hoursandMinutes }}
+            {{ rec.hours }}
           </td>
           <td *ngIf="laborForm.hoursorClockorScan === 'labourHours'"> 
-            <input type="text" [(ngModel)]="rec.hoursandMinutes" name="hours"> 
+            <input type="text" [(ngModel)]="rec.hours" name="hours"> 
           </td>
           <td>
             <input type="number" [(ngModel)]="rec.adjustments" />
@@ -259,7 +257,7 @@
           </td> 
         </tr>
         <!-- inspect -->
-        <tr *ngFor="let inspect of laborForm.tasks[0].inspect; let i = index;">
+        <tr *ngFor="let inspect of laborForm.workOrderLaborList[0].inspect; let i = index;">
             <td *ngIf="i < 1">Inspect <i  *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg" (click)="addNewTask('inspect')"></i></td>
             <td *ngIf="i >= 1">&nbsp;</td>
     
@@ -268,7 +266,7 @@
               placeholder="Select Expertise Type"
                 [options]="expertiseTypeList"
                 class="p-dropdown-custom-2"
-                [(ngModel)]="inspect.expertise"
+                [(ngModel)]="inspect.expertiseId"
               ></p-dropdown>
           </td>
           <td>
@@ -289,11 +287,12 @@
             <i *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg margintop" ></i>
           </td>
           <td>
-            <select class="w100" [(ngModel)]="inspect.billableorNonBillable" name="billing">
-              <option value="">Select Billing Type</option>
-              <option value="billable">Billable</option>
-              <option value="non-billable">Non Billable</option>
-            </select>
+              <p-dropdown
+              placeholder="Select Billing Type"
+                [options]="billableList"
+                class="p-dropdown-custom-2"
+                [(ngModel)]="inspect.billableId"
+              ></p-dropdown>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' && laborForm.hoursorClockorScan !== 'scan'">
             <button class="btn btn-primary-cstm start-btn" (click)="startandStop(inspect)">
@@ -302,7 +301,7 @@
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
-            <p-calendar [(ngModel)]="inspect.startDateandTime"
+            <p-calendar [(ngModel)]="inspect.startDate"
             [disabled]="!inspect.startDateandTimeIsEdit"
              [showIcon]="true" showTime="true" hourFormat="24" class="w150"
             ></p-calendar>
@@ -312,16 +311,16 @@
           
             <p-calendar 
             [disabled]="!inspect.endDateandTimeIsEdit" 
-            [(ngModel)]="inspect.endDateandTime" [showIcon]="true" showTime="true" 
+            [(ngModel)]="inspect.endDate" [showIcon]="true" showTime="true" 
             hourFormat="24" class="w150"
             ></p-calendar>
             <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(inspect,'endDateandTimeIsEdit')"></i> 
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
-            {{ inspect.hoursandMinutes }}
+            {{ inspect.hours }}
           </td>
           <td *ngIf="laborForm.hoursorClockorScan === 'labourHours'"> 
-              <input type="text" [(ngModel)]="inspect.hoursandMinutes" name="hours"> 
+              <input type="text" [(ngModel)]="inspect.hours" name="hours"> 
             </td>
           <td>
             <input type="number" [(ngModel)]="inspect.adjustments" />
@@ -334,7 +333,7 @@
           </td>
         </tr> 
         <!-- Evaluate -->
-        <tr *ngFor="let evaluate of laborForm.tasks[0].evaluate; let i = index;">
+        <tr *ngFor="let evaluate of laborForm.workOrderLaborList[0].evaluate; let i = index;">
             <td *ngIf="i < 1">Evaluate <i  *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg" (click)="addNewTask('evaluate')"></i></td>
             <td *ngIf="i >= 1">&nbsp;</td>
           <td>
@@ -343,7 +342,7 @@
               placeholder="Select Expertise Type"
                 [options]="expertiseTypeList"
                 class="p-dropdown-custom-2"
-                [(ngModel)]="evaluate.expertise"
+                [(ngModel)]="evaluate.expertiseId"
               ></p-dropdown>
 
           </td>
@@ -364,11 +363,12 @@
             <i *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg margintop" ></i>
           </td>
           <td>
-            <select class="w100" [(ngModel)]="evaluate.billableorNonBillable" name="billing">
-              <option value="">Select Billing Type</option>
-              <option value="billable">Billable</option>
-              <option value="non-billable">Non Billable</option>
-            </select>
+              <p-dropdown
+              placeholder="Select Billing Type"
+                [options]="billableList"
+                class="p-dropdown-custom-2"
+                [(ngModel)]="evaluate.billableId"
+              ></p-dropdown>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' && laborForm.hoursorClockorScan !== 'scan'">
             <button class="btn btn-primary-cstm start-btn" (click)="startandStop(evaluate)">
@@ -378,23 +378,23 @@
 
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
-            <p-calendar [(ngModel)]="evaluate.startDateandTime"  [disabled]="!evaluate.startDateandTimeIsEdit" [showIcon]="true"
+            <p-calendar [(ngModel)]="evaluate.startDate"  [disabled]="!evaluate.startDateandTimeIsEdit" [showIcon]="true"
              showTime="true" hourFormat="24" class="w150"></p-calendar>
              <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(evaluate,'startDateandTimeIsEdit')"></i>  
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
-            <p-calendar [(ngModel)]="evaluate.endDateandTime"
+            <p-calendar [(ngModel)]="evaluate.endDate"
               [disabled]="!evaluate.endDateandTimeIsEdit" 
                 [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
             <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(evaluate,'endDateandTimeIsEdit')"></i>  
           </td>
 
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
-            {{ evaluate.hoursandMinutes }}
+            {{ evaluate.hours }}
           </td>
           <td *ngIf="laborForm.hoursorClockorScan === 'labourHours'"> 
-              <input type="text" [(ngModel)]="evaluate.hoursandMinutes" name="hours"> 
+              <input type="text" [(ngModel)]="evaluate.hours" name="hours"> 
             </td>
           <td>
             <input type="number" [(ngModel)]="evaluate.adjustments" />
@@ -407,7 +407,7 @@
           </td>
         </tr> 
         <!-- TearDown -->
-         <tr *ngFor="let teardown of laborForm.tasks[0].tearDown; let i = index;">
+         <tr *ngFor="let teardown of laborForm.workOrderLaborList[0].tearDown; let i = index;">
             <td *ngIf="i < 1">TearDown <i  *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg" (click)="addNewTask('tearDown')"></i></td>
             <td *ngIf="i >= 1">&nbsp;</td>
           <td>
@@ -415,7 +415,7 @@
               placeholder="Select Expertise Type"
                 [options]="expertiseTypeList"
                 class="p-dropdown-custom-2"
-                [(ngModel)]="teardown.expertise"
+                [(ngModel)]="teardown.expertiseId"
               ></p-dropdown>
           </td>
           <td>
@@ -435,11 +435,13 @@
             <i *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg margintop" ></i>
           </td>
           <td>
-            <select class="w100" [(ngModel)]="teardown.billableorNonBillable" name="billing">
-              <option value="">Select Billing Type</option>
-              <option value="billable">Billable</option>
-              <option value="non-billable">Non Billable</option>
-            </select>
+              <p-dropdown
+              placeholder="Select Billing Type"
+                [options]="billableList"
+                class="p-dropdown-custom-2"
+                [(ngModel)]="teardown.billableId"
+              ></p-dropdown>
+
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' && laborForm.hoursorClockorScan !== 'scan'">
             <button class="btn btn-primary-cstm start-btn" (click)="startandStop(teardown)">
@@ -448,7 +450,7 @@
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
-            <p-calendar [(ngModel)]="teardown.startDateandTime" 
+            <p-calendar [(ngModel)]="teardown.startDate" 
             [showIcon]="true" showTime="true"
             [disabled]="!teardown.startDateandTimeIsEdit"
             hourFormat="24" class="w150"></p-calendar>
@@ -457,17 +459,17 @@
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
-            <p-calendar [(ngModel)]="teardown.endDateandTime" 
+            <p-calendar [(ngModel)]="teardown.endDate" 
             [showIcon]="true" showTime="true" hourFormat="24" 
             [disabled]="!teardown.endDateandTimeIsEdit" 
             class="w150"></p-calendar>
             <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(teardown,'endDateandTimeIsEdit')"></i> 
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
-            {{ teardown.hoursandMinutes }}
+            {{ teardown.hours }}
           </td>
           <td *ngIf="laborForm.hoursorClockorScan === 'labourHours'"> 
-              <input type="text" [(ngModel)]="teardown.hoursandMinutes" name="hours"> 
+              <input type="text" [(ngModel)]="teardown.hours" name="hours"> 
             </td>
           <td>
             <input type="number" [(ngModel)]="teardown.adjustments" />
@@ -480,7 +482,7 @@
           </td>
         </tr>
         <!-- Disassemble -->
-        <tr *ngFor="let disassemble of laborForm.tasks[0].disassemble; let i = index;">
+        <tr *ngFor="let disassemble of laborForm.workOrderLaborList[0].disassemble; let i = index;">
             <td *ngIf="i < 1">Disassemble <i  *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg" (click)="addNewTask('disassemble')"></i></td>
             <td *ngIf="i >= 1">&nbsp;</td>
       
@@ -489,7 +491,7 @@
               placeholder="Select Expertise Type"
                 [options]="expertiseTypeList"
                 class="p-dropdown-custom-2"
-                [(ngModel)]="disassemble.expertise"
+                [(ngModel)]="disassemble.expertiseId"
               ></p-dropdown>
 
           </td>
@@ -511,11 +513,12 @@
             <i *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg margintop" ></i>
           </td>
           <td>
-            <select class="w100" [(ngModel)]="disassemble.billableorNonBillable" name="billing">
-              <option value="">Select Billing Type</option>
-              <option value="billable">Billable</option>
-              <option value="non-billable">Non Billable</option>
-            </select>
+              <p-dropdown
+              placeholder="Select Billing Type"
+                [options]="billableList"
+                class="p-dropdown-custom-2"
+                [(ngModel)]="disassemble.billableId"
+              ></p-dropdown>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' && laborForm.hoursorClockorScan !== 'scan'">
             <button class="btn btn-primary-cstm start-btn" (click)="startandStop(disassemble)">
@@ -524,7 +527,7 @@
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
-            <p-calendar [(ngModel)]="disassemble.startDateandTime" 
+            <p-calendar [(ngModel)]="disassemble.startDate" 
             [disabled]="!disassemble.startDateandTimeIsEdit"
             [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
            
@@ -532,17 +535,17 @@
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
-            <p-calendar [(ngModel)]="disassemble.endDateandTime" 
+            <p-calendar [(ngModel)]="disassemble.endDate" 
             [disabled]="!disassemble.endDateandTimeIsEdit" 
             [showIcon]="true" showTime="true" hourFormat="24" 
             class="w150"></p-calendar>
             <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(disassemble,'endDateandTimeIsEdit')"></i>  
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
-            {{ disassemble.hoursandMinutes }}
+            {{ disassemble.hours }}
           </td>
           <td *ngIf="laborForm.hoursorClockorScan === 'labourHours'"> 
-              <input type="text" [(ngModel)]="disassemble.hoursandMinutes" name="hours"> 
+              <input type="text" [(ngModel)]="disassemble.hours" name="hours"> 
             </td>
           <td>
             <input type="number" [(ngModel)]="disassemble.adjustments" />
@@ -555,7 +558,7 @@
           </td>
         </tr> 
         <!-- Assemble -->
-         <tr *ngFor="let assemble of laborForm.tasks[0].assemble; let i = index;">
+         <tr *ngFor="let assemble of laborForm.workOrderLaborList[0].assemble; let i = index;">
             <td *ngIf="i < 1">Assemble <i  *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg" (click)="addNewTask('assemble')"></i></td>
             <td *ngIf="i >= 1">&nbsp;</td>
           <td>
@@ -563,7 +566,7 @@
               placeholder="Select Expertise Type"
                 [options]="expertiseTypeList"
                 class="p-dropdown-custom-2"
-                [(ngModel)]="assemble.expertise"
+                [(ngModel)]="assemble.expertiseId"
               ></p-dropdown>
           </td>
           <td>
@@ -583,11 +586,12 @@
             <i *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg margintop" ></i>
           </td>
           <td>
-            <select class="w100" [(ngModel)]="assemble.billableorNonBillable" name="billing">
-              <option value="">Select Billing Type</option>
-              <option value="billable">Billable</option>
-              <option value="non-billable">Non Billable</option>
-            </select>
+              <p-dropdown
+              placeholder="Select Billing Type"
+                [options]="billableList"
+                class="p-dropdown-custom-2"
+                [(ngModel)]="assemble.billableId"
+              ></p-dropdown>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' && laborForm.hoursorClockorScan !== 'scan'">
             <button class="btn btn-primary-cstm start-btn" (click)="startandStop(assemble)">
@@ -595,7 +599,7 @@
             </button>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
-            <p-calendar [(ngModel)]="assemble.startDateandTime" 
+            <p-calendar [(ngModel)]="assemble.startDate" 
             [disabled]="!assemble.startDateandTimeIsEdit"
             [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
 
@@ -603,7 +607,7 @@
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
-            <p-calendar [(ngModel)]="assemble.endDateandTime" 
+            <p-calendar [(ngModel)]="assemble.endDate" 
             [disabled]="!assemble.endDateandTimeIsEdit" 
             [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
          
@@ -611,10 +615,10 @@
 
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
-            {{ assemble.hoursandMinutes }}
+            {{ assemble.hours }}
           </td>
           <td *ngIf="laborForm.hoursorClockorScan === 'labourHours'"> 
-              <input type="text" [(ngModel)]="assemble.hoursandMinutes" name="hours"> 
+              <input type="text" [(ngModel)]="assemble.hours" name="hours"> 
             </td>
           <td>
             <input type="number" [(ngModel)]="assemble.adjustments" />
@@ -628,7 +632,7 @@
           </td>
         </tr> 
         <!-- Testing -->
-         <tr *ngFor="let testing of laborForm.tasks[0].testing; let i = index;">
+         <tr *ngFor="let testing of laborForm.workOrderLaborList[0].testing; let i = index;">
           
                 <td *ngIf="i < 1">Testing <i  *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg" (click)="addNewTask('testing')"></i></td>
                 <td *ngIf="i >= 1">&nbsp;</td>
@@ -637,7 +641,7 @@
               placeholder="Select Expertise Type"
                 [options]="expertiseTypeList"
                 class="p-dropdown-custom-2"
-                [(ngModel)]="testing.expertise"
+                [(ngModel)]="testing.expertiseId"
               ></p-dropdown>
           </td>
           <td>
@@ -657,11 +661,12 @@
             <i *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg margintop" ></i>
           </td>
           <td>
-            <select class="w100" [(ngModel)]="testing.billableorNonBillable" name="billing">
-              <option value="">Select Billing Type</option>
-              <option value="billable">Billable</option>
-              <option value="non-billable">Non Billable</option>
-            </select>
+              <p-dropdown
+              placeholder="Select Billing Type"
+                [options]="billableList"
+                class="p-dropdown-custom-2"
+                [(ngModel)]="testing.billableId"
+              ></p-dropdown>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' && laborForm.hoursorClockorScan !== 'scan'">
             <button class="btn btn-primary-cstm start-btn" (click)="startandStop(testing)">
@@ -671,13 +676,13 @@
 
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
-            <p-calendar [(ngModel)]="testing.startDateandTime" 
+            <p-calendar [(ngModel)]="testing.startDate" 
             [disabled]="!testing.startDateandTimeIsEdit"
             [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
             <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(testing,'startDateandTimeIsEdit')"></i>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
-            <p-calendar [(ngModel)]="testing.endDateandTime" 
+            <p-calendar [(ngModel)]="testing.endDate" 
             [disabled]="!testing.endDateandTimeIsEdit" 
             [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
          
@@ -685,10 +690,10 @@
           </td>
 
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
-            {{ testing.hoursandMinutes }}
+            {{ testing.hours }}
           </td>
           <td *ngIf="laborForm.hoursorClockorScan === 'labourHours'"> 
-              <input type="text" [(ngModel)]="testing.hoursandMinutes" name="hours"> 
+              <input type="text" [(ngModel)]="testing.hours" name="hours"> 
             </td>
           <td>
             <input type="number" [(ngModel)]="testing.adjustments" />
@@ -701,7 +706,7 @@
           </td>
         </tr> 
         <!-- QualityControl -->
-         <tr *ngFor="let qc of laborForm.tasks[0].qualityControl; let i = index;">
+         <tr *ngFor="let qc of laborForm.workOrderLaborList[0].qualityControl; let i = index;">
             <td *ngIf="i < 1">QualityControl <i  *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg" (click)="addNewTask('qualityControl')"></i></td>
             <td *ngIf="i >= 1">&nbsp;</td>
           <td>
@@ -709,7 +714,7 @@
               placeholder="Select Expertise Type"
                 [options]="expertiseTypeList"
                 class="p-dropdown-custom-2"
-                [(ngModel)]="qc.expertise"
+                [(ngModel)]="qc.expertiseId"
               ></p-dropdown>
           </td>
           <td>
@@ -729,11 +734,12 @@
             <i *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg margintop" ></i>
           </td>
           <td>
-            <select class="w100" [(ngModel)]="qc.billableorNonBillable" name="billing">
-              <option value="">Select Billing Type</option>
-              <option value="billable">Billable</option>
-              <option value="non-billable">Non Billable</option>
-            </select>
+              <p-dropdown
+              placeholder="Select Billing Type"
+                [options]="billableList"
+                class="p-dropdown-custom-2"
+                [(ngModel)]="qc.billableId"
+              ></p-dropdown>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' && laborForm.hoursorClockorScan !== 'scan'">
             <button class="btn btn-primary-cstm start-btn" (click)="startandStop(qc)">
@@ -742,7 +748,7 @@
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
-            <p-calendar [(ngModel)]="qc.startDateandTime" 
+            <p-calendar [(ngModel)]="qc.startDate" 
             [disabled]="!qc.startDateandTimeIsEdit"
             [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
         
@@ -751,7 +757,7 @@
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
-            <p-calendar [(ngModel)]="qc.endDateandTime"
+            <p-calendar [(ngModel)]="qc.endDate"
             [disabled]="!qc.endDateandTimeIsEdit" 
              [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
              <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(qc,'endDateandTimeIsEdit')"></i> 
@@ -759,10 +765,10 @@
 
 
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
-            {{ qc.hoursandMinutes }}
+            {{ qc.hours }}
           </td>
           <td *ngIf="laborForm.hoursorClockorScan === 'labourHours'"> 
-              <input type="text" [(ngModel)]="qc.hoursandMinutes" name="hours"> 
+              <input type="text" [(ngModel)]="qc.hours" name="hours"> 
             </td>
           <td>
             <input type="number" [(ngModel)]="qc.adjustments" />
@@ -775,7 +781,7 @@
           </td>
         </tr> 
         <!-- Ship -->
-         <tr *ngFor="let ship of laborForm.tasks[0].ship; let i= index;">
+         <tr *ngFor="let ship of laborForm.workOrderLaborList[0].ship; let i= index;">
             <td *ngIf="i < 1">Ship <i  *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg" (click)="addNewTask('ship')"></i></td>
             <td *ngIf="i >= 1">&nbsp;</td>
       
@@ -784,7 +790,7 @@
               placeholder="Select Expertise Type"
                 [options]="expertiseTypeList"
                 class="p-dropdown-custom-2"
-                [(ngModel)]="ship.expertise"
+                [(ngModel)]="ship.expertiseId"
               ></p-dropdown>
           </td>
           <td>
@@ -804,11 +810,12 @@
             <i *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg margintop" ></i>
           </td>
           <td>
-            <select class="w100" [(ngModel)]="ship.billableorNonBillable" name="billing">
-              <option value="">Select Billing Type</option>
-              <option value="billable">Billable</option>
-              <option value="non-billable">Non Billable</option>
-            </select>
+              <p-dropdown
+              placeholder="Select Billing Type"
+                [options]="billableList"
+                class="p-dropdown-custom-2"
+                [(ngModel)]="ship.billableId"
+              ></p-dropdown>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' && laborForm.hoursorClockorScan !== 'scan'">
             <button class="btn btn-primary-cstm start-btn" (click)="startandStop(ship)">
@@ -816,23 +823,23 @@
             </button>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
-            <p-calendar [(ngModel)]="ship.startDateandTime" 
+            <p-calendar [(ngModel)]="ship.startDate" 
             [disabled]="!ship.startDateandTimeIsEdit"
             [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
             <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(ship,'startDateandTimeIsEdit')"></i>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
-            <p-calendar [(ngModel)]="ship.endDateandTime"    
+            <p-calendar [(ngModel)]="ship.endDate"    
             [disabled]="!ship.endDateandTimeIsEdit"  
             [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
            <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(ship,'endDateandTimeIsEdit')"></i>  
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
-            {{ ship.hoursandMinutes }}
+            {{ ship.hours }}
           </td>
           <td *ngIf="laborForm.hoursorClockorScan === 'labourHours'"> 
-              <input type="text" [(ngModel)]="ship.hoursandMinutes" name="hours"> 
+              <input type="text" [(ngModel)]="ship.hours" name="hours"> 
             </td>
           <td>
             <input type="number" [(ngModel)]="ship.adjustments" />
@@ -845,7 +852,7 @@
           </td>
         </tr> 
         <!-- Clean -->
-        <tr *ngFor="let clean of laborForm.tasks[0].clean; let i = index;">
+        <tr *ngFor="let clean of laborForm.workOrderLaborList[0].clean; let i = index;">
             <td *ngIf="i < 1">Clean <i  *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg" (click)="addNewTask('clean')"></i></td>
             <td *ngIf="i >= 1">&nbsp;</td>
           <td>
@@ -853,7 +860,7 @@
               placeholder="Select Expertise Type"
                 [options]="expertiseTypeList"
                 class="p-dropdown-custom-2"
-                [(ngModel)]="clean.expertise"
+                [(ngModel)]="clean.expertiseId"
               ></p-dropdown>
 
           </td>
@@ -876,11 +883,12 @@
             <i *ngIf="!laborForm.isTaskCompletedByOne" class="float-right float-right fa fa-plus-circle fa-lg margintop" ></i>
           </td>
           <td>
-            <select class="w100" [(ngModel)]="clean.billableorNonBillable" name="billing">
-              <option value="">Select Billing Type</option>
-              <option value="billable">Billable</option>
-              <option value="non-billable">Non Billable</option>
-            </select>
+              <p-dropdown
+              placeholder="Select Billing Type"
+                [options]="billableList"
+                class="p-dropdown-custom-2"
+                [(ngModel)]="clean.billableId"
+              ></p-dropdown>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' && laborForm.hoursorClockorScan !== 'scan'">
             <button class="btn btn-primary-cstm start-btn" (click)="startandStop(clean)">
@@ -888,22 +896,22 @@
             </button>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
-            <p-calendar [(ngModel)]="clean.startDateandTime" 
+            <p-calendar [(ngModel)]="clean.startDate" 
             [disabled]="!clean.startDateandTimeIsEdit"
             [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
             <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(clean,'startDateandTimeIsEdit')"></i>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
-            <p-calendar [(ngModel)]="clean.endDateandTime" 
+            <p-calendar [(ngModel)]="clean.endDate" 
             [disabled]="!clean.endDateandTimeIsEdit" 
             [showIcon]="true" showTime="true" hourFormat="24" class="w150"></p-calendar>
             <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(clean,'endDateandTimeIsEdit')"></i>  
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
-            {{ clean.hoursandMinutes }}
+            {{ clean.hours }}
           </td>
           <td *ngIf="laborForm.hoursorClockorScan === 'labourHours'"> 
-              <input type="text" [(ngModel)]="clean.hoursandMinutes" name="hours"> 
+              <input type="text" [(ngModel)]="clean.hours" name="hours"> 
             </td>
           <td>
             <input type="number" [(ngModel)]="clean.adjustments" />
