@@ -66,6 +66,17 @@ namespace QuickApp.Pro.Controllers
                 asset.IsDelete = false;
                 _context.Asset.Add(asset);
                 _context.SaveChanges();
+
+                AssetAudit imc = new AssetAudit();
+
+                imc.AssetRecordId = asset.AssetRecordId;
+                
+                imc.MasterCompanyId = 1;
+                imc.CreatedDate = DateTime.Now;
+                imc.UpdatedDate = DateTime.Now;
+                imc.IsActive = true;
+                _context.AssetAudit.Add(imc);
+                _context.SaveChanges();
             }
             return Ok(asset);
         }

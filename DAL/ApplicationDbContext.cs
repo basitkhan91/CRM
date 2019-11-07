@@ -292,6 +292,8 @@ namespace DAL
         public DbSet<AssetAttributeTypeAudit> AssetAttributeTypeAudit { get; set; }
 
         public DbSet<Asset> Asset { get; set; }
+
+        public DbSet<AssetAudit> AssetAudit { get; set; }
         public DbSet<GLAccountMiscCategory> GLAccountMiscCategory { get; set; }
         public DbSet<GLAccount> GLAccount { get; set; }
 
