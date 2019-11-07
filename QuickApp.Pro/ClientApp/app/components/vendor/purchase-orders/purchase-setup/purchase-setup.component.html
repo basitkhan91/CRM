@@ -457,7 +457,7 @@
                                 <td>
                                     <div class="inner-addon right-addon autosuggesions-add inline-block w175" *ngIf="partChildList.partListUserTypeId==1">
                                         <div class="col-sm-11">
-                                            <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="partChildList.partListUserId" name="cCustomerName{{row_no}}" [suggestions]="splitcustomersList" (completeMethod)="filterCustomersSplit($event)" [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onCustomerNameChange($event.value)" #cCustomerName="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
+                                            <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="partChildList.partListUserId" name="cCustomerName{{row_no}}" [suggestions]="splitcustomersList" (completeMethod)="filterCustomersSplit($event)" [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onCustomerNameChange($event.value, partChildList)" #cCustomerName="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
                                             <!-- <div *ngIf="cCustomerName.invalid && (cCustomerName.dirty || cCustomerName.touched)" class="alert alert-danger alert-danger-cstm">
                                                     <div *ngIf="cCustomerName.errors.required">
                                                         <small> Customer Name is required </small>
@@ -505,6 +505,8 @@
                                         </div>  -->
                                     </div>
                                 </td>
+                            
+                                {{splitAddressData0}}
                                 <td colspan="5">
                                     <div class="form-row">
                                         <div class="col-sm-10">
