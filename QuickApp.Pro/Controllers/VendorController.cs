@@ -851,101 +851,32 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-        [HttpPost("saveVendorrepaire")]
-        public IActionResult saveVendorrepaire([FromBody] RepairOrderViewModel poViewModel, Address address, VendorType vt)
+        [HttpPost("saveVendorRepairOrder")]
+        public IActionResult SaveVendorRepairOrder([FromBody] RepairOrderViewModel roViewModel, Address address, VendorType vt)
         {
             if (ModelState.IsValid)
             {
-                if (poViewModel == null)
+                if (roViewModel == null)
                 {
-                    return BadRequest($"{nameof(poViewModel)} cannot be null");
+                    return BadRequest($"{nameof(roViewModel)} cannot be null");
                 }
 
-
-                if (_context.RepairOrder.Any(o => o.RepairOrderId == poViewModel.RepairOrderId))
+                if (_context.RepairOrder.Any(o => o.RepairOrderId == roViewModel.RepairOrderId))
                 {
+                    var repairOrderModel = _context.RepairOrder.Where(a => a.RepairOrderId == roViewModel.RepairOrderId).SingleOrDefault();
 
-                    var repairOrderModel = _context.RepairOrder.Where(a => a.RepairOrderId == poViewModel.RepairOrderId).SingleOrDefault();
-
-                    repairOrderModel.RepairOrderNumber = poViewModel.RepairOrderNumber;
-                    repairOrderModel.OpenDate = poViewModel.OpenDate;
-                    repairOrderModel.NeedByDate = poViewModel.NeedByDate;
-                    repairOrderModel.PriorityId = poViewModel.PriorityId;
-                    repairOrderModel.DeferredReceiver = poViewModel.DeferredReceiver;
-                    repairOrderModel.VendorId = poViewModel.VendorId;
-                    repairOrderModel.VendorName = poViewModel.VendorName;
-                    repairOrderModel.VendorCode = poViewModel.VendorCode;
-                    repairOrderModel.VendorContactId = poViewModel.VendorContactId;
-                    repairOrderModel.VendorContactPhone = poViewModel.VendorContactPhone;
-                    repairOrderModel.CreditLimit = poViewModel.CreditLimit;
-                    repairOrderModel.CreditTermsId = poViewModel.CreditTermsId;
-                    repairOrderModel.RequisitionerId = poViewModel.RequisitionerId;
-                    repairOrderModel.ApproverId = poViewModel.ApproverId;
-                    repairOrderModel.ApprovedDate = poViewModel.ApprovedDate;
-                    repairOrderModel.StatusId = poViewModel.StatusId;
-                    repairOrderModel.Resale = poViewModel.Resale;
-                    repairOrderModel.ManagementStructureId = poViewModel.ManagementStructureId;
-                    repairOrderModel.RoMemo = poViewModel.RoMemo;
-                    repairOrderModel.ShipToUserId = poViewModel.ShipToUserId;
-                    repairOrderModel.ShipToAddressId = poViewModel.ShipToAddressId;
-                    repairOrderModel.ShipToContactId = poViewModel.ShipToContactId;
-                    repairOrderModel.ShipViaId = poViewModel.ShipViaId;
-                    repairOrderModel.ShippingCost = poViewModel.ShippingCost;
-                    repairOrderModel.HandlingCost = poViewModel.HandlingCost;
-                    repairOrderModel.ShippingId = poViewModel.ShippingId;
-                    repairOrderModel.ShippingUrl = poViewModel.ShippingUrl;
-                    repairOrderModel.ShipToMemo = poViewModel.ShipToMemo;
-                    repairOrderModel.BillToUserTypeId = poViewModel.BillToUserTypeId;
-                    repairOrderModel.BillToUserId = poViewModel.BillToUserId;
-                    repairOrderModel.BillToAddressId = poViewModel.BillToAddressId;
-                    repairOrderModel.BillToContactId = poViewModel.BillToContactId;
-                    repairOrderModel.BillToMemo = poViewModel.BillToMemo;
-                    repairOrderModel.CreatedBy = "admin";
-                    repairOrderModel.UpdatedBy = "admin";
-                    repairOrderModel.UpdatedDate = DateTime.Now;
+                    // UPDATE data.
+                    repairOrderModel = FillRepairOrder(repairOrderModel, roViewModel);
                     _context.SaveChanges();
                     return Ok(repairOrderModel);
                 }
                 else
                 {
-                    RepairOrder repairOrderModel = new RepairOrder();
                     vt.VendorTypeId = 1;
-                    repairOrderModel.RepairOrderNumber = poViewModel.RepairOrderNumber;
-                    repairOrderModel.OpenDate = poViewModel.OpenDate;
-                    repairOrderModel.NeedByDate = poViewModel.NeedByDate;
-                    repairOrderModel.PriorityId = poViewModel.PriorityId;
-                    repairOrderModel.DeferredReceiver = poViewModel.DeferredReceiver;
-                    repairOrderModel.VendorId = poViewModel.VendorId;
-                    repairOrderModel.VendorName = poViewModel.VendorName;
-                    repairOrderModel.VendorCode = poViewModel.VendorCode;
-                    repairOrderModel.VendorContactId = poViewModel.VendorContactId;
-                    repairOrderModel.VendorContactPhone = poViewModel.VendorContactPhone;
-                    repairOrderModel.CreditLimit = poViewModel.CreditLimit;
-                    repairOrderModel.CreditTermsId = poViewModel.CreditTermsId;
-                    repairOrderModel.RequisitionerId = poViewModel.RequisitionerId;
-                    repairOrderModel.ApproverId = poViewModel.ApproverId;
-                    repairOrderModel.ApprovedDate = poViewModel.ApprovedDate;
-                    repairOrderModel.StatusId = poViewModel.StatusId;
-                    repairOrderModel.Resale = poViewModel.Resale;
-                    repairOrderModel.ManagementStructureId = poViewModel.ManagementStructureId;
-                    repairOrderModel.RoMemo = poViewModel.RoMemo;
-                    repairOrderModel.ShipToUserId = poViewModel.ShipToUserId;
-                    repairOrderModel.ShipToAddressId = poViewModel.ShipToAddressId;
-                    repairOrderModel.ShipToContactId = poViewModel.ShipToContactId;
-                    repairOrderModel.ShipViaId = poViewModel.ShipViaId;
-                    repairOrderModel.ShippingCost = poViewModel.ShippingCost;
-                    repairOrderModel.HandlingCost = poViewModel.HandlingCost;
-                    repairOrderModel.ShippingId = poViewModel.ShippingId;
-                    repairOrderModel.ShippingUrl = poViewModel.ShippingUrl;
-                    repairOrderModel.ShipToMemo = poViewModel.ShipToMemo;
-                    repairOrderModel.BillToUserTypeId = poViewModel.BillToUserTypeId;
-                    repairOrderModel.BillToUserId = poViewModel.BillToUserId;
-                    repairOrderModel.BillToAddressId = poViewModel.BillToAddressId;
-                    repairOrderModel.BillToContactId = poViewModel.BillToContactId;
-                    repairOrderModel.BillToMemo = poViewModel.BillToMemo;
-                    repairOrderModel.CreatedBy = "admin";
-                    repairOrderModel.UpdatedBy = "admin";
-                    repairOrderModel.CreatedDate = DateTime.Now;
+
+                    // SAVE data here.
+                    var repairOrderModel = new RepairOrder();
+                    repairOrderModel = FillRepairOrder(repairOrderModel, roViewModel);
                     _context.RepairOrder.Add(repairOrderModel);
                     _context.SaveChanges();
 
@@ -957,10 +888,90 @@ namespace QuickApp.Pro.Controllers
                         _context.SaveChanges();
                     }
                     return Ok(repairOrderModel);
-
                 }
             }
             return Ok(ModelState);
+        }
+
+        private RepairOrder FillRepairOrder(RepairOrder repairOrderModel, RepairOrderViewModel roViewModel)
+        {
+            repairOrderModel.RepairOrderNumber = roViewModel.RepairOrderNumber;
+            repairOrderModel.OpenDate = roViewModel.OpenDate;
+            repairOrderModel.ClosedDate = DateTime.Now; // TODO: FE needs to send this
+            repairOrderModel.NeedByDate = roViewModel.NeedByDate;
+            repairOrderModel.PriorityId = roViewModel.PriorityId;
+            repairOrderModel.DeferredReceiver = roViewModel.DeferredReceiver;
+            repairOrderModel.VendorId = roViewModel.VendorId;
+            repairOrderModel.VendorContactId = roViewModel.VendorContactId;
+            repairOrderModel.VendorContactPhone = roViewModel.VendorContactPhone;
+            repairOrderModel.CreditLimit = roViewModel.CreditLimit;
+            repairOrderModel.CreditTermsId = roViewModel.CreditTermsId;
+            repairOrderModel.RequisitionerId = roViewModel.RequisitionerId;
+            repairOrderModel.ApproverId = roViewModel.ApproverId;
+            repairOrderModel.ApprovedDate = roViewModel.ApprovedDate;
+            repairOrderModel.StatusId = roViewModel.StatusId;
+            repairOrderModel.Resale = roViewModel.Resale;
+            repairOrderModel.ManagementStructureId = roViewModel.ManagementStructureId;
+            repairOrderModel.RoMemo = roViewModel.RoMemo;
+            repairOrderModel.ShipToUserId = roViewModel.ShipToUserId;
+            repairOrderModel.ShipToUserTypeId = roViewModel.ShipToUserTypeId;
+            repairOrderModel.ShipToAddressId = roViewModel.ShipToAddressId;
+            repairOrderModel.ShipToContactId = roViewModel.ShipToContactId;
+            repairOrderModel.ShipViaId = roViewModel.ShipViaId;
+            repairOrderModel.ShippingCost = roViewModel.ShippingCost;
+            repairOrderModel.HandlingCost = roViewModel.HandlingCost;
+            repairOrderModel.ShipVia = ""; // TODO = WHERE TO GET THIS;
+            repairOrderModel.ShippingAcctNum = ""; // TODO = WHERE TO GET THIS
+            repairOrderModel.ShippingId = roViewModel.ShippingId;
+            repairOrderModel.ShippingUrl = roViewModel.ShippingUrl;
+            repairOrderModel.ShipToMemo = roViewModel.ShipToMemo;
+            repairOrderModel.BillToUserTypeId = roViewModel.BillToUserTypeId;
+            repairOrderModel.BillToUserId = roViewModel.BillToUserId;
+            repairOrderModel.BillToAddressId = roViewModel.BillToAddressId;
+            repairOrderModel.BillToContactId = roViewModel.BillToContactId;
+            repairOrderModel.BillToMemo = roViewModel.BillToMemo;
+            repairOrderModel.CreatedBy = "admin";
+            repairOrderModel.UpdatedBy = "admin";
+
+            // FILL SHIIPING ADDRESS
+            if (roViewModel.ShipToAddressId != null && roViewModel.ShipToAddressId > 0)
+            {
+                var shippingAddressModel = GetAddress(roViewModel.ShipToAddressId);
+                if (shippingAddressModel != null)
+                {
+                    repairOrderModel.ShipToAddress1 = shippingAddressModel.Line1;
+                    repairOrderModel.ShipToAddress2 = shippingAddressModel.Line2;
+                    repairOrderModel.ShipToAddress3 = shippingAddressModel.Line3;
+                    repairOrderModel.ShipToCity = shippingAddressModel.City;
+                    repairOrderModel.ShipToStateOrProvince = shippingAddressModel.StateOrProvince;
+                    repairOrderModel.ShipToPostalCode = shippingAddressModel.PostalCode;
+                    repairOrderModel.ShipToCountry = shippingAddressModel.Country;
+                }
+            }
+
+            // FILL BILLING ADDRESS
+            if (roViewModel.BillToAddressId != null && roViewModel.BillToAddressId > 0)
+            {
+                var billingAddressModel = GetAddress(roViewModel.BillToAddressId);
+                if (billingAddressModel != null)
+                {
+                    repairOrderModel.BillToAddress1 = billingAddressModel.Line1;
+                    repairOrderModel.BillToAddress2 = billingAddressModel.Line2;
+                    repairOrderModel.BillToAddress3 = billingAddressModel.Line3;
+                    repairOrderModel.BillToCity = billingAddressModel.City;
+                    repairOrderModel.BillToStateOrProvince = billingAddressModel.StateOrProvince;
+                    repairOrderModel.BillToPostalCode = billingAddressModel.PostalCode;
+                    repairOrderModel.BillToCountry = billingAddressModel.Country;
+                }
+            }
+
+            return repairOrderModel;
+        }
+
+        private Address GetAddress(long? addressId)
+        {
+            var addressModel = _context.Address.Where(a => a.AddressId == addressId).SingleOrDefault();
+            return addressModel;
         }
 
         [HttpPost("saveVendorrepairpart")]
@@ -1820,14 +1831,14 @@ namespace QuickApp.Pro.Controllers
                 address.IsActive = true;
                 address.CreatedBy = vendorshipping.CreatedBy ?? "Admin"; //Hotfix
                 address.UpdatedBy = vendorshipping.UpdatedBy ?? "Admin";//Hotfix
-                
+
                 address.UpdatedDate = DateTime.Now;
                 if (vendorshipping.AddressId > 0)
                 {
                     address.CreatedDate = vendorshipping.CreatedDate;
                     address.AddressId = vendorshipping.AddressId;
                     _context.Address.Update(address);
-                   
+
                 }
                 else
                 {
@@ -1886,12 +1897,12 @@ namespace QuickApp.Pro.Controllers
                 vendorShippingAddressObj.MasterCompanyId = 1;
                 vendorShippingAddressObj.IsActive = vendorshippingAddressViewModel.IsActive;
                 vendorShippingAddressObj.AddressId = id;
-                
+
                 vendorShippingAddressObj.UpdatedDate = DateTime.Now;
                 vendorShippingAddressObj.CreatedBy = vendorshippingAddressViewModel.CreatedBy;
                 vendorShippingAddressObj.UpdatedBy = vendorshippingAddressViewModel.UpdatedBy;
 
-                if(vendorshipping.VendorShippingAddressId>0)
+                if (vendorshipping.VendorShippingAddressId > 0)
                 {
                     vendorShippingAddressObj.CreatedDate = vendorshipping.CreatedDate;
                     vendorShippingAddressObj.VendorShippingAddressId = vendorshipping.VendorShippingAddressId;
@@ -1902,7 +1913,7 @@ namespace QuickApp.Pro.Controllers
                     vendorShippingAddressObj.CreatedDate = DateTime.Now;
                     _unitOfWork.VendorShippingAddress.Add(vendorShippingAddressObj);
                 }
-                
+
                 _unitOfWork.SaveChanges();
                 long? venAddressid = vendorShippingAddressObj.VendorShippingAddressId;
                 vendorshipping.VendorShippingAddressId = vendorShippingAddressObj.VendorShippingAddressId;
