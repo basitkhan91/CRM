@@ -498,10 +498,7 @@ namespace DAL.Repositories
                         where po.PurchaseOrderId == purchaseOrderId
                         select new
                         {
-                            po,
-                            v.VendorCode,
-                            con.WorkPhone,
-                            con.WorkPhoneExtn
+                            po
                         }).FirstOrDefault();
 
             return data;
@@ -986,7 +983,7 @@ namespace DAL.Repositories
 
                 return purchaseOrderParts;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 throw;

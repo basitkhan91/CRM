@@ -599,7 +599,8 @@ namespace DAL.Repositories
                                 ad.City,
                                 ad.StateOrProvince,
                                 ad.PostalCode,
-                                ad.Country
+                                ad.Country,
+                                ad.AddressId
                             }).Distinct().ToList();
                 return data;
             }
