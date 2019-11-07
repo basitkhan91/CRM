@@ -162,7 +162,7 @@ export class PurchaseOrderPart {
     ShelfList: DropDownData[];
     BinList: DropDownData[];
     stockLine: StockLine[];
-
+    timeLife: TimeLife[];
 }
 
 export class TimeLife {

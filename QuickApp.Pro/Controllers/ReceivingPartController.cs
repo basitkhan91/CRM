@@ -296,6 +296,16 @@ namespace QuickApp.Pro.Controllers
                         var stockLineIds = receivePart.StockLines.Select(s => s.StockLineId).ToArray();
                         var stockLines = unitOfWork.stockLineList.getStockLinesByIds(stockLineIds);
 
+                        foreach (var timeLife in receivePart.TimeLife)
+                        {
+                            timeLife.PurchaseOrder = null;
+                        }
+
+                        if (receivePart.TimeLife != null && receivePart.TimeLife.Count > 0)
+                        {
+                            unitOfWork.Repository<TimeLife>().UpdateRange(receivePart.TimeLife);
+                        }
+
                         foreach (var dbStockLine in stockLines)
                         {
                             var stockLine = receivePart.StockLines.Where(x => x.StockLineId == dbStockLine.StockLineId).FirstOrDefault();
@@ -304,7 +314,7 @@ namespace QuickApp.Pro.Controllers
                             dbStockLine.WarehouseId = stockLine.WarehouseId > 0 ? stockLine.WarehouseId : null;
                             dbStockLine.BinId = stockLine.BinId > 0 ? stockLine.BinId : null;
                             dbStockLine.PurchaseOrderUnitCost = stockLine.PurchaseOrderUnitCost;
-                            dbStockLine.PurchaseOrderExtendedCost= stockLine.PurchaseOrderExtendedCost;
+                            dbStockLine.PurchaseOrderExtendedCost = stockLine.PurchaseOrderExtendedCost;
                             dbStockLine.LocationId = stockLine.LocationId > 0 ? stockLine.LocationId : null;
                             dbStockLine.ConditionId = stockLine.ConditionId > 0 ? stockLine.ConditionId : null;
                             dbStockLine.ManufacturingTrace = stockLine.ManufacturingTrace;
@@ -312,12 +322,17 @@ namespace QuickApp.Pro.Controllers
                             dbStockLine.ManufacturingDate = stockLine.ManufacturingDate;
                             dbStockLine.ManufacturingBatchNumber = stockLine.ManufacturingBatchNumber;
                             dbStockLine.PartCertificationNumber = stockLine.PartCertificationNumber;
+                            dbStockLine.EngineSerialNumber = stockLine.EngineSerialNumber;
+                            dbStockLine.ShippingViaId = stockLine.ShippingViaId;
+                            dbStockLine.ShippingReference = stockLine.ShippingReference;
+                            dbStockLine.ShippingAccount = stockLine.ShippingAccount;
                             dbStockLine.CertifiedDate = stockLine.CertifiedDate;
                             dbStockLine.CertifiedBy = stockLine.CertifiedBy;
                             dbStockLine.TagDate = stockLine.TagDate;
                             dbStockLine.ExpirationDate = stockLine.ExpirationDate;
                             dbStockLine.CertifiedDueDate = stockLine.CertifiedDueDate;
                             dbStockLine.UpdatedBy = UserName;
+
                             dbStockLine.UpdatedDate = DateTime.Now;
                             receivePart.StockLines.Remove(stockLine);
                             unitOfWork.Repository<StockLine>().Update(dbStockLine);
