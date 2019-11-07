@@ -267,6 +267,10 @@ namespace DAL.Repositories
         {
             try
             {
+                if(workFlowWorkOrder.Equipments!=null && workFlowWorkOrder.Equipments.Count>0)
+                {
+                    workFlowWorkOrder.Equipments.ForEach(p => p.AssetRecordId = Convert.ToInt64(p.AssetId));
+                }
                 workFlowWorkOrder.CreatedDate = workFlowWorkOrder.UpdatedDate = DateTime.Now;
                 workFlowWorkOrder.IsActive = true;
                 workFlowWorkOrder.IsDeleted = false;
