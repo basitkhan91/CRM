@@ -78,13 +78,16 @@ export class ShippingEndpoint extends EndpointFactory {
                 var stockLine = new StockLine();
 
                 stockLine.stockLineNumber = SL.stockLineNumber;
-                
                 //stockLine.owner = SL.owner;
                 //stockLine.ownerType = SL.ownerType;
                 //stockLine.obtainFrom = SL.obtainFrom;
                 //stockLine.obtainFromType = SL.obtainFromType;
                 //stockLine.traceableTo = SL.traceableTo;
                 //stockLine.traceableToType = SL.traceableToType;
+                stockLine.engineSerialNumber = SL.engineSerialNumber;
+                stockLine.shippingAccount = SL.shippingAccount;
+                stockLine.shippingReference = SL.shippingReference;
+                stockLine.shippingViaId = SL.shippingViaId;
                 stockLine.partCertificationNumber = SL.partCertificationNumber;
                 stockLine.stockLineId = SL.stockLineId;
                 stockLine.conditionId = SL.conditionId;
@@ -113,7 +116,7 @@ export class ShippingEndpoint extends EndpointFactory {
             let Obj = {
                 'purchaseOrderPartRecordId': part.purchaseOrderPartRecordId,
                 'stockLines': stockLines,
-                'timeLife': null,
+                'timeLife': part.timeLife,
             };
 
             listObj.push(Obj);

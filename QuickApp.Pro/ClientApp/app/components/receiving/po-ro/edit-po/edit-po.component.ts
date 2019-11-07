@@ -61,6 +61,7 @@ export class EditPoComponent implements OnInit {
     SiteList: any[];
     GLAccountList: GlAccount[];
     currentDate: Date;
+    ShippingViaList : DropDownData[];
     /** edit-po ctor */
     constructor(public receivingService: ReceivingService,
         public priority: PriorityService,
@@ -248,6 +249,7 @@ export class EditPoComponent implements OnInit {
                         this.loadReceivingPOEditGrid();
                         this.getAllSite();
                         this.getAllGLAccount();
+                        this.getShippingVia();
                     },
                     error => this.onDataLoadFailed(error)
                 );
@@ -977,20 +979,28 @@ export class EditPoComponent implements OnInit {
         stockLine.quantityRejected = 0;
     }
 
-    updateStockLines() {
-
-    }
-
     updateStockLine() {
         let receiveParts: ReceiveParts[] = [];
+
         for (var part of this.purchaseOrderData.purchaseOderPart) {
             if (part.stockLine) {
+
+                var timeLife = [];
                 var stockLineToUpdate = part.stockLine.filter(x => x.isEnabled);
 
+                for (var stockLine of stockLineToUpdate) {
+                    for (var tl of part.timeLife) {
+                        if (tl.stockLineId == stockLine.stockLineId) {                            
+                            timeLife.push(tl);
+                        }
+                    }
+                }
+                
                 if (stockLineToUpdate.length > 0) {
                     let receivePart: ReceiveParts = new ReceiveParts();
                     receivePart.purchaseOrderPartRecordId = part.purchaseOrderPartRecordId;
                     receivePart.stockLines = stockLineToUpdate;
+                    receivePart.timeLife = timeLife;
                     receiveParts.push(receivePart);
                 }
             }
@@ -1018,6 +1028,20 @@ export class EditPoComponent implements OnInit {
 
         //this.alertService.showMessage(this.pageTitle, 'Stock Lines update successfully.', MessageSeverity.success)
         //return this.route.navigate(['/receivingmodule/receivingpages/app-view-po']);
+    }
+
+ 
+
+    private getShippingVia(): void {
+        this.shippingService.getAllShippingVia().subscribe(results => {
+            this.ShippingViaList = [];
+            for (let shippingVia of results[0]) {
+                var dropdown = new DropDownData();
+                dropdown.Key = shippingVia.shippingViaId.toLocaleString();
+                dropdown.Value = shippingVia.name;
+                this.ShippingViaList.push(dropdown);
+            }
+        });
     }
 
     getManufacturers() {
