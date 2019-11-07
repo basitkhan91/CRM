@@ -45,7 +45,7 @@ export class VendorEndpointService extends EndpointFactory {
 	private readonly _saveVendorpurchases: string = "/api/Vendor/saveVendorpurchases";
 	private readonly _saveVendorrepaire: string = "/api/Vendor/saveVendorRepairOrder";
 	private readonly _saveVendorpurchasespart: string = "/api/Vendor/saveVendorpurchasespart";
-	private readonly _saveVendorrepairepart: string = "/api/Vendor/saveVendorrepairpart";
+	private readonly _saveVendorrepairepart: string = "/api/Vendor/saveVendorRepairPart";
 
 	private readonly _vendorUpdateUrl: string = "/api/Vendor/vendorUpdate";
 	private readonly _vendorContactUrlNew: string = "/api/Vendor/updateStatusVenShippingAddress";
