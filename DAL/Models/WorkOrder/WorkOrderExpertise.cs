@@ -15,7 +15,11 @@ namespace DAL.Models
         public int ExpertiseTypeId { get; set; }
         public decimal? EstimatedHours { get; set; }
         public decimal? StandardRate { get; set; }
-        public decimal? EstimatedCost { get; set; }
+        public decimal? LaborDirectRate { get; set; }
+        public decimal? DirectLaborRate { get; set; }
+        public decimal? OverheadBurden { get; set; }
+        public decimal? OverHeadCost { get; set; }
+        public decimal? LaborOverHeadCost { get; set; }
         public long TaskId { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
