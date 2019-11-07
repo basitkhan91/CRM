@@ -1,4 +1,118 @@
-﻿<div [@fadeInOut] class="page-content">
+﻿
+<div class="equipment-tab-content">
+        <div class="x_panel">
+            <div class="tab-content">
+                <div class="table-responsive table-overflow" id="workflow-attributes-block">
+                    <table class="table table-bordered ">
+                        <thead>
+                            <tr>
+
+                                <th class="text-center">Part Number </th>
+                                <th class="text-center">Part Description</th>
+                                <th class="text-center">Alternate PN</th>
+                                <th class="text-center">SerialNumber</th>
+                                <th class="text-center">Provision</th>
+                                <th class="text-center">OEM</th>
+                                <th class="text-center">Control</th>
+                                <th class="text-center">Condition</th>
+                                <th class="text-center">Item Type</th>
+                                <th class="text-center">Qunatity Requried</th>
+                                <th class="text-center">Qunatity Reserved</th>
+                                <th class="text-center">Qunatity TurnIn</th>
+                                <th class="text-center">Qunatity Issued</th>
+                                <th class="text-center">Qunatity BackOrder</th>
+                                <th class="text-center">Qunatity Remaining</th>
+                                <th class="text-center">Unit Cost</th>
+                                <th class="text-center">Extended Cost</th>
+                                <th class="text-center">Currency</th>
+                                <th class="text-center">Purchase OrderNumber</th>
+                                <th class="text-center">Repair OrderNumber</th>
+                                <th class="text-center">Part Quantity OnHand</th>
+                                <th class="text-center">Part Quantity Available</th>
+                                <th class="text-center">Part Quantity OnOrder</th>
+                                <th class="text-center">WorkOrder Number</th>
+                                <th class="text-center">Sub WorkOrder</th>
+                                <th class="text-center">SalesOrder</th>
+                                <th class="text-center">Condition</th>
+                                <th class="text-center">TimeLife</th>
+                                <th class="text-center">Ware House</th>
+                                <th class="text-center">Location</th>
+                                <th class="text-center">Shelf</th>
+                                <th class="text-center">Bin</th>
+
+                            </tr>
+                        </thead>
+                     
+                        <tbody>
+                            <tr *ngFor="let m  of workOrderMaterialList; let i=index;">
+                                <td>{{m.partNumber}}</td>
+                                <td>{{m.partDescription}}</td>
+                                <td>{{m.altPartNumber}}</td>
+                                <td>{{m.serialNumber}}</td>
+                                <td>{{m.provision}}</td>
+                                <td>{{m.oem}}</td>
+                                <td>{{m.control}}</td>
+                                <td>{{m.condition}}</td>
+                                <td>{{m.itemType}}</td>
+                                <td>{{m.qunatityRequried}}</td>
+                                <td>{{m.qunatityReserved}}</td>
+                                <td>{{m.qunatityTurnIn}}</td>
+                                <td>{{m.qunatityIssued}}</td>
+                                <td>{{m.qunatityBackOrder}}</td>
+                                <td>{{m.qunatityRemaining}}</td>
+                                <td>{{m.unitCost}}</td>
+                                <td>{{m.extendedCost}}</td>
+                                <td>{{m.currency}}</td>
+                                <td>{{m.purchaseOrderNumber}}</td>
+                                <td>{{m.repairOrderNumber}}</td>
+                                <td>{{m.partQuantityOnHand}}</td>
+                                <td>{{m.partQuantityAvailable}}</td>
+                                <td>{{m.partQuantityOnOrder}}</td>
+                                <td>{{m.receiver}}</td>
+                                <td>{{m.workOrderNumber}}</td>
+                                <td>{{m.subWorkOrder}}</td>
+                                <td>{{m.salesOrder}}</td>
+                                <td>{{m.timeLife}}</td>
+                                <td>{{m.wareHouse}}</td>
+                                <td>{{m.location}}</td>
+                                <td>{{m.shelf}}</td>
+                                <td>{{m.bin}}</td>
+                           
+                            </tr>
+                             
+                                <!-- <td>
+                                    <span data-toggle="modal" data-target="#delete">
+                                        <a class="btn btn-success boxed-float-btn nobg" data-toggle="tooltip"
+                                            title="Delete Material"><i class="fa fa-trash"></i></a>
+                                    </span>
+                                </td> -->
+                            <!-- <div class="text-right">
+                                    <button class="btn btn-primary" (click)="saveAssets()" >
+                                            save Assets
+                                        </button>
+                            </div> -->
+    
+                            <!-- <div *ngIf="workOrderAssetList" class="text-right save-work-btn" >
+                                    <button class="btn btn-primary btn-primary-cstm"  style="padding: 6px 12px !important;">Save Assets</button>
+                                </div> -->
+     
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <br />
+            <br />
+            <br />
+            <br />
+        </div>
+    </div>
+
+
+
+
+
+<!-- <div [@fadeInOut] class="page-content">
     <div class="right_col" role="main">
         <div class="col-md-12">
             <div class="x_panel" style="">
@@ -398,4 +512,4 @@
         </div>
     </div>
 
-</div>
+</div> -->

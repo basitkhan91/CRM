@@ -117,7 +117,9 @@ export class WorkOrderService {
     }
     getAllTasks(){
         return this.workOrderEndpointService.getTasks();
-
+    }
+    getMaterialList(workOrderWorkFlowId,workOrderId){
+        return this.workOrderEndpointService.getMaterialList(workOrderWorkFlowId , workOrderId)
     }
 
 }
