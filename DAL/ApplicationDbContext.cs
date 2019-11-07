@@ -421,6 +421,7 @@ namespace DAL
         public DbSet<PurchaseOrderAudit> PurchaseOrderAudit { get; set; }
         public DbSet<WorkOrderTask> WorkOrderTask { get; set; }
         public DbSet<WorkOrderTaskAttribute> WorkOrderTaskAttribute { get; set; }
+        public DbSet<WorkOrderPublicationDashNumber> WorkOrderPublicationDashNumber { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {

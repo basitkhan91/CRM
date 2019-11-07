@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -6,6 +7,10 @@ namespace DAL.Models
 {
     public class WorkOrderPublications
     {
+        public WorkOrderPublications()
+        {
+            WorkOrderPublicationDashNumber = new List<WorkOrderPublicationDashNumber>();
+        }
         [Key]
         public long WorkOrderPublicationId { get; set; }
         [ForeignKey("WorkOrderId")]
@@ -14,6 +19,8 @@ namespace DAL.Models
         public long WorkFlowWorkOrderId { get; set; }
         public long PublicationId { get; set; }
         public long TaskId { get; set; }
+        public long? AircraftManufacturerId { get; set; }
+        public long? ModelId { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
@@ -21,5 +28,6 @@ namespace DAL.Models
         public DateTime UpdatedDate { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
+        public virtual List<WorkOrderPublicationDashNumber> WorkOrderPublicationDashNumber { get; set; }
     }
 }
