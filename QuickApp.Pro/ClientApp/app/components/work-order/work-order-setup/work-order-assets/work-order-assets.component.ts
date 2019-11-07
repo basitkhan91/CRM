@@ -7,11 +7,12 @@ import { WorkOrderService } from '../../../../services/work-order/work-order.ser
 })
 export class WorkOrderAssetsComponent implements OnInit {
     //@Input() workOrderAssetList: any;
-    workOrderAssetList: any
+    @Input() workOrderAssetList: any
+    @Input() savedWorkOrderData : any
     ngOnInit(): void {
         console.log('test');
         
-        this.getWorkOrderAssetList();
+        // this.getWorkOrderAssetList();
         console.log(this.workOrderAssetList)
     }
 
@@ -19,11 +20,11 @@ export class WorkOrderAssetsComponent implements OnInit {
 
     }
 
-    getWorkOrderAssetList(): void {
-        this.workOrderService.getWorkOrderAssetList(7).subscribe(
-            result => {
-                this.workOrderAssetList = result;
-            }
-        );
-    }
+    // getWorkOrderAssetList(): void {
+    //     this.workOrderService.getWorkOrderAssetList(7).subscribe(
+    //         result => {
+    //             this.workOrderAssetList = result;
+    //         }
+    //     );
+    // }
 }
