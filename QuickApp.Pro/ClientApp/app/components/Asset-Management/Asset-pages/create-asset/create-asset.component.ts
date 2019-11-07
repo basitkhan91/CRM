@@ -449,11 +449,13 @@ export class CreateAssetComponent implements OnInit {
         this.currentAsset.isDepreciable = false;
     }
     
-    saveAsset(): void {
+    saveAsset(): void { 
 
         if (this.currentAsset.isDepreciable == true) {
             if (!(this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.unitOfMeasureId
-                && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId)) {
+                && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId
+                && this.currentAsset.companyId && this.currentAsset.buisinessUnitId && this.currentAsset.departmentId && this.currentAsset.divisionId
+                && this.currentAsset.manufacturerId)) {
                 this.display = true;
                 this.modelValue = true;
             }
@@ -462,14 +464,18 @@ export class CreateAssetComponent implements OnInit {
             && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId)
 
             if (this.currentAsset.isIntangible == true) {
-                if (!(this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.assetIntangibleTypeId)) {
+                if (!(this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.assetIntangibleTypeId
+                    && this.currentAsset.companyId && this.currentAsset.buisinessUnitId && this.currentAsset.departmentId && this.currentAsset.divisionId
+                    && this.currentAsset.manufacturerId)) {
                     this.display = true;
                     this.modelValue = true;
                 }
             }
         if ((this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.assetIntangibleTypeId)
             || (this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.unitOfMeasureId
-            && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId)) {
+                && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId
+                && this.currentAsset.companyId && this.currentAsset.buisinessUnitId && this.currentAsset.departmentId && this.currentAsset.divisionId
+                && this.currentAsset.manufacturerId)) {
             this.isSaving = true;
 
             if (!this.currentAsset.assetRecordId) {
