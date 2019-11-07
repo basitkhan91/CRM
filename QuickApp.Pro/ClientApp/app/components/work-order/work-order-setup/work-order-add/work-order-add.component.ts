@@ -169,11 +169,11 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
   generateLaborForm() {
-    const keysArray = Object.keys(this.labor.tasks[0]);
+    const keysArray = Object.keys(this.labor.workOrderLaborList[0]);
     for (let i = 0; i < keysArray.length; i++) {
       this.labor = {
         ...this.labor,
-        tasks: [{ ...this.labor.tasks[0], [keysArray[i]]: [new AllTasks()] }]
+        workOrderLaborList: [{ ...this.labor.workOrderLaborList[0], [keysArray[i]]: [new AllTasks()] }]
       };
     }
     console.log(this.labor);
@@ -329,7 +329,7 @@ export class WorkOrderAddComponent implements OnInit {
 
 
   saveWorkOrder(): void {
-    this.showTableGrid = true; // Show Grid Boolean
+    // this.showTableGrid = true; // Show Grid Boolean
     const generalInfo = this.workOrderGeneralInformation
     const data = {
       ...generalInfo,

@@ -164,7 +164,19 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     constructor(private actionService: ActionService,
         private workOrderService: WorkOrderService,
         private authService: AuthService,
-        private router: ActivatedRoute, private route: Router, private expertiseService: EmployeeExpertiseService, private cusservice: CustomerService, public workscopeService: WorkScopeService, public currencyService: CurrencyService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService, private conditionService: ConditionService, private _workflowService: WorkFlowtService, private itemser: ItemMasterService, private vendorService: VendorService, private alertService: AlertService, private modalService: NgbModal, private percentService: PercentService) {
+        private router: ActivatedRoute, private route: Router, 
+        private expertiseService: EmployeeExpertiseService, 
+        private cusservice: CustomerService, 
+        public workscopeService: WorkScopeService, 
+        public currencyService: CurrencyService, 
+        public itemClassService: ItemClassificationService,
+         public unitofmeasureService: UnitOfMeasureService, 
+         private conditionService: ConditionService, 
+         private _workflowService: WorkFlowtService, 
+         private itemser: ItemMasterService, 
+         private vendorService: VendorService, 
+         private alertService: AlertService, 
+         private modalService: NgbModal, private percentService: PercentService) {
     }
 
     public ngOnDestroy() {

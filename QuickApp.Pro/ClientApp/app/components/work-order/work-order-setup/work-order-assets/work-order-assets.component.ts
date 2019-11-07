@@ -7,8 +7,8 @@ import { WorkOrderService } from '../../../../services/work-order/work-order.ser
 })
 export class WorkOrderAssetsComponent implements OnInit {
     //@Input() workOrderAssetList: any;
-    @Input() workOrderAssetList: any
     @Input() savedWorkOrderData : any
+    @Input() workOrderAssetList: any
     ngOnInit(): void {
         console.log('test');
         
@@ -18,7 +18,13 @@ export class WorkOrderAssetsComponent implements OnInit {
 
     constructor(private workOrderService: WorkOrderService) {
 
+
     }
+
+    saveAssets(){
+        
+    }
+
 
     // getWorkOrderAssetList(): void {
     //     this.workOrderService.getWorkOrderAssetList(7).subscribe(

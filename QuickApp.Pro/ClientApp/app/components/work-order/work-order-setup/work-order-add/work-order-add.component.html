@@ -630,7 +630,7 @@
                             <li class="nav-item">
                                 <a id="pills-profile-tab" role="tab" aria-controls="pills-profile"
                                     [ngClass]="{active : gridActiveTab === 'equipment'}"
-                                    (click)="gridTabChange('equipment');getEquipmentData()">Equipment</a>
+                                    (click)="gridTabChange('equipment');getAllEquipment();">Equipment</a>
                             </li>
                             <li class="nav-item" [hidden]="workOrderGeneralInformation.workOrderType == 'multiple'">
                                 <a id="pills-contact-tab" role="tab" aria-controls="pills-contact"
