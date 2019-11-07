@@ -1,5 +1,3 @@
-
-/****** Object:  Trigger [dbo].[Trg_ATAChapter]    Script Date: 11/7/2019 3:58:53 AM ******/
 SET ANSI_NULLS ON
 GO
 
