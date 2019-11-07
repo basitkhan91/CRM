@@ -1,5 +1,3 @@
-
-/****** Object:  Trigger [dbo].[Trg_StocklineAdjustmentReasonAudit]    Script Date: 11/7/2019 4:04:14 AM ******/
 SET ANSI_NULLS ON
 GO
 
