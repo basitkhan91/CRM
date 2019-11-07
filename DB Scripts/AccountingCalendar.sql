@@ -1,5 +1,3 @@
-USE [PAS_DEV]
-GO
 
 /****** Object:  Table [dbo].[AccountingCalendar]    Script Date: 9/17/2019 12:46:21 PM ******/
 SET ANSI_NULLS ON
