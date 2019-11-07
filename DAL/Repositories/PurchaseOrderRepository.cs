@@ -832,7 +832,11 @@ namespace DAL.Repositories
                                 po.BillToCountry,
                                 po.BillToPostalCode,
                                 po.BillToContact,
-                                po.BillToMemo
+                                po.BillToMemo,
+                                po.VendorId,
+                                po.ManagementStructureId,
+                                po.NeedByDate,
+                                po.DateApproved
                             }).FirstOrDefault();
 
                 return data;
@@ -932,6 +936,7 @@ namespace DAL.Repositories
                             purchaseOrderPart.isParent=true;
                             purchaseOrderPart.PurchaseOrderPartRecordId = part.pop.PurchaseOrderPartRecordId;
                             purchaseOrderPart.ParentId = part.pop.ParentId;
+                            purchaseOrderPart.ManagementStructureId = part.pop.ManagementStructureId;
 
 
                             purchaseOrderParts.Add(purchaseOrderPart);
@@ -966,7 +971,9 @@ namespace DAL.Repositories
                                     purchaseOrderSplitPart.SerialNumber = splitPart.pop.SerialNumber;
                                     purchaseOrderSplitPart.PurchaseOrderId = splitPart.pop.PurchaseOrderId;
                                     purchaseOrderSplitPart.PurchaseOrderPartRecordId = splitPart.pop.PurchaseOrderPartRecordId;
-                                    
+                                    purchaseOrderSplitPart.ManagementStructureId = splitPart.pop.ManagementStructureId;
+                                    purchaseOrderSplitPart.POPartSplitAddressId = splitPart.pop.POPartSplitAddressId;
+
                                     purchaseOrderPart.PurchaseOrderSplitParts.Add(purchaseOrderSplitPart);
                                 }
                                 // purchaseOrderParts.Add(purchaseOrderPart);

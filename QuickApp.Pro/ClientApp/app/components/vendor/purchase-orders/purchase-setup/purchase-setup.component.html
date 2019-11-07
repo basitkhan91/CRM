@@ -11,7 +11,7 @@
                 </nav>
             </div>
             <div class="card-body">
-                <h4 class="po-head">Create Purchase Order for  {{sourcePoApproval.vendorName}}</h4>
+                <h4 class="po-head">{{isEditMode ? 'Edit' : 'Create'}} Purchase Order for {{sourcePoApproval.vendorName}}</h4>
                 
                     <div class="form-row">
                         <div class="col-md-3">
@@ -348,7 +348,7 @@
                                             </div>
                                     </div>     
                                 </td>
-                                <td><input type="number" class="form-control" [(ngModel)]="partList.quantityOrdered" name="parentQtyOrdered{{row_index}}" pKeyFilter="pint" #parentQtyOrdered="ngModel" (keyup)="onChangeParentQtyOrdered($event); onGetDiscAmount(partList); onGetExtCost(partList);" required>
+                                <td><input type="number" class="form-control" [(ngModel)]="partList.quantityOrdered" name="parentQtyOrdered{{row_index}}" pKeyFilter="pint" #parentQtyOrdered="ngModel" (keyup)="onChangeParentQtyOrdered($event, partList); onGetDiscAmount(partList); onGetExtCost(partList);" required>
                                     <div *ngIf="parentQtyOrdered.invalid && (parentQtyOrdered.dirty || parentQtyOrdered.touched)" class="alert alert-danger alert-danger-cstm">
                                             <div *ngIf="parentQtyOrdered.errors.required">
                                                 <small> Order Qty is required </small>
@@ -508,7 +508,7 @@
                                 <td colspan="5">
                                     <div class="form-row">
                                         <div class="col-sm-10">
-                                            <select class="inner-addon right-addon autosuggesions-add inline-block mw400" [(ngModel)]="partChildList.partListAddressId" name="partListAddressId{{row_no}}" (change)="onGetSplitAddress(partChildList)">
+                                            <select class="inner-addon right-addon autosuggesions-add inline-block mw400 form-control" [(ngModel)]="partChildList.partListAddressId" name="partListAddressId{{row_no}}" (change)="onGetSplitAddress(partChildList)">
                                                 <option>Select</option>
                                                 <option *ngFor="let object of splitAddressData" value="{{object.addressId}}">{{object.address1}} {{object.city}} {{object.country}} {{object.postalCode}}</option>
                                             </select>
@@ -523,7 +523,7 @@
                                 </td>
                                 <td>{{partList.UOMShortName}}</td>
                                 <td><input class="form-control" type="number" pKeyFilter="pint" [(ngModel)]="partChildList.quantityOrdered" name="childQtyOrdered{{row_no}}" (keyup)="onChangeChildQtyOrdered(partList)" /></td> <!--[disabled]="!partList.quantityOrdered"-->
-                                <td><p-calendar class="pcal-cpo-grid" [showIcon]="true" [(ngModel)]="partChildList.needByDate" name="needByDate{{row_no}}"></p-calendar></td>
+                                <td><p-calendar class="pcal-cpo-grid" [showIcon]="true" [(ngModel)]="partChildList.needByDate" name="childNeedByDate{{row_no}}"></p-calendar></td>
                                 <td>
                                     <label style="width:90px;">Company:</label>
                                     <select class="inner-addon right-addon autosuggesions-add inline-block mw400"
@@ -712,7 +712,7 @@
                             <div class="col-sm-11">
                                     <p-autoComplete field="label" class="pautocomp-cstm" (onClear)="clearInputShipTo()"
                                     [(ngModel)]="sourcePoApproval.shipToUserId" name="shipCustomerName" [suggestions]="customerNames" 
-                                    (completeMethod)="filterNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onShipToCustomerSelected($event.value);" #shipCustomerName="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
+                                    (completeMethod)="filterNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onShipToCustomerSelected($event.value, sourcePoApproval);" #shipCustomerName="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
                                 <div *ngIf="shipCustomerName.invalid && (shipCustomerName.dirty || shipCustomerName.touched)" class="alert alert-danger alert-danger-cstm">
                                         <div *ngIf="shipCustomerName.errors.required">
                                             <small> Customer Name is required </small>

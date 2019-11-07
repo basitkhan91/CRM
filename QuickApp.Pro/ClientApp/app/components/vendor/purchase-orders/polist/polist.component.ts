@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { Table } from 'primeng/table';
 import { PurchaseOrderService } from '../../../../services/purchase-order.service';
 import { VendorCapabilitiesService } from '../../../../services/vendorcapabilities.service';
+import { CommonService } from '../../../../services/common.service';
 
 @Component({
 	selector: 'app-polist',
@@ -60,7 +61,8 @@ export class PolistComponent implements OnInit {
         private dialog: MatDialog,
         private masterComapnyService: MasterComapnyService,
         private purchaseOrderService: PurchaseOrderService,
-        private vendorCapesService: VendorCapabilitiesService) {
+        private vendorCapesService: VendorCapabilitiesService,
+        private commonService: CommonService) {
         // this.displayedColumns.push('Customer');
         // this.dataSource = new MatTableDataSource();
         // this.activeIndex = 0;
@@ -94,6 +96,34 @@ export class PolistComponent implements OnInit {
 
         })
     }
+
+    getManagementStructureDetails(id) {
+		this.commonService.getManagementStructureDetails(id).subscribe(res => {
+			// if (res.Level1) {
+			// 	this.tempPOHeaderAddress.companyId = res.Level1;
+			// 	this.getBUList(res.Level1);
+			// } else 
+			// 	this.tempPOHeaderAddress.companyId = 0;
+
+			// if(res.Level2) {
+			// 	this.tempPOHeaderAddress.buId = res.Level2;
+			// 	this.getDivisionlist(res.Level2);
+			// } else
+			// 	this.tempPOHeaderAddress.buId = 0;
+
+			// if(res.Level3) {
+			// 	this.tempPOHeaderAddress.divisionId = res.Level3;
+			// 	this.getDepartmentlist(res.Level3);
+			// } else 
+			// 	this.tempPOHeaderAddress.divisionId = 0;
+
+			// if(res.Level4) {
+			// 	this.tempPOHeaderAddress.departmentId = res.Level4;
+			// } else
+			// 	this.tempPOHeaderAddress.departmentId = 0;
+
+		})
+	}
 
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";

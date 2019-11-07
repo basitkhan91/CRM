@@ -158,11 +158,10 @@
 				  style="width:120px"
 				  *ngFor="let col of columns"
 				  class="ui-resizable-column"
-				  pReorderableRowHandle
-				  data-toggle="modal"
-				  data-target="#view"
-				  (dblclick)="viewSelectedRow(rowData)"
-				>
+				  pReorderableRowHandle				  
+				> <!--data-toggle="modal"
+					data-target="#view"
+					(dblclick)="viewSelectedRow(rowData)"-->
 				  {{
 					col.field == 'createdDate'
 					  ? (rowData[col.field] | date: 'MM/dd/yyyy')
@@ -434,10 +433,15 @@
 																<td></td>
 																<td></td>
 																<td>{{partList?.partNumber}}</td>
-																<td>{{partList?.altPartNumber}}</td>
+																<td>{{partList?.partDescription}}</td>
 																<td>{{partChild?.userType}}</td>
 																<td>{{partChild?.user}}</td>
-																<td colspan="5">{{partChild?.poPartSplitAddress1}}, {{partChild?.poPartSplitCity}}, {{partChild?.poPartSplitState}}, {{partChild?.poPartSplitPostalCode}}, {{partChild?.poPartSplitCountry}}</td>
+																<td colspan="5">
+																	{{partChild.poPartSplitAddress1 ? partChild.poPartSplitAddress1 : ''}}, 
+																	{{partChild.poPartSplitCity ? partChild.poPartSplitCity : ''}},
+																	{{partChild.poPartSplitState ? partChild.poPartSplitState : ''}} ,
+																	{{partChild.poPartSplitPostalCode ? partChild.poPartSplitPostalCode : ''}}, 
+																	{{partChild.poPartSplitCountry ? partChild.poPartSplitCountry : ''}}</td>
 																<td>{{partList?.unitOfMeasure}}</td>
 																<td>{{partChild?.quantityOrdered}}</td>
 																<td>{{partChild?.needByDate}}</td>
@@ -523,7 +527,7 @@
 												</div>
 												<div class="col-sm-3">
 													<h5 class="po-head">Bill To</h5>
-													<p><span class="label"><b>User Type: </b></span><span class="value">{{poHeaderAdd.billToUserType ? poHeaderAdd.billToUserType : '-'}}</span></p>
+													<p><span class="label"><b>User Type: </b></span><span class="value">{{poHeaderAdd.billToToUserType ? poHeaderAdd.billToToUserType : '-'}}</span></p>
 													<p><span class="label"><b>User: </b></span><span class="value">{{poHeaderAdd.billToUser ? poHeaderAdd.billToUser : '-'}}</span></p>
 													<p><span class="label"><b>Site Name: </b></span><span class="value">{{poHeaderAdd.billToSiteName ? poHeaderAdd.billToSiteName : '-'}}</span></p>
 													<p><span class="label"><b>Address1: </b></span><span class="value">{{poHeaderAdd.billToAddress1 ? poHeaderAdd.billToAddress1 : '-'}}</span></p>
