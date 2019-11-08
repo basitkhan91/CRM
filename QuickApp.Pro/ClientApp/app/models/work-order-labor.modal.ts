@@ -54,9 +54,9 @@ export class AllTasks {
   startDateandTimeIsEdit: boolean;
   endDateandTimeIsEdit: boolean;
   endDate: Date;
-  hoursandMinutes: string;
+  hours: string;
   adjustments: string;
-  adjustmentedHours: string;
+  adjustedHours: string;
   memo: string;
 
 
@@ -69,9 +69,9 @@ export class AllTasks {
     this.startDateandTimeIsEdit = false;
     this.endDate = null;
     this.endDateandTimeIsEdit = false;
-    this.hoursandMinutes = '';
+    this.hours = '';
     this.adjustments = '';
-    this.adjustmentedHours = '';
+    this.adjustedHours = '';
     this.memo = '';
   }
 }

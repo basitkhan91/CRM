@@ -161,9 +161,10 @@ export class WorkOrderLaborComponent implements OnInit {
       hoursorClockorScan : hoursorClockorScan,
       dataEnteredBy :  getValueFromObjectByKey('value', this.laborForm.dataEnteredBy ) ,
       employeeId: getValueFromObjectByKey('value', this.laborForm.employeeId ), 
+      masterCompanyId: 1,
       ...excessParams,
     workOrderId : this.id,
-    workOrderLaborList: [
+    workOrderLaborList: 
     {
      receive :  tasksData['receive'].map(x => {
       return {
@@ -245,7 +246,7 @@ export class WorkOrderLaborComponent implements OnInit {
         employeeId: getValueFromObjectByKey('value', x.employeeId ) 
       }
     })
-    }]
+    }
     
   
   }
