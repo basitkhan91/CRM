@@ -14197,6 +14197,10 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .vendor-steps-prime-cstm {
     display: none !important;
 }
+.pcalendar-wo-labor {
+    width: calc(100% - 20px) !important;
+    margin-right: 6px;
+}
 
 .view-Header {
   color: #4298ff !important;

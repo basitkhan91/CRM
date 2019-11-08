@@ -1286,7 +1286,6 @@ export class PurchaseSetupComponent implements OnInit {
 	}
 
 	deleteSplitShipment(childata, index, mainindex) {
-
 		// if (childata.purchaseOrderPartRecordId) {
 		// 	this.vendorService.deletePurchaseorderpart(childata.purchaseOrderPartRecordId).subscribe(data => {
 
