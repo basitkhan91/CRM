@@ -1707,7 +1707,8 @@ namespace DAL.Repositories
             try
             {
                 var workOrderMaterialsList = (from wom in _appContext.WorkOrderMaterials
-                                              join sl in _appContext.StockLine on wom.ItemMasterId equals sl.ItemMasterId
+                                              join sl in _appContext.StockLine on wom.ItemMasterId equals sl.ItemMasterId into sls
+                                              from sl in sls.DefaultIfEmpty()
                                               join im in _appContext.ItemMaster on wom.ItemMasterId equals im.ItemMasterId
                                               join p in _appContext.Provision on im.ProvisionId equals p.ProvisionId into pro
                                               from p in pro.DefaultIfEmpty()
