@@ -3085,6 +3085,24 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpPut("roStatus")]
+        public IActionResult RepairOrderStatus(long repairOrderId, bool status, string updatedBy)
+        {
+            var repairOrderModel = _context.RepairOrder.Where(a => a.RepairOrderId == repairOrderId).SingleOrDefault();
+
+            if (repairOrderModel == null)
+            {
+                return BadRequest($"No matching record found for RepairOrderid={repairOrderId}.");
+            }
+
+            repairOrderModel.IsActive = status;
+            repairOrderModel.UpdatedBy = updatedBy;
+            repairOrderModel.UpdatedDate = DateTime.Now;
+            _context.RepairOrder.Update(repairOrderModel);
+            _context.SaveChanges();
+            return Ok();
+        }
+
         #region Capes
 
         [HttpGet("GetVendorCapesDatawithMasterId/{id}")]
