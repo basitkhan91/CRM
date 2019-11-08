@@ -3078,6 +3078,13 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("roViewById")]
+        public IActionResult RepairOrderView(long repairOrderId)
+        {
+            var result = _unitOfWork.repairOrder.RepairOrderView(repairOrderId);
+            return Ok(result);
+        }
+
         #region Capes
 
         [HttpGet("GetVendorCapesDatawithMasterId/{id}")]
