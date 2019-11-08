@@ -112,6 +112,9 @@ export class WorkOrderAddComponent implements OnInit {
   savedWorkOrderData: any;
   workFlowWorkOrderData: any;
   workOrderAssetList: any;
+  workOrderId: (responseData: any) => void;
+  workFlowWorkOrderId: any;
+  workOrderMaterialList: any;
 
 
   constructor(
@@ -329,7 +332,7 @@ export class WorkOrderAddComponent implements OnInit {
 
 
   saveWorkOrder(): void {
-    // this.showTableGrid = true; // Show Grid Boolean
+    this.showTableGrid = true; // Show Grid Boolean
     const generalInfo = this.workOrderGeneralInformation
     const data = {
       ...generalInfo,
@@ -357,6 +360,7 @@ export class WorkOrderAddComponent implements OnInit {
     this.workOrderService.createNewWorkOrder(data).subscribe(
       result => {
         this.savedWorkOrderData = result;
+        this.workOrderId = result.workOrderId;
         this.showTableGrid = true; // Show Grid Boolean
         // this.workOrder = result;
         this.alertService.showMessage(
@@ -370,18 +374,30 @@ export class WorkOrderAddComponent implements OnInit {
 
   savedWorkFlowData(responseData){
     this.workFlowWorkOrderData = responseData;
+    this.workFlowWorkOrderId = responseData.workFlowWorkOrderId;
   }
 
-  getAllEquipment(){
+  getEquipmentByWorkOrderId(){
     if(this.workFlowWorkOrderData){
-      const {workFlowId } = this.workFlowWorkOrderData;
-      this.workOrderService.getWorkOrderAssetList(workFlowId).subscribe(
+      // this.workFlowWorkOrderId = this.workFlowWorkOrderData.workFlowWorkOrderId;
+      this.workOrderService.getWorkOrderAssetList(this.workFlowWorkOrderId).subscribe(
         result => {
             this.workOrderAssetList = result;
         }
-    );
-    }
+    )
+  }
 
+  }
+
+  getMaterialListByWorkOrderId(){
+   if( this.workFlowWorkOrderId && this.workOrderId  ){
+     this.workOrderService.getMaterialList(this.workFlowWorkOrderId ,  this.workOrderId).subscribe(res => {
+      
+         this.workOrderMaterialList = res;
+       
+     })
+
+   }
   }
 
 

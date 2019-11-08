@@ -16,7 +16,7 @@
                             <th class="text-center"></th>
                         </tr>
                         <tr>
-                            <th class="text-center">Equipment #</th>
+                            <th class="text-center">Equipment </th>
                             <th class="text-center">Equipment Description</th>
                             <th class="text-center">Equipment Type</th>
                             <th class="text-center">Qty</th>
@@ -58,12 +58,13 @@
                                     </button>
                         </div> -->
 
-                        <div *ngIf="workOrderAssetList" class="text-right save-work-btn" >
-                                <button class="btn btn-primary btn-primary-cstm" (click)="saveAssets()" style="padding: 6px 12px !important;">Save Assets</button>
-                            </div>
+                        
  
                     </tbody>
                 </table>
+                <div *ngIf="workOrderAssetList" class="text-right save-work-btn" >
+                        <button class="btn btn-primary btn-primary-cstm" (click)="saveAssets()" style="padding: 6px 12px !important;">Save Assets</button>
+                    </div>
             </div>
         </div>
         <div class="clear"></div>
