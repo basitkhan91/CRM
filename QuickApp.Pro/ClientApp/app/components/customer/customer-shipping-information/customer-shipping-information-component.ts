@@ -6,7 +6,7 @@ import { AuthService } from '../../../services/auth.service';
 import { AlertService, MessageSeverity } from '../../../services/alert.service';
 import { CustomerShippingModel } from '../../../models/customer-shipping.model';
 import { CustomerInternationalShippingModel, CustomerInternationalShipVia } from '../../../models/customer-internationalshipping.model';
-import { getValueFromObjectByKey, getObjectById } from '../../../generic/autocomplete';
+import { getValueFromObjectByKey, getObjectById, editValueAssignByCondition } from '../../../generic/autocomplete';
 @Component({
     selector: 'app-customer-shipping-information',
     templateUrl: './customer-shipping-information.component.html',
@@ -124,7 +124,9 @@ export class CustomerShippingInformationComponent implements OnInit {
             ...this.domesticShippingInfo,
             createdBy: this.userName,
             updatedBy: this.userName,
+            country: getValueFromObjectByKey('nice_name', this.domesticShippingInfo.country),
             masterCompanyId: 1,
+            isPrimary: false,
             isActive: true,
             customerId: this.id
         }
@@ -353,15 +355,23 @@ export class CustomerShippingInformationComponent implements OnInit {
             updatedBy: this.userName,
         }
 
+        this.shipViaDomestic = new CustomerInternationalShipVia()
         this.customerService.newShippingViaAdd(data).subscribe(res => {
 
+            this.getShipViaByDomesticShippingId(this.selectedShipViaDomestic.customerShippingAddressId)
 
-            this.shipViaDomestic = new CustomerInternationalShipVia()
             this.alertService.showMessage(
                 'Success',
                 `Sucessfully Updated Ship Via `,
                 MessageSeverity.success
             );
+        })
+    }
+
+    getShipViaByDomesticShippingId(customerShippingAddressId){
+        this.customerService.getShipViaByDomesticShippingId(customerShippingAddressId).subscribe(res => {
+            
+            
         })
     }
 

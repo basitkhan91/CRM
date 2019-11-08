@@ -338,9 +338,75 @@ namespace QuickApp.Pro.ViewModels
 
         public DateTime? UpdatedDate { get; set; }
 
-        //public bool? IsActive { get; set; }
+        public bool? IsActive { get; set; }
 
-        //public bool? IsDelete { get; set; }
+        public bool? IsDeleted { get; set; }
+    }
+
+    public class GLAccountClassColModel
+    {
+
+        public long GLCID { get; set; }
+        public string GLAccountType { get; set; }
+        public string Memo { get; set; }
+    }
+
+    public class GLAccountClassSPModel
+    {
+        public long? GLAccountClassId { get; set; }
+
+        public long? gLCID { get; set; }
+        public string gLAccountType { get; set; }
+
+        public string Memo { get; set; }
+
+
+        public Int32 MasterCompanyId { get; set; }
+
+        public bool? IsActive { get; set; }
+
+        public bool? IsDeleted { get; set; }
+
+        public virtual MasterCompany MasterCompany { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public string UpdatedBy { get; set; }
+    }
+
+    #endregion
+
+    #region Stockline Adjustment Reason
+    public class StocklineAdjustmentReasonColModel
+    {
+
+        public long ID { get; set; }
+        public string StockAdjustmentReason { get; set; }
+        public string Memo { get; set; }
+    }
+
+    public class StocklineAdjustmentReasonSPModel
+    {
+        public long? iD { get; set; }
+
+        public string StockAdjustmentReason { get; set; }
+
+        public string Memo { get; set; }
+
+
+        public Int32 MasterCompanyId { get; set; }
+
+        public bool? IsActive { get; set; }
+
+        public bool? IsDeleted { get; set; }
+
+        public virtual MasterCompany MasterCompany { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public string UpdatedBy { get; set; }
     }
     #endregion
 
@@ -622,7 +688,18 @@ namespace QuickApp.Pro.ViewModels
     #endregion
 
     #region AssetDepreciationInterval
-    public class AssetDepreciationIntervalModel
+
+    public class AssetDepreciationIntervalModel : PasBase
+    {
+        public long? AssetDepreciationIntervalId { get; set; }
+        public string AssetDepreciationIntervalCode { get; set; }
+        public string AssetDepreciationIntervalName { get; set; }
+        public string AssetDepreciationIntervalMemo { get; set; }
+        public Int32 MasterCompanyId { get; set; }
+        public bool? IsActive { get; set; }
+        public bool? IsDeleted { get; set; }
+    }
+    public class AssetDepreciationIntervalColModel
     {
         //public long AssetDepreciationIntervalId { get; set; }
         public string Code { get; set; }
@@ -630,7 +707,7 @@ namespace QuickApp.Pro.ViewModels
         public string Memo { get; set; }
     }
 
-    public class AssetDepreciationIntervalSPModel : AssetDepreciationIntervalModel
+    public class AssetDepreciationIntervalSPModel : AssetDepreciationIntervalColModel
     {
         public long? AssetDepreciationIntervalId { get; set; }
         public Int32 MasterCompanyId { get; set; }

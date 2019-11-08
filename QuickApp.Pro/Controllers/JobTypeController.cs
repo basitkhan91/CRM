@@ -20,12 +20,14 @@ namespace QuickApp.Pro.Controllers
         private IUnitOfWork _unitOfWork;
         readonly ILogger _logger;
         readonly IEmailer _emailer;
+        private readonly ApplicationDbContext _context;
 
-        public JobTypeController(IUnitOfWork unitOfWork, ILogger<JobTitleController> logger, IEmailer emailer)
+        public JobTypeController(IUnitOfWork unitOfWork, ILogger<JobTitleController> logger, IEmailer emailer, ApplicationDbContext context)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
             _emailer = emailer;
+            _context = context;
         }
 
 
@@ -51,6 +53,8 @@ namespace QuickApp.Pro.Controllers
                 DAL.Models.JobType jobTypeObj = new DAL.Models.JobType();
                 jobTypeObj.jobTypeDescription = jobTypeViewModel.jobTypeDescription;
                 jobTypeObj.JobTypeName = jobTypeViewModel.JobTypeName;
+                jobTypeObj.MasterCompanyId = jobTypeViewModel.MasterCompanyId;
+               
                 jobTypeObj.IsActive = jobTypeViewModel.IsActive;
                 jobTypeObj.CreatedDate = DateTime.Now;
                 jobTypeObj.UpdatedDate = DateTime.Now;
@@ -80,15 +84,17 @@ namespace QuickApp.Pro.Controllers
 
                 existingResult.jobTypeDescription = jobTypeViewModel.jobTypeDescription;
                 existingResult.JobTypeName = jobTypeViewModel.JobTypeName;
+                existingResult.MasterCompanyId = jobTypeViewModel.MasterCompanyId;
                 existingResult.IsActive = jobTypeViewModel.IsActive;
                 existingResult.UpdatedDate = DateTime.Now;
                 existingResult.UpdatedBy = jobTypeViewModel.UpdatedBy;
                 existingResult.IsActive = jobTypeViewModel.IsActive;
 
-           
+                _context.JobType.Update(existingResult);
+                _context.SaveChanges();
 
-                _unitOfWork.JobType.Update(existingResult);
-                _unitOfWork.SaveChanges();
+                //_unitOfWork.JobType.Update(existingResult);
+                //_unitOfWork.SaveChanges();
 
             }
 
@@ -103,13 +109,31 @@ namespace QuickApp.Pro.Controllers
             var existingResult = _unitOfWork.JobType.GetSingleOrDefault(c => c.JobTypeId == id);
 
             existingResult.IsDeleted = true;
-            _unitOfWork.JobType.Update(existingResult);
-            _unitOfWork.SaveChanges();
+
+            //_unitOfWork.JobType.Update(existingResult);
+            //_unitOfWork.SaveChanges();
+
+            _context.JobType.Update(existingResult);
+            _context.SaveChanges();
 
 
             return Ok(id);
         }
 
+
+        [HttpGet("audits/{id}")]
+        public IActionResult AuditDetails(long id)
+        {
+            var audits = _unitOfWork.Repository<JobTypeAudit>()
+                .Find(x => x.JobTypeId == id)
+                .OrderByDescending(x => x.JobTypeAuditId);
+
+            var auditResult = new List<AuditResult<JobTypeAudit>>();
+
+            auditResult.Add(new AuditResult<JobTypeAudit> { AreaName = "Job Type", Result = audits.ToList() });
+
+            return Ok(auditResult);
+        }
 
     }
 

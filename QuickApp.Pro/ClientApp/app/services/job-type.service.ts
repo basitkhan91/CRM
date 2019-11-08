@@ -61,6 +61,11 @@ export class JobTypeService {
 
     }
 
+
+    getJobTypeAudit(jobTypeId: number) {
+        return this.jobTypeEndpoint.getJobTypeAuditById<any>(jobTypeId);
+    }
+
  
 
    

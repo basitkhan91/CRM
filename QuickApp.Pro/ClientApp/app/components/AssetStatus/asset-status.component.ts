@@ -404,25 +404,23 @@ export class AssetStatusComponent implements OnInit {
         this.modal.close();
     }
 
-    //showAuditPopup(template, id): void {
-    //    this.auditAssetStatus(id);
-    //    this.modal = this.modalService.open(template, { size: 'sm' });
-    //}
-
-    //auditAssetStatus(assetStatusId: number): void {
-    //    this.AuditDetails = [];
-    //    this.assetStatusService.getAssetAudit(assetStatusId).subscribe(audits => {
-    //        if (audits.length > 0) {
-    //            this.AuditDetails = audits;
-    //            this.AuditDetails[0].ColumnsToAvoid = ["assetStatusAuditId", "id", "createdBy", "createdDate", "updatedDate"];
-    //        }
-    //    });
-    //}
-
+ 
     getAuditHistoryById(rowData) {
         this.assetStatusService.getAssetAudit(rowData.assetStatusId).subscribe(res => {
             this.auditHistory = res;
         })
+    }
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
     }
 
     sampleExcelDownload() {

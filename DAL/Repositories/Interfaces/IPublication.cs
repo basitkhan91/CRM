@@ -1,5 +1,6 @@
 ﻿using DAL.Common;
 using DAL.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,7 +9,7 @@ namespace DAL.Repositories.Interfaces
 {
     public interface IPublication : IRepository<DAL.Models.Publication>
     {
-        Publication GetPublicationsById(long id);
+        Publication GetPublicationsById(long id); 
         
         IEnumerable<object> GetPubPNMappingData(string id);
         
@@ -31,13 +32,14 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetATAMappingDataByMultiATAId(long PublicationId, string ATAChapterID);
         
         IEnumerable<object> GetATAMappingDataByMultiSubChapterId(long PublicationId, string SubATAChapterID);
-        
+          
         IEnumerable<object> searchgetAircraftMappingDataByMultiTypeIdModelIDDashID(long PublicationId, string aircraftTypeID, string aircraftModelID, string dashNumberId);
         
         IEnumerable<object> searchGetATAMappingDataByMultiATAIdSUBATAID(long PublicationId, string ATAChapterID, string SubATAChapterID);
-        
-        GetData<PublicationsList> GetPublicationsList(string publicationId, string description, long publicationTypeId, string publishedBy, long employeeId, string location, int pageNumber, int pageSize);
-        
+
+        IEnumerable<object> GetPublicationsList(string publicationId, string description, string publicationType, string publishedBy, string employee, string location, int pageNumber, int pageSize);
+
+
         GetData<PublicationsList> PublicationsGlobalSearch(long? ataChapterId, long? ataSubChapterId, long? airCraftId, long? modelId, long? dashNumberId, int pageNumber, int pageSize);
         
         object PublicationView(long publicationRecordId);
@@ -49,5 +51,8 @@ namespace DAL.Repositories.Interfaces
         object GetPublicationForWorkFlow(long publicationRecordId);
         
         IEnumerable<PublicationsList> getPublicationDropdownData();
+
+        IEnumerable<Publication> UploadCustomData(IFormFile file);
+        IEnumerable<object> PublicationHistory(long publicationId);
     }
 }

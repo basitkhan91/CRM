@@ -22,6 +22,7 @@ import { Location } from '../../models/location.model';
 import { ShelfService } from '../../services/shelf.service';
 import { TreeNode, MenuItem } from 'primeng/api';
 import { LegalEntityService } from '../../services/legalentity.service';
+import { ConfigurationService } from '../../services/configuration.service';
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 @Component({
 	selector: 'app-shelf',
@@ -150,7 +151,7 @@ export class ShelfComponent {
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 
-	constructor(public manageMentService: LegalEntityService, public workFlowtService: ShelfService, public locationService: LocationService, public wareHouseService: WarehouseService, public siteService: SiteService, private breadCrumb: SingleScreenBreadcrumbService, private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(public manageMentService: LegalEntityService, private configurations: ConfigurationService, public workFlowtService: ShelfService, public locationService: LocationService, public wareHouseService: WarehouseService, public siteService: SiteService, private breadCrumb: SingleScreenBreadcrumbService, private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 		this.dataSource = new MatTableDataSource();
 		this.sourceShelf = new Shelf();
 
@@ -158,7 +159,12 @@ export class ShelfComponent {
 
 	closethis() {
 		this.closeCmpny = false;
-	}
+    }
+    sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=Shelf&fileName=Shelf.xlsx`;
+
+        window.location.assign(url);
+    }
 
 	handleChange(rowData, e) {
 		if (e.checked == false) {

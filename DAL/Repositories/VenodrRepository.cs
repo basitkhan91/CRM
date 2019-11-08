@@ -23,6 +23,10 @@ namespace DAL.Repositories
             return _appContext.Vendor.OrderByDescending(c => c.VendorId).ToList();
         }
 
+        public IEnumerable<Vendor> GetVendorsLite()
+        {
+            return _appContext.Vendor.Where(v => v.IsActive == true && v.IsDelete == false).Select(v => new  Vendor{ VendorId= v.VendorId, VendorName=v.VendorName }).OrderBy(c=>c.VendorName).ToList();
+        }
 
         public IEnumerable<object> GetVendorListDetails()
         {
@@ -182,7 +186,7 @@ namespace DAL.Repositories
                                 po.ReferenceId,
                                 po.PriorityId,
                                 po.RequestedBy,
-                                po.DateRequested,
+                                po.OpenDate,
                                 po.ApproverId,
                                 po.DeferredReceiver,
                                 po.Resale,
@@ -454,6 +458,212 @@ namespace DAL.Repositories
             }
         }
 
+        public long CreateVendorBillingAddress(VendorBillingAddress billingAddress)
+        {
+            try
+            {
+				Address address = new Address();
+
+				address.City = billingAddress.City;
+				address.Country = billingAddress.Country;
+				
+				
+				
+				address.Line1 = billingAddress.Address1;
+				address.Line2 = billingAddress.Address2;
+				address.Line3 = billingAddress.Address3;
+				address.MasterCompanyId = billingAddress.MasterCompanyId;
+				address.PostalCode = billingAddress.PostalCode;
+				address.StateOrProvince = billingAddress.StateOrProvince;
+
+				address.IsActive = true;
+				address.UpdatedDate = address.CreatedDate = DateTime.Now;
+				address.CreatedBy = billingAddress.CreatedBy;
+				address.UpdatedBy = billingAddress.UpdatedBy;
+
+                if (billingAddress.AddressId > 0)
+                {
+                    address.CreatedDate = billingAddress.CreatedDate;
+                    address.AddressId = billingAddress.AddressId;
+                    _appContext.Address.Update(address);
+                }
+                else
+                {
+                    address.CreatedDate = DateTime.Now;
+                    _appContext.Address.Add(address);
+                }
+
+                _appContext.SaveChanges();
+
+
+                billingAddress.AddressId = Convert.ToInt64(address.AddressId);
+
+                billingAddress.UpdatedDate = DateTime.Now;
+                billingAddress.IsActive = true;
+                billingAddress.IsDeleted = false;
+                billingAddress.IsPrimary = false;
+
+                if (billingAddress.VendorBillingAddressId > 0)
+                {
+                    _appContext.VendorBillingAddress.Update(billingAddress);
+                }
+                else
+                {
+                    billingAddress.CreatedDate = DateTime.Now;
+                    _appContext.VendorBillingAddress.Add(billingAddress);
+                }
+
+                _appContext.SaveChanges();
+
+                return billingAddress.VendorBillingAddressId;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void UpdateVendorBillingAddress(VendorBillingAddress billingAddress)
+        {
+            try
+            {
+                 billingAddress.UpdatedDate = DateTime.Now;
+                _appContext.VendorBillingAddress.Update(billingAddress);
+                _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void DeleteVendorBillingAddress(long billingAddressId,string updatedBy)
+        {
+            try
+            {
+                VendorBillingAddress billingAddress = new VendorBillingAddress();
+                billingAddress.VendorBillingAddressId = billingAddressId;
+                billingAddress.IsDeleted = true;
+                billingAddress.UpdatedDate = DateTime.Now;
+                billingAddress.UpdatedBy = updatedBy;
+
+                _appContext.VendorBillingAddress.Attach(billingAddress);
+
+                _appContext.Entry(billingAddress).Property(p => p.IsDeleted).IsModified = true;
+                _appContext.Entry(billingAddress).Property(p => p.UpdatedDate).IsModified = true;
+                _appContext.Entry(billingAddress).Property(p => p.UpdatedBy).IsModified = true;
+
+                _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void VendorBillingAddressStatus(long billingAddressId,bool status, string updatedBy)
+        {
+            try
+            {
+                VendorBillingAddress billingAddress = new VendorBillingAddress();
+                billingAddress.VendorBillingAddressId = billingAddressId;
+                billingAddress.IsActive = status;
+                billingAddress.UpdatedDate = DateTime.Now;
+                billingAddress.UpdatedBy = updatedBy;
+
+                _appContext.VendorBillingAddress.Attach(billingAddress);
+
+                _appContext.Entry(billingAddress).Property(p => p.IsActive).IsModified = true;
+                _appContext.Entry(billingAddress).Property(p => p.UpdatedDate).IsModified = true;
+                _appContext.Entry(billingAddress).Property(p => p.UpdatedBy).IsModified = true;
+
+                _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetVendorBillingAddress()
+        {
+            try
+            {
+                var list = (from vba in _appContext.VendorBillingAddress
+                            join ad in _appContext.Address on vba.AddressId equals ad.AddressId
+                            where vba.IsDeleted == false
+                            select new
+                            {
+                                vba.SiteName,
+                                ad.Line1,
+                                ad.Line2,
+                                ad.Line3,
+                                ad.City,
+                                ad.StateOrProvince,
+                                ad.PostalCode,
+                                ad.Country,
+                                vba.CreatedDate
+                            }).OrderByDescending(p=>p.CreatedDate).ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetVendorBillingSiteNames(long vendorId)
+        {
+            try
+            {
+                var list = (from vba in _appContext.VendorBillingAddress
+                            where vba.IsDeleted == false && vba.VendorId == vendorId
+                            select new {
+                                vba.VendorBillingAddressId,
+                                vba.SiteName
+                            }).ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public object VendorBillingAddressById(long billingAddressId)
+        {
+            try
+            {
+                var data = (from vba in _appContext.VendorBillingAddress
+                            join ad in _appContext.Address on vba.AddressId equals ad.AddressId
+                            where vba.VendorBillingAddressId == billingAddressId
+                            select new
+                            {
+                                vba,
+                                ad.City,
+                                ad.Country,
+                                ad.Line1,
+                                ad.Line2,
+                                ad.Line3,
+                                ad.PostalCode,
+                                ad.StateOrProvince
+                            }
+                          ).FirstOrDefault();
+                return data;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         //get Vendor Capability List
 
 
@@ -480,5 +690,12 @@ namespace DAL.Repositories
                         }).ToList();
             return data;
         }
+
+        public IEnumerable<Vendor> getVendorsForDropdown() {
+            return _appContext.Vendor.Where(x => 
+            (x.IsActive != null && x.IsActive == true) && 
+            (x.IsDelete == null || x.IsDelete == false));
+        }
+
     }
 }

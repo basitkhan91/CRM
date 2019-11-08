@@ -297,7 +297,7 @@
                                                         <span class="pull-left">Integration With</span>
                                                         <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" data-target="addIntergation"  data-toggle="modal"></a></span>
                                                     </label>
-                                                    <p-multiSelect [options]="integrationOriginalList" name="integrations" [(ngModel)]="selectedIntegrations" defaultLabel="Choose Columns"></p-multiSelect>
+                                                    <p-multiSelect [options]="integrationOriginalList" name="integrations" [(ngModel)]="generalInformation.integrationPortalId" defaultLabel="Choose Columns"></p-multiSelect>
                                                     <!-- <p-multiSelect [options]="integrationOriginalList" [(ngModel)]="intSelectedColumns" optionLabel="header"
                                                                    selectedItemsLabel="{0} columns selected" name="integrationCols"
                                                                    [style]="{minWidth: '200px'}" defaultLabel="Choose Columns"></p-multiSelect> -->
@@ -775,13 +775,13 @@
                 <div class="form-group">
                         <label>Name <span class="clr-red">*</span></label>
                         <div class="inner-addon right-addon inline-block">
-
-                            <p-autoComplete class="p-dropdown-custom-2" name="classificationName"  
-                             [(ngModel)]="addNewclassification.description" 
-                             (onKeyUp)="checkClassificationExists('description',$event.target.value)"
-                             [suggestions]="classificationList" field="description" (completeMethod)="filterclassifications($event)" 
-                             [size]="30"[minLength]="1" [dropdown]="true" required>
-                            </p-autoComplete>
+                                <p-autoComplete class="p-dropdown-custom-2" name="classificationName"  
+                                [(ngModel)]="addNewclassification.description" 
+                                (onSelect)="selectedClassification($event)"
+                                (onKeyUp)="checkClassificationExists('label',$event.target.value)"
+                                [suggestions]="classificationList" field="label" (completeMethod)="filterclassifications($event)" 
+                                [size]="30"[minLength]="1" [dropdown]="true" required> 
+                               </p-autoComplete> 
                            <div *ngIf="isClassificationAlreadyExists" class="clr-red">Entry Already Exists</div>  
                         </div>
                     </div>

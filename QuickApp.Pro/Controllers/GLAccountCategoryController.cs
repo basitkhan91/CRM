@@ -1,151 +1,150 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using DAL;
+﻿using DAL;
+using DAL.Core;
 using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using QuickApp.Pro.Helpers;
-using QuickApp.Pro.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace QuickApp.Pro.Controllers
 {
-    [Route("api/[controller]")]
+
+    [Route("api/GLAccountCategory")]
     public class GLAccountCategoryController : Controller
     {
-        private IUnitOfWork _unitOfWork;
-        readonly ILogger _logger;
-        readonly IEmailer _emailer;
-        //private const string GetGLAccountCategoryByIdGLAccountCategoryName = "GetGLAccountCategoryById";
+        #region Private Members
 
-        public GLAccountCategoryController(IUnitOfWork unitOfWork, ILogger<GLAccountCategoryController> logger, IEmailer emailer)
+        private readonly IUnitOfWork _unitOfWork;
+
+        #endregion Private Members
+
+        #region Constructor
+
+        public GLAccountCategoryController(IUnitOfWork unitOfWork)
         {
-            _unitOfWork = unitOfWork;
-            _logger = logger;
-            _emailer = emailer;
-
+            this._unitOfWork = unitOfWork;
         }
-        [HttpGet("Get")]
-        [Produces(typeof(List<GLAccountCategoryViewModel>))]
-        public IActionResult Get()
+
+        #endregion Constructor
+
+        #region Public Methods
+
+        [HttpPost("add")]
+        public IActionResult add([FromBody]GLAccountCategory item)
         {
-            var allGLAccountCategory = _unitOfWork.GLAccountCategories.GetAllGLAccountCategoriesData(); //.GetAllCustomersData();
-            return Ok(Mapper.Map<IEnumerable<GLAccountCategoryViewModel>>(allGLAccountCategory));
-
-        }
-        [HttpGet("auditHistoryById/{id}")]
-        [Produces(typeof(List<AuditHistory>))]
-        public IActionResult GetAuditHostoryById(long id)
-        {
-            var result = _unitOfWork.AuditHistory.GetAllHistory("GLAccountCategory", id); //.GetAllCustomersData();
-
-
-            try
+            bool isValid = _unitOfWork.GLAccountCategoryRepository.IsValid(item);
+            var existingItems = _unitOfWork.GLAccountCategoryRepository.GetAllItems();
+            if (isValid)
             {
-                var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
+                if (ModelState.IsValid)
+                {
+                    item.CreatedDate = DateTime.Now;
+                    item.UpdatedDate = DateTime.Now;
+                    item.UpdatedBy = item.CreatedBy;      //[dbo].[GLAccountCategory].[UpdatedBy] not null in schema definition
+                    item.IsActive = true;
+                    item.MasterCompanyId = 1;
+                    bool isDuplicate = _unitOfWork.GLAccountCategoryRepository.IsDuplicate(item, existingItems);
+                    if (!isDuplicate)
+                    {
+                        _unitOfWork.Repository<GLAccountCategory>().Add(item);
+                        _unitOfWork.SaveChanges();
+                        item.UploadTag = UploadTag.Success;
+                        return Ok(item);
+                    }
+                    else
+                    {
+                        item.UploadTag = UploadTag.Duplicate;
+                        return BadRequest(item);
+                    }
+                }
+                else
+                {
+                    return BadRequest(ModelState);
+                }
 
-                return Ok(resul1);
             }
-            catch (Exception ex)
+            else
             {
-
-                throw;
+                item.UploadTag = UploadTag.Invalid;
+                return BadRequest(item);
             }
-
-
-
         }
 
-        [HttpPost("glaccountcategorypost")]
-        //[Authorize(Authorization.Policies.ManageAllRolesPolicy)]
-        public IActionResult CreateGLAccountCategory([FromBody] GLAccountCategoryViewModel glaccountCategoryViewModel)
+        [HttpGet("audit/{id}")]
+        public IActionResult AuditDetails(long id)
         {
-            if (ModelState.IsValid)
-            {
-                if (glaccountCategoryViewModel == null)
-                    return BadRequest($"{nameof(glaccountCategoryViewModel)} cannot be null");
+            List<GLAccountCategoryAudit> audits = _unitOfWork.Repository<GLAccountCategoryAudit>().Find(x => x.GLAccountCategoryId == id).OrderByDescending(x => x.GLAccountCategoryAuditId).ToList();
 
-                DAL.Models.GLAccountCategories glaccountcategoryobject = new DAL.Models.GLAccountCategories();
-                glaccountcategoryobject.GLAccountCategoryName = glaccountCategoryViewModel.GLAccountCategoryName;
-                glaccountcategoryobject.GLCID = glaccountCategoryViewModel.GLCID;
-                glaccountcategoryobject.MasterCompanyId = glaccountCategoryViewModel.MasterCompanyId;
-                glaccountcategoryobject.IsActive = glaccountCategoryViewModel.IsActive;
-                glaccountcategoryobject.CreatedDate = DateTime.Now;
-                glaccountcategoryobject.UpdatedDate = DateTime.Now;
-                glaccountcategoryobject.CreatedBy = glaccountCategoryViewModel.CreatedBy;
-                glaccountcategoryobject.UpdatedBy = glaccountCategoryViewModel.UpdatedBy;
-                _unitOfWork.GLAccountCategories.Add(glaccountcategoryobject);
+            return Ok(audits);
+        }
+
+        [HttpPost("bulkUpload")]
+        public IActionResult BulkUpload()
+        {
+            var result = _unitOfWork.GLAccountCategoryRepository.BulkUpload(Request.Form.Files[0]);
+
+            return Ok(result);
+        }
+
+        [HttpGet("getAll")]
+        public IActionResult getAll()
+        {
+            IEnumerable<GLAccountCategory> items = _unitOfWork.GLAccountCategoryRepository.GetAllItems();
+            return Ok(items);
+        }
+
+        [HttpGet("getById/{id}")]
+        public IActionResult getById(long id)
+        {
+            GLAccountCategory item = _unitOfWork.Repository<GLAccountCategory>().Find(x => x.GLAccountCategoryId == id).FirstOrDefault(x => !(x?.IsDelete ?? false));
+            return Ok(item);
+        }
+
+        [HttpGet("removeById/{id}")]
+        public IActionResult removeById(long id)
+        {
+            var item = _unitOfWork.Repository<GLAccountCategory>().Find(x => x.GLAccountCategoryId == id).FirstOrDefault();
+            if (item != null)
+            {
+                item.IsDelete = true;
+                _unitOfWork.Repository<GLAccountCategory>().Update(item);
                 _unitOfWork.SaveChanges();
-
+                return Ok();
             }
-
-            return Ok(ModelState);
+            else
+            {
+                return BadRequest();
+            }
         }
 
-        [HttpPut("glaccountcategorypost/{id}")]
-        public IActionResult UpdateGLAccountcategory(long id, [FromBody] GLAccountCategoryViewModel glaccountCategoryViewModel)
+        [HttpPost("update")]
+        public IActionResult update([FromBody]GLAccountCategory item)
         {
-
-            if (ModelState.IsValid)
+            bool isValid = _unitOfWork.GLAccountCategoryRepository.IsValid(item);
+            if (isValid)
             {
-                if (glaccountCategoryViewModel == null)
-                    return BadRequest($"{nameof(glaccountCategoryViewModel)} cannot be null");
-
-                var existingResult = _unitOfWork.GLAccountCategories.GetSingleOrDefault(c => c.GLAccountCategoryId == id);
-                // DAL.Models.Action updateObject = new DAL.Models.Action();
-
-
-                existingResult.UpdatedDate = DateTime.Now;
-                existingResult.UpdatedBy = glaccountCategoryViewModel.UpdatedBy;
-                existingResult.GLCID = glaccountCategoryViewModel.GLCID;
-                existingResult.GLAccountCategoryName = glaccountCategoryViewModel.GLAccountCategoryName;
-                existingResult.IsActive = glaccountCategoryViewModel.IsActive;
-                existingResult.MasterCompanyId = glaccountCategoryViewModel.MasterCompanyId;
-
-                _unitOfWork.GLAccountCategories.Update(existingResult);
+                item.UpdatedDate = DateTime.Now;
+                GLAccountCategory existingItem = _unitOfWork.Repository<GLAccountCategory>().Find(x => x.GLAccountCategoryId == item.GLAccountCategoryId).FirstOrDefault(x => !(x?.IsDelete ?? false));
+                existingItem.UpdatedDate = DateTime.Now;
+                existingItem.UpdatedBy = item.UpdatedBy;
+                existingItem.IsActive = item.IsActive;
+                existingItem.GLCID = item.GLCID;
+                existingItem.GLAccountCategoryName = item.GLAccountCategoryName;
+                //_unitOfWork.Repository<GLAccountCategory>().Update(item);
                 _unitOfWork.SaveChanges();
-
+                return Ok(item);
+            }
+            else
+            {
+                return BadRequest();
             }
 
-
-            return Ok(ModelState);
         }
 
+        #endregion Public Methods
 
-        [HttpDelete("glaccountcategorypost/{id}")]
-        [Produces(typeof(GLAccountCategoryViewModel))]
-        public IActionResult DeleteGLAccountCategory(long id)
-        {
-            var existingResult = _unitOfWork.GLAccountCategories.GetSingleOrDefault(c => c.GLAccountCategoryId == id);
-            existingResult.IsDelete = true;
-            _unitOfWork.GLAccountCategories.Update(existingResult);
+        #region Private Methods
 
-            //_unitOfWork.ActionAttribute.Remove(existingResult);
-
-            _unitOfWork.SaveChanges();
-
-            return Ok(id);
-        }
-
-        [HttpGet("audits/{Id}")]
-        public IActionResult getGLAccountCategoryAuditDetails(long Id)
-        {
-            var audits = _unitOfWork.Repository<GLAccountCategoriesAudit>()
-                .Find(x => x.GLAccountCategoryId == Id)
-                .OrderByDescending(x => x.GLAccountCategoryAuditId)
-                .ToList();
-
-            var auditResult = new List<AuditResult<GLAccountCategoriesAudit>>();
-
-            auditResult.Add(new AuditResult<GLAccountCategoriesAudit>
-            {
-                AreaName = "GL Account Category",
-                Memo = "",
-                Result = audits
-            });
-            return Ok(auditResult);
-        }
+        #endregion Private Methods
     }
 }

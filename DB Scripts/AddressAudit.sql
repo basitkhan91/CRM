@@ -1,5 +1,3 @@
-USE [PAS_DEV]
-GO
 
 /****** Object:  Table [dbo].[AddressAudit]    Script Date: 9/17/2019 4:05:34 PM ******/
 SET ANSI_NULLS ON

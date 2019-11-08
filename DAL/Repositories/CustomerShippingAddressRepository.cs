@@ -59,7 +59,7 @@ namespace DAL.Repositories
         public IEnumerable<Object> GetAllShipViaDetails(long Selectedrow)
         {
             var data = (from cs in _appContext.CustomerShipping
-                        join csa in _appContext.CustomerShippingAddress on Selectedrow equals csa.CustomerShippingAddressId
+                        join csa in _appContext.CustomerShippingAddress on cs.CustomerShippingAddressId equals csa.CustomerShippingAddressId
                         where ((cs.CustomerShippingAddressId == Selectedrow) && (cs.IsActive == true))
 
                         // select new { t, ad, vt }).ToList();
@@ -85,6 +85,34 @@ namespace DAL.Repositories
 
 
                         }).ToList();
+            return data;
+        }
+
+        public IEnumerable<Object> GetAllCusShippingHistory(long id)
+        {
+            var data = (from v in _appContext.CustomerShippingAddress
+                join ad in _appContext.Address on v.AddressId equals ad.AddressId
+                where v.CustomerId == id
+
+                select new
+                {
+                    Address1 = ad.Line1,
+                    Address2 = ad.Line2,
+                    Address3 = ad.Line3,
+                    ad.AddressId,
+                    ad.Country,
+                    ad.PostalCode,
+                    ad.City,
+                    ad.StateOrProvince,
+                    v.SiteName,
+                    v.CustomerShippingAddressId,
+                    v.CreatedDate,
+                    v.UpdatedDate,
+                    v.CustomerId,
+                    v.IsActive,
+                    v.IsDelete,
+                    v.IsPrimary
+                }).ToList();
             return data;
         }
 

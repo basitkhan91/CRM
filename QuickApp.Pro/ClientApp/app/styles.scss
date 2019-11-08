@@ -13970,6 +13970,10 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .p-autocomplete-ctsm .ui-autocomplete .ui-autocomplete-panel{
     width: 100% !important;
 }
+.p-autocomplete-ctsm-1 .ui-autocomplete .ui-autocomplete-panel{
+    width: 135px !important;
+}
+
 
 .p-dropdown-custom .ui-dropdown label.ui-dropdown-label {
     text-align: left;
@@ -13986,8 +13990,16 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     font-size: 12px !important;
   }
 .p-dropdown-custom-md .ui-dropdown{
-    width: 148px !important;
+    width: 138px !important;
 }
+.p-dropdown-custom-md-Header .ui-dropdown{
+    width: 100%!important;
+}
+.p-dropdown-custom-md-Header .ui-dropdown label.ui-dropdown-label {
+    text-align: left;
+    font-size: 12px !important;
+}
+
 .p-dropdown-custom-md .ui-dropdown label.ui-dropdown-label {
     text-align: left;
     font-size: 12px !important;
@@ -14133,6 +14145,9 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     width: 7px !important;
     height: 7px !important;
 }
+.pub-ptable-cstm .ui-table-summary {
+    text-align: right !important;
+}
 .cus-contact-table tr th {
     padding: 7px !important;
 }
@@ -14178,6 +14193,9 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 
 .rounder-corners-cstm {
     border-radius: 5px !important
+}
+.vendor-steps-prime-cstm {
+    display: none !important;
 }
 
 .view-Header {

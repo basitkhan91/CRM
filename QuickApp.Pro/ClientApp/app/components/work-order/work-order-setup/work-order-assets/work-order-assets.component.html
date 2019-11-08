@@ -5,10 +5,10 @@
                 <table class="table table-bordered ">
                     <thead>
                         <tr>
-                            <th colspan="9" class="text-center">
+                            <!-- <th colspan="9" class="text-center">
                                 Equipment &nbsp; &nbsp;<a class="add-asset-checkin-checkout" data-toggle="modal"
                                     data-target=".asset-checkin-checkout"><i class="fa fa-plus plus-icon"></i></a>
-                            </th>
+                            </th> -->
                         </tr>
                         <tr>
                             <th colspan="4" class="text-center"></th>
@@ -16,7 +16,7 @@
                             <th class="text-center"></th>
                         </tr>
                         <tr>
-                            <th class="text-center">Equipment #</th>
+                            <th class="text-center">Equipment </th>
                             <th class="text-center">Equipment Description</th>
                             <th class="text-center">Equipment Type</th>
                             <th class="text-center">Qty</th>
@@ -28,15 +28,23 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>A12345</td>
-                            <td>Equipment Description</td>
-                            <td>Equipmemt</td>
-                            <td>4</td>
-                            <td>1</td>
-                            <td>10</td>
-                            <td>9</td>
-                            <td>Findings Memo</td>
+                        <tr *ngFor="let asset of workOrderAssetList; let i=index;">
+                            <td>{{asset.asset}}</td>
+                            <td>{{asset.description}}</td>
+                            <td>{{asset.assetTypeName}}</td>
+                            <td>{{asset.quantity}}</td>
+                            <td>
+                                <input type="number" [(ngModel)]="asset.minQuantity" name="minQuantity{{i}}">
+                            </td>
+                            <td>
+                                    <input type="number" [(ngModel)]="asset.maxQuantity" name="maxQuantity{{i}}">
+                            </td>
+                            <td>
+                                    <input type="number" [(ngModel)]="asset.expectedQuantity" name="expectedQuantity{{i}}">
+                            </td>
+                            <td>
+                                    <input type="text" [(ngModel)]="asset.findings" name="findings{{i}}">
+                            </td>
                             <td>
                                 <span data-toggle="modal" data-target="#delete">
                                     <a class="btn btn-success boxed-float-btn nobg" data-toggle="tooltip"
@@ -44,8 +52,19 @@
                                 </span>
                             </td>
                         </tr>
+                        <!-- <div class="text-right">
+                                <button class="btn btn-primary" (click)="saveAssets()" >
+                                        save Assets
+                                    </button>
+                        </div> -->
+
+                        
+ 
                     </tbody>
                 </table>
+                <div *ngIf="workOrderAssetList" class="text-right save-work-btn" >
+                        <button class="btn btn-primary btn-primary-cstm" (click)="saveAssets()" style="padding: 6px 12px !important;">Save Assets</button>
+                    </div>
             </div>
         </div>
         <div class="clear"></div>

@@ -7,10 +7,10 @@ import { UnitOfMeasureService } from '../../../../services/unitofmeasure.service
 import { Currency } from '../../../../models/currency.model';
 import { CurrencyService } from '../../../../services/currency.service';
 import { AuthService } from '../../../../services/auth.service';
-import { AssetIntangibleTypeService } from '../../../../services/AssetIntangibleType/AssetIntangibleType.service';
+import { AssetIntangibleTypeService } from '../../../../services/asset-intangible-type/asset-intangible-type.service';
 import { GlAccount } from '../../../../models/GlAccount.model';
 import { GlAccountService } from '../../../../services/glAccount/glAccount.service';
-import { AssetTypeService } from '../../../../services/AssetType/assettype.service';
+import { AssetTypeService } from '../../../../services/asset-type/asset-type.service';
 import { DepriciationMethodService } from '../../../../services/depriciation-method/depriciation.service';
 import { DepriciationMethod } from '../../../../models/depriciation-method.model';
 import { Router } from '@angular/router';
@@ -449,11 +449,13 @@ export class CreateAssetComponent implements OnInit {
         this.currentAsset.isDepreciable = false;
     }
     
-    saveAsset(): void {
+    saveAsset(): void { 
 
         if (this.currentAsset.isDepreciable == true) {
             if (!(this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.unitOfMeasureId
-                && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId)) {
+                && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId
+                && this.currentAsset.companyId && this.currentAsset.buisinessUnitId && this.currentAsset.departmentId && this.currentAsset.divisionId
+                && this.currentAsset.manufacturerId)) {
                 this.display = true;
                 this.modelValue = true;
             }
@@ -462,14 +464,18 @@ export class CreateAssetComponent implements OnInit {
             && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId)
 
             if (this.currentAsset.isIntangible == true) {
-                if (!(this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.assetIntangibleTypeId)) {
+                if (!(this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.assetIntangibleTypeId
+                    && this.currentAsset.companyId && this.currentAsset.buisinessUnitId && this.currentAsset.departmentId && this.currentAsset.divisionId
+                    && this.currentAsset.manufacturerId)) {
                     this.display = true;
                     this.modelValue = true;
                 }
             }
         if ((this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.assetIntangibleTypeId)
             || (this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.unitOfMeasureId
-            && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId)) {
+                && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId
+                && this.currentAsset.companyId && this.currentAsset.buisinessUnitId && this.currentAsset.departmentId && this.currentAsset.divisionId
+                && this.currentAsset.manufacturerId)) {
             this.isSaving = true;
 
             if (!this.currentAsset.assetRecordId) {

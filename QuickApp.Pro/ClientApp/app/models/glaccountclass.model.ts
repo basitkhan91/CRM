@@ -1,37 +1,37 @@
 ﻿import { MasterCompany } from './mastercompany.model';
 
 export class GLAccountClass {
-    glaccountclassname: string;
+   // glaccountclassname: string;
    
   
 	// Note: Using only optional constructor properties without backing store disables typescript's type checking for the type
-	constructor(masterCompany?: MasterCompany, GLAccountClassId?: number, GLCID?: number, GLAccountClassName?: string, masterCompanyId?: number, createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string, isActive?: boolean, memo?: string) {
+    constructor(masterCompany?: MasterCompany, glAccountClassId?: number, glcid?: number, glAccountType?: string, masterCompanyId?: number, createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string, isActive?: boolean, isDelete?: boolean, Memo?: string) {
 
-		this.GLAccountClassId = GLAccountClassId;
-		this.GLCID = GLCID;
-		this.GLAccountClassName = GLAccountClassName;
+        this.glAccountClassId = glAccountClassId;
+        this.gLCID = glcid;
+        this.gLAccountType = glAccountType;
+        this.memo = Memo;
 		this.masterCompanyId = masterCompanyId;
 		this.createdBy = createdBy;
 		this.createdDate = createdDate;
 		this.updatedDate = updatedDate;
 		this.updatedBy = updatedBy;
-		this.masterCompany = masterCompany;
 		this.isActive = isActive;
-		this.memo = memo;
-
+        this.isDelete = isDelete;		
 	}
 
-	public GLAccountClassId: number;
-	public GLCID: number;
-	public  GLAccountClassName: string;
-	public masterCompanyId: number;
+    public glAccountClassId: number;
+    public gLCID: number;
+    public gLAccountType: string;
+    public memo: string;
+    public masterCompanyId: number;
 	public createdBy: string;
 	public updatedBy: string;
 	public createdDate: Date;
 	public updatedDate: Date;
-	public masterCompany?: MasterCompany;
 	public isActive: boolean;
-	public memo: string;
+    public isDelete: boolean;
+	
 
 
 

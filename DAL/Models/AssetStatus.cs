@@ -11,13 +11,13 @@ namespace DAL.Models
         [Key]
         public long AssetStatusId { get; set; }
 
-        [Required(ErrorMessage= "Id Is Required.")]
+        [Required(ErrorMessage= "Code Is Required.")]
         public string Code { get; set; }
 
         [Required(ErrorMessage = "Name Is Required.")]
         public string Name { get; set; }
-        public Int32? MasterCompanyId { get; set; }
         public string Memo { get; set; }
+        public Int32? MasterCompanyId { get; set; }
         public bool? IsActive { get; set; }
         public bool? IsDeleted { get; set; }
     }

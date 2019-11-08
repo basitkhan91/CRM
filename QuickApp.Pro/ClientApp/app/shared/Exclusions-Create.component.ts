@@ -33,14 +33,15 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
     }
 
     ngOnInit(): void {
-        //if (this.workFlow.exclusions.length > 0) {
         this.row = this.workFlow.exclusions[0];
+        if (this.row == undefined) {
+            this.row = {};
+        }
         this.row.taskId = this.workFlow.taskId;
-            this.ptnumberlistdata();
-            if (this.UpdateMode) {
-                this.reCalculate();
-            }
-        //}
+        this.ptnumberlistdata();
+        if (this.UpdateMode) {
+            this.reCalculate();
+        }
     }
 
     ngOnChanges(): void {

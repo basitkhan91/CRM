@@ -256,6 +256,7 @@
     <div [ngClass]="{ hideTab: currentTab !== 'Documents' }">
         <div *ngIf="savedGeneralInformationData || editGeneralInformationData">
         <app-customer-documents  
+        [editMode]="editMode"
         [editGeneralInformationData]="editGeneralInformationData"
         [savedGeneralInformationData]="savedGeneralInformationData"
          (tab)="changeOfTab($event)"></app-customer-documents>

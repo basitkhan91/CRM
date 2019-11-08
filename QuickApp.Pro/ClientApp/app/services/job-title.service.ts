@@ -44,6 +44,7 @@ export class JobTitleService {
             this.jobTitleEndpoint.getJobtitleEndpoint<any>());
     }
 
+    
     newJobTitle(action) {
         return this.jobTitleEndpoint.getNewjobtitleEndpoint<any>(action);
     }

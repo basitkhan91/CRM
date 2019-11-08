@@ -33,17 +33,17 @@ namespace QuickApp.Pro.Controllers
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
-            _emailer = emailer;
+            _emailer = emailer; 
             _context = context;
         }
 
         // GET: api/values
         [HttpGet("getpublicationslist")]
         [Produces(typeof(List<PublicationViewModel>))]
-        public IActionResult Get(string publicationId = "", string description = "", int publicationTypeId = 0, string publishedBy = "", long employeeId = 0, string location = "", int pageNumber = 0, int pageSize = 10)
+        public IActionResult Get(string publicationId = "", string description = "", string publicationType = "", string publishedBy = "", string employee = "", string location = "", int pageNumber = 0, int pageSize = 10)
         {
             //var allpublicationinfo = _unitOfWork.Publication.GetPublications(); //.GetAllCustomersData();
-            var allpublicationinfo = _unitOfWork.Publication.GetPublicationsList(publicationId, description, publicationTypeId, publishedBy, employeeId, location, pageNumber, pageSize); //.GetAllCustomersData();
+            var allpublicationinfo = _unitOfWork.Publication.GetPublicationsList(publicationId, description, publicationType, publishedBy, employee, location, pageNumber, pageSize); //.GetAllCustomersData();
 
             return Ok((allpublicationinfo));
 
@@ -102,9 +102,9 @@ namespace QuickApp.Pro.Controllers
                     publicationobject.RevisionDate = Request.Form["revisionDate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["revisionDate"].ToString(), "dd/MM/yyyy", null);
                     publicationobject.NextReviewDate = Request.Form["nextreviewDate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["nextreviewDate"].ToString(), "dd/MM/yyyy", null);
                     publicationobject.ASD = Request.Form["ASD"];
-                    publicationobject.Publishby = Request.Form["publishby"];
+                    publicationobject.Publishby = Request.Form["publishby"]; 
                     publicationobject.Location = Request.Form["location"];
-                    publicationobject.VerifiedBy = Request.Form["verifiedby"];
+                    publicationobject.VerifiedBy = Convert.ToInt32(Request.Form["verifiedby"]);
                     publicationobject.VerifiedDate = Request.Form["verifieddate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["verifieddate"].ToString(), "dd/MM/yyyy", null);
                     publicationobject.EmployeeId = Convert.ToInt32(Request.Form["EmployeeId"]);
                     publicationobject.CreatedDate = DateTime.Now;
@@ -112,7 +112,8 @@ namespace QuickApp.Pro.Controllers
                     publicationobject.CreatedBy = Request.Form["CreatedBy"];
                     publicationobject.UpdatedBy = Request.Form["UpdatedBy"];
                     publicationobject.PublicationTypeId = Request.Form["PublicationTypeId"].ToString() == "" ? 0 : Convert.ToInt32(Request.Form["PublicationTypeId"].ToString());
-                    publicationobject.Sequence = Request.Form["Sequence"];
+                    publicationobject.Sequence = Convert.ToString(Request.Form["Sequence"]) == "null" ? 0 : Convert.ToInt32(Request.Form["Sequence"]);
+                    publicationobject.RevisionNum = Convert.ToInt32(Request.Form["RevisionNum"]);
                     publicationobject.ExpirationDate = Request.Form["ExpirationDate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["ExpirationDate"].ToString(), "dd/MM/yyyy", null);
 
                     _unitOfWork.Publication.Add(publicationobject);
@@ -154,7 +155,7 @@ namespace QuickApp.Pro.Controllers
                 publicationobject.ASD = Request.Form["ASD"];
                 publicationobject.Publishby = Request.Form["publishby"];
                 publicationobject.Location = Request.Form["location"];
-                publicationobject.VerifiedBy = Request.Form["verifiedby"];
+                publicationobject.VerifiedBy = Convert.ToInt32(Request.Form["verifiedby"]);
                 publicationobject.VerifiedDate = Request.Form["verifieddate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["verifieddate"].ToString(), "dd/MM/yyyy", null);
                 publicationobject.EmployeeId = Convert.ToInt32(Request.Form["EmployeeId"]);
                 publicationobject.CreatedDate = Convert.ToDateTime(Request.Form["CreatedDate"]);
@@ -162,11 +163,12 @@ namespace QuickApp.Pro.Controllers
                 publicationobject.CreatedBy = Request.Form["CreatedBy"];
                 publicationobject.UpdatedBy = Request.Form["UpdatedBy"];
                 publicationobject.PublicationTypeId = Request.Form["PublicationTypeId"].ToString() == "" ? 0 : Convert.ToInt32(Request.Form["PublicationTypeId"].ToString());
-                publicationobject.Sequence = Request.Form["Sequence"];
+                publicationobject.Sequence = Convert.ToString(Request.Form["Sequence"]) == "null" ? 0 : Convert.ToInt32(Request.Form["Sequence"]);
+                publicationobject.RevisionNum = Convert.ToInt32(Request.Form["RevisionNum"]);
                 publicationobject.ExpirationDate = Request.Form["ExpirationDate"].ToString() == "" ? DateTime.Now : DateTime.ParseExact(Request.Form["ExpirationDate"].ToString(), "dd/MM/yyyy", null);
 
-                _unitOfWork.Publication.Update(publicationobject);
-                _unitOfWork.SaveChanges();
+                _context.Publication.Update(publicationobject);
+                _context.SaveChanges();
 
                 _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, publicationobject.PublicationRecordId, Convert.ToInt32(ModuleEnum.Publication), Convert.ToString(ModuleEnum.Publication), publicationobject.UpdatedBy, publicationobject.MasterCompanyId);
 
@@ -180,9 +182,13 @@ namespace QuickApp.Pro.Controllers
             var existingResult = _unitOfWork.Publication.GetSingleOrDefault(c => c.PublicationRecordId == id);
 
             existingResult.IsDeleted = true;
-            _unitOfWork.Publication.Update(existingResult);
+            //_unitOfWork.Publication.Update(existingResult);
             //_unitOfWork.Publication.Remove(existingResult);
-            _unitOfWork.SaveChanges();
+            //_unitOfWork.SaveChanges();
+
+            _context.Publication.Update(existingResult);
+            _context.SaveChanges();
+
             return Ok(id);
         }
 
@@ -563,6 +569,20 @@ namespace QuickApp.Pro.Controllers
 
             });
 
+            return Ok(result);
+        }
+
+        [HttpPost("uploadpublicationcustomdata")]
+        public IActionResult UploadCustomData()
+        {
+            var result = _unitOfWork.Publication.UploadCustomData(Request.Form.Files[0]);
+            return Ok(result);
+        }
+
+        [HttpGet("publicationhistory")]
+        public IActionResult PublicationHistory(long publicationId)
+        {
+            var result = _unitOfWork.Publication.PublicationHistory(publicationId);
             return Ok(result);
         }
 

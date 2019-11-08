@@ -33,7 +33,14 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetCustomerRowByid(long customerId);
         new IQueryable<Customer> GetPaginationData();
 
-        void CreateCustomerInternationalShippingDetails(CustomerInternationalShipping model);
+		IEnumerable<Object> GetList(Filters<CustomerFilters> customerFilters);
+
+		IEnumerable<Object> GetListGlobalFilter(string value, int pageNumber, int pageSize);
+
+		void CustomerStatus(long CustomerId, bool status, string updatedBy);
+
+
+		void CreateCustomerInternationalShippingDetails(CustomerInternationalShipping model);
         void UpdateCustomerInternationalShippingDetails(CustomerInternationalShipping model);
         void DeleteCustomerInternationalShippingDetails(long id, string updatedBy);
         void CustomerInternationalShippingDetailsStatus(long id, bool status, string updatedBy);
@@ -51,6 +58,11 @@ namespace DAL.Repositories.Interfaces
         ShippingViaDetails GetShippingViaDetailsById(long id);
         IEnumerable<object> searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID(long CustomerId, string AircraftTypeId, string AircraftModelId, string DashNumberId);
         IEnumerable<object> searchgetCustomerATAMappingDataByMultiTypeIdATAIDATASUBID(long contactId, string ATAChapterId, string ATASubChapterID);
+        IEnumerable<object> GetCustomerShipviaDetails(long customerId, long addressId);
+        void CreateDocumentDetails(CustomerDocumentDetail model);
+        void UpdateDocumentDetails(CustomerDocumentDetail customerDocument);
+        CustomerDocumentDetail GetCustomerDocumentDetailById(long id);
+        IEnumerable<object> GetCustomerNameAndCodes(string value);
 
     }
 }

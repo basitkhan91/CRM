@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 using System.Threading.Tasks;
 using DAL.Core;
-
+using DAL.Models;
 
 namespace DAL.Repositories
 {
@@ -24,6 +24,12 @@ namespace DAL.Repositories
             return _appContext.IntegrationPortal.Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.IntegrationPortalId).ToList();
 
            
+        }
+        public IEnumerable<IntegrationPortal> GetIntegrationLite()
+        {
+            return _appContext.IntegrationPortal.Where(v => v.IsActive == true && (v.IsDelete == false|| v.IsDelete==null))
+                .Select(v => new IntegrationPortal { IntegrationPortalId = v.IntegrationPortalId,
+                Description = v.Description }).OrderBy(c => c.Description).ToList();
         }
 
 

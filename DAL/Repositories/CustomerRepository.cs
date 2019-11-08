@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,11 +28,242 @@ namespace DAL.Repositories
         //    throw new NotImplementedException();
         //}
 
+
+        public IEnumerable<object> GetList(Filters<CustomerFilters> customerFilters)
+        {
+            if (customerFilters.filters == null)
+                customerFilters.filters = new CustomerFilters();
+            var pageNumber = customerFilters.first + 1;
+            var take = customerFilters.rows;
+            var skip = take * (pageNumber - 1);
+
+
+            var totalRecords = (from t in _appContext.Customer
+                                join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
+                                join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId
+                                join ad in _appContext.Address on t.AddressId equals ad.AddressId
+                                join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
+                                from custContacts in custinfo.DefaultIfEmpty()
+                                join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
+                                from contacts in contactInfo.DefaultIfEmpty()
+                                where (t.IsDeleted == false || t.IsDeleted == null)
+                                && t.Name.Contains((!String.IsNullOrEmpty(customerFilters.filters.Name) ? customerFilters.filters.Name : t.Name))
+                                && t.CustomerCode.Contains((!String.IsNullOrEmpty(customerFilters.filters.CustomerCode) ? customerFilters.filters.CustomerCode : t.CustomerCode))
+                                && t.Email.Contains((!String.IsNullOrEmpty(customerFilters.filters.Email) ? customerFilters.filters.Email : t.Email))
+                                && type.Description.Contains((!String.IsNullOrEmpty(customerFilters.filters.CustomerType) ? customerFilters.filters.CustomerType : type.Description))
+                                && ct.Description.Contains((!String.IsNullOrEmpty(customerFilters.filters.CustomerClassification) ? customerFilters.filters.CustomerClassification : ct.Description))
+                                && ad.City.Contains((!String.IsNullOrEmpty(customerFilters.filters.City) ? customerFilters.filters.City : ad.City))
+                                && ad.StateOrProvince.Contains((!String.IsNullOrEmpty(customerFilters.filters.StateOrProvince) ? customerFilters.filters.StateOrProvince : ad.StateOrProvince))
+
+                                 && customerFilters.filters.Contact == null ? string.IsNullOrEmpty(contacts.WorkPhone) || contacts.WorkPhone != null :
+                                         contacts.WorkPhone.Contains(customerFilters.filters.Contact)
+
+                                && customerFilters.filters.SalesPersonPrimary == null ? string.IsNullOrEmpty(t.PrimarySalesPersonFirstName) || t.PrimarySalesPersonFirstName != null :
+                                         t.PrimarySalesPersonFirstName.Contains(customerFilters.filters.SalesPersonPrimary)
+                                select new
+                                {
+                                    t.CustomerId,
+                                    Contact = contacts.WorkPhone == null ? "-" : contacts.WorkPhone,
+
+                                }).Distinct().Count();
+
+            var data = (from t in _appContext.Customer
+                        join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
+                        join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId
+                        join ad in _appContext.Address on t.AddressId equals ad.AddressId
+                        join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
+                        from custContacts in custinfo.DefaultIfEmpty()
+                        join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
+                        from contacts in contactInfo.DefaultIfEmpty()
+                        where (t.IsDeleted == false || t.IsDeleted == null)
+                        && t.Name.Contains((!String.IsNullOrEmpty(customerFilters.filters.Name) ? customerFilters.filters.Name : t.Name))
+                        && t.CustomerCode.Contains((!String.IsNullOrEmpty(customerFilters.filters.CustomerCode) ? customerFilters.filters.CustomerCode : t.CustomerCode))
+                        && t.Email.Contains((!String.IsNullOrEmpty(customerFilters.filters.Email) ? customerFilters.filters.Email : t.Email))
+                        && type.Description.Contains((!String.IsNullOrEmpty(customerFilters.filters.CustomerType) ? customerFilters.filters.CustomerType : type.Description))
+                        && ct.Description.Contains((!String.IsNullOrEmpty(customerFilters.filters.CustomerClassification) ? customerFilters.filters.CustomerClassification : ct.Description))
+                        && ad.City.Contains((!String.IsNullOrEmpty(customerFilters.filters.City) ? customerFilters.filters.City : ad.City))
+                        && ad.StateOrProvince.Contains((!String.IsNullOrEmpty(customerFilters.filters.StateOrProvince) ? customerFilters.filters.StateOrProvince : ad.StateOrProvince))
+                         && customerFilters.filters.Contact == null ? string.IsNullOrEmpty(contacts.WorkPhone) || contacts.WorkPhone != null :
+                                 contacts.WorkPhone.Contains(customerFilters.filters.Contact)
+
+                        && customerFilters.filters.SalesPersonPrimary == null ? string.IsNullOrEmpty(t.PrimarySalesPersonFirstName) || t.PrimarySalesPersonFirstName != null :
+                                 t.PrimarySalesPersonFirstName.Contains(customerFilters.filters.SalesPersonPrimary)
+                        select new
+                        {
+                            t.CustomerId,
+                            t.Name,
+                            t.CustomerCode,
+                            t.Email,
+                            CustomerType = type.Description,
+                            CustomerClassification = ct.Description,
+                            City = ad.City,
+                            StateOrProvince = ad.StateOrProvince,
+                            Contact = contacts.WorkPhone == null ? "-" : contacts.WorkPhone,
+                            SalesPersonPrimary = t.PrimarySalesPersonFirstName == null ? "-" : t.PrimarySalesPersonFirstName,
+                            t.CreatedDate,
+                            t.IsActive,
+                            t.IsDeleted,
+                            TotalRecords = totalRecords
+                        }).Distinct().OrderByDescending(p => p.CreatedDate)
+                             .Skip(skip)
+                             .Take(take)
+                             .ToList();
+
+
+
+            return (data);
+        }
+
+        public IEnumerable<object> GetListGlobalFilter(string value, int pageNumber, int pageSize)
+        {
+
+            var pageNumbers = pageNumber + 1;
+            var take = pageSize;
+            var skip = take * (pageNumbers - 1);
+
+            if (!string.IsNullOrEmpty(value))
+            {
+                var totalRecords = (from t in _appContext.Customer
+                                    join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
+                                    join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId
+                                    join ad in _appContext.Address on t.AddressId equals ad.AddressId
+                                    join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
+                                    from custContacts in custinfo.DefaultIfEmpty()
+                                    join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
+                                    from contacts in contactInfo.DefaultIfEmpty()
+                                    where (t.IsDeleted == false || t.IsDeleted == null)
+                                    && t.Name.Contains(value) || t.CustomerCode.Contains(value) || t.Email.Contains(value)
+                                    || type.Description.Contains(value) || ct.Description.Contains(value)
+                                    || ad.City.Contains(value) || ad.StateOrProvince.Contains(value)
+                                    || contacts.WorkPhone.Contains(value) || t.PrimarySalesPersonFirstName.Contains(value)
+                                    select new
+                                    {
+                                        t.CustomerId,
+
+                                    }).Count();
+
+                var data = (from t in _appContext.Customer
+                            join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
+                            join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId
+                            join ad in _appContext.Address on t.AddressId equals ad.AddressId
+                            join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
+                            from custContacts in custinfo.DefaultIfEmpty()
+                            join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
+                            from contacts in contactInfo.DefaultIfEmpty()
+                            where (t.IsDeleted == false || t.IsDeleted == null)
+                                   && t.Name.Contains(value) || t.CustomerCode.Contains(value) || t.Email.Contains(value)
+                                   || type.Description.Contains(value) || ct.Description.Contains(value)
+                                   || ad.City.Contains(value) || ad.StateOrProvince.Contains(value)
+                                   || contacts.WorkPhone.Contains(value) || t.PrimarySalesPersonFirstName.Contains(value)
+                            select new
+                            {
+                                t.CustomerId,
+                                t.Name,
+                                t.CustomerCode,
+                                t.Email,
+                                CustomerType = type.Description,
+                                CustomerClassification = ct.Description,
+                                City = ad.City,
+                                StateOrProvince = ad.StateOrProvince,
+                                Contact = contacts.WorkPhone == null ? "-" : contacts.WorkPhone,
+                                SalesPersonPrimary = t.PrimarySalesPersonFirstName == null ? "-" : t.PrimarySalesPersonFirstName,
+                                t.UpdatedDate,
+                                t.IsActive,
+                                t.IsDeleted,
+                                TotalRecords = totalRecords
+                            }).OrderBy(p => p.UpdatedDate)
+                                 .Skip(skip)
+                                 .Take(take)
+                                 .ToList();
+
+
+
+                return (data);
+            }
+            else
+            {
+                var totalRecords = (from t in _appContext.Customer
+                                    join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
+                                    join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId
+                                    join ad in _appContext.Address on t.AddressId equals ad.AddressId
+                                    join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
+                                    from custContacts in custinfo.DefaultIfEmpty()
+                                    join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
+                                    from contacts in contactInfo.DefaultIfEmpty()
+                                    where (t.IsDeleted == false || t.IsDeleted == null)
+                                    select new
+                                    {
+                                        t.CustomerId,
+
+                                    }).Count();
+
+                var data = (from t in _appContext.Customer
+                            join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
+                            join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId
+                            join ad in _appContext.Address on t.AddressId equals ad.AddressId
+                            join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
+                            from custContacts in custinfo.DefaultIfEmpty()
+                            join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
+                            from contacts in contactInfo.DefaultIfEmpty()
+                            where (t.IsDeleted == false || t.IsDeleted == null)
+                            select new
+                            {
+                                t.CustomerId,
+                                t.Name,
+                                t.CustomerCode,
+                                t.Email,
+                                CustomerType = type.Description,
+                                CustomerClassification = ct.Description,
+                                City = ad.City,
+                                StateOrProvince = ad.StateOrProvince,
+                                Contact = contacts.WorkPhone == null ? "-" : contacts.WorkPhone,
+                                SalesPersonPrimary = t.PrimarySalesPersonFirstName == null ? "-" : t.PrimarySalesPersonFirstName,
+                                t.UpdatedDate,
+                                t.IsActive,
+                                t.IsDeleted,
+                                TotalRecords = totalRecords
+                            }).OrderBy(p => p.UpdatedDate)
+                                 .Skip(skip)
+                                 .Take(take)
+                                 .ToList();
+
+
+
+                return (data);
+            }
+
+
+        }
+        public void CustomerStatus(long CustomerId, bool status, string updatedBy)
+        {
+            Customer customer = new Customer();
+            try
+            {
+                customer.CustomerId = CustomerId;
+                customer.UpdatedDate = DateTime.Now;
+                customer.UpdatedBy = updatedBy;
+                customer.IsActive = status;
+
+                _appContext.Customer.Attach(customer);
+                _appContext.Entry(customer).Property(x => x.IsActive).IsModified = true;
+                _appContext.Entry(customer).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(customer).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         public IEnumerable<Customer> getAllCustomer()
         {
             return _appContext.Customer.Include("CustomerContact").Where(x => x.IsDeleted == null || x.IsDeleted == false).ToList();
 
         }
+
+
 
         public IEnumerable<object> GetAllCustomersData()
         {
@@ -226,116 +458,119 @@ namespace DAL.Repositories
                             join mup in _appContext.MarkUpPercentage on t.MarkUpPercentageId equals mup.MarkUpPercentageId into tmup
                             from mup in tmup.DefaultIfEmpty()
                             where t.CustomerId == customerId //&&  (t.IsDelete == true || t.IsDelete == null)
-                            // select new { t, ad, vt }).ToList();
+                                                             // select new { t, ad, vt }).ToList();
                             select new
                             {
 
-								addressId = t.AddressId,
-								isAddressForBilling = t.IsAddressForBilling,
-								isAddressForShipping = t.IsAddressForShipping,
-								customerAffiliationId = vt.CustomerAffiliationId,
-								customerTypeId = t.CustomerTypeId,
-								name = t.Name,
-								customerPhone = t.CustomerPhone,
-								email = t.Email,
-								address1 = ad.Line1,
-								address2 = ad.Line2,
-								address3 = ad.Line3,
-								city = ad.City,
-								stateOrProvince = ad.StateOrProvince,
-								postalCode = ad.PostalCode,
-								country = ad.Country,
-								customerCode = t.CustomerCode,
-								doingBuinessAsName = t.DoingBuinessAsName,
-								parent = t.Parent,
-								customerParentName = t.CustomerParentName,
-								customerURL = t.CustomerURL,
-								generalCurrencyId = t.GeneralCurrencyId,
-								customerClassificationId = t.CustomerClassificationId,
-								contractReference = t.ContractReference,
-								isPBHCustomer = t.IsPBHCustomer,
-								pbhCustomerMemo = t.PBHCustomerMemo,
-								restrictPMA = t.RestrictPMA,
-								restrictPMAMemo = t.RestrictPMAMemo,
-								restrictBER = t.RestrictBER,
-								restrictBERMemo = t.RestrictBERMemo,
-								scanDocuments = t.ScanDocuments,
-								isCustomerAlsoVendor = t.IsCustomerAlsoVendor,
-								edi = t.EDI,
-								ediDescription = t.EDIDescription,
-								isAeroExchange = t.IsAeroExchange,
-								aeroExchangeDescription = t.AeroExchangeDescription,
-								createdBy = t.CreatedBy,
-								updatedBy = t.UpdatedBy,
-								UpdatedDate = t.UpdatedDate,
-								CreatedDate = t.CreatedDate,
-								masterCompanyId = t.MasterCompanyId,
-								isActive = t.IsActive,
-								markUpPercentageId = t.MarkUpPercentageId,
-								creditLimit = t.CreditLimit,
-								creditTermsId = t.CreditTermsId,
-								discountId = t.DiscountId,
-								allowNettingOfAPAR = t.AllowNettingOfAPAR,
-								isTaxExempt = t.IsTaxExempt,
-								taxRateStateOrProvince = t.TaxRateStateOrProvince,
-								taxRateOther = t.TaxRateOther,
-								taxTypeId = t.TaxTypeId,
-								allowPartialBilling = t.AllowPartialBilling,
-								allowProformaBilling = t.AllowProformaBilling,
-								customerId = t.CustomerId,
-								primarySalesPersonId = t.PrimarySalesPersonId,
-							    csrName = t.CSRName,
-								secondarySalesPersonId = t.SecondarySalesPersonId,
-								annualQuota = t.AnnualQuota,
-								annualRevenuePotential = t.AnnualRevenuePotential,
-								AgentName = t.AgentName
-								
+                                addressId = t.AddressId,
+                                isAddressForBilling = t.IsAddressForBilling,
+                                isAddressForShipping = t.IsAddressForShipping,
+                                customerAffiliationId = vt.CustomerAffiliationId,
+                                customerTypeId = t.CustomerTypeId,
+                                name = t.Name,
+                                customerPhone = t.CustomerPhone,
+                                email = t.Email,
+                                address1 = ad.Line1,
+                                address2 = ad.Line2,
+                                address3 = ad.Line3,
+                                city = ad.City,
+                                stateOrProvince = ad.StateOrProvince,
+                                postalCode = ad.PostalCode,
+                                country = ad.Country,
+                                customerCode = t.CustomerCode,
+                                doingBuinessAsName = t.DoingBuinessAsName,
+                                parent = t.Parent,
+                                customerParentName = t.CustomerParentName,
+                                customerURL = t.CustomerURL,
+                                generalCurrencyId = t.GeneralCurrencyId,
+                                customerClassificationId = t.CustomerClassificationId,
+                                contractReference = t.ContractReference,
+                                isPBHCustomer = t.IsPBHCustomer,
+                                pbhCustomerMemo = t.PBHCustomerMemo,
+                                restrictPMA = t.RestrictPMA,
+                                restrictPMAMemo = t.RestrictPMAMemo,
+                                restrictBER = t.RestrictBER,
+                                restrictBERMemo = t.RestrictBERMemo,
+                                scanDocuments = t.ScanDocuments,
+                                isCustomerAlsoVendor = t.IsCustomerAlsoVendor,
+                                edi = t.EDI,
+                                ediDescription = t.EDIDescription,
+                                isAeroExchange = t.IsAeroExchange,
+                                aeroExchangeDescription = t.AeroExchangeDescription,
+                                createdBy = t.CreatedBy,
+                                updatedBy = t.UpdatedBy,
+                                UpdatedDate = t.UpdatedDate,
+                                CreatedDate = t.CreatedDate,
+                                masterCompanyId = t.MasterCompanyId,
+                                isActive = t.IsActive,
+                                markUpPercentageId = t.MarkUpPercentageId,
+                                creditLimit = t.CreditLimit,
+                                creditTermsId = t.CreditTermsId,
+                                discountId = t.DiscountId,
+                                allowNettingOfAPAR = t.AllowNettingOfAPAR,
+                                isTaxExempt = t.IsTaxExempt,
+                                taxRateStateOrProvince = t.TaxRateStateOrProvince,
+                                taxRateOther = t.TaxRateOther,
+                                taxTypeId = t.TaxTypeId,
+                                allowPartialBilling = t.AllowPartialBilling,
+                                allowProformaBilling = t.AllowProformaBilling,
+                                customerId = t.CustomerId,
+                                primarySalesPersonId = t.PrimarySalesPersonId,
+                                csrName = t.CSRName,
+                                csrId = t.CsrId,
+                                saId = t.SaId,
+                                secondarySalesPersonId = t.SecondarySalesPersonId,
+                                annualQuota = t.AnnualQuota,
+                                annualRevenuePotential = t.AnnualRevenuePotential,
+                                AgentName = t.AgentName,
+								t.CustomerPhoneExt
 
 
 
 
-			
 
-								//t.CreditTermsId,
-								//t.CurrencyId,
-								//ad,
-								//t.PrimarySalesPersonFirstName,
-								//t.CustomerId,
-								//t,
-								//// cc,
-								//creditTerms,
-								//currency,
-								//currency.Symbol,
-								////creditTerms.Name,
-								//t.Email,
-								//t.IsActive,
-								//Address1 = ad.Line1,
-								//Address2 = ad.Line2,
-								//Address3 = ad.Line3,
-								//t.CustomerCode,
-								//t.DoingBuinessAsName,
-								//t.Parent,
-								//t.RestrictPMAMemo,
-								//t.PBHCustomerMemo,
-								//t.ContractReference,
-								//t.CustomerURL,
-								//t.Name,
-								//ad.City,
-								//ad.StateOrProvince,
-								//vt.description,
-								//t.CreatedDate,
-								//t.CreatedBy,
-								//t.UpdatedBy,
-								//t.UpdatedDate,
-								//ad.AddressId,
-								//ad.Country,
-								//ad.PostalCode,
-								//vt.CustomerAffiliationId,
-								//cc.CustomerClassificationId,
-								//mup.MarkUpValue,
-								//CreditTermName = creditTerms.Name,
-								////cc.Description
-							}).OrderByDescending(a => a.UpdatedDate).ToList();
+
+
+                                //t.CreditTermsId,
+                                //t.CurrencyId,
+                                //ad,
+                                //t.PrimarySalesPersonFirstName,
+                                //t.CustomerId,
+                                //t,
+                                //// cc,
+                                //creditTerms,
+                                //currency,
+                                //currency.Symbol,
+                                ////creditTerms.Name,
+                                //t.Email,
+                                //t.IsActive,
+                                //Address1 = ad.Line1,
+                                //Address2 = ad.Line2,
+                                //Address3 = ad.Line3,
+                                //t.CustomerCode,
+                                //t.DoingBuinessAsName,
+                                //t.Parent,
+                                //t.RestrictPMAMemo,
+                                //t.PBHCustomerMemo,
+                                //t.ContractReference,
+                                //t.CustomerURL,
+                                //t.Name,
+                                //ad.City,
+                                //ad.StateOrProvince,
+                                //vt.description,
+                                //t.CreatedDate,
+                                //t.CreatedBy,
+                                //t.UpdatedBy,
+                                //t.UpdatedDate,
+                                //ad.AddressId,
+                                //ad.Country,
+                                //ad.PostalCode,
+                                //vt.CustomerAffiliationId,
+                                //cc.CustomerClassificationId,
+                                //mup.MarkUpValue,
+                                //CreditTermName = creditTerms.Name,
+                                ////cc.Description
+                            }).OrderByDescending(a => a.UpdatedDate).ToList();
                 return data;
 
             }
@@ -382,7 +617,7 @@ namespace DAL.Repositories
             {
 
                 var data = (from ca in _appContext.CustomerContactATAMapping
-							where ca.CustomerId == customerId && ca.IsDeleted == false
+                            where ca.CustomerId == customerId && ca.IsDeleted == false
                             select new
                             {
                                 ca.CustomerContactATAMappingId,
@@ -390,7 +625,7 @@ namespace DAL.Repositories
                                 ca.ATAChapterId,
                                 ca.ATAChapterCode,
                                 ca.ATAChapterName,
-       
+
                                 ca.ATASubChapterId,
                                 ca.ATASubChapterDescription
 
@@ -405,20 +640,20 @@ namespace DAL.Repositories
             {
 
                 var data = (from ca in _appContext.CustomerContactATAMapping
-                    where ca.CustomerContactId == contactId && ca.IsDeleted == false
-                    select new
-                    {
-                        ca.CustomerContactATAMappingId,
-                        ca.CustomerId,
-                        ca.ATAChapterId,
-                        ca.ATAChapterCode,
-                        ca.ATAChapterName,
+                            where ca.CustomerContactId == contactId && ca.IsDeleted == false
+                            select new
+                            {
+                                ca.CustomerContactATAMappingId,
+                                ca.CustomerId,
+                                ca.ATAChapterId,
+                                ca.ATAChapterCode,
+                                ca.ATAChapterName,
 
-                        ca.ATASubChapterId,
-                        ca.ATASubChapterDescription
+                                ca.ATASubChapterId,
+                                ca.ATASubChapterDescription
 
 
-                    }).ToList();
+                            }).ToList();
                 return data;
             }
         }
@@ -428,16 +663,16 @@ namespace DAL.Repositories
             {
 
                 var data = (from c in _appContext.CustomerTaxTypeRateMapping
-                    where c.CustomerId == customerId && c.IsDeleted == false
-                    select new
-                    {
-                        c.CustomerTaxTypeRateMappingId,
-                        c.CustomerId,
-                        c.TaxType,
-                        c.TaxRate,
-                        c.CreatedBy,
-                        c.MasterCompanyId
-                    }).ToList();
+                            where c.CustomerId == customerId && c.IsDeleted == false
+                            select new
+                            {
+                                c.CustomerTaxTypeRateMappingId,
+                                c.CustomerId,
+                                c.TaxType,
+                                c.TaxRate,
+                                c.CreatedBy,
+                                c.MasterCompanyId
+                            }).ToList();
                 return data;
             }
         }
@@ -618,7 +853,7 @@ namespace DAL.Repositories
                      IsDeleted = p.cis.IsDeleted,
                      UpdatedDate = p.cis.UpdatedDate
                  })
-                 .Where(p => p.IsDeleted == false && p.CustomerId==model.CustomerId)
+                 .Where(p => p.IsDeleted == false && p.CustomerId == model.CustomerId)
                  .OrderByDescending(p => p.UpdatedDate)
                  .Skip(skip)
                  .Take(take)
@@ -656,7 +891,7 @@ namespace DAL.Repositories
             }
         }
 
-        public GetData<CustomerInternationalShipping> GetCustomerInternationalShippingDetails(long customerId,int pageNumber,int pageSize)
+        public GetData<CustomerInternationalShipping> GetCustomerInternationalShippingDetails(long customerId, int pageNumber, int pageSize)
         {
             GetData<CustomerInternationalShipping> getData = new GetData<CustomerInternationalShipping>();
             CustomerInternationalShipping intShipping;
@@ -697,7 +932,7 @@ namespace DAL.Repositories
                      IsDeleted = p.cis.IsDeleted,
                      UpdatedDate = p.cis.UpdatedDate
                  })
-                 
+
                  .OrderByDescending(p => p.UpdatedDate)
                  .Skip(skip)
                  .Take(take)
@@ -750,7 +985,7 @@ namespace DAL.Repositories
                            cis1 => cis1.cis.CustomerId,
                            cust => cust.CustomerId,
                            (cis1, cust) => new { cis1, cust })
-                 .Where(p=>p.cis1.cis.InternationalShippingId==id)
+                 .Where(p => p.cis1.cis.InternationalShippingId == id)
                  .Select(p => new
                  {
                      InternationalShippingId = p.cis1.cis.InternationalShippingId,
@@ -790,7 +1025,7 @@ namespace DAL.Repositories
                     intShipping.ShipToCountryId = result.ShipToCountryId;
                 }
 
-                
+
                 return intShipping;
             }
             catch (Exception)
@@ -811,6 +1046,60 @@ namespace DAL.Repositories
                 _appContext.ShippingViaDetails.Add(model);
                 _appContext.SaveChanges();
 
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void CreateDocumentDetails(CustomerDocumentDetail customerDocument)
+        {
+            try
+            {
+                customerDocument.CreatedDate = DateTime.Now;
+                customerDocument.IsActive = true;
+                customerDocument.IsDeleted = false;
+                _appContext.CustomerDocumentDetails.Add(customerDocument);
+                _appContext.SaveChanges();
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void UpdateDocumentDetails(CustomerDocumentDetail customerDocument)
+        {
+            try
+            {
+                customerDocument.CreatedDate = DateTime.Now;
+                customerDocument.IsActive = true;
+                customerDocument.IsDeleted = false;
+                _appContext.CustomerDocumentDetails.Update(customerDocument);
+                _appContext.SaveChanges();
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public CustomerDocumentDetail GetCustomerDocumentDetailById(long id)
+        {
+            try
+            {
+                CustomerDocumentDetail CustomerDocumentDetails = new CustomerDocumentDetail();
+                CustomerDocumentDetails = _appContext.CustomerDocumentDetails
+                    .Where(p => p.IsDeleted == false && p.CustomerId == id)
+                    .OrderByDescending(p => p.UpdatedDate)
+                    .FirstOrDefault();
+                return CustomerDocumentDetails;
             }
             catch (Exception)
             {
@@ -895,7 +1184,7 @@ namespace DAL.Repositories
                 var take = model.rows;
                 var skip = take * (pageNumber - 1);
 
-                getData.TotalRecordsCount = _appContext.ShippingViaDetails.Where(p=>p.IsDeleted==false)
+                getData.TotalRecordsCount = _appContext.ShippingViaDetails.Where(p => p.IsDeleted == false)
                  .OrderByDescending(p => p.UpdatedDate)
                  .Count();
 
@@ -931,7 +1220,7 @@ namespace DAL.Repositories
 
 
                 getData.PaginationList = _appContext.ShippingViaDetails
-                 .Where(p => p.IsDeleted == false && p.InternationalShippingId== internationalShippingId)
+                 .Where(p => p.IsDeleted == false && p.InternationalShippingId == internationalShippingId)
                  .OrderByDescending(p => p.UpdatedDate)
                  .Skip(skip)
                  .Take(take)
@@ -964,22 +1253,29 @@ namespace DAL.Repositories
             }
         }
 
+        public static int? ToNullableInt(string s)
+        {
+            int i;
+            if (int.TryParse(s, out i)) return i;
+            return null;
+        }
 
 
-
-
-
-		public IEnumerable<object> searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID(long CustomerId, string AircraftTypeId, string AircraftModelId, string DashNumberId)
+        public IEnumerable<object> searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID(long CustomerId, string AircraftTypeId, string AircraftModelId, string DashNumberId)
         {
             long[] myAircraftTypeId = null;
-            long[] myAircraftModelId = null;
-            long[] myDashNumberId = null;
+            long?[] myAircraftModelId = null;
+            long?[] myDashNumberId = null;
+
             if (AircraftTypeId != null && AircraftTypeId != "")
                 myAircraftTypeId = AircraftTypeId.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
             if (AircraftModelId != null && AircraftModelId != "")
-                myAircraftModelId = AircraftModelId.Split(',').Select(y => Convert.ToInt64(y)).ToArray();
+                myAircraftModelId = AircraftModelId.Split(',').Select(y => (long?)Convert.ToInt64(y)).ToArray();
             if (DashNumberId != null && DashNumberId != "")
-                myDashNumberId = DashNumberId.Split(',').Select(x => Convert.ToInt64(x)).ToArray();
+
+                myDashNumberId = DashNumberId.Split(',').Select(x => (long?)Convert.ToInt64(x)).ToArray();
+
+
             if (AircraftTypeId != null && AircraftModelId != null && myDashNumberId != null)
             {
                 var data = (from cam in _appContext.CustomerAircraftMapping
@@ -1056,7 +1352,7 @@ namespace DAL.Repositories
             if (ATAChapterId != null && ATASubChapterID != null)
             {
                 var data = (from cATA in _appContext.CustomerContactATAMapping
-							where cATA.CustomerContactId == contactId && myATAChapterId.Contains(cATA.ATAChapterId) && myATASubChapterID.Contains(cATA.ATASubChapterId) && cATA.IsDeleted != true
+                            where cATA.CustomerContactId == contactId && myATAChapterId.Contains(cATA.ATAChapterId) && myATASubChapterID.Contains(cATA.ATASubChapterId) && cATA.IsDeleted != true
                             select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -1064,7 +1360,7 @@ namespace DAL.Repositories
             else if (ATAChapterId != null && ATASubChapterID == null)
             {
                 var data = (from cATA in _appContext.CustomerContactATAMapping
-							where cATA.CustomerContactId == contactId && myATAChapterId.Contains(cATA.ATAChapterId) && cATA.IsDeleted != true
+                            where cATA.CustomerContactId == contactId && myATAChapterId.Contains(cATA.ATAChapterId) && cATA.IsDeleted != true
                             select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -1073,7 +1369,7 @@ namespace DAL.Repositories
             else if (ATAChapterId == null && ATASubChapterID != null)
             {
                 var data = (from cATA in _appContext.CustomerContactATAMapping
-							where cATA.CustomerContactId == contactId && myATASubChapterID.Contains(cATA.ATASubChapterId) && cATA.IsDeleted != true
+                            where cATA.CustomerContactId == contactId && myATASubChapterID.Contains(cATA.ATASubChapterId) && cATA.IsDeleted != true
                             select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -1082,7 +1378,7 @@ namespace DAL.Repositories
             else
             {
                 var data = (from cATA in _appContext.CustomerContactATAMapping
-							where cATA.CustomerContactId == contactId && cATA.IsDeleted != true
+                            where cATA.CustomerContactId == contactId && cATA.IsDeleted != true
                             select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -1090,6 +1386,63 @@ namespace DAL.Repositories
             }
         }
 
+        public IEnumerable<object> GetCustomerShipviaDetails(long customerId, long addressId)
+        {
+            try
+            {
+                var list = (from csv in _appContext.CustomerShipping
+                            where csv.CustomerId == customerId && csv.CustomerShippingAddressId == addressId
+                            select new
+                            {
+                                csv.CustomerShippingId,
+                                csv.IsActive,
+                                csv.Memo,
+                                csv.ShippingAccountinfo,
+                                csv.ShippingId,
+                                csv.ShippingURL,
+                                csv.ShipVia,
+                            }).ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetCustomerNameAndCodes(string value)
+        {
+            try
+            {
+                var list = (from cust in _appContext.Customer
+
+                            join cc in _appContext.CustomerContact on cust.CustomerId equals cc.CustomerId into custcc
+                            from cc in custcc.DefaultIfEmpty()
+                            join con in _appContext.Contact on cc.ContactId equals con.ContactId into custcon
+                            from con in custcon.DefaultIfEmpty()
+                            where cust.IsActive == true && cust.IsDeleted == false
+                                  && (cust.Name.ToLower().Contains(value.ToLower()) || cust.CustomerCode.ToLower().Contains(value.ToLower()))
+                            select new
+                            {
+                                CustomerId = cust.CustomerId,
+                                CustomerName = cust.Name + " - " + cust.CustomerCode,
+                                cust.CreditLimit,
+                                cust.CreditTermsId,
+                                CustomerContact= con==null?" ":con.FirstName,
+                                CustomerRef=cust.ContractReference==null?"": cust.ContractReference,
+                                CSRName =cust.CSRName
+                            }
+                            ).Distinct().ToList();
+                return list;
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }

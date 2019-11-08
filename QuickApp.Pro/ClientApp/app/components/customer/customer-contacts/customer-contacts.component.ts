@@ -179,9 +179,9 @@ export class CustomerContactsComponent implements OnInit {
 		this.isEditButton = true;
 		this.contactInformation = {
 			...this.ediData,
-			firstName: getObjectByValue('firstName', this.ediData.firstName, this.contactsListOriginal),
-			middleName: getObjectByValue('middleName', this.ediData.middleName, this.contactsListOriginal),
-			lastName: getObjectByValue('lastName', this.ediData.lastName, this.contactsListOriginal),
+			// firstName: getObjectByValue('firstName', this.ediData.firstName, this.contactsListOriginal),
+			// middleName: getObjectByValue('middleName', this.ediData.middleName, this.contactsListOriginal),
+			// lastName: getObjectByValue('lastName', this.ediData.lastName, this.contactsListOriginal),
 		}
 		console.log(this.contactInformation);
 

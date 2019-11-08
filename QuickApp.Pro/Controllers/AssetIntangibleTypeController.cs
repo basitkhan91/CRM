@@ -1,11 +1,10 @@
-﻿using System;
+﻿using DAL;
+using DAL.Core;
+using DAL.Models;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using DAL;
-using DAL.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -15,7 +14,7 @@ namespace QuickApp.Pro.Controllers
     {
         #region Private Members
 
-        private IUnitOfWork unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
         #endregion Private Members
 
@@ -23,93 +22,130 @@ namespace QuickApp.Pro.Controllers
 
         public AssetIntangibleTypeController(IUnitOfWork unitOfWork)
         {
-            this.unitOfWork = unitOfWork;
+            this._unitOfWork = unitOfWork;
         }
+
         #endregion Constructor
 
         #region Public Methods
 
-        [HttpGet("getAllIntangibleTypes")]
+        [HttpPost("add")]
+        public IActionResult add([FromBody]AssetIntangibleType item)
+        {
+            bool isValid = _unitOfWork.AssetIntangibleTypeRepository.IsValid(item);
+            var existingItems = _unitOfWork.AssetIntangibleTypeRepository.GetAllItems();
+            if (isValid)
+            {
+                if (ModelState.IsValid)
+                {
+                    item.CreatedDate = DateTime.Now;
+                    item.UpdatedDate = DateTime.Now;
+                    item.UpdatedBy = item.CreatedBy;      //[dbo].[AssetIntangibleType].[UpdatedBy] not null in schema definition
+                    item.IsActive = true;
+                    item.MasterCompanyId = 1;
+                    bool isDuplicate = _unitOfWork.AssetIntangibleTypeRepository.IsDuplicate(item, existingItems);
+                    if (!isDuplicate)
+                    {
+                        _unitOfWork.Repository<AssetIntangibleType>().Add(item);
+                        _unitOfWork.SaveChanges();
+                        item.UploadTag = UploadTag.Success;
+                        return Ok(item);
+                    }
+                    else
+                    {
+                        item.UploadTag = UploadTag.Duplicate;
+                        return BadRequest(item);
+                    }
+                }
+                else
+                {
+                    return BadRequest(ModelState);
+                }
+
+            }
+            else
+            {
+                item.UploadTag = UploadTag.Invalid;
+                return BadRequest(item);
+            }
+        }
+
+        [HttpGet("audit/{id}")]
+        public IActionResult AuditDetails(long id)
+        {
+            List<AssetIntangibleTypeAudit> audits = _unitOfWork.Repository<AssetIntangibleTypeAudit>().Find(x => x.AssetIntangibleTypeId == id).OrderByDescending(x => x.AssetIntangibleTypeAuditId).ToList();
+
+            return Ok(audits);
+        }
+
+        [HttpPost("bulkUpload")]
+        public IActionResult BulkUpload()
+        {
+            var result = _unitOfWork.AssetIntangibleTypeRepository.BulkUpload(Request.Form.Files[0]);
+
+            return Ok(result);
+        }
+
+        [HttpGet("getAll")]
         public IActionResult getAll()
         {
-            var intangibleTypeData = unitOfWork.assetIntangibleType.GetAllIntangibleType();
-            return Ok(intangibleTypeData);
+            IEnumerable<AssetIntangibleType> items = _unitOfWork.AssetIntangibleTypeRepository.GetAllItems();
+            return Ok(items);
         }
-
 
         [HttpGet("getById/{id}")]
-        public IActionResult getintangibleById(long id)
+        public IActionResult getById(long id)
         {
-            var intangibleTypeData = unitOfWork.Repository<AssetIntangibleType>().Find(x => x.AssetIntangibleTypeId == id && x.IsDelete != true);
-            return Ok(intangibleTypeData);
+            AssetIntangibleType item = _unitOfWork.Repository<AssetIntangibleType>().Find(x => x.AssetIntangibleTypeId == id).FirstOrDefault(x => !(x?.IsDelete ?? false));
+            return Ok(item);
         }
 
-        [HttpPost("addintangibleType")]
-        public IActionResult addintangibleType([FromBody]AssetIntangibleType intangibleTypeData)
+        [HttpGet("removeById/{id}")]
+        public IActionResult removeById(long id)
         {
-            if (intangibleTypeData != null)
+            var item = _unitOfWork.Repository<AssetIntangibleType>().Find(x => x.AssetIntangibleTypeId == id).FirstOrDefault();
+            if (item != null)
             {
-                if (ModelState.IsValid)
-                {
-                    intangibleTypeData.MasterCompanyId = 1;
-                    intangibleTypeData.CreatedDate = DateTime.Now;
-                    intangibleTypeData.UpdatedDate = DateTime.Now;
-                    unitOfWork.Repository<AssetIntangibleType>().Add(intangibleTypeData);
-                    unitOfWork.SaveChanges();
-                    return Ok(intangibleTypeData);
-                }
-                else
-                {
-                    return BadRequest(ModelState);
-                }
-
-            }
-            else
-            {
-                return BadRequest();
-            }
-
-        }
-
-        [HttpPut("update")]
-        public IActionResult updateintangibleType([FromBody]AssetIntangibleType intangibleType)
-        {
-            if (intangibleType != null)
-            {
-                if (ModelState.IsValid)
-                {
-                    unitOfWork.Repository<AssetIntangibleType>().Update(intangibleType);
-                    unitOfWork.SaveChanges();
-                    return Ok(intangibleType);
-                }
-                else
-                {
-                    return BadRequest(ModelState);
-                }
-
-            }
-            else
-            {
-                return BadRequest();
-            }
-
-        }
-
-        [HttpGet("removeintangibleTypeById/{id}")]
-        public IActionResult removeintangibleTypeById(long id)
-        {
-            var intangibleType = unitOfWork.Repository<AssetIntangibleType>().Find(x => x.AssetIntangibleTypeId == id).FirstOrDefault();
-            if (intangibleType != null)
-            {
-                intangibleType.IsDelete = true;
-                unitOfWork.Repository<AssetIntangibleType>().Update(intangibleType);
-                unitOfWork.SaveChanges();
+                item.IsDelete = true;
+                _unitOfWork.Repository<AssetIntangibleType>().Update(item);
+                _unitOfWork.SaveChanges();
                 return Ok();
             }
             else
             {
                 return BadRequest();
             }
+        }
+
+        [HttpPost("update")]
+        public IActionResult update([FromBody]AssetIntangibleType item)
+        {
+            if (item != null)
+            {
+                if (ModelState.IsValid)
+                {
+                    item.UpdatedDate = DateTime.Now;
+                    AssetIntangibleType existingItem = _unitOfWork.Repository<AssetIntangibleType>().Find(x => x.AssetIntangibleTypeId == item.AssetIntangibleTypeId).FirstOrDefault(x => !(x?.IsDelete ?? false));
+                    existingItem.UpdatedDate = DateTime.Now;
+                    existingItem.UpdatedBy = item.UpdatedBy;
+                    existingItem.IsActive = item.IsActive;
+                    existingItem.AssetIntangibleName = item.AssetIntangibleName;
+                    existingItem.AssetIntangibleMemo = item.AssetIntangibleMemo;
+                    _unitOfWork.Repository<AssetIntangibleType>().Update(existingItem);
+                    _unitOfWork.SaveChanges();
+                    return Ok(item);
+                }
+                else
+                {
+                    return BadRequest(ModelState);
+                }
+
+            }
+            else
+            {
+                return BadRequest();
+            }
+
         }
 
         #endregion Public Methods

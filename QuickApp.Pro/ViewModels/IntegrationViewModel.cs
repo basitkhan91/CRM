@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace QuickApp.Pro.ViewModels
 {
-    public class IntegrationViewModel : IAudit
+    public class IntegrationViewModel :IntegrationBaseViewModel, IAudit
     { 
-        public Int32 IntegrationPortalId { get; set; }
-        public string Description { get; set; }
+        
         public string PortalUrl { get; set; }
         public string Memo { get; set; }
 

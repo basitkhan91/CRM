@@ -5,7 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Reflection;
+using Microsoft.EntityFrameworkCore.Query.Expressions;
 
 namespace DAL.Repositories
 {
@@ -244,7 +246,17 @@ namespace DAL.Repositories
             {
                 if (restrictedParts != null && restrictedParts.Count > 0)
                 {
-                    restrictedParts.ForEach(p => { p.ReferenceId = referenceId; p.ModuleId = moduleId; p.IsDeleted = false; p.IsActive = true;p.CreatedDate = p.UpdatedDate = DateTime.Now; });
+
+                    restrictedParts.ForEach(p =>
+                    {
+                        p.ReferenceId = referenceId;
+                        p.PartNumber = GetRestrictedPartName(p.MasterPartId, moduleId);
+                        p.ModuleId = moduleId;
+                        p.IsDeleted = false;
+                        p.IsActive = true;
+                        p.CreatedDate = p.UpdatedDate = DateTime.Now;
+                    });
+
                     _appContext.RestrictedParts.AddRange(restrictedParts);
                     _appContext.SaveChanges();
                 }
@@ -256,16 +268,48 @@ namespace DAL.Repositories
             }
         }
 
-        public void UpdateRestrictedParts(List<RestrictedParts> restrictedParts, long referenceId,int moduleId)
+        public void CreateCustomerTaxTypeRateMapping(List<CustomerTaxTypeRateMapping> customerTaxTypeRateMappings, long referenceId)
         {
             try
             {
+                if (customerTaxTypeRateMappings != null && customerTaxTypeRateMappings.Count > 0)
+                {
+
+                    customerTaxTypeRateMappings
+                        .ForEach(p =>
+                        {
+                            p.CustomerId = referenceId;
+                            p.IsDeleted = false;
+                            p.CreatedDate = DateTime.Now;
+                            p.MasterCompanyId = 1;
+                            p.CreatedBy = p.CreatedBy ?? "admin";
+                            p.UpdatedBy = p.UpdatedBy ?? "admin";
+                            p.UpdatedDate = System.DateTime.Now;
+                        });
+                    _appContext.CustomerTaxTypeRateMapping.AddRange(customerTaxTypeRateMappings);
+                    _appContext.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void UpdateRestrictedParts(List<RestrictedParts> restrictedParts, long referenceId, int moduleId)
+        {
+            try
+            {
+
                 if (restrictedParts != null && restrictedParts.Count > 0)
                 {
                     foreach (var item in restrictedParts)
                     {
+                        item.PartNumber = GetRestrictedPartName(item.MasterPartId, moduleId);
                         if (item.RestrictedPartId > 0)
                         {
+
                             _appContext.RestrictedParts.Update(item);
                         }
                         else
@@ -275,7 +319,6 @@ namespace DAL.Repositories
                             item.IsActive = true;
                             item.IsDeleted = false;
                             item.CreatedDate = item.UpdatedDate = DateTime.Now;
-                            
                             _appContext.RestrictedParts.Add(item);
                         }
                         _appContext.SaveChanges();
@@ -435,13 +478,13 @@ namespace DAL.Repositories
 
         #endregion
 
-        public void CreateClassificationMappings(List<ClassificationMapping> classificationMappings, long referenceId)
+        public void CreateClassificationMappings(List<ClassificationMapping> classificationMappings, int moduleId, long referenceId, string createdBy)
         {
             try
             {
                 if (classificationMappings != null && classificationMappings.Count > 0)
                 {
-                    classificationMappings.ForEach(p => p.CustomerId = referenceId);
+                    classificationMappings.ForEach(p => { p.ModuleId = moduleId; p.ReferenceId = referenceId; p.IsActive = true; p.IsDeleted = false; p.CreatedDate = DateTime.Now; p.UpdatedDate = DateTime.Now; p.CreatedBy = createdBy; p.UpdatedBy = createdBy; });
                     _appContext.ClassificationMapping.AddRange(classificationMappings);
                     _appContext.SaveChanges();
                 }
@@ -453,25 +496,23 @@ namespace DAL.Repositories
             }
         }
 
-        public void UpdateClassificationMappings(List<ClassificationMapping> classificationMappings, long referenceId)
+        public void UpdateClassificationMappings(List<ClassificationMapping> classificationMappings, int moduleId, long referenceId, string createdBy)
         {
             try
             {
+                var existingList = _appContext.ClassificationMapping.Where(p => p.ModuleId == moduleId && p.ReferenceId == referenceId).ToList();
+
+                if (existingList != null && existingList.Count > 0)
+                {
+                    _appContext.ClassificationMapping.RemoveRange(existingList);
+                    _appContext.SaveChanges();
+                }
+
                 if (classificationMappings != null && classificationMappings.Count > 0)
                 {
-                    foreach (var item in classificationMappings)
-                    {
-                        if (item.ClassificationMappingId > 0)
-                        {
-                            _appContext.ClassificationMapping.Update(item);
-                        }
-                        else
-                        {
-                            item.CustomerId = referenceId;
-                            _appContext.ClassificationMapping.Add(item);
-                        }
-                        _appContext.SaveChanges();
-                    }
+                    classificationMappings.ForEach(p => { p.ModuleId = moduleId; p.ReferenceId = referenceId; p.IsActive = true; p.IsDeleted = false; p.CreatedDate = DateTime.Now; p.UpdatedDate = DateTime.Now; p.CreatedBy = createdBy; p.UpdatedBy = createdBy; });
+                    _appContext.ClassificationMapping.AddRange(classificationMappings);
+                    _appContext.SaveChanges();
                 }
             }
             catch (Exception)
@@ -481,37 +522,24 @@ namespace DAL.Repositories
             }
         }
 
-        public List<ClassificationMapping> GetCustomerClassificationMappings(int moduleId, int referenceId)
+        public IEnumerable<object> GetCustomerClassificationMappings(int moduleId, long referenceId)
         {
-            List<ClassificationMapping> ClassificationMappingList = new List<ClassificationMapping>();
-            ClassificationMapping classificationMapping;
             try
             {
-                var result = _appContext.ClassificationMapping
-                             .Join(_appContext.CustomerClassification,
-                             cm => cm.ClasificationId,
-                             cc => cc.CustomerClassificationId,
-                             (cm, cc) => new { cm, cc })
-                             .Where(p => p.cm.IsDeleted == false && p.cm.ModuleId == moduleId && p.cm.CustomerId == referenceId)
-                             .Select(p => new
-                             {
-                                 p.cm.ClassificationMappingId,
-                                 p.cm.ClasificationId,
-                                 p.cc.Description
-                             })
-                             .ToList();
+                var ClassificationMappingList = (from cm in _appContext.ClassificationMapping
+                                                 join cc in _appContext.CustomerClassification on cm.ClasificationId equals cc.CustomerClassificationId
+                                                 where cm.IsDeleted == false && cm.ModuleId == moduleId && cm.ReferenceId == referenceId
+                                                 select new
+                                                 {
+                                                     cm.ClassificationMappingId,
+                                                     cm.ClasificationId,
+                                                     cc.Description,
+                                                     cc.CustomerClassificationId
+                                                 })
+                            .Distinct()
+                            .ToList();
 
-                if (result != null && result.Count > 0)
-                {
-                    foreach (var item in result)
-                    {
-                        classificationMapping = new ClassificationMapping();
-                        classificationMapping.ClassificationMappingId = item.ClassificationMappingId;
-                        classificationMapping.ClasificationId = item.ClasificationId;
-                        classificationMapping.Description = item.Description;
-                        ClassificationMappingList.Add(classificationMapping);
-                    }
-                }
+
 
                 return ClassificationMappingList;
             }
@@ -522,37 +550,23 @@ namespace DAL.Repositories
             }
         }
 
-        public List<ClassificationMapping> GetVendorClassificationMappings(int moduleId, int referenceId)
+        public IEnumerable<object> GetVendorClassificationMappings(int moduleId, long referenceId)
         {
-            List<ClassificationMapping> ClassificationMappingList = new List<ClassificationMapping>();
-            ClassificationMapping classificationMapping;
             try
             {
-                var result = _appContext.ClassificationMapping
-                             .Join(_appContext.VendorClassification,
-                             cm => cm.ClasificationId,
-                             vc => vc.VendorClassificationId,
-                             (cm, vc) => new { cm, vc })
-                             .Where(p => p.cm.IsDeleted == false && p.cm.ModuleId == moduleId && p.cm.ReferenceId == referenceId)
-                             .Select(p => new
-                             {
-                                 ClassificationMappingId = p.cm.ClassificationMappingId,
-                                 ClasificationId = p.cm.ClasificationId,
-                                 Description = p.vc.ClassificationName
-                             })
-                             .ToList();
 
-                if (result != null && result.Count > 0)
-                {
-                    foreach (var item in result)
-                    {
-                        classificationMapping = new ClassificationMapping();
-                        classificationMapping.ClassificationMappingId = item.ClassificationMappingId;
-                        classificationMapping.ClasificationId = item.ClasificationId;
-                        classificationMapping.Description = item.Description;
-                        ClassificationMappingList.Add(classificationMapping);
-                    }
-                }
+                var ClassificationMappingList = (from cm in _appContext.ClassificationMapping
+                                                 join vc in _appContext.VendorClassification on cm.ClasificationId equals vc.VendorClassificationId
+                                                 where cm.IsDeleted == false && cm.ModuleId == moduleId && cm.ReferenceId == referenceId
+                                                 select new
+                                                 {
+                                                     cm.ClassificationMappingId,
+                                                     cm.ClasificationId,
+                                                     vc.ClassificationName
+                                                 })
+                           .Distinct()
+                           .ToList();
+
 
                 return ClassificationMappingList;
             }
@@ -605,12 +619,95 @@ namespace DAL.Repositories
         }
 
 
-        public IEnumerable<object> BindDropdowns(string tableName, string primaryColumn, string textColumn,long count)
+        public IEnumerable<object> BindDropdowns(string tableName, string primaryColumn, string textColumn, long count)
         {
             try
             {
-                var result = _appContext.Dropdowns.FromSql("BindDropdowns @p0,@p1,@p2,@p3", tableName, primaryColumn, textColumn,count).ToList();
+                var result = _appContext.Dropdowns.FromSql("BindDropdowns @p0,@p1,@p2,@p3", tableName, primaryColumn, textColumn, count).ToList();
                 return result;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+        public long CreateShippingVia(ShippingVia shippingVia)
+        {
+            try
+            {
+                shippingVia.UpdatedDate = DateTime.Now;
+                shippingVia.IsActive = true;
+                shippingVia.IsDeleted = false;
+                if(shippingVia.ShippingViaId>0)
+                {
+                    _appContext.ShippingVia.Update(shippingVia);
+                }
+                else
+                {
+                    shippingVia.CreatedDate = DateTime.Now; 
+                    _appContext.ShippingVia.Add(shippingVia);
+                }
+                
+                _appContext.SaveChanges();
+                return shippingVia.ShippingViaId;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void UpdateShippingVia(ShippingVia shippingVia)
+        {
+            try
+            {
+                shippingVia.UpdatedDate = DateTime.Now;
+                _appContext.ShippingVia.Update(shippingVia);
+                _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public object GetShippingViaDetails(long shippingViaId)
+        {
+            var data = (from sv in _appContext.ShippingVia
+                        where sv.IsDeleted == false && sv.ShippingViaId == shippingViaId
+                        select new
+                        {
+                            ShipVia = sv.Name,
+                            sv.ShippingAccountInfo,
+                            sv.ShippingURL,
+                            sv.ShippingId,
+                            sv.Memo
+                        }).FirstOrDefault();
+            return data;
+        }
+
+
+        public IEnumerable<object> BindShipViaDetails(int userType, long referenceId)
+        {
+            try
+            {
+                var list = (from sv in _appContext.ShippingVia
+                            where sv.IsDeleted == false && sv.UserType == userType && sv.ReferenceId == referenceId
+                            select new
+                            {
+                                sv.ShippingViaId,
+                                sv.Name,
+                                sv.ShippingAccountInfo,
+                                sv.ShippingURL,
+                                sv.ShippingId,
+                                sv.Memo
+                            }).OrderBy(p => p.Name).ToList();
+                return list;
             }
             catch (Exception)
             {
@@ -622,6 +719,143 @@ namespace DAL.Repositories
         private static PropertyInfo[] GetProperties(object obj)
         {
             return obj.GetType().GetProperties();
+        }
+
+        public long? CreateAddress(Address address)
+        {
+            try
+            {
+                address.CreatedDate = address.UpdatedDate = DateTime.Now;
+                address.IsActive = true;
+                _appContext.Address.Add(address);
+                _appContext.SaveChanges();
+                return address.AddressId;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void UpdateAddress(Address address)
+        {
+            try
+            {
+                address.UpdatedDate = DateTime.Now;
+                _appContext.Address.Update(address);
+                _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public object GetAddressDetails(long addressId)
+        {
+            try
+            {
+                var data = (from ad in _appContext.Address
+                            where ad.AddressId == addressId
+                            select new
+                            {
+                                ad.City,
+                                ad.Country,
+                                ad.Line1,
+                                ad.Line2,
+                                ad.Line3,
+                                ad.PoBox,
+                                ad.PostalCode,
+                                ad.StateOrProvince
+                            }).FirstOrDefault();
+                return data;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public string GetRestrictedPartName(long masterPartId, long masterCompanyId)
+        {
+            try
+            {
+                var data = (from im in _appContext.ItemMaster
+                            join mp in _appContext.MasterParts on im.MasterPartId equals mp.MasterPartId
+                            where (im.MasterCompanyId == masterCompanyId)
+                            select new
+                            {
+                                mp.PartNumber,
+                                mp.MasterPartId
+                            }).Where(m => m.MasterPartId == masterPartId).Select(p => p.PartNumber).SingleOrDefault();
+                if (!String.IsNullOrWhiteSpace(data))
+                    return data;
+                else return null;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+        public Dictionary<string, long> GetManagementStructure(long manmgStrucId)
+        {
+            Dictionary<string, long> keyValuePairs = new Dictionary<string, long>();
+            ManagementStructure level4 = null;
+            ManagementStructure level3 = null;
+            ManagementStructure level2 = null;
+            ManagementStructure level1 = null;
+            try
+            {
+                level4 = _appContext.ManagementStructure.Where(p => p.IsDelete == false && p.ManagementStructureId == manmgStrucId).FirstOrDefault();
+                if (level4 != null && level4.ParentId > 0)
+                {
+                    level3 = _appContext.ManagementStructure.Where(p => p.IsDelete == false && p.ManagementStructureId == level4.ParentId).FirstOrDefault();
+                }
+                if (level3 != null && level3.ParentId > 0)
+                {
+                    level2 = _appContext.ManagementStructure.Where(p => p.IsDelete == false && p.ManagementStructureId == level3.ParentId).FirstOrDefault();
+                }
+                if (level2 != null && level2.ParentId > 0)
+                {
+                    level1 = _appContext.ManagementStructure.Where(p => p.IsDelete == false && p.ManagementStructureId == level2.ParentId).FirstOrDefault();
+                }
+
+
+                if (level4 != null && level3 != null && level2 != null && level1 != null)
+                {
+                    keyValuePairs.Add("Level4", level4.ManagementStructureId);
+                    keyValuePairs.Add("Level3", level3.ManagementStructureId);
+                    keyValuePairs.Add("Level2", level2.ManagementStructureId);
+                    keyValuePairs.Add("Level1", level1.ManagementStructureId);
+                }
+                else if (level4 != null && level2 != null && level3 != null)
+                {
+                    keyValuePairs.Add("Level3", level4.ManagementStructureId);
+                    keyValuePairs.Add("Level2", level3.ManagementStructureId);
+                    keyValuePairs.Add("Level1", level2.ManagementStructureId);
+                }
+                else if (level4 != null && level3 != null)
+                {
+                    keyValuePairs.Add("Level2", level4.ManagementStructureId);
+                    keyValuePairs.Add("Level1", level3.ManagementStructureId);
+                }
+                else if (level4 != null)
+                {
+                    keyValuePairs.Add("Level1", level4.ManagementStructureId);
+                }
+                return keyValuePairs;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

@@ -13,7 +13,8 @@ export class LegalEntityEndpontService extends EndpointFactory {
 
 	private readonly _entityurl: string = "/api/legalEntity/Get";
 
-	private readonly _managementUrl: string = "/api/ManagementStrcture/ManagementGet";
+    private readonly _managementUrl: string = "/api/ManagementStrcture/ManagementGet";
+    private readonly _managementLegalUrl: string = "/api/ManagementStrcture/ManagementGetView";
 	private readonly _entityediturl: string = "/api/legalEntity/GetforEdigt";
 	private readonly _entityUrlNew: string = "/api/legalEntity/legalEntitypost";
 	private readonly _managementposturl: string = "/api/ManagementStrcture/managementEntitypost";
@@ -22,10 +23,12 @@ export class LegalEntityEndpontService extends EndpointFactory {
     private readonly _JobTilesUrlAuditHistory: string = "/api/legalEntity/auditHistoryById";
     private readonly getEntitySetupAccounts: string = "/api/legalEntity/legalEntityAccountsById";
 
-    private readonly _activeUrl: string = "/api/legalEntity/UpdateActive";
+	private readonly _activeUrl: string = "/api/legalEntity/UpdateActive";
+	private readonly getLegalEntityAddressByIdURL: string = "/api/legalEntity/legalentityaddressbyid";
 
 	get entityurl() { return this.configurations.baseUrl + this._entityurl; }
-	get managemententityurl() { return this.configurations.baseUrl + this._managementUrl; }
+    get managemententityurl() { return this.configurations.baseUrl + this._managementUrl; }
+    get managementlengalentityurl() { return this.configurations.baseUrl + this._managementLegalUrl; }
 	get entityediturl() { return this.configurations.baseUrl + this._entityediturl; }
 
 	constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -47,7 +50,16 @@ export class LegalEntityEndpontService extends EndpointFactory {
 			.catch(error => {
 				return this.handleError(error, () => this.getLegalEntityEndpontService());
 			});
-	}
+    }
+    getManagemtentLengalEntityData<T>(): Observable<T> {
+
+        return this.http.get<T>(this.managementlengalentityurl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getLegalEntityEndpontService());
+            });
+    }
+
+    
 
 	getEntityforEdit<T>(): Observable<T> {
 
@@ -192,6 +204,15 @@ export class LegalEntityEndpontService extends EndpointFactory {
         return this.http.put<T>(this._activeUrl, JSON.stringify(roleObject), this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getUpdateLegalEntityActive(roleObject, legalEntityId));
+            });
+	}
+	
+	getLegalEntityAddressById<T>(entityId: number): Observable<T> {
+        let endpointUrl = `${this.getLegalEntityAddressByIdURL}/${entityId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getLegalEntityAddressById(entityId));
             });
     }
 }

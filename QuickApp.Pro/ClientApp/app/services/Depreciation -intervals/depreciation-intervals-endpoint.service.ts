@@ -21,7 +21,7 @@ export class DepreciationIntervalsEndpoint extends EndpointFactory {
     private readonly addURL: string = "/api/AssetDepreciationInterval/add";
     private readonly updateURL: string = "/api/AssetDepreciationInterval/update";
     private readonly removeByIdURL: string = "/api/AssetDepreciationInterval/remove";
-    private readonly getIntervalsHistById: string = "/api/AssetDepreciationInterval/audits";
+    private readonly getIntervalsHistById: string = "/api/AssetDepreciationInterval/depreciationintervalauditdetails";
     private readonly excelUpload: string = "/api/AssetDepreciationInterval/UploadDepIntervalCustomData";
 
 
@@ -81,12 +81,12 @@ export class DepreciationIntervalsEndpoint extends EndpointFactory {
             });
     }
 
-    getAudit<T>(assetDisposalTypeId: number): Observable<T> {
-        let endpointUrl = `${this.getIntervalsHistById}/${assetDisposalTypeId}`;
+    getAudit<T>(assetDepreciationIntervalId: number): Observable<T> {
+        let endpointUrl = `${this.getIntervalsHistById}/${assetDepreciationIntervalId}`;
 
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getAudit(assetDisposalTypeId));
+                return this.handleError(error, () => this.getAudit(assetDepreciationIntervalId));
             });
     }
 

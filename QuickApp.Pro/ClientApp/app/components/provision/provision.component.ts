@@ -106,11 +106,38 @@ export class ProvisionComponent implements OnInit{
     //     }
 
     // }
-    // sampleExcelDownload() {
-    //     const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=Provision&fileName=manufacturer.xlsx`;
+     sampleExcelDownload() {
+         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=Provision&fileName=provision.xlsx`;
 
-    //     window.location.assign(url);
-    // }
+         window.location.assign(url);
+    }
+
+    customExcelUpload(event) {
+        const file = event.target.files;
+
+        console.log(file);
+        if (file.length > 0) {
+
+            this.formData.append('file', file[0])
+            this.provisionService.provisionFileUpload(this.formData).subscribe(res => {
+                event.target.value = '';
+
+                this.formData = new FormData();
+                this.existingRecordsResponse = res;
+                this.getProvisionData();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+
+                // $('#duplicateRecords').modal('show');
+                // document.getElementById('duplicateRecords').click();
+
+            })
+        }
+
+    }
 
     getProvisionData() {
         this.provisionService.getProvisionList().subscribe(res => {          

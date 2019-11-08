@@ -51,10 +51,13 @@ import { WorkOrderAssetsComponent } from '../components/work-order/work-order-se
 import { WorkOrderAddressesComponent } from '../components/work-order/work-order-setup/work-order-addresses/work-order-addresses.component';
 import { TooltipModule } from 'primeng/tooltip';
 import { CommonService } from '../services/common.service';
+import { MatIconModule } from "@angular/material/icon";
+
 @NgModule({
   imports: [
     FormsModule,
     CommonModule,
+    MatIconModule,
     WorkOrdersPagesRoutingModule,
     TableModule,
     ButtonModule,

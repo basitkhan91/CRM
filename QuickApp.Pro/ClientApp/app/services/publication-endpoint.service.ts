@@ -64,6 +64,8 @@ export class PublicationEndpointService extends EndpointFactory {
     private readonly _publicationTypes: string = '/api/Publication/getpublicationtypes';  
     private readonly _publicationForWorkflowURL: string = '/api/Publication/GetPublicationDropdownData';
     private readonly _publicationURL: string = '/api/Publication/getPublicationForWorkFlowById';
+    private readonly _excelUpload: string ="/api/Publication/uploadpublicationcustomdata";
+    private readonly _auditsUrl: string = "/api/Publication/publicationhistory";
 
 
     get getCodeUrl() {
@@ -516,6 +518,27 @@ getpublicationTypesEndpoint<T>(): Observable<T> {
                 return this.handleError(error, () => this.getPublicationForWorkFlowEndpoint(publicationId));
             });
     }
+
+    publicationCustomUpload(file){
+      return this.http.post( `${this.configurations.baseUrl}${this._excelUpload}`, file)            
+  }
+
+  getPublicationAuditDetails<T>(Id: number): Observable<T> {
+    let endPointUrl = `${this._auditsUrl}?publicationId=${Id}`;
+
+    return this.http.get<T>(endPointUrl, this.getRequestHeaders())
+        .catch(error => {
+            return this.handleError(error, () => this.getPublicationAuditDetails(Id));
+        });
+}
+
+getpublicationListBySearchEndpoint<T>(pageIndex, pageSize, publicationId, description, publicationType, publishby, employeeName, location): Observable<T> {
+  return this.http
+    .get<T>(`${this.getCodeUrl}?pageNumber=${pageIndex}&pageSize=${pageSize}&publicationId=${publicationId}&description=${description}&publicationType=${publicationType}&publishedBy=${publishby}&employee=${employeeName}&location=${location}`, this.getRequestHeaders())
+    .catch(error => {
+      return this.handleError(error, () => this.getpublicationListBySearchEndpoint(pageIndex, pageSize, publicationId, description, publicationType, publishby, employeeName, location));
+    });
+  }
 
 
 }

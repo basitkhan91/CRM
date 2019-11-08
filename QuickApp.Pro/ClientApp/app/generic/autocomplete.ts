@@ -1,6 +1,6 @@
 // used to pass (field/key) and value and original Data and get  Filtered Data Bases on the (value/input) you give 
 export function getObjectByValue(field: string, value: string, originalData: any) {
-    if ((field !== '' || field !== undefined) && (value !== '' || value !== undefined) && (originalData !== undefined)) {
+    if ((field !== '' && field !== undefined) && (value !== '' && value !== undefined) && (originalData !== undefined && originalData.length > 0)) {
         const data = originalData.filter(x => {
             if (x[field] === value) {
                 return x;
@@ -12,12 +12,12 @@ export function getObjectByValue(field: string, value: string, originalData: any
 }
 // used to pass  (field/key) and id and original Data and get  Filtered Data Bases on the (id/input) you give 
 export function getObjectById(field: string, id: any, originalData: any) {
-    if ((field !== '' || field !== undefined) && (id !== '' || id !== undefined) && (originalData !== undefined)) {
+    console.log(field, id, originalData)
+
+    if ((field !== '' && field !== undefined) && (id !== '' && id !== undefined) && (originalData !== undefined && originalData.length > 0)) {
         const data = originalData.filter(x => {
 
             if (parseInt(x[field]) === parseInt(id)) {
-
-
                 return x;
             }
         })
@@ -26,13 +26,16 @@ export function getObjectById(field: string, id: any, originalData: any) {
 }
 // pass (field/key) and assigned value from the object  
 export function getValueFromObjectByKey(field: string, object: any) {
-    if ((field !== '' || field !== undefined) && (object !== undefined)) {
+
+    if ((field !== '' && field !== undefined) && (object !== undefined && object !== null)) {
+        console.log(object[field]);
+        console.log('test');
         return object[field];
     }
 }
 // pass the (field/key) and (idField) where to Match with the  (id/input) from Original Data and particular value of key after Filter
 export function getValueFromArrayOfObjectById(field: string, idField: string, id: any, originalData: any) {
-    if ((field !== '' || field !== undefined) && (idField !== '' || idField !== undefined) && (id !== '' || id !== undefined) && (originalData !== undefined)) {
+    if ((field !== '' && field !== undefined) && (idField !== '' && idField !== undefined) && (id !== '' && id !== undefined) && (originalData !== undefined && originalData.length > 0)) {
         const data = originalData.filter(x => {
             if (parseInt(x[idField]) === parseInt(id)) {
                 return x;
@@ -45,7 +48,7 @@ export function getValueFromArrayOfObjectById(field: string, idField: string, id
 
 // Used to Return String on Create Mode on Edit Mode Return the String from the Object 
 export function editValueAssignByCondition(field: any, value: any) {
-    if ((value !== undefined) && (field !== '' || field !== undefined)) {
+    if ((value !== undefined) && (field !== '' && field !== undefined)) {
 
         if (typeof (value) === 'string') {
             return value
@@ -58,7 +61,7 @@ export function editValueAssignByCondition(field: any, value: any) {
 
 // Used to Match and Validate the current selected and Previous data and return Boolean on Edit Mode
 export function selectedValueValidate(field: string, object: any, editData: any) {
-    if ((field !== '' || field !== undefined) && (object !== undefined) && (editData !== undefined)) {
+    if ((field !== '' && field !== undefined) && (object !== undefined && object! == null) && (editData !== undefined && editData !== null)) {
         return getValueFromObjectByKey(field, object) == editValueAssignByCondition(field, editData[field])
 
     }
@@ -66,7 +69,7 @@ export function selectedValueValidate(field: string, object: any, editData: any)
 }
 
 export function validateRecordExistsOrNotOnEdit(field: string, currentInput: any, editData: any) {
-    if ((field !== '' || field !== undefined) && (currentInput !== '' || currentInput !== undefined) && (editData !== undefined)) {
+    if ((field !== '' && field !== undefined) && (currentInput !== '' && currentInput !== undefined) && (editData !== undefined && editData !==null )) {
         return editValueAssignByCondition(field, editData[field]) !== currentInput;
 
     }
@@ -79,8 +82,8 @@ export function validateRecordExistsOrNot(field: string, currentInput: any, orig
     if (editModeDataObject !== undefined) {
         validData = validateRecordExistsOrNotOnEdit(field, currentInput, editModeDataObject)
     }
-    if (validData || editModeDataObject == undefined) {
-        if ((field !== '' || field !== undefined) && (currentInput !== '' || currentInput !== undefined) && (originalData !== undefined)) {
+    if (validData && editModeDataObject == undefined) {
+        if ((field !== '' && field !== undefined) && (currentInput !== '' && currentInput !== undefined) && (originalData !== undefined && originalData.length > 0)) {
             if (typeof (currentInput) === 'string') {
                 const data = originalData.filter(x => {
                     return x[field].toLowerCase() === currentInput.toLowerCase().trim()
@@ -89,11 +92,13 @@ export function validateRecordExistsOrNot(field: string, currentInput: any, orig
             } else if (typeof (currentInput) === 'number') {
                 const data = originalData.filter(x => {
 
-                    return x[field] === currentInput
+                    return parseInt(x[field]) === currentInput
                 })
                 return data;
             }
 
+        } else {
+            return [];
         }
     } else {
         return [];
@@ -102,7 +107,7 @@ export function validateRecordExistsOrNot(field: string, currentInput: any, orig
 export function colorCodeGeneratorForHistory(index: number, field: string, value: any, dataList: any) {
     console.log(index, field, value, dataList);
 
-    if ((index !== null || index !== undefined) && (field !== '' || field !== undefined) && (value !== '' || value !== undefined) && (dataList !== undefined)) {
+    if ((index !== null && index !== undefined) && (field !== '' && field !== undefined) && (value !== '' && value !== undefined) && (dataList !== undefined)) {
         console.log(index, field, value, dataList);
         const dataLength = this.dataList.length;
         if (index >= 0 && index <= dataLength) {
@@ -115,4 +120,6 @@ export function colorCodeGeneratorForHistory(index: number, field: string, value
         }
     }
 }
+
+
 

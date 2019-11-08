@@ -54,7 +54,7 @@ export class PriorityComponent implements OnInit {
     pageSize: number = 10;
     totalPages: number;
     priorityHeader = [
-        { field: 'description', header: 'Provison Name' },
+        { field: 'description', header: 'Priority Name' },
         { field: 'memo', header: 'Memo' },
     ]
     selectedColumns = this.priorityHeader;

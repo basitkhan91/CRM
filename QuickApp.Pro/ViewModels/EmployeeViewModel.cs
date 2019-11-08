@@ -18,6 +18,8 @@ namespace QuickApp.Pro.ViewModels
         public string StationId { get; set; }
         public Int16? JobTitleId { get; set; }
         public Int16? JobTypeId { get; set; }
+
+        public long? LegalEntityId { get; set; }
         public Int16? EmployeeExpertiseId { get; set; }
 
         public string EmployeeCode { get; set; }
@@ -38,7 +40,11 @@ namespace QuickApp.Pro.ViewModels
         public bool? EmployeeCertifyingStaff { get; set; }
         public long? SupervisorId { get; set; }
 
-        public  int CompanyId { get; set; }
+        public byte? LeaveTypeId { get; set; }
+
+        public long? ShiftTypeId { get; set; }
+        
+
 
         [ForeignKey("MasterCompanyId")]
         public Int32 MasterCompanyId { get; set; }

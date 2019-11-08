@@ -3,407 +3,626 @@ import { AuditHistory } from '../../../../models/audithistory.model';
 import { MatPaginator, MatSort, MatTableDataSource, MatDialog } from '@angular/material';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MasterCompany } from '../../../../models/mastercompany.model';
-import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModalRef, NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../../../services/auth.service';
 import { AlertService, MessageSeverity } from '../../../../services/alert.service';
 import { MasterComapnyService } from '../../../../services/mastercompany.service';
 import { VendorService } from '../../../../services/vendor.service';
 import { fadeInOut } from '../../../../services/animations';
 import { Router } from '@angular/router';
-
-
+import { Table } from 'primeng/table';
+import { PurchaseOrderService } from '../../../../services/purchase-order.service';
+import { VendorCapabilitiesService } from '../../../../services/vendorcapabilities.service';
 
 @Component({
 	selector: 'app-polist',
 	templateUrl: './polist.component.html',
 	styleUrls: ['./polist.component.scss'],
-	 animations: [fadeInOut]
+	animations: [fadeInOut]
 })
-/** Polist component*/
-export class PolistComponent implements OnInit, AfterViewInit {
-	purchaseOrderNumber: any = "";
-	requestedBy: any = "";
-	dateApprovied: any = "";
-	approver: any = "";
-	createdBy: any = "";
-	updatedBy: any = "";
-	createdDate: any = "";
-	updatedDate: any = "";
-	selectedActionName: any;
-	disableSave: boolean;
-	actionamecolle: any[] = [];
 
+export class PolistComponent implements OnInit {
 
-	auditHisory: AuditHistory[];
-	Active: string = "Active";
-	/** Currency ctor */
+    totalRecords: number = 0;
+    totalPages: number = 0;
+    headers = [
+		{ field: 'purchaseOrderNumber', header: 'PO Num' },
+        { field: 'openDate', header: 'Open Date' },
+        { field: 'closedDate', header: 'Closed/Cancelled Date' },
+        { field: 'vendorName', header: 'Vendor Name' },
+        { field: 'vendorCode', header: 'Vendor Code' },
+        { field: 'status', header: 'Status' },
+        { field: 'requestedBy', header: 'Requested By' },
+        { field: 'approvedBy', header: 'Approved By' },
+    ]
+    selectedColumns = this.headers;
+    data: any;
+    pageSize: number = 10;
+    pageIndex: number = 0;
+    @ViewChild('dt')
+    private table: Table;
+    lazyLoadEventData: any;
+    auditHistory: AuditHistory[];
+    rowDataToDelete: any = {};
+    poHeaderAdd: any = {};
+    poPartsList: any = [];
+    approveList: any = [];
+    vendorCapesInfo: any = [];
+    vendorCapesCols: any[];
 
-	@ViewChild(MatPaginator) paginator: MatPaginator;
-	@ViewChild(MatSort) sort: MatSort;
+    constructor(private _route: Router,
+        private authService: AuthService,
+        private modalService: NgbModal,
+        private activeModal: NgbActiveModal,
+        private _fb: FormBuilder,
+        private alertService: AlertService,
+        public vendorService: VendorService,
+        private dialog: MatDialog,
+        private masterComapnyService: MasterComapnyService,
+        private purchaseOrderService: PurchaseOrderService,
+        private vendorCapesService: VendorCapabilitiesService) {
+        // this.displayedColumns.push('Customer');
+        // this.dataSource = new MatTableDataSource();
+        // this.activeIndex = 0;
+        // this.workFlowtService.listCollection = null;
+        //this.sourceCustomer = new Customer();
 
-	displayedColumns = ['currencyId', 'code', 'symbol', 'displayName', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
-	dataSource: MatTableDataSource<any>;
-	allCurrencyInfo: any[] = [];
-	sourceAction: any = {};
-
-	loadingIndicator: boolean;
-
-	actionForm: FormGroup;
-	title: string = "Create";
-	id: number;
-	
-	cols: any[];
-	selectedColumns: any[];
-	private isEditMode: boolean = false;
-	private isDeleteMode: boolean = false;
-	allComapnies: MasterCompany[];
-	private isSaving: boolean;
-	modal: NgbModalRef;
-	selectedColumn: any[];
-	currencyName: string;
-	filteredBrands: any[];
-	localCollection: any[] = [];
-	allPolistInfo: any[] = [];
-	allPurchaseorderInfo: any[] = [];
-	/** Currency ctor */
-	constructor(private authService: AuthService, private _fb: FormBuilder, public _router: Router, private alertService: AlertService, private masterComapnyService: MasterComapnyService, private modalService: NgbModal, public vendorservice: VendorService, private dialog: MatDialog) {
-		this.displayedColumns.push('action');
-		this.dataSource = new MatTableDataSource();
-		this.vendorservice.ShowPtab = false;
-		this.vendorservice.alertObj.next(this.vendorservice.ShowPtab);
-		this.vendorservice.currentUrl = '/vendorsmodule/vendorpages/app-polist';
-		this.vendorservice.bredcrumbObj.next(this.vendorservice.currentUrl);
-	}
-	ngOnInit(): void {
-		//this.purchaseorderlist();
-		this.loadData();
-		this.cols = [
-			//{ field: 'statusId', header: 'Status' },
-			{ field: 'purchaseOrderNumber', header: 'PO Number' },
-			{ field: 'requestedBy', header: 'Requested By' },
-			{ field: 'dateRequested', header: 'Open Date' },
-			{ field: 'requestedBy', header: 'Requested By' },
-			{ field: 'dateApprovied', header: ' Date Approvied ' },
-			{ field: 'approver', header: ' Approvied By' },
-			{ field: 'createdBy', header: 'Created By' },
-			{ field: 'updatedBy', header: 'Updated By' }
+    }
+    ngOnInit() {
+        // this.getList();
+        this.vendorCapesCols = [
+			{ field: 'vcId', header: 'VCID' },
+			{ field: 'ranking', header: 'Ranking' },
+			{ field: 'partNumber', header: 'PN' },
+			{ field: 'partDescription', header: 'PN Description' },
+			{ field: 'capabilityType', header: 'Capability Type' },
+			{ field: 'cost', header: 'Cost' },
+			{ field: 'tat', header: 'TAT' },
+			{ field: 'name', header: 'PN Mfg' },
 		];
-		//this.breadCrumb.currentUrl = '/singlepages/singlepages/app-currency';
-		//this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
-		this.selectedColumns = this.cols;
+
+    }
+
+    getList(data) {
+        this.vendorService.getPOList(data).subscribe(res => {
+			console.log(res);			
+             this.data = res[0];
+            if (this.data.length > 0) {
+                this.totalRecords = res[0][0].totalRecords;
+                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            }
+
+        })
+    }
+
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    }
+
+    columnsChanges() {
+        this.refreshList();
+    }
+    refreshList() {
+        this.table.reset();
+        // this.getList();
+        // this.table.sortOrder = 0;
+        // this.table.sortField = '';
+
+
+    }
+    loadData(event) {
+        this.lazyLoadEventData = event;
+        const pageIndex = parseInt(event.first) / event.rows;;
+        this.pageIndex = pageIndex;
+        this.pageSize = event.rows;
+        event.first = pageIndex;
+        this.getList(event)
+    }
+
+    changeStatus(rowData) {
+        console.log(rowData);
+        
+        this.purchaseOrderService.getPOStatus(rowData.purchaseOrderId, rowData.isActive, this.userName).subscribe(res => {
+            this.alertService.showMessage("Success", `Successfully Updated Status`, MessageSeverity.success);
+        })
+
+    }
+    edit(rowData) {
+		console.log(rowData);		
+        const { purchaseOrderId } = rowData;
+        this._route.navigateByUrl(`vendorsmodule/vendorpages/app-purchase-setup/edit/${purchaseOrderId}`);
+    }
+    delete(rowData) {
+        this.rowDataToDelete = rowData;
+    }
+    deletePO() {
+        const { purchaseOrderId } = this.rowDataToDelete;
+        this.purchaseOrderService.deletePO(purchaseOrderId, this.userName).subscribe(res => {
+            this.getList(this.lazyLoadEventData);
+            this.alertService.showMessage("Success", `Successfully Deleted Record`, MessageSeverity.success);
+
+        })
+    }
+
+    viewSelectedRow(rowData) { 
+        console.log(rowData);
+        this.getPOViewById(rowData.purchaseOrderId);
+        this.getPOPartsViewById(rowData.purchaseOrderId);
+        this.getApproversListById(rowData.purchaseOrderId);
+    }
+
+    getPOViewById(poId) {
+        this.purchaseOrderService.getPOViewById(poId).subscribe(res => {
+            console.log(res);  
+            this.poHeaderAdd = res;
+            this.getVendorCapesByID(this.poHeaderAdd.vendorId);
+        });
+    }
+    getPOPartsViewById(poId) {
+        this.purchaseOrderService.getPOPartsViewById(poId).subscribe(res => {
+            console.log(res);  
+            this.poPartsList = res;
+        });
+    }
+
+    getApproversListById(poId) {
+		this.purchaseOrderService.getPOApproverList(poId).subscribe(response => {
+			console.log(response);			
+			this.approveList = response;
+        });
+    }
+
+    getVendorCapesByID(vendorId) {
+		this.vendorCapesService.getVendorCapesById(vendorId).subscribe(res => {
+			this.vendorCapesInfo = res;
+		})
+	}
+
+
+    // changePage(event: { first: any; rows: number }) {
+    //     console.log(event);
+    //     this.pageIndex = (event.first / event.rows);
+    //     // this.pageIndex = pageIndex;
+    //     this.pageSize = event.rows;
+    //     this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+    // }
+    globalSearch(value) {
+        this.pageIndex = 0;
+        // this.customerService.getGlobalSearch(value, this.pageIndex, this.pageSize).subscribe(res => {
+        //     this.data = res;
+        //     if (res.length > 0) {
+        //         this.totalRecords = res[0].totalRecords;
+        //         this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+        //     }
+        // })
+    }
+    getAuditHistoryById(rowData) {
+        this.purchaseOrderService.getPOHistory(rowData.purchaseOrderId).subscribe(res => {
+            console.log(res);            
+            this.auditHistory = res;
+        })
+    }
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
+
+}
+
+
+// import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+// import { AuditHistory } from '../../../../models/audithistory.model';
+// import { MatPaginator, MatSort, MatTableDataSource, MatDialog } from '@angular/material';
+// import { FormGroup, FormBuilder } from '@angular/forms';
+// import { MasterCompany } from '../../../../models/mastercompany.model';
+// import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+// import { AuthService } from '../../../../services/auth.service';
+// import { AlertService, MessageSeverity } from '../../../../services/alert.service';
+// import { MasterComapnyService } from '../../../../services/mastercompany.service';
+// import { VendorService } from '../../../../services/vendor.service';
+// import { fadeInOut } from '../../../../services/animations';
+// import { Router } from '@angular/router';
+
+
+
+// @Component({
+// 	selector: 'app-polist',
+// 	templateUrl: './polist.component.html',
+// 	styleUrls: ['./polist.component.scss'],
+// 	 animations: [fadeInOut]
+// })
+// /** Polist component*/
+// export class PolistComponent implements OnInit, AfterViewInit {
+// 	purchaseOrderNumber: any = "";
+// 	requestedBy: any = "";
+// 	dateApprovied: any = "";
+// 	approver: any = "";
+// 	createdBy: any = "";
+// 	updatedBy: any = "";
+// 	createdDate: any = "";
+// 	updatedDate: any = "";
+// 	selectedActionName: any;
+// 	disableSave: boolean;
+// 	actionamecolle: any[] = [];
+
+
+// 	auditHisory: AuditHistory[];
+// 	Active: string = "Active";
+// 	/** Currency ctor */
+
+// 	@ViewChild(MatPaginator) paginator: MatPaginator;
+// 	@ViewChild(MatSort) sort: MatSort;
+
+// 	displayedColumns = ['currencyId', 'code', 'symbol', 'displayName', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
+// 	dataSource: MatTableDataSource<any>;
+// 	allCurrencyInfo: any[] = [];
+// 	sourceAction: any = {};
+
+// 	loadingIndicator: boolean;
+
+// 	actionForm: FormGroup;
+// 	title: string = "Create";
+// 	id: number;
+	
+// 	cols: any[];
+// 	selectedColumns: any[];
+// 	private isEditMode: boolean = false;
+// 	private isDeleteMode: boolean = false;
+// 	allComapnies: MasterCompany[];
+// 	private isSaving: boolean;
+// 	modal: NgbModalRef;
+// 	selectedColumn: any[];
+// 	currencyName: string;
+// 	filteredBrands: any[];
+// 	localCollection: any[] = [];
+// 	allPolistInfo: any[] = [];
+// 	allPurchaseorderInfo: any[] = [];
+// 	/** Currency ctor */
+// 	constructor(private authService: AuthService, private _fb: FormBuilder, public _router: Router, private alertService: AlertService, private masterComapnyService: MasterComapnyService, private modalService: NgbModal, public vendorservice: VendorService, private dialog: MatDialog) {
+// 		this.displayedColumns.push('action');
+// 		this.dataSource = new MatTableDataSource();
+// 		this.vendorservice.ShowPtab = false;
+// 		this.vendorservice.alertObj.next(this.vendorservice.ShowPtab);
+// 		this.vendorservice.currentUrl = '/vendorsmodule/vendorpages/app-polist';
+// 		this.vendorservice.bredcrumbObj.next(this.vendorservice.currentUrl);
+// 	}
+// 	ngOnInit(): void {
+// 		//this.purchaseorderlist();
+// 		this.loadData();
+// 		this.cols = [
+// 			//{ field: 'statusId', header: 'Status' },
+// 			{ field: 'purchaseOrderNumber', header: 'PO Number' },
+// 			{ field: 'requestedBy', header: 'Requested By' },
+// 			{ field: 'dateRequested', header: 'Open Date' },
+// 			{ field: 'requestedBy', header: 'Requested By' },
+// 			{ field: 'dateApprovied', header: ' Date Approvied ' },
+// 			{ field: 'approver', header: ' Approvied By' },
+// 			{ field: 'createdBy', header: 'Created By' },
+// 			{ field: 'updatedBy', header: 'Updated By' }
+// 		];
+// 		//this.breadCrumb.currentUrl = '/singlepages/singlepages/app-currency';
+// 		//this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
+// 		this.selectedColumns = this.cols;
 		
-	}
-	ngAfterViewInit() {
-		this.dataSource.paginator = this.paginator;
-		this.dataSource.sort = this.sort;
-	}
+// 	}
+// 	ngAfterViewInit() {
+// 		this.dataSource.paginator = this.paginator;
+// 		this.dataSource.sort = this.sort;
+// 	}
 
-	private loadData() {
-		// debugger;
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
+// 	private loadData() {
+// 		// debugger;
+// 		this.alertService.startLoadingMessage();
+// 		this.loadingIndicator = true;
 
-		this.vendorservice.getPurchaseOrderlist().subscribe(
-			results => this.onDataLoadSuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
+// 		this.vendorservice.getPurchaseOrderlist().subscribe(
+// 			results => this.onDataLoadSuccessful(results[0]),
+// 			error => this.onDataLoadFailed(error)
+// 		);
 
-	}
-	public applyFilter(filterValue: string) {
-		this.dataSource.filter = filterValue;
-	}
+// 	}
+// 	public applyFilter(filterValue: string) {
+// 		this.dataSource.filter = filterValue;
+// 	}
 
-	private refresh() {
-		// Causes the filter to refresh there by updating with recently added data.
-		this.applyFilter(this.dataSource.filter);
-	}
-	private onDataLoadSuccessful(getCreditTermsList: any[]) {
-		// alert('success');
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.dataSource.data = getCreditTermsList;
+// 	private refresh() {
+// 		// Causes the filter to refresh there by updating with recently added data.
+// 		this.applyFilter(this.dataSource.filter);
+// 	}
+// 	private onDataLoadSuccessful(getCreditTermsList: any[]) {
+// 		// alert('success');
+// 		this.alertService.stopLoadingMessage();
+// 		this.loadingIndicator = false;
+// 		this.dataSource.data = getCreditTermsList;
 
-		this.allPolistInfo = getCreditTermsList;
-	}
+// 		this.allPolistInfo = getCreditTermsList;
+// 	}
 
-	private onDataLoadFailed(error: any) {
-		// alert(error);
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
+// 	private onDataLoadFailed(error: any) {
+// 		// alert(error);
+// 		this.alertService.stopLoadingMessage();
+// 		this.loadingIndicator = false;
 
-	}
-	private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
-		// alert('success');
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.allComapnies = allComapnies;
+// 	}
+// 	private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
+// 		// alert('success');
+// 		this.alertService.stopLoadingMessage();
+// 		this.loadingIndicator = false;
+// 		this.allComapnies = allComapnies;
 
-	}
+// 	}
 	
 
     
 
-	private onDataLoadordrSuccessful(getCreditTermsList: any[]) {
-		// alert('success');
-		this.vendorservice.purchasepartcollection = [];
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.dataSource.data = getCreditTermsList;
+// 	private onDataLoadordrSuccessful(getCreditTermsList: any[]) {
+// 		// alert('success');
+// 		this.vendorservice.purchasepartcollection = [];
+// 		this.alertService.stopLoadingMessage();
+// 		this.loadingIndicator = false;
+// 		this.dataSource.data = getCreditTermsList;
 
-		this.allPurchaseorderInfo = getCreditTermsList;
-		//if (this.allPurchaseorderInfo.length > 0) {
-			this.vendorservice.isEditMode = false;
-			this.vendorservice.purchasepartcollection = this.allPurchaseorderInfo;
-			this._router.navigateByUrl('/vendorsmodule/vendorpages/app-purchase-setup');
-		//}
-	}
-	//handleChange(rowData, e) {
-	//	if (e.checked == false) {
-	//		this.sourceAction = rowData;
-	//		this.sourceAction.updatedBy = this.userName;
-	//		this.Active = "In Active";
-	//		this.sourceAction.isActive == false;
-	//		this.vendorservice.updatecurrency(this.sourceAction).subscribe(
-	//			response => this.saveCompleted(this.sourceAction),
-	//			error => this.saveFailedHelper(error));
-	//		//alert(e);
-	//	}
-	//	else {
-	//		this.sourceAction = rowData;
-	//		this.sourceAction.updatedBy = this.userName;
-	//		this.Active = "Active";
-	//		this.sourceAction.isActive == true;
-	//		this.vendorservice.updatecurrency(this.sourceAction).subscribe(
-	//			response => this.saveCompleted(this.sourceAction),
-	//			error => this.saveFailedHelper(error));
-	//		//alert(e);
-	//	}
+// 		this.allPurchaseorderInfo = getCreditTermsList;
+// 		//if (this.allPurchaseorderInfo.length > 0) {
+// 			this.vendorservice.isEditMode = false;
+// 			this.vendorservice.purchasepartcollection = this.allPurchaseorderInfo;
+// 			this._router.navigateByUrl('/vendorsmodule/vendorpages/app-purchase-setup');
+// 		//}
+// 	}
+// 	//handleChange(rowData, e) {
+// 	//	if (e.checked == false) {
+// 	//		this.sourceAction = rowData;
+// 	//		this.sourceAction.updatedBy = this.userName;
+// 	//		this.Active = "In Active";
+// 	//		this.sourceAction.isActive == false;
+// 	//		this.vendorservice.updatecurrency(this.sourceAction).subscribe(
+// 	//			response => this.saveCompleted(this.sourceAction),
+// 	//			error => this.saveFailedHelper(error));
+// 	//		//alert(e);
+// 	//	}
+// 	//	else {
+// 	//		this.sourceAction = rowData;
+// 	//		this.sourceAction.updatedBy = this.userName;
+// 	//		this.Active = "Active";
+// 	//		this.sourceAction.isActive == true;
+// 	//		this.vendorservice.updatecurrency(this.sourceAction).subscribe(
+// 	//			response => this.saveCompleted(this.sourceAction),
+// 	//			error => this.saveFailedHelper(error));
+// 	//		//alert(e);
+// 	//	}
 
-	//}
-
-
-
-	open() {
-
-		this._router.navigateByUrl('/vendorsmodule/vendorpages/app-create-po')
-	}
+// 	//}
 
 
-	openDelete(content, row) {
 
-		this.isEditMode = false;
-		this.isDeleteMode = true;
-		this.sourceAction = row;
-		this.modal = this.modalService.open(content, { size: 'sm' });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-	}
-	private loadMasterCompanies() {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
+// 	open() {
 
-		this.masterComapnyService.getMasterCompanies().subscribe(
-			results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
+// 		this._router.navigateByUrl('/vendorsmodule/vendorpages/app-create-po')
+// 	}
 
-	}
-	openEdit(row) {
+
+// 	openDelete(content, row) {
+
+// 		this.isEditMode = false;
+// 		this.isDeleteMode = true;
+// 		this.sourceAction = row;
+// 		this.modal = this.modalService.open(content, { size: 'sm' });
+// 		this.modal.result.then(() => {
+// 			console.log('When user closes');
+// 		}, () => { console.log('Backdrop click') })
+// 	}
+// 	private loadMasterCompanies() {
+// 		this.alertService.startLoadingMessage();
+// 		this.loadingIndicator = true;
+
+// 		this.masterComapnyService.getMasterCompanies().subscribe(
+// 			results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
+// 			error => this.onDataLoadFailed(error)
+// 		);
+
+// 	}
+// 	openEdit(row) {
 
 		
-		this.vendorservice.getpurchasevendorlist(row.purchaseOrderId).subscribe(
-			results => this.onDataLoadordrSuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
-		//this.modal = this.modalService.open(content, { size: 'sm' });
-		//this.modal.result.then(() => {
-		//	console.log('When user closes');
-		//}, () => { console.log('Backdrop click') })
-	}
+// 		this.vendorservice.getpurchasevendorlist(row.purchaseOrderId).subscribe(
+// 			results => this.onDataLoadordrSuccessful(results[0]),
+// 			error => this.onDataLoadFailed(error)
+// 		);
+// 		//this.modal = this.modalService.open(content, { size: 'sm' });
+// 		//this.modal.result.then(() => {
+// 		//	console.log('When user closes');
+// 		//}, () => { console.log('Backdrop click') })
+// 	}
 
-	//openHist(content, row) {
-	//	this.alertService.startLoadingMessage();
-	//	this.loadingIndicator = true;
-
-
-	//	this.sourceAction = row;
+// 	//openHist(content, row) {
+// 	//	this.alertService.startLoadingMessage();
+// 	//	this.loadingIndicator = true;
 
 
-
-	//	this.isSaving = true;
-
-	//	this.vendorservice.historycurrency(this.sourceAction.currencyId).subscribe(
-	//		results => this.onHistoryLoadSuccessful(results[0], content),
-	//		error => this.saveFailedHelper(error));
+// 	//	this.sourceAction = row;
 
 
-	//}
-	private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
+
+// 	//	this.isSaving = true;
+
+// 	//	this.vendorservice.historycurrency(this.sourceAction.currencyId).subscribe(
+// 	//		results => this.onHistoryLoadSuccessful(results[0], content),
+// 	//		error => this.saveFailedHelper(error));
 
 
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-
-		this.auditHisory = auditHistory;
+// 	//}
+// 	private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
 
 
-		this.modal = this.modalService.open(content, { size: 'lg' });
+// 		this.alertService.stopLoadingMessage();
+// 		this.loadingIndicator = false;
 
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-
-
-	}
-	//openView(content, row) {
-
-	//	this.sourceAction = row;
-	//	this.currency_Name = row.code;
-	//	this.symbol = row.symbol;
-	//	this.displayName = row.displayName;
-	//	this.memo = row.memo;
-	//	this.createdBy = row.createdBy;
-	//	this.updatedBy = row.updatedBy;
-	//	this.createdDate = row.createdDate;
-	//	this.updatedDate = row.updatedDate;
-	//	this.loadMasterCompanies();
-	//	this.modal = this.modalService.open(content, { size: 'sm' });
-	//	this.modal.result.then(() => {
-	//		console.log('When user closes');
-	//	}, () => { console.log('Backdrop click') })
-	//}
-	openHelpText(content) {
-		this.modal = this.modalService.open(content, { size: 'sm' });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-	}
-	eventHandler(event) {
-		let value = event.target.value.toLowerCase();
-		if (this.selectedActionName) {
-			if (value == this.selectedActionName.toLowerCase()) {
-				//alert("Action Name already Exists");
-				this.disableSave = true;
-			}
-			else {
-				this.disableSave = false;
-			}
-		}
-	}
-	partnmId(event) {
-		//debugger;
-		for (let i = 0; i < this.actionamecolle.length; i++) {
-			if (event == this.actionamecolle[i][0].currencyName) {
-				//alert("Action Name already Exists");
-				this.disableSave = true;
-				this.selectedActionName = event;
-			}
-		}
-	}
+// 		this.auditHisory = auditHistory;
 
 
-	filterCurrency(event) {
+// 		this.modal = this.modalService.open(content, { size: 'lg' });
 
-		this.localCollection = [];
-		for (let i = 0; i < this.allCurrencyInfo.length; i++) {
-			let currencyName = this.allCurrencyInfo[i].code;
-			if (currencyName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-				this.actionamecolle.push([{
-					"currencyId": this.allCurrencyInfo[i].currencyId,
-					"currencyName": currencyName
-				}]),
-					this.localCollection.push(currencyName);
-			}
-		}
-	}
+// 		this.modal.result.then(() => {
+// 			console.log('When user closes');
+// 		}, () => { console.log('Backdrop click') })
 
 
-	//editItemAndCloseModel() {
+// 	}
+// 	//openView(content, row) {
 
-	//	// debugger;
+// 	//	this.sourceAction = row;
+// 	//	this.currency_Name = row.code;
+// 	//	this.symbol = row.symbol;
+// 	//	this.displayName = row.displayName;
+// 	//	this.memo = row.memo;
+// 	//	this.createdBy = row.createdBy;
+// 	//	this.updatedBy = row.updatedBy;
+// 	//	this.createdDate = row.createdDate;
+// 	//	this.updatedDate = row.updatedDate;
+// 	//	this.loadMasterCompanies();
+// 	//	this.modal = this.modalService.open(content, { size: 'sm' });
+// 	//	this.modal.result.then(() => {
+// 	//		console.log('When user closes');
+// 	//	}, () => { console.log('Backdrop click') })
+// 	//}
+// 	openHelpText(content) {
+// 		this.modal = this.modalService.open(content, { size: 'sm' });
+// 		this.modal.result.then(() => {
+// 			console.log('When user closes');
+// 		}, () => { console.log('Backdrop click') })
+// 	}
+// 	eventHandler(event) {
+// 		let value = event.target.value.toLowerCase();
+// 		if (this.selectedActionName) {
+// 			if (value == this.selectedActionName.toLowerCase()) {
+// 				//alert("Action Name already Exists");
+// 				this.disableSave = true;
+// 			}
+// 			else {
+// 				this.disableSave = false;
+// 			}
+// 		}
+// 	}
+// 	partnmId(event) {
+// 		//debugger;
+// 		for (let i = 0; i < this.actionamecolle.length; i++) {
+// 			if (event == this.actionamecolle[i][0].currencyName) {
+// 				//alert("Action Name already Exists");
+// 				this.disableSave = true;
+// 				this.selectedActionName = event;
+// 			}
+// 		}
+// 	}
 
-	//	this.isSaving = true;
 
-	//	if (this.isEditMode == false) {
-	//		this.sourceAction.createdBy = this.userName;
-	//		this.sourceAction.updatedBy = this.userName;
-	//		this.sourceAction.code = this.currencyName;
-	//		this.sourceAction.masterCompanyId = 1;
-	//		this.vendorservice.newAddcurrency(this.sourceAction).subscribe(
-	//			role => this.saveSuccessHelper(role),
-	//			error => this.saveFailedHelper(error));
-	//	}
-	//	else {
+// 	filterCurrency(event) {
 
-	//		this.sourceAction.updatedBy = this.userName;
-	//		this.sourceAction.code = this.currencyName;
-	//		this.sourceAction.masterCompanyId = 1;
-	//		this.vendorservice.updatecurrency(this.sourceAction).subscribe(
-	//			response => this.saveCompleted(this.sourceAction),
-	//			error => this.saveFailedHelper(error));
-	//	}
+// 		this.localCollection = [];
+// 		for (let i = 0; i < this.allCurrencyInfo.length; i++) {
+// 			let currencyName = this.allCurrencyInfo[i].code;
+// 			if (currencyName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+// 				this.actionamecolle.push([{
+// 					"currencyId": this.allCurrencyInfo[i].currencyId,
+// 					"currencyName": currencyName
+// 				}]),
+// 					this.localCollection.push(currencyName);
+// 			}
+// 		}
+// 	}
 
-	//	this.modal.close();
-	//}
 
-	//deleteItemAndCloseModel() {
-	//	this.isSaving = true;
-	//	this.sourceAction.updatedBy = this.userName;
-	//	this.vendorservice.deletecurrency(this.sourceAction.currencyId).subscribe(
-	//		response => this.saveCompleted(this.sourceAction),
-	//		error => this.saveFailedHelper(error));
-	//	this.modal.close();
-	//}
+// 	//editItemAndCloseModel() {
 
-	dismissModel() {
-		this.isDeleteMode = false;
-		this.isEditMode = false;
-		this.modal.close();
-	}
+// 	//	// debugger;
 
-	private saveCompleted(user?: any) {
-		this.isSaving = false;
+// 	//	this.isSaving = true;
 
-		if (this.isDeleteMode == true) {
-			this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
-			this.isDeleteMode = false;
-		}
-		else {
-			this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
+// 	//	if (this.isEditMode == false) {
+// 	//		this.sourceAction.createdBy = this.userName;
+// 	//		this.sourceAction.updatedBy = this.userName;
+// 	//		this.sourceAction.code = this.currencyName;
+// 	//		this.sourceAction.masterCompanyId = 1;
+// 	//		this.vendorservice.newAddcurrency(this.sourceAction).subscribe(
+// 	//			role => this.saveSuccessHelper(role),
+// 	//			error => this.saveFailedHelper(error));
+// 	//	}
+// 	//	else {
 
-		}
+// 	//		this.sourceAction.updatedBy = this.userName;
+// 	//		this.sourceAction.code = this.currencyName;
+// 	//		this.sourceAction.masterCompanyId = 1;
+// 	//		this.vendorservice.updatecurrency(this.sourceAction).subscribe(
+// 	//			response => this.saveCompleted(this.sourceAction),
+// 	//			error => this.saveFailedHelper(error));
+// 	//	}
 
-		this.loadData();
-	}
+// 	//	this.modal.close();
+// 	//}
 
-	private saveSuccessHelper(role?: any) {
-		this.isSaving = false;
-		this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
+// 	//deleteItemAndCloseModel() {
+// 	//	this.isSaving = true;
+// 	//	this.sourceAction.updatedBy = this.userName;
+// 	//	this.vendorservice.deletecurrency(this.sourceAction.currencyId).subscribe(
+// 	//		response => this.saveCompleted(this.sourceAction),
+// 	//		error => this.saveFailedHelper(error));
+// 	//	this.modal.close();
+// 	//}
 
-		this.loadData();
+// 	dismissModel() {
+// 		this.isDeleteMode = false;
+// 		this.isEditMode = false;
+// 		this.modal.close();
+// 	}
 
-	}
+// 	private saveCompleted(user?: any) {
+// 		this.isSaving = false;
 
-	get userName(): string {
-		return this.authService.currentUser ? this.authService.currentUser.userName : "";
-	}
+// 		if (this.isDeleteMode == true) {
+// 			this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
+// 			this.isDeleteMode = false;
+// 		}
+// 		else {
+// 			this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
 
-	private saveFailedHelper(error: any) {
-		this.isSaving = false;
-		this.alertService.stopLoadingMessage();
-		this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
-		this.alertService.showStickyMessage(error, null, MessageSeverity.error);
-	}
+// 		}
 
-	//private getDismissReason(reason: any): string {
-	//	if (reason === ModalDismissReasons.ESC) {
-	//		return 'by pressing ESC';
-	//	} else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-	//		return 'by clicking on a backdrop';
-	//	} else {
-	//		return `with: ${reason}`;
-	//	}
-	//}
+// 		this.loadData();
+// 	}
 
-}
+// 	private saveSuccessHelper(role?: any) {
+// 		this.isSaving = false;
+// 		this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
+
+// 		this.loadData();
+
+// 	}
+
+// 	get userName(): string {
+// 		return this.authService.currentUser ? this.authService.currentUser.userName : "";
+// 	}
+
+// 	private saveFailedHelper(error: any) {
+// 		this.isSaving = false;
+// 		this.alertService.stopLoadingMessage();
+// 		this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
+// 		this.alertService.showStickyMessage(error, null, MessageSeverity.error);
+// 	}
+
+// 	//private getDismissReason(reason: any): string {
+// 	//	if (reason === ModalDismissReasons.ESC) {
+// 	//		return 'by pressing ESC';
+// 	//	} else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+// 	//		return 'by clicking on a backdrop';
+// 	//	} else {
+// 	//		return `with: ${reason}`;
+// 	//	}
+// 	//}
+
+// }

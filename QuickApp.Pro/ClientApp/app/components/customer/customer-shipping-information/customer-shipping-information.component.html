@@ -677,7 +677,7 @@
                                 <label>Ship To Country <span class="clr-red">*</span></label>
                                 <div class="inner-addon right-addon inline-block">
                                     <p-autoComplete class="autocomp-customer-cstm" field="nice_name"  [(ngModel)]="domesticShippingInfo.country" name="country" [suggestions]="countrycollection" (completeMethod)="filterCountries($event)" [size]="30"
-                                                    [minLength]="1" [dropdown]="true" required>
+                                    [forceSelection]="true"        [minLength]="1" [dropdown]="true" required>
                                         <!-- <ng-template let-countryName pTemplate="item">
                                             <div class="ui-helper-clearfix">{{countryName}}</div>
                                         </ng-template> -->

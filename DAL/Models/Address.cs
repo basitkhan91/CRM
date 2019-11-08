@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
@@ -17,13 +17,10 @@ namespace DAL.Models
         public string PostalCode { get; set; }
         public string Country { get; set; }
         public int MasterCompanyId { get; set; }
-
         [NotMapped]
         public System.DateTime RecordCreateDate { get; set; }
-
         [NotMapped]
         public Nullable<System.DateTime> RecordModifiedDate { get; set; }
-
         [NotMapped]
         public Nullable<int> LastModifiedBy { get; set; }
         public string CreatedBy { get; set; }

@@ -15,8 +15,9 @@ namespace DAL.Models
 
         public int MasterCompanyId { get; set; }
 
+		public short? JobTypeId { get; set; }
 
-        public string CreatedBy { get; set; }
+		public string CreatedBy { get; set; }
 
 
         public string UpdatedBy { get; set; }

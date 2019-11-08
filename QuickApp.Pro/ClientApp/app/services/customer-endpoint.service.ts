@@ -26,7 +26,7 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _customerBillAddressUrl = "/api/Customer/customerAddressGet";
     private readonly _cusShippingGeturl = "/api/Customer/cusshippingGet";
     private readonly _cusShippingGeturlwithId = "/api/Vendor/cusshippingGetwithid";
-
+    private readonly _customerList: string = '/api/Customer/List';
     private readonly __venshipwithid = "/api/Vendor/venshippingGetwithid";
     private readonly _customerBillViaDetails = "/api/Customer/getCustomerBillViaDetails";
     private readonly _getBilladdresshistory = "/api/Customer/getCustomerBillAddressHistory";
@@ -52,6 +52,7 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _CustomerContctUrl: string = "/api/Customer/CustomerContactPost";
     private readonly _CustomerUpdateContctUrl: string = "/api/Customer/ContactPost";
     private readonly _contactsEmptyObjurl: string = "/api/Customer/contactEmptyObj";
+    private readonly _getShipViaByShippingId : string = "/api/Customer/GetShipVia";
     private readonly _getShipViaHistory: string = "/api/Customer/getShipViaHistory";
     private readonly _shippingInfoUrl: string = "/api/Customer/CustomerShippingPost";
     private readonly _saveShipViaDetails: string = "/api/Customer/addShipViaDetails";
@@ -114,6 +115,11 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _addDocumentDetails: string = '/api/Customer/customerDocumentUpload';
     private readonly _addRemoveDetails: string = '/api/Customer/customerDocumentDelete';
     private readonly _customerContactHistory: string = '/api/Customer/customercontactauditdetails'
+    private readonly _customerGlobalSearch: string = '/api/Customer/ListGlobalSearch'
+    private readonly _customerGetWarning : string = '/api/Customer/GetCustomerWarnings';
+    private readonly _customerBillingHistory : string  ="/api/Customer/getCustomerBillingHistory"
+    private readonly _customerclassificationMapUrl: string = "/api/Customer/customerclassificationmappings";
+
 
 
 
@@ -176,10 +182,28 @@ export class CustomerEndpoint extends EndpointFactory {
     get deleteAircraftInvetory() { return this.configurations.baseUrl + this._deleteAircraftMappedInventory }
     get deleteTaxTypeRateMapped() { return this.configurations.baseUrl + this._deleteTaxTypeRateMapped }
     get domesticShipVia() { return this.configurations.baseUrl + this._addShipViaDetails }
+    get customerclassificationMapUrl() { return this.configurations.baseUrl + this._customerclassificationMapUrl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
         super(http, configurations, injector);
+    }
+
+   getCustomerBillingHistory(customerBillingAddressId){
+       return this.http.get(`${this.configurations.baseUrl}/${this._customerBillingHistory}/${customerBillingAddressId}`)
+   }
+
+    getShipViaByDomesticShippingId(customerShippingId){
+        return this.http.get(`${this.configurations.baseUrl}/${this._getShipViaByShippingId}/${customerShippingId}` , this.getRequestHeaders())
+
+    }
+
+    getCustomerWarningsById(customerId){
+        return this.http.get(`${this.configurations.baseUrl}${this._customerGetWarning}/${customerId}`, this.getRequestHeaders())
+    }
+
+    getDocumentList(customerId) {
+        return this.http.get(`${this.configurations.baseUrl}/api/Customer//getCustomerDocumentDetail/${customerId}`, this.getRequestHeaders())
     }
 
     postDomesticShipVia<T>(postData) {
@@ -187,6 +211,13 @@ export class CustomerEndpoint extends EndpointFactory {
         return this.http.post<T>(this.domesticShipVia, JSON.stringify(postData), this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.postDomesticShipVia(postData));
+            });
+    }
+
+    getCustomerAll(data) {
+        return this.http.post(this._customerList, JSON.stringify(data), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getCustomerAll(data));
             });
     }
 
@@ -566,15 +597,16 @@ export class CustomerEndpoint extends EndpointFactory {
             });
 
     }
-    getUpdatecustomerEndpointforActive<T>(roleObject: any, customerId: number): Observable<T> {
-        let endpointUrl = `${this._updateActiveInactive}/${roleObject.customerId}`;
+    getUpdatecustomerEndpointforActive<T>(roleObject: any, login): Observable<T> {
+        let endpointUrl = `${this._updateActiveInactive}?CustomerId=${roleObject.customerId}&status=${roleObject.isActive}&updatedBy=${login}`;
 
-        return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getUpdatecustomerEndpoint(roleObject, customerId));
+                return this.handleError(error, () => this.getUpdatecustomerEndpoint(roleObject, login));
             });
 
     }
+
     updateAuditaddress<T>(roleObject: any, customerId: number): Observable<T> {
         debugger;
         let endpointUrl = `${this._updateToaddressaudit}/${roleObject.addressId}`;
@@ -1183,13 +1215,23 @@ export class CustomerEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getCustomerRecords(paginationOption));
             });
     }
-    getGlobalCustomerRecords<T>(paginationOption: any): Observable<T> {
-        let endpointUrl = this.globalSearch;
-        return this.http.post<T>(endpointUrl, JSON.stringify(paginationOption), this.getRequestHeaders())
+
+    getGlobalCustomerRecords<T>(value, pageIndex, pageSize): Observable<T> {
+        // let endpointUrl = this.globalSearch;
+        return this.http.get<T>(`${this.configurations.baseUrl}${this._customerGlobalSearch}?value=${value}&pageNumber=${pageIndex}&pageSize=${pageSize}`, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getCustomerRecords(paginationOption));
+                return this.handleError(error, () => this.getGlobalCustomerRecords(value, pageIndex, pageSize));
             });
     }
+
+    getCustomerClassificationMapping<T>(customerId): Observable<T> {
+        let url = `${this.customerclassificationMapUrl}?referenceId=${customerId}`;
+        return this.http.get<T>(url, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getCustomerClassificationMapping(customerId));
+            });
+    }
+
 }
 
 

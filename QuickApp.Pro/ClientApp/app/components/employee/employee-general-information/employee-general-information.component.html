@@ -47,13 +47,13 @@
                                                         <div class="col-sm-7">
                                                             <div class="inner-addon right-addon inline-block">
                                                                 <!--
-                                                                  <p-autoComplete [(ngModel)]="sourceEmployee.middleName" (onKeyUp)=onKeyUpMiddleNames($event) (onSelect)="onSelectMiddleName($event)" [ngModelOptions]="{standalone: true}" [suggestions]="middleNameCollection" (completeMethod)="filtermiddleName($event)" [size]="30"
-                                                                            [minLength]="3" [dropdown]="true">
-                                                                <ng-template let-middleName pTemplate="item">
-                                                                    <div class="ui-helper-clearfix">{{middleName}}</div>
-                                                                </ng-template>
-                                                            </p-autoComplete>
-                                                            -->
+                          <p-autoComplete [(ngModel)]="sourceEmployee.middleName" (onKeyUp)=onKeyUpMiddleNames($event) (onSelect)="onSelectMiddleName($event)" [ngModelOptions]="{standalone: true}" [suggestions]="middleNameCollection" (completeMethod)="filtermiddleName($event)" [size]="30"
+                                    [minLength]="3" [dropdown]="true">
+                        <ng-template let-middleName pTemplate="item">
+                            <div class="ui-helper-clearfix">{{middleName}}</div>
+                        </ng-template>
+                    </p-autoComplete>
+                    -->
                                                                 <input class="form-control" type="text" id="" [formControl]="empCreationForm.controls['middleName']" [(ngModel)]="sourceEmployee.middleName">
 
                                                             </div>
@@ -82,15 +82,15 @@
                                                     <div class="form-group col-sm-12">
                                                         <label class="control-label col-sm-4">Emp ID<span style="color:red">*</span></label>
                                                         <div class="col-sm-7">
-                                                            <input #sourceEmpID="ngModel" class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeId" readonly required
-                                                                   [class.is-invalid]="sourceEmpID.invalid && sourceEmpID.touched"
-                                                                   pattern="^[a-zA-Z0-9][a-zA-Z0-9 ]+">
+                                                            <input #sourceEmpID="ngModel" class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="employeeIdTemp" readonly 
+                                                                 
+                                                                   >
                                                         </div>
-                                                        <div *ngIf="sourceEmpID.errors && (sourceEmpID.valid || sourceEmpID.touched)">
+                                                        <!-- <div *ngIf="sourceEmpID.errors && (sourceEmpID.valid || sourceEmpID.touched)">
                                                             <small class="text-danger" *ngIf="sourceEmpID.errors.required">Employee ID is required</small>
                                                             <small class="text-danger" *ngIf="sourceEmpID.errors.pattern">Only alphabets and numbers are allowed</small>
-                                                            <!--<small class="text-danger" *ngIf="sourceEmployee.errors.minlength">Please enter atleast 3 characters</small>-->
-                                                        </div>
+                                                            <small class="text-danger" *ngIf="sourceEmployee.errors.minlength">Please enter atleast 3 characters</small>
+                                                        </div> -->
                                                     </div>
                                                     <div class="form-group col-sm-12">
                                                         <label class="control-label col-sm-4">Emp ID (Per Payroll) </label>
@@ -104,17 +104,18 @@
                                                         <label class="control-label col-sm-4">Job Title<span style="color:red">*</span></label>
                                                         <div class="inner-addon col-sm-7 inline-block display-flex">
                                                             <select id="" [formControl]="empCreationForm.controls['jobTitleId']" required>
+                                                                <option value ="0"> Select Job Title</option>
                                                                 <option *ngFor="let jobtitleName of allJobTitlesinfo" [ngValue]="jobtitleName.jobTitleId">{{jobtitleName.description}}</option>
                                                             </select>
                                                             <a href="#" data-toggle="modal" data-target="#addJobTitle" class="add-icon" (click)="openjobtitle(content)"><i class="fa fa-plus"></i></a>
 
                                                         </div>
                                                         <!--
-                                                          <div *ngIf="sourceJobTitle.errors && (sourceJobTitle.valid || sourceJobTitle.touched)">
-                                                        <small class="text-danger" *ngIf="sourceJobTitle.errors.required">Job Title is required</small>
+                  <div *ngIf="sourceJobTitle.errors && (sourceJobTitle.valid || sourceJobTitle.touched)">
+                <small class="text-danger" *ngIf="sourceJobTitle.errors.required">Job Title is required</small>
 
-                                                    </div>
-                                                    -->
+            </div>
+            -->
 
                                                     </div>
 
@@ -122,34 +123,36 @@
                                                         <label class="control-label col-sm-4">Emp Expertise<span style="color:red">*</span></label>
                                                         <div class="inner-addon col-sm-7 inline-block display-flex">
                                                             <select [formControl]="empCreationForm.controls['employeeExpertiseId']" required>
+                                                                    <option value ="0">Select Employee Expertise </option>
                                                                 <option *ngFor="let employeeName of allEmployeeExpertiseInfo" [ngValue]="employeeName.employeeExpertiseId">{{employeeName.description}}</option>
                                                             </select>
                                                             <a data-toggle="modal" data-target="#addEmpExprt" class="add-icon" (click)="openemployeeExpertise(contentEdit)"><i class="fa fa-plus"></i></a>
                                                         </div>
                                                         <!--
-                                                         <div *ngIf="sourceEmpExp.errors && (sourceEmpExp.valid || sourceEmpExp.touched)">
-                                                        <small class="text-danger" *ngIf="sourceEmpExp.errors.required">Employee Expertise is required</small>
+                 <div *ngIf="sourceEmpExp.errors && (sourceEmpExp.valid || sourceEmpExp.touched)">
+                <small class="text-danger" *ngIf="sourceEmpExp.errors.required">Employee Expertise is required</small>
 
-                                                    </div>
-                                                    -->
+            </div>
+            -->
 
                                                     </div>
                                                     <div class="form-group col-sm-12">
                                                         <label class="control-label col-sm-4">Job Type<span style="color:red">*</span></label>
                                                         <div class="inner-addon col-sm-7 inline-block display-flex">
                                                             <select [formControl]="empCreationForm.controls['JobTypeId']" required>
+                                                                    <option value ="0"> Select Job Type</option>
                                                                 <option *ngFor="let jobType of allJobTypesinfo" [ngValue]="jobType.jobTypeId">{{jobType.jobTypeName}}</option>
                                                             </select>
-                                                            <a data-toggle="modal"  data-target="#addJobTitle" class="add-icon" (click)="openjobtype(content2)"><i class="fa fa-plus"></i></a>
+                                                            <a data-toggle="modal" data-target="#addJobTitle" class="add-icon" (click)="openjobtype(content2)"><i class="fa fa-plus"></i></a>
                                                         </div>
                                                         <!--
 
-                                                       <div *ngIf="sourceJobType.errors && (sourceJobType.valid || sourceJobType.touched)">
-                                                        <small class="text-danger" *ngIf="sourceJobType.errors.required">Job Type is required</small>
+               <div *ngIf="sourceJobType.errors && (sourceJobType.valid || sourceJobType.touched)">
+                <small class="text-danger" *ngIf="sourceJobType.errors.required">Job Type is required</small>
 
-                                                    </div>
+            </div>
 
-                                                    -->
+            -->
 
                                                     </div>
                                                     <div class="form-group col-sm-12">
@@ -162,45 +165,53 @@
                                                 </div>
                                                 <div class="col-sm-6 w400">
                                                     <div class="form-group col-sm-12">
-                                                        <label class="form-group control-label col-sm-4">Company<span style="color:red">*</span></label>
+                                                        <label class="form-group control-label col-sm-4">Legal Entity<span style="color:red">*</span></label>
                                                         <div class="col-sm-7">
-                                                            <select [formControl]="empCreationForm.controls['companyId']" (change)="getBUList(sourceEmployee.companyId)" required>
+                                                            <select [formControl]="empCreationForm.controls['companyId']" (change)="getBUList($event.target.value)" required>
+
+                                                                <!--
+                           <option *ngFor="let managementStructure of alllegalEntityInfo" [ngValue]="managementStructure.managementStructureId">{{managementStructure.legalEntiryInfo.description}}</option>
+                    -->
                                                                 <!--<option>--Select--</option>-->
-                                                                <option *ngFor="let company of companylist" [ngValue]="company.companyId">{{company.companyName}}</option>
+                                                                <option value="0">Select Legal Entity</option>
+                                                                <option *ngFor="let managementStructure of maincompanylist" [ngValue]="managementStructure.managementStructureId">{{managementStructure.name}}</option>
+
+
                                                             </select>
                                                         </div>
                                                         <!--
-                                                            <div *ngIf="sourceCompany.errors && (sourceCompany.valid || sourceCompany.touched)">
-                                                        <small class="text-danger" *ngIf="sourceCompany.errors.required">Company is required</small>
+                    <div *ngIf="sourceCompany.errors && (sourceCompany.valid || sourceCompany.touched)">
+                <small class="text-danger" *ngIf="sourceCompany.errors.required">Company is required</small>
 
-                                                    </div>
-                                                    -->
+            </div>
+            -->
 
                                                     </div>
                                                     <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">BU</label>
+                                                        <label class="control-label col-sm-4">BU </label>
                                                         <div class="col-sm-7">
-                                                            <select [(ngModel)]="sourceEmployee.buisinessUnitId" [ngModelOptions]="{standalone: true}" (change)="getDepartmentlist(sourceEmployee.buisinessUnitId)">
-                                                                <option>--Select--</option>
-                                                                <option *ngFor="let managementStructure of bulist" [ngValue]="managementStructure.managementStructureId">{{managementStructure.code}}</option>
+                                                        
+                                                            <select [formControl]="empCreationForm.controls['BusinessUnitId']" (change)="getDepartmentlist($event.target.value)">
+                                                                <option value="0">Select BU</option>
+                                                                <option *ngFor="let managementStructure of bulist" [ngValue]="managementStructure.managementStructureId">{{managementStructure.name}}</option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-sm-12">
                                                         <label class="control-label col-sm-4">Div</label>
                                                         <div class="col-sm-7">
-                                                            <select [(ngModel)]="sourceEmployee.departmentId" [ngModelOptions]="{standalone: true}" (change)="getDivisionlist(sourceEmployee.departmentId)">
-                                                                <option>--Select--</option>
-                                                                <option *ngFor="let managementStructure of departmentList " [ngValue]="managementStructure.managementStructureId">{{managementStructure.code}}</option>
+                                                            <select [formControl]="empCreationForm.controls['divisionId']" (change)="getDivisionlist($event.target.value)">
+                                                                <option value="0">Select Div</option>
+                                                                <option *ngFor="let managementStructure of departmentList " [ngValue]="managementStructure.managementStructureId">{{managementStructure.name}}</option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-sm-12">
                                                         <label class="control-label col-sm-4">Dept</label>
                                                         <div class="col-sm-7">
-                                                            <select [(ngModel)]="sourceEmployee.divisionId" [ngModelOptions]="{standalone: true}" (change)="divisionChange(sourceEmployee.divisionId)">
-                                                                <option>--Select--</option>
-                                                                <option *ngFor="let managementStructure of divisionlist " [ngValue]="managementStructure.managementStructureId">{{managementStructure.code}}</option>
+                                                            <select [formControl]="empCreationForm.controls['departmentId']" (change)="divisionChange(sourceEmployee.divisionId)">
+                                                                <option value="0">Select Dept</option>
+                                                                <option *ngFor="let managementStructure of divisionlist " [ngValue]="managementStructure.managementStructureId">{{managementStructure.name}}</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -216,7 +227,7 @@
                                                     <label class="control-label col-sm-4">Date Of Birth</label>
                                                     <div class="col-sm-7">
                                                         <!--<input class="form-control datepicker" type="date" valueAsDate="sourceEmployee.dateofBirth"   id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.dateofBirth"/>-->
-                                                        <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.dateOfBirth"  (onSelect)="onSelectMethod($event)"></p-calendar>
+                                                        <p-calendar [showIcon]="true"  [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.dateOfBirth"  (onSelect)="onSelectMethod($event)"></p-calendar>
 
                                                     </div>
                                                 </div>
@@ -234,7 +245,7 @@
                                                     <label class="control-label col-sm-4">Start Date<span style="color:red">*</span></label>
                                                     <div class="col-sm-7">
                                                         <!--<input class="form-control datepicker" type="date" valueAsDate="sourceEmployee.dateofBirth"   id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.dateofBirth"/>-->
-                                                        <p-calendar [formControl]="empCreationForm.controls['startDate']" [ngClass]="{'error-border':!empCreationForm.controls['startDate'].valid}" [showIcon]="true" [(ngModel)]="sourceEmployee.startDate"></p-calendar>
+                                                        <p-calendar   [formControl]="empCreationForm.controls['startDate']"  [showIcon]="true" [(ngModel)]="sourceEmployee.startDate"></p-calendar>
 
                                                     </div>
                                                 </div>
@@ -242,6 +253,8 @@
                                                     <label class="control-label col-sm-4">Nationality</label>
                                                     <div class="col-sm-7">
                                                         <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.nationalityCountryId">
+                                                                <option value ="0">Select Nationality </option>
+                    
                                                             <option *ngFor="let shift of allCountries" [ngValue]="shift.countries_id">{{shift.countries_name}}</option>
 
                                                         </select>
@@ -268,7 +281,17 @@
                                                 <div class="form-group col-sm-12">
                                                     <label class="control-label col-sm-4">Email</label>
                                                     <div class="col-sm-7">
-                                                        <input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.email">
+
+                                                        <input class="form-control" type="text" id="" [formControl]="empCreationForm.controls['email']" [(ngModel)]="sourceEmployee.email">
+                                                        <span class="help-block form-error text-danger small"
+                                                              *ngIf="empCreationForm.controls['email'].errors?.pattern &&
+  empCreationForm.controls['email'].touched">Email must be in proper format </span>
+
+                                                        <!--
+
+                           <input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.email">
+    -->
+
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-sm-12">
@@ -322,19 +345,19 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Pay Type<span style="color:red">*</span></label>
+                                                    <label class="control-label col-sm-4">Pay Type</label>
                                                     <div class="col-sm-7">
-                                                        <label class="radio-inline"><input type="radio" (change)="handlePayType($event)" name="paytype" id="hourpay" value="Hourly" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.hourlypayType" (click)="paytypeclick('hourly')">Hourly</label>
-                                                        <label class="radio-inline"><input type="radio" name="paytype" id="salarypay" (change)="handlePayType($event)" value="Monthly" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.yearlypayType" (click)="paytypeclick('yearly')">Monthly</label>
+                                                        <label class="radio-inline"><input type="radio" (change)="handlePayType('hourly')" name="paytype" id="hourpay" value="Hourly" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.hourlypayType">Hourly</label> <!--(click)="paytypeclick('hourly')"-->
+                                                        <label class="radio-inline"><input type="radio" name="paytype" id="salarypay" (change)="handlePayType('monthly')" value="Monthly" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.yearlypayType">Monthly</label> <!--(click)="paytypeclick('monthly')"-->
                                                     </div>
                                                 </div>
-                                                <div class="form-group col-sm-12 hourpay-block" *ngIf="hourly">
+                                                <div class="form-group col-sm-12 hourpay-block" *ngIf="hourly"> <!--hourly-->
                                                     <label class="control-label col-sm-4">Hourly Pay</label>
                                                     <div class="col-sm-7">
                                                         <input class="form-control amount" type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.hourlyPay">
                                                     </div>
                                                 </div>
-                                                <div class="form-group col-sm-12 salarypay-block" *ngIf="yearly">
+                                                <div class="form-group col-sm-12 salarypay-block" *ngIf="yearly"> <!--yearly-->
                                                     <label class="control-label col-sm-4">Monthly Pay</label>
                                                     <div class="col-sm-7">
                                                         <input class="form-control amount" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.hourlyPay">
@@ -356,7 +379,7 @@
                                                 </div>
 
                                                 <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Emp Certifying Staff?<span style="color:red">*</span></label>
+                                                    <label class="control-label col-sm-4">Emp Certifying Staff</label>
                                                     <div class="col-sm-7">
                                                         <input class="form-control" type="checkbox" id="certification-radio" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeCertifyingStaff">
                                                     </div>
@@ -365,8 +388,8 @@
                                                     <label class="control-label col-sm-4">Supervisor Name</label>
                                                     <div class="inner-addon col-sm-7 inline-block display-flex">
 
-                                                        <select [ngModelOptions]="{standalone: true}"  [(ngModel)]="supervisorId"   >
-                                                            <!--<option>--Select--</option>-->
+                                                        <select name="supervisorName"  [(ngModel)]="supervisorId"   >
+                                                            <option value="0">Select Supervisor</option>
                                                             <option *ngFor="let employee of allEmployeeinfo" [ngValue]="employee.employeeId">{{employee.firstName}}</option>
                                                         </select>
                                                         <!--
@@ -378,7 +401,7 @@
     </p-autoComplete>
     -->
 
-                                                        <a class="add-icon"><i class="fa fa-plus"></i></a>
+                                                        <!-- <a class="add-icon"><i class="fa fa-plus"></i></a> -->
 
                                                     </div>
 
@@ -584,8 +607,8 @@
 
         </div>
         <!-- <button type="button" class="btn btn-success pull-right submit-btn" (click)="nextClick()">Next</button>-->
-      
-        <button type="button" [disabled]="!empCreationForm.valid " class="btn btn-success pull-right submit-btn" (click)="onSubmit2()">Save & Next</button>
+   
+        <button type="button"   [disabled]="!empCreationForm.valid" class="btn btn-success pull-right submit-btn" (click)="onSubmit2()">Save & Next</button>
     </div>
 
 </div>
@@ -614,7 +637,7 @@
         </button>
     </div>
     <div class="modal-body">
-        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveJobType()">
+        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveJobType(); dismissModel();">
 
 
             <div class="form-group">
@@ -685,7 +708,7 @@
         </button>
     </div>
     <div class="modal-body">
-        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveJobTitle()">
+        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveJobTitle(); dismissModel();">
 
 
             <div class="form-group">
@@ -694,21 +717,35 @@
                     <div class="inner-addon right-addon inline-block">
 
                         <input #memo="ngModel" class="form-control" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="jobName" >
-                        <!--
-         <p-autoComplete [(ngModel)]="jobName" [ngModelOptions]="{standalone: true}" (onKeyUp)=onKeyJob($event) (onSelect)="onSelectJob($event)" [suggestions]="localCollection" (completeMethod)="filterJobs($event)" [size]="30"
-                    [minLength]="1" [dropdown]="true">
-        <ng-template let-jobName pTemplate="item">
-            <div class="ui-helper-clearfix">{{jobName}}</div>
-        </ng-template>
-    </p-autoComplete>
-    -->
+
 
                         <div *ngIf="disableJobTitle" style="color:red">">Already Exist</div>
                         <div class="clear"></div>
                     </div>
                 </div>
+
             </div>
+
             <div class="form-group">
+                <label for="description" class="control-label">Memo</label>
+                <div class="col-sm-7">
+            <div class="col-sm-7">
+                <div class="inner-addon right-addon inline-block">
+
+                    <input #memo="ngModel" class="form-control" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo"  minlength="2">
+                    <div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
+                        Memo is required.
+                    </div>
+                    <div *ngIf="memo.dirty && memo.errors?.minlength && memo.errors" class="invalid-form-error-message">
+                        Memo must be at least 2 characters long.
+                    </div>
+
+                 
+                </div>
+            </div>
+            </div>
+            </div>
+            <!-- <div class="form-group">
                 <label for="description" class="control-label">Memo</label>
                 <div class="control-data">
                     <input #memo="ngModel" id="memo" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2">
@@ -720,7 +757,7 @@
                     </div>
                 </div>
                 <div class="clear"></div>
-            </div>
+            </div> -->
 
             <div class="form-group">
 
@@ -799,31 +836,38 @@
         </button>
     </div>
     <div class="modal-body">
-        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveEmpExpertise()">
+        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveEmpExpertise(); dismissModel();">
             <div class="form-group">
                 <label for="name" class="control-label">Employee Expertise<span class="clr-red">*</span></label>
                 <div class="col-sm-7">
                     <div class="inner-addon right-addon inline-block">
 
                         <input #memo="ngModel" class="form-control" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="employeeName">
-
-                        <!--
-         <p-autoComplete [(ngModel)]="employeeName" [ngModelOptions]="{standalone: true}" (onKeyUp)=onKeyUpExp($event) (onSelect)="onSelectExp($event)" [suggestions]="localCollection" (completeMethod)="filterEmployeeNames($event)" [size]="30"
-                    [minLength]="1" [dropdown]="true">
-        <ng-template let-employeeName pTemplate="item">
-            <div class="ui-helper-clearfix">{{employeeName}}</div>
-        </ng-template>
-    </p-autoComplete>
-        -->
-                     
-
-
                         <div *ngIf="disableExpTitle" style="color:red">Already Exist</div>
                         <div class="clear"></div>
                     </div>
                 </div>
             </div>
+
             <div class="form-group">
+                <label for="description" class="control-label">Memo</label>
+                <div class="col-sm-7">
+            <div class="col-sm-7">
+                <div class="inner-addon right-addon inline-block">
+                    <input #memo="ngModel" class="form-control" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo"  minlength="2">
+                    <div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
+                        Memo is required.
+                    </div>
+                    <div *ngIf="memo.dirty && memo.errors?.minlength && memo.errors" class="invalid-form-error-message">
+                        Memo must be at least 2 characters long.
+                    </div>
+
+                 
+                </div>
+            </div>
+            </div>
+            </div>
+            <!-- <div class="form-group">
                 <label for="description" class="control-label">Memo</label>
                 <div class="control-data">
                     <input #memo="ngModel" class="form-control" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2">
@@ -838,7 +882,7 @@
                 </div>
 
                 <div class="clear"></div>
-            </div>
+            </div> -->
             <div class="form-group">
                 <div class="col-sm-6">
                     <label class="form-check-label" for="isActive">

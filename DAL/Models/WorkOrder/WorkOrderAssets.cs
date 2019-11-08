@@ -19,7 +19,8 @@ namespace DAL.Models
         public int MaxQuantity { get; set; }
         public int ExpectedQuantity { get; set; }
         public string Findings { get; set; }
-        public int? MasterCompanyId { get; set; }
+        public long TaskId { get; set; }
+        public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime CreatedDate { get; set; }

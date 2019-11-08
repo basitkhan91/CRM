@@ -67,7 +67,7 @@ import { UnauthorizedAccessComponent } from '../unauthorizedaccess/unauthorized-
             { path: "workflowmodule", loadChildren: './workflowpages/workflowpages.module#WorkFlowPagesModule' },
             { path: "assetmodule", loadChildren: './assetmanagement/assetmanagement.module#AssetmanagementModule' },
             { path: "accountreceivable", loadChildren: './accounts-receivable/accountsreceivable.module#AccountsreceivableModule' },
-            { path: "mastermodule", loadChildren: './mastermaintanacepages/mastermaintanacepages.module#MastermaintanceModule' },
+            //{ path: "mastermodule", loadChildren: './mastermaintanacepages/mastermaintanacepages.module#MastermaintanceModule' },
             { path: "accountpayble", loadChildren: './accounts-payble-pages/accounts-payble.module#AccountsPaybleModule' },
             {
                 path: "salesmodule",

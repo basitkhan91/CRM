@@ -16,6 +16,10 @@ import { MasterComapnyService } from '../../services/mastercompany.service';
 import { MenuItem, LazyLoadEvent } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
+import { validateRecordExistsOrNot, editValueAssignByCondition, getObjectById, selectedValueValidate, getObjectByValue } from '../../generic/autocomplete';
+import { ConfigurationService } from '../../services/configuration.service';
+
+
 
 @Component({
     selector: 'app-reason',
@@ -86,12 +90,34 @@ export class ReasonComponent {
     rows: number;
     paginatorState: any;
 
+    newReason =
+        {
+            reasonCode: "",
+            reasonForRemoval: "",
+            memo: "",
+            masterCompanyId: 1,
+            isActive: true,
+            isDelete: false,
+            reasonName: ''
+        }
+    addNewReason = { ...this.newReason };
+    disableSaveForReason: boolean = false;
+    reasonList: any;
+    reasonForRemovalList: any;
+    isEdit: boolean = false;
+    selectedRecordForEdit: any;
+    disableSaveForReasonCode: boolean = false;
+    reasonCodeList: any;
+    formData = new FormData();
+    existingRecordsResponse: Object;
+
+
     reasonPagination: any;//added
     totalRecords: number;
     totalPages: number;
     loading: boolean;
     /** Actions ctor */
-	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal,   private masterComapnyService: MasterComapnyService,private _fb: FormBuilder, private alertService: AlertService, public reasonService: ReasonService, private dialog: MatDialog) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private configurations: ConfigurationService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal,   private masterComapnyService: MasterComapnyService,private _fb: FormBuilder, private alertService: AlertService, public reasonService: ReasonService, private dialog: MatDialog) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
 
@@ -599,6 +625,7 @@ export class ReasonComponent {
             this.reasonPagination = responseData.columnData;
             this.totalRecords = responseData.totalRecords;
             this.totelPages = Math.ceil(this.totalRecords / this.pageSize);
+
         })
     }
 
@@ -609,4 +636,123 @@ export class ReasonComponent {
         })
     }
 
+    resetReasonForm() {
+        this.isEdit = false;
+        this.disableSaveForReason = false;
+        this.disableSaveForReasonCode = false;
+        this.selectedRecordForEdit = undefined;
+        this.addNewReason = { ...this.newReason };
+    }
+    selectedRSN(object) {
+        const exists = selectedValueValidate('reasonCode', object, this.selectedRecordForEdit)
+
+        this.disableSaveForReason = !exists;
+    }
+    filterReasonCodes(event) {
+        this.reasonList = this.reasonPagination;
+
+        const ReasonCodeData = [...this.reasonPagination.filter(x => {
+            return x.reasonCode.toLowerCase().includes(event.query.toLowerCase())
+        })]
+        this.reasonList = ReasonCodeData;
+    }
+    filterReasonForRemoval(event) {
+
+        this.reasonForRemovalList = this.reasonPagination;
+
+        const ReasonForRemovalData = [...this.reasonPagination.filter(x => {
+            return x.reasonForRemoval.toLowerCase().includes(event.query.toLowerCase())
+        })]
+        this.reasonForRemovalList = ReasonForRemovalData;
+
+    }
+    checkReasonCodeExists(field, value) {
+        const exists = validateRecordExistsOrNot(field, value, this.reasonPagination, this.selectedRecordForEdit);
+        if (exists.length > 0) {
+            this.disableSaveForReason = true;
+        }
+        else {
+            this.disableSaveForReason = false;
+        }
+
+    }
+
+    saveReason() {
+        const data = {
+            ...this.addNewReason, createdBy: this.userName, updatedBy: this.userName,
+            reasonCode: editValueAssignByCondition('reasonCode', this.addNewReason.reasonCode),
+            reasonForRemoval: editValueAssignByCondition('reasonForRemoval', this.addNewReason.reasonForRemoval),
+            memo: editValueAssignByCondition('memo', this.addNewReason.memo)
+        };
+        if (!this.isEdit) {
+            this.reasonService.newReason(data).subscribe(() => {
+                this.resetReasonForm();
+                this.getReasonList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Added  New Reason Successfully`,
+                    MessageSeverity.success
+                );
+            })
+        } else {
+            this.reasonService.updateReason(data).subscribe(() => {
+                this.selectedRecordForEdit = undefined;
+                this.isEdit = false;
+                this.resetReasonForm();
+                this.getReasonList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Updated Reason Successfully`,
+                    MessageSeverity.success
+                );
+            })
+        }
+    }
+
+    editReason(rowData) {
+        console.log(rowData);
+        this.isEdit = true;
+        this.disableSaveForReason = false;
+        this.disableSaveForReasonCode = false;
+        // this.addNewUOM = rowData;
+
+        this.addNewReason = {
+            ...rowData, reasonName: getObjectById('reasonId', rowData.reasonId, this.reasonPagination),
+            reasonCode: getObjectById('reasonId', rowData.reasonId, this.reasonPagination)
+        };
+        this.selectedRecordForEdit = { ...this.addNewReason }
+
+    }
+    sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=Reason&fileName=reason.xlsx`;
+
+        window.location.assign(url);
+    }
+
+    customExcelUpload(event) {
+        const file = event.target.files;
+
+        console.log(file);
+        if (file.length > 0) {
+
+            this.formData.append('file', file[0])
+            this.reasonService.reasonFileUpload(this.formData).subscribe(res => {
+                event.target.value = '';
+
+                this.formData = new FormData();
+                this.existingRecordsResponse = res;
+                this.getReasonList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+
+                // $('#duplicateRecords').modal('show');
+                // document.getElementById('duplicateRecords').click();
+
+            })
+        }
+
+    }
 }

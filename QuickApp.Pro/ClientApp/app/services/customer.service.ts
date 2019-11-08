@@ -175,8 +175,8 @@ export class CustomerService {
     }
 
     getCustomerdataById(customerId: any) {
-        return Observable.forkJoin(
-            this.customerEndpoint.getCustomerListByid<any>(customerId));
+
+        return this.customerEndpoint.getCustomerListByid<any>(customerId);
     }
 
     getSalespersondata(customerId: any) {
@@ -235,8 +235,12 @@ export class CustomerService {
         return this.customerEndpoint.getUpdatecustomerEndpoint<any>(action, action.customerId);
     }
 
-    updateActionforActive(action: any) {
-        return this.customerEndpoint.getUpdatecustomerEndpointforActive(action, action.customerId);
+    getCustomerAll(data) {
+        return this.customerEndpoint.getCustomerAll(data);
+    }
+
+    updateActionforActive(action, login) {
+        return this.customerEndpoint.getUpdatecustomerEndpointforActive(action, login);
     }
 
     updTeAuditAddress(action: any) {
@@ -299,7 +303,6 @@ export class CustomerService {
         return this.customerEndpoint.AddCustomerContactDetails<any>(Customer);
     }
     newBillingAdd(action: any) {
-
         return this.customerEndpoint.getNewBillinginfo<any>(action);
     }
 
@@ -332,6 +335,11 @@ export class CustomerService {
     getContacts(CustomerId: any) {
         return Observable.forkJoin(
             this.customerEndpoint.getContcatDetails<any>(CustomerId));
+    }
+
+    getGlobalSearch(value, pageIndex, pageSize) {
+
+        return this.customerEndpoint.getGlobalCustomerRecords<any>(value, pageIndex, pageSize);
     }
 
     updateCustomerBillingAddressDetails(customercntct: any, customerId: any) {
@@ -449,10 +457,7 @@ export class CustomerService {
             this.customerEndpoint.getCustomerRecords<Customer[]>(serverSidePagesData));
     }
 
-    getGlobalSearch(pageData: any) {
-        return Observable.forkJoin(
-            this.customerEndpoint.getGlobalCustomerRecords<Customer[]>(pageData));
-    }
+
     postCustomerAircrafts(data) {
         return Observable.forkJoin(this.customerEndpoint.postCustomerAircraft<any>(data));
     }
@@ -526,6 +531,23 @@ export class CustomerService {
     getCustomerContactAuditDetails(customerContactId) {
         return this.customerEndpoint.getCustomerContactAuditDetails<any>(customerContactId)
     }
+    getDocumentList(customerId) {
+        return this.customerEndpoint.getDocumentList(customerId)
+    }
+    
+    getCustomerWarningsById(customerId){
+        return this.customerEndpoint.getCustomerWarningsById(customerId);
+    }
+    getShipViaByDomesticShippingId(customerShippingId){
+        return this.customerEndpoint.getShipViaByDomesticShippingId(customerShippingId);
+    }
+    getCustomerBillingHistory(customerBillingAddressId){
+        return this.customerEndpoint.getCustomerBillingHistory(customerBillingAddressId)
+    }
 
+    getCustomerClassificationMapping(customerId) {
+        return this.customerEndpoint.getCustomerClassificationMapping(customerId);
+    }
+    
 
 }

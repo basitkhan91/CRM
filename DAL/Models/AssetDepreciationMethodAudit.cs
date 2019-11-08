@@ -6,12 +6,14 @@ using System.Text;
 
 namespace DAL.Models
 {
-    public class AssetDepreciationMethodAudit : PasBaseAuditing
+    public class AssetDepreciationMethodAudit : PasBaseAudit
     {
         [Key]
         public long AssetDepreciationMethodAuditId { get; set; }
 
         public long? AssetDepreciationMethodId { get; set; }
+
+        public string AssetDepreciationMethodCode { get; set; }
 
         //public string AssetDepreciationId { get; set; }
 
@@ -23,6 +25,7 @@ namespace DAL.Models
 
         public Int32 MasterCompanyId { get; set; }
 
+      
 
     }
 }

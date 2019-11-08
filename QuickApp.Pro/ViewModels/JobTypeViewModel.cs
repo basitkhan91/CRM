@@ -16,7 +16,8 @@ namespace QuickApp.Pro.ViewModels
 
         public string jobTypeDescription { get; set; }
 
-  
+        public Int32 MasterCompanyId { get; set; }
+
 
         public string CreatedBy { get; set; }
 
@@ -27,8 +28,6 @@ namespace QuickApp.Pro.ViewModels
         public DateTime UpdatedDate { get; set; }
 
         public bool IsActive { get; set; }
-
-        
 
         public bool IsDeleted { get; set; }
 

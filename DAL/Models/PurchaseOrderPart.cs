@@ -28,10 +28,10 @@ namespace DAL.Models
         public Nullable<short> QuantityOrdered { get; set; }
         public Nullable<short> QuantityBackOrdered { get; set; }
         public Nullable<decimal> UnitCost { get; set; }
-        public Nullable<short> DiscountPerUnit { get; set; }
-        public Nullable<decimal> DiscountCostPerUnit { get; set; }
+        public Nullable<short> DiscountPercent { get; set; }
+        public Nullable<decimal> DiscountAmount { get; set; }
         public Nullable<decimal> ExtendedCost { get; set; }
-        public Nullable<int> TransactionalCurrencyId { get; set; }
+        public Nullable<int> ReportCurrencyId { get; set; }
         public Nullable<int> FunctionalCurrencyId { get; set; }
         public Nullable<decimal> ForeignExchangeRate { get; set; }
         public Nullable<long> WorkOrderId { get; set; }
@@ -56,8 +56,11 @@ namespace DAL.Models
         public System.DateTime UpdatedDate { get; set; }
         public Nullable<bool> IsActive { get; set; }
         public bool isParent { get; set; }
+        public long? ParentId { get; set; } 
+        public decimal? DiscountPerUnit { get; set; }
 
-		public int MasterCompanyId { get; set; }
+
+        public int? MasterCompanyId { get; set; }
 
 		public virtual PurchaseOrder PurchaseOrder { get; set; }
         public virtual ItemMaster ItemMaster { get; set; }
@@ -69,5 +72,64 @@ namespace DAL.Models
 
         [NotMapped]
         public long StockLineCount { get; set; }
+        [NotMapped]
+        public List<PurchaseOrderSplitParts> PurchaseOrderSplitParts { get; set; }
+        [NotMapped]
+        public string PartNumber { get; set; }
+        [NotMapped]
+        public string AltPartNumber { get; set; }
+        [NotMapped]
+        public string PartDescription { get; set; }
+        [NotMapped]
+        public string Manufacturer { get; set; }
+        [NotMapped]
+        public string GLAccount { get; set; }
+        [NotMapped]
+        public string UnitOfMeasure { get; set; }
+        [NotMapped]
+        public string Condition { get; set; }
+        [NotMapped]
+        public string FunctionalCurrency { get; set; }
+        [NotMapped]
+        public string ReportCurrency { get; set; }
+        [NotMapped]
+        public string WorkOrderNo { get; set; }
+        [NotMapped]
+        public string SalesOrderNo { get; set; }
+        [NotMapped]
+        public string ReapairOrderNo { get; set; }
+
+    }
+
+    public class PurchaseOrderSplitParts
+    {
+        public long PurchaseOrderPartRecordId { get; set; }
+        public long PurchaseOrderId { get; set; }
+        public bool isParent { get; set; }
+        public string SerialNumber { get; set; }
+        public long ItemMasterId { get; set; }
+        public long AssetId { get; set; }
+        public long PartNumberId { get; set; }
+        public Nullable<short> POPartSplitUserTypeId { get; set; }
+        public long? POPartSplitUserId { get; set; }
+        public Nullable<long> POPartSplitAddressId { get; set; }
+        public Nullable<long> UOMId { get; set; }
+        public Nullable<short> QuantityOrdered { get; set; }
+        public DateTime? NeedByDate { get; set; }
+        public Nullable<long> ManagementStructureId { get; set; }
+        public string POPartSplitAddress1 { get; set; }
+        public string POPartSplitAddress2 { get; set; }
+        public string POPartSplitAddress3 { get; set; }
+        public string POPartSplitCity { get; set; }
+        public string POPartSplitState { get; set; }
+        public string POPartSplitPostalCode { get; set; }
+        public string POPartSplitCountry { get; set; }
+        public string PartNumber { get; set; }
+        public string AltPartNumber { get; set; }
+        public string PartDescription { get; set; }
+        public string Manufacturer { get; set; }
+        public string UserType { get; set; }
+        public string User { get; set; }
+        public string UnitOfMeasure { get; set; }
     }
 }

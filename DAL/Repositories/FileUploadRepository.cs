@@ -242,6 +242,17 @@ namespace DAL.Repositories
                     UploadDepInterval(BindCustomData<AssetDepreciationInterval>(file, "AssetDepreciationIntervalId", moduleName));
                     break;
 
+                case "GLAccountClass":
+                    UploadGLAccountClass(BindCustomData<GLAccountClass>(file, "GLAccountClassId", moduleName));
+                    break;
+
+                case "JobType":
+                    UploadJobType(BindCustomData<JobType>(file, "JobTypeId", moduleName));
+                    break;
+
+                case "StocklineAdjustmentReason":
+                    UploadStockAdjustmentReason(BindCustomData<StocklineAdjustmentReason>(file, "AdjustmentReasonId", moduleName));
+                    break;
                 default:
                     break;
             }
@@ -315,7 +326,12 @@ namespace DAL.Repositories
                                                          && !property.Name.Equals("UploadStatus")
                                                          && reader.GetValue(propCount) != null)
                                                 {
-                                                    property.SetValue(model, reader.GetValue(propCount));
+                                                    if (reader.GetValue(propCount).GetType().Name == "Double" && property.PropertyType.Name == "Int64")
+                                                    {
+                                                        property.SetValue(model, Convert.ToInt64(reader.GetValue(propCount)));
+                                                    }
+                                                    else
+                                                        property.SetValue(model, reader.GetValue(propCount));
                                                     propCount++;
                                                 }
                                             }
@@ -385,7 +401,7 @@ namespace DAL.Repositories
         {
             foreach (var item in priorityList)
             {
-                var flag = _appContext.Priority.Any(p => p.IsDelete == false
+                var flag = _appContext.Priority.Any(p => p.IsDeleted == false
                                                     && (p.Description.ToLower() == item.Description.Trim().ToLower()));
                 if (!flag)
                 {
@@ -543,8 +559,8 @@ namespace DAL.Repositories
                 var aircraftType = aircraftTypes.Where(p => p.Description.ToLower() == item.AircraftTypeName.ToLower()).FirstOrDefault();
                 if (aircraftType != null && aircraftType.AircraftTypeId > 0)
                 {
-                    item.AircraftTypeId =Convert.ToInt32(aircraftType.AircraftTypeId);
-                    var flag = _appContext.AircraftModel.Any(p => p.IsDeleted == false && p.ModelName.ToLower() == item.ModelName.Trim().ToLower() && p.AircraftTypeId==item.AircraftTypeId);
+                    item.AircraftTypeId = Convert.ToInt32(aircraftType.AircraftTypeId);
+                    var flag = _appContext.AircraftModel.Any(p => p.IsDeleted == false && p.ModelName.ToLower() == item.ModelName.Trim().ToLower() && p.AircraftTypeId == item.AircraftTypeId);
                     if (!flag)
                     {
                         _appContext.AircraftModel.Add(item);
@@ -556,10 +572,10 @@ namespace DAL.Repositories
 
         private void UploadATAChapter(List<ATAChapter> ataChapterList)
         {
-            
+
             foreach (var item in ataChapterList)
             {
-                
+
                 var flag = _appContext.ATAChapter.Any(p => p.IsDelete == false && p.ATAChapterName.ToLower() == item.ATAChapterName.Trim().ToLower());
                 if (!flag)
                 {
@@ -575,7 +591,7 @@ namespace DAL.Repositories
             {
 
                 var flag = _appContext.AssetDisposalType.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.AssetDisposalCode)
-                && !string.IsNullOrEmpty(p.AssetDisposalName) && 
+                && !string.IsNullOrEmpty(p.AssetDisposalCode) &&
                 p.AssetDisposalCode.ToLower() == item.AssetDisposalCode.Trim().ToLower());
                 if (!flag)
                 {
@@ -592,7 +608,7 @@ namespace DAL.Repositories
             {
 
                 var flag = _appContext.AssetDepreciationMethod.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.AssetDepreciationMethodCode)
-                && !string.IsNullOrEmpty(p.AssetDepreciationMethodName) &&
+                && !string.IsNullOrEmpty(p.AssetDepreciationMethodCode) &&
                 p.AssetDepreciationMethodCode.ToLower() == item.AssetDepreciationMethodCode.Trim().ToLower());
                 if (!flag)
                 {
@@ -609,7 +625,7 @@ namespace DAL.Repositories
             {
 
                 var flag = _appContext.AssetStatus.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.Code)
-                && !string.IsNullOrEmpty(p.Name) &&
+                && !string.IsNullOrEmpty(p.Code) &&
                 p.Code.ToLower() == item.Code.Trim().ToLower());
                 if (!flag)
                 {
@@ -626,7 +642,7 @@ namespace DAL.Repositories
             {
 
                 var flag = _appContext.AssetDepConvention.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.AssetDepConventionCode)
-                && !string.IsNullOrEmpty(p.AssetDepConventionName) &&
+                && !string.IsNullOrEmpty(p.AssetDepConventionCode) &&
                 p.AssetDepConventionCode.ToLower() == item.AssetDepConventionCode.Trim().ToLower());
                 if (!flag)
                 {
@@ -643,11 +659,60 @@ namespace DAL.Repositories
             {
 
                 var flag = _appContext.AssetDepreciationInterval.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.AssetDepreciationIntervalCode)
-                && !string.IsNullOrEmpty(p.AssetDepreciationIntervalName) &&
+                && !string.IsNullOrEmpty(p.AssetDepreciationIntervalCode) &&
                 p.AssetDepreciationIntervalCode.ToLower() == item.AssetDepreciationIntervalCode.Trim().ToLower());
                 if (!flag)
                 {
                     _appContext.AssetDepreciationInterval.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+
+        private void UploadGLAccountClass(List<GLAccountClass> glAccountCLassList)
+        {
+
+            foreach (var item in glAccountCLassList)
+            {
+
+                var flag = _appContext.GLAccountClass.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.GLAccountClassName)
+                && !string.IsNullOrEmpty(p.GLAccountClassName) &&
+                p.GLAccountClassName.ToLower() == item.GLAccountClassName.Trim().ToLower());
+                if (!flag)
+                {
+                    _appContext.GLAccountClass.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+        private void UploadStockAdjustmentReason(List<StocklineAdjustmentReason> stocklineAdjustmentReasonList)
+        {
+
+            foreach (var item in stocklineAdjustmentReasonList)
+            {
+
+                var flag = _appContext.stocklineAdjustmentReason.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.Description)
+                && !string.IsNullOrEmpty(p.Description) &&
+                p.Description.ToLower() == item.Description.Trim().ToLower());
+                if (!flag)
+                {
+                    _appContext.stocklineAdjustmentReason.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+
+        private void UploadJobType(List<JobType> jobTypeList)
+        {
+
+            foreach (var item in jobTypeList)
+            {
+
+                var flag = _appContext.JobType.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.JobTypeName)
+                && p.JobTypeName.ToLower() == item.JobTypeName.Trim().ToLower());
+                if (!flag)
+                {
+                    _appContext.JobType.Add(item);
                     _appContext.SaveChanges();
                 }
             }

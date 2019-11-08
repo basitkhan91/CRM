@@ -122,8 +122,6 @@
     <None Remove="ClientApp\app\services\gl-cash-flow-classification.service.ts" />
     <None Remove="ClientApp\app\services\itemMaster-endpoint.service.ts" />
     <None Remove="ClientApp\app\services\itemMaster.service.ts" />
-    <None Remove="ClientApp\app\services\percentage-endpoint.service.ts" />
-    <None Remove="ClientApp\app\services\percentage.service.ts" />
     <None Remove="ClientApp\app\services\site-endpoint.service.ts" />
     <None Remove="ClientApp\app\services\site.service.ts" />
     <None Remove="ClientApp\app\services\stockline-endpoint.service.ts" />
@@ -404,8 +402,6 @@
     <TypeScriptCompile Include="ClientApp\app\services\gl-cash-flow-classification.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\itemMaster-endpoint.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\itemMaster.service.ts" />
-    <TypeScriptCompile Include="ClientApp\app\services\percentage-endpoint.service.ts" />
-    <TypeScriptCompile Include="ClientApp\app\services\percentage.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\site-endpoint.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\site.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\stocklineadjustment.service.ts" />

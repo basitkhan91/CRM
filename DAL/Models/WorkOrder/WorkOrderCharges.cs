@@ -14,14 +14,15 @@ namespace DAL.Models
         public long WorkFlowWorkOrderId { get; set; }
         public long ItemMasterId { get; set; }
         public long? VendorId { get; set; }
-        public short? Quantity { get; set; }
+        public int? Quantity { get; set; }
         public int RoNumberId { get; set; }
         public string InvoiceNo { get; set; }
         public decimal Amount { get; set; }
         public int MarkupPercentageId { get; set; }
         public decimal CostPlusAmount {get;set;}
         public decimal FixedAmount { get; set; }
-        public int? MasterCompanyId { get; set; }
+        public long TaskId { get; set; }
+        public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime CreatedDate { get; set; }

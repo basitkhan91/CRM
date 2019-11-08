@@ -10,25 +10,26 @@ import { AlertService, MessageSeverity } from "../services/alert.service";
     styleUrls: ['./Directions-Create.component.css']
 })
 export class DirectionsCreateComponent implements OnInit, OnChanges {
-    
+
     @Input() workFlow: IWorkFlow;
     @Input() UpdateMode: boolean;
     @Output() notify: EventEmitter<IWorkFlow> =
         new EventEmitter<IWorkFlow>();
     errorMessage: string;
     row: any;
-    currentPage : number = 1;
-    itemsPerPage : number = 10;
+    currentPage: number = 1;
+    itemsPerPage: number = 10;
 
     constructor(private alertService: AlertService) {
 
     }
 
     ngOnInit(): void {
-       // if (this.workFlow.directions.length > 0) {
-            this.row = this.workFlow.directions[0];
-            this.row.taskId = this.workFlow.taskId;
-       // }
+        this.row = this.workFlow.directions[0];
+        if (this.row == undefined) {
+            this.row = {};
+        }
+        this.row.taskId = this.workFlow.taskId;
     }
 
     ngOnChanges(): void {
