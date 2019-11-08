@@ -130,23 +130,46 @@ namespace DAL.Repositories
         {
             try
             {
-                var list = (from ra in _appContext.RepairOrderApprover
-                            join ral in _appContext.RepairOrderApproverList on ra.RoApproverId equals ral.RoApproverId
-                            join emp in _appContext.Employee on ral.EmployeeId equals emp.EmployeeId
-                            where ra.RepairOrderId == repairOrderId
-                            select new
-                            {
-                                emp.EmployeeId,
-                                EmployeeName = emp.FirstName + ' ' + emp.LastName,
-                                emp.EmployeeCode,
-                                emp.Email,
-                                ral.StatusId,
-                                ral.Level,
-                                ra.RoApproverId,
-                                ral.RoApproverListId
-                            }
-                    ).ToList();
-                return list;
+                if (repairOrderId == 0)
+                {
+                    var list = (from ra in _appContext.RepairOrderApprover
+                                join ral in _appContext.RepairOrderApproverList on ra.RoApproverId equals ral.RoApproverId
+                                join emp in _appContext.Employee on ral.EmployeeId equals emp.EmployeeId
+                                select new
+                                {
+                                    emp.EmployeeId,
+                                    EmployeeName = emp.FirstName + ' ' + emp.LastName,
+                                    emp.EmployeeCode,
+                                    emp.Email,
+                                    ral.StatusId,
+                                    ral.Level,
+                                    ra.RoApproverId,
+                                    ral.RoApproverListId
+                                }
+                        ).Distinct()
+                        .ToList();
+                    return list;
+                }
+                else
+                {
+                    var list = (from ra in _appContext.RepairOrderApprover
+                                join ral in _appContext.RepairOrderApproverList on ra.RoApproverId equals ral.RoApproverId
+                                join emp in _appContext.Employee on ral.EmployeeId equals emp.EmployeeId
+                                where ra.RepairOrderId == repairOrderId
+                                select new
+                                {
+                                    emp.EmployeeId,
+                                    EmployeeName = emp.FirstName + ' ' + emp.LastName,
+                                    emp.EmployeeCode,
+                                    emp.Email,
+                                    ral.StatusId,
+                                    ral.Level,
+                                    ra.RoApproverId,
+                                    ral.RoApproverListId
+                                }
+                        ).ToList();
+                    return list;
+                }
             }
             catch (Exception)
             {
@@ -162,7 +185,7 @@ namespace DAL.Repositories
                 var data = (from ro in _appContext.RepairOrder
                             join v in _appContext.Vendor on ro.VendorId equals v.VendorId
                             join req in _appContext.Employee on ro.ApproverId equals req.EmployeeId
-                   
+
                             join app in _appContext.Employee on ro.ApproverId equals app.EmployeeId into approver
                             from app in approver.DefaultIfEmpty()
 
