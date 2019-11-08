@@ -89,7 +89,7 @@ namespace DAL
         //IVendorShippingDetailsRepository _vendorShippingDetailsRepository;
         IGLAccountClassRespository _gLAccountClassRespository;
         IAssetRepository _assetRepository;
-
+        IAssetAuditRepository _assetAuditRepository;
         IEmployee _employee;
         IGlCashFlowRepository _glCashFlowRepository;
         IEmployeeLeaveType _employeeLeaveType;
@@ -1480,6 +1480,16 @@ namespace DAL
                 if (_assetRepository == null)
                     _assetRepository = new AssetRepository(_context);
                 return _assetRepository;
+            }
+        }
+
+        public IAssetAuditRepository AssetAudit
+        {
+            get
+            {
+                if (_assetAuditRepository == null)
+                    _assetAuditRepository = new AssetAuditRepository(_context);
+                return _assetAuditRepository;
             }
         }
 

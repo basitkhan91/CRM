@@ -37,7 +37,8 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("GetAll")]
-        public IActionResult GetAllAsset() {
+        public IActionResult GetAllAsset()
+        {
             var assets = _unitOfWork.Asset.getAllAsset();
             return Ok(assets);
         }
@@ -66,20 +67,45 @@ namespace QuickApp.Pro.Controllers
                 asset.IsDelete = false;
                 _context.Asset.Add(asset);
                 _context.SaveChanges();
-
-                AssetAudit imc = new AssetAudit();
-
-                imc.AssetRecordId = asset.AssetRecordId;
-                
-                imc.MasterCompanyId = 1;
-                imc.CreatedDate = DateTime.Now;
-                imc.UpdatedDate = DateTime.Now;
-                imc.IsActive = true;
-                _context.AssetAudit.Add(imc);
-                _context.SaveChanges();
+                saveAssetAudit(asset);
             }
             return Ok(asset);
         }
+
+        public void saveAssetAudit(Asset asset)
+        {
+            AssetAudit assetaudit = new AssetAudit();
+            assetaudit.AssetRecordId = asset.AssetRecordId;
+            assetaudit.AssetId = asset.AssetId;
+            assetaudit.AlternateAssetId = asset.AlternateAssetId;
+            assetaudit.Name = asset.Name;
+            assetaudit.Description = asset.Description;
+            assetaudit.ManagementStructureId = asset.ManagementStructureId;
+            assetaudit.AssetAcquisitionTypeId = asset.AssetAcquisitionTypeId;
+            assetaudit.IsSerialized = asset.IsSerialized;
+            assetaudit.AssetTypeId = asset.AssetTypeId;
+            assetaudit.ManufacturerId = asset.ManufacturerId;
+            assetaudit.Model = asset.Model;
+            assetaudit.UnitOfMeasureId = asset.UnitOfMeasureId;
+            assetaudit.CurrencyId = asset.CurrencyId;
+            assetaudit.AssetTypeId = asset.AssetTypeId;
+            assetaudit.Asset_Location = asset.Asset_Location;
+            assetaudit.IsDepreciable = asset.IsDepreciable;
+            assetaudit.IsIntangible = asset.IsIntangible;
+            assetaudit.AssetIntangibleTypeId = asset.AssetIntangibleTypeId;
+            assetaudit.ManufacturedDate = asset.ManufacturedDate;
+            assetaudit.ExpirationDate = asset.ExpirationDate;
+            assetaudit.Memo = asset.Memo;
+            assetaudit.AssetParentId = asset.AssetParentId;
+            assetaudit.UnitCost = asset.UnitCost;
+            assetaudit.MasterCompanyId = 1;
+            assetaudit.CreatedDate = DateTime.Now;
+            assetaudit.UpdatedDate = DateTime.Now;
+            assetaudit.IsActive = true;
+            _context.AssetAudit.Add(assetaudit);
+            _context.SaveChanges();
+        }
+
 
         [HttpPut("updateAsset")]
         public IActionResult updateAsset([FromBody] Asset asset)
@@ -94,13 +120,22 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("removeById/{id}")]
         public IActionResult removeAssetById(long id)
         {
-            var asset = _unitOfWork.Repository<Asset>().Find(x => x.AssetRecordId == id).FirstOrDefault();
-            if (asset != null)
+            var assetaudit = _unitOfWork.Repository<AssetAudit>().Find(x => x.AssetRecordId == id).FirstOrDefault();
+            if (assetaudit != null)
             {
-                asset.IsDelete = true;
-                _unitOfWork.Repository<Asset>().Update(asset);
+                assetaudit.IsDelete = true;
+                _unitOfWork.AssetAudit.Remove(assetaudit);
                 _unitOfWork.SaveChanges();
-                return Ok();
+
+                var asset = _unitOfWork.Repository<Asset>().Find(x => x.AssetRecordId == id).FirstOrDefault();
+                asset.IsDelete = true;
+                _unitOfWork.Asset.Remove(asset);
+                _unitOfWork.SaveChanges();
+
+                return Ok(id);
+                //_unitOfWork.Repository<Asset>().Update(asset);
+                //_unitOfWork.SaveChanges();
+                //return Ok();
             }
             else
             {
@@ -117,7 +152,8 @@ namespace QuickApp.Pro.Controllers
                 for (var i = 0; i < capabilities.Count(); i++)
                 {
                     capabilities[i].IsActive = true;
-                    if (capabilities[i].ItemMasterId == null) {
+                    if (capabilities[i].ItemMasterId == null)
+                    {
                         capabilities[i].ItemMasterId = null;
                     }
                     capabilities[i].MasterCompanyId = 1;
@@ -174,6 +210,7 @@ namespace QuickApp.Pro.Controllers
                 newAsset.Description = asset.Description;
                 newAsset.ManagementStructureId = asset.ManagementStructureId;
                 newAsset.AssetAcquisitionTypeId = asset.AssetAcquisitionTypeId;
+                newAsset.IsSerialized = asset.IsSerialized;
                 newAsset.AssetTypeId = asset.AssetTypeId;
                 newAsset.ManufacturerId = asset.ManufacturerId;
                 newAsset.Model = asset.Model;
@@ -181,6 +218,7 @@ namespace QuickApp.Pro.Controllers
                 newAsset.CurrencyId = asset.CurrencyId;
                 newAsset.AssetTypeId = asset.AssetTypeId;
                 newAsset.UnitCost = asset.UnitCost;
+                newAsset.Asset_Location = asset.Asset_Location;
                 newAsset.IsActive = true;
                 newAsset.IsDelete = false;
                 newAsset.CreatedBy = asset.CreatedBy;
@@ -190,16 +228,16 @@ namespace QuickApp.Pro.Controllers
                 newAsset.MasterCompanyId = 1;
                 _unitOfWork.Repository<Asset>().Add(newAsset);
                 _unitOfWork.SaveChanges();
-                 return Ok(newAsset);
+                return Ok(newAsset);
             }
             else
-            return Ok("Enter proper data");
+                return Ok("Enter proper data");
 
         }
         [HttpPost("updateMaintenanceWarranty")]
         public IActionResult updatemaintenancewarranty(MaintenanceWarrantyViewModel maintenanceWarranty)
         {
-            if(maintenanceWarranty != null && maintenanceWarranty.AssetRecordId != null)
+            if (maintenanceWarranty != null && maintenanceWarranty.AssetRecordId != null)
             {
                 Asset asset = _context.Asset.Where(a => a.AssetRecordId == maintenanceWarranty.AssetRecordId).FirstOrDefault();
                 asset.AssetIsMaintenanceReqd = maintenanceWarranty.AssetIsMaintenanceReqd;
@@ -222,9 +260,9 @@ namespace QuickApp.Pro.Controllers
                 string wFilePath = string.Empty;
                 if (maintenanceWarranty.MaintenanceFile != null)
                 {
-                     mFilePath = Path.Combine(
-                      Directory.GetCurrentDirectory(), "wwwroot",
-                      maintenanceWarranty.MaintenanceFile.FileName);
+                    mFilePath = Path.Combine(
+                     Directory.GetCurrentDirectory(), "wwwroot",
+                     maintenanceWarranty.MaintenanceFile.FileName);
                     using (var stream = new FileStream(mFilePath, FileMode.Create))
                     {
                         maintenanceWarranty.MaintenanceFile.CopyTo(stream);
@@ -232,7 +270,7 @@ namespace QuickApp.Pro.Controllers
                 }
                 if (maintenanceWarranty.WarantyFile != null)
                 {
-                     wFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", maintenanceWarranty.WarantyFile.FileName);
+                    wFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", maintenanceWarranty.WarantyFile.FileName);
                     using (var stream = new FileStream(wFilePath, FileMode.Create))
                     {
                         maintenanceWarranty.WarantyFile.CopyTo(stream);
@@ -250,7 +288,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("updateCalibration")]
-        public IActionResult updatecalibration([FromBody] CalibrationViewModel  calibration)
+        public IActionResult updatecalibration([FromBody] CalibrationViewModel calibration)
         {
             if (calibration != null)
             {
@@ -297,7 +335,7 @@ namespace QuickApp.Pro.Controllers
             newAssetCapes.AircraftTypeId = assetCapes.AircraftTypeId;
             newAssetCapes.AircraftModelId = assetCapes.AircraftModelId;
             newAssetCapes.AircraftDashNumberId = assetCapes.AircraftDashNumberId;
-            
+
             _unitOfWork.Repository<AssetCapes>().Add(newAssetCapes);
             _unitOfWork.SaveChanges();
             return Ok();
