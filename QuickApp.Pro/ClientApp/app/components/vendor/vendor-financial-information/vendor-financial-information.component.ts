@@ -626,8 +626,6 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-
-
     private loadCurrencyData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;

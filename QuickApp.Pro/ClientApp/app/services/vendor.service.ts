@@ -32,6 +32,7 @@ export class VendorService {
 
     enableExternal: boolean = false;
     shippingCollection: any;
+    billingCollection: any;
     purchasepartcollection: any[] = [];
     repairecollection: any;
     isEditMode: boolean = false;
@@ -161,6 +162,10 @@ export class VendorService {
         return Observable.forkJoin(
             this.actionEndpoint.getVendorShipAddressdetails<any[]>(vendorId));
     }
+    getVendorBillAddressGet(vendorId: any) {
+        return Observable.forkJoin(
+            this.actionEndpoint.getVendorBillAddressdetails<any[]>(vendorId));
+    }
     getSiteAddresses() {
         return Observable.forkJoin(
             this.actionEndpoint.getSiteAddresses<any[]>());
@@ -172,6 +177,10 @@ export class VendorService {
     getVendorShipViaDetails(rowData) {
         return Observable.forkJoin(
             this.actionEndpoint.getVendorShipViaDetails(rowData));
+    }
+    getVendorBillViaDetails(rowData) {
+        return Observable.forkJoin(
+            this.actionEndpoint.getVendorBillViaDetails(rowData));
     }
     getVendorList() {
         return Observable.forkJoin(
@@ -243,8 +252,14 @@ export class VendorService {
     shipviaHistory(actionId: number) {
         return Observable.forkJoin(this.actionEndpoint.getShipviaHistory<AuditHistory[]>(actionId));
     }
+    billviaHistory(actionId: number) {
+        return Observable.forkJoin(this.actionEndpoint.getBillviaHistory<AuditHistory[]>(actionId));
+    }
     shipaddressHistory(actionId: number) {
         return Observable.forkJoin(this.actionEndpoint.getShipaddressHistory<AuditHistory[]>(actionId));
+    }
+    billaddressHistory(actionId: number) {
+        return Observable.forkJoin(this.actionEndpoint.getBilladdressHistory<AuditHistory[]>(actionId));
     }
 
     newAction(action: any) {
@@ -354,6 +369,9 @@ export class VendorService {
     updateVendorShippingAddressDetails(vendorcntct: any, vendorId: any) {
         return this.actionEndpoint.updateVendorAddressDetails<any>(vendorcntct, vendorId);
     }
+    updateVendorBillingAddressDetails(vendorcntct: any, vendorId: any) {
+        return this.actionEndpoint.updateVendorAddressDetails<any>(vendorcntct, vendorId);
+    }
 
     updateVendorDomesticWirePayment(vendorcntct: any, vendorId: any) {
         return this.actionEndpoint.updateVendorDomesticWirePayment<any>(vendorcntct, vendorId);
@@ -398,6 +416,10 @@ export class VendorService {
 
         return this.actionEndpoint.getNewShipppinginfo<any>(action);
     }
+    newBillingAdd(action: any) {
+
+        return this.actionEndpoint.getNewBillinginfo<any>(action);
+    }
 
     addNewBillingAddress(object) {
         return this.actionEndpoint.postNewBillingAddress<any>(object);
@@ -410,6 +432,10 @@ export class VendorService {
 
         return this.actionEndpoint.saveShipViaDetails<any>(action);
     }
+    newBillingViaAdd(action: any) {
+
+        return this.actionEndpoint.saveBillViaDetails<any>(action);
+    }
     addShipViaDetails(action: any) {
 
         return this.actionEndpoint.addShipViaDetails<any>(action, action.vendorShippingId);
@@ -418,11 +444,21 @@ export class VendorService {
 
         return this.actionEndpoint.getNewShipppinginfoWithAddressId<any>(action, shippingAddressId);
     }
+    newBillingAddWithAddress(action: any, billingAddressId: any) {
+
+        return this.actionEndpoint.getNewBillinginfoWithAddressId<any>(action, billingAddressId);
+    }
     updateshippinginfo(vendorshipping: any) {
         return this.actionEndpoint.updateShippinginfo(vendorshipping, vendorshipping.vendorShippingAddressId);
     }
+    updateBillinginfo(vendorbilling: any) {
+        return this.actionEndpoint.updateShippinginfo(vendorbilling, vendorbilling.vendorBillingAddressId);
+    }
     updateshippingViainfo(vendorshipping: any) {
         return this.actionEndpoint.updateShippingViainfo(vendorshipping, vendorshipping.vendorShippingId);
+    }
+    updateBillingViainfo(vendorbilling: any) {
+        return this.actionEndpoint.updateBillingViainfo(vendorbilling, vendorbilling.vendorBillingId);
     }
     getDiscountList() {
         return Observable.forkJoin(
@@ -454,6 +490,9 @@ export class VendorService {
 
     updateActionforActiveforshipping(vendorshipping: any) {
         return this.actionEndpoint.getUpdatevendorEndpointforActiveforshipping(vendorshipping, vendorshipping.vendorShippingAddressId);
+    }
+    updateActionforActiveforBilling(vendorbilling: any) {
+        return this.actionEndpoint.getUpdatevendorEndpointforActiveforbilling(vendorbilling, vendorbilling.vendorBillingAddressId);
     }
 
     updateActionforActiveforshipViaDetails(vendorshipping: any) {
