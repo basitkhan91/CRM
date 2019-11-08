@@ -586,9 +586,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("stocklinedetailsbypartno")]
-        public IActionResult GetStockLineDetailsByPartNo(long itemMasterId)
+        public IActionResult GetStockLineDetailsByPartNo(long itemMasterId,long conditionId)
         {
-            var result = unitOfWork.WorkOrderRepository.GetStockLineDetailsByPartNo(itemMasterId);
+            var result = unitOfWork.WorkOrderRepository.GetStockLineDetailsByPartNo(itemMasterId, conditionId);
             return Ok(result);
         }
 
@@ -600,9 +600,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("partserialno")]
-        public IActionResult GetPartSerialNo(long stockLineId, long conditionId)
+        public IActionResult GetPartSerialNo(long stockLineId)
         {
-            var result = unitOfWork.WorkOrderRepository.GetPartSerialNo(stockLineId, conditionId);
+            var result = unitOfWork.WorkOrderRepository.GetPartSerialNo(stockLineId);
             return Ok(result);
         }
 
@@ -631,6 +631,13 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetWorkOrderMaterialList(long wfwoId = 0, long workOrderId = 0)
         {
             var result = unitOfWork.WorkOrderRepository.GetWorkOrderMaterialList(wfwoId, workOrderId);
+            return Ok(result);
+        }
+
+        [HttpGet("gettechnicians")]
+        public IActionResult GetTechnicians()
+        {
+            var result = unitOfWork.WorkOrderRepository.GetTechnicians();
             return Ok(result);
         }
     }

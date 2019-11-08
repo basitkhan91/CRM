@@ -2088,9 +2088,7 @@ namespace DAL.Repositories
             {
 
                 var workFlowNos = (from wf in _appContext.Workflow
-                                   join im in _appContext.ItemMaster on wf.ItemMasterId equals im.ItemMasterId
-                                   join ws in _appContext.WorkScope on wf.WorkScopeId equals ws.WorkScopeId
-                                   where wf.IsDelete == false && wf.IsActive == true && im.ItemMasterId == partId && wf.WorkScopeId == workScopeId
+                                   where (wf.IsDelete == false || wf.IsDelete==null) && wf.IsActive == true && wf.ItemMasterId == partId && wf.WorkScopeId == workScopeId
                                    select new
                                    {
                                        WorkFlowNo = wf.WorkOrderNumber,
@@ -2116,7 +2114,10 @@ namespace DAL.Repositories
                             {
                                 sl.ItemMasterId,
                                 sl.PartNumber,
-                                im.PartDescription
+                                im.PartDescription,
+                                im.DER,
+                                im.PMA,
+                                NTE= (im.OverhaulHours == null ? 0 : im.OverhaulHours) + (im.RPHours == null ? 0 : im.RPHours) + (im.mfgHours == null ? 0 : im.mfgHours) + (im.TestHours == null ? 0 : im.TestHours)
                             })
                             .Distinct()
                             .ToList();
@@ -2129,16 +2130,17 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetStockLineDetailsByPartNo(long itemMasterId)
+        public IEnumerable<object> GetStockLineDetailsByPartNo(long itemMasterId,long conditionId)
         {
             try
             {
                 var list = (from sl in _appContext.StockLine
-                            where sl.ItemMasterId == itemMasterId
+                            where sl.ItemMasterId == itemMasterId && sl.ConditionId== conditionId
                             select new
                             {
                                 sl.StockLineId,
-                                sl.StockLineNumber
+                                sl.StockLineNumber,
+                                sl.SerialNumber
                             })
                             .Distinct()
                             .ToList();
@@ -2174,12 +2176,12 @@ namespace DAL.Repositories
             }
         }
 
-        public object GetPartSerialNo(long stockLineId, long conditionId)
+        public object GetPartSerialNo(long stockLineId)
         {
             try
             {
                 var serialNo = (from sl in _appContext.StockLine
-                                where sl.StockLineId == stockLineId && sl.ConditionId == conditionId
+                                where sl.StockLineId == stockLineId 
                                 select new
                                 {
                                     SerialNumber = sl.SerialNumber
@@ -2238,6 +2240,27 @@ namespace DAL.Repositories
                             .Distinct()
                             .ToList();
                 return data;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetTechnicians()
+        {
+            try
+            {
+                var list = (from e in _appContext.Employee
+                            join jt in _appContext.JobTitle on e.JobTitleId equals jt.JobTitleId
+                            where e.IsActive == true && (e.IsDeleted == false || e.IsDeleted == null) && jt.Description=="Technician"
+                            select new
+                            {
+                                label = e.FirstName,
+                                value = e.EmployeeId
+                            }).Distinct().ToList();
+                return list;
             }
             catch (Exception)
             {
@@ -2312,10 +2335,7 @@ namespace DAL.Repositories
                                     {
                                         workFlowWorkOrder.MaterialList = BindWorkFlowWorkOrderMaterials(workFlow.MaterialList, workOrderId, createdBy, item.MasterCompanyId);
                                     }
-                                    if (workFlow.MaterialList != null && workFlow.MaterialList.Count > 0)
-                                    {
-                                        workFlowWorkOrder.MaterialList = BindWorkFlowWorkOrderMaterials(workFlow.MaterialList, workOrderId, createdBy, item.MasterCompanyId);
-                                    }
+                                    
                                     if (workFlow.Directions != null && workFlow.Directions.Count > 0)
                                     {
                                         workFlowWorkOrder.Directions = BindWorkFlowWorkOrderDirections(workFlow.Directions, workOrderId, createdBy, item.MasterCompanyId);
@@ -2326,6 +2346,10 @@ namespace DAL.Repositories
                                     }
 
                                     _appContext.WorkOrderWorkFlow.Add(workFlowWorkOrder);
+                                    _appContext.SaveChanges();
+
+                                    workFlowWorkOrder.WorkFlowWorkOrderNo = "WOWF" + workFlowWorkOrder.WorkFlowWorkOrderId;
+                                    _appContext.WorkOrderWorkFlow.Update(workFlowWorkOrder);
                                     _appContext.SaveChanges();
                                 }
 
@@ -2429,6 +2453,7 @@ namespace DAL.Repositories
                     workOrderAsset.MasterCompanyId = masterCompanyId;
                     workOrderAsset.Quantity = item.Quantity;
                     workOrderAsset.WorkOrderId = workOrderId;
+                    workOrderAsset.TaskId = item.TaskId;
                     WorkOrderAssetsList.Add(workOrderAsset);
                 }
 
@@ -2526,6 +2551,18 @@ namespace DAL.Repositories
                     workOrderMaterial.WorkOrderId = workOrderId;
 
                     workOrderMaterial.ItemMasterId = item.ItemMasterId;
+                    workOrderMaterial.TaskId = Convert.ToInt64(item.TaskId);
+                    workOrderMaterial.ConditionCodeId = Convert.ToInt64(item.ConditionCodeId);
+                    workOrderMaterial.MandatoryOrSupplemental = item.MandatoryOrSupplemental;
+                    workOrderMaterial.ItemClassificationId =Convert.ToInt64(item.ItemClassificationId);
+                    workOrderMaterial.Quantity =Convert.ToInt32(item.Quantity);
+                    workOrderMaterial.UnitOfMeasureId =Convert.ToInt64(item.UnitOfMeasureId);
+                    workOrderMaterial.UnitCost =Convert.ToDecimal(item.UnitCost);
+                    workOrderMaterial.ExtendedCost =Convert.ToDecimal(item.ExtendedCost);
+                    workOrderMaterial.Price = item.Price;
+                    workOrderMaterial.ExtendedPrice = item.ExtendedPrice;
+                    workOrderMaterial.Memo = item.Memo;
+                    workOrderMaterial.IsDefered = item.IsDeferred;
 
                     WorkOrderMaterialList.Add(workOrderMaterial);
                 }
