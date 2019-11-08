@@ -1,7 +1,3 @@
-USE [PAS_DEV]
-GO
-
-/****** Object:  Trigger [dbo].[Trg_AssetAttributeType]    Script Date: 10/24/2019 3:13:50 PM ******/
 SET ANSI_NULLS ON
 GO
 

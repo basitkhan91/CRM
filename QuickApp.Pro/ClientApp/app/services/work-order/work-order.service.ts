@@ -105,5 +105,21 @@ export class WorkOrderService {
         return this.workOrderEndpointService.createWorkFlowWorkOrder(data);
     }
 
+    getWorkOrderWorkFlowNumbers(){
+        return this.workOrderEndpointService.getWorkOrderWorkFlowNumbers();
+    }
+
+    getWorkOrderAssetList(workFlowWorkOrderId) {
+        return this.workOrderEndpointService.getWorkOrderAssetList(workFlowWorkOrderId);
+    }
+    createWorkOrderLabor(data){
+        return this.workOrderEndpointService.createWorkOrderLabor(data);
+    }
+    getAllTasks(){
+        return this.workOrderEndpointService.getTasks();
+    }
+    getMaterialList(workOrderWorkFlowId,workOrderId){
+        return this.workOrderEndpointService.getMaterialList(workOrderWorkFlowId , workOrderId)
+    }
 
 }

@@ -116,7 +116,11 @@ export class PurchaseOrderPart {
     poPartSplitAddress: AddressModel;
     // UI Properties
     // below properties does not play role on the server side and are being used to show the data on UI and should be limited to UI only.
-
+    siteId: number;
+    shelfId: number;
+    binId: number;
+    warehouseId: number;
+    locationId: number;
 
     managementStructureName: string[];
     statusText: string;
@@ -142,6 +146,7 @@ export class PurchaseOrderPart {
     currentSERIndex: number;
     isDisabledTLboxes: boolean;
     toggleIcon: boolean;
+    isEnabled: boolean;
 
     companyId: number;
     businessUnitId: number;
@@ -156,6 +161,8 @@ export class PurchaseOrderPart {
     LocationList: DropDownData[];
     ShelfList: DropDownData[];
     BinList: DropDownData[];
+    stockLine: StockLine[];
+    timeLife: TimeLife[];
 }
 
 export class TimeLife {
@@ -213,6 +220,7 @@ export class StockLine {
     manufacturingDate: Date;
     expirationDate: Date;
     manufacturingBatchNumber: string;
+    manufacturingTrace: string;
     partCertificationNumber: string;
     certifiedBy: string;
     certifiedDate: Date;
@@ -233,6 +241,7 @@ export class StockLine {
     unitSalesPrice: number;
     coreUnitCost: number;
     gLAccountId: number;
+    glAccountId: number;
     assetId: number;
     isHazardousMaterial: boolean;
     isPMA: boolean;
@@ -240,6 +249,7 @@ export class StockLine {
     oEM: boolean;
     memo: string;
     managementStructureEntityId: number;
+    managementStructureId: number;
     timeLifeCyclesId: number;
     site: string;
     shelf: string;
@@ -266,8 +276,10 @@ export class StockLine {
     engineSerialNumber: string;
     createdDate: Date;
     purchaseOrderPartRecordId: number;
+    timeLifeDetailsNotProvided: boolean;
 
     //View Properties
+    isEnabled: boolean;
     CompanyList: DropDownData[];
     BusinessUnitList: DropDownData[];
     DivisionList: DropDownData[];
@@ -283,6 +295,10 @@ export class StockLine {
     serialNumberNotProvided: boolean;
     isDisabledSNboxes: boolean;
     currentDate: Date;
+    glAccountText: string;
+    obtainFromObject: DropDownData;
+    ownerObject: DropDownData;
+    traceableToObject: DropDownData;
 }
 
 export class ReceiveParts {

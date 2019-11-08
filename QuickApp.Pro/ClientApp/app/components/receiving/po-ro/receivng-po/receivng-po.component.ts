@@ -764,7 +764,7 @@ export class ReceivngPoComponent implements OnInit {
                 stockLine.purchaseOrderUnitCost = 0;
                 stockLine.purchaseOrderExtendedCost = part.unitCost;
                 stockLine.currentDate = new Date();
-
+                
                 if (part.itemMaster != undefined) {
                     stockLine.purchaseOrderUnitCost = part.unitCost;
                     if (!part.itemMaster.isSerialized) {
@@ -802,7 +802,7 @@ export class ReceivngPoComponent implements OnInit {
             stockLine.purchaseOrderUnitCost = 0;
             stockLine.purchaseOrderExtendedCost = part.unitCost;
             stockLine.currentDate = new Date();
-
+            
             if (part.itemMaster != undefined) {
                 stockLine.purchaseOrderUnitCost = part.unitCost;
                 if (!part.itemMaster.isSerialized) {
@@ -1142,7 +1142,6 @@ export class ReceivngPoComponent implements OnInit {
             return;
         }
         let partsToPost: ReceiveParts[] = this.extractAllAllStockLines();
-        console.log(partsToPost);
         this.shippingService.receiveParts(partsToPost).subscribe(data => {
             this.alertService.showMessage(this.pageTitle, 'Parts Received successfully.', MessageSeverity.success);
             return this.route.navigate(['/receivingmodule/receivingpages/app-edit-po']);
@@ -1238,7 +1237,7 @@ export class ReceivngPoComponent implements OnInit {
             if (item.timeLifeList != undefined && item.timeLifeList.length > 0) {
                 // need to have some check to make sure atleast one field is entered.
                 for (var i = 0; i < item.timeLifeList.length; i++) {
-                    if (item.isTimeLifeUpdateLater == undefined || !item.isTimeLifeUpdateLater) {
+                    if (item.isTimeLifeUpdateLater != undefined && !item.isTimeLifeUpdateLater) {
                         var timeLife = item.timeLifeList[i];
                         if (timeLife.cyclesRemaining == '' && timeLife.cyclesSinceNew == '' && timeLife.cyclesSinceOVH == '' && timeLife.cyclesSinceInspection == '' && timeLife.cyclesSinceRepair == '' &&
                             timeLife.timeRemaining == '' && timeLife.timeSinceNew == '' && timeLife.timeSinceOVH == '' && timeLife.timeSinceInspection == '' && timeLife.timeSinceRepair == '' &&
@@ -1253,7 +1252,10 @@ export class ReceivngPoComponent implements OnInit {
         return errorMessages;
     }
 
-    onObtainFromChange(event) {
+    onObtainFromChange(event, stockLine) {
+        stockLine.obtainFrom = '';
+        stockLine.obtainFromObject = {};
+
         if (event.target.value === '1') {
             this.obtainfromcustomer = true;
             this.obtainfromother = false;
@@ -1271,7 +1273,10 @@ export class ReceivngPoComponent implements OnInit {
         }
     }
 
-    onOwnerChange(event) {
+    onOwnerChange(event, stockLine) {
+        stockLine.owner = '';
+        stockLine.ownerObject = {};
+
         if (event.target.value === '1') {
             this.ownercustomer = true;
             this.ownerother = false;
@@ -1289,7 +1294,10 @@ export class ReceivngPoComponent implements OnInit {
         }
     }
 
-    onTraceableToChange(event) {
+    onTraceableToChange(event, stockLine) {
+        stockLine.traceableTo = '';
+        stockLine.traceableToObject = {};
+
         if (event.target.value === '1') {
             this.traceabletocustomer = true;
             this.traceabletoother = false;
@@ -1317,10 +1325,22 @@ export class ReceivngPoComponent implements OnInit {
         if (dropdownSource != undefined && dropdownSource.length > 0) {
             for (let row of dropdownSource) {
                 if (row.Value != undefined && row.Value.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                    stockLine.filteredRecords.push(row.Value);
+                    stockLine.filteredRecords.push(row);
                 }
             }
         }
+    }
+
+    onObtainSelect(stockLine: StockLine): void {
+        stockLine.obtainFrom = stockLine.obtainFromObject.Key;
+    }
+
+    onOwnerSelect(stockLine: StockLine): void {
+        stockLine.owner = stockLine.ownerObject.Key;
+    }
+
+    onTraceableToSelect(stockLine: StockLine): void {
+        stockLine.traceableTo = stockLine.traceableToObject.Key;
     }
 
     getConditionList(): void {

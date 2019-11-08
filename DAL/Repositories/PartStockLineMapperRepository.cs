@@ -61,6 +61,8 @@ namespace DAL.Repositories
             {
                 var purchaseOrder = _appContext.PurchaseOrder
                                    .Include("Vendor")
+                                   .Include("StockLine")
+                                   .Include("TimeLife")
                                    .Where(x => x.PurchaseOrderId == id).FirstOrDefault();
 
                 purchaseOrder.PurchaseOderPart = _appContext.PurchaseOrderPart
@@ -69,12 +71,12 @@ namespace DAL.Repositories
 
                 purchaseOrder.PurchaseOderPart.ToList().ForEach(part =>
                 {
-                    part.ItemMaster = _appContext.ItemMaster.Find(part.ItemMasterId);
-
-                    var stockLines = _appContext.StockLine.Where(x => x.PurchaseOrderPartRecordId != null && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId).ToList();
-                    if (stockLines != null && stockLines.Count > 0)
+                    part.ItemMaster = _appContext.ItemMaster.Include("Manufacturer").Where(x => x.ItemMasterId == part.ItemMasterId).FirstOrDefault();//.Find(part.ItemMasterId);
+                    if (part.StockLine != null && part.StockLine.Count > 0)
                     {
-                        part.StockLineCount = (long)stockLines.Sum(x => x.Quantity);
+                        part.StockLine = part.StockLine.OrderBy(x => x.StockLineId).ToList();
+                        part.TimeLife = part.TimeLife.OrderBy(x => x.StockLineId).ToList();
+                        part.StockLineCount = (long)part.StockLine.Sum(x => x.Quantity);
                     }
 
                     if (!part.isParent)
@@ -83,12 +85,8 @@ namespace DAL.Repositories
                     }
                 });
 
-                foreach (var part in purchaseOrder.PurchaseOderPart)
-                {
-                    part.ItemMaster.Manufacturer = _appContext.Manufacturer.Where(x => x.ManufacturerId == part.ItemMaster.ManufacturerId).FirstOrDefault();
-                }
-
                 var approver = purchaseOrder.ApproverId != null ? _appContext.Employee.Find(purchaseOrder.ApproverId) : null;
+
                 return new
                 {
                     StatusId = purchaseOrder.StatusId,
@@ -98,8 +96,12 @@ namespace DAL.Repositories
                     Vendor = purchaseOrder.Vendor,
                     OpenDate = purchaseOrder.OpenDate,
                     Approver = approver != null ? approver.FirstName + " " + approver.LastName : "",
-                    PurchaseOderPart = purchaseOrder.PurchaseOderPart.Select(x => 
-                    new {
+                    NeedByDate = purchaseOrder.NeedByDate,
+                    DateApproved = purchaseOrder.DateApproved,
+                    DeferredReceiver = purchaseOrder.DeferredReceiver,
+                    Resale = purchaseOrder.Resale,
+                    Notes = purchaseOrder.Notes,
+                    PurchaseOderPart = purchaseOrder.PurchaseOderPart.Select(x => new {
                         ItemMaster = x.ItemMaster,
                         PurchaseOrderId = x.PurchaseOrderId,
                         PurchaseOrderPartRecordId = x.PurchaseOrderPartRecordId,
@@ -111,13 +113,52 @@ namespace DAL.Repositories
                         DiscountPerUnit = x.DiscountPercent,
                         ExtendedCost = x.ExtendedCost,
                         UnitCost = x.UnitCost,
-                    }),
-                    NeedByDate = purchaseOrder.NeedByDate,
-                    DateApproved = purchaseOrder.DateApproved,
-                    DeferredReceiver  = purchaseOrder.DeferredReceiver,
-                    Resale = purchaseOrder.Resale,
-                    Notes = purchaseOrder.Notes,
-
+                        StockLine = x.StockLine == null ? null : x.StockLine.Select(SL => new
+                        {
+                            StockLineId = SL.StockLineId,
+                            StockLineNumber = SL.StockLineNumber,
+                            ControlNumber = SL.ControlNumber,
+                            IdNumber = SL.IdNumber,
+                            ConditionId = SL.ConditionId,
+                            SerialNumber = SL.SerialNumber,
+                            Quantity = SL.Quantity,
+                            PurchaseOrderUnitCost = SL.PurchaseOrderUnitCost,
+                            PurchaseOrderExtendedCost = SL.PurchaseOrderExtendedCost,
+                            ReceiverNumber = SL.ReceiverNumber,
+                            WorkOrder = 0,
+                            SalesOrder = 0,
+                            SubWorkOrder = 0,
+                            Owner = SL.Owner,
+                            OwnerType = SL.OwnerType,
+                            ObtainFrom = SL.ObtainFrom,
+                            ObtainFromType = SL.ObtainFromType,
+                            TraceableTo = SL.TraceableTo,
+                            TraceableToType = SL.TraceableToType,
+                            ManufacturingTrace = SL.ManufacturingTrace,
+                            ManufacturerId = SL.ManufacturerId,
+                            ManufacturerLotNumber = SL.ManufacturerLotNumber,
+                            ManufacturingDate = SL.ManufacturingDate != null ? Convert.ToDateTime(SL.ManufacturingDate).ToShortDateString() : null,
+                            ManufacturingBatchNumber = SL.ManufacturingBatchNumber,
+                            PartCertificationNumber = SL.PartCertificationNumber,
+                            EngineSerialNumber = SL.EngineSerialNumber,
+                            ShippingViaId = SL.ShippingViaId,
+                            ShippingReference = SL.ShippingReference,
+                            ShippingAccount = SL.ShippingAccount,
+                            CertifiedDate = SL.CertifiedDate != null ? Convert.ToDateTime(SL.CertifiedDate).ToShortDateString(): null,
+                            CertifiedBy = SL.CertifiedBy,
+                            TagDate = SL.TagDate != null ? Convert.ToDateTime(SL.TagDate).ToShortDateString() : null,
+                            ExpirationDate = SL.ExpirationDate != null ? Convert.ToDateTime(SL.ExpirationDate).ToShortDateString() : null,
+                            CertifiedDueDate = SL.CertifiedDueDate != null ? Convert.ToDateTime(SL.CertifiedDueDate).ToShortDateString() : null,
+                            GLAccountId  = SL.GLAccountId,
+                            ManagementStructureEntityId = SL.ManagementStructureEntityId,
+                            SiteId = SL.SiteId,
+                            WarehouseId = SL.WarehouseId,
+                            LocationId = SL.LocationId,
+                            ShelfId = SL.ShelfId,
+                            BinId = SL.BinId
+                        }),
+                        TimeLife = x.TimeLife
+                    })
                 };
             }
             catch (Exception ex)

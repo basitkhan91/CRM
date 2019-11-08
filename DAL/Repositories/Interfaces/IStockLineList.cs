@@ -15,5 +15,6 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object>  GetAllStockLineIntegrationPortalData(long id);
         IEnumerable<object> getStocklineDataById(long id);
         IEnumerable<object>  GetAllTimeLifeData(long id);
+        IEnumerable<StockLine> getStockLinesByIds(long[] ids);
     }
 }

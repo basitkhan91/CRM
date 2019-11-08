@@ -470,7 +470,7 @@
                                     </select> -->
                                 </td>
                                 <td>
-                                    <p-dropdown [options]="priorityList"  placeholder="Select Status" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.workOrderPriorityId">
+                                    <p-dropdown [options]="priorityList"  placeholder="Select Priority" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.workOrderPriorityId">
                                       </p-dropdown>
                                     <!-- <select class="w100"
                                         [(ngModel)]="workOrderPartNumber.workOrderPriorityId">
@@ -630,7 +630,7 @@
                             <li class="nav-item">
                                 <a id="pills-profile-tab" role="tab" aria-controls="pills-profile"
                                     [ngClass]="{active : gridActiveTab === 'equipment'}"
-                                    (click)="gridTabChange('equipment')">Equipment</a>
+                                    (click)="gridTabChange('equipment');getEquipmentByWorkOrderId();">Equipment</a>
                             </li>
                             <li class="nav-item" [hidden]="workOrderGeneralInformation.workOrderType == 'multiple'">
                                 <a id="pills-contact-tab" role="tab" aria-controls="pills-contact"
@@ -640,7 +640,7 @@
                             <li class="nav-item">
                                 <a id="pills-contact-tab" role="tab"
                                     [ngClass]="{active : gridActiveTab === 'materialList'}"
-                                    (click)="gridTabChange('materialList')">Material List </a>
+                                    (click)="gridTabChange('materialList'); getMaterialListByWorkOrderId();">Material List </a>
                             </li>
                             <li class="nav-item">
                                 <a id="pills-contact-tab" role="tab" [ngClass]="{active : gridActiveTab === 'address'}"
@@ -722,22 +722,29 @@
                     </ul>
                     <br>
                     <div [ngClass]="{hidedata :  subTabWorkFlow !== 'createworkFlow' }">
-                        <wf-create [isWorkOrder]="isWorkOrder" [savedWorkOrderData]="savedWorkOrderData"> </wf-create>
+                        <wf-create [isWorkOrder]="isWorkOrder" [savedWorkOrderData]="savedWorkOrderData" (savedWorkFlowWorkOrderData)="savedWorkFlowData($event)" > </wf-create>
                     </div>
                     <div [ngClass]="{hidedata: subTabWorkFlow !== 'editworkFlow' }">
                         <!-- <app-workflow-list></app-workflow-list> -->
                     </div>
                     <div *ngIf="labor" [ngClass]="{hidedata : gridActiveTab !== 'labor'}">
-                        <app-work-order-labor [laborForm]="labor"></app-work-order-labor>
+                        <app-work-order-labor [laborForm]="labor" [savedWorkOrderData]="savedWorkOrderData"
+                        (saveworkOrderLabor)="saveworkOrderLabor($event)"
+                        ></app-work-order-labor>
                     </div>
 
                     <div [ngClass]="{hidedata : gridActiveTab !== 'equipment'}">
-                        <app-work-order-assets></app-work-order-assets>
+                        <app-work-order-assets [workOrderAssetList]="workOrderAssetList" [savedWorkOrderData]="savedWorkOrderData" ></app-work-order-assets>
                     </div>
 
                     <div  *ngIf="quote" [ngClass]="{hidedata : gridActiveTab !== 'quote' }" >
                             <app-work-order-quote [quoteForm]="quote"></app-work-order-quote>
                         </div>
+                    <div  [ngClass]="{hidedata : gridActiveTab !== 'materialList' }" >  
+                      <app-work-order-complete-material-list  [workOrderMaterialList]="workOrderMaterialList"></app-work-order-complete-material-list>
+                    </div>
+                      
+
                     <div [ngClass]="{hidedata : gridActiveTab !== 'billorInvoice'}">
                         <app-work-order-billing></app-work-order-billing>
                     </div>

@@ -12,6 +12,7 @@ import { fadeInOut } from '../../../../services/animations';
 import { Router } from '@angular/router';
 import { Table } from 'primeng/table';
 import { PurchaseOrderService } from '../../../../services/purchase-order.service';
+import { VendorCapabilitiesService } from '../../../../services/vendorcapabilities.service';
 
 @Component({
 	selector: 'app-polist',
@@ -43,6 +44,11 @@ export class PolistComponent implements OnInit {
     lazyLoadEventData: any;
     auditHistory: AuditHistory[];
     rowDataToDelete: any = {};
+    poHeaderAdd: any = {};
+    poPartsList: any = [];
+    approveList: any = [];
+    vendorCapesInfo: any = [];
+    vendorCapesCols: any[];
 
     constructor(private _route: Router,
         private authService: AuthService,
@@ -53,7 +59,8 @@ export class PolistComponent implements OnInit {
         public vendorService: VendorService,
         private dialog: MatDialog,
         private masterComapnyService: MasterComapnyService,
-        private purchaseOrderService: PurchaseOrderService) {
+        private purchaseOrderService: PurchaseOrderService,
+        private vendorCapesService: VendorCapabilitiesService) {
         // this.displayedColumns.push('Customer');
         // this.dataSource = new MatTableDataSource();
         // this.activeIndex = 0;
@@ -63,6 +70,17 @@ export class PolistComponent implements OnInit {
     }
     ngOnInit() {
         // this.getList();
+        this.vendorCapesCols = [
+			{ field: 'vcId', header: 'VCID' },
+			{ field: 'ranking', header: 'Ranking' },
+			{ field: 'partNumber', header: 'PN' },
+			{ field: 'partDescription', header: 'PN Description' },
+			{ field: 'capabilityType', header: 'Capability Type' },
+			{ field: 'cost', header: 'Cost' },
+			{ field: 'tat', header: 'TAT' },
+			{ field: 'name', header: 'PN Mfg' },
+		];
+
     }
 
     getList(data) {
@@ -128,14 +146,39 @@ export class PolistComponent implements OnInit {
 
     viewSelectedRow(rowData) { 
         console.log(rowData);
-        this.getVendorPOById(rowData.purchaseOrderId);
+        this.getPOViewById(rowData.purchaseOrderId);
+        this.getPOPartsViewById(rowData.purchaseOrderId);
+        this.getApproversListById(rowData.purchaseOrderId);
     }
 
-    getVendorPOById(poId) {
-        this.purchaseOrderService.getVendorPOById(poId).subscribe(res => {
-            console.log(res);            
+    getPOViewById(poId) {
+        this.purchaseOrderService.getPOViewById(poId).subscribe(res => {
+            console.log(res);  
+            this.poHeaderAdd = res;
+            this.getVendorCapesByID(this.poHeaderAdd.vendorId);
         });
     }
+    getPOPartsViewById(poId) {
+        this.purchaseOrderService.getPOPartsViewById(poId).subscribe(res => {
+            console.log(res);  
+            this.poPartsList = res;
+        });
+    }
+
+    getApproversListById(poId) {
+		this.purchaseOrderService.getPOApproverList(poId).subscribe(response => {
+			console.log(response);			
+			this.approveList = response;
+        });
+    }
+
+    getVendorCapesByID(vendorId) {
+		this.vendorCapesService.getVendorCapesById(vendorId).subscribe(res => {
+			this.vendorCapesInfo = res;
+		})
+	}
+
+
     // changePage(event: { first: any; rows: number }) {
     //     console.log(event);
     //     this.pageIndex = (event.first / event.rows);
