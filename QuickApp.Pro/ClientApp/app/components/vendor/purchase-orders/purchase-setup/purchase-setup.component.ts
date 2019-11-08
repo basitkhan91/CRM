@@ -26,11 +26,13 @@ import { AddressNew } from '../../../../models/address-new-model';
 import { PercentService } from '../../../../services/percent.service';
 import { VendorCapabilitiesService } from '../../../../services/vendorcapabilities.service';
 import { ItemMasterService } from '../../../../services/itemMaster.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
 	selector: 'app-purchase-setup',
 	templateUrl: './purchase-setup.component.html',
-	styleUrls: ['./purchase-setup.component.scss']
+	styleUrls: ['./purchase-setup.component.scss'],
+	providers: [DatePipe]
 })
 /** purchase-setup component*/
 export class PurchaseSetupComponent implements OnInit {
@@ -208,7 +210,8 @@ export class PurchaseSetupComponent implements OnInit {
 		private purchaseOrderService: PurchaseOrderService,
 		private percentService: PercentService,
 		private vendorCapesService: VendorCapabilitiesService,
-		private itemser: ItemMasterService) {
+		private itemser: ItemMasterService,
+		private datePipe: DatePipe) {
 		
 		this.vendorService.ShowPtab = false;
 		this.vendorService.alertObj.next(this.vendorService.ShowPtab);
@@ -744,9 +747,9 @@ export class PurchaseSetupComponent implements OnInit {
 
 		this.sourcePoApprovalObj = {
 			purchaseOrderNumber: this.sourcePoApproval.purchaseOrderNumber,
-			openDate: new Date(this.sourcePoApproval.openDate),
-			closedDate: new Date(this.sourcePoApproval.closedDate),
-			needByDate: new Date(this.sourcePoApproval.needByDate),
+			openDate: this.datePipe.transform(this.sourcePoApproval.openDate, "MM/dd/yyyy"),//new Date(this.sourcePoApproval.openDate),
+			closedDate: this.datePipe.transform(this.sourcePoApproval.closedDate, "MM/dd/yyyy"),
+			needByDate: this.datePipe.transform(this.sourcePoApproval.needByDate, "MM/dd/yyyy"),
 			priorityId: this.sourcePoApproval.priorityId ? this.getPriorityId(this.sourcePoApproval.priorityId) : 0,
 			deferredReceiver: this.sourcePoApproval.deferredReceiver ? this.sourcePoApproval.deferredReceiver : false,
 			vendorId: this.sourcePoApproval.vendorId ? this.getVendorId(this.sourcePoApproval.vendorId) : 0,
@@ -758,7 +761,7 @@ export class PurchaseSetupComponent implements OnInit {
 			creditTermsId: this.sourcePoApproval.creditTermsId ? this.sourcePoApproval.creditTermsId : 0,
 			requisitionerId: this.sourcePoApproval.requisitionerId ? this.getEmployeeId(this.sourcePoApproval.requisitionerId) : 0,
 			approverId: this.sourcePoApproval.approverId ? this.getEmployeeId(this.sourcePoApproval.approverId) : 0,
-			approvedDate: new Date(this.sourcePoApproval.approvedDate),
+			approvedDate: this.datePipe.transform(this.sourcePoApproval.approvedDate, "MM/dd/yyyy"),
 			statusId: this.sourcePoApproval.statusId ? this.sourcePoApproval.statusId : 0,
 			resale: this.sourcePoApproval.resale ? this.sourcePoApproval.resale : false,
 			managementStructureId: this.sourcePoApproval.managementStructureId ? this.sourcePoApproval.managementStructureId : 0,
@@ -877,7 +880,7 @@ export class PurchaseSetupComponent implements OnInit {
 							poPartSplitCountry: this.splitAddressData ? getValueFromArrayOfObjectById('country', 'addressId', childDataList[j].partListAddressId, this.splitAddressData) : '',
 							UOMId: this.partListData[i].UOMId ? this.partListData[i].UOMId : 0,
 							quantityOrdered: childDataList[j].quantityOrdered ? childDataList[j].quantityOrdered : 0,
-							needByDate: new Date(childDataList[j].needByDate),
+							needByDate: this.datePipe.transform(childDataList[j].needByDate, "MM/dd/yyyy"),
 							managementStructureId: childDataList[j].managementStructureId ? childDataList[j].managementStructureId : 0, //109
 							//createdBy: this.userName,
 							//updatedBy: this.userName,
@@ -904,7 +907,8 @@ export class PurchaseSetupComponent implements OnInit {
 					manufacturerId: this.partListData[i].manufacturerId ? this.partListData[i].manufacturerId : 0,
 					glAccounId: this.partListData[i].glAccountId ? this.partListData[i].glAccountId : 0,
 					UOMId: this.partListData[i].UOMId ? this.partListData[i].UOMId : 0,
-					needByDate: this.partListData[i].needByDate,
+					//needByDate: this.partListData[i].needByDate,
+					needByDate: this.datePipe.transform(this.partListData[i].needByDate, "MM/dd/yyyy"),
 					conditionId: this.partListData[i].conditionId ? this.getConditionIdByObject(this.partListData[i].conditionId) : 0,
 					quantityOrdered: this.partListData[i].quantityOrdered ? this.partListData[i].quantityOrdered : 0,
 					unitCost: this.partListData[i].unitCost ? this.partListData[i].unitCost : 0,
@@ -1277,16 +1281,18 @@ export class PurchaseSetupComponent implements OnInit {
 	onSelectSplitUserType(part) {
 		part.addressData = [];
 		part.partListUserId = {};
+		part.partListAddressId = null;
+		this.splitAddressData = [];
 	}
 
 	deleteSplitShipment(childata, index, mainindex) {
 
-		if (childata.purchaseOrderPartRecordId) {
-			this.vendorService.deletePurchaseorderpart(childata.purchaseOrderPartRecordId).subscribe(data => {
+		// if (childata.purchaseOrderPartRecordId) {
+		// 	this.vendorService.deletePurchaseorderpart(childata.purchaseOrderPartRecordId).subscribe(data => {
 
-			})
-		}
-		const index1: number = this.partListData.indexOf(index);
+		// 	})
+		// }
+		// const index1: number = this.partListData.indexOf(index);
 		this.partListData[mainindex].childList.splice(index, 1);
 	}
 
@@ -2656,7 +2662,7 @@ export class PurchaseSetupComponent implements OnInit {
 				})
 			} else {
 				await this.vendorService.newShippingAdd(vendorData).subscribe(() => {
-					this.onShipToVendorSelected(this.addressFormForShipping.vendorId);
+					this.onShipToVendorSelected(vendorData.vendorId);
 					this.alertService.showMessage(
 						'Success',
 						`Updated Shipping Information Successfully`,
@@ -2792,7 +2798,7 @@ export class PurchaseSetupComponent implements OnInit {
 				})
 			} else {
 					await this.customerService.newBillingAdd(customerData).subscribe(() => {
-						this.onBillToCustomerSelected(this.addressFormForBilling.customerId);
+						this.onBillToCustomerSelected(customerData.customerId);
 						this.alertService.showMessage(
 							'Success',
 							`Updated Billing Information Successfully`,
@@ -3058,7 +3064,7 @@ export class PurchaseSetupComponent implements OnInit {
 			const customerData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('value', this.tempSplitPart.partListUserId) }
 			if(!this.isEditModeSplitAddress) {				
 				await this.customerService.newShippingAdd(customerData).subscribe(res => {
-					this.onCustomerNameChange(res.customerId);
+					this.onCustomerNameChange(customerData.customerId); //res.customerId
 					this.alertService.showMessage(
 						'Success',
 						`Saved Address Successfully`,
@@ -3067,7 +3073,7 @@ export class PurchaseSetupComponent implements OnInit {
 				})
 			} else {
 				await this.customerService.newShippingAdd(customerData).subscribe(res => {
-					this.onCustomerNameChange(res.customerId);
+					this.onCustomerNameChange(customerData.customerId);
 					this.alertService.showMessage(
 						'Success',
 						`Updated Address Successfully`,
@@ -3080,7 +3086,7 @@ export class PurchaseSetupComponent implements OnInit {
 			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.tempSplitPart.partListUserId) }
 			if(!this.isEditModeSplitAddress) {				
 				await this.vendorService.newShippingAdd(vendorData).subscribe(res => {
-					this.onVendorNameChange(res.vendorId);
+					this.onVendorNameChange(vendorData.vendorId);
 					this.alertService.showMessage(
 						'Success',
 						`Saved Address Successfully`,
@@ -3089,7 +3095,7 @@ export class PurchaseSetupComponent implements OnInit {
 				})
 			} else {
 				await this.vendorService.newShippingAdd(vendorData).subscribe(res => {
-					this.onVendorNameChange(res.vendorId);
+					this.onVendorNameChange(vendorData.vendorId);
 					this.alertService.showMessage(
 						'Success',
 						`Updated Address Successfully`,
@@ -3102,7 +3108,7 @@ export class PurchaseSetupComponent implements OnInit {
 			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.tempSplitPart.partListUserId), siteName: "" }
 			if(!this.isEditModeSplitAddress) {				
 				await this.companyService.addNewShippingAddress(companyData).subscribe(res => {
-					this.onCompanyNameChange(res.legalEntityId);
+					this.onCompanyNameChange(companyData.legalentityId); //res.legalEntityId
 					this.alertService.showMessage(
 						'Success',
 						`Saved Address Successfully`,
@@ -3111,7 +3117,7 @@ export class PurchaseSetupComponent implements OnInit {
 				})
 			} else {
 				await this.companyService.addNewShippingAddress(companyData).subscribe(res => {
-					this.onCompanyNameChange(res.legalEntityId);
+					this.onCompanyNameChange(companyData.legalentityId);
 					this.alertService.showMessage(
 						'Success',
 						`Updated Address Successfully`,

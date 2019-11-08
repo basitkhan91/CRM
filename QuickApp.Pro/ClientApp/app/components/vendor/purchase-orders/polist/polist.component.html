@@ -114,13 +114,14 @@
 					><span><i class="fa fa-plus"></i></span
 				  ></a> -->
 				</div>
+				
 			  </div>
 			</ng-template>
 	  
 			<ng-template pTemplate="header" let-columns>
 			  <tr>
 				<th
-				  style="width:120px"
+				  style="width:150px"
 				  *ngFor="let col of columns"
 				  pResizableColumn
 				  pReorderableColumn
@@ -137,7 +138,12 @@
 				</th>
 			  </tr>
 			  <tr>
-				<th
+				<th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
+					<input type="text" *ngIf="col.field !== 'openDate' && col.field !== 'closedDate'" style="width:100%;" pInputText (keyup)="onChangeInputField($event.target.value, col.field)">
+					<input type="date" *ngIf="col.field == 'openDate'" name="openDate" style="width:100%;" (change)="onChangeInputField($event.target.value, col.field)">
+					<input type="date" *ngIf="col.field == 'closedDate'" name="closedDate" style="width:100%;" (change)="onChangeInputField($event.target.value, col.field)">
+				</th>
+				<!-- <th
 				  style="width:120px"
 				  *ngFor="let col of columns"
 				  [ngSwitch]="col.field"
@@ -148,14 +154,14 @@
 					type="text"
 					(input)="dt.filter($event.target.value, col.field, 'contains')"
 				  />
-				</th>
+				</th> -->
 				<th style="width:200px;position:sticky"></th>
 			  </tr>
 			</ng-template>
 			<ng-template pTemplate="body" let-rowData let-columns="columns">
 			  <tr [pSelectableRow]="rowData" pReorderableRowHandle>
 				<td
-				  style="width:120px"
+				  style="width:150px"
 				  *ngFor="let col of columns"
 				  class="ui-resizable-column"
 				  pReorderableRowHandle				  
@@ -349,10 +355,10 @@
 										</div>
 										<div class="col-sm-3">
 											<h5>Management Structure</h5>
-												<p><span class="label"><b>Company: </b></span><span class="value">-</span></p>
-												<p><span class="label"><b>BU: </b></span><span class="value">-</span></p>
-												<p><span class="label"><b>Division: </b></span><span class="value">-</span></p>
-												<p><span class="label"><b>Department: </b></span><span class="value">-</span></p>
+												<p><span class="label"><b>Company: </b></span><span class="value">{{headerManagementStructure.level1 ? headerManagementStructure.level1 : '-'}}</span></p>
+												<p><span class="label"><b>BU: </b></span><span class="value">{{headerManagementStructure.level2 ? headerManagementStructure.level2 : '-'}}</span></p>
+												<p><span class="label"><b>Division: </b></span><span class="value">{{headerManagementStructure.level3 ? headerManagementStructure.level3 : '-'}}</span></p>
+												<p><span class="label"><b>Department: </b></span><span class="value">{{headerManagementStructure.level4 ? headerManagementStructure.level4 : '-'}}</span></p>
 												<p><span class="label"><b>Memo: </b></span><span class="value">{{poHeaderAdd.notes ? poHeaderAdd.notes : '-'}}</span></p>
 										</div>
 									</div>
@@ -412,7 +418,7 @@
 																<td>{{partList?.workOrderNo}}</td>
 																<td>{{partList?.reapairOrderNo}}</td>
 																<td>{{partList?.salesOrderNo}}</td>
-																<td colspan="4"></td>
+																<td colspan="4">{{partList?.level1}},{{partList?.level2}},{{partList?.level3}},{{partList?.level4}}</td>
 																<td>{{partList?.memo}}</td>
 															</tr>
 															<tr class="child-header splitship-head" *ngIf="partList.purchaseOrderSplitParts">
@@ -445,7 +451,7 @@
 																<td>{{partList?.unitOfMeasure}}</td>
 																<td>{{partChild?.quantityOrdered}}</td>
 																<td>{{partChild?.needByDate}}</td>
-																<td colspan="4"></td>
+																<td colspan="4">{{partChild?.level1}},{{partChild?.level2}},{{partChild?.level3}},{{partChild?.level4}}</td>
 																<td colspan="10"></td>
 															</tr>
 														</ng-container>
