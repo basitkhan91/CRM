@@ -374,13 +374,11 @@ export class AppComponent implements OnInit, AfterViewInit {
                     },
                     {
                         label: 'Sales Order Quote', items: [
-                            { label: 'SO Quote List', routerLink: '/#' },
-                            { label: 'Create New Quote', routerLink: '/#' },
-                            { label: 'SO Quote List', routerLink: '/#' },
-                            { label: 'SO OnTime Performance', routerLink: '/#' },
+                            { label: 'SO Quote List', routerLink: '/salesmodule/salespages/sales-quote-list' },
+                            { label: 'Create New SO Quote', routerLink: '/salesmodule/salespages/sales-quote-create' },
                             {
-                                label: 'Reports and Forms', items: [
-                                    { label: 'open SO Quotes', routerLink: '/#' },
+                                label: 'Reports & Forms', items: [
+                                    { label: 'Open SO Quotes', routerLink: '/#' },
                                     { label: 'Approved SO Quotes', routerLink: '/#' }
                                 ]
                             }
