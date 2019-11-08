@@ -95,6 +95,12 @@ export class VendorpagesComponent {
 				];
 			}
 
+            else if (this.currentUrl == '/vendorsmodule/vendorpages/app-vendor-billing-information') {
+                this.items = [
+                    { label: 'Vendor', url: '/vendorsmodule/vendorpages/app-vendors-list' },
+                    { label: 'Billing Information' }
+                ];
+            }
 			else if (this.currentUrl == '/vendorsmodule/vendorpages/app-vendor-shipping-information') {
 				this.items = [
 					{ label: 'Vendor', url: '/vendorsmodule/vendorpages/app-vendors-list' },

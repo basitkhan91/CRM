@@ -813,7 +813,7 @@ export class VendorGeneralInformationComponent implements OnInit {
     }
 
     onAddIntegrationWith() {
-        this.router.navigate(['/singlepages/singlepages/app-integration']);
+        //this.router.navigate(['/singlepages/singlepages/app-integration']);
     }
 
     onAddCapabilities() {
