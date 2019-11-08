@@ -3071,6 +3071,13 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
+        [HttpGet("roApproversList")]
+        public IActionResult GetRoApproversList(long repairOrderId)
+        {
+            var result = _unitOfWork.repairOrder.GetRoApproversList(repairOrderId);
+            return Ok(result);
+        }
+
         #region Capes
 
         [HttpGet("GetVendorCapesDatawithMasterId/{id}")]
