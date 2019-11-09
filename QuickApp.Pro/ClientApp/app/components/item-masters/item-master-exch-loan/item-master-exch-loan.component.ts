@@ -53,6 +53,8 @@ export class ItemMasterExchangeLoanComponent implements OnInit {
                 if(c[0]!=null)
                 {
                     this.currentItem=c[0];
+                    this.showExchange=this.currentItem.isExchange;
+                    this.showLoan=this.currentItem.isLoan;
                 }
                 this.alertService.stopLoadingMessage();
             });
