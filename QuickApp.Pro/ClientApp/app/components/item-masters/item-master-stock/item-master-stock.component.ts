@@ -43,6 +43,7 @@ import { CustomerService } from '../../../services/customer.service';
 import { PublicationService } from '../../../services/publication.service';
 import { DashNumberService } from '../../../services/dash-number/dash-number.service';
 import {CommonService} from '../../../services/common.service';
+import { ItemMasterExchangeLoanComponent } from '../item-master-exch-loan/item-master-exch-loan.component';
 
 @Component({
     selector: 'app-item-master-stock',
@@ -52,6 +53,7 @@ import {CommonService} from '../../../services/common.service';
 
 /** item-master-stock component*/
 export class ItemMasterStockComponent implements OnInit, AfterViewInit {
+    @ViewChild('exchLoan') exchLoan:ItemMasterExchangeLoanComponent;
     dataSourceValue: MatTableDataSource<Priority>;
     disables: boolean = false;
     disable1: boolean = true;
@@ -420,7 +422,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate);
                 this.selectedIntegrationTypes = this.sourceItemMaster.integrationPortalIds;
                 this.sourceItemMaster.oemPNId = this.sourceItemMaster.oemPNData[0]
-
+                this.ItemMasterId= this.itemMasterId;
                 // assign the header values
                 this.pnvalue = this.sourceItemMaster.partNumber;
                 this.pnDescription = this.sourceItemMaster.partDescription;
@@ -4555,6 +4557,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 `Saved Purchase and Sale Successfully `,
                 MessageSeverity.success
             );
+            this.exchLoan.loadData(this.ItemMasterId);
             this.changeOfTab('Exchange');
             // console.log(datas);
         })
@@ -5615,6 +5618,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     changeOfTab(value) {
         console.log('invoked');
+        console.log(`Parent master id ${this.ItemMasterId}`);
         if (value === 'General') {
             this.currentTab = 'General';
             this.activeMenuItem = 1;
@@ -5632,6 +5636,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.activeMenuItem = 5;
         } else if(value==="Exchange"){
             this.currentTab = 'Exchange';
+            this.exchLoan.loadData(this.ItemMasterId);
             this.activeMenuItem = 6;
         }
         else if (value === 'ExportInfo') {

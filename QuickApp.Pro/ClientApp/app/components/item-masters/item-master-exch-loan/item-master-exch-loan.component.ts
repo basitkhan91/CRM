@@ -1,18 +1,19 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, ChangeDetectionStrategy } from '@angular/core';
 import {CurrencyService} from '../../../services/currency.service';
 import { Currency } from '../../../models/currency.model';
 import {ItemMasterLoanExchange } from '../../../models/item-master-loan-exchange.model';
 import {AuthService} from '../../../services/auth.service';
 import { ItemMasterService } from '../../../services/itemMaster.service';
+import { AlertService, MessageSeverity } from '../../../services/alert.service';
 @Component({
     selector: 'app-item-master-exch-loan',
 	templateUrl: './item-master-exch-loan.component.html',
-	styleUrls: ['./item-master-exch-loan.component.scss']
-})
+    styleUrls: ['./item-master-exch-loan.component.scss']
+   })
 
 export class ItemMasterExchangeLoanComponent implements OnInit {
     constructor( private currencyService:CurrencyService, private authService:AuthService, 
-        private itemMasterService: ItemMasterService) { }
+        private itemMasterService: ItemMasterService , private alertService:AlertService) { }
     showExchange:boolean=true;
     showLoan:boolean=true;
     exchangeCurrencies:Currency[];
@@ -38,6 +39,13 @@ export class ItemMasterExchangeLoanComponent implements OnInit {
             loanCurrencyId:0,createdBy:this.userName,isActive:true, isDeleted:false,isExchange:true, isLoan:true};
         this.currentItem.exchangeCurrencyId=0;
         this.currentItem.loanCurrencyId=0;
+        this.loadCurrency();
+   
+    }
+
+    loadData(id:number):void {
+        this.itemMasterId=id;
+        this.alertService.startLoadingMessage();
         if(this.itemMasterId)
         {
             this.itemMasterService.getExchangeLoan(this.itemMasterId).subscribe(c=>{
@@ -46,12 +54,12 @@ export class ItemMasterExchangeLoanComponent implements OnInit {
                 {
                     this.currentItem=c[0];
                 }
+                this.alertService.stopLoadingMessage();
             });
         }
 
-        this.loadCurrency();
+       
     }
-
     loadCurrency():void
     {
         this.currencyService.getCurrencyList().subscribe(dat=>{
@@ -93,17 +101,29 @@ export class ItemMasterExchangeLoanComponent implements OnInit {
         this.currentItem.updatedBy=this.userName;
         this.currentItem.isExchange=this.showExchange;
         this.currentItem.isLoan=this.showLoan;
+        this.currentItem.itemMasterId=this.itemMasterId;
         console.log( this.currentItem);
          if(this.currentItem.itemMasterLoanExchId)
          {
             this.itemMasterService.updateExchangeLoan(this.currentItem).subscribe(()=>{
                 //Show the message
+                 //Show the message
+                 this.alertService.showMessage(
+                    'Success',
+                    `Saved Exchange  and loans Successfully `,
+                    MessageSeverity.success
+                );
                 this.moveTab('ExportInfo');
             })
          }else{
              // Add new item
              this.itemMasterService.AddExchangeLoan(this.currentItem).subscribe((data)=>{
                  //Show the message
+                 this.alertService.showMessage(
+                    'Success',
+                    `Saved Exchange  and loans Successfully `,
+                    MessageSeverity.success
+                );
                  this.currentItem.itemMasterLoanExchId=data.itemMasterLoanExchId;
                  this.moveTab('ExportInfo');
              });
