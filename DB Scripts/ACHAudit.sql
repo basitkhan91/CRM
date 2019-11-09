@@ -1,5 +1,3 @@
-USE [PAS_DEV]
-GO
 
 /****** Object:  Table [dbo].[ACHAudit]    Script Date: 9/17/2019 4:03:21 PM ******/
 SET ANSI_NULLS ON

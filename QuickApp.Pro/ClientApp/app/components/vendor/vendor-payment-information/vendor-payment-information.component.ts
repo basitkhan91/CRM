@@ -777,7 +777,8 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 			this.workFlowtService.contactCollection = this.local;
 			this.activeIndex = 4;
 			this.workFlowtService.indexObj.next(this.activeIndex);
-		this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-shipping-information');
+        this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-shipping-information');
+        //this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-billing-information');
 	}
     private saveCompleted(user?: any) {
         this.isSaving = false;

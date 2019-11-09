@@ -114,23 +114,42 @@ namespace DAL.Repositories
                 address.PostalCode = billingAddress.PostalCode;
                 address.StateOrProvince = billingAddress.StateOrProvince;
                 address.IsActive = true;
-                address.UpdatedDate = address.CreatedDate = DateTime.Now;
+                address.UpdatedDate = DateTime.Now;
                 address.CreatedBy = billingAddress.CreatedBy;
                 address.UpdatedBy = billingAddress.UpdatedBy;
 
-                _appContext.Address.Add(address);
+                if(billingAddress.AddressId>0)
+                {
+                    address.CreatedDate = billingAddress.CreatedDate;
+                    address.AddressId = billingAddress.AddressId;
+                    _appContext.Address.Update(address);
+                }
+                else
+                {
+                    address.CreatedDate = DateTime.Now;
+                    _appContext.Address.Add(address);
+                }
+                
                 _appContext.SaveChanges();
 
 
                 billingAddress.AddressId = Convert.ToInt64(address.AddressId);
 
-                billingAddress.CreatedDate = billingAddress.UpdatedDate = DateTime.Now;
+                 billingAddress.UpdatedDate = DateTime.Now;
                 billingAddress.IsActive = true;
                 billingAddress.IsDeleted = false;
                 billingAddress.IsPrimary = false;
 
-
-                _appContext.LegalEntityBillingAddress.Add(billingAddress);
+                if(billingAddress.LegalEntityBillingAddressId>0)
+                {
+                    _appContext.LegalEntityBillingAddress.Update(billingAddress);
+                }
+                else
+                {
+                    billingAddress.CreatedDate = DateTime.Now;
+                    _appContext.LegalEntityBillingAddress.Add(billingAddress);
+                }
+                
                 _appContext.SaveChanges();
                 return billingAddress.LegalEntityBillingAddressId;
             }
@@ -278,22 +297,46 @@ namespace DAL.Repositories
                 address.PostalCode = shippingAddress.PostalCode;
                 address.StateOrProvince = shippingAddress.StateOrProvince;
                 address.IsActive = true;
-                address.UpdatedDate = address.CreatedDate = DateTime.Now;
+                address.UpdatedDate = DateTime.Now;
                 address.CreatedBy = shippingAddress.CreatedBy;
                 address.UpdatedBy = shippingAddress.UpdatedBy;
 
-                _appContext.Address.Add(address);
+
+                if (shippingAddress.AddressId > 0)
+                {
+                    address.CreatedDate = shippingAddress.CreatedDate;
+                    address.AddressId = shippingAddress.AddressId;
+                    _appContext.Address.Update(address);
+                }
+                else
+                {
+                    address.CreatedDate = DateTime.Now;
+                    _appContext.Address.Add(address);
+                }
+
                 _appContext.SaveChanges();
 
 
                 shippingAddress.AddressId = Convert.ToInt64(address.AddressId);
 
-                shippingAddress.CreatedDate = shippingAddress.UpdatedDate = DateTime.Now;
+                shippingAddress.UpdatedDate = DateTime.Now;
                 shippingAddress.IsActive = true;
                 shippingAddress.IsDeleted = false;
+                shippingAddress.IsPrimary = false;
 
-                _appContext.LegalEntityShippingAddress.Add(shippingAddress);
+                if (shippingAddress.LegalEntityShippingAddressId > 0)
+                {
+                    _appContext.LegalEntityShippingAddress.Update(shippingAddress);
+                }
+                else
+                {
+                    shippingAddress.CreatedDate = DateTime.Now;
+                    _appContext.LegalEntityShippingAddress.Add(shippingAddress);
+                }
+
                 _appContext.SaveChanges();
+
+                
                 return shippingAddress.LegalEntityShippingAddressId;
             }
             catch (Exception)
@@ -556,7 +599,8 @@ namespace DAL.Repositories
                                 ad.City,
                                 ad.StateOrProvince,
                                 ad.PostalCode,
-                                ad.Country
+                                ad.Country,
+                                ad.AddressId
                             }).Distinct().ToList();
                 return data;
             }

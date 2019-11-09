@@ -2,17 +2,12 @@
 // info@ebenmonney.com
 // www.ebenmonney.com/quickapp-pro
 // ===============================
+using DAL.Common;
 using DAL.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Threading;
-using DAL.Models.Interfaces;
-using DAL.Common;
+using System.Threading.Tasks;
 
 namespace DAL
 {
@@ -21,9 +16,9 @@ namespace DAL
         // Test Changes....
         public string CurrentUserId { get; set; }
 
-		public DbSet<CustomerContactAudit> CustomerContactAudit { get; set; }
+        public DbSet<CustomerContactAudit> CustomerContactAudit { get; set; }
 
-		public DbSet<ShippingReference> ShippingReference { get; set; }
+        public DbSet<ShippingReference> ShippingReference { get; set; }
         public DbSet<ShippingVia> ShippingVia { get; set; }
         public DbSet<ShippingAccount> ShippingAccount { get; set; }
         public DbSet<ItemMasterAircraftMapping> ItemMasterAircraftMapping { get; set; }
@@ -220,6 +215,7 @@ namespace DAL
         //public DbSet<PurchaseOrder> PurchaseOrder { get; set; }
         public DbSet<RepairOrder> RepairOrder { get; set; }
         public DbSet<StocklineAdjustmentReason> stocklineAdjustmentReason { get; set; }
+        public DbSet<StocklineAdjustmentReasonAudit> stocklineAdjustmentReasonAudit { get; set; }
 
         public DbSet<ItemMasterAircraftManufacturer> ItemMasterAircraftManufacturer { get; set; }
         public DbSet<EmployeeLeaveTypeMapping> EmployeeLeaveTypeMapping { get; set; }
@@ -291,6 +287,8 @@ namespace DAL
         public DbSet<AssetAttributeTypeAudit> AssetAttributeTypeAudit { get; set; }
 
         public DbSet<Asset> Asset { get; set; }
+
+        public DbSet<AssetAudit> AssetAudit { get; set; }
         public DbSet<GLAccountMiscCategory> GLAccountMiscCategory { get; set; }
         public DbSet<GLAccount> GLAccount { get; set; }
 
@@ -359,6 +357,9 @@ namespace DAL
         public DbSet<WorkOrderLabor> WorkOrderLabor { get; set; }
         public DbSet<WorkOrderStage> WorkOrderStage { get; set; }
         public DbSet<WorkOrderPartNumber> WorkOrderPartNumber { get; set; }
+        public DbSet<WorkOrderExpertise> WorkOrderExpertise { get; set; }
+        public DbSet<WorkOrderDirections> WorkOrderDirections { get; set; }
+        public DbSet<WorkOrderPublications> WorkOrderPublications { get; set; }
 
         public DbSet<VendorCapability> VendorCapability { get; set; }
         public DbSet<AircraftModelAudit> AircraftModelAudit { get; set; }
@@ -390,7 +391,7 @@ namespace DAL
         public DbSet<MasterParts> MasterParts { get; set; }
         public DbSet<Nha_Tla_Alt_Equ_ItemMapping> Nha_Tla_Alt_Equ_ItemMapping { get; set; }
 
-        public DbSet<WorkFlowWorkOrder> WorkFlowWorkOrder { get; set; }
+        public DbSet<WorkOrderWorkFlow> WorkOrderWorkFlow { get; set; }
         public DbSet<WorkOrderLaborHeader> WorkOrderLaborHeader { get; set; }
         public DbSet<WorkOrderCharges> WorkOrderCharges { get; set; }
         public DbSet<WorkOrderAssets> WorkOrderAssets { get; set; }
@@ -415,6 +416,11 @@ namespace DAL
         public DbSet<LegalEntityShippingAddress> LegalEntityShippingAddress { get; set; }
         public DbSet<LegalEntityContact> LegalEntityContact { get; set; }
         public DbSet<PurchaseOrderAudit> PurchaseOrderAudit { get; set; }
+        public DbSet<WorkOrderTask> WorkOrderTask { get; set; }
+        public DbSet<WorkOrderTaskAttribute> WorkOrderTaskAttribute { get; set; }
+        public DbSet<WorkOrderPublicationDashNumber> WorkOrderPublicationDashNumber { get; set; }
+        public DbSet<RepairOrderApprover> RepairOrderApprover { get; set; }
+        public DbSet<RepairOrderApproverList> RepairOrderApproverList { get; set; }
         public DbSet<ItemMasterExchangeLoan> ItemMasterExchangeLoan { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)

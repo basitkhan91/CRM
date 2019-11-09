@@ -1,5 +1,3 @@
-
-/****** Object:  Trigger [dbo].[Trg_AssetDepreciationIntervalAudit]    Script Date: 10/22/2019 3:52:44 PM ******/
 SET ANSI_NULLS ON
 GO
 

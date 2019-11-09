@@ -14,12 +14,15 @@ namespace DAL.Repositories.Interfaces
         void DeleteWorkOrder(long workOrderId);
         void WorkOrderStatus(long workOrderId, bool status, string updatedBy);
         IEnumerable<object> GetWorkOrdersList(int pageNo, int pageSize);
+        IEnumerable<object> GetWorkOrderPartList(long workOrderId);
         WorkOrder WorkOrderById(long workOrderId);
         
 
-        long CreateWorkFlowWorkOrder(WorkFlowWorkOrder workFlowWorkOrder);
-        void UpdateWorkFlowWorkOrder(WorkFlowWorkOrder workFlowWorkOrder);
-        WorkFlowWorkOrder GetWorkFlowWorkOrderById(long workFlowWorkOrderId);
+        long CreateWorkFlowWorkOrder(WorkOrderWorkFlow workFlowWorkOrder);
+        void UpdateWorkFlowWorkOrder(WorkOrderWorkFlow workFlowWorkOrder);
+        WorkOrderWorkFlow GetWorkFlowWorkOrderById(long workFlowWorkOrderId);
+        IEnumerable<object> GetWorkOrderWorkFlowNos(long workOrderId);
+        IEnumerable<object> GetWorkOrderTaskAttributes(long workOrderTaskId);
 
         long CreateWorkOrderLabor(WorkOrderLaborHeader workOrderLabor);
         void UpdateWorkOrderLabor(WorkOrderLaborHeader workOrderLabor);
@@ -31,7 +34,7 @@ namespace DAL.Repositories.Interfaces
 
         long CreateWorkOrderAssets(WorkOrderAssets workOrderAssets);
         void UpdateWorkOrderAssets(WorkOrderAssets workOrderAssets);
-        IEnumerable<WorkOrderAssets> GetWorkFlowWorkOrderAssetsList(long wfwoId = 0, long workOrderId = 0);
+        IEnumerable<object> GetWorkOrderAssetList(long wfwoId, long workOrderId);
 
         long CreateWorkOrderExclusions(WorkOrderExclusions workOrderExclusions);
         void UpdateWorkOrderExclusions(WorkOrderExclusions workOrderExclusions);
@@ -55,11 +58,13 @@ namespace DAL.Repositories.Interfaces
 
         IEnumerable<object> GetWorkFlowNos(long partId, long workScopeId);
         IEnumerable<object> GetWorkOrderPartDetails();
-        IEnumerable<object> GetStockLineDetailsByPartNo(long itemMasterId);
-        object GetPartSerialNo(long stockLineId, long conditionId);
+        IEnumerable<object> GetStockLineDetailsByPartNo(long itemMasterId, long conditionId);
+        object GetPartSerialNo(long stockLineId);
         IEnumerable<object> GetPartPublications(long itemMasterId);
         IEnumerable<object> GetRevisedParts(long itemMasterId, int mappingType);
         IEnumerable<object> GetConditionDetailsByPartNo(long itemMasterId);
+        IEnumerable<object> GetWorkOrderMaterialList(long wfwoId, long workOrderId);
+        IEnumerable<object> GetTechnicians();
 
     }
 }

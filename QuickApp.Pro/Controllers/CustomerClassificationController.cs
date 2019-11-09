@@ -130,7 +130,7 @@ namespace QuickApp.Pro.Controllers
         {
             var existingResult = _unitOfWork.CustomerClassifications.GetSingleOrDefault(c => c.CustomerClassificationId == id);
 
-            existingResult.IsDelete = true;
+            existingResult.IsDeleted = true;
             _unitOfWork.CustomerClassifications.Update(existingResult);
 
             //_unitOfWork.CustomerClassifications.Remove(existingResult);

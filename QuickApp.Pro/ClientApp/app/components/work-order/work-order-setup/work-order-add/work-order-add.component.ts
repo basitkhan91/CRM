@@ -83,6 +83,7 @@ export class WorkOrderAddComponent implements OnInit {
   quote: WorkOrderQuote;
   // labor Object Modal
   labor: WorkOrderLabor;
+  isWorkOrder : boolean = true;
 
   workFlowItems: any;
 
@@ -108,6 +109,12 @@ export class WorkOrderAddComponent implements OnInit {
   conditionList: any;
   cmmList: any;
   priorityList: Object;
+  savedWorkOrderData: any;
+  workFlowWorkOrderData: any;
+  workOrderAssetList: any;
+  workOrderId: (responseData: any) => void;
+  workFlowWorkOrderId: any;
+  workOrderMaterialList: any;
 
 
   constructor(
@@ -165,11 +172,11 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
   generateLaborForm() {
-    const keysArray = Object.keys(this.labor.tasks[0]);
+    const keysArray = Object.keys(this.labor.workOrderLaborList[0]);
     for (let i = 0; i < keysArray.length; i++) {
       this.labor = {
         ...this.labor,
-        tasks: [{ ...this.labor.tasks[0], [keysArray[i]]: [new AllTasks()] }]
+        workOrderLaborList: [{ ...this.labor.workOrderLaborList[0], [keysArray[i]]: [new AllTasks()] }]
       };
     }
     console.log(this.labor);
@@ -325,6 +332,7 @@ export class WorkOrderAddComponent implements OnInit {
 
 
   saveWorkOrder(): void {
+    this.showTableGrid = true; // Show Grid Boolean
     const generalInfo = this.workOrderGeneralInformation
     const data = {
       ...generalInfo,
@@ -332,7 +340,7 @@ export class WorkOrderAddComponent implements OnInit {
       employeeId: getValueFromObjectByKey('value', generalInfo.employeeId),
       salesPersonId: getValueFromObjectByKey('value', generalInfo.salesPersonId),
       masterCompanyId: 1,
-      "customerContactId": 68,
+      customerContactId: 68,
       createdBy: this.userName,
       updatedBy: this.userName,
       partNumbers: generalInfo.partNumbers.map(x => {
@@ -340,7 +348,8 @@ export class WorkOrderAddComponent implements OnInit {
           ...x,
 
           masterPartId: getValueFromObjectByKey('itemMasterId', x.masterPartId),
-          mappingItemMasterId: getValueFromObjectByKey('mappingItemMasterId', x.mappingItemMasterId),
+          mappingItemMasterId : getValueFromObjectByKey('itemMasterId', x.masterPartId),
+          // mappingItemMasterId: getValueFromObjectByKey('mappingItemMasterId', x.mappingItemMasterId),
           technicianId: getValueFromObjectByKey('value', x.technicianId),
           createdBy: this.userName,
           updatedBy: this.userName
@@ -350,6 +359,8 @@ export class WorkOrderAddComponent implements OnInit {
 
     this.workOrderService.createNewWorkOrder(data).subscribe(
       result => {
+        this.savedWorkOrderData = result;
+        this.workOrderId = result.workOrderId;
         this.showTableGrid = true; // Show Grid Boolean
         // this.workOrder = result;
         this.alertService.showMessage(
@@ -359,6 +370,46 @@ export class WorkOrderAddComponent implements OnInit {
         );
       }
     );
+  }
+
+  savedWorkFlowData(responseData){
+    this.workFlowWorkOrderData = responseData;
+    this.workFlowWorkOrderId = responseData.workFlowWorkOrderId;
+  }
+
+  getEquipmentByWorkOrderId(){
+    if(this.workFlowWorkOrderData){
+      // this.workFlowWorkOrderId = this.workFlowWorkOrderData.workFlowWorkOrderId;
+      this.workOrderService.getWorkOrderAssetList(this.workFlowWorkOrderId).subscribe(
+        result => {
+            this.workOrderAssetList = result;
+        }
+    )
+  }
+
+  }
+
+  getMaterialListByWorkOrderId(){
+   if( this.workFlowWorkOrderId && this.workOrderId  ){
+     this.workOrderService.getMaterialList(this.workFlowWorkOrderId ,  this.workOrderId).subscribe(res => {
+      
+         this.workOrderMaterialList = res;
+       
+     })
+
+   }
+  }
+
+
+
+  saveworkOrderLabor(data){
+    this.workOrderService.createWorkOrderLabor(data).subscribe(res => {
+      this.alertService.showMessage(
+        this.moduleName,
+        'Saved Work Order Labor  Succesfully',
+        MessageSeverity.success
+      );
+    })
   }
 
 

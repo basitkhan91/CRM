@@ -111,6 +111,13 @@ export class SingleComponent {
                 ];
             }
 
+            else if (this.currentUrl == '/singlepages/singlepages/app-stockline-adjustment-reason') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Adjustment Reason' }
+                ];
+            }
+
             else if (this.currentUrl == '/singlepages/singlepages/app-asset-dep-convention-type') {
                 this.items = [
                     { label: 'Single Screens' },
@@ -782,6 +789,13 @@ export class SingleComponent {
                 this.items = [
                     { label: 'Single Screens' },
                     { label: 'Depreciation Method' }
+                ];
+            }
+
+            else if (this.currentUrl == '/singlepages/singlepages/app-stockline-adjustment-reason') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Adjustment Reason' }
                 ];
             }
 

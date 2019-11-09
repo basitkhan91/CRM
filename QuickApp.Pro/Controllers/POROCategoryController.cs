@@ -113,6 +113,26 @@ namespace QuickApp.Pro.Controllers
             }
         }
 
+        [HttpPut("UpdatePOROforActive/{id}")]
+        public IActionResult poroUpdateforActive(long id, [FromBody]POROCategory poroCategory)
+        {
+
+            var POROCategoryObj = unitOfWork.Repository<POROCategory>().GetSingleOrDefault(a => a.POROCategoryId == id);
+
+            POROCategoryObj.IsActive = poroCategory.IsActive;
+            POROCategoryObj.UpdatedDate = DateTime.Now; ;
+
+            //  MasterPartsStatus(long masterPartId, bool status, string updatedBy)
+
+            //unitOfWork.CommonRepository.MasterPartsStatus(CustomerObj.MasterPartId, Convert.ToBoolean(itemMasterViewModel.IsActive), itemMasterViewModel.UpdatedBy);
+
+            unitOfWork.Repository<POROCategory>().Update(POROCategoryObj);
+            unitOfWork.SaveChanges();
+            return Ok(POROCategoryObj);
+
+
+        }
+
         [HttpGet("audits/{id}")]
         public IActionResult AuditDetails(long id)
         {

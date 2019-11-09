@@ -418,6 +418,12 @@ namespace DAL.Repositories
             }
         }
 
+        public IEnumerable<StockLine> getStockLinesByIds(long[] ids) {
+            var stockLines = (from st in _appContext.StockLine
+                             where ids.Contains(st.StockLineId)
+                             select st);
+            return stockLines;
+        }
 
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
