@@ -14198,8 +14198,16 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     display: none !important;
 }
 .pcalendar-wo-labor {
-    width: calc(100% - 20px) !important;
-    margin-right: 6px;
+    width: calc(100% - 30px) !important;
+    margin-right: 18px;
+}
+.emp-labour-cstm p-autocomplete .ui-autocomplete {
+    width: calc(100% - 14px) !important;
+    padding-right: 3px;
+    float: left;
+}
+.emp-labour-cstm i {
+    margin-top: 12px !important;
 }
 
 .view-Header {

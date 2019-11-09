@@ -254,8 +254,8 @@ export class PurchaseSetupComponent implements OnInit {
 
 		this.sourcePoApproval.statusId = 1;
 		this.sourcePoApproval.openDate = new Date();
-		this.sourcePoApproval.closedDate = new Date();
-		this.sourcePoApproval.dateRequested = new Date();
+		//this.sourcePoApproval.closedDate = new Date();
+		//this.sourcePoApproval.dateRequested = new Date();
 		this.sourcePoApproval.shipToUserTypeId = 3;
 		this.sourcePoApproval.billToUserTypeId = 3;
 
@@ -1185,7 +1185,7 @@ export class PurchaseSetupComponent implements OnInit {
 		}
 	}
 
-	onCustomerNameChange(customerId, data?) {
+	onCustomerNameChange(customerId, data?, pindex?, cindex?) {
 		//this.gridSelectedCustomerId = customer ? customer.value : this.gridSelectedCustomerId;
 		//console.log(part, customer)
 		// part.poPartSplitUserId = customer.customerId;
@@ -1194,6 +1194,9 @@ export class PurchaseSetupComponent implements OnInit {
 			//this["splitAddressData"+index] = returnedcustomerAddressses[0];
 			//console.log(this["splitAddressData"+index])
 			 this.splitAddressData = returnedcustomerAddressses[0];
+			 this["splitAddressData"+pindex+cindex] = returnedcustomerAddressses[0];
+			 console.log(this["splitAddressData"+pindex+cindex])
+
 			if(this.isEditMode) {
 				if(data.poPartSplitAddressId == 0) {
 					this.splitAddressData.push({customerShippingAddressId: 0, address1: data.poPartSplitAddress1, address2: data.poPartSplitAddress2, address3: data.poPartSplitAddress3, city: data.poPartSplitCity, stateOrProvince: data.poPartSplitState, postalCode: data.poPartSplitPostalCode, country: data.poPartSplitCountry})
@@ -2464,8 +2467,9 @@ export class PurchaseSetupComponent implements OnInit {
 
 	onGetDiscPerUnit(partList) {
 		if (partList.unitCost !== null && partList.discountPercent !== null) {
-			const discountPercentValue = getValueFromObjectByKey('percentValue', partList.discountPercent)
-			partList.discountPerUnit = Math.round(partList.unitCost * ((discountPercentValue / 100)-1));
+			const discountPercentValue = getValueFromObjectByKey('percentValue', partList.discountPercent);
+			partList.discountPerUnit = Math.round(partList.unitCost * discountPercentValue);
+			//partList.discountPerUnit = Math.round(partList.unitCost * ((discountPercentValue / 100)-1));
 		}
 	}
 
