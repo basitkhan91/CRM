@@ -353,7 +353,7 @@
                             Update
                         </button>
 
-                        <button type="button" class="btn btn-primary-cstm pull-right " (click)="nextClick()">
+                        <button type="button" class="btn btn-primary-cstm pull-right " (click)="nextClick()" [disabled]="!generalForm.valid">
                             Next
                         </button>
                     </div>
