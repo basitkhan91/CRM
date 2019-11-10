@@ -110,58 +110,32 @@ namespace QuickApp.Pro.Controllers
         [HttpPut("updateAsset")]
         public IActionResult updateAsset([FromBody] Asset asset)
         {
-            if (asset != null)
-            {
-                asset.MasterCompanyId = 1;
-                asset.UpdatedDate = DateTime.Now;
-                _unitOfWork.Repository<Asset>().Update(asset);
-                _unitOfWork.SaveChanges();
-                return Ok(asset);
-            }
-            else
-            {
-                return BadRequest();
-            }
+            asset.MasterCompanyId = 1;
+            asset.UpdatedDate = DateTime.Now;
+            _unitOfWork.Repository<Asset>().Update(asset);
+            _unitOfWork.SaveChanges();
+            return Ok(asset);
         }
 
         [HttpGet("removeById/{id}")]
-
         public IActionResult removeAssetById(long id)
         {
-            var assetauditcount = _unitOfWork.Repository<AssetAudit>().Find(x => x.AssetRecordId == id).Count();
             var assetaudit = _unitOfWork.Repository<AssetAudit>().Find(x => x.AssetRecordId == id).FirstOrDefault();
-            var asset = _unitOfWork.Repository<Asset>().Find(x => x.AssetRecordId == id).FirstOrDefault();
-            if (asset != null)
+            if (assetaudit != null)
             {
-                if (assetaudit != null)
-                {
-                    if (assetauditcount > 1)
-                    {
-                        asset.MasterCompanyId = 1;
-                        asset.IsDelete = true;
-                        asset.UpdatedDate = DateTime.Now;
-                        _unitOfWork.Repository<Asset>().Update(asset);
-                        _unitOfWork.SaveChanges();
+                assetaudit.IsDelete = true;
+                _unitOfWork.AssetAudit.Remove(assetaudit);
+                _unitOfWork.SaveChanges();
 
-                    }
-                    else
-                    {
-                        assetaudit.IsDelete = true;
-                        _unitOfWork.AssetAudit.Remove(assetaudit);
-                        _unitOfWork.SaveChanges();
+                var asset = _unitOfWork.Repository<Asset>().Find(x => x.AssetRecordId == id).FirstOrDefault();
+                asset.IsDelete = true;
+                _unitOfWork.Asset.Remove(asset);
+                _unitOfWork.SaveChanges();
 
-                        asset.IsDelete = true;
-                        _unitOfWork.Asset.Remove(asset);
-                        _unitOfWork.SaveChanges();
-                    }
-                }
-                else
-                {
-                    asset.IsDelete = true;
-                    _unitOfWork.Asset.Remove(asset);
-                    _unitOfWork.SaveChanges();
-                }
                 return Ok(id);
+                //_unitOfWork.Repository<Asset>().Update(asset);
+                //_unitOfWork.SaveChanges();
+                //return Ok();
             }
             else
             {

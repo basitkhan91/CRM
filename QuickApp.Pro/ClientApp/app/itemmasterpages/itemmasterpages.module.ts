@@ -29,7 +29,6 @@ import { ItemMasterStockComponent } from "../components/item-masters/item-master
 import { ItemMasterNonStockComponent } from "../components/item-masters/item-master-non-stock/item-master-non-stock.component";
 import { ItemMasterEquipmentComponent } from "../components/item-masters/item-master-equipment/item-master-equipment.component";
 import { ItemMasterExchangeComponent } from "../components/item-masters/item-master-exchange/item-master-exchange.component";
-import {ItemMasterExchangeLoanComponent} from '../components/item-masters/item-master-exch-loan/item-master-exch-loan.component';
 import { ItemMasterLoanComponent } from "../components/item-masters/item-master-loan/item-master-loan.component";
 import { ItemMasterCreateCapabilitiesComponent } from "../components/item-masters/Capabilities/item-master-create-capabilities/item-master-create-capabilities.component";
 import { ItemMasterCapabilitiesListComponent } from "../components/item-masters/Capabilities/item-master-capabilities-list/item-master-capabilities-list.component";
@@ -48,7 +47,6 @@ import { DashnumberComponent } from "../components/dashnumber/dashnumber.compone
 import { DashNumberService } from "../services/dash-number/dash-number.service";
 import { DashNumberEndpointService } from "../services/dash-number/dash-number-endpoint.service";
 import { TooltipModule } from "primeng/tooltip";
-import {CommonService} from '../services/common.service';
 
 
 @NgModule({
@@ -90,8 +88,7 @@ import {CommonService} from '../services/common.service';
         ItemMasterExchangeComponent,
         ItemMasterLoanComponent,
         ItemMasterCreateCapabilitiesComponent,
-        ItemMasterCapabilitiesListComponent,
-        ItemMasterExchangeLoanComponent
+        ItemMasterCapabilitiesListComponent
 
 
     ],
@@ -103,8 +100,7 @@ import {CommonService} from '../services/common.service';
         PublicationService,
         PublicationEndpointService,
         DashNumberService,
-        DashNumberEndpointService,
-        CommonService
+        DashNumberEndpointService
       
     ],
     entryComponents: [

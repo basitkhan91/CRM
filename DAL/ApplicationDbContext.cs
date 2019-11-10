@@ -421,8 +421,6 @@ namespace DAL
         public DbSet<WorkOrderPublicationDashNumber> WorkOrderPublicationDashNumber { get; set; }
         public DbSet<RepairOrderApprover> RepairOrderApprover { get; set; }
         public DbSet<RepairOrderApproverList> RepairOrderApproverList { get; set; }
-        public DbSet<ItemMasterExchangeLoan> ItemMasterExchangeLoan { get; set; }
-
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }

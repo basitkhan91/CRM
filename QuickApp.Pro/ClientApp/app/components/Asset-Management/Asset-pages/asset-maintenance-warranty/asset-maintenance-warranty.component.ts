@@ -92,9 +92,7 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
                 this.currentMaintenance.warrantyStatus = "";
                 this.currentMaintenance.unexpiredTime = "";
             }
-            this.assetService.updateAsset(this.currentMaintenance).subscribe(data => {
-                this.currentMaintenance.updatedBy = this.userName;
-                this.localCollection = data;                
+            this.assetService.updateAsset(this.currentMaintenance).subscribe(response => {
                 this.alertService.showMessage('Asset Maintance updated successfully.');
                 this.activeIndex = 3;
                 this.assetService.indexObj.next(this.activeIndex);

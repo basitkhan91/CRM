@@ -198,10 +198,8 @@ export class AssetCalibrationComponent implements OnInit {
             }
             
             this.currentCalibration.updatedBy = this.userName;
-            this.currentCalibration.masterCompanyId = 1; 
-            this.assetService.updateAsset(this.currentCalibration).subscribe(data => {               
-                this.currentCalibration.updatedBy = this.userName;
-                this.localCollection = data;
+            this.currentCalibration.masterCompanyId = 1;            
+            this.assetService.updateAsset(this.currentCalibration).subscribe(response => {
                 this.alertService.showMessage('Asset calibration updated successfully.');
                 this.activeIndex = 2;
                 this.assetService.indexObj.next(this.activeIndex);
