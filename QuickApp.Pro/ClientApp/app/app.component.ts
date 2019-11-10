@@ -375,7 +375,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                     {
                         label: 'Sales Order Quote', items: [
                             { label: 'SO Quote List', routerLink: '/salesmodule/salespages/sales-quote-list' },
-                            { label: 'Create New SO Quote', routerLink: '/salesmodule/salespages/sales-quote-create' },
+                            { label: 'Create New SO Quote', routerLink: '/salesmodule/salespages/sales-quote' },
                             {
                                 label: 'Reports & Forms', items: [
                                     { label: 'Open SO Quotes', routerLink: '/#' },

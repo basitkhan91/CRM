@@ -425,6 +425,13 @@ namespace DAL
         public DbSet<WorkOrderTaskAttribute> WorkOrderTaskAttribute { get; set; }
         public DbSet<WorkOrderPublicationDashNumber> WorkOrderPublicationDashNumber { get; set; }
 
+        public DbSet<MasterSalesOrderQuoteTypes> MasterSalesOrderQuoteTypes { get; set; }
+        public DbSet<MasterSalesCreditTerms> MasterSalesCreditTerms { get; set; }
+
+        public DbSet<MasterSalesLeadSources> MasterSalesLeadSources { get; set; }
+
+        public DbSet<MasterSalesProbablity> MasterSalesProbablity { get; set; }
+
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }

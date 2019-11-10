@@ -1,22 +1,24 @@
-p-autocomplete {
-  border-radius: 5px !important;
+label {
+  text-align: left;
+  width: 100%;
 }
 
-.ui-input-control {
-  margin-top: 6px !important;
+.form-controls {
+  margin-top: 10px;
+}
+.column {
+  margin-left: 10px;
 }
 
-.btn-small {
-  padding: 1px;
+.column-seperator {
+  margin-left: 20px;
 }
 
-#footer {
-  display: inline-flex;
-  font-size: 11px !important;
+.checkbox-custom-label {
+  margin-left: 15px;
+  margin-top: 10px;
 }
-.footer-t-rec {
-  margin-left: 65%;
-}
-.footer--count {
-  margin-right: 0px;
+
+button {
+  border-radius: 5px;
 }

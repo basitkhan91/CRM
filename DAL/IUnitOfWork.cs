@@ -262,6 +262,15 @@ namespace DAL
         
         IPublicationTypesRepository PublicationTypesRepository { get; }
         IPercentageRepository PercentageRepository { get; }
+
+        IMasterSalesOrderQuoteTypesRepository MasterSalesOrderQuoteTypesRepository { get; }
+
+        IMasterSalesCreditTermsRepository MasterSalesCreditTermsRepository { get; }
+
+        IMasterSalesLeadSourcesRepository MasterSalesLeadSourcesRepository { get; }
+
+        IMasterSalesProbablityRepository MasterSalesProbablityRepository { get;  }
+
         void SaveChanges(Employee employeeobject);
     }
 }
