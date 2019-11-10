@@ -204,10 +204,14 @@ namespace DAL
 
         IPublicationTypesRepository _publicationTypesRepository;
         IPercentageRepository _percentageRepository;
+
         IMasterSalesOrderQuoteTypesRepository _masterSalesOrderQuoteTypesRepository;
         IMasterSalesCreditTermsRepository _masterSalesCreditTermsRepository;
         IMasterSalesLeadSourcesRepository _masterSalesLeadSourcesRepository;
         IMasterSalesProbablityRepository _masterSalesProbablityRepository;
+
+        IItemMasterExchangeLoanRepository itemMasterExchangeLoanRepository;
+
         public UnitOfWork(ApplicationDbContext context, IOptions<AppSettings> appSettings)
         {
             _context = context;
@@ -1870,6 +1874,16 @@ namespace DAL
                     _masterSalesProbablityRepository = new MasterSalesProbablityRepository(_context);
                 }
                 return _masterSalesProbablityRepository;
+
+        public IItemMasterExchangeLoanRepository ItemMasterExchangeLoan
+        {
+            get
+            {
+                if (itemMasterExchangeLoanRepository == null)
+                {
+                    itemMasterExchangeLoanRepository = new ItemMasterExchangeLoanRepository(_context, _appSettings);
+                }
+                return itemMasterExchangeLoanRepository;
             }
         }
     }

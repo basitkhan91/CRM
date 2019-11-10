@@ -271,6 +271,8 @@ namespace DAL
 
         IMasterSalesProbablityRepository MasterSalesProbablityRepository { get;  }
 
+        IItemMasterExchangeLoanRepository ItemMasterExchangeLoan { get; }
+      
         void SaveChanges(Employee employeeobject);
     }
 }

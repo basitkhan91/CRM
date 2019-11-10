@@ -2,17 +2,12 @@
 // info@ebenmonney.com
 // www.ebenmonney.com/quickapp-pro
 // ===============================
+using DAL.Common;
 using DAL.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Threading;
-using DAL.Models.Interfaces;
-using DAL.Common;
+using System.Threading.Tasks;
 
 namespace DAL
 {
@@ -21,9 +16,9 @@ namespace DAL
         // Test Changes....
         public string CurrentUserId { get; set; }
 
-		public DbSet<CustomerContactAudit> CustomerContactAudit { get; set; }
+        public DbSet<CustomerContactAudit> CustomerContactAudit { get; set; }
 
-		public DbSet<ShippingReference> ShippingReference { get; set; }
+        public DbSet<ShippingReference> ShippingReference { get; set; }
         public DbSet<ShippingVia> ShippingVia { get; set; }
         public DbSet<ShippingAccount> ShippingAccount { get; set; }
         public DbSet<ItemMasterAircraftMapping> ItemMasterAircraftMapping { get; set; }
@@ -424,6 +419,9 @@ namespace DAL
         public DbSet<WorkOrderTask> WorkOrderTask { get; set; }
         public DbSet<WorkOrderTaskAttribute> WorkOrderTaskAttribute { get; set; }
         public DbSet<WorkOrderPublicationDashNumber> WorkOrderPublicationDashNumber { get; set; }
+        public DbSet<RepairOrderApprover> RepairOrderApprover { get; set; }
+        public DbSet<RepairOrderApproverList> RepairOrderApproverList { get; set; }
+        public DbSet<ItemMasterExchangeLoan> ItemMasterExchangeLoan { get; set; }
 
         public DbSet<MasterSalesOrderQuoteTypes> MasterSalesOrderQuoteTypes { get; set; }
         public DbSet<MasterSalesCreditTerms> MasterSalesCreditTerms { get; set; }

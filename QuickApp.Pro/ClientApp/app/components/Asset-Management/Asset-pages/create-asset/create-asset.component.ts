@@ -64,7 +64,6 @@ export class CreateAssetComponent implements OnInit {
         public unitService: UnitOfMeasureService, public currencyService: CurrencyService, public assetTypeService: AssetTypeService, private depriciationMethodService: DepriciationMethodService,  private authService: AuthService, ) {
        
         if (this.assetService.listCollection != null && this.assetService.isEditMode == true) {
-
             this.showLable = true;
             this.currentAsset = this.assetService.listCollection;
             this.updateMode = true;
@@ -693,6 +692,7 @@ export class CreateAssetComponent implements OnInit {
     }
 
     nextClick() {
+        this.currentAsset = this.assetService.listCollection;
         this.activeIndex = 1;
         this.assetService.indexObj.next(this.activeIndex);
         this.route.navigateByUrl('/assetmodule/assetpages/app-asset-capes');
