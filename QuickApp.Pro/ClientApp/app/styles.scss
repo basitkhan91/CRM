@@ -12650,6 +12650,9 @@ table thead tr th:first-child input, table tr td:first-child input {
 .pautocomp-cstm .ui-autocomplete {
     padding: 0;
 }
+.pautocomp-po-cstm .ui-autocomplete {
+    padding-right: 8px;
+}
 body .ui-datepicker table td > a.ui-state-active {
     color: #337ab7;
 }
