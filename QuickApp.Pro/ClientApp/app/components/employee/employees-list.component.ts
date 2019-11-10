@@ -187,24 +187,38 @@ export class EmployeesListComponent implements OnInit {
         );
 
         this.cols = [
-            { field: 'employeeId', header: 'Employee Id' },
-            { field: 'firstName', header: 'First Name' },
-            { field: 'lastName', header: 'Last Name' },
-            { field: 'email', header: 'Email' },
-            //{ field: 'companyId', header: 'Company' },
+            { field: 'firstName', header: 'FIRST NAME' },
+            { field: 'lastName', header: 'LAST NAME' },
+            { field: 'employeeId', header: 'EMP ID' },
+            // { field: 'email', header: 'Email' },
             //{ field: 'businessUnitId', header: 'BU' },
             //{ field: 'divisionId', header: 'Division' },
             //{ field: 'departmentId', header: 'Department' },
-            //{ field: 'jobTitleId', header: 'Job Title' },
-            { field: 'createdBy', header: 'Created By' },
-            { field: 'updatedBy', header: 'Updated By' },
-            { field: 'updatedDate', header: 'Updated Date' },
-            { field: 'createdDate', header: 'Created Date' }
+            { field: 'jobtitle', header: 'JOB TITLE' },
+            { field: 'employeeExpertise', header: 'EMP EXPERTISE'},
+            { field: 'jobtype', header: 'JOB TYPE'},
+            { field: 'startDate', header: 'START DATE'},
+            { field: 'company', header: 'COMPANY' },
+            { field: 'paytype', header: 'PAY TYPE'}
+            // { field: 'createdBy', header: 'Created By' },
+            // { field: 'updatedBy', header: 'Updated By' },
+            // { field: 'updatedDate', header: 'Updated Date' },
+            // { field: 'createdDate', header: 'Created Date' }
 
         ];
 
         this.selectedColumns = this.cols;
 
+    }
+
+    getData(rowData, field) {
+        if(field === 'jobtitle') return rowData['jobtitle'] ? rowData['jobtitle']['description'] : 'NA';
+        else if(field === 'jobtype') return rowData['jobtype'] ? rowData['jobtype']['jobTypeName'] : 'NA';
+        else if(field === 'company') return rowData['masterCompany'] ? rowData['masterCompany']['companyName'] : 'NA';
+        else if (field === 'employeeExpertise') return rowData['employeeExpertise'] ? rowData['employeeExpertise']['description'] : 'NA';
+        else if (field === 'employeeId') return `EMP ${rowData[field]}`;
+        else if (field === 'paytype') return rowData['isHourly'] ? 'Hourly' : 'Yearly';
+        else return rowData[field];
     }
 
     deleteItemAndCloseModel() {
