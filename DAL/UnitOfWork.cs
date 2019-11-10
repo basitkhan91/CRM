@@ -1874,6 +1874,8 @@ namespace DAL
                     _masterSalesProbablityRepository = new MasterSalesProbablityRepository(_context);
                 }
                 return _masterSalesProbablityRepository;
+            }
+        }
 
         public IItemMasterExchangeLoanRepository ItemMasterExchangeLoan
         {
