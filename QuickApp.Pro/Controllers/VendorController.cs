@@ -874,7 +874,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     vt.VendorTypeId = 1;
 
-                    // SAVE data here.
+                    // SAVE data.
                     var repairOrderModel = new RepairOrder();
                     repairOrderModel = FillRepairOrder(repairOrderModel, roViewModel);
                     _context.RepairOrder.Add(repairOrderModel);
@@ -897,7 +897,7 @@ namespace QuickApp.Pro.Controllers
         {
             repairOrderModel.RepairOrderNumber = roViewModel.RepairOrderNumber;
             repairOrderModel.OpenDate = roViewModel.OpenDate;
-            repairOrderModel.ClosedDate = DateTime.Now; // TODO: FE needs to send this
+            repairOrderModel.ClosedDate = roViewModel.ClosedDate;
             repairOrderModel.NeedByDate = roViewModel.NeedByDate;
             repairOrderModel.PriorityId = roViewModel.PriorityId;
             repairOrderModel.DeferredReceiver = roViewModel.DeferredReceiver;
@@ -930,40 +930,61 @@ namespace QuickApp.Pro.Controllers
             repairOrderModel.BillToAddressId = roViewModel.BillToAddressId;
             repairOrderModel.BillToContactId = roViewModel.BillToContactId;
             repairOrderModel.BillToMemo = roViewModel.BillToMemo;
-            repairOrderModel.CreatedBy = "admin";
-            repairOrderModel.UpdatedBy = "admin";
+            repairOrderModel.CreatedBy = roViewModel.CreatedBy;
+            repairOrderModel.UpdatedBy = roViewModel.UpdatedBy;
+            //  SHIIPING ADDRESS
+            repairOrderModel.ShipToAddress1 = roViewModel.ShipToAddress1;
+            repairOrderModel.ShipToAddress2 = roViewModel.ShipToAddress2;
+            repairOrderModel.ShipToAddress3 = roViewModel.ShipToAddress3;
+            repairOrderModel.ShipToCity = roViewModel.ShipToCity;
+            repairOrderModel.ShipToStateOrProvince = roViewModel.ShipToStateOrProvince;
+            repairOrderModel.ShipToPostalCode = roViewModel.ShipToPostalCode;
+            repairOrderModel.ShipToCountry = roViewModel.ShipToCountry;
+            // BILLING ADDRESS
+            repairOrderModel.BillToAddress1 = roViewModel.BillToAddress1;
+            repairOrderModel.BillToAddress2 = roViewModel.BillToAddress2;
+            repairOrderModel.BillToAddress3 = roViewModel.BillToAddress3;
+            repairOrderModel.BillToCity = roViewModel.BillToCity;
+            repairOrderModel.BillToStateOrProvince = roViewModel.BillToStateOrProvince;
+            repairOrderModel.BillToPostalCode = roViewModel.BillToPostalCode;
+            repairOrderModel.BillToCountry = roViewModel.BillToCountry;
 
-            // FILL SHIIPING ADDRESS
-            if (roViewModel.ShipToAddressId != null && roViewModel.ShipToAddressId > 0)
-            {
-                var shippingAddressModel = GetAddress(roViewModel.ShipToAddressId);
-                if (shippingAddressModel != null)
-                {
-                    repairOrderModel.ShipToAddress1 = shippingAddressModel.Line1;
-                    repairOrderModel.ShipToAddress2 = shippingAddressModel.Line2;
-                    repairOrderModel.ShipToAddress3 = shippingAddressModel.Line3;
-                    repairOrderModel.ShipToCity = shippingAddressModel.City;
-                    repairOrderModel.ShipToStateOrProvince = shippingAddressModel.StateOrProvince;
-                    repairOrderModel.ShipToPostalCode = shippingAddressModel.PostalCode;
-                    repairOrderModel.ShipToCountry = shippingAddressModel.Country;
-                }
-            }
+            #region ADDRESS - PREVIOSLY GETTING FROM ADDRESS_T BUT NOW CONSUMING FROM REQUEST.
 
-            // FILL BILLING ADDRESS
-            if (roViewModel.BillToAddressId != null && roViewModel.BillToAddressId > 0)
-            {
-                var billingAddressModel = GetAddress(roViewModel.BillToAddressId);
-                if (billingAddressModel != null)
-                {
-                    repairOrderModel.BillToAddress1 = billingAddressModel.Line1;
-                    repairOrderModel.BillToAddress2 = billingAddressModel.Line2;
-                    repairOrderModel.BillToAddress3 = billingAddressModel.Line3;
-                    repairOrderModel.BillToCity = billingAddressModel.City;
-                    repairOrderModel.BillToStateOrProvince = billingAddressModel.StateOrProvince;
-                    repairOrderModel.BillToPostalCode = billingAddressModel.PostalCode;
-                    repairOrderModel.BillToCountry = billingAddressModel.Country;
-                }
-            }
+            //// FILL SHIIPING ADDRESS
+            //if (roViewModel.ShipToAddressId != null && roViewModel.ShipToAddressId > 0)
+            //{
+            //    var shippingAddressModel = GetAddress(roViewModel.ShipToAddressId);
+            //    if (shippingAddressModel != null)
+            //    {
+            //        repairOrderModel.ShipToAddress1 = shippingAddressModel.Line1;
+            //        repairOrderModel.ShipToAddress2 = shippingAddressModel.Line2;
+            //        repairOrderModel.ShipToAddress3 = shippingAddressModel.Line3;
+            //        repairOrderModel.ShipToCity = shippingAddressModel.City;
+            //        repairOrderModel.ShipToStateOrProvince = shippingAddressModel.StateOrProvince;
+            //        repairOrderModel.ShipToPostalCode = shippingAddressModel.PostalCode;
+            //        repairOrderModel.ShipToCountry = shippingAddressModel.Country;
+            //    }
+            //}
+
+            //// FILL BILLING ADDRESS
+            //if (roViewModel.BillToAddressId != null && roViewModel.BillToAddressId > 0)
+            //{
+            //    var billingAddressModel = GetAddress(roViewModel.BillToAddressId);
+            //    if (billingAddressModel != null)
+            //    {
+            //        repairOrderModel.BillToAddress1 = billingAddressModel.Line1;
+            //        repairOrderModel.BillToAddress2 = billingAddressModel.Line2;
+            //        repairOrderModel.BillToAddress3 = billingAddressModel.Line3;
+            //        repairOrderModel.BillToCity = billingAddressModel.City;
+            //        repairOrderModel.BillToStateOrProvince = billingAddressModel.StateOrProvince;
+            //        repairOrderModel.BillToPostalCode = billingAddressModel.PostalCode;
+            //        repairOrderModel.BillToCountry = billingAddressModel.Country;
+            //    }
+            //}
+
+            #endregion
+
 
             return repairOrderModel;
         }
