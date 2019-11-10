@@ -92,7 +92,7 @@ namespace QuickApp.Pro.ViewModels
         public long RepairOrderId { get; set; }
         public int? AltPartNumberId { get; set; }
         public int? AssetId { get; set; }
-        public int? ConditionId { get; set; }
+        public long? ConditionId { get; set; }
         public string CreatedBy { get; set; }
         public int? DiscountAmount { get; set; }
         // THIS IS NEW
@@ -124,7 +124,7 @@ namespace QuickApp.Pro.ViewModels
         public string RoPartSplitAddress1 { get; set; }
         public string RoPartSplitAddress2 { get; set; }
         public string RoPartSplitAddress3 { get; set; }
-        public string RoPartSplitAddressId { get; set; }
+        public int? RoPartSplitAddressId { get; set; }
         public string RoPartSplitCity { get; set; }
         public string RoPartSplitCountry { get; set; }
         public string RoPartSplitPostalCode { get; set; }
@@ -150,7 +150,7 @@ namespace QuickApp.Pro.ViewModels
         public string RoPartSplitAddress1 { get; set; }
         public string RoPartSplitAddress2 { get; set; }
         public string RoPartSplitAddress3 { get; set; }
-        public int RoPartSplitAddressId { get; set; }
+        public int? RoPartSplitAddressId { get; set; }
         public string RoPartSplitCity { get; set; }
         public string RoPartSplitCountry { get; set; }
         public string RoPartSplitPostalCode { get; set; }

@@ -3103,6 +3103,20 @@ namespace QuickApp.Pro.Controllers
             return Ok();
         }
 
+        [HttpGet("roById")]
+        public IActionResult RepairOrderById(long repairOrderId)
+        {
+            var result = _unitOfWork.repairOrder.RepairOrderById(repairOrderId);
+            return Ok(result);
+        }
+
+        [HttpGet("roPartsById")]
+        public IActionResult RepairOrderPartsById(long repairOrderId)
+        {
+            var result = _unitOfWork.repairOrder.RepairOrderPartsById(repairOrderId);
+            return Ok(result);
+        }
+
         #region Capes
 
         [HttpGet("GetVendorCapesDatawithMasterId/{id}")]
