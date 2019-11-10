@@ -352,12 +352,12 @@ namespace DAL.Repositories
         public object RepairOrderPartsById(long repairOrderId)
         {
             var roPartsList = (from ro in _appContext.RepairOrder
-                join rop in _appContext.RepairOrderPart on ro.RepairOrderId equals rop.RepairOrderId
-                where rop.RepairOrderId == repairOrderId
-                select new
-                {
-                    rop
-                }).ToList();
+                               join rop in _appContext.RepairOrderPart on ro.RepairOrderId equals rop.RepairOrderId
+                               where rop.RepairOrderId == repairOrderId
+                               select new
+                               {
+                                   rop
+                               }).ToList();
 
             var repairOrderPartDto = new RepairOrderPartDto();
             repairOrderPartDto.RoPartSplits = new List<RoPartSplits>();
@@ -409,7 +409,6 @@ namespace DAL.Repositories
                             PartNumberId = roPart.rop.PartNumberId,
                             QuantityOrdered = roPart.rop.QuantityOrdered,
                             UOMId = roPart.rop.UOMId,
-                            UpdatedBy = roPart.rop.UpdatedBy,
                             RoPartSplitAddress1 = roPart.rop.RoPartSplitAddress1,
                             RoPartSplitAddress2 = roPart.rop.RoPartSplitAddress2,
                             RoPartSplitAddress3 = roPart.rop.RoPartSplitAddress3,
