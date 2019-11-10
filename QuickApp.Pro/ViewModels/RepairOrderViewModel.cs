@@ -9,7 +9,7 @@ namespace QuickApp.Pro.ViewModels
         public DateTime? OpenDate { get; set; }
         public DateTime? ClosedDate { get; set; }
         public DateTime? NeedByDate { get; set; }
-        public int? PriorityId { get; set; }
+        public long PriorityId { get; set; }
         public bool? DeferredReceiver { get; set; }
         public int VendorId { get; set; }
         public int? VendorContactId { get; set; }
@@ -24,7 +24,7 @@ namespace QuickApp.Pro.ViewModels
         public int? ManagementStructureId { get; set; }
         public string RoMemo { get; set; }
         public int? ShipToUserTypeId { get; set; }
-        public int? ShipToUserId { get; set; }
+        public long ShipToUserId { get; set; }
         public int? ShipToAddressId { get; set; }
         public int? ShipToContactId { get; set; }
         public int? ShipViaId { get; set; }

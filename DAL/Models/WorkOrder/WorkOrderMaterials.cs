@@ -24,6 +24,7 @@ namespace DAL.Models
         public decimal? Price { get; set; }
         public decimal? ExtendedPrice { get; set; }
         public string Memo { get; set; }
+        public bool? IsDefered { get; set; }
 
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }

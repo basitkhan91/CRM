@@ -2324,6 +2324,7 @@ namespace QuickApp.Pro.Controllers
 					customer.PrimarySalesPersonFirstName = item.PrimarySalesPersonFirstName;
 					customer.IsActive = item.IsActive;
 					customer.CustomerClarifiacationName = item.CustomerClarification;
+                    customer.CustomerPhone = item.CustomerPhone; 
 					customersList.Add(customer);
 				}
 				#region Pagination for join tables
@@ -2425,6 +2426,7 @@ namespace QuickApp.Pro.Controllers
 					customer.PrimarySalesPersonFirstName = item.PrimarySalesPersonFirstName;
 					customer.IsActive = item.IsActive;
 					customer.CustomerClarifiacationName = item.CustomerClarification;
+                    customer.CustomerPhone = item.CustomerPhone;
 					customersList.Add(customer);
 					getData.TotalRecordsCount = customersList.Count();
 				}
