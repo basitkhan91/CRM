@@ -254,8 +254,99 @@ namespace QuickApp.Pro.Controllers
 
         //}
 
+        [HttpGet("exchangeloan/{id}")]
+        [Produces(typeof(ExchangeLoandViewModel))]
+        public IActionResult GetExchangeAndLoan(long id )
+        {
 
 
+            var itemMasterExchangeLoan = _unitOfWork.ItemMasterExchangeLoan.GetSingleOrDefault(c=> c.ItemMasterId==id);
+            var itemMasterExchangeLoanVM = Mapper.Map<ExchangeLoandViewModel>(itemMasterExchangeLoan);
+
+            return Ok(itemMasterExchangeLoanVM);
+
+        }
+
+       [HttpPost("exchangeloan")]
+        public IActionResult CreateExchangeLoan([FromBody] ExchangeLoandViewModel exchangeLoandViewModel)
+        {
+
+
+            if (ModelState.IsValid)
+            {
+                if (exchangeLoandViewModel == null)
+                    return BadRequest($"{nameof(exchangeLoandViewModel)} cannot be null");
+                ItemMasterExchangeLoan itemMasterExchangeLoan = new ItemMasterExchangeLoan();
+
+
+                itemMasterExchangeLoan.ItemMasterId = exchangeLoandViewModel.ItemMasterId;
+                itemMasterExchangeLoan.MasterCompanyId = exchangeLoandViewModel.MasterCompanyId;
+                itemMasterExchangeLoan.IsActive = exchangeLoandViewModel.IsActive;
+                itemMasterExchangeLoan.IsDeleted = exchangeLoandViewModel.IsDeleted;
+                itemMasterExchangeLoan.IsExchange = exchangeLoandViewModel.IsExchange;
+                itemMasterExchangeLoan.IsLoan = exchangeLoandViewModel.IsLoan;
+                itemMasterExchangeLoan.LoanCurrencyId = exchangeLoandViewModel.LoanCurrencyId;
+                itemMasterExchangeLoan.ExchangeListPrice = exchangeLoandViewModel.ExchangeListPrice;
+                itemMasterExchangeLoan.ExchangeCorePrice = exchangeLoandViewModel.ExchangeCorePrice;
+                itemMasterExchangeLoan.ExchangeOverhaulPrice = exchangeLoandViewModel.ExchangeOverhaulPrice;
+                itemMasterExchangeLoan.ExchangeOutrightPrice = exchangeLoandViewModel.ExchangeOutrightPrice;
+                itemMasterExchangeLoan.ExchangeCoreCost = exchangeLoandViewModel.ExchangeCoreCost;
+                itemMasterExchangeLoan.LoanCorePrice = exchangeLoandViewModel.LoanCorePrice;
+                itemMasterExchangeLoan.LoanOutrightPrice = exchangeLoandViewModel.LoanOutrightPrice;
+                itemMasterExchangeLoan.LoanFees = exchangeLoandViewModel.LoanFees;
+                itemMasterExchangeLoan.ExchangeCurrencyId = exchangeLoandViewModel.ExchangeCurrencyId;
+                itemMasterExchangeLoan.CreatedDate = DateTime.Now;
+                itemMasterExchangeLoan.UpdatedDate = DateTime.Now;
+                itemMasterExchangeLoan.CreatedBy = exchangeLoandViewModel.CreatedBy;
+                itemMasterExchangeLoan.UpdatedBy = exchangeLoandViewModel.UpdatedBy;
+                _unitOfWork.ItemMasterExchangeLoan.Add(itemMasterExchangeLoan);
+                _unitOfWork.SaveChanges();
+                return Ok(itemMasterExchangeLoan);
+
+            }
+
+            return Ok(ModelState);
+
+        }
+
+        [HttpPut("exchangeloan/{id}")]
+        public IActionResult UpdateExchangeLoan(long id, [FromBody] ExchangeLoandViewModel exchangeLoandViewModel)
+        {
+
+            if (ModelState.IsValid)
+            {
+                if (exchangeLoandViewModel == null)
+                    return BadRequest($"{nameof(exchangeLoandViewModel)} cannot be null");
+
+                var existingResult = _unitOfWork.ItemMasterExchangeLoan.GetSingleOrDefault(c => c.ItemMasterId == id);
+                // DAL.Models.Action updateObject = new DAL.Models.Action();
+
+
+                existingResult.UpdatedDate = DateTime.Now;
+                existingResult.UpdatedBy = exchangeLoandViewModel.UpdatedBy;
+                existingResult.IsActive = exchangeLoandViewModel.IsActive;
+                existingResult.IsDeleted = exchangeLoandViewModel.IsDeleted;
+                existingResult.IsExchange = exchangeLoandViewModel.IsExchange;
+                existingResult.IsLoan = exchangeLoandViewModel.IsLoan;
+                existingResult.LoanCurrencyId = exchangeLoandViewModel.LoanCurrencyId;
+                existingResult.ExchangeListPrice = exchangeLoandViewModel.ExchangeListPrice;
+                existingResult.ExchangeCorePrice = exchangeLoandViewModel.ExchangeCorePrice;
+                existingResult.ExchangeOverhaulPrice = exchangeLoandViewModel.ExchangeOverhaulPrice;
+                existingResult.ExchangeOutrightPrice = exchangeLoandViewModel.ExchangeOutrightPrice;
+                existingResult.ExchangeCoreCost = exchangeLoandViewModel.ExchangeCoreCost;
+                existingResult.LoanCorePrice = exchangeLoandViewModel.LoanCorePrice;
+                existingResult.LoanOutrightPrice = exchangeLoandViewModel.LoanOutrightPrice;
+                existingResult.LoanFees = exchangeLoandViewModel.LoanFees;
+                existingResult.ExchangeCurrencyId = exchangeLoandViewModel.ExchangeCurrencyId;
+
+                _unitOfWork.ItemMasterExchangeLoan.Update(existingResult);
+                _unitOfWork.SaveChanges();
+
+            }
+
+
+            return Ok(ModelState);
+        }
 
         [HttpGet("GetCapesDatawithMasterId/{id}")]
         [Produces(typeof(List<AircraftModelViewModel>))]
@@ -371,83 +462,6 @@ namespace QuickApp.Pro.Controllers
         }
 
 
-        //[HttpPost("Mancapespost")]
-        //public IActionResult CreateManCappost([FromBody] CapesInfoViewModel capesInfoViewModel)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (_context.Capability.Any(o => o.CapabilityId == capesInfoViewModel.CapabilityId))
-        //        {
-        //            // return BadRequest($"{nameof(capesInfoViewModel)} cannot be null");
-        //            var existingresule = _context.Capability.Where(c => c.CapabilityId == capesInfoViewModel.CapabilityId).FirstOrDefault();
-        //            existingresule.AircraftManufacturer = capesInfoViewModel.AircraftManufacturer;
-        //            existingresule.AircraftModelId = capesInfoViewModel.AircraftModelId;
-        //            existingresule.AircraftTypeId = capesInfoViewModel.AircraftTypeId;
-        //            existingresule.ATAMainId = capesInfoViewModel.atcChapterId1;
-        //            existingresule.CapabilityTypeId = capesInfoViewModel.CapabilityTypeId;
-        //            existingresule.AircraftManufacturer = capesInfoViewModel.Description;
-        //            existingresule.MasterCompanyId = 1;
-        //            existingresule.CreatedDate = DateTime.Now;
-        //            existingresule.UpdatedDate = DateTime.Now;
-        //            existingresule.DateVerified = capesInfoViewModel.dateVerified1;
-        //            existingresule.Description = capesInfoViewModel.modelname1;
-        //            existingresule.EntryDate = capesInfoViewModel.dateVerified1;
-        //            existingresule.PartId = capesInfoViewModel.PartId;
-        //            existingresule.IsCMMExist = capesInfoViewModel.isCMMExist1;
-        //            existingresule.Memo = capesInfoViewModel.memo1;
-        //            existingresule.CompanyId = capesInfoViewModel.MasterComapnyId1;
-        //            existingresule.BuisinessUnitId = capesInfoViewModel.Buid1;
-        //            existingresule.DepartmentId = capesInfoViewModel.Depid1;
-        //            existingresule.DivisionId = capesInfoViewModel.Divid1;
-        //            existingresule.ManufacturerId = capesInfoViewModel.ManufacturerId;
-        //            existingresule.VerifiedBy = capesInfoViewModel.verifiedBy1;
-        //            existingresule.IsActive = true;
-        //            existingresule.IsDelete = true;
-        //            existingresule.IsVerified = capesInfoViewModel.isVerified1;
-        //            _context.Capability.Update(existingresule);
-        //            _context.SaveChanges();
-
-        //        }
-        //        else {
-
-
-        //            Capability cp = new Capability();
-        //            cp.AircraftManufacturer = capesInfoViewModel.AircraftManufacturer;
-        //            cp.AircraftModelId = capesInfoViewModel.AircraftModelId;
-        //            cp.AircraftTypeId = capesInfoViewModel.AircraftTypeId;
-        //            cp.ATAMainId = capesInfoViewModel.atcChapterId1;
-        //            cp.CapabilityTypeId = capesInfoViewModel.CapabilityTypeId;
-        //            cp.AircraftManufacturer = capesInfoViewModel.Description;
-        //            cp.MasterCompanyId = 1;
-        //            cp.CreatedDate = DateTime.Now;
-        //            cp.UpdatedDate = DateTime.Now;
-        //            cp.DateVerified = capesInfoViewModel.dateVerified1;
-        //            cp.Description = capesInfoViewModel.modelname1;
-        //            cp.EntryDate = capesInfoViewModel.dateVerified1;
-        //            cp.PartId = capesInfoViewModel.PartId;
-        //            cp.IsCMMExist = capesInfoViewModel.isCMMExist1;
-        //            cp.Memo = capesInfoViewModel.memo1;
-        //            cp.VerifiedBy = capesInfoViewModel.verifiedBy1;
-        //            cp.IsActive = true;
-        //            cp.IsDelete = true;
-        //            cp.CompanyId = capesInfoViewModel.MasterComapnyId1;
-        //            cp.BuisinessUnitId = capesInfoViewModel.Buid1;
-        //            cp.DepartmentId = capesInfoViewModel.Depid1;
-        //            cp.DivisionId = capesInfoViewModel.Divid1;
-        //            cp.IsVerified = capesInfoViewModel.isVerified1;
-        //            cp.ManufacturerId = capesInfoViewModel.ManufacturerId;
-        //            _context.Capability.Add(cp);
-        //            _context.SaveChanges();
-        //            long returnid = cp.CapabilityId;
-        //            saveItemcapes(returnid, capesInfoViewModel.itemId);
-        //            return Ok(capesInfoViewModel);
-
-
-        //        }
-        //    }
-        //    return Ok(capesInfoViewModel);
-        //    // return Ok(ModelState);
-        //}
         [HttpPost("Mancapespost")]
         public IActionResult addCharges([FromBody] List<Capability> capability)
         {
