@@ -49,8 +49,8 @@ namespace DAL.Repositories
                 _appContext.WorkOrder.Update(workOrder);
                 _appContext.SaveChanges();
 
-                // Creating WorkflowWorkOrder From Work Flow
-                CreateWorkFlowWorkOrderFromWorkFlow(workOrder.PartNumbers, workOrder.WorkOrderId, workOrder.CreatedBy);
+				// Creating WorkflowWorkOrder From Work Flow
+				workOrder.WorkFlowWorkOrderId= CreateWorkFlowWorkOrderFromWorkFlow(workOrder.PartNumbers, workOrder.WorkOrderId, workOrder.CreatedBy);
 
                 return workOrder;
             }
@@ -2273,11 +2273,13 @@ namespace DAL.Repositories
 
         #region Private Methods
 
-        private void CreateWorkFlowWorkOrderFromWorkFlow(List<WorkOrderPartNumber> workOrderPartNumbers, long workOrderId, string createdBy)
+        private long CreateWorkFlowWorkOrderFromWorkFlow(List<WorkOrderPartNumber> workOrderPartNumbers, long workOrderId, string createdBy)
         {
             try
             {
-                if (workOrderPartNumbers != null && workOrderPartNumbers.Count > 0)
+				long workFlowWorkOrderId = 0;
+
+				if (workOrderPartNumbers != null && workOrderPartNumbers.Count > 0)
                 {
                     foreach (var item in workOrderPartNumbers)
                     {
@@ -2351,7 +2353,9 @@ namespace DAL.Repositories
                                     workFlowWorkOrder.WorkFlowWorkOrderNo = "WOWF" + workFlowWorkOrder.WorkFlowWorkOrderId;
                                     _appContext.WorkOrderWorkFlow.Update(workFlowWorkOrder);
                                     _appContext.SaveChanges();
-                                }
+
+									workFlowWorkOrderId = workFlowWorkOrder.WorkFlowWorkOrderId;
+								}
 
 
 
@@ -2359,7 +2363,8 @@ namespace DAL.Repositories
                         }
                     }
                 }
-            }
+				return workFlowWorkOrderId;
+			}
             catch (Exception)
             {
 

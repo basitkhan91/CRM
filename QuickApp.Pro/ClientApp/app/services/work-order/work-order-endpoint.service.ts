@@ -144,8 +144,8 @@ export class WorkOrderEndpointService extends EndpointFactory {
     getRevisedPartNumbers(itemMasterId) {
         return this.http.get(`${this.configurations.baseUrl}/api/workOrder/revisedparts?itemMasterId=${itemMasterId}&mappingType=${1}`, this.getRequestHeaders())
     }
-    getStockLineByItemMasterId(itemMasterId) {
-        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/stocklinedetailsbypartno?itemMasterId=${itemMasterId}`, this.getRequestHeaders())
+    getStockLineByItemMasterId(itemMasterId, conditionId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/stocklinedetailsbypartno?itemMasterId=${itemMasterId}&conditionId=${conditionId}`, this.getRequestHeaders())
     }
 
     getPartPublicationByItemMaster(itemMasterId) {
