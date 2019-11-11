@@ -60,8 +60,6 @@ namespace QuickApp.Pro.ViewModels
         public string BillToSiteName { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
-
-        // NOT USING THIS ANYMORE
         public DateTime? CreatedDate { get; set; }
         public bool? IsActive { get; set; }
         public DateTime? UpdatedDate { get; set; }
