@@ -62,6 +62,7 @@ namespace QuickApp.Pro.ViewModels
         public string UpdatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }
         public bool? IsActive { get; set; }
+        public bool IsDeleted { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public string VendorCode { get; set; }
         public string VendorName { get; set; }

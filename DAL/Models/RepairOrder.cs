@@ -66,6 +66,7 @@ namespace DAL.Models
         [NotMapped]
         public DateTime? CreatedDate { get; set; }
         public bool? IsActive { get; set; }
+        public bool IsDeleted { get; set; }
         public DateTime? UpdatedDate { get; set; }
         [NotMapped]
         public string VendorCode { get; set; }
