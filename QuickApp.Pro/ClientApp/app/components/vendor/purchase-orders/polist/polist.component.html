@@ -114,13 +114,14 @@
 					><span><i class="fa fa-plus"></i></span
 				  ></a> -->
 				</div>
+				
 			  </div>
 			</ng-template>
 	  
 			<ng-template pTemplate="header" let-columns>
 			  <tr>
 				<th
-				  style="width:120px"
+				  style="width:150px"
 				  *ngFor="let col of columns"
 				  pResizableColumn
 				  pReorderableColumn
@@ -137,7 +138,12 @@
 				</th>
 			  </tr>
 			  <tr>
-				<th
+				<th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
+					<input type="text" *ngIf="col.field !== 'openDate' && col.field !== 'closedDate'" style="width:100%;" pInputText (keyup)="onChangeInputField($event.target.value, col.field)">
+					<input type="date" *ngIf="col.field == 'openDate'" name="openDate" style="width:100%;" (change)="onChangeInputField($event.target.value, col.field)">
+					<input type="date" *ngIf="col.field == 'closedDate'" name="closedDate" style="width:100%;" (change)="onChangeInputField($event.target.value, col.field)">
+				</th>
+				<!-- <th
 				  style="width:120px"
 				  *ngFor="let col of columns"
 				  [ngSwitch]="col.field"
@@ -148,21 +154,20 @@
 					type="text"
 					(input)="dt.filter($event.target.value, col.field, 'contains')"
 				  />
-				</th>
+				</th> -->
 				<th style="width:200px;position:sticky"></th>
 			  </tr>
 			</ng-template>
 			<ng-template pTemplate="body" let-rowData let-columns="columns">
 			  <tr [pSelectableRow]="rowData" pReorderableRowHandle>
 				<td
-				  style="width:120px"
+				  style="width:150px"
 				  *ngFor="let col of columns"
 				  class="ui-resizable-column"
-				  pReorderableRowHandle
-				  data-toggle="modal"
-				  data-target="#view"
-				  (dblclick)="viewSelectedRow(rowData)"
-				>
+				  pReorderableRowHandle				  
+				> <!--data-toggle="modal"
+					data-target="#view"
+					(dblclick)="viewSelectedRow(rowData)"-->
 				  {{
 					col.field == 'createdDate'
 					  ? (rowData[col.field] | date: 'MM/dd/yyyy')
@@ -350,10 +355,10 @@
 										</div>
 										<div class="col-sm-3">
 											<h5>Management Structure</h5>
-												<p><span class="label"><b>Company: </b></span><span class="value">-</span></p>
-												<p><span class="label"><b>BU: </b></span><span class="value">-</span></p>
-												<p><span class="label"><b>Division: </b></span><span class="value">-</span></p>
-												<p><span class="label"><b>Department: </b></span><span class="value">-</span></p>
+												<p><span class="label"><b>Company: </b></span><span class="value">{{headerManagementStructure.level1 ? headerManagementStructure.level1 : '-'}}</span></p>
+												<p><span class="label"><b>BU: </b></span><span class="value">{{headerManagementStructure.level2 ? headerManagementStructure.level2 : '-'}}</span></p>
+												<p><span class="label"><b>Division: </b></span><span class="value">{{headerManagementStructure.level3 ? headerManagementStructure.level3 : '-'}}</span></p>
+												<p><span class="label"><b>Department: </b></span><span class="value">{{headerManagementStructure.level4 ? headerManagementStructure.level4 : '-'}}</span></p>
 												<p><span class="label"><b>Memo: </b></span><span class="value">{{poHeaderAdd.notes ? poHeaderAdd.notes : '-'}}</span></p>
 										</div>
 									</div>
@@ -361,7 +366,7 @@
 								<p-tabView class="pas-tabview">
 										<p-tabPanel header="Parts List">											
 											<div class="table-responsive pas-table-cstm roview-table-cstm" style="margin-top: 5px;">
-												<table class="table table-bordered" id="po-table" *ngFor="let partList of poPartsList">
+												<table class="table table-bordered" id="po-table">
 													<thead>
 														<tr class="partsList-table-tr">
 															<th>PN</th>
@@ -390,7 +395,7 @@
 														</tr>
 													</thead>
 													<tbody>
-														<ng-container>
+														<ng-container *ngFor="let partList of poPartsList">
 															<tr class="parent-data">
 																<td>{{partList?.partNumber}}</td>
 																<td>{{partList?.altPartNumber}}</td>
@@ -413,7 +418,7 @@
 																<td>{{partList?.workOrderNo}}</td>
 																<td>{{partList?.reapairOrderNo}}</td>
 																<td>{{partList?.salesOrderNo}}</td>
-																<td colspan="4"></td>
+																<td colspan="4">{{partList?.level1}},{{partList?.level2}},{{partList?.level3}},{{partList?.level4}}</td>
 																<td>{{partList?.memo}}</td>
 															</tr>
 															<tr class="child-header splitship-head" *ngIf="partList.purchaseOrderSplitParts">
@@ -434,14 +439,19 @@
 																<td></td>
 																<td></td>
 																<td>{{partList?.partNumber}}</td>
-																<td>{{partList?.altPartNumber}}</td>
+																<td>{{partList?.partDescription}}</td>
 																<td>{{partChild?.userType}}</td>
 																<td>{{partChild?.user}}</td>
-																<td colspan="5">{{partChild?.poPartSplitAddress1}}, {{partChild?.poPartSplitCity}}, {{partChild?.poPartSplitState}}, {{partChild?.poPartSplitPostalCode}}, {{partChild?.poPartSplitCountry}}</td>
+																<td colspan="5">
+																	{{partChild.poPartSplitAddress1 ? partChild.poPartSplitAddress1 : ''}}, 
+																	{{partChild.poPartSplitCity ? partChild.poPartSplitCity : ''}},
+																	{{partChild.poPartSplitState ? partChild.poPartSplitState : ''}} ,
+																	{{partChild.poPartSplitPostalCode ? partChild.poPartSplitPostalCode : ''}}, 
+																	{{partChild.poPartSplitCountry ? partChild.poPartSplitCountry : ''}}</td>
 																<td>{{partList?.unitOfMeasure}}</td>
 																<td>{{partChild?.quantityOrdered}}</td>
 																<td>{{partChild?.needByDate}}</td>
-																<td colspan="4"></td>
+																<td colspan="4">{{partChild?.level1}},{{partChild?.level2}},{{partChild?.level3}},{{partChild?.level4}}</td>
 																<td colspan="10"></td>
 															</tr>
 														</ng-container>
@@ -453,7 +463,7 @@
 										<p-tabPanel header="Approve">
 												<div class="approver-tab-cstm">
 													<h5 class="po-head">Approvers List</h5>
-													<div class="form-row" *ngFor="let approver of approveList">
+													<div class="form-row" *ngFor="let approver of approveList" style="margin-top: 15px;">
 														<div class="col-md-3">
 															<label>Approver {{approver.level}}</label>
 														</div>
@@ -500,7 +510,7 @@
 
 										<p-tabPanel header="Address">
 											<div class="table-responsive default-bg clear">
-												<div class="col-sm-3">
+												<div class="col-sm-4">
 													<h5 class="po-head">Ship To</h5>
 													<p><span class="label"><b>User Type: </b></span><span class="value">{{poHeaderAdd.shipToUserType ? poHeaderAdd.shipToUserType : '-'}}</span></p>
 													<p><span class="label"><b>User: </b></span><span class="value">{{poHeaderAdd.shipToUser ? poHeaderAdd.shipToUser : '-'}}</span></p>
@@ -521,9 +531,9 @@
 													<p><span class="label"><b>Shipping Id (AWB): </b></span><span class="value">{{poHeaderAdd.shippingId ? poHeaderAdd.shippingId : '-'}}</span></p>
 													<p><span class="label"><b>URL: </b></span><span class="value">{{poHeaderAdd.shippingURL ? poHeaderAdd.shippingURL : '-'}}</span></p>
 												</div>
-												<div class="col-sm-3">
+												<div class="col-sm-4">
 													<h5 class="po-head">Bill To</h5>
-													<p><span class="label"><b>User Type: </b></span><span class="value">{{poHeaderAdd.billToUserType ? poHeaderAdd.billToUserType : '-'}}</span></p>
+													<p><span class="label"><b>User Type: </b></span><span class="value">{{poHeaderAdd.billToToUserType ? poHeaderAdd.billToToUserType : '-'}}</span></p>
 													<p><span class="label"><b>User: </b></span><span class="value">{{poHeaderAdd.billToUser ? poHeaderAdd.billToUser : '-'}}</span></p>
 													<p><span class="label"><b>Site Name: </b></span><span class="value">{{poHeaderAdd.billToSiteName ? poHeaderAdd.billToSiteName : '-'}}</span></p>
 													<p><span class="label"><b>Address1: </b></span><span class="value">{{poHeaderAdd.billToAddress1 ? poHeaderAdd.billToAddress1 : '-'}}</span></p>

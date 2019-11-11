@@ -51,7 +51,7 @@ export class CreatePOPartsList {
         this.manufacturerId = null;
         this.glAccountId = null;
         this.UOMId = null;
-        this.needByDate = new Date();
+        this.needByDate = null;
         this.conditionId = null;
         this.quantityOrdered = null;
         this.unitCost = null;
@@ -116,7 +116,7 @@ export class PartDetails {
             this.partListAddressId = null;
             this.UOMId = null;
             this.quantityOrdered = null;
-            this.needByDate = new Date();
+            this.needByDate = null;
             this.managementStructureId = null;
             this.masterCompanyId = 1;
             this.childBulist = [];

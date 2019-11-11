@@ -10,7 +10,13 @@ export class CustomerSearchQuery {
   page: number;
   pageCount: number;
   rows: number;
-  limit: number;
+    limit: number;
+    contact: any;
+    Phone: any;
+    pageLinks: any;
+    selectedColumns: any;
+
+
 
   constructor() {
     this.init();

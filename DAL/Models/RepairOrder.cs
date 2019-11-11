@@ -63,13 +63,10 @@ namespace DAL.Models
         public string BillToSiteName { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
-
-        // NOT USING THIS ANYMORE
         [NotMapped]
         public DateTime? CreatedDate { get; set; }
-        //[NotMapped]
         public bool? IsActive { get; set; }
-        //[NotMapped]
+        public bool IsDeleted { get; set; }
         public DateTime? UpdatedDate { get; set; }
         [NotMapped]
         public string VendorCode { get; set; }

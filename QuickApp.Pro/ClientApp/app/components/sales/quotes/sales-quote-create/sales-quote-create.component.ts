@@ -1,8 +1,11 @@
 import { Component, OnInit } from "@angular/core";
-import { CustomerSearchQuery } from "./models/customer-search-query";
+
+import { CustomerSearchQuery } from "../models/customer-search-query";
 import { CustomerService } from "../../../../services/customer.service";
 import { Customer } from "../../../../models/customer.model";
 import { AlertService } from "../../../../services/alert.service";
+import { ActivatedRoute } from "@angular/router";
+import { map } from "rxjs/operators";
 
 @Component({
   selector: "app-sales-quote-create",
@@ -15,39 +18,21 @@ export class SalesQuoteCreateComponent implements OnInit {
   totalRecords: number = 0;
   totalPages: number = 0;
   showPaginator: boolean = false;
-
+    customerId: number;
+    checked = false;
   constructor(
     private customerService: CustomerService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
-    this.query = new CustomerSearchQuery();
+    this.customerId = +this.route.snapshot.paramMap.get("customerId");
+    console.log(`customer id: ${this.customerId}`);
   }
 
-  onSearch() {
-    this.query.reset();
-    this.searchCustomer();
-  }
-
-  onPaging(event) {
-    if (this.totalRecords > 0) {
-      this.query.first = event.first;
-      this.query.rows = event.rows;
-      this.searchCustomer();
-    }
-  }
-
-  private searchCustomer() {
-    this.alertService.startLoadingMessage();
-    this.customerService
-      .getServerPages(this.query)
-      .subscribe((response: any) => {
-        this.customers = response[0].customerList;
-        this.totalRecords = response[0].totalRecordsCount;
-        this.totalPages = Math.ceil(this.totalRecords / this.query.rows);
-        this.showPaginator = this.totalRecords > 0;
-        this.alertService.stopLoadingMessage();
-      });
-  }
+  quote: any = {
+    quoteTypeId: null,
+    quoteDate: Date
+  };
 }

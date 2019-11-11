@@ -22,7 +22,7 @@ export class CommonService {
 
     }
     createShipVia(object) {
-        return this.http.post(`${this.baseUrl}/api/Common/createshipvia`, JSON.stringify(object), this.authService.getRequestHeaders())
+        return this.http.post<any>(`${this.baseUrl}/api/Common/createshipvia`, JSON.stringify(object), this.authService.getRequestHeaders())
     }
 
     getShipViaDetailsByModule(moduleId, referenceId) {
@@ -41,6 +41,10 @@ export class CommonService {
     }
     getManagementStructureDetails(id) {
         return this.http.get<any>(`${this.baseUrl}/api/Common/managementstructure?manmgStrucId=${id}`, this.authService.getRequestHeaders())
+    }
+
+    getManagementStructureCodes(id) {
+        return this.http.get<any>(`${this.baseUrl}/api/Common/managementstructurecodes?manmgStrucId=${id}`, this.authService.getRequestHeaders())
     }
 
     getCustomerNameandCode(value){
