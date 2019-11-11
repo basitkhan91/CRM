@@ -74,6 +74,7 @@ namespace QuickApp.Pro.Controllers
                 glaccountclassobject.GLAccountClassMemo = GLAccountClassViewModel.GLAccountClassMemo;
                 glaccountclassobject.MasterCompanyId = GLAccountClassViewModel.MasterCompanyId;
                 glaccountclassobject.IsActive = GLAccountClassViewModel.IsActive;
+                glaccountclassobject.IsDeleted = GLAccountClassViewModel.IsDeleted;
                 glaccountclassobject.CreatedDate = DateTime.Now;
                 glaccountclassobject.UpdatedDate = DateTime.Now;
                 glaccountclassobject.CreatedBy = GLAccountClassViewModel.CreatedBy;
@@ -94,6 +95,12 @@ namespace QuickApp.Pro.Controllers
                 if (ModelState.IsValid)
                 {
                     glAccountClass.UpdatedDate = DateTime.Now;
+                    glAccountClass.UpdatedBy = glAccountClass.UpdatedBy;
+                    glAccountClass.GLCID = glAccountClass.GLCID;
+                    glAccountClass.GLAccountClassName = glAccountClass.GLAccountClassName;
+                    glAccountClass.GLAccountClassMemo = glAccountClass.GLAccountClassMemo;
+                    glAccountClass.MasterCompanyId = glAccountClass.MasterCompanyId;
+                    glAccountClass.IsActive = glAccountClass.IsActive;
                     _unitOfWork.Repository<GLAccountClass>().Update(glAccountClass);
                     _unitOfWork.SaveChanges();
                     return Ok(glAccountClass);
