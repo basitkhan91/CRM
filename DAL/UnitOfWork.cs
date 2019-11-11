@@ -204,6 +204,12 @@ namespace DAL
 
         IPublicationTypesRepository _publicationTypesRepository;
         IPercentageRepository _percentageRepository;
+
+        IMasterSalesOrderQuoteTypesRepository _masterSalesOrderQuoteTypesRepository;
+        IMasterSalesCreditTermsRepository _masterSalesCreditTermsRepository;
+        IMasterSalesLeadSourcesRepository _masterSalesLeadSourcesRepository;
+        IMasterSalesProbablityRepository _masterSalesProbablityRepository;
+
         IItemMasterExchangeLoanRepository itemMasterExchangeLoanRepository;
 
         public UnitOfWork(ApplicationDbContext context, IOptions<AppSettings> appSettings)
@@ -1822,6 +1828,55 @@ namespace DAL
                 return _percentageRepository;
             }
         }
+
+        public IMasterSalesOrderQuoteTypesRepository MasterSalesOrderQuoteTypesRepository
+        {
+            get
+            {
+                if (_masterSalesOrderQuoteTypesRepository == null)
+                {
+                    _masterSalesOrderQuoteTypesRepository = new MasterSalesOrderQuoteTypesRepository(_context);
+                }
+                return _masterSalesOrderQuoteTypesRepository;
+            }
+        }
+
+        public IMasterSalesCreditTermsRepository MasterSalesCreditTermsRepository
+        {
+            get
+            {
+                if (_masterSalesCreditTermsRepository == null)
+                {
+                    _masterSalesCreditTermsRepository = new MasterSalesCreditTermsRepository(_context);
+                }
+                return _masterSalesCreditTermsRepository;
+            }
+        }
+
+        public IMasterSalesLeadSourcesRepository MasterSalesLeadSourcesRepository
+        {
+            get
+            {
+                if (_masterSalesLeadSourcesRepository == null)
+                {
+                    _masterSalesLeadSourcesRepository = new MasterSalesLeadSourcesRepository(_context);
+                }
+                return _masterSalesLeadSourcesRepository;
+            }
+        }
+
+        public IMasterSalesProbablityRepository MasterSalesProbablityRepository
+        {
+            get
+            {
+                if (_masterSalesProbablityRepository == null)
+                {
+                    _masterSalesProbablityRepository = new MasterSalesProbablityRepository(_context);
+                }
+                return _masterSalesProbablityRepository;
+            }
+        }
+
         public IItemMasterExchangeLoanRepository ItemMasterExchangeLoan
         {
             get
