@@ -1064,7 +1064,7 @@ namespace QuickApp.Pro.Controllers
             roPartModel.ItemMasterId = roViewModel.ItemMasterId;
             roPartModel.AssetId = roViewModel.AssetId;
             roPartModel.PartNumberId = roViewModel.PartNumberId;
-            roViewModel.AltPartNumberId = roViewModel.AltPartNumberId;
+            roPartModel.AltPartNumberId = roViewModel.AltPartNumberId;
             roPartModel.ItemTypeId = roViewModel.ItemTypeId;
             roPartModel.GlAccountId = roViewModel.GlAccountId;
             roPartModel.ManufacturerId = roViewModel.ManufacturerId;
@@ -1074,7 +1074,7 @@ namespace QuickApp.Pro.Controllers
             roPartModel.QuantityOrdered = roViewModel.QuantityOrdered;
             roPartModel.UnitCost = roViewModel.UnitCost;
             roPartModel.DiscountAmount = roViewModel.DiscountAmount;
-            roViewModel.DiscountPercent = roViewModel.DiscountPercent;
+            roPartModel.DiscountPercent = roViewModel.DiscountPercent;
             roPartModel.DiscountPerUnit = roViewModel.DiscountPerUnit;
             roPartModel.ExtendedCost = roViewModel.ExtendedCost;
             roPartModel.ForeignExchangeRate = roViewModel.ForeignExchangeRate;
@@ -2939,7 +2939,6 @@ namespace QuickApp.Pro.Controllers
 
             if (ModelState.IsValid)
             {
-                // Set isActive to false in RepairOrder table.
                 var repairOrderModel = _context
                     .RepairOrder
                     .Where(a => a.RepairOrderId == repairOrderId)
@@ -2948,29 +2947,14 @@ namespace QuickApp.Pro.Controllers
                 if (repairOrderModel != null)
                 {
                     repairOrderModel.UpdatedBy = updatedBy;
-                    repairOrderModel.IsActive = false;
+                    repairOrderModel.IsDeleted = true;
+                    repairOrderModel.UpdatedDate = DateTime.Now;
                 }
 
                 _context.RepairOrder.Update(repairOrderModel);
                 _unitOfWork.SaveChanges();
 
-                // TODO = if RepairOrderPart needs to be set as isActive to false, then can do that. Need to confirm.
-                //// Set isActive to false in RepairOrderPart table.
-                //var repairOrderPartModel = _context
-                //    .RepairOrderPart
-                //    .Where(a => a.RepairOrderId == repairOrderId)
-                //    .SingleOrDefault();
-
-                //if (repairOrderPartModel != null)
-                //{
-                //    repairOrderPartModel.UpdatedBy = updatedBy;
-                //    repairOrderPartModel.IsActive = false;
-                //}
-
-                //_context.RepairOrderPart.Update(repairOrderPartModel);
-                //_unitOfWork.SaveChanges();
-
-                return Ok(repairOrderModel);
+                return Ok();
 
             }
 
@@ -2992,7 +2976,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPut("roStatus")]
-        public IActionResult RepairOrderStatus(long repairOrderId, bool status, string updatedBy)
+        public IActionResult RepairOrderStatus(long repairOrderId, bool isActive, string updatedBy)
         {
             var repairOrderModel = _context.RepairOrder.Where(a => a.RepairOrderId == repairOrderId).SingleOrDefault();
 
@@ -3001,7 +2985,7 @@ namespace QuickApp.Pro.Controllers
                 return BadRequest($"No matching record found for RepairOrderid={repairOrderId}.");
             }
 
-            repairOrderModel.IsActive = status;
+            repairOrderModel.IsActive = isActive;
             repairOrderModel.UpdatedBy = updatedBy;
             repairOrderModel.UpdatedDate = DateTime.Now;
             _context.RepairOrder.Update(repairOrderModel);
