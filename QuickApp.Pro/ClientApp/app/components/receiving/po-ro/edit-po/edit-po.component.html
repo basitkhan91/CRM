@@ -67,7 +67,6 @@
                         </div>-->
                     </div>
 
-
                     <div *ngIf="toggle_epo_header">
                         <div class="form-row">
                             <div class="col-md-3">
@@ -92,14 +91,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <!--<div class="col-md-3">
-                                <div class="form-group">
-                                    <label>BU</label>
-                                    <select disabled="disabled" class="form-control" [(ngModel)]="poSelectedBusinessUnitId" #selects="ngModel" [ngModelOptions]="{standalone: true}">
-                                        <option *ngFor="let businessUnit of poBusinessUnitList" [value]="businessUnit.Key">{{businessUnit.Value}}</option>
-                                    </select>
-                                </div>
-                            </div>-->
+                           
                         </div>
 
                         <div class="form-row">
@@ -161,9 +153,10 @@
                         <th>PN</th>
                         <th>Alt PN</th>
                         <th>PN Description</th>
-                        <!-- <th>Change PN to</th> -->
                         <th>Manufacturer</th>
                         <th>Cond</th>
+                        <th>UOM</th>
+                        <th>OEM, DER,PMA FLAG</th>
                         <th>Qty Ordered</th>
                         <th>Discount</th>
                         <th>Unit Cost</th>
@@ -188,7 +181,6 @@
                             <td>{{part.itemMaster.partNumber}}</td>
                             <td>#######</td>
                             <td>{{part.itemMaster.partDescription}}</td>
-                            <td>#######</td>
                             <td>{{part.itemMaster.manufacturer?.name}}</td>
                             <td>
                                 <select class="form-control"
@@ -251,7 +243,6 @@
                                 </select>
                             </td>
                             <td>
-
                                 <label style="width:90px;">Division:</label>
                                 <select class="form-control"
                                         [(ngModel)]="part.divisionId"
@@ -309,7 +300,6 @@
                                 </select>
                             </td>
                             <td>
-
                                 <select class="form-control"
                                         [(ngModel)]="part.shelfId"
                                         #selects="ngModel"
