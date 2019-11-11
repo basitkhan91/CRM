@@ -1,18 +1,18 @@
 ﻿import { Component } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { fadeInOut } from '../../services/animations';
-import { PageHeaderComponent } from '../../shared/page-header.component';
-import { ActionService } from '../../services/action.service';
-import { MasterComapnyService } from '../../services/mastercompany.service';
-import { AlertService, DialogType, MessageSeverity } from '../../services/alert.service';
-import { Action } from '../../models/action.model';
-import { AuditHistory } from '../../models/audithistory.model';
-import { AuthService } from '../../services/auth.service';
+import { fadeInOut } from '../../../../services/animations';
+import { PageHeaderComponent } from '../../../page-header.component';
+import { ActionService } from '../../../../services/action.service';
+import { MasterComapnyService } from '../../../../services/mastercompany.service';
+import { AlertService, DialogType, MessageSeverity } from '../../../../services/alert.service';
+import { Action } from '../../../../models/action.model';
+import { AuditHistory } from '../../../../models/audithistory.model';
+import { AuthService } from '../../../../services/auth.service';
 
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
-import { MasterCompany } from '../../models/mastercompany.model';
+import { MasterCompany } from '../../../../models/mastercompany.model';
 
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -20,10 +20,10 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { InputTextModule } from 'primeng/inputtext';
 
 import { CheckboxModule } from 'primeng/checkbox';
-import { EmployeeService } from '../../services/employee.service';
+import { EmployeeService } from '../../../../services/employee.service';
 import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Router } from '@angular/router';
-import { AppTranslationService } from '../../services/app-translation.service';
+import { AppTranslationService } from '../../../../services/app-translation.service';
 
 
 
