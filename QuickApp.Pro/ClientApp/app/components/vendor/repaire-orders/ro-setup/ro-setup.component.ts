@@ -70,8 +70,8 @@ export class RoSetupComponent implements OnInit{
 	selectedActionName: any;
 	partListData: any[] = [];
 	allPriorityInfo: any = [];
-	sourcePoApproval: any = {};
-	sourcePoApprovalObj: any = {};
+	sourceRoApproval: any = {};
+	sourceRoApprovalObj: any = {};
 	partList: any = {};
 	maincompanylist: any[] = [];
 	bulist: any[] = [];
@@ -107,8 +107,8 @@ export class RoSetupComponent implements OnInit{
 	functionalCurrList: any[];
 	functionalTransList: any[];
 	@ViewChild('createPOForm') createPOForm: NgForm;
-	purchaseOrderId: any;
-	purchaseOrderPartRecordId: any;
+	repairOrderId: any;
+	repairOrderPartRecordId: any;
 	addAllMultiPN: boolean = false;
 	allGlInfo: GlAccount[];
 	childObject: any = {};
@@ -167,7 +167,7 @@ export class RoSetupComponent implements OnInit{
 	companySiteList_Billing: any;
 	contactListForCompanyBilling: any;
 	contactListForBillingCompany: any;
-	poId: any;
+	roId: any;
 	tempPOHeaderAddress: any = {};
 	vendorList: any = [];
 	tempShipTOAddressId: any;
@@ -221,7 +221,7 @@ export class RoSetupComponent implements OnInit{
 		
 		this.vendorService.ShowPtab = false;
 		this.vendorService.alertObj.next(this.vendorService.ShowPtab);
-		this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-purchase-setup';
+		this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-ro-setup';
 		this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
 	}
 
@@ -239,12 +239,12 @@ export class RoSetupComponent implements OnInit{
 		this.glAccountData();
 		this.getLegalEntity();
 		this.loadPercentData();
-		this.sourcePoApproval.companyId = 0;
-		this.sourcePoApproval.buId = 0;
-		this.sourcePoApproval.divisionId = 0;
-		this.sourcePoApproval.departmentId = 0;
-		if (this.sourcePoApproval.purchaseOrderNumber == "" || this.sourcePoApproval.purchaseOrderNumber == undefined) {
-			this.sourcePoApproval.purchaseOrderNumber = 'Creating';
+		this.sourceRoApproval.companyId = 0;
+		this.sourceRoApproval.buId = 0;
+		this.sourceRoApproval.divisionId = 0;
+		this.sourceRoApproval.departmentId = 0;
+		if (this.sourceRoApproval.purchaseOrderNumber == "" || this.sourceRoApproval.purchaseOrderNumber == undefined) {
+			this.sourceRoApproval.purchaseOrderNumber = 'Creating';
 		}
 
 		this.vendorCapesCols = [
@@ -258,22 +258,22 @@ export class RoSetupComponent implements OnInit{
 			{ field: 'name', header: 'PN Mfg' },
 		];
 
-		this.sourcePoApproval.statusId = 1;
-		this.sourcePoApproval.openDate = new Date();
-		//this.sourcePoApproval.closedDate = new Date();
-		//this.sourcePoApproval.dateRequested = new Date();
-		this.sourcePoApproval.shipToUserTypeId = 3;
-		this.sourcePoApproval.billToUserTypeId = 3;
+		this.sourceRoApproval.statusId = 1;
+		this.sourceRoApproval.openDate = new Date();
+		//this.sourceRoApproval.closedDate = new Date();
+		//this.sourceRoApproval.dateRequested = new Date();
+		this.sourceRoApproval.shipToUserTypeId = 3;
+		this.sourceRoApproval.billToUserTypeId = 3;
 
 		this.vendorIdByParams = this._actRoute.snapshot.params['vendorId'];
 		this.loadvendorDataById(this.vendorIdByParams);
 		
-		this.poId = this._actRoute.snapshot.params['id'];
-		if (this.poId) {
+		this.roId = this._actRoute.snapshot.params['id'];
+		if (this.roId) {
 			this.isEditMode = true;
-			this.getVendorPOById(this.poId);
-			this.getApproversListById(this.poId);
-			this.getPurchaseOrderPartsById(this.poId);
+			this.getVendorROById(this.roId);
+			this.getApproversListById(this.roId);
+			this.getRepairOrderPartsById(this.roId);
 		}
 
 		//grid childlist disable on load
@@ -293,12 +293,12 @@ export class RoSetupComponent implements OnInit{
 			this.vendorContactList = [];
 		this.getVendorContactsListByID(vendorId);
 		this.getVendorCapesByID(vendorId);
-		//this.sourcePoApproval.vendorName = value.vendorName;
-		this.sourcePoApproval.vendorId = getObjectById('vendorId', vendorId, this.allActions);
-		this.sourcePoApproval.vendorCode = getObjectById('vendorId', vendorId, this.allActions);
-		//this.sourcePoApproval.creditLimit = value.creditLimit;
-		//this.sourcePoApproval.creditTermsId = value.creditTermsId;
-		//this.sourcePoApproval.creditTerms = getValueFromArrayOfObjectById('name', 'creditTermsId', value.creditTermsId, this.allcreditTermInfo);
+		//this.sourceRoApproval.vendorName = value.vendorName;
+		this.sourceRoApproval.vendorId = getObjectById('vendorId', vendorId, this.allActions);
+		this.sourceRoApproval.vendorCode = getObjectById('vendorId', vendorId, this.allActions);
+		//this.sourceRoApproval.creditLimit = value.creditLimit;
+		//this.sourceRoApproval.creditTermsId = value.creditTermsId;
+		//this.sourceRoApproval.creditTerms = getValueFromArrayOfObjectById('name', 'creditTermsId', value.creditTermsId, this.allcreditTermInfo);
 		});		
 	}
 
@@ -331,15 +331,15 @@ export class RoSetupComponent implements OnInit{
 		})
 	}
 
-	getVendorPOById(poId) {
+	getVendorROById(roId) {
 		this.vendorService.getWorkFlows().subscribe(
 			response => {
 				this.vendorList = response[0];
 
-				this.purchaseOrderService.getVendorPOById(poId).subscribe(response => {
-					const res = response.po;					
+				this.vendorService.getVendorROById(roId).subscribe(response => {
+					const res = response;					
 					this.tempPOHeaderAddress = {
-						purchaseOrderNumber: res.purchaseOrderNumber,
+						repairOrderNumber: res.repairOrderNumber,
 						openDate: new Date(res.openDate),
 						closedDate: new Date(res.closedDate),
 						needByDate: new Date(res.needByDate),
@@ -409,18 +409,18 @@ export class RoSetupComponent implements OnInit{
 					// this.shipToAddress.shipToAddress3 = this.tempPOHeaderAddress.shipToCountry;
 					// console.log(this.tempPOHeaderAddress);
 					// console.log(this.shipToAddress);					
-					this.sourcePoApproval = this.tempPOHeaderAddress;
+					this.sourceRoApproval = this.tempPOHeaderAddress;
 				})
 			}
 		);
 	}
 
-	getPurchaseOrderPartsById(poId) {
+	getRepairOrderPartsById(roId) {
 		this.vendorService.getWorkFlows().subscribe(
 			response => {
 				this.vendorList = response[0];
 
-				this.purchaseOrderService.getPurchaseOrderPartsById(poId).subscribe(res => {
+				this.vendorService.getRepairOrderPartsById(roId).subscribe(res => {
 					console.log(res);
 					this.newPartsList = [this.newObjectForParent];
 					//this.partListData = res;
@@ -530,8 +530,8 @@ export class RoSetupComponent implements OnInit{
 		})
 	}
 
-	getApproversListById(poId) {
-		this.purchaseOrderService.getPOApproverList(poId).subscribe(response => {
+	getApproversListById(roId) {
+		this.purchaseOrderService.getPOApproverList(roId).subscribe(response => {
 			console.log(response);			
 			this.approveListEdit = response.map(x => {
 				return {
@@ -613,12 +613,12 @@ export class RoSetupComponent implements OnInit{
 	getShipViaEdit(data) {
 		this.commonService.getShipViaDetailsByModule(data.shipToUserType, this.shipToSelectedvalue).subscribe(response => {
 			this.shipViaList = response;
-			this.sourcePoApproval.shipViaId = data.shipViaId;
+			this.sourceRoApproval.shipViaId = data.shipViaId;
 				if(data.shipViaId == 0) {
 					this.shipViaList.push({shippingViaId: 0, name: data.shipVia, shippingAccountInfo: data.shippingAcctNum, shippingId: data.shippingId, shippingURL: data.shippingURL});
-					this.sourcePoApproval.shippingAcctNum = data.shippingAcctNum;
-					this.sourcePoApproval.shippingId = data.shippingId;
-					this.sourcePoApproval.shippingURL = data.shippingURL;
+					this.sourceRoApproval.shippingAcctNum = data.shippingAcctNum;
+					this.sourceRoApproval.shippingId = data.shippingId;
+					this.sourceRoApproval.shippingURL = data.shippingURL;
 				} else {
 					this.getShipViaDetails(data.shipViaId);
 				}
@@ -750,50 +750,51 @@ export class RoSetupComponent implements OnInit{
 		return this.authService.currentUser ? this.authService.currentUser.userName : "";
 	}
 
-	savePurchaseOrder() {
-		console.log(this.sourcePoApproval);
+	saveRepairOrder() {
+		console.log(this.sourceRoApproval);
 
-		this.sourcePoApprovalObj = {
-			purchaseOrderNumber: this.sourcePoApproval.purchaseOrderNumber,
-			openDate: this.datePipe.transform(this.sourcePoApproval.openDate, "MM/dd/yyyy"),//new Date(this.sourcePoApproval.openDate),
-			closedDate: this.datePipe.transform(this.sourcePoApproval.closedDate, "MM/dd/yyyy"),
-			needByDate: this.datePipe.transform(this.sourcePoApproval.needByDate, "MM/dd/yyyy"),
-			priorityId: this.sourcePoApproval.priorityId ? this.getPriorityId(this.sourcePoApproval.priorityId) : 0,
-			deferredReceiver: this.sourcePoApproval.deferredReceiver ? this.sourcePoApproval.deferredReceiver : false,
-			vendorId: this.sourcePoApproval.vendorId ? this.getVendorId(this.sourcePoApproval.vendorId) : 0,
+		this.sourceRoApprovalObj = {
+			repairOrderNumber: this.sourceRoApproval.repairOrderNumber,
+			openDate: this.datePipe.transform(this.sourceRoApproval.openDate, "MM/dd/yyyy"),//new Date(this.sourceRoApproval.openDate),
+			closedDate: this.datePipe.transform(this.sourceRoApproval.closedDate, "MM/dd/yyyy"),
+			needByDate: this.datePipe.transform(this.sourceRoApproval.needByDate, "MM/dd/yyyy"),
+			priorityId: this.sourceRoApproval.priorityId ? this.getPriorityId(this.sourceRoApproval.priorityId) : 0,
+			deferredReceiver: this.sourceRoApproval.deferredReceiver ? this.sourceRoApproval.deferredReceiver : false,
+			vendorId: this.sourceRoApproval.vendorId ? this.getVendorId(this.sourceRoApproval.vendorId) : 0,
 			//vendorId: 671,
-			vendorContactId: this.sourcePoApproval.vendorContactId ? this.getVendorContactId(this.sourcePoApproval.vendorContactId) : 0,
+			vendorContactId: this.sourceRoApproval.vendorContactId ? this.getVendorContactId(this.sourceRoApproval.vendorContactId) : 0,
 			//vendorContactId: 200,
-			vendorContactPhone: this.sourcePoApproval.vendorContactPhone ? this.getVendorContactPhone(this.sourcePoApproval.vendorContactPhone) : '',
-			creditLimit: this.sourcePoApproval.creditLimit ? this.sourcePoApproval.creditLimit : '',
-			creditTermsId: this.sourcePoApproval.creditTermsId ? this.sourcePoApproval.creditTermsId : 0,
-			requisitionerId: this.sourcePoApproval.requisitionerId ? this.getEmployeeId(this.sourcePoApproval.requisitionerId) : 0,
-			approverId: this.sourcePoApproval.approverId ? this.getEmployeeId(this.sourcePoApproval.approverId) : 0,
-			approvedDate: this.datePipe.transform(this.sourcePoApproval.approvedDate, "MM/dd/yyyy"),
-			statusId: this.sourcePoApproval.statusId ? this.sourcePoApproval.statusId : 0,
-			resale: this.sourcePoApproval.resale ? this.sourcePoApproval.resale : false,
-			managementStructureId: this.sourcePoApproval.managementStructureId ? this.sourcePoApproval.managementStructureId : 0,
-			poMemo: this.sourcePoApproval.poMemo ? this.sourcePoApproval.poMemo : '',
-			shipToUserTypeId: this.sourcePoApproval.shipToUserTypeId ? parseInt(this.sourcePoApproval.shipToUserTypeId) : 0,
-			shipToUserId: this.sourcePoApproval.shipToUserId ? this.getShipToBillToUserId(this.sourcePoApproval.shipToUserId) : 0,
-			shipToAddressId: this.sourcePoApproval.shipToAddressId ? this.sourcePoApproval.shipToAddressId : 0,
-			//shipToContactId: this.sourcePoApproval.shipToContactId ? this.getShipBillContactId(this.sourcePoApproval.shipToContactId) : 0,
-			shipToContactId: this.sourcePoApproval.shipToContactId ? editValueAssignByCondition('contactId', this.sourcePoApproval.shipToContactId) : 0,
-			shipViaId: this.sourcePoApproval.shipViaId,
-			shippingCost: this.sourcePoApproval.shippingCost,
-			handlingCost: this.sourcePoApproval.handlingCost,
-			shipVia: this.sourcePoApproval.shipVia,
-			shippingAcctNum: this.sourcePoApproval.shippingAcctNum,
-			shippingURL: this.sourcePoApproval.shippingURL,
-			shippingId: this.sourcePoApproval.shippingId,
-			shipToMemo: this.sourcePoApproval.shipToMemo ? this.sourcePoApproval.shipToMemo : '',
-			billToUserTypeId: this.sourcePoApproval.billToUserTypeId ? parseInt(this.sourcePoApproval.billToUserTypeId) : 0,
-			billToUserId: this.sourcePoApproval.billToUserId ? this.getShipToBillToUserId(this.sourcePoApproval.billToUserId) : 0,
-			billToAddressId: this.sourcePoApproval.billToAddressId ? this.sourcePoApproval.billToAddressId : 0,
-			//billToContactId: this.sourcePoApproval.billToContactId ? this.getShipBillContactId(this.sourcePoApproval.billToContactId) : 0,
-			billToContactId: this.sourcePoApproval.billToContactId ? editValueAssignByCondition('contactId', this.sourcePoApproval.billToContactId) : 0,
-			billToMemo: this.sourcePoApproval.billToMemo ? this.sourcePoApproval.billToMemo : '',
-			shipToSiteName: this.postSiteNameForShipping(this.sourcePoApproval.shipToUserTypeId, this.sourcePoApproval.shipToAddressId),
+			vendorContactPhone: this.sourceRoApproval.vendorContactPhone ? this.getVendorContactPhone(this.sourceRoApproval.vendorContactPhone) : '',
+			creditLimit: this.sourceRoApproval.creditLimit ? this.sourceRoApproval.creditLimit : '',
+			creditTermsId: this.sourceRoApproval.creditTermsId ? this.sourceRoApproval.creditTermsId : 0,
+			requisitionerId: this.sourceRoApproval.requisitionerId ? this.getEmployeeId(this.sourceRoApproval.requisitionerId) : 0,
+			approverId: this.sourceRoApproval.approverId ? this.getEmployeeId(this.sourceRoApproval.approverId) : 0,
+			approvedDate: this.datePipe.transform(this.sourceRoApproval.approvedDate, "MM/dd/yyyy"),
+			statusId: this.sourceRoApproval.statusId ? this.sourceRoApproval.statusId : 0,
+			resale: this.sourceRoApproval.resale ? this.sourceRoApproval.resale : false,
+			managementStructureId: this.sourceRoApproval.managementStructureId ? this.sourceRoApproval.managementStructureId : 0,
+			poMemo: this.sourceRoApproval.poMemo ? this.sourceRoApproval.poMemo : '',
+			shipToUserTypeId: this.sourceRoApproval.shipToUserTypeId ? parseInt(this.sourceRoApproval.shipToUserTypeId) : 0,
+			shipToUserId: this.sourceRoApproval.shipToUserId ? this.getShipToBillToUserId(this.sourceRoApproval.shipToUserId) : 0,
+			shipToAddressId: this.sourceRoApproval.shipToAddressId ? this.sourceRoApproval.shipToAddressId : 0,
+			//shipToContactId: this.sourceRoApproval.shipToContactId ? this.getShipBillContactId(this.sourceRoApproval.shipToContactId) : 0,
+			shipToContactId: this.sourceRoApproval.shipToContactId ? editValueAssignByCondition('contactId', this.sourceRoApproval.shipToContactId) : 0,
+			shipViaId: this.sourceRoApproval.shipViaId,
+			shippingCost: this.sourceRoApproval.shippingCost,
+			handlingCost: this.sourceRoApproval.handlingCost,
+			shipVia: this.sourceRoApproval.shipVia,
+			shippingAcctNum: this.sourceRoApproval.shippingAcctNum,
+			shippingURL: this.sourceRoApproval.shippingURL,
+			//shippingId: this.sourceRoApproval.shippingId,
+			shippingId: 0,
+			shipToMemo: this.sourceRoApproval.shipToMemo ? this.sourceRoApproval.shipToMemo : '',
+			billToUserTypeId: this.sourceRoApproval.billToUserTypeId ? parseInt(this.sourceRoApproval.billToUserTypeId) : 0,
+			billToUserId: this.sourceRoApproval.billToUserId ? this.getShipToBillToUserId(this.sourceRoApproval.billToUserId) : 0,
+			billToAddressId: this.sourceRoApproval.billToAddressId ? this.sourceRoApproval.billToAddressId : 0,
+			//billToContactId: this.sourceRoApproval.billToContactId ? this.getShipBillContactId(this.sourceRoApproval.billToContactId) : 0,
+			billToContactId: this.sourceRoApproval.billToContactId ? editValueAssignByCondition('contactId', this.sourceRoApproval.billToContactId) : 0,
+			billToMemo: this.sourceRoApproval.billToMemo ? this.sourceRoApproval.billToMemo : '',
+			shipToSiteName: this.postSiteNameForShipping(this.sourceRoApproval.shipToUserTypeId, this.sourceRoApproval.shipToAddressId),
 			shipToAddress1: this.shipToAddress.address1,
 			shipToAddress2: this.shipToAddress.address2,
 			shipToAddress3: this.shipToAddress.address3,
@@ -801,7 +802,7 @@ export class RoSetupComponent implements OnInit{
 			shipToStateOrProvince: this.shipToAddress.stateOrProvince,
 			shipToPostalCode: this.shipToAddress.postalCode,
 			shipToCountry: this.shipToAddress.country,
-			billToSiteName: this.postSiteNameForBilling(this.sourcePoApproval.billToUserTypeId, this.sourcePoApproval.billToAddressId),
+			billToSiteName: this.postSiteNameForBilling(this.sourceRoApproval.billToUserTypeId, this.sourceRoApproval.billToAddressId),
 			billToAddress1: this.billToAddress.address1,
 			billToAddress2: this.billToAddress.address2,
 			billToAddress3: this.billToAddress.address3,
@@ -809,12 +810,12 @@ export class RoSetupComponent implements OnInit{
 			billToStateOrProvince: this.billToAddress.stateOrProvince,
 			billToPostalCode: this.billToAddress.postalCode,
 			billToCountry: this.billToAddress.country,
-			shipToSiteId: this.sourcePoApproval.shipToAddressId ? this.sourcePoApproval.shipToAddressId : 0,
-			billToSiteId: this.sourcePoApproval.billToAddressId ? this.sourcePoApproval.billToAddressId : 0,
+			shipToSiteId: this.sourceRoApproval.shipToAddressId ? this.sourceRoApproval.shipToAddressId : 0,
+			billToSiteId: this.sourceRoApproval.billToAddressId ? this.sourceRoApproval.billToAddressId : 0,
 			createdBy: this.userName,
 			updatedBy: this.userName
 		}
-		console.log(this.sourcePoApprovalObj);
+		console.log(this.sourceRoApprovalObj);
 
 		if (this.createPOForm.invalid) { //invalid
 			//  $('.createPO-form input.ng-invalid, .createPO-form select.ng-invalid, .createPO-form p-calendar.ng-invalid input').addClass('border-red-clr');
@@ -824,31 +825,31 @@ export class RoSetupComponent implements OnInit{
 		else {
 			// header save 
 			if(!this.isEditMode) {
-				this.vendorService.savePurchaseorder({...this.sourcePoApprovalObj}).subscribe(saveddata => {
-					this.route.navigate(['/vendorsmodule/vendorpages/app-polist'])
-					this.purchaseOrderId = saveddata.purchaseOrderId;
+				this.vendorService.saveRepairOrder({...this.sourceRoApprovalObj}).subscribe(saveddata => {
+					this.route.navigate(['/vendorsmodule/vendorpages/app-ro-list'])
+					this.repairOrderId = saveddata.repairOrderId;
 					this.savedInfo = saveddata;
 					console.log(saveddata);
 					this.tempVendorId = null;
-					this.savePurchaseorderPart(saveddata.purchaseOrderId);
-					this.savePOApproverData(saveddata.purchaseOrderId);
+					this.saveRepairorderPart(saveddata.repairOrderId);
+					this.saveROApproverData(saveddata.repairOrderId);
 				});
 			} else {
-				const poHeaderEdit = {...this.sourcePoApprovalObj, purchaseOrderId: parseInt(this.poId)};
-				this.vendorService.savePurchaseorder({...poHeaderEdit}).subscribe(saveddata => {
-					this.route.navigate(['/vendorsmodule/vendorpages/app-polist'])
-					this.purchaseOrderId = saveddata.purchaseOrderId;
+				const roHeaderEdit = {...this.sourceRoApprovalObj, repairOrderId: parseInt(this.roId)};
+				this.vendorService.saveRepairOrder({...roHeaderEdit}).subscribe(saveddata => {
+					this.route.navigate(['/vendorsmodule/vendorpages/app-ro-list'])
+					this.repairOrderId = saveddata.repairOrderId;
 					this.savedInfo = saveddata;
 					console.log(saveddata);
 					this.tempVendorId = null;
-					this.savePurchaseorderPart(saveddata.purchaseOrderId);
-					//this.savePOApproverData(saveddata.purchaseOrderId);
+					this.saveRepairorderPart(saveddata.repairOrderId);
+					//this.saveROApproverData(saveddata.repairOrderId);
 				});
 			}			
 		}
 	}
 
-	savePurchaseorderPart(purId) {
+	saveRepairorderPart(repId) {
 		//if (!this.isEditMode) {
 			for (let i = 0; i < this.partListData.length; i++) {
 				//alert("New");
@@ -871,22 +872,22 @@ export class RoSetupComponent implements OnInit{
 					console.log(childDataList);
 					for (let j = 0; j < childDataList.length; j++) {
 						this.childObject = {
-							purchaseOrderId: purId,
+							repairOrderId: repId,
 							//isParent: false,
 							//serialNumber: j+1,
 							itemMasterId: this.partListData[i].itemMasterId ? this.partListData[i].itemMasterId : 0,
 							assetId: this.partListData[i].assetId ? this.partListData[i].assetId : 0,
 							partNumberId: this.partListData[i].itemMasterId ? this.partListData[i].itemMasterId : 0,
-							poPartSplitUserTypeId: childDataList[j].partListUserTypeId ? childDataList[j].partListUserTypeId : 0,
-							poPartSplitUserId: childDataList[j].partListUserId ? this.getIdByObject(childDataList[j].partListUserId) : 0,
-							poPartSplitAddressId: childDataList[j].partListAddressId ? childDataList[j].partListAddressId : 0,
-							poPartSplitAddress1: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('address1', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
-							poPartSplitAddress2: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('address2', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
-							poPartSplitAddress3: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('address3', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
-							poPartSplitCity: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('city', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
-							poPartSplitStateOrProvince: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('stateOrProvince', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
-							poPartSplitPostalCode: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('postalCode', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
-							poPartSplitCountry: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('country', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							roPartSplitUserTypeId: childDataList[j].partListUserTypeId ? parseInt(childDataList[j].partListUserTypeId) : 0,
+							roPartSplitUserId: childDataList[j].partListUserId ? this.getIdByObject(childDataList[j].partListUserId) : 0,
+							roPartSplitAddressId: childDataList[j].partListAddressId ? parseInt(childDataList[j].partListAddressId) : 0,
+							roPartSplitAddress1: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('address1', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							roPartSplitAddress2: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('address2', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							roPartSplitAddress3: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('address3', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							roPartSplitCity: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('city', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							roPartSplitStateOrProvince: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('stateOrProvince', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							roPartSplitPostalCode: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('postalCode', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							roPartSplitCountry: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('country', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
 							UOMId: this.partListData[i].UOMId ? this.partListData[i].UOMId : 0,
 							quantityOrdered: childDataList[j].quantityOrdered ? childDataList[j].quantityOrdered : 0,
 							needByDate: this.datePipe.transform(childDataList[j].needByDate, "MM/dd/yyyy"),
@@ -898,14 +899,14 @@ export class RoSetupComponent implements OnInit{
 						this.childObjectArray.push(this.childObject)
 						this.childObjectArrayEdit.push({
 							...this.childObject, 
-							purchaseOrderPartRecordId: childDataList[j].purchaseOrderPartRecordId ? childDataList[j].purchaseOrderPartRecordId : 0
+							repairOrderPartRecordId: childDataList[j].repairOrderPartRecordId ? childDataList[j].repairOrderPartRecordId : 0
 						})
 						console.log(this.childObjectArray);
 					}
 				}
 
 				this.parentObject = {
-					purchaseOrderId: purId,
+					repairOrderId: repId,
 					isParent: true,
 					//serialNumber: i+1,
 					itemMasterId: this.partListData[i].itemMasterId ? this.partListData[i].itemMasterId : 0,
@@ -930,7 +931,7 @@ export class RoSetupComponent implements OnInit{
 					//reportCurrencyId: this.partListData[i].reportCurrencyId ? this.partListData[i].reportCurrencyId : 1,
 					reportCurrencyId: this.partListData[i].reportCurrencyId ? this.getCurrencyIdByObject(this.partListData[i].reportCurrencyId) : 1,
 					workOrderId: this.partListData[i].workOrderId ? this.partListData[i].workOrderId : 0,
-					repairOrderId: this.partListData[i].repairOrderId ? this.partListData[i].repairOrderId : 0,
+					//repairOrderId: this.partListData[i].repairOrderId ? this.partListData[i].repairOrderId : 0,
 					salesOrderId: this.partListData[i].salesOrderId ? this.partListData[i].salesOrderId : 0,
 					managementStructureId: this.partListData[i].managementStructureId ? this.partListData[i].managementStructureId : 0,
 					memo: this.partListData[i].memo,
@@ -942,35 +943,35 @@ export class RoSetupComponent implements OnInit{
 				if(!this.isEditMode) {
 					this.parentObjectArray.push({
 						...this.parentObject,
-						poPartSplits: this.childObjectArray
-						//purchaseOrderPartRecordId: this.partListData[i].purchaseOrderPartRecordId
+						roPartSplits: this.childObjectArray
+						//repairOrderPartRecordId: this.partListData[i].repairOrderPartRecordId
 					})
 					//this.parentObjectArray.push(this.parentObject)
 				} else {
 					this.parentObjectArray.push({
 						...this.parentObject,
-						poPartSplits: this.childObjectArrayEdit,
-						purchaseOrderPartRecordId: this.partListData[i].purchaseOrderPartRecordId ? this.partListData[i].purchaseOrderPartRecordId : 0
+						roPartSplits: this.childObjectArrayEdit,
+						repairOrderPartRecordId: this.partListData[i].repairOrderPartRecordId ? this.partListData[i].repairOrderPartRecordId : 0
 					})
 				}				
 				console.log(this.parentObjectArray);
 			}
 
 			if(!this.isEditMode) {
-				this.vendorService.savePurchaseorderpart(this.parentObjectArray).subscribe(res => {
+				this.vendorService.saveRepairOrderPart(this.parentObjectArray).subscribe(res => {
 					console.log(res);
 					this.alertService.showMessage(
 						'Success',
-						`Created New PO Successfully`,
+						`Created New RO Successfully`,
 						MessageSeverity.success
 					);
 				});
 			} else {
-				this.vendorService.savePurchaseorderpart(this.parentObjectArray).subscribe(res => {
+				this.vendorService.saveRepairOrderPart(this.parentObjectArray).subscribe(res => {
 					console.log(res);
 					this.alertService.showMessage(
 						'Success',
-						`Updated PO Successfully`,
+						`Updated RO Successfully`,
 						MessageSeverity.success
 					);
 				});
@@ -1014,7 +1015,7 @@ export class RoSetupComponent implements OnInit{
 		}
 	}
 
-	savePOApproverData(purchaseOrderId) {
+	saveROApproverData(repairOrderId) {
 		console.log(this.approversData);
 		this.approverIds = [];
 		this.poApproverList = [];
@@ -1046,20 +1047,20 @@ export class RoSetupComponent implements OnInit{
 			this.poApproverList.push(poapprover);
 		}
 		this.poApproverData = {
-			purchaseOrderId: purchaseOrderId ? purchaseOrderId : this.poId,
+			repairOrderId: repairOrderId ? repairOrderId : this.roId,
 			purchaseOrderApproverList: this.poApproverList
 		}
-		this.purchaseOrderService.saveCreatePOApproval(this.poApproverData).subscribe(res => {
-			console.log(res);
-			if(this.isEditMode) {
-				this.getApproversListById(this.poId);
-				this.alertService.showMessage(
-					'Success',
-					`Added Approvers Successfully`,
-					MessageSeverity.success
-				);
-			}
-		})
+		// this.purchaseOrderService.saveCreatePOApproval(this.poApproverData).subscribe(res => {
+		// 	console.log(res);
+		// 	if(this.isEditMode) {
+		// 		this.getApproversListById(this.roId);
+		// 		this.alertService.showMessage(
+		// 			'Success',
+		// 			`Added Approvers Successfully`,
+		// 			MessageSeverity.success
+		// 		);
+		// 	}
+		// })
 	}
 
 	updatePOApproverData() {
@@ -1096,25 +1097,19 @@ export class RoSetupComponent implements OnInit{
 			this.poApproverList.push(poapprover);
 		}
 		this.poApproverData = {
-			purchaseOrderId: parseInt(this.poId),
+			repairOrderId: parseInt(this.roId),
 			poApproverId: this.poApproverId,
 			purchaseOrderApproverList: this.poApproverList
 		}
-
-		// this.poApproverData = {
-		// 	purchaseOrderId: parseInt(this.poId),
-		// 	poApproverId: this.approversData[0].poApproverId,
-		// 	purchaseOrderApproverList: this.poApproverListEdit
-		// }
 		console.log(this.poApproverData);
-		this.purchaseOrderService.updatePOApproval(this.poApproverData).subscribe(res => {
-			console.log(res);
-			this.alertService.showMessage(
-				'Success',
-				`Updated Approvers Successfully`,
-				MessageSeverity.success
-			);
-		})
+		// this.purchaseOrderService.updatePOApproval(this.poApproverData).subscribe(res => {
+		// 	console.log(res);
+		// 	this.alertService.showMessage(
+		// 		'Success',
+		// 		`Updated Approvers Successfully`,
+		// 		MessageSeverity.success
+		// 	);
+		// })
 	}
 
 	getApproverIdUpdate(level, value) {
@@ -1157,7 +1152,7 @@ export class RoSetupComponent implements OnInit{
 		console.log(parentdata)
 		this.showInput = true;
 		const itemMasterId = getValueFromObjectByKey('value', parentdata.partNumberId)
-		this.sourcePoApproval.itemMasterId = itemMasterId;
+		this.sourceRoApproval.itemMasterId = itemMasterId;
 		this.partWithId = [];
 		this.itemTypeId = 1;
 
@@ -1295,8 +1290,8 @@ export class RoSetupComponent implements OnInit{
 	}
 
 	deleteSplitShipment(childata, index, mainindex) {
-		// if (childata.purchaseOrderPartRecordId) {
-		// 	this.vendorService.deletePurchaseorderpart(childata.purchaseOrderPartRecordId).subscribe(data => {
+		// if (childata.repairOrderPartRecordId) {
+		// 	this.vendorService.deletePurchaseorderpart(childata.repairOrderPartRecordId).subscribe(data => {
 
 		// 	})
 		// }
@@ -1416,7 +1411,7 @@ export class RoSetupComponent implements OnInit{
 			}
 			console.log(this.vendorContactsForshipTo);
 
-			this.commonService.getShipViaDetailsByModule(this.sourcePoApproval.shipToUserTypeId, vendorId).subscribe(res => {
+			this.commonService.getShipViaDetailsByModule(this.sourceRoApproval.shipToUserTypeId, vendorId).subscribe(res => {
 				this.shipViaList = res;
 			})
 			this.getShipViaDetailsForShipTo();
@@ -1489,22 +1484,22 @@ export class RoSetupComponent implements OnInit{
 
 	onClickShipMemo() {
 		this.addressMemoLabel = 'Edit Ship';
-		this.tempMemo = this.sourcePoApproval.shipToMemo;
+		this.tempMemo = this.sourceRoApproval.shipToMemo;
 	}
 
 	getShipViaDetails(id) {
-		//this.sourcePoApproval.shippingCost = null;
-		//this.sourcePoApproval.handlingCost = null;
-		this.sourcePoApproval.shippingAcctNum = null;
-		this.sourcePoApproval.shippingId = null;
-		this.sourcePoApproval.shippingURL = '';
+		//this.sourceRoApproval.shippingCost = null;
+		//this.sourceRoApproval.handlingCost = null;
+		this.sourceRoApproval.shippingAcctNum = null;
+		this.sourceRoApproval.shippingId = null;
+		this.sourceRoApproval.shippingURL = '';
 
 		this.commonService.getShipViaDetailsById(id).subscribe(res => {
 			const responseData = res;
-			this.sourcePoApproval.shippingAcctNum = responseData.shippingAccountInfo;
-			this.sourcePoApproval.shippingURL = responseData.shippingURL;
-			this.sourcePoApproval.shippingId = responseData.shippingId;
-			this.sourcePoApproval.shipVia = responseData.shipVia;
+			this.sourceRoApproval.shippingAcctNum = responseData.shippingAccountInfo;
+			this.sourceRoApproval.shippingURL = responseData.shippingURL;
+			this.sourceRoApproval.shippingId = responseData.shippingId;
+			this.sourceRoApproval.shipVia = responseData.shipVia;
 			console.log(res)
 		})
 	}
@@ -1635,7 +1630,7 @@ export class RoSetupComponent implements OnInit{
 			this.contactListForCompanyBilling = res;
 		})
 
-		this.commonService.getShipViaDetailsByModule(this.sourcePoApproval.billToUserTypeId, this.billToSelectedvalue).subscribe(res => {
+		this.commonService.getShipViaDetailsByModule(this.sourceRoApproval.billToUserTypeId, this.billToSelectedvalue).subscribe(res => {
 			this.shipViaList = res;
 		})
 	}
@@ -1715,7 +1710,7 @@ export class RoSetupComponent implements OnInit{
 
 	onClickBillMemo() {
 		this.addressMemoLabel = 'Edit Bill';
-		this.tempMemo = this.sourcePoApproval.billToMemo;
+		this.tempMemo = this.sourceRoApproval.billToMemo;
 	}
 
 	onClickBillSiteName(value, data?) {
@@ -1794,7 +1789,7 @@ export class RoSetupComponent implements OnInit{
 	}
 
 	getBUList(companyId) {
-		this.sourcePoApproval.managementStructureId = companyId;
+		this.sourceRoApproval.managementStructureId = companyId;
 		this.bulist = [];
 		this.divisionlist = [];
 		this.departmentList = [];
@@ -1817,7 +1812,7 @@ export class RoSetupComponent implements OnInit{
 	}
 
 	getDivisionlist(buId) {
-		this.sourcePoApproval.managementStructureId = buId;
+		this.sourceRoApproval.managementStructureId = buId;
 		this.divisionlist = [];
 		this.departmentList = [];
 		for (let i = 0; i < this.allManagemtninfo.length; i++) {
@@ -1838,7 +1833,7 @@ export class RoSetupComponent implements OnInit{
 	}
 
 	getDepartmentlist(divisionId) {
-		this.sourcePoApproval.managementStructureId = divisionId;
+		this.sourceRoApproval.managementStructureId = divisionId;
 		this.departmentList = [];
 		for (let i = 0; i < this.allManagemtninfo.length; i++) {
 			if (this.allManagemtninfo[i].parentId == divisionId) {
@@ -1858,7 +1853,7 @@ export class RoSetupComponent implements OnInit{
 	}
 
 	getDepartmentId(departmentId) {
-		this.sourcePoApproval.managementStructureId = departmentId;
+		this.sourceRoApproval.managementStructureId = departmentId;
 		for (let i = 0; i < this.partListData.length; i++) {
 			this.partListData[i].parentDeptId = departmentId;
 		}
@@ -2054,34 +2049,34 @@ export class RoSetupComponent implements OnInit{
 					this.partListData[i].childList = [];
 				}
 			}
-			if (this.sourcePoApproval.companyId) {
+			if (this.sourceRoApproval.companyId) {
 				for (let i = 0; i < this.partListData.length; i++) {
 					if (i == this.partListData.length - 1) {
-						this.partListData[i].parentCompanyId = this.sourcePoApproval.companyId;
+						this.partListData[i].parentCompanyId = this.sourceRoApproval.companyId;
 						this.getParentBUList(this.partListData[i]);
 					}
 				}
 			}
-			if (this.sourcePoApproval.buId) {
+			if (this.sourceRoApproval.buId) {
 				for (let i = 0; i < this.partListData.length; i++) {
 					if (i == this.partListData.length - 1) {
-						this.partListData[i].parentbuId = this.sourcePoApproval.buId;
+						this.partListData[i].parentbuId = this.sourceRoApproval.buId;
 						this.getParentDivisionlist(this.partListData[i]);
 					}
 				}
 			}
-			if (this.sourcePoApproval.divisionId) {
+			if (this.sourceRoApproval.divisionId) {
 				for (let i = 0; i < this.partListData.length; i++) {
 					if (i == this.partListData.length - 1) {
-						this.partListData[i].parentDivisionId = this.sourcePoApproval.divisionId;
+						this.partListData[i].parentDivisionId = this.sourceRoApproval.divisionId;
 						this.getParentDeptlist(this.partListData[i]);
 					}
 				}
 			}
-			if (this.sourcePoApproval.departmentId) {
+			if (this.sourceRoApproval.departmentId) {
 				for (let i = 0; i < this.partListData.length; i++) {
 					if (i == this.partListData.length - 1) {
-						this.partListData[i].parentDeptId = this.sourcePoApproval.departmentId;
+						this.partListData[i].parentDeptId = this.sourceRoApproval.departmentId;
 						this.getParentDeptId(this.partListData[i]);
 					}
 				}
@@ -2215,47 +2210,47 @@ export class RoSetupComponent implements OnInit{
 	}
 
 	clearInputShipTo() {
-		this.sourcePoApproval.shipToUserId = null;
-		this.sourcePoApproval.shipToAddressId = null;
-		this.sourcePoApproval.shipToContactId = null;
-		this.sourcePoApproval.shipToMemo = '';
-		this.sourcePoApproval.shipViaId = null;
-		this.sourcePoApproval.shippingCost = null;
-		this.sourcePoApproval.handlingCost = null;
-		this.sourcePoApproval.shippingAcctNum = null;
-		this.sourcePoApproval.shippingId = null;
-		this.sourcePoApproval.shippingURL = '';
+		this.sourceRoApproval.shipToUserId = null;
+		this.sourceRoApproval.shipToAddressId = null;
+		this.sourceRoApproval.shipToContactId = null;
+		this.sourceRoApproval.shipToMemo = '';
+		this.sourceRoApproval.shipViaId = null;
+		this.sourceRoApproval.shippingCost = null;
+		this.sourceRoApproval.handlingCost = null;
+		this.sourceRoApproval.shippingAcctNum = null;
+		this.sourceRoApproval.shippingId = null;
+		this.sourceRoApproval.shippingURL = '';
 		this.shipToAddress = {};
 		this.shipViaList = [];
 	}
 
 	clearInputOnClickUserIdShipTo() {
-		this.sourcePoApproval.shipToAddressId = null;
-		this.sourcePoApproval.shipToContactId = null;
-		this.sourcePoApproval.shipToMemo = '';
-		this.sourcePoApproval.shipViaId = null;
-		this.sourcePoApproval.shippingCost = null;
-		this.sourcePoApproval.handlingCost = null;
-		this.sourcePoApproval.shippingAcctNum = null;
-		this.sourcePoApproval.shippingId = null;
-		this.sourcePoApproval.shippingURL = '';
+		this.sourceRoApproval.shipToAddressId = null;
+		this.sourceRoApproval.shipToContactId = null;
+		this.sourceRoApproval.shipToMemo = '';
+		this.sourceRoApproval.shipViaId = null;
+		this.sourceRoApproval.shippingCost = null;
+		this.sourceRoApproval.handlingCost = null;
+		this.sourceRoApproval.shippingAcctNum = null;
+		this.sourceRoApproval.shippingId = null;
+		this.sourceRoApproval.shippingURL = '';
 		this.shipToAddress = {};
 		this.shipViaList = [];
 	}
 
 	clearInputBillTo() {
-		this.sourcePoApproval.billToUserId = null;
-		this.sourcePoApproval.billToAddressId = null;
-		this.sourcePoApproval.billToContactId = null;
+		this.sourceRoApproval.billToUserId = null;
+		this.sourceRoApproval.billToAddressId = null;
+		this.sourceRoApproval.billToContactId = null;
 		this.billToAddress = {};
-		this.sourcePoApproval.billToMemo = '';
+		this.sourceRoApproval.billToMemo = '';
 	}
 
 	clearInputOnClickUserIdBillTo() {
-		this.sourcePoApproval.billToAddressId = null;
-		this.sourcePoApproval.billToContactId = null;
+		this.sourceRoApproval.billToAddressId = null;
+		this.sourceRoApproval.billToContactId = null;
 		this.billToAddress = {};
-		this.sourcePoApproval.billToMemo = '';
+		this.sourceRoApproval.billToMemo = '';
 	}	
 
 	eventHandler(event) {
@@ -2291,12 +2286,12 @@ export class RoSetupComponent implements OnInit{
 		this.vendorContactList = [];
 		this.getVendorContactsListByID(value.vendorId);
 		this.getVendorCapesByID(value.vendorId);
-		this.sourcePoApproval.vendorName = value.vendorName;
-		this.sourcePoApproval.vendorCode = getObjectById('vendorId', value.vendorId, this.allActions);
-		this.sourcePoApproval.creditLimit = value.creditLimit;
-		this.sourcePoApproval.creditTermsId = value.creditTermsId;
-		this.sourcePoApproval.creditTerms = getValueFromArrayOfObjectById('name', 'creditTermsId', value.creditTermsId, this.allcreditTermInfo);
-		//this.sourcePoApproval.creditTermsId = getObjectById('creditTermsId', value.creditTermsId, this.allcreditTermInfo);				
+		this.sourceRoApproval.vendorName = value.vendorName;
+		this.sourceRoApproval.vendorCode = getObjectById('vendorId', value.vendorId, this.allActions);
+		this.sourceRoApproval.creditLimit = value.creditLimit;
+		this.sourceRoApproval.creditTermsId = value.creditTermsId;
+		this.sourceRoApproval.creditTerms = getValueFromArrayOfObjectById('name', 'creditTermsId', value.creditTermsId, this.allcreditTermInfo);
+		//this.sourceRoApproval.creditTermsId = getObjectById('creditTermsId', value.creditTermsId, this.allcreditTermInfo);				
 	}
 
 	getVendorCapesByID(vendorId) {
@@ -2461,22 +2456,22 @@ export class RoSetupComponent implements OnInit{
 
 	onSaveAddressMemo() {
 		if (this.addressMemoLabel == 'Edit Ship') {
-			this.sourcePoApproval.shipToMemo = this.tempMemo;
+			this.sourceRoApproval.shipToMemo = this.tempMemo;
 		}
 		if (this.addressMemoLabel == 'Edit Bill') {
-			this.sourcePoApproval.billToMemo = this.tempMemo;
+			this.sourceRoApproval.billToMemo = this.tempMemo;
 		}
 	}
 
 	onAddMemo() {
-		this.tempMemo = this.sourcePoApproval.poMemo;
+		this.tempMemo = this.sourceRoApproval.poMemo;
 	}
 	onSaveMemo() {
-		this.sourcePoApproval.poMemo = this.tempMemo;
+		this.sourceRoApproval.poMemo = this.tempMemo;
 	}	
 
 	onSelectNeedByDate() {
-		this.needByTempDate = this.sourcePoApproval.needByDate;
+		this.needByTempDate = this.sourceRoApproval.needByDate;
 		//if (this.vendorService.isEditMode == false) {
 			if (this.partListData) {
 				for (let i = 0; i < this.partListData.length; i++) {
@@ -2526,8 +2521,8 @@ export class RoSetupComponent implements OnInit{
 					return x;
 				}
 			})
-			this.sourcePoApproval.vendorContactId = isDefaultContact[0];
-			this.sourcePoApproval.vendorContactPhone = isDefaultContact[0];
+			this.sourceRoApproval.vendorContactId = isDefaultContact[0];
+			this.sourceRoApproval.vendorContactPhone = isDefaultContact[0];
 		})
 	}
 
@@ -2539,8 +2534,8 @@ export class RoSetupComponent implements OnInit{
 					return x;
 				}
 			})
-			this.sourcePoApproval.vendorContactId = isContact[0];
-			this.sourcePoApproval.vendorContactPhone = isContact[0];
+			this.sourceRoApproval.vendorContactId = isContact[0];
+			this.sourceRoApproval.vendorContactPhone = isContact[0];
 		})
 	}
 
@@ -2635,10 +2630,10 @@ export class RoSetupComponent implements OnInit{
 	}	
 
 	getShipViaDetailsForShipTo(id?) {	
-		this.commonService.getShipViaDetailsByModule(this.sourcePoApproval.shipToUserTypeId, this.shipToSelectedvalue).subscribe(response => {
+		this.commonService.getShipViaDetailsByModule(this.sourceRoApproval.shipToUserTypeId, this.shipToSelectedvalue).subscribe(response => {
 			this.shipViaList = response;
 			if(id) {
-				this.sourcePoApproval.shipViaId = id;
+				this.sourceRoApproval.shipViaId = id;
 				this.getShipViaDetails(id);
 			}		
 		})		
@@ -2662,11 +2657,11 @@ export class RoSetupComponent implements OnInit{
 			masterCompanyId: 1,
 			isActive: true,			
 		}
-		if (this.sourcePoApproval.shipToUserTypeId == 1) {
-			const customerData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId)}
+		if (this.sourceRoApproval.shipToUserTypeId == 1) {
+			const customerData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('value', this.sourceRoApproval.shipToUserId)}
 			if(!this.isEditModeShipping) {
 			await this.customerService.newShippingAdd(customerData).subscribe(response => {
-				this.onShipToCustomerSelected(customerData.customerId, this.sourcePoApproval, response.customerShippingId);
+				this.onShipToCustomerSelected(customerData.customerId, this.sourceRoApproval, response.customerShippingId);
 				// this.addressFormForShipping = new CustomerShippingModel()
 				this.alertService.showMessage(
 					'Success',
@@ -2676,7 +2671,7 @@ export class RoSetupComponent implements OnInit{
 			})
 			} else {
 				await this.customerService.newShippingAdd(customerData).subscribe(response => {
-					this.onShipToCustomerSelected(customerData.customerId, this.sourcePoApproval, response.customerShippingId);
+					this.onShipToCustomerSelected(customerData.customerId, this.sourceRoApproval, response.customerShippingId);
 					this.alertService.showMessage(
 						'Success',
 						`Updated Shipping Information Successfully`,
@@ -2685,11 +2680,11 @@ export class RoSetupComponent implements OnInit{
 				})
 			}			
 		}
-		if (this.sourcePoApproval.shipToUserTypeId == 2) {
-			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId) }
+		if (this.sourceRoApproval.shipToUserTypeId == 2) {
+			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourceRoApproval.shipToUserId) }
 			if(!this.isEditModeShipping) {			
 				await this.vendorService.newShippingAdd(vendorData).subscribe(response => {
-					this.onShipToVendorSelected(vendorData.vendorId, this.sourcePoApproval, response.vendorShippingAddressId);				
+					this.onShipToVendorSelected(vendorData.vendorId, this.sourceRoApproval, response.vendorShippingAddressId);				
 					// this.addressFormForShipping = new CustomerShippingModel()
 					this.alertService.showMessage(
 						'Success',
@@ -2700,7 +2695,7 @@ export class RoSetupComponent implements OnInit{
 				})
 			} else {
 				await this.vendorService.newShippingAdd(vendorData).subscribe(response => {
-					this.onShipToVendorSelected(vendorData.vendorId, this.sourcePoApproval, response.vendorShippingAddressId);
+					this.onShipToVendorSelected(vendorData.vendorId, this.sourceRoApproval, response.vendorShippingAddressId);
 					this.alertService.showMessage(
 						'Success',
 						`Updated Shipping Information Successfully`,
@@ -2709,11 +2704,11 @@ export class RoSetupComponent implements OnInit{
 				})
 			}			
 		}
-		if (this.sourcePoApproval.shipToUserTypeId == 3) {			
-			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId)}	
+		if (this.sourceRoApproval.shipToUserTypeId == 3) {			
+			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourceRoApproval.shipToUserId)}	
 			if(!this.isEditModeShipping) {									
 				await this.companyService.addNewShippingAddress(companyData).subscribe(response => {
-					this.onShipToCompanySelected(null, this.sourcePoApproval, response.legalEntityShippingAddressId);
+					this.onShipToCompanySelected(null, this.sourceRoApproval, response.legalEntityShippingAddressId);
 					// this.addressFormForShipping = new CustomerShippingModel()
 					this.alertService.showMessage(
 						'Success',
@@ -2728,10 +2723,10 @@ export class RoSetupComponent implements OnInit{
 				// 	updatedBy: this.userName,
 				// 	masterCompanyId: 1,
 				// 	isActive: true,	
-				// 	legalentityId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId)
+				// 	legalentityId: getValueFromObjectByKey('value', this.sourceRoApproval.shipToUserId)
 				// }
 				await this.companyService.addNewShippingAddress(companyData).subscribe(response => {
-					this.onShipToCompanySelected(null, this.sourcePoApproval, response.legalEntityShippingAddressId);
+					this.onShipToCompanySelected(null, this.sourceRoApproval, response.legalEntityShippingAddressId);
 					this.alertService.showMessage(
 						'Success',
 						`Updated Shipping Information Successfully`,
@@ -2743,7 +2738,7 @@ export class RoSetupComponent implements OnInit{
 	}
 
 	saveShippingAddressToPO() {
-		if (this.sourcePoApproval.shipToUserTypeId == 1) {
+		if (this.sourceRoApproval.shipToUserTypeId == 1) {
 			for(let i=0; i < this.shipToCusData.length; i++) {
 				if(this.shipToCusData[i].customerShippingAddressId == 0) {
 					this.shipToCusData.splice(i, 1);;
@@ -2756,12 +2751,12 @@ export class RoSetupComponent implements OnInit{
 			this.shipToCusData.push(addressInfo);
 			this.shipToCusData.map(x => {
 				if(x.customerShippingAddressId == 0) {
-					this.sourcePoApproval.shipToAddressId = x.customerShippingAddressId;
+					this.sourceRoApproval.shipToAddressId = x.customerShippingAddressId;
 				}
 			});
-			this.onShipToGetAddress(this.sourcePoApproval, this.sourcePoApproval.shipToAddressId);	
+			this.onShipToGetAddress(this.sourceRoApproval, this.sourceRoApproval.shipToAddressId);	
 		}
-		if (this.sourcePoApproval.shipToUserTypeId == 2) {
+		if (this.sourceRoApproval.shipToUserTypeId == 2) {
 			for(let i=0; i < this.vendorSelected.length; i++) {
 				if(this.vendorSelected[i].vendorShippingAddressId == 0) {
 					this.vendorSelected.splice(i, 1);;
@@ -2774,12 +2769,12 @@ export class RoSetupComponent implements OnInit{
 			this.vendorSelected.push(addressInfo);
 			this.vendorSelected.map(x => {
 				if(x.vendorShippingAddressId == 0) {
-					this.sourcePoApproval.shipToAddressId = x.vendorShippingAddressId;
+					this.sourceRoApproval.shipToAddressId = x.vendorShippingAddressId;
 				}
 			});
-			this.onShipToGetAddress(this.sourcePoApproval, this.sourcePoApproval.shipToAddressId);
+			this.onShipToGetAddress(this.sourceRoApproval, this.sourceRoApproval.shipToAddressId);
 		}
-		if (this.sourcePoApproval.shipToUserTypeId == 3) {
+		if (this.sourceRoApproval.shipToUserTypeId == 3) {
 			for(let i=0; i < this.companySiteList_Shipping.length; i++) {
 				if(this.companySiteList_Shipping[i].legalEntityShippingAddressId == 0) {
 					this.companySiteList_Shipping.splice(i, 1);;
@@ -2792,11 +2787,11 @@ export class RoSetupComponent implements OnInit{
 			this.companySiteList_Shipping.push(addressInfo);
 			this.companySiteList_Shipping.map(x => {
 				if(x.legalEntityShippingAddressId == 0) {
-					this.sourcePoApproval.shipToAddressId = x.legalEntityShippingAddressId;
+					this.sourceRoApproval.shipToAddressId = x.legalEntityShippingAddressId;
 				}
 			});
 			this.shipToAddress = this.addressFormForShipping;
-			//this.onShipToGetCompanyAddressThisPO(this.sourcePoApproval.shipToAddressId);
+			//this.onShipToGetCompanyAddressThisPO(this.sourceRoApproval.shipToAddressId);
 		}
 		if(!this.isEditModeShipping) {
 			this.alertService.showMessage(
@@ -2822,11 +2817,11 @@ export class RoSetupComponent implements OnInit{
 			isActive: true,
 			isPrimary: true
 		}
-		if (this.sourcePoApproval.billToUserTypeId == 1) {
-			const customerData = { ...data, customerId: getValueFromObjectByKey('value', this.sourcePoApproval.billToUserId) }
+		if (this.sourceRoApproval.billToUserTypeId == 1) {
+			const customerData = { ...data, customerId: getValueFromObjectByKey('value', this.sourceRoApproval.billToUserId) }
 			if(!this.isEditModeBilling) {				
 				await this.customerService.newBillingAdd(customerData).subscribe(response => {
-					this.onBillToCustomerSelected(customerData.customerId, this.sourcePoApproval, response.customerBillingAddressId);
+					this.onBillToCustomerSelected(customerData.customerId, this.sourceRoApproval, response.customerBillingAddressId);
 					// this.addressFormForBilling = new CustomerShippingModel()
 					this.alertService.showMessage(
 						'Success',
@@ -2836,7 +2831,7 @@ export class RoSetupComponent implements OnInit{
 				})
 			} else {
 					await this.customerService.newBillingAdd(customerData).subscribe(response => {
-						this.onBillToCustomerSelected(customerData.customerId, this.sourcePoApproval, response.customerBillingAddressId);
+						this.onBillToCustomerSelected(customerData.customerId, this.sourceRoApproval, response.customerBillingAddressId);
 						this.alertService.showMessage(
 							'Success',
 							`Updated Billing Information Successfully`,
@@ -2846,11 +2841,11 @@ export class RoSetupComponent implements OnInit{
 			}
 			
 		}
-		if (this.sourcePoApproval.billToUserTypeId == 2) {
-			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.billToUserId) }
+		if (this.sourceRoApproval.billToUserTypeId == 2) {
+			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourceRoApproval.billToUserId) }
 			if(!this.isEditModeBilling) {				
 				await this.vendorService.addNewBillingAddress(vendorData).subscribe(response => {
-					this.onBillToVendorSelected(vendorData.vendorId, this.sourcePoApproval, response.vendorBillingAddressId);
+					this.onBillToVendorSelected(vendorData.vendorId, this.sourceRoApproval, response.vendorBillingAddressId);
 					//this.onBillCompanySelected();
 					// this.addressFormForBilling = new CustomerShippingModel()
 					this.alertService.showMessage(
@@ -2861,7 +2856,7 @@ export class RoSetupComponent implements OnInit{
 				})
 			} else {
 				await this.vendorService.addNewBillingAddress(vendorData).subscribe(response => {
-					this.onBillToVendorSelected(vendorData.vendorId, this.sourcePoApproval, response.vendorBillingAddressId);
+					this.onBillToVendorSelected(vendorData.vendorId, this.sourceRoApproval, response.vendorBillingAddressId);
 					this.alertService.showMessage(
 						'Success',
 						`Updated Billing Information Successfully`,
@@ -2870,11 +2865,11 @@ export class RoSetupComponent implements OnInit{
 				})
 			}			
 		}
-		if (this.sourcePoApproval.billToUserTypeId == 3) {
-			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourcePoApproval.billToUserId) }
+		if (this.sourceRoApproval.billToUserTypeId == 3) {
+			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourceRoApproval.billToUserId) }
 			if(!this.isEditModeBilling) {				
 				await this.companyService.addNewBillingAddress(companyData).subscribe(response => {
-					this.onBillToCompanySelected(null, this.sourcePoApproval, response.legalEntityBillingAddressId);
+					this.onBillToCompanySelected(null, this.sourceRoApproval, response.legalEntityBillingAddressId);
 					// this.addressFormForBilling = new CustomerShippingModel()
 					this.alertService.showMessage(
 						'Success',
@@ -2884,7 +2879,7 @@ export class RoSetupComponent implements OnInit{
 				})
 			} else {
 				await this.companyService.addNewBillingAddress(companyData).subscribe(response => {
-					this.onBillToCompanySelected(null, this.sourcePoApproval, response.legalEntityBillingAddressId);
+					this.onBillToCompanySelected(null, this.sourceRoApproval, response.legalEntityBillingAddressId);
 					this.alertService.showMessage(
 						'Success',
 						`Updated Billing Information Successfully`,
@@ -2897,7 +2892,7 @@ export class RoSetupComponent implements OnInit{
 	}
 
 	saveBillingAddressToPO() {
-		if (this.sourcePoApproval.billToUserTypeId == 1) {
+		if (this.sourceRoApproval.billToUserTypeId == 1) {
 			for(let i=0; i < this.billToCusData.length; i++) {
 				if(this.billToCusData[i].customerBillingAddressId == 0) {
 					this.billToCusData.splice(i, 1);;
@@ -2910,12 +2905,12 @@ export class RoSetupComponent implements OnInit{
 			this.billToCusData.push(addressInfo);
 			this.billToCusData.map(x => {
 				if(x.customerBillingAddressId == 0) {
-					this.sourcePoApproval.billToAddressId = x.customerBillingAddressId;
+					this.sourceRoApproval.billToAddressId = x.customerBillingAddressId;
 				}
 			});
-			this.onBillToGetAddress(this.sourcePoApproval, this.sourcePoApproval.billToAddressId);
+			this.onBillToGetAddress(this.sourceRoApproval, this.sourceRoApproval.billToAddressId);
 		}
-		if (this.sourcePoApproval.billToUserTypeId == 2) {
+		if (this.sourceRoApproval.billToUserTypeId == 2) {
 			for(let i=0; i < this.vendorSelectedForBillTo.length; i++) {
 				if(this.vendorSelectedForBillTo[i].vendorBillingAddressId == 0) {
 					this.vendorSelectedForBillTo.splice(i, 1);;
@@ -2928,13 +2923,13 @@ export class RoSetupComponent implements OnInit{
 			this.vendorSelectedForBillTo.push(addressInfo);
 			this.vendorSelectedForBillTo.map(x => {
 				if(x.vendorBillingAddressId == 0) {
-					this.sourcePoApproval.billToAddressId = x.vendorBillingAddressId;
+					this.sourceRoApproval.billToAddressId = x.vendorBillingAddressId;
 				}
 			});
 			this.billToAddress = this.addressFormForBilling;
-			//this.onBillToGetAddress(this.sourcePoApproval, this.sourcePoApproval.billToAddressId);
+			//this.onBillToGetAddress(this.sourceRoApproval, this.sourceRoApproval.billToAddressId);
 		}
-		if (this.sourcePoApproval.billToUserTypeId == 3) {
+		if (this.sourceRoApproval.billToUserTypeId == 3) {
 			for(let i=0; i < this.companySiteList_Billing.length; i++) {
 				if(this.companySiteList_Billing[i].legalEntityBillingAddressId == 0) {
 					this.companySiteList_Billing.splice(i, 1);;
@@ -2947,7 +2942,7 @@ export class RoSetupComponent implements OnInit{
 			this.companySiteList_Billing.push(addressInfo);
 			this.companySiteList_Billing.map(x => {
 				if(x.legalEntityBillingAddressId == 0) {
-					this.sourcePoApproval.billToAddressId = x.legalEntityBillingAddressId;
+					this.sourceRoApproval.billToAddressId = x.legalEntityBillingAddressId;
 				}
 			});
 			this.billToAddress = this.addressFormForBilling;
@@ -2974,10 +2969,10 @@ export class RoSetupComponent implements OnInit{
 	}
 
 	async saveShipViaForShipTo() {
-		this.sourcePoApproval.shipViaId = null;
-		this.sourcePoApproval.shippingAcctNum = '';
-		this.sourcePoApproval.shippingId = '';
-		this.sourcePoApproval.shippingURL = '';
+		this.sourceRoApproval.shipViaId = null;
+		this.sourceRoApproval.shippingAcctNum = '';
+		this.sourceRoApproval.shippingId = '';
+		this.sourceRoApproval.shippingURL = '';
 		const data = {
 			...this.addShipViaFormForShipping,
 			name: this.addShipViaFormForShipping.shipVia,
@@ -2985,11 +2980,11 @@ export class RoSetupComponent implements OnInit{
 			updatedBy: this.userName,
 			masterCompanyId: 1,
 			isActive: true,
-			UserType: parseInt(this.sourcePoApproval.shipToUserTypeId)
+			UserType: parseInt(this.sourceRoApproval.shipToUserTypeId)
 		}
 
-		if (this.sourcePoApproval.shipToUserTypeId == 1) {
-			const customerData = { ...data, ReferenceId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId) }
+		if (this.sourceRoApproval.shipToUserTypeId == 1) {
+			const customerData = { ...data, ReferenceId: getValueFromObjectByKey('value', this.sourceRoApproval.shipToUserId) }
 			if(!this.isEditModeShipVia) {				
 			await this.commonService.createShipVia(customerData).subscribe(response => {
 				this.getShipViaDetailsForShipTo(response.shippingViaId);
@@ -3011,8 +3006,8 @@ export class RoSetupComponent implements OnInit{
 				})
 			}
 		}
-		if (this.sourcePoApproval.shipToUserTypeId == 2) {
-			const vendorData = { ...data, ReferenceId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId) }
+		if (this.sourceRoApproval.shipToUserTypeId == 2) {
+			const vendorData = { ...data, ReferenceId: getValueFromObjectByKey('vendorId', this.sourceRoApproval.shipToUserId) }
 			if(!this.isEditModeShipVia) {				
 				await this.commonService.createShipVia(vendorData).subscribe(response => {
 					this.getShipViaDetailsForShipTo(response.shippingViaId);
@@ -3036,8 +3031,8 @@ export class RoSetupComponent implements OnInit{
 			}
 			
 		}
-		if (this.sourcePoApproval.shipToUserTypeId == 3) {
-			const companyData = { ...data, ReferenceId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId) }
+		if (this.sourceRoApproval.shipToUserTypeId == 3) {
+			const companyData = { ...data, ReferenceId: getValueFromObjectByKey('value', this.sourceRoApproval.shipToUserId) }
 			if(!this.isEditModeShipVia) {				
 				await this.commonService.createShipVia(companyData).subscribe(response => {
 					this.getShipViaDetailsForShipTo(response.shippingViaId);
@@ -3200,7 +3195,7 @@ export class RoSetupComponent implements OnInit{
 				);
 			}
 			//this.shipToAddress = getObjectById('customerShippingAddressId', id, this.shipToCusData);
-			//this.onShipToGetAddress(this.sourcePoApproval, this.sourcePoApproval.shipToAddressId);
+			//this.onShipToGetAddress(this.sourceRoApproval, this.sourceRoApproval.shipToAddressId);
 		//}
 		// if (this.tempSplitPart.partListUserTypeId == 2) {
 		// 	for(let i=0; i < this.vendorSelected.length; i++) {
@@ -3215,10 +3210,10 @@ export class RoSetupComponent implements OnInit{
 		// 	this.vendorSelected.push(addressInfo);
 		// 	this.vendorSelected.map(x => {
 		// 		if(x.vendorShippingAddressId == 0) {
-		// 			this.sourcePoApproval.shipToAddressId = x.vendorShippingAddressId;
+		// 			this.sourceRoApproval.shipToAddressId = x.vendorShippingAddressId;
 		// 		}
 		// 	});
-		// 	this.onShipToGetAddress(this.sourcePoApproval, this.sourcePoApproval.shipToAddressId);
+		// 	this.onShipToGetAddress(this.sourceRoApproval, this.sourceRoApproval.shipToAddressId);
 		// }
 		// if (this.tempSplitPart.partListUserTypeId == 3) {
 		// 	for(let i=0; i < this.companySiteList_Shipping.length; i++) {
@@ -3233,11 +3228,11 @@ export class RoSetupComponent implements OnInit{
 		// 	this.companySiteList_Shipping.push(addressInfo);
 		// 	this.companySiteList_Shipping.map(x => {
 		// 		if(x.legalEntityShippingAddressId == 0) {
-		// 			this.sourcePoApproval.shipToAddressId = x.legalEntityShippingAddressId;
+		// 			this.sourceRoApproval.shipToAddressId = x.legalEntityShippingAddressId;
 		// 		}
 		// 	});
 		// 	this.shipToAddress = this.addressFormForShipping;
-		// 	//this.onShipToGetCompanyAddressThisPO(this.sourcePoApproval.shipToAddressId);
+		// 	//this.onShipToGetCompanyAddressThisPO(this.sourceRoApproval.shipToAddressId);
 		// }
 	}
 
@@ -3250,7 +3245,7 @@ export class RoSetupComponent implements OnInit{
 	}
 
 	saveShipToShipViaDetailsToPO() {
-		//if (this.sourcePoApproval.shipToUserTypeId == 1) {
+		//if (this.sourceRoApproval.shipToUserTypeId == 1) {
 			for(let i=0; i < this.shipViaList.length; i++) {
 				if(this.shipViaList[i].shippingViaId == 0) {
 					this.shipViaList.splice(i, 1);;
@@ -3264,13 +3259,13 @@ export class RoSetupComponent implements OnInit{
 			this.shipViaList.push(shipViaInfo);
 			this.shipViaList.map(x => {
 				if(x.shippingViaId == 0) {
-					this.sourcePoApproval.shipViaId = x.shippingViaId;
+					this.sourceRoApproval.shipViaId = x.shippingViaId;
 				}
 			});
-			this.sourcePoApproval.shipVia = this.addShipViaFormForShipping.shipVia;
-			this.sourcePoApproval.shippingAcctNum = this.addShipViaFormForShipping.shippingAccountInfo;
-			this.sourcePoApproval.shippingURL = this.addShipViaFormForShipping.shippingURL;
-			this.sourcePoApproval.shippingId = this.addShipViaFormForShipping.shippingId;
+			this.sourceRoApproval.shipVia = this.addShipViaFormForShipping.shipVia;
+			this.sourceRoApproval.shippingAcctNum = this.addShipViaFormForShipping.shippingAccountInfo;
+			this.sourceRoApproval.shippingURL = this.addShipViaFormForShipping.shippingURL;
+			this.sourceRoApproval.shippingId = this.addShipViaFormForShipping.shippingId;
 			if(!this.isEditModeShipVia) {
 				this.alertService.showMessage(
 					'Success',
