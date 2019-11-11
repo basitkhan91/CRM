@@ -5,19 +5,19 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb rpo-bcrumb" style="background-color: transparent;">
                         <li class="breadcrumb-item active" aria-current="page">Vendor</li>
-                        <li class="breadcrumb-item" aria-current="page">Purchases</li>
-                        <li class="breadcrumb-item" aria-current="page">Create PO</li>
+                        <li class="breadcrumb-item" aria-current="page">Repair Order</li>
+                        <li class="breadcrumb-item" aria-current="page">Create RO</li>
                     </ol>
                 </nav>
             </div>
             <div class="card-body">
-                <h4 class="po-head">Create Purchase Order for  {{sourcePoApproval.vendorName}}</h4>
+                <h4 class="po-head">{{isEditMode ? 'Edit' : 'Create'}} Repair Order for {{sourcePoApproval.vendorName}}</h4>
                 
                     <div class="form-row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>PO Num</label>
-                                <input class="form-control" type="text" name="purchaseOrderNumber" value="Creating" disabled [(ngModel)]="sourcePoApproval.purchaseOrderNumber">
+                                <label>RO Num</label>
+                                <input class="form-control" type="text" name="repairOrderNumber" value="Creating" disabled [(ngModel)]="sourcePoApproval.repairOrderNumber">
                             </div>
                             <div class="form-group">
                                 <label>Open Date <span class="clr-red">*</span></label>
@@ -30,11 +30,11 @@
                             </div>
                             <div class="form-group">
                                 <label>Closed/Cancelled Date</label>
-                                <p-calendar class="pas-clder" [showIcon]="true" name="closedDate" [(ngModel)]="sourcePoApproval.closedDate"></p-calendar>
+                                <p-calendar class="pas-clder" [showIcon]="true" [minDate]="sourcePoApproval.openDate" name="closedDate" [(ngModel)]="sourcePoApproval.closedDate"></p-calendar>
                             </div>
                             <div class="form-group">
                                 <label>Need By <span class="clr-red">*</span></label>
-                                <p-calendar class="pas-clder" [showIcon]="true" name="needByDate" [(ngModel)]="sourcePoApproval.needByDate" (onSelect)="onSelectNeedByDate()" #needByDate="ngModel" required></p-calendar>
+                                <p-calendar class="pas-clder" [showIcon]="true" [minDate]="sourcePoApproval.openDate" name="needByDate" [(ngModel)]="sourcePoApproval.needByDate" (onSelect)="onSelectNeedByDate()" #needByDate="ngModel" required></p-calendar>
                                 <div *ngIf="needByDate.invalid && (needByDate.dirty || needByDate.touched)" class="alert alert-danger alert-danger-cstm">
                                         <div *ngIf="needByDate.errors.required">
                                             <small> Need By Date is required </small>
@@ -53,6 +53,16 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <div class="checkbox-cstm" style="margin-top: 10px;">
+                                    <label>
+                                        <input type="checkbox" name="deferredReceiver" [(ngModel)]="sourcePoApproval.deferredReceiver">
+                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                        Deferred Receiver
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- <div class="form-group">
                                 <label>Deferred Receiver</label>
                                 <div class="checkbox-cstm" style="margin-top: 4px">
                                     <label style="width: 20px;">
@@ -60,7 +70,7 @@
                                         <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                     </label>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
@@ -151,7 +161,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Approved Date</label>
-                                <p-calendar class="pas-clder" [showIcon]="true" name="approvedDate" [(ngModel)]="sourcePoApproval.approvedDate"></p-calendar>
+                                <p-calendar class="pas-clder" [showIcon]="true" [minDate]="sourcePoApproval.openDate" name="approvedDate" [(ngModel)]="sourcePoApproval.approvedDate"></p-calendar>
                             </div>
                             <div class="form-group">
                                 <label>Status <span class="clr-red">*</span></label>
@@ -168,6 +178,15 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <div class="checkbox-cstm" style="margin-top: 32px;">
+                                    <label>
+                                        <input type="checkbox" name="resale" [(ngModel)]="sourcePoApproval.resale" class="form-control" required>
+                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                        Resale <span class="clr-red">*</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <!-- <div class="form-group">
                                 <label>Resale <span class="clr-red">*</span></label>
                                 <div class="checkbox-cstm" style="margin-top: 4px">
                                     <label style="width: 20px;">
@@ -175,7 +194,7 @@
                                         <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                     </label>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="col-md-3">
                             <div class="card" style="margin-top: 20px;">
@@ -330,7 +349,7 @@
                                 <td>
                                     {{partList.UOMShortName}}
                                 </td>
-                                <td><p-calendar class="pcal-cpo-grid" [showIcon]="true" name="needByDate{{row_index}}" [(ngModel)]="partList.needByDate" #pNeedByDate="ngModel" required></p-calendar>
+                                <td><p-calendar class="pcal-cpo-grid" [showIcon]="true" [minDate]="sourcePoApproval.openDate" name="needByDate{{row_index}}" [(ngModel)]="partList.needByDate" #pNeedByDate="ngModel" required></p-calendar>
                                     <div *ngIf="pNeedByDate.invalid && (pNeedByDate.dirty || pNeedByDate.touched)" class="alert alert-danger alert-danger-cstm">
                                             <div *ngIf="pNeedByDate.errors.required">
                                                 <small> NeedBy Date is required </small>
@@ -348,7 +367,7 @@
                                             </div>
                                     </div>     
                                 </td>
-                                <td><input type="number" class="form-control" [(ngModel)]="partList.quantityOrdered" name="parentQtyOrdered{{row_index}}" pKeyFilter="pint" #parentQtyOrdered="ngModel" (keyup)="onChangeParentQtyOrdered($event); onGetDiscAmount(partList); onGetExtCost(partList);" required>
+                                <td><input type="number" class="form-control" [(ngModel)]="partList.quantityOrdered" name="parentQtyOrdered{{row_index}}" pKeyFilter="pint" #parentQtyOrdered="ngModel" (keyup)="onChangeParentQtyOrdered($event, partList); onGetDiscAmount(partList); onGetExtCost(partList);" required>
                                     <div *ngIf="parentQtyOrdered.invalid && (parentQtyOrdered.dirty || parentQtyOrdered.touched)" class="alert alert-danger alert-danger-cstm">
                                             <div *ngIf="parentQtyOrdered.errors.required">
                                                 <small> Order Qty is required </small>
@@ -443,7 +462,7 @@
                                 <td>{{partList.partNumber}}</td>
                                 <td>{{partList.partDescription}}</td>
                                 <td>
-                                    <select name="partListUserType{{row_no}}" [(ngModel)]="partChildList.partListUserTypeId" #pUserType="ngModel" (change)="onSelectSplitUserType(partChildList)">
+                                    <select name="partListUserType{{row_index}}{{row_no}}" [(ngModel)]="partChildList.partListUserTypeId" #pUserType="ngModel" (change)="onSelectSplitUserType(partChildList, row_index, row_no)">
                                         <option value="1">Customer</option>
                                         <option value="2">Vendor</option>
                                         <option value="3">Company</option>
@@ -457,7 +476,7 @@
                                 <td>
                                     <div class="inner-addon right-addon autosuggesions-add inline-block w175" *ngIf="partChildList.partListUserTypeId==1">
                                         <div class="col-sm-11">
-                                            <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="partChildList.partListUserId" name="cCustomerName{{row_no}}" [suggestions]="splitcustomersList" (completeMethod)="filterCustomersSplit($event)" [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onCustomerNameChange($event.value)" #cCustomerName="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
+                                            <p-autoComplete field="label" class="pautocomp-cstm pautocomp-po-cstm" [(ngModel)]="partChildList.partListUserId" name="cCustomerName{{row_index}}{{row_no}}" [suggestions]="splitcustomersList" (completeMethod)="filterCustomersSplit($event)" [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onCustomerNameChange($event.value, partChildList, row_index, row_no)" #cCustomerName="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
                                             <!-- <div *ngIf="cCustomerName.invalid && (cCustomerName.dirty || cCustomerName.touched)" class="alert alert-danger alert-danger-cstm">
                                                     <div *ngIf="cCustomerName.errors.required">
                                                         <small> Customer Name is required </small>
@@ -471,8 +490,8 @@
                                     </div>
                                     <div class="inner-addon right-addon autosuggesions-add inline-block w175" *ngIf="partChildList.partListUserTypeId==2">
                                         <div class="col-sm-11">
-                                                <p-autoComplete field="vendorName" class="pautocomp-cstm" 
-                                                [(ngModel)]="partChildList.partListUserId" name="splitVendorNames{{row_no}}" [suggestions]="splitVendorNames" (completeMethod)="filterSplitVendorNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="onVendorNameChange($event.vendorId)" > <!--required #cVendorName="ngModel"-->
+                                                <p-autoComplete field="vendorName" class="pautocomp-cstm pautocomp-po-cstm" 
+                                                [(ngModel)]="partChildList.partListUserId" name="splitVendorNames{{row_index}}{{row_no}}" [suggestions]="splitVendorNames" (completeMethod)="filterSplitVendorNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="onVendorNameChange($event.vendorId, partChildList, row_index, row_no)" > <!--required #cVendorName="ngModel"-->
                                             </p-autoComplete>                                            
                                             <!-- <div *ngIf="cVendorName.invalid && (cVendorName.dirty || cVendorName.touched)" class="alert alert-danger alert-danger-cstm">
                                                     <div *ngIf="cVendorName.errors.required">
@@ -486,9 +505,9 @@
                                         </div>
                                     </div>
                                     <div class="inner-addon right-addon autosuggesions-add inline-block w100" *ngIf="partChildList.partListUserTypeId==3">
-                                        <p-autoComplete field="label" class="pautocomp-cstm"                                  
-                                        (onSelect)="onCompanyNameChange($event.value)"
-                                         [(ngModel)]="partChildList.partListUserId" name="shipCompanyName" 
+                                        <p-autoComplete field="label" class="pautocomp-cstm pautocomp-po-cstm"
+                                        (onSelect)="onCompanyNameChange($event.value, partChildList, row_index, row_no)"
+                                         [(ngModel)]="partChildList.partListUserId" name="splitCompanyName{{row_index}}{{row_no}}" 
                                          [suggestions]="legalEntityList_Forgrid"
                                          (completeMethod)="filterCompanyNameforgrid($event)" 
                                          [size]="30" 
@@ -504,26 +523,27 @@
                                                 </div>
                                         </div>  -->
                                     </div>
-                                </td>
+                                </td>                            
+
                                 <td colspan="5">
                                     <div class="form-row">
                                         <div class="col-sm-10">
-                                            <select class="inner-addon right-addon autosuggesions-add inline-block mw400" [(ngModel)]="partChildList.partListAddressId" name="partListAddressId{{row_no}}" (change)="onGetSplitAddress(partChildList)">
+                                            <select class="inner-addon right-addon autosuggesions-add inline-block mw400 form-control" [(ngModel)]="partChildList.partListAddressId" name="partListAddressId{{row_index}}{{row_no}}" (change)="onGetSplitAddress(partChildList)">
                                                 <option>Select</option>
-                                                <option *ngFor="let object of splitAddressData" value="{{object.addressId}}">{{object.address1}} {{object.city}} {{object.country}} {{object.postalCode}}</option>
+                                                <option *ngFor="let object of getAddressDetails('splitAddressData', row_index, row_no)" value="{{object.addressId}}">{{object.address1}} {{object.city}} {{object.country}} {{object.postalCode}}</option>
                                             </select>
                                         </div>
                                         <div class="col-sm-1" style="margin: 2px -10px;" *ngIf="partChildList.partListUserTypeId">
-                                            <div style="cursor:pointer; font-size:14px;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#createPOAddress" (click)="onClickPartsListAddress('Add', partChildList)"></a></div>
+                                            <div style="cursor:pointer; font-size:14px;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#createPOAddress" (click)="onClickPartsListAddress('Add', partChildList, row_index, row_no)"></a></div>
                                         </div>
                                         <div class="col-sm-1" style="margin: 5px 0;" *ngIf="partChildList.partListUserTypeId">
-                                            <div style="cursor:pointer; font-size:12px;"><a class="fa fa-edit fa-lg" data-toggle="modal" data-target="#createPOAddress" (click)="onClickPartsListAddress('Edit', partChildList)"></a></div>
+                                            <div style="cursor:pointer; font-size:12px;"><a class="fa fa-edit fa-lg" data-toggle="modal" data-target="#createPOAddress" (click)="onClickPartsListAddress('Edit', partChildList, row_index, row_no)"></a></div>
                                         </div>
                                     </div>
                                 </td>
                                 <td>{{partList.UOMShortName}}</td>
-                                <td><input class="form-control" type="number" pKeyFilter="pint" [(ngModel)]="partChildList.quantityOrdered" name="childQtyOrdered{{row_no}}" (keyup)="onChangeChildQtyOrdered(partList)" /></td> <!--[disabled]="!partList.quantityOrdered"-->
-                                <td><p-calendar class="pcal-cpo-grid" [showIcon]="true" [(ngModel)]="partChildList.needByDate" name="needByDate{{row_no}}"></p-calendar></td>
+                                <td><input class="form-control" type="number" pKeyFilter="pint" [(ngModel)]="partChildList.quantityOrdered" name="childQtyOrdered{{row_index}}{{row_no}}" (keyup)="onChangeChildQtyOrdered(partList)" /></td> <!--[disabled]="!partList.quantityOrdered"-->
+                                <td><p-calendar class="pcal-cpo-grid" [showIcon]="true" [minDate]="sourcePoApproval.openDate" [(ngModel)]="partChildList.needByDate" name="childNeedByDate{{row_index}}{{row_no}}"></p-calendar></td>
                                 <td>
                                     <label style="width:90px;">Company:</label>
                                     <select class="inner-addon right-addon autosuggesions-add inline-block mw400"
@@ -712,7 +732,7 @@
                             <div class="col-sm-11">
                                     <p-autoComplete field="label" class="pautocomp-cstm" (onClear)="clearInputShipTo()"
                                     [(ngModel)]="sourcePoApproval.shipToUserId" name="shipCustomerName" [suggestions]="customerNames" 
-                                    (completeMethod)="filterNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onShipToCustomerSelected($event.value);" #shipCustomerName="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
+                                    (completeMethod)="filterNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onShipToCustomerSelected($event.value, sourcePoApproval);" #shipCustomerName="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
                                 <div *ngIf="shipCustomerName.invalid && (shipCustomerName.dirty || shipCustomerName.touched)" class="alert alert-danger alert-danger-cstm">
                                         <div *ngIf="shipCustomerName.errors.required">
                                             <small> Customer Name is required </small>
@@ -1237,7 +1257,7 @@
     </p-tabView>
     
     <div>
-        <button class="btn btn-primary-cstm pull-right" (click)="savePurchaseOrder()" style="margin-top: 10px;margin-bottom: 20px;">{{isEditMode ? 'Update' : 'Save'}}</button> <!--[disabled]="!createPOForm.valid"-->
+        <button class="btn btn-primary-cstm pull-right" (click)="savePurchaseOrder()" style="margin-top: 10px;margin-bottom: 20px;">{{isEditMode ? 'Update' : 'Save'}}</button>
     </div>
 </form>
     
