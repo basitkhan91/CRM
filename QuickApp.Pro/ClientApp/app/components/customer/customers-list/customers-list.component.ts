@@ -21,6 +21,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { Router } from '@angular/router';
 import { Globals } from '../../../globals'
 import { LazyLoadEvent, SortEvent } from 'primeng/api';
+import { listSearchFilterObjectCreation } from '../../../generic/autocomplete';
 
 
 
@@ -217,6 +218,7 @@ export class CustomersListComponent implements OnInit {
     billingInfoList: any;
     domesticShippingData: any[];
     internationalShippingData: any;
+    filterKeysByValue: object = {};
     constructor(private _route: Router,
         private authService: AuthService,
         private modalService: NgbModal,
@@ -238,7 +240,10 @@ export class CustomersListComponent implements OnInit {
     }
 
     getList(data) {
-        this.customerService.getCustomerAll(data).subscribe(res => {
+
+        // this.filterObjectCreate(data.filters);
+        const PagingData = { ...data, filters: listSearchFilterObjectCreation(data.filters) }
+        this.customerService.getCustomerAll(PagingData).subscribe(res => {
             this.data = res;
             if (res.length > 0) {
                 this.totalRecords = res[0].totalRecords;
@@ -247,6 +252,11 @@ export class CustomersListComponent implements OnInit {
 
         })
     }
+
+
+
+
+
 
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";

@@ -78,8 +78,8 @@ export class WorkOrderService {
     getRevisedPartNumbers(itemMasterId) {
         return this.workOrderEndpointService.getRevisedPartNumbers(itemMasterId)
     }
-    getStockLineByItemMasterId(itemMasterId) {
-        return this.workOrderEndpointService.getStockLineByItemMasterId(itemMasterId);
+    getStockLineByItemMasterId(itemMasterId, conditionId) {
+        return this.workOrderEndpointService.getStockLineByItemMasterId(itemMasterId, conditionId);
     }
     getPartPublicationByItemMaster(itemMasterId) {
         return this.workOrderEndpointService.getPartPublicationByItemMaster(itemMasterId);
