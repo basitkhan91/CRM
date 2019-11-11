@@ -1,14 +1,10 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DAL.Models
+namespace QuickApp.Pro.ViewModels
 {
-    public class RepairOrderApproverList
+    public class RepairOrderApproverListViewModel
     {
-        [Key]
         public long RoApproverListId { get; set; }
-        [ForeignKey("RoApproverId")]
         public long RoApproverId { get; set; }
         public long EmployeeId { get; set; }
         public int Level { get; set; }
@@ -17,6 +13,5 @@ namespace DAL.Models
         public string UpdatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
-
     }
 }
