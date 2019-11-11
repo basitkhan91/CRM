@@ -105,7 +105,9 @@
                                                         <div class="inner-addon col-sm-7 inline-block display-flex">
                                                             <select id="" [formControl]="empCreationForm.controls['jobTitleId']" required>
                                                                 <option value ="0"> Select Job Title</option>
-                                                                <option *ngFor="let jobtitleName of allJobTitlesinfo" [ngValue]="jobtitleName.jobTitleId">{{jobtitleName.description}}</option>
+                                                                <ng-container *ngFor="let jobtitleName of allJobTitlesinfo">
+                                                                    <option  *ngIf="jobtitleName.isActive" [ngValue]="jobtitleName.jobTitleId">{{jobtitleName.description}}</option>
+                                                                </ng-container>
                                                             </select>
                                                             <a href="#" data-toggle="modal" data-target="#addJobTitle" class="add-icon" (click)="openjobtitle(content)"><i class="fa fa-plus"></i></a>
 
@@ -124,7 +126,9 @@
                                                         <div class="inner-addon col-sm-7 inline-block display-flex">
                                                             <select [formControl]="empCreationForm.controls['employeeExpertiseId']" required>
                                                                     <option value ="0">Select Employee Expertise </option>
-                                                                <option *ngFor="let employeeName of allEmployeeExpertiseInfo" [ngValue]="employeeName.employeeExpertiseId">{{employeeName.description}}</option>
+                                                                    <ng-container *ngFor="let employeeName of allEmployeeExpertiseInfo">
+                                                                        <option *ngIf="employeeName.isActive" [ngValue]="employeeName.employeeExpertiseId">{{employeeName.description}}</option>
+                                                                    </ng-container>
                                                             </select>
                                                             <a data-toggle="modal" data-target="#addEmpExprt" class="add-icon" (click)="openemployeeExpertise(contentEdit)"><i class="fa fa-plus"></i></a>
                                                         </div>

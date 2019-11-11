@@ -218,7 +218,18 @@ export class CustomersListComponent implements OnInit {
     billingInfoList: any;
     domesticShippingData: any[];
     internationalShippingData: any;
+
     filterKeysByValue: object = {};
+
+//     NameInput:any;
+//     customerCodeInput:any;
+//     customerClassificationInput:any;
+//     emailInput:any;
+//     cityInput:any;
+//     stateOrProvinceInput:any;
+//     contactInput:any;
+//     salesPersonPrimaryInput:any;
+
     constructor(private _route: Router,
         private authService: AuthService,
         private modalService: NgbModal,
@@ -280,8 +291,55 @@ export class CustomersListComponent implements OnInit {
         this.pageSize = event.rows;
         event.first = pageIndex;
         this.getList(event)
+        console.log();
     }
+    
+    
 
+//     onChangeInputField(value, field) {
+                   
+//         if(field == "name") {
+//             this.NameInput = value;
+//         }
+//         if(field == "customerCode") {
+//             this.customerCodeInput = value;
+//         }
+
+//         if(field == "customerClassification") {
+//             this.customerClassificationInput = value;
+//         }
+//         if(field == "email") {
+//             this.emailInput = value;
+//         }
+
+//         if(field == "city") {
+//             this.cityInput = value;
+//         }
+//         if(field == "stateOrProvince") {
+//             this.stateOrProvinceInput = value;
+//         }
+        
+//         if(field == "contact") {
+//             this.contactInput = value;
+//         }
+//         if(field == "salesPersonPrimary") {
+//             this.salesPersonPrimaryInput = value;
+//         }
+
+//         this.lazyLoadEventData.filters = {
+//             name: this.NameInput,
+//             customerCode:this.customerCodeInput,
+//             customerClassification:this.customerClassificationInput,
+//             email:this.emailInput,
+//             city:this.cityInput,
+//             stateOrProvince:this.stateOrProvinceInput,
+//             contact:this.contactInput,
+//             salesPersonPrimary:this.salesPersonPrimaryInput,
+//         }
+//         //console.log(this.NameInput);        
+//         //this.loadData(event);
+//         this.getList(this.lazyLoadEventData);
+//     }
     changeStatus(rowData) {
         this.customerService.updateActionforActive(rowData, this.userName).subscribe(res => {
             this.alertService.showMessage("Success", `Successfully Updated Status`, MessageSeverity.success);

@@ -18,7 +18,8 @@ export class SalesQuoteCreateComponent implements OnInit {
   totalRecords: number = 0;
   totalPages: number = 0;
   showPaginator: boolean = false;
-  customerId: number;
+    customerId: number;
+    checked = false;
   constructor(
     private customerService: CustomerService,
     private alertService: AlertService,
