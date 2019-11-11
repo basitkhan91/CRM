@@ -16,7 +16,8 @@ export class SalesQuoteComponent implements OnInit {
   totalRecords: number = 0;
   totalPages: number = 0;
   showPaginator: boolean = false;
-
+    pageLinks: any;
+    selectedColumns: any;
   constructor(
     private customerService: CustomerService,
     private alertService: AlertService,
@@ -27,7 +28,7 @@ export class SalesQuoteComponent implements OnInit {
     this.query = new CustomerSearchQuery();
   }
 
-  onSearch() {
+  onSearch(event) {
     this.query.reset();
     this.searchCustomer();
   }
