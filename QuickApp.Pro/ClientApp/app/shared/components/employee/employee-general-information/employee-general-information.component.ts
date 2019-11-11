@@ -478,6 +478,13 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         console.log(res[0][0]);
 
         this.sourceEmployee = res[0][0];
+        this.empCreationForm.patchValue({
+            employeeExpertiseId: res[0][0].employeeExpertiseId,
+            JobTypeId: res[0][0].jobTypeId,
+            jobTitleId: res[0][0].jobTitleId,
+            startDate: new Date(res[0][0].startDate)
+        });
+        this.sourceEmployee.startDate = new Date(res[0][0].startDate);
 
         console.log(res[0][0].firstName);
         this.sourceEmpFirst.firstName = res[0][0].firstName;
