@@ -59,5 +59,9 @@ namespace DAL.Models
 
         public virtual List<WorkOrderPartNumber> PartNumbers { get; set; }
 
-    }
+		[NotMapped]
+		public long WorkFlowWorkOrderId { get; set; }
+
+
+	}
 }

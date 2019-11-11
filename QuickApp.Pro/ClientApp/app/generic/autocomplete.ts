@@ -69,7 +69,7 @@ export function selectedValueValidate(field: string, object: any, editData: any)
 }
 
 export function validateRecordExistsOrNotOnEdit(field: string, currentInput: any, editData: any) {
-    if ((field !== '' && field !== undefined) && (currentInput !== '' && currentInput !== undefined) && (editData !== undefined && editData !==null )) {
+    if ((field !== '' && field !== undefined) && (currentInput !== '' && currentInput !== undefined) && (editData !== undefined && editData !== null)) {
         return editValueAssignByCondition(field, editData[field]) !== currentInput;
 
     }
@@ -119,6 +119,25 @@ export function colorCodeGeneratorForHistory(index: number, field: string, value
 
         }
     }
+}
+
+
+
+export function listSearchFilterObjectCreation(filterData) {
+    const data = filterData;
+    let result = {};
+    if (data !== undefined) {
+        const keys = Object.keys(data);
+        for (var i = 0; i < keys.length; i++) {
+            result[keys[i]] = data[keys[i]]['value']
+        }
+        // const a = keys.map(x => {
+        //     return {
+        //         [x]: data[x]['value']
+        //     }
+        // })
+    }
+    return result;
 }
 
 

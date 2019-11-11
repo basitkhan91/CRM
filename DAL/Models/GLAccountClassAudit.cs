@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 namespace DAL.Models
 {
-   public class GLAccountClassAudit : PasBaseAudit
+   public class GLAccountClassAudit : PasBase
     {
         [Key]
         public long GLAccountClassAuditId { get; set; }
@@ -10,7 +10,8 @@ namespace DAL.Models
         public long? GLCID { get; set; }
         public string GLAccountClassName { get; set; }
         public string GLAccountClassMemo { get; set; }
-
-        public Int32? MasterCompanyId { get; set; }        
+        public Int32? MasterCompanyId { get; set; }
+        public bool? IsActive { get; set; }
+        public bool? IsDelete { get; set; }
     }
 }

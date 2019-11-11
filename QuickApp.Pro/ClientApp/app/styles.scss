@@ -12650,6 +12650,9 @@ table thead tr th:first-child input, table tr td:first-child input {
 .pautocomp-cstm .ui-autocomplete {
     padding: 0;
 }
+.pautocomp-po-cstm .ui-autocomplete {
+    padding-right: 8px;
+}
 body .ui-datepicker table td > a.ui-state-active {
     color: #337ab7;
 }
@@ -14194,7 +14197,21 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .rounder-corners-cstm {
     border-radius: 5px !important
 }
-
+.vendor-steps-prime-cstm {
+    
+}
+.pcalendar-wo-labor {
+    width: calc(100% - 30px) !important;
+    margin-right: 18px;
+}
+.emp-labour-cstm p-autocomplete .ui-autocomplete {
+    width: calc(100% - 14px) !important;
+    padding-right: 3px;
+    float: left;
+}
+.emp-labour-cstm i {
+    margin-top: 12px !important;
+}
 
 .view-Header {
   color: #4298ff !important;

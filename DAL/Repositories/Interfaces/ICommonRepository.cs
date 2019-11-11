@@ -49,6 +49,7 @@ namespace DAL.Repositories.Interfaces
         object GetAddressDetails(long addressId);
 
         Dictionary<string, long> GetManagementStructure(long manmgStrucId);
+        Dictionary<string, string> GetManagementStructureCodes(long manmgStrucId);
 
 
     }

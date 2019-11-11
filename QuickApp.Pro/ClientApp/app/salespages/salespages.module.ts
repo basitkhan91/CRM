@@ -33,12 +33,16 @@ import { CalendarModule } from "primeng/calendar";
 import { DropdownModule } from "primeng/dropdown";
 import { KeyFilterModule } from "primeng/keyfilter";
 import { TooltipModule } from "primeng/tooltip";
+import { SpinnerModule } from "primeng/spinner";
+import { CheckboxModule } from "primeng/checkbox";
+import { PanelModule } from "primeng/panel";
 
 import { SalesPagesRoutingModule } from "./salespages-routing.module";
 import { SalesPagesComponent } from "./salespages.component";
 import { SalesQuoteListComponent } from "../components/sales/quotes/sales-quote-list/sales-quote-list.component";
 import { SalesQuoteCreateComponent } from "../components/sales/quotes/sales-quote-create/sales-quote-create.component";
 import { CustomerService } from "../services/customer.service";
+import { SalesQuoteComponent } from "../components/sales/quotes/sales-quote/sales-quote-component";
 
 @NgModule({
   imports: [
@@ -65,12 +69,16 @@ import { CustomerService } from "../services/customer.service";
     StepsModule,
     BreadcrumbModule,
     DropdownModule,
-    TooltipModule
+    TooltipModule,
+    SpinnerModule,
+    CheckboxModule,
+    PanelModule
   ],
   declarations: [
     SalesPagesComponent,
     SalesQuoteListComponent,
-    SalesQuoteCreateComponent
+    SalesQuoteCreateComponent,
+    SalesQuoteComponent
   ],
   providers: [CustomerService],
   entryComponents: []

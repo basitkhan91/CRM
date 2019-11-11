@@ -858,6 +858,61 @@ namespace DAL.Repositories
             }
         }
 
+        public Dictionary<string, string> GetManagementStructureCodes(long manmgStrucId)
+        {
+            Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
+            ManagementStructure level4 = null;
+            ManagementStructure level3 = null;
+            ManagementStructure level2 = null;
+            ManagementStructure level1 = null;
+            try
+            {
+                level4 = _appContext.ManagementStructure.Where(p => p.IsDelete == false && p.ManagementStructureId == manmgStrucId).FirstOrDefault();
+                if (level4 != null && level4.ParentId > 0)
+                {
+                    level3 = _appContext.ManagementStructure.Where(p => p.IsDelete == false && p.ManagementStructureId == level4.ParentId).FirstOrDefault();
+                }
+                if (level3 != null && level3.ParentId > 0)
+                {
+                    level2 = _appContext.ManagementStructure.Where(p => p.IsDelete == false && p.ManagementStructureId == level3.ParentId).FirstOrDefault();
+                }
+                if (level2 != null && level2.ParentId > 0)
+                {
+                    level1 = _appContext.ManagementStructure.Where(p => p.IsDelete == false && p.ManagementStructureId == level2.ParentId).FirstOrDefault();
+                }
+
+
+                if (level4 != null && level3 != null && level2 != null && level1 != null)
+                {
+                    keyValuePairs.Add("Level4", level4.Code);
+                    keyValuePairs.Add("Level3", level3.Code);
+                    keyValuePairs.Add("Level2", level2.Code);
+                    keyValuePairs.Add("Level1", level1.Code);
+                }
+                else if (level4 != null && level2 != null && level3 != null)
+                {
+                    keyValuePairs.Add("Level3", level4.Code);
+                    keyValuePairs.Add("Level2", level3.Code);
+                    keyValuePairs.Add("Level1", level2.Code);
+                }
+                else if (level4 != null && level3 != null)
+                {
+                    keyValuePairs.Add("Level2", level4.Code);
+                    keyValuePairs.Add("Level1", level3.Code);
+                }
+                else if (level4 != null)
+                {
+                    keyValuePairs.Add("Level1", level4.Code);
+                }
+                return keyValuePairs;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }
 }

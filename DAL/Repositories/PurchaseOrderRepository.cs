@@ -31,6 +31,24 @@ namespace DAL.Repositories
             var take = poFilters.rows;
             var skip = take * (pageNumber - 1);
 
+            short statusId = 0;
+            if(poFilters.filters.Status=="Open")
+            {
+                statusId = 1;
+            }
+            else if(poFilters.filters.Status == "Pending")
+            {
+                statusId = 2;
+            }
+            else if (poFilters.filters.Status == "Fulfilling")
+            {
+                statusId = 3;
+            }
+            else if (poFilters.filters.Status == "Closed")
+            {
+                statusId = 4;
+            }
+
             var totalRecords = (from po in _appContext.PurchaseOrder
                                 join emp in _appContext.Employee on po.RequestedBy equals emp.EmployeeId
                                 join v in _appContext.Vendor on po.VendorId equals v.VendorId
@@ -42,7 +60,7 @@ namespace DAL.Repositories
                                 //&& Convert.ToString(po.ClosedDate) == (Convert.ToString(poFilters.filters.ClosedDate) == "1/1/0001 12:00:00 AM" ? Convert.ToString(po.ClosedDate) : Convert.ToString(poFilters.filters.ClosedDate))
                                 && v.VendorName.Contains(!String.IsNullOrEmpty(poFilters.filters.VendorName) ? poFilters.filters.VendorName : v.VendorName)
                                 && v.VendorCode.Contains(!String.IsNullOrEmpty(poFilters.filters.VendorCode) ? poFilters.filters.VendorCode : v.VendorCode)
-                                && po.StatusId == (poFilters.filters.StatusId > 0 ? poFilters.filters.StatusId : po.StatusId)
+                                && po.StatusId == (statusId > 0 ? statusId : po.StatusId)
                                 && emp.FirstName.Contains(!String.IsNullOrEmpty(poFilters.filters.ApprovedBy) ? poFilters.filters.ApprovedBy : emp.FirstName)
                                 select new
                                 {
@@ -62,7 +80,7 @@ namespace DAL.Repositories
                                      //&& Convert.ToString(po.ClosedDate) == (Convert.ToString(poFilters.filters.ClosedDate) == "1/1/0001 12:00:00 AM" ? Convert.ToString(po.ClosedDate) : Convert.ToString(poFilters.filters.ClosedDate))
                                      && v.VendorName.Contains(!String.IsNullOrEmpty(poFilters.filters.VendorName) ? poFilters.filters.VendorName : v.VendorName)
                                      && v.VendorCode.Contains(!String.IsNullOrEmpty(poFilters.filters.VendorCode) ? poFilters.filters.VendorCode : v.VendorCode)
-                                     && po.StatusId == (poFilters.filters.StatusId > 0 ? poFilters.filters.StatusId : po.StatusId)
+                                     && po.StatusId == (statusId > 0 ? statusId : po.StatusId)
                                      && emp.FirstName.Contains(!String.IsNullOrEmpty(poFilters.filters.ApprovedBy) ? poFilters.filters.ApprovedBy : emp.FirstName)
                                      select new
                                      {
@@ -832,7 +850,11 @@ namespace DAL.Repositories
                                 po.BillToCountry,
                                 po.BillToPostalCode,
                                 po.BillToContact,
-                                po.BillToMemo
+                                po.BillToMemo,
+                                po.VendorId,
+                                po.ManagementStructureId,
+                                po.NeedByDate,
+                                po.DateApproved
                             }).FirstOrDefault();
 
                 return data;
@@ -932,6 +954,7 @@ namespace DAL.Repositories
                             purchaseOrderPart.isParent=true;
                             purchaseOrderPart.PurchaseOrderPartRecordId = part.pop.PurchaseOrderPartRecordId;
                             purchaseOrderPart.ParentId = part.pop.ParentId;
+                            purchaseOrderPart.ManagementStructureId = part.pop.ManagementStructureId;
 
 
                             purchaseOrderParts.Add(purchaseOrderPart);
@@ -966,7 +989,9 @@ namespace DAL.Repositories
                                     purchaseOrderSplitPart.SerialNumber = splitPart.pop.SerialNumber;
                                     purchaseOrderSplitPart.PurchaseOrderId = splitPart.pop.PurchaseOrderId;
                                     purchaseOrderSplitPart.PurchaseOrderPartRecordId = splitPart.pop.PurchaseOrderPartRecordId;
-                                    
+                                    purchaseOrderSplitPart.ManagementStructureId = splitPart.pop.ManagementStructureId;
+                                    purchaseOrderSplitPart.POPartSplitAddressId = splitPart.pop.POPartSplitAddressId;
+
                                     purchaseOrderPart.PurchaseOrderSplitParts.Add(purchaseOrderSplitPart);
                                 }
                                 // purchaseOrderParts.Add(purchaseOrderPart);

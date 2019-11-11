@@ -619,6 +619,39 @@ export class VendorService {
     getReceivingPOListing(){
         return this.actionEndpoint.getReceivingPOListing();
     }
+
+    saveRepairOrder(action: any) {
+        return this.actionEndpoint.saveRepairorderdetails<any>(action);
+    }
+
+    saveRepairOrderPart(action: any) {
+        return this.actionEndpoint.saveRepairorderdetailspart<any>(action);
+    }
+
+    getVendorROById(Id: number) {
+        return this.actionEndpoint.getVendorROById<any>(Id);
+    }
+
+    getRepairOrderPartsById(Id: number) {
+        return Observable.forkJoin(this.actionEndpoint.getRepairOrderPartsById<any>(Id));
+    }
+
+    getROStatus(repairOrderId, isActive, updatedBy){
+        return this.actionEndpoint.getROStatus(repairOrderId, isActive, updatedBy);
+    }
+
+    deleteRO(repairOrderId, updatedBy){
+        return this.actionEndpoint.deleteRO(repairOrderId, updatedBy);
+    }
+
+    getROHistory(repairOrderId){
+        return this.actionEndpoint.getROHistory(repairOrderId);
+    }
+
+    getROViewById(purchaseOrderId){
+    return this.actionEndpoint.getROViewById(purchaseOrderId);
+    }
+      
 }
 
 
