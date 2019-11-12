@@ -1,18 +1,18 @@
 ﻿import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl, ValidatorFn, AbstractControl } from '@angular/forms';
-import { fadeInOut } from '../../../services/animations';
-import { PageHeaderComponent } from '../../../shared/page-header.component';
-import { ActionService } from '../../../services/action.service';
-import { MasterComapnyService } from '../../../services/mastercompany.service';
-import { AlertService, DialogType, MessageSeverity } from '../../../services/alert.service';
-import { Action } from '../../../models/action.model';
-import { AuditHistory } from '../../../models/audithistory.model';
-import { AuthService } from '../../../services/auth.service';
+import { fadeInOut } from '../../../../services/animations';
+import { PageHeaderComponent } from '../../../page-header.component';
+import { ActionService } from '../../../../services/action.service';
+import { MasterComapnyService } from '../../../../services/mastercompany.service';
+import { AlertService, DialogType, MessageSeverity } from '../../../../services/alert.service';
+import { Action } from '../../../../models/action.model';
+import { AuditHistory } from '../../../../models/audithistory.model';
+import { AuthService } from '../../../../services/auth.service';
 
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
-import { MasterCompany } from '../../../models/mastercompany.model';
+import { MasterCompany } from '../../../../models/mastercompany.model';
 
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -20,28 +20,28 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { InputTextModule } from 'primeng/inputtext';
 
 import { CheckboxModule } from 'primeng/checkbox';
-import { EmployeeService } from '../../../services/employee.service';
-import { JobTitle } from '../../../models/jobtitle.model';
-import { JobType } from '../../../models/jobtype.model';
-import { JobTitleService } from '../../../services/job-title.service';
-import { JobTypeService } from '../../../services/job-type.service';
-import { EmployeeExpertiseService } from '../../../services/employeeexpertise.service';
-import { EmployeeExpertise } from '../../../models/employeeexpertise.model';
+import { EmployeeService } from '../../../../services/employee.service';
+import { JobTitle } from '../../../../models/jobtitle.model';
+import { JobType } from '../../../../models/jobtype.model';
+import { JobTitleService } from '../../../../services/job-title.service';
+import { JobTypeService } from '../../../../services/job-type.service';
+import { EmployeeExpertiseService } from '../../../../services/employeeexpertise.service';
+import { EmployeeExpertise } from '../../../../models/employeeexpertise.model';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { AppTranslationService } from '../../../services/app-translation.service';
+import { AppTranslationService } from '../../../../services/app-translation.service';
 import * as moment from 'moment'
 import { CalendarModule } from 'primeng/calendar';
-import { LegalEntityService } from '../../../services/legalentity.service';
-import { EmployeeLeaveType } from '../../../models/EmployeeLeaveTypeModel';
-import { LocalStoreManager } from '../../../services/local-store-manager.service';
+import { LegalEntityService } from '../../../../services/legalentity.service';
+import { EmployeeLeaveType } from '../../../../models/EmployeeLeaveTypeModel';
+import { LocalStoreManager } from '../../../../services/local-store-manager.service';
 //import { EmployeeAddService } from '../../../services/employee.Add.Service';
-import { DBkeys } from '../../../services/db-Keys';
+import { DBkeys } from '../../../../services/db-Keys';
 
-import { User } from '../../../models/user.model';
+import { User } from '../../../../models/user.model';
 
 
-import { CompanyService } from '../../../services/company.service';
+import { CompanyService } from '../../../../services/company.service';
 
 
 
@@ -478,6 +478,13 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         console.log(res[0][0]);
 
         this.sourceEmployee = res[0][0];
+        this.empCreationForm.patchValue({
+            employeeExpertiseId: res[0][0].employeeExpertiseId,
+            JobTypeId: res[0][0].jobTypeId,
+            jobTitleId: res[0][0].jobTitleId,
+            startDate: new Date(res[0][0].startDate)
+        });
+        this.sourceEmployee.startDate = new Date(res[0][0].startDate);
 
         console.log(res[0][0].firstName);
         this.sourceEmpFirst.firstName = res[0][0].firstName;
