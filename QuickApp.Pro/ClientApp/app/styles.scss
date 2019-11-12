@@ -18,6 +18,35 @@ $theme: mat-light-theme($primary, $accent);
 //@import './mycustom-style.css';
 
 
+
+p-autocomplete.ng-touched.ng-invalid input {
+    border-color: #ff586b;
+}
+
+
+
+.p-autoComplete-ctsm.ng-touched.ng-invalid input {
+    border-color: #ff586b;
+} 
+.ng-touched.ng-invalid {
+    border-color: #ff586b;
+}
+.p-dropdown-custom-md-Header.ng-touched.ng-invalid .ui-dropdown  {
+    border-color: #ff586b;
+}
+.p-dropdown-custom-md.ng-touched.ng-invalid .ui-dropdown {
+    border-color: #ff586b;
+}
+.calender-cstm.ng-touched.ng-invalid input{
+    border-color: #ff586b;
+}
+.ui-table .ui-widget-header button {
+    margin: 0 !important;
+    padding: 0 !important;
+    background-color: #fafafa !important;
+}
+  
+
 .hidedata{
     display: none;
 }
@@ -4946,9 +4975,10 @@ input[type="text"] {
     }
 
     .alert-danger, .alert-error {
-        color: #fff;
-        background-color: #e74c3c;
-        border-color: rgba(231, 76, 60, .88)
+        font-size: 15px;
+        color: #ff586b;
+        background-color: #fff;
+        border-color: #fff;
     }
 
     .ui-pnotify.dark .ui-pnotify-container {
@@ -11446,7 +11476,7 @@ table thead tr th:first-child input, table tr td:first-child input {
     .ui-table .ui-widget-header button {
         font-size: 12px;
         padding: 3px 5px;
-        background-color: #d58512;
+        // background-color: #d58512;
         color: #fff;
         border: none;
         border-radius: 0;
@@ -14157,9 +14187,9 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .cus-contact-table tr td {
     padding: 4px !important;
 }
-.p-autoComplete-ctsm.ng-dirty.ng-invalid > .ui-autocomplete > .ui-inputtext {
-    border-color: #212121 !important;
-}
+// .p-autoComplete-ctsm.ng-dirty.ng-invalid > .ui-autocomplete > .ui-inputtext {
+//     border-color: #212121 !important;
+// }
 // .ro-grid-form-cstm .ng-invalid {
 //     border: 1px solid red;
 // }
@@ -14167,7 +14197,7 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     border: 1px solid red;
 }
 .alert-danger-cstm {
-    padding: 0px 5px 2px !important;
+    padding: 0px 0px 2px !important;
     margin: 0 !important;
 }
 .modal-full {
