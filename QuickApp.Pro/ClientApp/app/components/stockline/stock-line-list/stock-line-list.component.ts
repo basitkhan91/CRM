@@ -3,7 +3,7 @@ import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } fro
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
-import { TableModule } from 'primeng/table';
+import { TableModule, Table } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { InputTextModule } from 'primeng/inputtext';
@@ -45,7 +45,7 @@ export class StockLineListComponent implements OnInit {
 	sourceViewOptions: any = {};
 	public sourceStockLine: any = {};
 	selectedColumn: any[];
-	selectedColumns: any[];
+	//selectedColumns: any[];
 	createdBy: any = "";
 	quantity: any = "";
 	memo: any = "";
@@ -106,76 +106,80 @@ export class StockLineListComponent implements OnInit {
     tagdate: any;
     idNumber: any;
     manufacturerId: any;
+
+    lazyLoadEventData: any;
+    pageSize: number = 10;
+    pageIndex: number = 0;
+    first = 0;
+    data: any;
+    totalRecords: number = 0;
+    totalPages: number = 0;
+
     ngOnInit(): void
     {
-
-		this.loadData();
+		//this.loadData();
 		this.activeIndex = 0;
 		this.workFlowtService.currentUrl = '/stocklinemodule/stocklinepages/app-stock-line-list';
 		this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
-
 	}
 	
-	//displayedColumns = ['actionId', 'companyName', 'description', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
-	dataSource: MatTableDataSource<any>;
-	cols: any[];
-	//allVendorList: any[] = [];
+    dataSource: MatTableDataSource<any>;
+
+    cols: any[];
+
 	allStockInfo: StockLineListComponent[] = [];
-	/** stock-line-list ctor */
 	constructor(private workFlowtService: StocklineService, private _route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
-		//this.displayedColumns.push('StockLine');
 		this.dataSource = new MatTableDataSource();
-		this.loadData();
-
-	}
-
-	private onDataLoadFailed(error: any) {
-
-
 	}
 
 	public allWorkFlows: StockLineListComponent[] = [];
 
+    loadData(event) {
+        this.lazyLoadEventData = event;
+        const pageIndex = parseInt(event.first) / event.rows;;
+        this.pageIndex = pageIndex;
+        this.pageSize = event.rows;
+        event.first = pageIndex;
+        this.getList(event)
+    }
 
-    private loadData()
-    {
-		this.workFlowtService.getStockLineList().subscribe(
-			results => this.onDataLoadSuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
+    getList(data) {
+        this.workFlowtService.getStockLineList(data).subscribe(res => {
+            this.data = res;
+            if (res.length > 0) {
+                this.totalRecords = res[0].totalRecords;
+                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            }
+        })
+    }
 
-		// To display the values in header and column name values
-		this.cols = [
-			//{ field: 'actionId', header: 'Action Id' },
+    headers = [
+        { field: 'partNumber', header: 'PN' },
+        { field: 'stockLineNumber', header: 'PN DESCRIPTION' },
+        { field: 'customerClassification', header: 'ITEM CATEGORY' },
+        { field: 'email', header: 'ITEM GROUP' },
+        { field: 'city', header: 'SL NUM' },
+        { field: 'stateOrProvince', header: 'SERIAL NUM' },
+        { field: 'contact', header: 'COND' },
+        { field: 'salesPersonPrimary', header: 'QTY ON HAND' },
+        { field: 'salesPersonPrimary', header: 'QTY AVAIL' },
+        { field: 'salesPersonPrimary', header: 'GL ACCT' }
+    ]		
 
-			{ field: 'partNumber', header: 'PN' },
-			{ field: 'stockLineNumber', header: 'Stockline Num' },
-			{ field: 'controlNumber', header: 'Control Num' },
-			//{ field: 'id', header: 'ID' },
-			//{field: 'materialType', header: 'Material Type' },
-			{ field: 'receivedDate', header: 'Received Date' },
-			{ field: 'tagDate', header: 'Tagged Date' },
-			{ field: 'receiver', header: 'Receiver' },
-			{ field: 'serialNumber', header: 'Serial' },
-			{ field: 'location', header: 'Location' },
-			{ field: 'warehouse', header: 'Warehouse' },
-			{ field: 'expirationDate', header: 'Expiration Date' },
-			{ field: 'partCertificationNumber', header: 'Part Certification Num' }
-			//{ field: 'createdBy', header: 'Created By' },
-			//{ field: 'updatedBy', header: 'Updated By' },
-			//{ field: 'updatedDate', header: 'Updated Date' },
-			//{ field: 'createdDate', header: 'Created Date' }
-
-		];
-
-		this.selectedColumns = this.cols;
-
-	}
+    selectedColumns = this.headers;
+    private table: Table;
 
 	ngAfterViewInit() {
 		this.dataSource.paginator = this.paginator;
 		this.dataSource.sort = this.sort;
-	}
+    }
+
+    columnsChanges() {
+        this.refreshList();
+    }
+    refreshList() {
+        this.table.reset();
+    }
 
 	routeToPo()
 	{
@@ -187,46 +191,46 @@ export class StockLineListComponent implements OnInit {
 		this._route.navigateByUrl('/vendorsmodule/vendorpages/app-create-ro');
 	}
 
-	private loadMasterCompanies() {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
+	//private loadMasterCompanies() {
+	//	this.alertService.startLoadingMessage();
+	//	this.loadingIndicator = true;
 
-		this.masterComapnyService.getMasterCompanies().subscribe(
-			results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
+	//	this.masterComapnyService.getMasterCompanies().subscribe(
+	//		results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
+	//		error => this.onDataLoadFailed(error)
+	//	);
 
-	}
-	public applyFilter(filterValue: string) {
-		this.dataSource.filter = filterValue;
-	}
+	//}
+	//public applyFilter(filterValue: string) {
+	//	this.dataSource.filter = filterValue;
+	//}
 
-	private refresh() {
-		// Causes the filter to refresh there by updating with recently added data.
-		this.applyFilter(this.dataSource.filter);
-	}
-	private onDataLoadSuccessful(allWorkFlows: any[]) {
-		// alert('success');
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.dataSource.data = allWorkFlows;
-		this.allStockInfo = allWorkFlows;
-		console.log(allWorkFlows);
-	}
+	//private refresh() {
+	//	// Causes the filter to refresh there by updating with recently added data.
+	//	this.applyFilter(this.dataSource.filter);
+	//}
+	//private onDataLoadSuccessful(allWorkFlows: any[]) {
+	//	// alert('success');
+	//	this.alertService.stopLoadingMessage();
+	//	this.loadingIndicator = false;
+	//	this.dataSource.data = allWorkFlows;
+	//	this.allStockInfo = allWorkFlows;
+	//	console.log(allWorkFlows);
+	//}
 
-	dismissModel() {
-		this.isDeleteMode = false;
-		this.isEditMode = false;
-		this.modal.close();
-	}
+	//dismissModel() {
+	//	this.isDeleteMode = false;
+	//	this.isEditMode = false;
+	//	this.modal.close();
+	//}
 
-	private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
-		// alert('success');
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.allComapnies = allComapnies;
+	//private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
+	//	// alert('success');
+	//	this.alertService.stopLoadingMessage();
+	//	this.loadingIndicator = false;
+	//	this.allComapnies = allComapnies;
 
-	}
+	//}
 
 	//private onDataLoadFailed(error: any) {
 	//	// alert(error);
@@ -256,238 +260,238 @@ export class StockLineListComponent implements OnInit {
 	//}
 
 	//To Display all the values when clicked on view  
-    openView(content, row)
-    {
+    //openView(content, row)
+ //   {
 
-		this.sourceViewOptions = row;
-		//this.reason_Name = row.reasonCode;
-		//this.reasonForRemoval = row.reasonForRemoval;
-		//this.shelfLife = row.shelfLife;
-		this.company = row.companyName;
-		this.businessUnitName = row.businessUnitName;
-		this.division = row.divisionName;
-		this.departmentName = row.departmentName;
-		this.partNumber = row.partNumber;
-		this.partDescription = row.partDescription;
-		this.stockLineNumber = row.stockLineNumber;
-		if (row.isSerialized) {
-			this.isSerialized = row.isSerialized;
-		}
-		else
-		{
-			this.isSerialized = false;
-		}
-		
-		this.controlNumber = row.controlNumber;
-		this.quantity = row.quantity;
-		this.condition = row.condition;
-		this.serialNumber = row.serialNumber;
-		this.shelfLife = row.shelfLife;
-		this.shelfLifeExpirationDate = row.shelfLifeExpirationDate;
-		this.site = row.siteName;
-		this.warehouse = row.warehouse;
-		this.location = row.location;
-		this.shelf = row.shelfName;
-		this.bin = row.binName;
-
-		this.obtainFrom = row.obtainFrom;
-		this.owner = row.owner;
-		this.traceableTo = row.traceableTo;
-		//this.manufacturer = row.manufacturer;
-		if (row.man) {
-			this.manufacturerId = row.man.name;
-		}
-		else { this.manufacturerId = "" }
-		this.manufacturerLotNumber = row.manufacturerLotNumber;
-		this.manufacturingDate = row.manufacturingDate;
-		this.manufacturingBatchNumber = row.manufacturingBatchNumber;
-		this.partCertificationNumber = row.partCertificationNumber;
-		this.certifiedBy = row.certifiedBy;
-		this.certifiedDate = row.certifiedDate;
-		this.tagdate = row.tagDate;
-		this.tagType = row.tagType;
-		this.certifiedDueDate = row.certifiedDueDate;
-		this.calibrationMemo = row.calibrationMemo;
-		this.orderDate = row.orderDate;
-		this.purchaseOrderNumber = row.purchaseOrderNumber;
-		this.purchaseOrderUnitCost = row.purchaseOrderUnitCost;
-		this.repairOrderNumber = row.repairOrderNumber;
-		this.repairOrderUnitCost = row.repairOrderUnitCost;
-
-
-		this.receivedDate = row.receivedDate;
-		this.receiverNumber = row.receiver;
-		this.reconciliationNumber = row.reconciliationNumber;
-		this.unitSalesPrice = row.unitSalesPrice;
-		this.coreUnitCost = row.coreUnitCost;
-		this.glAccountId = row.glAccountId;
-		this.assetId = row.assetId;
-		if (row.isHazardousMaterial) {
-			this.isHazardousMaterial = row.isHazardousMaterial;
-		}
-		else { this.isHazardousMaterial = false; }
-		
-		this.isPMA = row.isPMA;
-		this.isDER = row.isDER;
-		this.oem = row.oem;
-		this.memo = row.memo;
-		this.idNumber = row.idNumber;
-
-
-
-		
-		this.createdBy = row.createdBy;
-		this.updatedBy = row.updatedBy;
-		this.createdDate = row.createdDate;
-		this.updatedDate = row.updatedDate;
-		this.loadMasterCompanies();
-		this.modal = this.modalService.open(content, { size: 'lg' });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-	}
-
-
-	openHelpText(content) {
-		this.modal = this.modalService.open(content, { size: 'sm' });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-	}
-
-	get userName(): string {
-		return this.authService.currentUser ? this.authService.currentUser.userName : "";
-	}
-
-	openDelete(content, row) {
-
-		this.isEditMode = false;
-		this.isDeleteMode = true;
-		this.sourceAction = row;
-		this.modal = this.modalService.open(content, { size: 'sm' });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
-	}
-
-	openEdits(row)
-	{
-		this.workFlowtService.isEditMode = true;
-        this.isSaving = true;
-		this.workFlowtService.listCollection = row; //Storing Row Data  and saving Data in Service that will used in StockLine Setup
-		this._route.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-edit');
-	}
-
-	openAdjustment(row)
-	{
-		this.workFlowtService.isAdjustment = true;
-		this.isAdjustSaving = true;
-		this.workFlowtService.adjustmentCollection = row;
-		this._route.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-adjustment');
-	}
-	//deleteItemAndCloseModel(rowData) {
-	//	this.isSaving = true;
-	//	this.sourceAction = rowData;
-	//	this.sourceAction.updatedBy = this.userName;
-	//	this.sourceAction.isActive = false;
-	//	this.sourceAction.sourceStockLine = rowData.sourceStockLine;
-	//	this.stocklineser.deleteStockLineAction(this.sourceAction).subscribe(
-	//		response => this.saveCompleted(this.sourceAction),
-	//		error => this.saveFailedHelper(error));
-	//	//  this.modal.close();
-	//}
-
-	private saveCompleted(user?: any)
-	{
-		this.isSaving = false;
-		if (this.isDeleteMode == true)
-		{
-			this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
-			this.isDeleteMode = false;
-		}
-		else
-		{
-			this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
-		}
-
-		//this.itemclass();
-	}
-	private saveFailedHelper(error: any) {
-		this.isSaving = false;
-		this.alertService.stopLoadingMessage();
-		this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
-		this.alertService.showStickyMessage(error, null, MessageSeverity.error);
-	}
-
-	//eventHandler(event) {
-	//	let value = event.target.value.toLowerCase()
-	//	if (this.selectedreason) {
-	//		if (value == this.selectedreason.toLowerCase()) {
-	//			this.disableSave = true;
-	//		}
-	//		else {
-	//			this.disableSave = false;
-	//		}
+	//	this.sourceViewOptions = row;
+	//	//this.reason_Name = row.reasonCode;
+	//	//this.reasonForRemoval = row.reasonForRemoval;
+	//	//this.shelfLife = row.shelfLife;
+	//	this.company = row.companyName;
+	//	this.businessUnitName = row.businessUnitName;
+	//	this.division = row.divisionName;
+	//	this.departmentName = row.departmentName;
+	//	this.partNumber = row.partNumber;
+	//	this.partDescription = row.partDescription;
+	//	this.stockLineNumber = row.stockLineNumber;
+	//	if (row.isSerialized) {
+	//		this.isSerialized = row.isSerialized;
 	//	}
-	//}
-
-
-
-	//itemId(event) {
-	//	for (let i = 0; i < this.allreasn.length; i++) {
-	//		if (event == this.allreasn[i][0].reasonName) {
-
-	//			this.disableSave = true;
-	//			this.selectedreason = event;
-	//		}
-
+	//	else
+	//	{
+	//		this.isSerialized = false;
 	//	}
-	//}
+		
+	//	this.controlNumber = row.controlNumber;
+	//	this.quantity = row.quantity;
+	//	this.condition = row.condition;
+	//	this.serialNumber = row.serialNumber;
+	//	this.shelfLife = row.shelfLife;
+	//	this.shelfLifeExpirationDate = row.shelfLifeExpirationDate;
+	//	this.site = row.siteName;
+	//	this.warehouse = row.warehouse;
+	//	this.location = row.location;
+	//	this.shelf = row.shelfName;
+	//	this.bin = row.binName;
 
-
-
-
-
-	//filterReasons(event) {
-
-	//	this.localCollection = [];
-	//	for (let i = 0; i < this.allReasonsInfo.length; i++) {
-	//		let reasonName = this.allReasonsInfo[i].reasonCode;
-	//		if (reasonName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-	//			this.allreasn.push([{
-	//				"reasonId": this.allReasonsInfo[i].reasonId,
-	//				"reasonName": reasonName
-	//			}]),
-	//				this.localCollection.push(reasonName);
-	//		}
+	//	this.obtainFrom = row.obtainFrom;
+	//	this.owner = row.owner;
+	//	this.traceableTo = row.traceableTo;
+	//	//this.manufacturer = row.manufacturer;
+	//	if (row.man) {
+	//		this.manufacturerId = row.man.name;
 	//	}
+	//	else { this.manufacturerId = "" }
+	//	this.manufacturerLotNumber = row.manufacturerLotNumber;
+	//	this.manufacturingDate = row.manufacturingDate;
+	//	this.manufacturingBatchNumber = row.manufacturingBatchNumber;
+	//	this.partCertificationNumber = row.partCertificationNumber;
+	//	this.certifiedBy = row.certifiedBy;
+	//	this.certifiedDate = row.certifiedDate;
+	//	this.tagdate = row.tagDate;
+	//	this.tagType = row.tagType;
+	//	this.certifiedDueDate = row.certifiedDueDate;
+	//	this.calibrationMemo = row.calibrationMemo;
+	//	this.orderDate = row.orderDate;
+	//	this.purchaseOrderNumber = row.purchaseOrderNumber;
+	//	this.purchaseOrderUnitCost = row.purchaseOrderUnitCost;
+	//	this.repairOrderNumber = row.repairOrderNumber;
+	//	this.repairOrderUnitCost = row.repairOrderUnitCost;
+
+
+	//	this.receivedDate = row.receivedDate;
+	//	this.receiverNumber = row.receiver;
+	//	this.reconciliationNumber = row.reconciliationNumber;
+	//	this.unitSalesPrice = row.unitSalesPrice;
+	//	this.coreUnitCost = row.coreUnitCost;
+	//	this.glAccountId = row.glAccountId;
+	//	this.assetId = row.assetId;
+	//	if (row.isHazardousMaterial) {
+	//		this.isHazardousMaterial = row.isHazardousMaterial;
+	//	}
+	//	else { this.isHazardousMaterial = false; }
+		
+	//	this.isPMA = row.isPMA;
+	//	this.isDER = row.isDER;
+	//	this.oem = row.oem;
+	//	this.memo = row.memo;
+	//	this.idNumber = row.idNumber;
+
+
+
+		
+	//	this.createdBy = row.createdBy;
+	//	this.updatedBy = row.updatedBy;
+	//	this.createdDate = row.createdDate;
+	//	this.updatedDate = row.updatedDate;
+	//	this.loadMasterCompanies();
+	//	this.modal = this.modalService.open(content, { size: 'lg' });
+	//	this.modal.result.then(() => {
+	//		console.log('When user closes');
+	//	}, () => { console.log('Backdrop click') })
 	//}
 
-	private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
 
-		// debugger;
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
+	//openHelpText(content) {
+	//	this.modal = this.modalService.open(content, { size: 'sm' });
+	//	this.modal.result.then(() => {
+	//		console.log('When user closes');
+	//	}, () => { console.log('Backdrop click') })
+	//}
 
-		this.auditHisory = auditHistory;
+	//get userName(): string {
+	//	return this.authService.currentUser ? this.authService.currentUser.userName : "";
+	//}
+
+	//openDelete(content, row) {
+
+	//	this.isEditMode = false;
+	//	this.isDeleteMode = true;
+	//	this.sourceAction = row;
+	//	this.modal = this.modalService.open(content, { size: 'sm' });
+	//	this.modal.result.then(() => {
+	//		console.log('When user closes');
+	//	}, () => { console.log('Backdrop click') })
+	//}
+
+	//openEdits(row)
+	//{
+	//	this.workFlowtService.isEditMode = true;
+ //       this.isSaving = true;
+	//	this.workFlowtService.listCollection = row; //Storing Row Data  and saving Data in Service that will used in StockLine Setup
+	//	this._route.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-edit');
+	//}
+
+	//openAdjustment(row)
+	//{
+	//	this.workFlowtService.isAdjustment = true;
+	//	this.isAdjustSaving = true;
+	//	this.workFlowtService.adjustmentCollection = row;
+	//	this._route.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-adjustment');
+	//}
+	////deleteItemAndCloseModel(rowData) {
+	////	this.isSaving = true;
+	////	this.sourceAction = rowData;
+	////	this.sourceAction.updatedBy = this.userName;
+	////	this.sourceAction.isActive = false;
+	////	this.sourceAction.sourceStockLine = rowData.sourceStockLine;
+	////	this.stocklineser.deleteStockLineAction(this.sourceAction).subscribe(
+	////		response => this.saveCompleted(this.sourceAction),
+	////		error => this.saveFailedHelper(error));
+	////	//  this.modal.close();
+	////}
+
+	//private saveCompleted(user?: any)
+	//{
+	//	this.isSaving = false;
+	//	if (this.isDeleteMode == true)
+	//	{
+	//		this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
+	//		this.isDeleteMode = false;
+	//	}
+	//	else
+	//	{
+	//		this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
+	//	}
+
+	//	//this.itemclass();
+	//}
+	//private saveFailedHelper(error: any) {
+	//	this.isSaving = false;
+	//	this.alertService.stopLoadingMessage();
+	//	this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
+	//	this.alertService.showStickyMessage(error, null, MessageSeverity.error);
+	//}
+
+	////eventHandler(event) {
+	////	let value = event.target.value.toLowerCase()
+	////	if (this.selectedreason) {
+	////		if (value == this.selectedreason.toLowerCase()) {
+	////			this.disableSave = true;
+	////		}
+	////		else {
+	////			this.disableSave = false;
+	////		}
+	////	}
+	////}
 
 
-		this.modal = this.modalService.open(content, { size: 'lg' });
 
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
+	////itemId(event) {
+	////	for (let i = 0; i < this.allreasn.length; i++) {
+	////		if (event == this.allreasn[i][0].reasonName) {
+
+	////			this.disableSave = true;
+	////			this.selectedreason = event;
+	////		}
+
+	////	}
+	////}
 
 
-	}
 
-	public navigateTogeneralInfo() {
-		//this.workFlowtService.listCollection = [];
-		this.workFlowtService.isEditMode = false;
-		this.workFlowtService.enableExternal = false;
-		this._route.navigateByUrl('stocklinemodule/stocklinepages/app-stock-line-setup');
 
-	}
+
+	////filterReasons(event) {
+
+	////	this.localCollection = [];
+	////	for (let i = 0; i < this.allReasonsInfo.length; i++) {
+	////		let reasonName = this.allReasonsInfo[i].reasonCode;
+	////		if (reasonName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+	////			this.allreasn.push([{
+	////				"reasonId": this.allReasonsInfo[i].reasonId,
+	////				"reasonName": reasonName
+	////			}]),
+	////				this.localCollection.push(reasonName);
+	////		}
+	////	}
+	////}
+
+	//private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
+
+	//	// debugger;
+	//	this.alertService.stopLoadingMessage();
+	//	this.loadingIndicator = false;
+
+	//	this.auditHisory = auditHistory;
+
+
+	//	this.modal = this.modalService.open(content, { size: 'lg' });
+
+	//	this.modal.result.then(() => {
+	//		console.log('When user closes');
+	//	}, () => { console.log('Backdrop click') })
+
+
+	//}
+
+	//public navigateTogeneralInfo() {
+	//	//this.workFlowtService.listCollection = [];
+	//	this.workFlowtService.isEditMode = false;
+	//	this.workFlowtService.enableExternal = false;
+	//	this._route.navigateByUrl('stocklinemodule/stocklinepages/app-stock-line-setup');
+
+	//}
 }
 
 

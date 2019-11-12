@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace QuickApp.Pro.ViewModels
 {
@@ -16,12 +13,16 @@ namespace QuickApp.Pro.ViewModels
         //[FK]
         [ForeignKey("ItemMasterId")]
         public long? ItemMasterId { get; set; }
-
+        public DateTime openDate { get; set; }
+        public int daysSinceRecieved { get; set; }
+        public int daysSinceMfg { get; set; }
+        public int daysSinceTagged { get; set; }
+        public int daysSinceOpen { get; set; }
+        public bool blackListed { get; set; }
         public Int32? Quantity { get; set; }
         //[FK]
         [ForeignKey("ConditionId")]
         public long? ConditionId { get; set; }
-
         public string SerialNumber { get; set; }
         public bool? ShelfLife { get; set; }
         public DateTime? ShelfLifeExpirationDate { get; set; }
@@ -34,11 +35,9 @@ namespace QuickApp.Pro.ViewModels
         public long? BinId { get; set; }
         [ForeignKey("WarehouseId")]
         public long? WarehouseId { get; set; }
-
         //[FK]
         [ForeignKey("LocationId")]
         public long? LocationId { get; set; }
-
         public string ObtainFrom { get; set; }
         public string Owner { get; set; }
         public string TraceableTo { get; set; }
@@ -61,12 +60,10 @@ namespace QuickApp.Pro.ViewModels
         public long? PurchaseOrderId { get; set; }
         public decimal? PurchaseOrderUnitCost { get; set; }
         public decimal? InventoryUnitCost { get; set; }
-
         //[FK]
         [ForeignKey("RepairOrderId")]
         public long? RepairOrderId { get; set; }
         public decimal? RepairOrderUnitCost { get; set; }
-
         public DateTime? ReceivedDate { get; set; }
         public string ReceiverNumber { get; set; }
         public string ReconciliationNumber { get; set; }
@@ -81,20 +78,16 @@ namespace QuickApp.Pro.ViewModels
         public string Memo { get; set; }
         public long? ManagementStructureEntityId { get; set; }
         public long? TimeLifeCyclesId { get; set; }
-
         public string Site { get; set; }
         public string Shelf { get; set; }
         public string Bin { get; set; }
-
         public bool? TimeLife { get; set; }
         public long? TimeLifeId { get; set; }
-
         public Int32? ObtainFromType { get; set; }
         public Int32? OwnerType { get; set; }
         public Int32? TraceableToType { get; set; }
         public Int32? UnitCostAdjustmentReasonTypeId { get; set; }
         public Int32? UnitSalePriceAdjustmentReasonTypeId { get; set; }
-
         [ForeignKey("MasterCompanyId")]
         public Int32? MasterCompanyId { get; set; }
         [ForeignKey("CompanyId")]
@@ -105,19 +98,20 @@ namespace QuickApp.Pro.ViewModels
         public Int32? DivisionId { get; set; }
         [ForeignKey("DepartmentId")]
         public Int32? DepartmentId { get; set; }
-
         public bool? isSerialized { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public DateTime? CreatedDate { get; set; }
-       
         public string IdNumber { get; set; }
-
-        public Int32? IntegrationPortalId { get; set; }
+        public int IntegrationPortalId { get; set; }
         public bool? IsListed { get; set; }
-
         public long? StocklineIntegrationPortalId { get; set; }
-
+        public string AircraftTailNumber { get; set; }
+        public string esn { get; set; }
+        public string eccn { get; set; }
+        public string itarNum { get; set; }
+        public string nha { get; set; }
+        public string tla { get; set; }
     }
 }

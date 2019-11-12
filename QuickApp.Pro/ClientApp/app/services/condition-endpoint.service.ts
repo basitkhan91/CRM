@@ -30,6 +30,7 @@ export class ConditionEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getAllConditionEndpoint());
             });
     }
+
     getConditionEndpoint<T>(): Observable<T> {
 
         return this.http.get<T>(this.ConditionUrl, this.getRequestHeaders())
