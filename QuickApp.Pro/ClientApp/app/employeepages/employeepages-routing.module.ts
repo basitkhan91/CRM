@@ -1,10 +1,10 @@
 ﻿import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { EmployeePagesComponent } from "./employeepages.component";
-import { EmployeesListComponent } from "../components/employee/employees-list.component";
-import { EmployeeGeneralInformationComponent } from "../components/employee/employee-general-information/employee-general-information.component";
-import { EmployeeCertificationComponent } from "../components/employee/employee-certification/employee-certification.component";
-import { EmployeeTrainingComponent } from "../components/employee/employee-training/employee-training.component";
+import { EmployeesListComponent } from "../shared/components/employee/employee-list/employees-list.component";
+import { EmployeeGeneralInformationComponent } from "../shared/components/employee/employee-general-information/employee-general-information.component";
+import { EmployeeCertificationComponent } from "../shared/components/employee/employee-certification/employee-certification.component";
+import { EmployeeTrainingComponent } from "../shared/components/employee/employee-training/employee-training.component";
 import { AuthService } from '../services/auth.service';
 import { AuthGuard } from '../services/auth-guard.service';
 

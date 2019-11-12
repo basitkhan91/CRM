@@ -3,7 +3,7 @@ import { StepsModule } from 'primeng/steps';
 import { MenuItem } from 'primeng/api';
 import { Message } from 'primeng/components/common/message';
 import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/router';
-import { EmployeeService } from "../../../services/employee.service";
+import { EmployeeService } from "../../../../services/employee.service";
 
 @Component({
     selector: 'app-employee-steps-prime-ng',

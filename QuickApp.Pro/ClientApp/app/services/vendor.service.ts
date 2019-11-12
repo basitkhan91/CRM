@@ -338,6 +338,12 @@ export class VendorService {
 
     }
 
+    deleteVendorShippingAddress(actionId: any) {
+
+        return this.actionEndpoint.getDeletevendorshippingEndpoint(actionId);
+
+    }
+
     newAddContactInfo(vendorcntct: any) {
         return this.actionEndpoint.getNewVendorContactInfo<any>(vendorcntct);
     }

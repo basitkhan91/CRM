@@ -945,8 +945,9 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
             for (let i = 0; i < this.alldata.length; i++) {
                 if (event == this.alldata[i].beneficiaryCustomer) {
                     this.sourceVendor.beneficiaryCustomer = event;
-                    this.disablesaveforBeneficiary = true;
+                    this.disablesaveforBeneficiary = false;
                     this.selectedCountries = event;
+                    break;
                 }
             }
         }
@@ -956,10 +957,10 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
             let value = event.target.value.toLowerCase();
             if (this.selectedCountries) {
                 if (value == this.selectedCountries.toLowerCase()) {
-                    this.disablesaveforBeneficiary = true;
+                    this.disablesaveforBeneficiary = false;
                 }
                 else {
-                    this.disablesaveforBeneficiary = false;
+                    this.disablesaveforBeneficiary = true;
                 }
             }
 
