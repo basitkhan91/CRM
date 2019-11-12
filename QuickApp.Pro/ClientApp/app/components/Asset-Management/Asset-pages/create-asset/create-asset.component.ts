@@ -559,7 +559,12 @@ export class CreateAssetComponent implements OnInit {
                     this.listCollection = data;
                     this.assetService.generalCollection = this.listCollection;
                     this.alertService.showMessage('Asset Created successfully.');
-                    this.activeIndex = 0;
+                    this.activeIndex = 1;
+                    this.currentAsset = this.assetService.listCollection;
+                    this.assetService.indexObj.next(this.activeIndex);
+                    this.route.navigateByUrl('/assetmodule/assetpages/app-asset-capes');
+
+
                 })
             }
             else {
@@ -665,7 +670,11 @@ export class CreateAssetComponent implements OnInit {
                     this.listCollection = data;
                     this.assetService.generalCollection = this.listCollection;
                     this.alertService.showMessage('Asset Updated successfully.');
-                    this.activeIndex = 0;
+                    this.activeIndex = 1;
+                    this.currentAsset = this.assetService.listCollection;
+                    this.assetService.indexObj.next(this.activeIndex);
+                    this.route.navigateByUrl('/assetmodule/assetpages/app-asset-capes');
+
                 })
             }
         }
