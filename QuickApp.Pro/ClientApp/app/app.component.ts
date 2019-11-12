@@ -238,7 +238,9 @@ export class AppComponent implements OnInit, AfterViewInit {
                         label: 'Reports and Forms', items: [
                             { label: 'Item Aging', routerLink: '/#' },
                             { label: 'Slow Moving Stock', routerLink: '/#' },
-                            { label: 'Hot List', routerLink: '/#' }]
+                            { label: 'Hot List', routerLink: '/#' },
+                            { label: 'Stock Line Report', routerLink: '/#', command: (event?: any) => { this.stockLineReport(); }}
+                        ]
                     }]
 
             },
@@ -671,6 +673,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 
         ];
 
+
+
         // created by jyotsna
 
         // this.callTest2();
@@ -744,6 +748,12 @@ export class AppComponent implements OnInit, AfterViewInit {
         if (this.notificationsLoadingSubscription) {
             this.notificationsLoadingSubscription.unsubscribe();
         }
+    }
+
+    stockLineReport() {
+        const url = `${this.configurations.baseUrl}/api/stockLine/stocklinereoprt`;
+
+        window.location.assign(url);
     }
 
     initNotificationsLoading() {
