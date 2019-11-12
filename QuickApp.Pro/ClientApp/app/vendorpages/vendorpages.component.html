@@ -14,7 +14,7 @@
 </div>-->
 
     <!--<p-breadcrumb [model]="items" [home]="home"></p-breadcrumb>-->
-    <div class="vendor-steps-prime-cstm">
+    <div class="vendor-steps-prime-cstm" *ngIf="isVisible">
       <app-vendor-steps-prime-ng> </app-vendor-steps-prime-ng>
     </div>
 <div><router-outlet></router-outlet></div>
