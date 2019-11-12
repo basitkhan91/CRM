@@ -19,7 +19,7 @@ namespace QuickApp.Pro.ViewModels
 
         public DateTime? QuoteExpiryDate { get; set; }
 
-        public int Priority { get; set; }
+        public int PriorityId { get; set; }
 
         public int AccountType { get; set; }
 
@@ -33,7 +33,9 @@ namespace QuickApp.Pro.ViewModels
 
         public string CustomerContactName { get; set; }
 
-        public string CustomerReference { get; set; }
+        public int CustomerReferenceId { get; set; }
+
+        public string CustomerReferenceName { get; set; }
 
         public int ContractReferenceId { get; set; }
 
@@ -62,7 +64,7 @@ namespace QuickApp.Pro.ViewModels
 
         public int CreditLimitTermsId { get; set; }
 
-        public int EmployeeID { get; set; }
+        public int EmployeeId{ get; set; }
 
         public string EmployeeName { get; set; }
 

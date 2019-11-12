@@ -541,11 +541,13 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.workFlowtService.contactCollection = this.local;
         this.activeIndex = 3;
         this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.changeStep('Payment Information');
         this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
     }
     previousClick() {
         this.activeIndex = 1;
         this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.changeStep('Contacts');
         this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
     }
     dismissModel() {

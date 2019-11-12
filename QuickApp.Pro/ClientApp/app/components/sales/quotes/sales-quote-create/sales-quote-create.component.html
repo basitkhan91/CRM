@@ -22,53 +22,79 @@
             <div class="col-md-2 column">
               <div class="form-group">
                 <label>Quote Type <span class="clr-red">*</span></label>
-                <select name="quoteType" required>
-                  <option></option>
+                <select
+                  name="quoteType"
+                  [(ngModel)]="salesQuote.quoteTypeId"
+                  required
+                >
+                  <option
+                    *ngFor="let type of salesQuote.salesQuoteTypes"
+                    [value]="type.id"
+                    >{{ type.name }}</option
+                  >
                 </select>
               </div>
               <div class="form-group">
                 <label>Open Date<span class="clr-red">*</span></label>
                 <p-calendar
-                  [(ngModel)]="quote.Date"
+                  name="openDate"
+                  [(ngModel)]="salesQuote.openDate"
                   [showIcon]="true"
                 ></p-calendar>
               </div>
               <div class="form-group">
                 <label>Cust Request Date<span class="clr-red">*</span></label>
                 <p-calendar
-                  [(ngModel)]="quote.Date"
+                  name="customerRequestDate"
+                  [(ngModel)]="salesQuote.customerRequestDate"
                   [showIcon]="true"
                 ></p-calendar>
               </div>
               <div class="form-group">
                 <label>Promised Date<span class="clr-red">*</span></label>
                 <p-calendar
-                  [(ngModel)]="quote.Date"
+                  name="customerPromisedDate"
+                  [(ngModel)]="salesQuote.customerPromisedDate"
                   [showIcon]="true"
                 ></p-calendar>
               </div>
               <div class="form-group">
                 <label>Estimated Ship Date<span class="clr-red">*</span></label>
                 <p-calendar
-                  [(ngModel)]="quote.Date"
+                  name="estimatedShipDate"
+                  [(ngModel)]="salesQuote.estimatedShipDate"
                   [showIcon]="true"
                 ></p-calendar>
               </div>
               <div class="form-group">
                 <label>Valid For (Days)<span class="clr-red">*</span></label>
-                <input type="text" pInputText />
+                <input
+                  type="text"
+                  pInputText
+                  name="validForDays"
+                  [(ngModel)]="salesQuote.validForDays"
+                />
               </div>
               <div class="form-group">
                 <label>Quote Exp Date<span class="clr-red">*</span></label>
                 <p-calendar
-                  [(ngModel)]="quote.Date"
+                  name="quoteExpiryDate"
+                  [(ngModel)]="salesQuote.quoteExpiryDate"
                   [showIcon]="true"
                 ></p-calendar>
               </div>
               <div class="form-group">
                 <label>Priority<span class="clr-red">*</span></label>
-                <select name="quoteType" required>
-                  <option></option>
+                <select
+                  name="priority"
+                  [(ngModel)]="salesQuote.priorityId"
+                  required
+                >
+                  <option
+                    *ngFor="let p of salesQuote.priorities"
+                    [value]="p.priorityId"
+                    >{{ p.description }}</option
+                  >
                 </select>
               </div>
             </div>
@@ -117,14 +143,30 @@
               </div>
               <div class="form-group">
                 <label>Probibility <span class="clr-red">*</span></label>
-                <select name="quoteType" required>
-                  <option></option>
+                <select
+                  name="probability"
+                  [(ngModel)]="salesQuote.probabilityId"
+                  required
+                >
+                  <option
+                    *ngFor="let p of salesQuote.salesProbablity"
+                    [value]="p.id"
+                    >{{ p.value }}</option
+                  >
                 </select>
               </div>
               <div class="form-group">
                 <label>Lead Source <span class="clr-red">*</span></label>
-                <select name="quoteType" required>
-                  <option></option>
+                <select
+                  name="leadSource"
+                  [(ngModel)]="salesQuote.leadSourceId"
+                  required
+                >
+                  <option
+                    *ngFor="let ls of salesQuote.leadSources"
+                    [value]="ls.id"
+                    >{{ ls.name }}</option
+                  >
                 </select>
               </div>
               <div class="form-group">
@@ -135,21 +177,31 @@
                   <input type="text" pInputText />
                 </div>
                 <div class="col-md-7">
-                  <select name="quoteType" required>
-                    <option></option>
+                  <select
+                    name="quoteType"
+                    [(ngModel)]="salesQuote.creditLimitTermsId"
+                    required
+                  >
+                    <option
+                      *ngFor="let ct of salesQuote.creditTerms"
+                      [value]="ct.id"
+                      >{{ ct.name }}</option
+                    >
                   </select>
                 </div>
               </div>
               <div class="form-group" style="margin-top: 5px;">
                 <p-checkbox
-                  [(ngModel)]="checked"
+                  name="restrictPMA"
+                  [(ngModel)]="salesQuote.restrictPMA"
                   binary="true"
                   label="Restrit PMA"
                 ></p-checkbox>
               </div>
               <div class="form-group" style="margin-top: 5px;">
                 <p-checkbox
-                  [(ngModel)]="checked"
+                  name="restrictDER"
+                  [(ngModel)]="salesQuote.restrictDER"
                   binary="true"
                   label="Restrit DER"
                 ></p-checkbox>
@@ -165,22 +217,23 @@
               <div class="form-group">
                 <label>Approved Date<span class="clr-red">*</span></label>
                 <p-calendar
-                  [(ngModel)]="quote.Date"
+                  name="approvedDate"
+                  [(ngModel)]="salesQuote.approvedDate"
                   [showIcon]="true"
                 ></p-calendar>
               </div>
               <div class="form-group">
-                  <label>Currency <span class="clr-red">*</span></label>
-                  <select name="quoteType" required>
-                    <option></option>
-                  </select>
-                </div>
-                <div class="form-group">
-                    <label>Warnings <span class="clr-red">*</span></label>
-                    <select name="quoteType" required>
-                      <option></option>
-                    </select>
-                  </div>
+                <label>Currency <span class="clr-red">*</span></label>
+                <select name="quoteType" required>
+                  <option></option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Warnings <span class="clr-red">*</span></label>
+                <select name="quoteType" required>
+                  <option></option>
+                </select>
+              </div>
             </div>
           </div>
         </form>

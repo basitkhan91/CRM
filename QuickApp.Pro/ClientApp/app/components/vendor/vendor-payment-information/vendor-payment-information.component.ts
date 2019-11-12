@@ -770,13 +770,15 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	}
 	previousClick() {
 		this.activeIndex = 2;
-		this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.changeStep('Financial Information');
 		this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-financial-information');
 	}
 	nextClick() {
 			this.workFlowtService.contactCollection = this.local;
 			this.activeIndex = 4;
-			this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.changeStep('Shipping Information');
         this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-shipping-information');
         //this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-billing-information');
 	}

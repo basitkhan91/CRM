@@ -868,6 +868,10 @@ namespace QuickApp.Pro.Controllers
 
                     // UPDATE data.
                     repairOrderModel = FillRepairOrder(repairOrderModel, roViewModel);
+                    repairOrderModel.UpdatedDate = DateTime.Now;
+                    repairOrderModel.UpdatedBy = roViewModel.UpdatedBy;
+                    repairOrderModel.IsActive = roViewModel.IsActive;
+                    repairOrderModel.IsDeleted = roViewModel.IsDeleted;
                     _context.SaveChanges();
                     return Ok(repairOrderModel);
                 }
@@ -878,6 +882,17 @@ namespace QuickApp.Pro.Controllers
                     // SAVE data.
                     var repairOrderModel = new RepairOrder();
                     repairOrderModel = FillRepairOrder(repairOrderModel, roViewModel);
+                    repairOrderModel.CreatedDate = DateTime.Now;
+                    repairOrderModel.IsActive = true;
+                    repairOrderModel.IsDeleted = false;
+
+                    var vendor = _context.Vendor.Where(x => x.VendorId == repairOrderModel.VendorId).FirstOrDefault();
+                    if (vendor != null)
+                    {
+                        repairOrderModel.VendorName = vendor.VendorName;
+                        repairOrderModel.VendorCode = vendor.VendorCode;
+                    }
+
                     _context.RepairOrder.Add(repairOrderModel);
                     _context.SaveChanges();
 
@@ -921,11 +936,15 @@ namespace QuickApp.Pro.Controllers
             repairOrderModel.ShipViaId = roViewModel.ShipViaId;
             repairOrderModel.ShippingCost = roViewModel.ShippingCost;
             repairOrderModel.HandlingCost = roViewModel.HandlingCost;
-            repairOrderModel.ShipVia = ""; // TODO = WHERE TO GET THIS;
-            repairOrderModel.ShippingAcctNum = ""; // TODO = WHERE TO GET THIS
+            repairOrderModel.ShipVia = roViewModel.ShipVia;
+            repairOrderModel.ShippingAcctNum = roViewModel.ShippingAcctNum;
             repairOrderModel.ShippingId = roViewModel.ShippingId;
             repairOrderModel.ShippingUrl = roViewModel.ShippingUrl;
             repairOrderModel.ShipToMemo = roViewModel.ShipToMemo;
+            repairOrderModel.ShipToSiteId = roViewModel.ShipToSiteId;
+            repairOrderModel.ShipToSiteName = roViewModel.ShipToSiteName;
+            repairOrderModel.BillToSiteId = roViewModel.BillToSiteId;
+            repairOrderModel.BillToSiteName = roViewModel.BillToSiteName;
             repairOrderModel.BillToUserTypeId = roViewModel.BillToUserTypeId;
             repairOrderModel.BillToUserId = roViewModel.BillToUserId;
             repairOrderModel.BillToAddressId = roViewModel.BillToAddressId;
@@ -949,42 +968,6 @@ namespace QuickApp.Pro.Controllers
             repairOrderModel.BillToStateOrProvince = roViewModel.BillToStateOrProvince;
             repairOrderModel.BillToPostalCode = roViewModel.BillToPostalCode;
             repairOrderModel.BillToCountry = roViewModel.BillToCountry;
-
-            #region ADDRESS - PREVIOSLY GETTING FROM ADDRESS_T BUT NOW CONSUMING FROM REQUEST.
-
-            //// FILL SHIIPING ADDRESS
-            //if (roViewModel.ShipToAddressId != null && roViewModel.ShipToAddressId > 0)
-            //{
-            //    var shippingAddressModel = GetAddress(roViewModel.ShipToAddressId);
-            //    if (shippingAddressModel != null)
-            //    {
-            //        repairOrderModel.ShipToAddress1 = shippingAddressModel.Line1;
-            //        repairOrderModel.ShipToAddress2 = shippingAddressModel.Line2;
-            //        repairOrderModel.ShipToAddress3 = shippingAddressModel.Line3;
-            //        repairOrderModel.ShipToCity = shippingAddressModel.City;
-            //        repairOrderModel.ShipToStateOrProvince = shippingAddressModel.StateOrProvince;
-            //        repairOrderModel.ShipToPostalCode = shippingAddressModel.PostalCode;
-            //        repairOrderModel.ShipToCountry = shippingAddressModel.Country;
-            //    }
-            //}
-
-            //// FILL BILLING ADDRESS
-            //if (roViewModel.BillToAddressId != null && roViewModel.BillToAddressId > 0)
-            //{
-            //    var billingAddressModel = GetAddress(roViewModel.BillToAddressId);
-            //    if (billingAddressModel != null)
-            //    {
-            //        repairOrderModel.BillToAddress1 = billingAddressModel.Line1;
-            //        repairOrderModel.BillToAddress2 = billingAddressModel.Line2;
-            //        repairOrderModel.BillToAddress3 = billingAddressModel.Line3;
-            //        repairOrderModel.BillToCity = billingAddressModel.City;
-            //        repairOrderModel.BillToStateOrProvince = billingAddressModel.StateOrProvince;
-            //        repairOrderModel.BillToPostalCode = billingAddressModel.PostalCode;
-            //        repairOrderModel.BillToCountry = billingAddressModel.Country;
-            //    }
-            //}
-
-            #endregion
 
 
             return repairOrderModel;
@@ -3005,6 +2988,103 @@ namespace QuickApp.Pro.Controllers
         {
             var result = _unitOfWork.repairOrder.RepairOrderPartsById(repairOrderId);
             return Ok(result);
+        }
+
+        [HttpPost("createRoApprover")]
+        public IActionResult CreateRoApprover([FromBody]RepairOrderApproverViewModel roApproverViewModel)
+        {
+            if (roApproverViewModel == null)
+            {
+                return BadRequest($"RO Approver cannot be null.");
+            }
+
+            var roApprovar = new RepairOrderApprover();
+            roApprovar = FillRepairOrderApproverSave(roApprovar, roApproverViewModel);
+            SaveRepairOrderApprover(roApprovar);
+
+            return Ok(roApprovar);
+        }
+
+        private RepairOrderApprover FillRepairOrderApproverSave(RepairOrderApprover roApprover, RepairOrderApproverViewModel roApproverViewModel)
+        {
+            roApprover.RepairOrderId = roApproverViewModel.RepairOrderId;
+            if (roApproverViewModel.RepairOrderApproverList != null &&
+                roApproverViewModel.RepairOrderApproverList.Any())
+            {
+                roApprover.RepairOrderApproverList = new List<RepairOrderApproverList>();
+                foreach (var roApproverObj in roApproverViewModel.RepairOrderApproverList)
+                {
+                    var repairOrderApproverList = new RepairOrderApproverList
+                    {
+                        EmployeeId = roApproverObj.EmployeeId,
+                        Level = roApproverObj.Level,
+                        StatusId = roApproverObj.StatusId,
+                        CreatedBy = roApproverObj.CreatedBy,
+                        CreatedDate = DateTime.Now
+                    };
+                    roApprover.RepairOrderApproverList.Add(repairOrderApproverList);
+                }
+            }
+            return roApprover;
+        }
+
+        [HttpPut("updateRoApprover")]
+        public IActionResult UpdateRoApprover([FromBody] RepairOrderApproverViewModel roApproverViewModel)
+        {
+            if (roApproverViewModel == null)
+            {
+                return BadRequest($"RO Approver cannot be null.");
+            }
+
+            var roApprover = _context.RepairOrderApprover
+                .Where(roa => roa.RoApproverId == roApproverViewModel.RoApproverId).FirstOrDefault();
+
+            // UPDATE RepairOrderId
+            roApprover.RepairOrderId = roApprover.RepairOrderId;
+
+            var roApprovarList = _context.RepairOrderApproverList
+                .Where(x => x.RoApproverId == roApproverViewModel.RoApproverId).ToList();
+
+            roApprover.RepairOrderApproverList = roApprovarList;
+
+            // UPDATE RepairOrderApproverList
+            roApprover = FillRepairOrderApproverUpdate(roApprover, roApproverViewModel);
+
+            _context.RepairOrderApprover.Update(roApprover);
+            _context.SaveChanges();
+
+            return Ok(roApprover);
+
+        }
+
+        private RepairOrderApprover FillRepairOrderApproverUpdate(RepairOrderApprover roApprover, RepairOrderApproverViewModel roApproverViewModel)
+        {
+            roApprover.RepairOrderId = roApproverViewModel.RepairOrderId;
+            if (roApproverViewModel.RepairOrderApproverList != null &&
+                roApproverViewModel.RepairOrderApproverList.Any())
+            {
+                roApprover.RepairOrderApproverList = new List<RepairOrderApproverList>();
+                foreach (var roApproverObj in roApproverViewModel.RepairOrderApproverList)
+                {
+                    var repairOrderApproverList = new RepairOrderApproverList
+                    {
+                        EmployeeId = roApproverObj.EmployeeId,
+                        Level = roApproverObj.Level,
+                        StatusId = roApproverObj.StatusId,
+                        UpdatedBy = roApproverObj.UpdatedBy,
+                        UpdatedDate = DateTime.Now,
+                        CreatedBy = roApproverObj.CreatedBy,
+                        CreatedDate = roApproverObj.CreatedDate
+                    };
+                    roApprover.RepairOrderApproverList.Add(repairOrderApproverList);
+                }
+            }
+            return roApprover;
+        }
+        private void SaveRepairOrderApprover(RepairOrderApprover roApprover)
+        {
+            _context.RepairOrderApprover.Add(roApprover);
+            _context.SaveChanges();
         }
 
         #region Capes

@@ -11,7 +11,7 @@
          editable: activeMenuItem === 1
         }"
         [class.isDisabled]="!isDisabledSteps"
-        (click)="changeOfTab('General Information')"
+        (click)="changeStep('General Information')"
         >
         <div class="md-step-circle"><span>1</span></div>
         <div class="md-step-title">General Information</div>
@@ -24,7 +24,7 @@
          active: activeMenuItem >= 2,
          editable: activeMenuItem === 2
         }"
-        (click)="changeOfTab('Contacts')"
+        (click)="changeStep('Contacts')"
         [class.isDisabled]="!isDisabledSteps"
         >
         <div class="md-step-circle"><span>2</span></div>
@@ -37,7 +37,7 @@
          active: activeMenuItem >= 3,
         editable: activeMenuItem === 3
         }"
-        (click)="changeOfTab('Financial Information')"
+        (click)="changeStep('Financial Information')"
         [class.isDisabled]="!isDisabledSteps"
         >
         <div class="md-step-circle"><span>3</span></div>
@@ -50,7 +50,7 @@
          active: activeMenuItem >= 4,
         editable: activeMenuItem === 4
         }"
-        (click)="changeOfTab('Payment Information')"
+        (click)="changeStep('Payment Information')"
         [class.isDisabled]="!isDisabledSteps"
         >
         <div class="md-step-circle"><span>4</span></div>
@@ -63,7 +63,7 @@
          active: activeMenuItem >= 5,
         editable: activeMenuItem === 5
         }"
-        (click)="changeOfTab('Shipping Information')"
+        (click)="changeStep('Shipping Information')"
         [class.isDisabled]="!isDisabledSteps"
         >
         <div class="md-step-circle"><span>5</span></div>
@@ -76,7 +76,7 @@
          active: activeMenuItem >= 6,
         editable: activeMenuItem === 6
         }"
-        (click)="changeOfTab('Billing')"
+        (click)="changeStep('Billing Information')"
         [class.isDisabled]="!isDisabledSteps"
         >
         <div class="md-step-circle"><span>6</span></div>
@@ -89,7 +89,7 @@
          active: activeMenuItem >= 7,
         editable: activeMenuItem === 7
         }"
-        (click)="changeOfTab('Warnings')"
+        (click)="changeStep('Warnings')"
         [class.isDisabled]="!isDisabledSteps"
         >
         <div class="md-step-circle"><span>7</span></div>
@@ -102,7 +102,7 @@
          active: activeMenuItem >= 8,
         editable: activeMenuItem === 8
         }"
-        (click)="changeOfTab('Documents')"
+        (click)="changeStep('Documents')"
         [class.isDisabled]="!isDisabledSteps"
         >
         <div class="md-step-circle"><span>8</span></div>
@@ -111,32 +111,4 @@
         <div class="md-step-bar-right"></div>
     </div>
 
-    <div class="md-step"
-         [ngClass]="{
-         active: activeMenuItem >= 9,
-        editable: activeMenuItem === 9
-        }"
-        (click)="changeOfTab('Warnings')"
-        [class.isDisabled]="!isDisabledSteps"
-        >
-        <div class="md-step-circle"><span>9</span></div>
-        <div class="md-step-title">
-            Warnings
-            <div class="md-step-bar-right"></div>
-        </div>
-    </div>
-    <div class="md-step"
-         [ngClass]="{
-         active: activeMenuItem >= 10,
-        editable: activeMenuItem === 10
-        }"
-        (click)="changeOfTab('Documents')"
-        [class.isDisabled]="!isDisabledSteps"
-        >
-        <div class="md-step-circle"><span>10</span></div>
-        <div class="md-step-title">
-            Documents
-            <div class="md-step-bar-right"></div>
-        </div>
-    </div>
 </div>

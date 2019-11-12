@@ -1,4 +1,4 @@
-﻿import { Component } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { StepsModule } from 'primeng/steps';
 import { MenuItem } from 'primeng/api';
 import { Message } from 'primeng/components/common/message';
@@ -11,12 +11,12 @@ import { VendorService } from '../../../services/vendor.service';
     styleUrls: ['./vendor-steps-prime-ng.component.scss']
 })
 /** vendor-steps-primeNG component*/
-export class VendorStepsPrimeNgComponent {
+export class VendorStepsPrimeNgComponent implements OnInit {
 	ifvalue: boolean;
 	generalcollection: any;
 	collection: any;
     currentUrl: any;
-    isDisabledSteps: boolean = false;
+    isDisabledSteps = false;
 	items: MenuItem[];
 
 	msgs: Message[] = [];
@@ -33,6 +33,7 @@ export class VendorStepsPrimeNgComponent {
 		
 		
     }
+
 
     changeStep(value) {
         if (value == 'General Information') {
@@ -65,11 +66,11 @@ export class VendorStepsPrimeNgComponent {
             this.activeMenuItem = 7;
         }
     }
-    changeOfTab(value) {
 
-    }
-
-	ngOnInit() {
+    ngOnInit() {
+        if (this.vendorService.isEditMode) {
+            this.isDisabledSteps = true;
+        }
 		//alert('ngInit');
 		
 

@@ -286,69 +286,6 @@ namespace DAL.Repositories
                                    ro
                                }).FirstOrDefault();
 
-
-            //if (repairOrder.ro != null)
-            //{
-            //    var repairOrderModel = new RepairOrder
-            //    {
-            //        RepairOrderId = repairOrder.ro.RepairOrderId,
-            //        RepairOrderNumber = repairOrder.ro.RepairOrderNumber,
-            //        OpenDate = repairOrder.ro.OpenDate,
-            //        ClosedDate = repairOrder.ro.ClosedDate,
-            //        NeedByDate = repairOrder.ro.NeedByDate,
-            //        PriorityId = repairOrder.ro.PriorityId,
-            //        DeferredReceiver = repairOrder.ro.DeferredReceiver,
-            //        VendorId = repairOrder.ro.VendorId,
-            //        VendorContactId = repairOrder.ro.VendorContactId,
-            //        VendorContactPhone = repairOrder.ro.VendorContactPhone,
-            //        CreditLimit = repairOrder.ro.CreditLimit,
-            //        RequisitionerId = repairOrder.ro.RequisitionerId,
-            //        ApproverId = repairOrder.ro.ApproverId,
-            //        ApprovedDate = repairOrder.ro.ApprovedDate,
-            //        StatusId = repairOrder.ro.StatusId,
-            //        Resale = repairOrder.ro.Resale,
-            //        ManagementStructureId = repairOrder.ro.ManagementStructureId,
-            //        RoMemo = repairOrder.ro.RoMemo,
-            //        ShipToUserId = repairOrder.ro.ShipToUserId,
-            //        ShipToAddressId = repairOrder.ro.ShipToAddressId,
-            //        ShipToContactId = repairOrder.ro.ShipToContactId,
-            //        ShipViaId = repairOrder.ro.ShipViaId,
-            //        ShippingCost = repairOrder.ro.ShippingCost,
-            //        HandlingCost = repairOrder.ro.HandlingCost,
-            //        ShipVia = repairOrder.ro.ShipVia,
-            //        ShippingAcctNum = repairOrder.ro.ShippingAcctNum,
-            //        ShippingUrl = repairOrder.ro.ShippingUrl,
-            //        ShippingId = repairOrder.ro.ShippingId,
-            //        ShipToMemo = repairOrder.ro.ShipToMemo,
-            //        BillToUserTypeId = repairOrder.ro.BillToUserTypeId,
-            //        BillToUserId = repairOrder.ro.BillToUserId,
-            //        BillToAddressId = repairOrder.ro.BillToAddressId,
-            //        BillToContactId = repairOrder.ro.BillToContactId,
-            //        BillToMemo = repairOrder.ro.BillToMemo,
-            //        ShipToSiteName = repairOrder.ro.ShipToSiteName,
-            //        ShipToAddress1 = repairOrder.ro.ShipToAddress1,
-            //        ShipToAddress2 = repairOrder.ro.ShipToAddress2,
-            //        ShipToAddress3 = repairOrder.ro.ShipToAddress3,
-            //        ShipToCity = repairOrder.ro.ShipToCity,
-            //        ShipToStateOrProvince = repairOrder.ro.ShipToStateOrProvince,
-            //        ShipToPostalCode = repairOrder.ro.ShipToPostalCode,
-            //        ShipToCountry = repairOrder.ro.ShipToCountry,
-            //        BillToSiteName = repairOrder.ro.BillToSiteName,
-            //        BillToAddress1 = repairOrder.ro.BillToAddress1,
-            //        BillToAddress2 = repairOrder.ro.BillToAddress2,
-            //        BillToAddress3 = repairOrder.ro.BillToAddress3,
-            //        BillToCity = repairOrder.ro.BillToCity,
-            //        BillToStateOrProvince = repairOrder.ro.BillToStateOrProvince,
-            //        BillToPostalCode = repairOrder.ro.BillToPostalCode,
-            //        BillToCountry = repairOrder.ro.BillToCountry,
-            //        ShipToSiteId = repairOrder.ro.ShipToSiteId,
-            //        BillToSiteId = repairOrder.ro.BillToSiteId,
-            //        CreatedBy = repairOrder.ro.CreatedBy,
-            //        UpdatedBy = repairOrder.ro.UpdatedBy
-            //    };
-            //    return repairOrderModel;
-            //}
-
             return repairOrder;
         }
 
@@ -423,7 +360,8 @@ namespace DAL.Repositories
                             RoPartSplitPostalCode = roPart.rop.RoPartSplitPostalCode,
                             RoPartSplitStateOrProvince = roPart.rop.RoPartSplitStateOrProvince,
                             RoPartSplitUserId = roPart.rop.RoPartSplitUserId,
-                            RoPartSplitUserTypeId = roPart.rop.RoPartSplitUserTypeId
+                            RoPartSplitUserTypeId = roPart.rop.RoPartSplitUserTypeId,
+                            NeedByDate = roPart.rop.NeedByDate
 
                         };
                         repairOrderPartDto.RoPartSplits.Add(roPartSplit);
