@@ -43,6 +43,8 @@ import { SalesQuoteListComponent } from "../components/sales/quotes/sales-quote-
 import { SalesQuoteCreateComponent } from "../components/sales/quotes/sales-quote-create/sales-quote-create.component";
 import { CustomerService } from "../services/customer.service";
 import { SalesQuoteComponent } from "../components/sales/quotes/sales-quote/sales-quote-component";
+import { SalesQuoteService } from "../services/salesquote.service";
+import { SalesQuoteEndpointService } from "../services/salesquote-endpoint.service";
 
 @NgModule({
   imports: [
@@ -80,7 +82,7 @@ import { SalesQuoteComponent } from "../components/sales/quotes/sales-quote/sale
     SalesQuoteCreateComponent,
     SalesQuoteComponent
   ],
-  providers: [CustomerService],
+  providers: [CustomerService, SalesQuoteService, SalesQuoteEndpointService],
   entryComponents: []
 })
 export class SalesPagesModule {}
