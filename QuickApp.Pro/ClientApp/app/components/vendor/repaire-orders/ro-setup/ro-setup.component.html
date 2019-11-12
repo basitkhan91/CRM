@@ -237,8 +237,8 @@
 		
 								<div class="form-group memo-popup-cstm" style="margin-top: 12px;">
 									<label>Memo</label>
-									<span pTooltip="{{sourceRoApproval.poMemo}}" tooltipPosition="top"><input type="text" name="poMemo" pInputText class="form-control" value="{{sourceRoApproval.poMemo}}" disabled /></span>
-									<i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#cpo-memo" pTooltip="{{sourceRoApproval.poMemo}}" tooltipPosition="top" (click)="onAddMemo()"></i>
+									<span pTooltip="{{sourceRoApproval.roMemo}}" tooltipPosition="top"><input type="text" name="roMemo" pInputText class="form-control" value="{{sourceRoApproval.roMemo}}" disabled /></span>
+									<i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#cpo-memo" pTooltip="{{sourceRoApproval.roMemo}}" tooltipPosition="top" (click)="onAddMemo()"></i>
 								</div>
 							</div>
 						</div>                
@@ -674,8 +674,8 @@
 							</div>
 						</div>
 						<div *ngIf="isEditMode" class="form-row">
-							<button *ngIf="!poApproverId" class="btn btn-primary-cstm pull-right" (click)="savePOApproverData()" style="margin-top: 10px;margin-bottom: 20px;">Add</button>
-							<button *ngIf="poApproverId" class="btn btn-primary-cstm pull-right" (click)="updatePOApproverData()" style="margin-top: 10px;margin-bottom: 20px;">Update</button>
+							<button *ngIf="!roApproverId" class="btn btn-primary-cstm pull-right" (click)="saveROApproverData()" style="margin-top: 10px;margin-bottom: 20px;">Add</button>
+							<button *ngIf="roApproverId" class="btn btn-primary-cstm pull-right" (click)="updateROApproverData()" style="margin-top: 10px;margin-bottom: 20px;">Update</button>
 						</div>
 						</div>
 			</p-tabPanel>
