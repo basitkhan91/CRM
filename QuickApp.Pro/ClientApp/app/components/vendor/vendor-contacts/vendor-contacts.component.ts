@@ -446,11 +446,13 @@ export class VendorContactsComponent implements OnInit {
     previousClick() {
         this.activeIndex = 0;
         this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.changeStep('General Information');
         this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
     }
     nextClick() {
         this.activeIndex = 2;
         this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.changeStep('Financial Information');
         this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-financial-information');
     }
 
