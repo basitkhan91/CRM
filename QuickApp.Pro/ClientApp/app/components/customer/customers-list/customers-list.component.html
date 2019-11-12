@@ -16,6 +16,7 @@
       [columns]="selectedColumns"
       selectionMode="multiple"
       [lazy]="true"
+
       (onLazyLoad)="loadData($event)"
       [resizableColumns]="true"
       [reorderableColumns]="true"
@@ -130,8 +131,8 @@
         </tr>
         <tr>
           <th  style="width:120px"  *ngFor="let col of columns"  [ngSwitch]="col.field" >
-              <input type="text" style="width:100%;" pInputText >
-            <!-- <input style="width:100%;"  pInputText  type="text" (input)="dt.filter($event.target.value, col.field, 'contains')" -->
+              <!-- <input type="text" style="width:100%;" pInputText   (keyup)="filterData($event)"> -->
+            <input style="width:100%;"  pInputText  type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
            
           </th>
           <th style="width:200px;position:sticky"></th>
