@@ -6,6 +6,9 @@ import { Customer } from "../../../../models/customer.model";
 import { AlertService } from "../../../../services/alert.service";
 import { ActivatedRoute } from "@angular/router";
 import { map } from "rxjs/operators";
+import { SalesQuoteService } from "../../../../services/salesquote.service";
+import { ISalesQuote } from "../../../../models/sales/ISalesQuote.model";
+import { SalesQuote } from "../../../../models/sales/SalesQuote.model";
 
 @Component({
   selector: "app-sales-quote-create",
@@ -18,17 +21,30 @@ export class SalesQuoteCreateComponent implements OnInit {
   totalRecords: number = 0;
   totalPages: number = 0;
   showPaginator: boolean = false;
-    customerId: number;
-    checked = false;
+  customerId: number;
+  salesQuote: ISalesQuote;
+  
   constructor(
     private customerService: CustomerService,
     private alertService: AlertService,
-    private route: ActivatedRoute
-  ) {}
+    private route: ActivatedRoute,
+    private salesQuoteService: SalesQuoteService
+  ) {
+    this.salesQuote = new SalesQuote();
+  }
 
   ngOnInit() {
     this.customerId = +this.route.snapshot.paramMap.get("customerId");
     console.log(`customer id: ${this.customerId}`);
+    this.getNewSalesQuoteInstance(this.customerId);
+  }
+
+  getNewSalesQuoteInstance(customerId: number) {
+    this.salesQuoteService
+      .getNewSalesQuoteInstance(customerId)
+      .subscribe(data => {
+        this.salesQuote = data && data.length ? data[0] : null;
+      });
   }
 
   quote: any = {
