@@ -148,7 +148,9 @@ export class CustomerBillingInformationComponent {
 		} else {
 			this.id = this.savedGeneralInformationData.customerId;
 			this.customerCode = this.savedGeneralInformationData.customerCode;
-			this.customerName = this.savedGeneralInformationData.name;
+            this.customerName = this.savedGeneralInformationData.name;
+            //Added By Vijay For Customer Create time IsBillingAddess is selected checkbox Then list page we are displaying list
+            this.getBillingDataById()
 		}
 
 
