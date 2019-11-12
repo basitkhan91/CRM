@@ -239,7 +239,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Item Aging', routerLink: '/#' },
                             { label: 'Slow Moving Stock', routerLink: '/#' },
                             { label: 'Hot List', routerLink: '/#' },
-                            { label: 'Stock Line Report', routerLink: '/#', command: (event?: any) => { this.stockLineReport(); }}
+                            { label: 'Stock Line Report', command: (event?: any) => { this.stockLineReport(); }}
                         ]
                     }]
 
