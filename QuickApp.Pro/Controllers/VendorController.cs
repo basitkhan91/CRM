@@ -3148,6 +3148,13 @@ namespace QuickApp.Pro.Controllers
             return Ok();
         }
 
+        [HttpDelete("deletevendorshippingaddress/{vendorShippingAddressId}")]
+        public IActionResult DeleteVendorShippingAddress(long vendorShippingAddressId)
+        {
+            _unitOfWork.Vendor.DeleteVendorShippingAddress(vendorShippingAddressId, "");
+            return Ok();
+        }
+
         [HttpGet("vendorbillingaddressstatus")]
         public IActionResult VendorBillingAddressStatus(long billingAddressId, bool status, string updatedBy)
         {
