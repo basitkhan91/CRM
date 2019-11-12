@@ -168,6 +168,7 @@
                                               errorMessage="Records not found" 
                                               [forceSelection]="true"
                                               (onSelect)="selectCustomer($event, workOrderGeneralInformation )"
+        
                                               [suggestions]="customerNamesList" 
                                               (completeMethod)="filterCustomerName($event)"
                                                [size]="30" [minLength]="1"
@@ -315,8 +316,8 @@
                                 <th rowspan="2">Work Scope *</th>
                                 <th rowspan="2">NTE</th>
                                 <!-- <th rowspan="2">Qty *</th> -->
-                                <th rowspan="2">Stock Line Num *</th>
                                 <th rowspan="2">Condition Id *</th>
+                                <th rowspan="2">Stock Line Num *</th>
                                 <th rowspan="2">Serial Num *</th>
                                 <th rowspan="2">CMM/Pub Ref</th>
                                 <th rowspan="2">Workflow ID </th>
@@ -357,7 +358,9 @@
                                     [forceSelection]="true"
                                     [dropdown]="true"
                                     [suggestions]="partNumberList" 
-                                    (onSelect)="onSelectedPartNumber($event, workOrderPartNumber); getWorkFlowByPNandScope(workOrderPartNumber)"
+                                    (onSelect)="onSelectedPartNumber($event, workOrderPartNumber); getWorkFlowByPNandScope(workOrderPartNumber); getStockLineByItemMasterId(workOrderPartNumber);"
+                                   
+                              
                                     (completeMethod)="filterPartNumber($event)"
                                      [size]="30" [minLength]="1"
                                     [dropdown]="true" class="p-autoComplete-ctsm" >
@@ -372,7 +375,7 @@
                                    >
                                 </p-autoComplete> -->
                                 </td>
-                                <td><input type="text"  class="form-control" [(ngModel)]="workOrderPartNumber.description" ></td>
+                                <td><input type="text"  class="form-control" [(ngModel)]="workOrderPartNumber.description"  disabled></td>
                                 <td>
                                     <p-autoComplete field="revisedPartNo" [(ngModel)]="workOrderPartNumber.mappingItemMasterId"
                                             
@@ -408,33 +411,30 @@
                                             {{workScope.workScopeCode}}</option>
                                     </select> -->
                                 </td>
-                                <td><input type="text" class="form-control w50" [(ngModel)]="workOrderPartNumber.nTE"></td>
+                                <td><input type="text" class="form-control w50" [(ngModel)]="workOrderPartNumber.nTE"  disabled></td>
                                 <!-- <td><input type="number" class="form-control w50"  [(ngModel)]="workOrderPartNumber.Quantity"  ></td> -->
+
+                                
                                 <td>
+                                  <p-dropdown  placeholder="Select Condition" [options]="conditionList"  (onChange)="getStockLineByItemMasterId(workOrderPartNumber);"
+                                   class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.conditionId">
+                                    </p-dropdown>
+                                 
+                                <!-- <a [(ngModel)]="workOrderPartNumber.publicationPart" target="_blank" class="clr-red">View</a> -->
+                              </td>
+
+                                <td>
+                                    <!-- <input type="text" class="form-control w50" [(ngModel)]="workOrderPartNumber.stockLineNumber"> -->
                                     <p-dropdown  placeholder="Select StockLine" [options]="stockLineList" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.stockLineId"
                                     (onChange)="getSerialNoByStockLineId(workOrderPartNumber)"
                                     
                                     >
                                       </p-dropdown>
-                                    <!-- <select class="w100" [(ngModel)]="workOrderPartNumber.stockLineId">
-                                        <option value="SL123">SL123</option>
-                                        <option value="SL124">SL124</option>
-                                        <option value="SL125">SL125</option>
-                                        <option value="SL126">SL126</option>
-                                        <option value="SL127">SL127</option>
-                                        <option value="SL128">SL128</option>
-                                    </select> -->
+  
                                 </td>
 
-                                <td>
-                                    <p-dropdown  placeholder="Select Condition" [options]="conditionList"  (onChange)="getSerialNoByStockLineId(workOrderPartNumber)"
-                                     class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.conditionId">
-                                      </p-dropdown>
-                                   
-                                  <!-- <a [(ngModel)]="workOrderPartNumber.publicationPart" target="_blank" class="clr-red">View</a> -->
-                                </td>
 
-                                <td><input type="text" class="form-control w100" [(ngModel)]="workOrderPartNumber.stockLineNumber" disabled >
+                                <td><input type="text" class="form-control w100" [(ngModel)]="workOrderPartNumber.serialNumber" disabled >
                                 </td>
                                 <td>
                                     <p-dropdown placeholder="Select CMM" [options]="cmmList" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.cMMId">
@@ -444,7 +444,7 @@
                                 </td>
                                 <td>
                                     <span class="inline-block">
-                                        <p-dropdown [options]="workFlowItems" placeholder="Select WorkFlow" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.workflowId">
+                                        <p-dropdown [options]="workFlowList" placeholder="Select WorkFlow" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.workflowId">
                                         </p-dropdown>
                                     </span>
                                 </td>
@@ -493,9 +493,9 @@
                                         <p-calendar [showIcon]="true" 
                                         [(ngModel)]="workOrderPartNumber.estimatedShipDate"></p-calendar>
                                    </td>
-                                <td><input type="checkbox" class="form-control w60"  [(ngModel)]="workOrderPartNumber.isPMA" >
+                                <td><input type="checkbox" class="form-control w60"  [(ngModel)]="workOrderPartNumber.isPMA" disabled >
                                 </td>
-                                <td><input type="checkbox" class="form-control w60"  [(ngModel)]="workOrderPartNumber.isDER" >
+                                <td><input type="checkbox" class="form-control w60"  [(ngModel)]="workOrderPartNumber.isDER"  disabled>
                                 </td>
                                 <td>
                                   
@@ -539,7 +539,8 @@
                                 </td>
                                 <td><input type="text" class="form-control w50" ></td>
                                 <td><input type="text" class="form-control w50"  [(ngModel)]="workOrderPartNumber.tATDaysStandard"></td>
-                                <td><span class="delete-row-btn"> <a
+                              
+                                <td><span *ngIf="!workOrderGeneralInformation.isSinglePN " class="delete-row-btn"> <a
                                             class="btn btn-danger boxed-float-btn nobg"
                                             data-toggle="tooltip" title="Delete"><i
                                                 class="fa fa-trash"></i></a>
@@ -554,30 +555,33 @@
                 
                 <div>
                   <button class="btn btn-success pull-right" *ngIf="!showTableGrid" type="button" (click)="saveWorkOrder()">Save</button>
-                <button  *ngIf="showTableGrid && workOrderGeneralInformation.workOrderType !== 'single' " class="btn btn-success pull-right" [routerLink]="['/workordersmodule/workorderspages/app-work-order-quote']"  >Create Quote</button>
+                <button  *ngIf="showTableGrid && workOrderGeneralInformation.isSinglePN " class="btn btn-success pull-right" [routerLink]="['/workordersmodule/workorderspages/app-work-order-quote']"  >Create Quote</button>
                 </div>
             
             </div>
 
             <div class="card " *ngIf="showTableGrid">
-                <div class="card-header">
-                    {{workOrderGeneralInformation.workOrderType | uppercase}} MPN
+                <div class="card-header" *ngIf="!workOrderGeneralInformation.isSinglePN ">
+                  Multiple  MPN
 
                 </div>
                 <div class="card-body">
-                    <div class="col-md-12" [hidden]="workOrderGeneralInformation.workOrderType !== 'multiple'">
+                    <div class="col-md-12" [hidden]="workOrderGeneralInformation.isSinglePN">
                         <div class="col-md-2">
                             <label class="control-label col-sm-3">MPN </label>
                             <div class="col-sm-7">
-                                <select class="mpn-select">
+
+                                <p-dropdown [options]="mpnPartNumbersList" placeholder="Select Part Number" class="p-dropdown-custom-md" >
+                                  </p-dropdown>
+                                <!-- <select class="mpn-select">
                                     <option>Select</option>
                                     <option>12548454-1</option>
                                     <option>125487457-A</option>
                                     <option>78546687-114F</option>
-                                </select>
+                                </select> -->
                             </div>
                         </div>
-                        <div class="col-md-10" style="background-color: white" [hidden]="workOrderGeneralInformation.workOrderType !== 'multiple'">
+                        <div class="col-md-10" style="background-color: white" [hidden]="workOrderGeneralInformation.isSinglePN">
                             <div class="col-md-2">
                                 <label class="fs12">Description : </label>
                                 <span>Gyro</span>
@@ -617,7 +621,7 @@
                                     <a class="dropdown-item" (click)="subTabWorkFlowChange()">View WF</a>
                                     <a class="dropdown-item" (click)="subTabWorkFlowChange('editworkFlow')">Edit
                                         Existing WF</a>
-                                    <a class="dropdown-item" (click)="subTabWorkFlowChange('createworkFlow')">Create New
+                                    <a *ngIf="workFlowWorkOrderId == 0 " class="dropdown-item" (click)="subTabWorkFlowChange('createworkFlow')">Create New
                                         WF</a>
                                     <div class="dropdown-divider"></div>
                                 </div>
@@ -632,7 +636,7 @@
                                     [ngClass]="{active : gridActiveTab === 'equipment'}"
                                     (click)="gridTabChange('equipment');getEquipmentByWorkOrderId();">Equipment</a>
                             </li>
-                            <li class="nav-item" [hidden]="workOrderGeneralInformation.workOrderType == 'multiple'">
+                            <li class="nav-item" [hidden]="workOrderGeneralInformation.isSinglePN">
                                 <a id="pills-contact-tab" role="tab" aria-controls="pills-contact"
                                     [ngClass]="{active : gridActiveTab === 'quote'}"
                                     (click)="gridTabChange('quote')">Quote</a>

@@ -49,23 +49,26 @@ namespace DAL.Repositories
         {
             var roHistoryList = (from ro in _appContext.RepairOrder
                                  join emp in _appContext.Employee on ro.ApproverId equals emp.EmployeeId
-                                 where ro.RepairOrderId == repairOrderId
+                                 join v in _appContext.Vendor on ro.VendorId equals v.VendorId
+                                 join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
+                                 from appr in approver.DefaultIfEmpty()
+                                 where ro.RepairOrderId == repairOrderId && (ro.IsDeleted == false || ro.IsDeleted == null)
                                  select new
                                  {
-                                     RepairOrderId = ro.RepairOrderId,
-                                     RepairOrderNumber = ro.RepairOrderNumber,
-                                     OpenDate = ro.OpenDate,
-                                     ClosedDate = DateTime.Now,
-                                     VendorName = ro.VendorName,
-                                     VendorCode = ro.VendorCode,
+                                     ro.RepairOrderId,
+                                     ro.RepairOrderNumber,
+                                     ro.OpenDate,
+                                     ClosedDate = ro.ClosedDate,
+                                     v.VendorName,
+                                     v.VendorCode,
                                      Status = ro.StatusId == 1
                                          ? "Open"
                                          : (ro.StatusId == 2 ? "Pending" : (ro.StatusId == 3 ? "Fulfilling" : "Closed")),
-                                     RequestedBy = ro.RequisitionerId,
-                                     ApprovedBy = emp.FirstName + " " + emp.LastName,
-                                     UpdatedDate = ro.UpdatedDate,
-                                     IsActive = ro.IsActive
-                                 }).Distinct().ToList();
+                                     RequestedBy = emp.FirstName,
+                                     ApprovedBy = appr == null ? "-" : appr.FirstName,
+                                     ro.UpdatedDate,
+                                     ro.IsActive
+                                 }).OrderByDescending(r => r.UpdatedDate).ToList();
 
             return roHistoryList;
         }
@@ -269,6 +272,168 @@ namespace DAL.Repositories
 
                 throw;
             }
+        }
+
+        public object RepairOrderById(long repairOrderId)
+        {
+            var repairOrder = (from ro in _appContext.RepairOrder
+                               join v in _appContext.Vendor on ro.VendorId equals v.VendorId
+                               join vc in _appContext.VendorContact on v.VendorId equals vc.VendorId
+                               join con in _appContext.Contact on vc.ContactId equals con.ContactId
+                               where ro.RepairOrderId == repairOrderId
+                               select new
+                               {
+                                   ro
+                               }).FirstOrDefault();
+
+
+            //if (repairOrder.ro != null)
+            //{
+            //    var repairOrderModel = new RepairOrder
+            //    {
+            //        RepairOrderId = repairOrder.ro.RepairOrderId,
+            //        RepairOrderNumber = repairOrder.ro.RepairOrderNumber,
+            //        OpenDate = repairOrder.ro.OpenDate,
+            //        ClosedDate = repairOrder.ro.ClosedDate,
+            //        NeedByDate = repairOrder.ro.NeedByDate,
+            //        PriorityId = repairOrder.ro.PriorityId,
+            //        DeferredReceiver = repairOrder.ro.DeferredReceiver,
+            //        VendorId = repairOrder.ro.VendorId,
+            //        VendorContactId = repairOrder.ro.VendorContactId,
+            //        VendorContactPhone = repairOrder.ro.VendorContactPhone,
+            //        CreditLimit = repairOrder.ro.CreditLimit,
+            //        RequisitionerId = repairOrder.ro.RequisitionerId,
+            //        ApproverId = repairOrder.ro.ApproverId,
+            //        ApprovedDate = repairOrder.ro.ApprovedDate,
+            //        StatusId = repairOrder.ro.StatusId,
+            //        Resale = repairOrder.ro.Resale,
+            //        ManagementStructureId = repairOrder.ro.ManagementStructureId,
+            //        RoMemo = repairOrder.ro.RoMemo,
+            //        ShipToUserId = repairOrder.ro.ShipToUserId,
+            //        ShipToAddressId = repairOrder.ro.ShipToAddressId,
+            //        ShipToContactId = repairOrder.ro.ShipToContactId,
+            //        ShipViaId = repairOrder.ro.ShipViaId,
+            //        ShippingCost = repairOrder.ro.ShippingCost,
+            //        HandlingCost = repairOrder.ro.HandlingCost,
+            //        ShipVia = repairOrder.ro.ShipVia,
+            //        ShippingAcctNum = repairOrder.ro.ShippingAcctNum,
+            //        ShippingUrl = repairOrder.ro.ShippingUrl,
+            //        ShippingId = repairOrder.ro.ShippingId,
+            //        ShipToMemo = repairOrder.ro.ShipToMemo,
+            //        BillToUserTypeId = repairOrder.ro.BillToUserTypeId,
+            //        BillToUserId = repairOrder.ro.BillToUserId,
+            //        BillToAddressId = repairOrder.ro.BillToAddressId,
+            //        BillToContactId = repairOrder.ro.BillToContactId,
+            //        BillToMemo = repairOrder.ro.BillToMemo,
+            //        ShipToSiteName = repairOrder.ro.ShipToSiteName,
+            //        ShipToAddress1 = repairOrder.ro.ShipToAddress1,
+            //        ShipToAddress2 = repairOrder.ro.ShipToAddress2,
+            //        ShipToAddress3 = repairOrder.ro.ShipToAddress3,
+            //        ShipToCity = repairOrder.ro.ShipToCity,
+            //        ShipToStateOrProvince = repairOrder.ro.ShipToStateOrProvince,
+            //        ShipToPostalCode = repairOrder.ro.ShipToPostalCode,
+            //        ShipToCountry = repairOrder.ro.ShipToCountry,
+            //        BillToSiteName = repairOrder.ro.BillToSiteName,
+            //        BillToAddress1 = repairOrder.ro.BillToAddress1,
+            //        BillToAddress2 = repairOrder.ro.BillToAddress2,
+            //        BillToAddress3 = repairOrder.ro.BillToAddress3,
+            //        BillToCity = repairOrder.ro.BillToCity,
+            //        BillToStateOrProvince = repairOrder.ro.BillToStateOrProvince,
+            //        BillToPostalCode = repairOrder.ro.BillToPostalCode,
+            //        BillToCountry = repairOrder.ro.BillToCountry,
+            //        ShipToSiteId = repairOrder.ro.ShipToSiteId,
+            //        BillToSiteId = repairOrder.ro.BillToSiteId,
+            //        CreatedBy = repairOrder.ro.CreatedBy,
+            //        UpdatedBy = repairOrder.ro.UpdatedBy
+            //    };
+            //    return repairOrderModel;
+            //}
+
+            return repairOrder;
+        }
+
+        public object RepairOrderPartsById(long repairOrderId)
+        {
+            var roPartsList = (from ro in _appContext.RepairOrder
+                               join rop in _appContext.RepairOrderPart on ro.RepairOrderId equals rop.RepairOrderId
+                               where rop.RepairOrderId == repairOrderId
+                               select new
+                               {
+                                   rop
+                               }).ToList();
+
+            var repairOrderDtoList = new List<RepairOrderPartDto>();
+
+            var repairOrderPartDto = new RepairOrderPartDto();
+            repairOrderPartDto.RoPartSplits = new List<RoPartSplits>();
+            if (roPartsList != null && roPartsList.Any())
+            {
+                foreach (var roPart in roPartsList)
+                {
+                    if (roPart.rop.IsParent == true)
+                    {
+                        repairOrderPartDto.RepairOrderPartRecordId = roPart.rop.RepairOrderPartRecordId;
+                        repairOrderPartDto.RepairOrderId = roPart.rop.RepairOrderId;
+                        repairOrderPartDto.AltPartNumberId = roPart.rop.AltPartNumberId;
+                        repairOrderPartDto.AssetId = roPart.rop.AssetId;
+                        repairOrderPartDto.ConditionId = roPart.rop.ConditionId;
+                        repairOrderPartDto.CreatedBy = roPart.rop.CreatedBy;
+                        repairOrderPartDto.DiscountAmount = roPart.rop.DiscountAmount;
+                        repairOrderPartDto.DiscountPercent = roPart.rop.DiscountPercent;
+                        repairOrderPartDto.DiscountPerUnit = roPart.rop.DiscountPerUnit;
+                        repairOrderPartDto.ExtendedCost = roPart.rop.ExtendedCost;
+                        repairOrderPartDto.ForeignExchangeRate = roPart.rop.ForeignExchangeRate;
+                        repairOrderPartDto.FunctionalCurrencyId = roPart.rop.FunctionalCurrencyId;
+                        repairOrderPartDto.GlAccountId = roPart.rop.GlAccountId;
+                        repairOrderPartDto.IsParent = roPart.rop.IsParent;
+                        repairOrderPartDto.ItemMasterId = roPart.rop.ItemMasterId;
+                        repairOrderPartDto.ItemTypeId = roPart.rop.ItemTypeId;
+                        repairOrderPartDto.ManagementStructureId = roPart.rop.ManagementStructureId;
+                        repairOrderPartDto.ManufacturerId = roPart.rop.ManufacturerId;
+                        repairOrderPartDto.MasterCompanyId = roPart.rop.MasterCompanyId;
+                        repairOrderPartDto.Memo = roPart.rop.Memo;
+                        repairOrderPartDto.NeedByDate = roPart.rop.NeedByDate;
+                        repairOrderPartDto.PartNumberId = roPart.rop.PartNumberId;
+                        repairOrderPartDto.QuantityOrdered = roPart.rop.QuantityOrdered;
+                        repairOrderPartDto.ReportCurrencyId = roPart.rop.ReportCurrencyId;
+                        repairOrderPartDto.SalesOrderId = roPart.rop.SalesOrderId;
+                        repairOrderPartDto.UnitCost = roPart.rop.UnitCost;
+                        repairOrderPartDto.UOMId = roPart.rop.UOMId;
+                        repairOrderPartDto.UpdatedBy = roPart.rop.UpdatedBy;
+                        repairOrderPartDto.WorkOrderId = roPart.rop.WorkOrderId;
+                    }
+                    else
+                    {
+                        var roPartSplit = new RoPartSplits()
+                        {
+                            RepairOrderPartRecordId = roPart.rop.RepairOrderPartRecordId,
+                            RepairOrderId = roPart.rop.RepairOrderId,
+                            AssetId = roPart.rop.AssetId,
+                            ItemMasterId = roPart.rop.ItemMasterId,
+                            ManagementStructureId = roPart.rop.ManagementStructureId,
+                            PartNumberId = roPart.rop.PartNumberId,
+                            QuantityOrdered = roPart.rop.QuantityOrdered,
+                            UOMId = roPart.rop.UOMId,
+                            RoPartSplitAddress1 = roPart.rop.RoPartSplitAddress1,
+                            RoPartSplitAddress2 = roPart.rop.RoPartSplitAddress2,
+                            RoPartSplitAddress3 = roPart.rop.RoPartSplitAddress3,
+                            RoPartSplitAddressId = roPart.rop.RoPartSplitAddressId,
+                            RoPartSplitCity = roPart.rop.RoPartSplitCity,
+                            RoPartSplitCountry = roPart.rop.RoPartSplitCountry,
+                            RoPartSplitPostalCode = roPart.rop.RoPartSplitPostalCode,
+                            RoPartSplitStateOrProvince = roPart.rop.RoPartSplitStateOrProvince,
+                            RoPartSplitUserId = roPart.rop.RoPartSplitUserId,
+                            RoPartSplitUserTypeId = roPart.rop.RoPartSplitUserTypeId
+
+                        };
+                        repairOrderPartDto.RoPartSplits.Add(roPartSplit);
+                    }
+                }
+
+                repairOrderDtoList.Add(repairOrderPartDto);
+            }
+
+            return repairOrderDtoList;
         }
     }
 }

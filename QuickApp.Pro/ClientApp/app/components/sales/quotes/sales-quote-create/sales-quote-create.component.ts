@@ -23,6 +23,7 @@ export class SalesQuoteCreateComponent implements OnInit {
   showPaginator: boolean = false;
   customerId: number;
   salesQuote: ISalesQuote;
+  
   constructor(
     private customerService: CustomerService,
     private alertService: AlertService,
