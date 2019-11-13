@@ -395,5 +395,120 @@ namespace DAL.Repositories
 
             return repairOrderDtoList;
         }
+
+        public List<RepairOrderPartViewDto> GetRepairOrderPartsView(long repairOrderId)
+        {
+
+            var returnObjects = new List<RepairOrderPartViewDto>();
+
+            try
+            {
+                var list = (from rop in _appContext.RepairOrderPart
+                            join ro in _appContext.RepairOrder on rop.RepairOrderId equals ro.RepairOrderId
+                            join im in _appContext.ItemMaster on rop.ItemMasterId equals im.ItemMasterId
+                            join ip in _appContext.ItemType on rop.ItemTypeId equals ip.ItemTypeId
+                            join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId
+                            join gla in _appContext.GLAccount on im.GLAccountId equals gla.GLAccountId into glacc
+                            from gla in glacc.DefaultIfEmpty()
+                            join uom in _appContext.UnitOfMeasure on im.RepairUnitOfMeasureId equals uom.UnitOfMeasureId into uoms
+                            from uom in uoms.DefaultIfEmpty()
+                            join cond in _appContext.Condition on rop.ConditionId equals cond.ConditionId
+                            join fcurr in _appContext.Currency on rop.FunctionalCurrencyId equals fcurr.CurrencyId
+                            join rcurr in _appContext.Currency on rop.ReportCurrencyId equals rcurr.CurrencyId
+                            join wo in _appContext.WorkOrder on rop.WorkOrderId equals wo.WorkOrderId into won
+                            from wo in won.DefaultIfEmpty()
+
+                            where rop.RepairOrderId == repairOrderId
+                            select new
+                            {
+                                rop,
+                                im.PartNumber,
+                                AltPartNumber = im.PartNumber,
+                                im.PartDescription,
+                                ItemType = ip.Description,
+                                Manufacturer = man.Name,
+                                GLAccount = gla.AccountName,
+                                UnitOfMeasure = uom.Description,
+                                Condition = cond.Description,
+                                FunctionalCurrency = fcurr.DisplayName,
+                                RerortCurrency = rcurr.DisplayName,
+                                WorkOrderNo = wo.WorkOrderNum,
+                                SalesOrderNo = rop.SalesOrderId,
+                            }).ToList();
+
+                if (list != null && list.Any())
+                {
+                    var repairOrderPartViewDto = new RepairOrderPartViewDto();
+                    repairOrderPartViewDto.RepairOrderSplitParts = new List<RepairOrderSplitParts>();
+                    foreach (var part in list)
+                    {
+                        if (part.rop.IsParent == true)
+                        {
+                            //var repairOrderPartViewDto = new RepairOrderPartViewDto()
+                            //{
+                            repairOrderPartViewDto.PartNumber = part.PartNumber;
+                            repairOrderPartViewDto.AltPartNumber = part.AltPartNumber;
+                            repairOrderPartViewDto.PartDescription = part.PartDescription;
+                            repairOrderPartViewDto.ItemType = part.ItemType;
+                            repairOrderPartViewDto.Manufacturer = part.Manufacturer;
+                            repairOrderPartViewDto.GlAccount = part.GLAccount;
+                            repairOrderPartViewDto.UnitOfMeasure = part.UnitOfMeasure;
+                            repairOrderPartViewDto.Condition = part.Condition;
+                            repairOrderPartViewDto.FunctionalCurrency = part.FunctionalCurrency;
+                            repairOrderPartViewDto.ReportCurrency = part.RerortCurrency;
+                            repairOrderPartViewDto.WorkOrderNo = part.WorkOrderNo;
+                            repairOrderPartViewDto.SalesOrderNo = part.SalesOrderNo;
+                            repairOrderPartViewDto.RepairOrderId = part.rop.RepairOrderId;
+                            repairOrderPartViewDto.NeedByDate = part.rop.NeedByDate;
+                            repairOrderPartViewDto.QuantityOrdered = part.rop.QuantityOrdered;
+                            repairOrderPartViewDto.UnitCost = part.rop.UnitCost;
+                            repairOrderPartViewDto.DiscountPercent = part.rop.DiscountPercent;
+                            repairOrderPartViewDto.DiscountPerUnit = part.rop.DiscountPerUnit;
+                            repairOrderPartViewDto.DiscountAmount = part.rop.DiscountAmount;
+                            repairOrderPartViewDto.ExtendedCost = part.rop.ExtendedCost;
+                            repairOrderPartViewDto.ReportCurrencyId = part.rop.ReportCurrencyId;
+                            repairOrderPartViewDto.FunctionalCurrencyId = part.rop.FunctionalCurrencyId;
+                            repairOrderPartViewDto.ForeignExchangeRate = part.rop.ForeignExchangeRate;
+                            repairOrderPartViewDto.ManagementStructureId = part.rop.ManagementStructureId;
+                            //};
+
+
+                        }
+                        else
+                        {
+                            var repairOrderSplitPart = new RepairOrderSplitParts()
+                            {
+                                RepairOrderPartRecordId = part.rop.RepairOrderPartRecordId,
+                                RepairOrderId = part.rop.RepairOrderId,
+                                ManagementStructureId = part.rop.ManagementStructureId,
+                                NeedByDate = part.rop.NeedByDate,
+                                QuantityOrdered = part.rop.QuantityOrdered,
+                                RoPartSplitAddress1 = part.rop.RoPartSplitAddress1,
+                                RoPartSplitAddress2 = part.rop.RoPartSplitAddress2,
+                                RoPartSplitAddress3 = part.rop.RoPartSplitAddress3,
+                                RoPartSplitCity = part.rop.RoPartSplitCity,
+                                RoPartSplitState = part.rop.RoPartSplitStateOrProvince,
+                                RoPartSplitPostalCode = part.rop.RoPartSplitPostalCode,
+                                RoPartSplitCountry = part.rop.RoPartSplitCountry,
+                                UnitOfMeasure = part.UnitOfMeasure,
+                                PartNumber = part.PartNumber,
+                                PartDescription = part.PartDescription,
+                                UserType = part.rop.RoPartSplitUserTypeId == 1 ? "Customer" : (part.rop.RoPartSplitUserTypeId == 2 ? "Vendor" : "Company"),
+                                User = ""
+                            };
+                            repairOrderPartViewDto.RepairOrderSplitParts.Add(repairOrderSplitPart);
+                        }
+                    }
+                    returnObjects.Add(repairOrderPartViewDto);
+                }
+
+                return returnObjects;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
     }
 }

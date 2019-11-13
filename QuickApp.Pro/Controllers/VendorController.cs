@@ -3091,6 +3091,13 @@ namespace QuickApp.Pro.Controllers
             _context.SaveChanges();
         }
 
+        [HttpGet("roPartsViewById")]
+        public IActionResult GetRepairOrderPartsView(long repairOrderId)
+        {
+            var list = _unitOfWork.repairOrder.GetRepairOrderPartsView(repairOrderId);
+            return Ok(list);
+        }
+
         #region Capes
 
         [HttpGet("GetVendorCapesDatawithMasterId/{id}")]
