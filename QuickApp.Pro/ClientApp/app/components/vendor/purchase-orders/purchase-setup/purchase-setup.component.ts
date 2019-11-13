@@ -26,11 +26,13 @@ import { AddressNew } from '../../../../models/address-new-model';
 import { PercentService } from '../../../../services/percent.service';
 import { VendorCapabilitiesService } from '../../../../services/vendorcapabilities.service';
 import { ItemMasterService } from '../../../../services/itemMaster.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
 	selector: 'app-purchase-setup',
 	templateUrl: './purchase-setup.component.html',
-	styleUrls: ['./purchase-setup.component.scss']
+	styleUrls: ['./purchase-setup.component.scss'],
+	providers: [DatePipe]
 })
 /** purchase-setup component*/
 export class PurchaseSetupComponent implements OnInit {
@@ -42,7 +44,7 @@ export class PurchaseSetupComponent implements OnInit {
 	firstNamesbillTo: any[] = [];
 	billToContactData: any[] = [];
 	shipToContactData: any = [];
-	vendorSelectedforSplit: any[];
+	//vendorSelectedforSplit: any[];
 	vendorSelectedForBillTo: any;
 	shipToCusData: any[] = [];
 	vendorSelected: any[] = [];
@@ -149,6 +151,7 @@ export class PurchaseSetupComponent implements OnInit {
 	multiplePNIdArray: any = [];
 	tempNewPNArray: any = [];
 	newObjectForParent = new CreatePOPartsList();
+	newObjectForChild = new PartDetails();
 	addressFormForShipping = new CustomerShippingModel()
 	addressFormForBilling = new CustomerShippingModel()
 	legalEntity: any;
@@ -177,6 +180,7 @@ export class PurchaseSetupComponent implements OnInit {
 	allPercentData: any = [];
 	splitcustomersList: any = [];
 	splitAddressData: any = [];
+	tempSplitAddressData: any = [];
 	approveListEdit: any = [];
 	poApproverId: number;
 	vendorIdByParams: number;
@@ -186,6 +190,9 @@ export class PurchaseSetupComponent implements OnInit {
 	isEditModeBilling: boolean = false;
 	isEditModeShipVia: boolean = false;
 	isEditModeSplitAddress: boolean = false;
+	addressFormForShippingCompany: any;
+	parentIndex: number;
+	childIndex: number;
 
 	constructor(private route: Router,
 		public legalEntityService: LegalEntityService,
@@ -206,7 +213,8 @@ export class PurchaseSetupComponent implements OnInit {
 		private purchaseOrderService: PurchaseOrderService,
 		private percentService: PercentService,
 		private vendorCapesService: VendorCapabilitiesService,
-		private itemser: ItemMasterService) {
+		private itemser: ItemMasterService,
+		private datePipe: DatePipe) {
 		
 		this.vendorService.ShowPtab = false;
 		this.vendorService.alertObj.next(this.vendorService.ShowPtab);
@@ -249,8 +257,8 @@ export class PurchaseSetupComponent implements OnInit {
 
 		this.sourcePoApproval.statusId = 1;
 		this.sourcePoApproval.openDate = new Date();
-		this.sourcePoApproval.closedDate = new Date();
-		this.sourcePoApproval.dateRequested = new Date();
+		//this.sourcePoApproval.closedDate = new Date();
+		//this.sourcePoApproval.dateRequested = new Date();
 		this.sourcePoApproval.shipToUserTypeId = 3;
 		this.sourcePoApproval.billToUserTypeId = 3;
 
@@ -313,6 +321,7 @@ export class PurchaseSetupComponent implements OnInit {
 
 			if(res.Level4) {
 				this.tempPOHeaderAddress.departmentId = res.Level4;
+				this.getDepartmentId(res.Level4);
 			} else
 				this.tempPOHeaderAddress.departmentId = 0;
 
@@ -324,7 +333,8 @@ export class PurchaseSetupComponent implements OnInit {
 			response => {
 				this.vendorList = response[0];
 
-				this.purchaseOrderService.getVendorPOById(poId).subscribe(res => {
+				this.purchaseOrderService.getVendorPOById(poId).subscribe(response => {
+					const res = response.po;					
 					this.tempPOHeaderAddress = {
 						purchaseOrderNumber: res.purchaseOrderNumber,
 						openDate: new Date(res.openDate),
@@ -334,10 +344,12 @@ export class PurchaseSetupComponent implements OnInit {
 						deferredReceiver: res.deferredReceiver,
 						vendorId: getObjectById('vendorId', res.vendorId, this.vendorList),
 						vendorCode: getObjectById('vendorId', res.vendorId, this.vendorList),
-						vendorContactId: this.getVendorContactsListByID(res.vendorId),
-						vendorContactPhone: this.getVendorContactsListByID(res.vendorId),
+						vendorContactId: this.getVendorContactsListByIDEdit(res),
+						vendorContactPhone: this.getVendorContactsListByIDEdit(res),
+						vendorName: getValueFromArrayOfObjectById('vendorName', 'vendorId', res.vendorId, this.vendorList),
 						creditLimit: res.creditLimit,
 						creditTerms: res.creditTermsId ? getValueFromArrayOfObjectById('name', 'creditTermsId', res.creditTermsId, this.allcreditTermInfo) : null,
+						creditTermsId: res.creditTermsId,
 						requisitionerId: getObjectById('value', res.requestedBy, this.allEmployeeList),						
 						approverId: getObjectById('value', res.approverId, this.allEmployeeList),
 						approvedDate: res.dateApproved ? new Date(res.dateApproved) : '',
@@ -350,6 +362,7 @@ export class PurchaseSetupComponent implements OnInit {
 						poMemo: res.notes,
 						shipToUserTypeId: res.shipToUserType,
 						//shipToUserId: res.shipToUserId,
+						shipToSiteName: res.shipToSiteName,
 						shipToAddress1: res.shipToAddress1,
 						shipToAddress2: res.shipToAddress2,
 						shipToAddress3: res.shipToAddress3,
@@ -360,6 +373,7 @@ export class PurchaseSetupComponent implements OnInit {
 						//shipToContactId: getObjectById('contactId', res.shipToContactId, this.shipToContactData),
 						shipToMemo: res.shipToMemo,
 						shipViaId: res.shipViaId,
+						shipVia: res.shipVia,
 						shippingCost: res.shippingCost,
 						handlingCost: res.handlingCost,
 						//shippingAcctNum: res.shippingAcctNum,
@@ -382,8 +396,16 @@ export class PurchaseSetupComponent implements OnInit {
 						billToUserId: this.getBillToUserIdEdit(res),
 
 					};
-					this.getVendorCapesByID(res.vendorId);
-					console.log(this.tempPOHeaderAddress);
+					this.getVendorCapesByID(res.vendorId);										
+					// this.shipToAddress.shipToAddress1 = this.tempPOHeaderAddress.shipToAddress1;
+					// this.shipToAddress.shipToAddress2 = this.tempPOHeaderAddress.shipToAddress2;
+					// this.shipToAddress.shipToAddress3 = this.tempPOHeaderAddress.shipToAddress3;
+					// this.shipToAddress.city = this.tempPOHeaderAddress.shipToCity;
+					// this.shipToAddress.stateOrProvince = this.tempPOHeaderAddress.shipToState;
+					// this.shipToAddress.shipToAddress3 = this.tempPOHeaderAddress.shipToPostalCode;
+					// this.shipToAddress.shipToAddress3 = this.tempPOHeaderAddress.shipToCountry;
+					// console.log(this.tempPOHeaderAddress);
+					// console.log(this.shipToAddress);					
 					this.sourcePoApproval = this.tempPOHeaderAddress;
 				})
 			}
@@ -399,7 +421,7 @@ export class PurchaseSetupComponent implements OnInit {
 					console.log(res);
 					this.newPartsList = [this.newObjectForParent];
 					//this.partListData = res;
-					res.map(x => {
+					res.map((x, pindex) => {
 						this.newPartsList = {
 							...x,
 							partNumberId: getObjectById('value', x.itemMasterId, this.allPartnumbersInfo),					
@@ -414,7 +436,7 @@ export class PurchaseSetupComponent implements OnInit {
 							reportCurrencyId: getObjectById('currencyId', x.reportCurrencyId, this.allCurrencyData),
 							discountAmount: x.discountAmount,
 							//parentCompanyId: this.getManagementStructureForParentEdit(x),
-							childList: this.getPurchaseOrderSplitPartsEdit(x),
+							childList: this.getPurchaseOrderSplitPartsEdit(x, pindex),
 		
 						}
 						this.getManagementStructureForParentEdit(this.newPartsList);
@@ -430,13 +452,14 @@ export class PurchaseSetupComponent implements OnInit {
 			});			
 	}
 
-	getPurchaseOrderSplitPartsEdit(partList) {
+	getPurchaseOrderSplitPartsEdit(partList, pindex) {
 		if(partList.purchaseOrderSplitParts) {
-			return partList.purchaseOrderSplitParts.map(y => {
+			return partList.purchaseOrderSplitParts.map((y, cindex) => {
 				const splitpart = {
 					...y,
+					needByDate: new Date(y.needByDate),
 					partListUserTypeId: y.poPartSplitUserTypeId,
-					partListUserId: this.getPartSplitUserIdEdit(y),
+					partListUserId: this.getPartSplitUserIdEdit(y, pindex, cindex),
 					partListAddressId: y.poPartSplitAddressId ? y.poPartSplitAddressId : 0,
 					//childCompanyId: this.getManagementStructureForChildEdit(y),
 				}
@@ -546,7 +569,7 @@ export class PurchaseSetupComponent implements OnInit {
 			return getObjectById('value', data.shipToUserId, this.allCustomers);
 		}
 		if (data.shipToUserType === 2) {
-			this.tempShipTOAddressId = data.shipToAddressId;
+			this.tempShipTOAddressId = data.shipToAddressId;			
 			this.onShipToVendorSelected(data.shipToUserId, data);
 			this.getShipViaEdit(data);
 			return getObjectById('vendorId', data.shipToUserId, this.vendorList);
@@ -557,7 +580,21 @@ export class PurchaseSetupComponent implements OnInit {
 				this.shipToSelectedvalue = data.shipToUserId;		
 				this.companyService.getShippingCompanySiteNames(this.shipToSelectedvalue).subscribe(response => {
 					this.companySiteList_Shipping = response;
-					this.onShipToGetCompanyAddress(this.companySiteList_Shipping[0].legalEntityShippingAddressId);
+					if(this.isEditMode) {
+						if(data.shipToAddressId == 0) {
+							this.companySiteList_Shipping.push({legalEntityShippingAddressId: 0, siteName: data.shipToSiteName});
+		
+							this.shipToAddress.address1 = data.shipToAddress1;
+							this.shipToAddress.address2 = data.shipToAddress2;
+							this.shipToAddress.address3 = data.shipToAddress3;
+							this.shipToAddress.city = data.shipToCity;
+							this.shipToAddress.stateOrProvince = data.shipToState;
+							this.shipToAddress.postalCode = data.shipToPostalCode;
+							this.shipToAddress.country = data.shipToCountry;
+						} else {
+							this.onShipToGetCompanyAddress(this.companySiteList_Shipping[0].legalEntityShippingAddressId);
+						}
+					} 					
 				})
 				this.companyService.getCompanyContacts(this.shipToSelectedvalue).subscribe(response => {
 					this.contactListForCompanyShipping = response;
@@ -573,8 +610,15 @@ export class PurchaseSetupComponent implements OnInit {
 	getShipViaEdit(data) {
 		this.commonService.getShipViaDetailsByModule(data.shipToUserType, this.shipToSelectedvalue).subscribe(response => {
 			this.shipViaList = response;
-			this.tempPOHeaderAddress.shipViaId = data.shipViaId;
-			this.getShipViaDetails(data.shipViaId);
+			this.sourcePoApproval.shipViaId = data.shipViaId;
+				if(data.shipViaId == 0) {
+					this.shipViaList.push({shippingViaId: 0, name: data.shipVia, shippingAccountInfo: data.shippingAcctNum, shippingId: data.shippingId, shippingURL: data.shippingURL});
+					this.sourcePoApproval.shippingAcctNum = data.shippingAcctNum;
+					this.sourcePoApproval.shippingId = data.shippingId;
+					this.sourcePoApproval.shippingURL = data.shippingURL;
+				} else {
+					this.getShipViaDetails(data.shipViaId);
+				}
 		})
 	}
 
@@ -595,7 +639,21 @@ export class PurchaseSetupComponent implements OnInit {
 				this.billToSelectedvalue = data.billToUserId;		
 				this.companyService.getBillingCompanySiteNames(this.billToSelectedvalue).subscribe(response => {
 					this.companySiteList_Billing = response;
-					this.onBillToGetCompanyAddress(this.companySiteList_Billing[0].legalEntityBillingAddressId);
+					if(this.isEditMode) {
+						if(data.billToAddressId == 0) {
+							this.companySiteList_Billing.push({legalEntityBillingAddressId: 0, siteName: data.billToSiteName});
+		
+							this.billToAddress.address1 = data.billToAddress1;
+							this.billToAddress.address2 = data.billToAddress2;
+							this.billToAddress.address3 = data.billToAddress3;
+							this.billToAddress.city = data.billToCity;
+							this.billToAddress.stateOrProvince = data.billToState;
+							this.billToAddress.postalCode = data.billToPostalCode;
+							this.billToAddress.country = data.billToCountry;
+						} else {
+							this.onBillToGetCompanyAddress(this.companySiteList_Billing[0].legalEntityBillingAddressId);
+						}	
+					} 				
 				})
 				this.companyService.getCompanyContacts(this.billToSelectedvalue).subscribe(response => {
 					this.contactListForCompanyBilling = response;
@@ -606,7 +664,7 @@ export class PurchaseSetupComponent implements OnInit {
 		}
 	}
 
-	getPartSplitUserIdEdit(data) {
+	getPartSplitUserIdEdit(data, pindex, cindex) {
 		if (data.poPartSplitUserTypeId === 1) {
 			//this.tempBillTOAddressId = data.billToAddressId;
 			//this.onBillToCustomerSelected(data.billToUserId, data);
@@ -614,15 +672,15 @@ export class PurchaseSetupComponent implements OnInit {
 			// 	this.allCustomers = res[0];
 				
 			// });
-			this.onCustomerNameChange(data.poPartSplitUserId);
+			this.onCustomerNameChange(data.poPartSplitUserId, data, pindex, cindex);			
 			return getObjectById('value', data.poPartSplitUserId, this.allCustomers);			
 		}
 		if (data.poPartSplitUserTypeId === 2) {
-			this.onVendorNameChange(data.poPartSplitUserId);
+			this.onVendorNameChange(data.poPartSplitUserId, data, pindex, cindex);
 			return getObjectById('vendorId', data.poPartSplitUserId, this.vendorList);
 		}
 		if (data.poPartSplitUserTypeId === 3) {
-			this.onCompanyNameChange(data.poPartSplitUserId);
+			this.onCompanyNameChange(data.poPartSplitUserId, data, pindex, cindex);
 			return getObjectById('value', data.poPartSplitUserId, this.legalEntity);
 		}
 	}
@@ -635,7 +693,6 @@ export class PurchaseSetupComponent implements OnInit {
 
 	filterCompanyNameforgrid(event) {
 		this.legalEntityList_Forgrid = this.legalEntity;
-
 
 		const legalFilter = [...this.legalEntity.filter(x => {
 			return x.label.toLowerCase().includes(event.query.toLowerCase())
@@ -695,9 +752,9 @@ export class PurchaseSetupComponent implements OnInit {
 
 		this.sourcePoApprovalObj = {
 			purchaseOrderNumber: this.sourcePoApproval.purchaseOrderNumber,
-			openDate: new Date(this.sourcePoApproval.openDate),
-			closedDate: new Date(this.sourcePoApproval.closedDate),
-			needByDate: new Date(this.sourcePoApproval.needByDate),
+			openDate: this.datePipe.transform(this.sourcePoApproval.openDate, "MM/dd/yyyy"),//new Date(this.sourcePoApproval.openDate),
+			closedDate: this.datePipe.transform(this.sourcePoApproval.closedDate, "MM/dd/yyyy"),
+			needByDate: this.datePipe.transform(this.sourcePoApproval.needByDate, "MM/dd/yyyy"),
 			priorityId: this.sourcePoApproval.priorityId ? this.getPriorityId(this.sourcePoApproval.priorityId) : 0,
 			deferredReceiver: this.sourcePoApproval.deferredReceiver ? this.sourcePoApproval.deferredReceiver : false,
 			vendorId: this.sourcePoApproval.vendorId ? this.getVendorId(this.sourcePoApproval.vendorId) : 0,
@@ -709,7 +766,7 @@ export class PurchaseSetupComponent implements OnInit {
 			creditTermsId: this.sourcePoApproval.creditTermsId ? this.sourcePoApproval.creditTermsId : 0,
 			requisitionerId: this.sourcePoApproval.requisitionerId ? this.getEmployeeId(this.sourcePoApproval.requisitionerId) : 0,
 			approverId: this.sourcePoApproval.approverId ? this.getEmployeeId(this.sourcePoApproval.approverId) : 0,
-			approvedDate: new Date(this.sourcePoApproval.approvedDate),
+			approvedDate: this.datePipe.transform(this.sourcePoApproval.approvedDate, "MM/dd/yyyy"),
 			statusId: this.sourcePoApproval.statusId ? this.sourcePoApproval.statusId : 0,
 			resale: this.sourcePoApproval.resale ? this.sourcePoApproval.resale : false,
 			managementStructureId: this.sourcePoApproval.managementStructureId ? this.sourcePoApproval.managementStructureId : 0,
@@ -748,7 +805,9 @@ export class PurchaseSetupComponent implements OnInit {
 			billToCity: this.billToAddress.city,
 			billToStateOrProvince: this.billToAddress.stateOrProvince,
 			billToPostalCode: this.billToAddress.postalCode,
-			billToCountry: this.billToAddress.country,			
+			billToCountry: this.billToAddress.country,
+			shipToSiteId: this.sourcePoApproval.shipToAddressId ? this.sourcePoApproval.shipToAddressId : 0,
+			billToSiteId: this.sourcePoApproval.billToAddressId ? this.sourcePoApproval.billToAddressId : 0,
 			createdBy: this.userName,
 			updatedBy: this.userName
 		}
@@ -792,7 +851,8 @@ export class PurchaseSetupComponent implements OnInit {
 				//alert("New");
 				let childDataList = [];
 				this.childObjectArray = [];
-				this.parentObjectArray = [];
+				this.childObjectArrayEdit = [];
+				//this.parentObjectArray = [];
 				this.parentObject = {};
 				this.childObject = {};
 				console.log(this.partListData[i].childList);
@@ -817,16 +877,16 @@ export class PurchaseSetupComponent implements OnInit {
 							poPartSplitUserTypeId: childDataList[j].partListUserTypeId ? childDataList[j].partListUserTypeId : 0,
 							poPartSplitUserId: childDataList[j].partListUserId ? this.getIdByObject(childDataList[j].partListUserId) : 0,
 							poPartSplitAddressId: childDataList[j].partListAddressId ? childDataList[j].partListAddressId : 0,
-							poPartSplitAddress1: this.splitAddressData ? getValueFromArrayOfObjectById('address1', 'addressId', childDataList[j].partListAddressId, this.splitAddressData) : '',
-							poPartSplitAddress2: this.splitAddressData ? getValueFromArrayOfObjectById('address2', 'addressId', childDataList[j].partListAddressId, this.splitAddressData) : '',
-							poPartSplitAddress3: this.splitAddressData ? getValueFromArrayOfObjectById('address3', 'addressId', childDataList[j].partListAddressId, this.splitAddressData) : '',
-							poPartSplitCity: this.splitAddressData ? getValueFromArrayOfObjectById('city', 'addressId', childDataList[j].partListAddressId, this.splitAddressData) : '',
-							poPartSplitStateOrProvince: this.splitAddressData ? getValueFromArrayOfObjectById('stateOrProvince', 'addressId', childDataList[j].partListAddressId, this.splitAddressData) : '',
-							poPartSplitPostalCode: this.splitAddressData ? getValueFromArrayOfObjectById('postalCode', 'addressId', childDataList[j].partListAddressId, this.splitAddressData) : '',
-							poPartSplitCountry: this.splitAddressData ? getValueFromArrayOfObjectById('country', 'addressId', childDataList[j].partListAddressId, this.splitAddressData) : '',
+							poPartSplitAddress1: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('address1', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							poPartSplitAddress2: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('address2', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							poPartSplitAddress3: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('address3', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							poPartSplitCity: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('city', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							poPartSplitStateOrProvince: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('stateOrProvince', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							poPartSplitPostalCode: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('postalCode', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							poPartSplitCountry: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('country', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
 							UOMId: this.partListData[i].UOMId ? this.partListData[i].UOMId : 0,
 							quantityOrdered: childDataList[j].quantityOrdered ? childDataList[j].quantityOrdered : 0,
-							needByDate: childDataList[j].needByDate,
+							needByDate: this.datePipe.transform(childDataList[j].needByDate, "MM/dd/yyyy"),
 							managementStructureId: childDataList[j].managementStructureId ? childDataList[j].managementStructureId : 0, //109
 							//createdBy: this.userName,
 							//updatedBy: this.userName,
@@ -835,7 +895,7 @@ export class PurchaseSetupComponent implements OnInit {
 						this.childObjectArray.push(this.childObject)
 						this.childObjectArrayEdit.push({
 							...this.childObject, 
-							purchaseOrderPartRecordId: childDataList[j].purchaseOrderPartRecordId
+							purchaseOrderPartRecordId: childDataList[j].purchaseOrderPartRecordId ? childDataList[j].purchaseOrderPartRecordId : 0
 						})
 						console.log(this.childObjectArray);
 					}
@@ -853,7 +913,8 @@ export class PurchaseSetupComponent implements OnInit {
 					manufacturerId: this.partListData[i].manufacturerId ? this.partListData[i].manufacturerId : 0,
 					glAccounId: this.partListData[i].glAccountId ? this.partListData[i].glAccountId : 0,
 					UOMId: this.partListData[i].UOMId ? this.partListData[i].UOMId : 0,
-					needByDate: this.partListData[i].needByDate,
+					//needByDate: this.partListData[i].needByDate,
+					needByDate: this.datePipe.transform(this.partListData[i].needByDate, "MM/dd/yyyy"),
 					conditionId: this.partListData[i].conditionId ? this.getConditionIdByObject(this.partListData[i].conditionId) : 0,
 					quantityOrdered: this.partListData[i].quantityOrdered ? this.partListData[i].quantityOrdered : 0,
 					unitCost: this.partListData[i].unitCost ? this.partListData[i].unitCost : 0,
@@ -886,7 +947,7 @@ export class PurchaseSetupComponent implements OnInit {
 					this.parentObjectArray.push({
 						...this.parentObject,
 						poPartSplits: this.childObjectArrayEdit,
-						purchaseOrderPartRecordId: this.partListData[i].purchaseOrderPartRecordId
+						purchaseOrderPartRecordId: this.partListData[i].purchaseOrderPartRecordId ? this.partListData[i].purchaseOrderPartRecordId : 0
 					})
 				}				
 				console.log(this.parentObjectArray);
@@ -989,8 +1050,13 @@ export class PurchaseSetupComponent implements OnInit {
 			console.log(res);
 			if(this.isEditMode) {
 				this.getApproversListById(this.poId);
+				this.alertService.showMessage(
+					'Success',
+					`Added Approvers Successfully`,
+					MessageSeverity.success
+				);
 			}
-		})		
+		})
 	}
 
 	updatePOApproverData() {
@@ -1040,6 +1106,11 @@ export class PurchaseSetupComponent implements OnInit {
 		console.log(this.poApproverData);
 		this.purchaseOrderService.updatePOApproval(this.poApproverData).subscribe(res => {
 			console.log(res);
+			this.alertService.showMessage(
+				'Success',
+				`Updated Approvers Successfully`,
+				MessageSeverity.success
+			);
 		})
 	}
 
@@ -1120,17 +1191,34 @@ export class PurchaseSetupComponent implements OnInit {
 		}
 	}
 
-	onCustomerNameChange(customerId) {
+	onCustomerNameChange(customerId, data?, pindex?, cindex?) {
 		//this.gridSelectedCustomerId = customer ? customer.value : this.gridSelectedCustomerId;
 		//console.log(part, customer)
 		// part.poPartSplitUserId = customer.customerId;
 
 		this.customerService.getCustomerShipAddressGet(customerId).subscribe(returnedcustomerAddressses => {
-			this.splitAddressData = returnedcustomerAddressses[0];
+			//this["splitAddressData"+index] = returnedcustomerAddressses[0];
+			//console.log(this["splitAddressData"+index])
+			 //this.splitAddressData = returnedcustomerAddressses[0];
+			 this["splitAddressData"+pindex+cindex] = returnedcustomerAddressses[0];
+			if(this.isEditMode) {
+				if(data.poPartSplitAddressId == 0) {
+					this["splitAddressData"+pindex+cindex].push({customerShippingAddressId: 0, address1: data.poPartSplitAddress1, address2: data.poPartSplitAddress2, address3: data.poPartSplitAddress3, city: data.poPartSplitCity, stateOrProvince: data.poPartSplitState, postalCode: data.poPartSplitPostalCode, country: data.poPartSplitCountry})
+				}
+				this["splitAddressData"+pindex+cindex].map(x => {
+					if(x.customerShippingAddressId == 0) {
+						data.partListAddressId = x.customerShippingAddressId;
+					}
+				});
+				//this.onShipToGetAddress(data, data.poPartSplitAddressId);
+			}
 			//part.poPartSplitAddressId = 0;
 		});
 	}
 
+	getAddressDetails(variable, pindex, cindex) {
+		return this[variable+pindex+cindex]
+	}
 	filterCustomersSplit(event): void {
 		this.splitcustomersList = this.allCustomers;
 
@@ -1142,27 +1230,43 @@ export class PurchaseSetupComponent implements OnInit {
 		}		
 	}
 
-	onVendorNameChange(vendorId): void {
+	onVendorNameChange(vendorId, data?, pindex?, cindex?): void {
 		//console.log(part, vendor)
 		//this.gridSelectedVendorId = vendor ? vendor.vendorId : this.gridSelectedVendorId;
 		//part.poPartSplitUserId = vendor.vendorId;
 		this.vendorService.getVendorShipAddressGet(vendorId).subscribe(
 			vendorAddresses => {
-				this.vendorSelectedforSplit = vendorAddresses[0];
+				//this.vendorSelectedforSplit = vendorAddresses[0];
+				this["splitAddressData"+pindex+cindex] = vendorAddresses[0];
 				//part.addressData = vendorAddresses[0];;
-				this.splitAddressData = vendorAddresses[0];
+				//this.splitAddressData = vendorAddresses[0];
+				if(this.isEditMode) {
+					if(data.poPartSplitAddressId == 0) {
+						this["splitAddressData"+pindex+cindex].push({vendorShippingAddressId: 0, address1: data.poPartSplitAddress1, address2: data.poPartSplitAddress2, address3: data.poPartSplitAddress3, city: data.poPartSplitCity, stateOrProvince: data.poPartSplitState, postalCode: data.poPartSplitPostalCode, country: data.poPartSplitCountry})
+					}
+					//this.onShipToGetAddress(data, data.poPartSplitAddressId);
+				}
 			})
 	}
 
-	onCompanyNameChange(companyId) {
+	onCompanyNameChange(companyId, data?, pindex?, cindex?) {
 		this.legalEntityService.getLegalEntityAddressById(companyId).subscribe(response => {
-			this.splitAddressData = response[0].map(x => {
+			this["splitAddressData"+pindex+cindex] = response[0].map(x => {
 				return {
 					...x,
-					address1: x.line1
+					address1: x.line1,
+					address2: x.line2,
+					address3: x.line3,
 				}
 			});
-		})
+			if(this.isEditMode) {
+				if(data.poPartSplitAddressId == 0) {
+					this["splitAddressData"+pindex+cindex].push({legalEntityShippingAddressId: 0, address1: data.poPartSplitAddress1, address2: data.poPartSplitAddress2, address3: data.poPartSplitAddress3, city: data.poPartSplitCity, country: data.poPartSplitCountry, postalCode: data.poPartSplitPostalCode, stateOrProvince: data.poPartSplitState});
+				}
+			} else {
+				this.onShipToGetCompanyAddress(this.companySiteList_Shipping[0].legalEntityShippingAddressId);
+			}	
+		})	
 	}
 
 	onGetSplitAddress(splitPart) {
@@ -1180,19 +1284,20 @@ export class PurchaseSetupComponent implements OnInit {
 		}
 	}
 
-	onSelectSplitUserType(part) {
+	onSelectSplitUserType(part, pindex, cindex) {
 		part.addressData = [];
 		part.partListUserId = {};
+		part.partListAddressId = null;
+		this["splitAddressData"+pindex+cindex] = [];
 	}
 
 	deleteSplitShipment(childata, index, mainindex) {
+		// if (childata.purchaseOrderPartRecordId) {
+		// 	this.vendorService.deletePurchaseorderpart(childata.purchaseOrderPartRecordId).subscribe(data => {
 
-		if (childata.purchaseOrderPartRecordId) {
-			this.vendorService.deletePurchaseorderpart(childata.purchaseOrderPartRecordId).subscribe(data => {
-
-			})
-		}
-		const index1: number = this.partListData.indexOf(index);
+		// 	})
+		// }
+		// const index1: number = this.partListData.indexOf(index);
 		this.partListData[mainindex].childList.splice(index, 1);
 	}
 
@@ -1256,38 +1361,50 @@ export class PurchaseSetupComponent implements OnInit {
 			this.firstNamesbillTo1 = vendorContacts;
 		}
 	}	
-	
+
 	// ship to
-	onShipToCustomerSelected(customerId, res?) {
+	onShipToCustomerSelected(customerId, res?, id?) {
 		this.clearInputOnClickUserIdShipTo();
 		this.shipToSelectedvalue = customerId;
 		this.customerService.getCustomerShipAddressGet(customerId).subscribe(
 			returnddataforbill => {
 				this.shipToCusData = returnddataforbill[0];
-				if(this.isEditMode) {
-					this.onShipToGetAddress(res, res.shipToAddressId);
+				if(id) {
+					res.shipToAddressId = id;
 				}
-				
+				if(this.isEditMode) {
+					if(res.shipToAddressId == 0) {
+						this.shipToCusData.push({customerShippingAddressId: 0, address1: res.shipToAddress1, address2: res.shipToAddress2, address3: res.shipToAddress3, city: res.shipToCity, stateOrProvince: res.shipToStateOrProvince, postalCode: res.shipToPostalCode, country: res.shipToCountry, siteName: res.shipToSiteName})
+					}					
+				}
+				this.onShipToGetAddress(res, res.shipToAddressId);
 			});
 		this.customerService.getContacts(customerId).subscribe(data => {
 			this.shipToContactData = data[0];
 			if(this.isEditMode) {
 				this.tempPOHeaderAddress.shipToContactId = getObjectById('contactId', res.shipToContactId, this.shipToContactData);
 			}
-		});
+		});		
 		this.getShipViaDetailsForShipTo();
 	}
 
-	onShipToVendorSelected(vendorId, res?) {
+	onShipToVendorSelected(vendorId, res?, id?) {
+		this.clearInputOnClickUserIdShipTo();
 		this.shipToSelectedvalue = vendorId;
 		this.showInput = true;
 		this.vendorService.getVendorShipAddressGet(vendorId).subscribe(
 			returdaa => {
 				console.log(returdaa);
 				this.vendorSelected = returdaa[0];
-				if(this.isEditMode) {
-					this.onShipToGetAddress(res, res.shipToAddressId);
+				if(id) {
+					res.shipToAddressId = id;
 				}
+				if(this.isEditMode) {
+					if(res.shipToAddressId == 0) {
+						this.vendorSelected.push({vendorShippingAddressId: 0, address1: res.shipToAddress1, address2: res.shipToAddress2, address3: res.shipToAddress3, city: res.shipToCity, stateOrProvince: res.shipToStateOrProvince, postalCode: res.shipToPostalCode, country: res.shipToCountry, siteName: res.shipToSiteName})
+					}					
+				}
+				this.onShipToGetAddress(res, res.shipToAddressId);
 			});
 		this.vendorService.getContacts(vendorId).subscribe(data => {
 			this.vendorContactsForshipTo = data[0]; //vendorContactsForshipTo
@@ -1296,18 +1413,23 @@ export class PurchaseSetupComponent implements OnInit {
 			}
 			console.log(this.vendorContactsForshipTo);
 
-			// this.commonService.getShipViaDetailsByModule(this.sourcePoApproval.shipToUserTypeId, vendorId).subscribe(res => {
-			// 	this.shipViaList = res;
-			// })
+			this.commonService.getShipViaDetailsByModule(this.sourcePoApproval.shipToUserTypeId, vendorId).subscribe(res => {
+				this.shipViaList = res;
+			})
 			this.getShipViaDetailsForShipTo();
 		});
 	}
 
-	onShipToCompanySelected(object?) {
+	onShipToCompanySelected(object?, res?, id?) {
+		this.clearInputOnClickUserIdShipTo();
 		this.shipToSelectedvalue = object ? object.value : this.shipToSelectedvalue;
 
 		this.companyService.getShippingCompanySiteNames(this.shipToSelectedvalue).subscribe(response => {
 			this.companySiteList_Shipping = response;
+			if(id) {
+				res.shipToAddressId = id;
+				this.onShipToGetCompanyAddress(id);
+			}		
 		})
 		this.companyService.getCompanyContacts(this.shipToSelectedvalue).subscribe(response => {
 			this.contactListForCompanyShipping = response;
@@ -1411,37 +1533,79 @@ export class PurchaseSetupComponent implements OnInit {
 			this.addressSiteNameHeader = 'Edit Ship To Company Details';
 			this.isEditModeShipping = true;
 			this.tempshipToAddress = getObjectById('legalEntityShippingAddressId', data.shipToAddressId, this.companySiteList_Shipping);
-			this.addressFormForShipping = {...this.tempshipToAddress};
+			//this.onShipToGetCompanyAddress(data.shipToAddressId);
+			
+			if(data.shipToAddressId != 0) {
+				this.shipToAddress = {};
+				this.companyService.getShippingAddress(data.shipToAddressId).subscribe(res => {
+					const resp = res;
+						this.shipToAddress.address1 = resp.line1;
+						this.shipToAddress.address2 = resp.line2;
+						this.shipToAddress.address3 = resp.line3;
+						this.shipToAddress.city = resp.city;
+						this.shipToAddress.stateOrProvince = resp.stateOrProvince;
+						this.shipToAddress.postalCode = resp.postalCode;
+						this.shipToAddress.country = resp.country;
+	
+				const tempShipToAdd = this.shipToAddress;
+				this.addressFormForShipping = {...tempShipToAdd, siteName: this.tempshipToAddress.siteName, legalEntityShippingAddressId: this.tempshipToAddress.legalEntityShippingAddressId};
+				})
+			} else {
+				this.addressFormForShipping = {...this.tempshipToAddress, siteName: this.tempshipToAddress.siteName, legalEntityShippingAddressId: this.tempshipToAddress.legalEntityShippingAddressId};
+			}
 		}
 	}
 
 	// bill to
-	onBillToCustomerSelected(customerId, res?) {
+	onBillToCustomerSelected(customerId, res?, id?) {
 		this.clearInputOnClickUserIdBillTo();
 		this.billToSelectedvalue = customerId;
 		this.customerService.getCustomerBillViaDetails(customerId).subscribe(
 			returnddataforbill => {
 				this.billToCusData = returnddataforbill[0];
-				if(this.isEditMode) {
-					this.onBillToGetAddress(res, res.billToAddressId);
+				if(id) {
+					res.billToAddressId = id;
 				}
+				if(this.isEditMode) {
+					if(res.billToAddressId == 0) {
+						this.billToCusData.push({customerBillingAddressId: 0, address1: res.billToAddress1, address2: res.billToAddress2, address3: res.billToAddress3, city: res.billToCity, stateOrProvince: res.billToStateOrProvince, postalCode: res.billToPostalCode, country: res.billToCountry, siteName: res.billToSiteName})
+					}					
+				}
+				this.onBillToGetAddress(res, res.billToAddressId);
 			});
 		this.customerService.getContacts(customerId).subscribe(data => {
-			this.billToContactData = data[0];//shipToContactData
+			this.billToContactData = data[0];
 			if(this.isEditMode) {
 				this.tempPOHeaderAddress.billToContactId = getObjectById('contactId', res.billToContactId, this.billToContactData);
 			}
 		});
 	}
 
-	async onBillToVendorSelected(vendorId, res?) {
+	async onBillToVendorSelected(vendorId, res?, id?) {
+		this.clearInputOnClickUserIdBillTo();
 		this.billToSelectedvalue = vendorId;
 		this.showInput = true;
 	await this.vendorService.getVendorSiteNames(vendorId).subscribe(
 			returdaa => {
 				this.vendorSelectedForBillTo = returdaa;
-				if(this.isEditMode) {
+				if(id) {
+					res.billToAddressId = id;
 					this.onBillToGetAddress(res, res.billToAddressId);
+				}
+				if(this.isEditMode) {
+					if(res.billToAddressId == 0) {
+						this.vendorSelectedForBillTo.push({vendorBillingAddressId: 0, siteName: res.billToSiteName});
+
+						this.billToAddress.address1 = res.billToAddress1;
+						this.billToAddress.address2 = res.billToAddress2;
+						this.billToAddress.address3 = res.billToAddress3;
+						this.billToAddress.city = res.billToCity;
+						this.billToAddress.stateOrProvince = res.billToState;
+						this.billToAddress.postalCode = res.billToPostalCode;
+						this.billToAddress.country = res.billToCountry;
+					} else {
+						this.onBillToGetAddress(res, res.billToAddressId);
+					}
 				}
 			})
 		this.vendorService.getContacts(vendorId).subscribe(
@@ -1453,11 +1617,16 @@ export class PurchaseSetupComponent implements OnInit {
 			})
 	}
 
-	onBillToCompanySelected(object?) {
+	onBillToCompanySelected(object?, response?, id?) {
+		this.clearInputOnClickUserIdBillTo();
 		this.billToSelectedvalue = object ? object.value : this.billToSelectedvalue;
 
 		this.companyService.getBillingCompanySiteNames(this.billToSelectedvalue).subscribe(res => {
 			this.companySiteList_Billing = res;
+			if(id) {
+				response.billToAddressId = id;
+				this.onBillToGetCompanyAddress(id);
+			}	
 		})
 		this.companyService.getCompanyContacts(this.billToSelectedvalue).subscribe(res => {
 			this.contactListForCompanyBilling = res;
@@ -1564,7 +1733,9 @@ export class PurchaseSetupComponent implements OnInit {
 			this.addressSiteNameHeader = 'Edit Bill To Vendor Details';
 			this.isEditModeBilling = true;
 			this.tempbillToAddress = getObjectById('vendorBillingAddressId', data.billToAddressId, this.vendorSelectedForBillTo);
-			this.addressFormForBilling = {...this.tempbillToAddress};
+			this.onBillToGetAddress(data, data.billToAddressId);
+			const tempBillToAdd = this.billToAddress;
+			this.addressFormForBilling = {...tempBillToAdd, siteName: this.tempbillToAddress.siteName, vendorBillingAddressId: this.tempbillToAddress.vendorBillingAddressId};
 		}
 		if (value === 'AddComSiteName') {
 			this.addressSiteNameHeader = 'Add Bill To Company Details';
@@ -1573,7 +1744,27 @@ export class PurchaseSetupComponent implements OnInit {
 			this.addressSiteNameHeader = 'Edit Bill To Company Details';
 			this.isEditModeBilling = true;
 			this.tempbillToAddress = getObjectById('legalEntityBillingAddressId', data.billToAddressId, this.companySiteList_Billing);
-			this.addressFormForBilling = {...this.tempbillToAddress};
+			//this.addressFormForBilling = {...this.tempbillToAddress};
+
+			if(data.billToAddressId != 0) {
+				this.billToAddress = {};
+				this.companyService.getBillingAddress(data.billToAddressId).subscribe(res => {
+					const resp = res;				
+						this.billToAddress.address1 = resp.line1;
+						this.billToAddress.address2 = resp.line2;
+						this.billToAddress.address3 = resp.line3;
+						this.billToAddress.city = resp.city;
+						this.billToAddress.stateOrProvince = resp.stateOrProvince;
+						this.billToAddress.postalCode = resp.postalCode;
+						this.billToAddress.country = resp.country;
+					
+					const tempBillToAdd = this.billToAddress;
+					this.addressFormForBilling = {...tempBillToAdd, siteName: this.tempbillToAddress.siteName, legalEntityBillingAddressId: this.tempbillToAddress.legalEntityBillingAddressId};
+				})
+			} else {
+				this.addressFormForBilling = {...this.tempbillToAddress, siteName: this.tempbillToAddress.siteName, legalEntityBillingAddressId: this.tempbillToAddress.legalEntityBillingAddressId};
+			}
+			
 		}
 	}
 
@@ -1915,28 +2106,66 @@ export class PurchaseSetupComponent implements OnInit {
 			}
 		}
 
-	addRow(partList) {
-		console.log(partList);
-
-		partList.childList.push(new PartDetails());
-		for (let i = 0; i < partList.childList.length; i++) {
-			if (i == partList.childList.length - 1) {
-				partList.childList.map(x => {
-					console.log(x);
-					console.log(partList.managementStructureId);
-					return {
-						...x,
-						childCompanyId: this.getAddRowCompanyId(partList),
-						childbuId: this.getAddRowBUId(partList),
-						childDivisionId: this.getAddRowDivisionId(partList),
-						childDeptId: this.getAddRowDeptId(partList),
-						managementStructureId: partList.managementStructureId
+		addRow(partList) {
+			partList.childList.push(new PartDetails());
+			if(partList.parentCompanyId) {
+				for (let i = 0; i < partList.childList.length; i++) {
+					if (i == partList.childList.length - 1) {
+						partList.childList[i].childCompanyId = partList.parentCompanyId;
+						this.getChildBUList(partList.childList[i]);
 					}
-				})
-				console.log(partList.childList);
+				}
 			}
+			if(partList.parentbuId) {
+				for (let i = 0; i < partList.childList.length; i++) {
+					if (i == partList.childList.length - 1 && partList.childList[i].childCompanyId !== 0) {
+						partList.childList[i].childbuId = partList.parentbuId;
+						this.getChildDivisionlist(partList.childList[i]);
+					}
+				}
+			}
+			if(partList.parentDivisionId) {
+				for (let i = 0; i < partList.childList.length; i++) {
+					if (i == partList.childList.length - 1 && partList.childList[i].childbuId !== 0) {
+						partList.childList[i].childDivisionId = partList.parentDivisionId;
+						this.getChildDeptlist(partList.childList[i]);
+					}
+				}
+			}
+			if(partList.parentDeptId) {
+				for (let i = 0; i < partList.childList.length; i++) {
+					if (i == partList.childList.length - 1 && partList.childList[i].childDivisionId !== 0) {
+						partList.childList[i].childDeptId = partList.parentDeptId;
+						this.getChildDeptId(partList.childList[i]);
+					}
+				}
+			}		
 		}
-	}
+
+	// addRow(partList) {
+	// 	console.log(partList);
+
+	// 	partList.childList.push(new PartDetails());
+	// 	for (let i = 0; i < partList.childList.length; i++) {
+	// 		if (i == partList.childList.length - 1) {
+	// 			partList.childList.map(x => {
+	// 				console.log(x);
+	// 				console.log(partList.managementStructureId);
+	// 				return {
+	// 					...x,
+	// 					childCompanyId: this.getAddRowCompanyId(partList),
+	// 					childbuId: this.getAddRowBUId(partList),
+	// 					childDivisionId: this.getAddRowDivisionId(partList),
+	// 					childDeptId: this.getAddRowDeptId(partList),
+	// 					managementStructureId: partList.managementStructureId,
+						
+	// 				}
+	// 			})
+	// 			this.splitAddressData = [];
+	// 			console.log(partList.childList);
+	// 		}
+	// 	}
+	// }	
 
 
 	getAddRowCompanyId(partList) {
@@ -1994,6 +2223,7 @@ export class PurchaseSetupComponent implements OnInit {
 		this.sourcePoApproval.shippingId = null;
 		this.sourcePoApproval.shippingURL = '';
 		this.shipToAddress = {};
+		this.shipViaList = [];
 	}
 
 	clearInputOnClickUserIdShipTo() {
@@ -2007,6 +2237,7 @@ export class PurchaseSetupComponent implements OnInit {
 		this.sourcePoApproval.shippingId = null;
 		this.sourcePoApproval.shippingURL = '';
 		this.shipToAddress = {};
+		this.shipViaList = [];
 	}
 
 	clearInputBillTo() {
@@ -2264,8 +2495,9 @@ export class PurchaseSetupComponent implements OnInit {
 
 	onGetDiscPerUnit(partList) {
 		if (partList.unitCost !== null && partList.discountPercent !== null) {
-			const discountPercentValue = getValueFromObjectByKey('percentValue', partList.discountPercent)
-			partList.discountPerUnit = Math.round(partList.unitCost * ((discountPercentValue / 100)-1));
+			const discountPercentValue = getValueFromObjectByKey('percentValue', partList.discountPercent);
+			partList.discountPerUnit = Math.round(partList.unitCost * discountPercentValue);
+			//partList.discountPerUnit = Math.round(partList.unitCost * ((discountPercentValue / 100)-1));
 		}
 	}
 
@@ -2294,8 +2526,19 @@ export class PurchaseSetupComponent implements OnInit {
 			this.sourcePoApproval.vendorContactId = isDefaultContact[0];
 			this.sourcePoApproval.vendorContactPhone = isDefaultContact[0];
 		})
+	}
 
-
+	async getVendorContactsListByIDEdit(res) {
+		await this.vendorService.getVendorContactsListByID(res.vendorId).subscribe(data => {
+			this.vendorContactList = data[0];
+			const isContact = this.vendorContactList.filter(x => {
+				if (x.vendorContactId === res.vendorContactId) {
+					return x;
+				}
+			})
+			this.sourcePoApproval.vendorContactId = isContact[0];
+			this.sourcePoApproval.vendorContactPhone = isContact[0];
+		})
 	}
 
 	getConditionIdByObject(obj) {
@@ -2388,9 +2631,13 @@ export class PurchaseSetupComponent implements OnInit {
 		}
 	}	
 
-	getShipViaDetailsForShipTo() {	
+	getShipViaDetailsForShipTo(id?) {	
 		this.commonService.getShipViaDetailsByModule(this.sourcePoApproval.shipToUserTypeId, this.shipToSelectedvalue).subscribe(response => {
 			this.shipViaList = response;
+			if(id) {
+				this.sourcePoApproval.shipViaId = id;
+				this.getShipViaDetails(id);
+			}		
 		})		
 	}	
 	
@@ -2413,21 +2660,20 @@ export class PurchaseSetupComponent implements OnInit {
 			isActive: true,			
 		}
 		if (this.sourcePoApproval.shipToUserTypeId == 1) {
-			const customerData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId), customerShippingAddressId: null,}
+			const customerData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId)}
 			if(!this.isEditModeShipping) {
-			await this.customerService.newShippingAdd(customerData).subscribe(() => {
-				this.onShipToCustomerSelected(customerData.customerId);
+			await this.customerService.newShippingAdd(customerData).subscribe(response => {
+				this.onShipToCustomerSelected(customerData.customerId, this.sourcePoApproval, response.customerShippingId);
 				// this.addressFormForShipping = new CustomerShippingModel()
 				this.alertService.showMessage(
 					'Success',
-					`Saved  Shipping Information Successfully `,
+					`Saved Shipping Information Successfully`,
 					MessageSeverity.success
 				);
-
 			})
 			} else {
-				await this.customerService.newShippingAdd(customerData).subscribe(() => {
-					this.onShipToCustomerSelected(this.addressFormForShipping.customerId);
+				await this.customerService.newShippingAdd(customerData).subscribe(response => {
+					this.onShipToCustomerSelected(customerData.customerId, this.sourcePoApproval, response.customerShippingId);
 					this.alertService.showMessage(
 						'Success',
 						`Updated Shipping Information Successfully`,
@@ -2439,8 +2685,8 @@ export class PurchaseSetupComponent implements OnInit {
 		if (this.sourcePoApproval.shipToUserTypeId == 2) {
 			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId) }
 			if(!this.isEditModeShipping) {			
-				await this.vendorService.newShippingAdd(vendorData).subscribe(() => {
-					this.onShipToVendorSelected(vendorData.vendorId);				
+				await this.vendorService.newShippingAdd(vendorData).subscribe(response => {
+					this.onShipToVendorSelected(vendorData.vendorId, this.sourcePoApproval, response.vendorShippingAddressId);				
 					// this.addressFormForShipping = new CustomerShippingModel()
 					this.alertService.showMessage(
 						'Success',
@@ -2450,22 +2696,21 @@ export class PurchaseSetupComponent implements OnInit {
 	
 				})
 			} else {
-				await this.vendorService.newShippingAdd(vendorData).subscribe(() => {
-					this.onShipToVendorSelected(this.addressFormForShipping.vendorId);
+				await this.vendorService.newShippingAdd(vendorData).subscribe(response => {
+					this.onShipToVendorSelected(vendorData.vendorId, this.sourcePoApproval, response.vendorShippingAddressId);
 					this.alertService.showMessage(
 						'Success',
 						`Updated Shipping Information Successfully`,
 						MessageSeverity.success
 					);
 				})
-			}
-			
+			}			
 		}
-		if (this.sourcePoApproval.shipToUserTypeId == 3) {
-			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId) }
-			if(!this.isEditModeShipping) {				
-				await this.companyService.addNewShippingAddress(companyData).subscribe(() => {
-					this.onShipToCompanySelected();
+		if (this.sourcePoApproval.shipToUserTypeId == 3) {			
+			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId)}	
+			if(!this.isEditModeShipping) {									
+				await this.companyService.addNewShippingAddress(companyData).subscribe(response => {
+					this.onShipToCompanySelected(null, this.sourcePoApproval, response.legalEntityShippingAddressId);
 					// this.addressFormForShipping = new CustomerShippingModel()
 					this.alertService.showMessage(
 						'Success',
@@ -2474,8 +2719,16 @@ export class PurchaseSetupComponent implements OnInit {
 					);
 				})
 			} else {
-				await this.companyService.addNewShippingAddress(companyData).subscribe(() => {
-					this.onShipToCompanySelected();
+				// const companyData = {
+				// 	...this.addressFormForShippingCompany,
+				// 	createdBy: this.userName,
+				// 	updatedBy: this.userName,
+				// 	masterCompanyId: 1,
+				// 	isActive: true,	
+				// 	legalentityId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId)
+				// }
+				await this.companyService.addNewShippingAddress(companyData).subscribe(response => {
+					this.onShipToCompanySelected(null, this.sourcePoApproval, response.legalEntityShippingAddressId);
 					this.alertService.showMessage(
 						'Success',
 						`Updated Shipping Information Successfully`,
@@ -2503,7 +2756,7 @@ export class PurchaseSetupComponent implements OnInit {
 					this.sourcePoApproval.shipToAddressId = x.customerShippingAddressId;
 				}
 			});
-			this.onShipToGetAddress(this.sourcePoApproval, this.sourcePoApproval.shipToAddressId);
+			this.onShipToGetAddress(this.sourcePoApproval, this.sourcePoApproval.shipToAddressId);	
 		}
 		if (this.sourcePoApproval.shipToUserTypeId == 2) {
 			for(let i=0; i < this.vendorSelected.length; i++) {
@@ -2542,6 +2795,19 @@ export class PurchaseSetupComponent implements OnInit {
 			this.shipToAddress = this.addressFormForShipping;
 			//this.onShipToGetCompanyAddressThisPO(this.sourcePoApproval.shipToAddressId);
 		}
+		if(!this.isEditModeShipping) {
+			this.alertService.showMessage(
+				'Success',
+				`Saved Shipping Information Successfully`,
+				MessageSeverity.success
+			);
+		} else {
+			this.alertService.showMessage(
+				'Success',
+				`Updated Shipping Information Successfully`,
+				MessageSeverity.success
+			);
+		}
 	}
 
 	async saveBillingAddress() {
@@ -2556,8 +2822,8 @@ export class PurchaseSetupComponent implements OnInit {
 		if (this.sourcePoApproval.billToUserTypeId == 1) {
 			const customerData = { ...data, customerId: getValueFromObjectByKey('value', this.sourcePoApproval.billToUserId) }
 			if(!this.isEditModeBilling) {				
-				await this.customerService.newBillingAdd(customerData).subscribe(() => {
-					this.onBillToCustomerSelected(customerData.customerId);
+				await this.customerService.newBillingAdd(customerData).subscribe(response => {
+					this.onBillToCustomerSelected(customerData.customerId, this.sourcePoApproval, response.customerBillingAddressId);
 					// this.addressFormForBilling = new CustomerShippingModel()
 					this.alertService.showMessage(
 						'Success',
@@ -2566,8 +2832,8 @@ export class PurchaseSetupComponent implements OnInit {
 					);
 				})
 			} else {
-					await this.customerService.newBillingAdd(customerData).subscribe(() => {
-						this.onBillToCustomerSelected(this.addressFormForBilling.customerId);
+					await this.customerService.newBillingAdd(customerData).subscribe(response => {
+						this.onBillToCustomerSelected(customerData.customerId, this.sourcePoApproval, response.customerBillingAddressId);
 						this.alertService.showMessage(
 							'Success',
 							`Updated Billing Information Successfully`,
@@ -2580,8 +2846,8 @@ export class PurchaseSetupComponent implements OnInit {
 		if (this.sourcePoApproval.billToUserTypeId == 2) {
 			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.billToUserId) }
 			if(!this.isEditModeBilling) {				
-				await this.vendorService.addNewBillingAddress(vendorData).subscribe(() => {
-					this.onBillToVendorSelected(vendorData.vendorId);
+				await this.vendorService.addNewBillingAddress(vendorData).subscribe(response => {
+					this.onBillToVendorSelected(vendorData.vendorId, this.sourcePoApproval, response.vendorBillingAddressId);
 					//this.onBillCompanySelected();
 					// this.addressFormForBilling = new CustomerShippingModel()
 					this.alertService.showMessage(
@@ -2591,8 +2857,8 @@ export class PurchaseSetupComponent implements OnInit {
 					);
 				})
 			} else {
-				await this.vendorService.addNewBillingAddress(vendorData).subscribe(() => {
-					this.onBillToVendorSelected(this.addressFormForBilling.vendorId);
+				await this.vendorService.addNewBillingAddress(vendorData).subscribe(response => {
+					this.onBillToVendorSelected(vendorData.vendorId, this.sourcePoApproval, response.vendorBillingAddressId);
 					this.alertService.showMessage(
 						'Success',
 						`Updated Billing Information Successfully`,
@@ -2603,9 +2869,9 @@ export class PurchaseSetupComponent implements OnInit {
 		}
 		if (this.sourcePoApproval.billToUserTypeId == 3) {
 			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourcePoApproval.billToUserId) }
-			if(this.isEditModeBilling) {				
-				await this.companyService.addNewBillingAddress(companyData).subscribe(() => {
-					this.onBillToCompanySelected();
+			if(!this.isEditModeBilling) {				
+				await this.companyService.addNewBillingAddress(companyData).subscribe(response => {
+					this.onBillToCompanySelected(null, this.sourcePoApproval, response.legalEntityBillingAddressId);
 					// this.addressFormForBilling = new CustomerShippingModel()
 					this.alertService.showMessage(
 						'Success',
@@ -2614,8 +2880,8 @@ export class PurchaseSetupComponent implements OnInit {
 					);	
 				})
 			} else {
-				await this.companyService.addNewBillingAddress(companyData).subscribe(() => {
-					this.onBillToCompanySelected();
+				await this.companyService.addNewBillingAddress(companyData).subscribe(response => {
+					this.onBillToCompanySelected(null, this.sourcePoApproval, response.legalEntityBillingAddressId);
 					this.alertService.showMessage(
 						'Success',
 						`Updated Billing Information Successfully`,
@@ -2662,7 +2928,8 @@ export class PurchaseSetupComponent implements OnInit {
 					this.sourcePoApproval.billToAddressId = x.vendorBillingAddressId;
 				}
 			});
-			this.onBillToGetAddress(this.sourcePoApproval, this.sourcePoApproval.billToAddressId);
+			this.billToAddress = this.addressFormForBilling;
+			//this.onBillToGetAddress(this.sourcePoApproval, this.sourcePoApproval.billToAddressId);
 		}
 		if (this.sourcePoApproval.billToUserTypeId == 3) {
 			for(let i=0; i < this.companySiteList_Billing.length; i++) {
@@ -2682,6 +2949,19 @@ export class PurchaseSetupComponent implements OnInit {
 			});
 			this.billToAddress = this.addressFormForBilling;
 		}		
+		if(!this.isEditModeBilling) {
+			this.alertService.showMessage(
+				'Success',
+				`Saved Billing Information Successfully`,
+				MessageSeverity.success
+			);
+		} else {
+			this.alertService.showMessage(
+				'Success',
+				`Updated Billing Information Successfully`,
+				MessageSeverity.success
+			);
+		}
 	}
 
 
@@ -2691,6 +2971,10 @@ export class PurchaseSetupComponent implements OnInit {
 	}
 
 	async saveShipViaForShipTo() {
+		this.sourcePoApproval.shipViaId = null;
+		this.sourcePoApproval.shippingAcctNum = '';
+		this.sourcePoApproval.shippingId = '';
+		this.sourcePoApproval.shippingURL = '';
 		const data = {
 			...this.addShipViaFormForShipping,
 			name: this.addShipViaFormForShipping.shipVia,
@@ -2704,8 +2988,8 @@ export class PurchaseSetupComponent implements OnInit {
 		if (this.sourcePoApproval.shipToUserTypeId == 1) {
 			const customerData = { ...data, ReferenceId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId) }
 			if(!this.isEditModeShipVia) {				
-			await this.commonService.createShipVia(customerData).subscribe(() => {
-				this.getShipViaDetailsForShipTo();
+			await this.commonService.createShipVia(customerData).subscribe(response => {
+				this.getShipViaDetailsForShipTo(response.shippingViaId);
 				// this.addressFormForShipping = new CustomerShippingModel()
 				this.alertService.showMessage(
 					'Success',
@@ -2714,8 +2998,8 @@ export class PurchaseSetupComponent implements OnInit {
 				);
 			})
 			} else {				
-				await this.commonService.createShipVia(customerData).subscribe(() => {
-					this.getShipViaDetailsForShipTo();
+				await this.commonService.createShipVia(customerData).subscribe(response => {
+					this.getShipViaDetailsForShipTo(response.shippingViaId);
 					this.alertService.showMessage(
 						'Success',
 						`Updated Ship Via Information Sucessfully`,
@@ -2727,8 +3011,8 @@ export class PurchaseSetupComponent implements OnInit {
 		if (this.sourcePoApproval.shipToUserTypeId == 2) {
 			const vendorData = { ...data, ReferenceId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId) }
 			if(!this.isEditModeShipVia) {				
-				await this.commonService.createShipVia(vendorData).subscribe(() => {
-					this.getShipViaDetailsForShipTo();
+				await this.commonService.createShipVia(vendorData).subscribe(response => {
+					this.getShipViaDetailsForShipTo(response.shippingViaId);
 					// this.addressFormForShipping = new CustomerShippingModel()
 					this.alertService.showMessage(
 						'Success',
@@ -2738,8 +3022,8 @@ export class PurchaseSetupComponent implements OnInit {
 	
 				})
 			} else {
-				await this.commonService.createShipVia(vendorData).subscribe(() => {
-					this.getShipViaDetailsForShipTo();
+				await this.commonService.createShipVia(vendorData).subscribe(response => {
+					this.getShipViaDetailsForShipTo(response.shippingViaId);
 					this.alertService.showMessage(
 						'Success',
 						`Updated Ship Via Information Sucessfully`,
@@ -2752,8 +3036,8 @@ export class PurchaseSetupComponent implements OnInit {
 		if (this.sourcePoApproval.shipToUserTypeId == 3) {
 			const companyData = { ...data, ReferenceId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId) }
 			if(!this.isEditModeShipVia) {				
-				await this.commonService.createShipVia(companyData).subscribe(() => {
-					this.getShipViaDetailsForShipTo();
+				await this.commonService.createShipVia(companyData).subscribe(response => {
+					this.getShipViaDetailsForShipTo(response.shippingViaId);
 					// this.addressFormForShipping = new CustomerShippingModel()
 					this.alertService.showMessage(
 						'Success',
@@ -2762,8 +3046,8 @@ export class PurchaseSetupComponent implements OnInit {
 					);	
 				})
 			} else {
-				await this.commonService.createShipVia(companyData).subscribe(() => {
-					this.getShipViaDetailsForShipTo();
+				await this.commonService.createShipVia(companyData).subscribe(response => {
+					this.getShipViaDetailsForShipTo(response.shippingViaId);
 					this.alertService.showMessage(
 						'Success',
 						`Updated Ship Via Information Sucessfully`,
@@ -2815,19 +3099,19 @@ export class PurchaseSetupComponent implements OnInit {
 			const customerData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('value', this.tempSplitPart.partListUserId) }
 			if(!this.isEditModeSplitAddress) {				
 				await this.customerService.newShippingAdd(customerData).subscribe(res => {
-					this.onCustomerNameChange(res.customerId);
+					this.onCustomerNameChange(customerData.customerId, null, this.parentIndex, this.childIndex); //res.customerId
 					this.alertService.showMessage(
 						'Success',
-						`Saved Address Sucessfully`,
+						`Saved Address Successfully`,
 						MessageSeverity.success
 					);
 				})
 			} else {
 				await this.customerService.newShippingAdd(customerData).subscribe(res => {
-					this.onCustomerNameChange(res.customerId);
+					this.onCustomerNameChange(customerData.customerId, null, this.parentIndex, this.childIndex);
 					this.alertService.showMessage(
 						'Success',
-						`Updated Address Sucessfully`,
+						`Updated Address Successfully`,
 						MessageSeverity.success
 					);
 				})
@@ -2837,19 +3121,19 @@ export class PurchaseSetupComponent implements OnInit {
 			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.tempSplitPart.partListUserId) }
 			if(!this.isEditModeSplitAddress) {				
 				await this.vendorService.newShippingAdd(vendorData).subscribe(res => {
-					this.onVendorNameChange(res.vendorId);
+					this.onVendorNameChange(vendorData.vendorId, null, this.parentIndex, this.childIndex);
 					this.alertService.showMessage(
 						'Success',
-						`Saved Address Sucessfully`,
+						`Saved Address Successfully`,
 						MessageSeverity.success
 					);
 				})
 			} else {
 				await this.vendorService.newShippingAdd(vendorData).subscribe(res => {
-					this.onVendorNameChange(res.vendorId);
+					this.onVendorNameChange(vendorData.vendorId, null, this.parentIndex, this.childIndex);
 					this.alertService.showMessage(
 						'Success',
-						`Updated Address Sucessfully`,
+						`Updated Address Successfully`,
 						MessageSeverity.success
 					);
 				})
@@ -2859,19 +3143,19 @@ export class PurchaseSetupComponent implements OnInit {
 			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.tempSplitPart.partListUserId), siteName: "" }
 			if(!this.isEditModeSplitAddress) {				
 				await this.companyService.addNewShippingAddress(companyData).subscribe(res => {
-					this.onCompanyNameChange(res.legalEntityId);
+					this.onCompanyNameChange(companyData.legalentityId, null, this.parentIndex, this.childIndex); //res.legalEntityId
 					this.alertService.showMessage(
 						'Success',
-						`Saved Address Sucessfully`,
+						`Saved Address Successfully`,
 						MessageSeverity.success
 					);
 				})
 			} else {
 				await this.companyService.addNewShippingAddress(companyData).subscribe(res => {
-					this.onCompanyNameChange(res.legalEntityId);
+					this.onCompanyNameChange(companyData.legalentityId, null, this.parentIndex, this.childIndex);
 					this.alertService.showMessage(
 						'Success',
-						`Updated Address Sucessfully`,
+						`Updated Address Successfully`,
 						MessageSeverity.success
 					);
 				})
@@ -2881,9 +3165,9 @@ export class PurchaseSetupComponent implements OnInit {
 
 	saveSplitAddressToPO() {
 		//if (this.tempSplitPart.partListUserTypeId == 1) {
-			for(let i=0; i < this.splitAddressData.length; i++) {
-				if(this.splitAddressData[i].addressId == 0) {
-					this.splitAddressData.splice(i, 1);;
+			for(let i=0; i < this.tempSplitAddressData.length; i++) {
+				if(this.tempSplitAddressData[i].addressId == 0) {
+					this.tempSplitAddressData.splice(i, 1);;
 				}
 			}
 			const addressInfo = {
@@ -2893,12 +3177,25 @@ export class PurchaseSetupComponent implements OnInit {
 				address2: this.addNewAddress.line2,
 				address3: this.addNewAddress.line3,
 			}
-			this.splitAddressData.push(addressInfo);
-			this.splitAddressData.map(x => {
+			this.tempSplitAddressData.push(addressInfo);
+			this.tempSplitAddressData.map(x => {
 				if(x.addressId == 0) {
 					this.tempSplitPart.partListAddressId = x.addressId;
 				}
 			});
+			if(!this.isEditModeSplitAddress) {
+				this.alertService.showMessage(
+					'Success',
+					`Saved Address Successfully`,
+					MessageSeverity.success
+				);
+			} else {
+				this.alertService.showMessage(
+					'Success',
+					`Updated Address Successfully`,
+					MessageSeverity.success
+				);
+			}
 			//this.shipToAddress = getObjectById('customerShippingAddressId', id, this.shipToCusData);
 			//this.onShipToGetAddress(this.sourcePoApproval, this.sourcePoApproval.shipToAddressId);
 		//}
@@ -2971,30 +3268,49 @@ export class PurchaseSetupComponent implements OnInit {
 			this.sourcePoApproval.shippingAcctNum = this.addShipViaFormForShipping.shippingAccountInfo;
 			this.sourcePoApproval.shippingURL = this.addShipViaFormForShipping.shippingURL;
 			this.sourcePoApproval.shippingId = this.addShipViaFormForShipping.shippingId;
+			if(!this.isEditModeShipVia) {
+				this.alertService.showMessage(
+					'Success',
+					`Saved ShipVia Successfully`,
+					MessageSeverity.success
+				);
+			} else {
+				this.alertService.showMessage(
+					'Success',
+					`Updated ShipVia Successfully`,
+					MessageSeverity.success
+				);
+			}
+			
 		//}
 	}
 
-	onClickPartsListAddress(value, splitPart) {
+	onClickPartsListAddress(value, splitPart, pindex?, cindex?) {
+		this.tempSplitPart = splitPart;
+		this.parentIndex = pindex;
+		this.childIndex = cindex;
+		this.tempSplitAddressData = this["splitAddressData"+pindex+cindex];
 		if (value === 'Add') {
 			this.addressHeader = 'Add Split Shipment Address';
-			this.resetAddressForm();
-			this.tempSplitPart = splitPart;
+			this.resetAddressForm();			
 		}
 		if (value === 'Edit') {
 			this.addressHeader = 'Edit Split Shipment Address';
 			this.isEditModeSplitAddress = true;
-				this.tempSplitAddress = getObjectById('addressId', splitPart.partListAddressId, this.splitAddressData);
+				this.tempSplitAddress = getObjectById('addressId', splitPart.partListAddressId, this["splitAddressData"+pindex+cindex]);
 				this.addNewAddress = {
 					...this.tempSplitAddress,
 					line1: this.tempSplitAddress.address1,
 					line2: this.tempSplitAddress.address2,
 					line3: this.tempSplitAddress.address3,
 				};
-		}
-	}	
 
-	onChangeParentQtyOrdered(event) {
+		}
+	}
+
+	onChangeParentQtyOrdered(event, partList) {
 		this.parentQty = event.target.value;
+		this.onChangeChildQtyOrdered(partList);
 	}
 
 	onChangeChildQtyOrdered(partList) {

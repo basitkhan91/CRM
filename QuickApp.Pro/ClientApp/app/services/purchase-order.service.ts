@@ -52,6 +52,14 @@ export class PurchaseOrderService {
   deletePO(purchaseOrderId, updatedBy){
     return this.purchaseOrderEndpoint.deletePO(purchaseOrderId, updatedBy);
   }
+
+  getPOViewById(purchaseOrderId){
+    return this.purchaseOrderEndpoint.getPOViewById(purchaseOrderId);
+  }
+
+  getPOPartsViewById(purchaseOrderId){
+    return this.purchaseOrderEndpoint.getPOPartsViewById(purchaseOrderId);
+  }
   /*./vendor PO*/
 
 }

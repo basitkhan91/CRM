@@ -19,7 +19,7 @@ export class VendorpagesComponent {
 	//matSpinner: boolean=true;
 	otherurl: any;
 	currentUrl: string;
-
+    isVisible = true;
 	public items: MenuItem[];
 	home: MenuItem;
 
@@ -56,15 +56,16 @@ export class VendorpagesComponent {
 		//this.appTranslationService.matSpinObj.next(this.appTranslationService.matSpinner=false);
 		
 	}
-	loadmethod(url) {
-		
+    loadmethod(url) {
+        this.isVisible = true;
 		this.currentUrl = url;
 		if (this.currentUrl) {
 			if (this.currentUrl == '/vendorsmodule/vendorpages/app-vendors-list') {
 				this.items = [
 					{ label: 'Vendor', url: '/vendorsmodule/vendorpages/app-vendors-list' },
 					{ label: 'Vendors List' }
-				];
+                ];
+                this.isVisible = false;
 			}
 
 			else if (this.currentUrl == '/vendorsmodule/vendorpages/app-vendor-general-information') {
@@ -95,6 +96,12 @@ export class VendorpagesComponent {
 				];
 			}
 
+            else if (this.currentUrl == '/vendorsmodule/vendorpages/app-vendor-billing-information') {
+                this.items = [
+                    { label: 'Vendor', url: '/vendorsmodule/vendorpages/app-vendors-list' },
+                    { label: 'Billing Information' }
+                ];
+            }
 			else if (this.currentUrl == '/vendorsmodule/vendorpages/app-vendor-shipping-information') {
 				this.items = [
 					{ label: 'Vendor', url: '/vendorsmodule/vendorpages/app-vendors-list' },
@@ -121,45 +128,59 @@ export class VendorpagesComponent {
 				this.items = [
 					{ label: 'Vendor' },
 					{ label: 'Vendor Emails' }
-				];
+                ];
+                this.isVisible = false;
+
 			}
 
 			else if (this.currentUrl == '/vendorsmodule/vendorpages/app-vendor-conversations') {
 				this.items = [
 					{ label: 'Vendor' },
 					{ label: 'Conversations' }
-				];
+                ];
+                this.isVisible = false;
+
 			}
 
 			else if (this.currentUrl == 'vendorsmodule/vendorpages/app-create-po') {
 				this.items = [
 					{ label: 'Vendor' },
 					{ label: 'Create PO' }
-				];
+                ];
+                this.isVisible = false;
+
 			}
 			else if (this.currentUrl == 'vendorsmodule/vendorpages/app-polist') {
 				this.items = [
 					{ label: 'Vendor' },
 					{ label: 'PO List' }
-				];
+                ];
+                this.isVisible = false;
+
 			}
 			else if (this.currentUrl == 'vendorsmodule/vendorpages/app-purchase-setup') {
 				this.items = [
 					{ label: 'Vendor' },
 					{ label: 'PO Setup' }
-				];
+                ];
+                this.isVisible = false;
+
 			}
 			else if (this.currentUrl == 'vendorsmodule/vendorpages/app-vendor-capabilities-list') {
 				this.items = [
 					{ label: 'Vendor' },
 					{ label: 'Capabilities-list' }
-				];
+                ];
+                this.isVisible = false;
+
 			}
 			else if (this.currentUrl == 'vendorsmodule/vendorpages/app-add-vendor-capabilities') {
 				this.items = [
 					{ label: 'Add Vendor' },
 					{ label: 'capabilities' }
-				];
+                ];
+                this.isVisible = false;
+
 			}
 		}
 		if (this.otherurl) {
@@ -167,7 +188,9 @@ export class VendorpagesComponent {
 				this.items = [
 					{ label: 'Vendor', url: '/vendorsmodule/vendorpages/app-vendors-list' },
 					{ label: 'Vendors List' }
-				];
+                ];
+                this.isVisible = false;
+
 			}
 
 			else if (this.otherurl == '/vendorsmodule/vendorpages/app-vendor-general-information') {
@@ -223,50 +246,66 @@ export class VendorpagesComponent {
 				this.items = [
 					{ label: 'Vendor' },
 					{ label: 'Emails' }
-				];
+                ];
+                this.isVisible = false;
+
 			}
 
 			else if (this.otherurl == '/vendorsmodule/vendorpages/app-vendor-conversations') {
 				this.items = [
 					{ label: 'Vendor' },
 					{ label: 'Conversations' }
-				];
+                ];
+                this.isVisible = false;
+
 			}
 			else if (this.otherurl == 'vendorsmodule/vendorpages/app-create-po') {
 				this.items = [
 					{ label: 'Vendor' },
 					{ label: 'Create PO' }
-				];
+                ];
+                this.isVisible = false;
+
 			}
 			else if (this.otherurl == 'vendorsmodule/vendorpages/app-create-po') {
 				this.items = [
 					{ label: 'Vendor' },
 					{ label: 'Create PO' }
-				];
+                ];
+                this.isVisible = false;
+
 			}
 			else if (this.otherurl == 'vendorsmodule/vendorpages/app-polist') {
 				this.items = [
 					{ label: 'Vendor' },
 					{ label: 'PO List' }
-				];
+                ];
+                this.isVisible = false;
+
 			}
 			else if (this.otherurl == 'vendorsmodule/vendorpages/app-purchase-setup') {
 				this.items = [
 					{ label: 'Vendor' },
 					{ label: 'PO Setup' }
-				];
+                ];
+                this.isVisible = false;
+
 			}
 			else if (this.currentUrl == 'vendorsmodule/vendorpages/app-vendor-capabilities-list') {
 				this.items = [
 					{ label: 'Vendor' },
 					{ label: 'Capabilities-list' }
-				];
+                ];
+                this.isVisible = false;
+
 			}
 			else if (this.currentUrl == 'vendorsmodule/vendorpages/app-add-vendor-capabilities') {
 				this.items = [
 					{ label: 'Add Vendor' },
 					{ label: 'capabilities' }
-				];
+                ];
+                this.isVisible = false;
+
 			}
 		}
 

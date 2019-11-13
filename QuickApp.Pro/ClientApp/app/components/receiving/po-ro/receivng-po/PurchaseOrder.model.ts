@@ -162,7 +162,7 @@ export class PurchaseOrderPart {
     ShelfList: DropDownData[];
     BinList: DropDownData[];
     stockLine: StockLine[];
-
+    timeLife: TimeLife[];
 }
 
 export class TimeLife {
@@ -297,6 +297,8 @@ export class StockLine {
     currentDate: Date;
     glAccountText: string;
     obtainFromObject: DropDownData;
+    ownerObject: DropDownData;
+    traceableToObject: DropDownData;
 }
 
 export class ReceiveParts {

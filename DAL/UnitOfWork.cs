@@ -89,7 +89,7 @@ namespace DAL
         //IVendorShippingDetailsRepository _vendorShippingDetailsRepository;
         IGLAccountClassRespository _gLAccountClassRespository;
         IAssetRepository _assetRepository;
-
+        IAssetAuditRepository _assetAuditRepository;
         IEmployee _employee;
         IGlCashFlowRepository _glCashFlowRepository;
         IEmployeeLeaveType _employeeLeaveType;
@@ -204,7 +204,14 @@ namespace DAL
 
         IPublicationTypesRepository _publicationTypesRepository;
         IPercentageRepository _percentageRepository;
-        
+
+        IMasterSalesOrderQuoteTypesRepository _masterSalesOrderQuoteTypesRepository;
+        IMasterSalesCreditTermsRepository _masterSalesCreditTermsRepository;
+        IMasterSalesLeadSourcesRepository _masterSalesLeadSourcesRepository;
+        IMasterSalesProbablityRepository _masterSalesProbablityRepository;
+
+        IItemMasterExchangeLoanRepository itemMasterExchangeLoanRepository;
+
         public UnitOfWork(ApplicationDbContext context, IOptions<AppSettings> appSettings)
         {
             _context = context;
@@ -1483,6 +1490,16 @@ namespace DAL
             }
         }
 
+        public IAssetAuditRepository AssetAudit
+        {
+            get
+            {
+                if (_assetAuditRepository == null)
+                    _assetAuditRepository = new AssetAuditRepository(_context);
+                return _assetAuditRepository;
+            }
+        }
+
         public IAccountingCalendar accountingCalendar
         {
             get
@@ -1809,6 +1826,66 @@ namespace DAL
                     _percentageRepository = new PercentageRepository(_context, _appSettings);
                 }
                 return _percentageRepository;
+            }
+        }
+
+        public IMasterSalesOrderQuoteTypesRepository MasterSalesOrderQuoteTypesRepository
+        {
+            get
+            {
+                if (_masterSalesOrderQuoteTypesRepository == null)
+                {
+                    _masterSalesOrderQuoteTypesRepository = new MasterSalesOrderQuoteTypesRepository(_context);
+                }
+                return _masterSalesOrderQuoteTypesRepository;
+            }
+        }
+
+        public IMasterSalesCreditTermsRepository MasterSalesCreditTermsRepository
+        {
+            get
+            {
+                if (_masterSalesCreditTermsRepository == null)
+                {
+                    _masterSalesCreditTermsRepository = new MasterSalesCreditTermsRepository(_context);
+                }
+                return _masterSalesCreditTermsRepository;
+            }
+        }
+
+        public IMasterSalesLeadSourcesRepository MasterSalesLeadSourcesRepository
+        {
+            get
+            {
+                if (_masterSalesLeadSourcesRepository == null)
+                {
+                    _masterSalesLeadSourcesRepository = new MasterSalesLeadSourcesRepository(_context);
+                }
+                return _masterSalesLeadSourcesRepository;
+            }
+        }
+
+        public IMasterSalesProbablityRepository MasterSalesProbablityRepository
+        {
+            get
+            {
+                if (_masterSalesProbablityRepository == null)
+                {
+                    _masterSalesProbablityRepository = new MasterSalesProbablityRepository(_context);
+                }
+                return _masterSalesProbablityRepository;
+            }
+        }
+
+        public IItemMasterExchangeLoanRepository ItemMasterExchangeLoan
+        {
+            get
+            {
+                if (itemMasterExchangeLoanRepository == null)
+                {
+                    itemMasterExchangeLoanRepository = new ItemMasterExchangeLoanRepository(_context, _appSettings);
+                }
+                return itemMasterExchangeLoanRepository;
             }
         }
     }

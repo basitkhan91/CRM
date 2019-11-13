@@ -219,7 +219,6 @@ export class ReceivngPoComponent implements OnInit {
                         part.timeLifeList = [];
 
                         for (var i = 0; i < part.stocklineListObj.length; i++) {
-                            part.stocklineListObj[i].timeLifeDetailsNotProvided = false;
                             let timeLife: TimeLife = new TimeLife();
                             timeLife.timeLifeCyclesId = 0;
                             timeLife.purchaseOrderId = part.purchaseOrderId;
@@ -765,7 +764,7 @@ export class ReceivngPoComponent implements OnInit {
                 stockLine.purchaseOrderUnitCost = 0;
                 stockLine.purchaseOrderExtendedCost = part.unitCost;
                 stockLine.currentDate = new Date();
-                stockLine.timeLifeDetailsNotProvided = false;
+                
                 if (part.itemMaster != undefined) {
                     stockLine.purchaseOrderUnitCost = part.unitCost;
                     if (!part.itemMaster.isSerialized) {
@@ -803,7 +802,7 @@ export class ReceivngPoComponent implements OnInit {
             stockLine.purchaseOrderUnitCost = 0;
             stockLine.purchaseOrderExtendedCost = part.unitCost;
             stockLine.currentDate = new Date();
-            stockLine.timeLifeDetailsNotProvided = false;
+            
             if (part.itemMaster != undefined) {
                 stockLine.purchaseOrderUnitCost = part.unitCost;
                 if (!part.itemMaster.isSerialized) {
@@ -1116,7 +1115,6 @@ export class ReceivngPoComponent implements OnInit {
     }
 
     onChangeTimeLife(part: PurchaseOrderPart) {
-            part.isDisabledTLboxes = part.stocklineListObj[part.currentSLIndex].timeLifeDetailsNotProvided;
             part.timeLifeList[part.currentTLIndex].timeLifeCyclesId = 0;
             part.timeLifeList[part.currentTLIndex].purchaseOrderId = part.purchaseOrderId;
             part.timeLifeList[part.currentTLIndex].purchaseOrderPartRecordId = part.purchaseOrderPartRecordId;
@@ -1254,7 +1252,10 @@ export class ReceivngPoComponent implements OnInit {
         return errorMessages;
     }
 
-    onObtainFromChange(event) {
+    onObtainFromChange(event, stockLine) {
+        stockLine.obtainFrom = '';
+        stockLine.obtainFromObject = {};
+
         if (event.target.value === '1') {
             this.obtainfromcustomer = true;
             this.obtainfromother = false;
@@ -1272,7 +1273,10 @@ export class ReceivngPoComponent implements OnInit {
         }
     }
 
-    onOwnerChange(event) {
+    onOwnerChange(event, stockLine) {
+        stockLine.owner = '';
+        stockLine.ownerObject = {};
+
         if (event.target.value === '1') {
             this.ownercustomer = true;
             this.ownerother = false;
@@ -1290,7 +1294,10 @@ export class ReceivngPoComponent implements OnInit {
         }
     }
 
-    onTraceableToChange(event) {
+    onTraceableToChange(event, stockLine) {
+        stockLine.traceableTo = '';
+        stockLine.traceableToObject = {};
+
         if (event.target.value === '1') {
             this.traceabletocustomer = true;
             this.traceabletoother = false;
@@ -1326,6 +1333,14 @@ export class ReceivngPoComponent implements OnInit {
 
     onObtainSelect(stockLine: StockLine): void {
         stockLine.obtainFrom = stockLine.obtainFromObject.Key;
+    }
+
+    onOwnerSelect(stockLine: StockLine): void {
+        stockLine.owner = stockLine.ownerObject.Key;
+    }
+
+    onTraceableToSelect(stockLine: StockLine): void {
+        stockLine.traceableTo = stockLine.traceableToObject.Key;
     }
 
     getConditionList(): void {

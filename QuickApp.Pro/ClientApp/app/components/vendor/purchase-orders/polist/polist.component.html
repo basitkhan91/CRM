@@ -114,13 +114,14 @@
 					><span><i class="fa fa-plus"></i></span
 				  ></a> -->
 				</div>
+				
 			  </div>
 			</ng-template>
 	  
 			<ng-template pTemplate="header" let-columns>
 			  <tr>
 				<th
-				  style="width:120px"
+				  style="width:150px"
 				  *ngFor="let col of columns"
 				  pResizableColumn
 				  pReorderableColumn
@@ -137,7 +138,12 @@
 				</th>
 			  </tr>
 			  <tr>
-				<th
+				<th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
+					<input type="text" *ngIf="col.field !== 'openDate' && col.field !== 'closedDate'" style="width:100%;" pInputText (keyup)="onChangeInputField($event.target.value, col.field)">
+					<input type="date" *ngIf="col.field == 'openDate'" name="openDate" style="width:100%;" (change)="onChangeInputField($event.target.value, col.field)">
+					<input type="date" *ngIf="col.field == 'closedDate'" name="closedDate" style="width:100%;" (change)="onChangeInputField($event.target.value, col.field)">
+				</th>
+				<!-- <th
 				  style="width:120px"
 				  *ngFor="let col of columns"
 				  [ngSwitch]="col.field"
@@ -148,21 +154,20 @@
 					type="text"
 					(input)="dt.filter($event.target.value, col.field, 'contains')"
 				  />
-				</th>
+				</th> -->
 				<th style="width:200px;position:sticky"></th>
 			  </tr>
 			</ng-template>
 			<ng-template pTemplate="body" let-rowData let-columns="columns">
 			  <tr [pSelectableRow]="rowData" pReorderableRowHandle>
 				<td
-				  style="width:120px"
+				  style="width:150px"
 				  *ngFor="let col of columns"
 				  class="ui-resizable-column"
-				  pReorderableRowHandle
-				  data-toggle="modal"
-				  data-target="#view"
-				  (dblclick)="viewSelectedRow(rowData)"
-				>
+				  pReorderableRowHandle				  
+				> <!--data-toggle="modal"
+					data-target="#view"
+					(dblclick)="viewSelectedRow(rowData)"-->
 				  {{
 					col.field == 'createdDate'
 					  ? (rowData[col.field] | date: 'MM/dd/yyyy')
@@ -319,39 +324,236 @@
 						  <h4 class="modal-title">Details of Purchase Order</h4>
 						</div>
 						<div class="modal-body">
-						  <!-- <div>
+						  <div>
 							<div class="card">
-									<div class="card-body">
-										<div class="table-responsive default-bg clear">
-											<div class="col-sm-4">
-												<p><span class="label"><b>Entry Date: </b></span><span class="value">{{generalInfo.entryDate | date: 'dd/MM/yyyy'}}</span></p>
-												<p><span class="label"><b>Publication ID: </b></span><span class="value">{{generalInfo.publicationId ? generalInfo.publicationId : '-'}}</span></p>
-												<p><span class="label"><b>Publication Description: </b></span><span class="value">{{generalInfo.description ? generalInfo.description : '-'}}</span></p>
-												<p><span class="label"><b>Publication Type: </b></span><span class="value">{{generalInfo.publicationType ? generalInfo.publicationType : '-'}}</span></p>
-												<p><span class="label"><b>Author / Source / Directive: </b></span><span class="value">{{generalInfo.asd ? generalInfo.asd : '-'}}</span></p>                                                                                         
-											</div>
-											<div class="col-sm-4">
-													<p><span class="label"><b>Sequence: </b></span><span class="value">{{generalInfo.sequence ? generalInfo.sequence : '-'}}</span></p>
-													<p><span class="label"><b>Published By: </b></span><span class="value">{{generalInfo.publishby ? generalInfo.publishby : '-'}}</span></p>
-													<p><span class="label"><b>Location: </b></span><span class="value">{{generalInfo.location ? generalInfo.location : '-'}}</span></p>
-													<p><span class="label"><b>Revision Date: </b></span><span class="value">{{generalInfo.revisionDate | date: 'dd/MM/yyyy'}}</span></p>
-													<p><span class="label"><b>Revision Number: </b></span><span class="value">{{generalInfo.revisionNum ? generalInfo.revisionNum : '-'}}</span></p>
-													<p><span class="label"><b>Expiration Date: </b></span><span class="value">{{generalInfo.expirationDate | date: 'dd/MM/yyyy'}}</span></p>
-											</div>
-											<div class="col-sm-4">
-													<p><span class="label"><b>Next Review Date: </b></span><span class="value">{{generalInfo.nextReviewDate | date: 'dd/MM/yyyy'}}</span></p>
-													<p><span class="label"><b>Employee: </b></span><span class="value">{{generalInfo.employeeName ? generalInfo.employeeName : '-'}}</span></p>
-													<p><span class="label"><b>Verified By: </b></span><span class="value">{{generalInfo.verifiedBy ? generalInfo.verifiedBy : '-'}}</span></p>
-													<p><span class="label"><b>Status: </b></span><span class="value">{{isActive}}</span></p>
-												
-											</div>
+								<div class="card-body">
+									<div class="table-responsive default-bg clear">
+										<div class="col-sm-3">
+											<p><span class="label"><b>PO Num: </b></span><span class="value">{{poHeaderAdd.purchaseOrderNumber ? poHeaderAdd.purchaseOrderNumber : '-'}}</span></p>
+											<p><span class="label"><b>Open Date: </b></span><span class="value">{{poHeaderAdd.openDate | date: 'dd/MM/yyyy'}}</span></p>
+											<p><span class="label"><b>Closed/Cancelled Date: </b></span><span class="value">{{poHeaderAdd.closedDate | date: 'dd/MM/yyyy'}}</span></p>
+											<p><span class="label"><b>Need By: </b></span><span class="value">{{poHeaderAdd.needByDate | date: 'dd/MM/yyyy'}}</span></p>
+											<p><span class="label"><b>Priority: </b></span><span class="value">{{poHeaderAdd.priority ? poHeaderAdd.priority : '-'}}</span></p>
+											<p><span class="label"><b>Deferred Receiver: </b></span><span class="value">{{poHeaderAdd.deferredReceiver ? poHeaderAdd.deferredReceiver : '-'}}</span></p>
+										</div>
+										<div class="col-sm-3">
+												<p><span class="label"><b>Vendor Name: </b></span><span class="value">{{poHeaderAdd.vendorName ? poHeaderAdd.vendorName : '-'}}</span></p>
+												<p><span class="label"><b>Vendor Code: </b></span><span class="value">{{poHeaderAdd.vendorCode ? poHeaderAdd.vendorCode : '-'}}</span></p>
+												<p><span class="label"><b>Vendor Contact: </b></span><span class="value">{{poHeaderAdd.vendorContact ? poHeaderAdd.vendorContact : '-'}}</span></p>
+												<p><span class="label"><b>Contact Phone: </b></span><span class="value">{{poHeaderAdd.workPhone ? poHeaderAdd.workPhone : '-'}}</span></p>
+												<p><span class="label"><b>Credit Limit & Terms: </b></span><span class="value">
+													{{poHeaderAdd.creditLimit ? poHeaderAdd.creditLimit : '-'}} &
+													{{poHeaderAdd.creditTerm ? poHeaderAdd.creditTerm : '-'}}
+												</span></p>
+										</div>
+										<div class="col-sm-3">
+												<p><span class="label"><b>Requisitioner: </b></span><span class="value">{{poHeaderAdd.requisitioner ? poHeaderAdd.requisitioner : '-'}}</span></p>
+												<p><span class="label"><b>Approver: </b></span><span class="value">{{poHeaderAdd.approver ? poHeaderAdd.approver : '-'}}</span></p>
+												<p><span class="label"><b>Approved Date: </b></span><span class="value">{{poHeaderAdd.dateApproved | date: 'dd/MM/yyyy'}}</span></p>
+												<p><span class="label"><b>Status: </b></span><span class="value">{{poHeaderAdd.status ? poHeaderAdd.status : '-'}}</span></p>
+												<p><span class="label"><b>Resale: </b></span><span class="value">{{poHeaderAdd.resale ? poHeaderAdd.resale : '-'}}</span></p>
+										</div>
+										<div class="col-sm-3">
+											<h5>Management Structure</h5>
+												<p><span class="label"><b>Company: </b></span><span class="value">{{headerManagementStructure.level1 ? headerManagementStructure.level1 : '-'}}</span></p>
+												<p><span class="label"><b>BU: </b></span><span class="value">{{headerManagementStructure.level2 ? headerManagementStructure.level2 : '-'}}</span></p>
+												<p><span class="label"><b>Division: </b></span><span class="value">{{headerManagementStructure.level3 ? headerManagementStructure.level3 : '-'}}</span></p>
+												<p><span class="label"><b>Department: </b></span><span class="value">{{headerManagementStructure.level4 ? headerManagementStructure.level4 : '-'}}</span></p>
+												<p><span class="label"><b>Memo: </b></span><span class="value">{{poHeaderAdd.notes ? poHeaderAdd.notes : '-'}}</span></p>
 										</div>
 									</div>
+								</div>
+								<p-tabView class="pas-tabview">
+										<p-tabPanel header="Parts List">											
+											<div class="table-responsive pas-table-cstm roview-table-cstm" style="margin-top: 5px;">
+												<table class="table table-bordered" id="po-table">
+													<thead>
+														<tr class="partsList-table-tr">
+															<th>PN</th>
+															<th>Alt PN</th>
+															<th>PN Description</th>
+															<th>Item Type</th>
+															<th>Mfr</th>
+															<th>GL Account</th>
+															<th>UOM</th>
+															<th>Need By</th>
+															<th>Cond</th>
+															<th>Order Qty</th>
+															<th>Unit Cost</th>
+															<th>Disc Percent</th>
+															<th>Disc./unit</th>
+															<th>Disc. Amount</th> 
+															<th>Ext Cost</th>
+															<th>Functional CUR</th>
+															<th>FX Rate</th>
+															<th>Report CUR</th>
+															<th>WO</th>
+															<th>RO</th>
+															<th>SO</th>
+															<th colspan="4">Management Structure</th>
+															<th>Memo</th>
+														</tr>
+													</thead>
+													<tbody>
+														<ng-container *ngFor="let partList of poPartsList">
+															<tr class="parent-data">
+																<td>{{partList?.partNumber}}</td>
+																<td>{{partList?.altPartNumber}}</td>
+																<td>{{partList?.partDescription}}</td>
+																<td>{{partList?.itemType}}</td>
+																<td>{{partList?.manufacturer}}</td>
+																<td>{{partList?.glAccount}}</td>
+																<td>{{partList?.unitOfMeasure}}</td>
+																<td>{{partList?.needByDate}}</td>
+																<td>{{partList?.condition}}</td>
+																<td>{{partList?.quantityOrdered}}</td>
+																<td>{{partList?.unitCost}}</td>
+																<td>{{partList?.discountPercent}}</td>
+																<td>{{partList?.discountPerUnit}}</td>
+																<td>{{partList?.discountAmount}}</td>
+																<td>{{partList?.extendedCost}}</td>
+																<td>{{partList?.functionalCurrency}}</td>
+																<td>{{partList?.foreignExchangeRate}}</td>
+																<td>{{partList?.reportCurrency}}</td>
+																<td>{{partList?.workOrderNo}}</td>
+																<td>{{partList?.reapairOrderNo}}</td>
+																<td>{{partList?.salesOrderNo}}</td>
+																<td colspan="4">{{partList?.level1}},{{partList?.level2}},{{partList?.level3}},{{partList?.level4}}</td>
+																<td>{{partList?.memo}}</td>
+															</tr>
+															<tr class="child-header splitship-head" *ngIf="partList.purchaseOrderSplitParts">
+																<th></th>
+																<th></th>
+																<th>PN</th>
+																<th>PN Description</th>
+																<th>User Type</th>
+																<th>Name</th>
+																<th colspan="5">Select Address</th>
+																<th>UOM</th>
+																<th>Order Qty</th>
+																<th>Need By</th>
+																<th colspan="4">Management Structure</th>
+																<th colspan="10"></th>
+															</tr>
+															<tr class="child-data" *ngFor="let partChild of partList.purchaseOrderSplitParts">
+																<td></td>
+																<td></td>
+																<td>{{partList?.partNumber}}</td>
+																<td>{{partList?.partDescription}}</td>
+																<td>{{partChild?.userType}}</td>
+																<td>{{partChild?.user}}</td>
+																<td colspan="5">
+																	{{partChild.poPartSplitAddress1 ? partChild.poPartSplitAddress1 : ''}}, 
+																	{{partChild.poPartSplitCity ? partChild.poPartSplitCity : ''}},
+																	{{partChild.poPartSplitState ? partChild.poPartSplitState : ''}} ,
+																	{{partChild.poPartSplitPostalCode ? partChild.poPartSplitPostalCode : ''}}, 
+																	{{partChild.poPartSplitCountry ? partChild.poPartSplitCountry : ''}}</td>
+																<td>{{partList?.unitOfMeasure}}</td>
+																<td>{{partChild?.quantityOrdered}}</td>
+																<td>{{partChild?.needByDate}}</td>
+																<td colspan="4">{{partChild?.level1}},{{partChild?.level2}},{{partChild?.level3}},{{partChild?.level4}}</td>
+																<td colspan="10"></td>
+															</tr>
+														</ng-container>
+													</tbody>
+												</table>									
+											</div>
+										</p-tabPanel>
+
+										<p-tabPanel header="Approve">
+												<div class="approver-tab-cstm">
+													<h5 class="po-head">Approvers List</h5>
+													<div class="form-row" *ngFor="let approver of approveList" style="margin-top: 15px;">
+														<div class="col-md-3">
+															<label>Approver {{approver.level}}</label>
+														</div>
+														<div class="col-md-9">
+															<div class="approver-details-cstm">
+																<p><b>Name: </b>{{approver.employeeName}}</p>
+																<p><b>Code: </b>{{approver.employeeCode}}</p>
+																<p><b>Email: </b>{{approver.email}}</p>
+															</div>
+														</div>
+													</div>
+													</div>
+										</p-tabPanel>
+
+										<p-tabPanel header="Vendor Capes">
+												<p-table class="rpo-table-cstm" #dt [value]="vendorCapesInfo" [metaKeySelection]="true"
+														 [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]"
+														 [columns]="vendorCapesCols" selectionMode="multiple"
+														 [resizableColumns]="true" [reorderableColumns]="true" [responsive]="true">
+										
+													<ng-template pTemplate="header" let-columns>
+														<tr>
+															<th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+																{{col.header}}
+																<p-sortIcon [field]="col.field"></p-sortIcon>
+															</th>
+														</tr>
+														<tr>
+															<th *ngFor="let col of columns" [ngSwitch]="col.field">
+																<input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+															</th>
+														</tr>
+													</ng-template>
+										
+													<ng-template pTemplate="body" let-rowData let-columns="columns">
+														<tr [pSelectableRow]="rowData">
+															<td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+																{{rowData[col.field]}}
+															</td>
+														</tr>
+													</ng-template>
+												</p-table>
+											</p-tabPanel>
+
+										<p-tabPanel header="Address">
+											<div class="table-responsive default-bg clear">
+												<div class="col-sm-4">
+													<h5 class="po-head">Ship To</h5>
+													<p><span class="label"><b>User Type: </b></span><span class="value">{{poHeaderAdd.shipToUserType ? poHeaderAdd.shipToUserType : '-'}}</span></p>
+													<p><span class="label"><b>User: </b></span><span class="value">{{poHeaderAdd.shipToUser ? poHeaderAdd.shipToUser : '-'}}</span></p>
+													<p><span class="label"><b>Site Name: </b></span><span class="value">{{poHeaderAdd.shipToSiteName ? poHeaderAdd.shipToSiteName : '-'}}</span></p>
+													<p><span class="label"><b>Address1: </b></span><span class="value">{{poHeaderAdd.shipToAddress1 ? poHeaderAdd.shipToAddress1 : '-'}}</span></p>
+													<p><span class="label"><b>Address2: </b></span><span class="value">{{poHeaderAdd.shipToAddress2 ? poHeaderAdd.shipToAddress2 : '-'}}</span></p>
+													<p><span class="label"><b>Address3: </b></span><span class="value">{{poHeaderAdd.shipToAddress3 ? poHeaderAdd.shipToAddress3 : '-'}}</span></p>
+													<p><span class="label"><b>City: </b></span><span class="value">{{poHeaderAdd.shipToCity ? poHeaderAdd.shipToCity : '-'}}</span></p>
+													<p><span class="label"><b>Primary State/Province: </b></span><span class="value">{{poHeaderAdd.shipToState ? poHeaderAdd.shipToState : '-'}}</span></p>
+													<p><span class="label"><b>Postal: </b></span><span class="value">{{poHeaderAdd.shipToPostalCode ? poHeaderAdd.shipToPostalCode : '-'}}</span></p>
+													<p><span class="label"><b>Country: </b></span><span class="value">{{poHeaderAdd.shipToCountry ? poHeaderAdd.shipToCountry : '-'}}</span></p>
+													<p><span class="label"><b>Contact Name: </b></span><span class="value">{{poHeaderAdd.shipToContact ? poHeaderAdd.shipToContact : '-'}}</span></p>
+													<p><span class="label"><b>Memo: </b></span><span class="value">{{poHeaderAdd.shipToMemo ? poHeaderAdd.shipToMemo : '-'}}</span></p>
+													<p><span class="label"><b>Ship Via: </b></span><span class="value">{{poHeaderAdd.shipVia ? poHeaderAdd.shipVia : '-'}}</span></p>
+													<p><span class="label"><b>Shipping Cost: </b></span><span class="value">{{poHeaderAdd.shippingCost ? poHeaderAdd.shippingCost : '-'}}</span></p>
+													<p><span class="label"><b>Handling Cost: </b></span><span class="value">{{poHeaderAdd.handlingCost ? poHeaderAdd.handlingCost : '-'}}</span></p>
+													<p><span class="label"><b>Shipping Acct Num: </b></span><span class="value">{{poHeaderAdd.shippingAccountNo ? poHeaderAdd.shippingAccountNo : '-'}}</span></p>
+													<p><span class="label"><b>Shipping Id (AWB): </b></span><span class="value">{{poHeaderAdd.shippingId ? poHeaderAdd.shippingId : '-'}}</span></p>
+													<p><span class="label"><b>URL: </b></span><span class="value">{{poHeaderAdd.shippingURL ? poHeaderAdd.shippingURL : '-'}}</span></p>
+												</div>
+												<div class="col-sm-4">
+													<h5 class="po-head">Bill To</h5>
+													<p><span class="label"><b>User Type: </b></span><span class="value">{{poHeaderAdd.billToToUserType ? poHeaderAdd.billToToUserType : '-'}}</span></p>
+													<p><span class="label"><b>User: </b></span><span class="value">{{poHeaderAdd.billToUser ? poHeaderAdd.billToUser : '-'}}</span></p>
+													<p><span class="label"><b>Site Name: </b></span><span class="value">{{poHeaderAdd.billToSiteName ? poHeaderAdd.billToSiteName : '-'}}</span></p>
+													<p><span class="label"><b>Address1: </b></span><span class="value">{{poHeaderAdd.billToAddress1 ? poHeaderAdd.billToAddress1 : '-'}}</span></p>
+													<p><span class="label"><b>Address2: </b></span><span class="value">{{poHeaderAdd.billToAddress2 ? poHeaderAdd.billToAddress2 : '-'}}</span></p>
+													<p><span class="label"><b>Address3: </b></span><span class="value">{{poHeaderAdd.billToAddress3 ? poHeaderAdd.billToAddress3 : '-'}}</span></p>
+													<p><span class="label"><b>City: </b></span><span class="value">{{poHeaderAdd.billToCity ? poHeaderAdd.billToCity : '-'}}</span></p>
+													<p><span class="label"><b>Primary State/Province: </b></span><span class="value">{{poHeaderAdd.billToState ? poHeaderAdd.billToState : '-'}}</span></p>
+													<p><span class="label"><b>Postal: </b></span><span class="value">{{poHeaderAdd.billToPostalCode ? poHeaderAdd.billToPostalCode : '-'}}</span></p>
+													<p><span class="label"><b>Country: </b></span><span class="value">{{poHeaderAdd.billToCountry ? poHeaderAdd.billToCountry : '-'}}</span></p>
+													<p><span class="label"><b>Contact Name: </b></span><span class="value">{{poHeaderAdd.billToContact ? poHeaderAdd.billToContact : '-'}}</span></p>
+													<p><span class="label"><b>Memo: </b></span><span class="value">{{poHeaderAdd.billToMemo ? poHeaderAdd.billToMemo : '-'}}</span></p>
+												</div>
+											</div>
+										</p-tabPanel>
+										</p-tabView>
 							</div>
-						  </div> -->
+						  </div>
 						</div>
 						<div class="modal-footer">
-						  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						  <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
 						</div>
 					  </div>
 					</div>

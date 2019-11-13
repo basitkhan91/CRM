@@ -18,11 +18,11 @@ export class CommonService {
 
     smartDropDownList(tableName, primaryKeyColumn, labelColumn, count?) {
 
-        return this.http.get(`${this.baseUrl}/api/Common/binddropdowns?tableName=${tableName}&primaryColumn=${primaryKeyColumn}&textColumn=${labelColumn}&count=${count !== undefined ? count : 0}`, this.authService.getRequestHeaders())
+        return this.http.get<any>(`${this.baseUrl}/api/Common/binddropdowns?tableName=${tableName}&primaryColumn=${primaryKeyColumn}&textColumn=${labelColumn}&count=${count !== undefined ? count : 0}`, this.authService.getRequestHeaders())
 
     }
     createShipVia(object) {
-        return this.http.post(`${this.baseUrl}/api/Common/createshipvia`, JSON.stringify(object), this.authService.getRequestHeaders())
+        return this.http.post<any>(`${this.baseUrl}/api/Common/createshipvia`, JSON.stringify(object), this.authService.getRequestHeaders())
     }
 
     getShipViaDetailsByModule(moduleId, referenceId) {
@@ -41,6 +41,10 @@ export class CommonService {
     }
     getManagementStructureDetails(id) {
         return this.http.get<any>(`${this.baseUrl}/api/Common/managementstructure?manmgStrucId=${id}`, this.authService.getRequestHeaders())
+    }
+
+    getManagementStructureCodes(id) {
+        return this.http.get<any>(`${this.baseUrl}/api/Common/managementstructurecodes?manmgStrucId=${id}`, this.authService.getRequestHeaders())
     }
 
     getCustomerNameandCode(value){

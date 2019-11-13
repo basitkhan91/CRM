@@ -64,7 +64,6 @@ export class CreateAssetComponent implements OnInit {
         public unitService: UnitOfMeasureService, public currencyService: CurrencyService, public assetTypeService: AssetTypeService, private depriciationMethodService: DepriciationMethodService,  private authService: AuthService, ) {
        
         if (this.assetService.listCollection != null && this.assetService.isEditMode == true) {
-
             this.showLable = true;
             this.currentAsset = this.assetService.listCollection;
             this.updateMode = true;
@@ -449,11 +448,13 @@ export class CreateAssetComponent implements OnInit {
         this.currentAsset.isDepreciable = false;
     }
     
-    saveAsset(): void {
+    saveAsset(): void { 
 
         if (this.currentAsset.isDepreciable == true) {
             if (!(this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.unitOfMeasureId
-                && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId)) {
+                && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId
+                && this.currentAsset.companyId && this.currentAsset.buisinessUnitId && this.currentAsset.departmentId && this.currentAsset.divisionId
+                && this.currentAsset.manufacturerId)) {
                 this.display = true;
                 this.modelValue = true;
             }
@@ -462,14 +463,18 @@ export class CreateAssetComponent implements OnInit {
             && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId)
 
             if (this.currentAsset.isIntangible == true) {
-                if (!(this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.assetIntangibleTypeId)) {
+                if (!(this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.assetIntangibleTypeId
+                    && this.currentAsset.companyId && this.currentAsset.buisinessUnitId && this.currentAsset.departmentId && this.currentAsset.divisionId
+                    && this.currentAsset.manufacturerId)) {
                     this.display = true;
                     this.modelValue = true;
                 }
             }
         if ((this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.assetIntangibleTypeId)
             || (this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.unitOfMeasureId
-            && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId)) {
+                && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId
+                && this.currentAsset.companyId && this.currentAsset.buisinessUnitId && this.currentAsset.departmentId && this.currentAsset.divisionId
+                && this.currentAsset.manufacturerId)) {
             this.isSaving = true;
 
             if (!this.currentAsset.assetRecordId) {
@@ -554,7 +559,12 @@ export class CreateAssetComponent implements OnInit {
                     this.listCollection = data;
                     this.assetService.generalCollection = this.listCollection;
                     this.alertService.showMessage('Asset Created successfully.');
-                    this.activeIndex = 0;
+                    this.activeIndex = 1;
+                    this.currentAsset = this.assetService.listCollection;
+                    this.assetService.indexObj.next(this.activeIndex);
+                    this.route.navigateByUrl('/assetmodule/assetpages/app-asset-capes');
+
+
                 })
             }
             else {
@@ -660,7 +670,11 @@ export class CreateAssetComponent implements OnInit {
                     this.listCollection = data;
                     this.assetService.generalCollection = this.listCollection;
                     this.alertService.showMessage('Asset Updated successfully.');
-                    this.activeIndex = 0;
+                    this.activeIndex = 1;
+                    this.currentAsset = this.assetService.listCollection;
+                    this.assetService.indexObj.next(this.activeIndex);
+                    this.route.navigateByUrl('/assetmodule/assetpages/app-asset-capes');
+
                 })
             }
         }
@@ -687,6 +701,7 @@ export class CreateAssetComponent implements OnInit {
     }
 
     nextClick() {
+        this.currentAsset = this.assetService.listCollection;
         this.activeIndex = 1;
         this.assetService.indexObj.next(this.activeIndex);
         this.route.navigateByUrl('/assetmodule/assetpages/app-asset-capes');

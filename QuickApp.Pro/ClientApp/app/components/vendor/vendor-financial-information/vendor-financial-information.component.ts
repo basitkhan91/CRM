@@ -541,11 +541,13 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.workFlowtService.contactCollection = this.local;
         this.activeIndex = 3;
         this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.changeStep('Payment Information');
         this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
     }
     previousClick() {
         this.activeIndex = 1;
         this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.changeStep('Contacts');
         this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
     }
     dismissModel() {
@@ -618,6 +620,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.loadMasterCompanies();
         this.sourceAction = new CreditTerms();
         this.sourceAction.isActive = true;
+        this.sourceAction.isDeleted = false;
         this.creditTermName = "";
         this.creditTermsId = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
@@ -625,8 +628,6 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-
-
     private loadCurrencyData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -736,11 +737,11 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
             error => this.onDataLoadFailed(error)
         );
     }
-    private onCreditTermsdata(getCreditTermsList: CreditTerms[]) {
+    private onCreditTermsdata(getCreditTermsList: any) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = getCreditTermsList;
-        this.allcreditTermInfo = getCreditTermsList;
+        this.allcreditTermInfo = getCreditTermsList.columnData;
     }
     saveCreditTermsdata() {
         this.isSaving = true;

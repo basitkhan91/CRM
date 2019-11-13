@@ -238,7 +238,9 @@ export class AppComponent implements OnInit, AfterViewInit {
                         label: 'Reports and Forms', items: [
                             { label: 'Item Aging', routerLink: '/#' },
                             { label: 'Slow Moving Stock', routerLink: '/#' },
-                            { label: 'Hot List', routerLink: '/#' }]
+                            { label: 'Hot List', routerLink: '/#' },
+                            { label: 'Stock Line Report', command: (event?: any) => { this.stockLineReport(); }}
+                        ]
                     }]
 
             },
@@ -374,13 +376,11 @@ export class AppComponent implements OnInit, AfterViewInit {
                     },
                     {
                         label: 'Sales Order Quote', items: [
-                            { label: 'SO Quote List', routerLink: '/#' },
-                            { label: 'Create New Quote', routerLink: '/#' },
-                            { label: 'SO Quote List', routerLink: '/#' },
-                            { label: 'SO OnTime Performance', routerLink: '/#' },
+                            { label: 'SO Quote List', routerLink: '/salesmodule/salespages/sales-quote-list' },
+                            { label: 'Create New SO Quote', routerLink: '/salesmodule/salespages/sales-quote' },
                             {
-                                label: 'Reports and Forms', items: [
-                                    { label: 'open SO Quotes', routerLink: '/#' },
+                                label: 'Reports & Forms', items: [
+                                    { label: 'Open SO Quotes', routerLink: '/#' },
                                     { label: 'Approved SO Quotes', routerLink: '/#' }
                                 ]
                             }
@@ -673,6 +673,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 
         ];
 
+
+
         // created by jyotsna
 
         // this.callTest2();
@@ -746,6 +748,12 @@ export class AppComponent implements OnInit, AfterViewInit {
         if (this.notificationsLoadingSubscription) {
             this.notificationsLoadingSubscription.unsubscribe();
         }
+    }
+
+    stockLineReport() {
+        const url = `${this.configurations.baseUrl}/api/stockLine/stocklinereoprt`;
+
+        window.location.assign(url);
     }
 
     initNotificationsLoading() {

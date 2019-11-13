@@ -2,28 +2,28 @@
 
 
     constructor() {
-        this.workOrderScopeId = 0;
-        this.promisedDate = new Date();
-        this.estimatedShipDate = new Date();
-        this.customerRequestDate = new Date();
-        this.estimatedCompletionDate = new Date();
+        this.workOrderScopeId = null;
+        this.promisedDate = '';
+        this.estimatedShipDate = '';
+        this.customerRequestDate = '';
+        this.estimatedCompletionDate = '';
         this.nTE = '';
         this.quantity = 1;
-        this.stockLineId = 0;
+        this.stockLineId = null;
         this.cMMId = 0;
         this.workflowId = 0;
-        this.workOrderStageId = 0;
-        this.workOrderStatusId = 0;
-        this.workOrderPriorityId = 0;
+        this.workOrderStageId = 1;
+        this.workOrderStatusId = 1;
+        this.workOrderPriorityId = null;
         this.isPMA = false;
         this.isDER = false;
         this.techStationId = 0;
         this.tearDownReport = 0;
         this.tATDaysStandard = 0;
         this.technicianId = 0;
-        this.mappingItemMasterId = 0;
-        this.conditionId = 0;
-        this.masterPartId = 0;
+        this.mappingItemMasterId = null;
+        this.conditionId = null;
+        this.masterPartId = null;
         this.stockLineNumber = '';
         this.isActive = true;
         this.isDelete = false;
@@ -32,17 +32,17 @@
 
     }
 
-    updatedDate : Date;
-    createdDate : Date;
+    updatedDate: Date;
+    createdDate: Date;
     isActive: boolean
     isDelete: boolean
     stockLineNumber: string;
-    masterPartId: number;
+    masterPartId: any;
     workOrderScopeId: number;
-    promisedDate: Date;
-    estimatedShipDate: Date;
-    customerRequestDate: Date;
-    estimatedCompletionDate: Date;
+    promisedDate: string;
+    estimatedShipDate: string;
+    customerRequestDate: string;
+    estimatedCompletionDate: string;
     nTE: string;
     quantity: number;
     stockLineId: number;

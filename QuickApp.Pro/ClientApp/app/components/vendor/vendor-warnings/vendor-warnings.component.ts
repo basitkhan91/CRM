@@ -348,11 +348,13 @@ export class VendorWarningsComponent implements OnInit {
     previousClick() {
         this.activeIndex = 4;
         this.vendorService.indexObj.next(this.activeIndex);
+        this.workFlowtService.changeStep('Shipping Information');
         this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-shipping-information');
     }
     nextClick() {
         this.activeIndex = 6;
         this.vendorService.indexObj.next(this.activeIndex);
+        this.workFlowtService.changeStep('Documents');
         this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-memo');
     }
 

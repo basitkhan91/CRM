@@ -480,6 +480,7 @@ export class VendorShippingInformationComponent {
     previousClick() {
         this.activeIndex = 3;
         this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.changeStep('Payment Information');
         this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
     }
     openShipVia(content, rowData) {
@@ -520,6 +521,17 @@ export class VendorShippingInformationComponent {
         this.sourceVendor.updatedBy = this.userName;
         this.sourceVendor.vendorShippingAddressId = vendorShippingAddressId;
         this.workFlowtService.deleteAcion(this.sourceVendor).subscribe(
+            response => this.saveCompleted(this.sourceVendor),
+            error => this.saveFailedHelper(error));
+    }
+
+    deleteVendorShippingAddress(vendorShippingAddressId) {
+        this.isSaving = true;
+        this.sourceVendor.isActive = false;
+        this.sourceVendor.addressStatus = false;
+        this.sourceVendor.updatedBy = this.userName;
+        this.sourceVendor.vendorShippingAddressId = vendorShippingAddressId;
+        this.workFlowtService.deleteVendorShippingAddress(this.sourceVendor).subscribe(
             response => this.saveCompleted(this.sourceVendor),
             error => this.saveFailedHelper(error));
     }
@@ -597,6 +609,7 @@ export class VendorShippingInformationComponent {
         }
         this.activeIndex = 5;
         this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.changeStep('Warnings');
         this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
     }
     handleChanges(rowData, e) {

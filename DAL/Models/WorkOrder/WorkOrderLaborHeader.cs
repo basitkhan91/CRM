@@ -10,7 +10,7 @@ namespace DAL.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public WorkOrderLaborHeader()
         {
-            WorkOrderLaborList = new List<WorkOrderLabor>();
+            LaborList = new List<WorkOrderLabor>();
         }
 
         [Key]
@@ -19,11 +19,12 @@ namespace DAL.Models
         public long WorkOrderId { get; set; }
         [ForeignKey("WorkFlowWorkOrderId")]
         public long WorkFlowWorkOrderId { get; set; }
-        public string DataEnteredBy { get; set; }
+        public long? DataEnteredBy { get; set; }
         public int HoursorClockorScan { get; set; }
         public bool IsTaskCompletedByOne { get; set; }
         public int WorkOrderHoursType { get; set; }
         public string LabourMemo { get; set; }
+        public long? ExpertiseId { get; set; }
         [ForeignKey("MasterCompanyId")]
         public int? MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
@@ -33,6 +34,8 @@ namespace DAL.Models
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
 
-        public virtual List<WorkOrderLabor> WorkOrderLaborList { get; set; }
+        public virtual List<WorkOrderLabor> LaborList { get; set; }
+        [NotMapped]
+        public WorkOrderLaborList WorkOrderLaborList { get; set; }
     }
 }

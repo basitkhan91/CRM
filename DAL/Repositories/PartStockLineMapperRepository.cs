@@ -62,6 +62,7 @@ namespace DAL.Repositories
                 var purchaseOrder = _appContext.PurchaseOrder
                                    .Include("Vendor")
                                    .Include("StockLine")
+                                   .Include("TimeLife")
                                    .Where(x => x.PurchaseOrderId == id).FirstOrDefault();
 
                 purchaseOrder.PurchaseOderPart = _appContext.PurchaseOrderPart
@@ -73,6 +74,8 @@ namespace DAL.Repositories
                     part.ItemMaster = _appContext.ItemMaster.Include("Manufacturer").Where(x => x.ItemMasterId == part.ItemMasterId).FirstOrDefault();//.Find(part.ItemMasterId);
                     if (part.StockLine != null && part.StockLine.Count > 0)
                     {
+                        part.StockLine = part.StockLine.OrderBy(x => x.StockLineId).ToList();
+                        part.TimeLife = part.TimeLife.OrderBy(x => x.StockLineId).ToList();
                         part.StockLineCount = (long)part.StockLine.Sum(x => x.Quantity);
                     }
 
@@ -126,17 +129,21 @@ namespace DAL.Repositories
                             SalesOrder = 0,
                             SubWorkOrder = 0,
                             Owner = SL.Owner,
-                            OwnerType = SL.OwnerType == 1 ? "Customer" : SL.OwnerType == 2 ? "Other" : SL.OwnerType == 3 ? "Vendor" : "",
+                            OwnerType = SL.OwnerType,
                             ObtainFrom = SL.ObtainFrom,
-                            ObtainFromType = SL.ObtainFromType == 1 ? "Customer" : SL.ObtainFromType == 2 ? "Other" : SL.ObtainFromType == 3 ? "Vendor" : "",
+                            ObtainFromType = SL.ObtainFromType,
                             TraceableTo = SL.TraceableTo,
-                            TraceableToType = SL.TraceableToType == 1 ? "Customer" : SL.TraceableToType == 2 ? "Other" : SL.TraceableToType == 3 ? "Vendor" : "",
+                            TraceableToType = SL.TraceableToType,
                             ManufacturingTrace = SL.ManufacturingTrace,
                             ManufacturerId = SL.ManufacturerId,
                             ManufacturerLotNumber = SL.ManufacturerLotNumber,
                             ManufacturingDate = SL.ManufacturingDate != null ? Convert.ToDateTime(SL.ManufacturingDate).ToShortDateString() : null,
                             ManufacturingBatchNumber = SL.ManufacturingBatchNumber,
                             PartCertificationNumber = SL.PartCertificationNumber,
+                            EngineSerialNumber = SL.EngineSerialNumber,
+                            ShippingViaId = SL.ShippingViaId,
+                            ShippingReference = SL.ShippingReference,
+                            ShippingAccount = SL.ShippingAccount,
                             CertifiedDate = SL.CertifiedDate != null ? Convert.ToDateTime(SL.CertifiedDate).ToShortDateString(): null,
                             CertifiedBy = SL.CertifiedBy,
                             TagDate = SL.TagDate != null ? Convert.ToDateTime(SL.TagDate).ToShortDateString() : null,
@@ -149,7 +156,8 @@ namespace DAL.Repositories
                             LocationId = SL.LocationId,
                             ShelfId = SL.ShelfId,
                             BinId = SL.BinId
-                        })
+                        }),
+                        TimeLife = x.TimeLife
                     })
                 };
             }

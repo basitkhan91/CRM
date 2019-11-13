@@ -14,11 +14,11 @@ export class workOrderGeneralInfo {
   salesPersonId: number;
   workOrderNum: string;
   isContractAvl: boolean;
-    contract: string;
-    workOrderNumber: string;
-    customerReference: string;
-    csr: string;
-    workOrderType: string;
+  contract: string;
+  workOrderNumber: string;
+  customerReference: string;
+  csr: string;
+  workOrderType: string;
   partNumbers: WorkOrderPartNumber[]
 
   // workOrderType: string;
@@ -47,15 +47,15 @@ export class workOrderGeneralInfo {
     this.openDate = new Date();
     this.creditTermsId = null;
     this.creditLimit = null;
-    this.workOrderStatusId = 0;
+    this.workOrderStatusId = 1;
     this.salesPersonId = null;
     this.workOrderNum = '';
     this.isContractAvl = false;
-      this.contract = '';
-      this.workOrderNumber= '';
-      this.customerReference= '';
-      this.csr= '';
-      this.workOrderType= '';
+    this.contract = '';
+    this.workOrderNumber = '';
+    this.customerReference = '';
+    this.csr = '';
+    this.workOrderType = '';
     this.partNumbers = []
 
     // this.workOrderType = 'single';

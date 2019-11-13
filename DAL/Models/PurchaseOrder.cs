@@ -57,8 +57,8 @@ namespace DAL.Models
         public decimal HandlingCost { get; set; }
         public long BillToContactId { get; set; }
         public long ShipViaId { get; set; }
-        public long ShipToSiteId { get; set; }
-        public long BillToSiteId { get; set; }
+        public long? ShipToSiteId { get; set; }
+        public long? BillToSiteId { get; set; }
         public string ShipVia { get; set; }
         public string ShippingAccountNo { get; set; }
         public string ShippingId { get; set; }

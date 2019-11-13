@@ -28,6 +28,8 @@ namespace DAL.Models
         public bool? IsActive { get; set; }
 
         public virtual MasterCompany MasterCompany { get; set; }
+
+        [Column("IsDelete", TypeName = "bit")]
         public bool? IsDeleted { get; set; }
 
     }

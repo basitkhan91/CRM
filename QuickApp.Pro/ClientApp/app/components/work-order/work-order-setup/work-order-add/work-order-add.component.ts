@@ -83,9 +83,9 @@ export class WorkOrderAddComponent implements OnInit {
   quote: WorkOrderQuote;
   // labor Object Modal
   labor: WorkOrderLabor;
-  isWorkOrder : boolean = true;
+  isWorkOrder: boolean = true;
 
-  workFlowItems: any;
+  workFlowList: any;
 
   technicalStationsList = [
     {
@@ -97,7 +97,7 @@ export class WorkOrderAddComponent implements OnInit {
     label: 'Station 2',
     value: 20
   }]
-  WorkOrderMPN = new WorkOrderPartNumber();
+  WorkOrderMPN = { ...new WorkOrderPartNumber() };
   employeeList: any[];
   salesPersonList: any[];
   technicianList: any[];
@@ -105,11 +105,19 @@ export class WorkOrderAddComponent implements OnInit {
   partNumberOriginalData: any;
   revisedPartOriginalData: any;
   revisedPartNumberList: any;
-  stockLineList: any;
+  // stockLineList: any;
   conditionList: any;
   cmmList: any;
   priorityList: Object;
   savedWorkOrderData: any;
+  workFlowWorkOrderData: any;
+  workOrderAssetList: any;
+  workOrderId: (responseData: any) => void;
+  workFlowWorkOrderId: any = 0;
+  workOrderMaterialList: any;
+  mpnPartNumbersList: any = [];
+  stockLineList: any;
+  workOrderWorkFlowOriginalData: any;
 
 
   constructor(
@@ -167,11 +175,11 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
   generateLaborForm() {
-    const keysArray = Object.keys(this.labor.tasks[0]);
+    const keysArray = Object.keys(this.labor.workOrderLaborList[0]);
     for (let i = 0; i < keysArray.length; i++) {
       this.labor = {
         ...this.labor,
-        tasks: [{ ...this.labor.tasks[0], [keysArray[i]]: [new AllTasks()] }]
+        workOrderLaborList: [{ ...this.labor.workOrderLaborList[0], [keysArray[i]]: [new AllTasks()] }]
       };
     }
     console.log(this.labor);
@@ -217,14 +225,17 @@ export class WorkOrderAddComponent implements OnInit {
     })
   }
 
-  selectCustomer(object, currentData) {
-    console.log(object);
-
-    currentData.customerReference = object.customerRef,
-      currentData.csr = object.csrName;
+  selectCustomer(object, currentRecord) {
+    currentRecord.customerReference = object.customerRef,
+    currentRecord.csr = object.csrName;
+    currentRecord.creditLimit = object.creditLimit;
+    currentRecord.creditTermsId = object.creditTermsId;
 
   }
 
+  clearautoCompleteInput(currentRecord, field){
+    currentRecord[field]=null;
+  }
 
 
   getAllEmployees(): void {
@@ -306,7 +317,7 @@ export class WorkOrderAddComponent implements OnInit {
   // Handles radio Button single or Multiple
   toggleWorkOrderType(value): void {
     console.log(value);
-    
+
     // this.workOrderGeneralInformation.isSinglePN = value;
     this.showTableGrid = false;
     this.getAllGridModals();
@@ -327,6 +338,7 @@ export class WorkOrderAddComponent implements OnInit {
 
 
   saveWorkOrder(): void {
+    this.mpnPartNumbersList = [];
     // this.showTableGrid = true; // Show Grid Boolean
     const generalInfo = this.workOrderGeneralInformation
     const data = {
@@ -335,16 +347,21 @@ export class WorkOrderAddComponent implements OnInit {
       employeeId: getValueFromObjectByKey('value', generalInfo.employeeId),
       salesPersonId: getValueFromObjectByKey('value', generalInfo.salesPersonId),
       masterCompanyId: 1,
-      "customerContactId": 68,
+      customerContactId: 68,
       createdBy: this.userName,
       updatedBy: this.userName,
       partNumbers: generalInfo.partNumbers.map(x => {
+        if (this.workOrderGeneralInformation.isSinglePN == false) {
+          this.mpnPartNumbersList.push({ label: x.masterPartId.partNumber, value: x.masterPartId })
+        }
+
+
         return {
           ...x,
 
           masterPartId: getValueFromObjectByKey('itemMasterId', x.masterPartId),
-          mappingItemMasterId : getValueFromObjectByKey('itemMasterId', x.masterPartId),
-          // mappingItemMasterId: getValueFromObjectByKey('mappingItemMasterId', x.mappingItemMasterId),
+          // mappingItemMasterId: getValueFromObjectByKey('itemMasterId', x.masterPartId),
+          mappingItemMasterId: getValueFromObjectByKey('mappingItemMasterId', x.mappingItemMasterId),
           technicianId: getValueFromObjectByKey('value', x.technicianId),
           createdBy: this.userName,
           updatedBy: this.userName
@@ -355,6 +372,14 @@ export class WorkOrderAddComponent implements OnInit {
     this.workOrderService.createNewWorkOrder(data).subscribe(
       result => {
         this.savedWorkOrderData = result;
+
+        this.workOrderId = result.workOrderId;
+        this.workOrderGeneralInformation.workOrderNumber = result.workOrderNum;
+        this.workFlowWorkOrderId = result.workFlowWorkOrderId;
+        // get WOrkFlow Equipment Details if WorFlow Exists
+        this.getEquipmentByWorkOrderId();
+        this.getMaterialListByWorkOrderId();
+
         this.showTableGrid = true; // Show Grid Boolean
         // this.workOrder = result;
         this.alertService.showMessage(
@@ -365,6 +390,68 @@ export class WorkOrderAddComponent implements OnInit {
       }
     );
   }
+
+
+
+
+
+  savedWorkFlowData(workFlowDataObject) {
+    this.workOrderService.createWorkFlowWorkOrder(workFlowDataObject).subscribe(res => {
+      this.workFlowWorkOrderData = res;
+      this.workFlowWorkOrderId = res.workFlowWorkOrderId;
+      this.getWorkOrderWorkFlowNos();
+      this.alertService.showMessage(
+        '',
+        'Work Order Work Flow Saved Succesfully',
+        MessageSeverity.success
+      );
+    })
+
+    // this.workFlowWorkOrderData = responseData;
+    // this.workFlowWorkOrderId = responseData.workFlowWorkOrderId;
+  }
+
+  getWorkOrderWorkFlowNos() {
+    this.workOrderService.getWorkOrderWorkFlowNumbers(this.workOrderId).subscribe(res => {
+      this.workOrderWorkFlowOriginalData = res;
+    })
+  }
+
+  saveworkOrderLabor(data) {
+    this.workOrderService.createWorkOrderLabor(data).subscribe(res => {
+      this.alertService.showMessage(
+        this.moduleName,
+        'Saved Work Order Labor  Succesfully',
+        MessageSeverity.success
+      );
+    })
+  }
+
+  getEquipmentByWorkOrderId() {
+    if (this.workFlowWorkOrderId !== 0) {
+      // this.workFlowWorkOrderId = this.workFlowWorkOrderData.workFlowWorkOrderId;
+      this.workOrderService.getWorkOrderAssetList(this.workFlowWorkOrderId).subscribe(
+        result => {
+          this.workOrderAssetList = result;
+        }
+      )
+    }
+
+  }
+
+  getMaterialListByWorkOrderId() {
+    if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
+      this.workOrderService.getMaterialList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
+
+        this.workOrderMaterialList = res;
+
+      })
+
+    }
+  }
+
+
+
 
 
 
@@ -394,16 +481,41 @@ export class WorkOrderAddComponent implements OnInit {
   onSelectedPartNumber(object, currentRecord) {
     console.log('Sample PN');
 
+
+    // currentRecord = new WorkOrderPartNumber();
+
     const { itemMasterId } = object;
-    const { partNumber } = object;
+    // this.mpnPartNumbers.push(object.partNumber)
+
+    // const { partNumber } = object;
+
+    // const { conditionId } = currentRecord;
 
     this.getRevisedpartNumberByItemMasterId(itemMasterId)
-    this.getStockLineByItemMasterId(itemMasterId)
+    // this.getStockLineByItemMasterId(itemMasterId)
     this.getConditionByItemMasterId(itemMasterId)
     this.getPartPublicationByItemMasterId(itemMasterId)
     currentRecord.description = object.partDescription
-
+    currentRecord.nTE = object.nte;
+    currentRecord.isPMA = object.pma === null ? false : object.pma;
+    currentRecord.isDER = object.der === null ? false : object.der;
   }
+
+
+
+  // onUnSelectPartNumber(event, currentRecord) {
+  //   console.log(event.target.value, currentRecord)
+  //   if (event.target.value !== currentRecord.partNumber) {
+  //     currentRecord = { ...new WorkOrderPartNumber() };
+  //   }
+  // }
+
+  // onClearPartNumber(currentRecord) {
+  //   currentRecord = { ...new WorkOrderPartNumber() };
+
+  //   console.log(currentRecord);
+
+  // }
 
 
   async  getRevisedpartNumberByItemMasterId(itemMasterId) {
@@ -413,17 +525,37 @@ export class WorkOrderAddComponent implements OnInit {
     })
 
   }
-  async getStockLineByItemMasterId(itemMasterId) {
-    await this.workOrderService.getStockLineByItemMasterId(itemMasterId).subscribe(res => {
-      this.stockLineList = res.map(x => {
-        return {
-          label: x.stockLineNumber,
-          value: x.stockLineId,
-        }
-      });
+  async getStockLineByItemMasterId(workOrderPart) {
+    const { conditionId } = workOrderPart;
+    const { itemMasterId } = workOrderPart.masterPartId;
+    if (itemMasterId !== 0 && conditionId !== 0) {
+      await this.workOrderService.getStockLineByItemMasterId(itemMasterId, conditionId).subscribe(res => {
+        this.stockLineList = res.map(x => {
+          return {
+            label: x.stockLineNumber,
+            value: x.stockLineId,
+          }
+        });
 
-    })
+      })
+    }
   }
+  // async getStockLineByItemMasterId(workOrderPart) {
+  //   const { conditionId } = workOrderPart;
+  //   const { itemMasterId } = workOrderPart.masterPartId;
+
+  //   if (itemMasterId !== 0 && conditionId !== 0) {
+  //     await this.workOrderService.getStockLineByItemMasterId(itemMasterId, conditionId).subscribe(res => {
+  //       if (res.length > 0) {
+  //         const responseData = res[0];
+  //         workOrderPart.stockLineId = responseData.stockLineId;
+  //         workOrderPart.stockLineNumber = responseData.stockLineNumber;
+  //         workOrderPart.serialNumber = responseData.serialNumber;
+
+  //       }
+  //     })
+  //   }
+  // }
 
   async getConditionByItemMasterId(itemMasterId) {
     await this.workOrderService.getConditionByItemMasterId(itemMasterId).subscribe(res => {
@@ -465,7 +597,7 @@ export class WorkOrderAddComponent implements OnInit {
     if (stockLineId !== 0 && conditionId !== 0) {
       this.workOrderService.getSerialNoByStockLineId(stockLineId, conditionId).subscribe(res => {
         if (res) {
-          workOrderPart.stockLineNumber = res.serialNumber;
+          workOrderPart.serialNumber = res.serialNumber;
         }
       })
     }
@@ -479,7 +611,7 @@ export class WorkOrderAddComponent implements OnInit {
 
     if (itemMasterId !== 0 && workOrderScopeId !== 0) {
       this.workOrderService.getWorkFlowByPNandScope(itemMasterId, workOrderScopeId).subscribe(res => {
-        this.workFlowItems = res.map(x => {
+        this.workFlowList = res.map(x => {
           return {
             label: x.workFlowNo,
             value: x.workFlowId
