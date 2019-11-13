@@ -161,7 +161,7 @@
                                                     </span>
                                             </label>
                                             <p-autoComplete field="customerName" [(ngModel)]="workOrderGeneralInformation.customerId"
-                                          
+                                       
                                               name="customerName"
                                               errorMessage="Records not found" 
                                               [forceSelection]="true"
@@ -191,7 +191,7 @@
                                                 <span class="clr-red">*</span>
                                             </label>
 
-                                            <input type="text" class="form-control" name="contactRef"  #contactRef="ngModel" [(ngModel)]="workOrderGeneralInformation.customerReference"  required>
+                                            <input type="text" class="form-control wo-input" name="contactRef"  #contactRef="ngModel" [(ngModel)]="workOrderGeneralInformation.customerReference"  required>
 
                                             
                                         <div *ngIf="contactRef.invalid && (contactRef.dirty || contactRef.touched)" class="alert alert-danger alert-danger-cstm">
@@ -218,7 +218,7 @@
                                                         <label for="customercontact">CSR
                                                           <span class="clr-red">*</span>
                                                         </label>
-                                                        <input type="text" class="form-control" [(ngModel)]="workOrderGeneralInformation.csr" name="csr"   #csr="ngModel"  required />
+                                                        <input type="text" class="form-control wo-input" [(ngModel)]="workOrderGeneralInformation.csr" name="csr"   #csr="ngModel"  required />
 
                                                         <div *ngIf="csr.invalid && (csr.dirty || csr.touched)" class="alert alert-danger alert-danger-cstm">
                                                             <div *ngIf="csr.errors.required">
@@ -235,7 +235,7 @@
                                                 <span class="clr-red">*</span> </label>
                                             <div class="col-md-12">
                                                 <div class="col-md-4">
-                                                    <input type="number" class="form-control" 
+                                                    <input type="number" class="form-control wo-input" 
                                                     name="creditLimit"  #creditLimit="ngModel"
                                                     [(ngModel)]="workOrderGeneralInformation.creditLimit"  required>
                                                     
