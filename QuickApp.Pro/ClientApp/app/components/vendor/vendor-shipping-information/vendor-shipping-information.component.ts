@@ -525,6 +525,17 @@ export class VendorShippingInformationComponent {
             error => this.saveFailedHelper(error));
     }
 
+    deleteVendorShippingAddress(vendorShippingAddressId) {
+        this.isSaving = true;
+        this.sourceVendor.isActive = false;
+        this.sourceVendor.addressStatus = false;
+        this.sourceVendor.updatedBy = this.userName;
+        this.sourceVendor.vendorShippingAddressId = vendorShippingAddressId;
+        this.workFlowtService.deleteVendorShippingAddress(this.sourceVendor).subscribe(
+            response => this.saveCompleted(this.sourceVendor),
+            error => this.saveFailedHelper(error));
+    }
+
     deleteItemShippingCloseModel(vendorShippingId) {
         this.isSaving = true;
         this.shipViaObj.isActive = true;

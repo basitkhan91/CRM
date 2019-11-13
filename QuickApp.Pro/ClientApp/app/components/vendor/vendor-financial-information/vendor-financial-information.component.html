@@ -223,7 +223,9 @@
                                     <label class="control-label col-sm-4">Credit Terms <strong class="clr-red">*</strong></label>
                                     <div class="inner-addon col-sm-7 inline-block display-flex">
                                         <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.creditTermsId">
-                                            <option *ngFor="let creditTermsId of allcreditTermInfo" [ngValue]="creditTermsId.creditTermsId">{{creditTermsId.name}}</option>
+											<ng-container *ngFor="let creditTermsId of allcreditTermInfo">
+												<option *ngIf="creditTermsId.isActive" [ngValue]="creditTermsId.creditTermsId">{{creditTermsId.name}}</option>
+											</ng-container>
                                         </select>
                                         <a href="#" data-toggle="modal" data-target="#addCurreny" class="add-icon" (click)="openCrediTerms(contenCreditTerms)"><i class="fa fa-plus"></i></a>
                                     </div>
@@ -234,10 +236,9 @@
                                     <label class="control-label col-sm-4">Currency <strong class="clr-red">*</strong></label>
                                     <div class="inner-addon col-sm-7 inline-block display-flex">
                                         <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.currencyId">
-                                            <option class="form-control" *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">
-                                                <!--{{currencyName.code}}-->
-                                                {{currencyName.symbol}}
-                                            </option>
+											<ng-container *ngFor="let currencyName of allCurrencyInfo">
+												<option class="form-control" *ngIf="currencyName.isActive" [ngValue]="currencyName.currencyId">{{currencyName.symbol}}</option>
+											</ng-container>
                                         </select>
                                         <a href="#" data-toggle="modal" data-target="#addCurrency" class="add-icon" (click)="openCurrency(contentCurrency)"><i class="fa fa-plus"></i></a>
                                     </div>
@@ -344,9 +345,9 @@
                             </div>
                             <div class="clear"></div>
                             <hr>
-                            <button type="button" [validate] moduleName="app-vendor-contacts" requirePermission="canAdd" *ngIf="sourceVendor.vendorId == undefined" class="btn btn-success pull-right submit-btn" (click)="editItemAndCloseModel()">Save</button>
+                            <button type="button" [validate] moduleName="app-vendor-contacts" requirePermission="canAdd" *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel()">Save</button>
 
-                            <button type="button" [validate] moduleName="app-vendor-contacts" requirePermission="canUpdate" *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0" class="btn btn-success pull-right submit-btn" (click)="editItemAndCloseModel()">Update</button>
+                            <button type="button" [validate] moduleName="app-vendor-contacts" requirePermission="canUpdate" *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel()">Update</button>
 
 
                         </div>
@@ -355,8 +356,8 @@
                 </form>
             </div>
         </div>
-        <button type="button" class="btn btn-success pull-right submit-btn" (click)="NextClick()">Next</button>
-        <button type="button" class="btn btn-success pull-right submit-btn" (click)="previousClick()">Previous</button>
+        <button type="button" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel(true)">Save & Next</button>
+        <button type="button" class="btn btn-primary-cstm pull-right" (click)="previousClick()">Previous</button>
     </div>
 </div>
 
@@ -384,7 +385,7 @@
                 </div>
                 <div class="clear"></div>
             </div>
-            <div class="form-group">
+            <div class="form-group credit">
                 <label for="percentage" class="control-label">Percentage</label>
 				<div class="control-data">
 					<!--<input #percentage="ngModel" id="percentage" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.percentage">-->
@@ -494,7 +495,7 @@
 				</div>
                 <div class="clear"></div>
             </div>
-            <div class="form-group">
+            <div class="form-group credit">
                 <label for="days" class="control-label">Days</label>
 				<div class="control-data">
 					<!--<input #days="ngModel" id="days" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.days">-->
@@ -534,7 +535,7 @@
 				</div>
                 <div class="clear"></div>
             </div>
-            <div class="form-group">
+            <div class="form-group credit">
                 <label for="netDays" class="control-label">Net Days</label>
 				<div class="control-data">
 					<!--<input #netDays="ngModel" id="netDays" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.netDays">-->
@@ -929,7 +930,7 @@
 
             <div class="modal-footer">
 
-                <button class="btn btn-success" [disabled]="disableSave">Submit</button>
+                <button class="btn btn-success" [disabled]="disableSave">Save</button>
                 <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
             </div>
         </form>
@@ -989,7 +990,7 @@
                 </p-autoComplete>
                 <div *ngIf="disableSaveCurrency" style="color:red"> Already Exist</div>
             </div>
-            <div class="form-group">
+            <div class="form-group currency">
                 <label for="netDays" class="control-label">Currency Symbol<strong class="clr-red">*</strong></label>
                 <div>
                     <input type="text" name="symbol" class="form-control" required #symbol="ngModel" [(ngModel)]="sourceAction.symbol" minlength="2">
@@ -1002,7 +1003,7 @@
                 </div>
                 <div class="clear"></div>
             </div>
-            <div class="form-group">
+            <div class="form-group currency">
                 <label for="netDays" class="control-label">Currency Name<strong class="clr-red">*</strong></label>
                 <div>
                     <input type="text" name="displayName" class="form-control" required #displayName="ngModel" [(ngModel)]="sourceAction.displayName" minlength="2">
@@ -1041,7 +1042,7 @@
 
             <div class="modal-footer">
 
-                <button class="btn btn-success" [disabled]="disableSaveCurrency">Submit</button>
+                <button class="btn btn-success" [disabled]="disableSaveCurrency">Save</button>
                 <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
             </div>
             <div class="form-group" style="visibility:hidden">

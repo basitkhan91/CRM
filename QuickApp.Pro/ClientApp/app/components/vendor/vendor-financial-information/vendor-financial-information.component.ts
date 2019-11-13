@@ -412,7 +412,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         }
     }
 
-    editItemAndCloseModel() {
+    editItemAndCloseModel(isGoNxt?: boolean) {
         this.isSaving = true;
         if (!(this.sourceVendor.creditLimit && this.sourceVendor.creditTermsId && this.sourceVendor.currencyId)) {
             this.display = true;
@@ -514,7 +514,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
                     this.workFlowtService.financeCollection = this.local;
                     this.activeIndex = 2;
                     this.workFlowtService.indexObj.next(this.activeIndex);
-                    this.savesuccessCompleted(this.sourceVendor);
+                    this.savesuccessCompleted(this.sourceVendor, isGoNxt);
                 })
             }
             else {
@@ -567,9 +567,12 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         }
         this.loadData();
     }
-    private savesuccessCompleted(user?: any) {
+    private savesuccessCompleted(user?: any, isGoNxt?: boolean) {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was saved successfully`, MessageSeverity.success);
+        if(isGoNxt){
+            this.NextClick();
+        }
         this.loadData();
     }
 

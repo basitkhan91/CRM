@@ -16,7 +16,7 @@ export class VendorStepsPrimeNgComponent implements OnInit {
 	generalcollection: any;
 	collection: any;
     currentUrl: any;
-    isDisabledSteps = false;
+    isDisabledSteps = true;
 	items: MenuItem[];
 
 	msgs: Message[] = [];
@@ -39,37 +39,44 @@ export class VendorStepsPrimeNgComponent implements OnInit {
         if (value == 'General Information') {
             //	this.showComponentPTab = this.vendorService.ShowPtab;
             this.activeMenuItem = 1;
+            this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
         }
 
         else if (value == 'Contacts') {
 
             this.activeMenuItem = 2;
+            this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
         }
         else if (value == 'Financial Information') {
 
             this.activeMenuItem = 3;
+            this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-financial-information');
         }
         else if (value == 'Payment Information') {
 
             this.activeMenuItem = 4;
+            this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
         }
         else if (value == 'Shipping Information') {
 
             this.activeMenuItem = 5;
+            this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-shipping-information');
         }
         else if (value == 'Warnings') {
 
             this.activeMenuItem = 6;
+            this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
         }
         else if (value == 'Documents') {
 
             this.activeMenuItem = 7;
+            this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-memo');
         }
     }
 
     ngOnInit() {
         if (this.vendorService.isEditMode) {
-            this.isDisabledSteps = true;
+            this.isDisabledSteps = false;
         }
 		//alert('ngInit');
 		

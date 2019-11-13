@@ -52,6 +52,7 @@ export class VendorEndpointService extends EndpointFactory {
 	private readonly _deleteCheckPayment: string = "/api/Vendor/deleteCheckPayment";
 	private readonly _deleteContactUrl: string = "/api/Vendor/vendorContact";
 	private readonly _vendorShippingUrlNew: string = "/api/Vendor/updateStatusVendorShipping";
+    private readonly _vendorShippingAddressUrlDelete: string = "/api/Vendor/deletevendorshippingaddress";
 	private readonly _vendorsContctUrl: string = "/api/Vendor/vendorContactPost";
 	private readonly _checkPaymntUpdateUrl: string = "/api/Vendor/checkPaymentUpdate";
 	private readonly _domesticUpdate: string = "/api/Vendor/domesticPaymentUpdate";
@@ -994,8 +995,8 @@ export class VendorEndpointService extends EndpointFactory {
 	}
 
 	getDeletevendorshippingEndpoint<T>(roleObject: any): Observable<T> {
-		let endpointUrl = `${this._vendorShippingUrlNew}/${roleObject.vendorShippingId}`;
-		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+        let endpointUrl = `${this._vendorShippingAddressUrlDelete}/${roleObject.vendorShippingAddressId}`;
+		return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
 			.catch(error => {
 				return this.handleError(error, () => this.getDeletevendorshippingEndpoint(roleObject));
 			});

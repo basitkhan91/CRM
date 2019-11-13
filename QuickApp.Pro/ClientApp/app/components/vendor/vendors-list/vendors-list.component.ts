@@ -465,7 +465,7 @@ export class VendorsListComponent implements OnInit {
     deleteItemAndCloseModel() {
         this.isSaving = true;
         this.isDeleteMode = true;
-        this.sourceVendor.isdelete = false;
+        this.sourceVendor.isdelete = true;
         //this.sourceVendor = content;
         this.sourceVendor.updatedBy = this.userName;
         this.workFlowtService.updatevendorstatus(this.sourceVendor).subscribe(
