@@ -9,7 +9,7 @@ import { ConfigurationService } from './configuration.service';
 @Injectable()
 export class StocklineEndpoint extends EndpointFactory
 {
-	private readonly _actionsUrlNew1: string = "/api/StockLine/stockLinepost1";
+    private readonly _actionsUrlNew1: string = "/api/StockLine/stockLine";
 
 	private readonly _deleteStockUrl: string = "/api/StockLine/deleteIntegration";
 	  
@@ -23,6 +23,8 @@ export class StocklineEndpoint extends EndpointFactory
 
 	private readonly _actionsUrl: string = "/api/StockLine/Get";//which will be specified in the Controller
 
+    private readonly _stockLineListUrl: string = "/api/StockLine/List";//which will be specified in the Controller
+
 	private readonly _actionsUrl1: string = "/api/StocklineAdjustment/Get";//which will be specified in the Controller
 
 	private readonly _integrationPortalById: string = "/api/StockLine/IntegrationPortalGet";
@@ -35,9 +37,9 @@ export class StocklineEndpoint extends EndpointFactory
 
 	private readonly _adjustmentUrlNew: string = "/api/StockLine/stockLineAdjustmentpost";//which will be specified in the Controller 
 
-	private readonly _actionsTimeUrlNew: string = "/api/StockLine/PostTimeLine"; // Which will be specified in the Controller
+    private readonly _actionsTimeUrlNew: string = "/api/StockLine/stockLineTimeLifeAdjustment"; // Which will be specified in the Controller
 
-	private readonly _actionsStocklineIntegrationUrlNew: string = "/api/StockLine/PostIntegration"; // Which will be specified in the Controller
+    private readonly _actionsStocklineIntegrationUrlNew: string = "/api/StockLine/stockLineIntegration"; // Which will be specified in the Controller
 
 	private readonly _stockLineItemMasterPart: string = "/api/StockLine/itemMasterPartUpdate"; // Which will be specified in the Controller
 
@@ -72,20 +74,23 @@ export class StocklineEndpoint extends EndpointFactory
 	get companyUrl() { return this.configurations.baseUrl + this._actionsCompanyUrl; }
 
 	constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
-
-
-
 		super(http, configurations, injector);
 	}
 	//for getting stockline
-	getStockLineEndpoint<T>(): Observable<T> {
-
-		return this.http.get<T>(this.actionsUrl, this.getRequestHeaders())
+	getStockLineListEndpoint(data) {
+        return this.http.post(this._stockLineListUrl, JSON.stringify(data), this.getRequestHeaders())
 			.catch(error => {
-				return this.handleError(error, () => this.getStockLineEndpoint());
+                return this.handleError(error, () => this.getStockLineListEndpoint(data));
 			});
 	}
 
+    getStockLineEndpoint<T>(): Observable<T> {
+
+        return this.http.get<T>(this.actionsUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getStockLineEndpoint());
+            });
+    }
 
 	//for getting stocklineAdjustmentDatatype table Data
 	getStockLineAdjustmentDatatypeDataEndpoint<T>(): Observable<T> {

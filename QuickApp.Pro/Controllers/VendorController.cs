@@ -95,6 +95,12 @@ namespace QuickApp.Pro.Controllers
             return Ok(allActions);
         }
 
+        [HttpGet("stocklinePOList")]
+        public IActionResult stocklinePOList()
+        {
+            var allActions = _unitOfWork.purchaseOrder.StockLinePOList(); //.GetAllCustomersData();
+            return Ok(allActions);
+        }
 
         [HttpGet("recevingpolist")]
         public IActionResult RecevingPolist()
@@ -115,7 +121,9 @@ namespace QuickApp.Pro.Controllers
 
         public IActionResult rolist()
         {
-            var allActions = _context.RepairOrder.OrderByDescending(c => c.RepairOrderId).ToList(); //.GetAllCustomersData();
+            var allActions = _context.RepairOrder
+                .Where(x => x.IsDeleted == false)
+                .OrderByDescending(c => c.RepairOrderId).ToList(); 
             return Ok(allActions);
 
         }
@@ -870,7 +878,10 @@ namespace QuickApp.Pro.Controllers
                     repairOrderModel = FillRepairOrder(repairOrderModel, roViewModel);
                     repairOrderModel.UpdatedDate = DateTime.Now;
                     repairOrderModel.UpdatedBy = roViewModel.UpdatedBy;
-                    repairOrderModel.IsActive = roViewModel.IsActive;
+                    if (roViewModel.IsActive != null)
+                    {
+                        repairOrderModel.IsActive = roViewModel.IsActive;
+                    }
                     repairOrderModel.IsDeleted = roViewModel.IsDeleted;
                     _context.SaveChanges();
                     return Ok(repairOrderModel);
@@ -969,7 +980,6 @@ namespace QuickApp.Pro.Controllers
             repairOrderModel.BillToPostalCode = roViewModel.BillToPostalCode;
             repairOrderModel.BillToCountry = roViewModel.BillToCountry;
 
-
             return repairOrderModel;
         }
 
@@ -992,7 +1002,7 @@ namespace QuickApp.Pro.Controllers
                 var returnObjects = new List<RepairOrderPartDto>();
                 foreach (var roViewModel in roViewModels)
                 {
-                    if (_context.RepairOrderPart.Any(o => o.RepairOrderId == roViewModel.RepairOrderId))
+                    if (_context.RepairOrderPart.Any(o => o.RepairOrderPartRecordId == roViewModel.RepairOrderPartRecordId))
                     {
                         var roPartModel = _context.RepairOrderPart
                                                 .Where(a => a.RepairOrderPartRecordId == roViewModel.RepairOrderPartRecordId)
@@ -1406,7 +1416,7 @@ namespace QuickApp.Pro.Controllers
                 contactObj.ContactId = contactViewModel.ContactId;
                 contactObj.ContactTitle = contactViewModel.ContactTitle;
                 contactObj.AlternatePhone = contactViewModel.AlternatePhone;
-                // contactObj.IsDefaultContact = contactViewModel.IsDefaultContact;
+                contactObj.IsDefaultContact = contactViewModel.IsDefaultContact;
                 contactObj.Email = contactViewModel.Email;
                 contactObj.Prefix = contactViewModel.Prefix;
                 contactObj.Suffix = contactViewModel.Suffix;
@@ -3085,6 +3095,13 @@ namespace QuickApp.Pro.Controllers
         {
             _context.RepairOrderApprover.Add(roApprover);
             _context.SaveChanges();
+        }
+
+        [HttpGet("roPartsViewById")]
+        public IActionResult GetRepairOrderPartsView(long repairOrderId)
+        {
+            var list = _unitOfWork.repairOrder.GetRepairOrderPartsView(repairOrderId);
+            return Ok(list);
         }
 
         #region Capes

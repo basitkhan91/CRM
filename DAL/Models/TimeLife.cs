@@ -12,33 +12,33 @@ namespace DAL.Models
         [Key]
         public long TimeLifeCyclesId { get; set; }
 
-        public Int32? CyclesRemaining { get; set; }
+        public int? CyclesRemaining { get; set; }
 
-        public Int32? CyclesSinceNew { get; set; }
+        public int? CyclesSinceNew { get; set; }
 
-        public Int32? CyclesSinceOVH { get; set; }
+        public int? CyclesSinceOVH { get; set; }
 
-        public Int32? CyclesSinceInspection { get; set; }
+        public int? CyclesSinceInspection { get; set; }
 
-        public Int32? CyclesSinceRepair { get; set; }
+        public int? CyclesSinceRepair { get; set; }
 
-        public Int32? TimeRemaining { get; set; }
+        public int? TimeRemaining { get; set; }
 
-        public Int32? TimeSinceNew { get; set; }
+        public int? TimeSinceNew { get; set; }
 
-        public Int32? TimeSinceOVH { get; set; }
+        public int? TimeSinceOVH { get; set; }
 
-        public Int32? TimeSinceInspection { get; set; }
+        public int? TimeSinceInspection { get; set; }
 
-        public Int32? TimeSinceRepair { get; set; }
+        public int? TimeSinceRepair { get; set; }
 
-        public Int32? LastSinceNew { get; set; }
+        public int? LastSinceNew { get; set; }
 
-        public Int32? LastSinceOVH { get; set; }
+        public int? LastSinceOVH { get; set; }
 
-        public Int32? LastSinceInspection { get; set; }
+        public int? LastSinceInspection { get; set; }
 
-        public Int32? MasterCompanyId { get; set; }
+        public int? MasterCompanyId { get; set; }
 
         public bool? IsActive { get; set; }
 
@@ -47,9 +47,9 @@ namespace DAL.Models
         public bool DetailsNotProvided { get; set; }
 
         [ForeignKey("PurchaseOrderId")]
-        public long PurchaseOrderId { get; set; }
-
-        public long PurchaseOrderPartRecordId { get; set; }
+        public long? PurchaseOrderId { get; set; }
+        [ForeignKey("PurchaseOrderId")]
+        public long? PurchaseOrderPartRecordId { get; set; }
 
         public virtual PurchaseOrder PurchaseOrder { get; set; }
     }

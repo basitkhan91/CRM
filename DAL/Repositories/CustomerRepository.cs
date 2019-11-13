@@ -1421,6 +1421,8 @@ namespace DAL.Repositories
                             from cc in custcc.DefaultIfEmpty()
                             join con in _appContext.Contact on cc.ContactId equals con.ContactId into custcon
                             from con in custcon.DefaultIfEmpty()
+                            join emp in _appContext.Employee on cust.CsrId equals emp.EmployeeId into custemp
+                            from emp in custemp.DefaultIfEmpty()
                             where cust.IsActive == true && cust.IsDeleted == false
                                   && (cust.Name.ToLower().Contains(value.ToLower()) || cust.CustomerCode.ToLower().Contains(value.ToLower()))
                             select new
@@ -1431,7 +1433,7 @@ namespace DAL.Repositories
                                 cust.CreditTermsId,
                                 CustomerContact= con==null?" ":con.FirstName,
                                 CustomerRef=cust.ContractReference==null?"": cust.ContractReference,
-                                CSRName =cust.CSRName
+                                CSRName = emp.FirstName
                             }
                             ).Distinct().ToList();
                 return list;

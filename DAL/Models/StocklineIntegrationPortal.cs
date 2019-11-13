@@ -1,22 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace DAL.Models
 {
     public class StocklineIntegrationPortal : PasBase
     {
+        [Key]
         public long StocklineIntegrationPortalId { get; set; }
-         
+         [ForeignKey("StocklineId")]
         public long StocklineId { get; set; }
-        public Int32? IntegrationPortalId { get; set; }
-        public Int32? MasterCompanyId { get; set; }
-
+        [ForeignKey("IntegrationPortalId")]
+        public int IntegrationPortalId { get; set; }
+        [ForeignKey("MasterCompanyId")]
+        public int MasterCompanyId { get; set; }
         public bool? IsActive { get; set; }
-
         public bool? IsListed { get; set; }
-
-        
     }
 }

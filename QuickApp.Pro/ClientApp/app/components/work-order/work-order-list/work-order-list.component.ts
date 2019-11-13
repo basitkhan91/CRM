@@ -16,14 +16,14 @@ import { AlertService, MessageSeverity } from '../../../services/alert.service';
 /** WorkOrderList component*/
 export class WorkOrderListComponent implements OnInit {
     /** WorkOrderList ctor */
-    workOrderData : any;
-    pageSize : number = 10;
+    workOrderData: any;
+    pageSize: number = 10;
     @ViewChild('dt')
     private table: Table;
     lazyLoadEventData: any;
     headers = [
         // { field: 'workOrderNum', header: 'WorkOrder Number' },
-        { field : 'name' , header: 'Customer Name'},
+        { field: 'name', header: 'Customer Name' },
         { field: 'customerCode', header: 'customerCode' },
         { field: 'workOrderType', header: 'WorkOrder Type' },
         { field: 'openDate', header: 'Open Date' },
@@ -33,13 +33,15 @@ export class WorkOrderListComponent implements OnInit {
     pageIndex: number = 0;
     totalRecords: any;
     totalPages: number;
-    constructor(    private workOrderService: WorkOrderService,     
-         private authService: AuthService,
-         private alertService: AlertService
-         ) {
+    workOrderPartListData: any;
+    workOrderPartListDataKeys: string[];
+    constructor(private workOrderService: WorkOrderService,
+        private authService: AuthService,
+        private alertService: AlertService
+    ) {
 
     }
-    ngOnInit(){
+    ngOnInit() {
         // this.getAllWorkOrderList()
     }
 
@@ -69,8 +71,8 @@ export class WorkOrderListComponent implements OnInit {
         this.getAllWorkOrderList(event)
     }
 
-    getAllWorkOrderList(data){
-        this.workOrderService.getWorkOrderList( this.pageIndex , this.pageSize).subscribe(res => {
+    getAllWorkOrderList(data) {
+        this.workOrderService.getWorkOrderList(this.pageIndex, this.pageSize).subscribe(res => {
             this.workOrderData = res;
             if (res.length > 0) {
                 this.totalRecords = res[0].totalRecords;
@@ -104,5 +106,20 @@ export class WorkOrderListComponent implements OnInit {
             this.alertService.showMessage("Success", `Successfully Deleted Record`, MessageSeverity.success);
 
         })
+    }
+
+    getWorkOrderPartListByWorkOrderId(rowData) {
+        const { workOrderId } = rowData;
+        this.workOrderService.getWorkOrderPartListByWorkOrderId(workOrderId).subscribe(res => {
+            if (res.length > 0) {
+                this.workOrderPartListDataKeys = Object.keys(res[0]);
+                this.workOrderPartListData = res;
+
+
+
+
+            }
+        })
+
     }
 }

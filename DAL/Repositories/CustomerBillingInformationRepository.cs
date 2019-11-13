@@ -23,6 +23,8 @@ namespace DAL.Repositories.Interfaces
         {
             var data = (from v in _appContext.CustomerBillingAddress
                         join ad in _appContext.Address on v.AddressId equals ad.AddressId
+                        join c in _appContext.Countries on ad.Country equals Convert.ToString(c.countries_id) into adc
+                        from c in adc.DefaultIfEmpty()
                         where ((v.IsDelete== null || v.IsDelete == false) && (v.CustomerId == id))
 
                         // select new { t, ad, vt }).ToList();
@@ -32,7 +34,7 @@ namespace DAL.Repositories.Interfaces
                             Address2 = ad.Line2,
                             Address3 = ad.Line3,
                             ad.AddressId,
-                            ad.Country,
+                            //ad.Country,
                             ad.PostalCode,
                             ad.City,
                             ad.StateOrProvince,
@@ -43,7 +45,8 @@ namespace DAL.Repositories.Interfaces
                             v.CustomerId,
                             v.IsActive,
                             v.IsDelete,
-                            v.IsPrimary
+                            v.IsPrimary,
+                            Country= c.countries_name
 
 
                         }).ToList();
@@ -55,7 +58,9 @@ namespace DAL.Repositories.Interfaces
         {
             var data = (from v in _appContext.CustomerBillingAddress
                 join ad in _appContext.Address on v.AddressId equals ad.AddressId
-                where v.CustomerId == id
+                        join c in _appContext.Countries on ad.Country equals Convert.ToString(c.countries_id) into adc
+                        from c in adc.DefaultIfEmpty()
+                        where v.CustomerId == id
 
                 select new
                 {
@@ -63,7 +68,7 @@ namespace DAL.Repositories.Interfaces
                     Address2 = ad.Line2,
                     Address3 = ad.Line3,
                     ad.AddressId,
-                    ad.Country,
+                    //ad.Country,
                     ad.PostalCode,
                     ad.City,
                     ad.StateOrProvince,
@@ -74,7 +79,8 @@ namespace DAL.Repositories.Interfaces
                     v.CustomerId,
                     v.IsActive,
                     v.IsDelete,
-                    v.IsPrimary
+                    v.IsPrimary,
+                    Country = c.countries_name
                 }).ToList();
             return data;
         }

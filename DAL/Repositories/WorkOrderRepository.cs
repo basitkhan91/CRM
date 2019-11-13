@@ -134,9 +134,11 @@ namespace DAL.Repositories
                                     join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
                                     join pr in _appContext.Priority on wop.WorkOrderPriorityId equals pr.PriorityId
                                     join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
-                                    join im in _appContext.ItemMaster on wop.MasterPartId equals im.MasterPartId
-                                    join rp in _appContext.Nha_Tla_Alt_Equ_ItemMapping on wop.MappingItemMasterId equals rp.MappingItemMasterId
-                                    join im1 in _appContext.ItemMaster on rp.MappingItemMasterId equals im1.ItemMasterId
+                                    join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
+                                    join rp in _appContext.Nha_Tla_Alt_Equ_ItemMapping on wop.MappingItemMasterId equals rp.MappingItemMasterId into woprp
+									from rp  in  woprp.DefaultIfEmpty()
+                                    join im1 in _appContext.ItemMaster on rp.MappingItemMasterId equals im1.ItemMasterId into rpim1
+									from  im1  in rpim1.DefaultIfEmpty()
                                     join wos in _appContext.WorkOrderStage on wop.WorkOrderStageId equals wos.ID
                                     join wost in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals wost.Id
                                     where wo.WorkOrderId == workOrderId
@@ -152,10 +154,12 @@ namespace DAL.Repositories
                             join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
                             join pr in _appContext.Priority on wop.WorkOrderPriorityId equals pr.PriorityId
                             join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
-                            join im in _appContext.ItemMaster on wop.MasterPartId equals im.MasterPartId
-                            join rp in _appContext.Nha_Tla_Alt_Equ_ItemMapping on wop.MappingItemMasterId equals rp.MappingItemMasterId
-                            join im1 in _appContext.ItemMaster on rp.MappingItemMasterId equals im1.ItemMasterId
-                            join wos in _appContext.WorkOrderStage on wop.WorkOrderStageId equals wos.ID
+                            join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
+							join rp in _appContext.Nha_Tla_Alt_Equ_ItemMapping on wop.MappingItemMasterId equals rp.MappingItemMasterId into woprp
+							from rp  in  woprp.DefaultIfEmpty()
+							join im1 in _appContext.ItemMaster on rp.MappingItemMasterId equals im1.ItemMasterId into rpim1
+							from  im1  in rpim1.DefaultIfEmpty()
+							join wos in _appContext.WorkOrderStage on wop.WorkOrderStageId equals wos.ID
                             join wost in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals wost.Id
                             where wo.WorkOrderId == workOrderId
                             select new
@@ -2116,7 +2120,7 @@ namespace DAL.Repositories
                                 sl.PartNumber,
                                 im.PartDescription,
                                 im.DER,
-                                im.PMA,
+                                PMA=im.isPma,
                                 NTE= (im.OverhaulHours == null ? 0 : im.OverhaulHours) + (im.RPHours == null ? 0 : im.RPHours) + (im.mfgHours == null ? 0 : im.mfgHours) + (im.TestHours == null ? 0 : im.TestHours)
                             })
                             .Distinct()

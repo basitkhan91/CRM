@@ -104,7 +104,8 @@ export class VendorEndpointService extends EndpointFactory {
 	private readonly _updateActiveInactivefordshipping: string = "/api/Vendor/vendorUpdateforActiveforshipping";
     private readonly _updateActiveInactivefordbilling: string = "/api/Vendor/vendorUpdateforActiveforbilling";
 	private readonly _updateActiveInactivefordshipviaDetails: string = "/api/Vendor/vendorUpdateforActiveforshipviaDetails";
-	private readonly _polisturl: string = "/api/Vendor/polist";
+    private readonly _polisturl: string = "/api/Vendor/polist";
+    private readonly _stockLinePOlisturl: string = "/api/Vendor/stocklinePOList";
 	private readonly _countryUrl: string = "/api/Customer/GetcountryList";
 	private readonly _rolist: string = "/api/Vendor/rolist";
 	private readonly _purchaseorderDetails: string = "/api/Vendor/GetvendorpurchaseList";
@@ -146,6 +147,9 @@ export class VendorEndpointService extends EndpointFactory {
 	private readonly _saveVendorRepairOrderPart: string = "/api/Vendor/saveVendorRepairPart";
 	private readonly _roByIdUrl: string = "/api/Vendor/roById";
 	private readonly _roPartByIdUrl: string = "/api/Vendor/roPartsById";
+	private readonly _roListWithFiltersUrl: string = "/api/Vendor/roListWithFilters";
+	private readonly _saveCreateROApproval: string = "/api/Vendor/createRoApprover";
+	private readonly _updateROApproval: string = "/api/Vendor/updateRoApprover";
     
 
 	get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
@@ -188,7 +192,8 @@ export class VendorEndpointService extends EndpointFactory {
 	get getshipaddresshistory() { return this.configurations.baseUrl + this._getshipaddresshistory; }
     get getbilladdresshistory() { return this.configurations.baseUrl + this._getbilladdresshistory; }
 	get capabilityUrl() { return this.configurations.baseUrl + this._capabilityUrl; }
-	get polisturl() { return this.configurations.baseUrl + this._polisturl; }
+    get polisturl() { return this.configurations.baseUrl + this._polisturl; }
+    get stockLinepolisturl() { return this.configurations.baseUrl + this._stockLinePOlisturl; }
 	get rolisturl() { return this.configurations.baseUrl + this._rolist; }
 	get listUrl() { return this.configurations.baseUrl + this._listUrl; }
 	get countryUrl() { return this.configurations.baseUrl + this._countryUrl; }
@@ -204,6 +209,7 @@ export class VendorEndpointService extends EndpointFactory {
 	get capesdata() { return this.configurations.baseUrl + this._capesdata; }
 
 	get paginate() { return this.configurations.baseUrl + this.getVendor; }
+	get roListWithFiltersUrl() { return this.configurations.baseUrl + this._roListWithFiltersUrl; }
 
 
 	constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -1205,7 +1211,7 @@ export class VendorEndpointService extends EndpointFactory {
 	}
 	getPurchaseOrderList<T>(): Observable<T> {
 
-		return this.http.get<T>(this.polisturl, this.getRequestHeaders())
+        return this.http.get<T>(this.stockLinepolisturl, this.getRequestHeaders())
 			.catch(error => {
 				return this.handleError(error, () => this.getPurchaseOrderList());
 			});
@@ -1398,7 +1404,7 @@ export class VendorEndpointService extends EndpointFactory {
   }
 
   deleteRO(repairOrderId, updatedBy) {
-	return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/deleteRo?repairOrderId=${repairOrderId}&updatedBy=${updatedBy}`)
+	return this.http.delete<any>(`${this.configurations.baseUrl}/api/Vendor/deleteRo?repairOrderId=${repairOrderId}&updatedBy=${updatedBy}`)
   }
 
   getROHistory(repairOrderId) {
@@ -1426,4 +1432,34 @@ getRepairOrderPartsById<T>(Id: number): Observable<T> {
 getROViewById(repairOrderId) {
     return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/roViewById?repairOrderId=${repairOrderId}`)
   }
+
+  getROList(data) {
+	return this.http.post(this.roListWithFiltersUrl, JSON.stringify(data), this.getRequestHeaders())
+		.catch(error => {
+			return this.handleError(error, () => this.getROList(data));
+		});
+  }
+
+  saveCreateROApproval<T>(param: any): Observable<any> {
+	let body = JSON.stringify(param);
+	let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+	return this.http.post(this._saveCreateROApproval, body, this.getRequestHeaders())
+		.map((response: Response) => {
+			return <any>response;
+		}).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+}
+
+updateROApproval<T>(param: any): Observable<any> {
+	let body = JSON.stringify(param);
+	let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+	return this.http.post(this._updateROApproval, body, this.getRequestHeaders())
+		.map((response: Response) => {
+			return <any>response;
+
+		}).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+}
+
+getROApproverList(repairOrderId) {
+	return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/roApproversList?repairOrderId=${repairOrderId}`)
+}
 }

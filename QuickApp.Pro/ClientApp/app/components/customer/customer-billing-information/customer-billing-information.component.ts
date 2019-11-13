@@ -205,7 +205,7 @@ export class CustomerBillingInformationComponent {
 			masterCompanyId: 1,
 			createdBy: this.userName,
 			updatedBy: this.userName,
-			country: getValueFromObjectByKey('nice_name', this.billingInfo.country)
+			country: getValueFromObjectByKey('countries_id', this.billingInfo.country)
 		}).subscribe(
 			res => {
 				this.billingInfo = new CustomerBillingAddressModel()
