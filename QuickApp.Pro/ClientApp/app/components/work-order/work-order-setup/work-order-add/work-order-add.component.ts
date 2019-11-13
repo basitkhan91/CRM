@@ -377,6 +377,7 @@ export class WorkOrderAddComponent implements OnInit {
         this.workOrderGeneralInformation.workOrderNumber = result.workOrderNum;
         this.workFlowWorkOrderId = result.workFlowWorkOrderId;
         // get WOrkFlow Equipment Details if WorFlow Exists
+            this.getWorkOrderWorkFlowNos();
         this.getEquipmentByWorkOrderId();
         this.getMaterialListByWorkOrderId();
 
