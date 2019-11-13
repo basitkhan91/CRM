@@ -658,6 +658,10 @@ export class VendorService {
     return this.actionEndpoint.getROViewById(purchaseOrderId);
     }
 
+    getROPartsViewById(purchaseOrderId){
+        return this.actionEndpoint.getROPartsViewById(purchaseOrderId);
+    }
+
     getROList(data) {
         return Observable.forkJoin(
             this.actionEndpoint.getROList(data));

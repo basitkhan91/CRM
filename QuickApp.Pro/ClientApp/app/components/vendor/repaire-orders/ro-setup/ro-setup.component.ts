@@ -194,6 +194,8 @@ export class RoSetupComponent implements OnInit {
 	addressFormForShippingCompany: any;
 	parentIndex: number;
 	childIndex: number;
+	allCountriesList: any = [];
+	countriesList: any = [];
 
 	/** ro-approval ctor */
 	constructor(private route: Router,
@@ -236,6 +238,7 @@ export class RoSetupComponent implements OnInit {
 		this.loadcustomerData();
 		this.glAccountData();
 		this.getLegalEntity();
+		this.getCountriesList();
 		this.loadPercentData();
 		this.sourceRoApproval.companyId = 0;
 		this.sourceRoApproval.buId = 0;
@@ -339,7 +342,7 @@ export class RoSetupComponent implements OnInit {
 					this.tempROHeaderAddress = {
 						repairOrderNumber: res.repairOrderNumber,
 						openDate: new Date(res.openDate),
-						closedDate: new Date(res.closedDate),
+						closedDate: res.closedDate ? new Date(res.closedDate) : '',
 						needByDate: new Date(res.needByDate),
 						priorityId: getObjectById('value', res.priorityId, this.allPriorityInfo),
 						deferredReceiver: res.deferredReceiver,
@@ -692,6 +695,12 @@ export class RoSetupComponent implements OnInit {
 		})
 	}
 
+	getCountriesList() {
+		this.commonService.smartDropDownList('Countries', 'countries_id', 'nice_name').subscribe(res => {
+			this.allCountriesList = res;
+		})
+	}
+
 	filterCompanyNameforgrid(event) {
 		this.legalEntityList_Forgrid = this.legalEntity;
 
@@ -783,8 +792,8 @@ export class RoSetupComponent implements OnInit {
 			shipVia: this.sourceRoApproval.shipVia,
 			shippingAcctNum: this.sourceRoApproval.shippingAcctNum,
 			shippingURL: this.sourceRoApproval.shippingURL,
-			//shippingId: this.sourceRoApproval.shippingId,
-			shippingId: 0,
+			shippingId: this.sourceRoApproval.shippingId,
+			//shippingId: 0,
 			shipToMemo: this.sourceRoApproval.shipToMemo ? this.sourceRoApproval.shipToMemo : '',
 			billToUserTypeId: this.sourceRoApproval.billToUserTypeId ? parseInt(this.sourceRoApproval.billToUserTypeId) : 0,
 			billToUserId: this.sourceRoApproval.billToUserId ? this.getShipToBillToUserId(this.sourceRoApproval.billToUserId) : 0,
@@ -2366,6 +2375,16 @@ export class RoSetupComponent implements OnInit {
 		}
 	}
 
+	filterCountries(event) {
+		this.countriesList = this.allCountriesList;
+		if (event.query !== undefined && event.query !== null) {
+			const countries = [...this.allCountriesList.filter(x => {
+				return x.label.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.countriesList = countries;
+		}
+	}
+
 	private loadPercentData() {
 		//  this.commonService.smartDropDownList('Percent', 'PercentId', 'PercentValue').subscribe(res => {
 		// 	this.allPercentData = res;
@@ -2644,6 +2663,7 @@ export class RoSetupComponent implements OnInit {
 	async saveShippingAddress() {		
 		const data = {
 			...this.addressFormForShipping,
+		    country: getValueFromObjectByKey('value', this.addressFormForShipping.country),
 			createdBy: this.userName,
 			updatedBy: this.userName,
 			masterCompanyId: 1,
@@ -2738,6 +2758,7 @@ export class RoSetupComponent implements OnInit {
 			}
 			const addressInfo = {
 				...this.addressFormForShipping,
+				country: getValueFromObjectByKey('label', this.addressFormForShipping.country),
 				customerShippingAddressId: 0
 			}
 			this.shipToCusData.push(addressInfo);
@@ -2803,6 +2824,7 @@ export class RoSetupComponent implements OnInit {
 	async saveBillingAddress() {
 		const data = {
 			...this.addressFormForBilling,
+			country: getValueFromObjectByKey('value', this.addressFormForBilling.country),
 			createdBy: this.userName,
 			updatedBy: this.userName,
 			masterCompanyId: 1,
@@ -2892,6 +2914,7 @@ export class RoSetupComponent implements OnInit {
 			}
 			const addressInfo = {
 				...this.addressFormForBilling,
+				country: getValueFromObjectByKey('label', this.addressFormForBilling.country),
 				customerBillingAddressId: 0
 			}
 			this.billToCusData.push(addressInfo);
@@ -3076,6 +3099,7 @@ export class RoSetupComponent implements OnInit {
 	async saveSplitAddress() {		
 		const data = {
 			...this.addNewAddress,
+			country: getValueFromObjectByKey('value', this.addNewAddress.country),
 			address1: this.addNewAddress.line1,
 			address2: this.addNewAddress.line2,
 			address3: this.addNewAddress.line3,
@@ -3162,6 +3186,7 @@ export class RoSetupComponent implements OnInit {
 			}
 			const addressInfo = {
 				...this.addNewAddress,
+				country: getValueFromObjectByKey('label', this.addNewAddress.country),
 				addressId: 0,
 				address1: this.addNewAddress.line1,
 				address2: this.addNewAddress.line2,

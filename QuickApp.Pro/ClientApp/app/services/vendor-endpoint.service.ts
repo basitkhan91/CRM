@@ -1400,7 +1400,7 @@ export class VendorEndpointService extends EndpointFactory {
 	}
 
 	getROStatus(repairOrderId, isActive, updatedBy) {
-		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/roStatus?repairOrderId=${repairOrderId}&isActive=${isActive}&updatedBy=${updatedBy}`)
+		return this.http.put(`${this.configurations.baseUrl}/api/Vendor/roStatus?repairOrderId=${repairOrderId}&isActive=${isActive}&updatedBy=${updatedBy}`, {} , this.getRequestHeaders())
   }
 
   deleteRO(repairOrderId, updatedBy) {
@@ -1431,6 +1431,10 @@ getRepairOrderPartsById<T>(Id: number): Observable<T> {
 
 getROViewById(repairOrderId) {
     return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/roViewById?repairOrderId=${repairOrderId}`)
+  }
+
+  getROPartsViewById(repairOrderId) {
+    return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/roPartsViewById?repairOrderId=${repairOrderId}`)
   }
 
   getROList(data) {
