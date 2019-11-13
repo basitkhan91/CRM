@@ -595,7 +595,7 @@ export class VendorBillingInformationComponent {
         if (this.local) {
             this.workFlowtService.billingCollection = this.local;
         }
-        this.activeIndex = 5;
+        this.activeIndex = 6;
         this.workFlowtService.indexObj.next(this.activeIndex);
         this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
     }

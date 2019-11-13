@@ -25,7 +25,7 @@ import { CreditTermsService } from '../../../services/Credit Terms.service';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { ChangeDetectorRef } from '@angular/core';
 import { DiscountValue } from '../../../models/discountvalue';
-
+import { CommonService } from '../../../services/common.service';
 @Component({
     selector: 'app-vendor-financial-information',
     templateUrl: './vendor-financial-information.component.html',
@@ -84,6 +84,10 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.sourceVendor.aeroExchange = true;
         this.sourceVendor.edi = true;
 
+        // this.commonservice.smartDropDownList('Discount', 'DiscountId', 'DiscountValue').subscribe(res => {
+        //     console.log(res);
+        // })
+
     }
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -115,7 +119,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
 
-    constructor(private cdRef: ChangeDetectorRef, public CreditTermsService: CreditTermsService, public currencyService: CurrencyService, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(private cdRef: ChangeDetectorRef, public CreditTermsService: CreditTermsService, public currencyService: CurrencyService, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private commonservice: CommonService) {
         if (this.workFlowtService.contactCollection) {
             this.local = this.workFlowtService.contactCollection;
             this.sourceVendor = this.local;

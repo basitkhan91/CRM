@@ -607,10 +607,10 @@ export class VendorShippingInformationComponent {
         if (this.local) {
             this.workFlowtService.shippingCollection = this.local;
         }
-        this.activeIndex = 5;
+        this.activeIndex = 6;
         this.workFlowtService.indexObj.next(this.activeIndex);
-        this.workFlowtService.changeStep('Warnings');
-        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
+        this.workFlowtService.changeStep('Billing Information');
+        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-billing-information');
     }
     handleChanges(rowData, e) {
         if (e.checked == false) {

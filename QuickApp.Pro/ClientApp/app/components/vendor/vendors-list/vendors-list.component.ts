@@ -455,6 +455,7 @@ export class VendorsListComponent implements OnInit {
         this.loadingIndicator = true;
         this.sourceVendor = row;
         this.isSaving = true;
+        this.selectedRow = row;
         this.workFlowtService.vendorHistory(this.sourceVendor.vendorId).subscribe(
             results => this.onHistoryLoadSuccessful(results[0], content),
             error => this.saveFailedHelper(error));

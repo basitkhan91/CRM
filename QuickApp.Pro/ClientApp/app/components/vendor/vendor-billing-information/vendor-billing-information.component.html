@@ -187,8 +187,8 @@
                                 </div>
                             </div>
                             <div class="clear"></div>
-                            <button type="button" [validate] moduleName="app-vendor-Billing-information" requirePermission="canAdd" [disabled]="disablesave" *ngIf="sourceVendor.vendorId == undefined" class="btn btn-success pull-right submit-btn" (click)="editItemAndCloseModel()">Save</button>
-                            <button type="button"  [validate] moduleName="app-vendor-Billing-information" requirePermission="canUpdate" [disabled]="disablesave" *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0" class="btn btn-success pull-right submit-btn" (click)="editItemAndCloseModel()">Update</button>
+                            <button type="button" [validate] moduleName="app-vendor-Billing-information" requirePermission="canAdd" [disabled]="disablesave" *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel()">Save</button>
+                            <button type="button"  [validate] moduleName="app-vendor-Billing-information" requirePermission="canUpdate" [disabled]="disablesave" *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel()">Update</button>
 
                             <div class="clear"></div>
                             <hr />
@@ -203,8 +203,8 @@
 				</form>
 			</div>
 		</div>
-		<button type="button" class="btn btn-success pull-right submit-btn" (click)="nextClick()">Next</button>
-		<button type="button" class="btn btn-success pull-right submit-btn" (click)="previousClick()">Previous</button>
+		<button type="button" class="btn btn-primary-cstm pull-right" (click)="nextClick()">Next</button>
+		<button type="button" class="btn btn-primary-cstm pull-right" (click)="previousClick()">Previous</button>
 	</div>
 </div>
 
