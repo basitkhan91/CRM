@@ -533,7 +533,7 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.loadingIndicator = true;
         this.sourceVendor = row;
     }
-    editItemAndCloseModel() {
+    editItemAndCloseModel(goNxt?:any) {
         this.isSaving = true;
         if (!(this.sourceVendor.vendorName && this.sourceVendor.vendorCode && this.sourceVendor.vendorEmail && this.sourceVendor.vendorPhone && this.sourceVendor.address1 && this.sourceVendor.city
             && this.sourceVendor.PostalCode && this.sourceVendor.country && this.sourceVendor.vendorClassificationId
@@ -574,7 +574,7 @@ export class VendorGeneralInformationComponent implements OnInit {
                     }
                     this.activeIndex = 0;
                     this.vendorService.indexObj.next(this.activeIndex);
-                    this.savesuccessCompleted(this.sourceVendor);
+                    this.savesuccessCompleted(this.sourceVendor, goNxt);
                 })
             }
 
@@ -602,7 +602,7 @@ export class VendorGeneralInformationComponent implements OnInit {
                         this.vendorService.shippingCollection = this.localCollection;
                         this.activeIndex = 0;
                         this.vendorService.indexObj.next(this.activeIndex);
-                        this.savesuccessCompleted(this.sourceVendor);
+                        this.savesuccessCompleted(this.sourceVendor, goNxt);
                     })
             }
         }
@@ -637,9 +637,12 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.loadData();
     }
 
-    private savesuccessCompleted(user?: any) {
+    private savesuccessCompleted(user?: any, goNxt?: any) {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
+        if(goNxt === 'goNext'){
+            this.nextClick();
+        }
         this.loadData();
     }
     private saveSuccessHelper(role?: any) {
@@ -694,6 +697,20 @@ export class VendorGeneralInformationComponent implements OnInit {
                 this.selectedActionName = event;
             }
         }
+    }
+
+    checkVendorExist(){
+        this.disableSaveVenderName = false; 
+        for (let i = 0; i < this.VendorNamecoll.length; i++) {
+            if (this.sourceVendor.vendorName == this.VendorNamecoll[i][0].vendorName) {
+                this.disableSaveVenName = true;
+                this.disableSave = true;
+                this.disableSaveVenderName = true;
+                this.selectedActionName = event;
+                return;
+            }
+        }
+
     }
 
     eventvendorHandler(event) {

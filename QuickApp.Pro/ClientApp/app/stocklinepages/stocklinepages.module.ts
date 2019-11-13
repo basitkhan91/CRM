@@ -69,6 +69,8 @@ import { AuditModule } from "../audit/audit.module";
 		StockLineEditComponent,
 		StocklineAdjustmentReasonComponent
 
+
+
 	],
 	providers: [
 

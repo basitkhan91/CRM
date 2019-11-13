@@ -45,7 +45,7 @@
                                     <p-autoComplete class="pautocomp-cstm" (onSelect)="onVendorselected($event)" (onKeyUp)="eventHandler($event)"
                                                     [(ngModel)]="sourceVendor.vendorName" name="vendorName"
                                                     [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
-                                                    [minLength]="1" [dropdown]="true" required>
+                                                    [minLength]="1" [dropdown]="true" required (onBlur)="checkVendorExist()">
                                         <ng-template let-vendorName pTemplate="item">
                                             <div class="ui-helper-clearfix">{{ vendorName }}</div>
                                         </ng-template>
@@ -353,8 +353,8 @@
                             Update
                         </button>
 
-                        <button type="button" class="btn btn-primary-cstm pull-right " (click)="nextClick()" [disabled]="!generalForm.valid">
-                            Next
+                        <button type="button" class="btn btn-primary-cstm pull-right " (click)="editItemAndCloseModel('goNext')" [disabled]="!generalForm.valid">
+                            Save & Next
                         </button>
                     </div>
                 </div>

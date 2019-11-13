@@ -541,8 +541,8 @@ export class CustomerService {
     getShipViaByDomesticShippingId(customerShippingId) {
         return this.customerEndpoint.getShipViaByDomesticShippingId(customerShippingId);
     }
-    getCustomerBillingHistory(customerBillingAddressId) {
-        return this.customerEndpoint.getCustomerBillingHistory(customerBillingAddressId)
+    getCustomerBillingHistory(customerId, customerBillingAddressId) {
+        return this.customerEndpoint.getCustomerBillingHistory(customerId , customerBillingAddressId)
     }
 
     getCustomerClassificationMapping(customerId) {

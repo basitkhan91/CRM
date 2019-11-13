@@ -155,6 +155,7 @@ namespace DAL
         public DbSet<CustomerAircraftType> CustomerAircraftType { get; set; }
 
         public DbSet<ItemMaster> ItemMaster { get; set; }
+        public DbSet<ItemType> ItemType { get; set; }
 
         public DbSet<ACH> ACH { get; set; }
 
