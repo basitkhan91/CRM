@@ -16,12 +16,12 @@ namespace DAL.Models
         public long TaskId { get; set; }
         public long? ExpertiseId { get; set; }
         public long EmployeeId { get; set; }
-        public bool IsBillable { get; set; }
+        public int? BillableId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public decimal? Hours { get; set; }
         public decimal? Adjustments { get; set; }
-        public decimal? AdjustmentHours { get; set; }
+        public decimal? AdjustedHours { get; set; }
         public string Memo { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }

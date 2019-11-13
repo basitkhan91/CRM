@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -9,6 +10,7 @@ using DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using OfficeOpenXml;
 using QuickApp.Pro.Helpers;
 using QuickApp.Pro.ViewModels;
 
@@ -1020,6 +1022,28 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.SaveChanges();
             }
             return Ok(id);
+        }
+
+
+        [HttpGet("stocklinereoprt")]
+        public IActionResult GenerateStockLineReoprt()
+        {
+            var result = _unitOfWork.stockLineList.GenerateStockLineReoprt();
+
+            var stream = new MemoryStream();
+
+            using (var package = new ExcelPackage(stream))
+            {
+                var workSheet = package.Workbook.Worksheets.Add("Stock Line Report");
+                workSheet.Cells.LoadFromCollection(result, true);
+                package.Save();
+            }
+            stream.Position = 0;
+            string excelName = $"StockLineReport-{DateTime.Now.ToString("ddMMMyyyy")}.xlsx";
+
+            //return File(stream, "application/octet-stream", excelName);  
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+
         }
 
     }

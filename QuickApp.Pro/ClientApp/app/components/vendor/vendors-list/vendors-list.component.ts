@@ -156,10 +156,10 @@ export class VendorsListComponent implements OnInit {
             { field: 'vendorEmail', header: 'Vendor Email' },
             { field: 'city', header: 'City' },
             { field: 'stateOrProvince', header: 'StateOrProvince' },
-            { field: 'createdBy', header: 'Created By' },
-            { field: 'updatedBy', header: 'Updated By' },
-            { field: 'updatedDate', header: 'Updated Date' },
-            { field: 'createdDate', header: 'Created Date' }
+            //{ field: 'createdBy', header: 'Created By' },
+            //{ field: 'updatedBy', header: 'Updated By' },
+            //{ field: 'updatedDate', header: 'Updated Date' },
+            //{ field: 'createdDate', header: 'Created Date' }
         ];
         this.selectedColumns = this.cols;
     }
@@ -462,7 +462,7 @@ export class VendorsListComponent implements OnInit {
     deleteItemAndCloseModel() {
         this.isSaving = true;
         this.isDeleteMode = true;
-        this.sourceVendor.isdelete = false;
+        this.sourceVendor.isdelete = true;
         //this.sourceVendor = content;
         this.sourceVendor.updatedBy = this.userName;
         this.workFlowtService.updatevendorstatus(this.sourceVendor).subscribe(

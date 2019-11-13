@@ -1,5 +1,4 @@
-USE [PAS_DEV]
-GO
+
 
 /****** Object:  Table [dbo].[ACH]    Script Date: 9/17/2019 4:03:05 PM ******/
 SET ANSI_NULLS ON

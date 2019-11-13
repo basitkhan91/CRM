@@ -9,6 +9,9 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> RecevingRolist();
         IEnumerable<object> RoHistoryList(int repairOrderId);
         IEnumerable<object> GetRepairOrderlist(Filters<RepairOrderFilters> roFilters);
-
+        IEnumerable<object> GetRoApproversList(long repairOrderId);
+        object RepairOrderView(long repairOrderId);
+        object RepairOrderById(long repairOrderId);
+        object RepairOrderPartsById(long repairOrderId);
     }
 }

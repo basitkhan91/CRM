@@ -12,6 +12,8 @@ import { fadeInOut } from '../../../../services/animations';
 import { Router } from '@angular/router';
 import { Table } from 'primeng/table';
 import { PurchaseOrderService } from '../../../../services/purchase-order.service';
+import { VendorCapabilitiesService } from '../../../../services/vendorcapabilities.service';
+import { CommonService } from '../../../../services/common.service';
 
 @Component({
 	selector: 'app-polist',
@@ -41,8 +43,23 @@ export class PolistComponent implements OnInit {
     @ViewChild('dt')
     private table: Table;
     lazyLoadEventData: any;
+    lazyLoadEventDataInput: any;
     auditHistory: AuditHistory[];
     rowDataToDelete: any = {};
+    poHeaderAdd: any = {};
+    poPartsList: any = [];
+    approveList: any = [];
+    vendorCapesInfo: any = [];
+    vendorCapesCols: any[];
+    headerManagementStructure: any = {};
+    purchaseOrderNoInput: any;
+    openDateInput: any;
+    closedDateInput: any;
+    vendorNameInput: any;
+    vendorCodeInput: any;
+    statusIdInput: any;
+    requestedByInput: any;
+    approvedByInput: any;
 
     constructor(private _route: Router,
         private authService: AuthService,
@@ -53,7 +70,9 @@ export class PolistComponent implements OnInit {
         public vendorService: VendorService,
         private dialog: MatDialog,
         private masterComapnyService: MasterComapnyService,
-        private purchaseOrderService: PurchaseOrderService) {
+        private purchaseOrderService: PurchaseOrderService,
+        private vendorCapesService: VendorCapabilitiesService,
+        private commonService: CommonService) {
         // this.displayedColumns.push('Customer');
         // this.dataSource = new MatTableDataSource();
         // this.activeIndex = 0;
@@ -63,6 +82,17 @@ export class PolistComponent implements OnInit {
     }
     ngOnInit() {
         // this.getList();
+        this.vendorCapesCols = [
+			{ field: 'vcId', header: 'VCID' },
+			{ field: 'ranking', header: 'Ranking' },
+			{ field: 'partNumber', header: 'PN' },
+			{ field: 'partDescription', header: 'PN Description' },
+			{ field: 'capabilityType', header: 'Capability Type' },
+			{ field: 'cost', header: 'Cost' },
+			{ field: 'tat', header: 'TAT' },
+			{ field: 'name', header: 'PN Mfg' },
+		];
+
     }
 
     getList(data) {
@@ -75,6 +105,57 @@ export class PolistComponent implements OnInit {
             }
 
         })
+    }
+
+    getManagementStructureCodes(id) {
+        this.commonService.getManagementStructureCodes(id).subscribe(res => {
+			if (res.Level1) {
+				this.headerManagementStructure.level1 = res.Level1;
+            }
+            if (res.Level2) {
+				this.headerManagementStructure.level2 = res.Level2;
+            }
+            if (res.Level3) {
+				this.headerManagementStructure.level3 = res.Level3;
+            }
+            if (res.Level4) {
+				this.headerManagementStructure.level4 = res.Level4;
+			}
+		})
+    }
+    
+    getManagementStructureCodesParent(partList) {
+        this.commonService.getManagementStructureCodes(partList.managementStructureId).subscribe(res => {
+			if (res.Level1) {
+				partList.level1 = res.Level1;
+            }
+            if (res.Level2) {
+				partList.level2 = res.Level2;
+            }
+            if (res.Level3) {
+				partList.level3 = res.Level3;
+            }
+            if (res.Level4) {
+				partList.level4 = res.Level4;
+			}
+		})
+    }
+
+    getManagementStructureCodesChild(partChild) {
+        this.commonService.getManagementStructureCodes(partChild.managementStructureId).subscribe(res => {
+			if (res.Level1) {
+				partChild.level1 = res.Level1;
+            }
+            if (res.Level2) {
+				partChild.level2 = res.Level2;
+            }
+            if (res.Level3) {
+				partChild.level3 = res.Level3;
+            }
+            if (res.Level4) {
+				partChild.level4 = res.Level4;
+			}
+		})
     }
 
     get userName(): string {
@@ -98,7 +179,55 @@ export class PolistComponent implements OnInit {
         this.pageIndex = pageIndex;
         this.pageSize = event.rows;
         event.first = pageIndex;
+        this.lazyLoadEventDataInput = event;
         this.getList(event)
+        console.log(event);        
+    }
+
+    onChangeInputField(value, field) {
+        console.log(value, field);
+                      
+        // if(field == "purchaseOrderId") {
+        //     this.purchaseOrderIdInput = value;
+        // }
+        if(field == "purchaseOrderNumber") {
+            this.purchaseOrderNoInput = value;
+        }
+        if(field == "openDate") {
+            this.openDateInput = value;
+        }
+        if(field == "closedDate") {
+            this.closedDateInput = value;
+        }
+        if(field == "vendorName") {
+            this.vendorNameInput = value;
+        }
+        if(field == "vendorCode") {
+            this.vendorCodeInput = value;
+        }
+        if(field == "status") {
+            this.statusIdInput = value;
+        }
+        if(field == "requestedBy") {
+            this.requestedByInput = value;
+        }
+        if(field == "approvedBy") {
+            this.approvedByInput = value;
+        }
+
+        this.lazyLoadEventDataInput.filters = {
+            purchaseOrderNo: this.purchaseOrderNoInput,
+            openDate: this.openDateInput,
+            closedDate: this.closedDateInput,
+            vendorName: this.vendorNameInput,
+            vendorCode: this.vendorCodeInput,
+            status: this.statusIdInput,
+            requestedBy: this.requestedByInput,
+            approvedBy: this.approvedByInput,
+        }
+        console.log(this.lazyLoadEventDataInput);        
+        //this.loadData(event);
+        this.getList(this.lazyLoadEventDataInput);
     }
 
     changeStatus(rowData) {
@@ -128,14 +257,59 @@ export class PolistComponent implements OnInit {
 
     viewSelectedRow(rowData) { 
         console.log(rowData);
-        this.getVendorPOById(rowData.purchaseOrderId);
+        this.getPOViewById(rowData.purchaseOrderId);
+        this.getPOPartsViewById(rowData.purchaseOrderId);
+        this.getApproversListById(rowData.purchaseOrderId);
     }
 
-    getVendorPOById(poId) {
-        this.purchaseOrderService.getVendorPOById(poId).subscribe(res => {
-            console.log(res);            
+    getPOViewById(poId) {
+        this.purchaseOrderService.getPOViewById(poId).subscribe(res => {
+            console.log(res);  
+            this.poHeaderAdd = res;
+            this.getVendorCapesByID(this.poHeaderAdd.vendorId);
+            this.getManagementStructureCodes(res.managementStructureId);
         });
     }
+    getPOPartsViewById(poId) {
+        this.purchaseOrderService.getPOPartsViewById(poId).subscribe(res => {
+            console.log(res);  
+            res.map(x => {
+                const partList = {
+                    ...x,
+                    purchaseOrderSplitParts: this.getPurchaseOrderSplit(x)              
+                }
+                this.getManagementStructureCodesParent(partList);
+                this.poPartsList.push(partList);
+            });
+        });
+    }
+
+    getPurchaseOrderSplit(partList) {
+        if(partList.purchaseOrderSplitParts) {
+			return partList.purchaseOrderSplitParts.map(y => {
+				const splitpart = {
+					...y,					
+				}
+				this.getManagementStructureCodesChild(splitpart);
+				return splitpart;
+			})
+		}
+    }
+
+    getApproversListById(poId) {
+		this.purchaseOrderService.getPOApproverList(poId).subscribe(response => {
+			console.log(response);			
+			this.approveList = response;
+        });
+    }
+
+    getVendorCapesByID(vendorId) {
+		this.vendorCapesService.getVendorCapesById(vendorId).subscribe(res => {
+			this.vendorCapesInfo = res;
+		})
+	}
+
+
     // changePage(event: { first: any; rows: number }) {
     //     console.log(event);
     //     this.pageIndex = (event.first / event.rows);

@@ -282,8 +282,6 @@ namespace DAL.Repositories
             }
         }
 
-
-
         public IEnumerable<object> getStocklineDataById(long id)
         {
             try
@@ -393,8 +391,6 @@ namespace DAL.Repositories
             }
         }
 
-
-
         public IEnumerable<object> stockLinePOUnitCostGet(long id)
         {
             try
@@ -428,19 +424,113 @@ namespace DAL.Repositories
             return stockLines;
         }
 
+
         public void CreateStockLine(StockLine model)
         {
             try
             {
                 _appContext.StockLine.Add(model);
                 _appContext.SaveChanges();
+                }
+                 catch (Exception)
+            {
+            throw;
+            }
+            }
 
+        public IEnumerable<StockLineReport> GenerateStockLineReoprt()
+        {
+            List<StockLineReport> stockLines = new List<StockLineReport>();
+            StockLineReport stockLineReport;
+            try
+            {
+                var list = (from stl in _appContext.StockLine
+                            join im in _appContext.ItemMaster on stl.ItemMasterId equals im.ItemMasterId into stlim
+                            from im in stlim.DefaultIfEmpty()
+                            join cnd in _appContext.Condition on stl.ConditionId equals cnd.ConditionId into stlcnd
+                            from cnd in stlcnd.DefaultIfEmpty()
+                            join mnf in _appContext.Manufacturer on stl.ManufacturerId equals mnf.ManufacturerId into stlmnf
+                            from mnf in stlmnf.DefaultIfEmpty()
+                            join whs in _appContext.Warehouse on stl.WarehouseId equals whs.WarehouseId into stlwhs
+                            from whs in stlwhs.DefaultIfEmpty()
+                            join shf in _appContext.Shelf on stl.ShelfId equals shf.ShelfId into stlshf
+                            from shf in stlshf.DefaultIfEmpty()
+                            join bnd in _appContext.Bin on stl.BinId equals bnd.BinId into stlbnd
+                            from bnd in stlbnd.DefaultIfEmpty()
+                            join glc in _appContext.GLAccount on stl.GLAccountId equals glc.GLAccountId into stlglc
+                            from glc in stlglc.DefaultIfEmpty()
+                            join pox in _appContext.PurchaseOrder on stl.PurchaseOrderId equals pox.PurchaseOrderId into stlpox
+                            from pox in stlpox.DefaultIfEmpty()
+                            join rox in _appContext.RepairOrder on stl.RepairOrderId equals rox.RepairOrderId into stlrox
+                            from rox in stlrox.DefaultIfEmpty()
+                            join mpx in _appContext.MasterParts on stl.ItemMasterId equals mpx.MasterPartId into stlmpx
+                            from mpx in stlmpx.DefaultIfEmpty()
+                            select new
+                            {
+                                PartNumber=  mpx.PartNumber==null?"": mpx.PartNumber,
+                                PartDescription = mpx.Description == null ? "" : mpx.Description,
+                                SerialNumber = stl.SerialNumber == null ? "" : stl.SerialNumber,
+                                StocklineNumber = stl.StockLineNumber == null ? "" : stl.StockLineNumber,
+                                Condition = cnd.Description == null ? "" : cnd.Description,
+                                VendorName = mnf.Name == null ? "" : mnf.Name,
+                                VendorCode = mnf.ManufacturerId==null?0: mnf.ManufacturerId,
+                                Quantity = stl.Quantity == null ? 0 : stl.Quantity,
+                                QtyAdjusted = 0,
+                                POUnitCost = stl.PurchaseOrderUnitCost == null ? 0 : stl.PurchaseOrderUnitCost,
+                                UnitPrice = stl.UnitSalesPrice == null ? 0 : stl.UnitSalesPrice,
+                                ExtendedPrice = 0,
+                                WareHouse = whs.Name == null ? "" : whs.Name,
+                                Shelf = shf.Name == null ? "" : shf.Name,
+                                Bin = bnd.Name == null ? "" : bnd.Name,
+                                AccountCode = glc.AccountCode == null ? "" : glc.AccountCode,
+                                PurchaseOrderNumber = pox.PurchaseOrderNumber == null ? "" : pox.PurchaseOrderNumber,
+                                RepairOrderNumber = rox.RepairOrderNumber == null ? "" : rox.RepairOrderNumber,
+                                RepairOrderUnitCost = stl.RepairOrderUnitCost == null ? 0 : stl.RepairOrderUnitCost,
+                                stl.ReceivedDate,
+                                ReceiverNumber = stl.ReceiverNumber == null ? "" : stl.ReceiverNumber,
+                                ReconciliationNumber = stl.ReconciliationNumber == null ? "" : stl.ReconciliationNumber
+                            }).Distinct().ToList();
+
+                if(list!=null && list.Count>0)
+                {
+                    foreach(var item in list)
+                    {
+                        stockLineReport = new StockLineReport();
+                        stockLineReport.AccountCode = item.AccountCode;
+                        stockLineReport.PartNumber = item.PartNumber;
+                        stockLineReport.PartDescription = item.PartDescription;
+                        stockLineReport.SerialNumber = item.SerialNumber;
+                        stockLineReport.StocklineNumber = item.StocklineNumber;
+                        stockLineReport.Condition = item.Condition;
+                        stockLineReport.VendorName = item.VendorName;
+                        stockLineReport.VendorCode = item.VendorCode;
+                        stockLineReport.Quantity = item.Quantity;
+                        stockLineReport.QtyAdjusted = item.QtyAdjusted;
+                        stockLineReport.POUnitCost = item.POUnitCost;
+                        stockLineReport.UnitPrice = item.UnitPrice;
+                        stockLineReport.ExtendedPrice = item.ExtendedPrice;
+                        stockLineReport.WareHouse = item.WareHouse;
+                        stockLineReport.Shelf = item.Shelf;
+                        stockLineReport.Bin = item.Bin;
+                        stockLineReport.AccountCode = item.AccountCode;
+                        stockLineReport.PurchaseOrderNumber = item.PurchaseOrderNumber;
+                        stockLineReport.RepairOrderNumber = item.RepairOrderNumber;
+                        stockLineReport.RepairOrderUnitCost = item.RepairOrderUnitCost;
+                        stockLineReport.ReceivedDate = item.ReceivedDate;
+                        stockLineReport.ReceiverNumber = item.ReceiverNumber;
+                        stockLineReport.ReconciliationNumber = item.ReconciliationNumber;
+                        stockLines.Add(stockLineReport);
+                    }
+                }
+
+                return stockLines;
             }
             catch (Exception)
             {
                 throw;
             }
         }
+
 
         public IEnumerable<object> GetList(Filters<StockLineListFilters> stockLineFilters)
         {
@@ -588,6 +678,8 @@ namespace DAL.Repositories
                           }).ToList();
             return result;
         }
+
+
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 

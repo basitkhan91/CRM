@@ -93,6 +93,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     ];
     selectedClassificationRecordForEdit: any;
     tempClassifciatonIds: any = [];
+    tempIntegrationIds: any = [];
     // editData: any;
 
     // selectedCustomerCodeData: any;
@@ -476,6 +477,27 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 this.generalInformation.customerClassificationIds = this.tempClassifciatonIds;
                 console.log(this.generalInformation.customerClassificationIds);
             });
+
+            this.customerService.getintegrationtypes(this.id).subscribe(res => {               
+               
+                const responseData:
+                 any = res;
+                const tempIntegrationMapping = responseData.map(x => {
+                    return {
+                        value: x.integrationPortalId,
+                        label: x.description
+                    }
+                });
+             
+                for (let j = 0; j < tempIntegrationMapping.length; j++) {
+                    
+                            this.tempIntegrationIds.push(tempIntegrationMapping[j].value);
+                    }
+                this.generalInformation.integrationPortalId = this.tempIntegrationIds;
+                
+            });
+
+            
         }
     }
 

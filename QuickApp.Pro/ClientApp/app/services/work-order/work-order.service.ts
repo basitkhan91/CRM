@@ -78,8 +78,8 @@ export class WorkOrderService {
     getRevisedPartNumbers(itemMasterId) {
         return this.workOrderEndpointService.getRevisedPartNumbers(itemMasterId)
     }
-    getStockLineByItemMasterId(itemMasterId) {
-        return this.workOrderEndpointService.getStockLineByItemMasterId(itemMasterId);
+    getStockLineByItemMasterId(itemMasterId, conditionId) {
+        return this.workOrderEndpointService.getStockLineByItemMasterId(itemMasterId, conditionId);
     }
     getPartPublicationByItemMaster(itemMasterId) {
         return this.workOrderEndpointService.getPartPublicationByItemMaster(itemMasterId);
@@ -90,23 +90,40 @@ export class WorkOrderService {
     getConditionByItemMasterId(itemMasterId) {
         return this.workOrderEndpointService.getConditionByItemMasterId(itemMasterId);
     }
-    getWorkOrderList(pageIndex, pageSize){
-        return this.workOrderEndpointService.getWorkOrderList(pageIndex,pageSize);
+    getWorkOrderList(pageIndex, pageSize) {
+        return this.workOrderEndpointService.getWorkOrderList(pageIndex, pageSize);
     }
 
     updateActionforWorkOrder(action, login) {
         return this.workOrderEndpointService.updateWorkOrderStatus(action, login);
     }
-    deleteActionforWorkOrder(workOrderId){
+    deleteActionforWorkOrder(workOrderId) {
         return this.workOrderEndpointService.deleteWorkOrder(workOrderId);
     }
 
-    createWorkFlowWorkOrder(data){
+    getWorkOrderPartListByWorkOrderId(workOrderId) {
+        return this.workOrderEndpointService.getWorkOrderPartListByWorkOrderId(workOrderId);
+    }
+
+    createWorkFlowWorkOrder(data) {
         return this.workOrderEndpointService.createWorkFlowWorkOrder(data);
     }
 
-    getWorkOrderWorkFlowNumbers(){
-        return this.workOrderEndpointService.getWorkOrderWorkFlowNumbers();
+    getWorkOrderWorkFlowNumbers(workOrderId) {
+        return this.workOrderEndpointService.getWorkOrderWorkFlowNumbers(workOrderId);
+    }
+
+    getWorkOrderAssetList(workFlowWorkOrderId) {
+        return this.workOrderEndpointService.getWorkOrderAssetList(workFlowWorkOrderId);
+    }
+    createWorkOrderLabor(data) {
+        return this.workOrderEndpointService.createWorkOrderLabor(data);
+    }
+    getAllTasks() {
+        return this.workOrderEndpointService.getTasks();
+    }
+    getMaterialList(workOrderWorkFlowId, workOrderId) {
+        return this.workOrderEndpointService.getMaterialList(workOrderWorkFlowId, workOrderId)
     }
 
 }

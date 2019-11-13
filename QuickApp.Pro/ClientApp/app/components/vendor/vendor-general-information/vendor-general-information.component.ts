@@ -615,6 +615,7 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.vendorService.vendorgeneralcollection = this.local;
         this.activeIndex = 1;
         this.vendorService.indexObj.next(this.activeIndex);
+        this.vendorService.changeStep('Contacts');
         this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
     }
 
@@ -817,7 +818,7 @@ export class VendorGeneralInformationComponent implements OnInit {
     }
 
     onAddCapabilities() {
-        
+        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-capabilities-list');
     }
 
 }

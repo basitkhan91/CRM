@@ -72,11 +72,13 @@ namespace QuickApp.Pro.Controllers
             return Ok(dynamicGridData);
         }
         [HttpDelete("stockLineAdjustmentReasonDelete/{id}")]
+        [Produces(typeof(StocklineAdjustmnetReasonViewModel))]
 
         public IActionResult stockLineAdjustmentReasonDelete(long id)
         {
             
-            var existingResultofstocklineList = _unitOfWork.Repository<StocklineAdjustmentReason>().Find(x => x.AdjustmentReasonId == id).FirstOrDefault();
+            //var existingResultofstocklineList = _unitOfWork.Repository<StocklineAdjustmentReason>().Find(x => x.AdjustmentReasonId == id).FirstOrDefault();
+            var existingResultofstocklineList = _unitOfWork.StocklineAdjustmentReasonRepository.GetSingleOrDefault(x => x.AdjustmentReasonId == id);
             if (existingResultofstocklineList != null)
             {
                 existingResultofstocklineList.IsDeleted = true;
@@ -103,6 +105,7 @@ namespace QuickApp.Pro.Controllers
                 actionobject.Memo = stocklineAdjustmnetReasonViewModel.Memo;
                 actionobject.MasterCompanyId = stocklineAdjustmnetReasonViewModel.MasterCompanyId;
                 actionobject.IsActive = stocklineAdjustmnetReasonViewModel.IsActive;
+                actionobject.IsDeleted = stocklineAdjustmnetReasonViewModel.IsDeleted;
                 actionobject.CreatedDate = DateTime.Now;
                 actionobject.UpdatedDate = DateTime.Now;
                 actionobject.CreatedBy = stocklineAdjustmnetReasonViewModel.CreatedBy;
@@ -115,13 +118,29 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPut("stockLineAdjustmentReasonpost/{id}")]
-        public IActionResult stockLineAdjustmentReasonUpdate([FromBody]StocklineAdjustmentReason stocklineAdjustmentReason)
+        public IActionResult stockLineAdjustmentReasonUpdate([FromBody] StocklineAdjustmentReason stocklineAdjustmentReason)
         {
             if (stocklineAdjustmentReason != null)
             {
                 if (ModelState.IsValid)
                 {
+                    //stocklineAdjustmentReason.UpdatedDate = DateTime.Now;
+                    //stocklineAdjustmentReason.UpdatedBy = unitOfMeasureViewModel.UpdatedBy;
+                    //_unitOfWork.Repository<StocklineAdjustmentReason>().Update(stocklineAdjustmentReason);
+                    //_unitOfWork.SaveChanges();
+                    //return Ok(stocklineAdjustmentReason);
+
+                    //var existingResultofstocklineList = _unitOfWork.Repository<StocklineAdjustmentReason>().Find(x => x.AdjustmentReasonId == id).FirstOrDefault();
+                    //var existingResultofstocklineList = _unitOfWork.StocklineAdjustmentReasonRepository.GetSingleOrDefault(x => x.AdjustmentReasonId == id);
+
                     stocklineAdjustmentReason.UpdatedDate = DateTime.Now;
+                    stocklineAdjustmentReason.UpdatedBy = stocklineAdjustmentReason.UpdatedBy;
+                    stocklineAdjustmentReason.Description = stocklineAdjustmentReason.Description;
+                    stocklineAdjustmentReason.Memo = stocklineAdjustmentReason.Memo;
+                    stocklineAdjustmentReason.IsActive = stocklineAdjustmentReason.IsActive;
+                    stocklineAdjustmentReason.MasterCompanyId = stocklineAdjustmentReason.MasterCompanyId;
+
+                    //_unitOfWork.StocklineAdjustmentReasonRepository.Update(stocklineAdjustmentReason);
                     _unitOfWork.Repository<StocklineAdjustmentReason>().Update(stocklineAdjustmentReason);
                     _unitOfWork.SaveChanges();
                     return Ok(stocklineAdjustmentReason);

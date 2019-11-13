@@ -233,6 +233,7 @@ namespace DAL
         IWorkOrderRepository WorkOrderRepository { get; }
         ICapabilityTypeRepository capabilityTypeRepository { get; }
         IAssetRepository Asset { get; }
+        IAssetAuditRepository AssetAudit { get; }
 
         IRepository<T> Repository<T>() where T : class;
 
@@ -261,6 +262,17 @@ namespace DAL
         
         IPublicationTypesRepository PublicationTypesRepository { get; }
         IPercentageRepository PercentageRepository { get; }
+
+        IMasterSalesOrderQuoteTypesRepository MasterSalesOrderQuoteTypesRepository { get; }
+
+        IMasterSalesCreditTermsRepository MasterSalesCreditTermsRepository { get; }
+
+        IMasterSalesLeadSourcesRepository MasterSalesLeadSourcesRepository { get; }
+
+        IMasterSalesProbablityRepository MasterSalesProbablityRepository { get;  }
+
+        IItemMasterExchangeLoanRepository ItemMasterExchangeLoan { get; }
+      
         void SaveChanges(Employee employeeobject);
     }
 }
