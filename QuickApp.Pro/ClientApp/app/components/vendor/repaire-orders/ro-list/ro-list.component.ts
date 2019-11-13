@@ -273,7 +273,7 @@ export class RoListComponent implements OnInit {
             res.map(x => {
                 const partList = {
                     ...x,
-                    purchaseOrderSplitParts: this.getRepairOrderSplit(x)              
+                    repairOrderSplitParts: this.getRepairOrderSplit(x)              
                 }
                 this.getManagementStructureCodesParent(partList);
                 this.roPartsList.push(partList);
@@ -282,8 +282,8 @@ export class RoListComponent implements OnInit {
     }
 
     getRepairOrderSplit(partList) {
-        if(partList.purchaseOrderSplitParts) {
-			return partList.purchaseOrderSplitParts.map(y => {
+        if(partList.repairOrderSplitParts) {
+			return partList.repairOrderSplitParts.map(y => {
 				const splitpart = {
 					...y,					
 				}

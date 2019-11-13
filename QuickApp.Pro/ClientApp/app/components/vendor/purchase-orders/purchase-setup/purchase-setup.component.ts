@@ -2786,6 +2786,7 @@ export class PurchaseSetupComponent implements OnInit {
 			}
 			const addressInfo = {
 				...this.addressFormForShipping,
+				country: getValueFromObjectByKey('label', this.addressFormForShipping.country),
 				vendorShippingAddressId: 0
 			}
 			this.vendorSelected.push(addressInfo);
@@ -2804,6 +2805,7 @@ export class PurchaseSetupComponent implements OnInit {
 			}
 			const addressInfo = {
 				...this.addressFormForShipping,
+				country: getValueFromObjectByKey('label', this.addressFormForShipping.country),
 				legalEntityShippingAddressId: 0
 			}
 			this.companySiteList_Shipping.push(addressInfo);
@@ -2941,6 +2943,7 @@ export class PurchaseSetupComponent implements OnInit {
 			}
 			const addressInfo = {
 				...this.addressFormForBilling,
+				country: getValueFromObjectByKey('label', this.addressFormForBilling.country),
 				vendorBillingAddressId: 0
 			}
 			this.vendorSelectedForBillTo.push(addressInfo);
@@ -2960,6 +2963,7 @@ export class PurchaseSetupComponent implements OnInit {
 			}
 			const addressInfo = {
 				...this.addressFormForBilling,
+				country: getValueFromObjectByKey('label', this.addressFormForBilling.country),
 				legalEntityBillingAddressId: 0
 			}
 			this.companySiteList_Billing.push(addressInfo);
