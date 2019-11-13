@@ -104,7 +104,8 @@ export class VendorEndpointService extends EndpointFactory {
 	private readonly _updateActiveInactivefordshipping: string = "/api/Vendor/vendorUpdateforActiveforshipping";
     private readonly _updateActiveInactivefordbilling: string = "/api/Vendor/vendorUpdateforActiveforbilling";
 	private readonly _updateActiveInactivefordshipviaDetails: string = "/api/Vendor/vendorUpdateforActiveforshipviaDetails";
-	private readonly _polisturl: string = "/api/Vendor/polist";
+    private readonly _polisturl: string = "/api/Vendor/polist";
+    private readonly _stockLinePOlisturl: string = "/api/Vendor/stocklinePOList";
 	private readonly _countryUrl: string = "/api/Customer/GetcountryList";
 	private readonly _rolist: string = "/api/Vendor/rolist";
 	private readonly _purchaseorderDetails: string = "/api/Vendor/GetvendorpurchaseList";
@@ -191,7 +192,8 @@ export class VendorEndpointService extends EndpointFactory {
 	get getshipaddresshistory() { return this.configurations.baseUrl + this._getshipaddresshistory; }
     get getbilladdresshistory() { return this.configurations.baseUrl + this._getbilladdresshistory; }
 	get capabilityUrl() { return this.configurations.baseUrl + this._capabilityUrl; }
-	get polisturl() { return this.configurations.baseUrl + this._polisturl; }
+    get polisturl() { return this.configurations.baseUrl + this._polisturl; }
+    get stockLinepolisturl() { return this.configurations.baseUrl + this._stockLinePOlisturl; }
 	get rolisturl() { return this.configurations.baseUrl + this._rolist; }
 	get listUrl() { return this.configurations.baseUrl + this._listUrl; }
 	get countryUrl() { return this.configurations.baseUrl + this._countryUrl; }
@@ -1209,7 +1211,7 @@ export class VendorEndpointService extends EndpointFactory {
 	}
 	getPurchaseOrderList<T>(): Observable<T> {
 
-		return this.http.get<T>(this.polisturl, this.getRequestHeaders())
+        return this.http.get<T>(this.stockLinepolisturl, this.getRequestHeaders())
 			.catch(error => {
 				return this.handleError(error, () => this.getPurchaseOrderList());
 			});

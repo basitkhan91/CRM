@@ -73,7 +73,7 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { BreadcrumbModule } from 'primeng/breadcrumb'; //bread crumb
 import { SingleScreenBreadcrumbService } from "../services/single-screens-breadcrumb.service";
 import { WarehouseComponent } from "../components/warehouse/warehouse.component";
-import { StocklineAdjustmentReasonComponent } from '../components/stockline/stockline-adjustment-reason/stockline-adjustment-reason.component';
+//import { StocklineAdjustmentReasonComponent } from '../components/stockline/stockline-adjustment-reason/stockline-adjustment-reason.component';
 import { ManufacturerComponent } from "../components/manufacturer/manufacturer.component";
 import { VendorcapabilitiesComponent } from "../components/vendorcapabilities/vendorcapabilities.component";
 //import { VendorcapabilitiesComponent } from "../components/vendor-capabilities/vendor-capabilities.component";
@@ -214,7 +214,7 @@ import { CommonService } from "../services/common.service";
         RfqEngineComponent,
         WarehouseComponent,
 
-        StocklineAdjustmentReasonComponent,
+        //StocklineAdjustmentReasonComponent,
 		GLAccountCategoryComponent,
         ManufacturerComponent,
         VendorcapabilitiesComponent,

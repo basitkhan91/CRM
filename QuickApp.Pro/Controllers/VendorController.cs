@@ -95,6 +95,12 @@ namespace QuickApp.Pro.Controllers
             return Ok(allActions);
         }
 
+        [HttpGet("stocklinePOList")]
+        public IActionResult stocklinePOList()
+        {
+            var allActions = _unitOfWork.purchaseOrder.StockLinePOList(); //.GetAllCustomersData();
+            return Ok(allActions);
+        }
 
         [HttpGet("recevingpolist")]
         public IActionResult RecevingPolist()

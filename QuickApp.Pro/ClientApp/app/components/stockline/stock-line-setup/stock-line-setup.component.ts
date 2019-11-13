@@ -116,34 +116,28 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
     hasSerialized: boolean;
     showSerialNumberError: boolean;
     disableSavepartNumber: boolean;
+
 	ngOnInit(): void
 	{
-		this.stocklineser.currentUrl = '/stocklinemodule/stocklinepages/app-stock-line-setup';
-		this.stocklineser.bredcrumbObj.next(this.stocklineser.currentUrl);
-		this.loadData();
-		this.loadCompanyData();
-		this.loadManagementdata();
-		this.loadSiteData();
-		this.Integration();
-		this.loadManufacturerData();
-		this.loadPoData();
-		this.loadRoData();
-		this.loadEmployeeData();
-		this.loadIntegrationPortal();
-		this.glAccountlistdata();
-		
-		//this.onDataLoadWareHouse();
-		//this.onDataLoadLocation();
-		
+        this.stocklineser.currentUrl = '/stocklinemodule/stocklinepages/app-stock-line-setup';
+        this.stocklineser.bredcrumbObj.next(this.stocklineser.currentUrl);
+        this.loadData();
+        this.loadCompanyData();
+        this.loadManagementdata();
+        this.loadSiteData();
+        this.Integration();
+        this.loadManufacturerData();
+        this.loadPoData();
+        this.loadRoData();
+        this.loadEmployeeData();
+        this.loadIntegrationPortal();
+        this.glAccountlistdata();
+        this.customerList();
+        this.vendorList();
+        this.loadGlAccountData();
+	    this.ptnumberlistdata();
+    }
 
-		
-		this.customerList();
-		this.vendorList();
-		this.loadGlAccountData();
-		this.ptnumberlistdata();
-
-		
-	}
 	selectedObtainFromValue: string = '';
 	selectedTracableToValue: string = '';
 	showLable: boolean;
@@ -167,9 +161,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 	constructor(public integrationService: IntegrationService,private empService: EmployeeService,public vendorservice: VendorService,public manufacturerService: ManufacturerService,public itemser: ItemMasterService,public glAccountService: GLAccountClassService,public vendorService: VendorService,public customerService: CustomerService,public inteService: IntegrationService,public workFlowtService1: LegalEntityService,public workFlowtService: BinService,public siteService: SiteService,public integration: IntegrationService, public stocklineser: StocklineService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public conditionService: ConditionService, private dialog: MatDialog)
 	{
 		this.dataSource = new MatTableDataSource();
-		
-		
-
 	}
 
 	private ptnumberlistdata() {
@@ -188,11 +179,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		this.loadingIndicator = false;
 		this.dataSource.data = allWorkFlows;
 		this.allPartnumbersInfo = allWorkFlows;
-
-
 		//console.log(this.allActions);
-
-
 	}
 
 	private glAccountlistdata() {
@@ -211,11 +198,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		this.loadingIndicator = false;
 		this.dataSource.data = allWorkFlows;
 		this.allglAccountInfo = allWorkFlows;
-
-
 		//console.log(this.allActions);
-
-
 	}
 
 	loadPoData()
@@ -236,7 +219,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		this.dataSource.data = getCreditTermsList;
 
 		this.allPolistInfo = getCreditTermsList;
-
 	}
 
 	loadRoData()
@@ -300,22 +282,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 
 				);
 		}
-		//let valAirCraft = [];
-		//this.itemser.getAircraftManufacturer(this.sourceItemMaster.itemMasterId)
-		//	.subscribe(results => {
-		//		this.allIntegrationInfo = results;
-		//		if (results != null) {
-		//			for (let i = 0; i < this.allIntegrationInfo.length; i++) {
-		//				valAirCraft.push(this.allIntegrationInfo[i].integrationPortalId);
-		//			}
-		//			this.selectedAircraftTypes = valAirCraft;
-		//			console.log(this.selectedAircraftTypes);
-		//		}
-
-		//	},
-		//		error => this.onDataLoadFailed(error)
-		//	);
-
 
 	}
 
@@ -382,21 +348,22 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 
 
     filterpartItems(event) {
-
+        console.log('I am in filter');
         this.partCollection = [];
         this.itemclaColl = [];
         if (this.allPartnumbersInfo) {
             if (this.allPartnumbersInfo.length > 0) {
-
+                
                 for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
                     let partName = this.allPartnumbersInfo[i].partNumber;
+                    console.log(partName);
                     if (partName) {
                         if (partName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                             this.itemclaColl.push([{
                                 "partId": this.allPartnumbersInfo[i].itemMasterId,
                                 "partName": partName
                             }]),
-
+                                
                                 this.partCollection.push(partName);
                         }
                     }
@@ -424,8 +391,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			);
 		}
 	}
-
-
 
 	private onpartnumberloadsuccessfull(allWorkFlows: any[])
 	{
@@ -466,23 +431,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			this.sourceStockLineSetup.shelfLife = allWorkFlows[0].isShelfLifeAvailable;
 		}
 
-		//if (allWorkFlows[0].tagType == null) {
-		//	this.sourceStockLineSetup.tagType = false;
-		//}
-		//else {
-		//	this.sourceStockLineSetup.tagType = allWorkFlows[0].tagType;
-		//}
-		
-		//this.sourceStockLineSetup.tagDate = new Date(allWorkFlows[0].tagDate);
-
-		//if (this.sourceStockLineSetup.tagDate == "0001-01-01T00:00:00" || this.sourceStockLineSetup.tagDate == undefined || this.sourceStockLineSetup.tagDate == "undefined") {
-		//	this.sourceStockLineSetup.tagDate = new Date();
-		//}
-		//else {
-		//	this.sourceStockLineSetup.tagDate = new Date(this.sourceStockLineSetup.tagDate);
-		//}
-
-		
 		this.sourceStockLineSetup.isPMA = allWorkFlows[0].pma;
 		this.sourceStockLineSetup.isDER = allWorkFlows[0].der;
 
@@ -643,26 +591,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 	}
 
 	
-	//private onIntegrationData(getEmployeeCerficationList: any[]) {
-	//	// alert('success');
-	//	this.alertService.stopLoadingMessage();
-	//	this.loadingIndicator = false;
-	//	this.dataSource.data = getEmployeeCerficationList;
-	//	this.allintegrationdetails = getEmployeeCerficationList;
-	//	if (this.allintegrationdetails.length > 0) {
-	//		for (let i = 0; i < this.allintegrationdetails.length; i++)
-	//			this.integrationvalues.push(
-	//				{ value: this.allintegrationdetails[i].integrationPortalId, label: this.allintegrationdetails[i].description },
-	//				//{ value: '2', label: 'Shift 1' },
-	//				//{ value: '3', label: 'Shift 1' },
-	//				//{ value: '4', label: 'Shift 1' },
-
-	//			);
-	//	}
-	//}
-
-
-
 	private onDataLoadLocation(getLocationList: any) { //Storing WareHouse Data
 
 		this.alertService.stopLoadingMessage();
@@ -748,12 +676,12 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			}
 
 		}
-	}
+    }
+
 	locationValueChange(locationId)
 	{
 		this.allShelfs = [];
 		this.allBins = [];
-
 		
 		this.sourceStockLineSetup.shelfId = 0;
 		this.sourceStockLineSetup.binId = 0;
@@ -768,10 +696,8 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 	shelfValueChange(binId)
 	{
 		this.allBins = [];
-
 		
 		this.sourceStockLineSetup.binId = 0;
-
 		this.workFlowtService.getBinDataById(binId).subscribe(
 			results => this.onDataLoadBin(results), //sending Location
 			error => this.onDataLoadFailed(error));	
@@ -791,7 +717,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			results => this.onManagemtntdataLoad(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
-		
 		
 	}
 
@@ -818,23 +743,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		this.dataSource.data = getAtaMainList;
 		this.allManagemtninfo = getAtaMainList;
 
-		//if (this.allManagemtninfo)
-		//{
-		//	for (let i = 0; i < this.allManagemtninfo.length; i++)
-		//	{
-		//		this.copyOfAllManagemtninfo.push(JSON.parse(JSON.stringify(this.allManagemtninfo[i])));
-		//	}
-		//}
-
-
-		//this.copyOfAllManagemtninfo = getAtaMainList;
-		// i am Showing Managemnet Structure Data which Already has
-		//if (this.sourceStockLineSetup.managementStructureEntityId && this.allManagemtninfo) {
-		//	this.getBUList(this.sourceStockLineSetup.managementStructureEntityId);
-		//}
-
-		
-
 		for (let i = 0; i < this.allManagemtninfo.length; i++)
 		{
 
@@ -848,53 +756,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		}
 		
 	}
-
-	//Management Structure Wrong One Start
-
-			//getBUList(companyId) {
-
-			//	//for Structure
-			//	if (this.allManagemtninfo) {
-
-			//		this.gridData = this.makeNestedObj(this.allManagemtninfo, companyId);
-			//	}
-
-			//	if (this.gridData.length == 0)
-			//	{
-			//		this.workFlowtService1.getManagemententity().subscribe(
-			//			results => this.onManagemtntdataLoad(results[0]),
-			//			error => this.onDataLoadFailed(error)
-			//		);
-
-			//	}
-
-			//	if (this.gridData.length == 0)
-			//	{
-			//		this.gridData = this.makeNestedObj(this.allManagemtninfo, companyId);
-			//	}
-
-			//	this.cols1 = [
-			//		{ field: 'code', header: 'Code' },
-			//		{ field: 'name', header: 'Name' },
-			//		{ field: 'description', header: 'Description' },
-			//		//{ field: 'legalEntityId', header: 'ID' },
-			//	];
-			//	this.showManagement = true;
-			//}
-
-
-	//Management Structure Wrong One End
-
-
-
-		//this.bulist = [];
-		//this.departmentList = [];
-		//this.divisionlist = [];
-		//for (let i = 0; i < this.allManagemtninfo.length; i++) {
-		//	if (this.allManagemtninfo[i].parentId == companyId) {
-		//		this.bulist.push(this.allManagemtninfo[i]);
-		//	}
-	
 
 	getBUList(companyId)
 	{
@@ -984,8 +845,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 
 	}
 
-
-
 	private onDataLoadFailed(error: any)
 	{
 		// alert(error);
@@ -1027,7 +886,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			this.showPartNumberError = false;
 		}
 
-
 		if (this.sourceStockLineSetup.companyId) {
 			this.showCompanyError = false;
 		}
@@ -1054,37 +912,30 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		else {
 			this.showDepError = false;
 		}
-
-
 		if (this.sourceStockLineSetup.partDescription) {
 			this.showPartDescriptionError = false;
 		}
 		else { this.showPartDescriptionError = true; }
 
-
-		if (this.sourceStockLineSetup.conditionId) {
+        if (this.sourceStockLineSetup.conditionId) {
 			this.showConditionError = false;
 		}
 		else { this.showConditionError = true; }
-
 
 		if (this.sourceStockLineSetup.siteId) {
 			this.showSiteError = false;
 		}
 		else { this.showSiteError = true; }
 
-
 		if (this.sourceStockLineSetup.receivedDate) {
 			this.showReceiveDateError = false;
 		}
 		else { this.showReceiveDateError = true; }
 
-
 		if (this.sourceStockLineSetup.receiverNumber) {
 			this.showReceiverNumberError = false;
 		}
 		else { this.showReceiverNumberError = true; }
-
 
 		if (this.sourceStockLineSetup.glAccountId) {
 			this.showGlAccountNumberError = false;
@@ -1102,20 +953,18 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			this.showSerialNumberError = true;
 		}
 
+        this.isSaving = true;
 
-
-
-		this.isSaving = true;
 		if (
 			((this.sourceStockLineSetup.partNumber == undefined) || (this.sourceStockLineSetup.partNumber == "undefined"))
 			|| ((this.sourceStockLineSetup.isSerialized == true) && (!this.sourceStockLineSetup.serialNumber))
 			|| (!this.sourceStockLineSetup.companyId) || (!this.sourceStockLineSetup.partNumber) || (!this.sourceStockLineSetup.partDescription)
 			|| (!this.sourceStockLineSetup.conditionId) || (!this.sourceStockLineSetup.siteId) || (!this.sourceStockLineSetup.receivedDate)
 			|| (!this.sourceStockLineSetup.receiverNumber) || (!this.sourceStockLineSetup.glAccountId)
-		) {
+        )
+        {
 			this.display = true;
 			this.disableSave = true;
-
 			this.modelValue = true;
 		}
 
@@ -1145,14 +994,11 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 							this.collectionofstockLineTimeLife = data;
 							this.sourceStockLineSetup.timeLifeCyclesId = data.timeLifeCyclesId;
 							this.value = 1;
-
 							this.stocklineser.newStockLine(this.sourceStockLineSetup).subscribe(data => {
 								this.collectionofstockLine = data;
-
 								this.saveStocklineIntegrationPortalData(data.stockLineId, this.selectedModels); //for Saving Integration Data
 								this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
 								this.value = 1;
-
 							})
 						})
 					}
@@ -1168,67 +1014,10 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 
 						})
 					}
-
 				}
-
-
 			}
 		}
 
-		//if ((this.sourceStockLineSetup.isSerialized == true) && (this.sourceStockLineSetup.serialNumber)) {
-		//	if (!this.sourceStockLine.stockLineId) {
-		//		this.sourceStockLine.createdBy = this.userName;
-		//		this.sourceStockLine.updatedBy = this.userName;
-		//		this.sourceStockLine.masterCompanyId = 1;
-		//		this.sourceStockLine.itemTypeId = 1;
-		//		this.stocklineser.newStockLine(this.sourceStockLineSetup).subscribe(data => {
-		//			this.collectionofstockLine = data;
-
-		//			this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
-		//			this.value = 1;
-
-		//		})
-		//	}
-		//	else {
-
-		//		this.sourceStockLine.updatedBy = this.userName;
-		//		this.sourceStockLine.masterCompanyId = 1;
-		//		this.sourceItemMaster.itemMasterId = this.sourceStockLineSetup.itemMasterId;
-		//		this.sourceItemMaster.partId = this.selectedPartId
-		//		//Update Item Master
-		//		this.stocklineser.updateItemMasterPartPost(this.sourceItemMaster).subscribe(data => { });
-		//		//Updating Part
-
-		//		this.stocklineser.updateStockSetupLine(this.sourceStockLineSetup).subscribe(
-		//			response => this.saveCompleted(this.sourceStockLineSetup),
-		//			error => this.saveFailedHelper(error));
-
-		//		if (this.sourceStockLineSetup.timeLifeCyclesId) {
-		//			console.log("Update Timelife");
-		//			this.stocklineser.updateStockLineTimelife(this.sourceTimeLife).subscribe(data => {
-		//				this.collectionofstockLine = data;
-		//				this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
-		//			})
-
-		//		}
-		//		else {
-		//			this.stocklineser.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
-		//				this.collectionofstockLine = data;
-
-		//				this.value = 1;
-		//				this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
-		//			})
-		//		}
-
-
-
-		//	}
-		//}
-		//else
-		//{
-			
-		//}
-		
 	}
 
 	closethis()
@@ -1285,19 +1074,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		return;
 	}
 
-	//isTimeLifeEdit(isEdit)
-	//{
-	//	if (isEdit == true)
-	//	{
-	//		this.AllowEdit = true;
-	//	}
-
-	//	else
-	//	{
-	//		this.AllowEdit = false;
-	//	}
-	//}
-
 	//for Saving Integration Data
 
 	saveStocklineIntegrationPortalData(id,models)
@@ -1306,8 +1082,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		{
 			models[i].StocklineId = id;
 			//data[i].partId = partid;
-
-
 			this.stocklineser.saveStocklineIntegrationPortalData(models[i]).subscribe(stocklineIntegrationPortalData => {
 				this.collectionofstocklineIntegrationPortalData = stocklineIntegrationPortalData;
 			})
