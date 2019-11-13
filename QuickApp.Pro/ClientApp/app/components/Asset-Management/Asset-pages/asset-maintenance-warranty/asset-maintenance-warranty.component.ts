@@ -28,10 +28,15 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
     /** asset-maintenance-warranty ctor */
     constructor(private assetService: AssetService, private vendorService: VendorService, private route: Router,
         private authService: AuthService, private alertService: AlertService, private glAccountService: GlAccountService) {
-        if (this.assetService.listCollection != null && this.assetService.isEditMode == true) {
+        if ((this.assetService.listCollection != null && this.assetService.isEditMode == true) || (this.assetService.generalCollection != null)) {
 
-            this.showLable = true;
-            this.currentMaintenance = this.assetService.listCollection;
+            if (this.assetService.listCollection != null && this.assetService.isEditMode == true) {
+                this.showLable = true;
+                this.currentMaintenance = this.assetService.listCollection;
+            }
+            else if (this.assetService.generalCollection != null) {
+                this.showLable = true;
+                this.currentMaintenance = this.assetService.generalCollection;}
 
             if (this.currentMaintenance.warrantyEndDate) {
                 this.currentMaintenance.warrantyEndDate = new Date(this.currentMaintenance.warrantyEndDate);
@@ -47,6 +52,10 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
             }
             if (this.assetService.listCollection) {
                 this.local = this.assetService.listCollection;
+                this.currentMaintenance = this.local;
+            }
+            else if (this.assetService.generalCollection) {
+                this.local = this.assetService.generalCollection;
                 this.currentMaintenance = this.local;
             }
         }

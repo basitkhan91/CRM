@@ -35,13 +35,23 @@ export class AssetCalibrationComponent implements OnInit {
     /** asset-calibration ctor */
     constructor(private assetService: AssetService, private vendorService: VendorService, private alertService: AlertService,
         private authService: AuthService, private glAccountService: GlAccountService, private route: Router, private currencyService: CurrencyService) {
-        if (this.assetService.listCollection != null && this.assetService.isEditMode == true) {
+        if ((this.assetService.listCollection != null && this.assetService.isEditMode == true) || (this.assetService.generalCollection != null)) {
 
-            this.showLable = true;
-            this.currentAsset = this.assetService.listCollection;
-            if (this.assetService.listCollection) {
-                this.local = this.assetService.listCollection;
-                this.currentCalibration = this.local;
+            if (this.assetService.listCollection != null && this.assetService.isEditMode == true) {
+                this.showLable = true;
+                this.currentAsset = this.assetService.listCollection;
+                if (this.assetService.listCollection) {
+                    this.local = this.assetService.listCollection;
+                    this.currentCalibration = this.local;
+                }
+            }
+            else if (this.assetService.generalCollection != null) {
+                this.showLable = true;
+                this.currentAsset = this.assetService.generalCollection;
+                if (this.assetService.generalCollection) {
+                    this.local = this.assetService.generalCollection;
+                    this.currentCalibration = this.local;
+                }
             }
             if (this.currentCalibration.calibrationRequired == false) {
                 this.currentCalibration.calibrationFrequencyMonths = null;
@@ -156,7 +166,10 @@ export class AssetCalibrationComponent implements OnInit {
                 this.currentCalibration.updatedBy = this.userName;
                 this.localCollection = data;
                 this.assetService.generalCollection = this.localCollection;
-                this.activeIndex = 2;
+                //this.activeIndex = 2;
+                this.activeIndex = 3;
+                this.assetService.indexObj.next(this.activeIndex);
+                this.route.navigateByUrl('/assetmodule/assetpages/app-asset-maintenance-warranty');
             })
         }
         else {
@@ -203,8 +216,10 @@ export class AssetCalibrationComponent implements OnInit {
                 this.currentCalibration.updatedBy = this.userName;
                 this.localCollection = data;
                 this.alertService.showMessage('Asset calibration updated successfully.');
-                this.activeIndex = 2;
+                //this.activeIndex = 2;
+                this.activeIndex = 3;
                 this.assetService.indexObj.next(this.activeIndex);
+                this.route.navigateByUrl('/assetmodule/assetpages/app-asset-maintenance-warranty');
             })
             }
 
