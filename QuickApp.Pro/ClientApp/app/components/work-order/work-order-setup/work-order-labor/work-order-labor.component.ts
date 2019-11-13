@@ -17,9 +17,9 @@ import { AuthService } from '../../../../services/auth.service';
 export class WorkOrderLaborComponent implements OnInit {
   @Input() savedWorkOrderData;
   @Input() laborForm: WorkOrderLabor;
+  @Input() workOrderWorkFlowOriginalData: any;
   @Output() saveworkOrderLabor = new EventEmitter();
 
-  workOrderWorkFlowOriginalData: any;
   workOrderWorkFlowList: any;
   employeesOriginalData: any;
   employeeList: any;
@@ -28,13 +28,13 @@ export class WorkOrderLaborComponent implements OnInit {
   id: any;
   saveFormdata: any;
   billableList = [
-    {label: 'Billable', value: 1},
-    {label: 'Non-Billable', value: 2}
-]
+    { label: 'Billable', value: 1 },
+    { label: 'Non-Billable', value: 2 }
+  ]
 
   constructor(private workOrderService: WorkOrderService,
     private authService: AuthService,
-     private commonService : CommonService){}
+    private commonService: CommonService) { }
 
   // expertiseDropdownMenu = [
   //   { label: 'Technician', value: 'Technician' },
@@ -47,7 +47,7 @@ export class WorkOrderLaborComponent implements OnInit {
   // ];
   ngOnInit() {
 
-    this.getWorkOrderWorkFlowNos();
+    // this.getWorkOrderWorkFlowNos();
     this.getAllEmployees();
     this.getAllExpertiseType();
     this.id = this.savedWorkOrderData.workOrderId;
@@ -59,14 +59,14 @@ export class WorkOrderLaborComponent implements OnInit {
   }
 
 
-  getWorkOrderWorkFlowNos(){
-    this.workOrderService.getWorkOrderWorkFlowNumbers().subscribe(res => {
-      this.workOrderWorkFlowOriginalData = res;
-    })
-  }
+  // getWorkOrderWorkFlowNos(){
+  //   this.workOrderService.getWorkOrderWorkFlowNumbers().subscribe(res => {
+  //     this.workOrderWorkFlowOriginalData = res;
+  //   })
+  // }
 
-  
-  
+
+
   filterWorkFlowNumbers(event): void {
 
     this.workOrderWorkFlowList = this.workOrderWorkFlowOriginalData;
@@ -110,8 +110,8 @@ export class WorkOrderLaborComponent implements OnInit {
     }
   }
 
-  getAllExpertiseType(){
-    this.commonService.smartDropDownList('ExpertiseType' , 'ExpertiseTypeId',  'Description').subscribe(res => {
+  getAllExpertiseType() {
+    this.commonService.smartDropDownList('ExpertiseType', 'ExpertiseTypeId', 'Description').subscribe(res => {
       this.expertiseTypeList = res;
     })
   }
@@ -126,12 +126,12 @@ export class WorkOrderLaborComponent implements OnInit {
       obj.endDate = new Date();
     }
   }
-  isEditTime(data, field){
+  isEditTime(data, field) {
     console.log(data, field)
-    if(field === 'endDateandTimeIsEdit'){
-      data[field] = data[field] === true ?  false : true;
-    }else if(field === 'startDateandTimeIsEdit'){
-      data[field] =  data[field] === true ?  false : true;
+    if (field === 'endDateandTimeIsEdit') {
+      data[field] = data[field] === true ? false : true;
+    } else if (field === 'startDateandTimeIsEdit') {
+      data[field] = data[field] === true ? false : true;
     }
 
   }
@@ -140,116 +140,118 @@ export class WorkOrderLaborComponent implements OnInit {
   saveLabor() {
     console.log(this.laborForm);
     const excessParams = {
-      createdBy : this.userName,
-      updatedBy : this.userName,
-      createdate : new Date(),
-      updatdate : new Date() ,
-      isActive : true,
-      IsDeleted : false,
-  }
+      createdBy: this.userName,
+      updatedBy: this.userName,
+      createdate: new Date(),
+      updatdate: new Date(),
+      isActive: true,
+      IsDeleted: false,
+    }
     let hoursorClockorScan;
-  if( this.laborForm.hoursorClockorScan === 'labourHours'){
-    hoursorClockorScan = 1;
-  } else if(this.laborForm.hoursorClockorScan === 'labourClock'){
-    hoursorClockorScan =2;
-  }else if(this.laborForm.hoursorClockorScan === 'scan'){
-    hoursorClockorScan = 3;
-  }
+    if (this.laborForm.hoursorClockorScan === 'labourHours') {
+      hoursorClockorScan = 1;
+    } else if (this.laborForm.hoursorClockorScan === 'labourClock') {
+      hoursorClockorScan = 2;
+    } else if (this.laborForm.hoursorClockorScan === 'scan') {
+      hoursorClockorScan = 3;
+    }
 
     let tasksData = this.laborForm.workOrderLaborList[0];
-    this.saveFormdata = {...this.laborForm , 
-      hoursorClockorScan : hoursorClockorScan,
-      dataEnteredBy :  getValueFromObjectByKey('value', this.laborForm.dataEnteredBy ) ,
-      employeeId: getValueFromObjectByKey('value', this.laborForm.employeeId ), 
+    this.saveFormdata = {
+      ...this.laborForm,
+      hoursorClockorScan: hoursorClockorScan,
+      dataEnteredBy: getValueFromObjectByKey('value', this.laborForm.dataEnteredBy),
+      employeeId: getValueFromObjectByKey('value', this.laborForm.employeeId),
       masterCompanyId: 1,
       ...excessParams,
-    workOrderId : this.id,
-    workOrderLaborList: 
-    {
-     receive :  tasksData['receive'].map(x => {
-      return {
-        ...x,
-        ...excessParams,
-        taskId: 1,
-        employeeId: getValueFromObjectByKey('value', x.employeeId ) 
+      workOrderId: this.id,
+      workFlowWorkOrderId: getValueFromObjectByKey('value', this.laborForm.workFlowWorkOrderId),
+      workOrderLaborList:
+      {
+        receive: tasksData['receive'].map(x => {
+          return {
+            ...x,
+            ...excessParams,
+            taskId: 1,
+            employeeId: getValueFromObjectByKey('value', x.employeeId)
+          }
+        }),
+        inspect: tasksData['inspect'].map(x => {
+          return {
+            ...x,
+            ...excessParams,
+            taskId: 2,
+            employeeId: getValueFromObjectByKey('value', x.employeeId)
+          }
+        }),
+        evaluate: tasksData['evaluate'].map(x => {
+          return {
+            ...x,
+            ...excessParams,
+            taskId: 3,
+            employeeId: getValueFromObjectByKey('value', x.employeeId)
+          }
+        }),
+        tearDown: tasksData['tearDown'].map(x => {
+          return {
+            ...x,
+            ...excessParams,
+            taskId: 4,
+            employeeId: getValueFromObjectByKey('value', x.employeeId)
+          }
+        }),
+        disassemble: tasksData['disassemble'].map(x => {
+          return {
+            ...x,
+            ...excessParams,
+            taskId: 5,
+            employeeId: getValueFromObjectByKey('value', x.employeeId)
+          }
+        }),
+        assemble: tasksData['assemble'].map(x => {
+          return {
+            ...x,
+            ...excessParams,
+            taskId: 6,
+            employeeId: getValueFromObjectByKey('value', x.employeeId)
+          }
+        }),
+        testing: tasksData['testing'].map(x => {
+          return {
+            ...x,
+            ...excessParams,
+            taskId: 7,
+            employeeId: getValueFromObjectByKey('value', x.employeeId)
+          }
+        }),
+        qualityControl: tasksData['qualityControl'].map(x => {
+          return {
+            ...x,
+            ...excessParams,
+            taskId: 8,
+            employeeId: getValueFromObjectByKey('value', x.employeeId)
+          }
+        }),
+        ship: tasksData['ship'].map(x => {
+          return {
+            ...x,
+            ...excessParams,
+            taskId: 9,
+            employeeId: getValueFromObjectByKey('value', x.employeeId)
+          }
+        }),
+        clean: tasksData['clean'].map(x => {
+          return {
+            ...x,
+            ...excessParams,
+            taskId: 10,
+            employeeId: getValueFromObjectByKey('value', x.employeeId)
+          }
+        })
       }
-    }),
-    inspect :  tasksData['inspect'].map(x => {
-      return {
-        ...x,
-        ...excessParams,
-        taskId: 2,
-        employeeId: getValueFromObjectByKey('value', x.employeeId ) 
-      }
-    }),
-    evaluate :  tasksData['evaluate'].map(x => {
-      return {
-        ...x,
-        ...excessParams,
-        taskId: 3, 
-        employeeId: getValueFromObjectByKey('value', x.employeeId ) 
-      }
-    }),
-    tearDown :  tasksData['tearDown'].map(x => {
-      return {
-        ...x,
-        ...excessParams,
-        taskId: 4,
-        employeeId: getValueFromObjectByKey('value', x.employeeId ) 
-      }
-    }),
-    disassemble :  tasksData['disassemble'].map(x => {
-      return {
-        ...x,
-        ...excessParams,
-        taskId: 5,
-        employeeId: getValueFromObjectByKey('value', x.employeeId ) 
-      }
-    }),
-    assemble :  tasksData['assemble'].map(x => {
-      return {
-        ...x,
-        ...excessParams,
-        taskId: 6,
-        employeeId: getValueFromObjectByKey('value', x.employeeId ) 
-      }
-    }),
-    testing :  tasksData['testing'].map(x => {
-      return {
-        ...x,
-        ...excessParams,
-        taskId: 7,
-        employeeId: getValueFromObjectByKey('value', x.employeeId ) 
-      }
-    }),
-    qualityControl :  tasksData['qualityControl'].map(x => {
-      return {
-        ...x,
-        ...excessParams,
-        taskId: 8,
-        employeeId: getValueFromObjectByKey('value', x.employeeId ) 
-      }
-    }),
-    ship :  tasksData['ship'].map(x => {
-      return {
-        ...x,
-        ...excessParams,
-        taskId: 9,
-        employeeId: getValueFromObjectByKey('value', x.employeeId ) 
-      }
-    }),
-    clean :  tasksData['clean'].map(x => {
-      return {
-        ...x,
-        ...excessParams,
-        taskId: 10,
-        employeeId: getValueFromObjectByKey('value', x.employeeId ) 
-      }
-    })
+
+
     }
-    
-  
-  }
 
 
     // const labFormData =  this.laborForm
@@ -274,14 +276,14 @@ export class WorkOrderLaborComponent implements OnInit {
     // }
 
 
-    
+
     this.saveworkOrderLabor.emit(this.saveFormdata);
-    
+
   }
-      // tasks : this.laborForm.tasks[0][keysArray[i]].map(x => {
-      //   return {
-      //     ...x,
-      //     employeeId: getValueFromObjectByKey('value', x.employeeId )
-      //   }
-      // }),
+  // tasks : this.laborForm.tasks[0][keysArray[i]].map(x => {
+  //   return {
+  //     ...x,
+  //     employeeId: getValueFromObjectByKey('value', x.employeeId )
+  //   }
+  // }),
 }

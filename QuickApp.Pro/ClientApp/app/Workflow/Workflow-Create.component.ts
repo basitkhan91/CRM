@@ -41,8 +41,8 @@ import { AuthService } from "../services/auth.service";
     styleUrls: ['./workflow-Create.component.css']
 })
 export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
-    @Input() isWorkOrder; 
-    @Input()  savedWorkOrderData;
+    @Input() isWorkOrder;
+    @Input() savedWorkOrderData;
     @Output() savedWorkFlowWorkOrderData = new EventEmitter()
     UpdateMode: boolean;
     workFlow: any;
@@ -164,19 +164,19 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     constructor(private actionService: ActionService,
         private workOrderService: WorkOrderService,
         private authService: AuthService,
-        private router: ActivatedRoute, private route: Router, 
-        private expertiseService: EmployeeExpertiseService, 
-        private cusservice: CustomerService, 
-        public workscopeService: WorkScopeService, 
-        public currencyService: CurrencyService, 
+        private router: ActivatedRoute, private route: Router,
+        private expertiseService: EmployeeExpertiseService,
+        private cusservice: CustomerService,
+        public workscopeService: WorkScopeService,
+        public currencyService: CurrencyService,
         public itemClassService: ItemClassificationService,
-         public unitofmeasureService: UnitOfMeasureService, 
-         private conditionService: ConditionService, 
-         private _workflowService: WorkFlowtService, 
-         private itemser: ItemMasterService, 
-         private vendorService: VendorService, 
-         private alertService: AlertService, 
-         private modalService: NgbModal, private percentService: PercentService) {
+        public unitofmeasureService: UnitOfMeasureService,
+        private conditionService: ConditionService,
+        private _workflowService: WorkFlowtService,
+        private itemser: ItemMasterService,
+        private vendorService: VendorService,
+        private alertService: AlertService,
+        private modalService: NgbModal, private percentService: PercentService) {
     }
 
     public ngOnDestroy() {
@@ -236,12 +236,12 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
 
     ngOnInit(): void {
-        console.log(this.isWorkOrder );
+        console.log(this.isWorkOrder);
         this.isFixedcheck('');
         this.loadCurrencyData();
         this.loadWorkScopedata();
         this.loadItemClassData();
-        this.GetPartNumberList();        
+        this.GetPartNumberList();
         this.getMaterialMandatory();
         this.loadUOMData();
         this.sourceWorkFlow.workflowCreateDate = new Date();
@@ -281,10 +281,10 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         this.getAllPercentages();
     }
 
-    
+
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
-      }
+    }
 
     private getAllPercentages(): void {
         this.percentService.getPercentages().subscribe(
@@ -351,7 +351,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                 this.sourceWorkFlow.changedPartNumber = this._workflowService.listCollection.changedPartNumber;
                 this.sourceWorkFlow.changedPartNumberDescription = this._workflowService.listCollection.changedPartNumberDescription;
 
-                
+
 
                 if (this.sourceWorkFlow.isFixedAmount == true) {
                     this.isFixedcheck('fixed');
@@ -1048,7 +1048,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                         };
                     }
 
-                    if (this.sourceWorkFlow.changedPartNumberId != undefined && this.sourceWorkFlow.changedPartNumberId != null && this.sourceWorkFlow.changedPartNumberId != '' ) {
+                    if (this.sourceWorkFlow.changedPartNumberId != undefined && this.sourceWorkFlow.changedPartNumberId != null && this.sourceWorkFlow.changedPartNumberId != '') {
                         var currentSelectedChangedPart = this.allParts.filter(x => x.itemMasterId == this.sourceWorkFlow.changedPartNumberId);
                         if (currentSelectedChangedPart.length > 0) {
                             this.sourceWorkFlow.changedPart = {
@@ -1802,7 +1802,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             provisionId: '',
             isDeferred: '',
             memo: "",
-            
+
             taskId: "",
             workflowId: "",
             masterCompanyId: '',
@@ -1856,7 +1856,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
             this.workFlow = currentWF[0];
             this.selectedItems = currentWF[0].selectedItems;
-            
+
             this.tasksData.push(this.workFlow);
 
 
@@ -1906,7 +1906,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         this.sourceWorkFlow.workflowId = undefined;
         // // save Work Order Workflow
         // console.log(this.validateWorkFlowHeader());
-        
+
         // if(this.isWorkOrder && this.validateWorkFlowHeader()){
         //     console.log(2);
         //     // if(this.responseDataForHeader){
@@ -1926,9 +1926,9 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
         // }else {
         //     console.log(3);
-     // WorkFlow Create
-      if (!this.validateWorkFlowHeader() || !this.calculateTotalWorkFlowCost()) {
-         return;
+        // WorkFlow Create
+        if (!this.validateWorkFlowHeader() || !this.calculateTotalWorkFlowCost()) {
+            return;
         }
 
 
@@ -1954,7 +1954,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             return;
         }
 
-      
+
         this.actionService.getNewWorkFlow(this.sourceWorkFlow).subscribe(
             data => {
                 this.alertService.showMessage(this.title, "Work Flow added successfully.", MessageSeverity.success);
@@ -1971,8 +1971,8 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                 this.alertService.showMessage(this.title, message, MessageSeverity.error);
             }
         )
-    // }
-        
+        // }
+
     }
     title: string = "Work Flow";
 
@@ -2001,7 +2001,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
         // }else {
         //     console.log(8);
-                // WorkFlow Create 
+        // WorkFlow Create 
         if (!this.validateWorkFlowHeader() || !this.calculateTotalWorkFlowCost()) {
             return;
         }
@@ -2045,7 +2045,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                 this.alertService.showMessage(this.title, message, MessageSeverity.error);
             }
         )
-    // }
+        // }
     }
 
     SaveWorkFlow(): void {
@@ -2139,13 +2139,13 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                 }
             }
 
-          
+
 
 
         }
     }
 
-    saveWorkFlowWorkOrder(){
+    saveWorkFlowWorkOrder() {
         if (this.workFlowList != undefined && this.workFlowList.length > 0) {
 
             this.sourceWorkFlow.charges = [];
@@ -2235,68 +2235,51 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                 }
             }
 
-          
+
 
 
         }
-        if(this.isWorkOrder){
-          
+        if (this.isWorkOrder) {
+
             // responseDataForHeader
             const data = this.sourceWorkFlow;
             const excessParams = {
-                createdBy : this.userName,
-                updatedBy : this.userName,
-                createdate : new Date(),
-                updatdate : new Date() ,
-                isActive : true,
-                IsDeleted : false,
-                masterCompanyId : 1
+                createdBy: this.userName,
+                updatedBy: this.userName,
+                createdate: new Date(),
+                updatdate: new Date(),
+                isActive: true,
+                IsDeleted: false,
+                masterCompanyId: 1
 
             }
-            // const tasks = this.tasksData.map(x => {
-            //     return {
-            //             workOrderTask : {
-            //             workOrderId : this.savedWorkOrderData.workOrderId,
-            //              taskId:x.taskId,
-            //             ...excessParams ,
-            //             workOrderTaskAttribute: x.selectedItems.map(y => {
-            //                return {
-            //                 workOrderTaskAttributeId:0,
-            //                 workOrderTaskId:0,
-            //                 taskAttributeId: y.Id,
-            //                 ...excessParams ,
-            //                }
-            //             })
-                        
 
-            //     }
-            // }
-            // }
-            // );
+            const saveWorkFlowWorkOrderData = {
+                ...this.sourceWorkFlow,
+                // ...tasks[0],
+                workOrderId: this.savedWorkOrderData.workOrderId,
+                charges: data.charges.map(x => { return { ...x, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
+                directions: data.directions.map(x => { return { ...x, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
+                equipments: data.equipments.map(x => { return { ...x, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
+                exclusions: data.exclusions.map(x => { return { ...x, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
+                expertise: data.expertise.map(x => { return { ...x, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
+                materialList: data.materialList.map(x => { return { ...x, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
+                measurements: data.measurements.map(x => { return { ...x, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
+                publication: data.publication.map(x => { return { ...x, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } })
 
-              this.workOrderService.createWorkFlowWorkOrder(
-                  {...this.sourceWorkFlow ,
-                    // ...tasks[0],
-                    workOrderId : this.savedWorkOrderData.workOrderId , 
-                    charges : data.charges.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId , ...excessParams } }),
-                    directions : data.directions.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId, ...excessParams } }),
-                    equipments : data.equipments.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId ,...excessParams } }),
-                    exclusions : data.exclusions.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId, ...excessParams} }),
-                    expertise : data.expertise.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId, ...excessParams } }),
-                    materialList : data.materialList.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId, ...excessParams } }),
-                    measurements : data.measurements.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId, ...excessParams} }),
-                    publication : data.publication.map(x =>   { return {...x , workOrderId : this.savedWorkOrderData.workOrderId, ...excessParams } })
 
-                
-            }).subscribe(res => {
-                
-                this.savedWorkFlowWorkOrderData.emit(res);
-                this.alertService.showMessage(
-                    '',
-                    'Work Order Work Flow Saved Succesfully',
-                    MessageSeverity.success
-                  );
-            })
+            }
+
+            this.savedWorkFlowWorkOrderData.emit(saveWorkFlowWorkOrderData);
+            //   this.workOrderService.createWorkFlowWorkOrder(
+            //       ).subscribe(res => {
+
+            //     this.alertService.showMessage(
+            //         '',
+            //         'Work Order Work Flow Saved Succesfully',
+            //         MessageSeverity.success
+            //       );
+            // })
         }
     }
 
@@ -2360,12 +2343,12 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             this.setSelectedItems(this.workFlow);
         }
         console.log(this.currenttaskId)
-       this.tasksData =  this.tasksData.filter(x => {
-            if(x.taskId !== workFlow.taskId){
+        this.tasksData = this.tasksData.filter(x => {
+            if (x.taskId !== workFlow.taskId) {
                 return x;
             }
         })
-        
+
         this.onActionChange();
     }
 
