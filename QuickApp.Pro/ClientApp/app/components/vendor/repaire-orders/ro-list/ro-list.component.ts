@@ -9,6 +9,7 @@ import { Table } from 'primeng/table';
 import { PurchaseOrderService } from '../../../../services/purchase-order.service';
 import { VendorCapabilitiesService } from '../../../../services/vendorcapabilities.service';
 import { CommonService } from '../../../../services/common.service';
+import { listSearchFilterObjectCreation } from '../../../../generic/autocomplete';
 
 
 @Component({
@@ -47,7 +48,7 @@ export class RoListComponent implements OnInit {
     vendorCapesInfo: any = [];
     vendorCapesCols: any[];
     headerManagementStructure: any = {};
-    purchaseOrderNoInput: any;
+    repairOrderNoInput: any;
     openDateInput: any;
     closedDateInput: any;
     vendorNameInput: any;
@@ -93,16 +94,15 @@ export class RoListComponent implements OnInit {
 	}
 	
 	// getList(data) {
-    //     this.vendorService.getRepaireOrderlist(data).subscribe(res => {
+    //     this.vendorService.getROList(data).subscribe(res => {
 	// 		console.log(res);			
     //          this.data = res[0];
     //         if (this.data.length > 0) {
     //             this.totalRecords = res[0][0].totalRecords;
     //             this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
     //         }
-
     //     })
-    // }
+	// }
 
     getManagementStructureCodes(id) {
         this.commonService.getManagementStructureCodes(id).subscribe(res => {
@@ -187,8 +187,8 @@ export class RoListComponent implements OnInit {
         // if(field == "repairOrderId") {
         //     this.repairOrderIdInput = value;
         // }
-        if(field == "purchaseOrderNumber") {
-            this.purchaseOrderNoInput = value;
+        if(field == "repairOrderNumber") {
+            this.repairOrderNoInput = value;
         }
         if(field == "openDate") {
             this.openDateInput = value;
@@ -213,7 +213,7 @@ export class RoListComponent implements OnInit {
         }
 
         this.lazyLoadEventDataInput.filters = {
-            purchaseOrderNo: this.purchaseOrderNoInput,
+            repairOrderNumber: this.repairOrderNoInput,
             openDate: this.openDateInput,
             closedDate: this.closedDateInput,
             vendorName: this.vendorNameInput,
@@ -267,19 +267,19 @@ export class RoListComponent implements OnInit {
             this.getManagementStructureCodes(res.managementStructureId);
         });
     }
-    // getPOPartsViewById(roId) {
-    //     this.purchaseOrderService.getPOPartsViewById(roId).subscribe(res => {
-    //         console.log(res);  
-    //         res.map(x => {
-    //             const partList = {
-    //                 ...x,
-    //                 purchaseOrderSplitParts: this.getPurchaseOrderSplit(x)              
-    //             }
-    //             this.getManagementStructureCodesParent(partList);
-    //             this.poPartsList.push(partList);
-    //         });
-    //     });
-    // }
+    getPOPartsViewById(roId) {
+        this.purchaseOrderService.getPOPartsViewById(roId).subscribe(res => {
+            console.log(res);  
+            res.map(x => {
+                const partList = {
+                    ...x,
+                    purchaseOrderSplitParts: this.getPurchaseOrderSplit(x)              
+                }
+                this.getManagementStructureCodesParent(partList);
+                this.poPartsList.push(partList);
+            });
+        });
+    }
 
     getPurchaseOrderSplit(partList) {
         if(partList.purchaseOrderSplitParts) {
@@ -294,7 +294,7 @@ export class RoListComponent implements OnInit {
     }
 
     getApproversListById(roId) {
-		this.purchaseOrderService.getPOApproverList(roId).subscribe(response => {
+		this.vendorService.getROApproverList(roId).subscribe(response => {
 			console.log(response);			
 			this.approveList = response;
         });

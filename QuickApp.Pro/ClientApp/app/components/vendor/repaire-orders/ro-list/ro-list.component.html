@@ -280,8 +280,9 @@
 											<td [ngStyle]="{'color': getColorCodeForHistory(i, 'status', audit.status)  ? 'black' : 'red'  }">{{audit.status}}</td>
 											<td [ngStyle]="{'color': getColorCodeForHistory(i, 'requestedBy', audit.requestedBy)  ? 'black' : 'red'  }">{{audit.requestedBy}}</td>
 											<td [ngStyle]="{'color': getColorCodeForHistory(i, 'approvedBy', audit.approvedBy)  ? 'black' : 'red'  }">{{audit.approvedBy}}</td>
+											<td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
 											<td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
-										<td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+										
 									</tr>
 							</tbody>
 						</table>
@@ -349,7 +350,7 @@
 										<div class="col-sm-3">
 												<p><span class="label"><b>Requisitioner: </b></span><span class="value">{{roHeaderAdd.requisitioner ? roHeaderAdd.requisitioner : '-'}}</span></p>
 												<p><span class="label"><b>Approver: </b></span><span class="value">{{roHeaderAdd.approver ? roHeaderAdd.approver : '-'}}</span></p>
-												<p><span class="label"><b>Approved Date: </b></span><span class="value">{{roHeaderAdd.dateApproved | date: 'dd/MM/yyyy'}}</span></p>
+												<p><span class="label"><b>Approved Date: </b></span><span class="value">{{roHeaderAdd.approvedDate | date: 'dd/MM/yyyy'}}</span></p>
 												<p><span class="label"><b>Status: </b></span><span class="value">{{roHeaderAdd.status ? roHeaderAdd.status : '-'}}</span></p>
 												<p><span class="label"><b>Resale: </b></span><span class="value">{{roHeaderAdd.resale ? roHeaderAdd.resale : '-'}}</span></p>
 										</div>
@@ -359,7 +360,7 @@
 												<p><span class="label"><b>BU: </b></span><span class="value">{{headerManagementStructure.level2 ? headerManagementStructure.level2 : '-'}}</span></p>
 												<p><span class="label"><b>Division: </b></span><span class="value">{{headerManagementStructure.level3 ? headerManagementStructure.level3 : '-'}}</span></p>
 												<p><span class="label"><b>Department: </b></span><span class="value">{{headerManagementStructure.level4 ? headerManagementStructure.level4 : '-'}}</span></p>
-												<p><span class="label"><b>Memo: </b></span><span class="value">{{roHeaderAdd.notes ? roHeaderAdd.notes : '-'}}</span></p>
+												<p><span class="label"><b>Memo: </b></span><span class="value">{{roHeaderAdd.roMemo ? roHeaderAdd.roMemo : '-'}}</span></p>
 										</div>
 									</div>
 								</div>

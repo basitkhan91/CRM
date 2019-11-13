@@ -1375,9 +1375,9 @@ export class PurchaseSetupComponent implements OnInit {
 				if(this.isEditMode) {
 					if(res.shipToAddressId == 0) {
 						this.shipToCusData.push({customerShippingAddressId: 0, address1: res.shipToAddress1, address2: res.shipToAddress2, address3: res.shipToAddress3, city: res.shipToCity, stateOrProvince: res.shipToStateOrProvince, postalCode: res.shipToPostalCode, country: res.shipToCountry, siteName: res.shipToSiteName})
-					}
-					this.onShipToGetAddress(res, res.shipToAddressId);
+					}					
 				}
+				this.onShipToGetAddress(res, res.shipToAddressId);
 			});
 		this.customerService.getContacts(customerId).subscribe(data => {
 			this.shipToContactData = data[0];
@@ -1402,9 +1402,9 @@ export class PurchaseSetupComponent implements OnInit {
 				if(this.isEditMode) {
 					if(res.shipToAddressId == 0) {
 						this.vendorSelected.push({vendorShippingAddressId: 0, address1: res.shipToAddress1, address2: res.shipToAddress2, address3: res.shipToAddress3, city: res.shipToCity, stateOrProvince: res.shipToStateOrProvince, postalCode: res.shipToPostalCode, country: res.shipToCountry, siteName: res.shipToSiteName})
-					}
-					this.onShipToGetAddress(res, res.shipToAddressId);
+					}					
 				}
+				this.onShipToGetAddress(res, res.shipToAddressId);
 			});
 		this.vendorService.getContacts(vendorId).subscribe(data => {
 			this.vendorContactsForshipTo = data[0]; //vendorContactsForshipTo
@@ -1569,9 +1569,9 @@ export class PurchaseSetupComponent implements OnInit {
 				if(this.isEditMode) {
 					if(res.billToAddressId == 0) {
 						this.billToCusData.push({customerBillingAddressId: 0, address1: res.billToAddress1, address2: res.billToAddress2, address3: res.billToAddress3, city: res.billToCity, stateOrProvince: res.billToStateOrProvince, postalCode: res.billToPostalCode, country: res.billToCountry, siteName: res.billToSiteName})
-					}
-					this.onBillToGetAddress(res, res.billToAddressId);
+					}					
 				}
+				this.onBillToGetAddress(res, res.billToAddressId);
 			});
 		this.customerService.getContacts(customerId).subscribe(data => {
 			this.billToContactData = data[0];

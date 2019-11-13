@@ -5,19 +5,19 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb rpo-bcrumb" style="background-color: transparent;">
                         <li class="breadcrumb-item active" aria-current="page">Vendor</li>
-                        <li class="breadcrumb-item" aria-current="page">Repair Order</li>
-                        <li class="breadcrumb-item" aria-current="page">Create RO</li>
+                        <li class="breadcrumb-item" aria-current="page">Purchase Order</li>
+                        <li class="breadcrumb-item" aria-current="page">Create PO</li>
                     </ol>
                 </nav>
             </div>
             <div class="card-body">
-                <h4 class="po-head">{{isEditMode ? 'Edit' : 'Create'}} Repair Order for {{sourcePoApproval.vendorName}}</h4>
+                <h4 class="po-head">{{isEditMode ? 'Edit' : 'Create'}} Purchase Order for {{sourcePoApproval.vendorName}}</h4>
                 
                     <div class="form-row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>RO Num</label>
-                                <input class="form-control" type="text" name="repairOrderNumber" value="Creating" disabled [(ngModel)]="sourcePoApproval.repairOrderNumber">
+                                <label>PO Num</label>
+                                <input class="form-control" type="text" name="purchaseOrderNumber" value="Creating" disabled [(ngModel)]="sourcePoApproval.purchaseOrderNumber">
                             </div>
                             <div class="form-group">
                                 <label>Open Date <span class="clr-red">*</span></label>
