@@ -1,10 +1,11 @@
 ﻿import { Component, OnInit } from '@angular/core';
-import { AlertService } from '../../../services/alert.service';
+//import { AlertService } from '../../../services/alert.service';
 import { AssetService } from '../../../services/asset/Assetservice';
 import { Router } from '@angular/router';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { fadeInOut } from '../../../services/animations';
 import { SingleScreenAuditDetails } from '../../../models/single-screen-audit-details.model';
+import { AlertService, DialogType, MessageSeverity } from '../../../services/alert.service';
 
 @Component({
     selector: 'app-asset-listing',
@@ -104,7 +105,8 @@ export class AssetListingComponent implements OnInit {
 
     removeAsset(): void {
         this.assetService.remove(this.assetService.listCollection.assetRecordId).subscribe(response => {
-            this.alertService.showMessage("Asset removed successfully.");
+            //this.alertService.showMessage("Asset removed successfully.");
+            this.alertService.showMessage("Success", `Asset removed successfully.`, MessageSeverity.success);
             this.assetService.getAssetList().subscribe(asset => {
                 this.allAssetInfo = asset[0];
                 this.modal.close();
@@ -119,7 +121,8 @@ export class AssetListingComponent implements OnInit {
             this.Active = "In Active";
             this.assetTypeToUpdate.isActive == false;
             this.assetService.updateAsset(this.assetTypeToUpdate).subscribe(asset => {
-                this.alertService.showMessage('Asset Type updated successfully.');
+                //this.alertService.showMessage('Asset Type updated successfully.');
+                this.alertService.showMessage("Success", `Asset Type updated successfully.`, MessageSeverity.success);
                 this.assetService.getAssetList().subscribe(assets => {
                     this.allAssetInfo = assets[0];
                 });
@@ -131,7 +134,8 @@ export class AssetListingComponent implements OnInit {
             this.Active = "Active";
             this.assetTypeToUpdate.isActive == true;
             this.assetService.updateAsset(this.assetTypeToUpdate).subscribe(asset => {
-                this.alertService.showMessage('Asset Type updated successfully.');
+                //this.alertService.showMessage('Asset Type updated successfully.');
+                this.alertService.showMessage("Success", `Asset Type updated successfully.`, MessageSeverity.success);
                 this.assetService.getAssetList().subscribe(assets => {
                     this.allAssetInfo = assets[0];
                 });
