@@ -1416,7 +1416,7 @@ namespace QuickApp.Pro.Controllers
                 contactObj.ContactId = contactViewModel.ContactId;
                 contactObj.ContactTitle = contactViewModel.ContactTitle;
                 contactObj.AlternatePhone = contactViewModel.AlternatePhone;
-                // contactObj.IsDefaultContact = contactViewModel.IsDefaultContact;
+                contactObj.IsDefaultContact = contactViewModel.IsDefaultContact;
                 contactObj.Email = contactViewModel.Email;
                 contactObj.Prefix = contactViewModel.Prefix;
                 contactObj.Suffix = contactViewModel.Suffix;
