@@ -80,6 +80,7 @@ export class VendorsListComponent implements OnInit {
     allShippings: any[];
     shippingCol: any[];
     selectedShippingColumns: any[];
+    selectedRow: any;
     ngOnInit() {
         this.loadData();
         this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendors-list';
@@ -150,16 +151,18 @@ export class VendorsListComponent implements OnInit {
         );
 
         this.cols = [
-            { field: 'vendorCode', header: 'Vendor Code' },
-            { field: 'vendorName', header: 'Vendor Name' },
-            { field: 'description', header: 'Vendor Type' },
-            { field: 'vendorEmail', header: 'Vendor Email' },
-            { field: 'city', header: 'City' },
-            { field: 'stateOrProvince', header: 'StateOrProvince' },
-            //{ field: 'createdBy', header: 'Created By' },
-            //{ field: 'updatedBy', header: 'Updated By' },
-            //{ field: 'updatedDate', header: 'Updated Date' },
-            //{ field: 'createdDate', header: 'Created Date' }
+            { field: 'vendorName', header: 'VENDOR NAME' },
+            { field: 'vendorCode', header: 'VENDOR CODE' },
+            { field: 'description', header: 'VENDOR TYPE' },
+            { field: 'stateOrProvince', header: 'VENDOR CLASSIFICATION' },
+            { field: 'vendorEmail', header: 'VENDOR EMAIL' },
+            { field: 'city', header: 'VENDOR CITY' },
+            { field: 'stateOrProvince', header: 'VENDOR STATE' },
+            { field: 'vendorPhone', header: 'VENDOR CONTACT' }
+            // { field: 'createdBy', header: 'Created By' },
+            // { field: 'updatedBy', header: 'Updated By' },
+            // { field: 'updatedDate', header: 'Updated Date' },
+            // { field: 'createdDate', header: 'Created Date' }
         ];
         this.selectedColumns = this.cols;
     }
@@ -602,6 +605,7 @@ export class VendorsListComponent implements OnInit {
             error => this.saveFailedHelper(error));
     }
     openContactList(content, row) {
+        this.selectedRow = row;
         this.modal = this.modalService.open(content, { size: 'lg' });
         this.modal.result.then(() => {
             console.log('When user closes');

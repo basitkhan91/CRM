@@ -2120,7 +2120,7 @@ namespace DAL.Repositories
                                 sl.PartNumber,
                                 im.PartDescription,
                                 im.DER,
-                                im.PMA,
+                                PMA=im.isPma,
                                 NTE= (im.OverhaulHours == null ? 0 : im.OverhaulHours) + (im.RPHours == null ? 0 : im.RPHours) + (im.mfgHours == null ? 0 : im.mfgHours) + (im.TestHours == null ? 0 : im.TestHours)
                             })
                             .Distinct()
