@@ -1456,7 +1456,7 @@ getROViewById(repairOrderId) {
 updateROApproval<T>(param: any): Observable<any> {
 	let body = JSON.stringify(param);
 	let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
-	return this.http.post(this._updateROApproval, body, this.getRequestHeaders())
+	return this.http.put(this._updateROApproval, body, this.getRequestHeaders())
 		.map((response: Response) => {
 			return <any>response;
 

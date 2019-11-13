@@ -2672,15 +2672,14 @@ export class PurchaseSetupComponent implements OnInit {
 
 	async saveShippingAddress() {		
 		const data = {
-			...this.addressFormForShipping,
-			country: getValueFromObjectByKey('value', this.addressFormForShipping.country),
+			...this.addressFormForShipping,			
 			createdBy: this.userName,
 			updatedBy: this.userName,
 			masterCompanyId: 1,
 			isActive: true,			
 		}
 		if (this.sourcePoApproval.shipToUserTypeId == 1) {
-			const customerData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId)}
+			const customerData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId), country: getValueFromObjectByKey('value', data.country)}
 			if(!this.isEditModeShipping) {
 			await this.customerService.newShippingAdd(customerData).subscribe(response => {
 				this.onShipToCustomerSelected(customerData.customerId, this.sourcePoApproval, response.customerShippingId);
@@ -2703,7 +2702,7 @@ export class PurchaseSetupComponent implements OnInit {
 			}			
 		}
 		if (this.sourcePoApproval.shipToUserTypeId == 2) {
-			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId) }
+			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId), country: getValueFromObjectByKey('label', data.country) }
 			if(!this.isEditModeShipping) {			
 				await this.vendorService.newShippingAdd(vendorData).subscribe(response => {
 					this.onShipToVendorSelected(vendorData.vendorId, this.sourcePoApproval, response.vendorShippingAddressId);				
@@ -2727,7 +2726,7 @@ export class PurchaseSetupComponent implements OnInit {
 			}			
 		}
 		if (this.sourcePoApproval.shipToUserTypeId == 3) {			
-			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId)}	
+			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId), country: getValueFromObjectByKey('label', data.country)}	
 			if(!this.isEditModeShipping) {									
 				await this.companyService.addNewShippingAddress(companyData).subscribe(response => {
 					this.onShipToCompanySelected(null, this.sourcePoApproval, response.legalEntityShippingAddressId);
@@ -2834,7 +2833,6 @@ export class PurchaseSetupComponent implements OnInit {
 	async saveBillingAddress() {
 		const data = {
 			...this.addressFormForBilling,
-			country: getValueFromObjectByKey('value', this.addressFormForBilling.country),
 			createdBy: this.userName,
 			updatedBy: this.userName,
 			masterCompanyId: 1,
@@ -2842,7 +2840,7 @@ export class PurchaseSetupComponent implements OnInit {
 			isPrimary: true
 		}
 		if (this.sourcePoApproval.billToUserTypeId == 1) {
-			const customerData = { ...data, customerId: getValueFromObjectByKey('value', this.sourcePoApproval.billToUserId) }
+			const customerData = { ...data, customerId: getValueFromObjectByKey('value', this.sourcePoApproval.billToUserId), country: getValueFromObjectByKey('value', data.country) }
 			if(!this.isEditModeBilling) {				
 				await this.customerService.newBillingAdd(customerData).subscribe(response => {
 					this.onBillToCustomerSelected(customerData.customerId, this.sourcePoApproval, response.customerBillingAddressId);
@@ -2866,7 +2864,7 @@ export class PurchaseSetupComponent implements OnInit {
 			
 		}
 		if (this.sourcePoApproval.billToUserTypeId == 2) {
-			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.billToUserId) }
+			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.billToUserId), country: getValueFromObjectByKey('label', data.country) }
 			if(!this.isEditModeBilling) {				
 				await this.vendorService.addNewBillingAddress(vendorData).subscribe(response => {
 					this.onBillToVendorSelected(vendorData.vendorId, this.sourcePoApproval, response.vendorBillingAddressId);
@@ -2890,7 +2888,7 @@ export class PurchaseSetupComponent implements OnInit {
 			}			
 		}
 		if (this.sourcePoApproval.billToUserTypeId == 3) {
-			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourcePoApproval.billToUserId) }
+			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourcePoApproval.billToUserId), country: getValueFromObjectByKey('label', data.country) }
 			if(!this.isEditModeBilling) {				
 				await this.companyService.addNewBillingAddress(companyData).subscribe(response => {
 					this.onBillToCompanySelected(null, this.sourcePoApproval, response.legalEntityBillingAddressId);
@@ -3109,7 +3107,6 @@ export class PurchaseSetupComponent implements OnInit {
 	async saveSplitAddress() {		
 		const data = {
 			...this.addNewAddress,
-			country: getValueFromObjectByKey('value', this.addNewAddress.country),
 			address1: this.addNewAddress.line1,
 			address2: this.addNewAddress.line2,
 			address3: this.addNewAddress.line3,
@@ -3120,7 +3117,7 @@ export class PurchaseSetupComponent implements OnInit {
 			//customerShippingAddressId: null,
 		}
 		if (this.tempSplitPart.partListUserTypeId == 1) {
-			const customerData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('value', this.tempSplitPart.partListUserId) }
+			const customerData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('value', this.tempSplitPart.partListUserId), country: getValueFromObjectByKey('value', data.country) }
 			if(!this.isEditModeSplitAddress) {				
 				await this.customerService.newShippingAdd(customerData).subscribe(res => {
 					this.onCustomerNameChange(customerData.customerId, null, this.parentIndex, this.childIndex); //res.customerId
@@ -3142,7 +3139,7 @@ export class PurchaseSetupComponent implements OnInit {
 			}			
 		}
 		if (this.tempSplitPart.partListUserTypeId == 2) {
-			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.tempSplitPart.partListUserId) }
+			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.tempSplitPart.partListUserId), country: getValueFromObjectByKey('label', data.country) }
 			if(!this.isEditModeSplitAddress) {				
 				await this.vendorService.newShippingAdd(vendorData).subscribe(res => {
 					this.onVendorNameChange(vendorData.vendorId, null, this.parentIndex, this.childIndex);
@@ -3164,7 +3161,7 @@ export class PurchaseSetupComponent implements OnInit {
 			}			
 		}
 		if (this.tempSplitPart.partListUserTypeId == 3) {
-			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.tempSplitPart.partListUserId), siteName: "" }
+			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.tempSplitPart.partListUserId), siteName: "", country: getValueFromObjectByKey('label', data.country) }
 			if(!this.isEditModeSplitAddress) {				
 				await this.companyService.addNewShippingAddress(companyData).subscribe(res => {
 					this.onCompanyNameChange(companyData.legalentityId, null, this.parentIndex, this.childIndex); //res.legalEntityId

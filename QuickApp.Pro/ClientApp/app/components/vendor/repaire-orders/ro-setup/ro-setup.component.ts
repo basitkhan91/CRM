@@ -2662,15 +2662,14 @@ export class RoSetupComponent implements OnInit {
 
 	async saveShippingAddress() {		
 		const data = {
-			...this.addressFormForShipping,
-		    country: getValueFromObjectByKey('value', this.addressFormForShipping.country),
+			...this.addressFormForShipping,		    
 			createdBy: this.userName,
 			updatedBy: this.userName,
 			masterCompanyId: 1,
 			isActive: true,			
 		}
 		if (this.sourceRoApproval.shipToUserTypeId == 1) {
-			const customerData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('value', this.sourceRoApproval.shipToUserId)}
+			const customerData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('value', this.sourceRoApproval.shipToUserId), country: getValueFromObjectByKey('value', data.country)}
 			if(!this.isEditModeShipping) {
 			await this.customerService.newShippingAdd(customerData).subscribe(response => {
 				this.onShipToCustomerSelected(customerData.customerId, this.sourceRoApproval, response.customerShippingId);
@@ -2693,7 +2692,7 @@ export class RoSetupComponent implements OnInit {
 			}			
 		}
 		if (this.sourceRoApproval.shipToUserTypeId == 2) {
-			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourceRoApproval.shipToUserId) }
+			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourceRoApproval.shipToUserId), country: getValueFromObjectByKey('label', data.country) }
 			if(!this.isEditModeShipping) {			
 				await this.vendorService.newShippingAdd(vendorData).subscribe(response => {
 					this.onShipToVendorSelected(vendorData.vendorId, this.sourceRoApproval, response.vendorShippingAddressId);				
@@ -2717,7 +2716,7 @@ export class RoSetupComponent implements OnInit {
 			}			
 		}
 		if (this.sourceRoApproval.shipToUserTypeId == 3) {			
-			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourceRoApproval.shipToUserId)}	
+			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourceRoApproval.shipToUserId), country: getValueFromObjectByKey('label', data.country)}	
 			if(!this.isEditModeShipping) {									
 				await this.companyService.addNewShippingAddress(companyData).subscribe(response => {
 					this.onShipToCompanySelected(null, this.sourceRoApproval, response.legalEntityShippingAddressId);
@@ -2823,8 +2822,7 @@ export class RoSetupComponent implements OnInit {
 
 	async saveBillingAddress() {
 		const data = {
-			...this.addressFormForBilling,
-			country: getValueFromObjectByKey('value', this.addressFormForBilling.country),
+			...this.addressFormForBilling,			
 			createdBy: this.userName,
 			updatedBy: this.userName,
 			masterCompanyId: 1,
@@ -2832,7 +2830,7 @@ export class RoSetupComponent implements OnInit {
 			isPrimary: true
 		}
 		if (this.sourceRoApproval.billToUserTypeId == 1) {
-			const customerData = { ...data, customerId: getValueFromObjectByKey('value', this.sourceRoApproval.billToUserId) }
+			const customerData = { ...data, customerId: getValueFromObjectByKey('value', this.sourceRoApproval.billToUserId), country: getValueFromObjectByKey('value', data.country) }
 			if(!this.isEditModeBilling) {				
 				await this.customerService.newBillingAdd(customerData).subscribe(response => {
 					this.onBillToCustomerSelected(customerData.customerId, this.sourceRoApproval, response.customerBillingAddressId);
@@ -2856,7 +2854,7 @@ export class RoSetupComponent implements OnInit {
 			
 		}
 		if (this.sourceRoApproval.billToUserTypeId == 2) {
-			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourceRoApproval.billToUserId) }
+			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourceRoApproval.billToUserId), country: getValueFromObjectByKey('label', data.country) }
 			if(!this.isEditModeBilling) {				
 				await this.vendorService.addNewBillingAddress(vendorData).subscribe(response => {
 					this.onBillToVendorSelected(vendorData.vendorId, this.sourceRoApproval, response.vendorBillingAddressId);
@@ -2880,7 +2878,7 @@ export class RoSetupComponent implements OnInit {
 			}			
 		}
 		if (this.sourceRoApproval.billToUserTypeId == 3) {
-			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourceRoApproval.billToUserId) }
+			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourceRoApproval.billToUserId), country: getValueFromObjectByKey('label', data.country) }
 			if(!this.isEditModeBilling) {				
 				await this.companyService.addNewBillingAddress(companyData).subscribe(response => {
 					this.onBillToCompanySelected(null, this.sourceRoApproval, response.legalEntityBillingAddressId);
@@ -3098,8 +3096,7 @@ export class RoSetupComponent implements OnInit {
 
 	async saveSplitAddress() {		
 		const data = {
-			...this.addNewAddress,
-			country: getValueFromObjectByKey('value', this.addNewAddress.country),
+			...this.addNewAddress,			
 			address1: this.addNewAddress.line1,
 			address2: this.addNewAddress.line2,
 			address3: this.addNewAddress.line3,
@@ -3110,7 +3107,7 @@ export class RoSetupComponent implements OnInit {
 			//customerShippingAddressId: null,
 		}
 		if (this.tempSplitPart.partListUserTypeId == 1) {
-			const customerData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('value', this.tempSplitPart.partListUserId) }
+			const customerData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('value', this.tempSplitPart.partListUserId), country: getValueFromObjectByKey('value', data.country) }
 			if(!this.isEditModeSplitAddress) {				
 				await this.customerService.newShippingAdd(customerData).subscribe(res => {
 					this.onCustomerNameChange(customerData.customerId, null, this.parentIndex, this.childIndex); //res.customerId
@@ -3132,7 +3129,7 @@ export class RoSetupComponent implements OnInit {
 			}			
 		}
 		if (this.tempSplitPart.partListUserTypeId == 2) {
-			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.tempSplitPart.partListUserId) }
+			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.tempSplitPart.partListUserId), country: getValueFromObjectByKey('label', data.country) }
 			if(!this.isEditModeSplitAddress) {				
 				await this.vendorService.newShippingAdd(vendorData).subscribe(res => {
 					this.onVendorNameChange(vendorData.vendorId, null, this.parentIndex, this.childIndex);
@@ -3154,7 +3151,7 @@ export class RoSetupComponent implements OnInit {
 			}			
 		}
 		if (this.tempSplitPart.partListUserTypeId == 3) {
-			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.tempSplitPart.partListUserId), siteName: "" }
+			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.tempSplitPart.partListUserId), siteName: "", country: getValueFromObjectByKey('label', data.country) }
 			if(!this.isEditModeSplitAddress) {				
 				await this.companyService.addNewShippingAddress(companyData).subscribe(res => {
 					this.onCompanyNameChange(companyData.legalentityId, null, this.parentIndex, this.childIndex); //res.legalEntityId
