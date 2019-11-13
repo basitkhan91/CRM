@@ -75,35 +75,60 @@ namespace DAL.Repositories
 
         public IEnumerable<object> GetRepairOrderlist(Filters<RepairOrderFilters> roFilters)
         {
+
             if (roFilters.filters == null)
                 roFilters.filters = new RepairOrderFilters();
             var pageNumber = roFilters.first + 1;
             var take = roFilters.rows;
             var skip = take * (pageNumber - 1);
 
+            short statusId = 0;
+            if (roFilters.filters.Status == "Open")
+            {
+                statusId = 1;
+            }
+            else if (roFilters.filters.Status == "Pending")
+            {
+                statusId = 2;
+            }
+            else if (roFilters.filters.Status == "Fulfilling")
+            {
+                statusId = 3;
+            }
+            else if (roFilters.filters.Status == "Closed")
+            {
+                statusId = 4;
+            }
+
             var totalRecords = (from ro in _appContext.RepairOrder
                                 join emp in _appContext.Employee on ro.ApproverId equals emp.EmployeeId
                                 join v in _appContext.Vendor on ro.VendorId equals v.VendorId
-                                where ro.IsActive == false
-                                && ro.RepairOrderNumber.Contains(!String.IsNullOrEmpty(roFilters.filters.RepairOrderNumber) ? roFilters.filters.RepairOrderNumber : ro.RepairOrderNumber)
-                                && v.VendorName.Contains(!string.IsNullOrEmpty(roFilters.filters.VendorName) ? roFilters.filters.VendorName : v.VendorName)
-                                && v.VendorCode.Contains(!string.IsNullOrEmpty(roFilters.filters.VendorCode) ? roFilters.filters.VendorCode : v.VendorCode)
-                                && ro.StatusId == (roFilters.filters.StatusId > 0 ? roFilters.filters.StatusId : ro.StatusId)
+                                join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
+                                from appr in approver.DefaultIfEmpty()
+                                where ro.IsDeleted == false
+                                      && ro.RepairOrderNumber.Contains(!String.IsNullOrEmpty(roFilters.filters.RepairOrderNo) ? roFilters.filters.RepairOrderNo : ro.RepairOrderNumber)
+                                      && v.VendorName.Contains(!String.IsNullOrEmpty(roFilters.filters.VendorName) ? roFilters.filters.VendorName : v.VendorName)
+                                      && v.VendorCode.Contains(!String.IsNullOrEmpty(roFilters.filters.VendorCode) ? roFilters.filters.VendorCode : v.VendorCode)
+                                      && ro.StatusId == (statusId > 0 ? statusId : ro.StatusId)
+                                      && emp.FirstName.Contains(!String.IsNullOrEmpty(roFilters.filters.ApprovedBy) ? roFilters.filters.ApprovedBy : emp.FirstName)
                                 select new
                                 {
                                     ro.RepairOrderId
 
                                 }).Distinct()
-                                    .Count();
+                .Count();
 
             var repairOrderList = (from ro in _appContext.RepairOrder
                                    join emp in _appContext.Employee on ro.ApproverId equals emp.EmployeeId
                                    join v in _appContext.Vendor on ro.VendorId equals v.VendorId
-                                   where ro.IsActive == false
-                                         && ro.RepairOrderNumber.Contains(!String.IsNullOrEmpty(roFilters.filters.RepairOrderNumber) ? roFilters.filters.RepairOrderNumber : ro.RepairOrderNumber)
-                                         && v.VendorName.Contains(!string.IsNullOrEmpty(roFilters.filters.VendorName) ? roFilters.filters.VendorName : v.VendorName)
-                                         && v.VendorCode.Contains(!string.IsNullOrEmpty(roFilters.filters.VendorCode) ? roFilters.filters.VendorCode : v.VendorCode)
-                                         && ro.StatusId == (roFilters.filters.StatusId > 0 ? roFilters.filters.StatusId : ro.StatusId)
+                                   join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
+                                   from appr in approver.DefaultIfEmpty()
+                                   where ro.IsDeleted == false
+                                   && ro.RepairOrderNumber.Contains(!String.IsNullOrEmpty(roFilters.filters.RepairOrderNo) ? roFilters.filters.RepairOrderNo : ro.RepairOrderNumber)
+                                   && v.VendorName.Contains(!String.IsNullOrEmpty(roFilters.filters.VendorName) ? roFilters.filters.VendorName : v.VendorName)
+                                   && v.VendorCode.Contains(!String.IsNullOrEmpty(roFilters.filters.VendorCode) ? roFilters.filters.VendorCode : v.VendorCode)
+                                   && ro.StatusId == (statusId > 0 ? statusId : ro.StatusId)
+                                   && emp.FirstName.Contains(!String.IsNullOrEmpty(roFilters.filters.ApprovedBy) ? roFilters.filters.ApprovedBy : emp.FirstName)
                                    select new
                                    {
                                        ro.RepairOrderId,
@@ -114,17 +139,14 @@ namespace DAL.Repositories
                                        v.VendorCode,
                                        Status = ro.StatusId == 1 ? "Open" : (ro.StatusId == 2 ? "Pending" : (ro.StatusId == 3 ? "Fulfilling" : "Closed")),
                                        RequestedBy = emp.FirstName,
-                                       //ApprovedBy = appr==null?"": appr.FirstName,
-                                       ApprovedBy = "Test",
+                                       ApprovedBy = appr == null ? "" : appr.FirstName,
                                        ro.CreatedDate,
                                        ro.IsActive,
                                        TotalRecords = totalRecords
                                    }).Distinct().OrderByDescending(p => p.CreatedDate)
-                                     .Skip(skip)
-                                    .Take(take)
-                                    .ToList();
-
-
+                                    .Skip(skip)
+                                   .Take(take)
+                                   .ToList();
 
             return repairOrderList;
         }
