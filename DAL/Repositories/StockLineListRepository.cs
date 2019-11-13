@@ -38,9 +38,11 @@ namespace DAL.Repositories
                               join bi in _appContext.Bin on stl.BinId equals bi.BinId into bin
                               from bi in bin.DefaultIfEmpty()
 
-                              join po in _appContext.PurchaseOrder on stl.PurchaseOrderId equals po.PurchaseOrderId
-                              
-                              join ro in _appContext.RepairOrder on stl.RepairOrderId equals ro.RepairOrderId
+                              join po in _appContext.PurchaseOrder on stl.PurchaseOrderId equals po.PurchaseOrderId into purchase
+                              from po in purchase.DefaultIfEmpty()
+
+                              join ro in _appContext.RepairOrder on stl.RepairOrderId equals ro.RepairOrderId into repair
+                              from ro in repair.DefaultIfEmpty()
 
                               join mana in _appContext.ManagementStructure on stl.ManagementStructureEntityId equals mana.ManagementStructureId
 
