@@ -14,7 +14,7 @@ namespace DAL.Models
         public DateTime ClosedDate { get; set; }
         public string VendorName { get; set; }
         public string VendorCode { get; set; }
-        public short StatusId { get; set; }
+        public string Status { get; set; }
         public string RequestedBy { get; set; }
         public string ApprovedBy { get; set; }
     }

@@ -15,7 +15,8 @@ export class VendorStepsPrimeNgComponent {
 	ifvalue: boolean;
 	generalcollection: any;
 	collection: any;
-	currentUrl: any;
+    currentUrl: any;
+    isDisabledSteps: boolean = false;
 	items: MenuItem[];
 
 	msgs: Message[] = [];

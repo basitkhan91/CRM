@@ -140,7 +140,11 @@ export class VendorEndpointService extends EndpointFactory {
 	private readonly _aircraftmodelsPost: string = "/api/Vendor/Aircraftpost";
 	private readonly _vendorContactsGetByID: string = "/api/Common/vendorcontacts";
 	private readonly getVendor: string = "/api/vendor/pagination";	
-    private readonly _vendorsForDropDown: string = "/api/Vendor/GetVendorsForDropDown";
+	private readonly _vendorsForDropDown: string = "/api/Vendor/GetVendorsForDropDown";
+	private readonly _saveVendorRepairOrder: string = "/api/Vendor/saveVendorRepairOrder";
+	private readonly _saveVendorRepairOrderPart: string = "/api/Vendor/saveVendorRepairPart";
+	private readonly _roByIdUrl: string = "/api/Vendor/roById";
+	private readonly _roPartByIdUrl: string = "/api/Vendor/roPartsById";
     
 
 	get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
@@ -1368,4 +1372,57 @@ export class VendorEndpointService extends EndpointFactory {
 		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/vendorbillingaddressbyid?billingAddressId=${vendorId}`)
 	
 	}
+
+	saveRepairorderdetails<T>(param: any): Observable<any> {
+		let body = JSON.stringify(param);
+		let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+		return this.http.post(this._saveVendorRepairOrder, body, this.getRequestHeaders())
+			.map((response: Response) => {
+				return <any>response;
+
+			}).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+	}
+
+	saveRepairorderdetailspart<T>(param: any): Observable<any> {
+		let body = JSON.stringify(param);
+		let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+		return this.http.post(this._saveVendorRepairOrderPart, body, this.getRequestHeaders())
+			.map((response: Response) => {
+				return <any>response;
+			}).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+	}
+
+	getROStatus(repairOrderId, isActive, updatedBy) {
+		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/roStatus?repairOrderId=${repairOrderId}&isActive=${isActive}&updatedBy=${updatedBy}`)
+  }
+
+  deleteRO(repairOrderId, updatedBy) {
+	return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/deleteRo?repairOrderId=${repairOrderId}&updatedBy=${updatedBy}`)
+  }
+
+  getROHistory(repairOrderId) {
+	return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/roHistory?repairOrderId=${repairOrderId}`)
+}
+
+getVendorROById<T>(Id: number): Observable<T> {
+	let endPointUrl = `${this._roByIdUrl}?repairOrderId=${Id}`;
+
+	return this.http.get<T>(endPointUrl, this.getRequestHeaders())
+		.catch(error => {
+			return this.handleError(error, () => this.getVendorROById(Id));
+		});
+}
+
+getRepairOrderPartsById<T>(Id: number): Observable<T> {
+	let endPointUrl = `${this._roPartByIdUrl}?repairOrderId=${Id}`;
+
+	return this.http.get<T>(endPointUrl, this.getRequestHeaders())
+		.catch(error => {
+			return this.handleError(error, () => this.getRepairOrderPartsById(Id));
+		});
+}
+
+getROViewById(repairOrderId) {
+    return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/roViewById?repairOrderId=${repairOrderId}`)
+  }
 }

@@ -85,7 +85,7 @@ export class EditPoComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this.receivingService.getPurchaseOrderDataForEditById(this.receivingService.purchaseOrderId).subscribe(
+        this.receivingService.getPurchaseOrderDataForEditById(126).subscribe(
             results => {
                 this.purchaseOrderData = results[0];
                 this.purchaseOrderData.openDate = new Date(results[0].openDate).toLocaleDateString();
@@ -246,7 +246,6 @@ export class EditPoComponent implements OnInit {
                         this.getConditionList();
                         this.loadManagementdata();
                         this.loadManufacturerData();
-                        this.loadReceivingPOEditGrid();
                         this.getAllSite();
                         this.getAllGLAccount();
                         this.getShippingVia();
@@ -350,10 +349,6 @@ export class EditPoComponent implements OnInit {
         this.poUserType.push(<DropDownData>{ Key: '1', Value: 'Customer' });
         this.poUserType.push(<DropDownData>{ Key: '2', Value: 'Vendor' });
         this.poUserType.push(<DropDownData>{ Key: '3', Value: 'Company' });
-    }
-
-    private loadReceivingPOEditGrid() {
-
     }
 
     private loadManagementdata() {
