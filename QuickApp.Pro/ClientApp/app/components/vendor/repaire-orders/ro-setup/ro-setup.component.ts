@@ -1514,7 +1514,8 @@ export class RoSetupComponent implements OnInit {
 			this.addressSiteNameHeader = 'Edit Ship To Customer Details';
 			this.isEditModeShipping = true;
 			this.tempshipToAddress = getObjectById('customerShippingAddressId', data.shipToAddressId, this.shipToCusData);
-			this.addressFormForShipping = {...this.tempshipToAddress, country: getObjectByValue('label', this.tempshipToAddress.country.toLowerCase(), this.allCountriesList)};
+			const countryName = this.tempshipToAddress.country.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+			this.addressFormForShipping = {...this.tempshipToAddress, country: getObjectByValue('label', countryName, this.allCountriesList)};
 		}
 		if (value === 'AddVenSiteName') {
 			this.addressSiteNameHeader = 'Add Ship To Vendor Details';
@@ -1523,7 +1524,8 @@ export class RoSetupComponent implements OnInit {
 			this.addressSiteNameHeader = 'Edit Ship To Vendor Details';
 			this.isEditModeShipping = true;
 			this.tempshipToAddress = getObjectById('vendorShippingAddressId', data.shipToAddressId, this.vendorSelected);
-			this.addressFormForShipping = {...this.tempshipToAddress};
+			const countryName = this.tempshipToAddress.country.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+			this.addressFormForShipping = {...this.tempshipToAddress, country: getObjectByValue('label', countryName, this.allCountriesList)};
 		}
 		if (value === 'AddComSiteName') {
 			this.addressSiteNameHeader = 'Add Ship To Company Details';
@@ -1547,10 +1549,12 @@ export class RoSetupComponent implements OnInit {
 						this.shipToAddress.country = resp.country;
 	
 				const tempShipToAdd = this.shipToAddress;
-				this.addressFormForShipping = {...tempShipToAdd, siteName: this.tempshipToAddress.siteName, legalEntityShippingAddressId: this.tempshipToAddress.legalEntityShippingAddressId};
+				const countryName = tempShipToAdd.country.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+				this.addressFormForShipping = {...tempShipToAdd, siteName: this.tempshipToAddress.siteName, legalEntityShippingAddressId: this.tempshipToAddress.legalEntityShippingAddressId, country: getObjectByValue('label', countryName, this.allCountriesList)};
 				})
 			} else {
-				this.addressFormForShipping = {...this.tempshipToAddress, siteName: this.tempshipToAddress.siteName, legalEntityShippingAddressId: this.tempshipToAddress.legalEntityShippingAddressId};
+				const countryName = this.tempshipToAddress.country.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+				this.addressFormForShipping = {...this.tempshipToAddress, siteName: this.tempshipToAddress.siteName, legalEntityShippingAddressId: this.tempshipToAddress.legalEntityShippingAddressId, country: getObjectByValue('label', countryName, this.allCountriesList)};
 			}
 		}
 	}
@@ -1723,7 +1727,8 @@ export class RoSetupComponent implements OnInit {
 			this.addressSiteNameHeader = 'Edit Bill To Customer Details';
 			this.isEditModeBilling = true;
 			this.tempbillToAddress = getObjectById('customerBillingAddressId', data.billToAddressId, this.billToCusData);
-			this.addressFormForBilling = {...this.tempbillToAddress};
+			const countryName = this.tempbillToAddress.country.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+			this.addressFormForBilling = {...this.tempbillToAddress, country: getObjectByValue('label', countryName, this.allCountriesList)};
 		}
 		if (value === 'AddVenSiteName') {
 			this.addressSiteNameHeader = 'Add Bill To Vendor Details';
@@ -1734,7 +1739,8 @@ export class RoSetupComponent implements OnInit {
 			this.tempbillToAddress = getObjectById('vendorBillingAddressId', data.billToAddressId, this.vendorSelectedForBillTo);
 			this.onBillToGetAddress(data, data.billToAddressId);
 			const tempBillToAdd = this.billToAddress;
-			this.addressFormForBilling = {...tempBillToAdd, siteName: this.tempbillToAddress.siteName, vendorBillingAddressId: this.tempbillToAddress.vendorBillingAddressId};
+			const countryName = tempBillToAdd.country.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+			this.addressFormForBilling = {...tempBillToAdd, siteName: this.tempbillToAddress.siteName, vendorBillingAddressId: this.tempbillToAddress.vendorBillingAddressId, country: getObjectByValue('label', countryName, this.allCountriesList)};
 		}
 		if (value === 'AddComSiteName') {
 			this.addressSiteNameHeader = 'Add Bill To Company Details';
@@ -1758,10 +1764,12 @@ export class RoSetupComponent implements OnInit {
 						this.billToAddress.country = resp.country;
 					
 					const tempBillToAdd = this.billToAddress;
-					this.addressFormForBilling = {...tempBillToAdd, siteName: this.tempbillToAddress.siteName, legalEntityBillingAddressId: this.tempbillToAddress.legalEntityBillingAddressId};
+					const countryName = tempBillToAdd.country.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+					this.addressFormForBilling = {...tempBillToAdd, siteName: this.tempbillToAddress.siteName, legalEntityBillingAddressId: this.tempbillToAddress.legalEntityBillingAddressId, country: getObjectByValue('label', countryName, this.allCountriesList)};
 				})
 			} else {
-				this.addressFormForBilling = {...this.tempbillToAddress, siteName: this.tempbillToAddress.siteName, legalEntityBillingAddressId: this.tempbillToAddress.legalEntityBillingAddressId};
+				const countryName = this.tempbillToAddress.country.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+				this.addressFormForBilling = {...this.tempbillToAddress, siteName: this.tempbillToAddress.siteName, legalEntityBillingAddressId: this.tempbillToAddress.legalEntityBillingAddressId, country: getObjectByValue('label', countryName, this.allCountriesList)};
 			}
 			
 		}
@@ -2505,7 +2513,7 @@ export class RoSetupComponent implements OnInit {
 	onGetDiscPerUnit(partList) {
 		if (partList.unitCost !== null && partList.discountPercent !== null) {
 			const discountPercentValue = getValueFromObjectByKey('percentValue', partList.discountPercent);
-			partList.discountPerUnit = Math.round(partList.unitCost * discountPercentValue);
+			partList.discountPerUnit = Math.round((partList.unitCost * discountPercentValue) / 100);
 			//partList.discountPerUnit = Math.round(partList.unitCost * ((discountPercentValue / 100)-1));
 		}
 	}
@@ -3314,11 +3322,13 @@ export class RoSetupComponent implements OnInit {
 			this.addressHeader = 'Edit Split Shipment Address';
 			this.isEditModeSplitAddress = true;
 				this.tempSplitAddress = getObjectById('addressId', splitPart.partListAddressId, this["splitAddressData"+pindex+cindex]);
+				const countryName = this.tempSplitAddress.country.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
 				this.addNewAddress = {
 					...this.tempSplitAddress,
 					line1: this.tempSplitAddress.address1,
 					line2: this.tempSplitAddress.address2,
 					line3: this.tempSplitAddress.address3,
+					country: getObjectByValue('label', countryName, this.allCountriesList)
 				};
 
 		}
@@ -3326,11 +3336,14 @@ export class RoSetupComponent implements OnInit {
 
 	onChangeParentQtyOrdered(event, partList) {
 		this.parentQty = event.target.value;
-		this.onChangeChildQtyOrdered(partList);
+		if(partList.childList) {
+			this.onChangeChildQtyOrdered(partList);
+		}	
 	}
 
 	onChangeChildQtyOrdered(partList) {
 		this.childOrderQtyArray = [];
+		this.childOrderQtyTotal = null;
 		console.log(partList.childList);
 		for (let i = 0; i < partList.childList.length; i++) {
 			if (partList.childList[i].quantityOrdered === null || partList.childList[i].quantityOrdered === undefined) {
