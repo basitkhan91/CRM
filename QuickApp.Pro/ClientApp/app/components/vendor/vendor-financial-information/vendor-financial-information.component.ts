@@ -824,7 +824,8 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.discountcollection = [];
         for (let i = 0; i < this.alldiscountvalueInfo.length; i++) {
             let discontValue = this.alldiscountvalueInfo[i].discontValue;
-            if (discontValue.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+            
+            if (discontValue.toString().indexOf(event.query)) {
                 this.namecolle.push([{
                     "discountId": this.alldiscountvalueInfo[i].discountId,
                     "discontValue": discontValue
