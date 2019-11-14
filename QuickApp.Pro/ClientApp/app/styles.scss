@@ -14234,6 +14234,10 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     width: calc(100% - 30px) !important;
     margin-right: 18px;
 }
+
+.pcalendar-wo-labor .ui-calendar.ui-calendar-w-btn .ui-inputtext {
+    width: 115px !important;
+}
 .emp-labour-cstm p-autocomplete .ui-autocomplete {
     width: calc(100% - 14px) !important;
     padding-right: 3px;
