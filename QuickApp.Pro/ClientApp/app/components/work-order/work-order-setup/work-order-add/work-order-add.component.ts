@@ -288,7 +288,7 @@ export class WorkOrderAddComponent implements OnInit {
       result => {
         this.workScopesList = result.map(x => {
           return {
-            label: x.workScopeCode,
+              label: x.description,
             value: x.workScopeId
           }
         })
