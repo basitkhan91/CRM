@@ -19,16 +19,16 @@ $theme: mat-light-theme($primary, $accent);
 
 
 
-p-autocomplete.ng-touched.ng-invalid input {
-    border-color: #ff586b;
-}
+// .p-autocomplete-ctsm-lg.ng-touched.ng-invalid input {
+//     border-color: #ff586b;
+// }
 
 
 
 .p-autoComplete-ctsm.ng-touched.ng-invalid input {
     border-color: #ff586b;
 } 
-.ng-touched.ng-invalid {
+.wo-input.ng-touched.ng-invalid {
     border-color: #ff586b;
 }
 .p-dropdown-custom-md-Header.ng-touched.ng-invalid .ui-dropdown  {
@@ -11456,7 +11456,7 @@ table thead tr th:first-child input, table tr td:first-child input {
     }
 
     .ui-table .ui-table-tbody > tr.ui-state-highlight {
-        background-color: #aecef5 !important;
+        background-color: #fff !important;
     }
 
     .ui-table .ui-widget-header .ui-multiselect-label-container label, .ui-table .ui-paginator-bottom p-dropdown label {

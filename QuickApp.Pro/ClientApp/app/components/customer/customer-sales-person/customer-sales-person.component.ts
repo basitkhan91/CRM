@@ -112,13 +112,15 @@ export class CustomerSalesPersonComponent implements OnInit {
 
         if (this.editMode) {
 
+            console.log(this.editGeneralInformationData);
+
             this.id = this.editGeneralInformationData.customerId
             this.salesInfo = {
                 ...this.editGeneralInformationData,
                 primarySalesPersonId: getObjectById('employeeId', this.editGeneralInformationData.primarySalesPersonId, this.employeeListOriginal),
                 secondarySalesPersonId: getObjectById('employeeId', this.editGeneralInformationData.secondarySalesPersonId, this.employeeListOriginal),
-                // csrName: getObjectByValue('firstName', this.salesInfo.csrName, this.employeeListOriginal),
-                // agentName: getObjectByValue('firstName', this.salesInfo.agentName, this.employeeListOriginal),
+                csrId: getObjectById('employeeId', this.editGeneralInformationData.csrId, this.employeeListOriginal),
+                saId: getObjectById('employeeId', this.editGeneralInformationData.saId, this.employeeListOriginal),
             };
             console.log(this.salesInfo)
 

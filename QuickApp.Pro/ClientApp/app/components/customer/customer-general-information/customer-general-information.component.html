@@ -351,7 +351,7 @@
                                                                     name="isRestrict"
 
                                                                      [(ngModel)]="restictPMAtempList"
-                                                                     [options]="partList" 
+                                                                     [options]="partListForPMA" 
                                                                      [filter]="true"
                                                                      itemSize="30"
                                                                     ></p-multiSelect>
@@ -369,12 +369,12 @@
                                                                                 <th>Actions</th>
                                                                             </tr>
                                                                         </ng-template>
-                                                                        <ng-template pTemplate="body" let-car let-columns="columns"  let-i="rowIndex">
+                                                                        <ng-template pTemplate="body" let-part let-rowData let-columns="columns"  let-i="rowIndex">
                                                                             <tr>
                                                                                 <td *ngFor="let col of columns">
-                                                                                        {{car[col.field]}}
+                                                                                        {{part[col.field]}}
                                                                                 </td>
-                                                                                <button class="btn-delete"  (click)="deleteRestirctPMA(i)" mat-icon-button matTooltip="Delete" >
+                                                                                <button class="btn-delete"  (click)="deleteRestirctPMA(i, rowData)" mat-icon-button matTooltip="Delete" >
                                                                                     <mat-icon color="warn">delete</mat-icon>
                                                                                 </button>
                                                                             </tr>
@@ -418,8 +418,8 @@
                                                                             <div class="col-sm-9">    
                                                                     <p-multiSelect 
                                                                     name="isRestrict"
-                                                                     [(ngModel)]="restictBERtempList"
-                                                                     [options]="partList" 
+                                                                     [(ngModel)]="restictDERtempList"
+                                                                     [options]="partListForDER" 
                                                                      [filter]="true"
                                                                      itemSize="30"
                                                                     ></p-multiSelect>
@@ -437,12 +437,12 @@
                                                                                 <th>Actions</th>
                                                                             </tr>
                                                                         </ng-template>
-                                                                        <ng-template pTemplate="body" let-car let-columns="columns"  let-i="rowIndex">
+                                                                        <ng-template pTemplate="body" let-part let-rowData let-columns="columns"  let-i="rowIndex">
                                                                             <tr>
                                                                                 <td *ngFor="let col of columns">
-                                                                                        {{car[col.field]}}
+                                                                                        {{part[col.field]}}
                                                                                 </td>
-                                                                                <button class="btn-delete"  (click)="deleteRestirctBER(i)" mat-icon-button matTooltip="Delete" >
+                                                                                <button class="btn-delete"  (click)="deleteRestrictDER(i, rowData)" mat-icon-button matTooltip="Delete" >
                                                                                     <mat-icon color="warn">delete</mat-icon>
                                                                                 </button>
                                                                             </tr>
