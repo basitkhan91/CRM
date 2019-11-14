@@ -2290,9 +2290,9 @@ namespace DAL.Repositories
                         var workFlowId = item.WorkflowId;
                         if (workFlowId > 0)
                         {
-                            var isExists = _appContext.WorkOrderWorkFlow.Any(p => p.WorkflowId == workFlowId);
-                            if (!isExists)
-                            {
+                            //var isExists = _appContext.WorkOrderWorkFlow.Any(p => p.WorkflowId == workFlowId);
+                           // if (!isExists)
+                           // {
                                 WorkOrderWorkFlow workFlowWorkOrder = new WorkOrderWorkFlow();
                                 var workFlow = _appContext.Set<Workflow>().Where(x => x.WorkflowId == workFlowId).FirstOrDefault();
 
@@ -2363,7 +2363,7 @@ namespace DAL.Repositories
 
 
 
-                            }
+                           // }
                         }
                     }
                 }
