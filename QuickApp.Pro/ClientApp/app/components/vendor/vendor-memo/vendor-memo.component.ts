@@ -31,7 +31,7 @@ import { MenuItem } from 'primeng/components/common/menuitem';
 /** VendorMemo component*/
 export class VendorMemoComponent implements OnInit{
     /** VendorMemo ctor */
-	constructor(public workFlowtService: VendorService) {
+	constructor(public workFlowtService: VendorService, private router: Router) {
 
 	}
 
@@ -42,5 +42,10 @@ export class VendorMemoComponent implements OnInit{
 		this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
 		this.workFlowtService.ShowPtab = true;
 		this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab);
+	}
+
+	createnew(){
+        this.workFlowtService.changeStep('General Information');
+        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
 	}
 }   
