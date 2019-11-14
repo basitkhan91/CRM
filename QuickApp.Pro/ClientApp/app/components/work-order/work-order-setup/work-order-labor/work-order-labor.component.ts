@@ -27,6 +27,7 @@ export class WorkOrderLaborComponent implements OnInit {
   expertiseTypeList: Object;
   id: any;
   saveFormdata: any;
+  minDateValue: Date = new Date()
   billableList = [
     { label: 'Billable', value: 1 },
     { label: 'Non-Billable', value: 2 }
@@ -119,19 +120,41 @@ export class WorkOrderLaborComponent implements OnInit {
   addNewTask(taskName) {
     this.laborForm.workOrderLaborList[0][taskName].push(new AllTasks());
   }
-  startandStop(obj) {
-    if (obj.startDate === null) {
-      obj.startDate = new Date();
-    } else if (obj.endDate === null) {
-      obj.endDate = new Date();
+  startandStop(currentRecord) {
+    if (currentRecord.startDate === null) {
+      currentRecord.startDate = new Date();
+    } else if (currentRecord.endDate === null) {
+      currentRecord.endDate = currentRecord.startDate;
     }
+    this.calculateWorkingHoursandMins(currentRecord)
   }
-  isEditTime(data, field) {
-    console.log(data, field)
+
+
+  resetEndDateandTime(currentRecord) {
+    currentRecord.endDate = null;
+  }
+
+  calculateWorkingHoursandMins(currentRecord) {
+    console.log(currentRecord)
+    if (currentRecord.startDate && currentRecord.endDate) {
+      const start = moment(currentRecord.startDate)
+      const end = moment(currentRecord.endDate)
+      // currentRecord.hours = start.diff(end);
+      const ms = moment(end, "DD/MM/YYYY HH:mm:ss").diff(moment(start, "DD/MM/YYYY HH:mm:ss"));
+      console.log(ms);
+      const days = moment.duration(ms)
+      console.log(days);
+      currentRecord.hours = Math.floor(days.asHours()) + moment.utc(ms).format(":mm")
+      // currentRecord.hours = moment(moment(startTime, "hh:mm").diff(moment(endTime, "hh:mm"))).format("hh:mm");
+    }
+
+  }
+
+  isEditTime(currentRecord, field) {
     if (field === 'endDateandTimeIsEdit') {
-      data[field] = data[field] === true ? false : true;
+      currentRecord[field] = currentRecord[field] === true ? false : true;
     } else if (field === 'startDateandTimeIsEdit') {
-      data[field] = data[field] === true ? false : true;
+      currentRecord[field] = currentRecord[field] === true ? false : true;
     }
 
   }

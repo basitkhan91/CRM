@@ -605,21 +605,25 @@
                             <li class="nav-item">
                                 <a id="pills-home-tab" role="tab" aria-controls="pills-home" aria-selected="true"
                                     [ngClass]="{active : gridActiveTab === 'labor'}"
+                                    [class.isDisabled]="!isDisabledSteps"
                                     (click)="gridTabChange('labor')">labor</a>
                             </li>
                             <li class="nav-item">
                                 <a id="pills-profile-tab" role="tab" aria-controls="pills-profile"
                                     [ngClass]="{active : gridActiveTab === 'equipment'}"
+                                    [class.isDisabled]="!isDisabledSteps"
                                     (click)="gridTabChange('equipment');getEquipmentByWorkOrderId();">Equipment</a>
                             </li>
                             <li class="nav-item" [hidden]="workOrderGeneralInformation.isSinglePN">
                                 <a id="pills-contact-tab" role="tab" aria-controls="pills-contact"
                                     [ngClass]="{active : gridActiveTab === 'quote'}"
+                                    [class.isDisabled]="!isDisabledSteps"
                                     (click)="gridTabChange('quote')">Quote</a>
                             </li>
                             <li class="nav-item">
                                 <a id="pills-contact-tab" role="tab"
                                     [ngClass]="{active : gridActiveTab === 'materialList'}"
+                                    [class.isDisabled]="!isDisabledSteps"
                                     (click)="gridTabChange('materialList'); getMaterialListByWorkOrderId();">Material List </a>
                             </li>
                             <li class="nav-item">
