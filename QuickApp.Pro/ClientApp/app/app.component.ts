@@ -232,7 +232,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                 icon: 'fa fa-fw fa-folder-open',
                 items: [
                     { label: 'Stock List', routerLink: '/stocklinemodule/stocklinepages/app-stock-line-list' },
-                    { label: 'Add Stock List', routerLink: '/stocklinemodule/stocklinepages/app-stock-line-setup' },
+                    { label: 'Add Stock Line', routerLink: '/stocklinemodule/stocklinepages/app-stock-line-setup' },
                     { label: 'Adjustment Reason', routerLink: '/stocklinemodule/stocklinepages/app-stockline-adjustment-reason' },
                     {
                         label: 'Reports and Forms', items: [
