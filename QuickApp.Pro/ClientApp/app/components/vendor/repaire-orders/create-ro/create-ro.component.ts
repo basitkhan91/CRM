@@ -61,7 +61,7 @@ export class CreateRoComponent implements OnInit {
 	discountLevel: any = "";
 	is1099Required: any = "";
 	allPriorityInfo: any[]=[];
-	vendorList: any[]=[];
+	vendorList: any = [];
     /** create-po ctor */
 	sourcePo: any = {};
     vendorCodes: any[];
@@ -135,7 +135,8 @@ export class CreateRoComponent implements OnInit {
 		//debugger;
 		this.vendorList = [];
 		this.workFlowtService.getVendordataForPo(this.sourcePo).subscribe(data => {
-            const getlist = data[0];
+			const getlist = data[0];
+			console.log(getlist);			
             this.vendorList = getlist.map(x => {
                 return {
 					vendorId: x.vendorId,
@@ -148,10 +149,11 @@ export class CreateRoComponent implements OnInit {
                     email: x.email === null ? '-' : x.email,
                     city: x.city === null ? '-' : x.city,
                     stateOrProvince: x.stateOrProvince === null ? '-' : x.stateOrProvince,
-                    postalCode: x.ps.postalCode === null ? '-' : x.ps.postalCode,                    
+					//postalCode: x.ps.postalCode === null ? '-' : x.ps.postalCode,
                 }
-            })
+			})
 		});
+			
     }
 
     getVendorType(id) {
