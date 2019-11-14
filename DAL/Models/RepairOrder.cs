@@ -12,22 +12,22 @@ namespace DAL.Models
         public DateTime? OpenDate { get; set; }
         public DateTime? ClosedDate { get; set; }
         public DateTime? NeedByDate { get; set; }
-        public long PriorityId { get; set; }
+        public long? PriorityId { get; set; }
         public bool? DeferredReceiver { get; set; }
-        public int VendorId { get; set; }
+        public long? VendorId { get; set; }
         public int? VendorContactId { get; set; }
         public string VendorContactPhone { get; set; }
         public decimal? CreditLimit { get; set; }
         public int? CreditTermsId { get; set; }
-        public int RequisitionerId { get; set; }
-        public int ApproverId { get; set; }
+        public int? RequisitionerId { get; set; }
+        public int? ApproverId { get; set; }
         public DateTime? ApprovedDate { get; set; }
         public int? StatusId { get; set; }
         public bool? Resale { get; set; }
         public int? ManagementStructureId { get; set; }
         public string RoMemo { get; set; }
         public int? ShipToUserTypeId { get; set; }
-        public long ShipToUserId { get; set; }
+        public long? ShipToUserId { get; set; }
         public int? ShipToAddressId { get; set; }
         public int? ShipToContactId { get; set; }
         public int? ShipViaId { get; set; }
@@ -36,7 +36,7 @@ namespace DAL.Models
         public string ShipVia { get; set; }
         public string ShippingAcctNum { get; set; }
         public string ShippingUrl { get; set; }
-        public int? ShippingId { get; set; }
+        public string ShippingId { get; set; }
         public string ShipToMemo { get; set; }
         public string ShipToSiteName { get; set; }
         public string ShipToAddress1 { get; set; }

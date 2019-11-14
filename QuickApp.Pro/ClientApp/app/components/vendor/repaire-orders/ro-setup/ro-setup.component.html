@@ -237,8 +237,8 @@
 		
 								<div class="form-group memo-popup-cstm" style="margin-top: 12px;">
 									<label>Memo</label>
-									<span pTooltip="{{sourceRoApproval.poMemo}}" tooltipPosition="top"><input type="text" name="poMemo" pInputText class="form-control" value="{{sourceRoApproval.poMemo}}" disabled /></span>
-									<i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#cpo-memo" pTooltip="{{sourceRoApproval.poMemo}}" tooltipPosition="top" (click)="onAddMemo()"></i>
+									<span pTooltip="{{sourceRoApproval.roMemo}}" tooltipPosition="top"><input type="text" name="roMemo" pInputText class="form-control" value="{{sourceRoApproval.roMemo}}" disabled /></span>
+									<i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#cpo-memo" pTooltip="{{sourceRoApproval.roMemo}}" tooltipPosition="top" (click)="onAddMemo()"></i>
 								</div>
 							</div>
 						</div>                
@@ -393,7 +393,7 @@
 										[(ngModel)]="partList.functionalCurrencyId" name="functionalCurrencyId{{row_index}}" [suggestions]="functionalCurrList" (completeMethod)="filterFunctionalCurrency($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" required>
 										</p-autoComplete>
 									</td>
-									<td><input type="text" class="form-control" [(ngModel)]="partList.foreignExchangeRate" name="foreignExchangeRate{{row_index}}" pKeyFilter="pint" required></td>
+									<td><input type="number" class="form-control" [(ngModel)]="partList.foreignExchangeRate" name="foreignExchangeRate{{row_index}}" pKeyFilter="num" required></td>
 									<td>
 										<p-autoComplete field="symbol" class="pautocomp-cstm" [(ngModel)]="partList.reportCurrencyId" name="reportCurrencyId{{row_index}}" [suggestions]="functionalTransList" (completeMethod)="filterTransCurrency($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" required
 										> <!--[disabled]=true-->          
@@ -674,8 +674,8 @@
 							</div>
 						</div>
 						<div *ngIf="isEditMode" class="form-row">
-							<button *ngIf="!poApproverId" class="btn btn-primary-cstm pull-right" (click)="savePOApproverData()" style="margin-top: 10px;margin-bottom: 20px;">Add</button>
-							<button *ngIf="poApproverId" class="btn btn-primary-cstm pull-right" (click)="updatePOApproverData()" style="margin-top: 10px;margin-bottom: 20px;">Update</button>
+							<button *ngIf="!roApproverId" class="btn btn-primary-cstm pull-right" (click)="saveROApproverData()" style="margin-top: 10px;margin-bottom: 20px;">Add</button>
+							<button *ngIf="roApproverId" class="btn btn-primary-cstm pull-right" (click)="updateROApproverData()" style="margin-top: 10px;margin-bottom: 20px;">Update</button>
 						</div>
 						</div>
 			</p-tabPanel>
@@ -1404,7 +1404,8 @@
 								</div>
 								<div class="form-group col-md-12">
 									<label class="col-md-6">Country:</label>
-									<input type="text" class="form-control col-md-6" name="country" [(ngModel)]="addNewAddress.country">
+									<!-- <input type="text" class="form-control col-md-6" name="country" [(ngModel)]="addNewAddress.country"> -->
+									<p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="addNewAddress.country" name="country" [suggestions]="countriesList" (completeMethod)="filterCountries($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
 								</div>
 								<div class="form-group col-md-12" style="margin-top: 8px;">
 									<button type="button" class="btn btn-primary-cstm" [disabled]="!userForm.valid" (click)="saveSplitAddress();" data-dismiss="modal">Save</button>
@@ -1467,7 +1468,8 @@
 								</div>
 								<div class="form-group col-md-12">
 									<label class="col-md-6">Country:</label>
-									<input type="text" class="form-control col-md-6" name="country" [(ngModel)]="addressFormForShipping.country">
+									<!-- <input type="text" class="form-control col-md-6" name="country" [(ngModel)]="addressFormForShipping.country"> -->
+									<p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="addressFormForShipping.country" name="country" [suggestions]="countriesList" (completeMethod)="filterCountries($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
 								</div>
 								<div class="form-group col-md-12" style="margin-top: 8px;">
 									<button type="button" class="btn btn-primary-cstm" [disabled]="!addSiteNameForm.valid" (click)="saveShippingAddress(); " data-dismiss="modal">Save</button> <!--resetAddressShippingForm();-->
@@ -1530,7 +1532,8 @@
 								</div>
 								<div class="form-group col-md-12">
 									<label class="col-md-6">Country:</label>
-									<input type="text" class="form-control col-md-6" name="country" [(ngModel)]="addressFormForBilling.country">
+									<p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="addressFormForBilling.country" name="country" [suggestions]="countriesList" (completeMethod)="filterCountries($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
+									<!-- <input type="text" class="form-control col-md-6" name="country" [(ngModel)]="addressFormForBilling.country"> -->
 								</div>
 								<div class="form-group col-md-12" style="margin-top: 8px;">
 									<button type="button" class="btn btn-primary-cstm" [disabled]="!addSiteNameForm.valid" (click)="saveBillingAddress();"  data-dismiss="modal">Save</button>

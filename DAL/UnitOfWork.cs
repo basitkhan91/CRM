@@ -504,7 +504,7 @@ namespace DAL
 
         public int SaveChanges()
         {
-            AuditChanges();
+            //AuditChanges();
             return _context.SaveChanges();
         }
 

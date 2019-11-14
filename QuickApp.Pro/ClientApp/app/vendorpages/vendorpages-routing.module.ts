@@ -51,7 +51,7 @@ const vendorPagesRoutes: Routes = [
             { path: "app-vendor-contacts", component: VendorContactsComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-contacts'], title: "Vendor's Contact" } },
             { path: "app-vendor-financial-information", component: VendorFinancialInformationComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-financial-information'],title: "Vendor's Financial Information" } },
             { path: "app-vendor-payment-information", component: VendorPaymentInformationComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-payment-information'], title: "Vendor's Payment Information" } },
-            { path: "app-vendor-billiing-information", component: VendorBillingInformationComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-billing-information'], title: "Vendor's Billing Information" } },
+            { path: "app-vendor-billing-information", component: VendorBillingInformationComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-billing-information'], title: "Vendor's Billing Information" } },
             { path: "app-vendor-shipping-information", component: VendorShippingInformationComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-shipping-information'], title: "Vendor's Shipping Information" } },
             { path: "app-vendor-warnings", component: VendorWarningsComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-warnings'], title: "Vendor Warnings" } },
 			{ path: "app-vendor-memo", component: VendorMemoComponent, data: { title: "Vendor Memo" } },

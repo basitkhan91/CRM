@@ -5,19 +5,19 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb rpo-bcrumb" style="background-color: transparent;">
                         <li class="breadcrumb-item active" aria-current="page">Vendor</li>
-                        <li class="breadcrumb-item" aria-current="page">Repair Order</li>
-                        <li class="breadcrumb-item" aria-current="page">Create RO</li>
+                        <li class="breadcrumb-item" aria-current="page">Purchase Order</li>
+                        <li class="breadcrumb-item" aria-current="page">Create PO</li>
                     </ol>
                 </nav>
             </div>
             <div class="card-body">
-                <h4 class="po-head">{{isEditMode ? 'Edit' : 'Create'}} Repair Order for {{sourcePoApproval.vendorName}}</h4>
+                <h4 class="po-head">{{isEditMode ? 'Edit' : 'Create'}} Purchase Order for {{sourcePoApproval.vendorName}}</h4>
                 
                     <div class="form-row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>RO Num</label>
-                                <input class="form-control" type="text" name="repairOrderNumber" value="Creating" disabled [(ngModel)]="sourcePoApproval.repairOrderNumber">
+                                <label>PO Num</label>
+                                <input class="form-control" type="text" name="purchaseOrderNumber" value="Creating" disabled [(ngModel)]="sourcePoApproval.purchaseOrderNumber">
                             </div>
                             <div class="form-group">
                                 <label>Open Date <span class="clr-red">*</span></label>
@@ -394,7 +394,7 @@
                                     [(ngModel)]="partList.functionalCurrencyId" name="functionalCurrencyId{{row_index}}" [suggestions]="functionalCurrList" (completeMethod)="filterFunctionalCurrency($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" required>
                                     </p-autoComplete>
                                 </td>
-                                <td><input type="text" class="form-control" [(ngModel)]="partList.foreignExchangeRate" name="foreignExchangeRate{{row_index}}" pKeyFilter="pint" required></td>
+                                <td><input type="number" class="form-control" [(ngModel)]="partList.foreignExchangeRate" name="foreignExchangeRate{{row_index}}" pKeyFilter="num" required></td>
                                 <td>
                                     <p-autoComplete field="symbol" class="pautocomp-cstm" [(ngModel)]="partList.reportCurrencyId" name="reportCurrencyId{{row_index}}" [suggestions]="functionalTransList" (completeMethod)="filterTransCurrency($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" required
                                     > <!--[disabled]=true-->          
@@ -1405,7 +1405,8 @@
                             </div>
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">Country:</label>
-                                <input type="text" class="form-control col-md-6" name="country" [(ngModel)]="addNewAddress.country">
+                                <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="addNewAddress.country" name="country" [suggestions]="countriesList" (completeMethod)="filterCountries($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
+                                <!-- <input type="text" class="form-control col-md-6" name="country" [(ngModel)]="addNewAddress.country"> -->
                             </div>
                             <div class="form-group col-md-12" style="margin-top: 8px;">
                                 <button type="button" class="btn btn-primary-cstm" [disabled]="!userForm.valid" (click)="saveSplitAddress();" data-dismiss="modal">Save</button>
@@ -1468,7 +1469,8 @@
                             </div>
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">Country:</label>
-                                <input type="text" class="form-control col-md-6" name="country" [(ngModel)]="addressFormForShipping.country">
+                                <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="addressFormForShipping.country" name="country" [suggestions]="countriesList" (completeMethod)="filterCountries($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
+                                <!-- <input type="text" class="form-control col-md-6" name="country" [(ngModel)]="addressFormForShipping.country"> -->
                             </div>
                             <div class="form-group col-md-12" style="margin-top: 8px;">
                                 <button type="button" class="btn btn-primary-cstm" [disabled]="!addSiteNameForm.valid" (click)="saveShippingAddress(); " data-dismiss="modal">Save</button> <!--resetAddressShippingForm();-->
@@ -1531,7 +1533,8 @@
                             </div>
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">Country:</label>
-                                <input type="text" class="form-control col-md-6" name="country" [(ngModel)]="addressFormForBilling.country">
+                                <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="addressFormForBilling.country" name="country" [suggestions]="countriesList" (completeMethod)="filterCountries($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
+                                <!-- <input type="text" class="form-control col-md-6" name="country" [(ngModel)]="addressFormForBilling.country"> -->
                             </div>
                             <div class="form-group col-md-12" style="margin-top: 8px;">
                                 <button type="button" class="btn btn-primary-cstm" [disabled]="!addSiteNameForm.valid" (click)="saveBillingAddress();"  data-dismiss="modal">Save</button>

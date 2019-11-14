@@ -25,7 +25,7 @@ import { CreditTermsService } from '../../../services/Credit Terms.service';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { ChangeDetectorRef } from '@angular/core';
 import { DiscountValue } from '../../../models/discountvalue';
-
+import { CommonService } from '../../../services/common.service';
 @Component({
     selector: 'app-vendor-financial-information',
     templateUrl: './vendor-financial-information.component.html',
@@ -84,6 +84,10 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.sourceVendor.aeroExchange = true;
         this.sourceVendor.edi = true;
 
+        // this.commonservice.smartDropDownList('Discount', 'DiscountId', 'DiscountValue').subscribe(res => {
+        //     console.log(res);
+        // })
+
     }
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -115,7 +119,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
 
-    constructor(private cdRef: ChangeDetectorRef, public CreditTermsService: CreditTermsService, public currencyService: CurrencyService, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(private cdRef: ChangeDetectorRef, public CreditTermsService: CreditTermsService, public currencyService: CurrencyService, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private commonservice: CommonService) {
         if (this.workFlowtService.contactCollection) {
             this.local = this.workFlowtService.contactCollection;
             this.sourceVendor = this.local;
@@ -412,7 +416,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         }
     }
 
-    editItemAndCloseModel() {
+    editItemAndCloseModel(isGoNxt?: boolean) {
         this.isSaving = true;
         if (!(this.sourceVendor.creditLimit && this.sourceVendor.creditTermsId && this.sourceVendor.currencyId)) {
             this.display = true;
@@ -514,7 +518,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
                     this.workFlowtService.financeCollection = this.local;
                     this.activeIndex = 2;
                     this.workFlowtService.indexObj.next(this.activeIndex);
-                    this.savesuccessCompleted(this.sourceVendor);
+                    this.savesuccessCompleted(this.sourceVendor, isGoNxt);
                 })
             }
             else {
@@ -541,11 +545,13 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.workFlowtService.contactCollection = this.local;
         this.activeIndex = 3;
         this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.changeStep('Payment Information');
         this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
     }
     previousClick() {
         this.activeIndex = 1;
         this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.changeStep('Contacts');
         this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
     }
     dismissModel() {
@@ -565,9 +571,12 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         }
         this.loadData();
     }
-    private savesuccessCompleted(user?: any) {
+    private savesuccessCompleted(user?: any, isGoNxt?: boolean) {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was saved successfully`, MessageSeverity.success);
+        if(isGoNxt){
+            this.NextClick();
+        }
         this.loadData();
     }
 
@@ -815,7 +824,8 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.discountcollection = [];
         for (let i = 0; i < this.alldiscountvalueInfo.length; i++) {
             let discontValue = this.alldiscountvalueInfo[i].discontValue;
-            if (discontValue.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+            
+            if (discontValue.toString().indexOf(event.query)) {
                 this.namecolle.push([{
                     "discountId": this.alldiscountvalueInfo[i].discountId,
                     "discontValue": discontValue

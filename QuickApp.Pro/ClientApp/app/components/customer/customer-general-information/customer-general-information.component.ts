@@ -78,11 +78,12 @@ export class CustomerGeneralInformationComponent implements OnInit {
     isEdit: any = false;
     id: number;
     editData: any;
-    partList: any;
+    partListForPMA: any;
+    partListForDER: any;
     partListOriginal: any;
     // restrictsPMAList: any;
     // restrictBERList: any;
-    restictBERtempList: any = [];
+    restictDERtempList: any = [];
     restictPMAtempList: any = [];
     restrictedDERParts: any = [];
     restrictedPMAParts: any = [];
@@ -93,6 +94,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
     ];
     selectedClassificationRecordForEdit: any;
     tempClassifciatonIds: any = [];
+    tempIntegrationIds: any = [];
+    ataListDataValues: any;
     // editData: any;
 
     // selectedCustomerCodeData: any;
@@ -400,7 +403,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
                 this.editGeneralInformation.emit(res);
                 this.editData = res;
-                ;
+
                 this.generalInformation = {
                     ...this.editData,
                     name: getObjectByValue('name', res.name, this.customerListOriginal),
@@ -458,25 +461,60 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
             });
 
-             this.customerService.getCustomerClassificationMapping(this.id).subscribe(res => {
-                console.log(res);
-                const response: any = res;
-                const tempClassMapping = response.map(x => {
-                    return {
-                        value: x.customerClassificationId,
-                        label: x.description
-                    }
-                });
-                console.log(tempClassMapping);
-
-                for (let j = 0; j < tempClassMapping.length; j++) {
-                    
-                            this.tempClassifciatonIds.push(tempClassMapping[j].value);
-                    }
-                this.generalInformation.customerClassificationIds = this.tempClassifciatonIds;
-                console.log(this.generalInformation.customerClassificationIds);
-            });
+            this.getCustomerClassificationByCustomerId();
+            this.getCustomerIntegrationTypesByCustomerId();
+            this.getCustomerRestrictedPMAByCustomerId();
+            this.getCustomerRestrictedDERByCustomerId();
         }
+    }
+
+    async  getCustomerClassificationByCustomerId() {
+        await this.customerService.getCustomerClassificationMapping(this.id).subscribe(res => {
+            this.generalInformation.customerClassificationIds = res.map(x => x.customerClassificationId);
+            // console.log(this.generalInformation.customerClassificationIds);
+        });
+    }
+
+    async getCustomerIntegrationTypesByCustomerId() {
+        await this.customerService.getintegrationtypes(this.id).subscribe(res => {
+            this.generalInformation.integrationPortalId = res.map(x => x.integrationPortalId)
+            console.log(this.generalInformation.integrationPortalId);
+        });
+    }
+
+    async getCustomerRestrictedPMAByCustomerId() {
+        await this.commonService.getRestrictedParts(1, this.id, 'PMA').subscribe(res => {
+            this.generalInformation.restrictedPMAParts = res;
+            this.restictPMAtempList = res.map(x => x.itemMasterId);
+            // this.generalInformation.restrictedPMAParts = res.map(x => {
+            //     return  { 
+            //          masterPartId: x.itemMasterId,
+            //          partNumber: x.partNumber, 
+            //          memo: x.memo, 
+            //          createdBy: x.createdBy,
+            //          updatedBy: x.updatedBy
+            //     }
+            // });
+
+        })
+    }
+
+    async getCustomerRestrictedDERByCustomerId() {
+        await this.commonService.getRestrictedParts(1, this.id, 'DER').subscribe(res => {
+
+            this.generalInformation.restrictedDERParts = res;
+            this.restictDERtempList = res.map(x => x.itemMasterId);
+            // this.generalInformation.restrictedDERParts = res.map(x => {
+            //     return  { 
+            //          masterPartId: x.itemMasterId,
+            //          partNumber: x.partNumber, 
+            //          memo: x.memo, 
+            //          createdBy: x.createdBy,
+            //          updatedBy: x.updatedBy
+            //     }
+            // });
+
+        })
     }
 
 
@@ -494,13 +532,15 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     getAllPartList() {
         this.itemService.getPrtnumberslistList().subscribe(res => {
-            // this.partListOriginal
             const data = res[0];
-            this.partList = data.map(x => {
+
+            this.partListOriginal = data.map(x => {
                 return {
                     label: x.partNumber, value: { masterPartId: x.itemMasterId, partNumber: x.partNumber, memo: x.memo, createdBy: this.userName, updatedBy: this.userName }
                 }
             })
+            this.partListForPMA = [...this.partListOriginal];
+            this.partListForDER = [...this.partListOriginal];
         })
     }
     getAllIntegrations() {
@@ -534,7 +574,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     //     })
     // }
     async getAllCustomerClassification() {
-        this.commonService.smartDropDownList('CustomerClassification', 'CustomerClassificationId', 'Description').subscribe(res => {
+        await this.commonService.smartDropDownList('CustomerClassification', 'CustomerClassificationId', 'Description').subscribe(res => {
             this.allcustomerclassificationInfo = res;
         });
         //await this.customerClassificationService.getCustomerClassificationList().subscribe(res => {
@@ -567,15 +607,24 @@ export class CustomerGeneralInformationComponent implements OnInit {
     addRestrictPMA() {
 
         this.generalInformation.restrictedPMAParts = this.restictPMAtempList;
+
+        this.partListForPMA = this.restictPMAtempList.reduce((acc, obj) => {
+            return acc.filter(x => x.value.masterPartId !== obj.masterPartId)
+        }, this.partListOriginal)
     }
-    deleteRestirctPMA(i) {
+    deleteRestirctPMA(i, rowData) {
+        this.partListForPMA = [{ label: rowData.partNumber, value: rowData }, ...this.partListForPMA];
         this.generalInformation.restrictedPMAParts.splice(i, 1);
     }
 
     addRestrictBER() {
-        this.generalInformation.restrictedDERParts = this.restictBERtempList;
+        this.generalInformation.restrictedDERParts = this.restictDERtempList;
+        this.partListForDER = this.restictDERtempList.reduce((acc, obj) => {
+            return acc.filter(x => x.value.masterPartId !== obj.masterPartId)
+        }, this.partListOriginal)
     }
-    deleteRestrictBER(i) {
+    deleteRestrictDER(i, rowData) {
+        this.partListForDER = [{ label: rowData.partNumber, value: rowData }, ...this.partListForDER];
         this.generalInformation.restrictedDERParts.splice(i, 1);
     }
 
@@ -751,6 +800,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
     }
 
 
+
+
+
+
     addClassification() {
         const data = {
             ...this.addNewclassification,
@@ -816,6 +869,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
     resetIntegrationPopUp() {
         this.addNewIntergation = { ...this.intergrationNew }
     }
+
+
 
 
     // //calling for ATA Subchapter Data

@@ -21,7 +21,6 @@ import { CommonService } from '../../../../services/common.service';
 import { CustomerShippingModel } from '../../../../models/customer-shipping.model';
 import { CompanyService } from '../../../../services/company.service';
 import { CustomerInternationalShipVia } from '../../../../models/customer-internationalshipping.model';
-import { PurchaseOrderService } from '../../../../services/purchase-order.service';
 import { AddressNew } from '../../../../models/address-new-model';
 import { PercentService } from '../../../../services/percent.service';
 import { VendorCapabilitiesService } from '../../../../services/vendorcapabilities.service';
@@ -37,7 +36,7 @@ import { DatePipe } from '@angular/common';
 
 /** ro-setup component*/
 
-export class RoSetupComponent implements OnInit{
+export class RoSetupComponent implements OnInit {
 	firstNamesbillTo1: any;
 	firstNamesShipTo1: any[];
 	vendorContactsForshipTo: any[] = [];
@@ -146,9 +145,9 @@ export class RoSetupComponent implements OnInit{
 	approver4: any = {};
 	approver5: any = {};
 	allEmployeeList: any = [];
-	poApproverData: any = {};
-	poApproverList: any = [];
-	poApproverListEdit: any = [];
+	roApproverData: any = {};
+	roApproverList: any = [];
+	roApproverListEdit: any = [];
 	approverIds: any = [];
 	multiplePNIdArray: any = [];
 	tempNewPNArray: any = [];
@@ -168,7 +167,7 @@ export class RoSetupComponent implements OnInit{
 	contactListForCompanyBilling: any;
 	contactListForBillingCompany: any;
 	roId: any;
-	tempPOHeaderAddress: any = {};
+	tempROHeaderAddress: any = {};
 	vendorList: any = [];
 	tempShipTOAddressId: any;
 	tempBillTOAddressId: any;
@@ -184,7 +183,7 @@ export class RoSetupComponent implements OnInit{
 	splitAddressData: any = [];
 	tempSplitAddressData: any = [];
 	approveListEdit: any = [];
-	poApproverId: number;
+	roApproverId: number;
 	vendorIdByParams: number;
 	tempSplitPart: any;
 	tempSplitAddress: any;
@@ -195,6 +194,8 @@ export class RoSetupComponent implements OnInit{
 	addressFormForShippingCompany: any;
 	parentIndex: number;
 	childIndex: number;
+	allCountriesList: any = [];
+	countriesList: any = [];
 
 	/** ro-approval ctor */
 	constructor(private route: Router,
@@ -213,7 +214,6 @@ export class RoSetupComponent implements OnInit{
 		private companyService: CompanyService,
 		private commonService: CommonService,
 		private _actRoute: ActivatedRoute,
-		private purchaseOrderService: PurchaseOrderService,
 		private percentService: PercentService,
 		private vendorCapesService: VendorCapabilitiesService,
 		private itemser: ItemMasterService,
@@ -238,13 +238,14 @@ export class RoSetupComponent implements OnInit{
 		this.loadcustomerData();
 		this.glAccountData();
 		this.getLegalEntity();
+		this.getCountriesList();
 		this.loadPercentData();
 		this.sourceRoApproval.companyId = 0;
 		this.sourceRoApproval.buId = 0;
 		this.sourceRoApproval.divisionId = 0;
 		this.sourceRoApproval.departmentId = 0;
-		if (this.sourceRoApproval.purchaseOrderNumber == "" || this.sourceRoApproval.purchaseOrderNumber == undefined) {
-			this.sourceRoApproval.purchaseOrderNumber = 'Creating';
+		if (this.sourceRoApproval.repairOrderNumber == "" || this.sourceRoApproval.repairOrderNumber == undefined) {
+			this.sourceRoApproval.repairOrderNumber = 'Creating';
 		}
 
 		this.vendorCapesCols = [
@@ -305,28 +306,28 @@ export class RoSetupComponent implements OnInit{
 	getManagementStructureDetails(id) {
 		this.commonService.getManagementStructureDetails(id).subscribe(res => {
 			if (res.Level1) {
-				this.tempPOHeaderAddress.companyId = res.Level1;
+				this.tempROHeaderAddress.companyId = res.Level1;
 				this.getBUList(res.Level1);
 			} else 
-				this.tempPOHeaderAddress.companyId = 0;
+				this.tempROHeaderAddress.companyId = 0;
 
 			if(res.Level2) {
-				this.tempPOHeaderAddress.buId = res.Level2;
+				this.tempROHeaderAddress.buId = res.Level2;
 				this.getDivisionlist(res.Level2);
 			} else
-				this.tempPOHeaderAddress.buId = 0;
+				this.tempROHeaderAddress.buId = 0;
 
 			if(res.Level3) {
-				this.tempPOHeaderAddress.divisionId = res.Level3;
+				this.tempROHeaderAddress.divisionId = res.Level3;
 				this.getDepartmentlist(res.Level3);
 			} else 
-				this.tempPOHeaderAddress.divisionId = 0;
+				this.tempROHeaderAddress.divisionId = 0;
 
 			if(res.Level4) {
-				this.tempPOHeaderAddress.departmentId = res.Level4;
+				this.tempROHeaderAddress.departmentId = res.Level4;
 				this.getDepartmentId(res.Level4);
 			} else
-				this.tempPOHeaderAddress.departmentId = 0;
+				this.tempROHeaderAddress.departmentId = 0;
 
 		})
 	}
@@ -337,11 +338,11 @@ export class RoSetupComponent implements OnInit{
 				this.vendorList = response[0];
 
 				this.vendorService.getVendorROById(roId).subscribe(response => {
-					const res = response;					
-					this.tempPOHeaderAddress = {
+					const res = response.ro;					
+					this.tempROHeaderAddress = {
 						repairOrderNumber: res.repairOrderNumber,
 						openDate: new Date(res.openDate),
-						closedDate: new Date(res.closedDate),
+						closedDate: res.closedDate ? new Date(res.closedDate) : '',
 						needByDate: new Date(res.needByDate),
 						priorityId: getObjectById('value', res.priorityId, this.allPriorityInfo),
 						deferredReceiver: res.deferredReceiver,
@@ -353,17 +354,17 @@ export class RoSetupComponent implements OnInit{
 						creditLimit: res.creditLimit,
 						creditTerms: res.creditTermsId ? getValueFromArrayOfObjectById('name', 'creditTermsId', res.creditTermsId, this.allcreditTermInfo) : null,
 						creditTermsId: res.creditTermsId,
-						requisitionerId: getObjectById('value', res.requestedBy, this.allEmployeeList),						
+						requisitionerId: getObjectById('value', res.requisitionerId, this.allEmployeeList),						
 						approverId: getObjectById('value', res.approverId, this.allEmployeeList),
-						approvedDate: res.dateApproved ? new Date(res.dateApproved) : '',
+						approvedDate: res.approvedDate ? new Date(res.approvedDate) : '',
 						statusId: res.statusId,
 						resale: res.resale,
 						companyId: this.getManagementStructureDetails(res.managementStructureId),
 						// buId: 0,
 						// divisionId: 0,
 						// departmentId: 0,
-						poMemo: res.notes,
-						shipToUserTypeId: res.shipToUserType,
+						roMemo: res.roMemo,
+						shipToUserTypeId: res.shipToUserTypeId,
 						//shipToUserId: res.shipToUserId,
 						shipToSiteName: res.shipToSiteName,
 						shipToAddress1: res.shipToAddress1,
@@ -382,7 +383,7 @@ export class RoSetupComponent implements OnInit{
 						//shippingAcctNum: res.shippingAcctNum,
 						//shippingId: res.shippingId,
 						//shippingURL: res.shippingURL,
-						billToUserTypeId: res.billToUserType,
+						billToUserTypeId: res.billToUserTypeId,
 						//billToUserId: res.billToUserId,
 						billToAddress1: res.billToAddress1,
 						billToAddress2: res.billToAddress2,
@@ -400,16 +401,16 @@ export class RoSetupComponent implements OnInit{
 
 					};
 					this.getVendorCapesByID(res.vendorId);										
-					// this.shipToAddress.shipToAddress1 = this.tempPOHeaderAddress.shipToAddress1;
-					// this.shipToAddress.shipToAddress2 = this.tempPOHeaderAddress.shipToAddress2;
-					// this.shipToAddress.shipToAddress3 = this.tempPOHeaderAddress.shipToAddress3;
-					// this.shipToAddress.city = this.tempPOHeaderAddress.shipToCity;
-					// this.shipToAddress.stateOrProvince = this.tempPOHeaderAddress.shipToState;
-					// this.shipToAddress.shipToAddress3 = this.tempPOHeaderAddress.shipToPostalCode;
-					// this.shipToAddress.shipToAddress3 = this.tempPOHeaderAddress.shipToCountry;
-					// console.log(this.tempPOHeaderAddress);
+					// this.shipToAddress.shipToAddress1 = this.tempROHeaderAddress.shipToAddress1;
+					// this.shipToAddress.shipToAddress2 = this.tempROHeaderAddress.shipToAddress2;
+					// this.shipToAddress.shipToAddress3 = this.tempROHeaderAddress.shipToAddress3;
+					// this.shipToAddress.city = this.tempROHeaderAddress.shipToCity;
+					// this.shipToAddress.stateOrProvince = this.tempROHeaderAddress.shipToState;
+					// this.shipToAddress.shipToAddress3 = this.tempROHeaderAddress.shipToPostalCode;
+					// this.shipToAddress.shipToAddress3 = this.tempROHeaderAddress.shipToCountry;
+					// console.log(this.tempROHeaderAddress);
 					// console.log(this.shipToAddress);					
-					this.sourceRoApproval = this.tempPOHeaderAddress;
+					this.sourceRoApproval = this.tempROHeaderAddress;
 				})
 			}
 		);
@@ -424,11 +425,11 @@ export class RoSetupComponent implements OnInit{
 					console.log(res);
 					this.newPartsList = [this.newObjectForParent];
 					//this.partListData = res;
-					res.map((x, pindex) => {
+					res[0].map((x, pindex) => {
 						this.newPartsList = {
 							...x,
 							partNumberId: getObjectById('value', x.itemMasterId, this.allPartnumbersInfo),					
-							ifSplitShip: x.purchaseOrderSplitParts ? true : false,
+							ifSplitShip: x.roPartSplits ? true : false,
 							partNumber: x.partNumber,
 							partDescription: x.partDescription,
 							needByDate: new Date(x.needByDate),
@@ -439,7 +440,7 @@ export class RoSetupComponent implements OnInit{
 							reportCurrencyId: getObjectById('currencyId', x.reportCurrencyId, this.allCurrencyData),
 							discountAmount: x.discountAmount,
 							//parentCompanyId: this.getManagementStructureForParentEdit(x),
-							childList: this.getPurchaseOrderSplitPartsEdit(x, pindex),
+							childList: this.getRepairOrderSplitPartsEdit(x, pindex),
 		
 						}
 						this.getManagementStructureForParentEdit(this.newPartsList);
@@ -455,15 +456,15 @@ export class RoSetupComponent implements OnInit{
 			});			
 	}
 
-	getPurchaseOrderSplitPartsEdit(partList, pindex) {
-		if(partList.purchaseOrderSplitParts) {
-			return partList.purchaseOrderSplitParts.map((y, cindex) => {
+	getRepairOrderSplitPartsEdit(partList, pindex) {
+		if(partList.roPartSplits) {
+			return partList.roPartSplits.map((y, cindex) => {
 				const splitpart = {
 					...y,
 					needByDate: new Date(y.needByDate),
-					partListUserTypeId: y.poPartSplitUserTypeId,
+					partListUserTypeId: y.roPartSplitUserTypeId,
 					partListUserId: this.getPartSplitUserIdEdit(y, pindex, cindex),
-					partListAddressId: y.poPartSplitAddressId ? y.poPartSplitAddressId : 0,
+					partListAddressId: y.roPartSplitAddressId ? y.roPartSplitAddressId : 0,
 					//childCompanyId: this.getManagementStructureForChildEdit(y),
 				}
 				this.getManagementStructureForChildEdit(splitpart);
@@ -531,7 +532,7 @@ export class RoSetupComponent implements OnInit{
 	}
 
 	getApproversListById(roId) {
-		this.purchaseOrderService.getPOApproverList(roId).subscribe(response => {
+		this.vendorService.getROApproverList(roId).subscribe(response => {
 			console.log(response);			
 			this.approveListEdit = response.map(x => {
 				return {
@@ -542,7 +543,7 @@ export class RoSetupComponent implements OnInit{
 			});
 			if(this.approveListEdit) {
 				for(let i=0; i < this.approveListEdit.length; i++) {
-					this.poApproverId = this.approveListEdit[i].poApproverId;
+					this.roApproverId = this.approveListEdit[i].roApproverId;
 					if(this.approveListEdit[i].level == 1) {
 						this.approversData.approver1 = this.approveListEdit[i];
 						this.onSelectApprover('approver1', this.approversData.approver1)
@@ -565,19 +566,19 @@ export class RoSetupComponent implements OnInit{
 	}
 
 	getShipToUserIdEdit(data) {
-		if (data.shipToUserType === 1) {
+		if (data.shipToUserTypeId === 1) {
 			this.tempShipTOAddressId = data.shipToAddressId;
 			this.onShipToCustomerSelected(data.shipToUserId, data);
 			this.getShipViaEdit(data);
 			return getObjectById('value', data.shipToUserId, this.allCustomers);
 		}
-		if (data.shipToUserType === 2) {
+		if (data.shipToUserTypeId === 2) {
 			this.tempShipTOAddressId = data.shipToAddressId;			
 			this.onShipToVendorSelected(data.shipToUserId, data);
 			this.getShipViaEdit(data);
 			return getObjectById('vendorId', data.shipToUserId, this.vendorList);
 		}
-		if (data.shipToUserType === 3) {
+		if (data.shipToUserTypeId === 3) {
 			this.tempShipTOAddressId = data.shipToAddressId;
 			/*bind adress and contact and shipvia values in edit*/
 				this.shipToSelectedvalue = data.shipToUserId;		
@@ -601,7 +602,7 @@ export class RoSetupComponent implements OnInit{
 				})
 				this.companyService.getCompanyContacts(this.shipToSelectedvalue).subscribe(response => {
 					this.contactListForCompanyShipping = response;
-					this.tempPOHeaderAddress.shipToContactId = getObjectById('contactId', data.shipToContactId, this.contactListForCompanyShipping);
+					this.tempROHeaderAddress.shipToContactId = getObjectById('contactId', data.shipToContactId, this.contactListForCompanyShipping);
 				})
 				this.getShipViaEdit(data);
 		/* ./bind adress and contact values in edit*/
@@ -611,7 +612,7 @@ export class RoSetupComponent implements OnInit{
 	}
 
 	getShipViaEdit(data) {
-		this.commonService.getShipViaDetailsByModule(data.shipToUserType, this.shipToSelectedvalue).subscribe(response => {
+		this.commonService.getShipViaDetailsByModule(data.shipToUserTypeId, this.shipToSelectedvalue).subscribe(response => {
 			this.shipViaList = response;
 			this.sourceRoApproval.shipViaId = data.shipViaId;
 				if(data.shipViaId == 0) {
@@ -626,17 +627,17 @@ export class RoSetupComponent implements OnInit{
 	}
 
 	getBillToUserIdEdit(data) {
-		if (data.billToUserType === 1) {
+		if (data.billToUserTypeId === 1) {
 			this.tempBillTOAddressId = data.billToAddressId;
 			this.onBillToCustomerSelected(data.billToUserId, data);
 			return getObjectById('value', data.billToUserId, this.allCustomers);
 		}
-		if (data.billToUserType === 2) {
+		if (data.billToUserTypeId === 2) {
 			this.tempBillTOAddressId = data.billToAddressId;
 			this.onBillToVendorSelected(data.billToUserId, data);
 			return getObjectById('vendorId', data.billToUserId, this.vendorList);
 		}
-		if (data.billToUserType === 3) {
+		if (data.billToUserTypeId === 3) {
 			this.tempBillTOAddressId = data.billToAddressId;
 			/*bind adress and contact values in edit*/
 				this.billToSelectedvalue = data.billToUserId;		
@@ -660,7 +661,7 @@ export class RoSetupComponent implements OnInit{
 				})
 				this.companyService.getCompanyContacts(this.billToSelectedvalue).subscribe(response => {
 					this.contactListForCompanyBilling = response;
-					this.tempPOHeaderAddress.billToContactId = getObjectById('contactId', data.billToContactId, this.contactListForCompanyBilling);
+					this.tempROHeaderAddress.billToContactId = getObjectById('contactId', data.billToContactId, this.contactListForCompanyBilling);
 				})
 		/* ./bind adress and contact values in edit*/
 			return getObjectById('value', data.billToUserId, this.legalEntity);
@@ -668,29 +669,35 @@ export class RoSetupComponent implements OnInit{
 	}
 
 	getPartSplitUserIdEdit(data, pindex, cindex) {
-		if (data.poPartSplitUserTypeId === 1) {
+		if (data.roPartSplitUserTypeId === 1) {
 			//this.tempBillTOAddressId = data.billToAddressId;
 			//this.onBillToCustomerSelected(data.billToUserId, data);
 			// this.customerService.getWorkFlows().subscribe(res => {
 			// 	this.allCustomers = res[0];
 				
 			// });
-			this.onCustomerNameChange(data.poPartSplitUserId, data, pindex, cindex);			
-			return getObjectById('value', data.poPartSplitUserId, this.allCustomers);			
+			this.onCustomerNameChange(data.roPartSplitUserId, data, pindex, cindex);			
+			return getObjectById('value', data.roPartSplitUserId, this.allCustomers);			
 		}
-		if (data.poPartSplitUserTypeId === 2) {
-			this.onVendorNameChange(data.poPartSplitUserId, data, pindex, cindex);
-			return getObjectById('vendorId', data.poPartSplitUserId, this.vendorList);
+		if (data.roPartSplitUserTypeId === 2) {
+			this.onVendorNameChange(data.roPartSplitUserId, data, pindex, cindex);
+			return getObjectById('vendorId', data.roPartSplitUserId, this.vendorList);
 		}
-		if (data.poPartSplitUserTypeId === 3) {
-			this.onCompanyNameChange(data.poPartSplitUserId, data, pindex, cindex);
-			return getObjectById('value', data.poPartSplitUserId, this.legalEntity);
+		if (data.roPartSplitUserTypeId === 3) {
+			this.onCompanyNameChange(data.roPartSplitUserId, data, pindex, cindex);
+			return getObjectById('value', data.roPartSplitUserId, this.legalEntity);
 		}
 	}
 
 	getLegalEntity() {
 		this.commonService.smartDropDownList('LegalEntity', 'LegalEntityId', 'Name').subscribe(res => {
 			this.legalEntity = res;
+		})
+	}
+
+	getCountriesList() {
+		this.commonService.smartDropDownList('Countries', 'countries_id', 'nice_name').subscribe(res => {
+			this.allCountriesList = res;
 		})
 	}
 
@@ -773,7 +780,7 @@ export class RoSetupComponent implements OnInit{
 			statusId: this.sourceRoApproval.statusId ? this.sourceRoApproval.statusId : 0,
 			resale: this.sourceRoApproval.resale ? this.sourceRoApproval.resale : false,
 			managementStructureId: this.sourceRoApproval.managementStructureId ? this.sourceRoApproval.managementStructureId : 0,
-			poMemo: this.sourceRoApproval.poMemo ? this.sourceRoApproval.poMemo : '',
+			roMemo: this.sourceRoApproval.roMemo ? this.sourceRoApproval.roMemo : '',
 			shipToUserTypeId: this.sourceRoApproval.shipToUserTypeId ? parseInt(this.sourceRoApproval.shipToUserTypeId) : 0,
 			shipToUserId: this.sourceRoApproval.shipToUserId ? this.getShipToBillToUserId(this.sourceRoApproval.shipToUserId) : 0,
 			shipToAddressId: this.sourceRoApproval.shipToAddressId ? this.sourceRoApproval.shipToAddressId : 0,
@@ -785,8 +792,8 @@ export class RoSetupComponent implements OnInit{
 			shipVia: this.sourceRoApproval.shipVia,
 			shippingAcctNum: this.sourceRoApproval.shippingAcctNum,
 			shippingURL: this.sourceRoApproval.shippingURL,
-			//shippingId: this.sourceRoApproval.shippingId,
-			shippingId: 0,
+			shippingId: this.sourceRoApproval.shippingId,
+			//shippingId: 0,
 			shipToMemo: this.sourceRoApproval.shipToMemo ? this.sourceRoApproval.shipToMemo : '',
 			billToUserTypeId: this.sourceRoApproval.billToUserTypeId ? parseInt(this.sourceRoApproval.billToUserTypeId) : 0,
 			billToUserId: this.sourceRoApproval.billToUserId ? this.getShipToBillToUserId(this.sourceRoApproval.billToUserId) : 0,
@@ -1018,7 +1025,7 @@ export class RoSetupComponent implements OnInit{
 	saveROApproverData(repairOrderId) {
 		console.log(this.approversData);
 		this.approverIds = [];
-		this.poApproverList = [];
+		this.roApproverList = [];
 		if (this.approversData.approver1) {
 			this.approverIds.push(this.approversData.approver1.value);
 		}
@@ -1037,36 +1044,36 @@ export class RoSetupComponent implements OnInit{
 		console.log(this.approverIds);
  
 		for (let i = 0; i < this.approverIds.length; i++) {
-			const poapprover = {
+			const roapprover = {
 				employeeId: this.approverIds[i],
 				level: i + 1,
 				statusId: 1,
 				createdBy: "admin",
 				updatedBy: "admin"
 			}
-			this.poApproverList.push(poapprover);
+			this.roApproverList.push(roapprover);
 		}
-		this.poApproverData = {
+		this.roApproverData = {
 			repairOrderId: repairOrderId ? repairOrderId : this.roId,
-			purchaseOrderApproverList: this.poApproverList
+			repairOrderApproverList: this.roApproverList
 		}
-		// this.purchaseOrderService.saveCreatePOApproval(this.poApproverData).subscribe(res => {
-		// 	console.log(res);
-		// 	if(this.isEditMode) {
-		// 		this.getApproversListById(this.roId);
-		// 		this.alertService.showMessage(
-		// 			'Success',
-		// 			`Added Approvers Successfully`,
-		// 			MessageSeverity.success
-		// 		);
-		// 	}
-		// })
+		this.vendorService.saveCreateROApproval(this.roApproverData).subscribe(res => {
+			console.log(res);
+			if(this.isEditMode) {
+				this.getApproversListById(this.roId);
+				this.alertService.showMessage(
+					'Success',
+					`Added Approvers Successfully`,
+					MessageSeverity.success
+				);
+			}
+		})
 	}
 
-	updatePOApproverData() {
+	updateROApproverData() {
 		console.log(this.approversData);
 		this.approverIds = [];
-		this.poApproverList = [];
+		this.roApproverList = [];
 		if (this.approversData.approver1) {
 			this.approverIds.push(this.approversData.approver1.value);
 		}
@@ -1085,41 +1092,41 @@ export class RoSetupComponent implements OnInit{
 		console.log(this.approverIds);
  
 		for (let i = 0; i < this.approverIds.length; i++) {
-			const poapprover = {
+			const roapprover = {
 				employeeId: this.approverIds[i],
 				level: i + 1,
-				poApproverId: this.getApproverIdUpdate(i+1, 'id'),
-				poApproverListId: this.getApproverIdUpdate(i+1, 'listId'),
+				roApproverId: this.getApproverIdUpdate(i+1, 'id'),
+				roApproverListId: this.getApproverIdUpdate(i+1, 'listId'),
 				statusId: 1,
 				createdBy: "admin",
 				updatedBy: "admin"
 			}
-			this.poApproverList.push(poapprover);
+			this.roApproverList.push(roapprover);
 		}
-		this.poApproverData = {
+		this.roApproverData = {
 			repairOrderId: parseInt(this.roId),
-			poApproverId: this.poApproverId,
-			purchaseOrderApproverList: this.poApproverList
+			roApproverId: this.roApproverId,
+			repairOrderApproverList: this.roApproverList
 		}
-		console.log(this.poApproverData);
-		// this.purchaseOrderService.updatePOApproval(this.poApproverData).subscribe(res => {
-		// 	console.log(res);
-		// 	this.alertService.showMessage(
-		// 		'Success',
-		// 		`Updated Approvers Successfully`,
-		// 		MessageSeverity.success
-		// 	);
-		// })
+		console.log(this.roApproverData);
+		this.vendorService.updateROApproval(this.roApproverData).subscribe(res => {
+			console.log(res);
+			this.alertService.showMessage(
+				'Success',
+				`Updated Approvers Successfully`,
+				MessageSeverity.success
+			);
+		})
 	}
 
 	getApproverIdUpdate(level, value) {
 		for(let i=0; i < this.approveListEdit.length; i++) {
 			if(level == this.approveListEdit[i].level) {
 				if(value == 'id') {
-					return getValueFromArrayOfObjectById('poApproverId', 'level', level, this.approveListEdit);
+					return getValueFromArrayOfObjectById('roApproverId', 'level', level, this.approveListEdit);
 				}
 				if(value == 'listId') {
-					return getValueFromArrayOfObjectById('poApproverListId', 'level', level, this.approveListEdit);
+					return getValueFromArrayOfObjectById('roApproverListId', 'level', level, this.approveListEdit);
 				}		
 			}
 		}
@@ -1200,17 +1207,17 @@ export class RoSetupComponent implements OnInit{
 			 //this.splitAddressData = returnedcustomerAddressses[0];
 			 this["splitAddressData"+pindex+cindex] = returnedcustomerAddressses[0];
 			if(this.isEditMode) {
-				if(data.poPartSplitAddressId == 0) {
-					this["splitAddressData"+pindex+cindex].push({customerShippingAddressId: 0, address1: data.poPartSplitAddress1, address2: data.poPartSplitAddress2, address3: data.poPartSplitAddress3, city: data.poPartSplitCity, stateOrProvince: data.poPartSplitState, postalCode: data.poPartSplitPostalCode, country: data.poPartSplitCountry})
+				if(data.roPartSplitAddressId == 0) {
+					this["splitAddressData"+pindex+cindex].push({customerShippingAddressId: 0, address1: data.roPartSplitAddress1, address2: data.roPartSplitAddress2, address3: data.roPartSplitAddress3, city: data.roPartSplitCity, stateOrProvince: data.roPartSplitStateOrProvince, postalCode: data.roPartSplitPostalCode, country: data.roPartSplitCountry})
 				}
 				this["splitAddressData"+pindex+cindex].map(x => {
 					if(x.customerShippingAddressId == 0) {
 						data.partListAddressId = x.customerShippingAddressId;
 					}
 				});
-				//this.onShipToGetAddress(data, data.poPartSplitAddressId);
+				//this.onShipToGetAddress(data, data.roPartSplitAddressId);
 			}
-			//part.poPartSplitAddressId = 0;
+			//part.roPartSplitAddressId = 0;
 		});
 	}
 
@@ -1239,10 +1246,10 @@ export class RoSetupComponent implements OnInit{
 				//part.addressData = vendorAddresses[0];;
 				//this.splitAddressData = vendorAddresses[0];
 				if(this.isEditMode) {
-					if(data.poPartSplitAddressId == 0) {
-						this["splitAddressData"+pindex+cindex].push({vendorShippingAddressId: 0, address1: data.poPartSplitAddress1, address2: data.poPartSplitAddress2, address3: data.poPartSplitAddress3, city: data.poPartSplitCity, stateOrProvince: data.poPartSplitState, postalCode: data.poPartSplitPostalCode, country: data.poPartSplitCountry})
+					if(data.roPartSplitAddressId == 0) {
+						this["splitAddressData"+pindex+cindex].push({vendorShippingAddressId: 0, address1: data.roPartSplitAddress1, address2: data.roPartSplitAddress2, address3: data.roPartSplitAddress3, city: data.roPartSplitCity, stateOrProvince: data.roPartSplitStateOrProvince, postalCode: data.roPartSplitPostalCode, country: data.roPartSplitCountry})
 					}
-					//this.onShipToGetAddress(data, data.poPartSplitAddressId);
+					//this.onShipToGetAddress(data, data.roPartSplitAddressId);
 				}
 			})
 	}
@@ -1258,8 +1265,8 @@ export class RoSetupComponent implements OnInit{
 				}
 			});
 			if(this.isEditMode) {
-				if(data.poPartSplitAddressId == 0) {
-					this["splitAddressData"+pindex+cindex].push({legalEntityShippingAddressId: 0, address1: data.poPartSplitAddress1, address2: data.poPartSplitAddress2, address3: data.poPartSplitAddress3, city: data.poPartSplitCity, country: data.poPartSplitCountry, postalCode: data.poPartSplitPostalCode, stateOrProvince: data.poPartSplitState});
+				if(data.roPartSplitAddressId == 0) {
+					this["splitAddressData"+pindex+cindex].push({legalEntityShippingAddressId: 0, address1: data.roPartSplitAddress1, address2: data.roPartSplitAddress2, address3: data.roPartSplitAddress3, city: data.roPartSplitCity, country: data.roPartSplitCountry, postalCode: data.roPartSplitPostalCode, stateOrProvince: data.roPartSplitStateOrProvince});
 				}
 			} else {
 				this.onShipToGetCompanyAddress(this.companySiteList_Shipping[0].legalEntityShippingAddressId);
@@ -1290,12 +1297,6 @@ export class RoSetupComponent implements OnInit{
 	}
 
 	deleteSplitShipment(childata, index, mainindex) {
-		// if (childata.repairOrderPartRecordId) {
-		// 	this.vendorService.deletePurchaseorderpart(childata.repairOrderPartRecordId).subscribe(data => {
-
-		// 	})
-		// }
-		// const index1: number = this.partListData.indexOf(index);
 		this.partListData[mainindex].childList.splice(index, 1);
 	}
 
@@ -1373,14 +1374,14 @@ export class RoSetupComponent implements OnInit{
 				if(this.isEditMode) {
 					if(res.shipToAddressId == 0) {
 						this.shipToCusData.push({customerShippingAddressId: 0, address1: res.shipToAddress1, address2: res.shipToAddress2, address3: res.shipToAddress3, city: res.shipToCity, stateOrProvince: res.shipToStateOrProvince, postalCode: res.shipToPostalCode, country: res.shipToCountry, siteName: res.shipToSiteName})
-					}
-					this.onShipToGetAddress(res, res.shipToAddressId);
+					}					
 				}
+				this.onShipToGetAddress(res, res.shipToAddressId);
 			});
 		this.customerService.getContacts(customerId).subscribe(data => {
 			this.shipToContactData = data[0];
 			if(this.isEditMode) {
-				this.tempPOHeaderAddress.shipToContactId = getObjectById('contactId', res.shipToContactId, this.shipToContactData);
+				this.tempROHeaderAddress.shipToContactId = getObjectById('contactId', res.shipToContactId, this.shipToContactData);
 			}
 		});		
 		this.getShipViaDetailsForShipTo();
@@ -1400,14 +1401,14 @@ export class RoSetupComponent implements OnInit{
 				if(this.isEditMode) {
 					if(res.shipToAddressId == 0) {
 						this.vendorSelected.push({vendorShippingAddressId: 0, address1: res.shipToAddress1, address2: res.shipToAddress2, address3: res.shipToAddress3, city: res.shipToCity, stateOrProvince: res.shipToStateOrProvince, postalCode: res.shipToPostalCode, country: res.shipToCountry, siteName: res.shipToSiteName})
-					}
-					this.onShipToGetAddress(res, res.shipToAddressId);
+					}					
 				}
+				this.onShipToGetAddress(res, res.shipToAddressId);
 			});
 		this.vendorService.getContacts(vendorId).subscribe(data => {
 			this.vendorContactsForshipTo = data[0]; //vendorContactsForshipTo
 			if(this.isEditMode) {
-				this.tempPOHeaderAddress.shipToContactId = getObjectById('contactId', res.shipToContactId, this.vendorContactsForshipTo);
+				this.tempROHeaderAddress.shipToContactId = getObjectById('contactId', res.shipToContactId, this.vendorContactsForshipTo);
 			}
 			console.log(this.vendorContactsForshipTo);
 
@@ -1512,8 +1513,9 @@ export class RoSetupComponent implements OnInit{
 		if (value === 'EditCusSiteName') {
 			this.addressSiteNameHeader = 'Edit Ship To Customer Details';
 			this.isEditModeShipping = true;
-				this.tempshipToAddress = getObjectById('customerShippingAddressId', data.shipToAddressId, this.shipToCusData);
-				this.addressFormForShipping = {...this.tempshipToAddress};
+			this.tempshipToAddress = getObjectById('customerShippingAddressId', data.shipToAddressId, this.shipToCusData);
+			const countryName = this.tempshipToAddress.country.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+			this.addressFormForShipping = {...this.tempshipToAddress, country: getObjectByValue('label', countryName, this.allCountriesList)};
 		}
 		if (value === 'AddVenSiteName') {
 			this.addressSiteNameHeader = 'Add Ship To Vendor Details';
@@ -1522,7 +1524,8 @@ export class RoSetupComponent implements OnInit{
 			this.addressSiteNameHeader = 'Edit Ship To Vendor Details';
 			this.isEditModeShipping = true;
 			this.tempshipToAddress = getObjectById('vendorShippingAddressId', data.shipToAddressId, this.vendorSelected);
-			this.addressFormForShipping = {...this.tempshipToAddress};
+			const countryName = this.tempshipToAddress.country.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+			this.addressFormForShipping = {...this.tempshipToAddress, country: getObjectByValue('label', countryName, this.allCountriesList)};
 		}
 		if (value === 'AddComSiteName') {
 			this.addressSiteNameHeader = 'Add Ship To Company Details';
@@ -1546,10 +1549,12 @@ export class RoSetupComponent implements OnInit{
 						this.shipToAddress.country = resp.country;
 	
 				const tempShipToAdd = this.shipToAddress;
-				this.addressFormForShipping = {...tempShipToAdd, siteName: this.tempshipToAddress.siteName, legalEntityShippingAddressId: this.tempshipToAddress.legalEntityShippingAddressId};
+				const countryName = tempShipToAdd.country.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+				this.addressFormForShipping = {...tempShipToAdd, siteName: this.tempshipToAddress.siteName, legalEntityShippingAddressId: this.tempshipToAddress.legalEntityShippingAddressId, country: getObjectByValue('label', countryName, this.allCountriesList)};
 				})
 			} else {
-				this.addressFormForShipping = {...this.tempshipToAddress, siteName: this.tempshipToAddress.siteName, legalEntityShippingAddressId: this.tempshipToAddress.legalEntityShippingAddressId};
+				const countryName = this.tempshipToAddress.country.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+				this.addressFormForShipping = {...this.tempshipToAddress, siteName: this.tempshipToAddress.siteName, legalEntityShippingAddressId: this.tempshipToAddress.legalEntityShippingAddressId, country: getObjectByValue('label', countryName, this.allCountriesList)};
 			}
 		}
 	}
@@ -1567,14 +1572,14 @@ export class RoSetupComponent implements OnInit{
 				if(this.isEditMode) {
 					if(res.billToAddressId == 0) {
 						this.billToCusData.push({customerBillingAddressId: 0, address1: res.billToAddress1, address2: res.billToAddress2, address3: res.billToAddress3, city: res.billToCity, stateOrProvince: res.billToStateOrProvince, postalCode: res.billToPostalCode, country: res.billToCountry, siteName: res.billToSiteName})
-					}
-					this.onBillToGetAddress(res, res.billToAddressId);
+					}					
 				}
+				this.onBillToGetAddress(res, res.billToAddressId);
 			});
 		this.customerService.getContacts(customerId).subscribe(data => {
 			this.billToContactData = data[0];
 			if(this.isEditMode) {
-				this.tempPOHeaderAddress.billToContactId = getObjectById('contactId', res.billToContactId, this.billToContactData);
+				this.tempROHeaderAddress.billToContactId = getObjectById('contactId', res.billToContactId, this.billToContactData);
 			}
 		});
 	}
@@ -1610,7 +1615,7 @@ export class RoSetupComponent implements OnInit{
 			returdaa => {
 				this.vendorContactsForBillTO = returdaa[0];
 				if(this.isEditMode) {
-					this.tempPOHeaderAddress.billToContactId = getObjectById('contactId', res.billToContactId, this.vendorContactsForBillTO);
+					this.tempROHeaderAddress.billToContactId = getObjectById('contactId', res.billToContactId, this.vendorContactsForBillTO);
 				}
 			})
 	}
@@ -1722,7 +1727,8 @@ export class RoSetupComponent implements OnInit{
 			this.addressSiteNameHeader = 'Edit Bill To Customer Details';
 			this.isEditModeBilling = true;
 			this.tempbillToAddress = getObjectById('customerBillingAddressId', data.billToAddressId, this.billToCusData);
-			this.addressFormForBilling = {...this.tempbillToAddress};
+			const countryName = this.tempbillToAddress.country.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+			this.addressFormForBilling = {...this.tempbillToAddress, country: getObjectByValue('label', countryName, this.allCountriesList)};
 		}
 		if (value === 'AddVenSiteName') {
 			this.addressSiteNameHeader = 'Add Bill To Vendor Details';
@@ -1733,7 +1739,8 @@ export class RoSetupComponent implements OnInit{
 			this.tempbillToAddress = getObjectById('vendorBillingAddressId', data.billToAddressId, this.vendorSelectedForBillTo);
 			this.onBillToGetAddress(data, data.billToAddressId);
 			const tempBillToAdd = this.billToAddress;
-			this.addressFormForBilling = {...tempBillToAdd, siteName: this.tempbillToAddress.siteName, vendorBillingAddressId: this.tempbillToAddress.vendorBillingAddressId};
+			const countryName = tempBillToAdd.country.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+			this.addressFormForBilling = {...tempBillToAdd, siteName: this.tempbillToAddress.siteName, vendorBillingAddressId: this.tempbillToAddress.vendorBillingAddressId, country: getObjectByValue('label', countryName, this.allCountriesList)};
 		}
 		if (value === 'AddComSiteName') {
 			this.addressSiteNameHeader = 'Add Bill To Company Details';
@@ -1757,10 +1764,12 @@ export class RoSetupComponent implements OnInit{
 						this.billToAddress.country = resp.country;
 					
 					const tempBillToAdd = this.billToAddress;
-					this.addressFormForBilling = {...tempBillToAdd, siteName: this.tempbillToAddress.siteName, legalEntityBillingAddressId: this.tempbillToAddress.legalEntityBillingAddressId};
+					const countryName = tempBillToAdd.country.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+					this.addressFormForBilling = {...tempBillToAdd, siteName: this.tempbillToAddress.siteName, legalEntityBillingAddressId: this.tempbillToAddress.legalEntityBillingAddressId, country: getObjectByValue('label', countryName, this.allCountriesList)};
 				})
 			} else {
-				this.addressFormForBilling = {...this.tempbillToAddress, siteName: this.tempbillToAddress.siteName, legalEntityBillingAddressId: this.tempbillToAddress.legalEntityBillingAddressId};
+				const countryName = this.tempbillToAddress.country.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+				this.addressFormForBilling = {...this.tempbillToAddress, siteName: this.tempbillToAddress.siteName, legalEntityBillingAddressId: this.tempbillToAddress.legalEntityBillingAddressId, country: getObjectByValue('label', countryName, this.allCountriesList)};
 			}
 			
 		}
@@ -2374,6 +2383,16 @@ export class RoSetupComponent implements OnInit{
 		}
 	}
 
+	filterCountries(event) {
+		this.countriesList = this.allCountriesList;
+		if (event.query !== undefined && event.query !== null) {
+			const countries = [...this.allCountriesList.filter(x => {
+				return x.label.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.countriesList = countries;
+		}
+	}
+
 	private loadPercentData() {
 		//  this.commonService.smartDropDownList('Percent', 'PercentId', 'PercentValue').subscribe(res => {
 		// 	this.allPercentData = res;
@@ -2452,7 +2471,7 @@ export class RoSetupComponent implements OnInit{
 
 	onDelPNRow(index) {
 		this.partListData.splice(index, 1);
-	}	
+	}
 
 	onSaveAddressMemo() {
 		if (this.addressMemoLabel == 'Edit Ship') {
@@ -2464,11 +2483,11 @@ export class RoSetupComponent implements OnInit{
 	}
 
 	onAddMemo() {
-		this.tempMemo = this.sourceRoApproval.poMemo;
+		this.tempMemo = this.sourceRoApproval.roMemo;
 	}
 	onSaveMemo() {
-		this.sourceRoApproval.poMemo = this.tempMemo;
-	}	
+		this.sourceRoApproval.roMemo = this.tempMemo;
+	}
 
 	onSelectNeedByDate() {
 		this.needByTempDate = this.sourceRoApproval.needByDate;
@@ -2494,7 +2513,7 @@ export class RoSetupComponent implements OnInit{
 	onGetDiscPerUnit(partList) {
 		if (partList.unitCost !== null && partList.discountPercent !== null) {
 			const discountPercentValue = getValueFromObjectByKey('percentValue', partList.discountPercent);
-			partList.discountPerUnit = Math.round(partList.unitCost * discountPercentValue);
+			partList.discountPerUnit = Math.round((partList.unitCost * discountPercentValue) / 100);
 			//partList.discountPerUnit = Math.round(partList.unitCost * ((discountPercentValue / 100)-1));
 		}
 	}
@@ -2651,14 +2670,14 @@ export class RoSetupComponent implements OnInit{
 
 	async saveShippingAddress() {		
 		const data = {
-			...this.addressFormForShipping,
+			...this.addressFormForShipping,		    
 			createdBy: this.userName,
 			updatedBy: this.userName,
 			masterCompanyId: 1,
 			isActive: true,			
 		}
 		if (this.sourceRoApproval.shipToUserTypeId == 1) {
-			const customerData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('value', this.sourceRoApproval.shipToUserId)}
+			const customerData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('value', this.sourceRoApproval.shipToUserId), country: getValueFromObjectByKey('value', data.country)}
 			if(!this.isEditModeShipping) {
 			await this.customerService.newShippingAdd(customerData).subscribe(response => {
 				this.onShipToCustomerSelected(customerData.customerId, this.sourceRoApproval, response.customerShippingId);
@@ -2681,7 +2700,7 @@ export class RoSetupComponent implements OnInit{
 			}			
 		}
 		if (this.sourceRoApproval.shipToUserTypeId == 2) {
-			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourceRoApproval.shipToUserId) }
+			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourceRoApproval.shipToUserId), country: getValueFromObjectByKey('label', data.country) }
 			if(!this.isEditModeShipping) {			
 				await this.vendorService.newShippingAdd(vendorData).subscribe(response => {
 					this.onShipToVendorSelected(vendorData.vendorId, this.sourceRoApproval, response.vendorShippingAddressId);				
@@ -2705,7 +2724,7 @@ export class RoSetupComponent implements OnInit{
 			}			
 		}
 		if (this.sourceRoApproval.shipToUserTypeId == 3) {			
-			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourceRoApproval.shipToUserId)}	
+			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourceRoApproval.shipToUserId), country: getValueFromObjectByKey('label', data.country)}	
 			if(!this.isEditModeShipping) {									
 				await this.companyService.addNewShippingAddress(companyData).subscribe(response => {
 					this.onShipToCompanySelected(null, this.sourceRoApproval, response.legalEntityShippingAddressId);
@@ -2746,6 +2765,7 @@ export class RoSetupComponent implements OnInit{
 			}
 			const addressInfo = {
 				...this.addressFormForShipping,
+				country: getValueFromObjectByKey('label', this.addressFormForShipping.country),
 				customerShippingAddressId: 0
 			}
 			this.shipToCusData.push(addressInfo);
@@ -2764,6 +2784,7 @@ export class RoSetupComponent implements OnInit{
 			}
 			const addressInfo = {
 				...this.addressFormForShipping,
+				country: getValueFromObjectByKey('label', this.addressFormForShipping.country),
 				vendorShippingAddressId: 0
 			}
 			this.vendorSelected.push(addressInfo);
@@ -2782,6 +2803,7 @@ export class RoSetupComponent implements OnInit{
 			}
 			const addressInfo = {
 				...this.addressFormForShipping,
+				country: getValueFromObjectByKey('label', this.addressFormForShipping.country),
 				legalEntityShippingAddressId: 0
 			}
 			this.companySiteList_Shipping.push(addressInfo);
@@ -2810,7 +2832,7 @@ export class RoSetupComponent implements OnInit{
 
 	async saveBillingAddress() {
 		const data = {
-			...this.addressFormForBilling,
+			...this.addressFormForBilling,			
 			createdBy: this.userName,
 			updatedBy: this.userName,
 			masterCompanyId: 1,
@@ -2818,7 +2840,7 @@ export class RoSetupComponent implements OnInit{
 			isPrimary: true
 		}
 		if (this.sourceRoApproval.billToUserTypeId == 1) {
-			const customerData = { ...data, customerId: getValueFromObjectByKey('value', this.sourceRoApproval.billToUserId) }
+			const customerData = { ...data, customerId: getValueFromObjectByKey('value', this.sourceRoApproval.billToUserId), country: getValueFromObjectByKey('value', data.country) }
 			if(!this.isEditModeBilling) {				
 				await this.customerService.newBillingAdd(customerData).subscribe(response => {
 					this.onBillToCustomerSelected(customerData.customerId, this.sourceRoApproval, response.customerBillingAddressId);
@@ -2842,7 +2864,7 @@ export class RoSetupComponent implements OnInit{
 			
 		}
 		if (this.sourceRoApproval.billToUserTypeId == 2) {
-			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourceRoApproval.billToUserId) }
+			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.sourceRoApproval.billToUserId), country: getValueFromObjectByKey('label', data.country) }
 			if(!this.isEditModeBilling) {				
 				await this.vendorService.addNewBillingAddress(vendorData).subscribe(response => {
 					this.onBillToVendorSelected(vendorData.vendorId, this.sourceRoApproval, response.vendorBillingAddressId);
@@ -2866,7 +2888,7 @@ export class RoSetupComponent implements OnInit{
 			}			
 		}
 		if (this.sourceRoApproval.billToUserTypeId == 3) {
-			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourceRoApproval.billToUserId) }
+			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.sourceRoApproval.billToUserId), country: getValueFromObjectByKey('label', data.country) }
 			if(!this.isEditModeBilling) {				
 				await this.companyService.addNewBillingAddress(companyData).subscribe(response => {
 					this.onBillToCompanySelected(null, this.sourceRoApproval, response.legalEntityBillingAddressId);
@@ -2900,6 +2922,7 @@ export class RoSetupComponent implements OnInit{
 			}
 			const addressInfo = {
 				...this.addressFormForBilling,
+				country: getValueFromObjectByKey('label', this.addressFormForBilling.country),
 				customerBillingAddressId: 0
 			}
 			this.billToCusData.push(addressInfo);
@@ -2918,6 +2941,7 @@ export class RoSetupComponent implements OnInit{
 			}
 			const addressInfo = {
 				...this.addressFormForBilling,
+				country: getValueFromObjectByKey('label', this.addressFormForBilling.country),
 				vendorBillingAddressId: 0
 			}
 			this.vendorSelectedForBillTo.push(addressInfo);
@@ -2937,6 +2961,7 @@ export class RoSetupComponent implements OnInit{
 			}
 			const addressInfo = {
 				...this.addressFormForBilling,
+				country: getValueFromObjectByKey('label', this.addressFormForBilling.country),
 				legalEntityBillingAddressId: 0
 			}
 			this.companySiteList_Billing.push(addressInfo);
@@ -3083,7 +3108,7 @@ export class RoSetupComponent implements OnInit{
 
 	async saveSplitAddress() {		
 		const data = {
-			...this.addNewAddress,
+			...this.addNewAddress,			
 			address1: this.addNewAddress.line1,
 			address2: this.addNewAddress.line2,
 			address3: this.addNewAddress.line3,
@@ -3094,7 +3119,7 @@ export class RoSetupComponent implements OnInit{
 			//customerShippingAddressId: null,
 		}
 		if (this.tempSplitPart.partListUserTypeId == 1) {
-			const customerData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('value', this.tempSplitPart.partListUserId) }
+			const customerData = { ...data, isPrimary: true, customerId: getValueFromObjectByKey('value', this.tempSplitPart.partListUserId), country: getValueFromObjectByKey('value', data.country) }
 			if(!this.isEditModeSplitAddress) {				
 				await this.customerService.newShippingAdd(customerData).subscribe(res => {
 					this.onCustomerNameChange(customerData.customerId, null, this.parentIndex, this.childIndex); //res.customerId
@@ -3116,7 +3141,7 @@ export class RoSetupComponent implements OnInit{
 			}			
 		}
 		if (this.tempSplitPart.partListUserTypeId == 2) {
-			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.tempSplitPart.partListUserId) }
+			const vendorData = { ...data, vendorId: getValueFromObjectByKey('vendorId', this.tempSplitPart.partListUserId), country: getValueFromObjectByKey('label', data.country) }
 			if(!this.isEditModeSplitAddress) {				
 				await this.vendorService.newShippingAdd(vendorData).subscribe(res => {
 					this.onVendorNameChange(vendorData.vendorId, null, this.parentIndex, this.childIndex);
@@ -3138,7 +3163,7 @@ export class RoSetupComponent implements OnInit{
 			}			
 		}
 		if (this.tempSplitPart.partListUserTypeId == 3) {
-			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.tempSplitPart.partListUserId), siteName: "" }
+			const companyData = { ...data, legalentityId: getValueFromObjectByKey('value', this.tempSplitPart.partListUserId), siteName: "", country: getValueFromObjectByKey('label', data.country) }
 			if(!this.isEditModeSplitAddress) {				
 				await this.companyService.addNewShippingAddress(companyData).subscribe(res => {
 					this.onCompanyNameChange(companyData.legalentityId, null, this.parentIndex, this.childIndex); //res.legalEntityId
@@ -3170,6 +3195,7 @@ export class RoSetupComponent implements OnInit{
 			}
 			const addressInfo = {
 				...this.addNewAddress,
+				country: getValueFromObjectByKey('label', this.addNewAddress.country),
 				addressId: 0,
 				address1: this.addNewAddress.line1,
 				address2: this.addNewAddress.line2,
@@ -3296,11 +3322,13 @@ export class RoSetupComponent implements OnInit{
 			this.addressHeader = 'Edit Split Shipment Address';
 			this.isEditModeSplitAddress = true;
 				this.tempSplitAddress = getObjectById('addressId', splitPart.partListAddressId, this["splitAddressData"+pindex+cindex]);
+				const countryName = this.tempSplitAddress.country.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
 				this.addNewAddress = {
 					...this.tempSplitAddress,
 					line1: this.tempSplitAddress.address1,
 					line2: this.tempSplitAddress.address2,
 					line3: this.tempSplitAddress.address3,
+					country: getObjectByValue('label', countryName, this.allCountriesList)
 				};
 
 		}
@@ -3308,11 +3336,14 @@ export class RoSetupComponent implements OnInit{
 
 	onChangeParentQtyOrdered(event, partList) {
 		this.parentQty = event.target.value;
-		this.onChangeChildQtyOrdered(partList);
+		if(partList.childList) {
+			this.onChangeChildQtyOrdered(partList);
+		}	
 	}
 
 	onChangeChildQtyOrdered(partList) {
 		this.childOrderQtyArray = [];
+		this.childOrderQtyTotal = null;
 		console.log(partList.childList);
 		for (let i = 0; i < partList.childList.length; i++) {
 			if (partList.childList[i].quantityOrdered === null || partList.childList[i].quantityOrdered === undefined) {

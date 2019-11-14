@@ -81,15 +81,15 @@ export class CreateAssetComponent implements OnInit {
         if (this.currentAsset.expirationDate) {
             this.currentAsset.expirationDate = new Date(this.currentAsset.expirationDate);
         }
-        else {
-            this.currentAsset.expirationDate = new Date();
-        }
+        //else {
+        //    this.currentAsset.expirationDate = new Date();
+        //}
         if (this.currentAsset.manufacturedDate) {
             this.currentAsset.manufacturedDate = new Date(this.currentAsset.manufacturedDate);
         }
-        else {
-            this.currentAsset.manufacturedDate = new Date();
-        }
+        //else {
+        //    this.currentAsset.manufacturedDate = new Date();
+        //}
      
     }
 
@@ -558,8 +558,14 @@ export class CreateAssetComponent implements OnInit {
                     this.currentAsset.updatedBy = this.userName;
                     this.listCollection = data;
                     this.assetService.generalCollection = this.listCollection;
-                    this.alertService.showMessage('Asset Created successfully.');
-                    this.activeIndex = 0;
+                    //this.alertService.showMessage('Asset Created successfully.');
+                    this.alertService.showMessage("Success", `Asset Created successfully.`, MessageSeverity.success);
+                    this.activeIndex = 1;
+                    this.currentAsset = this.assetService.listCollection;
+                    this.assetService.indexObj.next(this.activeIndex);
+                    this.route.navigateByUrl('/assetmodule/assetpages/app-asset-capes');
+
+
                 })
             }
             else {
@@ -664,8 +670,13 @@ export class CreateAssetComponent implements OnInit {
                     this.currentAsset.updatedBy = this.userName;
                     this.listCollection = data;
                     this.assetService.generalCollection = this.listCollection;
-                    this.alertService.showMessage('Asset Updated successfully.');
-                    this.activeIndex = 0;
+                    //this.alertService.showMessage('Asset Updated successfully.');
+                    this.alertService.showMessage("Success", `Asset Updated successfully.`, MessageSeverity.success);
+                    this.activeIndex = 1;
+                    this.currentAsset = this.assetService.listCollection;
+                    this.assetService.indexObj.next(this.activeIndex);
+                    this.route.navigateByUrl('/assetmodule/assetpages/app-asset-capes');
+
                 })
             }
         }

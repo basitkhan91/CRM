@@ -117,6 +117,8 @@ export class WorkOrderAddComponent implements OnInit {
   workOrderMaterialList: any;
   mpnPartNumbersList: any = [];
   stockLineList: any;
+  workOrderWorkFlowOriginalData: any;
+  isDisabledSteps: boolean = false;
 
 
   constructor(
@@ -199,7 +201,7 @@ export class WorkOrderAddComponent implements OnInit {
 
   getAllWorkOrderStatus(): void {
     this.commonService.smartDropDownList('WorkOrderStatus', 'ID', 'Description').subscribe(res => {
-      this.workOrderStatusList = res;
+      this.workOrderStatusList = res.sort(function (a, b) { return a.value - b.value; });
     })
   }
 
@@ -224,14 +226,17 @@ export class WorkOrderAddComponent implements OnInit {
     })
   }
 
-  selectCustomer(object, currentData) {
-    console.log(object);
-
-    currentData.customerReference = object.customerRef,
-      currentData.csr = object.csrName;
+  selectCustomer(object, currentRecord) {
+    currentRecord.customerReference = object.customerRef,
+      currentRecord.csr = object.csrName;
+    currentRecord.creditLimit = object.creditLimit;
+    currentRecord.creditTermsId = object.creditTermsId;
 
   }
 
+  clearautoCompleteInput(currentRecord, field) {
+    currentRecord[field] = null;
+  }
 
 
   getAllEmployees(): void {
@@ -284,7 +289,7 @@ export class WorkOrderAddComponent implements OnInit {
       result => {
         this.workScopesList = result.map(x => {
           return {
-            label: x.workScopeCode,
+            label: x.description,
             value: x.workScopeId
           }
         })
@@ -335,7 +340,7 @@ export class WorkOrderAddComponent implements OnInit {
 
   saveWorkOrder(): void {
     this.mpnPartNumbersList = [];
-    this.showTableGrid = true; // Show Grid Boolean
+    // this.showTableGrid = true; // Show Grid Boolean
     const generalInfo = this.workOrderGeneralInformation
     const data = {
       ...generalInfo,
@@ -372,7 +377,12 @@ export class WorkOrderAddComponent implements OnInit {
         this.workOrderId = result.workOrderId;
         this.workOrderGeneralInformation.workOrderNumber = result.workOrderNum;
         this.workFlowWorkOrderId = result.workFlowWorkOrderId;
+
+        if (this.workFlowWorkOrderId !== 0) {
+          this.isDisabledSteps = true;
+        }
         // get WOrkFlow Equipment Details if WorFlow Exists
+        this.getWorkOrderWorkFlowNos();
         this.getEquipmentByWorkOrderId();
         this.getMaterialListByWorkOrderId();
 
@@ -387,9 +397,44 @@ export class WorkOrderAddComponent implements OnInit {
     );
   }
 
-  savedWorkFlowData(responseData) {
-    this.workFlowWorkOrderData = responseData;
-    this.workFlowWorkOrderId = responseData.workFlowWorkOrderId;
+
+
+
+
+  savedWorkFlowData(workFlowDataObject) {
+    this.workOrderService.createWorkFlowWorkOrder(workFlowDataObject).subscribe(res => {
+      this.workFlowWorkOrderData = res;
+      this.workFlowWorkOrderId = res.workFlowWorkOrderId;
+
+      if (this.workFlowWorkOrderId !== 0) {
+        this.isDisabledSteps = true;
+      }
+      this.getWorkOrderWorkFlowNos();
+      this.alertService.showMessage(
+        '',
+        'Work Order Work Flow Saved Succesfully',
+        MessageSeverity.success
+      );
+    })
+
+    // this.workFlowWorkOrderData = responseData;
+    // this.workFlowWorkOrderId = responseData.workFlowWorkOrderId;
+  }
+
+  getWorkOrderWorkFlowNos() {
+    this.workOrderService.getWorkOrderWorkFlowNumbers(this.workOrderId).subscribe(res => {
+      this.workOrderWorkFlowOriginalData = res;
+    })
+  }
+
+  saveworkOrderLabor(data) {
+    this.workOrderService.createWorkOrderLabor(data).subscribe(res => {
+      this.alertService.showMessage(
+        this.moduleName,
+        'Saved Work Order Labor  Succesfully',
+        MessageSeverity.success
+      );
+    })
   }
 
   getEquipmentByWorkOrderId() {
@@ -417,15 +462,6 @@ export class WorkOrderAddComponent implements OnInit {
 
 
 
-  saveworkOrderLabor(data) {
-    this.workOrderService.createWorkOrderLabor(data).subscribe(res => {
-      this.alertService.showMessage(
-        this.moduleName,
-        'Saved Work Order Labor  Succesfully',
-        MessageSeverity.success
-      );
-    })
-  }
 
 
 
@@ -571,7 +607,7 @@ export class WorkOrderAddComponent implements OnInit {
     if (stockLineId !== 0 && conditionId !== 0) {
       this.workOrderService.getSerialNoByStockLineId(stockLineId, conditionId).subscribe(res => {
         if (res) {
-          workOrderPart.stockLineNumber = res.serialNumber;
+          workOrderPart.serialNumber = res.serialNumber;
         }
       })
     }

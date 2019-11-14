@@ -1421,6 +1421,8 @@ namespace DAL.Repositories
                             from cc in custcc.DefaultIfEmpty()
                             join con in _appContext.Contact on cc.ContactId equals con.ContactId into custcon
                             from con in custcon.DefaultIfEmpty()
+                            join emp in _appContext.Employee on cust.CsrId equals emp.EmployeeId into custemp
+                            from emp in custemp.DefaultIfEmpty()
                             where cust.IsActive == true && cust.IsDeleted == false
                                   && (cust.Name.ToLower().Contains(value.ToLower()) || cust.CustomerCode.ToLower().Contains(value.ToLower()))
                             select new
@@ -1431,7 +1433,7 @@ namespace DAL.Repositories
                                 cust.CreditTermsId,
                                 CustomerContact= con==null?" ":con.FirstName,
                                 CustomerRef=cust.ContractReference==null?"": cust.ContractReference,
-                                CSRName =cust.CSRName
+                                CSRName = emp.FirstName
                             }
                             ).Distinct().ToList();
                 return list;
@@ -1445,5 +1447,84 @@ namespace DAL.Repositories
         }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
+
+        #region Customer ShippingAddress 
+
+        /// <summary>
+        /// This method is implemented for CustomerShippingAddress Insert and Update
+        ///  Added By vijay on 12/11/2019
+        /// </summary>
+        /// <param name="objCustomer"></param>
+        public void AddCustomerShippingAddress(Customer objCustomer)
+        {
+            CustomerShippingAddress objCustomerShippingAddress = new CustomerShippingAddress();
+                      
+            objCustomerShippingAddress.CustomerId = objCustomer.CustomerId;
+            objCustomerShippingAddress.AddressId = objCustomer.AddressId;
+            objCustomerShippingAddress.MasterCompanyId = objCustomer.MasterCompanyId;                  
+            objCustomerShippingAddress.SiteName = objCustomer.CustomerCode;
+            objCustomerShippingAddress.CreatedDate = DateTime.Now;
+            objCustomerShippingAddress.UpdatedDate = DateTime.Now;
+            objCustomerShippingAddress.CreatedBy = objCustomer.CreatedBy;
+            objCustomerShippingAddress.UpdatedBy = objCustomer.UpdatedBy;
+            objCustomerShippingAddress.IsActive = objCustomer.IsActive;
+            objCustomerShippingAddress.IsPrimary = true;
+            objCustomerShippingAddress.IsDelete = false;
+
+            if (objCustomerShippingAddress.CustomerShippingAddressId > 0)
+            {
+                _appContext.CustomerShippingAddress.Update(objCustomerShippingAddress);               
+            }
+            else
+            {
+                _appContext.CustomerShippingAddress.Add(objCustomerShippingAddress);
+            }
+
+            _appContext.SaveChanges();
+
+           // return objCustomerShippingAddress;
+        }
+
+
+        #endregion
+
+        #region CustomerBillingAddress
+
+        /// <summary>
+        /// This method is implemented for CustomerBillingAddress Insert and Update
+        /// Added By vijay on 12/11/2019
+        /// </summary>
+        /// <param name="objCustomer"></param>
+        public void AddCustomerBillinggAddress(Customer objCustomer)
+        {
+            CustomerBillingAddress objCustomerBillingAddress = new CustomerBillingAddress();
+            
+            objCustomerBillingAddress.CustomerId = objCustomer.CustomerId;
+            objCustomerBillingAddress.MasterCompanyId = objCustomer.MasterCompanyId;
+            objCustomerBillingAddress.AddressId = objCustomer.AddressId;
+            objCustomerBillingAddress.SiteName = objCustomer.CustomerCode;              
+            objCustomerBillingAddress.CreatedDate = DateTime.Now;
+            objCustomerBillingAddress.UpdatedDate = DateTime.Now;
+            objCustomerBillingAddress.CreatedBy = objCustomer.CreatedBy;
+            objCustomerBillingAddress.UpdatedBy = objCustomer.UpdatedBy;
+            objCustomerBillingAddress.IsPrimary = true;
+            objCustomerBillingAddress.IsActive = true;
+            objCustomerBillingAddress.IsDelete = false;
+
+            if (objCustomerBillingAddress.CustomerBillingAddressId > 0)
+            {
+                _appContext.CustomerBillingAddress.Update(objCustomerBillingAddress);
+            }
+            else
+            {
+                _appContext.CustomerBillingAddress.Add(objCustomerBillingAddress);
+            }
+
+            _appContext.SaveChanges();
+            //return objCustomerBillingAddress;
+        }
+
+
+        #endregion
     }
 }

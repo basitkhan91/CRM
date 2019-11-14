@@ -35,8 +35,20 @@ namespace DAL.Repositories
                 var data = (from t in _appContext.Vendor
                                   join ad in _appContext.Address on t.AddressId equals ad.AddressId
                                   join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId
+                                  join ct in _appContext.CreditTerms on t.CreditTermsId equals ct.CreditTermsId into crd
+                            from ct in crd.DefaultIfEmpty()
+                            join cu in _appContext.Currency on t.CurrencyId equals cu.CurrencyId into curr 
+                            from cu in curr.DefaultIfEmpty()
+                            join di in _appContext.Discount on t.DiscountId equals di.DiscountId into dis
+                            from di in dis.DefaultIfEmpty()
+                            where t.IsDelete != true
                             select new { t.VendorId,t,t.VendorEmail,t.IsActive,
-                                Address1 =ad.Line1, Address2=ad.Line2, Address3=ad.Line3,t.VendorCode, t.VendorName, ad.City, ad.StateOrProvince,vt.Description ,t.CreatedDate,t.CreatedBy,t.UpdatedBy,t.UpdatedDate,ad.AddressId,ad.Country,ad.PostalCode}).ToList();
+                                Address1 =ad.Line1, Address2=ad.Line2, Address3=ad.Line3,t.VendorCode, t.VendorName, ad.City, ad.StateOrProvince,vt.Description ,t.CreatedDate,t.CreatedBy,t.UpdatedBy,t.UpdatedDate,ad.AddressId,ad.Country,ad.PostalCode,
+                                t.EDI,t.EDIDescription,t.CreditLimit,
+                                CurrencyId= cu.Code,
+                                CreditTermsId = ct.Name,
+                                DiscountLevel = di==null ? 0: di.DiscontValue
+                            }).ToList();
                 return data;
 
                 //old query
@@ -556,6 +568,35 @@ namespace DAL.Repositories
                 _appContext.Entry(billingAddress).Property(p => p.UpdatedBy).IsModified = true;
 
                 _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void DeleteVendorShippingAddress(long shippingAddressId, string updatedBy)
+        {
+            try
+            {
+                var vsha = _appContext.VendorShippingAddress.Where(x => x.VendorShippingAddressId == shippingAddressId).FirstOrDefault();
+                if(vsha != null)
+                {
+                    _appContext.VendorShippingAddress.Remove(vsha);
+                    _appContext.SaveChanges();
+                }
+                //VendorShippingAddress shippingAddress = new VendorShippingAddress();
+                //shippingAddress.VendorShippingAddressId = billingAddressId;
+                //shippingAddress.UpdatedDate = DateTime.Now;
+                //shippingAddress.UpdatedBy = updatedBy;
+
+                //_appContext.VendorShippingAddress.Attach(shippingAddress);
+
+                //_appContext.Entry(shippingAddress).Property(p => p.UpdatedDate).IsModified = true;
+                //_appContext.Entry(shippingAddress).Property(p => p.UpdatedBy).IsModified = true;
+
+                //_appContext.SaveChanges();
             }
             catch (Exception)
             {

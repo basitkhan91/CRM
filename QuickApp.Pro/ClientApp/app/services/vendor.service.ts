@@ -338,6 +338,12 @@ export class VendorService {
 
     }
 
+    deleteVendorShippingAddress(actionId: any) {
+
+        return this.actionEndpoint.getDeletevendorshippingEndpoint(actionId);
+
+    }
+
     newAddContactInfo(vendorcntct: any) {
         return this.actionEndpoint.getNewVendorContactInfo<any>(vendorcntct);
     }
@@ -651,6 +657,27 @@ export class VendorService {
     getROViewById(purchaseOrderId){
     return this.actionEndpoint.getROViewById(purchaseOrderId);
     }
+
+    getROPartsViewById(purchaseOrderId){
+        return this.actionEndpoint.getROPartsViewById(purchaseOrderId);
+    }
+
+    getROList(data) {
+        return Observable.forkJoin(
+            this.actionEndpoint.getROList(data));
+    }
+
+    saveCreateROApproval(action: any) {
+        return this.actionEndpoint.saveCreateROApproval<any>(action);
+      }
+
+      updateROApproval(action: any) {
+        return this.actionEndpoint.updateROApproval<any>(action);
+    }
+
+    getROApproverList(purchaseOrderId){
+        return this.actionEndpoint.getROApproverList(purchaseOrderId);
+      }
       
 }
 

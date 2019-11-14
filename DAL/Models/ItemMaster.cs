@@ -171,6 +171,7 @@ namespace DAL.Models
         public bool? IsExportDual { get; set; }
         
         public int? oemPNId { get; set; } 
+        public  long? RepairUnitOfMeasureId { get; set; }
 
         public virtual Manufacturer Manufacturer { get;set;}
         public virtual Provision Provision {get;set;}

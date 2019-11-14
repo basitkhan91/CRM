@@ -8,7 +8,7 @@ namespace DAL.Models
     {
         [Key]
         public long RestrictedPartId { get; set; }
-        public int ModuleId { get; set; }
+        public long ModuleId { get; set; }
         public long? ReferenceId { get; set; }
         public long MasterPartId { get; set; }
         public string Memo { get; set; }

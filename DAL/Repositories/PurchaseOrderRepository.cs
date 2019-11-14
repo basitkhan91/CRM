@@ -145,6 +145,13 @@ namespace DAL.Repositories
             return purchaseOrderList;
         }
 
+        public IEnumerable<PurchaseOrder> StockLinePOList()
+        {
+            var purchaseOrderList = _appContext.PurchaseOrder.Where(c => c.IsActive == true).OrderByDescending(c => c.PurchaseOrderId)
+                .Select(c => new PurchaseOrder { PurchaseOrderId = c.PurchaseOrderId, PurchaseOrderNumber = c.PurchaseOrderNumber }).ToList();
+            return purchaseOrderList;
+        }
+
         public int GetLastIdNumber(long puchaseOrderId, long purchaseOrderPartId)
         {
             var stockLine = _appContext.StockLine.Where(x => x.PurchaseOrderId == puchaseOrderId && x.PurchaseOrderPartRecordId == purchaseOrderPartId).OrderByDescending(x => x.StockLineId).FirstOrDefault();
@@ -774,7 +781,7 @@ namespace DAL.Repositories
             }
         }
 
-        public object PurchaseOrderView(long purchaseOrderId)
+        public dynamic PurchaseOrderView(long purchaseOrderId)
         {
             try
             {
@@ -808,7 +815,7 @@ namespace DAL.Repositories
                                 po.PurchaseOrderNumber,
                                 v.VendorName,
                                 Requisitioner = req.FirstName,
-                                po.OpenDate,
+                                po.OpenDate, 
                                 v.VendorCode,
                                 Approver = app.FirstName,
                                 po.ClosedDate,
@@ -821,7 +828,7 @@ namespace DAL.Repositories
                                 po.Notes,
                                 po.DeferredReceiver,
                                 ShipToUserType = po.ShipToUserType == 1 ? "Customer" : (po.ShipToUserType == 2 ? "Vendor" : "Company"),
-                                ShipToUser = po.ShipToUserId == 1 ? shcust.Name : (po.ShipToUserType == 2 ? shv.VendorName : shcomp.Name),
+                                ShipToUser = po.ShipToUserType == 1 ? shcust.Name : (po.ShipToUserType == 2 ? shv.VendorName : shcomp.Name),
                                 po.ShipToSiteName,
                                 po.ShipToAddress1,
                                 po.ShipToAddress2,
@@ -840,7 +847,7 @@ namespace DAL.Repositories
                                 po.ShippingURL,
 
                                 BillToToUserType = po.BillToUserType == 1 ? "Customer" : (po.BillToUserType == 2 ? "Vendor" : "Company"),
-                                BillToUser = po.BillToUserId == 1 ? blcust.Name : (po.BillToUserType == 2 ? blv.VendorName : blcomp.Name),
+                                BillToUser = po.BillToUserType == 1 ? blcust.Name : (po.BillToUserType == 2 ? blv.VendorName : blcomp.Name),
                                 po.BillToSiteName,
                                 po.BillToAddress1,
                                 po.BillToAddress2,
@@ -1009,6 +1016,84 @@ namespace DAL.Repositories
                 return purchaseOrderParts;
             }
             catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        public PurchaseOrderEmail PurchaseOrderEmail(long purchaseOrderId)
+        {
+            PurchaseOrderEmail purchaseOrderEmail = new PurchaseOrderEmail();
+            try
+            {
+                var data = (from po in _appContext.PurchaseOrder
+                            join v in _appContext.Vendor on po.VendorId equals v.VendorId
+                            join shcust in _appContext.Customer on po.ShipToUserId equals shcust.CustomerId into shipToCust
+                            from shcust in shipToCust.DefaultIfEmpty()
+                            join shcomp in _appContext.LegalEntity on po.ShipToUserId equals shcomp.LegalEntityId into shipToComp
+                            from shcomp in shipToComp.DefaultIfEmpty()
+                            join shv in _appContext.Vendor on po.ShipToUserId equals shv.VendorId into shipToVen
+                            from shv in shipToVen.DefaultIfEmpty()
+                            join blcust in _appContext.Customer on po.ShipToUserId equals blcust.CustomerId into billToCust
+                            from blcust in billToCust.DefaultIfEmpty()
+                            join blcomp in _appContext.LegalEntity on po.ShipToUserId equals blcomp.LegalEntityId into billToComp
+                            from blcomp in billToComp.DefaultIfEmpty()
+                            join blv in _appContext.Vendor on po.ShipToUserId equals blv.VendorId into billToVen
+                            from blv in billToVen.DefaultIfEmpty()
+
+                            where po.PurchaseOrderId == purchaseOrderId
+                            select new
+                            {
+                                po.PurchaseOrderId,
+                                po.PurchaseOrderNumber,
+                                v.VendorName,
+                               PODate= po.OpenDate==null?"":po.OpenDate.ToString("ddMMMyyyy"),
+                                ShipToUser = po.ShipToUserType == 1 ? shcust.Name : (po.ShipToUserType == 2 ? shv.VendorName : shcomp.Name),
+                                BillToUser = po.BillToUserType == 1 ? blcust.Name : (po.BillToUserType == 2 ? blv.VendorName : blcomp.Name),
+                            }).FirstOrDefault();
+
+                if(data!=null)
+                {
+                    purchaseOrderEmail.PurchaseOrderId = data.PurchaseOrderId;
+                    purchaseOrderEmail.PurchaseOrderNumber = data.PurchaseOrderNumber;
+                    purchaseOrderEmail.VendorName = data.VendorName;
+                    purchaseOrderEmail.PoDate = data.PODate;
+                    purchaseOrderEmail.ShipToUser = data.ShipToUser;
+                    purchaseOrderEmail.BillToUser = data.BillToUser;
+
+                }
+
+                var list = (from pop in _appContext.PurchaseOrderPart
+                            join im in _appContext.ItemMaster on pop.ItemMasterId equals im.ItemMasterId
+                            where pop.PurchaseOrderId == purchaseOrderId
+                            select new
+                            {
+                                im.PartNumber,
+                                pop.QuantityOrdered,
+                                pop.UnitCost,
+                                pop.DiscountAmount,
+                                pop.ExtendedCost
+                            }).ToList();
+
+                if(list!=null && list.Count>0)
+                {
+                    purchaseOrderEmail.PurchaseOrderParts = new List<PurchaseOrderPart>();
+                    foreach (var item in list)
+                    {
+                        PurchaseOrderPart purchaseOrderPart = new PurchaseOrderPart();
+                        purchaseOrderPart.PartNumber = item.PartNumber;
+                        purchaseOrderPart.QuantityOrdered = item.QuantityOrdered;
+                        purchaseOrderPart.UnitCost = item.UnitCost;
+                        purchaseOrderPart.DiscountAmount = item.DiscountAmount;
+                        purchaseOrderPart.ExtendedCost = item.ExtendedCost;
+                        purchaseOrderEmail.PurchaseOrderParts.Add(purchaseOrderPart);
+                    }
+                }
+
+                return purchaseOrderEmail;
+            }
+            catch (Exception)
             {
 
                 throw;

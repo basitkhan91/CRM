@@ -54,11 +54,11 @@ export class StocklineService {
 		private authService: AuthService,
 		private stocklineEndpoint: StocklineEndpoint) { }
 	//For getting the stockline List
-	getStockLineList() {
-		return Observable.forkJoin(
-			this.stocklineEndpoint.getStockLineEndpoint<any[]>());
+    getStockLineList() {
+        return Observable.forkJoin(
+            this.stocklineEndpoint.getStockLineEndpoint<any[]>());
 	}
-
+    
 	getStockLineAdjustmentDatatypeList() {
 		return Observable.forkJoin(
 			this.stocklineEndpoint.getStockLineAdjustmentDatatypeDataEndpoint<any[]>());
@@ -68,10 +68,6 @@ export class StocklineService {
 		return Observable.forkJoin(
 			this.stocklineEndpoint.getStockLineCompanyListEndpoint<any[]>());
 	}
-
-
-	
-
 
 	//For entering into the new stockline values
 	newStockLine(sourceStockLine: any) {
@@ -177,9 +173,7 @@ export class StocklineService {
     }
 
 	deleteStocklineAdjustment(Object: any) {
-
 		return this.stocklineEndpoint.getDeleteStocklineAdjustmentReasonEndpoin(Object);
-
 	}
 
 	getPOUnitCost(Object: any) {
@@ -189,18 +183,8 @@ export class StocklineService {
 	getROUnitCost(Object: any) {
 		return this.stocklineEndpoint.getROUnitCostEndpoint(Object);
 	}
-	
 
 	deleteIntegrationById(actionId: number) {
-
 		return this.stocklineEndpoint.getDeleteIntegrationEndpoint(actionId);
-
 	}
-
-
-   
-
-   
-
-	
 }

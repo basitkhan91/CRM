@@ -1,4 +1,4 @@
-﻿import { Component } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { StepsModule } from 'primeng/steps';
 import { MenuItem } from 'primeng/api';
 import { Message } from 'primeng/components/common/message';
@@ -11,12 +11,12 @@ import { VendorService } from '../../../services/vendor.service';
     styleUrls: ['./vendor-steps-prime-ng.component.scss']
 })
 /** vendor-steps-primeNG component*/
-export class VendorStepsPrimeNgComponent {
+export class VendorStepsPrimeNgComponent implements OnInit {
 	ifvalue: boolean;
 	generalcollection: any;
 	collection: any;
     currentUrl: any;
-    isDisabledSteps: boolean = false;
+    isDisabledSteps = true;
 	items: MenuItem[];
 
 	msgs: Message[] = [];
@@ -34,42 +34,54 @@ export class VendorStepsPrimeNgComponent {
 		
     }
 
+
     changeStep(value) {
         if (value == 'General Information') {
             //	this.showComponentPTab = this.vendorService.ShowPtab;
             this.activeMenuItem = 1;
+            this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
         }
 
         else if (value == 'Contacts') {
 
             this.activeMenuItem = 2;
+            this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
         }
         else if (value == 'Financial Information') {
 
             this.activeMenuItem = 3;
+            this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-financial-information');
         }
         else if (value == 'Payment Information') {
 
             this.activeMenuItem = 4;
+            this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
         }
         else if (value == 'Shipping Information') {
 
             this.activeMenuItem = 5;
-        }
+            this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-shipping-information');
+		}
+		else if (value == 'Billing Information') {
+			this.activeMenuItem = 6;
+            this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-billing-information');
+		}
         else if (value == 'Warnings') {
 
-            this.activeMenuItem = 6;
+            this.activeMenuItem = 7;
+            this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
         }
         else if (value == 'Documents') {
 
-            this.activeMenuItem = 7;
+            this.activeMenuItem = 8;
+            this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-memo');
         }
     }
-    changeOfTab(value) {
 
-    }
-
-	ngOnInit() {
+    ngOnInit() {
+        if (this.vendorService.isEditMode) {
+            this.isDisabledSteps = false;
+        }
 		//alert('ngInit');
 		
 

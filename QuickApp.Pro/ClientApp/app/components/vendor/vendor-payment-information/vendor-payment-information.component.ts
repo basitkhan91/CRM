@@ -770,13 +770,15 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	}
 	previousClick() {
 		this.activeIndex = 2;
-		this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.changeStep('Financial Information');
 		this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-financial-information');
 	}
 	nextClick() {
 			this.workFlowtService.contactCollection = this.local;
 			this.activeIndex = 4;
-			this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.changeStep('Shipping Information');
         this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-shipping-information');
         //this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-billing-information');
 	}
@@ -943,8 +945,9 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
             for (let i = 0; i < this.alldata.length; i++) {
                 if (event == this.alldata[i].beneficiaryCustomer) {
                     this.sourceVendor.beneficiaryCustomer = event;
-                    this.disablesaveforBeneficiary = true;
+                    this.disablesaveforBeneficiary = false;
                     this.selectedCountries = event;
+                    break;
                 }
             }
         }
@@ -954,10 +957,10 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
             let value = event.target.value.toLowerCase();
             if (this.selectedCountries) {
                 if (value == this.selectedCountries.toLowerCase()) {
-                    this.disablesaveforBeneficiary = true;
+                    this.disablesaveforBeneficiary = false;
                 }
                 else {
-                    this.disablesaveforBeneficiary = false;
+                    this.disablesaveforBeneficiary = true;
                 }
             }
 
