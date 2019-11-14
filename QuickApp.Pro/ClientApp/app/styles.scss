@@ -40,7 +40,7 @@ $theme: mat-light-theme($primary, $accent);
 .calender-cstm.ng-touched.ng-invalid input{
     border-color: #ff586b;
 }
-.ui-table .ui-widget-header button {
+.ptable-wo-btns {
     margin: 0 !important;
     padding: 0 !important;
     background-color: #fafafa !important;
@@ -14228,11 +14228,15 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     border-radius: 5px !important
 }
 .vendor-steps-prime-cstm {
-    display: none !important;
+    
 }
 .pcalendar-wo-labor {
     width: calc(100% - 30px) !important;
     margin-right: 18px;
+}
+
+.pcalendar-wo-labor .ui-calendar.ui-calendar-w-btn .ui-inputtext {
+    width: 115px !important;
 }
 .emp-labour-cstm p-autocomplete .ui-autocomplete {
     width: calc(100% - 14px) !important;

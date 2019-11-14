@@ -5,12 +5,16 @@ using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using QuickApp.Pro.Helpers;
 using QuickApp.Pro.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Text;
+using System.Threading.Tasks;
 using RepairOrderPartDto = QuickApp.Pro.ViewModels.RepairOrderPartDto;
 
 namespace QuickApp.Pro.Controllers
@@ -24,14 +28,15 @@ namespace QuickApp.Pro.Controllers
         readonly ILogger _logger;
         readonly IEmailer _emailer;
         private const string GetActionByIdActionName = "GetActionById";
+        private readonly IOptions<SmtpConfig> _smtpConfig;
 
-
-        public VendorController(IUnitOfWork unitOfWork, ILogger<VendorController> logger, IEmailer emailer, ApplicationDbContext context)
+        public VendorController(IUnitOfWork unitOfWork, ILogger<VendorController> logger, IEmailer emailer, ApplicationDbContext context, IOptions<SmtpConfig> smtpConfig)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
             _emailer = emailer;
             _context = context;
+            _smtpConfig = smtpConfig;
         }
 
         // GET: api/values
@@ -855,6 +860,29 @@ namespace QuickApp.Pro.Controllers
                         poPartSplit.PurchaseOrderPartRecordId = popSplitEnt.PurchaseOrderPartRecordId;
                     }
                 }
+
+
+                if(poViewModels!=null && poViewModels.Count()>0)
+                {
+                    var statusId = (from po in _context.PurchaseOrder.Where(p => p.PurchaseOrderId == poViewModels.FirstOrDefault().PurchaseOrderId)
+                                select new {
+                                    po.StatusId
+                                }).FirstOrDefault().StatusId;
+
+                    if (statusId != null && statusId == 1)
+                    {
+                        string lintText = "more details.";
+                        SendPoEmail(poViewModels.FirstOrDefault().PurchaseOrderId, "Your Purchase Order has been created successfully", "PO Initiator", _smtpConfig.Value.POInitiatorEmail, "Purchase Order Creation -", lintText);
+                    }
+                    else if(statusId != null && statusId == 2)
+                    {
+                        string lintText = "Approve.";
+                        
+                        SendPoEmail(poViewModels.FirstOrDefault().PurchaseOrderId,"Purchase Order requires your approval","PO Approver", _smtpConfig.Value.POApproverEmail, "Purchase Order Approval -", lintText);
+                    }
+                }
+                
+
                 return Ok(poViewModels);
             }
             return Ok(ModelState);
@@ -3109,6 +3137,15 @@ namespace QuickApp.Pro.Controllers
             return Ok(list);
         }
 
+        [HttpGet("getvendorContactByVendorID/{vendorid}/{isDContact}")]
+        [Produces(typeof(List<VendorCapabiltiyAircraftModel>))]
+        public IActionResult GetVendorByID(long vendorid, bool isDContact)
+        {
+            var vendorcontactdata = _unitOfWork.Vendor.getVendorByID(vendorid, isDContact);
+            return Ok(vendorcontactdata);
+
+        }
+
         #region Capes
 
         [HttpGet("GetVendorCapesDatawithMasterId/{id}")]
@@ -3346,14 +3383,56 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        [HttpGet("getvendorContactByVendorID/{vendorid}/{isDContact}")]
-        [Produces(typeof(List<VendorCapabiltiyAircraftModel>))]
-        public IActionResult GetVendorByID(long vendorid, bool isDContact)
+        //[HttpGet("sendpoemail")]
+        private async Task<bool> SendPoEmail(long purchaseOrderId,string content, string recepientName, string recepientEmail,string subject,string lintText = "")
         {
-            var vendorcontactdata = _unitOfWork.Vendor.getVendorByID(vendorid, isDContact);
-            return Ok(vendorcontactdata);
 
+            string emailTemplatePath = @"c:\\EmailTemplates\\PO_Email.txt";
+            string emailContent = string.Empty;
+            StringBuilder parts = new StringBuilder();
+
+            var purchaseorder = _unitOfWork.purchaseOrder.PurchaseOrderEmail(purchaseOrderId);
+            string s = purchaseorder.VendorName;
+            var purchaseorderPart = _unitOfWork.purchaseOrder.GetPurchaseOrderPartsView(purchaseOrderId);
+
+            var fileStream = new FileStream(emailTemplatePath, FileMode.Open, FileAccess.Read);
+            using (var streamReader = new StreamReader(fileStream, Encoding.UTF8))
+            {
+                emailContent = streamReader.ReadToEnd();
+            }
+
+            emailContent=emailContent.Replace("{PONumber}", purchaseorder.PurchaseOrderNumber);
+            emailContent = emailContent.Replace("{PODate}", purchaseorder.PoDate);
+            emailContent = emailContent.Replace("{Vendor}", purchaseorder.VendorName);
+            emailContent = emailContent.Replace("{ShipToUserName}", purchaseorder.ShipToUser);
+            emailContent = emailContent.Replace("{BillToUserName}", purchaseorder.BillToUser);
+            emailContent = emailContent.Replace("{Content}", content);
+            emailContent = emailContent.Replace("{LintText}", lintText);
+            emailContent = emailContent.Replace("{WebsiteUrl}", _smtpConfig.Value.WebsiteURL);
+
+
+
+
+
+            if (purchaseorder.PurchaseOrderParts!=null && purchaseorder.PurchaseOrderParts.Count>0)
+            {
+                foreach(var item in purchaseorder.PurchaseOrderParts)
+                {
+                    parts.Append("<tr><td>" + item .PartNumber+ "</td>");
+                    parts.Append("<td>" + item.QuantityOrdered + "</td>");
+                    parts.Append("<td>" + item.UnitCost + "</td>");
+                    parts.Append("<td>" + item.DiscountAmount + "</td>");
+                    parts.Append("<td>" + item.ExtendedCost + "</td></tr>");
+                }
+            }
+            emailContent = emailContent.Replace("{PartsData}", parts.ToString());
+
+            Emailer emailer = new Emailer(_smtpConfig);
+            var result = await emailer.SendEmailAsync(recepientName, recepientEmail, subject + purchaseorder.PurchaseOrderNumber, emailContent, null, true);
+            return result.success;
         }
+
+        
 
         #endregion Private Methods
 

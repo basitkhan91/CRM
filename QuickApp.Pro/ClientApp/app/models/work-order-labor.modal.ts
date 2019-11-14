@@ -49,7 +49,7 @@ export class WorkOrderLabor {
 export class AllTasks {
   expertiseId: string;
   employeeId: number;
-  billableId: string;
+  billableId: number;
   startDate: Date;
   startDateandTimeIsEdit: boolean;
   endDateandTimeIsEdit: boolean;
@@ -64,7 +64,7 @@ export class AllTasks {
   constructor() {
     this.expertiseId = null;
     this.employeeId = null;
-    this.billableId = '';
+    this.billableId = 1;
     this.startDate = null;
     this.startDateandTimeIsEdit = false;
     this.endDate = null;

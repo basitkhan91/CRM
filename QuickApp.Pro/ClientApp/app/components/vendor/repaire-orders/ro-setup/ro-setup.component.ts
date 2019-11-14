@@ -1513,8 +1513,8 @@ export class RoSetupComponent implements OnInit {
 		if (value === 'EditCusSiteName') {
 			this.addressSiteNameHeader = 'Edit Ship To Customer Details';
 			this.isEditModeShipping = true;
-				this.tempshipToAddress = getObjectById('customerShippingAddressId', data.shipToAddressId, this.shipToCusData);
-				this.addressFormForShipping = {...this.tempshipToAddress};
+			this.tempshipToAddress = getObjectById('customerShippingAddressId', data.shipToAddressId, this.shipToCusData);
+			this.addressFormForShipping = {...this.tempshipToAddress, country: getObjectByValue('label', this.tempshipToAddress.country.toLowerCase(), this.allCountriesList)};
 		}
 		if (value === 'AddVenSiteName') {
 			this.addressSiteNameHeader = 'Add Ship To Vendor Details';
