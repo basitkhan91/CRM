@@ -268,6 +268,7 @@ export class RoListComponent implements OnInit {
         });
     }
     getROPartsViewById(roId) {
+		this.roPartsList = [];
         this.vendorService.getROPartsViewById(roId).subscribe(res => {
             console.log(res);  
             res.map(x => {

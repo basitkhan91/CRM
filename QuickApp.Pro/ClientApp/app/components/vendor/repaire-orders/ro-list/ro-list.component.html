@@ -142,6 +142,7 @@
 					<input type="text" *ngIf="col.field !== 'openDate' && col.field !== 'closedDate'" style="width:100%;" pInputText (keyup)="onChangeInputField($event.target.value, col.field)">
 					<input type="date" *ngIf="col.field == 'openDate'" name="openDate" style="width:100%;" (change)="onChangeInputField($event.target.value, col.field)">
 					<input type="date" *ngIf="col.field == 'closedDate'" name="closedDate" style="width:100%;" (change)="onChangeInputField($event.target.value, col.field)">
+					<!-- <p-calendar [showIcon]="true" *ngIf="col.field == 'closedDate'"></p-calendar> -->
 				</th>
 				<!-- <th
 				  style="width:120px"
