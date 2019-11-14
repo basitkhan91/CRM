@@ -1464,6 +1464,7 @@ namespace QuickApp.Pro.Controllers
                 contactObj.UpdatedDate = DateTime.Now;
                 contactObj.CreatedBy = contactViewModel.CreatedBy;
                 contactObj.UpdatedBy = contactViewModel.UpdatedBy;
+                contactObj.WorkPhoneExtn = contactViewModel.WorkPhoneExtn;
                 _unitOfWork.ContactRepository.Add(contactObj);
                 _unitOfWork.SaveChanges();
                 return Ok(contactObj);
@@ -1625,6 +1626,7 @@ namespace QuickApp.Pro.Controllers
                 contactObj.UpdatedDate = DateTime.Now;
                 contactObj.CreatedBy = contactViewModel.CreatedBy;
                 contactObj.UpdatedBy = contactViewModel.UpdatedBy;
+                contactObj.WorkPhoneExtn = contactViewModel.WorkPhoneExtn;
                 _unitOfWork.ContactRepository.Update(contactObj);
                 _unitOfWork.SaveChanges();
 
@@ -2267,34 +2269,44 @@ namespace QuickApp.Pro.Controllers
                 if (vendorShippingViewModel == null)
                     return BadRequest($"{nameof(vendorShippingViewModel)} cannot be null");
                 var checkPaymentObj = _unitOfWork.VendorShippingAddress.GetSingleOrDefault(c => c.VendorShippingAddressId == id);
-                var addressObj = _unitOfWork.Address.GetSingleOrDefault(c => c.AddressId == vendorShippingViewModel.AddressId);
-                checkPaymentObj.IsActive = true;
 
-                checkPaymentObj.MasterCompanyId = 1;
-                checkPaymentObj.IsActive = vendorShippingViewModel.IsActive;
-                checkPaymentObj.SiteName = vendorShippingViewModel.SiteName;
-                checkPaymentObj.CreatedDate = DateTime.Now;
-                checkPaymentObj.UpdatedDate = DateTime.Now;
-                checkPaymentObj.CreatedBy = vendorShippingViewModel.CreatedBy;
-                checkPaymentObj.UpdatedBy = vendorShippingViewModel.UpdatedBy;
-                //checkPaymentObj.MasterCompanyId = vendorShippingViewModel.MasterCompanyId;
-                checkPaymentObj.VendorShippingAddressId = vendorShippingViewModel.VendorShippingAddressId;
-                addressObj.Line1 = vendorShippingViewModel.Address1;
-                addressObj.Line2 = vendorShippingViewModel.Address2;
-                addressObj.Line3 = vendorShippingViewModel.Address3;
-                addressObj.PostalCode = vendorShippingViewModel.PostalCode;
-                addressObj.StateOrProvince = vendorShippingViewModel.stateOrProvince;
-                addressObj.City = vendorShippingViewModel.City;
-                addressObj.Country = vendorShippingViewModel.Country;
-                addressObj.MasterCompanyId = 1;
-                // addressObj.RecordCreateDate = DateTime.Now;
-                addressObj.CreatedBy = vendorShippingViewModel.CreatedBy;
-                addressObj.UpdatedBy = vendorShippingViewModel.UpdatedBy;
-                //addressObj.CreatedDate = DateTime.Now;
-                addressObj.UpdatedDate = DateTime.Now;
-                _unitOfWork.Address.Update(addressObj);
-                _unitOfWork.VendorShippingAddress.Update(checkPaymentObj);
-                _unitOfWork.SaveChanges();
+                if(checkPaymentObj != null)
+                {
+                    var addressObj = _unitOfWork.Address.GetSingleOrDefault(c => c.AddressId == checkPaymentObj.AddressId);
+                    checkPaymentObj.IsActive = true;
+                    checkPaymentObj.MasterCompanyId = 1;
+                    checkPaymentObj.IsActive = vendorShippingViewModel.IsActive;
+                    checkPaymentObj.SiteName = vendorShippingViewModel.SiteName;
+                    checkPaymentObj.CreatedDate = DateTime.Now;
+                    checkPaymentObj.UpdatedDate = DateTime.Now;
+                    checkPaymentObj.CreatedBy = vendorShippingViewModel.CreatedBy;
+                    checkPaymentObj.UpdatedBy = vendorShippingViewModel.UpdatedBy;
+                    checkPaymentObj.MasterCompanyId = vendorShippingViewModel.MasterCompanyId;
+                    //checkPaymentObj.VendorShippingAddressId = vendorShippingViewModel.VendorShippingAddressId;
+                    _unitOfWork.VendorShippingAddress.Update(checkPaymentObj);
+                    _unitOfWork.SaveChanges();
+                    if (addressObj != null)
+                    {
+                        addressObj.Line1 = vendorShippingViewModel.Address1;
+                        addressObj.Line2 = vendorShippingViewModel.Address2;
+                        addressObj.Line3 = vendorShippingViewModel.Address3;
+                        addressObj.PostalCode = vendorShippingViewModel.PostalCode;
+                        addressObj.StateOrProvince = vendorShippingViewModel.stateOrProvince;
+                        addressObj.City = vendorShippingViewModel.City;
+                        addressObj.Country = vendorShippingViewModel.Country;
+                        addressObj.MasterCompanyId = 1;
+                        // addressObj.RecordCreateDate = DateTime.Now;
+                        addressObj.CreatedBy = vendorShippingViewModel.CreatedBy;
+                        addressObj.UpdatedBy = vendorShippingViewModel.UpdatedBy;
+                        //addressObj.CreatedDate = DateTime.Now;
+                        addressObj.UpdatedDate = DateTime.Now;
+                        _unitOfWork.Address.Update(addressObj);
+                        _unitOfWork.SaveChanges();
+                    }
+
+                    
+                }
+               
                 return Ok(checkPaymentObj);
 
 
@@ -2313,7 +2325,7 @@ namespace QuickApp.Pro.Controllers
 
                 vendorShippingDetailsViewModel.MasterCompanyId = 1;
                 actionobject.VendorId = vendorShippingDetailsViewModel.VendorId;
-                actionobject.VendorShippingAddressId = vendorShippingDetailsViewModel.VendorShippingAddressId;
+                //actionobject.VendorShippingAddressId = vendorShippingDetailsViewModel.VendorShippingAddressId;
                 actionobject.ShipVia = vendorShippingDetailsViewModel.ShipVia;
                 actionobject.ShippingAccountinfo = vendorShippingDetailsViewModel.ShippingAccountinfo;
                 actionobject.ShippingId = vendorShippingDetailsViewModel.ShippingId;

@@ -53,7 +53,9 @@ namespace DAL.Repositories
                            vc.VendorContactId,
                            vc.VendorId,
                            c.CreatedDate,
-                           c.UpdatedDate
+                           c.UpdatedDate,
+                           c.WorkPhoneExtn,
+                           vc.IsDefaultContact
                            
                         }).ToList();
             return data;
