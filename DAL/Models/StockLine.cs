@@ -58,21 +58,9 @@ namespace DAL.Models
         public bool? IsDER { get; set; }
         public bool? OEM { get; set; }
         public string Memo { get; set; }
-        [NotMapped]
-        public string Site { get; set; }
-        [NotMapped]
-        public string Shelf { get; set; }
-        [NotMapped]
-        public string Bin { get; set; }
         public long? ManagementStructureEntityId { get; set; }
         [NotMapped]
-        public int? CompanyId { get; set; }
-        [NotMapped]
-        public int? BusinessUnitId { get; set; }
-        [NotMapped]
-        public int? DivisionId { get; set; }
-        [NotMapped]
-        public int? DepartmentId { get; set; }
+        public long? LegalEntityId { get; set; }
         [ForeignKey("MasterCompanyId")]
         public int? MasterCompanyId { get; set; }
         public bool? IsSerialized { get; set; }

@@ -365,13 +365,7 @@ namespace QuickApp.Pro.Controllers
                 actionobject1.Memo = stockLineViewModel.Memo;
                 // Approach is changed and due to which the time life will have a stock line id and not vice versa. due to serialized and non serialized item master configuration.
                 actionobject1.TimeLifeCyclesId = stockLineViewModel.TimeLifeCyclesId == 0 ? null : stockLineViewModel.TimeLifeCyclesId;
-                actionobject1.CompanyId = stockLineViewModel.CompanyId == 0?null:stockLineViewModel.CompanyId;
-                actionobject1.BusinessUnitId = stockLineViewModel.BusinessUnitId == 0?null:stockLineViewModel.BusinessUnitId;
-                actionobject1.DivisionId = stockLineViewModel.DivisionId == 0?null:stockLineViewModel.DivisionId;
-                actionobject1.DepartmentId = stockLineViewModel.DepartmentId == 0?null:stockLineViewModel.DepartmentId;
-                actionobject1.Site = stockLineViewModel.Site;
-                actionobject1.Shelf = stockLineViewModel.Shelf;
-                actionobject1.Bin = stockLineViewModel.Bin;
+                actionobject1.LegalEntityId = stockLineViewModel.LegalEntityId == 0?null:stockLineViewModel.LegalEntityId;
                 actionobject1.ObtainFromType = stockLineViewModel.ObtainFromType;
                 actionobject1.OwnerType = stockLineViewModel.OwnerType;
                 actionobject1.TraceableToType = stockLineViewModel.TraceableToType;

@@ -78,9 +78,6 @@ namespace QuickApp.Pro.ViewModels
         public string Memo { get; set; }
         public long? ManagementStructureEntityId { get; set; }
         public long? TimeLifeCyclesId { get; set; }
-        public string Site { get; set; }
-        public string Shelf { get; set; }
-        public string Bin { get; set; }
         public bool? TimeLife { get; set; }
         public long? TimeLifeId { get; set; }
         public Int32? ObtainFromType { get; set; }
@@ -90,14 +87,8 @@ namespace QuickApp.Pro.ViewModels
         public Int32? UnitSalePriceAdjustmentReasonTypeId { get; set; }
         [ForeignKey("MasterCompanyId")]
         public Int32? MasterCompanyId { get; set; }
-        [ForeignKey("CompanyId")]
-        public Int32? CompanyId { get; set; }
-        [ForeignKey("BusinessUnitId")]
-        public Int32? BusinessUnitId { get; set; }
-        [ForeignKey("DivisionId")]
-        public Int32? DivisionId { get; set; }
-        [ForeignKey("DepartmentId")]
-        public Int32? DepartmentId { get; set; }
+        [ForeignKey("LegalEntityId")]
+        public long? LegalEntityId { get; set; }
         public bool? isSerialized { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
