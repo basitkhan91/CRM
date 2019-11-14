@@ -388,8 +388,15 @@
             <div class="form-group credit">
                 <label for="percentage" class="control-label">Percentage</label>
 				<div class="control-data">
+
+							<select #percentage="ngModel" id="percentage" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.percentage">
+								<ng-container *ngFor="let discountObj of alldiscountvalueInfo">
+									<option [ngValue]="discountObj.discontId">{{discountObj.discontValue}}%</option>
+								</ng-container>
+							</select>
+							<a href="#" data-toggle="modal" data-target="#addCurreny" class="add-icon" (click)="openCrediTerms(contenCreditTerms)"><i class="fa fa-plus"></i></a>
 					<!--<input #percentage="ngModel" id="percentage" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.percentage">-->
-					<select #percentage="ngModel" id="percentage" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.percentage">
+					<!-- <select #percentage="ngModel" id="percentage" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.percentage">
 						<option value="0">0%</option>
 						<option value="1">1%</option>
 						<option value="2">2%</option>
@@ -491,7 +498,7 @@
 						<option value="98">98%</option>
 						<option value="99">99%</option>
 						<option value="100">100%</option>
-					</select>
+					</select> -->
 				</div>
                 <div class="clear"></div>
             </div>
