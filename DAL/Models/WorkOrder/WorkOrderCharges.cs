@@ -12,7 +12,7 @@ namespace DAL.Models
         public long WorkOrderId { get; set; }
         [ForeignKey("WorkFlowWorkOrderId")]
         public long WorkFlowWorkOrderId { get; set; }
-        public long ItemMasterId { get; set; }
+        public long ChargesTypeId { get; set; }
         public long? VendorId { get; set; }
         public int? Quantity { get; set; }
         public int RoNumberId { get; set; }
@@ -33,6 +33,6 @@ namespace DAL.Models
         [NotMapped]
         public string VendorName { get; set; }
         [NotMapped]
-        public string PartNumber { get; set; }
+        public string ChargeType { get; set; }
     }
 }
