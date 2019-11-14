@@ -36,7 +36,7 @@ namespace DAL.Models
         public string ShipVia { get; set; }
         public string ShippingAcctNum { get; set; }
         public string ShippingUrl { get; set; }
-        public int? ShippingId { get; set; }
+        public string ShippingId { get; set; }
         public string ShipToMemo { get; set; }
         public string ShipToSiteName { get; set; }
         public string ShipToAddress1 { get; set; }

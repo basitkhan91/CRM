@@ -3039,26 +3039,29 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPut("updateRoApprover")]
-        public IActionResult UpdateRoApprover([FromBody] RepairOrderApproverViewModel roApproverViewModel)
+        public IActionResult UpdateRoApprover([FromBody] RepairOrderApprover roApprover)
         {
-            if (roApproverViewModel == null)
+            if (roApprover == null)
             {
                 return BadRequest($"RO Approver cannot be null.");
             }
 
-            var roApprover = _context.RepairOrderApprover
-                .Where(roa => roa.RoApproverId == roApproverViewModel.RoApproverId).FirstOrDefault();
+            //var roApprover = _context.RepairOrderApprover
+            //    .Where(roa => roa.RoApproverId == roApproverViewModel.RoApproverId).FirstOrDefault();
 
-            // UPDATE RepairOrderId
-            roApprover.RepairOrderId = roApprover.RepairOrderId;
+            //// UPDATE RepairOrderId
+            //roApprover.RepairOrderId = roApprover.RepairOrderId;
 
-            var roApprovarList = _context.RepairOrderApproverList
-                .Where(x => x.RoApproverId == roApproverViewModel.RoApproverId).ToList();
+            //var roApprovarList = _context.RepairOrderApproverList
+            //    .Where(x => x.RoApproverId == roApproverViewModel.RoApproverId).ToList();
 
-            roApprover.RepairOrderApproverList = roApprovarList;
+            //roApprover.RepairOrderApproverList = roApprovarList;
 
-            // UPDATE RepairOrderApproverList
-            roApprover = FillRepairOrderApproverUpdate(roApprover, roApproverViewModel);
+            //// UPDATE RepairOrderApproverList
+            //roApprover = FillRepairOrderApproverUpdate(roApprover, roApproverViewModel);
+
+            //_context.RepairOrderApprover.Update(roApprover);
+            //_context.SaveChanges();
 
             _context.RepairOrderApprover.Update(roApprover);
             _context.SaveChanges();
@@ -3078,6 +3081,8 @@ namespace QuickApp.Pro.Controllers
                 {
                     var repairOrderApproverList = new RepairOrderApproverList
                     {
+                        RoApproverId= roApproverObj.RoApproverId,
+                        RoApproverListId=roApproverObj.RoApproverListId,
                         EmployeeId = roApproverObj.EmployeeId,
                         Level = roApproverObj.Level,
                         StatusId = roApproverObj.StatusId,
