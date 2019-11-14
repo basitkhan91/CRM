@@ -828,7 +828,7 @@ namespace DAL.Repositories
                                 po.Notes,
                                 po.DeferredReceiver,
                                 ShipToUserType = po.ShipToUserType == 1 ? "Customer" : (po.ShipToUserType == 2 ? "Vendor" : "Company"),
-                                ShipToUser = po.ShipToUserId == 1 ? shcust.Name : (po.ShipToUserType == 2 ? shv.VendorName : shcomp.Name),
+                                ShipToUser = po.ShipToUserType == 1 ? shcust.Name : (po.ShipToUserType == 2 ? shv.VendorName : shcomp.Name),
                                 po.ShipToSiteName,
                                 po.ShipToAddress1,
                                 po.ShipToAddress2,
@@ -847,7 +847,7 @@ namespace DAL.Repositories
                                 po.ShippingURL,
 
                                 BillToToUserType = po.BillToUserType == 1 ? "Customer" : (po.BillToUserType == 2 ? "Vendor" : "Company"),
-                                BillToUser = po.BillToUserId == 1 ? blcust.Name : (po.BillToUserType == 2 ? blv.VendorName : blcomp.Name),
+                                BillToUser = po.BillToUserType == 1 ? blcust.Name : (po.BillToUserType == 2 ? blv.VendorName : blcomp.Name),
                                 po.BillToSiteName,
                                 po.BillToAddress1,
                                 po.BillToAddress2,

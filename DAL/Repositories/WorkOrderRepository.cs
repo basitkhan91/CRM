@@ -1355,9 +1355,9 @@ namespace DAL.Repositories
             try
             {
                 var result = _appContext.WorkOrderCharges
-                             .Join(_appContext.ItemMaster,
-                            wc => wc.ItemMasterId,
-                            im => im.ItemMasterId,
+                             .Join(_appContext.ChargesTypes,
+                            wc => wc.ChargesTypeId,
+                            im => im.Id,
                             (wc, im) => new { wc, im })
                             .Join(_appContext.Vendor,
                             wc1 => wc1.wc.VendorId,
@@ -1368,7 +1368,7 @@ namespace DAL.Repositories
                              {
                                  WorkOrderCharges = p.wc1.wc,
                                  VendorName = p.v.VendorName,
-                                 PartNumber = p.wc1.im.PartNumber
+                                 ChargeType = p.wc1.im.Name
                              })
                              .ToList();
                 if (result != null && result.Count > 0)
@@ -1378,7 +1378,7 @@ namespace DAL.Repositories
                         workOrderCharges = new WorkOrderCharges();
                         workOrderCharges = item.WorkOrderCharges;
                         workOrderCharges.VendorName = item.VendorName;
-                        workOrderCharges.PartNumber = item.PartNumber;
+                        workOrderCharges.ChargeType = item.ChargeType;
 
                         workOrderChargesList.Add(workOrderCharges);
                     }
@@ -2423,10 +2423,10 @@ namespace DAL.Repositories
                     workOrderCharge.FixedAmount = 0;
                     workOrderCharge.IsActive = true;
                     workOrderCharge.IsDeleted = false;
-                    workOrderCharge.ItemMasterId = 1;
+                    workOrderCharge.ChargesTypeId = 1;
                     workOrderCharge.MarkupPercentageId = 1;
                     workOrderCharge.MasterCompanyId = masterCompanyId;
-                    workOrderCharge.PartNumber = "";
+                    workOrderCharge.ChargeType = "";
                     workOrderCharge.Quantity = item.Quantity;
                     workOrderCharge.UpdatedBy = createdBy;
                     workOrderCharge.UpdatedDate = DateTime.Now;

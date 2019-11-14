@@ -1,11 +1,12 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { AssetService } from '../../../../services/asset/Assetservice';
 import { AuthService } from '../../../../services/auth.service';
-import { AlertService } from '../../../../services/alert.service';
+//import { AlertService } from '../../../../services/alert.service';
 import { GlAccount } from '../../../../models/GlAccount.model';
 import { GlAccountService } from '../../../../services/glAccount/glAccount.service';
 import { VendorService } from '../../../../services/vendor.service';
 import { Vendor } from '../../../../models/vendor.model';
+import { AlertService, DialogType, MessageSeverity } from '../../../../services/alert.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -104,11 +105,20 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
             this.assetService.updateAsset(this.currentMaintenance).subscribe(data => {
                 this.currentMaintenance.updatedBy = this.userName;
                 this.localCollection = data;                
-                this.alertService.showMessage('Asset Maintance updated successfully.');
-                this.activeIndex = 3;
-                this.assetService.indexObj.next(this.activeIndex);
+                //this.alertService.showMessage('Asset Maintance updated successfully.');
+                this.alertService.showMessage("Success", `Asset Maintenance updated successfully.`, MessageSeverity.success);
+                this.route.navigateByUrl('assetmodule/assetpages/app-asset-listing');
+                //this.activeIndex = 3;
+                //this.assetService.indexObj.next(this.activeIndex);
             })
         }
+    }
+
+    customExcelUpload(event) {
+        
+
+    }
+    sampleExcelDownload() {
     }
 
     private onGlAccountLoad(getGlList: GlAccount[]) {

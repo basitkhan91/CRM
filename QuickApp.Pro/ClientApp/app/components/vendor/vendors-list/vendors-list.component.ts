@@ -70,7 +70,7 @@ export class VendorsListComponent implements OnInit {
     creditTermsId: any = "";
     currencyId: any = "";
     discountLevel: any = "";
-    is1099Required: any = "";
+    is1099Required: any = "";      
     showGeneralData: boolean = true;
     showcontactdata: boolean = true;
     showfinancialdata: boolean = true;
@@ -400,6 +400,7 @@ export class VendorsListComponent implements OnInit {
     }
 
     openView(content, row) {
+        
         this.vendorCode = row.vendorCode;
         this.vendorName = row.vendorName;
         this.vendorTypeId = row.t.vendorTypeId;
@@ -409,15 +410,16 @@ export class VendorsListComponent implements OnInit {
             this.currencyId = row.currency.symbol;
         }
         else {
-            this.currencyId = "";
+            this.currencyId = row.currencyId;
         }
 
         if (row.creditterms) {
             this.creditTermsId = row.creditterms.name;
         }
         else {
-            this.creditTermsId = "";
+            this.creditTermsId = row.creditTermsId;
         }
+       
         this.address1 = row.address1;
         this.address2 = row.address2;
         this.address3 = row.address3;
@@ -432,8 +434,8 @@ export class VendorsListComponent implements OnInit {
         this.licenseNumber = row.t.licenseNumber;
         this.capabilityId = row.capabilityId;
         this.vendorURL = row.t.vendorURL;
-        this.creditlimit = row.t.creditlimit;
-        this.discountLevel = row.t.discountLevel;
+        this.creditlimit = row.t.creditLimit;        
+        this.discountLevel = row.discountLevel;
         this.is1099Required = row.t.is1099Required;
         this.loadContactDataData(row.vendorId);
         this.loadPayamentData(row.vendorId);

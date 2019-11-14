@@ -43,7 +43,7 @@ export class RoListComponent implements OnInit {
     auditHistory: AuditHistory[];
     rowDataToDelete: any = {};
     roHeaderAdd: any = {};
-    poPartsList: any = [];
+    roPartsList: any = [];
     approveList: any = [];
     vendorCapesInfo: any = [];
     vendorCapesCols: any[];
@@ -86,23 +86,23 @@ export class RoListComponent implements OnInit {
 
     }
 
-    getList(data) {
-        this.vendorService.getRepaireOrderlist().subscribe(res => {
-			console.log(res);			
-             this.data = res[0];
-        })
-	}
-	
-	// getList(data) {
-    //     this.vendorService.getROList(data).subscribe(res => {
+    // getList(data) {
+    //     this.vendorService.getRepaireOrderlist().subscribe(res => {
 	// 		console.log(res);			
     //          this.data = res[0];
-    //         if (this.data.length > 0) {
-    //             this.totalRecords = res[0][0].totalRecords;
-    //             this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
-    //         }
     //     })
 	// }
+	
+	getList(data) {
+        this.vendorService.getROList(data).subscribe(res => {
+			console.log(res);			
+             this.data = res[0];
+            if (this.data.length > 0) {
+                this.totalRecords = res[0][0].totalRecords;
+                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            }
+        })
+	}
 
     getManagementStructureCodes(id) {
         this.commonService.getManagementStructureCodes(id).subscribe(res => {
@@ -255,7 +255,7 @@ export class RoListComponent implements OnInit {
     viewSelectedRow(rowData) { 
         console.log(rowData);
         this.getROViewById(rowData.repairOrderId);
-        //this.getPOPartsViewById(rowData.repairOrderId);
+        this.getROPartsViewById(rowData.repairOrderId);
         this.getApproversListById(rowData.repairOrderId);
     }
 
@@ -267,23 +267,23 @@ export class RoListComponent implements OnInit {
             this.getManagementStructureCodes(res.managementStructureId);
         });
     }
-    getPOPartsViewById(roId) {
-        this.purchaseOrderService.getPOPartsViewById(roId).subscribe(res => {
+    getROPartsViewById(roId) {
+        this.vendorService.getROPartsViewById(roId).subscribe(res => {
             console.log(res);  
             res.map(x => {
                 const partList = {
                     ...x,
-                    purchaseOrderSplitParts: this.getPurchaseOrderSplit(x)              
+                    repairOrderSplitParts: this.getRepairOrderSplit(x)              
                 }
                 this.getManagementStructureCodesParent(partList);
-                this.poPartsList.push(partList);
+                this.roPartsList.push(partList);
             });
         });
     }
 
-    getPurchaseOrderSplit(partList) {
-        if(partList.purchaseOrderSplitParts) {
-			return partList.purchaseOrderSplitParts.map(y => {
+    getRepairOrderSplit(partList) {
+        if(partList.repairOrderSplitParts) {
+			return partList.repairOrderSplitParts.map(y => {
 				const splitpart = {
 					...y,					
 				}

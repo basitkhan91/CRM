@@ -35,7 +35,7 @@ import { AuditModule } from "../audit/audit.module";
 
 @NgModule({
 	imports: [
-	
+
 		FlexLayoutModule,
 		FormsModule, ReactiveFormsModule,
 		QuickAppProMaterialModule,
@@ -56,27 +56,27 @@ import { AuditModule } from "../audit/audit.module";
 		CalendarModule,
 		StocklinePagesRoutingModule,
 		TreeModule,
-        TreeTableModule,
-        AuditModule
-		
+		TreeTableModule,
+		AuditModule
+
 
 	],
 	declarations: [
 		StockLineListComponent,
 		StockLineSetupComponent,
 		StockAdjustmentComponent,
-        StocklinepagesComponent,
-        StockLineEditComponent,
-        StocklineAdjustmentReasonComponent
+		StocklinepagesComponent,
+		StockLineEditComponent,
+		StocklineAdjustmentReasonComponent
 
 
-		
+
 	],
 	providers: [
-		
+
 	],
 	entryComponents: [
-		
+
 	],
 
 

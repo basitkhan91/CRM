@@ -54,8 +54,9 @@ export class StocklineService {
 		private authService: AuthService,
 		private stocklineEndpoint: StocklineEndpoint) { }
 	//For getting the stockline List
-    getStockLineList(data) {
-        return this.stocklineEndpoint.getStockLineListEndpoint(data);
+    getStockLineList() {
+        return Observable.forkJoin(
+            this.stocklineEndpoint.getStockLineEndpoint<any[]>());
 	}
     
 	getStockLineAdjustmentDatatypeList() {

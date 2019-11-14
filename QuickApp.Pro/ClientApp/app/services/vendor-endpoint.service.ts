@@ -1400,7 +1400,7 @@ export class VendorEndpointService extends EndpointFactory {
 	}
 
 	getROStatus(repairOrderId, isActive, updatedBy) {
-		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/roStatus?repairOrderId=${repairOrderId}&isActive=${isActive}&updatedBy=${updatedBy}`)
+		return this.http.put(`${this.configurations.baseUrl}/api/Vendor/roStatus?repairOrderId=${repairOrderId}&isActive=${isActive}&updatedBy=${updatedBy}`, {} , this.getRequestHeaders())
   }
 
   deleteRO(repairOrderId, updatedBy) {
@@ -1433,6 +1433,10 @@ getROViewById(repairOrderId) {
     return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/roViewById?repairOrderId=${repairOrderId}`)
   }
 
+  getROPartsViewById(repairOrderId) {
+    return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/roPartsViewById?repairOrderId=${repairOrderId}`)
+  }
+
   getROList(data) {
 	return this.http.post(this.roListWithFiltersUrl, JSON.stringify(data), this.getRequestHeaders())
 		.catch(error => {
@@ -1452,7 +1456,7 @@ getROViewById(repairOrderId) {
 updateROApproval<T>(param: any): Observable<any> {
 	let body = JSON.stringify(param);
 	let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
-	return this.http.post(this._updateROApproval, body, this.getRequestHeaders())
+	return this.http.put(this._updateROApproval, body, this.getRequestHeaders())
 		.map((response: Response) => {
 			return <any>response;
 
