@@ -253,8 +253,11 @@ namespace DAL.Repositories
                 if (workOrder != null)
                 {
                     workOrder.PartNumbers = _appContext.Set<WorkOrderPartNumber>().Where(x => x.WorkOrderId == workOrderId && x.IsDeleted == false).OrderBy(x => x.ID).ToList();
-                }
-                return workOrder;
+
+				}
+
+
+				return workOrder;
             }
             catch (Exception)
             {
