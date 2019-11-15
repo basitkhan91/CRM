@@ -2798,7 +2798,17 @@ namespace QuickApp.Pro.Controllers
         }
 
 
-    }
+
+		[HttpGet("customernameandcodesbyId")]
+		public IActionResult GetCustomerNameAndCodesByCustomerId(long customerId)
+		{
+			var custmoerNameAndCodes = _unitOfWork.Customer.GetCustomerNameAndCodesByCustomerId(customerId);
+			return Ok(custmoerNameAndCodes);
+
+		}
+
+
+	}
 }
 
 
