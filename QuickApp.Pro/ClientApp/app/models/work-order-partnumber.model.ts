@@ -7,10 +7,10 @@
         this.estimatedShipDate = '';
         this.customerRequestDate = '';
         this.estimatedCompletionDate = '';
-        this.nTE = '';
+        this.nte = '';
         this.quantity = 1;
         this.stockLineId = null;
-        this.cMMId = 0;
+        this.cmmId = 0;
         this.workflowId = 0;
         this.workOrderStageId = 1;
         this.workOrderStatusId = 1;
@@ -19,7 +19,8 @@
         this.isDER = false;
         this.techStationId = 0;
         this.tearDownReport = 0;
-        this.tATDaysStandard = 0;
+        this.tatDaysStandard = 0;
+        this.tatDaysCurrent = 0;
         this.technicianId = 0;
         this.mappingItemMasterId = null;
         this.conditionId = null;
@@ -43,10 +44,10 @@
     estimatedShipDate: string;
     customerRequestDate: string;
     estimatedCompletionDate: string;
-    nTE: string;
+    nte: string;
     quantity: number;
     stockLineId: number;
-    cMMId: number;
+    cmmId: number;
     workflowId: number;
     workOrderStageId: number;
     workOrderStatusId: number;
@@ -55,7 +56,8 @@
     isDER: boolean;
     techStationId: number;
     tearDownReport: number;
-    tATDaysStandard: number;
+    tatDaysCurrent : number;
+    tatDaysStandard: number;
     technicianId: number;
     mappingItemMasterId: number;
     conditionId: number;

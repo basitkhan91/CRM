@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit, Input } from '@angular/core';
 import { fadeInOut } from '../../../../services/animations';
 import { PageHeaderComponent } from '../../../../shared/page-header.component';
 import * as $ from 'jquery';
@@ -32,8 +32,9 @@ import {
   AllTasks
 } from '../../../../models/work-order-labor.modal';
 import { CommonService } from '../../../../services/common.service';
-import { validateRecordExistsOrNot, selectedValueValidate, getValueFromObjectByKey } from '../../../../generic/autocomplete';
+import { validateRecordExistsOrNot, selectedValueValidate, getValueFromObjectByKey, getObjectById } from '../../../../generic/autocomplete';
 import { AuthService } from '../../../../services/auth.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-work-order-add',
@@ -45,11 +46,23 @@ import { AuthService } from '../../../../services/auth.service';
 export class WorkOrderAddComponent implements OnInit {
   // workOrder: WorkOrder;
   // workOrderPartNumbers: WorkOrderPartNumber[];
-  workOrderTypes: WorkOrderType[];
-  workOrderStatusList: any;
-  workScopesList: any;
-  workOrderStagesList: any;
-  creditTerms: any;
+
+  @Input() isEdit;
+  @Input() workOrderTypes;
+  @Input() workOrderStatusList;
+  @Input() creditTerms;
+  @Input() employeesOriginalData;
+  @Input() workScopesList;
+  @Input() workOrderStagesList;
+  @Input() priorityList;
+  @Input() partNumberOriginalData;
+  @Input() workOrderGeneralInformation;
+
+  // workOrderTypes: WorkOrderType[];
+  // workOrderStatusList: any;
+  // workScopesList: any;
+  // workOrderStagesList: any;
+  // creditTerms: any;
   // customers: Customer[];
   selectedCustomer: Customer;
   selectedEmployee: any;
@@ -60,7 +73,7 @@ export class WorkOrderAddComponent implements OnInit {
   filteredCustomerCode: any[];
   employeeNames: any[];
   filteredEmployeeNames: any[];
-  employeesOriginalData: any;
+  // employeesOriginalData: any;
   customersOriginalData: any;
   contactInfo: any;
   sourceVendor: any;
@@ -74,7 +87,7 @@ export class WorkOrderAddComponent implements OnInit {
   gridActiveTab: String = 'workFlow';
   subTabWorkFlow: String;
   // WorkOrder general Information Object Modal
-  workOrderGeneralInformation: workOrderGeneralInfo = new workOrderGeneralInfo();
+
   // Address Information Object Modal
   addresses: addressesForm;
   // Document Object Modal
@@ -102,13 +115,13 @@ export class WorkOrderAddComponent implements OnInit {
   salesPersonList: any[];
   technicianList: any[];
   partNumberList: any;
-  partNumberOriginalData: any;
-  revisedPartOriginalData: any;
-  revisedPartNumberList: any;
+  // partNumberOriginalData: any;
+  // revisedPartOriginalData: any;
+  // revisedPartNumberList: any;
   // stockLineList: any;
-  conditionList: any;
+  // conditionList: any;
   cmmList: any;
-  priorityList: Object;
+  // priorityList: Object;
   savedWorkOrderData: any;
   workFlowWorkOrderData: any;
   workOrderAssetList: any;
@@ -132,6 +145,7 @@ export class WorkOrderAddComponent implements OnInit {
     private stocklineService: StocklineService,
     private commonService: CommonService,
     private authService: AuthService,
+    private acRouter: ActivatedRoute
   ) {
     // this.workOrderPartNumbers = [];
     // this.workOrder = new WorkOrder();
@@ -141,22 +155,46 @@ export class WorkOrderAddComponent implements OnInit {
     this.moduleName = 'Work Order';
   }
 
-  ngOnInit(): void {
-    this.getAllGridModals();
+  async ngOnInit() {
+    // this.getAllGridModals();
     this.mpnFlag = true;
     this.isDetailedView = true;
     this.selectedCustomer = new Customer();
-    this.getAllWorkOrderTypes();
-    this.getAllWorkOrderStatus();
-    this.getAllCreditTerms();
-    // this.getAllCustomers();
-    this.getAllEmployees();
-    this.getAllWorkScpoes();
-    this.getAllWorkOrderStages();
-    this.getMultiplePartsNumbers();
-    this.getAllPriority();
+    // this.getAllWorkOrderTypes();
+    // this.getAllWorkOrderStatus();
+    // this.getAllCreditTerms();
+    // // this.getAllCustomers();
+    // this.getAllEmployees();
+    // this.getAllWorkScpoes();
+    // this.getAllWorkOrderStages();
+    // this.getMultiplePartsNumbers();
+    // this.getAllPriority();
     // this.getStockLines();
-    this.addMPN();
+    if (!this.isEdit) {
+
+      this.addMPN();
+    } else {
+      const data = this.workOrderGeneralInformation;
+      this.workOrderGeneralInformation = {
+        ...data,
+        partNumbers: data.partNumbers.map((x, index) => {
+
+          this.getRevisedpartNumberByItemMasterId(x.masterPartId, index);
+          this.getStockLineByItemMasterId(x.masterPartId, x.conditionId, index);
+          this.getConditionByItemMasterId(x.masterPartId, index);
+          return {
+            ...x,
+            masterPartId: getObjectById('itemMasterId', x.masterPartId, this.partNumberOriginalData),
+            mappingItemMasterId: getObjectById('mappingItemMasterId', x.mappingItemMasterId, this.getDynamicVariableData('revisedPartOriginalData', index)),
+
+
+          }
+
+        })
+      }
+    }
+
+
   }
 
   get userName(): string {
@@ -191,25 +229,27 @@ export class WorkOrderAddComponent implements OnInit {
 
 
 
-  getAllWorkOrderTypes(): void {
-    this.workOrderService.getAllWorkOrderTypes().subscribe(
-      result => {
-        this.workOrderTypes = result;
-      }
-    );
-  }
 
-  getAllWorkOrderStatus(): void {
-    this.commonService.smartDropDownList('WorkOrderStatus', 'ID', 'Description').subscribe(res => {
-      this.workOrderStatusList = res.sort(function (a, b) { return a.value - b.value; });
-    })
-  }
 
-  getAllCreditTerms(): void {
-    this.commonService.smartDropDownList('CreditTerms', 'CreditTermsId', 'Name').subscribe(res => {
-      this.creditTerms = res;
-    })
-  }
+  // getAllWorkOrderTypes(): void {
+  //   this.workOrderService.getAllWorkOrderTypes().subscribe(
+  //     result => {
+  //       this.workOrderTypes = result;
+  //     }
+  //   );
+  // }
+
+  // getAllWorkOrderStatus(): void {
+  //   this.commonService.smartDropDownList('WorkOrderStatus', 'ID', 'Description').subscribe(res => {
+  //     this.workOrderStatusList = res.sort(function (a, b) { return a.value - b.value; });
+  //   })
+  // }
+
+  // getAllCreditTerms(): void {
+  //   this.commonService.smartDropDownList('CreditTerms', 'CreditTermsId', 'Name').subscribe(res => {
+  //     this.creditTerms = res;
+  //   })
+  // }
 
   // getAllCustomers(): void {
   //   this.customerService.getAllCustomersInfo().subscribe(
@@ -239,11 +279,11 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
 
-  getAllEmployees(): void {
-    this.commonService.smartDropDownList('Employee', 'EmployeeId', 'FirstName').subscribe(res => {
-      this.employeesOriginalData = res;
-    })
-  }
+  // async getAllEmployees() {
+  //   await this.commonService.smartDropDownList('Employee', 'EmployeeId', 'FirstName').subscribe(res => {
+  //     this.employeesOriginalData = res;
+  //   })
+  // }
 
 
   filterEmployee(event): void {
@@ -284,30 +324,30 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
 
-  getAllWorkScpoes(): void {
-    this.workOrderService.getAllWorkScopes().subscribe(
-      result => {
-        this.workScopesList = result.map(x => {
-          return {
-            label: x.description,
-            value: x.workScopeId
-          }
-        })
-      }
-    );
-  }
+  // getAllWorkScpoes(): void {
+  //   this.workOrderService.getAllWorkScopes().subscribe(
+  //     result => {
+  //       this.workScopesList = result.map(x => {
+  //         return {
+  //           label: x.description,
+  //           value: x.workScopeId
+  //         }
+  //       })
+  //     }
+  //   );
+  // }
 
-  getAllWorkOrderStages(): void {
-    this.commonService.smartDropDownList('WorkOrderStage', 'ID', 'Description').subscribe(res => {
-      this.workOrderStagesList = res;
-    })
-  }
+  // getAllWorkOrderStages(): void {
+  //   this.commonService.smartDropDownList('WorkOrderStage', 'ID', 'Description').subscribe(res => {
+  //     this.workOrderStagesList = res;
+  //   })
+  // }
 
-  getAllPriority() {
-    this.commonService.smartDropDownList('Priority', 'PriorityId', 'Description').subscribe(res => {
-      this.priorityList = res;
-    })
-  }
+  // getAllPriority() {
+  //   this.commonService.smartDropDownList('Priority', 'PriorityId', 'Description').subscribe(res => {
+  //     this.priorityList = res;
+  //   })
+  // }
 
 
 
@@ -467,14 +507,11 @@ export class WorkOrderAddComponent implements OnInit {
 
 
   // grid Service Calls
-  getMultiplePartsNumbers() {
-    this.workOrderService.getMultipleParts().subscribe(res => {
-      this.partNumberOriginalData = res;
-    })
-    // this.commonService.getItemMasterDetails().subscribe(res => {
-    //   this.partNumberOriginalData = res;
-    // })
-  }
+  // getMultiplePartsNumbers() {
+  //   this.workOrderService.getMultipleParts().subscribe(res => {
+  //     this.partNumberOriginalData = res;
+  //   })
+  // }
 
   filterPartNumber(event) {
     this.partNumberList = this.partNumberOriginalData;
@@ -488,7 +525,7 @@ export class WorkOrderAddComponent implements OnInit {
     }
   }
 
-  onSelectedPartNumber(object, currentRecord) {
+  onSelectedPartNumber(object, currentRecord, index) {
     console.log('Sample PN');
 
 
@@ -501,9 +538,9 @@ export class WorkOrderAddComponent implements OnInit {
 
     // const { conditionId } = currentRecord;
 
-    this.getRevisedpartNumberByItemMasterId(itemMasterId)
+    this.getRevisedpartNumberByItemMasterId(itemMasterId, index)
     // this.getStockLineByItemMasterId(itemMasterId)
-    this.getConditionByItemMasterId(itemMasterId)
+    this.getConditionByItemMasterId(itemMasterId, index)
     this.getPartPublicationByItemMasterId(itemMasterId)
     currentRecord.description = object.partDescription
     currentRecord.nTE = object.nte;
@@ -528,19 +565,21 @@ export class WorkOrderAddComponent implements OnInit {
   // }
 
 
-  async  getRevisedpartNumberByItemMasterId(itemMasterId) {
+  async  getRevisedpartNumberByItemMasterId(itemMasterId, index) {
 
     await this.workOrderService.getRevisedPartNumbers(itemMasterId).subscribe(res => {
-      this.revisedPartOriginalData = res;
+      this['revisedPartOriginalData' + index] = res;
+      console.log(this['revisedPartOriginalData' + index]);
+
     })
 
   }
-  async getStockLineByItemMasterId(workOrderPart) {
-    const { conditionId } = workOrderPart;
-    const { itemMasterId } = workOrderPart.masterPartId;
-    if (itemMasterId !== 0 && conditionId !== 0) {
+  async getStockLineByItemMasterId(itemMasterId, conditionId, index) {
+    // const { conditionId } = workOrderPart;
+    // const { itemMasterId } = workOrderPart.masterPartId;
+    if (itemMasterId !== 0 && conditionId !== null) {
       await this.workOrderService.getStockLineByItemMasterId(itemMasterId, conditionId).subscribe(res => {
-        this.stockLineList = res.map(x => {
+        this['stockLineList' + index] = res.map(x => {
           return {
             label: x.stockLineNumber,
             value: x.stockLineId,
@@ -550,6 +589,10 @@ export class WorkOrderAddComponent implements OnInit {
       })
     }
   }
+
+
+
+
   // async getStockLineByItemMasterId(workOrderPart) {
   //   const { conditionId } = workOrderPart;
   //   const { itemMasterId } = workOrderPart.masterPartId;
@@ -567,15 +610,28 @@ export class WorkOrderAddComponent implements OnInit {
   //   }
   // }
 
-  async getConditionByItemMasterId(itemMasterId) {
+  async getConditionByItemMasterId(itemMasterId, index) {
     await this.workOrderService.getConditionByItemMasterId(itemMasterId).subscribe(res => {
-      this.conditionList = res.map(x => {
+      this['conditionList' + index] = res.map(x => {
         return {
           label: x.description,
           value: x.conditionId,
         }
       })
     })
+  }
+  // getDynamicVariableData(variable, index) {
+  //   return this[variable + index];
+  // }
+  // getConditionDyVariable(variable, index) {
+  //   return this[variable + index];
+  // }
+  // getRevisedPNDyVariable(variable, index) {
+  //   return this[variable + index]
+  // }
+
+  getDynamicVariableData(variable, index) {
+    return this[variable + index]
   }
 
   async getPartPublicationByItemMasterId(itemMasterId) {
@@ -588,17 +644,23 @@ export class WorkOrderAddComponent implements OnInit {
 
 
 
-  filterRevisedPartNumber(event) {
-    this.revisedPartNumberList = this.revisedPartOriginalData;
+
+  filterRevisedPartNumber(event, index) {
+    this['revisedPartNumberList' + index] = this['revisedPartOriginalData' + index]
+    // this.revisedPartNumberList = this.revisedPartOriginalData;
 
     if (event.query !== undefined && event.query !== null) {
-      const partNumbers = [...this.revisedPartOriginalData.filter(x => {
+      const partNumbers = [...this['revisedPartOriginalData' + index].filter(x => {
 
         return x.revisedPartNo.toLowerCase().includes(event.query.toLowerCase())
       })]
-      this.revisedPartNumberList = partNumbers;
+      this['revisedPartNumberList' + index] = partNumbers;
     }
   }
+
+
+
+
 
 
   getSerialNoByStockLineId(workOrderPart) {
