@@ -93,7 +93,7 @@ export class PurchaseSetupComponent implements OnInit {
 	showInput: boolean = false;
 	partNumbers: any;
 	tempMemo: any;
-	checkAllPartsList: boolean;
+	///checkAllPartsList: boolean;
 	multiplePNDetails: boolean;
 	addressMemoLabel: string;
 	addressHeader: string;
@@ -248,7 +248,7 @@ export class PurchaseSetupComponent implements OnInit {
 		}
 
 		this.vendorCapesCols = [
-			{ field: 'vcId', header: 'VCID' },
+			//{ field: 'vcId', header: 'VCID' },
 			{ field: 'ranking', header: 'Ranking' },
 			{ field: 'partNumber', header: 'PN' },
 			{ field: 'partDescription', header: 'PN Description' },
