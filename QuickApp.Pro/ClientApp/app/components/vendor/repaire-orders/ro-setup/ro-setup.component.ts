@@ -94,7 +94,7 @@ export class RoSetupComponent implements OnInit {
 	showInput: boolean = false;
 	partNumbers: any;
 	tempMemo: any;
-	checkAllPartsList: boolean;
+	//checkAllPartsList: boolean;
 	multiplePNDetails: boolean;
 	addressMemoLabel: string;
 	addressHeader: string;
@@ -196,6 +196,7 @@ export class RoSetupComponent implements OnInit {
 	childIndex: number;
 	allCountriesList: any = [];
 	countriesList: any = [];
+	inputValidCheck: any;
 
 	/** ro-approval ctor */
 	constructor(private route: Router,
@@ -249,7 +250,7 @@ export class RoSetupComponent implements OnInit {
 		}
 
 		this.vendorCapesCols = [
-			{ field: 'vcId', header: 'VCID' },
+			//{ field: 'vcId', header: 'VCID' },
 			{ field: 'ranking', header: 'Ranking' },
 			{ field: 'partNumber', header: 'PN' },
 			{ field: 'partDescription', header: 'PN Description' },
@@ -826,8 +827,9 @@ export class RoSetupComponent implements OnInit {
 
 		if (this.createPOForm.invalid) { //invalid
 			//  $('.createPO-form input.ng-invalid, .createPO-form select.ng-invalid, .createPO-form p-calendar.ng-invalid input').addClass('border-red-clr');
-			//  $('.createPO-form input.ng-valid, .createPO-form select.ng-valid').removeClass('border-red-clr');
+			//  $('.createPO-form input.ng-valid, .createPO-form select.ng-valid').removeClass('border-red-clr');		
 			alert('Please enter required fields!');
+			this.inputValidCheck = true;
 		}
 		else {
 			// header save 

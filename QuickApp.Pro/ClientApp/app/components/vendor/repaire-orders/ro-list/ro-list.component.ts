@@ -74,7 +74,7 @@ export class RoListComponent implements OnInit {
     ngOnInit() {
         // this.getList();
         this.vendorCapesCols = [
-			{ field: 'vcId', header: 'VCID' },
+			//{ field: 'vcId', header: 'VCID' },
 			{ field: 'ranking', header: 'Ranking' },
 			{ field: 'partNumber', header: 'PN' },
 			{ field: 'partDescription', header: 'PN Description' },
