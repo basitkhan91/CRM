@@ -148,7 +148,7 @@ export class CreatePoComponent implements OnInit {
                     email: x.email === null ? '-' : x.email,
                     city: x.city === null ? '-' : x.city,
                     stateOrProvince: x.stateOrProvince === null ? '-' : x.stateOrProvince,
-                    postalCode: x.ps.postalCode === null ? '-' : x.ps.postalCode,                    
+                    //postalCode: x.ps.postalCode === null ? '-' : x.ps.postalCode,                    
                 }
             })
 		});

@@ -271,6 +271,7 @@ export class PolistComponent implements OnInit {
         });
     }
     getPOPartsViewById(poId) {
+        this.poPartsList = [];
         this.purchaseOrderService.getPOPartsViewById(poId).subscribe(res => {
             console.log(res);  
             res.map(x => {

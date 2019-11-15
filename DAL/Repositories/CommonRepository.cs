@@ -332,7 +332,7 @@ namespace DAL.Repositories
             }
         }
 
-        public List<RestrictedParts> GetRestrictedParts(int moduleId, long? referenceId, string partType)
+        public List<RestrictedParts> GetRestrictedParts(long moduleId, long? referenceId, string partType)
         {
             try
             {

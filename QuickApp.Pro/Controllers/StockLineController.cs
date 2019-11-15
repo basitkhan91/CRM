@@ -357,6 +357,7 @@ namespace QuickApp.Pro.Controllers
                 actionobject1.ShelfId = stockLineViewModel.ShelfId == 0 ? null : stockLineViewModel.ShelfId;
                 actionobject1.BinId = stockLineViewModel.BinId == 0 ? null : stockLineViewModel.BinId;
                 actionobject1.SiteId = stockLineViewModel.SiteId == 0 ? null : stockLineViewModel.SiteId;
+                actionobject1.LegalEntityId = stockLineViewModel.LegalEntityId == 0?null:stockLineViewModel.LegalEntityId;
                 actionobject1.ObtainFromType = stockLineViewModel.ObtainFromType;
                 actionobject1.OwnerType = stockLineViewModel.OwnerType;
                 actionobject1.TraceableToType = stockLineViewModel.TraceableToType;

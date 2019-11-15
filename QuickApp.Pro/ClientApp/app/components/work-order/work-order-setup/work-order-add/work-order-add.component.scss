@@ -86,6 +86,10 @@ textarea {
   font-size: 12px !important;
 }
 
+.isDisabled {
+  pointer-events: none;
+}
+
 // .ng-touched.ng-invalid {
 //   border-color: #ff586b;
 // }

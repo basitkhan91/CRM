@@ -110,15 +110,15 @@ export class VendorContactsComponent implements OnInit {
     isEditMode: boolean = false;
     isDeleteMode: boolean = false;
     vendorContactsColumns = [
-        { field: 'firstName', header: 'First Name' },
-        { field: 'lastName', header: 'Last Name' },
-        { field: 'contactTitle', header: 'Contact Title' },
-        { field: 'email', header: 'Email' },
-        { field: 'workPhone', header: 'Work Phone' },
-        { field: 'mobilePhone', header: 'Mobile Phone' },
-        { field: 'fax', header: 'Fax' },
-        { field: 'isDefaultContact', header: 'Primary Contact' },
-        { field: 'notes', header: 'Memo' }
+        { field: 'firstName', header: 'FIRST NAME' },
+        { field: 'lastName', header: 'LAST NAME' },
+        { field: 'contactTitle', header: 'CONTACT TITLE' },
+        { field: 'email', header: 'EMAIL' },
+        { field: 'workPhone', header: 'MOBILE PHONE' },
+        // { field: 'mobilePhone', header: 'Mobile Phone' },
+        { field: 'fax', header: 'FAX' },
+        // { field: 'isDefaultContact', header: 'Primary Contact' },
+        // { field: 'notes', header: 'Memo' }
         //{ field: 'updatedDate', header: 'Updated Date' },
         //{ field: 'createdDate', header: 'Created Date' }
     ];
@@ -401,6 +401,7 @@ export class VendorContactsComponent implements OnInit {
                 this.sourceVendor.updatedBy = this.userName;
                 this.sourceVendor.masterCompanyId = 1;
                 this.isDefault = this.sourceVendor.isDefaultContact;
+                this.sourceVendor.isDefaultContact = this.sourceVendor.isdefaultContact;
                 // before you commit make sure u don't have conlog, debug, commented code...
                 this.workFlowtService.newAddContactInfo(this.sourceVendor).subscribe(data => {
                     console.log(data)

@@ -478,9 +478,10 @@ export class VendorBillingInformationComponent {
     }
 
     previousClick() {
-        this.activeIndex = 3;
+        this.activeIndex = 4;
         this.workFlowtService.indexObj.next(this.activeIndex);
-        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
+        this.workFlowtService.changeStep('Shipping Information');
+        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-shipping-information');
     }
     openShipVia(content, rowData) {
         this.isEditMode = false;
@@ -595,8 +596,9 @@ export class VendorBillingInformationComponent {
         if (this.local) {
             this.workFlowtService.billingCollection = this.local;
         }
-        this.activeIndex = 5;
+        this.activeIndex = 7;
         this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.changeStep('Warnings');
         this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
     }
     handleChanges(rowData, e) {

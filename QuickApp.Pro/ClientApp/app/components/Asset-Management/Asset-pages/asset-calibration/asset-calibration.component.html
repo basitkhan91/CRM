@@ -36,7 +36,7 @@
                 <label class="control-label col-sm-4">Calibration Required</label>
                 <div class="col-sm-7">
                     <input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}"
-                        [(ngModel)]="calibrationRequired">
+                        [(ngModel)]="currentCalibration.calibrationRequired">
                 </div>
             </div>
 
@@ -44,25 +44,25 @@
                 <label class="control-label col-sm-4">Certification Required</label>
                 <div class="col-sm-7">
                     <input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}"
-                        [(ngModel)]="certificationRequired">
+                        [(ngModel)]="currentCalibration.certificationRequired">
                 </div>
             </div>
             <div class="form-group col-sm-12">
                 <label class="control-label col-sm-4">Inspection Required</label>
                 <div class="col-sm-7">
                     <input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}"
-                        [(ngModel)]="inspectionRequired">
+                        [(ngModel)]="currentCalibration.inspectionRequired">
                 </div>
             </div>
             <div class="form-group col-sm-12">
                 <label class="control-label col-sm-4">Verification Required</label>
                 <div class="col-sm-7">
                     <input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}"
-                        [(ngModel)]="verificationRequired">
+                        [(ngModel)]="currentCalibration.verificationRequired">
                 </div>
             </div>
             <!--added checks ended-->
-            <div *ngIf="calibrationRequired">
+            <div *ngIf="currentCalibration.calibrationRequired">
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Calibration Frequency</label>
                     <div class="col-sm-7">
@@ -130,7 +130,7 @@
                 </div>
                 <div class="clear"></div>
             </div>
-            <div *ngIf="certificationRequired">
+            <div *ngIf="currentCalibration.certificationRequired">
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Certification Frequency</label>
                     <div class="col-sm-7">
@@ -196,7 +196,7 @@
                 </div>
                 <div class="clear"></div>
             </div>
-            <div *ngIf="inspectionRequired">
+            <div *ngIf="currentCalibration.inspectionRequired">
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Inspection Frequency</label>
                     <div class="col-sm-7">
@@ -262,7 +262,7 @@
                 </div>
                 <div class="clear"></div>
             </div>
-            <div *ngIf="verificationRequired">
+            <div *ngIf="currentCalibration.verificationRequired">
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Verification Frequency</label>
                     <div class="col-sm-7">

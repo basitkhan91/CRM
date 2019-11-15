@@ -142,6 +142,7 @@
 					<input type="text" *ngIf="col.field !== 'openDate' && col.field !== 'closedDate'" style="width:100%;" pInputText (keyup)="onChangeInputField($event.target.value, col.field)">
 					<input type="date" *ngIf="col.field == 'openDate'" name="openDate" style="width:100%;" (change)="onChangeInputField($event.target.value, col.field)">
 					<input type="date" *ngIf="col.field == 'closedDate'" name="closedDate" style="width:100%;" (change)="onChangeInputField($event.target.value, col.field)">
+					<!-- <p-calendar [showIcon]="true" *ngIf="col.field == 'closedDate'"></p-calendar> -->
 				</th>
 				<!-- <th
 				  style="width:120px"
@@ -340,7 +341,7 @@
 										<div class="col-sm-3">
 												<p><span class="label"><b>Vendor Name: </b></span><span class="value">{{roHeaderAdd.vendorName ? roHeaderAdd.vendorName : '-'}}</span></p>
 												<p><span class="label"><b>Vendor Code: </b></span><span class="value">{{roHeaderAdd.vendorCode ? roHeaderAdd.vendorCode : '-'}}</span></p>
-												<p><span class="label"><b>Vendor Contact: </b></span><span class="value">{{roHeaderAdd.vendorContact ? roHeaderAdd.vendorContact : '-'}}</span></p>
+												<p><span class="label"><b>Vendor Contact: </b></span><span class="value">{{roHeaderAdd.contactName ? roHeaderAdd.contactName : '-'}}</span></p>
 												<p><span class="label"><b>Contact Phone: </b></span><span class="value">{{roHeaderAdd.workPhone ? roHeaderAdd.workPhone : '-'}}</span></p>
 												<p><span class="label"><b>Credit Limit & Terms: </b></span><span class="value">
 													{{roHeaderAdd.creditLimit ? roHeaderAdd.creditLimit : '-'}} &
@@ -396,7 +397,7 @@
 														</tr>
 													</thead>
 													<tbody>
-														<ng-container *ngFor="let partList of poPartsList">
+														<ng-container *ngFor="let partList of roPartsList">
 															<tr class="parent-data">
 																<td>{{partList?.partNumber}}</td>
 																<td>{{partList?.altPartNumber}}</td>
@@ -444,11 +445,11 @@
 																<td>{{partChild?.userType}}</td>
 																<td>{{partChild?.user}}</td>
 																<td colspan="5">
-																	{{partChild.poPartSplitAddress1 ? partChild.poPartSplitAddress1 : ''}}, 
-																	{{partChild.poPartSplitCity ? partChild.poPartSplitCity : ''}},
-																	{{partChild.poPartSplitState ? partChild.poPartSplitState : ''}} ,
-																	{{partChild.poPartSplitPostalCode ? partChild.poPartSplitPostalCode : ''}}, 
-																	{{partChild.poPartSplitCountry ? partChild.poPartSplitCountry : ''}}</td>
+																	{{partChild.roPartSplitAddress1 ? partChild.roPartSplitAddress1 : ''}}, 
+																	{{partChild.roPartSplitCity ? partChild.roPartSplitCity : ''}},
+																	{{partChild.roPartSplitState ? partChild.roPartSplitState : ''}} ,
+																	{{partChild.roPartSplitPostalCode ? partChild.roPartSplitPostalCode : ''}}, 
+																	{{partChild.roPartSplitCountry ? partChild.roPartSplitCountry : ''}}</td>
 																<td>{{partList?.unitOfMeasure}}</td>
 																<td>{{partChild?.quantityOrdered}}</td>
 																<td>{{partChild?.needByDate}}</td>

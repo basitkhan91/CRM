@@ -18,7 +18,7 @@ namespace DAL.Repositories.Interfaces
 
         void CreateRestrictedParts(List<RestrictedParts> restrictedParts, long referenceId, int moduleId);
         void UpdateRestrictedParts(List<RestrictedParts> restrictedParts, long referenceId, int moduleId);
-        List<RestrictedParts> GetRestrictedParts(int moduleId, long? referenceId, string partType);
+        List<RestrictedParts> GetRestrictedParts(long moduleId, long? referenceId, string partType);
 
         void CreateCustomerTaxTypeRateMapping(List<CustomerTaxTypeRateMapping> customerTaxTypeRateMappings ,long referenceId);
 

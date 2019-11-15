@@ -61,15 +61,19 @@ export class VendorStepsPrimeNgComponent implements OnInit {
 
             this.activeMenuItem = 5;
             this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-shipping-information');
-        }
+		}
+		else if (value == 'Billing Information') {
+			this.activeMenuItem = 6;
+            this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-billing-information');
+		}
         else if (value == 'Warnings') {
 
-            this.activeMenuItem = 6;
+            this.activeMenuItem = 7;
             this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
         }
         else if (value == 'Documents') {
 
-            this.activeMenuItem = 7;
+            this.activeMenuItem = 8;
             this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-memo');
         }
     }

@@ -237,7 +237,7 @@ export class CustomerBillingInformationComponent {
 
 	getCustomerBillingHistory(rowData){
 	  const {customerBillingAddressId} = rowData;
-		this.customerService.getCustomerBillingHistory(customerBillingAddressId).subscribe(res => {
+		this.customerService.getCustomerBillingHistory(this.id, customerBillingAddressId).subscribe(res => {
 			this.billingHistoryData = res;
 		})
 	}

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Models
 {
@@ -37,5 +38,7 @@ namespace DAL.Models
 
 
 		public virtual MasterCompany MasterCompany { get; set; }
+        [NotMapped]
+        public Nullable<bool> IsDefaultContact { get; set; }
     }
 }

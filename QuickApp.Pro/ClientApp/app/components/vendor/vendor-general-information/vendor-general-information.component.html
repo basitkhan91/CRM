@@ -42,10 +42,10 @@
                                         Vendor Name
                                         <span class="clr-red">*</span>
                                     </label>
-                                    <p-autoComplete class="pautocomp-cstm" (onSelect)="onVendorselected($event)" (onKeyUp)="eventHandler($event)"
+                                    <p-autoComplete class="pautocomp-cstm" (onSelect)="onVendorselected($event)"
                                                     [(ngModel)]="sourceVendor.vendorName" name="vendorName"
                                                     [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
-                                                    [minLength]="1" [dropdown]="true" required>
+                                                    [minLength]="1" [dropdown]="true" required (onBlur)="checkVendorExist()">
                                         <ng-template let-vendorName pTemplate="item">
                                             <div class="ui-helper-clearfix">{{ vendorName }}</div>
                                         </ng-template>
@@ -262,13 +262,17 @@
                                                        data-toggle="modal" (click)="onAddCapabilities()"></i>
                                                 </span>
                                             </label>
-                                            <select class="form-control">
+                                            <select class="form-control"  [(ngModel)]="sourceVendor.CapabilityId">
+                                                <option *ngFor="let capabilty of dropDownVendorCapabilitiesList" [ngValue]="capabilty.value">  {{capabilty.label}}</option>
+					                        </select>
+                                           
+                                            <!--<select class="form-control">
                                                 <option>Select</option>
                                                 <option>Capabilities 1</option>
                                                 <option>Capabilities 2</option>
                                                 <option>Capabilities 3</option>
 
-                                            </select>
+                                            </select>-->
                                         </div>
                                         <div class="form-group">
                                             <label for="vendorname">
@@ -353,8 +357,8 @@
                             Update
                         </button>
 
-                        <button type="button" class="btn btn-primary-cstm pull-right " (click)="nextClick()" [disabled]="!generalForm.valid">
-                            Next
+                        <button type="button" class="btn btn-primary-cstm pull-right " (click)="editItemAndCloseModel('goNext')" [disabled]="!generalForm.valid || disableSaveVenderName">
+                            Save & Next
                         </button>
                     </div>
                 </div>
@@ -368,7 +372,6 @@
 <!--<div *ngIf="checkAddress">
         <p-gmap [options]="options" [overlays]="overlays" [style]="{'width':'100%','height':'320px'}" ></p-gmap>
 </div>-->
-
 <!--<div id="addIntergation" class="modal fade" role="dialog">
     <div class="modal-dialog">
 

@@ -1,7 +1,7 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { AssetService } from '../../../../services/asset/Assetservice';
 import { VendorService } from '../../../../services/vendor.service';
-import { AlertService } from '../../../../services/alert.service';
+//import { AlertService } from '../../../../services/alert.service';
 import { Vendor } from '../../../../models/vendor.model';
 import { AuthService } from '../../../../services/auth.service';
 import { GlAccount } from '../../../../models/GlAccount.model';
@@ -9,6 +9,7 @@ import { GlAccountService } from '../../../../services/glAccount/glAccount.servi
 import { Router } from '@angular/router';
 import { Currency } from '../../../../models/currency.model';
 import { CurrencyService } from '../../../../services/currency.service';
+import { AlertService, DialogType, MessageSeverity } from '../../../../services/alert.service';
 
 @Component({
     selector: 'app-asset-calibration',
@@ -208,14 +209,14 @@ export class AssetCalibrationComponent implements OnInit {
                 this.currentCalibration.verificationCurrencyId = null;
                 this.currentCalibration.verificationGlAccountId = null;
                 this.currentCalibration.verificationMemo = null;
-            }
-            
+            }            
             this.currentCalibration.updatedBy = this.userName;
             this.currentCalibration.masterCompanyId = 1; 
             this.assetService.updateAsset(this.currentCalibration).subscribe(data => {               
                 this.currentCalibration.updatedBy = this.userName;
                 this.localCollection = data;
-                this.alertService.showMessage('Asset calibration updated successfully.');
+                //this.alertService.showMessage('Asset calibration updated successfully.');
+                this.alertService.showMessage("Success", `Asset calibration updated successfully.`, MessageSeverity.success);
                 //this.activeIndex = 2;
                 this.activeIndex = 3;
                 this.assetService.indexObj.next(this.activeIndex);

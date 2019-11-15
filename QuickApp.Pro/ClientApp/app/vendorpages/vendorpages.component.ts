@@ -57,7 +57,7 @@ export class VendorpagesComponent {
 		
 	}
     loadmethod(url) {
-        this.isVisible = true;
+        this.isVisible = false;
 		this.currentUrl = url;
 		if (this.currentUrl) {
 			if (this.currentUrl == '/vendorsmodule/vendorpages/app-vendors-list') {
@@ -73,6 +73,7 @@ export class VendorpagesComponent {
 					{ label: 'Vendor', url: '/vendorsmodule/vendorpages/app-vendors-list' },
 					{ label: 'Vendor'+"'"+' General Information' }
 				];
+				this.isVisible = true;
 			}
 
 			else if (this.currentUrl == '/vendorsmodule/vendorpages/app-vendor-contacts') {
@@ -80,6 +81,7 @@ export class VendorpagesComponent {
 					{ label: 'Vendor', url: '/vendorsmodule/vendorpages/app-vendors-list'},
 					{ label: 'Contacts' }
 				];
+				this.isVisible = true;
 			}
 
 			else if (this.currentUrl == '/vendorsmodule/vendorpages/app-vendor-financial-information') {
@@ -87,6 +89,7 @@ export class VendorpagesComponent {
 					{ label: 'Vendor', url: '/vendorsmodule/vendorpages/app-vendors-list' },
 					{ label: 'Financial Information' }
 				];
+				this.isVisible = true;
 			}
 
 			else if (this.currentUrl == '/vendorsmodule/vendorpages/app-vendor-payment-information') {
@@ -94,19 +97,22 @@ export class VendorpagesComponent {
 					{ label: 'Vendor', url: '/vendorsmodule/vendorpages/app-vendors-list' },
 					{ label: 'Payment Information' }
 				];
+				this.isVisible = true;
 			}
 
             else if (this.currentUrl == '/vendorsmodule/vendorpages/app-vendor-billing-information') {
                 this.items = [
                     { label: 'Vendor', url: '/vendorsmodule/vendorpages/app-vendors-list' },
                     { label: 'Billing Information' }
-                ];
+				];
+				this.isVisible = true;
             }
 			else if (this.currentUrl == '/vendorsmodule/vendorpages/app-vendor-shipping-information') {
 				this.items = [
 					{ label: 'Vendor', url: '/vendorsmodule/vendorpages/app-vendors-list' },
 					{ label: 'Shipping Information' }
 				];
+				this.isVisible = true;
 			}
 
 			else if (this.currentUrl == '/vendorsmodule/vendorpages/app-vendor-warnings')
@@ -115,6 +121,7 @@ export class VendorpagesComponent {
 					{ label: 'Vendor', url: '/vendorsmodule/vendorpages/app-vendors-list' },
 					{ label: 'Warnings' }
 				];
+				this.isVisible = true;
 			}
 
 			else if (this.currentUrl == '/vendorsmodule/vendorpages/app-vendor-memo') {
@@ -122,6 +129,7 @@ export class VendorpagesComponent {
 					{ label: 'Vendor' },
 					{ label: 'Memo' }
 				];
+				this.isVisible = true;
 			}
 
 			else if (this.currentUrl == '/vendorsmodule/vendorpages/app-vendor-emails') {

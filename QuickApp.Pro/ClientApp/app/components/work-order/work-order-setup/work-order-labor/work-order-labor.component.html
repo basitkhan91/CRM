@@ -220,6 +220,7 @@
             <button
               class="btn btn-primary-cstm start-btn"
               (click)="startandStop(rec)"
+              [disabled]="(rec.startDate && rec.endDate) !== null"
             >
               Start/Stop
             </button>
@@ -231,13 +232,20 @@
               [showIcon]="true"
               showTime="true"
               hourFormat="24"
+              [minDate]="minDateValue"
+              (onSelect)="resetEndDateandTime(rec)"
+              (onClose)="calculateWorkingHoursandMins(rec)"
               class="w150 pcalendar-wo-labor"
             ></p-calendar>
             <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(rec,'startDateandTimeIsEdit')"></i>
           </td>
             <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
-            <p-calendar [(ngModel)]="rec.endDate" [disabled]="!rec.endDateandTimeIsEdit" [showIcon]="true" showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"></p-calendar>
+            <p-calendar [(ngModel)]="rec.endDate" [disabled]="!rec.endDateandTimeIsEdit" [showIcon]="true" 
+            showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"  
+            [minDate]="rec.startDate"
+            (onClose)="calculateWorkingHoursandMins(rec)"
+            ></p-calendar>
           <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(rec,'endDateandTimeIsEdit')"></i>            
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
@@ -295,7 +303,9 @@
               ></p-dropdown>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' && laborForm.hoursorClockorScan !== 'scan'">
-            <button class="btn btn-primary-cstm start-btn" (click)="startandStop(inspect)">
+            <button class="btn btn-primary-cstm start-btn" (click)="startandStop(inspect)" 
+            [disabled]="(inspect.startDate && inspect.endDate) !== null"
+            >
               Start/Stop
             </button>
           </td>
@@ -304,6 +314,9 @@
             <p-calendar [(ngModel)]="inspect.startDate"
             [disabled]="!inspect.startDateandTimeIsEdit"
              [showIcon]="true" showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"
+             [minDate]="minDateValue"
+             (onSelect)="resetEndDateandTime(inspect)"
+             (onClose)="calculateWorkingHoursandMins(inspect)"
             ></p-calendar>
             <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(inspect,'startDateandTimeIsEdit')"></i>
           </td>
@@ -313,6 +326,8 @@
             [disabled]="!inspect.endDateandTimeIsEdit" 
             [(ngModel)]="inspect.endDate" [showIcon]="true" showTime="true" 
             hourFormat="24" class="w150 pcalendar-wo-labor"
+            [minDate]="inspect.startDate"
+            (onClose)="calculateWorkingHoursandMins(inspect)"
             ></p-calendar>
             <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(inspect,'endDateandTimeIsEdit')"></i> 
           </td>
@@ -371,7 +386,9 @@
               ></p-dropdown>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' && laborForm.hoursorClockorScan !== 'scan'">
-            <button class="btn btn-primary-cstm start-btn" (click)="startandStop(evaluate)">
+            <button class="btn btn-primary-cstm start-btn" (click)="startandStop(evaluate)"   
+            [disabled]="(evaluate.startDate && evaluate.endDate) !== null"
+            >
               Start/Stop
             </button>
           </td>
@@ -379,14 +396,22 @@
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
             <p-calendar [(ngModel)]="evaluate.startDate"  [disabled]="!evaluate.startDateandTimeIsEdit" [showIcon]="true"
-             showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"></p-calendar>
+             showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"
+             [minDate]="minDateValue"
+             (onSelect)="resetEndDateandTime(evaluate)"
+             (onClose)="calculateWorkingHoursandMins(evaluate)"
+             ></p-calendar>
              <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(evaluate,'startDateandTimeIsEdit')"></i>  
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
             <p-calendar [(ngModel)]="evaluate.endDate"
               [disabled]="!evaluate.endDateandTimeIsEdit" 
-                [showIcon]="true" showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"></p-calendar>
+                [showIcon]="true" showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor" 
+                [minDate]="evaluate.startDate"
+                (onClose)="calculateWorkingHoursandMins(evaluate)"
+                
+                ></p-calendar>
             <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(evaluate,'endDateandTimeIsEdit')"></i>  
           </td>
 
@@ -444,7 +469,9 @@
 
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' && laborForm.hoursorClockorScan !== 'scan'">
-            <button class="btn btn-primary-cstm start-btn" (click)="startandStop(teardown)">
+            <button class="btn btn-primary-cstm start-btn" (click)="startandStop(teardown)" 
+            [disabled]="(teardown.startDate && teardown.endDate) !== null"
+            >
               Start/Stop
             </button>
           </td>
@@ -453,7 +480,12 @@
             <p-calendar [(ngModel)]="teardown.startDate" 
             [showIcon]="true" showTime="true"
             [disabled]="!teardown.startDateandTimeIsEdit"
-            hourFormat="24" class="w150 pcalendar-wo-labor"></p-calendar>
+            hourFormat="24" class="w150 pcalendar-wo-labor"
+            [minDate]="minDateValue"
+            (onSelect)="resetEndDateandTime(teardown)"
+            (onClose)="calculateWorkingHoursandMins(teardown)"
+            
+            ></p-calendar>
            
             <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(teardown,'startDateandTimeIsEdit')"></i>
           </td>
@@ -462,7 +494,10 @@
             <p-calendar [(ngModel)]="teardown.endDate" 
             [showIcon]="true" showTime="true" hourFormat="24" 
             [disabled]="!teardown.endDateandTimeIsEdit" 
-            class="w150 pcalendar-wo-labor"></p-calendar>
+            class="w150 pcalendar-wo-labor" 
+            [minDate]="teardown.startDate"
+            (onClose)="calculateWorkingHoursandMins(teardown)"
+            ></p-calendar>
             <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(teardown,'endDateandTimeIsEdit')"></i> 
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
@@ -521,7 +556,9 @@
               ></p-dropdown>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' && laborForm.hoursorClockorScan !== 'scan'">
-            <button class="btn btn-primary-cstm start-btn" (click)="startandStop(disassemble)">
+            <button class="btn btn-primary-cstm start-btn" (click)="startandStop(disassemble)" 
+            [disabled]="(disassemble.startDate && disassemble.endDate) !== null"
+            >
               Start/Stop
             </button>
           </td>
@@ -529,7 +566,12 @@
           
             <p-calendar [(ngModel)]="disassemble.startDate" 
             [disabled]="!disassemble.startDateandTimeIsEdit"
-            [showIcon]="true" showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"></p-calendar>
+            [showIcon]="true" showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"
+            [minDate]="minDateValue"
+            (onSelect)="resetEndDateandTime(disassemble)"
+            (onClose)="calculateWorkingHoursandMins(disassemble)"
+            
+            ></p-calendar>
            
             <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(disassemble,'startDateandTimeIsEdit')"></i>
           </td>
@@ -538,7 +580,10 @@
             <p-calendar [(ngModel)]="disassemble.endDate" 
             [disabled]="!disassemble.endDateandTimeIsEdit" 
             [showIcon]="true" showTime="true" hourFormat="24" 
-            class="w150 pcalendar-wo-labor"></p-calendar>
+            class="w150 pcalendar-wo-labor" 
+            [minDate]="disassemble.startDate"
+            (onClose)="calculateWorkingHoursandMins(disassemble)"
+            ></p-calendar>
             <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(disassemble,'endDateandTimeIsEdit')"></i>  
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
@@ -594,14 +639,22 @@
               ></p-dropdown>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' && laborForm.hoursorClockorScan !== 'scan'">
-            <button class="btn btn-primary-cstm start-btn" (click)="startandStop(assemble)">
+            <button class="btn btn-primary-cstm start-btn" (click)="startandStop(assemble)"   
+            
+            [disabled]="(assemble.startDate && assemble.endDate) !== null"
+            >
               Start/Stop
             </button>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
             <p-calendar [(ngModel)]="assemble.startDate" 
             [disabled]="!assemble.startDateandTimeIsEdit"
-            [showIcon]="true" showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"></p-calendar>
+            [showIcon]="true" showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"
+            
+            [minDate]="minDateValue"
+            (onSelect)="resetEndDateandTime(assemble)"
+            (onClose)="calculateWorkingHoursandMins(assemble)"
+            ></p-calendar>
 
             <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(assemble,'startDateandTimeIsEdit')"></i>
           </td>
@@ -609,7 +662,10 @@
           
             <p-calendar [(ngModel)]="assemble.endDate" 
             [disabled]="!assemble.endDateandTimeIsEdit" 
-            [showIcon]="true" showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"></p-calendar>
+            [showIcon]="true" showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"
+            [minDate]="assemble.startDate"
+            (onClose)="calculateWorkingHoursandMins(assemble)"
+            ></p-calendar>
          
             <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(assemble,'endDateandTimeIsEdit')"></i>  
 
@@ -669,7 +725,9 @@
               ></p-dropdown>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' && laborForm.hoursorClockorScan !== 'scan'">
-            <button class="btn btn-primary-cstm start-btn" (click)="startandStop(testing)">
+            <button class="btn btn-primary-cstm start-btn" (click)="startandStop(testing)" 
+            [disabled]="(testing.startDate && testing.endDate) !== null"
+            >
               Start/Stop
             </button>
           </td>
@@ -678,13 +736,21 @@
           
             <p-calendar [(ngModel)]="testing.startDate" 
             [disabled]="!testing.startDateandTimeIsEdit"
-            [showIcon]="true" showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"></p-calendar>
+            [showIcon]="true" showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"
+            [minDate]="minDateValue"
+            (onSelect)="resetEndDateandTime(testing)"
+            (onClose)="calculateWorkingHoursandMins(testing)"
+            
+            ></p-calendar>
             <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(testing,'startDateandTimeIsEdit')"></i>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
             <p-calendar [(ngModel)]="testing.endDate" 
             [disabled]="!testing.endDateandTimeIsEdit" 
-            [showIcon]="true" showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"></p-calendar>
+            [showIcon]="true" showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"
+            [minDate]="testing.startDate"
+            (onClose)="calculateWorkingHoursandMins(testing)"
+            ></p-calendar>
          
             <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(testing,'endDateandTimeIsEdit')"></i>  
           </td>
@@ -742,7 +808,10 @@
               ></p-dropdown>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' && laborForm.hoursorClockorScan !== 'scan'">
-            <button class="btn btn-primary-cstm start-btn" (click)="startandStop(qc)">
+            <button class="btn btn-primary-cstm start-btn" (click)="startandStop(qc)" 
+            
+            [disabled]="(qc.startDate && qc.endDate) !== null"
+            >
               Start/Stop
             </button>
           </td>
@@ -750,7 +819,11 @@
           
             <p-calendar [(ngModel)]="qc.startDate" 
             [disabled]="!qc.startDateandTimeIsEdit"
-            [showIcon]="true" showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"></p-calendar>
+            [showIcon]="true" showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"
+            [minDate]="minDateValue"
+            (onSelect)="resetEndDateandTime(qc)"
+            (onClose)="calculateWorkingHoursandMins(qc)"
+            ></p-calendar>
         
             <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(qc,'startDateandTimeIsEdit')"></i>
 
@@ -759,7 +832,11 @@
           
             <p-calendar [(ngModel)]="qc.endDate"
             [disabled]="!qc.endDateandTimeIsEdit" 
-             [showIcon]="true" showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"></p-calendar>
+             [showIcon]="true" showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"
+             [minDate]="qc.startDate"
+             (onClose)="calculateWorkingHoursandMins(qc)"
+             
+             ></p-calendar>
              <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(qc,'endDateandTimeIsEdit')"></i> 
           </td>
 
@@ -818,21 +895,32 @@
               ></p-dropdown>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' && laborForm.hoursorClockorScan !== 'scan'">
-            <button class="btn btn-primary-cstm start-btn" (click)="startandStop(ship)">
+            <button class="btn btn-primary-cstm start-btn" (click)="startandStop(ship)"   
+            [disabled]="(ship.startDate && ship.endDate) !== null"
+            >
               Start/Stop
             </button>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
             <p-calendar [(ngModel)]="ship.startDate" 
             [disabled]="!ship.startDateandTimeIsEdit"
-            [showIcon]="true" showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"></p-calendar>
+            [showIcon]="true" showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"
+            
+            [minDate]="minDateValue"
+            (onSelect)="resetEndDateandTime(ship)"
+            (onClose)="calculateWorkingHoursandMins(ship)"
+            ></p-calendar>
             <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(ship,'startDateandTimeIsEdit')"></i>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
           
             <p-calendar [(ngModel)]="ship.endDate"    
             [disabled]="!ship.endDateandTimeIsEdit"  
-            [showIcon]="true" showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"></p-calendar>
+            [showIcon]="true" showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"
+            [minDate]="ship.startDate"
+            (onClose)="calculateWorkingHoursandMins(ship)"
+            
+            ></p-calendar>
            <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(ship,'endDateandTimeIsEdit')"></i>  
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
@@ -891,20 +979,33 @@
               ></p-dropdown>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' && laborForm.hoursorClockorScan !== 'scan'">
-            <button class="btn btn-primary-cstm start-btn" (click)="startandStop(clean)">
+            <button class="btn btn-primary-cstm start-btn" (click)="startandStop(clean)"  
+            
+            [disabled]="(clean.startDate && clean.endDate) !== null"
+            >
               Start/Stop
             </button>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
             <p-calendar [(ngModel)]="clean.startDate" 
             [disabled]="!clean.startDateandTimeIsEdit"
-            [showIcon]="true" showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"></p-calendar>
+            [showIcon]="true" showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor" 
+            
+
+            [minDate]="minDateValue"
+            (onSelect)="resetEndDateandTime(clean)"
+            (onClose)="calculateWorkingHoursandMins(clean)"
+            ></p-calendar>
             <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(clean,'startDateandTimeIsEdit')"></i>
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
             <p-calendar [(ngModel)]="clean.endDate" 
             [disabled]="!clean.endDateandTimeIsEdit" 
-            [showIcon]="true" showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"></p-calendar>
+            [showIcon]="true" showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"
+            [minDate]="clean.startDate"
+            (onClose)="calculateWorkingHoursandMins(clean)"
+            
+            ></p-calendar>
             <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(clean,'endDateandTimeIsEdit')"></i>  
           </td>
           <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">

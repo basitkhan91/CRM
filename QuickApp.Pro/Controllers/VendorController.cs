@@ -5,12 +5,16 @@ using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using QuickApp.Pro.Helpers;
 using QuickApp.Pro.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Text;
+using System.Threading.Tasks;
 using RepairOrderPartDto = QuickApp.Pro.ViewModels.RepairOrderPartDto;
 
 namespace QuickApp.Pro.Controllers
@@ -24,14 +28,15 @@ namespace QuickApp.Pro.Controllers
         readonly ILogger _logger;
         readonly IEmailer _emailer;
         private const string GetActionByIdActionName = "GetActionById";
+        private readonly IOptions<SmtpConfig> _smtpConfig;
 
-
-        public VendorController(IUnitOfWork unitOfWork, ILogger<VendorController> logger, IEmailer emailer, ApplicationDbContext context)
+        public VendorController(IUnitOfWork unitOfWork, ILogger<VendorController> logger, IEmailer emailer, ApplicationDbContext context, IOptions<SmtpConfig> smtpConfig)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
             _emailer = emailer;
             _context = context;
+            _smtpConfig = smtpConfig;
         }
 
         // GET: api/values
@@ -121,7 +126,9 @@ namespace QuickApp.Pro.Controllers
 
         public IActionResult rolist()
         {
-            var allActions = _context.RepairOrder.OrderByDescending(c => c.RepairOrderId).ToList(); //.GetAllCustomersData();
+            var allActions = _context.RepairOrder
+                .Where(x => x.IsDeleted == false)
+                .OrderByDescending(c => c.RepairOrderId).ToList(); 
             return Ok(allActions);
 
         }
@@ -853,6 +860,29 @@ namespace QuickApp.Pro.Controllers
                         poPartSplit.PurchaseOrderPartRecordId = popSplitEnt.PurchaseOrderPartRecordId;
                     }
                 }
+
+
+                if(poViewModels!=null && poViewModels.Count()>0)
+                {
+                    var statusId = (from po in _context.PurchaseOrder.Where(p => p.PurchaseOrderId == poViewModels.FirstOrDefault().PurchaseOrderId)
+                                select new {
+                                    po.StatusId
+                                }).FirstOrDefault().StatusId;
+
+                    if (statusId != null && statusId == 1)
+                    {
+                        string lintText = "more details.";
+                        SendPoEmail(poViewModels.FirstOrDefault().PurchaseOrderId, "Your Purchase Order has been created successfully", "PO Initiator", _smtpConfig.Value.POInitiatorEmail, "Purchase Order Creation -", lintText);
+                    }
+                    else if(statusId != null && statusId == 2)
+                    {
+                        string lintText = "Approve.";
+                        
+                        SendPoEmail(poViewModels.FirstOrDefault().PurchaseOrderId,"Purchase Order requires your approval","PO Approver", _smtpConfig.Value.POApproverEmail, "Purchase Order Approval -", lintText);
+                    }
+                }
+                
+
                 return Ok(poViewModels);
             }
             return Ok(ModelState);
@@ -876,7 +906,10 @@ namespace QuickApp.Pro.Controllers
                     repairOrderModel = FillRepairOrder(repairOrderModel, roViewModel);
                     repairOrderModel.UpdatedDate = DateTime.Now;
                     repairOrderModel.UpdatedBy = roViewModel.UpdatedBy;
-                    repairOrderModel.IsActive = roViewModel.IsActive;
+                    if (roViewModel.IsActive != null)
+                    {
+                        repairOrderModel.IsActive = roViewModel.IsActive;
+                    }
                     repairOrderModel.IsDeleted = roViewModel.IsDeleted;
                     _context.SaveChanges();
                     return Ok(repairOrderModel);
@@ -975,7 +1008,6 @@ namespace QuickApp.Pro.Controllers
             repairOrderModel.BillToPostalCode = roViewModel.BillToPostalCode;
             repairOrderModel.BillToCountry = roViewModel.BillToCountry;
 
-
             return repairOrderModel;
         }
 
@@ -998,7 +1030,7 @@ namespace QuickApp.Pro.Controllers
                 var returnObjects = new List<RepairOrderPartDto>();
                 foreach (var roViewModel in roViewModels)
                 {
-                    if (_context.RepairOrderPart.Any(o => o.RepairOrderId == roViewModel.RepairOrderId))
+                    if (_context.RepairOrderPart.Any(o => o.RepairOrderPartRecordId == roViewModel.RepairOrderPartRecordId))
                     {
                         var roPartModel = _context.RepairOrderPart
                                                 .Where(a => a.RepairOrderPartRecordId == roViewModel.RepairOrderPartRecordId)
@@ -1412,7 +1444,7 @@ namespace QuickApp.Pro.Controllers
                 contactObj.ContactId = contactViewModel.ContactId;
                 contactObj.ContactTitle = contactViewModel.ContactTitle;
                 contactObj.AlternatePhone = contactViewModel.AlternatePhone;
-                // contactObj.IsDefaultContact = contactViewModel.IsDefaultContact;
+                contactObj.IsDefaultContact = contactViewModel.IsDefaultContact;
                 contactObj.Email = contactViewModel.Email;
                 contactObj.Prefix = contactViewModel.Prefix;
                 contactObj.Suffix = contactViewModel.Suffix;
@@ -1432,6 +1464,7 @@ namespace QuickApp.Pro.Controllers
                 contactObj.UpdatedDate = DateTime.Now;
                 contactObj.CreatedBy = contactViewModel.CreatedBy;
                 contactObj.UpdatedBy = contactViewModel.UpdatedBy;
+                contactObj.WorkPhoneExtn = contactViewModel.WorkPhoneExtn;
                 _unitOfWork.ContactRepository.Add(contactObj);
                 _unitOfWork.SaveChanges();
                 return Ok(contactObj);
@@ -1593,6 +1626,7 @@ namespace QuickApp.Pro.Controllers
                 contactObj.UpdatedDate = DateTime.Now;
                 contactObj.CreatedBy = contactViewModel.CreatedBy;
                 contactObj.UpdatedBy = contactViewModel.UpdatedBy;
+                contactObj.WorkPhoneExtn = contactViewModel.WorkPhoneExtn;
                 _unitOfWork.ContactRepository.Update(contactObj);
                 _unitOfWork.SaveChanges();
 
@@ -2235,34 +2269,44 @@ namespace QuickApp.Pro.Controllers
                 if (vendorShippingViewModel == null)
                     return BadRequest($"{nameof(vendorShippingViewModel)} cannot be null");
                 var checkPaymentObj = _unitOfWork.VendorShippingAddress.GetSingleOrDefault(c => c.VendorShippingAddressId == id);
-                var addressObj = _unitOfWork.Address.GetSingleOrDefault(c => c.AddressId == vendorShippingViewModel.AddressId);
-                checkPaymentObj.IsActive = true;
 
-                checkPaymentObj.MasterCompanyId = 1;
-                checkPaymentObj.IsActive = vendorShippingViewModel.IsActive;
-                checkPaymentObj.SiteName = vendorShippingViewModel.SiteName;
-                checkPaymentObj.CreatedDate = DateTime.Now;
-                checkPaymentObj.UpdatedDate = DateTime.Now;
-                checkPaymentObj.CreatedBy = vendorShippingViewModel.CreatedBy;
-                checkPaymentObj.UpdatedBy = vendorShippingViewModel.UpdatedBy;
-                //checkPaymentObj.MasterCompanyId = vendorShippingViewModel.MasterCompanyId;
-                checkPaymentObj.VendorShippingAddressId = vendorShippingViewModel.VendorShippingAddressId;
-                addressObj.Line1 = vendorShippingViewModel.Address1;
-                addressObj.Line2 = vendorShippingViewModel.Address2;
-                addressObj.Line3 = vendorShippingViewModel.Address3;
-                addressObj.PostalCode = vendorShippingViewModel.PostalCode;
-                addressObj.StateOrProvince = vendorShippingViewModel.stateOrProvince;
-                addressObj.City = vendorShippingViewModel.City;
-                addressObj.Country = vendorShippingViewModel.Country;
-                addressObj.MasterCompanyId = 1;
-                // addressObj.RecordCreateDate = DateTime.Now;
-                addressObj.CreatedBy = vendorShippingViewModel.CreatedBy;
-                addressObj.UpdatedBy = vendorShippingViewModel.UpdatedBy;
-                //addressObj.CreatedDate = DateTime.Now;
-                addressObj.UpdatedDate = DateTime.Now;
-                _unitOfWork.Address.Update(addressObj);
-                _unitOfWork.VendorShippingAddress.Update(checkPaymentObj);
-                _unitOfWork.SaveChanges();
+                if(checkPaymentObj != null)
+                {
+                    var addressObj = _unitOfWork.Address.GetSingleOrDefault(c => c.AddressId == checkPaymentObj.AddressId);
+                    checkPaymentObj.IsActive = true;
+                    checkPaymentObj.MasterCompanyId = 1;
+                    checkPaymentObj.IsActive = vendorShippingViewModel.IsActive;
+                    checkPaymentObj.SiteName = vendorShippingViewModel.SiteName;
+                    checkPaymentObj.CreatedDate = DateTime.Now;
+                    checkPaymentObj.UpdatedDate = DateTime.Now;
+                    checkPaymentObj.CreatedBy = vendorShippingViewModel.CreatedBy;
+                    checkPaymentObj.UpdatedBy = vendorShippingViewModel.UpdatedBy;
+                    checkPaymentObj.MasterCompanyId = vendorShippingViewModel.MasterCompanyId;
+                    //checkPaymentObj.VendorShippingAddressId = vendorShippingViewModel.VendorShippingAddressId;
+                    _unitOfWork.VendorShippingAddress.Update(checkPaymentObj);
+                    _unitOfWork.SaveChanges();
+                    if (addressObj != null)
+                    {
+                        addressObj.Line1 = vendorShippingViewModel.Address1;
+                        addressObj.Line2 = vendorShippingViewModel.Address2;
+                        addressObj.Line3 = vendorShippingViewModel.Address3;
+                        addressObj.PostalCode = vendorShippingViewModel.PostalCode;
+                        addressObj.StateOrProvince = vendorShippingViewModel.stateOrProvince;
+                        addressObj.City = vendorShippingViewModel.City;
+                        addressObj.Country = vendorShippingViewModel.Country;
+                        addressObj.MasterCompanyId = 1;
+                        // addressObj.RecordCreateDate = DateTime.Now;
+                        addressObj.CreatedBy = vendorShippingViewModel.CreatedBy;
+                        addressObj.UpdatedBy = vendorShippingViewModel.UpdatedBy;
+                        //addressObj.CreatedDate = DateTime.Now;
+                        addressObj.UpdatedDate = DateTime.Now;
+                        _unitOfWork.Address.Update(addressObj);
+                        _unitOfWork.SaveChanges();
+                    }
+
+                    
+                }
+               
                 return Ok(checkPaymentObj);
 
 
@@ -2281,7 +2325,7 @@ namespace QuickApp.Pro.Controllers
 
                 vendorShippingDetailsViewModel.MasterCompanyId = 1;
                 actionobject.VendorId = vendorShippingDetailsViewModel.VendorId;
-                actionobject.VendorShippingAddressId = vendorShippingDetailsViewModel.VendorShippingAddressId;
+                //actionobject.VendorShippingAddressId = vendorShippingDetailsViewModel.VendorShippingAddressId;
                 actionobject.ShipVia = vendorShippingDetailsViewModel.ShipVia;
                 actionobject.ShippingAccountinfo = vendorShippingDetailsViewModel.ShippingAccountinfo;
                 actionobject.ShippingId = vendorShippingDetailsViewModel.ShippingId;
@@ -3035,26 +3079,29 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPut("updateRoApprover")]
-        public IActionResult UpdateRoApprover([FromBody] RepairOrderApproverViewModel roApproverViewModel)
+        public IActionResult UpdateRoApprover([FromBody] RepairOrderApprover roApprover)
         {
-            if (roApproverViewModel == null)
+            if (roApprover == null)
             {
                 return BadRequest($"RO Approver cannot be null.");
             }
 
-            var roApprover = _context.RepairOrderApprover
-                .Where(roa => roa.RoApproverId == roApproverViewModel.RoApproverId).FirstOrDefault();
+            //var roApprover = _context.RepairOrderApprover
+            //    .Where(roa => roa.RoApproverId == roApproverViewModel.RoApproverId).FirstOrDefault();
 
-            // UPDATE RepairOrderId
-            roApprover.RepairOrderId = roApprover.RepairOrderId;
+            //// UPDATE RepairOrderId
+            //roApprover.RepairOrderId = roApprover.RepairOrderId;
 
-            var roApprovarList = _context.RepairOrderApproverList
-                .Where(x => x.RoApproverId == roApproverViewModel.RoApproverId).ToList();
+            //var roApprovarList = _context.RepairOrderApproverList
+            //    .Where(x => x.RoApproverId == roApproverViewModel.RoApproverId).ToList();
 
-            roApprover.RepairOrderApproverList = roApprovarList;
+            //roApprover.RepairOrderApproverList = roApprovarList;
 
-            // UPDATE RepairOrderApproverList
-            roApprover = FillRepairOrderApproverUpdate(roApprover, roApproverViewModel);
+            //// UPDATE RepairOrderApproverList
+            //roApprover = FillRepairOrderApproverUpdate(roApprover, roApproverViewModel);
+
+            //_context.RepairOrderApprover.Update(roApprover);
+            //_context.SaveChanges();
 
             _context.RepairOrderApprover.Update(roApprover);
             _context.SaveChanges();
@@ -3074,6 +3121,8 @@ namespace QuickApp.Pro.Controllers
                 {
                     var repairOrderApproverList = new RepairOrderApproverList
                     {
+                        RoApproverId= roApproverObj.RoApproverId,
+                        RoApproverListId=roApproverObj.RoApproverListId,
                         EmployeeId = roApproverObj.EmployeeId,
                         Level = roApproverObj.Level,
                         StatusId = roApproverObj.StatusId,
@@ -3091,6 +3140,22 @@ namespace QuickApp.Pro.Controllers
         {
             _context.RepairOrderApprover.Add(roApprover);
             _context.SaveChanges();
+        }
+
+        [HttpGet("roPartsViewById")]
+        public IActionResult GetRepairOrderPartsView(long repairOrderId)
+        {
+            var list = _unitOfWork.repairOrder.GetRepairOrderPartsView(repairOrderId);
+            return Ok(list);
+        }
+
+        [HttpGet("getvendorContactByVendorID/{vendorid}/{isDContact}")]
+        [Produces(typeof(List<VendorCapabiltiyAircraftModel>))]
+        public IActionResult GetVendorByID(long vendorid, bool isDContact)
+        {
+            var vendorcontactdata = _unitOfWork.Vendor.getVendorByID(vendorid, isDContact);
+            return Ok(vendorcontactdata);
+
         }
 
         #region Capes
@@ -3330,14 +3395,56 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        [HttpGet("getvendorContactByVendorID/{vendorid}/{isDContact}")]
-        [Produces(typeof(List<VendorCapabiltiyAircraftModel>))]
-        public IActionResult GetVendorByID(long vendorid, bool isDContact)
+        //[HttpGet("sendpoemail")]
+        private async Task<bool> SendPoEmail(long purchaseOrderId,string content, string recepientName, string recepientEmail,string subject,string lintText = "")
         {
-            var vendorcontactdata = _unitOfWork.Vendor.getVendorByID(vendorid, isDContact);
-            return Ok(vendorcontactdata);
 
+            string emailTemplatePath = @"c:\\EmailTemplates\\PO_Email.txt";
+            string emailContent = string.Empty;
+            StringBuilder parts = new StringBuilder();
+
+            var purchaseorder = _unitOfWork.purchaseOrder.PurchaseOrderEmail(purchaseOrderId);
+            string s = purchaseorder.VendorName;
+            var purchaseorderPart = _unitOfWork.purchaseOrder.GetPurchaseOrderPartsView(purchaseOrderId);
+
+            var fileStream = new FileStream(emailTemplatePath, FileMode.Open, FileAccess.Read);
+            using (var streamReader = new StreamReader(fileStream, Encoding.UTF8))
+            {
+                emailContent = streamReader.ReadToEnd();
+            }
+
+            emailContent=emailContent.Replace("{PONumber}", purchaseorder.PurchaseOrderNumber);
+            emailContent = emailContent.Replace("{PODate}", purchaseorder.PoDate);
+            emailContent = emailContent.Replace("{Vendor}", purchaseorder.VendorName);
+            emailContent = emailContent.Replace("{ShipToUserName}", purchaseorder.ShipToUser);
+            emailContent = emailContent.Replace("{BillToUserName}", purchaseorder.BillToUser);
+            emailContent = emailContent.Replace("{Content}", content);
+            emailContent = emailContent.Replace("{LintText}", lintText);
+            emailContent = emailContent.Replace("{WebsiteUrl}", _smtpConfig.Value.WebsiteURL);
+
+
+
+
+
+            if (purchaseorder.PurchaseOrderParts!=null && purchaseorder.PurchaseOrderParts.Count>0)
+            {
+                foreach(var item in purchaseorder.PurchaseOrderParts)
+                {
+                    parts.Append("<tr><td>" + item .PartNumber+ "</td>");
+                    parts.Append("<td>" + item.QuantityOrdered + "</td>");
+                    parts.Append("<td>" + item.UnitCost + "</td>");
+                    parts.Append("<td>" + item.DiscountAmount + "</td>");
+                    parts.Append("<td>" + item.ExtendedCost + "</td></tr>");
+                }
+            }
+            emailContent = emailContent.Replace("{PartsData}", parts.ToString());
+
+            Emailer emailer = new Emailer(_smtpConfig);
+            var result = await emailer.SendEmailAsync(recepientName, recepientEmail, subject + purchaseorder.PurchaseOrderNumber, emailContent, null, true);
+            return result.success;
         }
+
+        
 
         #endregion Private Methods
 

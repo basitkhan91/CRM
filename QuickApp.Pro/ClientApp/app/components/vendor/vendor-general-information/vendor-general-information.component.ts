@@ -30,6 +30,7 @@ import { Message } from 'primeng/components/common/message';
 import { MenuItem } from 'primeng/components/common/menuitem';
 import { DialogModule } from 'primeng/dialog';//Error Validation Pop Up
 import { CustomerService } from '../../../services/customer.service';
+import { CommonService } from '../../../services/common.service';
 declare const google: any;
 @Component({
     selector: 'app-vendor-general-information',
@@ -128,8 +129,9 @@ export class VendorGeneralInformationComponent implements OnInit {
     isDeleteMode: boolean = false;
     integrationCols: any[];
     intSelectedColumns: any[];
+    dropDownVendorCapabilitiesList: any[];
 
-    constructor(public vendorclassificationService: VendorClassificationService, private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public customerser: CustomerService, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(public vendorclassificationService: VendorClassificationService, private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public customerser: CustomerService, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, public commonService: CommonService) {
         this.dataSource = new MatTableDataSource();
         if (this.local)
         {
@@ -177,6 +179,7 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.Capabilitydata();
         this.countrylist();
         this.loadDataVendorData();
+        this.getAllVendorCapabilities();
         this.options = {
             center: { lat: 36.890257, lng: 30.707417 },
             zoom: 12
@@ -533,7 +536,7 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.loadingIndicator = true;
         this.sourceVendor = row;
     }
-    editItemAndCloseModel() {
+    editItemAndCloseModel(goNxt?:any) {
         this.isSaving = true;
         if (!(this.sourceVendor.vendorName && this.sourceVendor.vendorCode && this.sourceVendor.vendorEmail && this.sourceVendor.vendorPhone && this.sourceVendor.address1 && this.sourceVendor.city
             && this.sourceVendor.PostalCode && this.sourceVendor.country && this.sourceVendor.vendorClassificationId
@@ -574,7 +577,7 @@ export class VendorGeneralInformationComponent implements OnInit {
                     }
                     this.activeIndex = 0;
                     this.vendorService.indexObj.next(this.activeIndex);
-                    this.savesuccessCompleted(this.sourceVendor);
+                    this.savesuccessCompleted(this.sourceVendor, goNxt);
                 })
             }
 
@@ -602,7 +605,7 @@ export class VendorGeneralInformationComponent implements OnInit {
                         this.vendorService.shippingCollection = this.localCollection;
                         this.activeIndex = 0;
                         this.vendorService.indexObj.next(this.activeIndex);
-                        this.savesuccessCompleted(this.sourceVendor);
+                        this.savesuccessCompleted(this.sourceVendor, goNxt);
                     })
             }
         }
@@ -637,9 +640,12 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.loadData();
     }
 
-    private savesuccessCompleted(user?: any) {
+    private savesuccessCompleted(user?: any, goNxt?: any) {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
+        if(goNxt === 'goNext'){
+            this.nextClick();
+        }
         this.loadData();
     }
     private saveSuccessHelper(role?: any) {
@@ -696,6 +702,20 @@ export class VendorGeneralInformationComponent implements OnInit {
         }
     }
 
+    checkVendorExist(){
+        this.disableSaveVenderName = false; 
+        for (let i = 0; i < this.VendorNamecoll.length; i++) {
+            if (this.sourceVendor.vendorName == this.VendorNamecoll[i][0].vendorName) {
+                this.disableSaveVenName = true;
+                this.disableSave = true;
+                this.disableSaveVenderName = true;
+                this.selectedActionName = event;
+                return;
+            }
+        }
+
+    }
+
     eventvendorHandler(event) {
         if (event.target.value != "") {
             let value = event.target.value.toLowerCase();
@@ -731,6 +751,15 @@ export class VendorGeneralInformationComponent implements OnInit {
             }
         }
     }
+    //Added by Vijay For Capabilities dropdown binding
+
+    getAllVendorCapabilities(): void {
+        
+        this.commonService.smartDropDownList('VendorCapabiliy', 'VendorCapabilityId', 'capabilityDescription').subscribe(res => {
+            this.dropDownVendorCapabilitiesList = res;            
+        })
+    }
+   
     eventCountryHandler(event) {
         if (event.target.value != "") {
             let value = event.target.value.toLowerCase();

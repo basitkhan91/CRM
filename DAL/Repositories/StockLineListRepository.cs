@@ -463,7 +463,7 @@ namespace DAL.Repositories
                             from pox in stlpox.DefaultIfEmpty()
                             join rox in _appContext.RepairOrder on stl.RepairOrderId equals rox.RepairOrderId into stlrox
                             from rox in stlrox.DefaultIfEmpty()
-                            join mpx in _appContext.MasterParts on stl.ItemMasterId equals mpx.MasterPartId into stlmpx
+                            join mpx in _appContext.MasterParts on im.MasterPartId equals mpx.MasterPartId into stlmpx
                             from mpx in stlmpx.DefaultIfEmpty()
                             select new
                             {

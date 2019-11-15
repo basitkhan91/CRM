@@ -47,12 +47,16 @@ export class CommonService {
         return this.http.get<any>(`${this.baseUrl}/api/Common/managementstructurecodes?manmgStrucId=${id}`, this.authService.getRequestHeaders())
     }
 
-    getCustomerNameandCode(value){
-        return this.http.get(`${this.baseUrl}/api/customer/customernameandcodes?value=${value}` , this.authService.getRequestHeaders())
+    getCustomerNameandCode(value) {
+        return this.http.get(`${this.baseUrl}/api/customer/customernameandcodes?value=${value}`, this.authService.getRequestHeaders())
     }
 
-    getItemMasterDetails(){
-        return this.http.get(`${this.baseUrl}/api/itemMaster/GetPartDetailsDropDown` , this.authService.getRequestHeaders())
+    getItemMasterDetails() {
+        return this.http.get(`${this.baseUrl}/api/itemMaster/GetPartDetailsDropDown`, this.authService.getRequestHeaders())
+    }
+
+    getRestrictedParts(moduleId, referenceId, partType) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/Common/getrestrictedparts?moduleId=${moduleId}&referenceId=${referenceId}&partType=${partType}`)
     }
 
 

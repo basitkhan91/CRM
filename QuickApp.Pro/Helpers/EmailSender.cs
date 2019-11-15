@@ -38,9 +38,24 @@ namespace QuickApp.Pro.Helpers
             string subject, string body, SmtpConfig config = null, bool isHtml = true)
         {
             var from = new MailboxAddress(_config.Name, _config.EmailAddress);
-            var to = new MailboxAddress(recepientName, recepientEmail);
+            //var to = new MailboxAddress(recepientName, recepientEmail);
+            InternetAddressList list = new InternetAddressList();
 
-            return await SendEmailAsync(from, new MailboxAddress[] { to }, subject, body, config, isHtml);
+            if (recepientEmail.Contains(","))
+            {
+                string[] toEmails = recepientEmail.Split(',');
+                foreach (var email in toEmails)
+                {
+                    list.Add(new MailboxAddress(email));
+                }
+            }
+            else
+            {
+                list.Add(new MailboxAddress(recepientEmail));
+            }
+
+            return await SendEmailAsync(from, list, subject, body, config, isHtml);
+            //return await SendEmailAsync(from, new MailboxAddress[] { to }, subject, body, config, isHtml);
         }
 
 
@@ -50,14 +65,68 @@ namespace QuickApp.Pro.Helpers
             string subject, string body, SmtpConfig config = null, bool isHtml = true)
         {
             var from = new MailboxAddress(senderName, senderEmail);
-            var to = new MailboxAddress(recepientName, recepientEmail);
+            //var to = new MailboxAddress(recepientName, recepientEmail);
 
-            return await SendEmailAsync(from, new MailboxAddress[] { to }, subject, body, config, isHtml);
+
+            InternetAddressList list = new InternetAddressList();
+
+            if (recepientEmail.Contains(","))
+            {
+                string[] toEmails = recepientEmail.Split(',');
+                foreach (var email in toEmails)
+                {
+                    list.Add(new MailboxAddress(email));
+                }
+            }
+            else
+            {
+                list.Add(new MailboxAddress(recepientName));
+            }
+
+            return await SendEmailAsync(from, list, subject, body, config, isHtml);
         }
 
 
 
         public async Task<(bool success, string errorMsg)> SendEmailAsync(MailboxAddress sender, MailboxAddress[] recepients, string subject, string body, SmtpConfig config = null, bool isHtml = true)
+        {
+            MimeMessage message = new MimeMessage();
+
+            message.From.Add(sender);
+            message.To.AddRange(recepients);
+            message.Subject = subject;
+            message.Body = isHtml ? new BodyBuilder { HtmlBody = body }.ToMessageBody() : new TextPart("plain") { Text = body };
+
+            try
+            {
+                if (config == null)
+                    config = _config;
+
+                using (var client = new SmtpClient())
+                {
+                    if (!config.UseSSL)
+                        client.ServerCertificateValidationCallback = (object sender2, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) => true;
+
+                    await client.ConnectAsync(config.Host, config.Port, config.UseSSL).ConfigureAwait(false);
+                    client.AuthenticationMechanisms.Remove("XOAUTH2");
+
+                    if (!string.IsNullOrWhiteSpace(config.Username))
+                        await client.AuthenticateAsync(config.Username, config.Password).ConfigureAwait(false);
+
+                    await client.SendAsync(message).ConfigureAwait(false);
+                    await client.DisconnectAsync(true).ConfigureAwait(false);
+                }
+
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                Utilities.CreateLogger<Emailer>().LogError(LoggingEvents.SEND_EMAIL, ex, "An error occurred whilst sending email");
+                return (false, ex.Message);
+            }
+        }
+
+        public async Task<(bool success, string errorMsg)> SendEmailAsync(MailboxAddress sender, InternetAddressList recepients, string subject, string body, SmtpConfig config = null, bool isHtml = true)
         {
             MimeMessage message = new MimeMessage();
 
@@ -108,5 +177,8 @@ namespace QuickApp.Pro.Helpers
         public string Username { get; set; }
         public string EmailAddress { get; set; }
         public string Password { get; set; }
+        public string WebsiteURL { get; set; }
+        public string POInitiatorEmail { get; set; }
+        public string POApproverEmail { get; set; }
     }
 }
