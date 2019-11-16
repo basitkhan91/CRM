@@ -146,7 +146,9 @@ export class VendorEndpointService extends EndpointFactory {
 	private readonly _saveVendorRepairOrder: string = "/api/Vendor/saveVendorRepairOrder";
 	private readonly _saveVendorRepairOrderPart: string = "/api/Vendor/saveVendorRepairPart";
 	private readonly _roByIdUrl: string = "/api/Vendor/roById";
-	private readonly _roPartByIdUrl: string = "/api/Vendor/roPartsById";
+    private readonly _roPartByIdUrl: string = "/api/Vendor/roPartsById";
+    private readonly _poPartByItemIdUrl: string = "/api/Vendor/POListByMasterItemId";
+    private readonly _roPartByItemIdUrl: string = "/api/Vendor/ROListByMasterItemId";
 	private readonly _roListWithFiltersUrl: string = "/api/Vendor/roListWithFilters";
 	private readonly _saveCreateROApproval: string = "/api/Vendor/createRoApprover";
 	private readonly _updateROApproval: string = "/api/Vendor/updateRoApprover";
@@ -1215,8 +1217,9 @@ export class VendorEndpointService extends EndpointFactory {
 			.catch(error => {
 				return this.handleError(error, () => this.getPurchaseOrderList());
 			});
-	}
-	getPOList(data) {
+    }
+
+   	getPOList(data) {
         return this.http.post(this.polisturl, JSON.stringify(data), this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getPOList(data));
@@ -1428,6 +1431,24 @@ getRepairOrderPartsById<T>(Id: number): Observable<T> {
 			return this.handleError(error, () => this.getRepairOrderPartsById(Id));
 		});
 }
+
+    getPurchaseOrderByItemId<T>(Id: number): Observable<T> {
+        let endPointUrl = `${this._poPartByItemIdUrl}?itemMasterId=${Id}`;
+
+        return this.http.get<T>(endPointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getPurchaseOrderByItemId(Id));
+            });
+    }
+
+    getRepiarOrderByItemId<T>(Id: number): Observable<T> {
+        let endPointUrl = `${this._roPartByItemIdUrl}?itemMasterId=${Id}`;
+
+        return this.http.get<T>(endPointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getRepiarOrderByItemId(Id));
+            });
+    }
 
 getROViewById(repairOrderId) {
     return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/roViewById?repairOrderId=${repairOrderId}`)

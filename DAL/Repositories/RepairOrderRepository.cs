@@ -511,5 +511,20 @@ namespace DAL.Repositories
                 throw;
             }
         }
+
+        public IEnumerable<RepairOrder> ROListByMasterItemId(int itemMasterId)
+        {
+            var repairOrderList = (from ro in _appContext.RepairOrder
+                                     join rop in _appContext.RepairOrderPart on ro.RepairOrderId equals rop.RepairOrderId
+                                     join im in _appContext.ItemMaster on rop.ItemMasterId equals im.ItemMasterId
+                                     where im.ItemMasterId == itemMasterId &&
+                                     ro.IsDeleted == false
+                                     select new RepairOrder
+                                     {
+                                         RepairOrderId = ro.RepairOrderId,
+                                         RepairOrderNumber = ro.RepairOrderNumber
+                                     });
+            return repairOrderList;
+        }
     }
 }
