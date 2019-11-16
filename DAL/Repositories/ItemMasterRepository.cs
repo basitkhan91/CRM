@@ -168,13 +168,9 @@ namespace DAL.Repositories
         }
         public IEnumerable<object> Getdescriptionbypart(string partNumber)
         {
-
             {
                 var data = (from t in _appContext.ItemMaster
-
-
                             where t.PartNumber == partNumber
-
                             select new
                             {
                                 t,
