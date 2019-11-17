@@ -149,7 +149,7 @@ export class StockLineListComponent implements OnInit {
             { field: 'stockLineNumber', header: 'SL NUM' },
             { field: 'controlNumber', header: 'CONTROL NUM' },
             { field: 'serialNumber', header: 'SERIAL NUM' },
-            { field: 'location', header: 'LOCATIOn' },
+            { field: 'location', header: 'LOCATION' },
             { field: 'partCertificationNumber', header: 'PART CERT NUM' }
         ];
         this.selectedColumns = this.cols;
