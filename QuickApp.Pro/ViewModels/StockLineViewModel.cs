@@ -55,6 +55,16 @@ namespace QuickApp.Pro.ViewModels
         public string CalibrationMemo { get; set; }
         public DateTime? OrderDate { get; set; }
         public Int32? QuantityToReceive { get; set; }
+        public decimal PurchaseOrderExtendedCost { get; set; }
+        public string ManufacturingTrace { get; set; }
+        public DateTime? ExpirationDate { get; set; }
+        public long? ShippingViaId { get; set; }
+        public string EngineSerialNumber { get; set; }
+        public int QuantityRejected { get; set; }
+        public long? PurchaseOrderPartRecordId { get; set; }
+        public string ShippingAccount { get; set; }
+        public string ShippingReference { get; set; }
+        public bool TimeLifeDetailsNotProvided { get; set; }
         //[FK]
         [ForeignKey("PurchaseOrderId")]
         public long? PurchaseOrderId { get; set; }

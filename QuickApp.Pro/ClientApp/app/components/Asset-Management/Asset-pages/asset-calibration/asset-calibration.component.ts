@@ -209,8 +209,7 @@ export class AssetCalibrationComponent implements OnInit {
                 this.currentCalibration.verificationCurrencyId = null;
                 this.currentCalibration.verificationGlAccountId = null;
                 this.currentCalibration.verificationMemo = null;
-            }
-            
+            }            
             this.currentCalibration.updatedBy = this.userName;
             this.currentCalibration.masterCompanyId = 1; 
             this.assetService.updateAsset(this.currentCalibration).subscribe(data => {               

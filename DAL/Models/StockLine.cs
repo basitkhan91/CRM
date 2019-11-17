@@ -28,6 +28,7 @@ namespace DAL.Models
         public string Owner { get; set; }
         public string TraceableTo { get; set; }
         public long? ManufacturerId { get; set; }
+        public string Manufacturer { get; set; }
         public string ManufacturerLotNumber { get; set; }
         public DateTime? ManufacturingDate { get; set; }
         public string ManufacturingBatchNumber { get; set; }
@@ -59,7 +60,6 @@ namespace DAL.Models
         public bool? OEM { get; set; }
         public string Memo { get; set; }
         public long? ManagementStructureEntityId { get; set; }
-        [NotMapped]
         public long? LegalEntityId { get; set; }
         [ForeignKey("MasterCompanyId")]
         public int? MasterCompanyId { get; set; }

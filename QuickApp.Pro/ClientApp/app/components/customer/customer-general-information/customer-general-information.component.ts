@@ -632,9 +632,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
     filterclassifications(event) {
         this.classificationList = this.allcustomerclassificationInfo;
 
-        this.classificationList = [
-            ...this.allcustomerclassificationInfo.filter(x => {
-                return x.description.toLowerCase().includes(event.query.toLowerCase());
+        this.classificationList = [...this.allcustomerclassificationInfo.filter(x => {
+            return x.label.toLowerCase().includes(event.query.toLowerCase());
             })
         ];
 

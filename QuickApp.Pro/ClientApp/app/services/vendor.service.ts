@@ -514,6 +514,7 @@ export class VendorService {
             this.actionEndpoint.getPOList(data));
     }
 
+
     getCountrylist() {
         return Observable.forkJoin(
             this.actionEndpoint.getcountryListEndpoint<any[]>());
@@ -640,6 +641,14 @@ export class VendorService {
 
     getRepairOrderPartsById(Id: number) {
         return Observable.forkJoin(this.actionEndpoint.getRepairOrderPartsById<any>(Id));
+    }
+
+    getPurchaseOrderByItemId(Id: number) {
+        return Observable.forkJoin(this.actionEndpoint.getPurchaseOrderByItemId<any>(Id));
+    }
+
+    getRepairOrderByItemId(Id: number) {
+        return Observable.forkJoin(this.actionEndpoint.getRepiarOrderByItemId<any>(Id));
     }
 
     getROStatus(repairOrderId, isActive, updatedBy){

@@ -45,6 +45,10 @@ import { CustomerService } from "../services/customer.service";
 import { SalesQuoteComponent } from "../components/sales/quotes/sales-quote/sales-quote-component";
 import { SalesQuoteService } from "../services/salesquote.service";
 import { SalesQuoteEndpointService } from "../services/salesquote-endpoint.service";
+import { TabViewModule } from "primeng/tabview";
+import { SalesApproveComponent } from "../components/sales/quotes/shared/components/sales-approve/sales-approve.component";
+import { SalesPartNumberComponent } from "../components/sales/quotes/shared/components/sales-part-number/sales-part-number.component";
+import { SalesAddressComponent } from "../components/sales/quotes/shared/components/sales-address/sales-address.component";
 
 @NgModule({
   imports: [
@@ -74,13 +78,18 @@ import { SalesQuoteEndpointService } from "../services/salesquote-endpoint.servi
     TooltipModule,
     SpinnerModule,
     CheckboxModule,
-    PanelModule
+    PanelModule,
+    TabViewModule,
+    DropdownModule
   ],
   declarations: [
     SalesPagesComponent,
     SalesQuoteListComponent,
     SalesQuoteCreateComponent,
-    SalesQuoteComponent
+    SalesQuoteComponent,
+    SalesApproveComponent,
+    SalesPartNumberComponent,
+    SalesAddressComponent
   ],
   providers: [CustomerService, SalesQuoteService, SalesQuoteEndpointService],
   entryComponents: []

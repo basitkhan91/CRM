@@ -69,6 +69,10 @@ export class StocklineService {
 			this.stocklineEndpoint.getStockLineCompanyListEndpoint<any[]>());
 	}
 
+    getManagemtentLengalEntityData() {
+        return Observable.forkJoin(
+            this.stocklineEndpoint.getManagemtentLengalEntityEndpoint<any[]>());
+    }
 	//For entering into the new stockline values
 	newStockLine(sourceStockLine: any) {
 		return this.stocklineEndpoint.getNewstockLineEndpoint<any>(sourceStockLine);

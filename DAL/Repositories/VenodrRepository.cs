@@ -48,7 +48,7 @@ namespace DAL.Repositories
                                 CurrencyId= cu.Code,
                                 CreditTermsId = ct.Name,
                                 DiscountLevel = di==null ? 0: di.DiscontValue
-                            }).ToList();
+                            }).OrderByDescending(c=>c.CreatedDate).ToList();
                 return data;
 
                 //old query

@@ -237,9 +237,27 @@
             </div>
           </div>
         </form>
+        <ng-container>
+          <p-tabView class="pas-tabview">
+            <p-tabPanel header="PN" [selected]="true">
+              <app-sales-part-number></app-sales-part-number>
+            </p-tabPanel>
+            <p-tabPanel header="Approve">
+              <app-sales-approve></app-sales-approve>
+            </p-tabPanel>
+            <p-tabPanel header="Address">
+              <app-sales-address></app-sales-address>
+            </p-tabPanel>
+          </p-tabView>
+        </ng-container>
       </div>
       <div class="card-footer" style="text-align: right;">
-        <button type="button" class="btn btn-success">Submit</button>
+        <div class="col-md-1 col-sm-1 col-1">
+          &nbsp;
+        </div>
+        <div class="col-md-11 col-sm-11 col-11">
+          <button type="button" class="btn btn-success">Submit</button>
+        </div>
       </div>
     </div>
   </div>

@@ -152,6 +152,22 @@ namespace DAL.Repositories
             return purchaseOrderList;
         }
 
+        public IEnumerable<PurchaseOrder> POListByMasterItemId(int itemMasteId)
+        {
+            var purchaseOrderList = (from po in _appContext.PurchaseOrder
+                                     join pop in _appContext.PurchaseOrderPart on po.PurchaseOrderId equals pop.PurchaseOrderId
+                                     join im in _appContext.ItemMaster on pop.ItemMasterId equals im.ItemMasterId
+                                     where im.ItemMasterId == itemMasteId &&
+                                     po.IsDeleted == false
+                                     select new PurchaseOrder
+                                     {
+                                         PurchaseOrderId = po.PurchaseOrderId,
+                                         PurchaseOrderNumber = po.PurchaseOrderNumber
+                                     });
+            return purchaseOrderList;
+
+        }
+
         public int GetLastIdNumber(long puchaseOrderId, long purchaseOrderPartId)
         {
             var stockLine = _appContext.StockLine.Where(x => x.PurchaseOrderId == puchaseOrderId && x.PurchaseOrderPartRecordId == purchaseOrderPartId).OrderByDescending(x => x.StockLineId).FirstOrDefault();

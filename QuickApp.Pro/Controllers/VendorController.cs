@@ -107,6 +107,13 @@ namespace QuickApp.Pro.Controllers
             return Ok(allActions);
         }
 
+        //[HttpGet("POListById")]
+        //public IActionResult POListById(int itemMasterId)
+        //{
+        //    var result = _unitOfWork.purchaseOrder.POListByMasterItemId(itemMasterId); //.GetAllCustomersData();
+        //    return Ok(result);
+        //}
+
         [HttpGet("recevingpolist")]
         public IActionResult RecevingPolist()
         {
@@ -3037,6 +3044,20 @@ namespace QuickApp.Pro.Controllers
         public IActionResult RepairOrderPartsById(long repairOrderId)
         {
             var result = _unitOfWork.repairOrder.RepairOrderPartsById(repairOrderId);
+            return Ok(result);
+        }
+
+        [HttpGet("POListByMasterItemId")]
+        public IActionResult POListByMasterItemId(int itemMasterId)
+        {
+            var result = _unitOfWork.purchaseOrder.POListByMasterItemId(itemMasterId);
+            return Ok(result);
+        }
+
+        [HttpGet("ROListByMasterItemId")]
+        public IActionResult ROListByMasterItemId(int itemMasterId)
+        {
+            var result = _unitOfWork.repairOrder.ROListByMasterItemId(itemMasterId);
             return Ok(result);
         }
 
