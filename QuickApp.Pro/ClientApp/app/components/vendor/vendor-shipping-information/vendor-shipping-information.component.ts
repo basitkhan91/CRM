@@ -206,7 +206,7 @@ export class VendorShippingInformationComponent {
             error => this.onDataLoadFailed(error)
         );
         this.cols = [
-            { field: 'siteName', header: 'Site Name' },
+            { field: 'siteName', header: 'Ship To' },
             { field: 'address1', header: 'Address1' },
             { field: 'address2', header: 'Address2' },
             { field: 'address3', header: 'Address3' },
