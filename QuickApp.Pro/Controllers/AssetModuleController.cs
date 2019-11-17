@@ -114,6 +114,8 @@ namespace QuickApp.Pro.Controllers
             {
                 asset.MasterCompanyId = 1;
                 asset.UpdatedDate = DateTime.Now;
+                if (asset.AssetAcquisitionTypeId == null)
+                    asset.AssetAcquisitionTypeId = 1;
                 _unitOfWork.Repository<Asset>().Update(asset);
                 _unitOfWork.SaveChanges();
                 return Ok(asset);
@@ -245,6 +247,11 @@ namespace QuickApp.Pro.Controllers
                 newAsset.AssetTypeId = asset.AssetTypeId;
                 newAsset.UnitCost = asset.UnitCost;
                 newAsset.Asset_Location = asset.Asset_Location;
+                newAsset.AssetParentId = asset.Asset_Location;
+                newAsset.Memo = asset.Memo;
+                newAsset.ExpirationDate = asset.ExpirationDate;
+                newAsset.ManufacturedDate = asset.ManufacturedDate;
+                newAsset.AssetAcquisitionTypeId = asset.AssetAcquisitionTypeId;
                 newAsset.IsActive = true;
                 newAsset.IsDelete = false;
                 newAsset.CreatedBy = asset.CreatedBy;

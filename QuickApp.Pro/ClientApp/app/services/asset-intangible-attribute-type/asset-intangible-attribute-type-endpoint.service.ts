@@ -4,15 +4,14 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import { EndpointFactory } from '../endpoint-factory.service';
 import { ConfigurationService } from '../configuration.service';
-import { AssetAttributeType } from '../../models/asset-attribute-type.model';
+import { AssetIntangibleAttributeType } from '../../models/asset-intangible-attribute-type.model';
 
 @Injectable()
-export class AssetAttributeTypeEndpointService extends EndpointFactory {
+export class AssetIntangibleAttributeTypeEndpointService extends EndpointFactory {
 
-    private readonly item: string = "AssetAttributeType";
+    private readonly item: string = "AssetIntangibleAttributeType";
     private readonly getAllItemsEndPointTemplate: string = "getAll";
     private readonly getItemByIdEndPointTemplate: string = "getById";
-    private readonly getByAssetTypeIdEndPointTemplate: string = "getByAssetTypeId";
     private readonly addItemEndPointTemplate: string = "add";
     private readonly updateItemEndPointTemplate: string = "update";
     private readonly removeItemByIdEndPointTemplate: string = "removeById";
@@ -21,7 +20,6 @@ export class AssetAttributeTypeEndpointService extends EndpointFactory {
 
 
     get getAll() { return `${this.configurations.baseUrl}/api/${this.item}/${this.getAllItemsEndPointTemplate}`; }
-    get getByAssetTypeId() { return `${this.configurations.baseUrl}/api/${this.item}/${this.getByAssetTypeIdEndPointTemplate}`; }
     get getById() { return `${this.configurations.baseUrl}/api/${this.item}/${this.getItemByIdEndPointTemplate}`; }
     get add() { return `${this.configurations.baseUrl}/api/${this.item}/${this.addItemEndPointTemplate}`; }
     get update() { return `${this.configurations.baseUrl}/api/${this.item}/${this.updateItemEndPointTemplate}`; }
@@ -34,7 +32,7 @@ export class AssetAttributeTypeEndpointService extends EndpointFactory {
         super(http, configurations, injector);
     }
 
-    addItem<T>(item: AssetAttributeType): Observable<T> {
+    addItem<T>(item: AssetIntangibleAttributeType): Observable<T> {
         let endpointUrl = this.add;
         return this.http.post<T>(endpointUrl, JSON.stringify(item), this.getRequestHeaders())
             .catch(error => {
@@ -52,15 +50,6 @@ export class AssetAttributeTypeEndpointService extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getAllItems());
-            });
-    }
-
-    getByAssetType<T>(id: number): Observable<T> {
-        let endpointUrl = `${this.getByAssetTypeId}/${id}`;
-
-        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getByAssetType(id));
             });
     }
 
@@ -91,7 +80,7 @@ export class AssetAttributeTypeEndpointService extends EndpointFactory {
             });
     }
 
-    updateItem<T>(item: AssetAttributeType): Observable<T> {
+    updateItem<T>(item: AssetIntangibleAttributeType): Observable<T> {
         let endpointUrl = this.update;
         return this.http.post<T>(endpointUrl, JSON.stringify(item), this.getRequestHeaders())
             .catch(error => {
