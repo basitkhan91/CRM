@@ -146,11 +146,14 @@ export class StockLineListComponent implements OnInit {
         this.cols = [
             { field: 'partNumber', header: 'PN' },
             { field: 'partDescription', header: 'PN DESCRIPTION' },
+            { field: 'itemCategory', header: 'ITEM CATEGORY' },
+            { field: 'itemGroup', header: 'ITEM GROUP' },
             { field: 'stockLineNumber', header: 'SL NUM' },
-            { field: 'controlNumber', header: 'CONTROL NUM' },
             { field: 'serialNumber', header: 'SERIAL NUM' },
-            { field: 'location', header: 'LOCATIOn' },
-            { field: 'partCertificationNumber', header: 'PART CERT NUM' }
+            { field: 'condition', header: 'COND' },
+            { field: 'quantity', header: 'QTY ON HAND' },
+            { field: 'quantity', header: 'QTY AVAIL' },
+            { field: 'glAccountId', header: 'GL ACCT' }
         ];
         this.selectedColumns = this.cols;
     }
@@ -248,6 +251,7 @@ export class StockLineListComponent implements OnInit {
         this.division = row.divisionName;
         this.departmentName = row.departmentName;
         this.partNumber = row.partNumber;
+        this.glAccountId = row.glAccountId;
         this.partDescription = row.partDescription;
         this.stockLineNumber = row.stockLineNumber;
         if (row.isSerialized) {
