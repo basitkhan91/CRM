@@ -703,14 +703,16 @@ namespace QuickApp.Pro.Controllers
             actionobject.ShipToAddress2 = poViewModel.ShipToAddress2;
             actionobject.ShipToAddress3 = poViewModel.ShipToAddress3;
             actionobject.ShipToCity = poViewModel.ShipToCity;
-            actionobject.ShipToState = poViewModel.ShipToState;
+            actionobject.ShipToState = poViewModel.ShipToStateOrProvince;
+
             actionobject.ShipToPostalCode = poViewModel.ShipToPostalCode;
             actionobject.ShipToCountry = poViewModel.ShipToCountry;
             actionobject.BillToAddress1 = poViewModel.BillToAddress1;
             actionobject.BillToAddress2 = poViewModel.BillToAddress2;
             actionobject.BillToAddress3 = poViewModel.BillToAddress3;
             actionobject.BillToCity = poViewModel.BillToCity;
-            actionobject.BillToState = poViewModel.BillToState;
+            actionobject.BillToState = poViewModel.BillToStateOrProvince;
+
             actionobject.BillToPostalCode = poViewModel.BillToPostalCode;
             actionobject.BillToCountry = poViewModel.BillToCountry;
 
@@ -739,6 +741,8 @@ namespace QuickApp.Pro.Controllers
             actionobject.NeedByDate = poPartSplit.NeedByDate;
             actionobject.QuantityOrdered = poPartSplit.QuantityOrdered;
             actionobject.ItemMasterId = poPartSplit.ItemMasterId;
+            actionobject.POPartSplitAddressId = poPartSplit.POPartSplitAddressId;
+
 
             actionobject.ManagementStructureId = poPartSplit.ManagementStructureId;
         }
