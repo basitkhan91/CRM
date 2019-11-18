@@ -257,14 +257,14 @@
                     <thead>
                         <tr class="partsList-table-tr">
                             <th style="min-width: 40px;"></th>
-                            <th style="padding-bottom: 2px !important;min-width: 50px;">
+                            <!-- <th style="padding-bottom: 2px !important;min-width: 50px;">
                                 <span class="checkbox-cstm">
                                     <label style="width: 20px;">
-                                        <input type="checkbox" name="checkAllPartsList" [(ngModel)]="checkAllPartsList" #checkAllPartsList1> <!--checkAllPartDetails()-->
+                                        <input type="checkbox" name="checkAllPartsList" [(ngModel)]="checkAllPartsList" #checkAllPartsList1>
                                         <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                     </label>
                                 </span>
-                            </th>
+                            </th> -->
                             <th>Split Shipment</th>
                             <th>PN <span class="clr-red">*</span></th>
                             <th>Alt PN</th>
@@ -296,14 +296,14 @@
                             <!--createPOPartsList-->
                             <tr class="parent-data">
                                 <td><i class="fa fa-trash" style="color: red;font-size: 15px;cursor: pointer;" (click)="onDelPNRow(row_index)"></i></td>
-                                <td>
+                                <!-- <td>
                                     <span class="checkbox-cstm">
                                         <label style="width: 20px;">
-                                            <input type="checkbox" name="checkPartList{{row_index}}" [checked]="checkAllPartsList1.checked"> <!--isCheckedPartListRow-->
+                                            <input type="checkbox" name="checkPartList{{row_index}}" [checked]="checkAllPartsList1.checked">
                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                         </label>
                                     </span>
-                                </td>
+                                </td> -->
                                 <td>
                                     <span class="checkbox-cstm">
                                         <label style="width: 20px;">
