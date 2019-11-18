@@ -128,11 +128,12 @@
 												</p>
 											</div>-->
 													</div>
-													<h5 class="heading">{{viewName}} Check Payment </h5>
+													<!-- <h5 class="heading">{{viewName}} Check Payment </h5> -->
+													<h5 class="heading">Check Mailing Information </h5>
 													<div class="col-sm-6 w400 page-2blocks">
 														<div class="pay-check-details">
 															<div class="form-group col-sm-12">
-																<label class="control-label col-sm-4">Site Name <strong class="clr-red">*</strong> </label>
+																<label class="control-label col-sm-4">Vendor Name <strong class="clr-red">*</strong> </label>
 																<div class="col-sm-7 cust-name">
 																	<input class="form-control" type="text" id=""
 																		   [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.siteName">
@@ -255,7 +256,7 @@
 												<hr class="hr-light-grey">
 												<button type="button" class="btn btn-primary-cstm pull-right" [disabled]="disablesave" (click)="saveCheckPaymentInfo()">Save</button>
 												<button type="button" class="btn btn-primary-cstm pull-right" (click)="showDomesticWire()">Go to Domestic Wire</button>
-												<button type="button" class="btn btn-primary-cstm pull-right" (click)="showDefault()">Go to Default</button>
+												<!-- <button type="button" class="btn btn-primary-cstm pull-right" (click)="showDefault()">Go to Default</button> -->
 
 												<div class="clear"></div>
 												<!--<form id="" class="filters" name="" action="#" method="post">
@@ -592,7 +593,7 @@
 			<h4 class="modal-title">Vendor Details</h4>
 		</div>
 		<div class="modal-body viewform">
-			<p><span class="label"><b>site Name: </b></span><span class="value">{{siteName}}</span></p>
+			<p><span class="label"><b>vendor Name: </b></span><span class="value">{{siteName}}</span></p>
 			<p><span class="label"><b> address 1: </b></span><span class="value">{{address1}}</span></p>
 			<p><span class="label"><b> city </b></span><span class="value">{{city}}</span></p>
 			<p><span class="label"><b>state Or Province: </b></span><span class="value">{{stateOrProvince}}</span></p>
