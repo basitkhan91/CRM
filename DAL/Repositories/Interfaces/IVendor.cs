@@ -41,5 +41,7 @@ namespace DAL.Repositories.Interfaces
 
         IEnumerable<object> GetVendorBillingSiteNames(long vendorId);
         IEnumerable<Vendor> getVendorsForDropdown();
+
+        IEnumerable<object> GetVendorBillingAddressAudit(long vendorId, long vendorBillingaddressId);
     }
 }

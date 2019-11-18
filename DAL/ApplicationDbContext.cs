@@ -110,6 +110,7 @@ namespace DAL
         public DbSet<CustomerShippingAddressAudit> CustomerShippingAddressAudit { get; set; }
 
         public DbSet<VendorContact> VendorContact { get; set; }
+        public DbSet<VendorContactAudit> VendorContactAudit { get; set; }
         public DbSet<VendorPayment> VendorPayment { get; set; }
         public DbSet<VendorPaymentMethod> VendorPaymentMethod { get; set; }
         public DbSet<VendorShipping> VendorShipping { get; set; }
@@ -129,6 +130,7 @@ namespace DAL
         public DbSet<InternationalwirePayment> InternationalWirePayment { get; set; }
 
         public DbSet<VendorShippingAddress> VendorShippingAddress { get; set; }
+        public DbSet<VendorShippingAddressAudit> VendorShippingAddressAudit { get; set; }
         // public DbSet<VendorShippingDetails> VendorShippingDetails { get; set; }
         public DbSet<VendorWarnings> VendorWarning { get; set; }
         public DbSet<CustomerWarning> CustomerWarning { get; set; }
@@ -425,6 +427,7 @@ namespace DAL
         public DbSet<POBillingShippingAddress> POBillingShippingAddress { get; set; }
         public DbSet<PurchaseOrderAddress> PurchaseOrderAddress { get; set; }
         public DbSet<VendorBillingAddress> VendorBillingAddress { get; set; }
+        public DbSet<VendorBillingAddressAudit> VendorBillingAddressAudit { get; set; }
         public DbSet<PurchaseOrderShipVia> PurchaseOrderShipVia { get; set; }
         public DbSet<LegalEntityBillingAddress> LegalEntityBillingAddress { get; set; }
         public DbSet<LegalEntityShippingAddress> LegalEntityShippingAddress { get; set; }
