@@ -203,6 +203,7 @@ namespace DAL
         IAssetDepConvention _assetDepConvention;
 
         IPublicationTypesRepository _publicationTypesRepository;
+        ICommunicationRepository _communicationRepository;
         IPercentageRepository _percentageRepository;
 
         IMasterSalesOrderQuoteTypesRepository _masterSalesOrderQuoteTypesRepository;
@@ -1817,6 +1818,16 @@ namespace DAL
             }
         }
 
+        public ICommunicationRepository CommunicationRepository
+        {
+            get
+            {
+                if (_communicationRepository == null)
+                    _communicationRepository = new CommunicationRepository(_context, _appSettings);
+                return _communicationRepository;
+            }
+        }
+        
         public IPercentageRepository PercentageRepository
         {
             get
