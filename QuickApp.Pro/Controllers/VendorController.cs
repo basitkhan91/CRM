@@ -496,7 +496,6 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("Getdiscount")]
         [Produces(typeof(List<DiscountViewModel>))]
         public IActionResult Getdiscount()
-
         {
             var result = _unitOfWork.Discount.GetAllDiscountData(); //.GetAllCustomersData();
 
