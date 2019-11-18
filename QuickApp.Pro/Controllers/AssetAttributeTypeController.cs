@@ -101,6 +101,13 @@ namespace QuickApp.Pro.Controllers
             return Ok(item);
         }
 
+        [HttpGet("getByAssetTypeId/{id}")]
+        public IActionResult getByAssetTypeId(long id)
+        {
+            AssetAttributeType item = _unitOfWork.Repository<AssetAttributeType>().Find(x => x.AssetTypeId == id).FirstOrDefault(x => !(x?.IsDelete ?? false));
+            return Ok(item);
+        }
+
         [HttpGet("removeById/{id}")]
         public IActionResult removeById(long id)
         {

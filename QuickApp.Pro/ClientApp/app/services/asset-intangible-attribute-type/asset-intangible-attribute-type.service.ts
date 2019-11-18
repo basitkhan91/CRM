@@ -3,41 +3,35 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
-import { AssetAttributeType } from '../../models/asset-attribute-type.model';
-import { AssetAttributeTypeEndpointService } from './asset-attribute-type-endpoint.service';
+import { AssetIntangibleAttributeType } from '../../models/asset-intangible-attribute-type.model';
+import { AssetIntangibleAttributeTypeEndpointService } from './asset-intangible-attribute-type-endpoint.service';
 @Injectable()
-export class AssetAttributeTypeService {
-    listCollection: any;
-    constructor(private endpointService: AssetAttributeTypeEndpointService) {
+export class AssetIntangibleAttributeTypeService {
+
+    constructor(private endpointService: AssetIntangibleAttributeTypeEndpointService) {
     }
 
     getAll() {
         return Observable.forkJoin(
-            this.endpointService.getAllItems<AssetAttributeType[]>()
-        );
-    }
-
-    getByAssetTypeId(id: number) {
-        return Observable.forkJoin(
-            this.endpointService.getByAssetType<AssetAttributeType>(id)
+            this.endpointService.getAllItems<AssetIntangibleAttributeType[]>()
         );
     }
 
     getById(id: number) {
         return Observable.forkJoin(
-            this.endpointService.getItemById<AssetAttributeType>(id)
+            this.endpointService.getItemById<AssetIntangibleAttributeType>(id)
         );
     }
 
-    add(item: AssetAttributeType) {
+    add(item: AssetIntangibleAttributeType) {
         return Observable.forkJoin(
-            this.endpointService.addItem<AssetAttributeType>(item)
+            this.endpointService.addItem<AssetIntangibleAttributeType>(item)
         );
     }
 
-    update(item: AssetAttributeType) {
+    update(item: AssetIntangibleAttributeType) {
         return Observable.forkJoin(
-            this.endpointService.updateItem<AssetAttributeType>(item)
+            this.endpointService.updateItem<AssetIntangibleAttributeType>(item)
         );
     }
 
