@@ -48,14 +48,14 @@ export class WorkOrderEndpointService extends EndpointFactory {
             });
     }
 
-    getWorkOrderById<T>(workOrderId: number): Observable<T> {
-        let endpointUrl = `${this.getById}/${workOrderId}`;
+    // getWorkOrderById<T>(workOrderId: number): Observable<T> {
+    //     let endpointUrl = `${this.getById}/${workOrderId}`;
 
-        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getWorkOrderById(workOrderId));
-            });
-    }
+    //     return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+    //         .catch(error => {
+    //             return this.handleError(error, () => this.getWorkOrderById(workOrderId));
+    //         });
+    // }
 
     createNewWorkOrder<T>(workOrder: WorkOrder): Observable<T> {
 
@@ -198,5 +198,11 @@ export class WorkOrderEndpointService extends EndpointFactory {
     getMaterialList(workOrderWorkFlowId, workOrderId) {
         return this.http.get(`${this.configurations.baseUrl}/api/workOrder/workordermateriallist?wfwoId=${workOrderWorkFlowId}&workOrderId=${workOrderId}`)
     }
+
+    getWorkOrderById(workOrderId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderbyid?workOrderId=${workOrderId}`, this.getRequestHeaders())
+    }
+
+
 
 }

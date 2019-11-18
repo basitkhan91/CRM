@@ -52,6 +52,7 @@ import { WorkOrderAddressesComponent } from '../components/work-order/work-order
 import { TooltipModule } from 'primeng/tooltip';
 import { CommonService } from '../services/common.service';
 import { MatIconModule } from "@angular/material/icon";
+import { WorkOrderSmartComponent } from '../components/work-order/work-order-setup/work-order-smart/work-order-smart.component';
 
 @NgModule({
   imports: [
@@ -97,7 +98,8 @@ import { MatIconModule } from "@angular/material/icon";
     DirectLabourComponent,
     WorkOrderLaborComponent,
     WorkOrderAssetsComponent,
-    WorkOrderAddressesComponent
+    WorkOrderAddressesComponent,
+    WorkOrderSmartComponent
   ],
   entryComponents: [],
   providers: [

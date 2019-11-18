@@ -19,7 +19,7 @@ namespace DAL.Repositories
             var temp2 = temp1.Include("Currency");
             var temp3 = temp2.Include("UnitOfMeasure");
             var temp4 = temp3.Include("AssetType");
-            var temp5=temp4.OrderByDescending(c => c.AssetRecordId).ToList();
+            var temp5= temp4.OrderByDescending(c => c.AssetRecordId).ToList();
             return data;
         }
 

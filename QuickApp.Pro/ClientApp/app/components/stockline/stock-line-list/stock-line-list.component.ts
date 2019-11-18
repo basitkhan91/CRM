@@ -150,10 +150,15 @@ export class StockLineListComponent implements OnInit {
             { field: 'itemGroup', header: 'ITEM GROUP' },
             { field: 'stockLineNumber', header: 'SL NUM' },
             { field: 'serialNumber', header: 'SERIAL NUM' },
+
+            { field: 'location', header: 'LOCATION' },
+            { field: 'partCertificationNumber', header: 'PART CERT NUM' },
+
             { field: 'condition', header: 'COND' },
             { field: 'quantity', header: 'QTY ON HAND' },
             { field: 'quantity', header: 'QTY AVAIL' },
             { field: 'glAccountId', header: 'GL ACCT' }
+
         ];
         this.selectedColumns = this.cols;
     }

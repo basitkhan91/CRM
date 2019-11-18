@@ -28,9 +28,10 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getById/{id}")]
         public IActionResult getIntangibleAttributeTypeById(long id)
         {
-            var intangibleTypeData = unitOfWork.Repository<AssetIntangibleAttributeType>().Find(x => x.AssetIntangibleAttributeTypeId == id && x.IsDelete != true);
-            return Ok(intangibleTypeData);
+            AssetIntangibleAttributeType item = unitOfWork.Repository<AssetIntangibleAttributeType>().Find(x => x.AssetIntangibleTypeId == id).FirstOrDefault(x => !(x?.IsDelete ?? false));
+            return Ok(item);
         }
+
         [HttpPost("add")]
         public IActionResult AddAssetIntangibleAttributeType([FromBody]AssetIntangibleAttributeType assetIntangibleAttributeType)
         {

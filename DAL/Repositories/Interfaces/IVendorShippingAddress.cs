@@ -12,6 +12,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<VendorShippingAddress> GetVendorShippingAddresses();
         IEnumerable<Object> GetAllShippingAddressDetails(long id);
         IEnumerable<object> GetAllShipViaDetails(long Selectedrow);
+        IEnumerable<object> GetVendorShippingAddressAudit(long vendorId, long vendirShippingAddressId);
         //  void CreateAction(DAL.Models.Action action);
 
     }

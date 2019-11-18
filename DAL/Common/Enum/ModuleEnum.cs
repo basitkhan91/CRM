@@ -9,6 +9,7 @@
         Publication,
         UnitOfMeasure,
         Manufacturer,
+        Memo,
         ItemClassfication, 
         Site, 
         WareHouse,

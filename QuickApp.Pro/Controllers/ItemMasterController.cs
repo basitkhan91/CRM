@@ -1646,7 +1646,7 @@ namespace QuickApp.Pro.Controllers
                                 join P in _context.Priority on IM.PriorityId equals P.PriorityId into pir
                                 from P in pir.DefaultIfEmpty()
                                 where (
-                                IM.PartNumber.ToLower().Contains(partNo.ToLower())
+                                IM.PartNumber.ToLower().Contains(partNo.ToLower()) && IM.IsActive==true
                                 )
                                 select new
                                 {

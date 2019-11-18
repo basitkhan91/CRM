@@ -2797,6 +2797,19 @@ namespace QuickApp.Pro.Controllers
         }
 
 
+
+
+		[HttpGet("customernameandcodesbyId")]
+		public IActionResult GetCustomerNameAndCodesByCustomerId(long customerId)
+		{
+			var custmoerNameAndCodes = _unitOfWork.Customer.GetCustomerNameAndCodesByCustomerId(customerId);
+			return Ok(custmoerNameAndCodes);
+
+		}
+
+
+	
+
         /// <summary>
         /// Added By Vijay on 15-11-2019
         /// This API is used for customer billing history based on CustomerId and CustomerBillingaddressId
@@ -2827,6 +2840,7 @@ namespace QuickApp.Pro.Controllers
         }
 
     }
+
 }
 
 
