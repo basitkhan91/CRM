@@ -1,0 +1,54 @@
+<div
+  *ngIf="
+    isEdit &&
+    editWorkOrderGeneralInformation &&
+    workOrderTypes &&
+    workOrderStatusList &&
+    creditTerms &&
+    employeesOriginalData &&
+    workScopesList &&
+    workOrderStagesList &&
+    priorityList &&
+    partNumberOriginalData
+  "
+>
+  <app-work-order-add
+    [isEdit]="isEdit"
+    [workOrderTypes]="workOrderTypes"
+    [workOrderStatusList]="workOrderStatusList"
+    [creditTerms]="creditTerms"
+    [employeesOriginalData]="employeesOriginalData"
+    [workScopesList]="workScopesList"
+    [workOrderStagesList]="workOrderStagesList"
+    [priorityList]="priorityList"
+    [partNumberOriginalData]="partNumberOriginalData"
+    [workOrderGeneralInformation]="editWorkOrderGeneralInformation"
+  ></app-work-order-add>
+</div>
+<div
+  *ngIf="
+    !(
+      isEdit &&
+      workOrderTypes &&
+      workOrderStatusList &&
+      creditTerms &&
+      employeesOriginalData &&
+      workScopesList &&
+      workOrderStagesList &&
+      priorityList &&
+      partNumberOriginalData
+    )
+  "
+>
+  <app-work-order-add
+    [workOrderTypes]="workOrderTypes"
+    [workOrderStatusList]="workOrderStatusList"
+    [creditTerms]="creditTerms"
+    [employeesOriginalData]="employeesOriginalData"
+    [workScopesList]="workScopesList"
+    [workOrderStagesList]="workOrderStagesList"
+    [priorityList]="priorityList"
+    [partNumberOriginalData]="partNumberOriginalData"
+    [workOrderGeneralInformation]="workOrderGeneralInformation"
+  ></app-work-order-add>
+</div>

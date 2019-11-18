@@ -1,4 +1,4 @@
-﻿<div [@fadeInOut] class="page-content">
+<div [@fadeInOut] class="page-content">
     <div class="right_col" role="main">
         <div class="x_panel">
             <div class="x_content">
@@ -21,7 +21,7 @@
                         <div class="form-row col-row col-row1">
                             <div class="col-md-4 display-flex inline-block" style="margin-top: 25px;">
                                 <div>
-                                   <button type="button" id="btnUpdatedepriciationMethod" *ngIf="this.updateMode" (click)="updatedepriciationmethod()" name="" class="btn btn-success nobg btn-cstm" data-toggle="tooltip" data-original-title="Update"><i class="fa fa-edit"></i></button>
+                                    <button type="button" id="btnUpdatedepriciationMethod" *ngIf="this.updateMode" (click)="updatedepriciationmethod()" name="" class="btn btn-success nobg btn-cstm" data-toggle="tooltip" data-original-title="Update"><i class="fa fa-edit"></i></button>
                                     <button type="button" id="btnResetdepriciationMethod" *ngIf="this.updateMode" (click)="resetdepriciationmethod()" name="" class="btn btn-default nobg btn-cstm" data-toggle="tooltip" data-original-title="Reset"><i class="fa fa-edit"></i></button>
                                 </div>
                             </div>
@@ -31,24 +31,26 @@
                                  [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn"
                                  [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
                             <ng-template pTemplate="caption">
-                               
-                                    <div style="text-align: right;margin-left:-6px !important;">
-                                        <p-multiSelect [maxSelectedLabels]="2" [options]="selectedData" optionLabel="header" [(ngModel)]="selectedColumns"
-                                                       [style]="{minWidth: '200px'}" style="float:left"></p-multiSelect>
-                                         <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
-                                                iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-                                        <button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
-                                                iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
-                                        <div class="excel-upload  excel-upload-cstm">
-                                            <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected"
-                                                   accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                                            <label for="upload">
-                                                <span matTooltip="Upload Data (Excel)">
-                                                    <i class="fa fa-upload"></i>
-                                                </span>
-                                            </label>
-                                        </div>
+
+                                <div style="text-align: right;margin-left:-6px !important;">
+                                    <p-multiSelect [maxSelectedLabels]="2" [options]="selectedData" optionLabel="header" [(ngModel)]="selectedColumns"
+                                                   [style]="{minWidth: '200px'}" style="float:left"></p-multiSelect>
+                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
+                                            iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
+                                            iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                    <div class="excel-upload  excel-upload-cstm">
+                                        <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file"
+                                               accept=".xlsx, .xls, .csv">
+                                        <label for="upload">
+                                            <span matTooltip="Upload Data (Excel)">
+                                                <i class="fa fa-upload"></i>
+                                            </span>
+                                        </label>
+                                        &nbsp; &nbsp;
+                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()">Sample File Download</button>
                                     </div>
+                                </div>
                             </ng-template>
 
                             <ng-template pTemplate="header" let-columns>
@@ -93,20 +95,30 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                         <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="openDelete(content,rowData)">
                                             <mat-icon color="warn">delete</mat-icon>
                                         </button>
-                                        <button class="btn-history" mat-icon-button matTooltip="History" (click)="showAuditPopup(auditContent,rowData.shelfId)">
+                                        <button class="btn-history" mat-icon-button matTooltip="History" data-target="#contentHist" data-toggle="modal" (click)="getAuditHistoryById(rowData)">
                                             <mat-icon color="green">history</mat-icon>
                                         </button>
                                     </td>
                                 </tr>
                             </ng-template>
+                            <!--<ng-template #auditContent let-c="close" let-d="dismiss">
+                                <div class="audit-template-launcher">
+                                    <bin-audit [Data]="AuditDetails" [Modal]="modal" *ngIf="HasAuditDetails"></bin-audit>
+                                    <audit-no-history [Modal]="modal" [Title]="AuditHistoryTitle" *ngIf="!HasAuditDetails"></audit-no-history>
+                                </div>
+                            </ng-template>-->
+
                             <ng-template #auditContent let-c="close" let-d="dismiss">
                                 <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
                                     <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
                                 </div>
                             </ng-template>
+
                             <ng-template pTemplate="summary" id="footer">
                                 <label id="footer" class="footer">No'of records:</label> <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" />
                                 &nbsp;&nbsp;
+                                <label id="footer" class="footer1">Pages Count:</label>
+                                <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" />
                             </ng-template>
                         </p-table>
                     </div>
@@ -226,12 +238,12 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                         <p-autoComplete [(ngModel)]="codeName" name="code" (onSelect)="partnmId($event)" (onKeyUp)="eventHandler($event)" [suggestions]="localCollection" (completeMethod)="filterDepreciationMethod($event)" [size]="30"
                                         [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
                             <ng-template let-codeName pTemplate="item">
-                                 <div class="ui-helper-clearfix">{{codeName}}</div>
+                                <div class="ui-helper-clearfix">{{codeName}}</div>
                             </ng-template>
 
                         </p-autoComplete>
                         <div *ngIf="disableSave" class="clr-red">Already Exists</div>
-                            <div class="clear"></div>
+                        <div class="clear"></div>
                     </div>
                 </div>
                 <div class="col-sm-12">
@@ -295,3 +307,67 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
         <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
     </div>
 </ng-template>
+
+<ng-template #auditContent let-c="close" let-d="dismiss">
+    <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
+        <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+    </div>
+</ng-template>
+
+
+<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">History of Depreciation Method</h4>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive rro-table-cstm">
+                    <table class="table table-bordered" *ngIf="auditHistory.length> 0 else noDatavailable">
+                        <thead>
+                            <tr>
+                                <!-- <th>UMID</th> -->
+                                <th>Code</th>
+                                <th>Name</th>
+                                <th>DepreciationMethod</th>
+                                <th>Memo</th>
+                                <th>IsActive</th>
+                                <th>Updated By</th>
+                                <th>Updated Time</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="auditHistory.length> 0">
+                            <tr *ngFor="let audit of auditHistory; let i = index;">
+                                <!-- auditHistory[i>0 ? i-1 : i] -->
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'assetDepreciationMethodCode', audit.assetDepreciationMethodCode)  ? 'black' : 'red'  }">{{audit.assetDepreciationMethodCode}}</td>
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'assetDepreciationMethodName', audit.assetDepreciationMethodName)  ? 'black' : 'red'  }">{{audit.assetDepreciationMethodName}}</td>
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'assetDepreciationMethodBasis', audit.assetDepreciationMethodBasis)  ? 'black' : 'red'  }">{{audit.assetDepreciationMethodBasis}}</td>
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'assetDepreciationMemo', audit.assetDepreciationMemo)  ? 'black' : 'red'  }">{{audit.assetDepreciationMemo}}</td>
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
+                                <td>{{audit.updatedBy}}</td>
+                                <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                            </tr>
+                        </tbody>
+
+
+                    </table>
+                    <ng-template #noDatavailable>
+                        <div class="text-center">
+                            <img src="../../assets/images/binoculars.png" style="height: 100px; width: 100px;">
+                            <h4 style="color: #ff5663;">No History Found </h4>
+                        </div>
+
+                    </ng-template>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+

@@ -60,13 +60,26 @@ export class PublicationEndpointService extends EndpointFactory {
     private readonly _publicationStatus: string =
         '/api/Publication/publicationstatus';
     private readonly _publicationGetByIdViewUrl: string = '/api/Publication/publicationview';
-    private readonly _publicationGlobalSearchUrl: string = '/api/Publication/publicationsglobalsearch';        
+    private readonly _publicationGlobalSearchUrl: string = '/api/Publication/publicationsglobalsearch';  
+    private readonly _publicationTypes: string = '/api/Publication/getpublicationtypes';  
+    private readonly _publicationForWorkflowURL: string = '/api/Publication/GetPublicationDropdownData';
+    private readonly _publicationURL: string = '/api/Publication/getPublicationForWorkFlowById';
+    private readonly _excelUpload: string ="/api/Publication/uploadpublicationcustomdata";
+    private readonly _auditsUrl: string = "/api/Publication/publicationhistory";
 
 
+    get getCodeUrl() {
+        return this.configurations.baseUrl + this._publicationGetUrl;
+    }
 
-  get getCodeUrl() {
-    return this.configurations.baseUrl + this._publicationGetUrl;
-  }
+    get getPublicationForWorkFlowURL() {
+        return this.configurations.baseUrl + this._publicationForWorkflowURL;
+    }
+
+    get getPublicationURL() {
+        return this.configurations.baseUrl + this._publicationURL;
+    }
+
 
   constructor(
     http: HttpClient,
@@ -477,10 +490,55 @@ getpublicationListEndpoint<T>(pageIndex, pageSize): Observable<T> {
 
   getpublicationGlobalSearchEndpoint<T>(ataChapterId, ataSubChapterId, airCraftId, modelId, dashNumberId, pageNumber, pageSize): Observable<T> {
     return this.http
-        .get<T>(`${this._publicationGlobalSearchUrl}/${ataChapterId}`, this.getRequestHeaders())
+        .get<T>(`${this._publicationGlobalSearchUrl}/?ataChapterId=${ataChapterId}&ataSubChapterId=${ataSubChapterId}&airCraftId=${airCraftId}&modelId=${modelId}&dashNumberId=${dashNumberId}&pageNumber=${pageNumber}&pageSize=${pageSize}`, this.getRequestHeaders())
         .catch(error => {
             return this.handleError(error, () => this.getpublicationGlobalSearchEndpoint(ataChapterId, ataSubChapterId, airCraftId, modelId, dashNumberId, pageNumber, pageSize));
         });
 }
+
+getpublicationTypesEndpoint<T>(): Observable<T> {
+  return this.http
+      .get<T>(`${this._publicationTypes}`, this.getRequestHeaders())
+      .catch(error => {
+          return this.handleError(error, () => this.getpublicationTypesEndpoint());
+      });
+    }
+
+    getAllPublicationsDropdownEndPoint<T>(): Observable<T> {
+        return this.http
+            .get<T>(this.getPublicationForWorkFlowURL, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAllPublicationsDropdownEndPoint());
+            });
+    }
+
+    getPublicationForWorkFlowEndpoint<T>(publicationId: number): Observable<T> {
+        return this.http.get<T>(`${this.getPublicationURL}/${publicationId}`, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getPublicationForWorkFlowEndpoint(publicationId));
+            });
+    }
+
+    publicationCustomUpload(file){
+      return this.http.post( `${this.configurations.baseUrl}${this._excelUpload}`, file)            
+  }
+
+  getPublicationAuditDetails<T>(Id: number): Observable<T> {
+    let endPointUrl = `${this._auditsUrl}?publicationId=${Id}`;
+
+    return this.http.get<T>(endPointUrl, this.getRequestHeaders())
+        .catch(error => {
+            return this.handleError(error, () => this.getPublicationAuditDetails(Id));
+        });
+}
+
+getpublicationListBySearchEndpoint<T>(pageIndex, pageSize, publicationId, description, publicationType, publishby, employeeName, location): Observable<T> {
+  return this.http
+    .get<T>(`${this.getCodeUrl}?pageNumber=${pageIndex}&pageSize=${pageSize}&publicationId=${publicationId}&description=${description}&publicationType=${publicationType}&publishedBy=${publishby}&employee=${employeeName}&location=${location}`, this.getRequestHeaders())
+    .catch(error => {
+      return this.handleError(error, () => this.getpublicationListBySearchEndpoint(pageIndex, pageSize, publicationId, description, publicationType, publishby, employeeName, location));
+    });
+  }
+
 
 }

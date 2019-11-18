@@ -51,9 +51,11 @@ namespace QuickApp.Pro.Controllers
                 if (ModelState.IsValid)
                 {
                     dashNumber.IsActive = true;
+                    dashNumber.IsDeleted = false;
                     dashNumber.CreatedDate = DateTime.Now;
                     dashNumber.UpdatedDate = DateTime.Now;
                     dashNumber.MasterCompanyId = 1;
+
                     unitOfWork.Repository<AircraftDashNumber>().Add(dashNumber);
                     unitOfWork.SaveChanges();
                     return Ok(dashNumber);
@@ -77,10 +79,11 @@ namespace QuickApp.Pro.Controllers
             if (dashNumber != null)
             {
                 if (ModelState.IsValid)
-                {
-                   
+                {   
+                    dashNumber.IsDeleted = false;
                     dashNumber.CreatedDate = DateTime.Now;
-                    dashNumber.UpdatedDate = DateTime.Now;                                  
+                    dashNumber.UpdatedDate = DateTime.Now;
+                    dashNumber.MasterCompanyId = 1;
                     unitOfWork.Repository<AircraftDashNumber>().Update(dashNumber);
                     unitOfWork.SaveChanges();
                     return Ok(dashNumber);

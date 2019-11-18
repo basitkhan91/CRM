@@ -138,6 +138,7 @@ export class CreatePoComponent implements OnInit {
             const getlist = data[0];
             this.vendorList = getlist.map(x => {
                 return {
+					vendorId: x.vendorId,
                     vendorName: x.vendorName === null ? '-' : x.vendorName,
                     vendorCode: x.vendorCode === null ? '-' : x.vendorCode,
                     firstName: x.firstName === null ? '-' : x.firstName,
@@ -147,7 +148,7 @@ export class CreatePoComponent implements OnInit {
                     email: x.email === null ? '-' : x.email,
                     city: x.city === null ? '-' : x.city,
                     stateOrProvince: x.stateOrProvince === null ? '-' : x.stateOrProvince,
-                    postalCode: x.ps.postalCode === null ? '-' : x.ps.postalCode,                    
+                    //postalCode: x.ps.postalCode === null ? '-' : x.ps.postalCode,                    
                 }
             })
 		});
@@ -181,11 +182,14 @@ export class CreatePoComponent implements OnInit {
 		// this.dataSource.data = getPriorityList;
 		this.allPriorityInfo = getPriorityList;
 	}
-	gotoCreatePO() {
+	gotoCreatePO(rowData) {
 		//this.workFlowtService.purchasepartcollection = [];
 		//this.workFlowtService.isEditMode = true;
 		//this.workFlowtService.vendorForPoCollection=data;
-		this._router.navigateByUrl('/vendorsmodule/vendorpages/app-purchase-setup');
+		//this._router.navigateByUrl('/vendorsmodule/vendorpages/app-purchase-setup');
+		console.log(rowData);		
+        const { vendorId } = rowData;
+        this._router.navigateByUrl(`vendorsmodule/vendorpages/app-purchase-setup/vendor/${vendorId}`);
 	}
 	private onDataLoadFailed(error: any) {
 		// alert(error);
@@ -512,6 +516,6 @@ export class CreatePoComponent implements OnInit {
 
     onCreatePO() {
         this._router.navigateByUrl('/vendorsmodule/vendorpages/app-purchase-setup');
-    }
+	}
 
 }

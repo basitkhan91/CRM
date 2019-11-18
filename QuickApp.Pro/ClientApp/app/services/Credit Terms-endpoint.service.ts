@@ -12,7 +12,7 @@ export class CreditTermsEndpoint extends EndpointFactory {
 
     private readonly _creditermsUrl: string = "/api/CreditTerms/Get";
     private readonly _credittermsPosturl: string = "/api/CreditTerms/Creditermspost";
-    private readonly _actionsUrlNewAuditHistory: string = "/api/CreditTerms/auditHistoryById";
+    private readonly _actionsUrlNewAuditHistory: string = "/api/CreditTerms/audits";
     private readonly getCreditTermsAuditById: string = "/api/CreditTerms/audits";
 
     get creditermsUrl() { return this.configurations.baseUrl + this._creditermsUrl; }

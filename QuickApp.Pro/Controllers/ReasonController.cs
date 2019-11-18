@@ -121,7 +121,7 @@ namespace QuickApp.Pro.Controllers
                 existingResult.ReasonCode = reasonViewModel.ReasonCode;
                 existingResult.Memo = reasonViewModel.Memo;
                 existingResult.IsActive = reasonViewModel.IsActive;
-                existingResult.MasterCompanyId = reasonViewModel.MasterCompanyId;
+                
 
                 _unitOfWork.Reasons.Update(existingResult);
                 _unitOfWork.SaveChanges();
@@ -171,54 +171,7 @@ namespace QuickApp.Pro.Controllers
             IQueryable<ReasonPaginationViewModel> queryable = null;
             List<ReasonPaginationViewModel> ReasonList = new List<ReasonPaginationViewModel>();
             ReasonPaginationViewModel Reason = null;
-            if (!string.IsNullOrEmpty(paginate.ReasonCode)
-                || !string.IsNullOrEmpty(paginate.ReasonForRemoval)
-                || !string.IsNullOrEmpty(paginate.Memo)
-                || !string.IsNullOrEmpty(paginate.CreatedBy)
-                || !string.IsNullOrEmpty(paginate.UpdatedBy))
-            {
-                //var Reasons = _unitOfWork.Reason;
-                var Reasons = _unitOfWork.Reasons.GetAllReasonData();
-                foreach (var item in Reasons)
-                {
-                    Reason = new ReasonPaginationViewModel();
-                    Reason.ReasonId = item.ReasonId;
-                    Reason.ReasonCode = item.ReasonCode;
-                    Reason.ReasonForRemoval = item.ReasonForRemoval;
-                    Reason.Memo = item.Memo;
-                    Reason.CreatedDate = item.CreatedDate;
-                    Reason.CreatedBy = item.CreatedBy;
-                    Reason.UpdatedDate = item.UpdatedDate;
-                    Reason.UpdatedBy = item.UpdatedBy;
-                    Reason.IsActive = item.IsActive;
-                    ReasonList.Add(Reason);
-                }
-                
-                if (!string.IsNullOrEmpty(paginate.ReasonCode))
-                {
-                    ReasonList = ReasonList.Where(c => c.ReasonCode != null && c.ReasonCode.ToUpper().Contains(paginate.ReasonCode.ToUpper().Trim())).ToList();
-                }
-                if (!string.IsNullOrEmpty(paginate.ReasonForRemoval))
-                {
-                    ReasonList = ReasonList.Where(c => c.ReasonForRemoval != null && c.ReasonForRemoval.ToUpper().Contains(paginate.ReasonForRemoval.ToUpper().Trim())).ToList();
-                }
-                if (!string.IsNullOrEmpty(paginate.Memo))
-                {
-                    ReasonList = ReasonList.Where(c => c.Memo != null && c.Memo.ToUpper().Contains(paginate.Memo.ToUpper().Trim())).ToList();
-                }
-
-                if (!string.IsNullOrEmpty(paginate.CreatedBy))
-                {
-                    ReasonList = ReasonList.Where(c => c.CreatedBy != null && c.CreatedBy.ToUpper().Contains(paginate.CreatedBy.ToUpper().Trim())).ToList();
-                }
-                if (!string.IsNullOrEmpty(paginate.UpdatedBy))
-                {
-                    ReasonList = ReasonList.Where(c => c.UpdatedBy != null && c.UpdatedBy.ToUpper().Contains(paginate.UpdatedBy.ToUpper().Trim())).ToList();
-                }
-                getData.TotalRecordsCount = ReasonList.Count();
-            }
-            else
-            {
+            
                 var Reasons = _unitOfWork.Reasons.GetAllReasonData();
                 foreach (var item in Reasons)
                 {
@@ -235,19 +188,17 @@ namespace QuickApp.Pro.Controllers
                     ReasonList.Add(Reason);
                     getData.TotalRecordsCount = ReasonList.Count();
                 }
-            }
+            
             queryable = ReasonList.AsQueryable();
+            return Ok(getData);
+            
+        }
 
-            if (paginate != null)
-            {
-                var pageListPerPage = paginate.rows;
-                var pageIndex = paginate.first;
-                var pageCount = (pageIndex / pageListPerPage) + 1;
-                getData.ReasonList = DAL.Common.PaginatedList<ReasonPaginationViewModel>.Create(queryable, pageCount, pageListPerPage);
-                return Ok(getData);
-            }
-            else
-                return BadRequest(new Exception("Error Occured while fetching customer specific details."));
+        [HttpPost("uploadReasonCustomdata")]
+        public IActionResult UploadReasonCustomData()
+        {
+            _unitOfWork.FileUploadRepository.UploadCustomFile(Convert.ToString("DepreciationConvention"), Request.Form.Files[0]);
+            return Ok();
         }
 
         public class GetData
@@ -286,10 +237,11 @@ namespace QuickApp.Pro.Controllers
                 Reason.CreatedBy = item.CreatedBy;
                 Reason.UpdatedDate = item.UpdatedDate;
                 Reason.UpdatedBy = item.UpdatedBy;
-               // Reason.IsActive = item.IsActive;
+                Reason.IsActive = item.IsActive;
                 ReasonList.Add(Reason);
             }
             dynamicGridData.ColumnData = ReasonList;
+            dynamicGridData.TotalRecords = dynamicGridData.ColumnData.Count();
             return Ok(dynamicGridData);
         }
         #endregion

@@ -206,7 +206,7 @@ export class VendorShippingInformationComponent {
             error => this.onDataLoadFailed(error)
         );
         this.cols = [
-            { field: 'siteName', header: 'Site Name' },
+            { field: 'siteName', header: 'Ship To' },
             { field: 'address1', header: 'Address1' },
             { field: 'address2', header: 'Address2' },
             { field: 'address3', header: 'Address3' },
@@ -480,6 +480,7 @@ export class VendorShippingInformationComponent {
     previousClick() {
         this.activeIndex = 3;
         this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.changeStep('Payment Information');
         this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
     }
     openShipVia(content, rowData) {
@@ -520,6 +521,17 @@ export class VendorShippingInformationComponent {
         this.sourceVendor.updatedBy = this.userName;
         this.sourceVendor.vendorShippingAddressId = vendorShippingAddressId;
         this.workFlowtService.deleteAcion(this.sourceVendor).subscribe(
+            response => this.saveCompleted(this.sourceVendor),
+            error => this.saveFailedHelper(error));
+    }
+
+    deleteVendorShippingAddress(vendorShippingAddressId) {
+        this.isSaving = true;
+        this.sourceVendor.isActive = false;
+        this.sourceVendor.addressStatus = false;
+        this.sourceVendor.updatedBy = this.userName;
+        this.sourceVendor.vendorShippingAddressId = vendorShippingAddressId;
+        this.workFlowtService.deleteVendorShippingAddress(this.sourceVendor).subscribe(
             response => this.saveCompleted(this.sourceVendor),
             error => this.saveFailedHelper(error));
     }
@@ -595,9 +607,10 @@ export class VendorShippingInformationComponent {
         if (this.local) {
             this.workFlowtService.shippingCollection = this.local;
         }
-        this.activeIndex = 5;
+        this.activeIndex = 6;
         this.workFlowtService.indexObj.next(this.activeIndex);
-        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
+        this.workFlowtService.changeStep('Billing Information');
+        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-billing-information');
     }
     handleChanges(rowData, e) {
         if (e.checked == false) {

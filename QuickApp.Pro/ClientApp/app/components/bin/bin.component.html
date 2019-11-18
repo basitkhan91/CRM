@@ -27,15 +27,17 @@
 									<button type="button" class="btn btn-primary-cstm " pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
 									<button type="button" class="btn btn-primary-cstm " pButton icon="fa-download" iconPos="left" label="Export Selection Only"
 									 (click)="dt.exportCSV({selectionOnly:true})"></button>
-									<div class="excel-upload  excel-upload-cstm">
-										<input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected"
-										 accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-										<label for="upload">
-											<span matTooltip="Upload Data (Excel)">
-												<i class="fa fa-upload"></i>
-											</span>
-										</label>
-									</div>
+                                    <div class="excel-upload  excel-upload-cstm">
+                                        <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected"
+                                               accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                                        <label for="upload">
+                                            <span matTooltip="Upload Data (Excel)">
+                                                <i class="fa fa-upload"></i>
+                                            </span>
+                                        </label>
+                                        &nbsp; &nbsp;
+                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()">Sample File Download</button>
+                                    </div>
 								</div>
 							</ng-template>
 							<ng-template pTemplate="colgroup" let-columns>
@@ -90,8 +92,9 @@
 								</tr>
 							</ng-template>
 							<ng-template #auditContent let-c="close" let-d="dismiss">
-								<div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
-									<app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+								<div class="audit-template-launcher">
+									<bin-audit [Data]="AuditDetails" [Modal]="modal" *ngIf= "HasAuditDetails"></bin-audit>
+									<audit-no-history [Modal]="modal" [Title]="AuditHistoryTitle" *ngIf="!HasAuditDetails"></audit-no-history>
 								</div>
 							</ng-template>
 							<ng-template pTemplate="summary" id="footer">
@@ -377,55 +380,55 @@
 			<div class="col-sm-12">
 				<div class="col-sm-6">
 					<p>
-						<span class="label">
+						<span class="label view-Header">
 							<b> Bin Name : </b>
 						</span>
 						<span class="value">{{binName}}</span>
 					</p>
 					<p>
-						<span class="label">
+						<span class="label view-Header">
 							<b> Shelf Name : </b>
 						</span>
 						<span class="value">{{shelfName}}</span>
 					</p>
 					<p>
-						<span class="label">
+						<span class="label view-Header">
 							<b> Location Name : </b>
 						</span>
 						<span class="value">{{locationName}}</span>
 					</p>
 					<p>
-						<span class="label">
+						<span class="label view-Header">
 							<b> Warehouse Name : </b>
 						</span>
 						<span class="value">{{warehouseName}}</span>
 					</p>
 					<p>
-						<span class="label">
+						<span class="label view-Header">
 							<b> Site Name : </b>
 						</span>
 						<span class="value">{{siteName}}</span>
 					</p>
 					<p>
-						<span class="label">
+						<span class="label view-Header">
 							<b> Address1: </b>
 						</span>
 						<span class="value">{{address1}}</span>
 					</p>
 					<p>
-						<span class="label">
+						<span class="label view-Header">
 							<b> Address2: </b>
 						</span>
 						<span class="value">{{address2}}</span>
 					</p>
 					<p>
-						<span class="label">
+						<span class="label view-Header">
 							<b> Address3: </b>
 						</span>
 						<span class="value">{{address3}}</span>
 					</p>
 					<p>
-						<span class="label">
+						<span class="label view-Header">
 							<b> City: </b>
 						</span>
 						<span class="value">{{city}}</span>
@@ -433,49 +436,49 @@
 				</div>
 				<div class="col-sm-6">
 					<p>
-						<span class="label">
+						<span class="label view-Header">
 							<b> State: </b>
 						</span>
 						<span class="value">{{stateOrProvince}}</span>
 					</p>
 					<p>
-						<span class="label">
+						<span class="label view-Header">
 							<b> Country: </b>
 						</span>
 						<span class="value">{{country}}</span>
 					</p>
 					<p>
-						<span class="label">
+						<span class="label view-Header">
 							<b> ZipCode: </b>
 						</span>
 						<span class="value">{{postalCode}}</span>
 					</p>
 					<p>
-						<span class="label">
+						<span class="label view-Header">
 							<b>Memo: </b>
 						</span>
 						<span class="value">{{memo}}</span>
 					</p>
 					<p>
-						<span class="label">
+						<span class="label view-Header">
 							<b>Created By: </b>
 						</span>
 						<span class="value">{{createdBy}}</span>
 					</p>
 					<p>
-						<span class="label">
+						<span class="label view-Header">
 							<b>Created Date: </b>
 						</span>
 						<span class="value">{{createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
 					</p>
 					<p>
-						<span class="label">
+						<span class="label view-Header">
 							<b>Updated By: </b>
 						</span>
 						<span class="value">{{updatedBy}}</span>
 					</p>
 					<p>
-						<span class="label">
+						<span class="label view-Header">
 							<b>Updated Date: </b>
 						</span>
 						<span class="value">{{updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>

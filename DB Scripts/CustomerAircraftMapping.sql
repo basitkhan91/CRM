@@ -13,11 +13,14 @@ GO
 ALTER TABLE [dbo].[CustomerAircraftMapping] DROP CONSTRAINT [FK_CustomerAircraftMapping_AircraftDashNumber]
 GO
 
-/****** Object:  Table [dbo].[CustomerAircraftMapping]    Script Date: 9/14/2019 6:20:25 PM ******/
+ALTER TABLE [dbo].[CustomerAircraftMapping] DROP CONSTRAINT [DF_CustomerAircraftMapping_Inventory]
+GO
+
+/****** Object:  Table [dbo].[CustomerAircraftMapping]    Script Date: 10/22/2019 10:38:01 AM ******/
 DROP TABLE [dbo].[CustomerAircraftMapping]
 GO
 
-/****** Object:  Table [dbo].[CustomerAircraftMapping]    Script Date: 9/14/2019 6:20:25 PM ******/
+/****** Object:  Table [dbo].[CustomerAircraftMapping]    Script Date: 10/22/2019 10:38:01 AM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -28,19 +31,19 @@ CREATE TABLE [dbo].[CustomerAircraftMapping](
 	[CustomerAircraftMappingId] [bigint] IDENTITY(1,1) NOT NULL,
 	[CustomerId] [bigint] NOT NULL,
 	[AircraftTypeId] [int] NOT NULL,
-	[AircraftModelId] [bigint] NOT NULL,
-	[DashNumberId] [bigint] NOT NULL,
+	[AircraftModelId] [bigint] NULL,
+	[DashNumberId] [bigint] NULL,
 	[DashNumber] [varchar](250) NOT NULL,
 	[AircraftType] [varchar](250) NOT NULL,
 	[AircraftModel] [varchar](250) NOT NULL,
 	[Memo] [varchar](2000) NULL,
 	[MasterCompanyId] [int] NOT NULL,
-	[Inventory] [int] NULL,
 	[CreatedBy] [varchar](256) NOT NULL,
 	[UpdatedBy] [varchar](256) NOT NULL,
-	[CreatedDate] [datetime2](7) NULL,
+	[CreatedDate] [datetime2](7) NOT NULL,
 	[UpdatedDate] [datetime2](7) NULL,
 	[IsDeleted] [bit] NULL,
+	[Inventory] [int] NULL,
  CONSTRAINT [PK_CACMapping] PRIMARY KEY CLUSTERED 
 (
 	[CustomerAircraftMappingId] ASC
@@ -54,6 +57,9 @@ CREATE TABLE [dbo].[CustomerAircraftMapping](
 	[MasterCompanyId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[CustomerAircraftMapping] ADD  CONSTRAINT [DF_CustomerAircraftMapping_Inventory]  DEFAULT ((0)) FOR [Inventory]
 GO
 
 ALTER TABLE [dbo].[CustomerAircraftMapping]  WITH CHECK ADD  CONSTRAINT [FK_CustomerAircraftMapping_AircraftDashNumber] FOREIGN KEY([DashNumberId])

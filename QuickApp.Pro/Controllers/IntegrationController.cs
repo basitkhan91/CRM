@@ -37,6 +37,18 @@ namespace QuickApp.Pro.Controllers
                 return Ok(Mapper.Map<IEnumerable<IntegrationViewModel>>(allIntegrationinfo));
 
             }
+        /// <summary>
+        /// Method that gets basic info namely id and name only
+        /// </summary>
+        /// <returns>List with basic info</returns>
+        [HttpGet("basic")]
+        [Produces(typeof(List<IntegrationBaseViewModel>))]
+        public IActionResult GetBasicList()
+        {
+            var basicIntegrationList = _unitOfWork.Integration.GetIntegrationLite();
+            var mappedList = Mapper.Map<IEnumerable<IntegrationBaseViewModel>>(basicIntegrationList);
+            return Ok(mappedList);
+        }
 
         [HttpGet("auditHistoryById/{id}")]
         [Produces(typeof(List<AuditHistory>))]
@@ -74,6 +86,7 @@ namespace QuickApp.Pro.Controllers
                 integrationobj.PortalUrl = integrationViewModel.PortalUrl;
                 integrationobj.Memo = integrationViewModel.Memo;
                 integrationobj.IsActive = integrationViewModel.IsActive;
+                integrationobj.IsDelete = false;
                 integrationobj.CreatedDate = DateTime.Now;
                 integrationobj.UpdatedDate = DateTime.Now;
                 integrationobj.CreatedBy = integrationViewModel.CreatedBy;

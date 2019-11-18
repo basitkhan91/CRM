@@ -40,7 +40,7 @@ export class ProvisionService {
         return Observable.forkJoin(
             this.provisionEndpoint.getProvisionEndpoint<Provision[]>());
     }
-    newProvision(provision: Provision) {
+    newProvision(provision) {
         return this.provisionEndpoint.getNewProvisionEndpoint<Provision>(provision);
     }
 
@@ -52,7 +52,7 @@ export class ProvisionService {
         return this.provisionEndpoint.getEditProvisionEndpoint<Provision>(provisionId);
     }
 
-    updateProvision(provision: Provision) {
+    updateProvision(provision) {
         return this.provisionEndpoint.getUpdateProvisionEndpoint(provision, provision.provisionId);
     }
 
@@ -63,6 +63,9 @@ export class ProvisionService {
 
     getProvisionAudit(provisionId: number) {
         return this.provisionEndpoint.getProvisionAuditById<any>(provisionId);
+    }
+    provisionFileUpload(file) {
+        return this.provisionEndpoint.provisionCustomUpload(file);
     }
 
 }

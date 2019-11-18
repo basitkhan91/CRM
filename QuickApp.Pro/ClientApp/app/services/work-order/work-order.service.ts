@@ -24,12 +24,16 @@ export class WorkOrderService {
         return this.workOrderEndpointService.getAllWorkOrders<WorkOrder[]>();
     }
 
-    getById(workOrderId: number) {
-        return this.workOrderEndpointService.getWorkOrderById<WorkOrder>(workOrderId);
+    // getById(workOrderId: number) {
+    //     return this.workOrderEndpointService.getWorkOrderById<WorkOrder>(workOrderId);
+    // }
+
+    getWorkOrderById(workOrderId) {
+        return this.workOrderEndpointService.getWorkOrderById(workOrderId);
     }
 
-    add(workOrder: WorkOrder) {
-        return this.workOrderEndpointService.addWorkOrder<WorkOrder>(workOrder);
+    createNewWorkOrder(workOrder) {
+        return this.workOrderEndpointService.createNewWorkOrder<any>(workOrder);
     }
 
     update<T>(workOrder: WorkOrder) {
@@ -53,7 +57,7 @@ export class WorkOrderService {
     }
 
     getAllWorkOrderStatus() {
-        return this.workOrderEndpointService.getAllWorkOrderStatus<WorkOrderStatus[]>(); 
+        return this.workOrderEndpointService.getAllWorkOrderStatus<WorkOrderStatus[]>();
     }
 
     getAllWorkScopes() {
@@ -66,4 +70,64 @@ export class WorkOrderService {
     postLabour(action: any) {
         return this.workOrderEndpointService.postLabourEndpoint<any>(action);
     }
+
+    getWorkFlowByPNandScope(itemMasterId, workScopeId) {
+        return this.workOrderEndpointService.getWorkFlowByPNandScope(itemMasterId, workScopeId)
+    }
+
+    getMultipleParts() {
+        return this.workOrderEndpointService.getMultipleParts()
+    }
+
+    getRevisedPartNumbers(itemMasterId) {
+        return this.workOrderEndpointService.getRevisedPartNumbers(itemMasterId)
+    }
+    getStockLineByItemMasterId(itemMasterId, conditionId) {
+        return this.workOrderEndpointService.getStockLineByItemMasterId(itemMasterId, conditionId);
+    }
+    getPartPublicationByItemMaster(itemMasterId) {
+        return this.workOrderEndpointService.getPartPublicationByItemMaster(itemMasterId);
+    }
+    getSerialNoByStockLineId(stockLineId, conditionId) {
+        return this.workOrderEndpointService.getSerialNoByStockLineId(stockLineId, conditionId)
+    }
+    getConditionByItemMasterId(itemMasterId) {
+        return this.workOrderEndpointService.getConditionByItemMasterId(itemMasterId);
+    }
+    getWorkOrderList(pageIndex, pageSize) {
+        return this.workOrderEndpointService.getWorkOrderList(pageIndex, pageSize);
+    }
+
+    updateActionforWorkOrder(action, login) {
+        return this.workOrderEndpointService.updateWorkOrderStatus(action, login);
+    }
+    deleteActionforWorkOrder(workOrderId) {
+        return this.workOrderEndpointService.deleteWorkOrder(workOrderId);
+    }
+
+    getWorkOrderPartListByWorkOrderId(workOrderId) {
+        return this.workOrderEndpointService.getWorkOrderPartListByWorkOrderId(workOrderId);
+    }
+
+    createWorkFlowWorkOrder(data) {
+        return this.workOrderEndpointService.createWorkFlowWorkOrder(data);
+    }
+
+    getWorkOrderWorkFlowNumbers(workOrderId) {
+        return this.workOrderEndpointService.getWorkOrderWorkFlowNumbers(workOrderId);
+    }
+
+    getWorkOrderAssetList(workFlowWorkOrderId) {
+        return this.workOrderEndpointService.getWorkOrderAssetList(workFlowWorkOrderId);
+    }
+    createWorkOrderLabor(data) {
+        return this.workOrderEndpointService.createWorkOrderLabor(data);
+    }
+    getAllTasks() {
+        return this.workOrderEndpointService.getTasks();
+    }
+    getMaterialList(workOrderWorkFlowId, workOrderId) {
+        return this.workOrderEndpointService.getMaterialList(workOrderWorkFlowId, workOrderId)
+    }
+
 }

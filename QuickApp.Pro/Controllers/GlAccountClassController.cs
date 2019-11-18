@@ -36,31 +36,31 @@ namespace QuickApp.Pro.Controllers
 
         }
         
-        [HttpGet("auditHistoryById/{id}")]
-        [Produces(typeof(List<AuditHistory>))]
-        public IActionResult GetAuditHostoryById(long id)
-        {
-            var result = _unitOfWork.AuditHistory.GetAllHistory("GLAccountClass", id); 
+        //[HttpGet("auditHistoryById/{id}")]
+        //[Produces(typeof(List<AuditHistory>))]
+        //public IActionResult GetAuditHostoryById(long id)
+        //{
+        //    var result = _unitOfWork.AuditHistory.GetAllHistory("GLAccountClass", id); 
 
-            try
-            {
-                var resul1 = Mapper.Map<IEnumerable<GLAccountClassViewModel>>(result);
+        //    try
+        //    {
+        //        var resul1 = Mapper.Map<IEnumerable<GLAccountClassViewModel>>(result);
 
-                return Ok(resul1);
-            }
-            catch (Exception ex)
-            {
+        //        return Ok(resul1);
+        //    }
+        //    catch (Exception ex)
+        //    {
 
-                throw;
-            }
+        //        throw;
+        //    }
 
 
 
-        }
+        //}
 
         [HttpPost("glaccountclasspost")]
         //[Authorize(Authorization.Policies.ManageAllRolesPolicy)]
-        public IActionResult CreateAction([FromBody] GLAccountClassViewModel GLAccountClassViewModel)
+        public IActionResult CreateAction([FromBody] GLAccountClass GLAccountClassViewModel)
         {
             if (ModelState.IsValid)
             {
@@ -71,8 +71,10 @@ namespace QuickApp.Pro.Controllers
                 glaccountclassobject.GLAccountClassId = GLAccountClassViewModel.GLAccountClassId;
                 glaccountclassobject.GLCID = GLAccountClassViewModel.GLCID ;
                 glaccountclassobject.GLAccountClassName = GLAccountClassViewModel.GLAccountClassName;
+                glaccountclassobject.GLAccountClassMemo = GLAccountClassViewModel.GLAccountClassMemo;
                 glaccountclassobject.MasterCompanyId = GLAccountClassViewModel.MasterCompanyId;
                 glaccountclassobject.IsActive = GLAccountClassViewModel.IsActive;
+                glaccountclassobject.IsDeleted = GLAccountClassViewModel.IsDeleted;
                 glaccountclassobject.CreatedDate = DateTime.Now;
                 glaccountclassobject.UpdatedDate = DateTime.Now;
                 glaccountclassobject.CreatedBy = GLAccountClassViewModel.CreatedBy;
@@ -85,43 +87,80 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
         [HttpPut("glaccountclasspost/{id}")]
-        public IActionResult UpdateAction(long id, [FromBody] GLAccountClassViewModel GLAccountClassViewModel)
+
+        public IActionResult updateGLAccountType([FromBody]GLAccountClass glAccountClass)
         {
-
-            if (ModelState.IsValid)
+            if (glAccountClass != null)
             {
-                if (GLAccountClassViewModel == null)
-                    return BadRequest($"{nameof(GLAccountClassViewModel)} cannot be null");
-
-                var existingResult = _unitOfWork.GLAccountClass.GetSingleOrDefault(c => c.GLAccountClassId == id);
-                // DAL.Models.Action updateObject = new DAL.Models.Action();
-
-
-                existingResult.UpdatedDate = DateTime.Now;
-                existingResult.UpdatedBy = GLAccountClassViewModel.UpdatedBy;
-                existingResult.GLAccountClassId = GLAccountClassViewModel.GLAccountClassId;
-                existingResult.GLCID = GLAccountClassViewModel.GLCID;
-                existingResult.GLAccountClassName = GLAccountClassViewModel.GLAccountClassName;
-                existingResult.IsActive = GLAccountClassViewModel.IsActive;
-                existingResult.MasterCompanyId = GLAccountClassViewModel.MasterCompanyId;
-
-                _unitOfWork.GLAccountClass.Update(existingResult);
-                _unitOfWork.SaveChanges();
+                if (ModelState.IsValid)
+                {
+                    glAccountClass.UpdatedDate = DateTime.Now;
+                    glAccountClass.UpdatedBy = glAccountClass.UpdatedBy;
+                    glAccountClass.GLCID = glAccountClass.GLCID;
+                    glAccountClass.GLAccountClassName = glAccountClass.GLAccountClassName;
+                    glAccountClass.GLAccountClassMemo = glAccountClass.GLAccountClassMemo;
+                    glAccountClass.MasterCompanyId = glAccountClass.MasterCompanyId;
+                    glAccountClass.IsActive = glAccountClass.IsActive;
+                    _unitOfWork.Repository<GLAccountClass>().Update(glAccountClass);
+                    _unitOfWork.SaveChanges();
+                    return Ok(glAccountClass);
+                }
+                else
+                {
+                    return BadRequest(ModelState);
+                }
 
             }
-
-
-            return Ok(ModelState);
+            else
+            {
+                return BadRequest();
+            }
         }
+
+        //public IActionResult UpdateAction(long id, [FromBody] GLAccountClassViewModel GLAccountClassViewModel)
+        //{
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        if (GLAccountClassViewModel == null)
+        //            return BadRequest($"{nameof(GLAccountClassViewModel)} cannot be null");
+
+        //        var existingResult = _unitOfWork.GLAccountClass.GetSingleOrDefault(c => c.GLAccountClassId == id);
+        //        // DAL.Models.Action updateObject = new DAL.Models.Action();
+
+
+        //        existingResult.UpdatedDate = DateTime.Now;
+        //        existingResult.UpdatedBy = GLAccountClassViewModel.UpdatedBy;
+        //        existingResult.GLAccountClassId = GLAccountClassViewModel.GLAccountClassId;
+        //        existingResult.GLCID = GLAccountClassViewModel.GLCID;
+        //        existingResult.GLAccountClassName = GLAccountClassViewModel.GLAccountClassName;
+        //        existingResult.IsActive = GLAccountClassViewModel.IsActive;
+        //        existingResult.MasterCompanyId = GLAccountClassViewModel.MasterCompanyId;
+
+        //        _unitOfWork.GLAccountClass.Update(existingResult);
+        //        _unitOfWork.SaveChanges();
+
+        //    }
+
+
+        //    return Ok(ModelState);
+        //}
         [HttpDelete("glaccountclasspost/{id}")]
         [Produces(typeof(GLAccountClassViewModel))]
         public IActionResult DeleteAction(long id)
         {
-            var existingResult = _unitOfWork.GLAccountClass.GetSingleOrDefault(c => c.GLAccountClassId == id);
-            existingResult.IsDelete = true;
-            _unitOfWork.GLAccountClass.Update(existingResult);
-            _unitOfWork.SaveChanges();
-            return Ok(id);
+            var glAccountClass = _unitOfWork.Repository<GLAccountClass>().Find(x => x.GLAccountClassId == id).FirstOrDefault();
+            if (glAccountClass != null)
+            {
+                glAccountClass.IsDeleted = true;
+                _unitOfWork.Repository<GLAccountClass>().Update(glAccountClass);
+                _unitOfWork.SaveChanges();
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         [HttpGet("audits/{id}")]
@@ -153,36 +192,67 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetAll()
         {
             List<ColumHeader> columHeaders = new List<ColumHeader>();
-            PropertyInfo[] propertyInfos = typeof(GLAccountClassModel).GetProperties();
+            PropertyInfo[] propertyInfos = typeof(GLAccountClassColModel).GetProperties();
             ColumHeader columnHeader;
-            DynamicGridData<GLAccountClassModel> dynamicGridData = new DynamicGridData<GLAccountClassModel>();
+            DynamicGridData<dynamic> dynamicGridData = new DynamicGridData<dynamic>();
             foreach (PropertyInfo property in propertyInfos)
             {
                 columnHeader = new ColumHeader();
-                columnHeader.field = property.Name;
+                columnHeader.field = char.ToLower(property.Name[0]) + property.Name.Substring(1);
+                //columnHeader.field = property.Name;
                 columnHeader.header = property.Name;
                 columHeaders.Add(columnHeader);
             }
             dynamicGridData.columHeaders = columHeaders;
-            List<GLAccountClassModel> gLAccountClassModels = new List<GLAccountClassModel>();
-            GLAccountClassModel gLAccountClass = null;
-            var gLAccounts = _unitOfWork.GLAccountClass.GetAll();
+            List<GLAccountClassSPModel> gLAccountClassModels = new List<GLAccountClassSPModel>();
+            GLAccountClassSPModel gLAccountClass = null;
+            var gLAccounts = _unitOfWork.Repository<GLAccountClass>().GetAll().Where(x => x.IsDeleted != true).OrderByDescending(x => x.GLAccountClassId); ;
             foreach (var item in gLAccounts)
             {
-                gLAccountClass = new GLAccountClassModel();
+                gLAccountClass = new GLAccountClassSPModel();
+                
+                gLAccountClass.gLCID  = item.GLCID;
+                gLAccountClass.gLAccountType = item.GLAccountClassName;
+                gLAccountClass.Memo = item.GLAccountClassMemo;
                 gLAccountClass.GLAccountClassId = item.GLAccountClassId;
-                gLAccountClass.GLCID = item.GLCID;
-                gLAccountClass.GLAccountClassName = item.GLAccountClassName;
                 gLAccountClass.CreatedDate = item.CreatedDate;
                 gLAccountClass.CreatedBy = item.CreatedBy;
                 gLAccountClass.UpdatedDate = item.UpdatedDate;
                 gLAccountClass.UpdatedBy = item.UpdatedBy;
-                //currency.IsActive = item.IsActive;
+                gLAccountClass.IsActive = item.IsActive;
                 gLAccountClassModels.Add(gLAccountClass);
             }
             dynamicGridData.ColumnData = gLAccountClassModels;
             return Ok(dynamicGridData);
         }
+
+        [HttpGet("GLAccountClassauditdetails/{gLAccountClassId}")]
+        [Produces(typeof(List<GLAccountClassAudit>))]
+        public IActionResult GetAuditHostoryById(long gLAccountClassId)
+        {
+            try
+            {
+                var result = _unitOfWork.GLAccountClass.GetGLAccountClassAuditDetails(gLAccountClassId);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpPost("UploadGlAccountClassCustomData")]
+        public IActionResult UploadGlAccountClassCustomData()
+        {
+
+            _unitOfWork.FileUploadRepository.UploadCustomFile(Convert.ToString("GLAccountClass"), Request.Form.Files[0]);
+            return Ok();
+        }
+
     }
+
+
+
+
 }
 

@@ -1,5 +1,5 @@
 
-<div class="card c-workflow">
+<div  class="card c-workflow">
     <div class="card-header">
         <nav class="pull-left" aria-label="breadcrumb">
             <ol class="breadcrumb c-wf-bcrumb" style="background-color: transparent;">
@@ -28,16 +28,13 @@
                                     PN <span class="clr-red">*</span>  <span style="margin-left:3px;cursor:pointer;"><i class="fa fa-plus-circle fa-lg" (click)="AddPage()"></i></span>
                                 </label>
                                 <p class="c-workflow-select">
-                                    <p-autoComplete class="wf-header-select" 
+                                    <p-autoComplete [(ngModel)]="sourceWorkFlow.part"
+                                                    [suggestions]="partCollection"
+                                                    (completeMethod)="filterpartItems($event)"
                                                     (onSelect)="onPartSelect($event)"
-                                                    [(ngModel)]="sourceWorkFlow.partNumber" 
-                                                    [suggestions]="partCollection" 
-                                                    (completeMethod)="filterpartItems($event)" 
-                                                    [size]="32"
-                                                    [minLength]="1" [dropdown]="true" required>
-                                        <ng-template let-partName pTemplate="part">
-                                            <div class="ui-helper-clearfix">{{partName}}</div>
-                                        </ng-template>
+                                                    [dropdown]="true" [size]="32" [minLength]="1"
+                                                    field="partName" class="wf-header-select" required>
+                                                    
                                     </p-autoComplete>
                                 </p>
                             </div>
@@ -68,11 +65,14 @@
                             <div class="form-group">
                                 <label for="changepn">Changed PN</label>
                                 <p class="c-workflow-select">
-                                    <p-autoComplete class="wf-header-select" (onSelect)="onChangePartSelect($event)" [(ngModel)]="sourceWorkFlow.changedPartNumber" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="32"
-                                                    [minLength]="1" [dropdown]="true" required>
-                                        <ng-template let-partName pTemplate="part">
-                                            <div class="ui-helper-clearfix">{{partName}}</div>
-                                        </ng-template>
+                                    <p-autoComplete  
+                                                    [(ngModel)]="sourceWorkFlow.changedPart" 
+                                                    [suggestions]="changedPartCollection" 
+                                                    (completeMethod)="filterChangedPartItems($event)" 
+                                                    (onSelect)="onChangedPartSelect($event)" 
+                                                    [dropdown]="true" [size]="32" [minLength]="1"
+                                                    field="partName"
+                                                    class="wf-header-select">
                                     </p-autoComplete>
                                 </p>
                                 
@@ -105,10 +105,12 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="Customer Name">
-                                    Customer Name  <span style="margin-left:3px;cursor:pointer;"><i class="fa fa-plus-circle fa-lg" (click)="AddPageCustomer()"></i></span>
+                                    Customer Name  <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg"  target="_blank" 
+                                                [routerLink]="['/customersmodule/customerpages/app-customer-create']"></a></span>
                                 </label>
                                 <p class="c-workflow-select">
-                                    <p-autoComplete class="wf-header-select" [(ngModel)]="sourceWorkFlow.customerName"
+                                    <p-autoComplete class="wf-header-select" 
+                                                    [(ngModel)]="sourceWorkFlow.customerName"
                                                     (onSelect)="onCustomerNameselected($event)"
                                                     [suggestions]="customerNames"
                                                     (completeMethod)="filterNames($event)" [size]="32"
@@ -186,7 +188,7 @@
                                             <label class="w70">Percent:</label>
                                             <select [(ngModel)]="sourceWorkFlow.percentageOfNew" class="form-control w70" (change)="onPercentOfNew(sourceWorkFlow.costOfNew,sourceWorkFlow.percentageOfNew);">
                                                 <option value="">Select</option>
-                                                <option *ngFor="let i of totalPercent" [ngValue]="i">{{i}}%</option>
+                                                <option *ngFor="let percent of totalPercent" [ngValue]="percent.percentValue">{{percent.percentValue}}%</option>
                                             </select>
                                         </div>
                                         <div class="col-sm-4">
@@ -224,7 +226,7 @@
                                             <div style="float:left;">
                                                 <select [(ngModel)]="sourceWorkFlow.percentageOfReplacement" class="form-control w70" (change)="onPercentOfReplcaement(sourceWorkFlow.costOfReplacement,sourceWorkFlow.percentageOfReplacement); ">
                                                     <option value="">Select</option>
-                                                    <option *ngFor="let i of totalPercent" [ngValue]="i">{{i}}%</option>
+                                                    <option *ngFor="let percent of totalPercent" [ngValue]="percent.percentValue">{{percent.percentValue}}%</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -255,7 +257,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-row pull-right">
+                    <div class="form-row pull-right" *ngIf="!isWorkOrder">
                         <div class="form-group col-md-4" style="margin-top: 15px;">
                             <button class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px;" *ngIf="!UpdateMode" (click)="addWorkFlow(true)">Save</button>
                             <button class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px;" *ngIf="UpdateMode" (click)="updateWorkFlow(true)">Update</button>
@@ -267,7 +269,7 @@
             
         </div>
 
-        <div *ngIf="toggle_wf_header" style="margin-top: 15px;"></div>
+        <div *ngIf="toggle_wf_header " style="margin-top: 15px;"></div>
         <h4 class="total-wf-cost">Total Work Flow Cost</h4>
         <div class="form-row mar-top-10 total-wf-cost-form">
             <div class="col-md-2">
@@ -357,7 +359,8 @@
                                 <strong> <label> Tasks </label></strong>
 
                             </div>
-
+                            <!-- {{workFlow | json}} -->
+                          
                             <div class="col-sm-5">
                                 <div class="inner-addon inline-block display-flex">
                                     <select class="form-control custom-select"
@@ -382,6 +385,7 @@
                             <div class="col-sm-1" style="margin-right: 70px;">
                                 <strong><label>Task Attribute</label></strong>
                             </div>
+                            <!-- {{tasksData | json }} -->
                             <div class="col-sm-5">
                                 <div class="inner-addon inline-block display-flex">
                                     <ng-multiselect-dropdown *ngIf="actionAttributes" class="form-control multiple-custom-select"
@@ -477,11 +481,20 @@
 
                 </div>
 
-                <div class="text-right save-work-btn" *ngIf="(showMainPage) && (!UpdateMode) && workFlowList.length > 0">
-                    <button class="btn btn-primary btn-primary-cstm" (click)="addWorkFlow(false)" style="padding: 6px 12px !important;">Save Work Flow</button>
+                <div *ngIf="!isWorkOrder">
+
+                    <div class="text-right save-work-btn" *ngIf="(showMainPage) && (!UpdateMode) && workFlowList.length > 0">
+                        <button class="btn btn-primary btn-primary-cstm" (click)="addWorkFlow(false)" style="padding: 6px 12px !important;">Save Work Flow</button>
+                    </div>
+                    <div class="text-right save-work-btn" *ngIf="(showMainPage) && (UpdateMode) ">
+                        <button class="btn btn-primary btn-primary-cstm" (click)="updateWorkFlow(false)" style="padding: 6px 12px !important;">Update Work Flow Details</button> <!-- add-btn -->
+                    </div>
                 </div>
-                <div class="text-right save-work-btn" *ngIf="(showMainPage) && (UpdateMode) && workFlowList.length > 0">
-                    <button class="btn btn-primary btn-primary-cstm" (click)="updateWorkFlow(false)" style="padding: 6px 12px !important;">Update Work Flow Details</button> <!-- add-btn -->
+                <div *ngIf="isWorkOrder">
+                        <div class="text-right save-work-btn" >
+                                <button class="btn btn-primary btn-primary-cstm" (click)="saveWorkFlowWorkOrder()" style="padding: 6px 12px !important;">Save Work Flow</button>
+                            </div>
+
                 </div>
                 <!--</div>-->
 

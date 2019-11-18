@@ -73,5 +73,8 @@ export class ManufacturerService {
         return Observable.forkJoin(
             this.manufacturerEndpoint.getManufacturerRecords<Manufacturer[]>(serverSidePagesData));
     }
+    ManufacturerFileUpload(file){
+        return this.manufacturerEndpoint.ManufacturerCustomUpload(file);
+    }
 
 }

@@ -20,6 +20,7 @@ import { Site } from '../../models/site.model';
 import { Warehouse } from '../../models/warehouse.model';
 import { TreeNode, MenuItem } from 'primeng/api';
 import { LegalEntityService } from '../../services/legalentity.service';
+import { ConfigurationService } from '../../services/configuration.service';
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 import { take } from 'rxjs/operators';
 
@@ -108,8 +109,11 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 	disableSaveManufacturer: boolean = false;
     selectedWareHouse: any;
     warehouseName: any;
-    AuditDetails: SingleScreenAuditDetails[];
-
+	AuditDetails: any[];
+	HasAuditDetails: boolean;
+	AuditHistoryTitle: string = 'History of Ware House'
+	formData:FormData = null;
+	uploadedRecords: Object = null
 	ngOnInit(): void
 	{
 		this.cols = [
@@ -136,6 +140,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-warehouse';
 		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
 		this.selectedColumns = this.cols;
+		this.formData  = new FormData();
 	}
 
 	ngAfterViewInit() {
@@ -150,7 +155,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	/** site ctor */
-    constructor(public manageMentService: LegalEntityService,public workFlowtService1: SiteService,private breadCrumb: SingleScreenBreadcrumbService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: WarehouseService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(public manageMentService: LegalEntityService, private configurations: ConfigurationService, public workFlowtService1: SiteService,private breadCrumb: SingleScreenBreadcrumbService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: WarehouseService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 		this.dataSource = new MatTableDataSource();
 		this.sourceWarehouse = new Warehouse(); //change
 
@@ -181,7 +186,12 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 			//alert(e);
 		}
 
-	}
+    }
+    sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=Warehouse&fileName=Warehouse.xlsx`;
+
+        window.location.assign(url);
+    }
 
 	siteValueChange(data) //Site Valu Selection in Form
 	{
@@ -619,9 +629,11 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 	deleteItemAndCloseModel() {
 		this.isSaving = true;
 		this.sourceWarehouse.updatedBy = this.userName;
-		this.workFlowtService.deleteWarehouse(this.sourceWarehouse.warehouseId).subscribe(
-			this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success));
-		this.modal.close();
+		this.workFlowtService.deleteWarehouse(this.sourceWarehouse.warehouseId).subscribe(() => {
+			this.alertService.showMessage("Success", `Deleted warehouse successfully`, MessageSeverity.success);
+			this.modal.close();
+			this.loadData();
+		});
 	}
 
 
@@ -776,13 +788,51 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
     }
 
     auditWarehouse(warehouseId: number): void {
-        this.AuditDetails = [];
+        this.AuditDetails  = [];
+		this.HasAuditDetails = this.AuditDetails.length > 0;
+
         this.workFlowtService.getWarehouseAudit(warehouseId).subscribe(audits => {
             if (audits.length > 0) {
-                this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["warehouseAuditId", "warehouseId", "lastModifiedBy", "createdBy", "createdDate", "updatedDate"];
+				this.AuditDetails = audits[0].result;
+				this.HasAuditDetails = this.AuditDetails.length > 0;
             }
         });
-    }
+	}
+	
+	/* 
+	    Bulk site upload
+	*/
+
+	bulkUpload(event) {
+
+		this.formData = new FormData();
+
+		this.uploadedRecords = null;
+
+		const file = event.target.files;
+		
+        console.log(file);
+		
+		if (file.length > 0) {
+
+			this.formData.append('file', file[0])
+			
+            this.workFlowtService.bulkUpload(this.formData).subscribe(response => {
+				
+				event.target.value = '';
+
+                this.uploadedRecords = response;
+				
+				this.loadData();
+				
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+            })
+        }
+
+	}
 
 }

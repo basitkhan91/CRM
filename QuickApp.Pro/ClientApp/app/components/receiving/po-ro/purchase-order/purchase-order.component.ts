@@ -11,7 +11,18 @@ import { VendorService } from '../../../../services/vendor.service';
 import { fadeInOut } from '../../../../services/animations';
 import { Router } from '@angular/router';
 import { ReceivingService } from '../../../../services/receiving/receiving.service';
-import { PurchaseOrder, DropDownData } from '../receivng-po/PurchaseOrder.model';
+import { PurchaseOrder, DropDownData, StockLine } from '../receivng-po/PurchaseOrder.model';
+import { LegalEntityService } from '../../../../services/legalentity.service';
+import { ManagementStructure } from '../receivng-po/managementstructure.model';
+import { Manufacturer } from '../../../../models/manufacturer.model';
+import { ManufacturerService } from '../../../../services/manufacturer.service';
+import { UnitOfMeasureService } from '../../../../services/unitofmeasure.service';
+import { ConditionService } from '../../../../services/condition.service';
+import { GlAccount } from '../../../../models/GlAccount.model';
+import { GlAccountService } from '../../../../services/glAccount/glAccount.service';
+import { SiteService } from '../../../../services/site.service';
+import { ShippingService } from '../../../../services/shipping/shipping-service';
+import { BinService } from '../../../../services/bin.service';
 
 @Component({
     selector: 'app-purchase-order',
@@ -68,10 +79,44 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
     currencyName: string;
     filteredBrands: any[];
     localCollection: any[] = [];
-    allPolistInfo: any[] = [];
+    allPolistInfo: any;
     allPurchaseorderInfo: PurchaseOrder;
+    toggle_po_header: boolean = false;
+
+    pageTitle: string = 'Purchase Order';
+    purchaseOrderData: PurchaseOrder;
+    managementStructure: ManagementStructure[];
+    ManufacturerList: DropDownData[];
+    allManufacturerInfo: any[];
+    UOMList: any[];
+    ConditionList: DropDownData[];
+    managementInfo: any[] = [];
+    GLAccountList: GlAccount[];
+    SiteList: any[];
+    ShippingViaList: DropDownData[];
+
+
     /** Currency ctor */
-    constructor(private receivingService: ReceivingService, private authService: AuthService, private _fb: FormBuilder, public _router: Router, private alertService: AlertService, private masterComapnyService: MasterComapnyService, private modalService: NgbModal, public vendorservice: VendorService, private dialog: MatDialog) {
+    constructor(private receivingService: ReceivingService,
+        private authService: AuthService,
+        private _fb: FormBuilder,
+        public _router: Router,
+        private alertService: AlertService,
+        private masterComapnyService: MasterComapnyService,
+        private modalService: NgbModal,
+        public vendorservice: VendorService,
+        private dialog: MatDialog,
+        private legalEntityService: LegalEntityService,
+        private manufacturerService: ManufacturerService,
+        private uomService: UnitOfMeasureService,
+        private conditionService: ConditionService,
+        private glAccountService: GlAccountService,
+        private siteService: SiteService,
+        private route: Router,
+        private shippingService: ShippingService,
+        private binservice: BinService
+    ) {
+
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
         this.vendorservice.ShowPtab = false;
@@ -79,23 +124,35 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
         this.vendorservice.currentUrl = '/vendorsmodule/vendorpages/app-polist';
         this.vendorservice.bredcrumbObj.next(this.vendorservice.currentUrl);
     }
+
     ngOnInit(): void {
         //this.purchaseorderlist();
         this.loadData();
         this.cols = [
-            //{ field: 'statusId', header: 'Status' },
-            { field: 'status', header: 'Status' },
-            { field: 'noOfItems', header: '# of Items' },
-            { field: 'purchaseOrderNumber', header: 'PO Number' },
-            { field: 'currency', header: 'Currency' },
-            { field: 'poTotalCost', header: 'PO Total Cost' },
+
+
+            { field: 'purchaseOrderNumber', header: 'PO Num' },
+            { field: 'openDate', header: 'Open Date' },
+            { field: 'closedDate', header: 'Closed/Cancelled Date' },
             { field: 'vendorName', header: 'Vendor Name' },
-            { field: 'vendorContact', header: 'Vendor Contact' },
-            { field: 'employeeName', header: 'Employee Name' },
-            { field: 'contactPhone', header: 'Contact Phone' },
-            { field: 'dateRequested', header: 'Open Date' },
-            { field: 'reference', header: 'Ref' },
+            { field: 'vendorCode', header: 'Vendor Code' },
+            { field: 'status', header: 'Status' },
             { field: 'requestedBy', header: 'Requested By' },
+            { field: 'approvedBy', header: 'Approved By' },
+
+            // //{ field: 'statusId', header: 'Status' },
+            // { field: 'status', header: 'Status' },
+            // { field: 'noOfItems', header: '# of Items' },
+            // { field: 'purchaseOrderNumber', header: 'PO Number' },
+            // { field: 'currency', header: 'Currency' },
+            // { field: 'poTotalCost', header: 'PO Total Cost' },
+            // { field: 'vendorName', header: 'Vendor Name' },
+            // { field: 'vendorContact', header: 'Vendor Contact' },
+            // { field: 'employeeName', header: 'Employee Name' },
+            // { field: 'contactPhone', header: 'Contact Phone' },
+            // { field: 'dateRequested', header: 'Open Date' },
+            // { field: 'reference', header: 'Ref' },
+            // { field: 'requestedBy', header: 'Requested By' },
 
 
             //{ field: 'dateApprovied', header: ' Date Approvied ' },
@@ -109,6 +166,7 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
         this.getStatus();
 
     }
+
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -116,15 +174,18 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
 
     private loadData() {
         // debugger;
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
+        // this.alertService.startLoadingMessage();
+        // this.loadingIndicator = true;
 
-        this.vendorservice.getPurchaseOrderlist().subscribe(
-            results => this.onDataLoadSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
+        this.vendorservice.getReceivingPOListing().subscribe(res => {
+            this.allPolistInfo = res;
+        }
+            // results => this.onDataLoadSuccessful(results[0]),
+            // error => this.onDataLoadFailed(error)
         );
 
     }
+
     public applyFilter(filterValue: string) {
         this.dataSource.filter = filterValue;
     }
@@ -133,7 +194,6 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
         // Causes the filter to refresh there by updating with recently added data.
         this.applyFilter(this.dataSource.filter);
     }
-
 
     private onDataLoadSuccessful(purchaseOrderList: any[]) {
         this.alertService.stopLoadingMessage();
@@ -186,6 +246,7 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
         this.loadingIndicator = false;
 
     }
+
     private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
         // alert('success');
         this.alertService.stopLoadingMessage();
@@ -204,12 +265,11 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
         this.receivingService.selectedPurchaseorderCollection = this.allPurchaseorderInfo;
         this.vendorservice.selectedPoCollection = this.allPurchaseorderInfo;
     }
-    
+
     open() {
 
         this._router.navigateByUrl('/vendorsmodule/vendorpages/app-create-po')
     }
-
 
     openDelete(content, row) {
 
@@ -221,6 +281,7 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
+
     private loadMasterCompanies() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -231,6 +292,7 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
         );
 
     }
+
     openEdit(row) {
         //this.vendorservice.getpurchasevendorlist(row.purchaseOrderId).subscribe(
         //	results => this.onDataLoadordrSuccessful(results[0]),
@@ -266,6 +328,7 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
+
     eventHandler(event) {
         let value = event.target.value.toLowerCase();
         if (this.selectedActionName) {
@@ -278,6 +341,7 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
             }
         }
     }
+
     partnmId(event) {
         //debugger;
         for (let i = 0; i < this.actionamecolle.length; i++) {
@@ -288,7 +352,6 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
             }
         }
     }
-
 
     filterCurrency(event) {
 
@@ -304,44 +367,6 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
             }
         }
     }
-
-
-    //editItemAndCloseModel() {
-
-    //	// debugger;
-
-    //	this.isSaving = true;
-
-    //	if (this.isEditMode == false) {
-    //		this.sourceAction.createdBy = this.userName;
-    //		this.sourceAction.updatedBy = this.userName;
-    //		this.sourceAction.code = this.currencyName;
-    //		this.sourceAction.masterCompanyId = 1;
-    //		this.vendorservice.newAddcurrency(this.sourceAction).subscribe(
-    //			role => this.saveSuccessHelper(role),
-    //			error => this.saveFailedHelper(error));
-    //	}
-    //	else {
-
-    //		this.sourceAction.updatedBy = this.userName;
-    //		this.sourceAction.code = this.currencyName;
-    //		this.sourceAction.masterCompanyId = 1;
-    //		this.vendorservice.updatecurrency(this.sourceAction).subscribe(
-    //			response => this.saveCompleted(this.sourceAction),
-    //			error => this.saveFailedHelper(error));
-    //	}
-
-    //	this.modal.close();
-    //}
-
-    //deleteItemAndCloseModel() {
-    //	this.isSaving = true;
-    //	this.sourceAction.updatedBy = this.userName;
-    //	this.vendorservice.deletecurrency(this.sourceAction.currencyId).subscribe(
-    //		response => this.saveCompleted(this.sourceAction),
-    //		error => this.saveFailedHelper(error));
-    //	this.modal.close();
-    //}
 
     dismissModel() {
         this.isDeleteMode = false;
@@ -383,16 +408,6 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
     }
 
-    //private getDismissReason(reason: any): string {
-    //	if (reason === ModalDismissReasons.ESC) {
-    //		return 'by pressing ESC';
-    //	} else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-    //		return 'by clicking on a backdrop';
-    //	} else {
-    //		return `with: ${reason}`;
-    //	}
-    //}
-
     private getStatus() {
         this.poStatus = [];
         this.poStatus.push(<DropDownData>{ Key: '1', Value: 'Open' });
@@ -400,6 +415,447 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
         this.poStatus.push(<DropDownData>{ Key: '3', Value: 'Approved' });
         this.poStatus.push(<DropDownData>{ Key: '4', Value: 'Rejected' });
         this.poStatus.push(<DropDownData>{ Key: '4', Value: 'Fulfilled' });
+    }
+
+    //////////////////View Functionality///////////////////////////////
+
+    private dismissViewModel(): void {
+        this.modal.close();
+    }
+
+    private viewPurchaseOrder(purchaseOrder: PurchaseOrder): void {
+        debugger;
+        this.receivingService.getPurchaseOrderDataForEditById(purchaseOrder.purchaseOrderId).subscribe(
+            results => {
+                this.purchaseOrderData = results[0];
+                this.purchaseOrderData.openDate = new Date(results[0].openDate).toLocaleDateString();
+                this.purchaseOrderData.needByDate = new Date(results[0].needByDate);
+                this.purchaseOrderData.dateApproved = new Date(results[0].dateApproved).toLocaleDateString();
+
+                this.getManagementStructure().subscribe(
+                    results => {
+                        this.managementStructure = results[0];
+                        var allParentParts = this.purchaseOrderData.purchaseOderPart.filter(x => x.isParent == true);
+                        for (let parent of allParentParts) {
+                            var splitParts = this.purchaseOrderData.purchaseOderPart.filter(x => !x.isParent && x.itemMaster.partNumber == parent.itemMaster.partNumber);
+
+                            if (splitParts.length > 0) {
+
+                                parent.hasChildren = true;
+                                parent.quantityOrdered = 0;
+                                for (let childPart of splitParts) {
+                                    parent.stockLineCount += childPart.stockLineCount;
+                                    childPart.managementStructureId = parent.managementStructureId;
+                                    childPart.managementStructureName = parent.managementStructureName;
+                                    parent.quantityOrdered += childPart.quantityOrdered;
+                                }
+                            }
+                            else {
+                                parent.hasChildren = false;
+                            }
+                        }
+
+
+                        for (let part of this.purchaseOrderData.purchaseOderPart) {
+                            part.isEnabled = false;
+                            part.conditionId = 0;
+                            let managementHierarchy: ManagementStructure[][] = [];
+                            let selectedManagementStructure: ManagementStructure[] = [];
+                            this.getManagementStructureHierarchy(part.managementStructureId, managementHierarchy, selectedManagementStructure);
+                            managementHierarchy.reverse();
+                            selectedManagementStructure.reverse();
+
+                            if (managementHierarchy[0] != undefined && managementHierarchy[0].length > 0) {
+                                part.companyId = selectedManagementStructure[0].managementStructureId;
+                                part.CompanyList = [];
+                                for (let managementStruct of managementHierarchy[0]) {
+                                    var dropdown = new DropDownData();
+                                    dropdown.Key = managementStruct.managementStructureId.toLocaleString();
+                                    dropdown.Value = managementStruct.code;
+                                    part.CompanyList.push(dropdown);
+                                }
+                            }
+                            if (managementHierarchy[1] != undefined && managementHierarchy[1].length > 0) {
+                                part.businessUnitId = selectedManagementStructure[1].managementStructureId;
+                                part.BusinessUnitList = [];
+                                for (let managementStruct of managementHierarchy[1]) {
+                                    var dropdown = new DropDownData();
+                                    dropdown.Key = managementStruct.managementStructureId.toLocaleString();
+                                    dropdown.Value = managementStruct.code;
+                                    part.BusinessUnitList.push(dropdown);
+                                }
+                            }
+                            if (managementHierarchy[2] != undefined && managementHierarchy[2].length > 0) {
+                                part.divisionId = selectedManagementStructure[2].managementStructureId;
+                                part.DivisionList = [];
+                                for (let managementStruct of managementHierarchy[2]) {
+                                    var dropdown = new DropDownData();
+                                    dropdown.Key = managementStruct.managementStructureId.toLocaleString();
+                                    dropdown.Value = managementStruct.code;
+                                    part.DivisionList.push(dropdown);
+                                }
+                            }
+                            if (managementHierarchy[3] != undefined && managementHierarchy[3].length > 0) {
+                                part.departmentId = selectedManagementStructure[3].managementStructureId;
+                                part.DepartmentList = [];
+                                for (let managementStruct of managementHierarchy[3]) {
+                                    var dropdown = new DropDownData();
+                                    dropdown.Key = managementStruct.managementStructureId.toLocaleString();
+                                    dropdown.Value = managementStruct.code;
+                                    part.DepartmentList.push(dropdown);
+                                }
+                            }
+
+                            if (part.stockLine != null) {
+                                for (var SL of part.stockLine) {
+                                    SL.isEnabled = false;
+                                    let stockLinemanagementHierarchy: ManagementStructure[][] = [];
+                                    let stockLineSelectedManagementStructure: ManagementStructure[] = [];
+                                    this.getManagementStructureHierarchy(SL.managementStructureEntityId, stockLinemanagementHierarchy, stockLineSelectedManagementStructure);
+                                    stockLinemanagementHierarchy.reverse();
+                                    stockLineSelectedManagementStructure.reverse();
+
+                                    if (stockLinemanagementHierarchy[0] != undefined && stockLinemanagementHierarchy[0].length > 0) {
+                                        SL.companyId = stockLineSelectedManagementStructure[0].managementStructureId;
+                                        SL.CompanyList = [];
+                                        for (let managementStruct of stockLinemanagementHierarchy[0]) {
+                                            var dropdown = new DropDownData();
+                                            dropdown.Key = managementStruct.managementStructureId.toLocaleString();
+                                            dropdown.Value = managementStruct.code;
+                                            SL.CompanyList.push(dropdown);
+                                        }
+                                    }
+                                    if (stockLinemanagementHierarchy[1] != undefined && stockLinemanagementHierarchy[1].length > 0) {
+                                        SL.businessUnitId = stockLineSelectedManagementStructure[1].managementStructureId;
+                                        SL.BusinessUnitList = [];
+                                        for (let managementStruct of stockLinemanagementHierarchy[1]) {
+                                            var dropdown = new DropDownData();
+                                            dropdown.Key = managementStruct.managementStructureId.toLocaleString();
+                                            dropdown.Value = managementStruct.code;
+                                            SL.BusinessUnitList.push(dropdown);
+                                        }
+                                    }
+                                    if (stockLinemanagementHierarchy[2] != undefined && stockLinemanagementHierarchy[2].length > 0) {
+                                        SL.divisionId = stockLineSelectedManagementStructure[2].managementStructureId;
+                                        SL.DivisionList = [];
+                                        for (let managementStruct of stockLinemanagementHierarchy[2]) {
+                                            var dropdown = new DropDownData();
+                                            dropdown.Key = managementStruct.managementStructureId.toLocaleString();
+                                            dropdown.Value = managementStruct.code;
+                                            SL.DivisionList.push(dropdown);
+                                        }
+                                    }
+                                    if (stockLinemanagementHierarchy[3] != undefined && stockLinemanagementHierarchy[3].length > 0) {
+                                        SL.departmentId = stockLineSelectedManagementStructure[3].managementStructureId;
+                                        SL.DepartmentList = [];
+                                        for (let managementStruct of stockLinemanagementHierarchy[3]) {
+                                            var dropdown = new DropDownData();
+                                            dropdown.Key = managementStruct.managementStructureId.toLocaleString();
+                                            dropdown.Value = managementStruct.code;
+                                            SL.DepartmentList.push(dropdown);
+                                        }
+                                    }
+                                }
+
+                            }
+
+                        }
+
+                        this.purchaseOrderData.dateRequested = new Date(); //new Date(this.purchaseOrderData.dateRequested);
+                        this.purchaseOrderData.dateApprovied = new Date(this.purchaseOrderData.dateApprovied);
+                        this.purchaseOrderData.needByDate = new Date(); //new Date(this.purchaseOrderData.needByDate);
+                        this.getManufacturers();
+                        this.getStatus();
+                        this.getUOMList();
+                        this.getConditionList();
+                        this.loadManagementdata();
+                        this.loadManufacturerData();
+                        this.getAllSite();
+                        this.getAllGLAccount();
+                        this.getShippingVia();
+                    },
+                    error => this.onDataLoadFailed(error)
+                );
+            },
+            error => {
+                this.alertService.showMessage(this.pageTitle, "Something went wrong while loading the Purchase Order detail", MessageSeverity.error);
+                return this.route.navigate(['/receivingmodule/receivingpages/app-purchase-order']);
+            }
+        );
+    }
+
+    private getManufacturers() {
+        this.ManufacturerList = [];
+        this.manufacturerService.getManufacturers().subscribe(
+            results => {
+                for (let manufacturer of results[0]) {
+                    var dropdown = new DropDownData();
+                    dropdown.Key = manufacturer.manufacturerId.toLocaleString();
+                    dropdown.Value = manufacturer.name;
+                    this.ManufacturerList.push(dropdown);
+                }
+            },
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private getManagementStructure() {
+        return this.legalEntityService.getManagemententity();
+    }
+
+    private getUOMList() {
+        this.uomService.getUnitOfMeasureList().subscribe(
+            result => {
+                this.UOMList = result[0];
+                for (var part of this.purchaseOrderData.purchaseOderPart) {
+                    var uom = this.UOMList.filter(x => x.unitOfMeasureId == part.uomId)[0];
+                    if (uom != undefined) {
+                        part.UOMText = uom.shortName;
+                    }
+                }
+            }
+        );
+    }
+
+    private getManagementStructureHierarchy(managementStructureId: number, managementStructureHierarchy: ManagementStructure[][], selectedManagementStructure: ManagementStructure[]) {
+
+        var selectedManagementStructures = this.managementStructure.filter(function (management) {
+            return management.managementStructureId == managementStructureId;
+        });
+
+        if (selectedManagementStructures != undefined && selectedManagementStructures.length > 0) {
+            var selectedMangStruc = selectedManagementStructures[0];
+
+            if (selectedMangStruc.parentId != null) {
+                var selectedMSList = this.managementStructure.filter(function (management) {
+                    return management.parentId == selectedMangStruc.parentId;
+                });
+
+                if (managementStructureHierarchy != null) {
+                    managementStructureHierarchy.push(selectedMSList);
+                }
+
+                if (selectedManagementStructure != null) {
+                    selectedManagementStructure.push(selectedMangStruc);
+                }
+
+                this.getManagementStructureHierarchy(selectedMangStruc.parentId, managementStructureHierarchy, selectedManagementStructure);
+            }
+            else {
+                var selectedMSList = this.managementStructure.filter(function (management) {
+                    return management.parentId == null;
+                });
+
+                if (managementStructureHierarchy != null) {
+                    managementStructureHierarchy.push(selectedMSList);
+                }
+
+                if (selectedManagementStructure != null) {
+                    selectedManagementStructure.push(selectedMangStruc);
+                }
+            }
+        }
+    }
+
+    private getConditionList(): void {
+        this.ConditionList = [];
+        this.conditionService.getConditionList().subscribe(
+            results => {
+                for (let condition of results[0]) {
+                    var dropdown = new DropDownData();
+                    dropdown.Key = condition.conditionId.toLocaleString();
+                    dropdown.Value = condition.description;
+                    this.ConditionList.push(dropdown);
+                }
+            },
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private loadManagementdata() {
+        this.legalEntityService.getManagemententity().subscribe(data => {
+            this.managementInfo = data[0]
+        });
+    }
+
+    private loadManufacturerData() {
+
+        this.manufacturerService.getWorkFlows().subscribe(data => {
+            this.allManufacturerInfo = data[0];
+        });
+    }
+
+    private getAllSite(): void {
+        this.siteService.getSiteList().subscribe(
+            results => {
+                this.SiteList = results[0];
+                for (var part of this.purchaseOrderData.purchaseOderPart) {
+                    if (part.stockLine) {
+                        part.siteId = 0;
+                        part.warehouseId = 0;
+                        part.locationId = 0;
+                        part.shelfId = 0;
+                        part.binId = 0;
+                        part.SiteList = [];
+                        for (var site of results[0]) {
+                            var row = new DropDownData();
+                            row.Key = site.siteId.toLocaleString();
+                            row.Value = site.name;
+                            part.SiteList.push(row);
+                        }
+
+                        for (var SL of part.stockLine) {
+                            SL.SiteList = [];
+
+                            for (var site of results[0]) {
+                                var row = new DropDownData();
+                                row.Key = site.siteId.toLocaleString();
+                                row.Value = site.name;
+                                SL.SiteList.push(row);
+                            }
+
+                            if (SL.warehouseId > 0) {
+                                this.getStockLineWareHouse(SL, true);
+                            }
+                            if (SL.locationId > 0) {
+                                this.getStockLineLocation(SL, true);
+                            }
+                            if (SL.shelfId > 0) {
+                                this.getStockLineShelf(SL, true);
+                            }
+                            if (SL.binId > 0) {
+                                this.getStockLineBin(SL, true);
+                            }
+                        }
+                    }
+                }
+            },
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private getAllGLAccount(): void {
+        this.glAccountService.getAll().subscribe(glAccountData => {
+            this.GLAccountList = glAccountData[0];
+
+            for (var part of this.purchaseOrderData.purchaseOderPart) {
+                if (part.stockLine) {
+                    for (var SL of part.stockLine) {
+                        if (SL.glAccountId > 0) {
+                            var glAccount = this.GLAccountList.filter(x => x.glAccountId == SL.glAccountId)[0];
+                            SL.glAccountText = glAccount.accountCode + " (" + glAccount.accountDescription + ")";
+                        }
+                    }
+                }
+            }
+
+        });
+    }
+    
+    private getShippingVia(): void {
+        this.shippingService.getAllShippingVia().subscribe(results => {
+            this.ShippingViaList = [];
+            for (let shippingVia of results[0]) {
+                var dropdown = new DropDownData();
+                dropdown.Key = shippingVia.shippingViaId.toLocaleString();
+                dropdown.Value = shippingVia.name;
+                this.ShippingViaList.push(dropdown);
+            }
+        });
+    }
+
+    private getStockLineWareHouse(stockLine: StockLine, onPageLoad: boolean): void {
+        stockLine.WareHouseList = [];
+        stockLine.LocationList = [];
+        stockLine.ShelfList = [];
+        stockLine.BinList = [];
+
+        if (!onPageLoad) {
+            stockLine.warehouseId = 0;
+            stockLine.locationId = 0;
+            stockLine.shelfId = 0;
+            stockLine.binId = 0;
+        }
+
+        this.binservice.getWareHouseBySiteId(stockLine.siteId).subscribe(
+            results => {
+                for (let wareHouse of results) {
+                    var dropdown = new DropDownData();
+                    dropdown.Key = wareHouse.warehouseId.toLocaleString();
+                    dropdown.Value = wareHouse.warehouseName;
+                    stockLine.WareHouseList.push(dropdown);
+                }
+            },
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private getStockLineLocation(stockLine: StockLine, onPageLoad: boolean): void {
+        stockLine.LocationList = [];
+        stockLine.ShelfList = [];
+        stockLine.BinList = [];
+
+        if (!onPageLoad) {
+            stockLine.locationId = 0;
+            stockLine.shelfId = 0;
+            stockLine.binId = 0;
+        }
+
+        this.binservice.getLocationByWareHouseId(stockLine.warehouseId).subscribe(
+            results => {
+                console.log(results);
+                for (let loc of results) {
+                    var dropdown = new DropDownData();
+                    dropdown.Key = loc.locationId.toLocaleString();
+                    dropdown.Value = loc.name;
+                    stockLine.LocationList.push(dropdown);
+                }
+            },
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private getStockLineShelf(stockLine: StockLine, onPageLoad: boolean): void {
+        stockLine.ShelfList = [];
+        stockLine.BinList = [];
+
+        if (!onPageLoad) {
+            stockLine.shelfId = 0;
+            stockLine.binId = 0;
+        }
+
+        this.binservice.getShelfByLocationId(stockLine.locationId).subscribe(
+            results => {
+
+                for (let shelf of results) {
+                    var dropdown = new DropDownData();
+                    dropdown.Key = shelf.shelfId.toLocaleString();
+                    dropdown.Value = shelf.name;
+                    stockLine.ShelfList.push(dropdown);
+                }
+            },
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private getStockLineBin(stockLine: StockLine, onPageLoad: boolean): void {
+        stockLine.BinList = [];
+
+        if (!onPageLoad) {
+            stockLine.binId = 0;
+        }
+
+        this.binservice.getBinByShelfId(stockLine.shelfId).subscribe(
+            results => {
+                for (let bin of results) {
+                    var dropdown = new DropDownData();
+                    dropdown.Key = bin.binId.toLocaleString();
+                    dropdown.Value = bin.name;
+                    stockLine.BinList.push(dropdown);
+                }
+            },
+            error => this.onDataLoadFailed(error)
+        );
     }
 
 }

@@ -49,7 +49,12 @@ export class LegalEntityService {
 	getManagemententity() {
 		return Observable.forkJoin(
 			this.legalEntityEndpont.getManagemtentEntityData<any[]>());
-	}
+    }
+
+    getManagemtentLengalEntityData() {
+        return Observable.forkJoin(
+            this.legalEntityEndpont.getManagemtentLengalEntityData<any[]>());
+    }
 	getEntityforEdit() {
 		return Observable.forkJoin(
 			this.legalEntityEndpont.getEntityforEdit<any[]>());
@@ -175,6 +180,10 @@ export class LegalEntityService {
 
     updateLegalEntityForActive(action: any) {
         return this.legalEntityEndpont.getUpdateLegalEntityActive(action, action.legalEntityId);
+	}
+	
+	getLegalEntityAddressById(entityId: number) {
+        return Observable.forkJoin(this.legalEntityEndpont.getLegalEntityAddressById<any>(entityId));
     }
 
 }

@@ -9,13 +9,21 @@ using DAL.Core.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using DAL.Common;
+using DAL.Core.DataExtractors;
 
 namespace DAL.Repositories
 {
     public class ShelfRepository:Repository<Shelf>, IShelfRepository
     {
-        public ShelfRepository(ApplicationDbContext context) : base(context)
-        { }
+        private AppSettings AppSettings { get; set; }
+
+        public ShelfRepository(ApplicationDbContext context, IOptions<AppSettings> settings) : base(context)
+        {
+            AppSettings = settings.Value;
+        }
+
         public IEnumerable<object> GetAllShelfData()
         {
             try
@@ -215,6 +223,118 @@ namespace DAL.Repositories
 
 
         }
+
+        public IEnumerable<Shelf> BulkUpload(IFormFile file)
+        {
+            IEnumerable<Shelf> shelfs = Enumerable.Empty<Shelf>();
+
+            var dataExtractor = new ShelfDataExtractor(AppSettings);
+
+            shelfs = dataExtractor.Extract(file, Common.ModuleEnum.Shelf);
+
+            foreach (var shelf in shelfs)
+            {
+                if (IsValid(shelf))
+                {
+                    var site = GetSiteByName(shelf.Site.Name);
+
+                    if (site == null)
+                    {
+                        shelf.UploadStatus = "Site name doesnot exist";
+                        continue;
+                    }
+
+                    shelf.Site = site;
+
+                    var wareHouse = GetWareHouseByName(shelf.Warehouse.Name);
+
+                    if (wareHouse == null)
+                    {
+                        shelf.UploadStatus = "Warehouse name doesnot exist";
+                        continue;
+                    }
+
+                    shelf.Warehouse = wareHouse;
+
+                    if (shelf.Warehouse.SiteId != shelf.Site.SiteId)
+                    {
+                        shelf.UploadStatus = "Site and location mismatch";
+                        continue;
+                    }
+
+                    var location = GetLocationByName(shelf.Location.Name);
+
+                    if (location == null)
+                    {
+                        shelf.UploadStatus = "location name name doesnot exist";
+                        continue;
+
+                    }
+
+                    shelf.Location = location;
+
+                    if (shelf.Location.WarehouseId != shelf.Warehouse.WarehouseId)
+                    {
+                        shelf.UploadStatus = "Location and warehouse mismatch ";
+                        continue;
+                    }
+
+                    shelf.LocationId = shelf.Location.LocationId;
+
+                    if (!ShelfNameAlreadyExist(shelf.Location.Name))
+                    {
+                        _appContext.Shelf.Add(shelf);
+
+                        _appContext.SaveChanges();
+
+                        shelf.UploadStatus = "Success";
+                    }
+                    else
+                    {
+                        shelf.UploadStatus = "Duplicate";
+                    }
+                }
+                else
+                {
+                    shelf.UploadStatus = "Validation Error";
+                }
+            }
+
+            return shelfs;
+        }
+
+        private static bool IsValid(Shelf shelf)
+        {
+            return (
+                shelf.Name != string.Empty
+                && shelf.Location.Name != string.Empty
+                && shelf.Warehouse.Name != string.Empty
+                && shelf.Site.Name != string.Empty
+            );
+        }
+
+        private bool ShelfNameAlreadyExist(string name)
+        {
+            return _appContext.Shelf.Any(shelf => ((shelf.IsDelete.HasValue && shelf.IsDelete.Value == false) || (!shelf.IsDelete.HasValue))
+                                               && shelf.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        private Location GetLocationByName(string name)
+        {
+            return _appContext.Location.Where(location => location.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+        }
+
+        private Warehouse GetWareHouseByName(string name)
+        {
+            return _appContext.Warehouse.Where(wareHouse => wareHouse.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+        }
+
+        private Site GetSiteByName(string name)
+        {
+            return _appContext.Site.Where(site => site.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+        }
+
+
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }

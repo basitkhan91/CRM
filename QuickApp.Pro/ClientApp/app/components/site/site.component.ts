@@ -18,6 +18,7 @@ import { SingleScreenBreadcrumbService } from "../../services/single-screens-bre
 import { Site } from '../../models/site.model';
 import { LegalEntityService } from '../../services/legalentity.service';
 import { TreeNode, MenuItem } from 'primeng/api';
+import { ConfigurationService } from '../../services/configuration.service';
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 
 @Component({
@@ -93,9 +94,15 @@ export class SiteComponent implements OnInit, AfterViewInit {
 	disableSaveManufacturer: boolean;
 	selectedSite: any;
 	siteNamecolle: any;
-	AuditDetails: SingleScreenAuditDetails[];
+	AuditDetails: any[];
+	HasAuditDetails: boolean;
+	AuditHistoryTitle: string = 'History of Site'
 	totelPages: number;
+	formData: FormData; 
+	uploadedRecords: Object;
+
 	ngOnInit(): void {
+
 		//This Headers will Place in Html
 		this.cols = [
 
@@ -116,6 +123,8 @@ export class SiteComponent implements OnInit, AfterViewInit {
 		this.breadCrumb.currentUrl = '/singlepages/singlepages/app-site';
 		this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
 		this.selectedColumns = this.cols;
+		this.HasAuditDetails = false;
+		this.formData = new FormData();
 	}
 
 	ngAfterViewInit() {
@@ -126,7 +135,7 @@ export class SiteComponent implements OnInit, AfterViewInit {
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	/** site ctor */
-	constructor(public manageMentService: LegalEntityService, private breadCrumb: SingleScreenBreadcrumbService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: SiteService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(public manageMentService: LegalEntityService, private configurations: ConfigurationService, private breadCrumb: SingleScreenBreadcrumbService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: SiteService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 		this.dataSource = new MatTableDataSource();
 		this.sourceSite = new Site();
 
@@ -134,7 +143,12 @@ export class SiteComponent implements OnInit, AfterViewInit {
 
 	closethis() {
 		this.closeCmpny = false;
-	}
+    }
+    sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=Site&fileName=Site.xlsx`;
+
+        window.location.assign(url);
+    }
 
 
 	public allWorkFlows: Site[] = [];
@@ -683,13 +697,50 @@ export class SiteComponent implements OnInit, AfterViewInit {
 	}
 
 	auditAssetStatus(siteId: number): void {
-		this.AuditDetails = [];
+		this.AuditDetails  = [];
+		this.HasAuditDetails = this.AuditDetails.length > 0;
 		this.workFlowtService.getSiteAudit(siteId).subscribe(audits => {
 			if (audits.length > 0) {
-				this.AuditDetails = audits;
-				this.AuditDetails[0].ColumnsToAvoid = ["siteAuditId", "siteId", "createdBy", "createdDate", "updatedDate"];
+				this.AuditDetails = audits[0].result;
+				this.HasAuditDetails = this.AuditDetails.length > 0;
 			}
 		});
 	}
 
+	/* 
+	    Bulk site upload
+	*/
+
+	bulkUpload(event) {
+
+		this.formData = new FormData();
+
+		this.uploadedRecords = null;
+
+		const file = event.target.files;
+		
+        console.log(file);
+		
+		if (file.length > 0) {
+
+			this.formData.append('file', file[0])
+			
+            this.workFlowtService.bulkUpload(this.formData).subscribe(response => {
+				
+				event.target.value = '';
+
+                this.uploadedRecords = response;
+				
+				this.loadData();
+				
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+            })
+        }
+
+	}
+	
 }

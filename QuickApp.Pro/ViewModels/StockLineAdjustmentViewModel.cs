@@ -30,7 +30,8 @@ namespace QuickApp.Pro.ViewModels
         public long? LegalEntityId { get; set; }
         [ForeignKey("MasterCompanyId")]
         public Int32? MasterCompanyId { get; set; }
-        public string IsActive { get; set; }
+        public bool? IsActive { get; set; }
+        public bool? IsDelete { get; set; }
 
     }
 }

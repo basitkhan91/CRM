@@ -20,9 +20,9 @@ namespace DAL.Models
         public string UpdatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public System.DateTime UpdatedDate { get; set; }
-        public bool? IsActive { get; set; }
-        public bool? IsAllow { get; set; }
-        public bool? IsWarning { get; set; }
-        public bool? IsRestrict { get; set; }
+        public bool? IsActive { get; set; } = true;
+        public bool? IsAllow { get; set; } = false;
+        public bool? IsWarning { get; set; } = false;
+        public bool? IsRestrict { get; set; } = false;
     }
 }

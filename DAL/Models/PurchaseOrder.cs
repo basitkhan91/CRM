@@ -13,20 +13,22 @@ namespace DAL.Models
         public string PurchaseOrderNumber { get; set; }
         public string ReferenceId { get; set; }
         public Nullable<long> PriorityId { get; set; }
-        public string RequestedBy { get; set; }
-        public System.DateTime DateRequested { get; set; }
-        public string Approver { get; set; }
-        public Nullable<System.DateTime> DateApprovied { get; set; }
+        public long RequestedBy { get; set; }
+        public DateTime OpenDate { get; set; }
+        public DateTime? ClosedDate { get; set; }
+        public long ApproverId { get; set; }
+        public Nullable<System.DateTime> DateApproved { get; set; }
         public Nullable<System.DateTime> NeedByDate { get; set; }
         public Nullable<short> StatusId { get; set; }
-        public string EmployeeId { get; set; }
+        public long EmployeeId { get; set; }
         [ForeignKey("VendorId")]
         public Nullable<long> VendorId { get; set; }
         public Nullable<long> VendorContactId { get; set; }
         public Nullable<int> ShipToCompanyId { get; set; }
-        public Nullable<int> ShipViaAccountId { get; set; }
+        public int? ShipViaAccountId { get; set; }
         public string Terms { get; set; }
-        public Nullable<short> CreditLimit { get; set; }
+        public Int16? CreditTermsId { get; set; }
+        public Nullable<decimal> CreditLimit { get; set; }
         public string Notes { get; set; }
         public Nullable<long> SiteId { get; set; }
         public Nullable<long> WarehouseId { get; set; }
@@ -35,7 +37,7 @@ namespace DAL.Models
         //public string IssuedToContactName { get; set; }
         //public string IssuedToMemo { get; set; }
         public Nullable<long> ShipToAddressId { get; set; }
-        public string ShipToContactName { get; set; }
+        public Nullable<long> ShipToContactId { get; set; }
         public string ShipToMemo { get; set; }
         public Nullable<long> BillToAddressId { get; set; }
         public string BillToContactName { get; set; }
@@ -44,11 +46,40 @@ namespace DAL.Models
         public long ManagementStructureId { get; set; }
         public Int16? ShipToUserType { get; set; }
         public Int16? BillToUserType { get; set; }
-        public string ShipToUserName { get; set; }
-        public string BillToUserName { get; set; }
-        public bool? DeferredReceiver { get; set; }
+        public long ShipToUserId { get; set; }
+        public long BillToUserId { get; set; }
+        public bool? DeferredReceiver { get; set; } 
         public bool? Resale { get; set; }
         public Nullable<bool> IsActive { get; set; }
+        public string ShipToSiteName { get; set; }
+        public string BillToSiteName { get; set; }
+        public decimal ShippingCost { get; set; }
+        public decimal HandlingCost { get; set; }
+        public long BillToContactId { get; set; }
+        public long ShipViaId { get; set; }
+        public long? ShipToSiteId { get; set; }
+        public long? BillToSiteId { get; set; }
+        public string ShipVia { get; set; }
+        public string ShippingAccountNo { get; set; }
+        public string ShippingId { get; set; }
+        public string ShippingURL { get; set; }
+        public string ShipToContact { get; set; }
+        public string BillToContact { get; set; }
+        public string ShipToAddress1 { get; set; }
+        public string ShipToAddress2 { get; set; }
+        public string ShipToAddress3 { get; set; }
+        public string ShipToCity { get; set; }
+        public string ShipToState { get; set; }
+        public string ShipToPostalCode { get; set; }
+        public string ShipToCountry { get; set; }
+        public string BillToAddress1 { get; set; }
+        public string BillToAddress2 { get; set; }
+        public string BillToAddress3 { get; set; }
+        public string BillToCity { get; set; }
+        public string BillToState { get; set; }
+        public string BillToPostalCode { get; set; }
+        public string BillToCountry { get; set; }
+        public bool IsDeleted { get; set; }
 
         public virtual ICollection<PurchaseOrderPart> PurchaseOderPart { get; set; }
         public virtual List<StockLine> StockLine { get; set; }

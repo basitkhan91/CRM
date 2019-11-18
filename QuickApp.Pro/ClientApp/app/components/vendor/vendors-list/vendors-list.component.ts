@@ -70,7 +70,7 @@ export class VendorsListComponent implements OnInit {
     creditTermsId: any = "";
     currencyId: any = "";
     discountLevel: any = "";
-    is1099Required: any = "";
+    is1099Required: any = "";      
     showGeneralData: boolean = true;
     showcontactdata: boolean = true;
     showfinancialdata: boolean = true;
@@ -80,6 +80,7 @@ export class VendorsListComponent implements OnInit {
     allShippings: any[];
     shippingCol: any[];
     selectedShippingColumns: any[];
+    selectedRow: any;
     ngOnInit() {
         this.loadData();
         this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendors-list';
@@ -150,16 +151,18 @@ export class VendorsListComponent implements OnInit {
         );
 
         this.cols = [
-            { field: 'vendorCode', header: 'Vendor Code' },
-            { field: 'vendorName', header: 'Vendor Name' },
-            { field: 'description', header: 'Vendor Type' },
-            { field: 'vendorEmail', header: 'Vendor Email' },
-            { field: 'city', header: 'City' },
-            { field: 'stateOrProvince', header: 'StateOrProvince' },
-            { field: 'createdBy', header: 'Created By' },
-            { field: 'updatedBy', header: 'Updated By' },
-            { field: 'updatedDate', header: 'Updated Date' },
-            { field: 'createdDate', header: 'Created Date' }
+            { field: 'vendorName', header: 'VENDOR NAME' },
+            { field: 'vendorCode', header: 'VENDOR CODE' },
+            { field: 'description', header: 'VENDOR TYPE' },
+            { field: 'stateOrProvince', header: 'VENDOR CLASSIFICATION' },
+            { field: 'vendorEmail', header: 'VENDOR EMAIL' },
+            { field: 'city', header: 'VENDOR CITY' },
+            { field: 'stateOrProvince', header: 'VENDOR STATE' },
+            { field: 'vendorPhone', header: 'VENDOR CONTACT' }
+            // { field: 'createdBy', header: 'Created By' },
+            // { field: 'updatedBy', header: 'Updated By' },
+            // { field: 'updatedDate', header: 'Updated Date' },
+            // { field: 'createdDate', header: 'Created Date' }
         ];
         this.selectedColumns = this.cols;
     }
@@ -397,6 +400,7 @@ export class VendorsListComponent implements OnInit {
     }
 
     openView(content, row) {
+        
         this.vendorCode = row.vendorCode;
         this.vendorName = row.vendorName;
         this.vendorTypeId = row.t.vendorTypeId;
@@ -406,15 +410,16 @@ export class VendorsListComponent implements OnInit {
             this.currencyId = row.currency.symbol;
         }
         else {
-            this.currencyId = "";
+            this.currencyId = row.currencyId;
         }
 
         if (row.creditterms) {
             this.creditTermsId = row.creditterms.name;
         }
         else {
-            this.creditTermsId = "";
+            this.creditTermsId = row.creditTermsId;
         }
+       
         this.address1 = row.address1;
         this.address2 = row.address2;
         this.address3 = row.address3;
@@ -429,8 +434,8 @@ export class VendorsListComponent implements OnInit {
         this.licenseNumber = row.t.licenseNumber;
         this.capabilityId = row.capabilityId;
         this.vendorURL = row.t.vendorURL;
-        this.creditlimit = row.t.creditlimit;
-        this.discountLevel = row.t.discountLevel;
+        this.creditlimit = row.t.creditLimit;        
+        this.discountLevel = row.discountLevel;
         this.is1099Required = row.t.is1099Required;
         this.loadContactDataData(row.vendorId);
         this.loadPayamentData(row.vendorId);
@@ -452,6 +457,7 @@ export class VendorsListComponent implements OnInit {
         this.loadingIndicator = true;
         this.sourceVendor = row;
         this.isSaving = true;
+        this.selectedRow = row;
         this.workFlowtService.vendorHistory(this.sourceVendor.vendorId).subscribe(
             results => this.onHistoryLoadSuccessful(results[0], content),
             error => this.saveFailedHelper(error));
@@ -462,7 +468,7 @@ export class VendorsListComponent implements OnInit {
     deleteItemAndCloseModel() {
         this.isSaving = true;
         this.isDeleteMode = true;
-        this.sourceVendor.isdelete = false;
+        this.sourceVendor.isdelete = true;
         //this.sourceVendor = content;
         this.sourceVendor.updatedBy = this.userName;
         this.workFlowtService.updatevendorstatus(this.sourceVendor).subscribe(
@@ -602,6 +608,7 @@ export class VendorsListComponent implements OnInit {
             error => this.saveFailedHelper(error));
     }
     openContactList(content, row) {
+        this.selectedRow = row;
         this.modal = this.modalService.open(content, { size: 'lg' });
         this.modal.result.then(() => {
             console.log('When user closes');

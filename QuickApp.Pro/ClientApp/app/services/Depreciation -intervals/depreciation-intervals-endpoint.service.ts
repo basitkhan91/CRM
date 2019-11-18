@@ -1,4 +1,4 @@
-﻿import { Injectable, Injector } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
@@ -9,12 +9,20 @@ import { DepreciationIntervals } from '../../models/depriciationIntervals.model'
 @Injectable()
 export class DepreciationIntervalsEndpoint extends EndpointFactory {
 
-    private readonly getAllURL: string = "/api/DepreciationIntervals/getAll";
-    private readonly getByIdURL: string = "/api/DepreciationIntervals/getById";
-    private readonly addURL: string = "/api/DepreciationIntervals/add";
-    private readonly updateURL: string = "/api/DepreciationIntervals/update";
-    private readonly removeByIdURL: string = "/api/DepreciationIntervals/removeById";
-    private readonly getIntervalsHistById: string = "/api/DepreciationIntervals/audits";
+    //private readonly getAllURL: string = "/api/DepreciationIntervals/getAll";
+    //private readonly getByIdURL: string = "/api/DepreciationIntervals/getById";
+    //private readonly addURL: string = "/api/DepreciationIntervals/add";
+    //private readonly updateURL: string = "/api/DepreciationIntervals/update";
+    //private readonly removeByIdURL: string = "/api/DepreciationIntervals/removeById";
+    //private readonly getIntervalsHistById: string = "/api/DepreciationIntervals/audits";
+
+    private readonly getAllURL: string = "/api/AssetDepreciationInterval/getAll";
+    private readonly getByIdURL: string = "/api/AssetDepreciationInterval/getById";
+    private readonly addURL: string = "/api/AssetDepreciationInterval/add";
+    private readonly updateURL: string = "/api/AssetDepreciationInterval/update";
+    private readonly removeByIdURL: string = "/api/AssetDepreciationInterval/remove";
+    private readonly getIntervalsHistById: string = "/api/AssetDepreciationInterval/depreciationintervalauditdetails";
+    private readonly excelUpload: string = "/api/AssetDepreciationInterval/UploadDepIntervalCustomData";
 
 
     get getAll() { return this.configurations.baseUrl + this.getAllURL; }
@@ -73,13 +81,19 @@ export class DepreciationIntervalsEndpoint extends EndpointFactory {
             });
     }
 
-    getAudit<T>(assetDisposalTypeId: number): Observable<T> {
-        let endpointUrl = `${this.getIntervalsHistById}/${assetDisposalTypeId}`;
+    getAudit<T>(assetDepreciationIntervalId: number): Observable<T> {
+        let endpointUrl = `${this.getIntervalsHistById}/${assetDepreciationIntervalId}`;
 
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getAudit(assetDisposalTypeId));
+                return this.handleError(error, () => this.getAudit(assetDepreciationIntervalId));
             });
+    }
+
+    DepIntervalCustomUpload(file) {
+        return this.http.post(`${this.configurations.baseUrl}${this.excelUpload}`, file)
+
+
     }
 
 }

@@ -9,7 +9,17 @@
         Publication,
         UnitOfMeasure,
         Manufacturer,
-        ItemClassfication,
-        Memo
+        Memo,
+        ItemClassfication, 
+        Site, 
+        WareHouse,
+        Location,
+        Shelf,
+        AssetType,
+        AssetIntangibleType,
+        StageCode,
+        GLAccountCategory,
+        ExpenditureCategory,
+        AssetAttributeType
     }
 }

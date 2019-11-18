@@ -13,10 +13,13 @@ namespace QuickApp.Pro.ViewModels
 
         public string Description { get; set; }
 
-       
+        public string Memo { get; set; }
+
+
         public Int32? MasterCompanyId { get; set; }
 
         public bool? IsActive { get; set; }
+        public bool? IsDeleted { get; set; }
 
         public string CreatedBy { get; set; }
 

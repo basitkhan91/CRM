@@ -1,4 +1,4 @@
-﻿// ===============================
+// ===============================
 // info@ebenmonney.com
 // www.ebenmonney.com/quickapp-pro
 // ===============================
@@ -20,7 +20,7 @@ export class AssetStatusService {
 
     getAll() {
         return Observable.forkJoin(
-            this.assetStatusEndpoint.getAllAssets<AssetStatus[]>());
+            this.assetStatusEndpoint.getAllAssets<any>());
     }
 
     getById(assetStatusId: number) {
@@ -44,6 +44,10 @@ export class AssetStatusService {
         return this.assetStatusEndpoint.getUpdateForActive(assetStatus, assetStatus.id);
     }
     getAssetAudit(assetId:number) {
-        return this.assetStatusEndpoint.getAssetStatusAuditById<any>(assetId);
+        return this.assetStatusEndpoint.getAssetStatusAuditById<any[]>(assetId);
+    }
+    
+    AssetStatusCustomUpload(file) {
+        return this.assetStatusEndpoint.AssetStatusCustomUpload(file);
     }
 }

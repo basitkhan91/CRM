@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DAL.Models
 {
-  public  class EmployeeLicensure:PasBase
+    public class EmployeeLicensure : PasBase
     {
         public long EmployeeLicensureId { get; set; }
 
@@ -20,7 +20,7 @@ namespace DAL.Models
         //public string Cost { get; set; }
         //public string Provider { get; set; }
         //public string IndustryCode { get; set; }
-        public long EmployeeLicenseTypeId  { get; set; }
+        public long? EmployeeLicenseTypeId { get; set; }
         public string CertifyingInstitution { get; set; }
         public DateTime CertificationDate { get; set; }
         //public DateTime ExpirationDate { get; set; }
@@ -28,5 +28,8 @@ namespace DAL.Models
         [ForeignKey("MasterCompanyId")]
         public Int32 MasterCompanyId { get; set; }
         public bool? IsActive { get; set; }
+        public DateTime? ExpirationDate { get; set; }
+
+        public bool? IsExpirationDate { get; set; }
     }
 }

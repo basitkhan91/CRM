@@ -67,8 +67,12 @@ import { UnauthorizedAccessComponent } from '../unauthorizedaccess/unauthorized-
             { path: "workflowmodule", loadChildren: './workflowpages/workflowpages.module#WorkFlowPagesModule' },
             { path: "assetmodule", loadChildren: './assetmanagement/assetmanagement.module#AssetmanagementModule' },
             { path: "accountreceivable", loadChildren: './accounts-receivable/accountsreceivable.module#AccountsreceivableModule' },
-            { path: "mastermodule", loadChildren: './mastermaintanacepages/mastermaintanacepages.module#MastermaintanceModule' },
+            //{ path: "mastermodule", loadChildren: './mastermaintanacepages/mastermaintanacepages.module#MastermaintanceModule' },
             { path: "accountpayble", loadChildren: './accounts-payble-pages/accounts-payble.module#AccountsPaybleModule' },
+            {
+                path: "salesmodule",
+                loadChildren: "./salespages/salespages.module#SalesPagesModule"
+            },
             //{ path: "app-receiving-search-po-ro", component: SearchPoRoComponent, data: { title: "Search PO-RO" } },
             //{ path: "app-receiving-po-ro-setup", component: PoRoSetupComponent, data: { title: "PO-RO Setup" } },
             //{ path: "app-receiving-po-setup", component: PoSetupComponent, data: { title: "PO Setup" } },

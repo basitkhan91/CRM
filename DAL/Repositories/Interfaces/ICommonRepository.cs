@@ -16,14 +16,41 @@ namespace DAL.Repositories.Interfaces
         void MasterPartsStatus(long masterPartId, bool status, string updatedBy);
         List<MasterParts> GetMasterParts();
 
-        void CreateRestrictedParts(List<RestrictedParts> restrictedParts, long? referenceId);
-        void UpdateRestrictedParts(List<RestrictedParts> restrictedParts, long? referenceId);
-        List<RestrictedParts> GetRestrictedParts(int moduleId, long? referenceId, string partType);
-        void CreateClassificationMappings(List<ClassificationMapping> classificationMappings, long referenceId);
-        void UpdateClassificationMappings(List<ClassificationMapping> classificationMappings, long referenceId);
-        List<ClassificationMapping> GetCustomerClassificationMappings(int moduleId, int referenceId);
-        List<ClassificationMapping> GetVendorClassificationMappings(int moduleId, int referenceId);
+        void CreateRestrictedParts(List<RestrictedParts> restrictedParts, long referenceId, int moduleId);
+        void UpdateRestrictedParts(List<RestrictedParts> restrictedParts, long referenceId, int moduleId);
+        List<RestrictedParts> GetRestrictedParts(long moduleId, long? referenceId, string partType);
+
+        void CreateCustomerTaxTypeRateMapping(List<CustomerTaxTypeRateMapping> customerTaxTypeRateMappings ,long referenceId);
+
+        void CreateRestrictPmaList(List<RestrictsPMAList> restrictsPmaLists, long referenceId);
+        void UpdateRestrictPmaList(List<RestrictsPMAList> restrictsPmaLists, long referenceId);
+        List<RestrictsPMAList> GetRestrictPmaList(int itemMasterId, long? customerId);
+
+        void CreateRestrictDerList(List<RestrictsBERList> restrictsDerLists, long referenceId);
+        void UpdateRestrictDerList(List<RestrictsBERList> restrictsDerLists, long referenceId);
+        List<RestrictsBERList> GetRestrictDerList(int itemMasterId, long? customerId);
+
+        void CreateClassificationMappings(List<ClassificationMapping> classificationMappings, int moduleId, long referenceId, string createdBy);
+        void UpdateClassificationMappings(List<ClassificationMapping> classificationMappings, int moduleId, long referenceId, string createdBy);
+        IEnumerable<object> GetCustomerClassificationMappings(int moduleId, long referenceId);
+        IEnumerable<object> GetVendorClassificationMappings(int moduleId, long referenceId);
 
         dynamic UpdateEntity(dynamic uiModel, dynamic dbModel, ref IDictionary<string, object> keyValuePairs);
+
+        IEnumerable<object> BindDropdowns(string tableName, string primaryColumn, string textColumn,long count);
+
+        long CreateShippingVia(ShippingVia shippingVia);
+        void UpdateShippingVia(ShippingVia shippingVia);
+        object GetShippingViaDetails(long shippingViaId);
+        IEnumerable<object> BindShipViaDetails(int userType, long referenceId);
+
+        long? CreateAddress(Address address);
+        void UpdateAddress(Address address);
+        object GetAddressDetails(long addressId);
+
+        Dictionary<string, long> GetManagementStructure(long manmgStrucId);
+        Dictionary<string, string> GetManagementStructureCodes(long manmgStrucId);
+
+
     }
 }

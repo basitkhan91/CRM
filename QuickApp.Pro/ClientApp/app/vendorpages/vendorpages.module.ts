@@ -15,6 +15,7 @@ import { VendorFinancialInformationComponent } from "../components/vendor/vendor
 import { VendorGeneralInformationComponent } from "../components/vendor/vendor-general-information/vendor-general-information.component";
 import { VendorPaymentInformationComponent } from "../components/vendor/vendor-payment-information/vendor-payment-information.component";
 import { VendorSetupComponent } from "../components/vendor/vendor-setup/vendor-setup.component";
+import { VendorBillingInformationComponent } from "../components/vendor/vendor-billing-information/vendor-billing-information.component";
 import { VendorShippingInformationComponent } from "../components/vendor/vendor-shipping-information/vendor-shipping-information.component";
 import { VendorWarningsComponent } from "../components/vendor/vendor-warnings/vendor-warnings.component";
 
@@ -71,6 +72,7 @@ import { RolesGuardService } from "../services/roles-guard.service";
 import { ValidateAccessModule } from "../validateaccess/validateaccess.module";
 import { KeyFilterModule } from "primeng/keyfilter";
 import { TooltipModule } from 'primeng/tooltip';
+import { CommonService } from "../services/common.service";
 
 
 @NgModule({
@@ -110,7 +112,8 @@ import { TooltipModule } from 'primeng/tooltip';
 		VendorFinancialInformationComponent,
 		VendorGeneralInformationComponent,
 		VendorPaymentInformationComponent,
-		VendorSetupComponent,
+        VendorSetupComponent,
+        VendorBillingInformationComponent,
 		VendorShippingInformationComponent,
 		VendorWarningsComponent,
 		VendorMemoComponent,
@@ -133,7 +136,8 @@ import { TooltipModule } from 'primeng/tooltip';
         
 	],
 	providers: [
-        VendorClassificationComponent
+		VendorClassificationComponent,
+		
 	],
     entryComponents: [
         AddActionsDialogComponent

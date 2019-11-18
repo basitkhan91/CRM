@@ -6,6 +6,7 @@ namespace DAL.Repositories.Interfaces
 {
     public interface IStocklineAdjustmentReasonRepository : IRepository<StocklineAdjustmentReason>
     {
-        IEnumerable<object> GetAllAdjustmentReasonData();
+        IEnumerable<DAL.Models.StocklineAdjustmentReason> GetAllAdjustmentReasonData(long adjustmentReasonId);
+        IEnumerable<DAL.Models.StocklineAdjustmentReasonAudit> GetStocklineAdjustmentReasonAuditDetails(long adjustmentReasonId);
     }
 }

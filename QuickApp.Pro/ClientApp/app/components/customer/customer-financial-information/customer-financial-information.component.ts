@@ -11,6 +11,7 @@ import { TaxTypeService } from '../../../services/taxtype.service';
 import { AuthService } from '../../../services/auth.service';
 import { AlertService, MessageSeverity } from '../../../services/alert.service';
 import { validateRecordExistsOrNot } from '../../../generic/autocomplete';
+import { CommonService } from '../../../services/common.service';
 
 @Component({
     selector: 'app-customer-financial-information',
@@ -27,11 +28,12 @@ export class CustomerFinancialInformationComponent implements OnInit {
     // creditTermList: import("c:/Users/Jyotsna/source/repos/PAS_DEV/QuickApp.Pro/ClientApp/app/models/credit-terms.model").CreditTerms[][];
     // discountList: import("c:/Users/Jyotsna/source/repos/PAS_DEV/QuickApp.Pro/ClientApp/app/models/discountvalue").DiscountValue[][];
     // markUpList: import("c:/Users/Jyotsna/source/repos/PAS_DEV/QuickApp.Pro/ClientApp/app/models/markUpPercentage.model").MarkUpPercentage[][];
-    state_taxRateList: any = [];
+    taxRatesList: any = [];
     creditTermList: any;
     discountList: any;
     markUpList: any;
     taxrateList: any;
+    state_taxRateList: any;
     id: number;
     intergationNew = {
         allowPartialBilling: true,
@@ -56,6 +58,9 @@ export class CustomerFinancialInformationComponent implements OnInit {
     allCurrencyInfo: any;
     customerCode: any;
     customerName: any;
+    selectedTaxRates = [];
+    selectedTaxType: any;
+    taxTypeRateMapping: any = [];
     // discountNew = {
 
 
@@ -173,6 +178,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
         public itemser: ItemMasterService, public customerService: CustomerService,
         private authService: AuthService,
         private alertService: AlertService,
+        private commonservice: CommonService
     ) {
         // if (this.workFlowtService.contactCollection) {
         //     this.local = this.workFlowtService.contactCollection;
@@ -185,6 +191,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
         // }
 
     }
+    // taxType
+    taxtypesList = [];
 
 
     ngOnInit(): void {
@@ -218,15 +226,19 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
     generateValue() {
         for (var i = 1; i <= 100; i++) {
-            this.state_taxRateList.push(i);
+            this.taxRatesList.push({ label: `${i}%`, value: `${i}%` });
 
 
         }
     }
     getAllcreditTermList() {
-        this.creditTermsService.getCreditTermsList().subscribe(res => {
-            this.creditTermList = res[0];
+        this.commonservice.smartDropDownList('CreditTerms', 'CreditTermsId', 'Name').subscribe(res => {
+            this.creditTermList = res;
+
         })
+        // this.creditTermsService.getCreditTermsList().subscribe(res => {
+        //     this.creditTermList = res[0];
+        // })
     }
     getAllCurrency() {
         this.currencyService.getCurrencyList().subscribe(res => {
@@ -238,7 +250,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
         this._creditTermList = this.creditTermList;
 
         this._creditTermList = [...this.creditTermList.filter(x => {
-            return x.name.toLowerCase().includes(event.query.toLowerCase())
+            return x.label.toLowerCase().includes(event.query.toLowerCase())
         })]
 
     }
@@ -292,15 +304,39 @@ export class CustomerFinancialInformationComponent implements OnInit {
     }
     getAllTaxList() {
         this.taxRateService.getTaxRateList().subscribe(res => {
-            this.taxrateList = res[0];
+            // this.taxrateList = res[0];
+            const responseData = res[0];
+            this.taxtypesList = responseData.map(x => {
+                return {
+                    label: x.taxTypeId, value: x.taxTypeId
+                }
+            })
 
         })
     }
 
+    mapTaxTypeandRate() {
+        // let i = 0;
+        const data = this.selectedTaxRates.map(x => {
+            // i++;
+            this.taxTypeRateMapping.push({
+                // id: i,
+                customerId: this.id,
+                taxType: this.selectedTaxType,
+                taxRate: x
+            })
+        })
+        this.selectedTaxRates = [];
+        this.selectedTaxType = undefined;
+
+    }
+
 
     saveFinancialInformation() {
+        
         this.customerService.updatefinanceinfo({
             ...this.savedGeneralInformationData,
+            CustomerTaxTypeRateMapping: this.taxTypeRateMapping,
             updatedBy: this.userName
         }, this.id).subscribe(res => {
             this.alertService.showMessage(

@@ -21,7 +21,7 @@ namespace QuickApp.Pro.Controllers
         readonly IEmailer _emailer;
         private const string GetActionByIdActionName = "GetActionById";
 
-        public PriorityController(IUnitOfWork unitOfWork, ILogger<GateCodeController> logger, IEmailer emailer)
+        public PriorityController(IUnitOfWork unitOfWork, ILogger<StageCodeController> logger, IEmailer emailer)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
@@ -73,7 +73,7 @@ namespace QuickApp.Pro.Controllers
                 priorityobject.Description = priorityViewModel.Description;
                 priorityobject.MasterCompanyId = 1;
                 priorityobject.IsActive = priorityViewModel.IsActive;
-                priorityobject.IsDelete = priorityViewModel.IsDelete;
+                priorityobject.IsDeleted = priorityViewModel.IsDeleted;
                 priorityobject.Memo = priorityViewModel.Memo;
                 priorityobject.CreatedDate = DateTime.Now;
                 priorityobject.UpdatedDate = DateTime.Now;
@@ -122,7 +122,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult DeleteAction(long id)
         {
             var existingResult = _unitOfWork.Priority.GetSingleOrDefault(c => c.PriorityId == id);
-            existingResult.IsDelete =true;
+            existingResult.IsDeleted =true;
             _unitOfWork.Priority.Update(existingResult);
             //_unitOfWork.Priority.Remove(existingResult);
 
@@ -145,7 +145,12 @@ namespace QuickApp.Pro.Controllers
             return Ok(auditResult);
         }
 
-
+        [HttpGet("priorityhistory")]
+        public IActionResult GetPriorityHistory(long priorityId)
+        {
+            var reult = _unitOfWork.Priority.GetPriorityHistory(priorityId);
+            return Ok(reult);
+        }
 
 
     }

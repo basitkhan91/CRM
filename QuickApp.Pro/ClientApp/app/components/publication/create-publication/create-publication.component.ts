@@ -23,6 +23,7 @@ import { AtaSubChapter1Service } from '../../../services/atasubchapter1.service'
 import { EmployeeService } from '../../../services/employee.service';
 import * as moment from 'moment';
 import { getValueFromArrayOfObjectById } from '../../../generic/autocomplete';
+import { CommonService } from '../../../services/common.service';
 
 @Component({
   selector: 'app-create-publication',
@@ -41,24 +42,26 @@ export class CreatePublicationComponent implements OnInit {
   pubType: string;
   uploadedFiles: any[] = [];
   private isSaving: boolean;
-  isEditMode: boolean;
+  isEditMode: boolean = false;  
   selectedFile: File = null;
   publicationId: number;
+  data: any;
 
   publicationGeneralInformation = {
     entryDate: new Date(),
     publicationId: '',
     description: '',
-    publicationTypeId: '',
+    publicationTypeId: null,
     asd: '',
-    sequence: '',
+    sequence: null,
     publishby: '',
     location: '',
     revisionDate: new Date(),
+    revisionNum: null,
     expirationDate: new Date(),
     nextReviewDate: new Date(),
     employeeId: null,
-    verifiedBy: '',
+    verifiedBy: null,
     verifiedDate: new Date(),
     masterCompanyId: 1,
   }
@@ -77,7 +80,7 @@ export class CreatePublicationComponent implements OnInit {
   selectedPartNumbers = [];
   pnMappingList = [];
   publicationRecordId: any;
-  employeeList = [];
+  employeeList:any = [];
   ataList = [];
   headersforPNMapping = [
     { field: 'partNumber', header: 'PN ID/Code' },
@@ -106,20 +109,23 @@ export class CreatePublicationComponent implements OnInit {
   searchATAParams: string = '';
   isDisabledSteps = false;
   attachmentList: any[] = [];
+  publicationTypes: any[] = [];
   // dropdown
 
-  publicationTypes = [
-    { label: 'Select Publication Type', value: null },
-    { label: 'CMM', value: '2' },
-    { label: 'AD', value: '3' },
-    { label: 'SB', value: '4' }
-  ];
+  // publicationTypes = [
+  //   { label: 'Select Publication Type', value: null },
+  //   { label: 'CMM', value: '2' },
+  //   { label: 'AD', value: '3' },
+  //   { label: 'SB', value: '4' }
+  // ];
 
   // table columns for ata
 
   atacols = [
-    { field: 'ataChapter', header: 'AtaChapter' },
-    { field: 'ataSubChapter', header: 'AtaSubChapter' }
+    { field: 'ataChapter', header: 'ATA Chapter' },
+    //{ field: 'ataChapterCode', header: 'ATA Chapter Code' },
+    { field: 'ataSubChapter', header: 'ATA SubChapter' },
+    //{ field: 'ataSubChapterCode', header: 'ATA SubChapter Code' }
   ];
   status = [
     { label: 'Select Status ', value: 'Select Status' },
@@ -127,6 +133,7 @@ export class CreatePublicationComponent implements OnInit {
     { label: 'In-Active', value: 'In-Active' }
   ];
   formData = new FormData();
+  selectedRowforDelete: any;
   /** Create-publication ctor */
   constructor(
     private publicationService: PublicationService,
@@ -143,25 +150,31 @@ export class CreatePublicationComponent implements OnInit {
     private Dashnumservice: DashNumberService,
     private employeeService: EmployeeService,
     private route: Router,
-    private _actRoute: ActivatedRoute
+    private _actRoute: ActivatedRoute,
+    private commonService: CommonService,
   ) { }
   aircraftInformationCols: any[] = [
     { field: 'aircraft', header: 'Aircraft' },
     { field: 'model', header: 'Model' },
     { field: 'dashNumber', header: 'Dash Numbers' },
-    { field: 'memo', header: 'Memo' }
+    // { field: 'memo', header: 'Memo' }
   ];
   headersforAttachment = [
     { field: 'fileName', header: 'File Name' },
-];
+  ];
   first: number = 0;
 
   ngOnInit() {
     // this.itemMasterId = this._actRoute.snapshot.params['id'];
-    this.getAllEmployeeList();
     this.publicationRecordId = this._actRoute.snapshot.params['id'];
-    console.log(this.publicationRecordId);
-    if(this.publicationRecordId) {
+    this.sourcePublication.sequence = 1;
+    if(!this.isEditMode) {
+      this.sourcePublication.revisionNum = 1;
+    }
+    this.getAllEmployeeList();
+    this.getPublicationTypes();
+
+    if (this.publicationRecordId) {
       this.isEditMode = true;
       this.isDisabledSteps = true;
       this.getPublicationDataonEdit();
@@ -178,17 +191,15 @@ export class CreatePublicationComponent implements OnInit {
               partDescription: x.partDescription,
               itemClassification: x.itemClassification
             };
-          });        
+          });
         });
 
-        //get aircraft info edit mode
-        this.getAircraftInformationByPublicationId();
+      //get aircraft info edit mode
+      this.getAircraftInformationByPublicationId();
 
-        //get atachapter edit mode
-        this.getAtaChapterByPublicationId();
+      //get atachapter edit mode
+      this.getAtaChapterByPublicationId();
 
-    } else {
-        this.isEditMode = false;
     }
 
   }
@@ -199,33 +210,55 @@ export class CreatePublicationComponent implements OnInit {
       : '';
   }
 
-  async getPublicationDataonEdit(){
-   await  this.publicationService.getAllbyIdPublications(this.publicationRecordId).subscribe(res => {   
-      console.log(res[0]);
+  getPublicationTypes() {
+    this.publicationService.getPublicationTypes().subscribe(response => {
+      this.publicationTypes = response[0].map(x => {
+        return {
+          label: x.name,
+          value: x.publicationTypeId
+        }
+        // this.publicationTypes.push(pubType);
+      })
+    })
+
+
+  }
+
+
+  async getPublicationDataonEdit() {
+    await this.publicationService.getAllbyIdPublications(this.publicationRecordId).subscribe(res => {
+
       const responseData = res;
       //this.sourcePublication = res[0];
       const tempsourcepub =  //responseData[0]
-      responseData.map(x => {
-        return{
-          ...x,
-          entryDate: new Date(x.entryDate),
-         revisionDate: new Date(x.revisionDate),
-         expirationDate: new Date(x.expirationDate),
-         nextReviewDate: new Date(x.nextReviewDate),
-         verifiedDate: new Date(x.verifiedDate)
-        }
-      });
+        responseData.map(x => {
+          return {
+            ...x,
+            entryDate: new Date(x.entryDate),
+            revisionDate: new Date(x.revisionDate),
+            expirationDate: new Date(x.expirationDate),
+            nextReviewDate: new Date(x.nextReviewDate),
+            verifiedDate: new Date(x.verifiedDate)
+          }
+        });
       //this.sourcePublication = tempsourcepub[0];
-      const tempSourcePublication = tempsourcepub.map(x => {
-        return {
-          ...x,
-        publicationType: getValueFromArrayOfObjectById('label', 'value', x.publicationTypeId.toString(), this.publicationTypes),
-        }
-      });
-      this.sourcePublication = tempSourcePublication[0];
+      // const tempSourcePublication = tempsourcepub.map(x => {
+      //   return {
+      //     ...x,
+      //     publicationType: getValueFromArrayOfObjectById('label', 'value', x.publicationTypeId.toString(), this.publicationTypes),
+      //   }
+      // });
+
+
+      this.sourcePublication = tempsourcepub[0];
+
+
+      this.publicationType = getValueFromArrayOfObjectById('label', 'value', this.sourcePublication.publicationTypeId, this.publicationTypes);
+
+
       this.attachmentList = this.sourcePublication.attachmentDetails;
-      
-      console.log(this.sourcePublication);
+
+
     })
   }
 
@@ -260,16 +293,21 @@ export class CreatePublicationComponent implements OnInit {
 
 
   async getAllEmployeeList() {
-    await this.employeeService.getEmployeeList().subscribe(res => {
-      const responseData = res[0];
-      this.employeeList = responseData.map(x => {
-        return {
-          label: x.firstName,
-          value: x.employeeId
-        };
-      });
+    this.commonService.smartDropDownList('Employee', 'employeeId', 'firstName').subscribe(res => {
+			console.log(res);
+      this.employeeList = res;
       this.employeeList = [{ label: 'Select Employee', value: null }, ...this.employeeList]
-    });
+		})
+    // await this.employeeService.getEmployeeList().subscribe(res => {
+    //   const responseData = res[0];
+    //   this.employeeList = responseData.map(x => {
+    //     return {
+    //       label: x.firstName,
+    //       value: x.employeeId
+    //     };
+    //   });
+    //   this.employeeList = [{ label: 'Select Employee', value: null }, ...this.employeeList]
+    // });
   }
   private saveSuccessHelper(role?: any) {
     this.isSaving = false;
@@ -354,10 +392,11 @@ export class CreatePublicationComponent implements OnInit {
       this.formData.append(file.name, file);
   }
 
-  saveGeneralInfo() {
-    const data = this.sourcePublication;
+  saveGeneralInfo() {    
+    this.data = this.sourcePublication;
+    this.data.employeeId = this.data.employeeId ? this.data.employeeId : 0;
     this.publicationType = getValueFromArrayOfObjectById('label', 'value', this.sourcePublication.publicationTypeId.toString(), this.publicationTypes);
-    console.log(this.publicationType);
+    
     // entryDate: new Date(),
     // PublicationId: '',
     // description: '',
@@ -373,28 +412,32 @@ export class CreatePublicationComponent implements OnInit {
     // verifiedby: '',
     // masterCompanyId: 1,
     // const files: Array<File> = this.uploadedFiles;
-    
 
-    this.formData.append('entryDate',  moment(data.entryDate).format('DD/MM/YYYY'));
-    this.formData.append('publicationId', data.publicationId);
-    this.formData.append('description', data.description);
-    this.formData.append('publicationTypeId',data.publicationTypeId);
-    this.formData.append('asd', data.asd);
-    this.formData.append('sequence', data.sequence);
-    this.formData.append('publishby', data.publishby);
-    this.formData.append('location', data.location);
-    this.formData.append('revisionDate', moment(data.revisionDate).format('DD/MM/YYYY') );
-    this.formData.append('expirationDate',  moment(data.expirationDate).format('DD/MM/YYYY'));
-    this.formData.append('nextReviewDate', moment(data.nextReviewDate).format('DD/MM/YYYY'));
-    this.formData.append('employeeId', data.employeeId);
-    this.formData.append('verifiedBy', data.verifiedBy);
-    this.formData.append('verifiedDate', moment(data.verifiedDate).format('DD/MM/YYYY'));
-    this.formData.append('masterCompanyId', data.masterCompanyId);
-    this.formData.append('CreatedBy',this.userName);
-    this.formData.append('UpdatedBy',this.userName);
+
+    this.formData.append('entryDate', moment(this.data.entryDate).format('DD/MM/YYYY'));
+    this.formData.append('publicationId', this.data.publicationId);
+    this.formData.append('description', this.data.description);
+    this.formData.append('publicationTypeId', this.data.publicationTypeId);
+    this.formData.append('asd', this.data.asd);
+    this.formData.append('sequence', this.data.sequence);
+    this.formData.append('publishby', this.data.publishby);
+    this.formData.append('location', this.data.location);
+    this.formData.append('revisionDate', moment(this.data.revisionDate).format('DD/MM/YYYY'));
+    //this.formData.append('revisionNum', this.data.revisionNum);
+    this.formData.append('expirationDate', moment(this.data.expirationDate).format('DD/MM/YYYY'));
+    this.formData.append('nextReviewDate', moment(this.data.nextReviewDate).format('DD/MM/YYYY'));
+    this.formData.append('employeeId', this.data.employeeId);
+    this.formData.append('verifiedBy', this.data.verifiedBy);
+    this.formData.append('verifiedDate', moment(this.data.verifiedDate).format('DD/MM/YYYY'));
+    this.formData.append('masterCompanyId', this.data.masterCompanyId);
+    this.formData.append('CreatedBy', this.userName);
+    this.formData.append('UpdatedBy', this.userName);
     this.formData.append('IsActive', 'true');
     this.formData.append('IsDeleted', 'false');
-    
+    if(!this.isEditMode) {
+      this.formData.append('revisionNum', this.data.revisionNum);
+    }
+
 
     if (this.sourcePublication.PublicationId != '' && this.publicationRecordId == null) {
       this.generalInformationDetails = this.sourcePublication;
@@ -404,13 +447,13 @@ export class CreatePublicationComponent implements OnInit {
         this.sourcePublication.PublicationId = this.sourcePublication.PublicationId;
         this.publicationService
           .newAction(this.formData
-          //   {
-          //   ...this.sourcePublication, CreatedBy: this.userName,
-          //   UpdatedBy: this.userName,
-          //   IsActive: true,
-          //   IsDeleted: false,
-          // }
-          
+            //   {
+            //   ...this.sourcePublication, CreatedBy: this.userName,
+            //   UpdatedBy: this.userName,
+            //   IsActive: true,
+            //   IsDeleted: false,
+            // }
+
           )
           .subscribe(res => {
             const { publicationRecordId } = res;
@@ -427,31 +470,46 @@ export class CreatePublicationComponent implements OnInit {
       this.changeOfTab('PnMap');
     }
 
-    if(this.isEditMode) {
-      console.log(data)
-      this.formData.append('publicationRecordId', this.publicationRecordId);
-      
-      this.publicationService
-          .updateAction(this.formData)
-          .subscribe(res => {
-            // const { publicationRecordId } = res;
-            // this.publicationRecordId = publicationRecordId;
-            // console.log(this.publicationRecordId)
-            console.log(res);
-            this.changeOfTab('PnMap'),
-            this.formData = new FormData(),
-              this.alertService.showMessage("Success", `Publication Updated Successfully`, MessageSeverity.success),
-              role => this.saveSuccessHelper(role),
-              error => this.saveFailedHelper(error);
-          });
-    }
-
-
+    //if (this.isEditMode) {
+        // console.log(this.sourcePublication);
+        // if(!this.sourcePublication.revisionNum) {
+        //   this.updatePublicationGeneralInfo();
+        // }
+    //}
   }
-  private loadCustomerClassifiData() { }
-  private onDataLoadClassifiSuccessful(
-    getCustomerClassificationList: CustomerClassification[]
-  ) { }
+
+  updatePublicationGeneralInfo() {
+    this.formData.append('publicationRecordId', this.publicationRecordId);
+    this.publicationService
+        .updateAction(this.formData)
+        .subscribe(res => {
+          // const { publicationRecordId } = res;
+          // this.publicationRecordId = publicationRecordId;
+          // console.log(this.publicationRecordId)
+          console.log(res);
+          this.changeOfTab('PnMap'),
+            this.formData = new FormData(),
+            this.alertService.showMessage("Success", `Publication Updated Successfully`, MessageSeverity.success),
+            role => this.saveSuccessHelper(role),
+            error => this.saveFailedHelper(error);
+        });
+  }
+
+  changeRevisionNum(value) {
+    if(value === 'Yes') {
+      this.data.revisionNum = this.data.revisionNum + 1;
+      this.formData.append('revisionNum', this.data.revisionNum);
+      this.updatePublicationGeneralInfo();
+    }
+    if(value === 'No') {
+      this.formData.append('revisionNum', this.data.revisionNum);
+      this.updatePublicationGeneralInfo();
+    }
+  }
+  // private loadCustomerClassifiData() { }
+  // private onDataLoadClassifiSuccessful(
+  //   getCustomerClassificationList: CustomerClassification[]
+  // ) { }
 
   // get PartNumbers
   async getPartNumberList() {
@@ -489,6 +547,8 @@ export class CreatePublicationComponent implements OnInit {
       };
     });
     this.selectedPartNumbers = [];
+    console.log(mapData);
+
 
     // PNMapping Save
     this.publicationService.postMappedPartNumbers(mapData).subscribe(res => {
@@ -504,8 +564,8 @@ export class CreatePublicationComponent implements OnInit {
               itemClassification: x.itemClassification
             };
           });
-            this.alertService.showMessage("Success", `PN Mapping Done Successfully`, MessageSeverity.success);
-          
+          this.alertService.showMessage("Success", `PN Mapping Done Successfully`, MessageSeverity.success);
+
         });
 
       this.getAircraftInformationByPublicationId();
@@ -599,7 +659,7 @@ export class CreatePublicationComponent implements OnInit {
             aircraft: x.aircraftType,
             model: x.aircraftModel,
             dashNumber: x.dashNumber,
-            memo: x.memo
+            //memo: x.memo
           };
         });
       });
@@ -660,7 +720,7 @@ export class CreatePublicationComponent implements OnInit {
     }
   }
 
-  async searchAircraftInformation() {
+  async searchAircraftInformation() {    
     await this.searchByFieldUrlCreateforAircraftInformation();
 
     this.searchParams = '';
@@ -698,7 +758,7 @@ export class CreatePublicationComponent implements OnInit {
     }
     this.publicationService
       .aircraftInformationSearch(this.searchParams, this.publicationRecordId)
-      .subscribe(res => { 
+      .subscribe(res => {
         const responseData: any = res;
         this.aircraftList = responseData.map(x => {
           return {
@@ -710,6 +770,9 @@ export class CreatePublicationComponent implements OnInit {
           };
         })
       });
+      this.selectAircraftManfacturer = [];
+      this.selectedAircraftModel = [];
+      this.selectedDashNumbers = [];
   }
 
   // get atachapter by publication id
@@ -721,11 +784,12 @@ export class CreatePublicationComponent implements OnInit {
         const responseData = res;
         this.ataList = responseData.map(x => {
           return {
-            ataChapter: x.ataChapterName,
-            ataSubChapter: x.ataSubChapterDescription,
-            ataChapterCode: x.ataChapterCode,
-            ataSubChapterId: x.ataSubChapterId,
-            ataChapterId: x.ataChapterId
+            ataChapter: `${x.ataChapterCode} - ${x.ataChapterName}`,
+            ataSubChapter: `${x.ataSubChapterCode} - ${x.ataSubChapterDescription}`,
+            //ataChapterCode: x.ataChapterCode,
+            //ataSubChapterCode: x.ataSubChapterCode,
+            //ataSubChapterId: x.ataSubChapterId,
+            //ataChapterId: x.ataChapterId
           };
         });
       });
@@ -834,48 +898,83 @@ export class CreatePublicationComponent implements OnInit {
         this.publicationRecordId
       )
       .subscribe(res => {
-
         this.ataList = res.map(x => {
           return {
-            ataChapter: x.ataChapterName,
-            ataSubChapter: x.ataSubChapterDescription,
-            ataChapterCode: x.ataChapterCode,
-            ataSubChapterId: x.ataSubChapterId,
-            ataChapterId: x.ataChapterId
+            ataChapter: `${x.ataChapterCode} - ${x.ataChapterName}`,
+            ataSubChapter: `${x.ataSubChapterCode} - ${x.ataSubChapterDescription}`,            
+            //ataSubChapterId: x.ataSubChapterId,
+            //ataChapterId: x.ataChapterId
           };
         });
       });
+      this.selectedATAchapter = [];
+      this.selectedATASubChapter = [];
   }
 
-  onDeletePNMappingRow(rowData, rowIndex) {
-    console.log(rowData)
-    console.log(rowIndex)
-    this.publicationService.deleteItemMasterMapping(rowData.publicationItemMasterMappingId).subscribe(res => {
-      console.log(res);
-      this.publicationService
-        .getPublicationPNMapping(this.publicationRecordId)
-        .subscribe(res => {
-          console.log(res);
-          this.pnMappingList = res.map(x => {
-            return {
-              ...x,
-              PartNumber: x.partNumber,
-              PartNumberDescription: x.partNumberDescription,
-              ItemClassification: x.itemClassification
-            };
-          });        
-        });
-    })
+  onDeletePNMappingRow(rowData) {
+    this.selectedRowforDelete = rowData;
   }
 
-//   getValueFromArrayOfObjectById(field: string, idField: string, id: string, originalData: any) {
-//     if ((field !== '' || field !== undefined) && (idField !== '' || idField !== undefined) && (id !== '' || id !== undefined) && (originalData !== undefined)) {
-//         const data = originalData.filter(x => {
-//             if (x[idField] === id) {
-//                 return x[field];
-//             }
-//         })
-//         return data;
-//     }
-// }
+  deleteConformation(value) {
+    console.log(this.selectedRowforDelete);    
+    if (value === 'Yes') {
+      this.publicationService.deleteItemMasterMapping(this.selectedRowforDelete.publicationItemMasterMappingId).subscribe(() => {
+        this.publicationService
+          .getPublicationPNMapping(this.publicationRecordId)
+          .subscribe(res => {
+            this.pnMappingList = res.map(x => {
+              return {
+                ...x,
+                PartNumber: x.partNumber,
+                PartNumberDescription: x.partNumberDescription,
+                ItemClassification: x.itemClassification
+              };
+            });
+            this.getAtaChapterByPublicationId();
+            this.getAircraftInformationByPublicationId();
+          });
+        this.alertService.showMessage(
+          'Success',
+          `Deleted PN Mapping Successfully`,
+          MessageSeverity.success
+        );
+      })
+    } else {
+      this.selectedRowforDelete = undefined;
+    }
+  }
+
+  // onDeletePNMappingRow(rowData) {
+  //   console.log(rowData)
+  //   console.log(rowIndex)
+  //   this.publicationService.deleteItemMasterMapping(rowData.publicationItemMasterMappingId).subscribe(res => {
+  //     console.log(res);
+  //     this.publicationService
+  //       .getPublicationPNMapping(this.publicationRecordId)
+  //       .subscribe(res => {
+  //         console.log(res);
+  //         this.pnMappingList = res.map(x => {
+  //           return {
+  //             ...x,
+  //             PartNumber: x.partNumber,
+  //             PartNumberDescription: x.partNumberDescription,
+  //             ItemClassification: x.itemClassification
+  //           };
+  //         });        
+  //       });
+  //   })
+  // }
+
+
+
+  //   getValueFromArrayOfObjectById(field: string, idField: string, id: string, originalData: any) {
+  //     if ((field !== '' || field !== undefined) && (idField !== '' || idField !== undefined) && (id !== '' || id !== undefined) && (originalData !== undefined)) {
+  //         const data = originalData.filter(x => {
+  //             if (x[idField] === id) {
+  //                 return x[field];
+  //             }
+  //         })
+  //         return data;
+  //     }
+  // }
 }

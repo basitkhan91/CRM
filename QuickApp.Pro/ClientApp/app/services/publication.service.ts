@@ -216,4 +216,36 @@ export class PublicationService {
         this.publicationEndpoint.getpublicationGlobalSearchEndpoint<any>(ataChapterId, ataSubChapterId, airCraftId, modelId, dashNumberId, pageNumber, pageSize)
     );
   }
+
+  getPublicationTypes() {
+    return Observable.forkJoin(
+      this.publicationEndpoint.getpublicationTypesEndpoint<any>()
+    );
+    }
+
+    getAllPublicationsDropdown() {
+        return Observable.forkJoin(
+            this.publicationEndpoint.getAllPublicationsDropdownEndPoint<any[]>()
+        );
+    }
+
+    getPublicationForWorkFlow(publicationId: number) {
+        return Observable.forkJoin(
+            this.publicationEndpoint.getPublicationForWorkFlowEndpoint<any>(publicationId)
+        );
+    }
+
+    publicationFileUpload(file){
+      return this.publicationEndpoint.publicationCustomUpload(file);
+  }
+
+    getPublicationAuditDetails(Id: number) {
+      return this.publicationEndpoint.getPublicationAuditDetails<any[]>(Id);
+  }
+
+  getpublicationListBySearchEndpoint(pageIndex, pageSize, publicationId, description, publicationType, publishby, employeeName, location) {
+    return Observable.forkJoin(
+      this.publicationEndpoint.getpublicationListBySearchEndpoint<Publication[]>(pageIndex, pageSize, publicationId, description, publicationType, publishby, employeeName, location)
+    );
+  }
 }

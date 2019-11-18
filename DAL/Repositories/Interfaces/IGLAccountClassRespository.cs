@@ -6,10 +6,11 @@ using DAL.Models;
 
 namespace DAL.Repositories.Interfaces
 {
-   public interface IGLAccountClassRespository : IRepository<DAL.Models.GLAccountClass>
+   public interface IGLAccountClassRespository : IRepository<GLAccountClass>
     {
         IEnumerable<DAL.Models.GLAccountClass> GetAllGLAccountClassData();
         IEnumerable<object> getShareWithEntityNodeById(long id);
         new IQueryable<GLAccountClass> GetPaginationData();
+        IEnumerable<DAL.Models.GLAccountClassAudit> GetGLAccountClassAuditDetails(long gLAccountClassId);
     }
 }

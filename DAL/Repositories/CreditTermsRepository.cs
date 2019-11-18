@@ -18,7 +18,7 @@ namespace DAL.Repositories
         {
             try
             {
-                var result = _appContext.CreditTerms.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.CreditTermsId).ToList();
+                var result = _appContext.CreditTerms.Include("MasterCompany").Where(c => c.IsDeleted == false || c.IsDeleted == null).OrderByDescending(c => c.CreditTermsId).ToList();
                 return result;
             }
             catch (Exception ex)
@@ -28,6 +28,11 @@ namespace DAL.Repositories
             }
 
 
+        }
+
+        public IEnumerable<CreditTermsAudit> GetAuditDetails(long id)
+        {
+            return _appContext.CreditTermsAudit.Where(c=> c.CreditTermsId== id).OrderByDescending(c=>c.CreatedDate).ToList();
         }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

@@ -296,7 +296,6 @@ namespace QuickApp.Pro.Controllers
                 //
 
                 //_unitOfWork.Address.Update(address);
-                _unitOfWork.SaveChanges();
                 _unitOfWork.Locations.Update(existingResult);
                 _unitOfWork.SaveChanges();
                 return Ok(existingResult);
@@ -352,7 +351,13 @@ namespace QuickApp.Pro.Controllers
             return Ok(auditResult);
         }
 
+        [HttpPost("bulkupload")]
+        public IActionResult BulkUpload()
+        {
+            var result = _unitOfWork.Locations.BulkUpload(Request.Form.Files[0]);
 
+            return Ok(result);
+        }
 
     }
 

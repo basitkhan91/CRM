@@ -3,6 +3,7 @@
 export class CustomerContactModel {
     // Note: Using only optional constructor properties without backing store disables typescript's type checking for the type
     constructor() {
+        this.tag = '',
         this.prefix= ''
         this.firstName= '';
         this.middleName = '';
@@ -20,7 +21,8 @@ export class CustomerContactModel {
         this.isDefaultContact = false
 
     }
-    prefix:string
+    tag: string;
+    prefix:string;
     firstName:string;
     middleName: string;
     lastName: string;

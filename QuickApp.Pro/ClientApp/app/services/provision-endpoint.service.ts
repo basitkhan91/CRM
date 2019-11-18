@@ -3,7 +3,6 @@ import { Injectable, Injector } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-
 import { EndpointFactory } from './endpoint-factory.service';
 import { ConfigurationService } from './configuration.service';
 
@@ -15,6 +14,8 @@ export class ProvisionEndpoint extends EndpointFactory {
     private readonly _actionsUrlNew: string = "/api/Provision/provision";
     private readonly _actionsUrlAuditHistory: string = "/api/Provision/auditHistoryById";
     private readonly getProvisionAuditHistoryById: string = "/api/Provision/audits";
+    private readonly excelUpload: string = "/api/Provision/uploadProvisionCustomdata";
+
 
 
     // private readonly _workflowActionsNewUrl: string = "/api/WorkflowAction/Get";
@@ -60,7 +61,7 @@ export class ProvisionEndpoint extends EndpointFactory {
             });
     }
 
-    getUpdateProvisionEndpoint<T>(roleObject: any, provisionId: number): Observable<T> {
+    getUpdateProvisionEndpoint<T>(roleObject: any, provisionId: number): Observable<T> { 
         let endpointUrl = `${this._actionsUrlNew}/${provisionId}`;
 
         return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
@@ -86,7 +87,12 @@ export class ProvisionEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getProvisionAuditById(provisionId));
             });
     }
+ 
+    provisionCustomUpload(file) {
+        return this.http.post(`${this.configurations.baseUrl}${this.excelUpload}`, file)
 
+
+    }
 
 }
 

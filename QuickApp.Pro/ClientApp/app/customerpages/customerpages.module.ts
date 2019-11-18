@@ -27,6 +27,7 @@ import { CustomerSalesPersonComponent } from "../components/customer/customer-sa
 import { CustomerWarningsComponent } from "../components/customer/customer-warnings/customer-warnings.component";
 import { CustomerStepsPrimengComponent } from "../components/customer/customer-steps-primeng/customer-steps-primeng.component";
 
+
 //import { CustomerWorksListComponent } from "../components/receiving/customer-work/customer-works-list/customer-works-list.component";
 //import { CustomerWorkSetupComponent } from "../components/receiving/customer-work/customer-work-setup/customer-work-setup.component";
 //import { CustomerWorkEditComponent } from "../components/receiving/customer-work/customer-work-edit/customer-work-edit.component";
@@ -58,6 +59,8 @@ import { AircraftManufacturerEndpointService } from "../services/aircraft-manufa
 import { AircraftManufacturerService } from "../services/aircraft-manufacturer/aircraftManufacturer.service";
 import { DashNumberService } from "../services/dash-number/dash-number.service";
 import { DashNumberEndpointService } from "../services/dash-number/dash-number-endpoint.service";
+import { CustomerDocumentsComponent } from "../components/customer/customer-documents/customer-documents.component";
+import { CommonService } from "../services/common.service";
 
 
 
@@ -88,6 +91,7 @@ import { DashNumberEndpointService } from "../services/dash-number/dash-number-e
         CustomerSetupComponent,
         CustomerGeneralInformationComponent,
         CustomerAircraftComponent,
+        CustomerDocumentsComponent,
         //CustomerWorksListComponent,
         //CustomerWorkSetupComponent,
         //CustomerWorkEditComponent,
@@ -107,7 +111,8 @@ import { DashNumberEndpointService } from "../services/dash-number/dash-number-e
         AircraftManufacturerEndpointService,
         AircraftManufacturerService,
         DashNumberService,
-        DashNumberEndpointService
+        DashNumberEndpointService,
+        CommonService
 
     ],
     entryComponents: [

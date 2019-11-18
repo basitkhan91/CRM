@@ -1,11 +1,12 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { AssetService } from '../../../../services/asset/Assetservice';
 import { AuthService } from '../../../../services/auth.service';
-import { AlertService } from '../../../../services/alert.service';
+//import { AlertService } from '../../../../services/alert.service';
 import { GlAccount } from '../../../../models/GlAccount.model';
 import { GlAccountService } from '../../../../services/glAccount/glAccount.service';
 import { VendorService } from '../../../../services/vendor.service';
 import { Vendor } from '../../../../models/vendor.model';
+import { AlertService, DialogType, MessageSeverity } from '../../../../services/alert.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -28,10 +29,15 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
     /** asset-maintenance-warranty ctor */
     constructor(private assetService: AssetService, private vendorService: VendorService, private route: Router,
         private authService: AuthService, private alertService: AlertService, private glAccountService: GlAccountService) {
-        if (this.assetService.listCollection != null && this.assetService.isEditMode == true) {
+        if ((this.assetService.listCollection != null && this.assetService.isEditMode == true) || (this.assetService.generalCollection != null)) {
 
-            this.showLable = true;
-            this.currentMaintenance = this.assetService.listCollection;
+            if (this.assetService.listCollection != null && this.assetService.isEditMode == true) {
+                this.showLable = true;
+                this.currentMaintenance = this.assetService.listCollection;
+            }
+            else if (this.assetService.generalCollection != null) {
+                this.showLable = true;
+                this.currentMaintenance = this.assetService.generalCollection;}
 
             if (this.currentMaintenance.warrantyEndDate) {
                 this.currentMaintenance.warrantyEndDate = new Date(this.currentMaintenance.warrantyEndDate);
@@ -47,6 +53,10 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
             }
             if (this.assetService.listCollection) {
                 this.local = this.assetService.listCollection;
+                this.currentMaintenance = this.local;
+            }
+            else if (this.assetService.generalCollection) {
+                this.local = this.assetService.generalCollection;
                 this.currentMaintenance = this.local;
             }
         }
@@ -92,12 +102,23 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
                 this.currentMaintenance.warrantyStatus = "";
                 this.currentMaintenance.unexpiredTime = "";
             }
-            this.assetService.updateAsset(this.currentMaintenance).subscribe(response => {
-                this.alertService.showMessage('Asset Maintance updated successfully.');
-                this.activeIndex = 3;
-                this.assetService.indexObj.next(this.activeIndex);
+            this.assetService.updateAsset(this.currentMaintenance).subscribe(data => {
+                this.currentMaintenance.updatedBy = this.userName;
+                this.localCollection = data;                
+                //this.alertService.showMessage('Asset Maintance updated successfully.');
+                this.alertService.showMessage("Success", `Asset Maintenance updated successfully.`, MessageSeverity.success);
+                this.route.navigateByUrl('assetmodule/assetpages/app-asset-listing');
+                //this.activeIndex = 3;
+                //this.assetService.indexObj.next(this.activeIndex);
             })
         }
+    }
+
+    customExcelUpload(event) {
+        
+
+    }
+    sampleExcelDownload() {
     }
 
     private onGlAccountLoad(getGlList: GlAccount[]) {

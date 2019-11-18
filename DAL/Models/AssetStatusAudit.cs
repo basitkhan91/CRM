@@ -9,10 +9,11 @@ namespace DAL.Models
     {
         [Key]
         public long AssetStatusAuditId { get; set; }
-        public long Id { get; set; }
-        public string Identification { get; set; }
+        public long AssetStatusId { get; set; }
+        public string Code { get; set; }
         public string Name { get; set; }
         public string Memo { get; set; }
+        public Int32 MasterCompanyId { get; set; }
 
     }
 }

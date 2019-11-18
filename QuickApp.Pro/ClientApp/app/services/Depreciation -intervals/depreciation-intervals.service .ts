@@ -1,4 +1,4 @@
-﻿import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/operator/do';
@@ -13,7 +13,7 @@ export class DepreciationIntervalsService {
 
     getAll() {
         return Observable.forkJoin(
-            this.depreciationIntervalsEndpoint.getAlldepreciationIntervals<DepreciationIntervals[]>());
+            this.depreciationIntervalsEndpoint.getAlldepreciationIntervals<any>());
     }
 
     getById(assetDepreciationIntervalTypeId: number) {
@@ -34,7 +34,11 @@ export class DepreciationIntervalsService {
         return this.depreciationIntervalsEndpoint.removedepreciationIntervalById(assetDepreciationIntervalTypeId);
     }
 
-    getAudit(assetDisposalTypeId: number) {
-        return this.depreciationIntervalsEndpoint.getAudit<any[]>(assetDisposalTypeId);
+    getAudit(assetDepreciationIntervalId: number) {
+        return this.depreciationIntervalsEndpoint.getAudit<any[]>(assetDepreciationIntervalId);
+    }
+
+    DepIntervalCustomUpload(file) {
+        return this.depreciationIntervalsEndpoint.DepIntervalCustomUpload(file);
     }
 }

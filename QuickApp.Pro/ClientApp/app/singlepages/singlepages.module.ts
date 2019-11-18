@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common'; //<-- This one
 import { RouterModule, Routes } from '@angular/router';
 import { GroupByPipe } from '../pipes/group-by.pipe';
 
-import { SinglePagesRoutingModule   } from "./singlepages-routing.module";
+import { SinglePagesRoutingModule } from "./singlepages-routing.module";
 
 import { SingleComponent } from "./singlepages.component";
 import { ActionsComponent } from '../components/actions/actions.component';
@@ -23,9 +23,7 @@ import { CurrencyComponent } from '../components/currency/currency.component';
 import { CustomerClassificationComponent } from '../components/customer-classification/customer-classification.component';
 import { DocumentsComponent } from '../components/documents/documents.component';
 import { EmployeeExpertiseComponent } from '../components/employee-expertise/employee-expertise.component';
-import { ExpenditureComponent } from '../components/expenditure/expenditure.component';
 import { FindingsComponent } from '../components/findings/findings.component';
-import { GateCodeComponent } from '../components/gate-code/gate-code.component';
 import { IntegrationComponent } from '../components/integration/integration.component';
 import { ItemClassificationComponent } from '../components/item-classification/item-classification.component';
 import { ItemGroupComponent } from '../components/item-group/item-group.component';
@@ -75,7 +73,7 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { BreadcrumbModule } from 'primeng/breadcrumb'; //bread crumb
 import { SingleScreenBreadcrumbService } from "../services/single-screens-breadcrumb.service";
 import { WarehouseComponent } from "../components/warehouse/warehouse.component";
-import { GLAccountCategoryComponent } from "../components/gl-account-categories/gl-account-categories.component";
+//import { StocklineAdjustmentReasonComponent } from '../components/stockline/stockline-adjustment-reason/stockline-adjustment-reason.component';
 import { ManufacturerComponent } from "../components/manufacturer/manufacturer.component";
 import { VendorcapabilitiesComponent } from "../components/vendorcapabilities/vendorcapabilities.component";
 //import { VendorcapabilitiesComponent } from "../components/vendor-capabilities/vendor-capabilities.component";
@@ -103,13 +101,25 @@ import { DepreciationIntervalsEndpoint } from "../services/Depreciation -interva
 import { AssetDepConventionTypeService } from "../services/assetDepConventionType/assetDepConventionType.service";
 import { AssetDepConventionTypeEndpointService } from "../services/assetDepConventionType/assetDepConventionType-endpoint.service";
 import { DepreciationIntervalsComponent } from "../components/depreciation-intervals/depreciation-intervals.component";
-import { AssetIntangibleTypeSingleScreenEndpointService } from "../services/AssetIntangibleTypeSingleScreen/assetIntangibleTypeSingleScreen-endpoint";
-import { AssetIntangibleTypeSingleScreenService } from "../services/AssetIntangibleTypeSingleScreen/assetIntangibleTypeSingleScreen.service";
-import { AssetIntangibleTypeSingleScreenComponent } from "../components/asset-intangible-type-single-screen/asset-intangible-type-single-screen.component";
-import { AssetTypeSingleScreenEndpointService } from "../services/AssetTypeSingleScreen/assettypesinglescreen-endpoint.service";
-import { AssetTypeSingleScreenService } from "../services/AssetTypeSingleScreen/assettypesinglescreen.service";
-import { AssetTypeSingleScreenComponent } from "../components/asset-type-single-screen/asset-type-single-screen.component";
-import { CreateAssetComponent } from "../components/Asset-Management/Asset-pages/create-asset/create-asset.component";
+import { AssetTypeEndpointService } from "../services/asset-type/asset-type-endpoint.service";
+import { AssetTypeService } from "../services/asset-type/asset-type.service";
+import { AssetTypeComponent } from "../components/asset-type/asset-type.component";
+import { AssetIntangibleTypeEndpointService } from "../services/asset-intangible-type/asset-intangible-type-endpoint.service";
+import { AssetIntangibleTypeService } from "../services/asset-intangible-type/asset-intangible-type.service";
+import { AssetIntangibleTypeComponent } from "../components/asset-intangible-type/asset-intangible-type.component";
+import { StageCodeEndpointService } from "../services/stage-code/stage-code-endpoint.service";
+import { StageCodeService } from "../services/stage-code/stage-code.service";
+import { StageCodeComponent } from "../components/stage-code/stage-code.component";
+import { GLAccountCategoryComponent } from "../components/gl-account-category/gl-account-category.component";
+import { GLAccountCategoryEndpointService } from "../services/gl-account-category/gl-account-category-endpoint.service";
+import { GLAccountCategoryService } from "../services/gl-account-category/gl-account-category.service";
+import { ExpenditureCategoryComponent } from '../components/expenditure-category/expenditure-category.component';
+import { ExpenditureCategoryEndpointService } from "../services/expenditure-category/expenditure-category-endpoint.service";
+import { ExpenditureCategoryService } from "../services/expenditure-category/expenditure-category.service";
+import { AssetAttributeTypeComponent } from '../components/asset-attribute-type/asset-attribute-type.component';
+import { AssetAttributeTypeEndpointService } from "../services/asset-attribute-type/asset-attribute-type-endpoint.service";
+import { AssetAttributeTypeService } from "../services/asset-attribute-type/asset-attribute-type.service";
+
 import { AuditModule } from "../audit/audit.module";
 import { AircraftManufacturerComponent } from "../components/aircraft-manufacturer/aircraft-manufacturer.component";
 import { AircraftManufacturerService } from "../services/aircraft-manufacturer/aircraftManufacturer.service";
@@ -120,16 +130,20 @@ import { AircraftModelComponent } from "../components/aircraft-model/aircraft-mo
 import { DashnumberComponent } from "../components/dashnumber/dashnumber.component";
 import { DashNumberEndpointService } from "../services/dash-number/dash-number-endpoint.service";
 import { DashNumberService } from "../services/dash-number/dash-number.service";
-import { PaginatorModule} from 'primeng/paginator';
+import { PaginatorModule } from 'primeng/paginator';
 import { CreatePublicationComponent } from "../components/publication/create-publication/create-publication.component";
 import { PaginationComponent } from "../shared/pagination/pagination/pagination.component";
 import { PaginationService } from "../services/pagination/pagination.service";
 import { TooltipModule } from "primeng/tooltip";
 import { KeyFilterModule } from 'primeng/keyfilter';
 import { PercentComponent } from "../components/percent/percent.component";
+import { JobTypeComponent } from '../components/job-type/job-type.component';
+import { PercentService } from "../services/percent.service";
+import { PercentEndpoint } from "../services/percent-endpoint.service";
+import { CommonService } from "../services/common.service";
 
 @NgModule({
-	imports: [
+    imports: [
         FlexLayoutModule,
         KeyFilterModule,
         FormsModule, ReactiveFormsModule,
@@ -145,7 +159,7 @@ import { PercentComponent } from "../components/percent/percent.component";
         MultiSelectModule,
         AutoCompleteModule,
         InputSwitchModule,
-        CheckboxModule, BreadcrumbModule, TreeTableModule, CheckboxModule, TreeModule, DialogModule, 
+        CheckboxModule, BreadcrumbModule, TreeTableModule, CheckboxModule, TreeModule, DialogModule,
         AuditModule, PaginatorModule
     ],
     declarations: [
@@ -160,13 +174,18 @@ import { PercentComponent } from "../components/percent/percent.component";
         CustomerClassificationComponent,
         DocumentsComponent,
         EmployeeExpertiseComponent,
-        ExpenditureComponent,
         FindingsComponent,
-        GateCodeComponent,
+        AssetIntangibleTypeComponent,
+        AssetTypeComponent,
+        StageCodeComponent,
+        GLAccountCategoryComponent,
+        ExpenditureCategoryComponent,
+        AssetAttributeTypeComponent,
         IntegrationComponent,
         ItemClassificationComponent,
         ItemGroupComponent,
         JobTitleComponent,
+        JobTypeComponent,
         PriorityComponent,
         ProvisionComponent,
         PublicationComponent,
@@ -178,42 +197,44 @@ import { PercentComponent } from "../components/percent/percent.component";
         WorkScopeComponent,
         ActionsEditorComponent,
         DefaultMessageComponent,
-      	ChargesComponent,
+        ChargesComponent,
         TaxTypeComponent,
-		ConditionsComponent,
-		ActionAttributeMappingComponent,
-		AtaSubChapter1Component,
-		AtaSubChapter2Component,
-		SiteComponent,
-		BinComponent,
-		CapabilitiesComponent,
-		FinancialStatementMappingComponent,
-		GlAccountClassComponent,
-		GlCashFlowClassificationComponent,
-		GlFinancialStatementComponent,
-		JournalApprovalsComponent,
-		RfqEngineComponent,
-		WarehouseComponent,
+        ConditionsComponent,
+        ActionAttributeMappingComponent,
+        AtaSubChapter1Component,
+        AtaSubChapter2Component,
+        SiteComponent,
+        BinComponent,
+        CapabilitiesComponent,
+        FinancialStatementMappingComponent,
+        GlAccountClassComponent,
+        GlCashFlowClassificationComponent,
+        GlFinancialStatementComponent,
+        JournalApprovalsComponent,
+        RfqEngineComponent,
+        WarehouseComponent,
+
+        //StocklineAdjustmentReasonComponent,
 		GLAccountCategoryComponent,
-		ManufacturerComponent,
-		VendorcapabilitiesComponent,
-		LocationComponent,
-		LaberAndOverheadCostSetupComponent,
-		ShelfComponent,
+        ManufacturerComponent,
+        VendorcapabilitiesComponent,
+        LocationComponent,
+        LaberAndOverheadCostSetupComponent,
+        ShelfComponent,
         CertificationTypeComponent,
         AssetStatusComponent,
         DisposalTypeComponent,
         DepriciationMethodComponent,
         AssetDepConventionTypeComponent,
         DepreciationIntervalsComponent,
-        AssetIntangibleTypeSingleScreenComponent,
-        AssetTypeSingleScreenComponent,
         AircraftManufacturerComponent,
         AircraftModelComponent,
         DashnumberComponent,
         PaginationComponent
     ],
     providers: [
+        PercentService,
+        PercentEndpoint,
         SingleScreenBreadcrumbService,
         AssetStatusService,
         AssetStatusEndpointService,
@@ -226,17 +247,26 @@ import { PercentComponent } from "../components/percent/percent.component";
         DepreciationIntervalsEndpoint,
         AssetDepConventionTypeService,
         AssetDepConventionTypeEndpointService,
-        AssetIntangibleTypeSingleScreenEndpointService,
-        AssetIntangibleTypeSingleScreenService,
-        AssetTypeSingleScreenEndpointService,
-        AssetTypeSingleScreenService,
+        AssetTypeService,
+        AssetTypeEndpointService,
+        AssetIntangibleTypeService,
+        AssetIntangibleTypeEndpointService,
+        StageCodeService,
+        StageCodeEndpointService,
+        GLAccountCategoryService,
+        GLAccountCategoryEndpointService,
+        ExpenditureCategoryService,
+        ExpenditureCategoryEndpointService,
+        AssetAttributeTypeService,
+        AssetAttributeTypeEndpointService,
         AircraftManufacturerService,
         AircraftManufacturerEndpointService,
         AircraftModelService,
         AircraftModelEndpointService,
         DashNumberService,
         DashNumberEndpointService,
-        PaginationService
+        PaginationService,
+        CommonService
     ],
     exports: [
         FlexLayoutModule,
@@ -248,7 +278,7 @@ import { PercentComponent } from "../components/percent/percent.component";
     ],
     entryComponents: [
     ],
-   
+
 })
 export class SinglePgesModule {
 

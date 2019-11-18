@@ -1,7 +1,5 @@
 ﻿using DAL.Models;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DAL.Repositories.Interfaces
 {
@@ -9,6 +7,8 @@ namespace DAL.Repositories.Interfaces
     {
         IEnumerable<CustomerBillingAddress> GetAllCustomerBillingAddress();
         IEnumerable<object> GetAllCusBillingDetails(long selectedrow);
+        IEnumerable<object> GetAllCusBillingHistory(long selectedrow);
+        IEnumerable<object> GetAllCustomerBillingAddressAudit(long customerId, long addressId);
     }
     
 }

@@ -89,6 +89,8 @@ namespace QuickApp.Pro.Controllers
 
 
         }
+
+
         [HttpDelete("managementEntitypost/{id}")]
         public IActionResult updateManagementDetailsactive(long id)
         {
@@ -107,8 +109,46 @@ namespace QuickApp.Pro.Controllers
 
 
         }
+    
+
+    [HttpGet("ManagementGetView")]
+    [Produces(typeof(List<LegalEntityViewModel>))]
+    public IActionResult GetforEView()
+    {
+        var res = (from t in _context.ManagementStructure
+
+
+                   join legalEntiryInfo in _context.LegalEntity on t.LegalEntityId equals legalEntiryInfo.LegalEntityId into cre
+                   from legalEntiryInfo in cre.DefaultIfEmpty()
+                   where t.IsActive == true || t.IsActive == null && t.LegalEntityId != null
+                   // select new { t, ad, vt }).ToList();
+                   select new
+                   {
+                       t.ManagementStructureId,
+                       t.Code,
+                       t.Name,
+                       t.Description,
+                       legalEntiryInfo,
+                       t.ParentId,
+                       t.IsLastChild,
+                       t.TagName,
+                       t.LegalEntityId,
+                       t.MasterCompanyId,
+                       t.IsActive,
+                       t.IsDelete,
+                       t.CreatedDate,
+                       t.CreatedBy,
+                       t.UpdatedBy,
+                       t.UpdatedDate,
+
+                       //cc.Description
+                   }).ToList();
+
+
+        // var allentity = _context.ManagementStructure.Where(a=>a.IsActive==true || a.IsActive==null).OrderByDescending(a=>a.ManagementStructureId).ToList();
+        //return Ok(Mapper.Map<IEnumerable<LegalEntityViewModel>>(allentity));
+        return Ok(res);
+}
     }
 
-
-   
 }

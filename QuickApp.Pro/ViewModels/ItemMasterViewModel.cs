@@ -65,7 +65,7 @@ namespace QuickApp.Pro.ViewModels
         public bool? IsOpenDateAvailable { get; set; }
 
         public int? OpenDays { get; set; }
-        public bool? IsDelete { get; set; }
+        public bool? IsDeleted { get; set; }
 
         public bool? IsShippedDateAvailable { get; set; }
 

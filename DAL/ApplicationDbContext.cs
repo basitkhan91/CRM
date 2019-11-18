@@ -2,17 +2,12 @@
 // info@ebenmonney.com
 // www.ebenmonney.com/quickapp-pro
 // ===============================
+using DAL.Common;
 using DAL.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Threading;
-using DAL.Models.Interfaces;
-using DAL.Common;
+using System.Threading.Tasks;
 
 namespace DAL
 {
@@ -20,6 +15,9 @@ namespace DAL
     {
         // Test Changes....
         public string CurrentUserId { get; set; }
+
+        public DbSet<CustomerContactAudit> CustomerContactAudit { get; set; }
+
         public DbSet<ShippingReference> ShippingReference { get; set; }
         public DbSet<ShippingVia> ShippingVia { get; set; }
         public DbSet<ShippingAccount> ShippingAccount { get; set; }
@@ -72,7 +70,6 @@ namespace DAL
 
         public DbSet<ActionAttribute> ActionAttribute { get; set; }
         public DbSet<ActionAttributeAudit> ActionAttributeAudit { get; set; }
-        public DbSet<GatecodeClass> Gatecode { get; set; }
         public DbSet<IntegrationPortal> IntegrationPortal { get; set; }
         public DbSet<Priority> Priority { get; set; }
         public DbSet<ItemClassfication> ItemClassification { get; set; }
@@ -91,12 +88,14 @@ namespace DAL
         public DbSet<EmployeeExpertise> EmployeeExpertise { get; set; }
 
         public DbSet<JobTitle> JobTitle { get; set; }
+
+        public DbSet<JobType> JobType { get; set; }
+
         public DbSet<GLAccountClass> GLAccountClass { get; set; }
 
         public DbSet<CertificationType> CertificationType { get; set; }
 
         public DbSet<DiscountModel> Discount { get; set; }
-        public DbSet<ExpenditureCategory> ExpenditureCategory { get; set; }
 
         public DbSet<DefaultMessage> DefaultMessage { get; set; }
         public DbSet<TaxType> TaxType { get; set; }
@@ -108,6 +107,7 @@ namespace DAL
         public DbSet<CustomerContact> CustomerContact { get; set; }
         public DbSet<CustomerShipping> CustomerShipping { get; set; }
         public DbSet<CustomerShippingAddress> CustomerShippingAddress { get; set; }
+        public DbSet<CustomerShippingAddressAudit> CustomerShippingAddressAudit { get; set; }
 
         public DbSet<VendorContact> VendorContact { get; set; }
         public DbSet<VendorPayment> VendorPayment { get; set; }
@@ -135,10 +135,6 @@ namespace DAL
         public DbSet<Employee> Employee { get; set; }
         public DbSet<shift> Shift { get; set; }
         public DbSet<Countries> Countries { get; set; }
-        public DbSet<Company> Company { get; set; }
-        public DbSet<Division> Division { get; set; }
-        public DbSet<Department> Department { get; set; }
-        public DbSet<BusinessUnit> BusinessUnit { get; set; }
         public DbSet<EmployeeLeaveType> EmployeeLeaveType { get; set; }
 
         public DbSet<EmployeeLicensure> EmployeeLicensure { get; set; }
@@ -148,6 +144,7 @@ namespace DAL
         public DbSet<EmployeeTrainingType> EmployeeTrainingType { get; set; }
         // public DbSet<EmployeeShift> EmployeeShift { get; set; }
         public DbSet<CustomerBillingAddress> CustomerBillingAddress { get; set; }
+        public DbSet<CustomerBillingAddressAudit> CustomerBillingAddressAudit { get; set; }
         public DbSet<ATAChapter> ATAChapter { get; set; }
 
         public DbSet<AircraftType> AircraftType { get; set; }
@@ -160,6 +157,7 @@ namespace DAL
         public DbSet<CustomerAircraftType> CustomerAircraftType { get; set; }
 
         public DbSet<ItemMaster> ItemMaster { get; set; }
+        public DbSet<ItemType> ItemType { get; set; }
 
         public DbSet<ACH> ACH { get; set; }
 
@@ -206,8 +204,6 @@ namespace DAL
 
         public DbSet<ManagementStructure> ManagementStructure { get; set; }
 
-        public DbSet<GLAccountCategories> GLAccountCategory { get; set; }
-        public DbSet<GLAccountCategoriesAudit> GLAccountCategoryAudit { get; set; }
         public DbSet<GlClassFlowClassification> GlClassFlowClassification { get; set; }
         public DbSet<GlClassFlowClassificationAudit> GlClassFlowClassificationAudit { get; set; }
         public DbSet<UIRoleEntity> UIRoleEntity { get; set; }
@@ -222,6 +218,7 @@ namespace DAL
         //public DbSet<PurchaseOrder> PurchaseOrder { get; set; }
         public DbSet<RepairOrder> RepairOrder { get; set; }
         public DbSet<StocklineAdjustmentReason> stocklineAdjustmentReason { get; set; }
+        public DbSet<StocklineAdjustmentReasonAudit> stocklineAdjustmentReasonAudit { get; set; }
 
         public DbSet<ItemMasterAircraftManufacturer> ItemMasterAircraftManufacturer { get; set; }
         public DbSet<EmployeeLeaveTypeMapping> EmployeeLeaveTypeMapping { get; set; }
@@ -242,7 +239,6 @@ namespace DAL
         public DbSet<MaterialUOM> MaterialUOMs { get; set; }
 
         public DbSet<PublicationType> PublicationType { get; set; }
-        public DbSet<PublicationModel> PublicationModels { get; set; }
         public DbSet<PublicationStatus> PublicationStatuses { get; set; }
         public DbSet<ExclusionEstimatedOccurance> ExclusionEstimatedOccurances { get; set; }
 
@@ -273,22 +269,37 @@ namespace DAL
         public DbSet<AssetDepreciationMethodAudit> AssetDepreciationMethodAudit { get; set; }
         public DbSet<AssetDisposalType> AssetDisposalType { get; set; }
         public DbSet<AssetDepreciationIntervalType> AssetDepreciationIntervalType { get; set; }
+        public DbSet<AssetDepreciationInterval> AssetDepreciationInterval { get; set; }
+        public DbSet<AssetDepreciationIntervalAudit> AssetDepreciationIntervalAudit { get; set; }
         public DbSet<AssetDepConventionType> AssetDepConventionType { get; set; }
-        public DbSet<AssetIntangibleTypeSingleScreen> AssetIntangibleTypeSingleScreen { get; set; }
+        public DbSet<AssetDepConvention> AssetDepConvention { get; set; }
+        public DbSet<AssetDepConventionAudit> AssetDepConventionAudit { get; set; }
 
         public DbSet<AssetType> AssetType { get; set; }
+        public DbSet<AssetIntangibleType> AssetIntangibleType { get; set; }
+        public DbSet<StageCode> StageCode { get; set; }
+
+        public DbSet<AssetTypeAudit> AssetTypeAudit { get; set; }
+        public DbSet<AssetIntangibleTypeAudit> AssetIntangibleTypeAudit { get; set; }
+        public DbSet<StageCodeAudit> StageCodeAudit { get; set; }
+        public DbSet<GLAccountCategory> GLAccountCategory { get; set; }
+        public DbSet<GLAccountCategoryAudit> GLAccountCategoryAudit { get; set; }
+        public DbSet<ExpenditureCategory> ExpenditureCategory { get; set; }
+        public DbSet<ExpenditureCategoryAudit> ExpenditureCategoryAudit { get; set; }
+        public DbSet<AssetAttributeType> AssetAttributeType { get; set; }
+        public DbSet<AssetAttributeTypeAudit> AssetAttributeTypeAudit { get; set; }
+
         public DbSet<Asset> Asset { get; set; }
+
+        public DbSet<AssetAudit> AssetAudit { get; set; }
         public DbSet<GLAccountMiscCategory> GLAccountMiscCategory { get; set; }
         public DbSet<GLAccount> GLAccount { get; set; }
-        public DbSet<AssetAttributeType> AssetAttributeType { get; set; }
-        public DbSet<AssetIntangibleType> AssetIntangibleType { get; set; }
 
         public DbSet<AccountingCalendar> AccountingCalendar { get; set; }
         public DbSet<PartStockLineMapper> PartStockLineMapper { get; set; }
         // public DbSet<ProvisionAudit> ProvisionAudit { get; set; }
-        public DbSet<AssetIntangibleTypeSingleScreenAudit> AssetIntangibleTypeSingleScreenAudit { get; set; }
 
-        public DbSet<AssetDisposalTypeAudit> AssetdisposalTypeAudit { get; set; }
+        public DbSet<AssetDisposalTypeAudit> AssetDisposalTypeAudit { get; set; }
         public DbSet<AssetDepreciationIntervalTypeAudit> AssetDepreciationIntervalTypeAudit { get; set; }
 
         public DbSet<AssetDepConventionTypeAudit> AssetDepConventionTypeAudit { get; set; }
@@ -326,17 +337,15 @@ namespace DAL
         public DbSet<ItemClassficationAudit> ItemClassificationAudit { get; set; }
         public DbSet<ItemgroupAudit> ItemGroupAudit { get; set; }
         public DbSet<JobTitleAudit> JobTitleAudit { get; set; }
+        public DbSet<JobTypeAudit> JobTypeAudit { get; set; }
         public DbSet<PriorityAudit> PriorityAudit { get; set; }
         public DbSet<WarehouseAudit> WarehouseAudit { get; set; }
         public DbSet<LocationAudit> LocationAudit { get; set; }
         public DbSet<ShelfAudit> ShelfAudit { get; set; }
         public DbSet<BinAudit> BinAudit { get; set; }
         public DbSet<ProvisionAudit> ProvisionAudit { get; set; }
-        public DbSet<ExpenditureCategoryAudit> ExpenditureCategoryAudit { get; set; }
-        public DbSet<AssetTypeAudit> AssetTypeAudit { get; set; }
 
 
-        public DbSet<GatecodeClassAudit> GatecodeAudit { get; set; }
         public DbSet<InterCompanySetup> InterCompanySetup { get; set; }
 
         public DbSet<JournalBatch> JournalBatch { get; set; }
@@ -351,6 +360,9 @@ namespace DAL
         public DbSet<WorkOrderLabor> WorkOrderLabor { get; set; }
         public DbSet<WorkOrderStage> WorkOrderStage { get; set; }
         public DbSet<WorkOrderPartNumber> WorkOrderPartNumber { get; set; }
+        public DbSet<WorkOrderExpertise> WorkOrderExpertise { get; set; }
+        public DbSet<WorkOrderDirections> WorkOrderDirections { get; set; }
+        public DbSet<WorkOrderPublications> WorkOrderPublications { get; set; }
 
         public DbSet<VendorCapability> VendorCapability { get; set; }
         public DbSet<AircraftModelAudit> AircraftModelAudit { get; set; }
@@ -365,19 +377,24 @@ namespace DAL
 
         public DbSet<CustomerAircraftMapping> CustomerAircraftMapping { get; set; }
         public DbSet<CustomerATAMapping> CustomerATAMapping { get; set; }
+        public DbSet<CustomerContactATAMapping> CustomerContactATAMapping { get; set; }
+        public DbSet<CustomerTaxTypeRateMapping> CustomerTaxTypeRateMapping { get; set; }
         public DbSet<AssetCapes> AssetCapes { get; set; }
         public DbSet<AssetCapesAudit> AssetCapesAudit { get; set; }
 
         public DbSet<CustomerInternationalShipping> CustomerInternationalShipping { get; set; }
         public DbSet<ShippingViaDetails> ShippingViaDetails { get; set; }
+        public DbSet<CustomerDocumentDetail> CustomerDocumentDetails { get; set; }
         public DbSet<Attachment> Attachment { get; set; }
         public DbSet<AttachmentDetails> AttachmentDetails { get; set; }
         public DbSet<ClassificationMapping> ClassificationMapping { get; set; }
         public DbSet<RestrictedParts> RestrictedParts { get; set; }
+        public DbSet<RestrictsPMAList> RestrictsPMAList { get; set; }
+        public DbSet<RestrictsBERList> RestrictsBERList { get; set; }
         public DbSet<MasterParts> MasterParts { get; set; }
         public DbSet<Nha_Tla_Alt_Equ_ItemMapping> Nha_Tla_Alt_Equ_ItemMapping { get; set; }
 
-        public DbSet<WorkFlowWorkOrder> WorkFlowWorkOrder { get; set; }
+        public DbSet<WorkOrderWorkFlow> WorkOrderWorkFlow { get; set; }
         public DbSet<WorkOrderLaborHeader> WorkOrderLaborHeader { get; set; }
         public DbSet<WorkOrderCharges> WorkOrderCharges { get; set; }
         public DbSet<WorkOrderAssets> WorkOrderAssets { get; set; }
@@ -399,7 +416,33 @@ namespace DAL
 
 
 
+        public DbSet<Dropdowns> Dropdowns { get; set; }
+        public DbSet<Percentage> Percentage { get; set; }
         public DbSet<AssetIntangibleAttributeType> AssetIntangibleAttributeType { get; set; }
+        public DbSet<Percent> Percent { get; set; }
+        public DbSet<PurchaseOrderApprover> PurchaseOrderApprover { get; set; }
+        public DbSet<PurchaseOrderApproverList> PurchaseOrderApproverList { get; set; }
+        public DbSet<POBillingShippingAddress> POBillingShippingAddress { get; set; }
+        public DbSet<PurchaseOrderAddress> PurchaseOrderAddress { get; set; }
+        public DbSet<VendorBillingAddress> VendorBillingAddress { get; set; }
+        public DbSet<PurchaseOrderShipVia> PurchaseOrderShipVia { get; set; }
+        public DbSet<LegalEntityBillingAddress> LegalEntityBillingAddress { get; set; }
+        public DbSet<LegalEntityShippingAddress> LegalEntityShippingAddress { get; set; }
+        public DbSet<LegalEntityContact> LegalEntityContact { get; set; }
+        public DbSet<PurchaseOrderAudit> PurchaseOrderAudit { get; set; }
+        public DbSet<WorkOrderTask> WorkOrderTask { get; set; }
+        public DbSet<WorkOrderTaskAttribute> WorkOrderTaskAttribute { get; set; }
+        public DbSet<WorkOrderPublicationDashNumber> WorkOrderPublicationDashNumber { get; set; }
+        public DbSet<RepairOrderApprover> RepairOrderApprover { get; set; }
+        public DbSet<RepairOrderApproverList> RepairOrderApproverList { get; set; }
+        public DbSet<ItemMasterExchangeLoan> ItemMasterExchangeLoan { get; set; }
+
+        public DbSet<MasterSalesOrderQuoteTypes> MasterSalesOrderQuoteTypes { get; set; }
+        public DbSet<MasterSalesCreditTerms> MasterSalesCreditTerms { get; set; }
+
+        public DbSet<MasterSalesLeadSources> MasterSalesLeadSources { get; set; }
+
+        public DbSet<MasterSalesProbablity> MasterSalesProbablity { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {

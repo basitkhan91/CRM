@@ -77,7 +77,7 @@ namespace DAL.Models
         public bool? ComponentEquipment { get; set; }
         public bool? ShelfLife { get; set; }
         public bool? IsActive { get; set; }
-        public bool? IsDelete { get; set; }
+        public bool? IsDeleted { get; set; }
         public decimal? ExportWeight { get; set; }
         public string ExportWeightUnit { get; set; }
         public decimal? ExportSizeLength { get; set; }
@@ -171,6 +171,7 @@ namespace DAL.Models
         public bool? IsExportDual { get; set; }
         
         public int? oemPNId { get; set; } 
+        public  long? RepairUnitOfMeasureId { get; set; }
 
         public virtual Manufacturer Manufacturer { get;set;}
         public virtual Provision Provision {get;set;}

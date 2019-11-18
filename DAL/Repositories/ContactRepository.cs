@@ -38,6 +38,7 @@ namespace DAL.Repositories
                            c.CreatedBy,
                            c.UpdatedBy,
                            c.Email,
+                           c.Tag,
                            c.Fax,
                            c.FirstName,
                            c.LastName,
@@ -52,7 +53,9 @@ namespace DAL.Repositories
                            vc.VendorContactId,
                            vc.VendorId,
                            c.CreatedDate,
-                           c.UpdatedDate
+                           c.UpdatedDate,
+                           c.WorkPhoneExtn,
+                           vc.IsDefaultContact
                            
                         }).ToList();
             return data;
@@ -74,6 +77,7 @@ namespace DAL.Repositories
                             c.CreatedBy,
                             c.UpdatedBy,
                             c.Email,
+                            c.Tag,
                             c.Fax,
                             c.FirstName,
                             c.LastName,

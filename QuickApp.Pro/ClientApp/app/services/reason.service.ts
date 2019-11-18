@@ -40,7 +40,7 @@ export class ReasonService {
         return Observable.forkJoin(
             this.reasonEndpoint.getReasonEndpoint<Reason[]>());
     }
-    newReason(reason: Reason) {
+    newReason(reason) {
         return this.reasonEndpoint.getNewReasonEndpoint<Reason>(reason);
     }
 
@@ -52,7 +52,7 @@ export class ReasonService {
         return this.reasonEndpoint.getEditReasonEndpoint<Reason>(reasonId);
     }
 
-    updateReason(reason: Reason) {
+    updateReason(reason) {
         return this.reasonEndpoint.getUpdateReasonEndpoint(reason, reason.reasonId);
     }
 
@@ -68,6 +68,14 @@ export class ReasonService {
     getServerPages(serverSidePagesData: any) {
         return Observable.forkJoin(
             this.reasonEndpoint.getReasonRecords<Reason[]>(serverSidePagesData));
+    }
+
+    getAllReasonsList() {
+        return Observable.forkJoin(
+            this.reasonEndpoint.getAllReasonsEndpoint<any>());
+    }
+    reasonFileUpload(file) {
+        return this.reasonEndpoint.reasonCustomUpload(file);
     }
 }
 

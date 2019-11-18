@@ -1,4 +1,4 @@
-﻿// ===============================
+// ===============================
 // info@ebenmonney.com
 // www.ebenmonney.com/quickapp-pro
 // ===============================
@@ -19,7 +19,8 @@ export class DisposalTypeEndpointService extends EndpointFactory {
     private readonly addURL: string = "/api/DisposalType/add";
     private readonly updateURL: string = "/api/DisposalType/update";
     private readonly removeByIdURL: string = "/api/DisposalType/removeById";
-    private readonly getdisposalTypeHistById: string = "/api/DisposalType/audits";
+    private readonly getdisposalTypeHistById: string = "/api/DisposalType/disposaltypeauditdetails";
+    private readonly excelUpload: string = "/api/DisposalType/UploadDispTypeCustomData";
 
 
 
@@ -86,6 +87,12 @@ export class DisposalTypeEndpointService extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.getDisposalAudit(assetDisposalTypeId));
             });
+    }
+
+    DispTypeCustomUpload(file) {
+        return this.http.post(`${this.configurations.baseUrl}${this.excelUpload}`, file)
+
+
     }
 
 }

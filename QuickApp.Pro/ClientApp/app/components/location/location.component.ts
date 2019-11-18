@@ -22,6 +22,7 @@ import { Warehouse } from '../../models/warehouse.model';
 import { Location } from '../../models/location.model';
 import { TreeNode, MenuItem } from 'primeng/api';
 import { LegalEntityService } from '../../services/legalentity.service';
+import { ConfigurationService } from '../../services/configuration.service';
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 
 @Component({
@@ -108,11 +109,15 @@ export class LocationComponent implements OnInit, AfterViewInit {
     showManagement: boolean;
 	Active: string = "Active";
 	actionamecolle: any[] = [];
-    AuditDetails: SingleScreenAuditDetails[];
+    AuditDetails: any[];
     localWareHouseManagementWarehouseCollection: any;
 	disableSaveManufacturer: boolean = false;;
     selectedLocation: any;
-    locationName: any;
+	locationName: any;
+	HasAuditDetails: boolean;
+	AuditHistoryTitle: string = 'History of Location';
+	formData:FormData = null;
+	uploadedRecords: Object = null;
 
 	ngOnInit(): void
 	{
@@ -146,7 +151,7 @@ export class LocationComponent implements OnInit, AfterViewInit {
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	/** location ctor */
-    constructor(public manageMentService: LegalEntityService,public wareHouseService: WarehouseService,public workFlowtService1: SiteService,private breadCrumb: SingleScreenBreadcrumbService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: LocationService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(public manageMentService: LegalEntityService, private configurations: ConfigurationService,public wareHouseService: WarehouseService,public workFlowtService1: SiteService,private breadCrumb: SingleScreenBreadcrumbService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: LocationService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 		this.dataSource = new MatTableDataSource();
 		this.sourceLocation = new Location();
 
@@ -154,7 +159,12 @@ export class LocationComponent implements OnInit, AfterViewInit {
 
 	closethis() {
 		this.closeCmpny = false;
-	}
+    }
+    sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=Location&fileName=Location.xlsx`;
+
+        window.location.assign(url);
+    }
 
 	handleChange(rowData, e) {
 		if (e.checked == false) {
@@ -783,14 +793,50 @@ export class LocationComponent implements OnInit, AfterViewInit {
     }
 
     auditLocation(locationId: number): void {
-        this.AuditDetails = [];
+		this.AuditDetails = [];
+		this.HasAuditDetails = this.AuditDetails.length > 0;
         this.workFlowtService.getLocationAudit(locationId).subscribe(audits => {
             if (audits.length > 0) {
-                this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["locationAuditId", "locationId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails = audits[0].result;
+				this.HasAuditDetails = this.AuditDetails.length > 0;
             }
         });
     }
 
+	/* 
+	    Bulk location upload
+	*/
+
+	bulkUpload(event) {
+
+		this.formData = new FormData();
+
+		this.uploadedRecords = null;
+
+		const file = event.target.files;
+		
+        console.log(file);
+		
+		if (file.length > 0) {
+
+			this.formData.append('file', file[0])
+			
+            this.workFlowtService.bulkUpload(this.formData).subscribe(response => {
+				
+				event.target.value = '';
+
+                this.uploadedRecords = response;
+				
+				this.loadData();
+				
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+            })
+        }
+
+	}
 	
 }

@@ -65,6 +65,7 @@ export class UnitOfMeasureComponent implements OnInit {
     ngOnInit(): void {
         this.getUOMList();
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-unit-of-measure';
+        this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
     }
 
     get userName(): string {
@@ -117,8 +118,6 @@ export class UnitOfMeasureComponent implements OnInit {
     getUOMList() {
         this.unitofmeasureService.getAllUnitofMeasureList().subscribe(res => {
             const responseData = res[0];
-            // this.uomHeaders = responseData.columHeaders;
-            // this.selectedColumns = responseData.columHeaders;
             this.uomData = responseData.columnData;
             this.totalRecords = responseData.totalRecords;
             this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
@@ -127,7 +126,6 @@ export class UnitOfMeasureComponent implements OnInit {
     changePage(event: { first: any; rows: number }) {
         console.log(event);
         const pageIndex = (event.first / event.rows);
-        // this.pageIndex = pageIndex;
         this.pageSize = event.rows;
         this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
     }
@@ -195,7 +193,7 @@ export class UnitOfMeasureComponent implements OnInit {
                 this.getUOMList();
                 this.alertService.showMessage(
                     'Success',
-                    `Added  New Unit of Measurment  Successfully  `,
+                    `Added  New Unit of Measurment Successfully`,
                     MessageSeverity.success
                 );
             })
@@ -207,7 +205,7 @@ export class UnitOfMeasureComponent implements OnInit {
                 this.getUOMList();
                 this.alertService.showMessage(
                     'Success',
-                    `Added  New Unit of Measurment  Successfully  `,
+                    `Updated Unit of Measurment Successfully`,
                     MessageSeverity.success
                 );
             })
@@ -216,6 +214,8 @@ export class UnitOfMeasureComponent implements OnInit {
 
     resetUOMForm() {
         this.isEdit = false;
+        this.disableSaveForUOM = false;
+        this.disableSaveForShortName = false;
         this.selectedRecordForEdit = undefined;
         this.addNewUOM = { ...this.newUOM };
     }
@@ -230,7 +230,7 @@ export class UnitOfMeasureComponent implements OnInit {
 
         this.addNewUOM = {
             ...rowData, unitName: getObjectById('unitOfMeasureId', rowData.unitOfMeasureId, this.uomData),
-            shortName: getObjectByValue('shortName', rowData.shortName, this.uomData)
+            shortName: getObjectById('unitOfMeasureId', rowData.unitOfMeasureId, this.uomData)
         };
         this.selectedRecordForEdit = { ...this.addNewUOM }
 

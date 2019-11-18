@@ -69,6 +69,16 @@ import { SpinnerModule } from 'primeng/spinner';
 import { ToolbarModule } from 'primeng/toolbar';
 import { KeyFilterModule } from 'primeng/keyfilter';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { PercentService } from '../services/percent.service';
+import { PercentEndpoint } from '../services/percent-endpoint.service';
+import { AircraftManufacturerService } from '../services/aircraft-manufacturer/aircraftManufacturer.service';
+import { AircraftManufacturerEndpointService } from '../services/aircraft-manufacturer/aircraftManufacturer-endpoint.service';
+import { AircraftModelEndpointService } from '../services/aircraft-model/aircraft-model-endpoint.service';
+import { AircraftModelService } from '../services/aircraft-model/aircraft-model.service';
+import { DashNumberService } from '../services/dash-number/dash-number.service';
+import { DashNumberEndpointService } from '../services/dash-number/dash-number-endpoint.service';
+import { WorkOrderService } from '../services/work-order/work-order.service';
+import { WorkOrderEndpointService } from '../services/work-order/work-order-endpoint.service';
 
 @NgModule({
   imports: [
@@ -139,7 +149,24 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
     ExclusionsCreateComponent,
     MeasurementCreateComponent
   ],
-  providers: [ActionService, ActionEndpoint, AssetService, AssetEndpoint],
+    providers: [
+        ActionService,
+        ActionEndpoint,
+        AssetService,
+        AssetEndpoint,
+        PercentService,
+        PercentEndpoint,
+        PercentService,
+        PercentEndpoint,
+        AircraftManufacturerService,
+        AircraftManufacturerEndpointService,
+        AircraftModelService,
+        AircraftModelEndpointService,
+        DashNumberService,
+        DashNumberEndpointService,
+        WorkOrderService,
+        WorkOrderEndpointService
+    ],
   entryComponents: []
 })
 export class WorkFlowPagesModule {}

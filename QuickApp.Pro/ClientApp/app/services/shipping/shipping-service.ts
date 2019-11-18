@@ -38,5 +38,9 @@ export class ShippingService {
     receiveParts(receiveParts: ReceiveParts[]) {
         return this.shippingService.receiveParts<any>(receiveParts);
     }
+
+    updateStockLine(receiveParts: ReceiveParts[]) {
+        return this.shippingService.updateStockLine<any>(receiveParts);
+    }
     
 }

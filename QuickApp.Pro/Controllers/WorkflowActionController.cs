@@ -59,16 +59,21 @@ namespace QuickApp.Pro.Controllers
                     WorkflowId = workflow.WorkflowId,
                     Description = workflow.WorkScope != null ? workflow.WorkScope.Description : "",
                     WorkScopeId = workflow.WorkScopeId,
-                    PartNumber = workflow.ItemMaster.PartNumber,
                     Name = workflow.Customer != null ? workflow.Customer.Name : "",
                     PartDescription = workflow.ItemMaster.PartDescription,
                     WorkOrderNumber = workflow.WorkOrderNumber,
                     CreatedDate = workflow.CreatedDate,
                     WorkflowExpirationDate = workflow.WorkflowExpirationDate,
                     WorkflowCreateDate = workflow.WorkflowCreateDate != null ? workflow.WorkflowCreateDate.Value.ToShortDateString() : "",
-                    Version  = workflow.Version,
-                    OtherCost = workflow.OtherCost
-                });
+                    Version = workflow.Version,
+                    OtherCost = workflow.OtherCost,
+                    ItemMasterId = workflow.ItemMasterId,
+                    PartNumber = workflow.ItemMaster.PartNumber,
+                    PartNumberDescription = workflow.ItemMaster.PartDescription,
+                    ChangedPartNumberId = workflow.ChangedPartNumberId,
+                    ChangedPartNumber = workflow.ChangedPartNumber != null ? workflow.ChangedPartNumber.PartNumber : "",
+                    ChangedPartNumberDescription = workflow.ChangedPartNumber != null ? workflow.ChangedPartNumber.PartDescription : ""
+                }); ;
         }
 
         [HttpGet("GetActionAttributes")]
@@ -152,7 +157,7 @@ namespace QuickApp.Pro.Controllers
                     actionobject.Version = workflowViewModel.Version;
                     actionobject.WorkScopeId = workflowViewModel.WorkflowScopeId;
                     actionobject.ItemMasterId = workflowViewModel.ItemMasterId;
-                    actionobject.ChangedPartNumber = workflowViewModel.ChangedPartNumber;
+                    //actionobject.ChangedPartNumber = workflowViewModel.ChangedPartNumber;
                     actionobject.ChangedPartNumberDescription = workflowViewModel.changedPartNumberDescription;
                     actionobject.CustomerId = workflowViewModel.CustomerId;
                     //actionobject.CustomerName = workflowViewModel.CustomerName;
@@ -191,7 +196,7 @@ namespace QuickApp.Pro.Controllers
                     actionobject.PartNumberDescription = workflowViewModel.PartNumberDescription;
                     actionobject.WorkScopeId = workflowViewModel.WorkflowScopeId;
                     actionobject.ItemMasterId = workflowViewModel.ItemMasterId;
-                    actionobject.ChangedPartNumber = workflowViewModel.ChangedPartNumber;
+                    //actionobject.ChangedPartNumber = workflowViewModel.ChangedPartNumber;
                     actionobject.ChangedPartNumberDescription = workflowViewModel.changedPartNumberDescription;
                     actionobject.CustomerId = workflowViewModel.CustomerId;
                     //actionobject.CustomerCode = workflowViewModel.CustomerCode;

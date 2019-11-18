@@ -11,18 +11,19 @@ import { Vendor } from '../models/vendor.model';
 
 @Injectable()
 export class VendorEndpointService extends EndpointFactory {
-    localCollection: Response;
+	localCollection: Response;
 
 
-    private readonly _vendorUrl: string = "/api/Vendor/Get";
+	private readonly _vendorUrl: string = "/api/Vendor/Get";
+	private readonly _vendorLiteUrl: string="/api/Vendor/basic"
     private readonly _vendorCapabilityUrl: string = "/api/Vendor/getVendorCapabilityList";
     private readonly _vendorUrlNew: string = "/api/Vendor/vendor";
 
 
 	private readonly _partDetails: string = "/api/Vendor/Getpartdetails";
 	private readonly _partDetailswithid: string = "/api/Vendor/GetpartdetailsWithid";
-	private readonly _partDetailswithidForsinglePart ="/api/Vendor/GetpartdetailsWithidForSinglePart"
-    private readonly _capabilityUrl: string = "/api/Vendor/GetCapabilityList";
+	private readonly _partDetailswithidForsinglePart = "/api/Vendor/GetpartdetailsWithidForSinglePart"
+	private readonly _capabilityUrl: string = "/api/Vendor/GetCapabilityList";
 	private readonly _vendrUrl: string = "/api/Vendor/GetListDetails";
 	private readonly _domesticWIthVendor = "/api/Vendor/GetDomesticWithVedor";
 	private readonly _internationalWIthVendor = "/api/Vendor/GetInternationalWithVedor";
@@ -33,59 +34,66 @@ export class VendorEndpointService extends EndpointFactory {
 	private readonly _contactGeturl: string = "/api/Vendor/ContactCompleteGet";
 	private readonly _checkPaymnetAddressUrl: string = "/api/Vendor/CheckAddress";
 	private readonly _bencusAddress: string = "/api/Vendor/BencusAddress";
-    private readonly _contactsEmptyObjurl: string = "/api/Vendor/contactEmptyObj";
-    private readonly _finalEmptyObjurl: string = "/api/Vendor/fianlEmptyObj";
-    private readonly _paymentEmptyObjurl: string = "/api/Vendor/paymentEmptyObj";
-    private readonly _generalEmptyObjurl: string = "/api/Vendor/generalEmptyObj";
-    private readonly _addressUrl: string = "/api/Vendor/AddressGet";
+	private readonly _contactsEmptyObjurl: string = "/api/Vendor/contactEmptyObj";
+	private readonly _finalEmptyObjurl: string = "/api/Vendor/fianlEmptyObj";
+	private readonly _paymentEmptyObjurl: string = "/api/Vendor/paymentEmptyObj";
+	private readonly _generalEmptyObjurl: string = "/api/Vendor/generalEmptyObj";
+	private readonly _addressUrl: string = "/api/Vendor/AddressGet";
 	private readonly _vendorsUrlNew: string = "/api/Vendor/vendorPost";
 	private readonly _getVendorForPo: string = "/api/Vendor/getVendorForPo";
 	private readonly _vendorwarningUrl: string = "/api/Vendor/saveVendorWarnings";
 	private readonly _saveVendorpurchases: string = "/api/Vendor/saveVendorpurchases";
-	private readonly _saveVendorrepaire: string = "/api/Vendor/saveVendorrepaire";
+	private readonly _saveVendorrepaire: string = "/api/Vendor/saveVendorRepairOrder";
 	private readonly _saveVendorpurchasespart: string = "/api/Vendor/saveVendorpurchasespart";
-	private readonly _saveVendorrepairepart: string = "/api/Vendor/saveVendorrepairpart";
-	
+	private readonly _saveVendorrepairepart: string = "/api/Vendor/saveVendorRepairPart";
+
 	private readonly _vendorUpdateUrl: string = "/api/Vendor/vendorUpdate";
 	private readonly _vendorContactUrlNew: string = "/api/Vendor/updateStatusVenShippingAddress";
 	private readonly _deleteCheckPayment: string = "/api/Vendor/deleteCheckPayment";
 	private readonly _deleteContactUrl: string = "/api/Vendor/vendorContact";
-    private readonly _vendorShippingUrlNew: string = "/api/Vendor/updateStatusVendorShipping";  
-    private readonly _vendorsContctUrl: string = "/api/Vendor/vendorContactPost";
+	private readonly _vendorShippingUrlNew: string = "/api/Vendor/updateStatusVendorShipping";
+    private readonly _vendorShippingAddressUrlDelete: string = "/api/Vendor/deletevendorshippingaddress";
+	private readonly _vendorsContctUrl: string = "/api/Vendor/vendorContactPost";
 	private readonly _checkPaymntUpdateUrl: string = "/api/Vendor/checkPaymentUpdate";
 	private readonly _domesticUpdate: string = "/api/Vendor/domesticPaymentUpdate";
 	private readonly _internationalUpdate: string = "/api/Vendor/InternationalUpdate";
 	private readonly _defaultUpdate: string = "/api/Vendor/defaultUpdate";
-    private readonly _addpaymentUrl: string = "/api/Vendor/paymentCheckPost";
-    private readonly _adddomesticpaymentUrl: string = "/api/Vendor/paymentDomesticPost";
+	private readonly _addpaymentUrl: string = "/api/Vendor/paymentCheckPost";
+	private readonly _adddomesticpaymentUrl: string = "/api/Vendor/paymentDomesticPost";
 	private readonly _addinternationalpaymentUrl: string = "/api/Vendor/paymentInternationalPost";
 	private readonly _adddefaultpaymentUrl: string = "/api/Vendor/paymentDefaultPost";
-    private readonly _vendorsUpdateContctUrl: string = "/api/Vendor/ContactPost";
-    private readonly _vendorCheckpaymentUpdate: string = "/api/Vendor/vendorCheckPayment";
-    private readonly _vendorShipAddressdetails: string = "/api/Vendor/vendorShippingAddressDetails";
-    private readonly _vendorDomesticpaymentUpdate: string = "/api/Vendor/vendorDomesticPayment";
+	private readonly _vendorsUpdateContctUrl: string = "/api/Vendor/ContactPost";
+	private readonly _vendorCheckpaymentUpdate: string = "/api/Vendor/vendorCheckPayment";
+	private readonly _vendorShipAddressdetails: string = "/api/Vendor/vendorShippingAddressDetails";
+	private readonly _vendorDomesticpaymentUpdate: string = "/api/Vendor/vendorDomesticPayment";
 	private readonly _vendorInternationalpaymentUpdate: string = "/api/Vendor/vendorInternationalPayment";
 	private readonly _vendorDefaultUpdate: string = "/api/Vendor/updatevendorDefault";
 
-    private readonly _vendorFinanceUrl: string = "/api/Vendor/vendorFinancePost";
+	private readonly _vendorFinanceUrl: string = "/api/Vendor/vendorFinancePost";
 	private readonly _shippingInfoUrl: string = "/api/Vendor/vendorShippingPost";
+    private readonly _billingInfoUrl: string = "/api/Vendor/vendorBillingPost";
 	private readonly _saveShipViaDetails: string = "/api/Vendor/addShipViaDetails";
+    private readonly _saveBillViaDetails: string = "/api/Vendor/addBillViaDetails";
 	private readonly _addShipViaDetails: string = "/api/Vendor/updateShipviaAddress";
 	private readonly _updateShipAddressDetails: string = "/api/Vendor/updateShipAddress";
 	private readonly _updateShippingViaDetails: string = "/api/Vendor/updateShipViaDetails";
+    private readonly _updateBillingViaDetails: string = "/api/Vendor/updateBillViaDetails";
 	private readonly _actionsUrlAuditHistory: string = "/api/Vendor/auditHistoryById";
-	private readonly _vendorShipAddressGetUrl: string = "/api/Vendor/vendorAddressGet";
-	private readonly _getSitesAddress: string = "/api/Vendor/getSitesAddress";
+    private readonly _vendorShipAddressGetUrl: string = "/api/Vendor/vendorAddressGet";
+    private readonly _vendorBillAddressGetUrl: string = "/api/Vendor/vendorAddressGet";
+    private readonly _getSitesAddress: string = "/api/Vendor/getSitesAddress";
 	private readonly _vendorwarningsUrl: string = "/api/Vendor/vendorWarningsget";
 	private readonly _vendorShipViaDetilas: string = "/api/Vendor/getVendorShipViaDetails";
-	private readonly _vendorShipViaDetails: string = "/api/Vendor/getVendorShipViaDetails";
+	private readonly _vendorBillViaDetails: string = "/api/Vendor/getVendorBillViaDetails";
 	private readonly _getContactHistroty: string = "/api/Vendor/getContactHistroty";
 	private readonly _getCheckPayHist: string = "/api/Vendor/getCheckPayHist";
 	private readonly _getVendorhistory: string = "/api/Vendor/getVendorHistory";
 	private readonly _getcheckhistory: string = "/api/Vendor/getcheckHistory";
 	private readonly _getShipViaHistory: string = "/api/Vendor/getShipViaHistory";
+    private readonly _getBillViaHistory: string = "/api/Vendor/getBillViaHistory";
 	private readonly _getshipaddresshistory: string = "/api/Vendor/getshipaddresshistory";
-    private readonly _updatevendorStatus: string = "/api/Vendor/updateVendorIsactive";
+    private readonly _getbilladdresshistory: string = "/api/Vendor/getbilladdresshistory";
+	private readonly _updatevendorStatus: string = "/api/Vendor/updateVendorIsactive";
 	private readonly _actionsUrl: string = "api/Vendor/Getdiscount";
 	private readonly _discountPutUrl: string = "api/Vendor/updatediscount";
 	private readonly _newDiscount: string = "api/Vendor/insertDiscount";
@@ -94,67 +102,87 @@ export class VendorEndpointService extends EndpointFactory {
 	private readonly _updateActiveInactiveforContact: string = "/api/Vendor/vendorUpdateforActiveforcontact";
 	private readonly _updateActiveInactiveforpayment: string = "/api/Vendor/vendorUpdateforActiveforpayment";
 	private readonly _updateActiveInactivefordshipping: string = "/api/Vendor/vendorUpdateforActiveforshipping";
+    private readonly _updateActiveInactivefordbilling: string = "/api/Vendor/vendorUpdateforActiveforbilling";
 	private readonly _updateActiveInactivefordshipviaDetails: string = "/api/Vendor/vendorUpdateforActiveforshipviaDetails";
-	private readonly _polisturl: string = "/api/Vendor/polist";
+    private readonly _polisturl: string = "/api/Vendor/polist";
+    private readonly _stockLinePOlisturl: string = "/api/Vendor/stocklinePOList";
 	private readonly _countryUrl: string = "/api/Customer/GetcountryList";
 	private readonly _rolist: string = "/api/Vendor/rolist";
 	private readonly _purchaseorderDetails: string = "/api/Vendor/GetvendorpurchaseList";
 	private readonly _managementSiteDetails: string = "/api/Vendor/GetmanagementSiteList";
 	private readonly _repaireorderDetails: string = "/api/Vendor/GetvendorrepairList";
 	private readonly _updateShipvendorAddressDetails: string = "/api/Vendor/updatevendorShipAddress";
+    private readonly _updateBillvendorAddressDetails: string = "/api/Vendor/updatevendorBillAddress";
 	private readonly _defaultsUpdate: string = "/api/Vendor/defaultmethodUpdate";
 	private readonly _deletePoPart: string = "/api/Vendor/deletePoPart";
 	private readonly _deleteRoPart: string = "/api/Vendor/deleteRoPart";
 	private readonly _actionsUrlNew2: string = "/api/Vendor/GetATASubchapter";
-    private readonly _capabilityListUrl: string = "/api/Vendor/capabilityTypeList";
+	private readonly _capabilityListUrl: string = "/api/Vendor/capabilityTypeList";
 
-    private readonly _vendorCapability: string = "/api/Vendor/vendorCapabilityPost";
-    private readonly _vendorCapabilityType: string = "/api/Vendor/vendorCapabilityTypePost";
-    private readonly _vendorCapabilityAircraftType: string = "/api/Vendor/vendorCapabilityAircraftTypePost";
-    private readonly _vendorCapabilityAircraftModel: string = "/api/Vendor/vendorCapabilityAircraftModelPost";
+	private readonly _vendorCapability: string = "/api/Vendor/vendorCapabilityPost";
+	private readonly _vendorCapabilityType: string = "/api/Vendor/vendorCapabilityTypePost";
+	private readonly _vendorCapabilityAircraftType: string = "/api/Vendor/vendorCapabilityAircraftTypePost";
+	private readonly _vendorCapabilityAircraftModel: string = "/api/Vendor/vendorCapabilityAircraftModelPost";
 
-    private readonly _vendorCapabilityGet: string = "/api/Vendor/vendorCapabilityTypeGet";
-    private readonly _vendorManufacturer: string = "/api/Vendor/vendorAircraftManufacturerGet";
-    private readonly _vendorManufacturerModel: string = "/api/Vendor/vendorAircraftManufacturerModelGet";
-    private readonly _vendorCapabilityUpdate: string = "/api/Vendor/vendorCapabilityUpdate";//which will be specified in the Controller
+	private readonly _vendorCapabilityGet: string = "/api/Vendor/vendorCapabilityTypeGet";
+	private readonly _vendorManufacturer: string = "/api/Vendor/vendorAircraftManufacturerGet";
+	private readonly _vendorManufacturerModel: string = "/api/Vendor/vendorAircraftManufacturerModelGet";
+	private readonly _vendorCapabilityUpdate: string = "/api/Vendor/vendorCapabilityUpdate";//which will be specified in the Controller
 
-    private readonly _deleteVendorCapabilityTypeUrl: string = "/api/Vendor/deleteVendorCapabilityType";
-    private readonly _deleteVendorCapabilityAircraftManufacturer: string = "/api/Vendor/deleteVendorCapabilityAircraftManafacturer";
-    private readonly _deleteVendorCapabilityAircraftModel: string = "/api/Vendor/deleteVendorCapabilityAircraftModel";
-    private readonly _deleteVendorCapability: string = "/api/Vendor/deleteVendorCapability";
+	private readonly _deleteVendorCapabilityTypeUrl: string = "/api/Vendor/deleteVendorCapabilityType";
+	private readonly _deleteVendorCapabilityAircraftManufacturer: string = "/api/Vendor/deleteVendorCapabilityAircraftManafacturer";
+	private readonly _deleteVendorCapabilityAircraftModel: string = "/api/Vendor/deleteVendorCapabilityAircraftModel";
+	private readonly _deleteVendorCapability: string = "/api/Vendor/deleteVendorCapability";
 
-    private readonly _getVendorContactByID: string = "/api/Vendor/getvendorContactByVendorID";
+	private readonly _getVendorContactByID: string = "/api/Vendor/getvendorContactByVendorID";
 
-    private readonly _actionsCapsUrl: string = "/api/Vendor/GetListforCapes";
-    private readonly _capesdata: string = "/api/Vendor/GetVendorCapesDatawithMasterId"; 
-    private readonly _mancapPost: string = "/api/Vendor/VendorMancapespost";
+	private readonly _actionsCapsUrl: string = "/api/Vendor/GetListforCapes";
+	private readonly _capesdata: string = "/api/Vendor/GetVendorCapesDatawithMasterId";
+	private readonly _mancapPost: string = "/api/Vendor/VendorMancapespost";
 	private readonly _aircraftmodelsPost: string = "/api/Vendor/Aircraftpost";
-	private readonly _vendorContactsGetByID: string = "/api/Common/vendorcontacts";    
+	private readonly _vendorContactsGetByID: string = "/api/Common/vendorcontacts";
+	private readonly getVendor: string = "/api/vendor/pagination";	
+	private readonly _vendorsForDropDown: string = "/api/Vendor/GetVendorsForDropDown";
+	private readonly _saveVendorRepairOrder: string = "/api/Vendor/saveVendorRepairOrder";
+	private readonly _saveVendorRepairOrderPart: string = "/api/Vendor/saveVendorRepairPart";
+	private readonly _roByIdUrl: string = "/api/Vendor/roById";
+    private readonly _roPartByIdUrl: string = "/api/Vendor/roPartsById";
+    private readonly _poPartByItemIdUrl: string = "/api/Vendor/POListByMasterItemId";
+    private readonly _roPartByItemIdUrl: string = "/api/Vendor/ROListByMasterItemId";
+	private readonly _roListWithFiltersUrl: string = "/api/Vendor/roListWithFilters";
+	private readonly _saveCreateROApproval: string = "/api/Vendor/createRoApprover";
+	private readonly _updateROApproval: string = "/api/Vendor/updateRoApprover";
+    
 
 	get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
 	get vendorlistsUrl() { return this.configurations.baseUrl + this._vendrUrl; }
+	get vendorBasicListUrl(){return this.configurations.baseUrl+ this._vendorLiteUrl}
 	get vendorListWithId() { return this.configurations.baseUrl + this._vendorsWithId; }
-    get vendorattributesUrl() { return this.configurations.baseUrl + this._vendorUrl; }
-    get vendorCapabilityListsUrl() { return this.configurations.baseUrl + this._vendorCapabilityUrl; }
+	get vendorattributesUrl() { return this.configurations.baseUrl + this._vendorUrl; }
+	get vendorCapabilityListsUrl() { return this.configurations.baseUrl + this._vendorCapabilityUrl; }
 	get partDetails() { return this.configurations.baseUrl + this._partDetails; }
 	get partDetailswithid() { return this.configurations.baseUrl + this._partDetailswithid; }
 	get partDetailswithidForsinglePart() { return this.configurations.baseUrl + this._partDetailswithidForsinglePart; }
 	get vendorDomestic() { return this.configurations.baseUrl + this._domesticWIthVendor; }
 	get internationalWIthVendor() { return this.configurations.baseUrl + this._internationalWIthVendor; }
-	get defaultVendor() { return this.configurations.baseUrl + this._defaultwithVendor; }
+    get defaultVendor() { return this.configurations.baseUrl + this._defaultwithVendor; }
+    get vendorsForDropDownURL() { return this.configurations.baseUrl + this._vendorsForDropDown; }
 
-	get VendorShipDetails() { return this.configurations.baseUrl + this._vendorShipViaDetails; }
+
+    get VendorShipDetails() { return this.configurations.baseUrl + this._vendorShipViaDetilas; }
 	get vendorShipAddressUrl() { return this.configurations.baseUrl + this._vendorShipAddressGetUrl; }
+    get vendorBillAddressUrl() { return this.configurations.baseUrl + this._vendorBillAddressGetUrl; }
 	get getSiteAddress() { return this.configurations.baseUrl + this._getSitesAddress; }
 	get vendorWarningsDetails() { return this.configurations.baseUrl + this._vendorwarningsUrl; }
 	get vendorShipViaDetails() { return this.configurations.baseUrl + this._vendorShipViaDetilas; }
+    get vendorBillViaDetails() { return this.configurations.baseUrl + this._vendorBillViaDetails; }
 	get contctsUrl() { return this.configurations.baseUrl + this._contacturl; }
 	get contctsCompleteUrl() { return this.configurations.baseUrl + this._contactGeturl; }
-    get contactEmptyurl() { return this.configurations.baseUrl + this._contactsEmptyObjurl }
-    get fianlurl() { return this.configurations.baseUrl + this._finalEmptyObjurl }
-    get paymenturl() { return this.configurations.baseUrl + this._paymentEmptyObjurl }
-    get generalurl() { return this.configurations.baseUrl + this._generalEmptyObjurl }
-    get addressUrl() { return this.configurations.baseUrl + this._addressUrl }
+	get contactEmptyurl() { return this.configurations.baseUrl + this._contactsEmptyObjurl }
+	get fianlurl() { return this.configurations.baseUrl + this._finalEmptyObjurl }
+	get paymenturl() { return this.configurations.baseUrl + this._paymentEmptyObjurl }
+	get generalurl() { return this.configurations.baseUrl + this._generalEmptyObjurl }
+	get addressUrl() { return this.configurations.baseUrl + this._addressUrl }
 	get checkPaymentAddress() { return this.configurations.baseUrl + this._checkPaymnetAddressUrl; }
 	get bencusAddress() { return this.configurations.baseUrl + this._bencusAddress; }
 	get getContactHistory() { return this.configurations.baseUrl + this._getContactHistroty; }
@@ -162,95 +190,119 @@ export class VendorEndpointService extends EndpointFactory {
 	get getVendorhistory() { return this.configurations.baseUrl + this._getVendorhistory; }
 	get getcheckhistory() { return this.configurations.baseUrl + this._getcheckhistory; }
 	get getShipViaHistory() { return this.configurations.baseUrl + this._getShipViaHistory; }
-    get getshipaddresshistory() { return this.configurations.baseUrl + this._getshipaddresshistory; }
+    get getBillViaHistory() { return this.configurations.baseUrl + this._getBillViaHistory; }
+	get getshipaddresshistory() { return this.configurations.baseUrl + this._getshipaddresshistory; }
+    get getbilladdresshistory() { return this.configurations.baseUrl + this._getbilladdresshistory; }
 	get capabilityUrl() { return this.configurations.baseUrl + this._capabilityUrl; }
-	get polisturl() { return this.configurations.baseUrl + this._polisturl; }
+    get polisturl() { return this.configurations.baseUrl + this._polisturl; }
+    get stockLinepolisturl() { return this.configurations.baseUrl + this._stockLinePOlisturl; }
 	get rolisturl() { return this.configurations.baseUrl + this._rolist; }
 	get listUrl() { return this.configurations.baseUrl + this._listUrl; }
 	get countryUrl() { return this.configurations.baseUrl + this._countryUrl; }
 	get purchaseorderDetails() { return this.configurations.baseUrl + this._purchaseorderDetails; }
 	get managementSiteDetails() { return this.configurations.baseUrl + this._managementSiteDetails; }
-    get repaireorderDetails() { return this.configurations.baseUrl + this._repaireorderDetails; }
+	get repaireorderDetails() { return this.configurations.baseUrl + this._repaireorderDetails; }
 
-    get vendorCapabilityurl() { return this.configurations.baseUrl + this._vendorCapabilityGet; }
-    get vendorManufacturerurl() { return this.configurations.baseUrl + this._vendorManufacturer; }
-    get vendorManufacturerModelurl() { return this.configurations.baseUrl + this._vendorManufacturerModel; }
+	get vendorCapabilityurl() { return this.configurations.baseUrl + this._vendorCapabilityGet; }
+	get vendorManufacturerurl() { return this.configurations.baseUrl + this._vendorManufacturer; }
+	get vendorManufacturerModelurl() { return this.configurations.baseUrl + this._vendorManufacturerModel; }
 
-    get actionsUrlCaps() { return this.configurations.baseUrl + this._actionsCapsUrl; }
-    get capesdata() { return this.configurations.baseUrl + this._capesdata; }
-  
+	get actionsUrlCaps() { return this.configurations.baseUrl + this._actionsCapsUrl; }
+	get capesdata() { return this.configurations.baseUrl + this._capesdata; }
 
-    constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
+	get paginate() { return this.configurations.baseUrl + this.getVendor; }
+	get roListWithFiltersUrl() { return this.configurations.baseUrl + this._roListWithFiltersUrl; }
 
-        super(http, configurations, injector);
+
+	constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
+
+		super(http, configurations, injector);
 	}
 
-    getVendorCapesData<T>(vendorId: any): Observable<T> {
-        let url = `${this.capesdata}/${vendorId}`;
-        return this.http.get<T>(url, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getVendorCapesData(vendorId));
-            });
-    }
-
-    saveVendorCapesmaninfo<T>(data: any): Observable<T> {
-        //debugger;
-        return this.http.post<T>(this._mancapPost, JSON.stringify(data), this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.saveVendorCapesmaninfo(data));
-            });
-    }
-
-    saveAircraftinfo<T>(data: any): Observable<T> {
-        //debugger;
-        return this.http.post<T>(this._aircraftmodelsPost, JSON.stringify(data), this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.saveVendorCapesmaninfo(data));
-            });
-    }
-
-    getNewvendorEndpoint<T>(userObject: any): Observable<T> {
-
-
-        return this.http.post<T>(this._vendorUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getNewvendorEndpoint(userObject));
-            });
-    }
-
-    getEditvendorEndpoint<T>(vendorId?: number): Observable<T> {
-        let endpointUrl = vendorId ? `${this._vendorUrlNew}/${vendorId}` : this._vendorUrlNew;
-
-        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getEditvendorEndpoint(vendorId));
-            });
-    }
-
-    getDeletevendorEndpoint<T>(vendorId: number): Observable<T> {
-        let endpointUrl = `${this._vendorUrlNew}/${vendorId}`;
-
-        return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getDeletevendorEndpoint(vendorId));
-            });
-    }
-
-    getvendorCapabilityListEndpoint<T>(): Observable<T> {
-        return this.http.get<T>(this.vendorCapabilityListsUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getvendorEndpoint());
-            });
-    }
-
-
-    getvendorEndpoint<T>(): Observable<T> {
-        return this.http.get<T>(this.vendorattributesUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getvendorEndpoint());
-            });
+	getReceivingPOListing(){
+		return this.http.get(`${this.configurations.baseUrl}/api/vendor/recevingpolist`)
 	}
 
+	postNewBillingAddress<T>(object) {
+		let url = `${this.configurations.baseUrl}/api/Vendor/createvendorbillingaddress`
+		return this.http.post<T>(url, JSON.stringify(object), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.postNewBillingAddress(object));
+			});
+
+	}
+	getVendorCapesData<T>(vendorId: any): Observable<T> {
+		let url = `${this.capesdata}/${vendorId}`;
+		return this.http.get<T>(url, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getVendorCapesData(vendorId));
+			});
+	}
+
+	saveVendorCapesmaninfo<T>(data: any): Observable<T> {
+		//debugger;
+		return this.http.post<T>(this._mancapPost, JSON.stringify(data), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.saveVendorCapesmaninfo(data));
+			});
+	}
+
+	saveAircraftinfo<T>(data: any): Observable<T> {
+		//debugger;
+		return this.http.post<T>(this._aircraftmodelsPost, JSON.stringify(data), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.saveVendorCapesmaninfo(data));
+			});
+	}
+
+	getNewvendorEndpoint<T>(userObject: any): Observable<T> {
+
+
+		return this.http.post<T>(this._vendorUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getNewvendorEndpoint(userObject));
+			});
+	}
+
+	getEditvendorEndpoint<T>(vendorId?: number): Observable<T> {
+		let endpointUrl = vendorId ? `${this._vendorUrlNew}/${vendorId}` : this._vendorUrlNew;
+
+		return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getEditvendorEndpoint(vendorId));
+			});
+	}
+
+	getDeletevendorEndpoint<T>(vendorId: number): Observable<T> {
+		let endpointUrl = `${this._vendorUrlNew}/${vendorId}`;
+
+		return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getDeletevendorEndpoint(vendorId));
+			});
+	}
+
+	getvendorCapabilityListEndpoint<T>(): Observable<T> {
+		return this.http.get<T>(this.vendorCapabilityListsUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getvendorEndpoint());
+			});
+	}
+
+
+	getvendorEndpoint<T>(): Observable<T> {
+		return this.http.get<T>(this.vendorattributesUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getvendorEndpoint());
+			});
+	}
+
+    getvendorBasicEndpoint<T>(): Observable<T> {
+        return this.http.get<T>(this.vendorBasicListUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getvendorBasicEndpoint());
+            });
+	}
 	
 	getCapabilityTypeListEndpoint<T>(): Observable<T> {
 		return this.http.get<T>(this.capabilityTypeListUrl, this.getRequestHeaders())
@@ -266,7 +318,7 @@ export class VendorEndpointService extends EndpointFactory {
 				return this.handleError(error, () => this.getManagementSiteDataByCompanyIdEdpoint(companyId));
 			});
 	}
-	
+
 	getpurchasevendorlist<T>(vendorId): Observable<T> {
 		let endUrl = `${this.purchaseorderDetails}/${vendorId}`;
 		return this.http.get<T>(endUrl, this.getRequestHeaders())
@@ -301,12 +353,12 @@ export class VendorEndpointService extends EndpointFactory {
 				return this.handleError(error, () => this.getvendorEndpoint());
 			});
 	}
-    getCapabilityEndpoint<T>(): Observable<T> {
-        return this.http.get<T>(this.capabilityUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getCapabilityEndpoint());
-            });
-    }
+	getCapabilityEndpoint<T>(): Observable<T> {
+		return this.http.get<T>(this.capabilityUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getCapabilityEndpoint());
+			});
+	}
 
 	getDomesticWire<T>(vendorId: any): Observable<T> {
 		let endpointurl = `${this.vendorDomestic}/${vendorId}`;
@@ -315,7 +367,7 @@ export class VendorEndpointService extends EndpointFactory {
 				return this.handleError(error, () => this.getvendorEndpoint());
 			});
 	}
-	
+
 
 	updateInternational<T>(roleObject: any): Observable<T> {
 		let endpointUrl = `${this._internationalUpdate}/${roleObject.internationalWirePaymentId}`;
@@ -362,7 +414,14 @@ export class VendorEndpointService extends EndpointFactory {
 			.catch(error => {
 				return this.handleError(error, () => this.getvendorEndpoint());
 			});
-	}
+    }
+    getVendorBillAddressdetails<T>(vendorId: any): Observable<T> {
+        let endpointurl = `${this.vendorBillAddressUrl}/${vendorId}`;
+        return this.http.get<T>(endpointurl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getvendorEndpoint());
+            });
+    }
 	getSiteAddresses<T>(): Observable<T> {
 		//let endpointurl = `${this.getSiteAddress}/${vendorId}`;
 		return this.http.get<T>(this.getSiteAddress, this.getRequestHeaders())
@@ -391,16 +450,23 @@ export class VendorEndpointService extends EndpointFactory {
 			.catch(error => {
 				return this.handleError(error, () => this.getVendorShipViaDetails(roleObject));
 			});
-	}
-    getvendorList<T>(): Observable<T> {
-
-        return this.http.get<T>(this.vendorlistsUrl, this.getRequestHeaders())
+    }
+    getVendorBillViaDetails<T>(roleObject: any): Observable<T> {
+        let endpointUrl = `${this.vendorBillViaDetails}/${roleObject.vendorBillingAddressId}`;
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getvendorList());
+                return this.handleError(error, () => this.getVendorBillViaDetails(roleObject));
             });
+    }
+	getvendorList<T>(): Observable<T> {
+
+		return this.http.get<T>(this.vendorlistsUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getvendorList());
+			});
 	}
 
-	getVendorsDatawithid<T>(vendorId:any): Observable<T> {
+	getVendorsDatawithid<T>(vendorId: any): Observable<T> {
 		let endpointurl = `${this.vendorListWithId}/${vendorId}`;
 		return this.http.get<T>(endpointurl, this.getRequestHeaders())
 			.catch(error => {
@@ -411,12 +477,12 @@ export class VendorEndpointService extends EndpointFactory {
 	getContcatDetails<T>(vendorId: any): Observable<T> {
 		let endpointUrl = `${this.contctsUrl}/${vendorId}`;
 		return this.http.get<T>(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getvendorEndpoint());
-            });
+			.catch(error => {
+				return this.handleError(error, () => this.getvendorEndpoint());
+			});
 	}
 	getContcatCompleteDetails<T>(): Observable<T> {
-		
+
 		return this.http.get<T>(this.contctsCompleteUrl, this.getRequestHeaders())
 			.catch(error => {
 				return this.handleError(error, () => this.getvendorEndpoint());
@@ -426,64 +492,64 @@ export class VendorEndpointService extends EndpointFactory {
 	getCheckPaymnetDetails<T>(vendorId: any): Observable<T> {
 		let endpointUrl = `${this.checkPaymentAddress}/${vendorId}`;
 		return this.http.get<T>(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getvendorEndpoint());
-            });
+			.catch(error => {
+				return this.handleError(error, () => this.getvendorEndpoint());
+			});
 	}
 	getBeneficiaryCustomerDetails<T>(): Observable<T> {
-		
+
 		return this.http.get<T>(this.bencusAddress, this.getRequestHeaders())
 			.catch(error => {
 				return this.handleError(error, () => this.getvendorEndpoint());
 			});
 	}
 
-    getEmptyrobj<T>(): Observable<T> {
-        return this.http.get<T>(this.contactEmptyurl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getvendorEndpoint());
-            });
-    }
+	getEmptyrobj<T>(): Observable<T> {
+		return this.http.get<T>(this.contactEmptyurl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getvendorEndpoint());
+			});
+	}
 
-    getFinalrobj<T>(): Observable<T> {
-        return this.http.get<T>(this.fianlurl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getvendorEndpoint());
-            });
-    }
+	getFinalrobj<T>(): Observable<T> {
+		return this.http.get<T>(this.fianlurl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getvendorEndpoint());
+			});
+	}
 
-    getGeneralrobj<T>(): Observable<T> {
-        return this.http.get<T>(this.generalurl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getvendorEndpoint());
-            });
-    }
+	getGeneralrobj<T>(): Observable<T> {
+		return this.http.get<T>(this.generalurl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getvendorEndpoint());
+			});
+	}
 
-    getPaymentrobj<T>(): Observable<T> {
-        return this.http.get<T>(this.paymenturl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getvendorEndpoint());
-            });
-    }
+	getPaymentrobj<T>(): Observable<T> {
+		return this.http.get<T>(this.paymenturl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getvendorEndpoint());
+			});
+	}
 
-    
 
-    getAddressDeatails<T>(): Observable<T> {
-        return this.http.get<T>(this.addressUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getvendorEndpoint());
-            });
-    }
-   
-   
-    getNewVendorEndpoint<T>(param:any): Observable<any> {
-        let body = JSON.stringify(param);
-        let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
-        return this.http.post(this._vendorsUrlNew, body, this.getRequestHeaders())
-            .map((response: Response) => {
-                return <any>response;
-                
-            }).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+
+	getAddressDeatails<T>(): Observable<T> {
+		return this.http.get<T>(this.addressUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getvendorEndpoint());
+			});
+	}
+
+
+	getNewVendorEndpoint<T>(param: any): Observable<any> {
+		let body = JSON.stringify(param);
+		let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+		return this.http.post(this._vendorsUrlNew, body, this.getRequestHeaders())
+			.map((response: Response) => {
+				return <any>response;
+
+			}).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
 	}
 	getVendorPoDetails<T>(param: any): Observable<any> {
 		let body = JSON.stringify(param);
@@ -512,7 +578,7 @@ export class VendorEndpointService extends EndpointFactory {
 
 			}).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
 	}
-	
+
 	savesaveRepairorderorderdetails<T>(param: any): Observable<any> {
 		let body = JSON.stringify(param);
 		let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
@@ -523,19 +589,19 @@ export class VendorEndpointService extends EndpointFactory {
 			}).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
 	}
 	savePurchaseorderdetailspart<T>(param: any): Observable<any> {
-		  
-       console.log(param);
+
+		console.log(param);
 
 
-		const data = {...param , 
-			poPartSplitUserId :  param.poPartSplitUserId !== undefined ? 
-			param.poPartSplitUserId.customerId == undefined ?    
-			param.poPartSplitUserId.vendorId === undefined ? param.poPartSplitUserId : param.poPartSplitUserId.vendorId
-			: param.poPartSplitUserId.customerId : ''
-			
-		}
+		// const data = {...param , 
+		// 	poPartSplitUserId :  param.poPartSplitUserId !== undefined ? 
+		// 	param.poPartSplitUserId.customerId == undefined ?    
+		// 	param.poPartSplitUserId.vendorId === undefined ? param.poPartSplitUserId : param.poPartSplitUserId.vendorId
+		// 	: param.poPartSplitUserId.customerId : ''
 
-		let body = JSON.stringify(data);
+		// }
+
+		let body = JSON.stringify(param);
 		let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
 		return this.http.post(this._saveVendorpurchasespart, body, this.getRequestHeaders())
 			.map((response: Response) => {
@@ -552,19 +618,31 @@ export class VendorEndpointService extends EndpointFactory {
 
 			}).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
 	}
-	
-    getNewShipppinginfo<T>(param: any): Observable<T> {
-   
+
+	getNewShipppinginfo<T>(param: any): Observable<T> {
+
+		let body = JSON.stringify(param);
+		let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+		//let options = new RequestOptions({ headers: headers });  // create a request option
+
+		// post request to create new book
+		return this.http
+			.post(this._shippingInfoUrl, body, this.getRequestHeaders())
+			.map((res: Response) => res)
+			.catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+    }
+    getNewBillinginfo<T>(param: any): Observable<T> {
+
         let body = JSON.stringify(param);
         let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
         //let options = new RequestOptions({ headers: headers });  // create a request option
 
         // post request to create new book
         return this.http
-            .post(this._shippingInfoUrl, body, this.getRequestHeaders())
+            .post(this._billingInfoUrl, body, this.getRequestHeaders())
             .map((res: Response) => res)
             .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
-	}
+    }
 	updateShipAddressDetails<T>(param: any): Observable<T> {
 
 		let body = JSON.stringify(param);
@@ -588,7 +666,19 @@ export class VendorEndpointService extends EndpointFactory {
 			.post(this._saveShipViaDetails, body, this.getRequestHeaders())
 			.map((res: Response) => res)
 			.catch((error: any) => Observable.throw(error.json().error || 'Server error'));
-	}
+    }
+    saveBillViaDetails<T>(param: any): Observable<T> {
+
+        let body = JSON.stringify(param);
+        let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+        //let options = new RequestOptions({ headers: headers });  // create a request option
+
+        // post request to create new book
+        return this.http
+            .post(this._saveBillViaDetails, body, this.getRequestHeaders())
+            .map((res: Response) => res)
+            .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+    }
 	//addShipViaDetails<T>(param: any): Observable<T> {
 
 	//	let body = JSON.stringify(param);
@@ -617,7 +707,6 @@ export class VendorEndpointService extends EndpointFactory {
 				return this.handleError(error, () => this.updatevendorstatus(roleObject));
 			});
 	}
-	
 
 
 
@@ -626,61 +715,74 @@ export class VendorEndpointService extends EndpointFactory {
 
 
 
-    getNewShipppinginfoWithAddressId<T>(param: any,addressId:any): Observable<T> {
-        param.vendorShippingAddressId = addressId;
+
+	getNewShipppinginfoWithAddressId<T>(param: any, addressId: any): Observable<T> {
+		param.vendorShippingAddressId = addressId;
+		let body = JSON.stringify(param);
+		let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+		//let options = new RequestOptions({ headers: headers });  // create a request option
+
+		// post request to create new book
+		return this.http
+			.post(this._shippingInfoUrl, body, this.getRequestHeaders())
+			.map((res: Response) => res.json())
+			.catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+    }
+    getNewBillinginfoWithAddressId<T>(param: any, addressId: any): Observable<T> {
+        param.vendorBillingAddressId = addressId;
         let body = JSON.stringify(param);
         let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
         //let options = new RequestOptions({ headers: headers });  // create a request option
 
         // post request to create new book
         return this.http
-            .post(this._shippingInfoUrl, body, this.getRequestHeaders())
+            .post(this._billingInfoUrl, body, this.getRequestHeaders())
             .map((res: Response) => res.json())
             .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
     }
-    getNewVendorContactInfo<T>(param: any): Observable<any> {
-        //debugger;
-        delete param.contactId;
-        delete param.masterCompanyId;
-        let body = JSON.stringify(param);
-        let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
-        return this.http.post(this._vendorsContctUrl, body, this.getRequestHeaders())
-            .map((response: Response) => {
-                return <any>response;
+	getNewVendorContactInfo<T>(param: any): Observable<any> {
+		//debugger;
+		delete param.contactId;
+		delete param.masterCompanyId;
+		let body = JSON.stringify(param);
+		let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+		return this.http.post(this._vendorsContctUrl, body, this.getRequestHeaders())
+			.map((response: Response) => {
+				return <any>response;
 
-            }).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
-    }
-    addPaymentCheckinfo<T>(param: any): Observable<any> {
-     
-        let body = JSON.stringify(param);
-        let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
-        return this.http.post(this._addpaymentUrl, body, this.getRequestHeaders())
-            .map((response: Response) => {
-                return <any>response;
+			}).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+	}
+	addPaymentCheckinfo<T>(param: any): Observable<any> {
 
-            }).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
-    }
+		let body = JSON.stringify(param);
+		let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+		return this.http.post(this._addpaymentUrl, body, this.getRequestHeaders())
+			.map((response: Response) => {
+				return <any>response;
 
-    addPaymentDomesticinfo<T>(param: any): Observable<any> {
+			}).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+	}
 
-        let body = JSON.stringify(param);
-        let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
-        return this.http.post(this._adddomesticpaymentUrl, body, this.getRequestHeaders())
-            .map((response: Response) => {
-                return <any>response;
+	addPaymentDomesticinfo<T>(param: any): Observable<any> {
 
-            }).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
-    }
+		let body = JSON.stringify(param);
+		let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+		return this.http.post(this._adddomesticpaymentUrl, body, this.getRequestHeaders())
+			.map((response: Response) => {
+				return <any>response;
 
-    addPaymentInternationalinfo<T>(param: any): Observable<any> {
+			}).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+	}
 
-        let body = JSON.stringify(param);
-        let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
-        return this.http.post(this._addinternationalpaymentUrl, body, this.getRequestHeaders())
-            .map((response: Response) => {
-                return <any>response;
+	addPaymentInternationalinfo<T>(param: any): Observable<any> {
 
-            }).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+		let body = JSON.stringify(param);
+		let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+		return this.http.post(this._addinternationalpaymentUrl, body, this.getRequestHeaders())
+			.map((response: Response) => {
+				return <any>response;
+
+			}).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
 	}
 	addPaymentDefaultinfo<T>(param: any): Observable<any> {
 
@@ -695,56 +797,56 @@ export class VendorEndpointService extends EndpointFactory {
 
 
 
-    AddvendorContactDetails<T>(param: any): Observable<any> {
-        let body = JSON.stringify(param);
-        let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
-        return this.http.post(this._vendorsUpdateContctUrl, body, this.getRequestHeaders())
-            .map((response: Response) => {
-                return <any>response;
+	AddvendorContactDetails<T>(param: any): Observable<any> {
+		let body = JSON.stringify(param);
+		let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+		return this.http.post(this._vendorsUpdateContctUrl, body, this.getRequestHeaders())
+			.map((response: Response) => {
+				return <any>response;
 
-            }).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
-    }
-    updateVendorCheckpayment<T>(param: any, vendorId: any): Observable<any> {
-        param.VendorId = vendorId;
-        let body = JSON.stringify(param);
-        let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
-        return this.http.post(this._vendorCheckpaymentUpdate, body, this.getRequestHeaders())
-            .map((response: Response) => {
-                return <any>response;
+			}).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+	}
+	updateVendorCheckpayment<T>(param: any, vendorId: any): Observable<any> {
+		param.VendorId = vendorId;
+		let body = JSON.stringify(param);
+		let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+		return this.http.post(this._vendorCheckpaymentUpdate, body, this.getRequestHeaders())
+			.map((response: Response) => {
+				return <any>response;
 
-            }).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
-    }
-    updateVendorAddressDetails<T>(param: any, vendorId: any): Observable<any> {
-        param.VendorId = vendorId;
-        let body = JSON.stringify(param);
-        let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
-        return this.http.post(this._vendorShipAddressdetails, body, this.getRequestHeaders())
-            .map((response: Response) => {
-                return <any>response;
+			}).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+	}
+	updateVendorAddressDetails<T>(param: any, vendorId: any): Observable<any> {
+		param.VendorId = vendorId;
+		let body = JSON.stringify(param);
+		let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+		return this.http.post(this._vendorShipAddressdetails, body, this.getRequestHeaders())
+			.map((response: Response) => {
+				return <any>response;
 
-            }).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
-    }
+			}).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+	}
 
-    updateVendorDomesticWirePayment<T>(param: any, vendorId: any): Observable<any> {
-        param.VendorId = vendorId;
-        let body = JSON.stringify(param);
-        let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
-        return this.http.post(this._vendorDomesticpaymentUpdate, body, this.getRequestHeaders())
-            .map((response: Response) => {
-                return <any>response;
+	updateVendorDomesticWirePayment<T>(param: any, vendorId: any): Observable<any> {
+		param.VendorId = vendorId;
+		let body = JSON.stringify(param);
+		let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+		return this.http.post(this._vendorDomesticpaymentUpdate, body, this.getRequestHeaders())
+			.map((response: Response) => {
+				return <any>response;
 
-            }).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
-    }
+			}).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+	}
 
-    updateVendorInternationalWirePayment<T>(param: any, vendorId: any): Observable<any> {
-        param.VendorId = vendorId;
-        let body = JSON.stringify(param);
-        let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
-        return this.http.post(this._vendorInternationalpaymentUpdate, body, this.getRequestHeaders())
-            .map((response: Response) => {
-                return <any>response;
+	updateVendorInternationalWirePayment<T>(param: any, vendorId: any): Observable<any> {
+		param.VendorId = vendorId;
+		let body = JSON.stringify(param);
+		let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+		return this.http.post(this._vendorInternationalpaymentUpdate, body, this.getRequestHeaders())
+			.map((response: Response) => {
+				return <any>response;
 
-            }).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+			}).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
 	}
 
 	//updateVendorDefault<T>(param: any, vendorId: any): Observable<any> {
@@ -758,28 +860,28 @@ export class VendorEndpointService extends EndpointFactory {
 	//		}).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
 	//}
 
-    getNewVendorfinanceInfo<T>(param: any): Observable<T> {
-        //debugger;
-        let body = JSON.stringify(param);
-        let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
-        //let options = new RequestOptions({ headers: headers });  // create a request option
+	getNewVendorfinanceInfo<T>(param: any): Observable<T> {
+		//debugger;
+		let body = JSON.stringify(param);
+		let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+		//let options = new RequestOptions({ headers: headers });  // create a request option
 
-        // post request to create new book
-        return this.http.post(this._vendorFinanceUrl, body, this.getRequestHeaders())
-            .map((response: Response) => {
-                return <any>response;
+		// post request to create new book
+		return this.http.post(this._vendorFinanceUrl, body, this.getRequestHeaders())
+			.map((response: Response) => {
+				return <any>response;
 
-            }).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
-       
-    }
+			}).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
 
-    
-    getUpdatevendorEndpoint<T>(roleObject: any,addressId:any, vendorId: number): Observable<T> {
-        let endpointUrl = `${this._vendorsUrlNew}/${addressId}/${vendorId}`;
-        return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getUpdatevendorEndpoint(roleObject,addressId, vendorId));
-            });
+	}
+
+
+	getUpdatevendorEndpoint<T>(roleObject: any, addressId: any, vendorId: number): Observable<T> {
+		let endpointUrl = `${this._vendorsUrlNew}/${addressId}/${vendorId}`;
+		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getUpdatevendorEndpoint(roleObject, addressId, vendorId));
+			});
 	}
 	updateVendorWarnings<T>(roleObject: any): Observable<T> {
 		let endpointUrl = `${this._vendorwarningUrl}/${roleObject.vendorWarningId}`;
@@ -797,19 +899,19 @@ export class VendorEndpointService extends EndpointFactory {
 				return this.handleError(error, () => this.updateVendorListDetails(roleObject));
 			});
 	}
-    getUpdateContactInfo<T>(roleObject: any, vendorId: number): Observable<T> {
-        let endpointUrl = `${this._vendorsContctUrl}/${vendorId}`;
-        return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getUpdateContactInfo(roleObject, vendorId));
-            });
-    }
-    updateCheckPaymentInfo<T>(roleObject: any, vendorId: number): Observable<T> {
-        let endpointUrl = `${this._checkPaymntUpdateUrl}/${vendorId}`;
-        return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getUpdateContactInfo(roleObject, vendorId));
-            });
+	getUpdateContactInfo<T>(roleObject: any, vendorId: number): Observable<T> {
+		let endpointUrl = `${this._vendorsContctUrl}/${vendorId}`;
+		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getUpdateContactInfo(roleObject, vendorId));
+			});
+	}
+	updateCheckPaymentInfo<T>(roleObject: any, vendorId: number): Observable<T> {
+		let endpointUrl = `${this._checkPaymntUpdateUrl}/${vendorId}`;
+		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getUpdateContactInfo(roleObject, vendorId));
+			});
 	}
 	updateDomestic<T>(roleObject: any): Observable<T> {
 		let endpointUrl = `${this._domesticUpdate}/${roleObject.domesticWirePaymentId}`;
@@ -827,35 +929,49 @@ export class VendorEndpointService extends EndpointFactory {
 			});
 	}
 
-    getUpdateFinanceInfo<T>(roleObject: any, vendorId: number): Observable<T> {
-        let endpointUrl = `${this._vendorFinanceUrl}/${vendorId}`;
+	getUpdateFinanceInfo<T>(roleObject: any, vendorId: number): Observable<T> {
+		let endpointUrl = `${this._vendorFinanceUrl}/${vendorId}`;
+		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getUpdateFinanceInfo(roleObject, vendorId));
+			});
+	}
+	updateShippinginfo<T>(roleObject: any, vendorId: any): Observable<T> {
+		let endpointUrl = `${this._updateShipvendorAddressDetails}/${vendorId}`;
+		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.updateShippinginfo(roleObject, vendorId));
+			});
+    }
+    updateBillinginfo<T>(roleObject: any, vendorId: any): Observable<T> {
+        let endpointUrl = `${this._updateBillvendorAddressDetails}/${vendorId}`;
         return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getUpdateFinanceInfo(roleObject, vendorId));
+                return this.handleError(error, () => this.updateBillinginfo(roleObject, vendorId));
             });
     }
-    updateShippinginfo<T>(roleObject: any,vendorId:any): Observable<T> {
-		let endpointUrl = `${this._updateShipvendorAddressDetails}/${vendorId}`;
-        return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.updateShippinginfo(roleObject,vendorId));
-            });
-	}
 	updateShippingViainfo<T>(roleObject: any, vendorId: any): Observable<T> {
 		let endpointUrl = `${this._updateShippingViaDetails}/${vendorId}`;
 		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
 			.catch(error => {
 				return this.handleError(error, () => this.updateShippinginfo(roleObject, vendorId));
 			});
-	}
-    
+    }
+    updateBillingViainfo<T>(roleObject: any, vendorId: any): Observable<T> {
+        let endpointUrl = `${this._updateBillingViaDetails}/${vendorId}`;
+        return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.updateBillinginfo(roleObject, vendorId));
+            });
+    }
+
 
 	getDeletevendorContactEndpoint<T>(roleObject: any): Observable<T> {
 		let endpointUrl = `${this._vendorContactUrlNew}/${roleObject.vendorShippingAddressId}`;
-		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject) ,this.getRequestHeaders())
-            .catch(error => {
+		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+			.catch(error => {
 				return this.handleError(error, () => this.getDeletevendorContactEndpoint(roleObject));
-            });
+			});
 	}
 	deletePOPart<T>(roleObject: any): Observable<T> {
 		let endpointUrl = `${this._deletePoPart}/${roleObject}`;
@@ -886,21 +1002,21 @@ export class VendorEndpointService extends EndpointFactory {
 			});
 	}
 
-    getDeletevendorshippingEndpoint<T>(roleObject: any): Observable<T> {
-        let endpointUrl = `${this._vendorShippingUrlNew}/${roleObject.vendorShippingId}`;
-        return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getDeletevendorshippingEndpoint(roleObject));
-            });
-    }
+	getDeletevendorshippingEndpoint<T>(roleObject: any): Observable<T> {
+        let endpointUrl = `${this._vendorShippingAddressUrlDelete}/${roleObject.vendorShippingAddressId}`;
+		return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getDeletevendorshippingEndpoint(roleObject));
+			});
+	}
 
 
-    getHistoryvendorEndpoint<T>(vendorId: number): Observable<T> {
+	getHistoryvendorEndpoint<T>(vendorId: number): Observable<T> {
 		let endpointUrl = `${this.getContactHistory}/${vendorId}`;
-        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getHistoryvendorEndpoint(vendorId));
-            });
+		return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getHistoryvendorEndpoint(vendorId));
+			});
 	}
 	getCheckPaymentHist<T>(vendorId: number): Observable<T> {
 		let endpointUrl = `${this.getCheckPayHist}/${vendorId}`;
@@ -929,14 +1045,29 @@ export class VendorEndpointService extends EndpointFactory {
 			.catch(error => {
 				return this.handleError(error, () => this.getShipviaHistory(vendorId));
 			});
-	}
+    }
+    getBillviaHistory<T>(vendorId: number): Observable<T> {
+        let endpointUrl = `${this.getShipViaHistory}/${vendorId}`;
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getBillviaHistory(vendorId));
+            });
+    }
 	getShipaddressHistory<T>(vendorId: number): Observable<T> {
 		let endpointUrl = `${this.getshipaddresshistory}/${vendorId}`;
 		return this.http.get<T>(endpointUrl, this.getRequestHeaders())
 			.catch(error => {
 				return this.handleError(error, () => this.getShipaddressHistory(vendorId));
 			});
-	}
+    }
+
+    getBilladdressHistory<T>(vendorId: number): Observable<T> {
+        let endpointUrl = `${this.getbilladdresshistory}/${vendorId}`;
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getBilladdressHistory(vendorId));
+            });
+    }
 
 	getDiscountEndpoint<T>(): Observable<T> {
 
@@ -993,7 +1124,7 @@ export class VendorEndpointService extends EndpointFactory {
 			});
 
 	}
-	
+
 	getUpdatevendorsEndpoint<T>(roleObject: any, vendorId: number): Observable<T> {
 		let endpointUrl = `${this._vendorsUrlNew}/${vendorId}`;
 
@@ -1049,7 +1180,17 @@ export class VendorEndpointService extends EndpointFactory {
 				return this.handleError(error, () => this.getUpdatevendorsEndpointforshipping(roleObject, vendorShippingAddressId));
 			});
 
-	}
+    }
+
+    getUpdatevendorEndpointforActiveforbilling<T>(roleObject: any, vendorBillingAddressId: number): Observable<T> {
+        let endpointUrl = `${this._updateActiveInactivefordbilling}/${roleObject.vendorBillingAddressId}`;
+
+        return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getUpdatevendorsEndpointforshipping(roleObject, vendorBillingAddressId));
+            });
+
+    }
 
 	getUpdatevendorEndpointforActiveforshipViaDetails<T>(roleObject: any, vendorShippingId: number): Observable<T> {
 		let endpointUrl = `${this._updateActiveInactivefordshipviaDetails}/${roleObject.vendorShippingId}`;
@@ -1072,11 +1213,18 @@ export class VendorEndpointService extends EndpointFactory {
 	}
 	getPurchaseOrderList<T>(): Observable<T> {
 
-		return this.http.get<T>(this.polisturl, this.getRequestHeaders())
+        return this.http.get<T>(this.stockLinepolisturl, this.getRequestHeaders())
 			.catch(error => {
 				return this.handleError(error, () => this.getPurchaseOrderList());
 			});
-	}
+    }
+
+   	getPOList(data) {
+        return this.http.post(this.polisturl, JSON.stringify(data), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getPOList(data));
+            });
+    }
 	getcountryListEndpoint<T>(): Observable<T> {
 
 		return this.http.get<T>(this.countryUrl, this.getRequestHeaders())
@@ -1092,7 +1240,7 @@ export class VendorEndpointService extends EndpointFactory {
 			});
 	}
 
-	
+
 
 	getATASubchapterDataEndpoint<T>(mainId: any): Observable<T> {
 		let endpointUrl = `${this._actionsUrlNew2}/${mainId}`;
@@ -1101,123 +1249,242 @@ export class VendorEndpointService extends EndpointFactory {
 			.catch(error => {
 				return this.handleError(error, () => this.getATASubchapterDataEndpoint(mainId));
 			});
-    }
+	}
 
-    
 
-    //for new Vendor Capability Post
-    newVendorCapabilityEndPoint<T>(userObject: any): Observable<T> {
 
-        return this.http.post<T>(this._vendorCapability, JSON.stringify(userObject), this.getRequestHeaders())
+	//for new Vendor Capability Post
+	newVendorCapabilityEndPoint<T>(userObject: any): Observable<T> {
+
+		return this.http.post<T>(this._vendorCapability, JSON.stringify(userObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.newVendorCapabilityEndPoint(userObject));
+			});
+	}
+
+	newVendorCapabilityTypeListEndPoint<T>(userObject: any): Observable<T> {
+
+		return this.http.post<T>(this._vendorCapabilityType, JSON.stringify(userObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.newVendorCapabilityTypeListEndPoint(userObject));
+			});
+	}
+
+	newVendorCapabilityAircraftTypeEndPoint<T>(userObject: any): Observable<T> {
+
+		return this.http.post<T>(this._vendorCapabilityAircraftType, JSON.stringify(userObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.newVendorCapabilityAircraftTypeEndPoint(userObject));
+			});
+	}
+
+	newVendorCapabiltiyAircraftModelEndPoint<T>(userObject: any): Observable<T> {
+
+		return this.http.post<T>(this._vendorCapabilityAircraftModel, JSON.stringify(userObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.newVendorCapabiltiyAircraftModelEndPoint(userObject));
+			});
+	}
+
+	getVendorCapabilityListEndpoint<T>(vendorId: any): Observable<T> {
+		let url = `${this.vendorCapabilityurl}/${vendorId}`;
+		return this.http.get<T>(url, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getVendorCapabilityListEndpoint(vendorId));
+			});
+	}
+
+	getVendorCapabilityAircraftManafacturerListEndpoint<T>(vendorId: any): Observable<T> {
+		let url = `${this.vendorManufacturerurl}/${vendorId}`;
+		return this.http.get<T>(url, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getVendorCapabilityAircraftManafacturerListEndpoint(vendorId));
+			});
+	}
+
+	getVendorCapabilityAircraftManafacturerModelListEndpoint<T>(vendorId: any): Observable<T> {
+		let url = `${this.vendorManufacturerModelurl}/${vendorId}`;
+		return this.http.get<T>(url, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getVendorCapabilityAircraftManafacturerModelListEndpoint(vendorId));
+			});
+	}
+
+
+	//for updating stockline
+	getupdateVendorCapabilityEndpoint<T>(roleObject: any, vendorCapabilityId: number): Observable<T> {
+		let endpointUrl = `${this._vendorCapabilityUpdate}/${roleObject.vendorCapabilityId}`;
+
+		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getupdateVendorCapabilityEndpoint(roleObject, vendorCapabilityId));
+			});
+	}
+
+
+	getDeletevendorCapabilityTypeEndpoint<T>(capabilityid: any): Observable<T> {
+		let endpointUrl = `${this._deleteVendorCapabilityTypeUrl}/${capabilityid}`;
+		return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getDeletevendorCapabilityTypeEndpoint(capabilityid));
+			});
+	}
+	getDeletevendorCapabilityAircraftManafacturerEndpoint<T>(capabilityid: any): Observable<T> {
+		let endpointUrl = `${this._deleteVendorCapabilityAircraftManufacturer}/${capabilityid}`;
+		return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getDeletevendorCapabilityAircraftManafacturerEndpoint(capabilityid));
+			});
+	}
+	getDeletevendorCapabilityAircraftModelEndpoint<T>(capabilityid: any): Observable<T> {
+		let endpointUrl = `${this._deleteVendorCapabilityAircraftModel}/${capabilityid}`;
+		return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getDeletevendorCapabilityAircraftModelEndpoint(capabilityid));
+			});
+	}
+
+	deleteVendorCapabilityEndpoint<T>(capabilityid: any): Observable<T> {
+		let endpointUrl = `${this._deleteVendorCapability}/${capabilityid}`;
+		return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.deletePOPart(capabilityid));
+			});
+	}
+	getVendorContactEndpoint<T>(vendorId: any, isDContact: any): Observable<T> {
+		let url = `${this._getVendorContactByID}/${vendorId}/${isDContact}`;
+		return this.http.get<T>(url, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getVendorContactEndpoint(vendorId, isDContact));
+			});
+	}
+
+	getVendorContactsByIDEndpoint<T>(vendorId: any): Observable<T> {
+		let url = `${this._vendorContactsGetByID}?vendorId=${vendorId}`;
+		return this.http.get<T>(url, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getVendorContactsByIDEndpoint(vendorId));
+			});
+	}	
+
+    getVendorsForDropdownEndPoint<T>(): Observable<T> {
+        return this.http.get<T>(this.vendorsForDropDownURL, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.newVendorCapabilityEndPoint(userObject));
-            });
-    }
-
-    newVendorCapabilityTypeListEndPoint<T>(userObject: any): Observable<T> {
-
-        return this.http.post<T>(this._vendorCapabilityType, JSON.stringify(userObject), this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.newVendorCapabilityTypeListEndPoint(userObject));
-            });
-    }
-
-    newVendorCapabilityAircraftTypeEndPoint<T>(userObject: any): Observable<T> {
-
-        return this.http.post<T>(this._vendorCapabilityAircraftType, JSON.stringify(userObject), this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.newVendorCapabilityAircraftTypeEndPoint(userObject));
-            });
-    }
-
-    newVendorCapabiltiyAircraftModelEndPoint<T>(userObject: any): Observable<T> {
-
-        return this.http.post<T>(this._vendorCapabilityAircraftModel, JSON.stringify(userObject), this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.newVendorCapabiltiyAircraftModelEndPoint(userObject));
-            });
-    }
-
-    getVendorCapabilityListEndpoint<T>(vendorId: any): Observable<T>
-    {
-        let url = `${this.vendorCapabilityurl}/${vendorId}`;
-        return this.http.get<T>(url, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getVendorCapabilityListEndpoint(vendorId));
-            });
-    }
-
-    getVendorCapabilityAircraftManafacturerListEndpoint<T>(vendorId: any): Observable<T> {
-        let url = `${this.vendorManufacturerurl}/${vendorId}`;
-        return this.http.get<T>(url, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getVendorCapabilityAircraftManafacturerListEndpoint(vendorId));
-            });
-    }
-
-    getVendorCapabilityAircraftManafacturerModelListEndpoint<T>(vendorId: any): Observable<T> {
-        let url = `${this.vendorManufacturerModelurl}/${vendorId}`;
-        return this.http.get<T>(url, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getVendorCapabilityAircraftManafacturerModelListEndpoint(vendorId));
-            });
-    }
-
-    
-    //for updating stockline
-    getupdateVendorCapabilityEndpoint<T>(roleObject: any, vendorCapabilityId: number): Observable<T> {
-        let endpointUrl = `${this._vendorCapabilityUpdate}/${roleObject.vendorCapabilityId}`;
-
-        return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getupdateVendorCapabilityEndpoint(roleObject, vendorCapabilityId));
-            });
-    }
-
-
-    getDeletevendorCapabilityTypeEndpoint<T>(capabilityid: any): Observable<T>
-    {
-        let endpointUrl = `${this._deleteVendorCapabilityTypeUrl}/${capabilityid}`;
-        return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getDeletevendorCapabilityTypeEndpoint(capabilityid));
-            });
-    }
-    getDeletevendorCapabilityAircraftManafacturerEndpoint<T>(capabilityid: any): Observable<T> {
-        let endpointUrl = `${this._deleteVendorCapabilityAircraftManufacturer}/${capabilityid}`;
-        return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getDeletevendorCapabilityAircraftManafacturerEndpoint(capabilityid));
-            });
-    }
-    getDeletevendorCapabilityAircraftModelEndpoint<T>(capabilityid: any): Observable<T> {
-        let endpointUrl = `${this._deleteVendorCapabilityAircraftModel}/${capabilityid}`;
-        return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getDeletevendorCapabilityAircraftModelEndpoint(capabilityid));
-            });
-    }
-
-    deleteVendorCapabilityEndpoint<T>(capabilityid: any): Observable<T> {
-        let endpointUrl = `${this._deleteVendorCapability}/${capabilityid}`;
-        return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.deletePOPart(capabilityid));
-            });
-    }
-    getVendorContactEndpoint<T>(vendorId: any, isDContact: any): Observable<T> {
-        let url = `${this._getVendorContactByID}/${vendorId}/${isDContact}`;
-        return this.http.get<T>(url, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getVendorContactEndpoint(vendorId, isDContact));
+                return this.handleError(error, () => this.getVendorsForDropdownEndPoint());
             });
 	}
 	
-	getVendorContactsByIDEndpoint<T>(vendorId: any): Observable<T> {
-        let url = `${this._vendorContactsGetByID}?vendorId=${vendorId}`;
-        return this.http.get<T>(url, this.getRequestHeaders())
+	getVendorbillingsitenames(vendorId){
+		return this.http.get(`${this.configurations.baseUrl}/api/Vendor/vendorbillingsitenames?vendorId=${vendorId}`)
+	}
+
+	getVendorAddressById(vendorId){
+		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/vendorbillingaddressbyid?billingAddressId=${vendorId}`)
+	
+	}
+
+	saveRepairorderdetails<T>(param: any): Observable<any> {
+		let body = JSON.stringify(param);
+		let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+		return this.http.post(this._saveVendorRepairOrder, body, this.getRequestHeaders())
+			.map((response: Response) => {
+				return <any>response;
+
+			}).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+	}
+
+	saveRepairorderdetailspart<T>(param: any): Observable<any> {
+		let body = JSON.stringify(param);
+		let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+		return this.http.post(this._saveVendorRepairOrderPart, body, this.getRequestHeaders())
+			.map((response: Response) => {
+				return <any>response;
+			}).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+	}
+
+	getROStatus(repairOrderId, isActive, updatedBy) {
+		return this.http.put(`${this.configurations.baseUrl}/api/Vendor/roStatus?repairOrderId=${repairOrderId}&isActive=${isActive}&updatedBy=${updatedBy}`, {} , this.getRequestHeaders())
+  }
+
+  deleteRO(repairOrderId, updatedBy) {
+	return this.http.delete<any>(`${this.configurations.baseUrl}/api/Vendor/deleteRo?repairOrderId=${repairOrderId}&updatedBy=${updatedBy}`)
+  }
+
+  getROHistory(repairOrderId) {
+	return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/roHistory?repairOrderId=${repairOrderId}`)
+}
+
+getVendorROById<T>(Id: number): Observable<T> {
+	let endPointUrl = `${this._roByIdUrl}?repairOrderId=${Id}`;
+
+	return this.http.get<T>(endPointUrl, this.getRequestHeaders())
+		.catch(error => {
+			return this.handleError(error, () => this.getVendorROById(Id));
+		});
+}
+
+getRepairOrderPartsById<T>(Id: number): Observable<T> {
+	let endPointUrl = `${this._roPartByIdUrl}?repairOrderId=${Id}`;
+
+	return this.http.get<T>(endPointUrl, this.getRequestHeaders())
+		.catch(error => {
+			return this.handleError(error, () => this.getRepairOrderPartsById(Id));
+		});
+}
+
+    getPurchaseOrderByItemId<T>(Id: number): Observable<T> {
+        let endPointUrl = `${this._poPartByItemIdUrl}?itemMasterId=${Id}`;
+
+        return this.http.get<T>(endPointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getVendorContactsByIDEndpoint(vendorId));
+                return this.handleError(error, () => this.getPurchaseOrderByItemId(Id));
             });
     }
+
+    getRepiarOrderByItemId<T>(Id: number): Observable<T> {
+        let endPointUrl = `${this._roPartByItemIdUrl}?itemMasterId=${Id}`;
+
+        return this.http.get<T>(endPointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getRepiarOrderByItemId(Id));
+            });
+    }
+
+getROViewById(repairOrderId) {
+    return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/roViewById?repairOrderId=${repairOrderId}`)
+  }
+
+  getROPartsViewById(repairOrderId) {
+    return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/roPartsViewById?repairOrderId=${repairOrderId}`)
+  }
+
+  getROList(data) {
+	return this.http.post(this.roListWithFiltersUrl, JSON.stringify(data), this.getRequestHeaders())
+		.catch(error => {
+			return this.handleError(error, () => this.getROList(data));
+		});
+  }
+
+  saveCreateROApproval<T>(param: any): Observable<any> {
+	let body = JSON.stringify(param);
+	let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+	return this.http.post(this._saveCreateROApproval, body, this.getRequestHeaders())
+		.map((response: Response) => {
+			return <any>response;
+		}).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+}
+
+updateROApproval<T>(param: any): Observable<any> {
+	let body = JSON.stringify(param);
+	let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+	return this.http.put(this._updateROApproval, body, this.getRequestHeaders())
+		.map((response: Response) => {
+			return <any>response;
+
+		}).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+}
+
+getROApproverList(repairOrderId) {
+	return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/roApproversList?repairOrderId=${repairOrderId}`)
+}
 }

@@ -6,7 +6,7 @@ import { AuthService } from '../../../services/auth.service';
 import { AlertService, MessageSeverity } from '../../../services/alert.service';
 import { CustomerShippingModel } from '../../../models/customer-shipping.model';
 import { CustomerInternationalShippingModel, CustomerInternationalShipVia } from '../../../models/customer-internationalshipping.model';
-import { getValueFromObjectByKey, getObjectById } from '../../../generic/autocomplete';
+import { getValueFromObjectByKey, getObjectById, editValueAssignByCondition } from '../../../generic/autocomplete';
 @Component({
     selector: 'app-customer-shipping-information',
     templateUrl: './customer-shipping-information.component.html',
@@ -89,6 +89,7 @@ export class CustomerShippingInformationComponent implements OnInit {
 
     ngOnInit() {
         if (this.editMode) {
+           
             this.id = this.editGeneralInformationData.customerId;
             this.customerCode = this.editGeneralInformationData.customerCode;
             this.customerName = this.editGeneralInformationData.name;
@@ -99,6 +100,9 @@ export class CustomerShippingInformationComponent implements OnInit {
             this.id = this.savedGeneralInformationData.customerId;
             this.customerCode = this.savedGeneralInformationData.customerCode;
             this.customerName = this.savedGeneralInformationData.name;
+            //Added By Vijay For Customer Create time IsShippingAddess is selected checkbox Then list page we are displaying list
+            this.getDomesticShippingByCustomerId();
+            this.getInternationalShippingByCustomerId();
         }
         // this.getInternationalShippingByCustomerId();
         // this.id = this.savedGeneralInformationData.customerId
@@ -124,13 +128,16 @@ export class CustomerShippingInformationComponent implements OnInit {
             ...this.domesticShippingInfo,
             createdBy: this.userName,
             updatedBy: this.userName,
+            country: getValueFromObjectByKey('countries_id', this.domesticShippingInfo.country),
             masterCompanyId: 1,
+            isPrimary: false,
             isActive: true,
             customerId: this.id
         }
         // create shipping 
         if (!this.isEditDomestic) {
             this.customerService.newShippingAdd(data).subscribe(() => {
+                this.shipViaDomestic = new CustomerInternationalShipVia();
                 this.alertService.showMessage(
                     'Success',
                     `Saved  Shipping Information Sucessfully `,
@@ -141,6 +148,7 @@ export class CustomerShippingInformationComponent implements OnInit {
         } else {
             // update shipping 
             this.customerService.updateshippinginfo(data).subscribe(() => {
+                this.shipViaDomestic = new CustomerInternationalShipVia();
                 this.alertService.showMessage(
                     'Success',
                     `Updated  Shipping Information Sucessfully `,
@@ -212,6 +220,7 @@ export class CustomerShippingInformationComponent implements OnInit {
         if (!this.isEditInternational) {
             // save International SDhipping 
             this.customerService.postInternationalShippingPost(data).subscribe((res) => {
+                this.shipViaInternational = new CustomerInternationalShipVia();
                 this.getInternationalShippingByCustomerId()
                 this.alertService.showMessage(
                     'Success',
@@ -222,6 +231,7 @@ export class CustomerShippingInformationComponent implements OnInit {
         } else {
             // update international 
             this.customerService.updateInternationalShipping(data).subscribe(res => {
+                this.shipViaInternational = new CustomerInternationalShipVia();
                 this.getInternationalShippingByCustomerId()
                 this.alertService.showMessage(
                     'Success',
@@ -349,15 +359,23 @@ export class CustomerShippingInformationComponent implements OnInit {
             updatedBy: this.userName,
         }
 
+        this.shipViaDomestic = new CustomerInternationalShipVia()
         this.customerService.newShippingViaAdd(data).subscribe(res => {
 
+            this.getShipViaByDomesticShippingId(this.selectedShipViaDomestic.customerShippingAddressId)
 
-            this.shipViaDomestic = new CustomerInternationalShipVia()
             this.alertService.showMessage(
                 'Success',
                 `Sucessfully Updated Ship Via `,
                 MessageSeverity.success
             );
+        })
+    }
+
+    getShipViaByDomesticShippingId(customerShippingAddressId){
+        this.customerService.getShipViaByDomesticShippingId(customerShippingAddressId).subscribe(res => {
+            
+            
         })
     }
 

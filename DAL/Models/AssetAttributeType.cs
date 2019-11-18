@@ -1,15 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+using DAL.Core;
 
 namespace DAL.Models
 {
- public  class AssetAttributeType:PasBase
+    public class AssetAttributeType : PasBase
     {
         [Key]
         public long? AssetAttributeTypeId { get; set; }
+
+        [ForeignKey("AssetTypeId")]
+        public long? AssetTypeId { get; set; }
 
         public string AssetAttributeTypeName { get; set; }
 
@@ -49,11 +51,8 @@ namespace DAL.Models
         public bool? IsActive { get; set; }
 
         public bool? IsDelete { get; set; }
-        
-        [ForeignKey("AssetTypeId")]
-        public long? AssetTypeId { get; set; }
 
-        public virtual AssetType AssetType { get; set; }
-
+        [NotMapped]
+        public UploadTag UploadTag { get; set; }
     }
 }

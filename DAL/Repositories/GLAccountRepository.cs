@@ -1,4 +1,5 @@
-﻿using DAL.Repositories.Interfaces;
+﻿using DAL.Models;
+using DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,11 @@ namespace DAL.Repositories
 
             
             //return null;
+        }
+
+        public IEnumerable<GLAccount> GetGLAccountsLite()
+        {
+            return _appContext.GLAccount.Where(x => x.IsDelete != true && x.IsActive == true).Select(c => new GLAccount { GLAccountId = c.GLAccountId, AccountName = c.AccountName }).OrderByDescending(x => x.AccountName).ToList();
         }
 
 

@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using DAL;
 using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -32,14 +33,48 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getAll")]
         public IActionResult getAll()
         {
-            var disposalTypes = unitOfWork.Repository<AssetDisposalType>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AssetDisposalTypeId);
-            return Ok(disposalTypes);
+            List<ColumHeader> columHeaders = new List<ColumHeader>();
+            PropertyInfo[] propertyInfos = typeof(AssetDisposalTypeColModel).GetProperties();
+            ColumHeader columnHeader;
+            DynamicGridData<dynamic> dynamicGridData = new DynamicGridData<dynamic>();
+            foreach (PropertyInfo property in propertyInfos)
+            {
+                columnHeader = new ColumHeader();
+                columnHeader.field = char.ToLower(property.Name[0]) + property.Name.Substring(1);//FirstCharToUpper(property.Name);
+                // columnHeader.field = property.Name;
+                columnHeader.header = property.Name;
+                columHeaders.Add(columnHeader);
+            }
+            dynamicGridData.columHeaders = columHeaders;
+            List<AssetDisposalTypeSPModel> assetDisposalMethods = new List<AssetDisposalTypeSPModel>();
+            AssetDisposalTypeSPModel assetDisposalType = null;
+            var gLAccounts = unitOfWork.Repository<AssetDisposalType>().GetAll().Where(x => x.IsDeleted != true).OrderByDescending(x => x.AssetDisposalTypeId);
+            foreach (var item in gLAccounts)
+            {
+                assetDisposalType = new AssetDisposalTypeSPModel();
+
+                assetDisposalType.Code = item.AssetDisposalCode;
+                assetDisposalType.Name = item.AssetDisposalName;
+                assetDisposalType.Memo = item.AssetDisposalMemo;
+                assetDisposalType.AssetDisposalTypeId = item.AssetDisposalTypeId;
+                assetDisposalType.CreatedDate = item.CreatedDate;
+                assetDisposalType.CreatedBy = item.CreatedBy;
+                assetDisposalType.UpdatedDate = item.UpdatedDate;
+                assetDisposalType.UpdatedBy = item.UpdatedBy;
+                assetDisposalType.IsActive = item.IsActive;
+                assetDisposalMethods.Add(assetDisposalType);
+            }
+            dynamicGridData.ColumnData = assetDisposalMethods;
+            return Ok(dynamicGridData);
+
+            //var disposalTypes = unitOfWork.Repository<AssetDisposalType>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AssetDisposalTypeId);
+            //return Ok(disposalTypes);
         }
 
         [HttpGet("getById/{id}")]
         public IActionResult getdisposalTypeById(long id)
         {
-            var disposalType = unitOfWork.Repository<AssetDisposalType>().Find(x => x.AssetDisposalTypeId == id && x.IsDelete != true);
+            var disposalType = unitOfWork.Repository<AssetDisposalType>().Find(x => x.AssetDisposalTypeId == id && x.IsDeleted != true);
             return Ok(disposalType);
         }
 
@@ -52,7 +87,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     disposalType.CreatedDate = DateTime.Now;
                     disposalType.UpdatedDate = DateTime.Now;
-                    disposalType.IsActive = true;
+                    disposalType.IsActive = disposalType.IsActive;
                     disposalType.MasterCompanyId = 1;
                     unitOfWork.Repository<AssetDisposalType>().Add(disposalType);
                     unitOfWork.SaveChanges();
@@ -102,7 +137,7 @@ namespace QuickApp.Pro.Controllers
             var disposalType = unitOfWork.Repository<AssetDisposalType>().Find(x => x.AssetDisposalTypeId == id).FirstOrDefault();
             if (disposalType != null)
             {
-                disposalType.IsDelete = true;
+                disposalType.IsDeleted = true;
                 unitOfWork.Repository<AssetDisposalType>().Update(disposalType);
                 unitOfWork.SaveChanges();
                 return Ok();
@@ -119,7 +154,7 @@ namespace QuickApp.Pro.Controllers
 
         #endregion Private Methods
 
-        [HttpGet("audits/{id}")]
+        [HttpGet("audits/{id}")]        
         public IActionResult AuditDetails(long id)
         {
             var audits = unitOfWork.Repository<AssetDisposalTypeAudit>()
@@ -132,5 +167,29 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(auditResult);
         }
+
+        [HttpGet("disposaltypeauditdetails/{assetDisposalTypeId}")]
+        [Produces(typeof(List<AssetDisposalTypeAudit>))]
+        public IActionResult GetAuditHostoryById(long assetDisposalTypeId)
+        {
+            try
+            {
+                var result = unitOfWork.AssetDisposalType.GetDisposalTypeAuditDetails(assetDisposalTypeId);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpPost("UploadDispTypeCustomData")]
+        public IActionResult UploadDispTypeCustomData()
+        {
+
+            unitOfWork.FileUploadRepository.UploadCustomFile(Convert.ToString("DisposalType"), Request.Form.Files[0]);
+            return Ok();
+        }
+
     }
 }

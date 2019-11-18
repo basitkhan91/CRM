@@ -14,8 +14,11 @@ export class ReasonEndpoint extends EndpointFactory {
     private readonly _actionsUrl: string = "/api/Reason/Get";
     private readonly _actionsUrlNew: string = "/api/Reason/reason";
     private readonly _actionsUrlAuditHistory: string = "/api/Reason/auditHistoryById";
+    private readonly _actionUrlAll: string = "/api/Reason/getAll"
     private readonly getReasonAuditDataById: string = "/api/Reason/audits";
     private readonly getReason: string = "/api/Reason/pagination";
+    private readonly excelUpload: string = "/api/Reason/uploadReasonCustomdata";
+
     // private readonly _workflowActionsNewUrl: string = "/api/WorkflowAction/Get";
     // private readonly _actionsUrlNew: string = "/api/Action/actions";
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
@@ -94,7 +97,17 @@ export class ReasonEndpoint extends EndpointFactory {
             });
     }
 
+    getAllReasonsEndpoint<T>(): Observable<T> {
+        return this.http.get<T>(this._actionUrlAll, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAllReasonsEndpoint());
+            });
+    }
+    reasonCustomUpload(file) {
+        return this.http.post(`${this.configurations.baseUrl}${this.excelUpload}`, file)
 
+
+    }
 
 }
 

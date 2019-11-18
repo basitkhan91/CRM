@@ -162,6 +162,20 @@ namespace QuickApp.Pro.Controllers
             
         }
 
+        [HttpGet("provisionhistory")]
+        public IActionResult GetProvisionHistory(long provisionId)
+        {
+            var reult = _unitOfWork.Provisions.GetProvisionHistory(provisionId);
+            return Ok(reult);
+        }
+
+        [HttpPost("uploadProvisionCustomdata")]
+        public IActionResult uploadProvisionCustomdata()
+        {
+            _unitOfWork.FileUploadRepository.UploadCustomFile(Convert.ToString("DepreciationConvention"), Request.Form.Files[0]);
+            return Ok();
+        }
+
     }
 
 

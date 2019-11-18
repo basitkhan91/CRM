@@ -130,9 +130,26 @@ export class CustomerService {
     getMappedAirCraftDetails(customerId: number) {
         return this.customerEndpoint.getAircraftMappingEndpoint<any>(customerId);
     }
-    getMappedATADetails(customerId: number) {
-        return this.customerEndpoint.getATAMappingEndpoint<any>(customerId);
+
+    getATAMappedByCustomerId(customerId: number) {
+        return this.customerEndpoint.getATAMappingByCustomerId<any>(customerId)
     }
+
+
+    getATAMappedByContactId(contactId: number) {
+        return this.customerEndpoint.getATAMappingByContactId<any>(contactId);
+    }
+
+
+    getMappedTaxTypeRateDetails(customerId: number) {
+        return this.customerEndpoint.getTaxTypeRateMappingEndpoint<any>(customerId);
+    }
+
+    deleteATAMappedByContactId(contactId) {
+        return this.customerEndpoint.deleteATAMappedByContactId(contactId);
+    }
+
+
     getFinalObj() {
         return Observable.forkJoin(
             this.customerEndpoint.getFinalrobj<any>());
@@ -158,8 +175,8 @@ export class CustomerService {
     }
 
     getCustomerdataById(customerId: any) {
-        return Observable.forkJoin(
-            this.customerEndpoint.getCustomerListByid<any>(customerId));
+
+        return this.customerEndpoint.getCustomerListByid<any>(customerId);
     }
 
     getSalespersondata(customerId: any) {
@@ -218,8 +235,12 @@ export class CustomerService {
         return this.customerEndpoint.getUpdatecustomerEndpoint<any>(action, action.customerId);
     }
 
-    updateActionforActive(action: any) {
-        return this.customerEndpoint.getUpdatecustomerEndpointforActive(action, action.customerId);
+    getCustomerAll(data) {
+        return this.customerEndpoint.getCustomerAll(data);
+    }
+
+    updateActionforActive(action, login) {
+        return this.customerEndpoint.getUpdatecustomerEndpointforActive(action, login);
     }
 
     updTeAuditAddress(action: any) {
@@ -282,7 +303,6 @@ export class CustomerService {
         return this.customerEndpoint.AddCustomerContactDetails<any>(Customer);
     }
     newBillingAdd(action: any) {
-
         return this.customerEndpoint.getNewBillinginfo<any>(action);
     }
 
@@ -315,6 +335,11 @@ export class CustomerService {
     getContacts(CustomerId: any) {
         return Observable.forkJoin(
             this.customerEndpoint.getContcatDetails<any>(CustomerId));
+    }
+
+    getGlobalSearch(value, pageIndex, pageSize) {
+
+        return this.customerEndpoint.getGlobalCustomerRecords<any>(value, pageIndex, pageSize);
     }
 
     updateCustomerBillingAddressDetails(customercntct: any, customerId: any) {
@@ -432,17 +457,16 @@ export class CustomerService {
             this.customerEndpoint.getCustomerRecords<Customer[]>(serverSidePagesData));
     }
 
-    getGlobalSearch(pageData: any) {
-        return Observable.forkJoin(
-            this.customerEndpoint.getGlobalCustomerRecords<Customer[]>(pageData));
-    }
+
     postCustomerAircrafts(data) {
         return Observable.forkJoin(this.customerEndpoint.postCustomerAircraft<any>(data));
     }
     postCustomerATAs(data) {
-        return Observable.forkJoin(this.customerEndpoint.postCustomerATA<any>(data));
+        return this.customerEndpoint.postCustomerATA(data);
     }
-
+    postCustomerTaxTypeRate(data) {
+        return Observable.forkJoin(this.customerEndpoint.postCustomerTaxTypeRate<any>(data));
+    }
     newItemMasterAircarftClass(action: any) {
         return this.customerEndpoint.getNewitemAircraftEndpoint<any>(action);
     }
@@ -487,11 +511,43 @@ export class CustomerService {
         return this.customerEndpoint.searchATAMappedByMultiATAIDATASUBIDByCustomerId<any>(customerId, searchUrl);
     }
 
-    deleteATAMappings(id) {
-        return this.customerEndpoint.deleteATAMappedDataById(id);
-    }
+    // deleteATAMappings(id) {
+    //     return this.customerEndpoint.deleteATAMappedDataById(id);
+    // }
     deleteAircraftInvetoryById(id) {
         return this.customerEndpoint.deleteAircraftInvetoryById(id);
     }
+    deleteCustomerTaxTypeRateById(id) {
+        return this.customerEndpoint.deleteTaxTypeRateMappedDataById(id);
+    }
+    documentUploadAction(action: any) {
+        return this.customerEndpoint.getDocumentUploadEndpoint<any>(action);
+    }
+
+    deleteDocumentAction(actionId: any) {
+        return this.customerEndpoint.getDeleteDocumentEndpoint(actionId);
+    }
+
+    getCustomerContactAuditDetails(customerContactId) {
+        return this.customerEndpoint.getCustomerContactAuditDetails<any>(customerContactId)
+    }
+    getDocumentList(customerId) {
+        return this.customerEndpoint.getDocumentList(customerId)
+    }
+
+    getCustomerWarningsById(customerId) {
+        return this.customerEndpoint.getCustomerWarningsById(customerId);
+    }
+    getShipViaByDomesticShippingId(customerShippingId) {
+        return this.customerEndpoint.getShipViaByDomesticShippingId(customerShippingId);
+    }
+    getCustomerBillingHistory(customerId, customerBillingAddressId) {
+        return this.customerEndpoint.getCustomerBillingHistory(customerId , customerBillingAddressId)
+    }
+
+    getCustomerClassificationMapping(customerId) {
+        return this.customerEndpoint.getCustomerClassificationMapping(customerId);
+    }
+
 
 }

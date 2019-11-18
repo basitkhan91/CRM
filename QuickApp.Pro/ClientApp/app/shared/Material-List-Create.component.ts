@@ -10,6 +10,7 @@ import { ConditionService } from "../services/condition.service";
 import { ItemClassificationService } from "../services/item-classfication.service";
 import { UnitOfMeasureService } from "../services/unitofmeasure.service";
 import { ItemMasterService } from "../services/itemMaster.service";
+import { AlertService, MessageSeverity } from "../services/alert.service";
 
 @Component({
     selector: 'grd-material',
@@ -44,27 +45,18 @@ export class MaterialListCreateComponent implements OnInit {
     variableIdOfNew: any[];
     defaultUOMId: number;
     defaultConditionId: number;
-    constructor(private actionService: ActionService, private itemser: ItemMasterService, private vendorService: VendorService, private conditionService: ConditionService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService) {
+    constructor(private actionService: ActionService, private itemser: ItemMasterService, private vendorService: VendorService, private conditionService: ConditionService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService, private alertService: AlertService) {
 
     }
 
-    // private calculateCost() {
-    //     this.totalCost = 0;
-    //     if (this.workFlow.materialList.length > 0) {
-    //         for (let material of this.workFlow.materialList) {
-    //             this.totalCost += (material.quantity * material.unitCost);
-    //         }
-    //     }
-    //     else {
-    //         this.totalCost = Number.parseFloat(this.totalCost.toFixed(2));
-    //     }
-
-    // }
     defaultMaterialMandatory: string;
+
     ngOnInit(): void {
-
         this.row = this.workFlow.materialList[0];
-
+        if (this.row == undefined) {
+            this.row = {};
+        }
+        this.row.taskId = this.workFlow.taskId;
         this.actionService.GetMaterialMandatory().subscribe(
             mandatory => {
                 this.materialMandatory = mandatory;
@@ -81,17 +73,18 @@ export class MaterialListCreateComponent implements OnInit {
         this.loadPartData();
         this.loadUOMData();
         this.ptnumberlistdata();
-        // this.calculateCost();
 
         if (this.UpdateMode) {
             this.reCalculate();
 
         }
     }
+
     reCalculate() {
         this.calculateExtendedCostSummation();
         this.calculateQtySummation();
         this.calculatePriceSummation();
+        this.calculateExtendedPriceSummation();
     }
 
     filterpartItems(event) {
@@ -100,19 +93,23 @@ export class MaterialListCreateComponent implements OnInit {
         this.itemclaColl = [];
         if (this.allPartnumbersInfo) {
             if (this.allPartnumbersInfo.length > 0) {
-
+                //this.partCollection.push(" ");
                 for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
                     let partName = this.allPartnumbersInfo[i].partNumber;
                     if (partName) {
                         if (partName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                            this.itemclaColl.push([{
-                                "partId": this.allPartnumbersInfo[i].itemMasterId,
-                                "partName": partName,
-                                "description": this.allPartnumbersInfo[i].partDescription,
-                                "itemClassificationId": this.allPartnumbersInfo[i].itemClassificationId,
-                            }]);
+                            if (this.workFlow.partNumber != this.allPartnumbersInfo[i].itemMasterId) {
+                                this.itemclaColl.push([{
+                                    "partId": this.allPartnumbersInfo[i].itemMasterId,
+                                    "partName": partName,
+                                    "description": this.allPartnumbersInfo[i].partDescription,
+                                    "itemClassificationId": this.allPartnumbersInfo[i].itemClassificationId,
+                                }]);
 
-                            this.partCollection.push(partName);
+
+                                this.partCollection.push(partName);
+                            }
+
                         }
                     }
                 }
@@ -122,6 +119,18 @@ export class MaterialListCreateComponent implements OnInit {
 
     onPartSelect(event, material) {
         if (this.itemclaColl) {
+            var duplicate = this.workFlow.materialList.filter(x => x.partNumber == event && x.taskId == this.workFlow.taskId);
+
+            if (duplicate.length > 1) {
+                material.itemMasterId = '';
+                material.partDescription = '';
+                material.partNumber = '';
+                material.itemClassificationId = '';
+                event = '';
+                this.alertService.showMessage("Workflow", "Part Number is already in use in Material List.", MessageSeverity.error);
+                return;
+            }
+
             for (let i = 0; i < this.itemclaColl.length; i++) {
                 if (event == this.itemclaColl[i][0].partName) {
                     material.itemMasterId = this.itemclaColl[i][0].partId;
@@ -130,8 +139,10 @@ export class MaterialListCreateComponent implements OnInit {
                     material.itemClassificationId = this.itemclaColl[i][0].itemClassificationId;
                 }
             };
+
         }
     }
+
     private ptnumberlistdata() {
         this.itemser.getPrtnumberslistList().subscribe(
             results => this.onptnmbersSuccessful(results[0]),
@@ -192,7 +203,7 @@ export class MaterialListCreateComponent implements OnInit {
         newRow.itemMasterId = "";
         newRow.mandatoryOrSupplemental = 'Mandatory';
         newRow.partDescription = "";
-        newRow.partNumber = "";
+        newRow.partNumber = " ";
         newRow.isDeferred = this.isDeferredBoolean;
         newRow.memo = "";
         newRow.price = "";
@@ -201,7 +212,7 @@ export class MaterialListCreateComponent implements OnInit {
         newRow.unitCost = "";
         newRow.unitOfMeasureId = this.defaultUOMId;
         newRow.isDelete = false;
-
+        newRow.extendedPrice = '';
         this.workFlow.materialList.push(newRow);
     }
 
@@ -215,21 +226,6 @@ export class MaterialListCreateComponent implements OnInit {
         this.reCalculate();
     }
 
-    // Unused Function in both ts and html
-    // calculateTotalCost(): void {
-    //     this.workFlow.totalMaterialCost = 0;
-    //     for (let material of this.workFlow.materialList) {
-    //         var value = material.extendedCost;
-    //         if (value > 0) {
-    //             this.workFlow.totalMaterialCost += value;
-    //         }
-    //         else {
-    //             this.workFlow.totalMaterialCost = 0;
-    //         }
-    //     }
-
-    // }
-
     calculateExtendedCost(material): void {
         if (material.quantity != "" && material.unitCost) {
             material.extendedCost = material.quantity * material.unitCost;
@@ -239,12 +235,32 @@ export class MaterialListCreateComponent implements OnInit {
         }
         this.calculateExtendedCostSummation();
     }
+
+
     // sum of extended cost
     calculateExtendedCostSummation() {
         this.workFlow.materialExtendedCostSummation = this.workFlow.materialList.reduce((acc, x) => {
             return acc + parseFloat(x.extendedCost == undefined || x.extendedCost === '' ? 0 : x.extendedCost)
         }, 0);
         this.workFlow.totalMaterialCostValue = this.workFlow.materialExtendedCostSummation;
+    }
+
+    calculateExtendedPrice(material): void {
+        if (material.quantity != "" && material.price != "") {
+            material.extendedPrice = material.quantity * material.price;
+        }
+        else {
+            material.extendedPrice = "";
+        }
+        this.calculateExtendedPriceSummation();
+    }
+
+
+    // sum of extended cost
+    calculateExtendedPriceSummation() {
+        this.workFlow.materialExtendedPriceSummation = this.workFlow.materialList.reduce((acc, x) => {
+            return acc + parseFloat(x.extendedPrice == undefined || x.extendedPrice === '' ? 0 : x.extendedPrice)
+        }, 0);
     }
 
     // sum of the qty

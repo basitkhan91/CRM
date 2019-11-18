@@ -16,6 +16,10 @@ import { MasterComapnyService } from '../../services/mastercompany.service';
 import { MenuItem, LazyLoadEvent } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
+import { validateRecordExistsOrNot, editValueAssignByCondition, getObjectById, selectedValueValidate, getObjectByValue } from '../../generic/autocomplete';
+import { ConfigurationService } from '../../services/configuration.service';
+
+
 
 @Component({
     selector: 'app-reason',
@@ -27,6 +31,7 @@ import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-scre
 export class ReasonComponent {
     reasonPaginationList: any[] = [];
     totelPages: number;
+    pageSize: number = 10;
     reason = [];
     updatedByInputFieldValue: any;
     createdByInputFieldValue: any;
@@ -51,12 +56,12 @@ export class ReasonComponent {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     Active: string = "Active";
-    displayedColumns = ['reasonId', 'reasonForRemoval', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
+    displayedColumns = ['reasonCode', 'reasonForRemoval', 'memo'];
     dataSource: MatTableDataSource<Reason>;
     allReasonsInfo: Reason[] = [];
     private isSaving: boolean;
 
-    public auditHisory: AuditHistory[] = [];
+    auditHistory: any[] = [];
     private bodyText: string;
     loadingIndicator: boolean;
     closeResult: string;
@@ -85,25 +90,48 @@ export class ReasonComponent {
     rows: number;
     paginatorState: any;
 
-    reasonPagination: Reason[];//added
+    newReason =
+        {
+            reasonCode: "",
+            reasonForRemoval: "",
+            memo: "",
+            masterCompanyId: 1,
+            isActive: true,
+            isDelete: false,
+            reasonName: ''
+        }
+    addNewReason = { ...this.newReason };
+    disableSaveForReason: boolean = false;
+    reasonList: any;
+    reasonForRemovalList: any;
+    isEdit: boolean = false;
+    selectedRecordForEdit: any;
+    disableSaveForReasonCode: boolean = false;
+    reasonCodeList: any;
+    formData = new FormData();
+    existingRecordsResponse: Object;
+
+
+    reasonPagination: any;//added
     totalRecords: number;
+    totalPages: number;
     loading: boolean;
     /** Actions ctor */
-	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal,   private masterComapnyService: MasterComapnyService,private _fb: FormBuilder, private alertService: AlertService, public reasonService: ReasonService, private dialog: MatDialog) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private configurations: ConfigurationService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal,   private masterComapnyService: MasterComapnyService,private _fb: FormBuilder, private alertService: AlertService, public reasonService: ReasonService, private dialog: MatDialog) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
 
     }
     
     ngOnInit(): void {
-        this.loadData();
+        this.getReasonList();
         this.cols = [
             //{ field: 'reasonId', header: 'Reason Id' },
             { field: 'reasonCode', header: 'Reason Code'},
             { field: 'reasonForRemoval', header: 'Reason For Removal' },
-            { field: 'memo', header: 'Memo' },
-            { field: 'createdBy', header: 'Created By' },
-            { field: 'updatedBy', header: 'Updated By' },
+            { field: 'memo', header: 'Memo' }
+            //{ field: 'createdBy', header: 'Created By' },
+            //{ field: 'updatedBy', header: 'Updated By' },
             //{ field: 'updatedDate', header: 'Updated Date' },
            // { field: 'createdDate', header: 'Created Date' }
 		];
@@ -113,6 +141,12 @@ export class ReasonComponent {
     }
 
 
+    changePage(event: { first: any; rows: number }) {
+        console.log(event);
+        const pageIndex = (event.first / event.rows);
+        this.pageSize = event.rows;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+    }
 
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
@@ -128,7 +162,6 @@ export class ReasonComponent {
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
-
     }
     private loadMasterCompanies() {
         this.alertService.startLoadingMessage();
@@ -275,6 +308,7 @@ export class ReasonComponent {
 
     filterReasons(event) {
 
+       
         this.localCollection = [];
         for (let i = 0; i < this.allReasonsInfo.length; i++) {
             let reasonName = this.allReasonsInfo[i].reasonCode;
@@ -287,40 +321,40 @@ export class ReasonComponent {
             }
         }
     }
-    openHist(content, row) {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
+    //openHist(content, row) {
+    //    this.alertService.startLoadingMessage();
+    //    this.loadingIndicator = true;
 
 
-        this.sourceAction = row;
+    //    this.sourceAction = row;
 
 
 
-        //this.isSaving = true;
-        // debugger;
-        this.reasonService.historyReason(this.sourceAction.reasonId).subscribe(
-            results => this.onHistoryLoadSuccessful(results[0], content),
-            error => this.saveFailedHelper(error));
+    //    //this.isSaving = true;
+    //    // debugger;
+    //    this.reasonService.historyReason(this.sourceAction.reasonId).subscribe(
+    //        results => this.onHistoryLoadSuccessful(results[0], content),
+    //        error => this.saveFailedHelper(error));
 
 
-    }
-    private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
+    //}
+    //private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
 
-        // debugger;
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
+    //    // debugger;
+    //    this.alertService.stopLoadingMessage();
+    //    this.loadingIndicator = false;
 
-        this.auditHisory = auditHistory;
-
-
-        this.modal = this.modalService.open(content, { size: 'lg' });
-
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+    //    this.auditHisory = auditHistory;
 
 
-    }
+    //    this.modal = this.modalService.open(content, { size: 'lg' });
+
+    //    this.modal.result.then(() => {
+    //        console.log('When user closes');
+    //    }, () => { console.log('Backdrop click') })
+
+
+    //}
     editItemAndCloseModel() {
 
         // debugger;
@@ -332,18 +366,29 @@ export class ReasonComponent {
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.reasonCode = this.reasonName;
             this.sourceAction.masterCompanyId = 1;
-            this.reasonService.newReason(this.sourceAction).subscribe(
-                role => this.saveSuccessHelper(role),
-                error => this.saveFailedHelper(error));
+            this.reasonService.newReason(this.sourceAction).subscribe(() => {
+                this.getReasonList();
+                this.alertService.showMessage(
+                    'Success',
+                    'Added  New Reason Successfully',
+                    MessageSeverity.success
+                );
+            });
         }
         else {
 
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.reasonCode = this.reasonName;
             this.sourceAction.masterCompanyId = 1;
-            this.reasonService.updateReason(this.sourceAction).subscribe(
-                response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));
+            this.reasonService.updateReason(this.sourceAction).subscribe(() => {
+                this.getReasonList();
+                this.alertService.showMessage(
+                    'Success',
+                    'Updated Reason Successfully',
+                    MessageSeverity.success
+                );
+
+            });
         }
 
         this.modal.close();
@@ -355,7 +400,10 @@ export class ReasonComponent {
             this.Active = "In Active";
             this.sourceAction.isActive == false;
             this.reasonService.updateReason(this.sourceAction).subscribe(
-                response => this.saveCompleted(this.sourceAction),
+                response => this.alertService.showMessage(
+                    'Success',
+                    `Updated Status Successfully  `,
+                    MessageSeverity.success),
                 error => this.saveFailedHelper(error));
             //alert(e);
         }
@@ -365,7 +413,11 @@ export class ReasonComponent {
             this.Active = "Active";
             this.sourceAction.isActive == true;
             this.reasonService.updateReason(this.sourceAction).subscribe(
-                response => this.saveCompleted(this.sourceAction),
+                //response => this.changeStatusCompleted(this.sourceAction),
+                response => this.alertService.showMessage(
+                    'Success',
+                    `Updated Status Successfully  `,
+                    MessageSeverity.success),
                 error => this.saveFailedHelper(error));
             //alert(e);
         }
@@ -377,9 +429,17 @@ export class ReasonComponent {
     deleteItemAndCloseModel() {
         this.isSaving = true;
         this.sourceAction.updatedBy = this.userName;
-        this.reasonService.deleteReason(this.sourceAction.reasonId).subscribe(
-            response => this.saveCompleted(this.sourceAction),
-            error => this.saveFailedHelper(error));
+        this.reasonService.deleteReason(this.sourceAction.reasonId).subscribe(() => {
+
+            this.getReasonList();
+            this.alertService.showMessage(
+                'Success',
+                'Deleted Reason Successfully',
+                MessageSeverity.success
+            );
+
+        });
+            
         this.modal.close();
     }
 
@@ -393,22 +453,21 @@ export class ReasonComponent {
         this.isSaving = false;
 
         if (this.isDeleteMode == true) {
-            this.alertService.showMessage("Success", `Reason was deleted successfully`, MessageSeverity.success);
+            this.alertService.showMessage("Success", "Reason was deleted successfully", MessageSeverity.success);
             this.isDeleteMode = false;
         }
         else {
-            this.alertService.showMessage("Success", `Reason was edited successfully`, MessageSeverity.success);
+            this.alertService.showMessage("Success", "Reason was edited successfully", MessageSeverity.success);
 
         }
-
-        this.updatePaginatorState();
     }
+
+
 
     private saveSuccessHelper(role?: Reason) {
         this.isSaving = false;
-        this.alertService.showMessage("Success", `Reason was created successfully`, MessageSeverity.success);
+        this.alertService.showMessage("Success", "Reason was created successfully", MessageSeverity.success);
 
-        this.updatePaginatorState();
 
     }
 
@@ -464,6 +523,9 @@ export class ReasonComponent {
         this.loading = true;
         this.rows = event.rows;
         this.first = event.first;
+        //alert(event.sortOrder);//yes
+        //alert(event.sortField);//yes
+        //event.sortFunction;//undefined
         if (this.field)
         {
             this.reason.push({
@@ -514,6 +576,7 @@ export class ReasonComponent {
         this.field = filed;
         this.matvhMode = matchMode;
 
+        //alert(filed);
         if (filed == 'reasonCode') {
             this.reasonCodeInputFieldValue = event;
         }
@@ -523,18 +586,18 @@ export class ReasonComponent {
         if (filed == 'memo') {
             this.memoInputFieldValue = event;
         }
-        if (filed == 'createdBy') {
-            this.createdByInputFieldValue = event;
-        }
-        if (filed == 'updatedBy') {
-            this.updatedByInputFieldValue = event;
-        }
+        //if (filed == 'createdBy') {
+        //    this.createdByInputFieldValue = event;
+        //}
+        //if (filed == 'updatedBy') {
+        //    this.updatedByInputFieldValue = event;
+        //}
         this.reason.push({
             ReasonCode: this.reasonCodeInputFieldValue,
             ReasonForRemoval: this.reasonForRemovalInputFieldValue,
             Memo: this.memoInputFieldValue,
-            CreatedBy: this.createdByInputFieldValue,
-            UpdatedBy: this.updatedByInputFieldValue,
+            //CreatedBy: this.createdByInputFieldValue,
+            //UpdatedBy: this.updatedByInputFieldValue,
             first: this.first,
             page: 10,
             pageCount: 10,
@@ -554,4 +617,142 @@ export class ReasonComponent {
         }
     }
 
+    getReasonList() {
+        this.reasonService.getAllReasonsList().subscribe(res => {
+            const responseData = res[0];
+            // this.uomHeaders = responseData.columHeaders;
+            // this.selectedColumns = responseData.columHeaders;
+            this.reasonPagination = responseData.columnData;
+            this.totalRecords = responseData.totalRecords;
+            this.totelPages = Math.ceil(this.totalRecords / this.pageSize);
+
+        })
+    }
+
+    getAuditHistoryById(rowData) {
+        this.reasonService.getReasonAudit(rowData.reasonId).subscribe(res => {
+
+            this.auditHistory = res[0].result;
+        })
+    }
+
+    resetReasonForm() {
+        this.isEdit = false;
+        this.disableSaveForReason = false;
+        this.disableSaveForReasonCode = false;
+        this.selectedRecordForEdit = undefined;
+        this.addNewReason = { ...this.newReason };
+    }
+    selectedRSN(object) {
+        const exists = selectedValueValidate('reasonCode', object, this.selectedRecordForEdit)
+
+        this.disableSaveForReason = !exists;
+    }
+    filterReasonCodes(event) {
+        this.reasonList = this.reasonPagination;
+
+        const ReasonCodeData = [...this.reasonPagination.filter(x => {
+            return x.reasonCode.toLowerCase().includes(event.query.toLowerCase())
+        })]
+        this.reasonList = ReasonCodeData;
+    }
+    filterReasonForRemoval(event) {
+
+        this.reasonForRemovalList = this.reasonPagination;
+
+        const ReasonForRemovalData = [...this.reasonPagination.filter(x => {
+            return x.reasonForRemoval.toLowerCase().includes(event.query.toLowerCase())
+        })]
+        this.reasonForRemovalList = ReasonForRemovalData;
+
+    }
+    checkReasonCodeExists(field, value) {
+        const exists = validateRecordExistsOrNot(field, value, this.reasonPagination, this.selectedRecordForEdit);
+        if (exists.length > 0) {
+            this.disableSaveForReason = true;
+        }
+        else {
+            this.disableSaveForReason = false;
+        }
+
+    }
+
+    saveReason() {
+        const data = {
+            ...this.addNewReason, createdBy: this.userName, updatedBy: this.userName,
+            reasonCode: editValueAssignByCondition('reasonCode', this.addNewReason.reasonCode),
+            reasonForRemoval: editValueAssignByCondition('reasonForRemoval', this.addNewReason.reasonForRemoval),
+            memo: editValueAssignByCondition('memo', this.addNewReason.memo)
+        };
+        if (!this.isEdit) {
+            this.reasonService.newReason(data).subscribe(() => {
+                this.resetReasonForm();
+                this.getReasonList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Added  New Reason Successfully`,
+                    MessageSeverity.success
+                );
+            })
+        } else {
+            this.reasonService.updateReason(data).subscribe(() => {
+                this.selectedRecordForEdit = undefined;
+                this.isEdit = false;
+                this.resetReasonForm();
+                this.getReasonList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Updated Reason Successfully`,
+                    MessageSeverity.success
+                );
+            })
+        }
+    }
+
+    editReason(rowData) {
+        console.log(rowData);
+        this.isEdit = true;
+        this.disableSaveForReason = false;
+        this.disableSaveForReasonCode = false;
+        // this.addNewUOM = rowData;
+
+        this.addNewReason = {
+            ...rowData, reasonName: getObjectById('reasonId', rowData.reasonId, this.reasonPagination),
+            reasonCode: getObjectById('reasonId', rowData.reasonId, this.reasonPagination)
+        };
+        this.selectedRecordForEdit = { ...this.addNewReason }
+
+    }
+    sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=Reason&fileName=reason.xlsx`;
+
+        window.location.assign(url);
+    }
+
+    customExcelUpload(event) {
+        const file = event.target.files;
+
+        console.log(file);
+        if (file.length > 0) {
+
+            this.formData.append('file', file[0])
+            this.reasonService.reasonFileUpload(this.formData).subscribe(res => {
+                event.target.value = '';
+
+                this.formData = new FormData();
+                this.existingRecordsResponse = res;
+                this.getReasonList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+
+                // $('#duplicateRecords').modal('show');
+                // document.getElementById('duplicateRecords').click();
+
+            })
+        }
+
+    }
 }

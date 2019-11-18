@@ -43,7 +43,34 @@ export class SingleComponent {
 	loadmethod(url) {
 
 		this.currentUrl = url;
-		if (this.currentUrl) {
+        if (this.currentUrl) {
+            let itemLabel = '';
+            switch (this.currentUrl) {
+                case '/singlepages/singlepages/app-asset-type':
+                    itemLabel = 'Asset Type';
+                    break;
+                case '/singlepages/singlepages/app-asset-intangible-type':
+                    itemLabel = 'Asset Intangible Type';
+                    break;
+                case '/singlepages/singlepages/app-stage-code':
+                    itemLabel = 'Stage Code';
+                    break;
+                case '/singlepages/singlepages/app-gl-account-category':
+                    itemLabel = 'GL Account Category';
+                    break;
+                case '/singlepages/singlepages/app-expenditure-category':
+                    itemLabel = 'Expenditure Category';
+                    break;
+                case '/singlepages/singlepages/app-asset-attribute-type':
+                    itemLabel = 'Asset Attribute Type';
+                    break;
+                default:
+            }
+            this.items = [
+                { label: 'Single Screens' },
+                { label: itemLabel }
+            ];
+
 			if (this.currentUrl == '/singlepages/singlepages/app-actions') {
 				this.items = [
 					{ label: 'Single Screens' },
@@ -62,15 +89,6 @@ export class SingleComponent {
 					{ label: 'Vendor Capabilities' }
 				];
             }
-
-
-            else if (this.currentUrl == '/singlepages/singlepages/app-asset-intangible-type-single-screen') {
-                this.items = [
-                    { label: 'Single Screens' },
-                    { label: 'Intangible Type' }
-                ];
-            }
-
 
             else if (this.currentUrl == '/singlepages/singlepages/app-disposal-type') {
                 this.items = [
@@ -93,6 +111,13 @@ export class SingleComponent {
                 ];
             }
 
+            else if (this.currentUrl == '/singlepages/singlepages/app-stockline-adjustment-reason') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Adjustment Reason' }
+                ];
+            }
+
             else if (this.currentUrl == '/singlepages/singlepages/app-asset-dep-convention-type') {
                 this.items = [
                     { label: 'Single Screens' },
@@ -107,24 +132,10 @@ export class SingleComponent {
                 ];
             }
 
-            else if (this.currentUrl == '/singlepages/singlepages/app-asset-type-single-screen') {
-                this.items = [
-                    { label: 'Single Screens' },
-                    { label: 'Asset Type ' }
-                ];
-            }
-
 			else if (this.currentUrl == '/singlepages/singlepages/app-labor-and-overhead-cost-setup') {
 				this.items = [
 					{ label: 'Single Screens' },
 					{ label: 'Labor And Overhead Cost Setup' }
-				];
-			}
-
-			else if (this.currentUrl == '/singlepages/singlepages/app-glaccount-category') {
-				this.items = [
-					{ label: 'Single Screens' },
-					{ label: 'Expenditure Type' }
 				];
 			}
 
@@ -205,27 +216,12 @@ export class SingleComponent {
 				];
 			}
 
-			else if (this.currentUrl == '/singlepages/singlepages/app-expenditure') {
-				this.items = [
-					{ label: 'Single Screens' },
-					{ label: 'Expenditure' }
-				];
-			}
-
 			else if (this.currentUrl == '/singlepages/singlepages/app-findings') {
 				this.items = [
 					{ label: 'Single Screens' },
 					{ label: 'Finding' }
 				];
 			}
-
-			else if (this.currentUrl == '/singlepages/singlepages/app-gate-code') {
-				this.items = [
-					{ label: 'Single Screens' },
-					{ label: 'Status Code' }
-				];
-			}
-
 			else if (this.currentUrl == '/singlepages/singlepages/app-integration') {
 				this.items = [
 					{ label: 'Single Screens' },
@@ -245,14 +241,23 @@ export class SingleComponent {
 					{ label: 'Single Screens' },
 					{ label: 'Item Group' }
 				];
-			}
+            }
+
+            else if (this.currentUrl == '/singlepages/singlepages/app-job-type') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Job Types' }
+                ];
+            }
 
 			else if (this.currentUrl == '/singlepages/singlepages/app-job-title') {
 				this.items = [
 					{ label: 'Single Screens' },
 					{ label: 'Job Titles' }
 				];
-			}
+            }
+
+           
 
 			else if (this.currentUrl == '/singlepages/singlepages/app-priority') {
 				this.items = [
@@ -291,14 +296,14 @@ export class SingleComponent {
 			else if (this.currentUrl == '/singlepages/singlepages/app-tax-type') {
 				this.items = [
 					{ label: 'Single Screens' },
-					{ label: 'TaxType' }
+					{ label: 'Tax Type' }
 				];
 			}
 
 			else if (this.currentUrl == '/singlepages/singlepages/app-tax-rate') {
 				this.items = [
 					{ label: 'Single Screens' },
-					{ label: 'TaxRate' }
+					{ label: 'Tax Rate' }
 				];
 			}
 
@@ -432,7 +437,35 @@ export class SingleComponent {
 		}
 
 		
-		if (this.otherurl) {
+        if (this.otherurl) {
+
+            let itemLabel = '';
+            switch (this.currentUrl) {
+                case '/singlepages/singlepages/app-asset-type':
+                    itemLabel = 'Asset Type';
+                    break;
+                case '/singlepages/singlepages/app-asset-intangible-type':
+                    itemLabel = 'Asset Intangible Type';
+                    break;
+                case '/singlepages/singlepages/app-stage-code':
+                    itemLabel = 'Stage Code';
+                    break;
+                case '/singlepages/singlepages/app-gl-account-category':
+                    itemLabel = 'GL Account Category';
+                    break;
+                case '/singlepages/singlepages/app-expenditure-category':
+                    itemLabel = 'Expenditure Category';
+                    break;
+                case '/singlepages/singlepages/app-asset-attribute-type':
+                    itemLabel = 'Asset Attribute Type';
+                    break;
+                default:
+            }
+            this.items = [
+                { label: 'Single Screens' },
+                { label: itemLabel }
+            ];
+
 			if (this.currentUrl == '/singlepages/singlepages/app-actions') {
 				this.items = [
 					{ label: 'Single Screens' },
@@ -510,13 +543,6 @@ export class SingleComponent {
 				];
 			}
 
-			else if (this.currentUrl == '/singlepages/singlepages/app-expenditure') {
-				this.items = [
-					{ label: 'Single Screens' },
-					{ label: 'Expenditure' }
-				];
-			}
-
 			else if (this.currentUrl == '/singlepages/singlepages/app-findings') {
 				this.items = [
 					{ label: 'Single Screens' },
@@ -543,7 +569,14 @@ export class SingleComponent {
 					{ label: 'Single Screens' },
 					{ label: 'Item Classification' }
 				];
-			}
+            }
+
+                  else if (this.currentUrl == '/singlepages/singlepages/app-job-type') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Job Types' }
+                ];
+            }
 
 			else if (this.currentUrl == '/singlepages/singlepages/app-item-group') {
 				this.items = [
@@ -557,7 +590,8 @@ export class SingleComponent {
 					{ label: 'Single Screens' },
 					{ label: 'Job Titles' }
 				];
-			}
+            }
+          
 
 			else if (this.currentUrl == '/singlepages/singlepages/app-priority') {
 				this.items = [
@@ -590,14 +624,14 @@ export class SingleComponent {
 			else if (this.currentUrl == '/singlepages/singlepages/app-tax-type') {
 				this.items = [
 					{ label: 'Single Screens' },
-					{ label: 'TaxType' }
+					{ label: 'Tax Type' }
 				];
 			}
 
 			else if (this.currentUrl == '/singlepages/singlepages/app-tax-rate') {
 				this.items = [
 					{ label: 'Single Screens' },
-					{ label: 'TaxRate' }
+					{ label: 'Tax Rate' }
 				];
 			}
 
@@ -670,13 +704,6 @@ export class SingleComponent {
 					{ label: 'GL Account Class' }
 				];
 			}
-			else if (this.currentUrl == '/singlepages/singlepages/app-glaccount-category') {
-				this.items = [
-					{ label: 'Single Screens' },
-					{ label: 'Expenditure Type' }
-				];
-			}
-
 			else if (this.currentUrl == '/singlepages/singlepages/app-app-certification-type') {
 				this.items = [
 					{ label: 'Single Screens' },
@@ -744,15 +771,6 @@ export class SingleComponent {
 				];
             }
 
-
-            else if (this.currentUrl == '/singlepages/singlepages/app-asset-intangible-type-single-screen') {
-                this.items = [
-                    { label: 'Single Screens' },
-                    { label: 'Intangible Type' }
-                ];
-            }
-
-
             else if (this.currentUrl == '/singlepages/singlepages/app-disposal-type') {
                 this.items = [
                     { label: 'Single Screens' },
@@ -774,6 +792,13 @@ export class SingleComponent {
                 ];
             }
 
+            else if (this.currentUrl == '/singlepages/singlepages/app-stockline-adjustment-reason') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Adjustment Reason' }
+                ];
+            }
+
             else if (this.currentUrl == '/singlepages/singlepages/app-asset-dep-convention-type') {
                 this.items = [
                     { label: 'Single Screens' },
@@ -786,13 +811,6 @@ export class SingleComponent {
                 this.items = [
                     { label: 'Single Screens' },
                     { label: 'Asset Status ' }
-                ];
-            }
-
-            else if (this.currentUrl == '/singlepages/singlepages/app-asset-type-single-screen') {
-                this.items = [
-                    { label: 'Single Screens' },
-                    { label: 'Asset Type ' }
                 ];
             }
 
@@ -824,6 +842,19 @@ export class SingleComponent {
                 this.items = [
                     { label: 'Single Screens' },
                     { label: 'Aircraft Manufacturer' }
+                ];
+			}
+			else if (this.currentUrl == '/singlepages/singlepages/app-dashNumber') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Dash Number' }
+                    
+                ];
+			}
+			else if (this.currentUrl == '/singlepages/singlepages/app-node-setup') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Nodes' }
                 ];
             }
 		}

@@ -25,6 +25,7 @@ export class CustomerSalesPersonComponent implements OnInit {
     id: number;
     customerName: any;
     customerCode: any;
+    numberValidate = "^\d+$";
 
 
     // activeIndex: number;
@@ -111,13 +112,15 @@ export class CustomerSalesPersonComponent implements OnInit {
 
         if (this.editMode) {
 
+            console.log(this.editGeneralInformationData);
+
             this.id = this.editGeneralInformationData.customerId
             this.salesInfo = {
                 ...this.editGeneralInformationData,
                 primarySalesPersonId: getObjectById('employeeId', this.editGeneralInformationData.primarySalesPersonId, this.employeeListOriginal),
                 secondarySalesPersonId: getObjectById('employeeId', this.editGeneralInformationData.secondarySalesPersonId, this.employeeListOriginal),
-                csrName: getObjectByValue('firstName', this.salesInfo.csrName, this.employeeListOriginal),
-                agentName: getObjectByValue('firstName', this.salesInfo.agentName, this.employeeListOriginal),
+                csrId: getObjectById('employeeId', this.editGeneralInformationData.csrId, this.employeeListOriginal),
+                saId: getObjectById('employeeId', this.editGeneralInformationData.saId, this.employeeListOriginal),
             };
             console.log(this.salesInfo)
 
@@ -152,8 +155,8 @@ export class CustomerSalesPersonComponent implements OnInit {
     salesInfo = {
         primarySalesPersonId: "",
         secondarySalesPersonId: "",
-        csrName: "",
-        agentName: "",
+        csrId: "",
+        saId: "",
         annualRevenuePotential: "",
         annualQuota: "",
     }
@@ -175,8 +178,8 @@ export class CustomerSalesPersonComponent implements OnInit {
             ...this.salesInfo,
             primarySalesPersonId: editValueAssignByCondition('employeeId', this.salesInfo.primarySalesPersonId),
             secondarySalesPersonId: editValueAssignByCondition('employeeId', this.salesInfo.secondarySalesPersonId),
-            csrName: editValueAssignByCondition('firstName', this.salesInfo.csrName),
-            agentName: editValueAssignByCondition('firstName', this.salesInfo.agentName),
+            csrId: editValueAssignByCondition('employeeId', this.salesInfo.csrId),
+            saId: editValueAssignByCondition('employeeId', this.salesInfo.saId),
             updatedBy: this.userName,
             masterCompanyId: 1
         }, this.id).subscribe(

@@ -1,10 +1,11 @@
 ﻿import { Component, OnInit } from '@angular/core';
-import { AlertService } from '../../../services/alert.service';
+//import { AlertService } from '../../../services/alert.service';
 import { AssetService } from '../../../services/asset/Assetservice';
 import { Router } from '@angular/router';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { fadeInOut } from '../../../services/animations';
 import { SingleScreenAuditDetails } from '../../../models/single-screen-audit-details.model';
+import { AlertService, DialogType, MessageSeverity } from '../../../services/alert.service';
 
 @Component({
     selector: 'app-asset-listing',
@@ -104,7 +105,8 @@ export class AssetListingComponent implements OnInit {
 
     removeAsset(): void {
         this.assetService.remove(this.assetService.listCollection.assetRecordId).subscribe(response => {
-            this.alertService.showMessage("Asset removed successfully.");
+            //this.alertService.showMessage("Asset removed successfully.");
+            this.alertService.showMessage("Success", `Asset removed successfully.`, MessageSeverity.success);
             this.assetService.getAssetList().subscribe(asset => {
                 this.allAssetInfo = asset[0];
                 this.modal.close();
@@ -119,7 +121,8 @@ export class AssetListingComponent implements OnInit {
             this.Active = "In Active";
             this.assetTypeToUpdate.isActive == false;
             this.assetService.updateAsset(this.assetTypeToUpdate).subscribe(asset => {
-                this.alertService.showMessage('Asset Type updated successfully.');
+                //this.alertService.showMessage('Asset Type updated successfully.');
+                this.alertService.showMessage("Success", `Asset Type updated successfully.`, MessageSeverity.success);
                 this.assetService.getAssetList().subscribe(assets => {
                     this.allAssetInfo = assets[0];
                 });
@@ -131,7 +134,8 @@ export class AssetListingComponent implements OnInit {
             this.Active = "Active";
             this.assetTypeToUpdate.isActive == true;
             this.assetService.updateAsset(this.assetTypeToUpdate).subscribe(asset => {
-                this.alertService.showMessage('Asset Type updated successfully.');
+                //this.alertService.showMessage('Asset Type updated successfully.');
+                this.alertService.showMessage("Success", `Asset Type updated successfully.`, MessageSeverity.success);
                 this.assetService.getAssetList().subscribe(assets => {
                     this.allAssetInfo = assets[0];
                 });
@@ -167,20 +171,20 @@ export class AssetListingComponent implements OnInit {
         this.assetViewList.model = row.model;
         this.assetViewList.assetAcquisitionTypeId = row.assetAcquisitionTypeId;
         if (row.manufacturer) {
-            this.manufacturerId = row.manufacturer.name;
+            this.assetViewList.manufacturerId = row.manufacturer.name;
         }
-        else { this.manufacturerId = "" }
+        else { this.assetViewList.manufacturerId = "" }
         if (row.currency) {
-            this.currencyId = row.currency.symbol;
+            this.assetViewList.currencyId = row.currency.symbol;
         }
         else
         {
-            this.currencyId = ""
+            this.assetViewList.currencyId = ""
         }
         if (row.glAccount) {
-            this.glAccountId = row.glAccount.accountName;
+            this.assetViewList.glAccountId = row.glAccount.accountName;
         }
-        else { this.glAccountId = "" }
+        else { this.assetViewList.glAccountId = "" }
         this.assetViewList.inspectionFrequencyMonths = row.inspectionFrequencyMonths;
         this.assetViewList.inspectionFrequencyDays = row.inspectionFrequencyDays;
         this.assetViewList.inspectionDefaultVendorId = row.inspectionDefaultVendorId;
@@ -190,22 +194,22 @@ export class AssetListingComponent implements OnInit {
         this.assetViewList.manufacturedDate = row.manufacturedDate;
         this.assetViewList.isSerialized = row.isSerialized;        
         if (row.unitOfMeasure) {
-            this.unitOfMeasureId = row.unitOfMeasure.description;
+            this.assetViewList.unitOfMeasureId = row.unitOfMeasure.description;
         }
-        else { this.unitOfMeasureId = "" }
+        else { this.assetViewList.unitOfMeasureId = "" }
 
         if (row.glAccount) {
-            this.glAccountId = row.glAccount.accountName;
+            this.assetViewList.glAccountId = row.glAccount.accountName;
         }
         else {
-            this.glAccountId = "";
+            this.assetViewList.glAccountId = "";
         }
 
         if (row.assetType) {
-            this.assetTypeId = row.assetType.assetTypeName;
+            this.assetViewList.assetTypeId = row.assetType.assetTypeName;
         }
         else {
-            this.assetTypeId = "";
+            this.assetViewList.assetTypeId = "";
         }
         this.assetViewList.unitCost = row.unitCost;
         this.assetViewList.expirationDate = row.expirationDate;

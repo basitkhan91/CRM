@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 using System.Threading.Tasks;
 using DAL.Core;
-
+using DAL.Models;
 
 namespace DAL.Repositories
 {
@@ -22,9 +22,22 @@ namespace DAL.Repositories
 
         public IEnumerable<DAL.Models.Priority> GetPriorities()
         {
-            return _appContext.Priority.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.PriorityId).ToList();
+            return _appContext.Priority.Include("MasterCompany").Where(c => c.IsDeleted == false || c.IsDeleted == null).OrderByDescending(c => c.PriorityId).ToList();
         }
 
+
+        public IEnumerable<PriorityAudit> GetPriorityHistory(long priorityId)
+        {
+            try
+            {
+                return _appContext.PriorityAudit.Where(p => p.PriorityId == priorityId).OrderByDescending(p => p.UpdatedDate).ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 

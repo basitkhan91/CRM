@@ -1,415 +1,473 @@
-﻿  <form #generalForm="ngForm" method="post" id="" name="" class="form-horizontal add-custustomer">
-        <div class="form-row">
-            <div class="form-group">
-                <div class="form-group col-sm-12 vendor-details-heading" *ngIf="showalert">
-                    <p class="fs10">
-                        Please Enter Mandatory Fields
-                    </p>
-                </div>
+﻿<form #generalForm="ngForm" method="post" id="" name="" class="form-horizontal add-custustomer">
+    <div class="form-row">
+        <div class="form-group">
+            <div class="form-group col-sm-12 vendor-details-heading" *ngIf="showalert">
+                <p class="fs10">
+                    Please Enter Mandatory Fields
+                </p>
             </div>
-            <div class="col-md-12">
+        </div>
+        <div class="col-md-12">
 
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="po-head" style="padding: 0px 10px;">{{ viewName }} General Information</h5>
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="po-head" style="padding: 0px 10px;">{{ viewName }} General Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="col-md-4">
+                        <label class="fs12">Vendor Name : </label>
+                        <span class="span-header-red"> {{ sourceVendor?.vendorName }}</span>
                     </div>
-                    <div class="card-body">
-                        <div class="col-md-4">
-                            <label class="fs12">Vendor Name : </label>
-                            <span class="span-header-red"> {{ sourceVendor?.vendorName }}</span>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="fs12">Vendor Code : </label>
-                            <span class="span-header-red"> {{ sourceVendor?.vendorCode }}</span>
-                        </div>
-                        <div class="clear"></div>
-                        <hr />
-                        <div class="clear"></div>
-                        <div class="col-md-12">
-                            <p-radioButton name="groupname" value="2" label="External" class="p-radiobutton-label-horizontal p-radiobutton-cstm"
-                                           [(ngModel)]="sourceVendor.vendorTypeId"></p-radioButton>
-                            <p-radioButton name="groupname" value="1" label="Internal" class="p-radiobutton-label-horizontal p-radiobutton-cstm"
-                                           [(ngModel)]="sourceVendor.vendorTypeId"></p-radioButton>
-                            <p-radioButton name="groupname" value="3" label="Affiliate" class="p-radiobutton-label-horizontal p-radiobutton-cstm"
-                                           [(ngModel)]="sourceVendor.vendorTypeId"></p-radioButton>
-                        </div>
+                    <div class="col-md-4">
+                        <label class="fs12">Vendor Code : </label>
+                        <span class="span-header-red"> {{ sourceVendor?.vendorCode }}</span>
+                    </div>
+                    <div class="clear"></div>
+                    <hr />
+                    <div class="clear"></div>
+                    <div class="col-md-12">
+                        <p-radioButton name="groupname" value="2" label="External" class="p-radiobutton-label-horizontal p-radiobutton-cstm"
+                                       [(ngModel)]="sourceVendor.vendorTypeId"></p-radioButton>
+                        <p-radioButton name="groupname" value="1" label="Internal" class="p-radiobutton-label-horizontal p-radiobutton-cstm"
+                                       [(ngModel)]="sourceVendor.vendorTypeId"></p-radioButton>
+                        <p-radioButton name="groupname" value="3" label="Affiliate" class="p-radiobutton-label-horizontal p-radiobutton-cstm"
+                                       [(ngModel)]="sourceVendor.vendorTypeId"></p-radioButton>
+                    </div>
 
-                        <div class="col-md-12">
-                            <div class="form-row">
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="vendorname">
-                                            Vendor Name
-                                            <span class="clr-red">*</span>
-                                        </label>
-                                        <p-autoComplete class="pautocomp-cstm" (onSelect)="onVendorselected($event)" (onKeyUp)="eventHandler($event)"
-                                                        [(ngModel)]="sourceVendor.vendorName" name="vendorName"
-                                                        [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
-                                                        [minLength]="1" [dropdown]="true" required>
-                                            <ng-template let-vendorName pTemplate="item">
-                                                <div class="ui-helper-clearfix">{{ vendorName }}</div>
-                                            </ng-template>
-                                        </p-autoComplete>
-                                        <div *ngIf="disableSaveVenderName" class="clr-red">
-                                            Already Exists
-                                        </div>
+                    <div class="col-md-12">
+                        <div class="form-row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="vendorname">
+                                        Vendor Name
+                                        <span class="clr-red">*</span>
+                                    </label>
+                                    <p-autoComplete class="pautocomp-cstm" (onSelect)="onVendorselected($event)"
+                                                    [(ngModel)]="sourceVendor.vendorName" name="vendorName"
+                                                    [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
+                                                    [minLength]="1" [dropdown]="true" required (onBlur)="checkVendorExist()">
+                                        <ng-template let-vendorName pTemplate="item">
+                                            <div class="ui-helper-clearfix">{{ vendorName }}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                                    <div *ngIf="disableSaveVenderName" class="clr-red">
+                                        Already Exists
                                     </div>
+                                </div>
 
-                                    <div class="form-group">
-                                        <label for="vendorname">
-                                            Code
-                                            <span class="clr-red">*</span>
-                                        </label>
-                                        <p-autoComplete class="pautocomp-cstm" (onSelect)="onVendorCodeselected($event)" (onKeyUp)="eventvendorHandler($event)"
-                                                        [(ngModel)]="sourceVendor.vendorCode" name="vendorCode"
-                                                        [suggestions]="vendorCodes" (completeMethod)="filterVendorCodes($event)" [size]="30"
-                                                        [minLength]="1" [dropdown]="true" required>
-                                            <ng-template let-vendorCode pTemplate="item">
-                                                <div class="ui-helper-clearfix">{{ vendorCode }}</div>
-                                            </ng-template>
-                                        </p-autoComplete>
-                                        <div *ngIf="disableSaveVenderCode" class="clr-red">
-                                            Already Exists
-                                        </div>
+                                <div class="form-group">
+                                    <label for="vendorname">
+                                        Code
+                                        <span class="clr-red">*</span>
+                                    </label>
+                                    <p-autoComplete class="pautocomp-cstm" (onSelect)="onVendorCodeselected($event)" (onKeyUp)="eventvendorHandler($event)"
+                                                    [(ngModel)]="sourceVendor.vendorCode" name="vendorCode"
+                                                    [suggestions]="vendorCodes" (completeMethod)="filterVendorCodes($event)" [size]="30"
+                                                    [minLength]="1" [dropdown]="true" required>
+                                        <ng-template let-vendorCode pTemplate="item">
+                                            <div class="ui-helper-clearfix">{{ vendorCode }}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                                    <div *ngIf="disableSaveVenderCode" class="clr-red">
+                                        Already Exists
                                     </div>
+                                </div>
 
-                                    <div class="form-group ">
-                                        <label for="customerref">
-                                            D/B/A
+                                <div class="form-group ">
+                                    <label for="customerref">
+                                        D/B/A
+                                    </label>
+                                    <input type="text" class="form-control" name="doingBusinessAsName"
+                                           [(ngModel)]="sourceVendor.doingBusinessAsName">
+                                </div>
+
+                                <div class="form-group" style="margin-top: 10px;">
+                                    <div class="checkbox-cstm">
+                                        <label>
+                                            <input type="checkbox" id="cparent" name="parent"
+                                                   [(ngModel)]="sourceVendor.parent">
+                                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                            Parent
                                         </label>
-                                        <input type="text" class="form-control" name="doingBusinessAsName"
-                                               [(ngModel)]="sourceVendor.doingBusinessAsName">
                                     </div>
+                                </div>
 
-                                    <div class="form-group" style="margin-top: 10px;">
-                                        <div class="checkbox-cstm">
-                                            <label>
-                                                <input type="checkbox" id="cparent" name="parent"
-                                                       [(ngModel)]="sourceVendor.parent">
-                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                Parent
+                                <p style="margin-bottom: 8px;" *ngIf="!sourceVendor.parent"></p>
+                                <div class="form-group" *ngIf="sourceVendor.parent">
+
+                                    <p-autoComplete class="pautocomp-cstm" (onSelect)="onParentNameselected($event)" (onKeyUp)=parentEventHandler($event)
+                                                    [(ngModel)]="sourceVendor.vendorParentName" name="vendorParentName"
+                                                    [suggestions]="vendorNames" (completeMethod)="filterVendorParentNames($event)" [size]="30"
+                                                    [minLength]="1" [dropdown]="true">
+                                        <ng-template let-vendorParentName pTemplate="item">
+                                            <div class="ui-helper-clearfix">{{vendorParentName}}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
+
+                                    <div *ngIf="disableSaveParentName" class="clr-red">Please Enter Valid Parent</div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="vendorname">
+                                        Phone
+                                        <span class="clr-red">*</span>
+                                    </label>
+                                    <input class="form-control" type="text" pKeyFilter="num" name="vendorPhone"
+                                           [(ngModel)]="sourceVendor.vendorPhone" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="vendorname">
+                                        Email
+                                        <span class="clr-red">*</span>
+                                    </label>
+                                    <input class="form-control" type="email" email name="vendorEmail"
+                                           [(ngModel)]="sourceVendor.vendorEmail" required>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="address1">
+                                        Address Line 1
+                                        <span class="clr-red">*</span>
+                                    </label>
+                                    <input class="form-control" type="text" id="vmaddress1" name="address1"
+                                           [(ngModel)]="sourceVendor.address1" required>
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="address2">
+                                        Address Line 2
+                                    </label>
+                                    <input class="form-control" type="text" id="vmaddress2" name="address2"
+                                           [(ngModel)]="sourceVendor.address2">
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="address3">
+                                        Address Line 3
+                                    </label>
+                                    <input class="form-control" type="text" id="vmaddress3" name="address3"
+                                           [(ngModel)]="sourceVendor.address3">
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="city">
+                                        City
+                                        <span class="clr-red">*</span>
+                                    </label>
+                                    <input class="form-control" type="text" id="vmcity" name="vmcity"
+                                           [(ngModel)]="sourceVendor.city" required>
+
+                                </div>
+                                <div class="form-group">
+                                    Primary State/Province
+                                    <label for="state">
+                                        <span class="clr-red">*</span>
+                                    </label>
+                                    <input class="form-control" type="text" id="vmstate" name="vmstate"
+                                           [(ngModel)]="sourceVendor.stateOrProvince" required>
+                                </div>
+
+
+                                <div class="form-group">
+                                    Postal
+                                    <label for="postal">
+                                        <span class="clr-red">*</span>
+                                    </label>
+                                    <input class="form-control" type="text" id="vmpostal" name="vmpostal"
+                                           [(ngModel)]="sourceVendor.PostalCode" required>
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="vendorname">
+                                        Country
+                                        <span class="clr-red">*</span>
+                                    </label>
+                                    <p-autoComplete class="pautocomp-cstm" (onSelect)="onCountrieselected($event)" (onKeyUp)=eventCountryHandler($event)
+                                                    [(ngModel)]="sourceVendor.country" name="country"
+                                                    [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
+                                                    [minLength]="1" [dropdown]="true" required>
+                                        <ng-template let-nice_name pTemplate="item">
+                                            <div class="ui-helper-clearfix">{{nice_name}}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                                    <div *ngIf="disablesave" class="clr-red">Please Select From List</div>
+                                </div>
+
+                                <!--<button type="button" class="btn btn-primary-cstm map-check" style="margin-bottom: 10px" (click)="getlatlng(sourceVendor.address1+sourceVendor.address2)">Check Address</button>-->
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Vendor Classification">
+                                                Vendor Classification <span class="clr-red">*</span>
+                                                <span style="margin-left:3px;cursor:pointer;">
+                                                    <i class="fa fa-plus-circle fa-lg"
+                                                       data-toggle="modal" (click)="openClassification(contentEdit)"></i>
+                                                </span>
+
                                             </label>
+                                            <select [(ngModel)]="sourceVendor.vendorClassificationId" name="vendorClassificationId" required>
+                                                <option *ngFor="let venclassName of allVendorClassInfo"
+                                                        [ngValue]="venclassName.vendorClassificationId">
+                                                    {{venclassName.classificationName}}
+                                                </option>
+                                            </select>
                                         </div>
-                                    </div>
 
-                                    <p style="margin-bottom: 8px;" *ngIf="!sourceVendor.parent"></p>
-                                    <div class="form-group" *ngIf="sourceVendor.parent">
+                                        <div class="form-group">
+                                            <label for="vendorname">
+                                                Contract Ref
+                                            </label>
+                                            <input class="form-control" type="text" name="vendorContractReference"
+                                                   [(ngModel)]="sourceVendor.vendorContractReference">
+                                        </div>
 
-                                        <p-autoComplete class="pautocomp-cstm" (onSelect)="onParentNameselected($event)" (onKeyUp)=parentEventHandler($event)
-                                                        [(ngModel)]="sourceVendor.vendorParentName" name="vendorParentName"
-                                                        [suggestions]="vendorNames" (completeMethod)="filterVendorParentNames($event)" [size]="30"
-                                                        [minLength]="1" [dropdown]="true">
-                                            <ng-template let-vendorParentName pTemplate="item">
-                                                <div class="ui-helper-clearfix">{{vendorParentName}}</div>
-                                            </ng-template>
-                                        </p-autoComplete>
-
-                                        <div *ngIf="disableSaveParentName" class="clr-red">Please Enter Valid Parent</div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="vendorname">
-                                            Phone
-                                            <span class="clr-red">*</span>
-                                        </label>
-                                        <input class="form-control" type="text" pKeyFilter="num" name="vendorPhone"
-                                               [(ngModel)]="sourceVendor.vendorPhone" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="vendorname">
-                                            Email
-                                            <span class="clr-red">*</span>
-                                        </label>
-                                        <input class="form-control" type="email" email name="vendorEmail"
-                                               [(ngModel)]="sourceVendor.vendorEmail" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="address1">
-                                            Address Line 1
-                                            <span class="clr-red">*</span>
-                                        </label>
-                                        <input class="form-control" type="text" id="vmaddress1" name="address1"
-                                               [(ngModel)]="sourceVendor.address1" required>
-
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="address2">
-                                            Address Line 2
-                                        </label>
-                                        <input class="form-control" type="text" id="vmaddress2" name="address2"
-                                               [(ngModel)]="sourceVendor.address2">
-
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="address3">
-                                            Address Line 3
-                                        </label>
-                                        <input class="form-control" type="text" id="vmaddress3" name="address3"
-                                               [(ngModel)]="sourceVendor.address3">
-                                    </div>
-
-
-                                    <div class="form-group">
-                                        <label for="city">
-                                            City
-                                            <span class="clr-red">*</span>
-                                        </label>
-                                        <input class="form-control" type="text" id="vmcity" name="vmcity"
-                                               [(ngModel)]="sourceVendor.city" required>
-
-                                    </div>
-                                    <div class="form-group">
-                                        Primary State/Province
-                                        <label for="state">
-                                            <span class="clr-red">*</span>
-                                        </label>
-                                        <input class="form-control" type="text" id="vmstate" name="vmstate"
-                                               [(ngModel)]="sourceVendor.stateOrProvince" required>
-                                    </div>
-
-
-                                    <div class="form-group">
-                                        Postal
-                                        <label for="postal">
-                                            <span class="clr-red">*</span>
-                                        </label>
-                                        <input class="form-control" type="text" id="vmpostal" name="vmpostal"
-                                               [(ngModel)]="sourceVendor.PostalCode" required>
-
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="vendorname">
-                                            Country
-                                            <span class="clr-red">*</span>
-                                        </label>
-                                        <p-autoComplete class="pautocomp-cstm" (onSelect)="onCountrieselected($event)" (onKeyUp)=eventCountryHandler($event)
-                                                        [(ngModel)]="sourceVendor.country" name="country"
-                                                        [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
-                                                        [minLength]="1" [dropdown]="true" required>
-                                            <ng-template let-nice_name pTemplate="item">
-                                                <div class="ui-helper-clearfix">{{nice_name}}</div>
-                                            </ng-template>
-                                        </p-autoComplete>
-                                        <div *ngIf="disablesave" class="clr-red">Please Select From List</div>
-                                    </div>
-
-                                    <!--<button type="button" class="btn btn-primary-cstm map-check" style="margin-bottom: 10px" (click)="getlatlng(sourceVendor.address1+sourceVendor.address2)">Check Address</button>-->
-
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="Vendor Classification">
-                                                    Vendor Classification <span class="clr-red">*</span>
-                                                    <span style="margin-left:3px;cursor:pointer;">
-                                                        <i class="fa fa-plus-circle fa-lg"
-                                                           data-toggle="modal" (click)="openClassification(contentEdit)"></i>
-                                                    </span>
-
-                                                </label>
-                                                <select [(ngModel)]="sourceVendor.vendorClassificationId" name="vendorClassificationId" required>
-                                                    <option *ngFor="let venclassName of allVendorClassInfo"
-                                                            [ngValue]="venclassName.vendorClassificationId">
-                                                        {{venclassName.classificationName}}
-                                                    </option>
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="vendorname">
-                                                    Contract Ref
-                                                </label>
-                                                <input class="form-control" type="text" name="vendorContractReference"
-                                                       [(ngModel)]="sourceVendor.vendorContractReference">
-                                            </div>
-
-                                            <div class="form-group" style="margin-top: 15px; margin-bottom: 8px;">
-                                                <div class="checkbox-cstm">
-                                                    <label>
-                                                        <input class="" type="checkbox" id="" name="isPreferredVendor"
-                                                               [(ngModel)]="sourceVendor.isPreferredVendor" checked="">
-                                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                        Preferred Vendor
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
+                                        <div class="form-group" style="margin-top: 15px; margin-bottom: 8px;">
+                                            <div class="checkbox-cstm">
                                                 <label>
-                                                    <span class="pull-left">Integration With</span>
-                                                    <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" (click)="onAddIntegrationWith()"></a></span>
+                                                    <input class="" type="checkbox" id="" name="isPreferredVendor"
+                                                           [(ngModel)]="sourceVendor.isPreferredVendor" checked="">
+                                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                    Preferred Vendor
                                                 </label>
-                                                <p-multiSelect [options]="integrationCols" [(ngModel)]="intSelectedColumns" optionLabel="header"
-                                                               selectedItemsLabel="{0} columns selected" name="integrationCols"
-                                                               [style]="{minWidth: '200px'}" defaultLabel="Choose Columns"></p-multiSelect>
                                             </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>
+                                                <span class="pull-left">Integration With</span>
+                                                <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" (click)="onAddIntegrationWith()"></a></span>
+                                            </label>
+                                            <p-multiSelect [options]="integrationCols" [(ngModel)]="intSelectedColumns" optionLabel="header"
+                                                           selectedItemsLabel="{0} columns selected" name="integrationCols"
+                                                           [style]="{minWidth: '200px'}" defaultLabel="Choose Columns"></p-multiSelect>
+                                        </div>
 
-                                            <div class="form-group">
-                                                <label for="vendorname">
-                                                    License
-                                                </label>
-                                                <input class="form-control" type="text" name="licenseNumber" [(ngModel)]="sourceVendor.licenseNumber">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="Vendor Classification">
-                                                    Capabilities
-                                                    <span style="margin-left:3px;cursor:pointer;">
-                                                        <i class="fa fa-plus-circle fa-lg"
-                                                           data-toggle="modal" (click)="onAddCapabilities()"></i>
-                                                    </span>
-                                                </label>
-                                                <select class="form-control">
-                                                    <option>Select</option>
-                                                    <option>Capabilities 1</option>
-                                                    <option>Capabilities 2</option>
-                                                    <option>Capabilities 3</option>
+                                        <div class="form-group">
+                                            <label for="licenseNumber">
+                                                License
+                                            </label>
+                                            <input class="form-control" type="text" name="licenseNumber" [(ngModel)]="sourceVendor.licenseNumber">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="Vendor Classification">
+                                                Capabilities
+                                                <span style="margin-left:3px;cursor:pointer;">
+                                                    <i class="fa fa-plus-circle fa-lg"
+                                                       data-toggle="modal" (click)="onAddCapabilities()"></i>
+                                                </span>
+                                            </label>
+                                            <select class="form-control"  [(ngModel)]="sourceVendor.capabilityId">
+                                                <option *ngFor="let capabilty of dropDownVendorCapabilitiesList" [ngValue]="capabilty.capabilityId">  {{capabilty.label}}</option>
+                                            </select>
+                                           
+                                            <!--<select class="form-control">
+                                                <option>Select</option>
+                                                <option>Capabilities 1</option>
+                                                <option>Capabilities 2</option>
+                                                <option>Capabilities 3</option>
 
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="vendorname">
-                                                    URL to Vendor site
+                                            </select>-->
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="vendorname">
+                                                URL to Vendor site
+                                            </label>
+                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}"
+                                                   [(ngModel)]="sourceVendor.vendorURL">
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-12">
+
+                                        <div class="form-group" style="width: 100%;">
+                                            <div class="checkbox-cstm">
+                                                <label>
+                                                    <input type="checkbox" [ngModelOptions]="{standalone: true}"
+                                                           [(ngModel)]="sourceVendor.isCertified" class="certified-checkbox">
+                                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                    Certified
                                                 </label>
-                                                <input class="form-control" type="text" [ngModelOptions]="{standalone: true}"
-                                                       [(ngModel)]="sourceVendor.vendorURL">
+                                            </div>
+                                        </div>
+
+                                        <div *ngIf="sourceVendor.isCertified" style="width: 97%">
+                                            <div class="form-group">
+                                                <p-fileUpload name="myfile[]" multiple="multiple" [showCancelButton]="false">
+                                                </p-fileUpload>
                                             </div>
 
                                         </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="col-md-12">
-
-                                            <div class="form-group" style="width: 100%;">
-                                                <div class="checkbox-cstm">
-                                                    <label>
-                                                        <input type="checkbox" [ngModelOptions]="{standalone: true}"
-                                                               [(ngModel)]="sourceVendor.isCertified" class="certified-checkbox">
-                                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                        Certified
-                                                    </label>
-                                                </div>
+                                        <div class="form-group" style="width: 100%;">
+                                            <div class="checkbox-cstm">
+                                                <label>
+                                                    <input type="checkbox" [ngModelOptions]="{standalone: true}"
+                                                           [(ngModel)]="sourceVendor.vendorAudit" class="audit-checkbox">
+                                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                    Vendor Audit
+                                                </label>
                                             </div>
+                                        </div>
 
-                                            <div *ngIf="sourceVendor.isCertified" style="width: 97%">
-                                                <div class="form-group">
-                                                    <p-fileUpload name="myfile[]" multiple="multiple" [showCancelButton]="false">
-                                                    </p-fileUpload>
-                                                </div>
+                                        <div *ngIf="sourceVendor.vendorAudit" style="width: 97%">
+                                            <div class="form-group">
 
+                                                <p-fileUpload name="myfile[]" multiple="multiple" [showCancelButton]="false">
+                                                </p-fileUpload>
                                             </div>
-                                            <div class="form-group" style="width: 100%;">
-                                                <div class="checkbox-cstm">
-                                                    <label>
-                                                        <input type="checkbox" [ngModelOptions]="{standalone: true}"
-                                                               [(ngModel)]="sourceVendor.vendorAudit" class="audit-checkbox">
-                                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                        Vendor Audit
-                                                    </label>
-                                                </div>
-                                            </div>
+                                        </div>
 
-                                            <div *ngIf="sourceVendor.vendorAudit" style="width: 97%">
-                                                <div class="form-group">
-
-                                                    <p-fileUpload name="myfile[]" multiple="multiple" [showCancelButton]="false">
-                                                    </p-fileUpload>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group" style="width: 100%;">
-                                                <div class="checkbox-cstm">
-                                                    <label>
-                                                        <input type="checkbox" class="" value="" id="" style="margin-top: 1px;"
-                                                               [ngModelOptions]="{standalone: true}"
-                                                               [(ngModel)]="sourceVendor.isVendorAlsoCustomer">
-                                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                        Is this Vendor also a Customer?
-                                                    </label>
-                                                </div>
+                                        <div class="form-group" style="width: 100%;">
+                                            <div class="checkbox-cstm">
+                                                <label>
+                                                    <input type="checkbox" class="" value="" id="" style="margin-top: 1px;"
+                                                           [ngModelOptions]="{standalone: true}"
+                                                           [(ngModel)]="sourceVendor.isVendorAlsoCustomer">
+                                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                    Is this Vendor also a Customer?
+                                                </label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <div style="padding-bottom: 7px;">
-                            <button type="submit" [validate] moduleName="app-vendor-general-information" requirePermission="canAdd"
-                                    class="btn btn-primary-cstm pull-right submit-btn" *ngIf="sourceVendor.vendorId == undefined"
-                                    [disabled]="!generalForm.valid || disableSaveVenName || disableSaveVenCode || disableSaveParentName || disablesave"
-                                    (click)="editItemAndCloseModel()">
-                                Save
-                            </button>
-
-                            <button type="submit" [validate] moduleName="app-vendor-general-information" requirePermission="canUpdate"
-                                    class="btn btn-primary-cstm pull-right submit-btn"
-                                    *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0"
-                                    [disabled]="!generalForm.valid || disableSaveVenName || disableSaveVenCode || disableSaveParentName || disablesave"
-                                    (click)="editItemAndCloseModel()">
-                                Update
-                            </button>
-
-                            <button type="button" class="btn btn-primary-cstm pull-right " (click)="nextClick()">
-                                Next
-                            </button>
-                        </div>
                     </div>
 
+                    <div style="padding-bottom: 7px;">
+                        <button type="submit" [validate] moduleName="app-vendor-general-information" requirePermission="canAdd"
+                                class="btn btn-primary-cstm pull-right submit-btn" *ngIf="sourceVendor.vendorId == undefined"
+                                [disabled]="!generalForm.valid || disableSaveVenName || disableSaveVenCode || disableSaveParentName || disablesave"
+                                (click)="editItemAndCloseModel()">
+                            Save
+                        </button>
+
+                        <button type="submit" [validate] moduleName="app-vendor-general-information" requirePermission="canUpdate"
+                                class="btn btn-primary-cstm pull-right submit-btn"
+                                *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0"
+                                [disabled]="!generalForm.valid || disableSaveVenName || disableSaveVenCode || disableSaveParentName || disablesave"
+                                (click)="editItemAndCloseModel()">
+                            Update
+                        </button>
+
+                        <button type="button" class="btn btn-primary-cstm pull-right " (click)="editItemAndCloseModel('goNext')" [disabled]="!generalForm.valid || disableSaveVenderName">
+                            Save & Next
+                        </button>
+                    </div>
                 </div>
+
             </div>
         </div>
-        
-    </form>
+    </div>
+
+</form>
 
 <!--<div *ngIf="checkAddress">
-		<p-gmap [options]="options" [overlays]="overlays" [style]="{'width':'100%','height':'320px'}" ></p-gmap>
+        <p-gmap [options]="options" [overlays]="overlays" [style]="{'width':'100%','height':'320px'}" ></p-gmap>
 </div>-->
-	
+<!--<div id="addIntergation" class="modal fade" role="dialog">
+    <div class="modal-dialog">
 
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" (click)="resetIntegrationPopUp()">&times;</button>
+                <h4 class="modal-title">Add Intergation</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>WebSite url  <span class="clr-red">*</span></label>
+                    <div class="inner-addon right-addon inline-block">
+
+                        <p-autoComplete class="p-dropdown-custom-2" name="url"
+                                        [(ngModel)]="addNewIntergation.portalURL"
+                                        (onKeyUp)="checkIntergationExists('description',$event.target.value)"
+                                        [suggestions]="integrationList" field="description" (completeMethod)="filterIntegrations($event)"
+                                        [size]="30" [minLength]="1" [dropdown]="true" required>
+                        </p-autoComplete>
+                        <div *ngIf="isIntegrationAlreadyExists" class="clr-red">Entry Already Exists</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Intergation</label>
+                    <input class="form-control" [(ngModel)]="addNewIntergation.description" name="description">
+                </div>
+
+                <div class="form-group">
+                    <label>Memo</label>
+                    <input class="form-control" [(ngModel)]="addNewIntergation.memo" name="memo">
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-6">
+                        <span class="checkbox-cstm">
+                            <label style="margin-top: 12px;" class="form-check-label" for="isActive">
+                                <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="addNewIntergation.isActive">
+                                <span class="cr"><i class="cr-icon pi pi-check"></i></span> Active
+                            </label>
+                        </span>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="newIntegrationAdd()" [disabled]="isClassificationAlreadyExists">Save</button>
+                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetIntegrationPopUp()">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>-->
 
 <ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
-	<div class="modal-header">
-		<h4 class="modal-title" *ngIf="isEditMode">Edit Vendor Classification</h4>
-		<h4 class="modal-title" *ngIf="!isEditMode">Add Vendor Classification</h4>
-		<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-			<span aria-hidden="true">&times;</span>
-		</button>
-	</div>
-	<div class="modal-body">
-		<form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveVendorClassificationDetails()">
-			<div class="form-group  input-icon1">
-				<label for="classificationName" class="control-label">Classification Name <span
-						class="clr-red">*</span></label>
-				<div class="col-sm-6">
-					<div class="inner-addon right-addon inline-block">
-						<p-autoComplete class="pautocomp-cstm" (onSelect)="onClassificationelected($event)"
-							(onKeyUp)="eventClassificationHandler($event)" [(ngModel)]="vendorClassName"
-							[ngModelOptions]="{ standalone: true }" [suggestions]="vendorCollection"
-							(completeMethod)="filterVendors($event)" [size]="30" [minLength]="1" [dropdown]="true">
-							<ng-template let-vendorName pTemplate="item">
-								<div class="ui-helper-clearfix">{{ vendorName }}</div>
-							</ng-template>
-						</p-autoComplete>
-						<div *ngIf="disablesaveForClassification" style="color:red">
-							Already Exist
-						</div>
-						<div class="clear"></div>
-					</div>
-				</div>
-			</div>
-			<div class="clear"></div>
-			<div class="form-group" style="margin-top: 10px;">
-				<label class="control-label">Memo</label>
-				<div class="inner-addon col-sm-6 right-addon inline-block">
+    <div class="modal-header">
+        <h4 class="modal-title" *ngIf="isEditMode">Edit Vendor Classification</h4>
+        <h4 class="modal-title" *ngIf="!isEditMode">Add Vendor Classification</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveVendorClassificationDetails()">
+            <div class="form-group  input-icon1">
+                <label for="classificationName" class="control-label">
+                    Classification Name <span class="clr-red">*</span>
+                </label>
+                <div class="col-sm-6">
+                    <div class="inner-addon right-addon inline-block">
+                        <p-autoComplete class="pautocomp-cstm" (onSelect)="onClassificationelected($event)"
+                                        (onKeyUp)="eventClassificationHandler($event)" [(ngModel)]="vendorClassName"
+                                        [ngModelOptions]="{ standalone: true }" [suggestions]="vendorCollection"
+                                        (completeMethod)="filterVendors($event)" [size]="30" [minLength]="1" [dropdown]="true">
+                            <ng-template let-vendorName pTemplate="item">
+                                <div class="ui-helper-clearfix">{{ vendorName }}</div>
+                            </ng-template>
+                        </p-autoComplete>
+                        <div *ngIf="disablesaveForClassification" style="color:red">
+                            Already Exist
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div class="form-group" style="margin-top: 10px;">
+                <label class="control-label">Memo</label>
+                <div class="inner-addon col-sm-6 right-addon inline-block">
                     <textarea class="form-control" #memo="ngModel" id="memo" name="memo" [(ngModel)]="sourceAction.memo"></textarea>
-				</div>
-				<div class="clear"></div>
-			</div>
-			<div class="form-group">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="form-group">
                 <div class="col-sm-6">
                     <!--<label class="form-check-label" for="isActive">
                         <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked
@@ -424,23 +482,23 @@
                         </label>
                     </span>
                 </div>
-				<div class="clear"></div>
-			</div>
-			<div class="modal-footer">
-				<button class="btn btn-primary-cstm" [disabled]="disablesaveForClassification">
-					Submit
-				</button>
-				<button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">
-					Close
-				</button>
-			</div>
-		</form>
-	</div>
+                <div class="clear"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary-cstm" [disabled]="disablesaveForClassification">
+                    Submit
+                </button>
+                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">
+                    Close
+                </button>
+            </div>
+        </form>
+    </div>
 </ng-template>
 
 <p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px"
-	maximizedTop="140px" [width]="350" [minWidth]="200" [responsive]="true" [minY]="1050" [baseZIndex]="1100000">
-	<h5 [ngStyle]="{ color: 'red' }">
-		Please Enter (*) Mandatory Fields
-	</h5>
+          maximizedTop="140px" [width]="350" [minWidth]="200" [responsive]="true" [minY]="1050" [baseZIndex]="1100000">
+    <h5 [ngStyle]="{ color: 'red' }">
+        Please Enter (*) Mandatory Fields
+    </h5>
 </p-dialog>

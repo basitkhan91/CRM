@@ -21,12 +21,14 @@ namespace QuickApp.Pro.Controllers
         readonly ILogger _logger;
         readonly IEmailer _emailer;
         private const string GetActionByIdActionName = "GetActionById";
+        private readonly ApplicationDbContext _context;
 
-        public JobTitleController(IUnitOfWork unitOfWork, ILogger<JobTitleController> logger, IEmailer emailer)
+        public JobTitleController(IUnitOfWork unitOfWork, ILogger<JobTitleController> logger, IEmailer emailer, ApplicationDbContext context)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
             _emailer = emailer;
+            _context = context;
         }
 
         // GET: api/values
@@ -79,6 +81,7 @@ namespace QuickApp.Pro.Controllers
                 jobTitleObj.Description = jobTitleViewModel.Description;
                 jobTitleObj.MasterCompanyId = jobTitleViewModel.MasterCompanyId;
                 jobTitleObj.IsActive = jobTitleViewModel.IsActive;
+                jobTitleObj.IsDeleted = false;
                 jobTitleObj.Memo = jobTitleViewModel.Memo;
                 jobTitleObj.CreatedDate = DateTime.Now;
                 jobTitleObj.UpdatedDate = DateTime.Now;
@@ -112,8 +115,10 @@ namespace QuickApp.Pro.Controllers
                 existingResult.Memo = jobTitleViewModel.Memo;
                 existingResult.MasterCompanyId = jobTitleViewModel.MasterCompanyId;
 
-                _unitOfWork.JobTitle.Update(existingResult);
-                _unitOfWork.SaveChanges();
+                //_unitOfWork.JobTitle.Update(existingResult);
+                //_unitOfWork.SaveChanges();
+                _context.JobTitle.Update(existingResult);
+                _context.SaveChanges();
 
             }
 
@@ -128,12 +133,15 @@ namespace QuickApp.Pro.Controllers
         {
             var existingResult = _unitOfWork.JobTitle.GetSingleOrDefault(c => c.JobTitleId == id);
 
-            existingResult.IsDelete = true;
-            _unitOfWork.JobTitle.Update(existingResult);
+            existingResult.IsDeleted = true;
+            //_unitOfWork.JobTitle.Update(existingResult);
 
             //_unitOfWork.JobTitle.Remove(existingResult);
 
-            _unitOfWork.SaveChanges();
+            //_unitOfWork.SaveChanges();
+
+            _context.JobTitle.Update(existingResult);
+            _context.SaveChanges();
 
             return Ok(id);
         }

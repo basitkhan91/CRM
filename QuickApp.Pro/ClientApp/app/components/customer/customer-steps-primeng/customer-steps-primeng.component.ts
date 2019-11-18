@@ -2,6 +2,8 @@
 import { Router, ActivatedRoute } from '@angular/router';
 import { CustomerService } from '../../../services/customer.service';
 import { EmployeeService } from '../../../services/employee.service';
+import { AtaMainService } from '../../../services/atamain.service';
+import { MessageSeverity, AlertService } from '../../../services/alert.service';
 
 @Component({
 	selector: 'app-customer-create',
@@ -20,6 +22,9 @@ export class CustomerStepsPrimengComponent {
 	editGeneralInformationData: any;
 	employeeListOriginal: any[];
 	isDisabledSteps: boolean = false;
+	search_ataChapterList: any;
+	add_ataChapterList: any;
+	ataListDataValues: any;
 	// ifvalue: boolean;
 	// generalcollection: any;
 	// collection: any;
@@ -36,6 +41,8 @@ export class CustomerStepsPrimengComponent {
 	constructor(private customerService: CustomerService,
 		private acRouter: ActivatedRoute,
 		public employeeService: EmployeeService,
+		private atamain: AtaMainService,
+		private alertService: AlertService,
 	) {
 		// let currentUrl = this.route.url;
 		// this.customerService.alertChangeObject$.subscribe(value => {
@@ -58,6 +65,7 @@ export class CustomerStepsPrimengComponent {
 		this.getAllCountries();
 		this.getAllCustomers();
 		this.getAllEmployees();
+		this.getAllATAChapter();
 
 		// 	this.showComponentPTab = this.customerService.ShowPtab;
 		// 	this.currentUrl = this.route.url;
@@ -223,12 +231,17 @@ export class CustomerStepsPrimengComponent {
 		} else if (value === 'Warnings') {
 			this.currentTab = 'Warnings';
 			this.activeMenuItem = 9;
+		} else if (value === 'Documents') {
+			this.currentTab = 'Documents';
+			this.activeMenuItem = 10;
 		}
 	}
 	generalInformationData(data) {
 		this.savedGeneralInformationData = data;
 		this.isDisabledSteps = true;
 	}
+
+
 	updateInformationData(data) {
 		this.editGeneralInformationData = data;
 	}
@@ -249,7 +262,62 @@ export class CustomerStepsPrimengComponent {
 			this.employeeListOriginal = res[0];
 		})
 	}
+
+
+
+	getAllATAChapter() {
+		this.atamain.getAtaMainList().subscribe(res => {
+			const responseData = res[0];
+			// used to get the complete object in the value 
+			this.add_ataChapterList = responseData.map(x => {
+				return {
+					value: x,
+					label: x.ataChapterName
+				}
+
+			})
+			// used to get the id for the value 
+			this.search_ataChapterList = responseData.map(x => {
+				return {
+					value: x.ataChapterId,
+					label: x.ataChapterName
+				}
+			})
+		});
+	}
+
+	saveCustomerContactATAMapped(ATAMappingData) {
+		const data = ATAMappingData;
+		this.customerService.postCustomerATAs(data).subscribe(res => {
+
+			this.getMappedATAByCustomerId(data[0].CustomerId)
+			this.alertService.showMessage(
+				'Success',
+				'Saved ATA Mapped Data Successfully ',
+				MessageSeverity.success
+			);
+		})
+	}
+
+
+	getMappedATAByCustomerId(customerId) {
+		// const id = this.savedGeneralInformationData.customerId;
+		this.customerService.getATAMappedByCustomerId(customerId).subscribe(res => {
+			this.ataListDataValues = res;
+			console.log(res);
+
+		})
+	}
+
+
+
+
+
+
 }
+
+
+
 //{
 //	label: 'Emails',
 //	command: (event: any) => {

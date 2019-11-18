@@ -23,6 +23,10 @@ namespace DAL.Repositories
             return _appContext.Vendor.OrderByDescending(c => c.VendorId).ToList();
         }
 
+        public IEnumerable<Vendor> GetVendorsLite()
+        {
+            return _appContext.Vendor.Where(v => v.IsActive == true && v.IsDelete == false).Select(v => new  Vendor{ VendorId= v.VendorId, VendorName=v.VendorName }).OrderBy(c=>c.VendorName).ToList();
+        }
 
         public IEnumerable<object> GetVendorListDetails()
         {
@@ -31,8 +35,20 @@ namespace DAL.Repositories
                 var data = (from t in _appContext.Vendor
                                   join ad in _appContext.Address on t.AddressId equals ad.AddressId
                                   join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId
+                                  join ct in _appContext.CreditTerms on t.CreditTermsId equals ct.CreditTermsId into crd
+                            from ct in crd.DefaultIfEmpty()
+                            join cu in _appContext.Currency on t.CurrencyId equals cu.CurrencyId into curr 
+                            from cu in curr.DefaultIfEmpty()
+                            join di in _appContext.Discount on t.DiscountId equals di.DiscountId into dis
+                            from di in dis.DefaultIfEmpty()
+                            where t.IsDelete != true
                             select new { t.VendorId,t,t.VendorEmail,t.IsActive,
-                                Address1 =ad.Line1, Address2=ad.Line2, Address3=ad.Line3,t.VendorCode, t.VendorName, ad.City, ad.StateOrProvince,vt.Description ,t.CreatedDate,t.CreatedBy,t.UpdatedBy,t.UpdatedDate,ad.AddressId,ad.Country,ad.PostalCode}).ToList();
+                                Address1 =ad.Line1, Address2=ad.Line2, Address3=ad.Line3,t.VendorCode, t.VendorName, ad.City, ad.StateOrProvince,vt.Description ,t.CreatedDate,t.CreatedBy,t.UpdatedBy,t.UpdatedDate,ad.AddressId,ad.Country,ad.PostalCode,
+                                t.EDI,t.EDIDescription,t.CreditLimit,
+                                CurrencyId= cu.Code,
+                                CreditTermsId = ct.Name,
+                                DiscountLevel = di==null ? 0: di.DiscontValue
+                            }).OrderByDescending(c=>c.CreatedDate).ToList();
                 return data;
 
                 //old query
@@ -182,11 +198,11 @@ namespace DAL.Repositories
                                 po.ReferenceId,
                                 po.PriorityId,
                                 po.RequestedBy,
-                                po.DateRequested,
-                                po.Approver,
+                                po.OpenDate,
+                                po.ApproverId,
                                 po.DeferredReceiver,
                                 po.Resale,
-                                po.DateApprovied,
+                                po.DateApproved,
                                 po.NeedByDate,
                                 pop.NonInventory,
                                 pop.POPartSplitAddress1,
@@ -218,11 +234,11 @@ namespace DAL.Repositories
                                 pop.UnitCost,
                                 pop.PurchaseOrderPartRecordId,
                                 po.ShipToUserType,
-                                po.ShipToUserName,
-                                po.ShipToContactName,
+                                po.ShipToUserId,
+                                po.ShipToContactId,
                                 po.ShipToMemo,
                                 po.BillToUserType,
-                                po.BillToUserName,
+                                po.BillToUserId,
                                 po.BillToContactName,
                                 po.BillToMemo,
                                 uom.ShortName,
@@ -279,19 +295,19 @@ namespace DAL.Repositories
                                 v.VendorName,
                                 v.VendorCode,
                                 po.CreditLimit,
-                                po.Terms,
+                                //po.Terms,
                                 po.BillToAddressId,
                                 po.ShipToAddressId,
                                 po.RepairOrderId,
                                 po.RepairOrderNumber,
-                                po.ReferenceId,
+                                //po.ReferenceId,
                                 po.PriorityId,
-                                po.RequestedBy,
-                                po.DateRequested,
-                                po.Approver,
+                                //po.RequestedBy,
+                                //po.DateRequested,
+                                //po.Approver,
                                 po.DeferredReceiver,
                                 po.Resale,
-                                po.DateApprovied,
+                                //po.DateApprovied,
                                 po.NeedByDate,
                                 //pop.NeedByDate,
                                 //pop.NonInventory,
@@ -304,13 +320,13 @@ namespace DAL.Repositories
                                 //pop.POPartSplitUserName,
                                 //pop.POPartSplitUserTypeId,
                                 //pop.QuantityOrdered,
-                                po.MasterCompanyId,
+                                //po.MasterCompanyId,
                                 po.StatusId,
-                                po.EmployeeId,
+                                //po.EmployeeId,
                                 po.VendorId,
                                 po.VendorContactId,
-                                po.ShipToCompanyId,
-                                po.ShipViaAccountId,
+                                //po.ShipToCompanyId,
+                                //po.ShipViaAccountId,
                                 pop,
                                 im.ItemMasterId,
                                 im.PartNumber,
@@ -323,13 +339,13 @@ namespace DAL.Repositories
                                 //pop.UOMId,
                                 pop.UnitCost,
                                 pop.RepairOrderPartRecordId,
-                                po.ShipToUserType,
-                                po.ShipToUserName,
-                                po.ShipToContactName,
+                                //po.ShipToUserType,
+                                //po.ShipToUserName,
+                                //po.ShipToContactName,
                                 po.ShipToMemo,
-                                po.BillToUserType,
-                                po.BillToUserName,
-                                po.BillToContactName,
+                                //po.BillToUserType,
+                                //po.BillToUserName,
+                                //po.BillToContactName,
                                 po.BillToMemo,
                                 uom.ShortName
 
@@ -454,6 +470,241 @@ namespace DAL.Repositories
             }
         }
 
+        public long CreateVendorBillingAddress(VendorBillingAddress billingAddress)
+        {
+            try
+            {
+				Address address = new Address();
+
+				address.City = billingAddress.City;
+				address.Country = billingAddress.Country;
+				
+				
+				
+				address.Line1 = billingAddress.Address1;
+				address.Line2 = billingAddress.Address2;
+				address.Line3 = billingAddress.Address3;
+				address.MasterCompanyId = billingAddress.MasterCompanyId;
+				address.PostalCode = billingAddress.PostalCode;
+				address.StateOrProvince = billingAddress.StateOrProvince;
+
+				address.IsActive = true;
+				address.UpdatedDate = address.CreatedDate = DateTime.Now;
+				address.CreatedBy = billingAddress.CreatedBy;
+				address.UpdatedBy = billingAddress.UpdatedBy;
+
+                if (billingAddress.AddressId > 0)
+                {
+                    address.CreatedDate = billingAddress.CreatedDate;
+                    address.AddressId = billingAddress.AddressId;
+                    _appContext.Address.Update(address);
+                }
+                else
+                {
+                    address.CreatedDate = DateTime.Now;
+                    _appContext.Address.Add(address);
+                }
+
+                _appContext.SaveChanges();
+
+
+                billingAddress.AddressId = Convert.ToInt64(address.AddressId);
+
+                billingAddress.UpdatedDate = DateTime.Now;
+                billingAddress.IsActive = true;
+                billingAddress.IsDeleted = false;
+                billingAddress.IsPrimary = false;
+
+                if (billingAddress.VendorBillingAddressId > 0)
+                {
+                    _appContext.VendorBillingAddress.Update(billingAddress);
+                }
+                else
+                {
+                    billingAddress.CreatedDate = DateTime.Now;
+                    _appContext.VendorBillingAddress.Add(billingAddress);
+                }
+
+                _appContext.SaveChanges();
+
+                return billingAddress.VendorBillingAddressId;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void UpdateVendorBillingAddress(VendorBillingAddress billingAddress)
+        {
+            try
+            {
+                 billingAddress.UpdatedDate = DateTime.Now;
+                _appContext.VendorBillingAddress.Update(billingAddress);
+                _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void DeleteVendorBillingAddress(long billingAddressId,string updatedBy)
+        {
+            try
+            {
+                VendorBillingAddress billingAddress = new VendorBillingAddress();
+                billingAddress.VendorBillingAddressId = billingAddressId;
+                billingAddress.IsDeleted = true;
+                billingAddress.UpdatedDate = DateTime.Now;
+                billingAddress.UpdatedBy = updatedBy;
+
+                _appContext.VendorBillingAddress.Attach(billingAddress);
+
+                _appContext.Entry(billingAddress).Property(p => p.IsDeleted).IsModified = true;
+                _appContext.Entry(billingAddress).Property(p => p.UpdatedDate).IsModified = true;
+                _appContext.Entry(billingAddress).Property(p => p.UpdatedBy).IsModified = true;
+
+                _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void DeleteVendorShippingAddress(long shippingAddressId, string updatedBy)
+        {
+            try
+            {
+                var vsha = _appContext.VendorShippingAddress.Where(x => x.VendorShippingAddressId == shippingAddressId).FirstOrDefault();
+                if(vsha != null)
+                {
+                    _appContext.VendorShippingAddress.Remove(vsha);
+                    _appContext.SaveChanges();
+                }
+                //VendorShippingAddress shippingAddress = new VendorShippingAddress();
+                //shippingAddress.VendorShippingAddressId = billingAddressId;
+                //shippingAddress.UpdatedDate = DateTime.Now;
+                //shippingAddress.UpdatedBy = updatedBy;
+
+                //_appContext.VendorShippingAddress.Attach(shippingAddress);
+
+                //_appContext.Entry(shippingAddress).Property(p => p.UpdatedDate).IsModified = true;
+                //_appContext.Entry(shippingAddress).Property(p => p.UpdatedBy).IsModified = true;
+
+                //_appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void VendorBillingAddressStatus(long billingAddressId,bool status, string updatedBy)
+        {
+            try
+            {
+                VendorBillingAddress billingAddress = new VendorBillingAddress();
+                billingAddress.VendorBillingAddressId = billingAddressId;
+                billingAddress.IsActive = status;
+                billingAddress.UpdatedDate = DateTime.Now;
+                billingAddress.UpdatedBy = updatedBy;
+
+                _appContext.VendorBillingAddress.Attach(billingAddress);
+
+                _appContext.Entry(billingAddress).Property(p => p.IsActive).IsModified = true;
+                _appContext.Entry(billingAddress).Property(p => p.UpdatedDate).IsModified = true;
+                _appContext.Entry(billingAddress).Property(p => p.UpdatedBy).IsModified = true;
+
+                _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetVendorBillingAddress()
+        {
+            try
+            {
+                var list = (from vba in _appContext.VendorBillingAddress
+                            join ad in _appContext.Address on vba.AddressId equals ad.AddressId
+                            where vba.IsDeleted == false
+                            select new
+                            {
+                                vba.SiteName,
+                                ad.Line1,
+                                ad.Line2,
+                                ad.Line3,
+                                ad.City,
+                                ad.StateOrProvince,
+                                ad.PostalCode,
+                                ad.Country,
+                                vba.CreatedDate
+                            }).OrderByDescending(p=>p.CreatedDate).ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetVendorBillingSiteNames(long vendorId)
+        {
+            try
+            {
+                var list = (from vba in _appContext.VendorBillingAddress
+                            where vba.IsDeleted == false && vba.VendorId == vendorId
+                            select new {
+                                vba.VendorBillingAddressId,
+                                vba.SiteName
+                            }).ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public object VendorBillingAddressById(long billingAddressId)
+        {
+            try
+            {
+                var data = (from vba in _appContext.VendorBillingAddress
+                            join ad in _appContext.Address on vba.AddressId equals ad.AddressId
+                            where vba.VendorBillingAddressId == billingAddressId
+                            select new
+                            {
+                                vba,
+                                ad.City,
+                                ad.Country,
+                                ad.Line1,
+                                ad.Line2,
+                                ad.Line3,
+                                ad.PostalCode,
+                                ad.StateOrProvince
+                            }
+                          ).FirstOrDefault();
+                return data;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         //get Vendor Capability List
 
 
@@ -480,5 +731,12 @@ namespace DAL.Repositories
                         }).ToList();
             return data;
         }
+
+        public IEnumerable<Vendor> getVendorsForDropdown() {
+            return _appContext.Vendor.Where(x => 
+            (x.IsActive != null && x.IsActive == true) && 
+            (x.IsDelete == null || x.IsDelete == false));
+        }
+
     }
 }

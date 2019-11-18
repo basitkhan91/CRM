@@ -17,7 +17,9 @@ import { VendorService } from '../../../services/vendor.service';
 import { Currency } from '../../../models/currency.model';
 import { CurrencyService } from '../../../services/currency.service';
 import { CustomerGeneralInformation } from '../../../models/customer-general.model';
-import { getValueFromObjectByKey, getObjectByValue, validateRecordExistsOrNot, editValueAssignByCondition, getObjectById } from '../../../generic/autocomplete';
+import { getValueFromObjectByKey, getObjectByValue, validateRecordExistsOrNot, editValueAssignByCondition, getObjectById, selectedValueValidate } from '../../../generic/autocomplete';
+import { ItemMasterService } from '../../../services/itemMaster.service';
+import { CommonService } from '../../../services/common.service';
 
 @Component({
     selector: 'app-customer-general-information',
@@ -35,7 +37,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     @Output() saveGeneralInformationData = new EventEmitter<any>();
     @Output() editGeneralInformation = new EventEmitter<any>();
 
-    generalInformation = new CustomerGeneralInformation()
+    generalInformation = new CustomerGeneralInformation();
     customertypes: any[];
     customerNames: { customerId: any; name: any; }[];
     //customerListOriginal: { customerId: any; name: any; }[];
@@ -44,7 +46,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     customerCodes: { customerId: any; name: any; }[];
     // countryListOriginal: any[];
     countrycollection: any[];
-    allcustomerclassificationInfo: CustomerClassification[];
+    allcustomerclassificationInfo;
     integrationOriginalList = [
 
     ];
@@ -54,6 +56,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     isCustomerNameAlreadyExists: boolean = false;
     isCustomerCodeAlreadyExists: boolean = false;
     emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{3,}";
+    urlPattern = "^((ht|f)tp(s?))\://([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(/\S*)?$";
 
     classificationNew = {
         description: '',
@@ -75,6 +78,24 @@ export class CustomerGeneralInformationComponent implements OnInit {
     isEdit: any = false;
     id: number;
     editData: any;
+    partListForPMA: any;
+    partListForDER: any;
+    partListOriginal: any;
+    // restrictsPMAList: any;
+    // restrictBERList: any;
+    restictDERtempList: any = [];
+    restictPMAtempList: any = [];
+    restrictedDERParts: any = [];
+    restrictedPMAParts: any = [];
+    restrictHeaders = [
+        { field: 'partNumber', header: 'PN' },
+        { field: 'memo', header: 'Description' },
+
+    ];
+    selectedClassificationRecordForEdit: any;
+    tempClassifciatonIds: any = [];
+    tempIntegrationIds: any = [];
+    ataListDataValues: any;
     // editData: any;
 
     // selectedCustomerCodeData: any;
@@ -314,7 +335,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
 
     constructor(public integrationService: IntegrationService, public customerClassificationService: CustomerClassificationService, public ataservice: AtaMainService, private authService: AuthService, private alertService: AlertService,
-        public customerService: CustomerService, public vendorser: VendorService, private currencyService: CurrencyService) {
+        public customerService: CustomerService, public itemService: ItemMasterService, public vendorser: VendorService, private currencyService: CurrencyService, private commonService: CommonService) {
 
 
         //     this.dataSource = new MatTableDataSource();
@@ -366,6 +387,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
 
         this.getAllCustomerTypes();
+        this.getAllPartList();
         //this.getAllCustomers();
 
         this.getAllCustomerClassification();
@@ -375,18 +397,22 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
         if (this.isEdit) {
             this.customerService.getCustomerdataById(this.id).subscribe(response => {
-                 console.log(response);
+                console.log(response);
 
-                const res = response[0][0]
+                const res = response[0];
 
-                this.editGeneralInformation.emit(res );
+                this.editGeneralInformation.emit(res);
                 this.editData = res;
-                this.generalInformation = { ...this.editData,
+
+                this.generalInformation = {
+                    ...this.editData,
                     name: getObjectByValue('name', res.name, this.customerListOriginal),
-                    country: getObjectByValue('nice_name', res.country, this.countryListOriginal),
+                    country: getObjectById('countries_id', res.country, this.countryListOriginal),
                     customerParentName: getObjectByValue('name', res.customerParentName, this.customerListOriginal),
                     customerCode: getObjectByValue('customerCode', res.customerCode, this.customerListOriginal),
-             };
+                };
+
+
                 // this.editData = {
                 //     addressId: res.addressId,
                 //     isAddressForBilling: res.t.isAddressForBilling,
@@ -434,7 +460,61 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
 
             });
+
+            this.getCustomerClassificationByCustomerId();
+            this.getCustomerIntegrationTypesByCustomerId();
+            this.getCustomerRestrictedPMAByCustomerId();
+            this.getCustomerRestrictedDERByCustomerId();
         }
+    }
+
+    async  getCustomerClassificationByCustomerId() {
+        await this.customerService.getCustomerClassificationMapping(this.id).subscribe(res => {
+            this.generalInformation.customerClassificationIds = res.map(x => x.customerClassificationId);
+            // console.log(this.generalInformation.customerClassificationIds);
+        });
+    }
+
+    async getCustomerIntegrationTypesByCustomerId() {
+        await this.customerService.getintegrationtypes(this.id).subscribe(res => {
+            this.generalInformation.integrationPortalId = res.map(x => x.integrationPortalId)
+            console.log(this.generalInformation.integrationPortalId);
+        });
+    }
+
+    async getCustomerRestrictedPMAByCustomerId() {
+        await this.commonService.getRestrictedParts(1, this.id, 'PMA').subscribe(res => {
+            this.generalInformation.restrictedPMAParts = res;
+            this.restictPMAtempList = res.map(x => x.itemMasterId);
+            // this.generalInformation.restrictedPMAParts = res.map(x => {
+            //     return  { 
+            //          masterPartId: x.itemMasterId,
+            //          partNumber: x.partNumber, 
+            //          memo: x.memo, 
+            //          createdBy: x.createdBy,
+            //          updatedBy: x.updatedBy
+            //     }
+            // });
+
+        })
+    }
+
+    async getCustomerRestrictedDERByCustomerId() {
+        await this.commonService.getRestrictedParts(1, this.id, 'DER').subscribe(res => {
+
+            this.generalInformation.restrictedDERParts = res;
+            this.restictDERtempList = res.map(x => x.itemMasterId);
+            // this.generalInformation.restrictedDERParts = res.map(x => {
+            //     return  { 
+            //          masterPartId: x.itemMasterId,
+            //          partNumber: x.partNumber, 
+            //          memo: x.memo, 
+            //          createdBy: x.createdBy,
+            //          updatedBy: x.updatedBy
+            //     }
+            // });
+
+        })
     }
 
 
@@ -449,12 +529,26 @@ export class CustomerGeneralInformationComponent implements OnInit {
     //                 }
     //             );
     // }
+
+    getAllPartList() {
+        this.itemService.getPrtnumberslistList().subscribe(res => {
+            const data = res[0];
+
+            this.partListOriginal = data.map(x => {
+                return {
+                    label: x.partNumber, value: { masterPartId: x.itemMasterId, partNumber: x.partNumber, memo: x.memo, createdBy: this.userName, updatedBy: this.userName }
+                }
+            })
+            this.partListForPMA = [...this.partListOriginal];
+            this.partListForDER = [...this.partListOriginal];
+        })
+    }
     getAllIntegrations() {
         this.integrationService.getWorkFlows().subscribe(res => {
             const responseData = res[0]
             this.integrationOriginalList = responseData.map(x => {
                 return {
-                    label: x.description, value: x
+                    label: x.description, value: x.integrationPortalId
                 }
             })
             console.log(this.integrationOriginalList)
@@ -480,14 +574,58 @@ export class CustomerGeneralInformationComponent implements OnInit {
     //     })
     // }
     async getAllCustomerClassification() {
-        await this.customerClassificationService.getCustomerClassificationList().subscribe(res => {
-            const responseData = res[0];
-            this.allcustomerclassificationInfo = responseData.filter(x => {
-                if (x.isActive === true) {
-                    return x;
-                }
-            })
-        })
+        await this.commonService.smartDropDownList('CustomerClassification', 'CustomerClassificationId', 'Description').subscribe(res => {
+            this.allcustomerclassificationInfo = res;
+        });
+        //await this.customerClassificationService.getCustomerClassificationList().subscribe(res => {
+        //    const responseData = res[0];
+        //    this.allcustomerclassificationInfo = responseData.map(x => {
+        //        return {
+        //            label: x.description, value: x.customerClassificationId
+        //        }
+        //        // console.log(this.allcustomerclassificationInfo);
+        //        // if (x.isActive === true) {
+        //        //     return x;
+        //        // }
+        //    })
+
+        //})
+    }
+    selectedPartForPMA(event) {
+        console.log(event)
+
+    }
+    // filterpartItems(event){
+    //     this.partList = this.partListOriginal;
+
+
+    //     this.partList = [...this.partListOriginal.filter(x => {
+    //         return x.partNumber.toLowerCase().includes(event.query.toLowerCase())
+    //     })] 
+    // }
+
+    addRestrictPMA() {
+
+        this.generalInformation.restrictedPMAParts = this.restictPMAtempList;
+
+        this.partListForPMA = this.restictPMAtempList.reduce((acc, obj) => {
+            return acc.filter(x => x.value.masterPartId !== obj.masterPartId)
+        }, this.partListOriginal)
+    }
+    deleteRestirctPMA(i, rowData) {
+        this.partListForPMA = [{ label: rowData.partNumber, value: rowData }, ...this.partListForPMA];
+        this.generalInformation.restrictedPMAParts.splice(i, 1);
+    }
+
+    addRestrictBER() {
+        this.generalInformation.restrictedDERParts = this.restictDERtempList;
+        this.partListForDER = this.restictDERtempList.reduce((acc, obj) => {
+            return acc.filter(x => x.value.masterPartId !== obj.masterPartId)
+        }, this.partListOriginal)
+    }
+    deleteRestrictDER(i, rowData) {
+        this.partListForDER = [{ label: rowData.partNumber, value: rowData }, ...this.partListForDER];
+        this.generalInformation.restrictedDERParts.splice(i, 1);
     }
 
 
@@ -495,8 +633,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
         this.classificationList = this.allcustomerclassificationInfo;
 
         this.classificationList = [...this.allcustomerclassificationInfo.filter(x => {
-            return x.description.toLowerCase().includes(event.query.toLowerCase())
-        })]
+            return x.label.toLowerCase().includes(event.query.toLowerCase());
+            })
+        ];
 
     }
     filterCustomerNames(event) {
@@ -536,12 +675,12 @@ export class CustomerGeneralInformationComponent implements OnInit {
         if (value == 'PBHCustomer') {
             this.memoPopupContent = this.generalInformation.pbhCustomerMemo;
         }
-        if (value == 'restrictPMA') {
-            this.memoPopupContent = this.generalInformation.restrictPMAMemo;
-        }
-        if (value == 'restrictBER') {
-            this.memoPopupContent = this.generalInformation.restrictBERMemo;
-        }
+        // if (value == 'restrictPMA') {
+        //     this.memoPopupContent = this.generalInformation.restrictPMAMemo;
+        // }
+        // if (value == 'restrictBER') {
+        //     this.memoPopupContent = this.generalInformation.restrictBERMemo;
+        // }
         this.memoPopupValue = value;
     }
 
@@ -550,12 +689,12 @@ export class CustomerGeneralInformationComponent implements OnInit {
         if (this.memoPopupValue == 'PBHCustomer') {
             this.generalInformation.pbhCustomerMemo = this.memoPopupContent;
         }
-        if (this.memoPopupValue == 'restrictPMA') {
-            this.generalInformation.restrictPMAMemo = this.memoPopupContent;
-        }
-        if (this.memoPopupValue == 'restrictBER') {
-            this.generalInformation.restrictBERMemo = this.memoPopupContent;
-        }
+        // if (this.memoPopupValue == 'restrictPMA') {
+        //     this.generalInformation.restrictPMAMemo = this.memoPopupContent;
+        // }
+        // if (this.memoPopupValue == 'restrictBER') {
+        //     this.generalInformation.restrictBERMemo = this.memoPopupContent;
+        // }
         this.memoPopupContent = '';
     }
     selectedCustomerName() {
@@ -586,11 +725,16 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     }
     saveGeneralInformation() {
+
+
+
         if (!this.isEdit) {
             this.customerService.newAction({
                 ...this.generalInformation,
-                country: getValueFromObjectByKey('nice_name', this.generalInformation.country),
+                country: getValueFromObjectByKey('countries_id', this.generalInformation.country),
 
+                restrictedDERParts: (typeof this.generalInformation.restrictedDERParts === 'undefined') ? null : this.generalInformation.restrictedDERParts.map(x => { return { ...x, partType: 'DER' } }),
+                restrictedPMAParts: typeof this.generalInformation.restrictedPMAParts === 'undefined' ? null : this.generalInformation.restrictedPMAParts.map(x => { return { ...x, partType: 'PMA' } }),
                 customerParentName: getValueFromObjectByKey('name', this.generalInformation.customerParentName),
                 createdBy: this.userName, updatedBy: this.userName, masterCompanyId: 1
             }).subscribe(res => {
@@ -606,14 +750,17 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 this.isEdit = true;
             })
         } else {
-
             this.customerService.updateAction({
                 ...this.generalInformation,
                 addressId: this.editData.addressId,
                 customerId: this.id,
+
+                restrictedDERParts: (typeof this.generalInformation.restrictedDERParts === 'undefined') ? null : this.generalInformation.restrictedDERParts.map(x => { return { ...x, partType: 'DER' } }),
+                restrictedPMAParts: typeof this.generalInformation.restrictedPMAParts === 'undefined' ? null : this.generalInformation.restrictedPMAParts.map(x => { return { ...x, partType: 'PMA' } }),
                 name: editValueAssignByCondition('name', this.generalInformation.name),
                 customerCode: editValueAssignByCondition('customerCode', this.generalInformation.customerCode),
-                country: getValueFromObjectByKey('nice_name', this.generalInformation.country),
+                //country: getValueFromObjectByKey('nice_name', this.generalInformation.country),
+                country: getValueFromObjectByKey('countries_id', this.generalInformation.country),
                 customerParentName: getValueFromObjectByKey('name', this.generalInformation.customerParentName),
                 createdBy: this.userName, updatedBy: this.userName, masterCompanyId: 1
             }).subscribe(res => {
@@ -645,6 +792,17 @@ export class CustomerGeneralInformationComponent implements OnInit {
         }
     }
 
+    selectedClassification(object) {
+        const exists = selectedValueValidate('label', object, this.selectedClassificationRecordForEdit)
+
+        this.isClassificationAlreadyExists = !exists;
+    }
+
+
+
+
+
+
     addClassification() {
         const data = {
             ...this.addNewclassification,
@@ -662,7 +820,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 MessageSeverity.success
             );
 
-            this.generalInformation.customerClassificationId = res.customerClassificationId;
+            // this.generalInformation.customerClassificationId = res.customerClassificationId;
 
         })
 
@@ -710,6 +868,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
     resetIntegrationPopUp() {
         this.addNewIntergation = { ...this.intergrationNew }
     }
+
+
 
 
     // //calling for ATA Subchapter Data

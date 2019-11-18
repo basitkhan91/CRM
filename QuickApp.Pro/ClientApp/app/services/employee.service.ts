@@ -103,6 +103,9 @@ export class EmployeeService {
     newAddCertification(employee: any) {
         return this.employeeEndpoint.getNewCertification<any>(employee);
     }
+    getEmployeeCertifications(employee: any) {
+        return this.employeeEndpoint.getEmployeeCertifications<any>(employee);
+    }
     AddRolesData(roles: any) {
         return this.employeeEndpoint.addRolesData<any>(roles);
     }
@@ -116,6 +119,19 @@ export class EmployeeService {
 
     newAddEmployee(employee: any) {
         return this.employeeEndpoint.getNewEmployeeEndpoint<any>(employee);
+    }
+
+    employeeLeavetypeAdd(employee: any) {
+        return this.employeeEndpoint.employeeLeavetypeAdd<any>(employee);
+    }
+    employeeLeavetypeRemove(employee: any) {
+        return this.employeeEndpoint.employeeLeavetypeRemove<any>(employee);
+    }
+    employeeshifttypeRemove(employee: any) {
+        return this.employeeEndpoint.employeeshifttypeRemove<any>(employee);
+    }
+    employeeShifttypeAdd(employee: any) {
+        return this.employeeEndpoint.employeeShifttypeAdd<any>(employee);
     }
 
     updateEmployee(action: any) {
@@ -175,6 +191,9 @@ export class EmployeeService {
 
     getAllEmployeesInfo() {
         this.employeeEndpoint.getAllEmployeesInfo<any[]>();
+    }
+    getEmployeeDataById(employeeId: any) {
+        return this.employeeEndpoint.getEmployeeDataById<any>(employeeId);
     }
 
 }

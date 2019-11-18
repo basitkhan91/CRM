@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -10,7 +10,7 @@ namespace DAL.Models
         public long? AssetDisposalTypeId { get; set; }
 
         [Required(ErrorMessage = "Id Is Required.")]
-        public string AssetDisposalId { get; set; }
+        public string AssetDisposalCode { get; set; }
 
         [Required(ErrorMessage = "Name Is Required.")]
         public string AssetDisposalName { get; set; }
@@ -21,7 +21,7 @@ namespace DAL.Models
 
         public bool? IsActive { get; set; }
 
-        public bool? IsDelete { get; set; }
+        public bool? IsDeleted { get; set; }
 
         public virtual MasterCompany MasterCompany { get; set; }
     }

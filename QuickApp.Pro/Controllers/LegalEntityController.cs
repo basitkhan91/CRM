@@ -64,7 +64,7 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<LegalEntityViewModel>))]
         public IActionResult Get()
         {
-            var allentity = _unitOfWork.legalEntity.GetAllLegalEntityData();
+            var allentity = _unitOfWork.LegalEntity.GetAllLegalEntityData();
             //return Ok(Mapper.Map<IEnumerable<LegalEntityViewModel>>(allentity));
             return Ok(allentity);
 
@@ -133,10 +133,8 @@ namespace QuickApp.Pro.Controllers
                 address.PostalCode = legalEntityViewModel.PostalCode;
                 address.StateOrProvince = legalEntityViewModel.BankProvince;
                 address.Country = legalEntityViewModel.Country;
-                address.RecordModifiedDate = legalEntityViewModel.RecordModifiedDate;
                 address.MasterCompanyId = 1;
                 address.IsActive = legalEntityViewModel.IsActive;
-                address.RecordCreateDate = DateTime.Now;
                 address.CreatedBy = legalEntityViewModel.CreatedBy;
                 address.UpdatedBy = legalEntityViewModel.UpdatedBy;
                 address.CreatedDate = DateTime.Now;
@@ -200,7 +198,7 @@ namespace QuickApp.Pro.Controllers
                     entityobject.ACHId = ach.ACHId;
                 }
 
-                _unitOfWork.legalEntity.Add(entityobject);
+                _unitOfWork.LegalEntity.Add(entityobject);
                 _unitOfWork.SaveChanges();
                // if (legalEntityViewModel.ParentId == null) { UpdateToParent(entityobject); }
                
@@ -219,10 +217,8 @@ namespace QuickApp.Pro.Controllers
             address.StateOrProvince = legalEntityViewModel.BankProvince;
             //address.City = legalEntityViewModel.BankCity;
             address.Country = legalEntityViewModel.Country;
-            address.RecordModifiedDate = legalEntityViewModel.RecordModifiedDate;
             address.MasterCompanyId = 1;
             address.IsActive = true;
-            address.RecordCreateDate = DateTime.Now;
             address.CreatedBy = legalEntityViewModel.CreatedBy;
             address.UpdatedBy = legalEntityViewModel.UpdatedBy;
             address.CreatedDate = DateTime.Now;
@@ -282,9 +278,7 @@ namespace QuickApp.Pro.Controllers
                         address.PostalCode = legalEntityViewModel.PostalCode;
                         address.StateOrProvince = legalEntityViewModel.BankProvince;
                         address.Country = legalEntityViewModel.Country;
-                        address.RecordModifiedDate = legalEntityViewModel.RecordModifiedDate;
                         address.MasterCompanyId = 1;
-                        address.RecordCreateDate = DateTime.Now;
                         address.CreatedBy = legalEntityViewModel.CreatedBy;
                         address.UpdatedBy = legalEntityViewModel.UpdatedBy;
                         address.CreatedDate = DateTime.Now;
@@ -304,9 +298,8 @@ namespace QuickApp.Pro.Controllers
                         lockAddress.City = legalEntityViewModel.BankCity;
                         lockAddress.Country = legalEntityViewModel.Country;
                         lockAddress.PostalCode = legalEntityViewModel.PostalCode;
-                        lockAddress.Country = legalEntityViewModel.Country;lockAddress.RecordModifiedDate = legalEntityViewModel.RecordModifiedDate;
+                        lockAddress.Country = legalEntityViewModel.Country;
                         lockAddress.MasterCompanyId = 1;
-                        lockAddress.RecordCreateDate = DateTime.Now;
                         lockAddress.CreatedBy = legalEntityViewModel.CreatedBy;
                         lockAddress.UpdatedBy = legalEntityViewModel.UpdatedBy;
                         lockAddress.CreatedDate = DateTime.Now;
@@ -396,7 +389,7 @@ namespace QuickApp.Pro.Controllers
                 var entityobject = _context.LegalEntity.Where(a => a.LegalEntityId == id).SingleOrDefault();
                 if (entityobject != null)
                 {
-                    entityobject.IsDelete = true;
+                    entityobject.IsDeleted = true;
                     _context.LegalEntity.Update(entityobject);
                     _context.SaveChanges();
                 }
@@ -420,6 +413,153 @@ namespace QuickApp.Pro.Controllers
             {
                 return BadRequest(ModelState);
             }
+
+        }
+
+
+        [HttpPost("createlegalentitybillingaddress")]
+        public IActionResult CreateLegalEntityBillingAddress([FromBody] LegalEntityBillingAddress billingAddress)
+        {
+            if (ModelState.IsValid)
+            {
+                billingAddress.LegalEntityBillingAddressId = _unitOfWork.LegalEntity.CreateLegalEntityBillingAddress(billingAddress);
+                return Ok(billingAddress);
+            }
+            return BadRequest(ModelState);
+        }
+
+        [HttpPost("updatelegalentitybillingaddress")]
+        public IActionResult UpdateLegalEntityBillingAddress([FromBody] LegalEntityBillingAddress billingAddress)
+        {
+            if (ModelState.IsValid)
+            {
+                _unitOfWork.LegalEntity.UpdateLegalEntityBillingAddress(billingAddress);
+                return Ok(billingAddress);
+            }
+            return BadRequest(ModelState);
+        }
+
+
+        [HttpGet("deletelegalentitybillingaddress")]
+        public IActionResult DeleteLegalEntityBillingAddress(long billingAddressId, string updatedBy)
+        {
+            _unitOfWork.LegalEntity.DeleteLegalEntityBillingAddress(billingAddressId, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("legalentitybillingaddressstatus")]
+        public IActionResult LegalEntityBillingAddressStatus(long billingAddressId, bool status, string updatedBy)
+        {
+            _unitOfWork.LegalEntity.LegalEntityBillingAddressStatus(billingAddressId, status, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("legalentitybillingaddress")]
+        public IActionResult GetLegalEntityBillingAddress()
+        {
+            _unitOfWork.LegalEntity.GetLegalEntityBillingAddress();
+            return Ok();
+        }
+
+        [HttpGet("legalentitybillingaddressbyid")]
+        public IActionResult LegalEntityBillingAddressById(long billingAddressId)
+        {
+            _unitOfWork.LegalEntity.LegalEntityBillingAddressById(billingAddressId);
+            return Ok();
+        }
+
+
+        [HttpPost("createlegalentityshippingaddress")]
+        public IActionResult CreateLegalEntityshippingAddress([FromBody] LegalEntityShippingAddress shippingAddress)
+        {
+            if (ModelState.IsValid)
+            {
+                shippingAddress.LegalEntityShippingAddressId = _unitOfWork.LegalEntity.CreateLegalEntityShippingAddress(shippingAddress);
+                return Ok(shippingAddress);
+            }
+            return BadRequest(ModelState);
+        }
+
+        [HttpPost("updatelegalentityshippingaddress")]
+        public IActionResult UpdateLegalEntityshippingAddress([FromBody] LegalEntityShippingAddress shippingAddress)
+        {
+            if (ModelState.IsValid)
+            {
+                _unitOfWork.LegalEntity.UpdateLegalEntityShippingAddress(shippingAddress);
+                return Ok(shippingAddress);
+            }
+            return BadRequest(ModelState);
+        }
+
+
+        [HttpGet("deletelegalentityshippingaddress")]
+        public IActionResult DeleteLegalEntityshippingAddress(long shippingAddressId, string updatedBy)
+        {
+            _unitOfWork.LegalEntity.DeleteLegalEntityShippingAddress(shippingAddressId, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("legalentityshippingaddressstatus")]
+        public IActionResult LegalEntityshippingAddressStatus(long shippingAddressId, bool status, string updatedBy)
+        {
+            _unitOfWork.LegalEntity.LegalEntityShippingAddressStatus(shippingAddressId, status, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("legalentityshippingaddresslist")]
+        public IActionResult GetLegalEntityshippingAddress()
+        {
+            _unitOfWork.LegalEntity.GetLegalEntityShippingAddress();
+            return Ok();
+        }
+
+        [HttpGet("legalentityshippingaddressbyid")]
+        public IActionResult LegalEntityshippingAddressById(long shippingAddressId)
+        {
+            _unitOfWork.LegalEntity.LegalEntityShippingAddressById(shippingAddressId);
+            return Ok();
+        }
+
+        [HttpGet("legalentitysitenames")]
+        public IActionResult GetLegalEntitySiteNames(long legalEntityId)
+        {
+            var result = _unitOfWork.LegalEntity.GetLegalEntitySiteNames(legalEntityId);
+            return Ok(result);
+        }
+
+        [HttpGet("legalentityaddress")]
+        public IActionResult GetLegalEntityAddress(long addressId)
+        {
+            var result = _unitOfWork.LegalEntity.GetLegalEntityAddress(addressId);
+            return Ok(result);
+        }
+
+        [HttpGet("legalentitycontacts")]
+        public IActionResult GetLegalEntityContacts(long legalEntityId)
+        {
+            var result = _unitOfWork.LegalEntity.GetLegalEntityContacts(legalEntityId);
+            return Ok(result);
+        }
+
+		[HttpGet("legalentityshippingsitenames")]
+		public IActionResult GetLegalEntityShippingSiteNames(long legalEntityId)
+		{
+			var result = _unitOfWork.LegalEntity.GetLegalEntityShippingSiteNames(legalEntityId);
+			return Ok(result);
+		}
+
+		[HttpGet("legalentityshippingaddress")]
+		public IActionResult GetLegalEntityShippingAddress(long addressId)
+		{
+			var result = _unitOfWork.LegalEntity.GetLegalEntityShippingAddress(addressId);
+			return Ok(result);
+		}
+
+        [HttpGet("legalentityaddressbyid/{legalentityid}")]
+        public IActionResult GetLegalEntityAddressById(long legalEntityId)
+        {
+            var allVendShipdetails = _unitOfWork.LegalEntity.GetLegalEntityAddressById(legalEntityId); //.GetAllCustomersData();
+            return Ok(allVendShipdetails);
 
         }
     }

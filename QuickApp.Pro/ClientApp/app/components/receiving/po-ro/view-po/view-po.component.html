@@ -194,23 +194,23 @@
                         <th>PN</th>
                         <th>Alt PN</th>
                         <th>PN Description</th>
-                        <th>Change PN to</th>
+                        <!-- <th>Change PN to</th> -->
                         <th>Manufacturer</th>
                         <th>Cond</th>
-                        <th>Qty to Repair</th>
-                        <th>Qty Reserved</th>
-                        <th>Qty Repaired</th>
-                        <th>Qty Reconciled</th>
+                        <th>Qty Ordered</th>
+                        <th>Qty Received</th>
+                        <th>Qty Rejected</th>
+                        <th>Qty Backordered</th>
                         <th>Unit Cost</th>
                         <th>Discount</th>
                         <th>Extended Cost</th>
                         <th>WO</th>
                         <th>SO</th>
                         <th>Sub-WO</th>
-                        <th>CO</th>
-                        <th>BU</th>
+                        <th colspan="4" style="text-align: center;">Management Structure</th>
+                        <!--<th>BU</th>
                         <th>Div</th>
-                        <th>Dep</th>
+                        <th>Dep</th>-->
                         <th>Site</th>
                         <th>Warehouse</th>
                         <th>Location</th>
@@ -225,108 +225,52 @@
                         <td>{{obj.partNumber}}</td>
                         <td>{{obj.partNumber}}</td>
                         <td>{{obj.partDescription}}</td>
-                        <td></td> <!--{{obj.ItemTypeId}}-->
+                        <!-- <td></td> {{obj.ItemTypeId}} -->
                         <td>{{obj.manufacturer}}</td>
-                        <td>
-                            <select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.conditionId" disabled="">
+                        <td> 
+                            {{obj.conditionId}}
+                            <!-- <select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="obj.conditionId" disabled="">
                                 <option *ngFor="let condition of allconditioninfo" [ngValue]="condition.conditionId">{{condition.description}}</option>
-                            </select>
+                            </select> -->
                         </td>
                         <td>2</td>
                         <td>2</td>
                         <td>2</td>
                         <td>2</td>
-                        <td>
-                            <select class="form-control" disabled="">
-                                <!--{{obj.unitCost}}-->
-                                <option value="">Select</option>
-                            </select>
-                        </td>
+                        <td></td>
                         <td>discount</td>
                         <td>extended cost</td>
-                        <td>
-                            <select class="form-control" disabled="">
-                                <option value="">WO-45450</option>
-                            </select>
+                        <td></td>
+                        <td></td> 
+                        <td></td>
+                        <td><label style="width:90px;">Company:</label></td>
+                        <td><label style="width:90px;">BU:</label></td>
+                        <td><label style="width:90px;">Division:</label></td>
+                        <td><label style="width:90px;">Dept:</label></td>
+                        <td>{{obj.siteId}}
+                            <!-- <select class="form-control" [(ngModel)]="obj.siteId" [ngModelOptions]="{standalone: true}" (change)="svalueChange(obj)" disabled="">
+                                <option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option>
+                            </select> -->
+                        </td>
+                        <td>{{obj.warehouseId}}
+                            <!-- <select class="form-control" [(ngModel)]="obj.warehouseId" [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange(obj)" disabled="">
+                                <option *ngFor="let warehouse of obj.allWareHouses" [ngValue]="warehouse.warehouseId">{{warehouse.warehouseName}}</option>
+                            </select> -->
                         </td>
                         <td>
-                            <select class="form-control" disabled="">
-                                <option value="">SO-45450</option>
-                                <option value="">SO-45451</option>
-                                <option value="">SO-45452</option>
-                                <option value="">SO-45453</option>
-                                <option value="">SO-45454</option>
-                                <option value="">SO-45455</option>
-                            </select>
+                            <!-- <select class="form-control" [(ngModel)]="obj.locationId" [ngModelOptions]="{standalone: true}" (change)="locationValueChange(obj)" disabled="">
+                                <option *ngFor="let location of obj.allLocations" [ngValue]="location.locationId">{{location.name}}</option>
+                            </select> -->
                         </td>
                         <td>
-                            <select class="form-control" disabled="">
-                                <option value="">SWO-45450</option>
-                                <option value="">SWO-45451</option>
-                                <option value="">SWO-45452</option>
-                                <option value="">SWO-45453</option>
-                                <option value="">SWO-45454</option>
-                                <option value="">SWO-45455</option>
-                            </select>
+                            <!-- <select class="form-control" [(ngModel)]="obj.shelfId" [ngModelOptions]="{standalone: true}" (change)="shelfValueChange(obj)" disabled="">
+                                <option *ngFor="let shelf of obj.allShelfs" [ngValue]="shelf.shelfId">{{shelf.name}}</option>
+                            </select> -->
                         </td>
                         <td>
-                            <select class="form-control" disabled="">
-                                <option value="">Adso</option>
-                                <option value="">Aerospace</option>
-                                <option value="">ILS</option>
-                                <option value="">PArts Base</option>
-                                <option value="">PAS</option>
-                                <option value="">Silverxis</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control" disabled="">
-                                <option value="">Adso</option>
-                                <option value="">Aerospace</option>
-                                <option value="">ILS</option>
-                                <option value="">PArts Base</option>
-                                <option value="">PAS</option>
-                                <option value="">Silverxis</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control" disabled="">
-                                <option value="">Designing</option>
-                                <option value="">Development</option>
-                                <option value="">Repear</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control" disabled="">
-                                <option value="">.net</option>
-                                <option value="">HTML</option>
-                                <option value="">Java</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control" [(ngModel)]="obj.siteId" [ngModelOptions]="{standalone: true}" (change)="svalueChange(obj)" disabled="">
-                                <option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control" [(ngModel)]="obj.warehouseId" [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange(obj)" disabled="">
-                                <option *ngFor="let warehouse of obj.allWareHouses" [ngValue]="warehouse.warehouseId">{{warehouse.warehouseName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control" [(ngModel)]="obj.locationId" [ngModelOptions]="{standalone: true}" (change)="locationValueChange(obj)" disabled="">
-                                <option *ngFor="let location of obj.allLocations" [ngValue]="location.locationId">{{location.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control" [(ngModel)]="obj.shelfId" [ngModelOptions]="{standalone: true}" (change)="shelfValueChange(obj)" disabled="">
-                                <option *ngFor="let shelf of obj.allShelfs" [ngValue]="shelf.shelfId">{{shelf.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control" [(ngModel)]="obj.binId" [ngModelOptions]="{standalone: true}" (change)="binValueSelect(obj)" disabled="">
-                                <option *ngFor="let bin of obj.allBins" [ngValue]="bin.binId">{{bin.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
-                            </select>
+                            <!-- <select class="form-control" [(ngModel)]="obj.binId" [ngModelOptions]="{standalone: true}" (change)="binValueSelect(obj)" disabled="">
+                                <option *ngFor="let bin of obj.allBins" [ngValue]="bin.binId">{{bin.name}}</option>
+                            </select> -->
                         </td>
                         <td colspan="51"></td>
                     </tr>
@@ -338,12 +282,13 @@
                         <th>Control Num</th>
                         <th>ID</th>
                         <th>Cond</th>
-                        <th>UOM</th>
+                        <!-- <th>UOM</th> -->
                         <th>Serial Num</th>
-                        <th>Out for Repair</th>
-                        <th>Qty Repaired</th>
-                        <th>Inventory Cost</th>
-                        <th>Repair Cost</th>
+                        <th>Qty Ordered</th>
+                        <th>Qty Received</th>
+                        <th>Qty Rejected</th>
+                        <th>Qty Backordered</th>
+                        <th>Unit Cost</th>
                         <th>Extended Cost</th>
                         <th>Receiver no.</th>
                         <th>WO </th>
@@ -370,10 +315,10 @@
                         <th>Core SO</th>
                         <th>GL Account</th>
                         <th>Time Life</th>
-                        <th>CO</th>
-                        <th>BU</th>
+                        <th colspan="4" style="text-align: center;">Management Structure</th>
+                        <!-- <th>BU</th>
                         <th>Div</th>
-                        <th>Dep</th>
+                        <th>Dep</th> -->
                         <th>Site</th>
                         <th>Warehouse</th>
                         <th>Location</th>
@@ -388,101 +333,90 @@
                         <td>CN-100557</td>
                         <td>7</td>
                         <td>
-                            <select class="form-control" disabled="">
+                            <!-- <select class="form-control" disabled="">
                                 <option>AR</option>
                                 <option>AS-IS</option>
                                 <option>NEW</option>
                                 <option>OVH</option>
                                 <option>REP</option>
                                 <option>SRV</option>
-                            </select>
+                            </select> -->
                         </td>
-                        <td>Each</td>
+                        <!-- <td>Each</td> -->
                         <td>SN-10006</td>
                         <td>1</td>
                         <td>1</td>
-                        <td>$<input type="text" class="form-control amount disabled2" style="max-width: calc(100% - 10px)!important;min-width: 80px;margin-left: 2px;" disabled="" value="100.00"></td>
-                        <td>$<input type="text" class="form-control amount disabled2" style="max-width: calc(100% - 10px)!important;min-width: 80px;margin-left: 2px;" disabled="" value="400.00"></td>
+                        <td>1</td>
+                        <td>1</td>
+                        <!-- <td>$
+                            <input type="text" class="form-control amount disabled2" style="max-width: calc(100% - 10px)!important;min-width: 80px;margin-left: 2px;" disabled="" value="100.00">
+                        </td> -->
+                        <td>$
+                            <!-- <input type="text" class="form-control amount disabled2" style="max-width: calc(100% - 10px)!important;min-width: 80px;margin-left: 2px;" disabled="" value="400.00"> -->
+                        </td>
                         <td> $400.00 </td>
                         <td>RO-55577</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                         <td>
-                            <select class="form-control" disabled="">
-                                <option value="">WO-45450</option>
-                                <option value="">WO-45451</option>
-                                <option value="">WO-45452</option>
-                                <option value="">WO-45453</option>
-                                <option value="">WO-45454</option>
-                                <option value="">WO-45455</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control" disabled="">
-                                <option value="">SO-45450</option>
-                                <option value="">SO-45451</option>
-                                <option value="">SO-45452</option>
-                                <option value="">SO-45453</option>
-                                <option value="">SO-45454</option>
-                                <option value="">SO-45455</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control" disabled="">
-                                <option value="">SWO-45450</option>
-                                <option value="">SWO-45451</option>
-                                <option value="">SWO-45452</option>
-                                <option value="">SWO-45453</option>
-                                <option value="">SWO-45454</option>
-                                <option value="">SWO-45455</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select id="" name="" class="form-control disabled2 owner-selection" disabled="">
+                            <!-- <select id="" name="" class="form-control disabled2 owner-selection" disabled="">
                                 <option value="Customer">Customer</option>
                                 <option value="Other">Other </option>
                                 <option value="Vendor">Vendor</option>
-                            </select>
+                            </select> -->
                         </td>
                         <td></td>
                         <td>
-                            <select id="" name="" class="form-control obtain-selection disabled2" disabled="">
+                            <!-- <select id="" name="" class="form-control obtain-selection disabled2" disabled="">
                                 <option value="Customer">Customer</option>
                                 <option value="Other">Other </option>
                                 <option value="Vendor">Vendor</option>
-                            </select>
+                            </select> -->
                         </td>
                         <td></td>
                         <td>
-                            <select id="" name="" class="form-control traceable-selection disabled2" disabled="">
+                            <!-- <select id="" name="" class="form-control traceable-selection disabled2" disabled="">
                                 <option value="Customer">Customer</option>
                                 <option value="Other">Other </option>
                                 <option value="Vendor">Vendor</option>
-                            </select>
+                            </select> -->
                         </td>
                         <td></td>
-                        <td><input class="form-control" type="text" disabled="" value="12345"></td>
                         <td>
-                            <select class="form-control" disabled="">
+                            <!-- <input class="form-control" type="text" disabled="" value="12345"> -->
+                        </td>
+                        <td>
+                            <!-- <select class="form-control" disabled="">
                                 <option>MFG 1</option>
                                 <option>MFG 2</option>
                                 <option>MFG 3</option>
-                            </select>
+                            </select> -->
                         </td>
-                        <td><input class="form-control" type="text" disabled="" value="12345"></td>
+                         <td>
+                             <!--<input class="form-control" type="text" disabled="" value="12345">-->
+                            </td> 
                         <td><p-calendar class="pas-clder" [showIcon]="true" disabled="true"></p-calendar></td>
-                        <td><input class="form-control" type="text" disabled="" value="12345"></td>
-                        <td><input class="form-control" type="text" disabled="" value="12345"></td>
+                        <td>
+                            <!-- <input class="form-control" type="text" disabled="" value="12345"> -->
+                        </td> 
+                        <td>
+                            <!-- <input class="form-control" type="text" disabled="" value="12345"> -->
+                        </td> 
                         <td><p-calendar class="pas-clder" [showIcon]="true" disabled="true"></p-calendar></td>
-                        <td><input class="form-control" type="text" disabled="" value="Shabbir Ahmad"></td>
+                        <td>
+                            <!-- <input class="form-control" type="text" disabled="" value="Shabbir Ahmad"> -->
+                        </td>
                         <td><p-calendar class="pas-clder" [showIcon]="true" disabled="true"></p-calendar></td>
                         <td><p-calendar class="pas-clder" [showIcon]="true" disabled="true"></p-calendar></td>
                         <td><p-calendar class="pas-clder" [showIcon]="true" disabled="true"></p-calendar></td>
                         <td><p-calendar class="pas-clder" [showIcon]="true" disabled="true"></p-calendar></td>
                         <td>
-                            <select class="form-control" disabled="">
+                            <!-- <select class="form-control" disabled="">
                                 <option value="">123</option>
                                 <option value="">456</option>
                                 <option value="">789</option>
-                            </select>
+                            </select> -->
                         </td>
                         <td>GL12345(Description)</td>
                         <td>
@@ -493,84 +427,54 @@
                                 </label>
                             </div>
                         </td>
+                        <td><label style="width:90px;">Company:</label></td>
+                        <td><label style="width:90px;">BU:</label></td>
+                        <td><label style="width:90px;">Division:</label></td>
+                        <td><label style="width:90px;">Dept:</label></td>
                         <td>
-                            <select class="form-control" disabled="">
-                                <option value="">Adso</option>
-                                <option value="">Aerospace</option>
-                                <option value="">ILS</option>
-                                <option value="">PArts Base</option>
-                                <option value="">PAS</option>
-                                <option value="">Silverxis</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control" disabled="">
-                                <option value="">Adso</option>
-                                <option value="">Aerospace</option>
-                                <option value="">ILS</option>
-                                <option value="">PArts Base</option>
-                                <option value="">PAS</option>
-                                <option value="">Silverxis</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control" disabled="">
-                                <option value="">Designing</option>
-                                <option value="">Development</option>
-                                <option value="">Repear</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control" disabled="">
-                                <option value="">.net</option>
-                                <option value="">HTML</option>
-                                <option value="">Java</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control" disabled="">
+                            <!-- <select class="form-control" disabled="">
                                 <option value="">Site 1</option>
                                 <option value="">Site 2</option>
                                 <option value="">Site 3</option>
                                 <option value="">Site 4</option>
                                 <option value="">Site 5</option>
-                            </select>
+                            </select> -->
                         </td>
                         <td>
-                            <select class="form-control" disabled="">
+                            <!-- <select class="form-control" disabled="">
                                 <option value="">Warehouse 1</option>
                                 <option value="">Warehouse 2</option>
                                 <option value="">Warehouse 3</option>
                                 <option value="">Warehouse 4</option>
                                 <option value="">Warehouse 5</option>
-                            </select>
+                            </select> -->
                         </td>
                         <td>
-                            <select class="form-control" disabled="">
+                            <!-- <select class="form-control" disabled="">
                                 <option value="">Location 1</option>
                                 <option value="">Location 2</option>
                                 <option value="">Location 3</option>
                                 <option value="">Location 4</option>
                                 <option value="">Location 5</option>
-                            </select>
+                            </select> -->
                         </td>
                         <td>
-                            <select class="form-control" disabled="">
+                            <!-- <select class="form-control" disabled="">
                                 <option value="">Shelf 1</option>
                                 <option value="">Shelf 2</option>
                                 <option value="">Shelf 3</option>
                                 <option value="">Shelf 4</option>
                                 <option value="">Shelf 5</option>
-                            </select>
+                            </select> -->
                         </td>
                         <td>
-                            <select class="form-control" disabled="">
+                            <!-- <select class="form-control" disabled="">
                                 <option value="">Bin 1</option>
                                 <option value="">Bin 2</option>
                                 <option value="">Bin 3</option>
                                 <option value="">Bin 4</option>
                                 <option value="">Bin 5</option>
-                            </select>
+                            </select> -->
                         </td>
                     </tr>
                 </tbody>

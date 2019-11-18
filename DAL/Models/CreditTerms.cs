@@ -14,7 +14,7 @@ namespace DAL.Models
         public string Name { get; set; }
         public string Memo { get; set; }
 
-        public byte? Percentage { get; set; }
+        public decimal Percentage { get; set; }
 
         public byte? Days { get; set; }
 
@@ -26,7 +26,7 @@ namespace DAL.Models
         public bool? IsActive { get; set; }
 
         public virtual MasterCompany MasterCompany { get; set; }
-        public bool? IsDelete { get; set; }
+        public bool? IsDeleted { get; set; }
 
 
 
