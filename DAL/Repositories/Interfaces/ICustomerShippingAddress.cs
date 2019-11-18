@@ -1,7 +1,6 @@
 ﻿using DAL.Models;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DAL.Repositories.Interfaces
 {
@@ -12,6 +11,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetAllShipViaDetails(long Selectedrow);
         IEnumerable<object> GetAllCusShippingHistory(long selectedrow);
         //  void CreateAction(DAL.Models.Action action);
+        IEnumerable<object> GetCustomerShippingAddressAudit(long customerId,long customerShippingAddressId);
 
     }
 }

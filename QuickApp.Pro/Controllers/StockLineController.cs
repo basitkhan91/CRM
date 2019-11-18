@@ -80,15 +80,14 @@ namespace QuickApp.Pro.Controllers
             }
         }
 
+        
         [HttpGet("GetCompanyData")]
         [Produces(typeof(List<StockLineViewModel>))]
         public IActionResult GetCompanyData()
         {
-
             try
             {
                 var result = _unitOfWork.stockLineList.GetAllCompanyData();
-
                 return Ok(result);
             }
             catch (Exception ex)
@@ -352,7 +351,7 @@ namespace QuickApp.Pro.Controllers
                 actionobject1.Memo = stockLineViewModel.Memo;
                 actionobject1.ManagementStructureEntityId = stockLineViewModel.ManagementStructureEntityId;
                 actionobject1.TimeLifeCyclesId = stockLineViewModel.TimeLifeCyclesId == 0 ? null : stockLineViewModel.TimeLifeCyclesId;
-                actionobject1.MasterCompanyId = 1;//stockLineViewModel.MasterCompanyId;
+                actionobject1.MasterCompanyId = stockLineViewModel.MasterCompanyId;
                 actionobject1.IsSerialized = stockLineViewModel.isSerialized;
                 actionobject1.ShelfId = stockLineViewModel.ShelfId == 0 ? null : stockLineViewModel.ShelfId;
                 actionobject1.BinId = stockLineViewModel.BinId == 0 ? null : stockLineViewModel.BinId;
