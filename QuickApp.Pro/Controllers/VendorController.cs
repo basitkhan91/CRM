@@ -3202,6 +3202,7 @@ namespace QuickApp.Pro.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult GetAllVendorrContactAddressAudit(long vendorId, long vendorContactId)
         {
+
             var allVendorShippingDetails = _unitOfWork.ContactRepository.GetVendorContactsAudit(vendorId, vendorContactId);
             return Ok(allVendorShippingDetails);
         }
