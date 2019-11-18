@@ -376,7 +376,7 @@
                                     [forceSelection]="true"
                                     [dropdown]="true"
                                     [suggestions]="partNumberList" 
-                                    (onSelect)="onSelectedPartNumber($event, workOrderPartNumber); getWorkFlowByPNandScope(workOrderPartNumber); getStockLineByItemMasterId(workOrderPartNumber);"
+                                    (onSelect)="onSelectedPartNumber($event, workOrderPartNumber, i); getWorkFlowByPNandScope(workOrderPartNumber); getStockLineByItemMasterId(workOrderPartNumber,i);"
                                     (completeMethod)="filterPartNumber($event)"
                                     (onClear)="clearautoCompleteInput(workOrderPartNumber, 'masterPartId' )"
                                      [size]="30" [minLength]="1"
@@ -393,8 +393,8 @@
                                     errorMessage="Records not found" 
                                     [forceSelection]="true"
                                     [dropdown]="true"
-                                    [suggestions]="revisedPartNumberList" 
-                                    (completeMethod)="filterRevisedPartNumber($event)"
+                                    [suggestions]="getDynamicVariableData('revisedPartNumberList',i)" 
+                                    (completeMethod)="filterRevisedPartNumber($event, i)"
                                      [size]="30" [minLength]="1"
                                     [dropdown]="true" class="p-autoComplete-ctsm"  >
                                   </p-autoComplete>
@@ -408,19 +408,19 @@
                                     >
                                       </p-dropdown>
                                 </td>
-                                <td><input type="text" class="form-control w50" [(ngModel)]="workOrderPartNumber.nTE"  
+                                <td><input type="text" class="form-control w50" [(ngModel)]="workOrderPartNumber.nte"  
                                   name="nte{{i}}"  #nte="ngModel" 
                                   disabled></td>
                                 <td>
-                                  <p-dropdown  placeholder="Select Condition" [options]="conditionList"
+                                  <p-dropdown  placeholder="Select Condition" [options]="getDynamicVariableData('conditionList',i)"
                                   name="condition{{i}}"  #condition="ngModel" 
-                                  (onChange)="getStockLineByItemMasterId(workOrderPartNumber);"
+                                  (onChange)="getStockLineByItemMasterId(workOrderPartNumber.masterPartId,workOrderPartNumber.conditionId,  i);"
                                    class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.conditionId"  required>
                                     </p-dropdown>
                               </td>
 
                                 <td>
-                                    <p-dropdown  placeholder="Select StockLine" [options]="stockLineList" 
+                                    <p-dropdown  placeholder="Select StockLine" [options]="getDynamicVariableData('stockLineList',i)" 
                                     name="stockLine{{i}}"  #stockLine="ngModel" 
                                     class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.stockLineId"
                                     (onChange)="getSerialNoByStockLineId(workOrderPartNumber)"
@@ -438,7 +438,7 @@
                                 <td>
                                     <p-dropdown placeholder="Select CMM" 
                                     name="cmm{{i}}"  #cmm="ngModel" 
-                                    [options]="cmmList" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.cMMId">
+                                    [options]="cmmList" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.cmmId">
                                       </p-dropdown>
                                    
                     
@@ -514,8 +514,8 @@
                                       </p-dropdown>
 
                                 </td>
-                                <td><input type="text" class="form-control w50" ></td>
-                                <td><input type="text" class="form-control w50" name="tATDaysStandard{{i}}"  #tATDaysStandard="ngModel"   [(ngModel)]="workOrderPartNumber.tATDaysStandard"></td>
+                                <td><input type="text" class="form-control w50" name="tatDaysCurrent{{i}}"  #tatDaysCurrent="ngModel"   [(ngModel)]="workOrderPartNumber.tatDaysCurrent" ></td>
+                                <td><input type="text" class="form-control w50" name="tatDaysStandard{{i}}"  #tatDaysStandard="ngModel"   [(ngModel)]="workOrderPartNumber.tatDaysStandard"></td>
                               
                                 <td><span *ngIf="!workOrderGeneralInformation.isSinglePN "  class="delete-row-btn"> <a
                                             class="btn btn-danger boxed-float-btn nobg"
@@ -530,7 +530,8 @@
                   
                 </div>
                 <div>
-                  <button class="btn btn-primary-cstm pull-right" *ngIf="!showTableGrid" type="button"  [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Save</button>
+                  <button class="btn btn-primary-cstm pull-right" *ngIf="!showTableGrid && !isEdit" type="button"  [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Save</button>
+                  <button class="btn btn-primary-cstm pull-right" *ngIf="!showTableGrid && isEdit" type="button"  [disabled]="!workOrderForm.valid" >Update</button>
                 <button  *ngIf="showTableGrid && workOrderGeneralInformation.isSinglePN " class="btn btn-success pull-right" [routerLink]="['/workordersmodule/workorderspages/app-work-order-quote']"  >Create Quote</button>
                 </div>
             </form>

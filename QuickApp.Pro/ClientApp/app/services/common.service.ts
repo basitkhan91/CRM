@@ -51,6 +51,10 @@ export class CommonService {
         return this.http.get(`${this.baseUrl}/api/customer/customernameandcodes?value=${value}`, this.authService.getRequestHeaders())
     }
 
+    getCustomerNameandCodeById(customerId) {
+        return this.http.get(`${this.baseUrl}/api/Customer/customernameandcodesbyId?customerId=${customerId}`, this.authService.getRequestHeaders())
+    }
+
     getItemMasterDetails() {
         return this.http.get(`${this.baseUrl}/api/itemMaster/GetPartDetailsDropDown`, this.authService.getRequestHeaders())
     }

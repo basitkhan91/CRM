@@ -1446,7 +1446,41 @@ namespace DAL.Repositories
             }
         }
 
-        private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
+		public IEnumerable<object> GetCustomerNameAndCodesByCustomerId(long customerId)
+		{
+			try
+			{
+				var list = (from cust in _appContext.Customer
+
+							join cc in _appContext.CustomerContact on cust.CustomerId equals cc.CustomerId into custcc
+							from cc in custcc.DefaultIfEmpty()
+							join con in _appContext.Contact on cc.ContactId equals con.ContactId into custcon
+							from con in custcon.DefaultIfEmpty()
+							join emp in _appContext.Employee on cust.CsrId equals emp.EmployeeId into custemp
+							from emp in custemp.DefaultIfEmpty()
+							where cust.CustomerId == customerId && cust.IsActive == true && cust.IsDeleted == false							  
+							select new
+							{
+								CustomerId = cust.CustomerId,
+								CustomerName = cust.Name + " - " + cust.CustomerCode,
+								cust.CreditLimit,
+								cust.CreditTermsId,
+								CustomerContact = con == null ? " " : con.FirstName,
+								CustomerRef = cust.ContractReference == null ? "" : cust.ContractReference,
+								CSRName = emp.FirstName
+							}
+							).Distinct().ToList();
+				return list;
+
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+		}
+
+		private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
         #region Customer ShippingAddress 
 
