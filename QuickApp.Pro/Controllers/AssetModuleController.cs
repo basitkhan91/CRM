@@ -67,7 +67,6 @@ namespace QuickApp.Pro.Controllers
                 asset.IsDelete = false;
                 _context.Asset.Add(asset);
                 _context.SaveChanges();
-                saveAssetAudit(asset);
             }
             return Ok(asset);
         }
