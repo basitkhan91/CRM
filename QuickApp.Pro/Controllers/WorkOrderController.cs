@@ -91,8 +91,6 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-        
-
         [HttpGet("workorderlist")]
         public IActionResult GetWorkOrdersList(int pageNo = 0, int pageSize = 10)
         {
@@ -113,6 +111,21 @@ namespace QuickApp.Pro.Controllers
             var result = unitOfWork.WorkOrderRepository.GetWorkFlowNos(partId, workScopeId);
             return Ok(result);
         }
+
+        [HttpGet("workorderheaderview")]
+        public IActionResult WorkOrderHeaderView(long workOrderId)
+        {
+            var result = unitOfWork.WorkOrderRepository.WorkOrderHeaderView(workOrderId);
+            return Ok(result);
+        }
+
+        [HttpGet("workorderpartsview")]
+        public IActionResult WorkOrderPartsView(long workOrderId)
+        {
+            var result = unitOfWork.WorkOrderRepository.WorkOrderPartsView(workOrderId);
+            return Ok(result);
+        }
+
 
         #endregion
 
@@ -166,6 +179,13 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetWorkOrderTaskAttributes(long workOrderTaskId)
         {
             var result = unitOfWork.WorkOrderRepository.GetWorkOrderTaskAttributes(workOrderTaskId);
+            return Ok(result);
+        }
+
+        [HttpGet("workorderworkflowview")]
+        public IActionResult WorkOrderWorkFlowView(long workFlowWorkOrderId)
+        {
+            var result = unitOfWork.WorkOrderRepository.WorkOrderWorkFlowView(workFlowWorkOrderId);
             return Ok(result);
         }
 
@@ -495,6 +515,61 @@ namespace QuickApp.Pro.Controllers
         {
             var result = unitOfWork.WorkOrderRepository.GetWorkFlowWorkOrderFreightList(wfwoId, workOrderId);
             return Ok(result);
+        }
+
+        #endregion
+
+        #region Work Order Publications
+
+        [HttpPost("createworkorderpublications")]
+        public IActionResult CreateWorkOrderPublications([FromBody]List<WorkOrderPublications> workOrderPublications)
+        {
+            if (ModelState.IsValid)
+            {
+                unitOfWork.WorkOrderRepository.CreateWorkOrderPublications(workOrderPublications);
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpPost("updateworkorderpublications")]
+        public IActionResult UpdateWorkOrderPublications([FromBody]List<WorkOrderPublications> workOrderPublications)
+        {
+            if (ModelState.IsValid)
+            {
+                unitOfWork.WorkOrderRepository.UpdateWorkOrderPublications(workOrderPublications);
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpGet("deleteworkorderpublication")]
+        public IActionResult DeleteWorkOrderPublication(long workOrderPublicationId, string updatedBy)
+        {
+            unitOfWork.WorkOrderRepository.DeleteWorkOrderPublication(workOrderPublicationId, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("workorderpublicationstatus")]
+        public IActionResult WorkOrderPublicationStatus(long workOrderPublicationId, bool status, string updatedBy)
+        {
+            unitOfWork.WorkOrderRepository.WorkOrderPublicationStatus(workOrderPublicationId, status, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("getworkorderpublications")]
+        public IActionResult GetWorkOrderPublications(long wfwoId = 0, long workOrderId = 0)
+        {
+            unitOfWork.WorkOrderRepository.GetWorkOrderPublications(wfwoId, workOrderId);
+            return Ok();
         }
 
         #endregion

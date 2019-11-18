@@ -18,8 +18,8 @@ namespace DAL.Models
             MaterialList = new List<WorkOrderMaterials>();
             Documents = new List<WorkOrderDocuments>();
             WorkOrderAddress = new List<WorkOrderAddress>();
-           // WorkOrderQuote = new WorkOrderQuote();
-           WorkOrderFreight = new List<WorkOrderFreight>();
+            // WorkOrderQuote = new WorkOrderQuote();
+            WorkOrderFreight = new List<WorkOrderFreight>();
             Directions = new List<WorkOrderDirections>();
             Publication = new List<WorkOrderPublications>();
         }
@@ -37,9 +37,6 @@ namespace DAL.Models
         public long? WorkScopeId { get; set; }
         [ForeignKey("ItemMasterId")]
         public long? ItemMasterId { get; set; }
-        public string PartNumberDescription { get; set; }
-        public string ChangedPartNumber { get; set; }
-        public string ChangedPartNumberDescription { get; set; }
         [ForeignKey("CustomerId")]
         public long? CustomerId { get; set; }
         public int? CurrencyId { get; set; }
@@ -50,7 +47,6 @@ namespace DAL.Models
         public decimal? FixedAmount { get; set; }
         public decimal? BERThresholdAmount { get; set; }
         public string WorkOrderNumber { get; set; }
-        public decimal? FlatRate { get; set; }
         public bool? IsPercentageOfNew { get; set; }
         public decimal? CostOfNew { get; set; }
         public byte? PercentageOfNew { get; set; }
@@ -59,16 +55,21 @@ namespace DAL.Models
         public byte? PercentageOfReplacement { get; set; }
         public decimal? OtherCost { get; set; }
         public string Memo { get; set; }
-        public long? ManagementStructureId { get; set; }
+        public long? ChangedPartNumberId { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
         //public virtual Customer Customer { get; set; }
-        public bool? IsActive { get; set; }
-        public bool? IsDeleted { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsDeleted { get; set; }
         public string WorkFlowWorkOrderNo { get; set; }
+        public decimal? MaterilaCost { get; set; }
+        public decimal? ExpertiseCost { get; set; }
+        public decimal? ChargesCost { get; set; }
+        public decimal? Total { get; set; }
+        public int? PerOfBerThreshold {get;set;}
 
 
         public virtual List<WorkOrderCharges> Charges { get; set; }
@@ -78,7 +79,6 @@ namespace DAL.Models
         public virtual List<WorkOrderDocuments> Documents { get; set; }
         public virtual List<WorkOrderAddress> WorkOrderAddress { get; set; }
         public virtual List<WorkOrderFreight> WorkOrderFreight { get; set; }
-        //public virtual List<WorkOrderTask> WorkOrderTask { get; set; }
         public virtual List<WorkOrderExpertise> Expertise { get; set; }
         public virtual List<WorkOrderDirections> Directions { get; set; }
         public virtual List<WorkOrderPublications> Publication { get; set; }

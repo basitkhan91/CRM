@@ -16,13 +16,17 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetWorkOrdersList(int pageNo, int pageSize);
         IEnumerable<object> GetWorkOrderPartList(long workOrderId);
         WorkOrder WorkOrderById(long workOrderId);
-        
+        object WorkOrderHeaderView(long workOrderId);
+        IEnumerable<object> WorkOrderPartsView(long workOrderId);
+
+
 
         long CreateWorkFlowWorkOrder(WorkOrderWorkFlow workFlowWorkOrder);
         void UpdateWorkFlowWorkOrder(WorkOrderWorkFlow workFlowWorkOrder);
         WorkOrderWorkFlow GetWorkFlowWorkOrderById(long workFlowWorkOrderId);
         IEnumerable<object> GetWorkOrderWorkFlowNos(long workOrderId);
         IEnumerable<object> GetWorkOrderTaskAttributes(long workOrderTaskId);
+        object WorkOrderWorkFlowView(long workFlowWorkOrderId);
 
         long CreateWorkOrderLabor(WorkOrderLaborHeader workOrderLabor);
         void UpdateWorkOrderLabor(WorkOrderLaborHeader workOrderLabor);
@@ -65,6 +69,12 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetConditionDetailsByPartNo(long itemMasterId);
         IEnumerable<object> GetWorkOrderMaterialList(long wfwoId, long workOrderId);
         IEnumerable<object> GetTechnicians();
+
+        void CreateWorkOrderPublications(List<WorkOrderPublications> workOrderPublications);
+        void UpdateWorkOrderPublications(List<WorkOrderPublications> workOrderPublications);
+        void DeleteWorkOrderPublication(long workOrderPublicationId, string updatedBy);
+        void WorkOrderPublicationStatus(long workOrderPublicationId, bool status, string updatedBy);
+        IEnumerable<object> GetWorkOrderPublications(long wfwoId = 0, long workOrderId = 0);
 
     }
 }
