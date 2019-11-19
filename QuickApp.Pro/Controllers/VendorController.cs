@@ -3186,6 +3186,7 @@ namespace QuickApp.Pro.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult GetAllVendorBillingAddressAudit(long vendorId, long vendorBillingaddressId)
         {
+
             var allVendorBillingDetails = _unitOfWork.Vendor.GetVendorBillingAddressAudit(vendorId, vendorBillingaddressId);
             return Ok(allVendorBillingDetails);
         }
