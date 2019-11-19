@@ -881,7 +881,7 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        [HttpPost("PurchaseOrderUnitCost")]
+        [HttpPost("PurchaseOrderUnitCost/{POId}")]
         public IActionResult PurchaseOrderUnitCost(long POId)
         {
             try
@@ -901,7 +901,7 @@ namespace QuickApp.Pro.Controllers
             }
         }
 
-        [HttpPost("RepairOrderUnitCost")]
+        [HttpPost("RepairOrderUnitCost/{ROId}")]
         public IActionResult RepairOrderUnitCost(long ROId)
         {
             try

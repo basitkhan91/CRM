@@ -503,11 +503,15 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">PO NUM </label>
                     <div class="col-sm-7">
-                        <select [(ngModel)]="sourceStockLineSetup.PurchaseOrderId" [ngModelOptions]="{standalone: true}" (change)="POValueChange(sourceStockLineSetup.purchaseOrderId)">
+                        <select [(ngModel)]="sourceStockLineSetup.PurchaseOrderId" [ngModelOptions]="{standalone: true}" (change)="POValueChange(sourceStockLineSetup.PurchaseOrderId)">
                             <option *ngFor="let po of allPolistInfo" [ngValue]="po.purchaseOrderId">{{po.purchaseOrderNumber}}</option>
                         </select>
                     </div>
                 </div>
+
+                <!--<select [(ngModel)]="sourceStockLineSetup.companyId" [ngModelOptions]="{standalone: true}" (change)="getBUList(sourceStockLineSetup.companyId)">
+                    <option *ngFor="let managementStructure of maincompanylist" [ngValue]="managementStructure.managementStructureId">{{managementStructure.name}}</option>
+                </select>-->
 
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">PO UNIT COST</label>
@@ -519,7 +523,7 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">RO NUM </label>
                     <div class="col-sm-7">
-                        <select [(ngModel)]="sourceStockLineSetup.RepairOrderId" [ngModelOptions]="{standalone: true}" (change)="ROValueChange(sourceStockLineSetup.repairOrderId)">
+                        <select [(ngModel)]="sourceStockLineSetup.RepairOrderId" [ngModelOptions]="{standalone: true}" (change)="ROValueChange(sourceStockLineSetup.RepairOrderId)">
                             <option *ngFor="let manufacturer of allRolistInfo" [ngValue]="manufacturer.repairOrderId">{{manufacturer.repairOrderNumber}}
                         </select>
                     </div>

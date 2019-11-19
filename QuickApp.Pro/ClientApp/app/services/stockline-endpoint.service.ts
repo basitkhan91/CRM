@@ -316,14 +316,17 @@ export class StocklineEndpoint extends EndpointFactory
 	}
 
     getPurchaseOrderUnitCostEndpoint<T>(POId: any): Observable<T> {
-        return this.http.post<T>(this._POUnitCost, JSON.stringify(POId), this.getRequestHeaders())
+        let endpointUrl = `${this._POUnitCost}/${POId}`;
+
+        return this.http.post<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getPurchaseOrderUnitCostEndpoint(POId));
             });
     }
 
     getRepairOrderUnitCostEndpoint<T>(ROId: any): Observable<T> {
-        return this.http.post<T>(this._ROUnitCost, JSON.stringify(ROId), this.getRequestHeaders())
+        let endpointUrl = `${this._ROUnitCost}/${ROId}`;
+        return this.http.post<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getRepairOrderUnitCostEndpoint(ROId));
             });
