@@ -16,5 +16,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> getEmployeeShiftData(long id);
         List<Employee> getAllEmployeeInfo();
         object GetEmployeeData(long employeeId);
+        IEnumerable<object> EmployeeUserRole(List<EmployeeUserRole> objEmployeeUserRoles);
+        IEnumerable<object> GetEmployeeUserRole(long employeeId);
     }
 }
