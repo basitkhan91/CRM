@@ -140,7 +140,6 @@ namespace DAL.Repositories
                 publicationType.IsDeleted = true;
 
                 _appContext.PublicationType.Attach(publicationType);
-
                 _context.Entry(publicationType).Property(x => x.IsDeleted).IsModified = true;
                 _context.Entry(publicationType).Property(x => x.UpdatedDate).IsModified = true;
                 _context.Entry(publicationType).Property(x => x.UpdatedBy).IsModified = true;
@@ -164,7 +163,6 @@ namespace DAL.Repositories
                 publicationType.IsActive = status;
 
                 _appContext.PublicationType.Attach(publicationType);
-
                 _context.Entry(publicationType).Property(x => x.IsActive).IsModified = true;
                 _context.Entry(publicationType).Property(x => x.UpdatedDate).IsModified = true;
                 _context.Entry(publicationType).Property(x => x.UpdatedBy).IsModified = true;

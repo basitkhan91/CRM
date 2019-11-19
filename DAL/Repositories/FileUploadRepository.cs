@@ -59,10 +59,10 @@ namespace DAL.Repositories
                                 file.CopyTo(stream);
                             }
 
-                            attachmentDetails.Code = "";
-                            attachmentDetails.Description = "";
+                            //attachmentDetails.Code = "";
+                            attachmentDetails.Description = file.Name;
                             attachmentDetails.FileFormat = "";
-                            attachmentDetails.Memo = "";
+                            //attachmentDetails.Memo = "";
 
                             attachmentDetails.FileSize = Math.Round(Convert.ToDecimal(fileSize / (1024 * 1024)), 2);
                             attachmentDetails.FileName = fileName;

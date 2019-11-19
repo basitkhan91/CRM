@@ -1,13 +1,9 @@
-﻿using DAL.Repositories.Interfaces;
+﻿using DAL.Models;
+using DAL.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using DAL.Models;
-using Microsoft.EntityFrameworkCore;
-
-using System.Threading.Tasks;
-using DAL.Core;
 
 
 namespace DAL.Repositories
@@ -54,10 +50,10 @@ namespace DAL.Repositories
                            join compmanagmentLegalEntity in _appContext.ManagementStructure on biumanagmentLegalEntity.ParentId equals compmanagmentLegalEntity.ManagementStructureId into comivCompany
                            from compmanagmentLegalEntity in comivCompany.DefaultIfEmpty()
 
-                           //join empSupervisor in _appContext.Employee on t.EmployeeId  equals empSupervisor.SupervisorId into employeesupervisiorInfo
-                          // from empSupervisor in employeesupervisiorInfo.DefaultIfEmpty()
+                               //join empSupervisor in _appContext.Employee on t.EmployeeId  equals empSupervisor.SupervisorId into employeesupervisiorInfo
+                               // from empSupervisor in employeesupervisiorInfo.DefaultIfEmpty()
 
-                        
+
 
                            join employeetraingInfo in _appContext.EmployeeTraining on t.EmployeeId equals employeetraingInfo.EmployeeId into employeeTraingInfo
                            from employeetraingInfo in employeeTraingInfo.DefaultIfEmpty()
@@ -65,7 +61,7 @@ namespace DAL.Repositories
                            join employeetraingType in _appContext.EmployeeTrainingType on employeetraingInfo.EmployeeTrainingTypeId equals employeetraingType.EmployeeTrainingTypeId into employeeTraingTypeInfo
                            from employeetraingType in employeeTraingTypeInfo.DefaultIfEmpty()
 
-      
+
 
 
 
@@ -94,9 +90,9 @@ namespace DAL.Repositories
                                nationalCountryId,
                                managementStructeInfo,
                                employeeExpertise,
-                            
-                         
-                              // empSupervisor,
+
+
+                               // empSupervisor,
                                jobtitle,
                                jobtype,
                                t.Fax,
@@ -286,6 +282,33 @@ namespace DAL.Repositories
             {
                 throw ex;
             }
+        }
+
+
+        public IEnumerable<object> EmployeeUserRole(List<EmployeeUserRole> objEmployeeUserRoles)
+        {
+            foreach (var obj in objEmployeeUserRoles)
+            {
+                if (obj.EmployeeUserRoleId > 0)
+                {
+                    _appContext.EmployeeUserRole.Update(obj);
+                }
+                else
+                {
+                    _appContext.EmployeeUserRole.Add(obj);
+                }
+
+                _appContext.SaveChanges();
+            }
+
+            return objEmployeeUserRoles;
+        }
+        public IEnumerable<object> GetEmployeeUserRole(long employeeId)
+        {
+            var data = (from emr in _appContext.EmployeeUserRole
+                        where emr.EmployeeId == employeeId && emr.IsActive == true
+                        select emr).ToList();
+            return data;
         }
 
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);

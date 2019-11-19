@@ -1,17 +1,13 @@
 ﻿
+using DAL.Models;
 using DAL.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
-using DAL.Core;
-using DAL.Models;
 
 namespace DAL.Repositories
 {
-    
+
     public class VenodrRepository : Repository<Vendor>, IVendor
     {
         List<Vendor> iList = new List<Vendor>();
@@ -728,6 +724,36 @@ namespace DAL.Repositories
             return _appContext.Vendor.Where(x => 
             (x.IsActive != null && x.IsActive == true) && 
             (x.IsDelete == null || x.IsDelete == false));
+        }
+
+        public IEnumerable<object> GetVendorBillingAddressAudit(long vendorId, long vendorBillingaddressId)
+        {
+            try
+            {
+                var list = (from vba in _appContext.VendorBillingAddressAudit
+                            join ad in _appContext.Address on vba.AddressId equals ad.AddressId
+                            where vba.VendorId== vendorId && vba.VendorBillingAddressId== vendorBillingaddressId
+                            select new
+                            {
+                                vba.SiteName,
+                                vba.AuditVendorBillingAddressId,
+                                vba.VendorBillingAddressId,
+                                ad.Line1,
+                                ad.Line2,
+                                ad.Line3,
+                                ad.City,
+                                ad.StateOrProvince,
+                                ad.PostalCode,
+                                ad.Country,
+                                vba.CreatedDate
+                            }).OrderByDescending(p => p.AuditVendorBillingAddressId).ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
     }
