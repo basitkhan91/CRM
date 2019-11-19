@@ -12,6 +12,7 @@ import { AuthService } from '../../../services/auth.service';
 import { AlertService, MessageSeverity } from '../../../services/alert.service';
 import { validateRecordExistsOrNot } from '../../../generic/autocomplete';
 import { CommonService } from '../../../services/common.service';
+import { PercentService } from '../../../services/percent.service';
 
 @Component({
     selector: 'app-customer-financial-information',
@@ -47,11 +48,31 @@ export class CustomerFinancialInformationComponent implements OnInit {
         days: '',
         netDays: '',
         isActive: true,
+        isDeleted: false,
         memo: ''
     }
+
+    taxTyeNew = {
+        description: '',
+      
+        isActive: true,
+        isDeleted: false,
+        memo: ''
+    }
+
+    
     addNewCreditTerms = { ...this.creditTermsNew }
+
+    addNewTaxType = { ...this.taxTyeNew }
     isCreditTermsExists: boolean = false;
+    isPercentageExists: boolean = false;
+    isTaxTypeExists: boolean = false;
     _creditTermList: any[];
+    _creditTermPercentageList: any;
+    _TaxTypeList: any;
+    percentValue = null;
+    percentageList: any;
+    taxTypeList: any;
     discontValue = null;
     _discountList: any;
     isDiscountExists: boolean = false;
@@ -178,7 +199,10 @@ export class CustomerFinancialInformationComponent implements OnInit {
         public itemser: ItemMasterService, public customerService: CustomerService,
         private authService: AuthService,
         private alertService: AlertService,
-        private commonservice: CommonService
+        private commonservice: CommonService,
+        public percentService: PercentService
+      
+
     ) {
         // if (this.workFlowtService.contactCollection) {
         //     this.local = this.workFlowtService.contactCollection;
@@ -217,6 +241,9 @@ export class CustomerFinancialInformationComponent implements OnInit {
         this.getAllMarkUp();
         this.getAllTaxList();
         this.getAllCurrency();
+        this.getAllPercentage();
+        this.getAllTaxTypes();
+    
     }
 
 
@@ -245,6 +272,22 @@ export class CustomerFinancialInformationComponent implements OnInit {
             this.allCurrencyInfo = res[0];
         })
     }
+    getAllPercentage() {
+        this.commonservice.smartDropDownList('[Percent]', 'PercentId', 'PercentValue').subscribe(res => {
+
+        //this.percentService.getPercentages().subscribe(res => {
+            this.percentageList = res;
+        })
+    }
+
+    getAllTaxTypes() {
+        //this.taxtypeser.getWorkFlows().subscribe(res => {
+            this.commonservice.smartDropDownList('TaxType', 'TaxTypeId', 'Description').subscribe(res => {
+                this.taxTypeList = res;
+           // this.taxTypeList = res[0];
+        })
+    }
+
 
     filterCreditTerms(event) {
         this._creditTermList = this.creditTermList;
@@ -266,8 +309,69 @@ export class CustomerFinancialInformationComponent implements OnInit {
     }
 
     selectedCreditTerm() {
-        this.isCreditTermsExists = false;
+        this.isCreditTermsExists = true;
     }
+
+    
+    filterPercentage(event) {
+        console.log(parseInt(event.query));
+        this._creditTermPercentageList = this.percentageList;
+
+        this._creditTermPercentageList = [...this.percentageList.filter(x => {
+            console.log(x);
+      
+            return x.percentValue.includes(parseInt(event.query))
+        })]
+    }
+
+    checkPercentageExists(field, value) {
+        const exists = validateRecordExistsOrNot(field, value, this.percentageList)
+        console.log(exists);
+        if (exists.length > 0) {
+            this.isPercentageExists = true;
+        } else {
+            this.isPercentageExists = false;
+        }
+    }
+
+    selectedPercentage() {
+        this.isPercentageExists = true;
+    }
+
+
+   
+    filterTaxType(event) {
+        
+        console.log(parseInt(event.query));
+        this._TaxTypeList = this.taxTypeList;
+
+        this._TaxTypeList = [...this.taxTypeList.filter(x => {
+            console.log(x);
+            return x.label.toLowerCase().includes(event.query.toLowerCase())
+
+          
+        })]
+    }
+
+    checkTaxTypeExists(field, value) {
+        alert(field)
+        alert(value)
+        const exists = validateRecordExistsOrNot(field, value, this.taxTypeList)
+        console.log(exists);
+        if (exists.length > 0) {
+            this.isTaxTypeExists = true;
+        } else {
+            this.isTaxTypeExists = false;
+        }
+    }
+
+    selectedTaxTypes() {
+        this.isTaxTypeExists = true;
+    }
+
+
+
+
 
 
     getAllDiscountList() {
@@ -419,6 +523,37 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
     restDiscount() {
         this.discontValue = null;
+    }
+
+
+
+    newTaxTypeAdd() {
+        const data = {
+            ...this.addNewTaxType,
+ masterCompanyId: 1,
+            createdBy: this.userName,
+            updatedBy: this.userName,
+            createdDate: new Date(),
+            updatedDate: new Date()
+        }
+
+        this.customerService.newAddDiscount(data).subscribe(data => {
+            this.getAllTaxTypes();
+            this.alertService.showMessage(
+                'Success',
+                `Added New Tax Type  Successfully `,
+                MessageSeverity.success
+            );
+            this.restDiscount();
+            this.savedGeneralInformationData.discountId = data.discountId;
+        })
+
+    }
+
+
+    resetTaxType() {
+        this.addNewTaxType = { ...this.taxTyeNew }
+
     }
 
     nextClick() {
