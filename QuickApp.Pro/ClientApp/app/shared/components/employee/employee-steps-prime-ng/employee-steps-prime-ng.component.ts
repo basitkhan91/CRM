@@ -59,6 +59,11 @@ export class EmployeeStepsPrimeNgComponent {
 
 			this.activeIndex = 2;
 		}
+
+		else if (this.currentUrl == '/employeesmodule/employeepages/app-employees-management-structure') {
+
+			this.activeIndex = 3;
+		}
 		
 
 
@@ -89,6 +94,16 @@ export class EmployeeStepsPrimeNgComponent {
 				this.msgs.push({ severity: 'info', summary: 'Financial Information', detail: event.item.label });
 				this.route.navigateByUrl('/employeesmodule/employeepages/app-employee-training');
 			}
-		}];
+		},
+		{
+			label: 'Management Structure',
+			command: (event: any) => {
+				this.activeIndex = 3;
+				this.msgs.length = 0;
+				this.msgs.push({ severity: 'info', summary: 'Management Structure', detail: event.item.label });
+				this.route.navigateByUrl('/employeesmodule/employeepages/app-employees-management-structure');
+			}
+		}
+	];
 	}
 }

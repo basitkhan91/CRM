@@ -195,5 +195,8 @@ export class EmployeeService {
     getEmployeeDataById(employeeId: any) {
         return this.employeeEndpoint.getEmployeeDataById<any>(employeeId);
     }
+    getAllRolesOfEmployee() {
+        return this.employeeEndpoint.getAllRolesOfEmployee<any>();
+    }
 
 }
