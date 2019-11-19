@@ -67,44 +67,10 @@ namespace QuickApp.Pro.Controllers
                 asset.IsDelete = false;
                 _context.Asset.Add(asset);
                 _context.SaveChanges();
-                saveAssetAudit(asset);
             }
             return Ok(asset);
         }
 
-        public void saveAssetAudit(Asset asset)
-        {
-            AssetAudit assetaudit = new AssetAudit();
-            assetaudit.AssetRecordId = asset.AssetRecordId;
-            assetaudit.AssetId = asset.AssetId;
-            assetaudit.AlternateAssetId = asset.AlternateAssetId;
-            assetaudit.Name = asset.Name;
-            assetaudit.Description = asset.Description;
-            assetaudit.ManagementStructureId = asset.ManagementStructureId;
-            assetaudit.AssetAcquisitionTypeId = asset.AssetAcquisitionTypeId;
-            assetaudit.IsSerialized = asset.IsSerialized;
-            assetaudit.AssetTypeId = asset.AssetTypeId;
-            assetaudit.ManufacturerId = asset.ManufacturerId;
-            assetaudit.Model = asset.Model;
-            assetaudit.UnitOfMeasureId = asset.UnitOfMeasureId;
-            assetaudit.CurrencyId = asset.CurrencyId;
-            assetaudit.AssetTypeId = asset.AssetTypeId;
-            assetaudit.Asset_Location = asset.Asset_Location;
-            assetaudit.IsDepreciable = asset.IsDepreciable;
-            assetaudit.IsIntangible = asset.IsIntangible;
-            assetaudit.AssetIntangibleTypeId = asset.AssetIntangibleTypeId;
-            assetaudit.ManufacturedDate = asset.ManufacturedDate;
-            assetaudit.ExpirationDate = asset.ExpirationDate;
-            assetaudit.Memo = asset.Memo;
-            assetaudit.AssetParentId = asset.AssetParentId;
-            assetaudit.UnitCost = asset.UnitCost;
-            assetaudit.MasterCompanyId = 1;
-            assetaudit.CreatedDate = DateTime.Now;
-            assetaudit.UpdatedDate = DateTime.Now;
-            assetaudit.IsActive = true;
-            _context.AssetAudit.Add(assetaudit);
-            _context.SaveChanges();
-        }
 
 
         [HttpPut("updateAsset")]

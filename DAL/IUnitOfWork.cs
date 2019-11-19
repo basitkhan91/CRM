@@ -261,6 +261,9 @@ namespace DAL
         IAssetDepConvention AssetDepConvention { get; }
         
         IPublicationTypesRepository PublicationTypesRepository { get; }
+      
+        ICommunicationRepository CommunicationRepository { get; }
+      
         IPercentageRepository PercentageRepository { get; }
 
         IMasterSalesOrderQuoteTypesRepository MasterSalesOrderQuoteTypesRepository { get; }
