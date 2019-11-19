@@ -28,6 +28,7 @@ import { WorkOrderListComponent } from '../components/work-order/work-order-list
 import { AuthService } from '../services/auth.service';
 import { AuthGuard } from '../services/auth-guard.service';
 import { DirectLabourComponent } from '../components/work-order/direct-labour/direct-labour.component';
+import { WorkOrderSmartComponent } from '../components/work-order/work-order-setup/work-order-smart/work-order-smart.component';
 
 const workorderPagesRoutes: Routes = [
   {
@@ -41,7 +42,12 @@ const workorderPagesRoutes: Routes = [
       },
       {
         path: 'app-work-order-add',
-        component: WorkOrderAddComponent,
+        component: WorkOrderSmartComponent,
+        data: { title: 'Work Order Setup' }
+      },
+      {
+        path: 'app-work-order-edit/:id',
+        component: WorkOrderSmartComponent,
         data: { title: 'Work Order Setup' }
       },
       {
@@ -143,4 +149,4 @@ const workorderPagesRoutes: Routes = [
   exports: [RouterModule],
   providers: [AuthService, AuthGuard]
 })
-export class WorkOrdersPagesRoutingModule {}
+export class WorkOrdersPagesRoutingModule { }

@@ -190,12 +190,12 @@ export class VendorContactsComponent implements OnInit {
     }
 
 
-    private loadData() {
+    private loadData() {        
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         this.workFlowtService.getContacts(this.local.vendorId).subscribe(
-            results => this.onDataLoadSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
+            results => this.onDataLoadSuccessful(results[0]),           
+            error => this.onDataLoadFailed(error)            
         );
 
         
@@ -334,10 +334,10 @@ export class VendorContactsComponent implements OnInit {
         }, () => { console.log('Backdrop click') })
     }
 
-    openEdit(content, row) {
+    openEdit(content, row) {        
         this.isEditMode = true;
         this.isSaving = true;
-        this.sourceVendor = { ...row };
+        this.sourceVendor = { ...row };       
         this.loadMasterCompanies();
     }
     openView(content, row) {
@@ -409,7 +409,7 @@ export class VendorContactsComponent implements OnInit {
                     this.sourceVendor = new Object();
                     this.localCollection.VendorId = this.local.vendorId;
                     this.localCollection.ContactId = this.local.contactId;
-                    this.localCollection.IsDefaultContact = false;
+                    this.localCollection.IsDefaultContact = this.sourceVendor.isdefaultContact;
                     this.loadData();
                     if (data) {
                         this.updateVendorContact(this.localCollection);

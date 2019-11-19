@@ -2794,11 +2794,53 @@ namespace QuickApp.Pro.Controllers
         {
             var result = _unitOfWork.CommonRepository.GetCustomerClassificationMappings(Convert.ToInt32(ModuleEnum.Customer), referenceId);
             return Ok(result);
-
         }
 
 
+
+
+		[HttpGet("customernameandcodesbyId")]
+		public IActionResult GetCustomerNameAndCodesByCustomerId(long customerId)
+		{
+			var custmoerNameAndCodes = _unitOfWork.Customer.GetCustomerNameAndCodesByCustomerId(customerId);
+			return Ok(custmoerNameAndCodes);
+
+		}
+
+
+	
+
+        /// <summary>
+        /// Added By Vijay on 15-11-2019
+        /// This API is used for customer billing history based on CustomerId and CustomerBillingaddressId
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <param name="customerBillingaddressId"></param>
+        /// <returns></returns>
+        [HttpGet("getCustomerBillingHistory")]       
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public IActionResult GetAllCustomerBillingAddressAudit(long customerId,long customerBillingaddressId)
+        {
+            var allCusBillingDetails = _unitOfWork.CustomerBillingInformation.GetAllCustomerBillingAddressAudit(customerId, customerBillingaddressId);
+            return Ok(allCusBillingDetails);
+        }
+        /// <summary>
+        /// Added By Vijay on 15-11-2019
+        /// This API is used for to get all customer shipping history based on CustomerId and CustomerShippingAddressId
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <param name="customerShippingAddressId"></param>
+        /// <returns></returns>
+        [HttpGet("getCustomerShippingHistory")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public IActionResult GetAllCustomerShippingAddressAudit(long customerId, long customerShippingAddressId)
+        {
+            var allCusShippingDetails = _unitOfWork.CustomerShippingAddress.GetCustomerShippingAddressAudit(customerId, customerShippingAddressId);
+            return Ok(allCusShippingDetails);
+        }
+
     }
+
 }
 
 

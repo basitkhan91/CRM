@@ -262,9 +262,9 @@
                                                        data-toggle="modal" (click)="onAddCapabilities()"></i>
                                                 </span>
                                             </label>
-                                            <select class="form-control"  [(ngModel)]="sourceVendor.CapabilityId">
-                                                <option *ngFor="let capabilty of dropDownVendorCapabilitiesList" [ngValue]="capabilty.value">  {{capabilty.label}}</option>
-					                        </select>
+                                            <select class="form-control"  [(ngModel)]="sourceVendor.capabilityId">
+                                                <option *ngFor="let capabilty of dropDownVendorCapabilitiesList" [ngValue]="capabilty.capabilityId">  {{capabilty.label}}</option>
+                                            </select>
                                            
                                             <!--<select class="form-control">
                                                 <option>Select</option>

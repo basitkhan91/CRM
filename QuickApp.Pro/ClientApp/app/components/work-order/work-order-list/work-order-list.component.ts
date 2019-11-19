@@ -6,6 +6,7 @@ import { WorkOrderService } from '../../../services/work-order/work-order.servic
 import { Table } from 'primeng/table';
 import { AuthService } from '../../../services/auth.service';
 import { AlertService, MessageSeverity } from '../../../services/alert.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-work-order-list',
@@ -36,6 +37,7 @@ export class WorkOrderListComponent implements OnInit {
     workOrderPartListData: any;
     workOrderPartListDataKeys: string[];
     constructor(private workOrderService: WorkOrderService,
+        private route: Router,
         private authService: AuthService,
         private alertService: AlertService
     ) {
@@ -91,6 +93,14 @@ export class WorkOrderListComponent implements OnInit {
         //         this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
         //     }
         // })
+    }
+
+
+    edit(rowData) {
+        this.workOrderService.getWorkOrderById(rowData).subscribe(res => {
+            const { workOrderId } = rowData;
+            this.route.navigate([`workordersmodule/workorderspages/app-work-order-edit/${workOrderId}`]);
+        })
     }
 
     changeStatus(rowData) {

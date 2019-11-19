@@ -23,6 +23,9 @@ namespace DAL.Repositories
 
                               join co in _appContext.Condition on stl.ConditionId equals co.ConditionId
 
+                              join ig in _appContext.Itemgroup on im.ItemGroupId equals ig.ItemGroupId into itemgroup
+                              from ig in itemgroup.DefaultIfEmpty()
+
                               join si in _appContext.Site on stl.SiteId equals si.SiteId into sit
                               from si in sit.DefaultIfEmpty()
 
@@ -51,7 +54,7 @@ namespace DAL.Repositories
 
                               join man in _appContext.Manufacturer on stl.ManufacturerId equals man.ManufacturerId into manufa
                               from man in manufa.DefaultIfEmpty()
-
+                              
                               select new
                               {
                                   stl,
@@ -62,11 +65,13 @@ namespace DAL.Repositories
                                   stockLineNumber = stl.StockLineNumber,
                                   stl.ControlNumber,
                                   stl.TagDate,
+                                  glGLAccountId = stl.GLAccountId,
                                   location = l.Name,
                                   warehouse = w.Name,
                                   im.ExpirationDate,
                                   stl.SerialNumber,
                                   conditionId = co.ConditionId,
+                                  itemGroup = ig.Description,
                                   stl.IdNumber,
                                   partDescription = im.PartDescription,
                                   stl.ManagementStructureEntityId,
