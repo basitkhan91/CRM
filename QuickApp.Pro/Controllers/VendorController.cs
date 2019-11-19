@@ -3182,7 +3182,33 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        #region Capes
+        [HttpGet("getVendorBillingHistory")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public IActionResult GetAllVendorBillingAddressAudit(long vendorId, long vendorBillingaddressId)
+        {
+
+            var allVendorBillingDetails = _unitOfWork.Vendor.GetVendorBillingAddressAudit(vendorId, vendorBillingaddressId);
+            return Ok(allVendorBillingDetails);
+        }
+
+        [HttpGet("getVendorShippingHistory")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public IActionResult GetAllVendorrShippingAddressAudit(long vendorId, long vendorShippingAddressId)
+        {
+            var allVendorShippingDetails = _unitOfWork.VendorShippingAddress.GetVendorShippingAddressAudit(vendorId, vendorShippingAddressId);
+            return Ok(allVendorShippingDetails);
+        }
+
+        [HttpGet("getVendorContactHistory")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public IActionResult GetAllVendorrContactAddressAudit(long vendorId, long vendorContactId)
+        {
+            var allVendorShippingDetails = _unitOfWork.ContactRepository.GetVendorContactsAudit(vendorId, vendorContactId);
+            return Ok(allVendorShippingDetails);
+        }
+
+
+            #region Capes
 
         [HttpGet("GetVendorCapesDatawithMasterId/{id}")]
         [Produces(typeof(List<AircraftModelViewModel>))]
