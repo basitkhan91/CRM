@@ -448,8 +448,12 @@ namespace DAL.Repositories
 
             {
                 var data = (from t in _appContext.Customer
-                            join ad in _appContext.Address on t.AddressId equals ad.AddressId
-                            join vt in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals vt.CustomerAffiliationId
+                            join ad in _appContext.Address on t.AddressId equals ad.AddressId into add
+                            from ad in add.DefaultIfEmpty()
+
+                            join vt in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals vt.CustomerAffiliationId into vtt
+                            from vt in vtt.DefaultIfEmpty()
+
                             join currency in _appContext.Currency on t.CurrencyId equals currency.CurrencyId into curr
                             from currency in curr.DefaultIfEmpty()
                             join creditTerms in _appContext.CreditTerms on t.CreditTermsId equals creditTerms.CreditTermsId into cre

@@ -390,7 +390,14 @@
                             </div>
                             <div class="form-group">
                                 <label>Email <span class="clr-red">*</span></label>
-                                <input class="form-control"  email type="text" name="email" [pattern]="emailPattern" [(ngModel)]="contactInformation.email" required>
+                                <input class="form-control" email type="text" name="email" [pattern]="emailPattern" #contactEmail="ngModel" [(ngModel)]="contactInformation.email" required>
+                                <div *ngIf="contactEmail.errors" [ngClass]="'error'">
+                                    <div *ngIf="contactEmail.errors.pattern">
+                                        <span style="color:red">Contact Email  not valid</span>
+                                    </div>
+                                </div>
+
+
                             </div>
                         </div>
                     </div>
