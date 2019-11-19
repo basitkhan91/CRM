@@ -87,10 +87,9 @@ namespace DAL.Repositories
 
                 return getData;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -105,10 +104,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
                 return publicationType.PublicationTypeId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -125,10 +123,9 @@ namespace DAL.Repositories
                               .FirstOrDefault();
                 return result;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -149,10 +146,9 @@ namespace DAL.Repositories
 
                 _context.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -173,10 +169,9 @@ namespace DAL.Repositories
 
                 _context.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -186,10 +181,9 @@ namespace DAL.Repositories
             {
                 return _appContext.PublicationTypeAudit.Where(c => c.PublicationTypeId == publicationTypeId).OrderByDescending(p => p.UpdatedDate).ToList();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -269,7 +263,7 @@ namespace DAL.Repositories
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 PublicationType publicationType = new PublicationType();
                 publicationType.Name = name;

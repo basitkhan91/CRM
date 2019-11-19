@@ -250,10 +250,9 @@ namespace DAL.Repositories
                 _appContext.Entry(customer).Property(x => x.UpdatedBy).IsModified = true;
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -448,8 +447,12 @@ namespace DAL.Repositories
 
             {
                 var data = (from t in _appContext.Customer
-                            join ad in _appContext.Address on t.AddressId equals ad.AddressId
-                            join vt in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals vt.CustomerAffiliationId
+                            join ad in _appContext.Address on t.AddressId equals ad.AddressId into add
+                            from ad in add.DefaultIfEmpty()
+
+                            join vt in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals vt.CustomerAffiliationId into vtt
+                            from vt in vtt.DefaultIfEmpty()
+
                             join currency in _appContext.Currency on t.CurrencyId equals currency.CurrencyId into curr
                             from currency in curr.DefaultIfEmpty()
                             join creditTerms in _appContext.CreditTerms on t.CreditTermsId equals creditTerms.CreditTermsId into cre
@@ -738,10 +741,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -754,10 +756,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -780,10 +781,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -806,10 +806,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -884,10 +883,9 @@ namespace DAL.Repositories
 
                 return getData;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -964,10 +962,9 @@ namespace DAL.Repositories
 
                 return getData;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1028,10 +1025,9 @@ namespace DAL.Repositories
 
                 return intShipping;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1047,10 +1043,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1065,10 +1060,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1083,10 +1077,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1101,10 +1094,9 @@ namespace DAL.Repositories
                     .FirstOrDefault();
                 return CustomerDocumentDetails;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1117,10 +1109,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1143,10 +1134,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1168,10 +1158,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1198,10 +1187,9 @@ namespace DAL.Repositories
 
                 return getData;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1228,10 +1216,9 @@ namespace DAL.Repositories
 
                 return getData;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1246,10 +1233,9 @@ namespace DAL.Repositories
                  .FirstOrDefault();
                 return shippingViaDetails;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1404,10 +1390,9 @@ namespace DAL.Repositories
                             }).ToList();
                 return list;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1439,10 +1424,9 @@ namespace DAL.Repositories
                 return list;
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1473,11 +1457,10 @@ namespace DAL.Repositories
 				return list;
 
 			}
-			catch (Exception)
-			{
-
-				throw;
-			}
+			catch (Exception ex)
+            {
+                throw ex;
+            }
 		}
 
 		private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

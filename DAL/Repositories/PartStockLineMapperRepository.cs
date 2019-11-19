@@ -50,7 +50,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-                throw new System.Exception("Error while loading data");
+                throw ex;
             }
 
         }
@@ -163,7 +163,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-                throw new System.Exception("Error while loading data");
+                throw ex;
             }
 
         }

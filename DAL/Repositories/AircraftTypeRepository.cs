@@ -31,10 +31,9 @@ namespace DAL.Repositories
             {
                 return _appContext.AircraftTypeAudit.Where(p => p.AircraftTypeId == aircraftId).OrderByDescending(p => p.UpdatedDate).ToList();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 

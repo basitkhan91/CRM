@@ -30,7 +30,6 @@ namespace DAL.Models
         public bool IsDeleted { get; set; }
         public virtual List<WorkOrderPublicationDashNumber> WorkOrderPublicationDashNumber { get; set; }
 
-        [NotMapped]
-        public bool SaveToWorkFlow { get; set; }
+        
     }
 }

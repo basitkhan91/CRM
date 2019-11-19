@@ -176,7 +176,7 @@ namespace DAL.Repositories
             catch (Exception ex)
             {
 
-                return null;
+                throw ex;
             }
         }
 
@@ -199,8 +199,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
 
 
@@ -228,8 +227,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
 
 
@@ -256,8 +254,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
         }
 
@@ -282,8 +279,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
         }
 
@@ -305,8 +301,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
         }
 
@@ -331,8 +326,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
         }
 
@@ -357,8 +351,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
         }
 
@@ -391,8 +384,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
         }
 
@@ -417,8 +409,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
         }
 
@@ -437,9 +428,9 @@ namespace DAL.Repositories
                 _appContext.StockLine.Add(model);
                 _appContext.SaveChanges();
                 }
-                 catch (Exception)
+                 catch (Exception ex)
             {
-            throw;
+                throw ex;
             }
             }
 
@@ -530,9 +521,9 @@ namespace DAL.Repositories
 
                 return stockLines;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
 

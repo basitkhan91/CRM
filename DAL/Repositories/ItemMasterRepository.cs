@@ -158,7 +158,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
         public IEnumerable<DAL.Models.ItemMaster> getAlldata()
@@ -228,7 +228,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
 
@@ -877,10 +877,9 @@ namespace DAL.Repositories
 
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -905,10 +904,9 @@ namespace DAL.Repositories
 
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -969,10 +967,9 @@ namespace DAL.Repositories
 
                 return getData;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1006,10 +1003,9 @@ namespace DAL.Repositories
                 }
                 return itemMapping;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 

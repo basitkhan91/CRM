@@ -20,9 +20,9 @@ namespace DAL.Repositories
                 var glAccountData = _appContext.GLAccount.Where(x => x.GLAccountId == id).Include("GlClassFlowClassification").Include("MasterCompany").ToList();
                 return glAccountData;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
            
 

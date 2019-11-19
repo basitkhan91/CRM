@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using DAL.Common;
 using DAL.Models;
@@ -364,6 +366,85 @@ namespace DAL.Repositories
             }
         }
 
+        public IEnumerable<WorkOrderReserveIssuesParts> GetReservedIssuedParts(long WorkFlowWorkOrderId,long workOrderId)
+        {
+            List<WorkOrderReserveIssuesParts> workOrderReserveIssuesParts = new List<WorkOrderReserveIssuesParts>();
+            WorkOrderReserveIssuesParts workOrderReserveIssuesPart;
+            try
+            {
+                var list = (from wom in _appContext.WorkOrderMaterials
+
+                            join im in _appContext.ItemMaster on wom.ItemMasterId equals im.ItemMasterId
+                            join con in _appContext.Condition on wom.ConditionCodeId equals con.ConditionId into wopcon
+                            from con in wopcon.DefaultIfEmpty()
+                            join sl in _appContext.StockLine on con.ConditionId equals sl.ConditionId into wopsl
+                            from sl in wopsl.DefaultIfEmpty()
+                            where wom.IsDeleted==false && wom.IsActive==true && (wom.WorkFlowWorkOrderId== WorkFlowWorkOrderId || wom.WorkOrderId== workOrderId) 
+                            select new
+                            {
+                                wom.WorkOrderId,
+                                wom.WorkFlowWorkOrderId,
+                                im.PartNumber,
+                                im.PartDescription,
+                                wom.Quantity,
+                                wom.QuantityReserved,
+                                wom.QuantityTurnIn,
+                                wom.QuantityIssued,
+                                Condition = con.Description,
+                                wom.ConditionCodeId,
+                                sl.QuantityOnHand,
+                                sl.QuantityAvailable,
+                                sl.QuantityOnOrder,
+                                wom.IssuedBy,
+                                wom.IssuedDate,
+                                wom.ReservedBy,
+                                wom.ReservedDate,
+                                wom.ItemMasterId,
+                                wom.WorkOrderMaterialsId
+                            }
+                          ).Distinct()
+                          .ToList();
+
+                if(list!=null && list.Count>0)
+                {
+                    foreach(var item in list)
+                    {
+                        workOrderReserveIssuesPart = new WorkOrderReserveIssuesParts();
+                        workOrderReserveIssuesPart.Condition = item.Condition;
+                        workOrderReserveIssuesPart.ConditionId = item.ConditionCodeId;
+                        workOrderReserveIssuesPart.IssuedBy = item.IssuedBy;
+                        workOrderReserveIssuesPart.IssuedDate = item.IssuedDate;
+                        workOrderReserveIssuesPart.ItemMasterId = item.ItemMasterId;
+                        workOrderReserveIssuesPart.PartDescription = item.PartDescription;
+                        workOrderReserveIssuesPart.PartNumber = item.PartNumber;
+                        workOrderReserveIssuesPart.Quantity = item.Quantity;
+                        workOrderReserveIssuesPart.QuantityAvailable = item.QuantityAvailable;
+                        workOrderReserveIssuesPart.QuantityIssued = item.QuantityIssued;
+                        workOrderReserveIssuesPart.QuantityOnHand = item.QuantityOnHand;
+                        workOrderReserveIssuesPart.QuantityOnOrder = item.QuantityOnOrder;
+                        workOrderReserveIssuesPart.QuantityReserved = item.QuantityReserved;
+                        workOrderReserveIssuesPart.QuantityTurnIn = item.QuantityTurnIn;
+                        workOrderReserveIssuesPart.ReservedBy = item.ReservedBy;
+                        workOrderReserveIssuesPart.ReservedDate = item.ReservedDate;
+                        workOrderReserveIssuesPart.WOReservedIssuedAltParts = GetWOReservedIssuedAltParts(item.ItemMasterId, item.WorkFlowWorkOrderId, item.WorkOrderId);
+                        workOrderReserveIssuesPart.WorkOrderId = item.WorkOrderId;
+                        workOrderReserveIssuesPart.WorkFlowWorkOrderId = item.WorkFlowWorkOrderId;
+                        workOrderReserveIssuesPart.WorkOrderMaterialsId = item.WorkOrderMaterialsId;
+                        workOrderReserveIssuesPart.IsAltPart = false;
+                        workOrderReserveIssuesPart.AltPartMasterPartId = 0;
+                        workOrderReserveIssuesParts.Add(workOrderReserveIssuesPart);
+                    }
+                }
+
+                return workOrderReserveIssuesParts;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         #endregion
 
         #region Work Flow Work Order
@@ -395,15 +476,41 @@ namespace DAL.Repositories
             }
         }
 
-        public void UpdateWorkFlowWorkOrder(WorkOrderWorkFlow workFlowWorkOrder)
+        public void UpdateWorkFlowWorkOrder(WorkOrderWorkFlow workOrderWorkFlow)
         {
             try
             {
-                workFlowWorkOrder.UpdatedDate = DateTime.Now;
-                workFlowWorkOrder.IsActive = true;
-                workFlowWorkOrder.IsDeleted = false;
-                _appContext.WorkOrderWorkFlow.Update(workFlowWorkOrder);
-                _appContext.SaveChanges();
+                long workFlowId = 0;
+                try
+                {
+                    if (workOrderWorkFlow.IsSaveToWorkFlow)
+                        workFlowId = SaveWorkFlow(workOrderWorkFlow.WorkflowId, workOrderWorkFlow.CreatedBy);
+
+                    workOrderWorkFlow.UpdatedDate = DateTime.Now;
+                    workOrderWorkFlow.IsActive = true;
+                    workOrderWorkFlow.IsDeleted = false;
+                    workOrderWorkFlow.WorkflowId = workFlowId;
+                    _appContext.WorkOrderWorkFlow.Update(workOrderWorkFlow);
+                    _appContext.SaveChanges();
+
+                    if (workOrderWorkFlow.MaterialList != null && workOrderWorkFlow.MaterialList.Count > 0)
+                    {
+                        UpdateWorkOrderMaterials(workOrderWorkFlow.MaterialList, workFlowId, workOrderWorkFlow.IsSaveToWorkFlow);
+                    }
+                    if (workOrderWorkFlow.Publication != null && workOrderWorkFlow.Publication.Count > 0)
+                    {
+                        UpdateWorkOrderPublications(workOrderWorkFlow.Publication, workFlowId, workOrderWorkFlow.IsSaveToWorkFlow);
+                    }
+                    if (workOrderWorkFlow.Charges != null && workOrderWorkFlow.Charges.Count > 0)
+                    {
+                        UpdateWorkOrderCharges(workOrderWorkFlow.Charges, workFlowId, workOrderWorkFlow.IsSaveToWorkFlow);
+                    }
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
             }
             catch (Exception)
             {
@@ -1822,17 +1929,13 @@ namespace DAL.Repositories
 
         #region Work Order Materials
 
-        public long CreateWorkOrderMaterials(WorkOrderMaterials workOrderMaterials)
+        public List<WorkOrderMaterials> CreateWorkOrderMaterials(List<WorkOrderMaterials> workOrderMaterials)
         {
             try
             {
-                workOrderMaterials.CreatedDate = workOrderMaterials.UpdatedDate = DateTime.Now;
-                workOrderMaterials.IsActive = true;
-                workOrderMaterials.IsDeleted = false;
-
-                _appContext.WorkOrderMaterials.Add(workOrderMaterials);
+                _appContext.WorkOrderMaterials.AddRange(workOrderMaterials);
                 _appContext.SaveChanges();
-                return workOrderMaterials.WorkOrderMaterialsId;
+                return workOrderMaterials;
             }
             catch (Exception)
             {
@@ -1841,16 +1944,24 @@ namespace DAL.Repositories
             }
         }
 
-        public void UpdateWorkOrderMaterials(WorkOrderMaterials workOrderMaterials)
+        public List<WorkOrderMaterials> UpdateWorkOrderMaterials(List<WorkOrderMaterials> workOrderMaterials)
         {
             try
             {
-                workOrderMaterials.UpdatedDate = DateTime.Now;
-                workOrderMaterials.IsActive = true;
-                workOrderMaterials.IsDeleted = false;
-
-                _appContext.WorkOrderMaterials.Update(workOrderMaterials);
-                _appContext.SaveChanges();
+                foreach(var item in workOrderMaterials)
+                {
+                    if(item.WorkOrderMaterialsId>0)
+                    {
+                        _appContext.WorkOrderMaterials.Update(item);
+                    }
+                    else
+                    {
+                        _appContext.WorkOrderMaterials.Add(item);
+                    }
+                    _appContext.SaveChanges();
+                }
+                
+                return workOrderMaterials;
             }
             catch (Exception)
             {
@@ -2240,7 +2351,7 @@ namespace DAL.Repositories
 
         #region Work Order Publications
 
-        public void CreateWorkOrderPublications(List<WorkOrderPublications> workOrderPublications)
+        public List<WorkOrderPublications> CreateWorkOrderPublications(List<WorkOrderPublications> workOrderPublications)
         {
             try
             {
@@ -2249,6 +2360,7 @@ namespace DAL.Repositories
                     _appContext.WorkOrderPublications.AddRange(workOrderPublications);
                     _appContext.SaveChanges();
                 }
+                return workOrderPublications;
             }
             catch (Exception)
             {
@@ -2257,44 +2369,24 @@ namespace DAL.Repositories
             }
         }
 
-        public void UpdateWorkOrderPublications(List<WorkOrderPublications> workOrderPublications)
+        public List<WorkOrderPublications> UpdateWorkOrderPublications(List<WorkOrderPublications> workOrderPublications)
         {
-            long workFlowId = 0;
             try
             {
-                if (workOrderPublications != null && workOrderPublications.Count > 0)
+                foreach (var item in workOrderPublications)
                 {
-                    foreach (var item in workOrderPublications)
+                    if (item.WorkOrderPublicationId > 0)
                     {
-                        if (item.WorkOrderPublicationId > 0)
-                        {
-                            _appContext.WorkOrderPublications.Update(item);
-                        }
-                        else
-                        {
-                            _appContext.WorkOrderPublications.Add(item);
-                        }
-                       
-
-                        if (item.SaveToWorkFlow)
-                        {
-                            var workFlowPublications=BindWorkFlowPublications(workOrderPublications);
-
-                            if(workFlowPublications!=null && workFlowPublications.Count>0)
-                            {
-                                workFlowId = workFlowPublications.FirstOrDefault().WorkflowId;
-                                var publications = _appContext.Publications.Where(p => p.WorkflowId == workFlowId).ToList();
-                                _appContext.Publications.RemoveRange(publications);
-                                _appContext.Publications.AddRange(workFlowPublications);
-                            }
-                        }
-
-                        _appContext.SaveChanges();
+                        _appContext.WorkOrderPublications.Update(item);
                     }
+                    else
+                    {
+                        _appContext.WorkOrderPublications.Add(item);
+                    }
+                    _appContext.SaveChanges();
                 }
 
-
-
+                return workOrderPublications;
             }
             catch (Exception)
             {
@@ -2349,7 +2441,7 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetWorkOrderPublications(long wfwoId = 0, long workOrderId = 0)
+        public IEnumerable<object> GetWorkOrderPublications(long wfwoId, long workOrderId)
         {
             try
             {
@@ -2911,7 +3003,7 @@ namespace DAL.Repositories
                     workOrderPublication.AircraftManufacturerId = item.AircraftManufacturer;
                     workOrderPublication.ModelId = item.Model;
 
-                    if(item.WorkflowPublicationDashNumbers!=null && item.WorkflowPublicationDashNumbers.Count>0)
+                    if (item.WorkflowPublicationDashNumbers != null && item.WorkflowPublicationDashNumbers.Count > 0)
                     {
                         workOrderPublication.WorkOrderPublicationDashNumber = new List<WorkOrderPublicationDashNumber>();
                         WorkOrderPublicationDashNumber workOrderPublicationDashNumber;
@@ -2923,7 +3015,7 @@ namespace DAL.Repositories
                             workOrderPublicationDashNumber.WorkOrderPublicationId = 0;
                             workOrderPublication.WorkOrderPublicationDashNumber.Add(workOrderPublicationDashNumber);
                         }
-                        
+
                     }
 
 
@@ -2994,7 +3086,6 @@ namespace DAL.Repositories
                     publication.UpdatedBy = item.UpdatedBy;
                     publication.UpdatedDate = item.UpdatedDate;
 
-
                     var pub = (from p in _appContext.Publication
                                join pt in _appContext.PublicationType on p.PublicationTypeId equals pt.PublicationTypeId
                                where p.PublicationRecordId == item.PublicationId
@@ -3012,6 +3103,7 @@ namespace DAL.Repositories
                                    p.VerifiedBy
 
                                }).FirstOrDefault();
+
                     if (pub != null)
                     {
                         publication.Location = pub.Location;
@@ -3024,38 +3116,278 @@ namespace DAL.Repositories
                         publication.Sequence = Convert.ToString(pub.Sequence);
                         publication.Source = "";
                         publication.Status = "";
-                        publication.VerifiedBy =Convert.ToString(pub.VerifiedBy);
+                        publication.VerifiedBy = Convert.ToString(pub.VerifiedBy);
                         publication.VerifiedDate = Convert.ToString(pub.VerifiedDate);
                     }
 
-                    var workflow=_appContext.WorkOrderWorkFlow.Where(p => p.WorkFlowWorkOrderId == item.WorkFlowWorkOrderId).FirstOrDefault();
-                    if(workflow!=null)
-                    {
-                        publication.WorkflowId = workflow.WorkflowId;
-                    }
-
                     publication.WorkflowPublicationDashNumbers = new List<WorkflowPublicationDashNumber>();
-                    WorkflowPublicationDashNumber dashNumber ;
-                    if(item.WorkOrderPublicationDashNumber!=null && item.WorkOrderPublicationDashNumber.Count>0)
+                    WorkflowPublicationDashNumber dashNumber;
+                    if (item.WorkOrderPublicationDashNumber != null && item.WorkOrderPublicationDashNumber.Count > 0)
                     {
-                        foreach(var dashNo in item.WorkOrderPublicationDashNumber)
+                        foreach (var dashNo in item.WorkOrderPublicationDashNumber)
                         {
                             dashNumber = new WorkflowPublicationDashNumber();
                             dashNumber.AircraftDashNumberId = dashNo.DashNumberId;
                             dashNumber.PublicationsId = 0;
-                            dashNumber.WorkflowPublicationDashNumberId =0;
+                            dashNumber.WorkflowPublicationDashNumberId = 0;
                             publication.WorkflowPublicationDashNumbers.Add(dashNumber);
                         }
                     }
 
                     publications.Add(publication);
-
                 }
             }
 
             return publications;
         }
 
+        private Workflow GetWorkFlowDetails(long workFlowId)
+        {
+            return _appContext.Workflow.Where(p => p.WorkflowId == workFlowId).FirstOrDefault();
+        }
+
+        private long SaveWorkFlow(long workFlowId, string createdBy)
+        {
+            int versionNo = 0;
+            try
+            {
+                //Existing Workflow Data
+                var workFlow = GetWorkFlowDetails(workFlowId);
+                if (workFlow != null)
+                {
+                    Workflow newWorkflow = new Workflow();
+
+                    versionNo = Convert.ToInt32(workFlow.Version.Substring(workFlow.Version.IndexOf("-") + 1));
+
+                    newWorkflow.BERThresholdAmount = workFlow.BERThresholdAmount;
+                    newWorkflow.ChangedPartNumber = workFlow.ChangedPartNumber;
+                    newWorkflow.ChangedPartNumberDescription = workFlow.ChangedPartNumberDescription;
+                    newWorkflow.ChangedPartNumberId = workFlow.ChangedPartNumberId;
+                    newWorkflow.CostOfNew = workFlow.CostOfNew;
+                    newWorkflow.CostOfReplacement = workFlow.CostOfReplacement;
+                    newWorkflow.CurrencyId = workFlow.CurrencyId;
+                    newWorkflow.CustomerId = workFlow.CustomerId;
+                    newWorkflow.FixedAmount = workFlow.FixedAmount;
+                    newWorkflow.FlatRate = workFlow.FlatRate;
+                    newWorkflow.IsCalculatedBERThreshold = workFlow.IsCalculatedBERThreshold;
+                    newWorkflow.IsFixedAmount = workFlow.IsFixedAmount;
+                    newWorkflow.IsPercentageOfNew = workFlow.IsPercentageOfNew;
+                    newWorkflow.IsPercentageOfReplacement = workFlow.IsPercentageOfReplacement;
+                    newWorkflow.ItemMasterId = workFlow.ItemMasterId;
+                    newWorkflow.ManagementStructureId = workFlow.ManagementStructureId;
+                    newWorkflow.MasterCompanyId = workFlow.MasterCompanyId;
+                    newWorkflow.Memo = workFlow.Memo;
+                    newWorkflow.OtherCost = workFlow.OtherCost;
+                    newWorkflow.PartNumber = workFlow.PartNumber;
+                    newWorkflow.PartNumberDescription = workFlow.PartNumberDescription;
+                    newWorkflow.PercentageOfNew = workFlow.PercentageOfNew;
+                    newWorkflow.PercentageOfReplacement = workFlow.PercentageOfReplacement;
+                    newWorkflow.WorkflowCreateDate = workFlow.WorkflowCreateDate;
+                    newWorkflow.WorkflowDescription = workFlow.WorkflowDescription;
+                    newWorkflow.WorkflowExpirationDate = workFlow.WorkflowExpirationDate;
+                    newWorkflow.WorkOrderNumber = workFlow.WorkOrderNumber;
+                    newWorkflow.WorkScopeId = workFlow.WorkScopeId;
+
+                    newWorkflow.Version = "V-" + Convert.ToString(versionNo + 1);
+                    newWorkflow.CreatedDate = newWorkflow.UpdatedDate = DateTime.Now;
+                    newWorkflow.IsActive = true;
+                    newWorkflow.IsDelete = false;
+                    newWorkflow.CreatedBy = newWorkflow.UpdatedBy = createdBy;
+                    _appContext.Workflow.Add(newWorkflow);
+                    _appContext.SaveChanges();
+                    return newWorkflow.WorkflowId;
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+            return 0;
+        }
+
+        private void UpdateWorkOrderMaterials(List<WorkOrderMaterials> workOrderMaterials, long workFlowId, bool IsSaveToWorkFlow=false)
+        {
+            foreach (var item in workOrderMaterials)
+            {
+                if (item.WorkOrderMaterialsId > 0)
+                {
+                    _appContext.WorkOrderMaterials.Update(item);
+                }
+                else
+                {
+                    _appContext.WorkOrderMaterials.Add(item);
+                }
+                _appContext.SaveChanges();
+            }
+
+            if (IsSaveToWorkFlow)
+            {
+                var workFlowMaterials = BindWorkFlowMaterials(workOrderMaterials);
+
+                if (workFlowMaterials != null && workFlowMaterials.Count > 0)
+                {
+                    workFlowMaterials.ForEach(p => { p.WorkflowId = workFlowId; });
+                    _appContext.WorkflowMaterial.AddRange(workFlowMaterials);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+
+        private List<WorkflowMaterial> BindWorkFlowMaterials(List<WorkOrderMaterials> workOrderMaterials)
+        {
+            List<WorkflowMaterial> workflowMaterials = new List<WorkflowMaterial>();
+            WorkflowMaterial workflowMaterial;
+            foreach(var item in workOrderMaterials)
+            {
+                workflowMaterial = new WorkflowMaterial();
+                workflowMaterial.ConditionCodeId =Convert.ToInt16(item.ConditionCodeId);
+                workflowMaterial.CreatedBy = item.CreatedBy;
+                workflowMaterial.CreatedDate = item.CreatedDate;
+                workflowMaterial.ExtendedCost = item.ExtendedCost;
+                workflowMaterial.ExtendedPrice = item.ExtendedPrice;
+                workflowMaterial.IsActive = item.IsActive;
+                workflowMaterial.IsDeferred = item.IsDefered;
+                workflowMaterial.IsDelete = item.IsDeleted;
+                workflowMaterial.ItemClassificationId = item.ItemClassificationId;
+                workflowMaterial.ItemMasterId =Convert.ToInt64(item.ItemMasterId);
+                workflowMaterial.MandatoryOrSupplemental = item.MandatoryOrSupplemental;
+                workflowMaterial.MasterCompanyId = item.MasterCompanyId;
+                workflowMaterial.Memo = item.Memo;
+                workflowMaterial.PartDescription = "";
+                workflowMaterial.PartNumber = "";
+                workflowMaterial.Price = item.Price;
+                workflowMaterial.ProvisionId = 0;
+                workflowMaterial.Quantity = Convert.ToInt16(item.Quantity);
+                workflowMaterial.TaskId = item.TaskId;
+                workflowMaterial.UnitCost = item.UnitCost;
+                workflowMaterial.UnitOfMeasureId = item.UnitOfMeasureId;
+                workflowMaterial.UpdatedBy = item.UpdatedBy;
+                workflowMaterials.Add(workflowMaterial);
+            }
+            return workflowMaterials;
+        }
+
+        private void UpdateWorkOrderPublications(List<WorkOrderPublications> workOrderPublications, long workFlowId,bool IsSaveToWorkFlow)
+        {
+            foreach (var item in workOrderPublications)
+            {
+                if (item.WorkOrderPublicationId > 0)
+                {
+                    _appContext.WorkOrderPublications.Update(item);
+                }
+                else
+                {
+                    _appContext.WorkOrderPublications.Add(item);
+                }
+                _appContext.SaveChanges();
+            }
+
+            if (IsSaveToWorkFlow)
+            {
+                var workFlowPublications = BindWorkFlowPublications(workOrderPublications);
+
+                if (workFlowPublications != null && workFlowPublications.Count > 0)
+                {
+                    workFlowPublications.ForEach(p => { p.WorkflowId = workFlowId; });
+                    _appContext.Publications.AddRange(workFlowPublications);
+                }
+            }
+        }
+
+        private void UpdateWorkOrderCharges(List<WorkOrderCharges> workOrderCharges, long workFlowId,bool IsSaveToWorkFlow)
+        {
+            foreach (var item in workOrderCharges)
+            {
+                if (item.WorkOrderChargesId > 0)
+                {
+                    _appContext.WorkOrderCharges.Update(item);
+                }
+                else
+                {
+                    _appContext.WorkOrderCharges.Add(item);
+                }
+                _appContext.SaveChanges();
+            }
+
+            if (IsSaveToWorkFlow)
+            {
+                var workFlowCharges = BindWorkFlowCharges(workOrderCharges);
+
+                if (workFlowCharges != null && workFlowCharges.Count > 0)
+                {
+                    workFlowCharges.ForEach(p => { p.WorkflowId = workFlowId; });
+                    _appContext.WorkflowChargesList.AddRange(workFlowCharges);
+                }
+            }
+        }
+
+        private List<WorkflowChargesList> BindWorkFlowCharges(List<WorkOrderCharges> workOrderCharges)
+        {
+            List<WorkflowChargesList> workflowCharges = new List<WorkflowChargesList>();
+            return workflowCharges;
+        }
+
+        private List<WOReservedIssuedAltParts> GetWOReservedIssuedAltParts(long? itemMasterId,long wokorderWorkFlowId,long workOrderId)
+        {
+            List<WOReservedIssuedAltParts> woReservedIssuedAltParts = new List<WOReservedIssuedAltParts>();
+            WOReservedIssuedAltParts woReservedIssuedAltPart;
+
+            var list = (from alt in _appContext.Nha_Tla_Alt_Equ_ItemMapping
+                         join im in _appContext.ItemMaster on alt.MappingItemMasterId equals im.ItemMasterId
+                         join sl in _appContext.StockLine on alt.MappingItemMasterId equals sl.ItemMasterId into altsl
+                         from sl in altsl.DefaultIfEmpty()
+                         join con in _appContext.Condition on sl.ConditionId equals con.ConditionId  into slcon
+                         from con in slcon.DefaultIfEmpty()
+                         where alt.ItemMasterId == itemMasterId && alt.IsDeleted == false && alt.IsActive == true
+                         select new
+                         {
+                             alt.MappingItemMasterId,
+                             im.PartNumber,
+                             im.PartDescription,
+                             sl.QuantityOnHand,
+                             sl.QuantityAvailable,
+                             sl.QuantityOnOrder,
+                             alt.ItemMasterId,
+                             sl.ConditionId,
+                            Condition= con.Description
+                         })
+                         .Distinct()
+                         .ToList();
+            if(list!=null && list.Count>0)
+            {
+                foreach(var item in list)
+                {
+                    woReservedIssuedAltPart = new WOReservedIssuedAltParts();
+                    woReservedIssuedAltPart.AltPartDescription = item.PartDescription;
+                    woReservedIssuedAltPart.AltPartId = item.MappingItemMasterId;
+                    woReservedIssuedAltPart.AltPartNumber = item.PartNumber;
+                    woReservedIssuedAltPart.AltPartMasterPartId = item.ItemMasterId;
+                    woReservedIssuedAltPart.QuantityAvailable = item.QuantityAvailable;
+                    woReservedIssuedAltPart.QuantityOnHand = item.QuantityOnHand;
+                    woReservedIssuedAltPart.QuantityOnOrder = item.QuantityOnOrder;
+                    woReservedIssuedAltPart.ConditionId = item.ConditionId;
+                    woReservedIssuedAltPart.Condition = item.Condition;
+                    woReservedIssuedAltPart.IsAltPart = true;
+                    woReservedIssuedAltPart.Quantity = 0;
+                    woReservedIssuedAltPart.QuantityIssued = 0;
+                    woReservedIssuedAltPart.QuantityReserved = 0;
+                    woReservedIssuedAltPart.QuantityTurnIn = 0;
+                    woReservedIssuedAltPart.WorkFlowWorkOrderId = wokorderWorkFlowId;
+                    woReservedIssuedAltPart.WorkOrderId = workOrderId;
+                    woReservedIssuedAltPart.WorkOrderMaterialsId = 0;
+                    woReservedIssuedAltPart.IssuedBy = "";
+                    woReservedIssuedAltPart.IssuedDate = DateTime.Now;
+                    woReservedIssuedAltPart.ReservedBy = "";
+                    woReservedIssuedAltPart.ReservedDate = DateTime.Now;
+
+                    woReservedIssuedAltParts.Add(woReservedIssuedAltPart);
+                }
+            }
+
+            return woReservedIssuedAltParts;
+        }
         #endregion
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

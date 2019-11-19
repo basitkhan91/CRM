@@ -83,7 +83,6 @@ export class ExpertiseCreateComponent implements OnInit, OnChanges {
         var value = Number.parseFloat(expertise.estimatedHours) * Number.parseFloat(expertise.laborDirectRate);
         if (value > 0) {
             expertise.directLaborRate = parseFloat((Number.parseFloat(expertise.estimatedHours) * Number.parseFloat(expertise.laborDirectRate)).toFixed(2));
-            // this.calculateTotalExpertiseCost();
         }
         else {
             expertise.directLaborRate = "";

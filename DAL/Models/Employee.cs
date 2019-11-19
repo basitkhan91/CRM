@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace DAL.Models
 {
     public class Employee : PasBase
@@ -17,10 +16,7 @@ namespace DAL.Models
         public Int16? JobTitleId { get; set; }
         public Int16? JobTypeId { get; set; }
         public long? LegalEntityId { get; set; }
-
-
         
-
         public Int16? EmployeeExpertiseId { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public Int16? OriginatingCountryId { get; set; }
@@ -52,6 +48,8 @@ namespace DAL.Models
 
         public bool? IsDeleted { get; set; }
         public long? ManagementStructureId { get; set; }
+
+        public string Memo { get; set; }
 
         public virtual MasterCompany MasterCompany { get; set; }
         public ICollection<EmployeeLeaveTypeMapping> EmployeeLeaveTypeMapping { get; set; }
