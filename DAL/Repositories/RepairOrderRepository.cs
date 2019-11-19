@@ -290,10 +290,9 @@ namespace DAL.Repositories
 
                 return data;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -507,8 +506,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 

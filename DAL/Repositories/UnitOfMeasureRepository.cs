@@ -124,7 +124,7 @@ namespace DAL.Repositories
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 UnitOfMeasure unitOfMeasure = new UnitOfMeasure();
                 unitOfMeasure.Description = description;

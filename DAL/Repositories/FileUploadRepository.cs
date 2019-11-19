@@ -86,9 +86,9 @@ namespace DAL.Repositories
                 }
                 return attachmentId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
 
         }
@@ -114,10 +114,9 @@ namespace DAL.Repositories
 
                 return attachmentDetails;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -144,10 +143,9 @@ namespace DAL.Repositories
 
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
 
 
@@ -349,6 +347,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
+                throw ex;
             }
             return result;
         }

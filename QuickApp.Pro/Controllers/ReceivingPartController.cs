@@ -280,7 +280,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest("Something went wrong while adding part, Please contact administrator");
+                return BadRequest(ex.Message);
             }
         }
 
@@ -349,7 +349,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest("Something went wrong while adding part, Please contact administrator");
+                return BadRequest(ex.Message);
             }
         }
 

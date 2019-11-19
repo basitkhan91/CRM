@@ -43,7 +43,7 @@ namespace QuickApp.Pro.Controllers
             catch (Exception ex)
             {
 
-                throw;
+                return BadRequest(ex.Message);
             }
 
 
@@ -64,7 +64,7 @@ namespace QuickApp.Pro.Controllers
             catch (Exception ex)
             {
 
-                throw;
+                return BadRequest(ex.Message);
             }
         }
         [HttpPost("workperformed")]

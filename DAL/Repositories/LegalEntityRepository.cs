@@ -153,10 +153,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
                 return billingAddress.LegalEntityBillingAddressId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -168,10 +167,9 @@ namespace DAL.Repositories
                 _appContext.LegalEntityBillingAddress.Update(billingAddress);
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -193,10 +191,9 @@ namespace DAL.Repositories
 
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -218,10 +215,9 @@ namespace DAL.Repositories
 
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -246,10 +242,9 @@ namespace DAL.Repositories
                             }).OrderByDescending(p => p.CreatedDate).ToList();
                 return list;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -274,10 +269,9 @@ namespace DAL.Repositories
                           ).FirstOrDefault();
                 return data;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -339,10 +333,9 @@ namespace DAL.Repositories
                 
                 return shippingAddress.LegalEntityShippingAddressId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -354,10 +347,9 @@ namespace DAL.Repositories
                 _appContext.LegalEntityShippingAddress.Update(ShippingAddress);
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -379,10 +371,9 @@ namespace DAL.Repositories
 
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -404,10 +395,9 @@ namespace DAL.Repositories
 
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -432,10 +422,9 @@ namespace DAL.Repositories
                             }).OrderByDescending(p => p.CreatedDate).ToList();
                 return list;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -460,10 +449,9 @@ namespace DAL.Repositories
                           ).FirstOrDefault();
                 return data;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -480,10 +468,9 @@ namespace DAL.Repositories
                             }).OrderBy(p => p.SiteName).ToList();
                 return list;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -506,10 +493,9 @@ namespace DAL.Repositories
                             }).FirstOrDefault();
                 return data;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -530,10 +516,9 @@ namespace DAL.Repositories
                             }).OrderBy(p => p.FirstName).ToList();
                 return list;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -551,11 +536,10 @@ namespace DAL.Repositories
 							}).OrderBy(p => p.SiteName).ToList();
 				return list;
 			}
-			catch (Exception)
-			{
-
-				throw;
-			}
+			catch (Exception ex)
+            {
+                throw ex;
+            }
 		}
 
 		public object GetLegalEntityShippingAddress(long addressId)
@@ -577,11 +561,10 @@ namespace DAL.Repositories
 							}).FirstOrDefault();
 				return data;
 			}
-			catch (Exception)
-			{
-
-				throw;
-			}
+			catch (Exception ex)
+            {
+                throw ex;
+            }
 		}
 
         public IEnumerable<object> GetLegalEntityAddressById(long legalEntityId)
@@ -604,10 +587,9 @@ namespace DAL.Repositories
                             }).Distinct().ToList();
                 return data;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);

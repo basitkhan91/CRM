@@ -27,8 +27,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
 
 
@@ -54,10 +53,9 @@ namespace DAL.Repositories
 
                 return workOrder;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -72,10 +70,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
                 return workOrder;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -95,10 +92,9 @@ namespace DAL.Repositories
                 _appContext.Entry(workOrder).Property(x => x.UpdatedBy).IsModified = true;
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -118,10 +114,9 @@ namespace DAL.Repositories
                 _appContext.Entry(workOrder).Property(x => x.UpdatedBy).IsModified = true;
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -187,10 +182,9 @@ namespace DAL.Repositories
                           .ToList();
                 return list;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -238,10 +232,9 @@ namespace DAL.Repositories
                           .ToList();
                 return list;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -259,10 +252,9 @@ namespace DAL.Repositories
 
 				return workOrder;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -292,8 +284,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -307,10 +298,9 @@ namespace DAL.Repositories
                 _appContext.WorkOrderWorkFlow.Update(workFlowWorkOrder);
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -339,10 +329,9 @@ namespace DAL.Repositories
 
                 return workFlowWorkOrder;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -360,10 +349,9 @@ namespace DAL.Repositories
                           ).ToList();
                 return list;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -381,10 +369,9 @@ namespace DAL.Repositories
                           ).ToList();
                 return list;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -659,10 +646,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
                 return workOrderLaborHeader.WorkOrderLaborHeaderId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -961,10 +947,9 @@ namespace DAL.Repositories
                 _appContext.WorkOrderLaborHeader.Update(workOrderLaborHeader);
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1303,10 +1288,9 @@ namespace DAL.Repositories
 
                 return workFlowLabourHeader;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1325,10 +1309,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
                 return workOrderCharges.WorkOrderChargesId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1343,10 +1326,9 @@ namespace DAL.Repositories
                 _appContext.WorkOrderCharges.Update(workOrderCharges);
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1389,10 +1371,9 @@ namespace DAL.Repositories
 
                 return workOrderChargesList;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1414,10 +1395,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
                 return workOrderAssets.WorkOrderAssetId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1432,10 +1412,9 @@ namespace DAL.Repositories
                 _appContext.WorkOrderAssets.Update(workOrderAssets);
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1462,10 +1441,9 @@ namespace DAL.Repositories
 
                 return workOrderAssetsList;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1485,10 +1463,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
                 return workOrderExclusions.WorkOrderExclusionsId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1503,10 +1480,9 @@ namespace DAL.Repositories
                 _appContext.WorkOrderExclusions.Update(workOrderExclusions);
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1552,10 +1528,9 @@ namespace DAL.Repositories
 
                 return workOrderExclusionsList;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1576,11 +1551,10 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
                 return workOrderDocuments.WorkOrderDocumentsId;
             }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            catch (Exception ex)
+                {
+                    throw ex;
+                }
         }
 
         public void UpdateWorkOrderDocuments(WorkOrderDocuments workOrderDocuments)
@@ -1594,10 +1568,9 @@ namespace DAL.Repositories
                 _appContext.WorkOrderDocuments.Update(workOrderDocuments);
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1635,10 +1608,9 @@ namespace DAL.Repositories
 
                 return workOrderDocumentsList;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1658,10 +1630,9 @@ namespace DAL.Repositories
                 _appContext.Entry(workOrderDocument).Property(x => x.UpdatedBy).IsModified = true;
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1683,10 +1654,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
                 return workOrderMaterials.WorkOrderMaterialsId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1701,10 +1671,9 @@ namespace DAL.Repositories
                 _appContext.WorkOrderMaterials.Update(workOrderMaterials);
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1784,10 +1753,9 @@ namespace DAL.Repositories
 
                 return workOrderMaterialsList;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1807,10 +1775,9 @@ namespace DAL.Repositories
                 _appContext.Entry(workOrderDocument).Property(x => x.UpdatedBy).IsModified = true;
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1832,10 +1799,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
                 return workOrderAddress.WorkOrderAddressId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1850,10 +1816,9 @@ namespace DAL.Repositories
                 _appContext.WorkOrderAddress.Update(workOrderAddress);
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1889,10 +1854,9 @@ namespace DAL.Repositories
 
                 return workOrderAddressList;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1913,10 +1877,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
                 return workOrderQuote.WorkOrderQuoteId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1931,10 +1894,9 @@ namespace DAL.Repositories
                 _appContext.WorkOrderQuote.Update(workOrderQuote);
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1995,9 +1957,9 @@ namespace DAL.Repositories
 
                 return workOrderQuote;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
 
@@ -2019,10 +1981,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
                 return workOrderFreight.WorkOrderFreightId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -2037,10 +1998,9 @@ namespace DAL.Repositories
                 _appContext.WorkOrderFreight.Update(workOrderFreight);
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -2077,10 +2037,9 @@ namespace DAL.Repositories
                 }
                 return workOrderFreightList;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -2104,10 +2063,9 @@ namespace DAL.Repositories
 
                 return workFlowNos;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -2130,10 +2088,9 @@ namespace DAL.Repositories
                             .ToList();
                 return list;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -2153,11 +2110,10 @@ namespace DAL.Repositories
                             .ToList();
                 return list;
             }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            catch (Exception ex)
+                {
+                    throw ex;
+                }
         }
 
         public IEnumerable<object> GetConditionDetailsByPartNo(long itemMasterId)
@@ -2176,10 +2132,9 @@ namespace DAL.Repositories
                             .ToList();
                 return list;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -2196,10 +2151,9 @@ namespace DAL.Repositories
 
                 return serialNo;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -2224,10 +2178,9 @@ namespace DAL.Repositories
                             }).ToList();
                 return list;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -2248,10 +2201,9 @@ namespace DAL.Repositories
                             .ToList();
                 return data;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -2269,10 +2221,9 @@ namespace DAL.Repositories
                             }).Distinct().ToList();
                 return list;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -2372,10 +2323,9 @@ namespace DAL.Repositories
                 }
 				return workFlowWorkOrderId;
 			}
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -2440,10 +2390,9 @@ namespace DAL.Repositories
 
                 return workOrderCharges;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -2471,10 +2420,9 @@ namespace DAL.Repositories
 
                 return WorkOrderAssetsList;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -2505,10 +2453,9 @@ namespace DAL.Repositories
 
                 return WorkOrderExclusionsList;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -2539,10 +2486,9 @@ namespace DAL.Repositories
 
                 return workOrderExpertiseList;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -2581,10 +2527,9 @@ namespace DAL.Repositories
 
                 return WorkOrderMaterialList;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -2612,10 +2557,9 @@ namespace DAL.Repositories
 
                 return workOrderPublicationList;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -2647,10 +2591,9 @@ namespace DAL.Repositories
 
                 return workOrderDirectionsList;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
