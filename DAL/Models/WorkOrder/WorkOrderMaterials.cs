@@ -25,6 +25,15 @@ namespace DAL.Models
         public decimal? ExtendedPrice { get; set; }
         public string Memo { get; set; }
         public bool? IsDefered { get; set; }
+        public int? QuantityReserved { get; set; }
+        public int? QuantityTurnIn { get; set; }
+        public int? QuantityIssued { get; set; }
+        public string IssuedBy { get; set; }
+        public DateTime? IssuedDate { get; set; }
+        public string ReservedBy { get; set; }
+        public DateTime? ReservedDate { get; set; }
+        public bool? IsAltPart { get; set; }
+        public long? AltPartMasterPartId { get; set; }
 
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
