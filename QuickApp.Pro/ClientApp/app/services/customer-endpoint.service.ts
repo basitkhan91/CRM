@@ -52,6 +52,7 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _CustomerContctUrl: string = "/api/Customer/CustomerContactPost";
     private readonly _CustomerUpdateContctUrl: string = "/api/Customer/ContactPost";
     private readonly _contactsEmptyObjurl: string = "/api/Customer/contactEmptyObj";
+    private readonly _getShipViaByShippingId: string = "/api/Customer/GetShipVia";
     private readonly _getShipViaHistory: string = "/api/Customer/getShipViaHistory";
     private readonly _shippingInfoUrl: string = "/api/Customer/CustomerShippingPost";
     private readonly _saveShipViaDetails: string = "/api/Customer/addShipViaDetails";
@@ -115,6 +116,10 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _addRemoveDetails: string = '/api/Customer/customerDocumentDelete';
     private readonly _customerContactHistory: string = '/api/Customer/customercontactauditdetails'
     private readonly _customerGlobalSearch: string = '/api/Customer/ListGlobalSearch'
+    private readonly _customerGetWarning: string = '/api/Customer/GetCustomerWarnings';
+    private readonly _customerBillingHistory: string = "/api/Customer/getCustomerBillingHistory"
+    private readonly _customerclassificationMapUrl: string = "/api/Customer/customerclassificationmappings";
+
 
 
 
@@ -177,10 +182,28 @@ export class CustomerEndpoint extends EndpointFactory {
     get deleteAircraftInvetory() { return this.configurations.baseUrl + this._deleteAircraftMappedInventory }
     get deleteTaxTypeRateMapped() { return this.configurations.baseUrl + this._deleteTaxTypeRateMapped }
     get domesticShipVia() { return this.configurations.baseUrl + this._addShipViaDetails }
+    get customerclassificationMapUrl() { return this.configurations.baseUrl + this._customerclassificationMapUrl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
         super(http, configurations, injector);
+    }
+
+    getCustomerBillingHistory(customerId, customerBillingAddressId) {
+        return this.http.get(`${this.configurations.baseUrl}/${this._customerBillingHistory}/${customerId}/${customerBillingAddressId}`)
+    }
+
+    getShipViaByDomesticShippingId(customerShippingId) {
+        return this.http.get(`${this.configurations.baseUrl}/${this._getShipViaByShippingId}/${customerShippingId}`, this.getRequestHeaders())
+
+    }
+
+    getCustomerWarningsById(customerId) {
+        return this.http.get(`${this.configurations.baseUrl}${this._customerGetWarning}/${customerId}`, this.getRequestHeaders())
+    }
+
+    getDocumentList(customerId) {
+        return this.http.get(`${this.configurations.baseUrl}/api/Customer//getCustomerDocumentDetail/${customerId}`, this.getRequestHeaders())
     }
 
     postDomesticShipVia<T>(postData) {
@@ -356,11 +379,9 @@ export class CustomerEndpoint extends EndpointFactory {
             });
     }
 
-    postCustomerATA<T>(postData) {
-        return this.http.post<T>(this.getCustomerATAPosttUrl, JSON.stringify(postData), this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.postCustomerATA(postData));
-            });
+    postCustomerATA(postData): any {
+        return this.http.post<any>(this.getCustomerATAPosttUrl, JSON.stringify(postData), this.getRequestHeaders())
+            
     }
 
     getNewitemAircraftEndpoint<T>(userObject: any): Observable<T> {
@@ -1200,6 +1221,16 @@ export class CustomerEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getGlobalCustomerRecords(value, pageIndex, pageSize));
             });
     }
+
+    getCustomerClassificationMapping(customerId) {
+        let url = `${this.customerclassificationMapUrl}?referenceId=${customerId}`;
+        return this.http.get<any>(url, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getCustomerClassificationMapping(customerId));
+            });
+    }
+
+
 
 }
 

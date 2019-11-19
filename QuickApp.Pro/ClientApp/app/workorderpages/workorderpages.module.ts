@@ -51,10 +51,14 @@ import { WorkOrderAssetsComponent } from '../components/work-order/work-order-se
 import { WorkOrderAddressesComponent } from '../components/work-order/work-order-setup/work-order-addresses/work-order-addresses.component';
 import { TooltipModule } from 'primeng/tooltip';
 import { CommonService } from '../services/common.service';
+import { MatIconModule } from "@angular/material/icon";
+import { WorkOrderSmartComponent } from '../components/work-order/work-order-setup/work-order-smart/work-order-smart.component';
+
 @NgModule({
   imports: [
     FormsModule,
     CommonModule,
+    MatIconModule,
     WorkOrdersPagesRoutingModule,
     TableModule,
     ButtonModule,
@@ -94,7 +98,8 @@ import { CommonService } from '../services/common.service';
     DirectLabourComponent,
     WorkOrderLaborComponent,
     WorkOrderAssetsComponent,
-    WorkOrderAddressesComponent
+    WorkOrderAddressesComponent,
+    WorkOrderSmartComponent
   ],
   entryComponents: [],
   providers: [

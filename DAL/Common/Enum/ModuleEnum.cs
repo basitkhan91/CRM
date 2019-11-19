@@ -9,6 +9,7 @@
         Publication,
         UnitOfMeasure,
         Manufacturer,
+        Memo,
         ItemClassfication, 
         Site, 
         WareHouse,
@@ -17,6 +18,8 @@
         AssetType,
         AssetIntangibleType,
         StageCode,
-        GLAccountCategory
+        GLAccountCategory,
+        ExpenditureCategory,
+        AssetAttributeType
     }
 }

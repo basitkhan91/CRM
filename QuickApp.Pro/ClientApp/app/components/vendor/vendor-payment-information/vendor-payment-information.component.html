@@ -54,7 +54,7 @@
 							</tr>
 						</ng-template>
 
-						<ng-template pTemplate="body" let-rowData let-columns="columns">
+						<ng-template pTemplate="body" let-rowData let-columns="columns" let-i="rowIndex">
 							<tr [pSelectableRow]="rowData" (dblclick)="toggledbldisplay(rowData)">
 
 
@@ -63,9 +63,10 @@
 								</td>
 
 								<td>
-									<p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+									<p-inputSwitch name="isActive{{i}}" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData, $event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+									<!-- <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
 									<p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-									<p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+									<p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch> -->
 									<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
 									<button class="btn-edit" mat-icon-button (click)="openEdit(contentEdit,rowData)" matTooltip="edit">
 										<mat-icon>edit</mat-icon>
@@ -127,11 +128,12 @@
 												</p>
 											</div>-->
 													</div>
-													<h5 class="heading">{{viewName}} Check Payment </h5>
+													<!-- <h5 class="heading">{{viewName}} Check Payment </h5> -->
+													<h5 class="heading">Check Mailing Information </h5>
 													<div class="col-sm-6 w400 page-2blocks">
 														<div class="pay-check-details">
 															<div class="form-group col-sm-12">
-																<label class="control-label col-sm-4">Site Name <strong class="clr-red">*</strong> </label>
+																<label class="control-label col-sm-4">Vendor Name <strong class="clr-red">*</strong> </label>
 																<div class="col-sm-7 cust-name">
 																	<input class="form-control" type="text" id=""
 																		   [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.siteName">
@@ -252,9 +254,9 @@
 												</div>
 												<div class="clear"></div>
 												<hr class="hr-light-grey">
-												<button type="button" class="btn btn-success pull-right submit-btn" [disabled]="disablesave" (click)="saveCheckPaymentInfo()">Save</button>
-												<button type="button" class="btn btn-success pull-right submit-btn" (click)="showDomesticWire()">Go to Domestic Wire</button>
-												<button type="button" class="btn btn-success pull-right submit-btn" (click)="showDefault()">Go to Default</button>
+												<button type="button" class="btn btn-primary-cstm pull-right" [disabled]="disablesave" (click)="saveCheckPaymentInfo()">Save</button>
+												<button type="button" class="btn btn-primary-cstm pull-right" (click)="showDomesticWire()">Go to Domestic Wire</button>
+												<!-- <button type="button" class="btn btn-primary-cstm pull-right" (click)="showDefault()">Go to Default</button> -->
 
 												<div class="clear"></div>
 												<!--<form id="" class="filters" name="" action="#" method="post">
@@ -374,9 +376,9 @@
 												</div>
 												<div class="clear"></div>
 												<hr class="hr-light-grey">
-												<button type="button" class="btn btn-success pull-right nxt-btn submit-btn" [disabled]="disablesaveforCountry"(click)="saveDomesticPaymentInfo()">Save</button>
-												<button type="button" class="btn btn-success pull-right nxt-btn submit-btn" (click)="showInternational()">Go to International</button>
-												<button type="button" class="btn btn-success pull-right nxt-btn submit-btn" (click)="showPament()">Go to Check</button>
+												<button type="button" class="btn btn-primary-cstm pull-right" [disabled]="disablesaveforCountry"(click)="saveDomesticPaymentInfo()">Save</button>
+												<button type="button" class="btn btn-primary-cstm pull-right" (click)="showInternational()">Go to International</button>
+												<button type="button" class="btn btn-primary-cstm pull-right" (click)="showPament()">Go to Check</button>
 											</div>
 											<div class="clear"></div>
 										</div>
@@ -483,8 +485,8 @@
 												</div>
 												<div class="clear"></div>
 												<hr class="hr-light-grey">
-												<button type="button" class="btn btn-success pull-right nxt-btn submit-btn" [disabled]="disablesavefoInternalrCountry || disablesaveforBeneficiary" (click)="saveInternationalPaymentInfo()">Save</button>
-												<button type="button" class="btn btn-success pull-right nxt-btn submit-btn" (click)="showDomesticWire()">Go to Domestic Wire</button>
+												<button type="button" class="btn btn-primary-cstm pull-right" [disabled]="disablesavefoInternalrCountry || disablesaveforBeneficiary" (click)="saveInternationalPaymentInfo()">Save</button>
+												<button type="button" class="btn btn-primary-cstm pull-right" (click)="showDomesticWire()">Go to Domestic Wire</button>
 											</div>
 											<div class="clear"></div>
 										</div>
@@ -522,8 +524,8 @@
 												<div class="clear"></div>
 												<hr class="hr-light-grey">
 
-												<button type="button" class="btn btn-success pull-right nxt-btn submit-btn" (click)="saveDefaultPaymentInfo()">Save</button>
-												<button type="button" class="btn btn-success pull-right submit-btn" (click)="showPament()">Go to Check</button>
+												<button type="button" class="btn btn-primary-cstm pull-right" (click)="saveDefaultPaymentInfo()">Save</button>
+												<button type="button" class="btn btn-primary-cstm pull-right" (click)="showPament()">Go to Check</button>
 
 
 
@@ -538,8 +540,8 @@
 				</form>
 			</div>
 		</div>
-		<button type="button" class="btn btn-success pull-right nxt-btn submit-btn" (click)="nextClick()">Next</button>
-		<button type="button" class="btn btn-success pull-right submit-btn" (click)="previousClick()">Previous</button>
+		<button type="button" class="btn btn-primary-cstm pull-right" (click)="nextClick()">Next</button>
+		<button type="button" class="btn btn-primary-cstm pull-right" (click)="previousClick()">Previous</button>
 	</div>
 
 </div>
@@ -591,7 +593,7 @@
 			<h4 class="modal-title">Vendor Details</h4>
 		</div>
 		<div class="modal-body viewform">
-			<p><span class="label"><b>site Name: </b></span><span class="value">{{siteName}}</span></p>
+			<p><span class="label"><b>vendor Name: </b></span><span class="value">{{siteName}}</span></p>
 			<p><span class="label"><b> address 1: </b></span><span class="value">{{address1}}</span></p>
 			<p><span class="label"><b> city </b></span><span class="value">{{city}}</span></p>
 			<p><span class="label"><b>state Or Province: </b></span><span class="value">{{stateOrProvince}}</span></p>

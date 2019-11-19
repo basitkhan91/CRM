@@ -1,0 +1,19 @@
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+
+namespace DAL.Models
+{
+    public class RepairOrderFilters
+    {
+        [Key]
+        public long RepairOrderId { get; set; }
+        public string RepairOrderNo { get; set; }
+        public DateTime? OpenDate { get; set; }
+        public DateTime? ClosedDate { get; set; }
+        public string VendorName { get; set; }
+        public string VendorCode { get; set; }
+        public string Status { get; set; }
+        public string RequestedBy { get; set; }
+        public string ApprovedBy { get; set; }
+    }
+}

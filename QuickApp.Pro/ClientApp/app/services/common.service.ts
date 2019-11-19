@@ -18,11 +18,11 @@ export class CommonService {
 
     smartDropDownList(tableName, primaryKeyColumn, labelColumn, count?) {
 
-        return this.http.get(`${this.baseUrl}/api/Common/binddropdowns?tableName=${tableName}&primaryColumn=${primaryKeyColumn}&textColumn=${labelColumn}&count=${count !== undefined ? count : 0}`, this.authService.getRequestHeaders())
+        return this.http.get<any>(`${this.baseUrl}/api/Common/binddropdowns?tableName=${tableName}&primaryColumn=${primaryKeyColumn}&textColumn=${labelColumn}&count=${count !== undefined ? count : 0}`, this.authService.getRequestHeaders())
 
     }
     createShipVia(object) {
-        return this.http.post(`${this.baseUrl}/api/Common/createshipvia`, JSON.stringify(object), this.authService.getRequestHeaders())
+        return this.http.post<any>(`${this.baseUrl}/api/Common/createshipvia`, JSON.stringify(object), this.authService.getRequestHeaders())
     }
 
     getShipViaDetailsByModule(moduleId, referenceId) {
@@ -41,6 +41,26 @@ export class CommonService {
     }
     getManagementStructureDetails(id) {
         return this.http.get<any>(`${this.baseUrl}/api/Common/managementstructure?manmgStrucId=${id}`, this.authService.getRequestHeaders())
+    }
+
+    getManagementStructureCodes(id) {
+        return this.http.get<any>(`${this.baseUrl}/api/Common/managementstructurecodes?manmgStrucId=${id}`, this.authService.getRequestHeaders())
+    }
+
+    getCustomerNameandCode(value) {
+        return this.http.get(`${this.baseUrl}/api/customer/customernameandcodes?value=${value}`, this.authService.getRequestHeaders())
+    }
+
+    getCustomerNameandCodeById(customerId) {
+        return this.http.get(`${this.baseUrl}/api/Customer/customernameandcodesbyId?customerId=${customerId}`, this.authService.getRequestHeaders())
+    }
+
+    getItemMasterDetails() {
+        return this.http.get(`${this.baseUrl}/api/itemMaster/GetPartDetailsDropDown`, this.authService.getRequestHeaders())
+    }
+
+    getRestrictedParts(moduleId, referenceId, partType) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/Common/getrestrictedparts?moduleId=${moduleId}&referenceId=${referenceId}&partType=${partType}`)
     }
 
 

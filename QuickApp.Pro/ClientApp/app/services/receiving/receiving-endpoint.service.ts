@@ -18,12 +18,14 @@ export class ReceivingEndpointService extends EndpointFactory {
     private readonly removeByIdURL: string = "/api/AssetType/removeAssetTypeById";
     private readonly itemMasterDataById: string = "/api/receivingPart/getById";
     private readonly receivingPurchaseOrderDataById: string = "/api/receivingPart/GetReceivingPurchaseList";
+    private readonly receivingPurchaseOrderDataForEditById: string = "/api/receivingPart/GetReceivingPurchaseForEdit";
     private readonly addStocklineMapperData: string = "/api/receivingPart/addStocklineMapperData";
 
     get getAll() { return this.configurations.baseUrl + this.getAllURL; }
     get removeById() { return this.configurations.baseUrl + this.removeByIdURL; }
     get itemMasterDataGet() { return this.configurations.baseUrl + this.itemMasterDataById; }
     get receivingPurchaseOrderDataGet() { return this.configurations.baseUrl + this.receivingPurchaseOrderDataById; }
+    get receivingPurchaseOrderForEditDataGet() { return this.configurations.baseUrl + this.receivingPurchaseOrderDataForEditById; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -90,7 +92,14 @@ export class ReceivingEndpointService extends EndpointFactory {
             });
     }
 
+    getReceivingPODataForEditById<T>(receivingId: any): Observable<T> {
 
+        let url = `${this.receivingPurchaseOrderForEditDataGet}/${receivingId}`;
+        return this.http.get<T>(url, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getReceivingPODataForEditById(receivingId));
+            });
+    }
 
     addPartStocklineMapper<T>(mapperObject: any): Observable<T>
     {

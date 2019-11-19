@@ -35,11 +35,12 @@ export class AssetCapesComponent implements OnInit {
     disableSavepartDescription: boolean;
     descriptionbyPart: any[] = [];
     allPartnumbersInfo: any[];
-    allManagemtninfo: any[] = [];
+    allManagemtninfo: any[] = [];   
     maincompanylist: any[] = [];
     bulist: any[];
     departmentList: any[];
     divisionlist: any[];
+    activeIndex: number;
     manufacturerData: any[] = [];
     allAircraftinfo: any[];
     completeAircraftManfacturerData: any[];
@@ -74,7 +75,7 @@ export class AssetCapesComponent implements OnInit {
     isSaving: boolean;
     currentCapes: any = {};
     
-    constructor(private modalService: NgbModal, private alertService: AlertService, public itemMasterService: ItemMasterService,
+    constructor(private modalService: NgbModal, private alertService: AlertService, public itemMasterService: ItemMasterService, private route: Router,
         private assetServices: AssetService, private formBuilder: FormBuilder) {
        
         if (this.assetServices.listCollection != null && this.assetServices.isEditMode == true) {
@@ -83,6 +84,16 @@ export class AssetCapesComponent implements OnInit {
             this.currentAsset = this.assetServices.listCollection;
             if (this.assetServices.listCollection) {
                 this.local = this.assetServices.listCollection;
+                this.currentCapes = this.local;
+            }
+            this.aircraftManfacturerData();
+            this.manufacturerdata();
+        }
+        else if (this.assetServices.generalCollection != null) {
+            this.showLable = true;
+            this.currentAsset = this.assetServices.generalCollection;
+            if (this.assetServices.generalCollection) {
+                this.local = this.assetServices.generalCollection;
                 this.currentCapes = this.local;
             }
             this.aircraftManfacturerData();
@@ -841,5 +852,19 @@ export class AssetCapesComponent implements OnInit {
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
+    }
+
+    saveCapes() {
+        this.assetServices.listCollection = this.local;
+        this.activeIndex = 2;
+        this.assetServices.indexObj.next(this.activeIndex);
+        this.route.navigateByUrl('/assetmodule/assetpages/app-asset-calibration');
+    }
+
+    backClick() {
+        this.assetServices.listCollection = this.local;
+        this.activeIndex = 0;
+        this.assetServices.indexObj.next(this.activeIndex);
+        this.route.navigateByUrl('/assetmodule/assetpages/app-create-asset');
     }
 }

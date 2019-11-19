@@ -18,7 +18,7 @@ namespace DAL.Repositories.Interfaces
 
         void CreateRestrictedParts(List<RestrictedParts> restrictedParts, long referenceId, int moduleId);
         void UpdateRestrictedParts(List<RestrictedParts> restrictedParts, long referenceId, int moduleId);
-        List<RestrictedParts> GetRestrictedParts(int moduleId, long? referenceId, string partType);
+        List<RestrictedParts> GetRestrictedParts(long moduleId, long? referenceId, string partType);
 
         void CreateCustomerTaxTypeRateMapping(List<CustomerTaxTypeRateMapping> customerTaxTypeRateMappings ,long referenceId);
 
@@ -30,10 +30,10 @@ namespace DAL.Repositories.Interfaces
         void UpdateRestrictDerList(List<RestrictsBERList> restrictsDerLists, long referenceId);
         List<RestrictsBERList> GetRestrictDerList(int itemMasterId, long? customerId);
 
-        void CreateClassificationMappings(List<ClassificationMapping> classificationMappings, long referenceId);
-        void UpdateClassificationMappings(List<ClassificationMapping> classificationMappings, long referenceId);
-        List<ClassificationMapping> GetCustomerClassificationMappings(int moduleId, int referenceId);
-        List<ClassificationMapping> GetVendorClassificationMappings(int moduleId, int referenceId);
+        void CreateClassificationMappings(List<ClassificationMapping> classificationMappings, int moduleId, long referenceId, string createdBy);
+        void UpdateClassificationMappings(List<ClassificationMapping> classificationMappings, int moduleId, long referenceId, string createdBy);
+        IEnumerable<object> GetCustomerClassificationMappings(int moduleId, long referenceId);
+        IEnumerable<object> GetVendorClassificationMappings(int moduleId, long referenceId);
 
         dynamic UpdateEntity(dynamic uiModel, dynamic dbModel, ref IDictionary<string, object> keyValuePairs);
 
@@ -49,6 +49,7 @@ namespace DAL.Repositories.Interfaces
         object GetAddressDetails(long addressId);
 
         Dictionary<string, long> GetManagementStructure(long manmgStrucId);
+        Dictionary<string, string> GetManagementStructureCodes(long manmgStrucId);
 
 
     }

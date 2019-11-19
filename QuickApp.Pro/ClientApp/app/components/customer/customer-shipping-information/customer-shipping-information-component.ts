@@ -89,6 +89,7 @@ export class CustomerShippingInformationComponent implements OnInit {
 
     ngOnInit() {
         if (this.editMode) {
+           
             this.id = this.editGeneralInformationData.customerId;
             this.customerCode = this.editGeneralInformationData.customerCode;
             this.customerName = this.editGeneralInformationData.name;
@@ -99,6 +100,9 @@ export class CustomerShippingInformationComponent implements OnInit {
             this.id = this.savedGeneralInformationData.customerId;
             this.customerCode = this.savedGeneralInformationData.customerCode;
             this.customerName = this.savedGeneralInformationData.name;
+            //Added By Vijay For Customer Create time IsShippingAddess is selected checkbox Then list page we are displaying list
+            this.getDomesticShippingByCustomerId();
+            this.getInternationalShippingByCustomerId();
         }
         // this.getInternationalShippingByCustomerId();
         // this.id = this.savedGeneralInformationData.customerId
@@ -124,7 +128,7 @@ export class CustomerShippingInformationComponent implements OnInit {
             ...this.domesticShippingInfo,
             createdBy: this.userName,
             updatedBy: this.userName,
-            country: getValueFromObjectByKey('nice_name', this.domesticShippingInfo.country),
+            country: getValueFromObjectByKey('countries_id', this.domesticShippingInfo.country),
             masterCompanyId: 1,
             isPrimary: false,
             isActive: true,
@@ -355,15 +359,23 @@ export class CustomerShippingInformationComponent implements OnInit {
             updatedBy: this.userName,
         }
 
+        this.shipViaDomestic = new CustomerInternationalShipVia()
         this.customerService.newShippingViaAdd(data).subscribe(res => {
 
+            this.getShipViaByDomesticShippingId(this.selectedShipViaDomestic.customerShippingAddressId)
 
-            this.shipViaDomestic = new CustomerInternationalShipVia()
             this.alertService.showMessage(
                 'Success',
                 `Sucessfully Updated Ship Via `,
                 MessageSeverity.success
             );
+        })
+    }
+
+    getShipViaByDomesticShippingId(customerShippingAddressId){
+        this.customerService.getShipViaByDomesticShippingId(customerShippingAddressId).subscribe(res => {
+            
+            
         })
     }
 

@@ -1,5 +1,3 @@
-USE [PAS_DEV]
-GO
 
 /****** Object:  Table [dbo].[ATASubChapterAudit]    Script Date: 9/17/2019 5:18:48 PM ******/
 SET ANSI_NULLS ON

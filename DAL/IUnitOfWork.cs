@@ -6,11 +6,7 @@
 using DAL.Models;
 using DAL.Repositories;
 using DAL.Repositories.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL
 {
@@ -20,7 +16,7 @@ namespace DAL
         IUserRoleRepository UserRole { get; }
         ICustomerRepository Customer { get; }
         IEnumerable<Customer> getAlldata();
-        ICustomerBillingInformationRepository CustomerBillingInformation { get;}
+        ICustomerBillingInformationRepository CustomerBillingInformation { get; }
 
         IProductRepository Products { get; }
         IOrdersRepository Orders { get; }
@@ -93,11 +89,10 @@ namespace DAL
 
         IEmployeeExpertiseRepository EmployeeExpertise { get; }
 
-        IExpenditureCategory ExpenditureCategory { get; }
         IDefaultMessage DefaultMessage { get; }
         IGlCashFlowRepository GlClassFlowClassification { get; }
 
-    int SaveChanges();
+        int SaveChanges();
 
 
         IAuditHistoryRepository AuditHistory { get; }
@@ -108,10 +103,10 @@ namespace DAL
         IDocument Document { get; }
 
         ICharge Charge { get; }
-        
-        IVendor Vendor { get;  }
+
+        IVendor Vendor { get; }
         IAddress Address { get; }
-        IContactRepository ContactRepository { get;}
+        IContactRepository ContactRepository { get; }
         IVendorContactRepository vendorContactRepository { get; }
         IFinance Finance { get; }
         //IContactRepository Contact { get; }
@@ -121,7 +116,7 @@ namespace DAL
 
         IVendorPaymentRepository vendorPaymentRepository { get; }
         IVendorCheckPaymentRepository vendorCheckPaymentRepository { get; }
-       
+
         IVendorDomesticPaymentRepository vendorDomesticPaymentRepository { get; }
 
         IVendorDomesticWirePaymentRepository vendordomesticWirePaymentRepository { get; }
@@ -131,7 +126,7 @@ namespace DAL
 
         IVendorInternationalWirePaymentRepository vendorInternationalWirePaymentRepository { get; }
         IVendorShippingAddress VendorShippingAddress { get; }
-       
+
 
         //IVendorShippingDetailsRepository VendorShippingDetailsRepository { get;  }
 
@@ -140,14 +135,14 @@ namespace DAL
         ICountriesRepository Countries { get; }
         IEmployeeLeaveType EmployeeLeaveType { get; }
         IEmployeeTrainingTypeRepository EmployeeTrainingType { get; }
-        
+
         IEmployeeLicenseType employeeLicenseType { get; }
 
         IEmployeeLicensure employeeLicensure { get; }
 
         IEmployeeTraining employeeTraining { get; }
 
-        IVendorWarning  VendorWarning { get; }
+        IVendorWarning VendorWarning { get; }
 
         ICustomerContactRepository CustomerContact { get; }
         ICustomerShippingAddress CustomerShippingAddress { get; }
@@ -159,7 +154,7 @@ namespace DAL
         ICustomerType customerType { get; }
 
         IATAChapter ATAChapter { get; }
-      
+
         IAircraftType aircraftType { get; }
 
         IAircraftModel aircraftModel { get; }
@@ -175,7 +170,7 @@ namespace DAL
         IStockLineList stockLineList { get; }
 
         //IStockListAdjustment StockListAdjustment { get; }
-       
+
         ITimeLife timeLife { get; }
 
         IWarning warning { get; }
@@ -184,14 +179,15 @@ namespace DAL
 
         ILegalEntity LegalEntity { get; }
 
-       // IGLAccountClassRespository gLAccountClass { get; }
+        // IGLAccountClassRespository gLAccountClass { get; }
 
         IGlCashFlowRepository glCashFlowRepository { get; }
 
         IPurchaseOrder purchaseOrder { get; }
+        IRepairOrder repairOrder { get; }
 
         ICustomerAffliationRepository CustomerAffliationRepository { get; }
-       IDiscountRepository Discount { get; }
+        IDiscountRepository Discount { get; }
         IManufacturerRepository Manufacturer { get; }
         ILaborAndOverheadCostRepository LaborAndOverheadCost { get; }
         IManagementSiteRepository managementSite { get; }
@@ -204,7 +200,7 @@ namespace DAL
         IStocklineAdjustmentRepository stocklineAdjustmentRepository { get; }
 
         //ICertificationTypeRepository CertificationTypeRepository { get; }
-        IStocklineAdjustmentReasonRepository stocklineAdjustmentReasonRepository { get; }
+        IStocklineAdjustmentReasonRepository StocklineAdjustmentReasonRepository { get; }
 
         IItemMasterAircraftManafacturerRepository ItemMasterAircraftManafacturerRepository { get; }
 
@@ -226,6 +222,8 @@ namespace DAL
         IAssetIntangibleTypeRepository AssetIntangibleTypeRepository { get; }
         IStageCodeRepository StageCodeRepository { get; }
         IGLAccountCategoryRepository GLAccountCategoryRepository { get; }
+        IExpenditureCategoryRepository ExpenditureCategoryRepository { get; }
+        IAssetAttributeTypeRepository AssetAttributeTypeRepository { get; }
 
 
         IEmployeeShiftRepository EmployeeShiftMappingRepository { get; }
@@ -235,6 +233,7 @@ namespace DAL
         IWorkOrderRepository WorkOrderRepository { get; }
         ICapabilityTypeRepository capabilityTypeRepository { get; }
         IAssetRepository Asset { get; }
+        IAssetAuditRepository AssetAudit { get; }
 
         IRepository<T> Repository<T>() where T : class;
 
@@ -245,7 +244,7 @@ namespace DAL
         IDashNumberRepository DashNumberRepository { get; }
 
         ICommonRepository CommonRepository { get; }
-      
+
         IAssetCapes AssetCapes { get; }
 
         IFileUploadRepository FileUploadRepository { get; }
@@ -262,7 +261,21 @@ namespace DAL
         IAssetDepConvention AssetDepConvention { get; }
         
         IPublicationTypesRepository PublicationTypesRepository { get; }
+      
+        ICommunicationRepository CommunicationRepository { get; }
+      
         IPercentageRepository PercentageRepository { get; }
+
+        IMasterSalesOrderQuoteTypesRepository MasterSalesOrderQuoteTypesRepository { get; }
+
+        IMasterSalesCreditTermsRepository MasterSalesCreditTermsRepository { get; }
+
+        IMasterSalesLeadSourcesRepository MasterSalesLeadSourcesRepository { get; }
+
+        IMasterSalesProbablityRepository MasterSalesProbablityRepository { get;  }
+
+        IItemMasterExchangeLoanRepository ItemMasterExchangeLoan { get; }
+      
         void SaveChanges(Employee employeeobject);
     }
 }

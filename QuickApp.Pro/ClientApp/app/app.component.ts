@@ -232,13 +232,15 @@ export class AppComponent implements OnInit, AfterViewInit {
                 icon: 'fa fa-fw fa-folder-open',
                 items: [
                     { label: 'Stock List', routerLink: '/stocklinemodule/stocklinepages/app-stock-line-list' },
-                    { label: 'Add Stock List', routerLink: '/stocklinemodule/stocklinepages/app-stock-line-setup' },
+                    { label: 'Add Stock Line', routerLink: '/stocklinemodule/stocklinepages/app-stock-line-setup' },
                     { label: 'Adjustment Reason', routerLink: '/stocklinemodule/stocklinepages/app-stockline-adjustment-reason' },
                     {
                         label: 'Reports and Forms', items: [
                             { label: 'Item Aging', routerLink: '/#' },
                             { label: 'Slow Moving Stock', routerLink: '/#' },
-                            { label: 'Hot List', routerLink: '/#' }]
+                            { label: 'Hot List', routerLink: '/#' },
+                            { label: 'Stock Line Report', command: (event?: any) => { this.stockLineReport(); }}
+                        ]
                     }]
 
             },
@@ -374,13 +376,11 @@ export class AppComponent implements OnInit, AfterViewInit {
                     },
                     {
                         label: 'Sales Order Quote', items: [
-                            { label: 'SO Quote List', routerLink: '/#' },
-                            { label: 'Create New Quote', routerLink: '/#' },
-                            { label: 'SO Quote List', routerLink: '/#' },
-                            { label: 'SO OnTime Performance', routerLink: '/#' },
+                            { label: 'SO Quote List', routerLink: '/salesmodule/salespages/sales-quote-list' },
+                            { label: 'Create New SO Quote', routerLink: '/salesmodule/salespages/sales-quote' },
                             {
-                                label: 'Reports and Forms', items: [
-                                    { label: 'open SO Quotes', routerLink: '/#' },
+                                label: 'Reports & Forms', items: [
+                                    { label: 'Open SO Quotes', routerLink: '/#' },
                                     { label: 'Approved SO Quotes', routerLink: '/#' }
                                 ]
                             }
@@ -598,6 +598,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'GL Account Type', routerLink: '/singlepages/singlepages/app-gl-account-class' },
                             { label: 'Gl Account Classification', routerLink: '/singlepages/singlepages/app-gl-cash-flow-classification' },
                             { label: 'GL Account Category', routerLink: '/singlepages/singlepages/app-gl-account-category' },
+                            { label: 'Expenditure Category', routerLink: '/singlepages/singlepages/app-expenditure-category' },
                             { label: 'Credit Terms', routerLink: '/singlepages/singlepages/app-credit-terms' },
                             { label: 'Tax Rate', routerLink: '/singlepages/singlepages/app-tax-rate' },
                             { label: 'Tax Type', routerLink: '/singlepages/singlepages/app-tax-type' },
@@ -634,12 +635,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                     },
                     {
                         label: 'Asset Attributes', items: [
-                            {
-                                label: 'Asset Attribute Type', items: [
-                                    { label: 'Asset Attribute List', routerLink: '/singlepages/singlepages/app-asset-type' },
-                                    { label: 'Create Attribute Asset', routerLink: '/#' },
-                                ]
-                            },
+                            { label: 'Asset Attribute Type', routerLink: '/singlepages/singlepages/app-asset-attribute-type' },
                             {
                                 label: 'Intangible Type', items: [
                                     { label: 'Intangible Type List', routerLink: '/#' },
@@ -656,6 +652,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
                     {
                         label: 'Stockline', items: [
+                            { label: 'Adjustment Reason', routerLink: '/singlepages/singlepages/app-stockline-adjustment-reason' },
                             { label: 'Ware House', routerLink: '/singlepages/singlepages/app-warehouse' },
                             { label: 'Location', routerLink: '/singlepages/singlepages/app-location' },
                             { label: 'Shelf', routerLink: '/singlepages/singlepages/app-shelf' },
@@ -675,6 +672,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 
 
         ];
+
+
 
         // created by jyotsna
 
@@ -749,6 +748,12 @@ export class AppComponent implements OnInit, AfterViewInit {
         if (this.notificationsLoadingSubscription) {
             this.notificationsLoadingSubscription.unsubscribe();
         }
+    }
+
+    stockLineReport() {
+        const url = `${this.configurations.baseUrl}/api/stockLine/stocklinereoprt`;
+
+        window.location.assign(url);
     }
 
     initNotificationsLoading() {

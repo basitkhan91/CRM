@@ -73,7 +73,7 @@ namespace QuickApp.Pro.Controllers
                 priorityobject.Description = priorityViewModel.Description;
                 priorityobject.MasterCompanyId = 1;
                 priorityobject.IsActive = priorityViewModel.IsActive;
-                priorityobject.IsDelete = priorityViewModel.IsDelete;
+                priorityobject.IsDeleted = priorityViewModel.IsDeleted;
                 priorityobject.Memo = priorityViewModel.Memo;
                 priorityobject.CreatedDate = DateTime.Now;
                 priorityobject.UpdatedDate = DateTime.Now;
@@ -122,7 +122,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult DeleteAction(long id)
         {
             var existingResult = _unitOfWork.Priority.GetSingleOrDefault(c => c.PriorityId == id);
-            existingResult.IsDelete =true;
+            existingResult.IsDeleted =true;
             _unitOfWork.Priority.Update(existingResult);
             //_unitOfWork.Priority.Remove(existingResult);
 

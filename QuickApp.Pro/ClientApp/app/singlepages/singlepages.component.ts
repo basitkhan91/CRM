@@ -58,6 +58,12 @@ export class SingleComponent {
                 case '/singlepages/singlepages/app-gl-account-category':
                     itemLabel = 'GL Account Category';
                     break;
+                case '/singlepages/singlepages/app-expenditure-category':
+                    itemLabel = 'Expenditure Category';
+                    break;
+                case '/singlepages/singlepages/app-asset-attribute-type':
+                    itemLabel = 'Asset Attribute Type';
+                    break;
                 default:
             }
             this.items = [
@@ -102,6 +108,13 @@ export class SingleComponent {
                 this.items = [
                     { label: 'Single Screens' },
                     { label: 'Depreciation Method'}
+                ];
+            }
+
+            else if (this.currentUrl == '/singlepages/singlepages/app-stockline-adjustment-reason') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Adjustment Reason' }
                 ];
             }
 
@@ -203,13 +216,6 @@ export class SingleComponent {
 				];
 			}
 
-			else if (this.currentUrl == '/singlepages/singlepages/app-expenditure') {
-				this.items = [
-					{ label: 'Single Screens' },
-					{ label: 'Expenditure' }
-				];
-			}
-
 			else if (this.currentUrl == '/singlepages/singlepages/app-findings') {
 				this.items = [
 					{ label: 'Single Screens' },
@@ -290,14 +296,14 @@ export class SingleComponent {
 			else if (this.currentUrl == '/singlepages/singlepages/app-tax-type') {
 				this.items = [
 					{ label: 'Single Screens' },
-					{ label: 'TaxType' }
+					{ label: 'Tax Type' }
 				];
 			}
 
 			else if (this.currentUrl == '/singlepages/singlepages/app-tax-rate') {
 				this.items = [
 					{ label: 'Single Screens' },
-					{ label: 'TaxRate' }
+					{ label: 'Tax Rate' }
 				];
 			}
 
@@ -447,6 +453,12 @@ export class SingleComponent {
                 case '/singlepages/singlepages/app-gl-account-category':
                     itemLabel = 'GL Account Category';
                     break;
+                case '/singlepages/singlepages/app-expenditure-category':
+                    itemLabel = 'Expenditure Category';
+                    break;
+                case '/singlepages/singlepages/app-asset-attribute-type':
+                    itemLabel = 'Asset Attribute Type';
+                    break;
                 default:
             }
             this.items = [
@@ -531,13 +543,6 @@ export class SingleComponent {
 				];
 			}
 
-			else if (this.currentUrl == '/singlepages/singlepages/app-expenditure') {
-				this.items = [
-					{ label: 'Single Screens' },
-					{ label: 'Expenditure' }
-				];
-			}
-
 			else if (this.currentUrl == '/singlepages/singlepages/app-findings') {
 				this.items = [
 					{ label: 'Single Screens' },
@@ -619,14 +624,14 @@ export class SingleComponent {
 			else if (this.currentUrl == '/singlepages/singlepages/app-tax-type') {
 				this.items = [
 					{ label: 'Single Screens' },
-					{ label: 'TaxType' }
+					{ label: 'Tax Type' }
 				];
 			}
 
 			else if (this.currentUrl == '/singlepages/singlepages/app-tax-rate') {
 				this.items = [
 					{ label: 'Single Screens' },
-					{ label: 'TaxRate' }
+					{ label: 'Tax Rate' }
 				];
 			}
 
@@ -787,6 +792,13 @@ export class SingleComponent {
                 ];
             }
 
+            else if (this.currentUrl == '/singlepages/singlepages/app-stockline-adjustment-reason') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Adjustment Reason' }
+                ];
+            }
+
             else if (this.currentUrl == '/singlepages/singlepages/app-asset-dep-convention-type') {
                 this.items = [
                     { label: 'Single Screens' },
@@ -836,6 +848,7 @@ export class SingleComponent {
                 this.items = [
                     { label: 'Single Screens' },
                     { label: 'Dash Number' }
+                    
                 ];
 			}
 			else if (this.currentUrl == '/singlepages/singlepages/app-node-setup') {

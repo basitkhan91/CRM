@@ -19,6 +19,7 @@ import { VendorEndpointService } from './vendor-endpoint.service';
 import { Vendor } from '../models/vendor.model';
 import { DiscountValue } from '../models/discountvalue';
 import { ATASubChapter } from '../models/atasubchapter.model';
+import { BehaviorSubject } from 'rxjs';
 
 
 export type RolesChangedOperation = "add" | "delete" | "modify";
@@ -31,6 +32,7 @@ export class VendorService {
 
     enableExternal: boolean = false;
     shippingCollection: any;
+    billingCollection: any;
     purchasepartcollection: any[] = [];
     repairecollection: any;
     isEditMode: boolean = false;
@@ -42,6 +44,8 @@ export class VendorService {
     financeCollection: any;
     ShowPtab: boolean = true;
     receiveSaveddata: any[] = [];
+    private stepDataSubject = new BehaviorSubject('');
+    public stepData$ = this.stepDataSubject.asObservable();
     public static readonly roleAddedOperation: RolesChangedOperation = "add";
     public static readonly roleDeletedOperation: RolesChangedOperation = "delete";
     public static readonly roleModifiedOperation: RolesChangedOperation = "modify";
@@ -75,7 +79,9 @@ export class VendorService {
     //	this.mySubject.next(data);
     //}
 
-
+    changeStep(stepVal) {
+        this.stepDataSubject.next(stepVal);
+    }
     getWorkFlows() {
         return Observable.forkJoin(
             this.actionEndpoint.getvendorEndpoint<any[]>());
@@ -156,6 +162,10 @@ export class VendorService {
         return Observable.forkJoin(
             this.actionEndpoint.getVendorShipAddressdetails<any[]>(vendorId));
     }
+    getVendorBillAddressGet(vendorId: any) {
+        return Observable.forkJoin(
+            this.actionEndpoint.getVendorBillAddressdetails<any[]>(vendorId));
+    }
     getSiteAddresses() {
         return Observable.forkJoin(
             this.actionEndpoint.getSiteAddresses<any[]>());
@@ -167,6 +177,10 @@ export class VendorService {
     getVendorShipViaDetails(rowData) {
         return Observable.forkJoin(
             this.actionEndpoint.getVendorShipViaDetails(rowData));
+    }
+    getVendorBillViaDetails(rowData) {
+        return Observable.forkJoin(
+            this.actionEndpoint.getVendorBillViaDetails(rowData));
     }
     getVendorList() {
         return Observable.forkJoin(
@@ -238,8 +252,14 @@ export class VendorService {
     shipviaHistory(actionId: number) {
         return Observable.forkJoin(this.actionEndpoint.getShipviaHistory<AuditHistory[]>(actionId));
     }
+    billviaHistory(actionId: number) {
+        return Observable.forkJoin(this.actionEndpoint.getBillviaHistory<AuditHistory[]>(actionId));
+    }
     shipaddressHistory(actionId: number) {
         return Observable.forkJoin(this.actionEndpoint.getShipaddressHistory<AuditHistory[]>(actionId));
+    }
+    billaddressHistory(actionId: number) {
+        return Observable.forkJoin(this.actionEndpoint.getBilladdressHistory<AuditHistory[]>(actionId));
     }
 
     newAction(action: any) {
@@ -318,6 +338,12 @@ export class VendorService {
 
     }
 
+    deleteVendorShippingAddress(actionId: any) {
+
+        return this.actionEndpoint.getDeletevendorshippingEndpoint(actionId);
+
+    }
+
     newAddContactInfo(vendorcntct: any) {
         return this.actionEndpoint.getNewVendorContactInfo<any>(vendorcntct);
     }
@@ -347,6 +373,9 @@ export class VendorService {
         return this.actionEndpoint.updateVendorCheckpayment<any>(vendorcntct, vendorId);
     }
     updateVendorShippingAddressDetails(vendorcntct: any, vendorId: any) {
+        return this.actionEndpoint.updateVendorAddressDetails<any>(vendorcntct, vendorId);
+    }
+    updateVendorBillingAddressDetails(vendorcntct: any, vendorId: any) {
         return this.actionEndpoint.updateVendorAddressDetails<any>(vendorcntct, vendorId);
     }
 
@@ -393,6 +422,10 @@ export class VendorService {
 
         return this.actionEndpoint.getNewShipppinginfo<any>(action);
     }
+    newBillingAdd(action: any) {
+
+        return this.actionEndpoint.getNewBillinginfo<any>(action);
+    }
 
     addNewBillingAddress(object) {
         return this.actionEndpoint.postNewBillingAddress<any>(object);
@@ -405,6 +438,10 @@ export class VendorService {
 
         return this.actionEndpoint.saveShipViaDetails<any>(action);
     }
+    newBillingViaAdd(action: any) {
+
+        return this.actionEndpoint.saveBillViaDetails<any>(action);
+    }
     addShipViaDetails(action: any) {
 
         return this.actionEndpoint.addShipViaDetails<any>(action, action.vendorShippingId);
@@ -413,11 +450,21 @@ export class VendorService {
 
         return this.actionEndpoint.getNewShipppinginfoWithAddressId<any>(action, shippingAddressId);
     }
+    newBillingAddWithAddress(action: any, billingAddressId: any) {
+
+        return this.actionEndpoint.getNewBillinginfoWithAddressId<any>(action, billingAddressId);
+    }
     updateshippinginfo(vendorshipping: any) {
         return this.actionEndpoint.updateShippinginfo(vendorshipping, vendorshipping.vendorShippingAddressId);
     }
+    updateBillinginfo(vendorbilling: any) {
+        return this.actionEndpoint.updateShippinginfo(vendorbilling, vendorbilling.vendorBillingAddressId);
+    }
     updateshippingViainfo(vendorshipping: any) {
         return this.actionEndpoint.updateShippingViainfo(vendorshipping, vendorshipping.vendorShippingId);
+    }
+    updateBillingViainfo(vendorbilling: any) {
+        return this.actionEndpoint.updateBillingViainfo(vendorbilling, vendorbilling.vendorBillingId);
     }
     getDiscountList() {
         return Observable.forkJoin(
@@ -450,6 +497,9 @@ export class VendorService {
     updateActionforActiveforshipping(vendorshipping: any) {
         return this.actionEndpoint.getUpdatevendorEndpointforActiveforshipping(vendorshipping, vendorshipping.vendorShippingAddressId);
     }
+    updateActionforActiveforBilling(vendorbilling: any) {
+        return this.actionEndpoint.getUpdatevendorEndpointforActiveforbilling(vendorbilling, vendorbilling.vendorBillingAddressId);
+    }
 
     updateActionforActiveforshipViaDetails(vendorshipping: any) {
         return this.actionEndpoint.getUpdatevendorEndpointforActiveforshipViaDetails(vendorshipping, vendorshipping.vendorShippingId);
@@ -463,6 +513,7 @@ export class VendorService {
         return Observable.forkJoin(
             this.actionEndpoint.getPOList(data));
     }
+
 
     getCountrylist() {
         return Observable.forkJoin(
@@ -559,15 +610,7 @@ export class VendorService {
     getVendorContactsListByID(vendorId: any) {
         return Observable.forkJoin(
             this.actionEndpoint.getVendorContactsByIDEndpoint<any[]>(vendorId));
-    }
-
-    saveCreatePOApproval(action: any) {
-        return this.actionEndpoint.saveCreatePOApproval<any>(action);
-    }
-
-    updatePOApproval(action: any) {
-        return this.actionEndpoint.updatePOApproval<any>(action);
-    }
+    }    
 
     getVendorsForDropdown() {
         return this.actionEndpoint.getVendorsForDropdownEndPoint<any[]>();
@@ -583,6 +626,68 @@ export class VendorService {
     getReceivingPOListing(){
         return this.actionEndpoint.getReceivingPOListing();
     }
+
+    saveRepairOrder(action: any) {
+        return this.actionEndpoint.saveRepairorderdetails<any>(action);
+    }
+
+    saveRepairOrderPart(action: any) {
+        return this.actionEndpoint.saveRepairorderdetailspart<any>(action);
+    }
+
+    getVendorROById(Id: number) {
+        return this.actionEndpoint.getVendorROById<any>(Id);
+    }
+
+    getRepairOrderPartsById(Id: number) {
+        return Observable.forkJoin(this.actionEndpoint.getRepairOrderPartsById<any>(Id));
+    }
+
+    getPurchaseOrderByItemId(Id: number) {
+        return Observable.forkJoin(this.actionEndpoint.getPurchaseOrderByItemId<any>(Id));
+    }
+
+    getRepairOrderByItemId(Id: number) {
+        return Observable.forkJoin(this.actionEndpoint.getRepiarOrderByItemId<any>(Id));
+    }
+
+    getROStatus(repairOrderId, isActive, updatedBy){
+        return this.actionEndpoint.getROStatus(repairOrderId, isActive, updatedBy);
+    }
+
+    deleteRO(repairOrderId, updatedBy){
+        return this.actionEndpoint.deleteRO(repairOrderId, updatedBy);
+    }
+
+    getROHistory(repairOrderId){
+        return this.actionEndpoint.getROHistory(repairOrderId);
+    }
+
+    getROViewById(purchaseOrderId){
+    return this.actionEndpoint.getROViewById(purchaseOrderId);
+    }
+
+    getROPartsViewById(purchaseOrderId){
+        return this.actionEndpoint.getROPartsViewById(purchaseOrderId);
+    }
+
+    getROList(data) {
+        return Observable.forkJoin(
+            this.actionEndpoint.getROList(data));
+    }
+
+    saveCreateROApproval(action: any) {
+        return this.actionEndpoint.saveCreateROApproval<any>(action);
+      }
+
+      updateROApproval(action: any) {
+        return this.actionEndpoint.updateROApproval<any>(action);
+    }
+
+    getROApproverList(purchaseOrderId){
+        return this.actionEndpoint.getROApproverList(purchaseOrderId);
+      }
+      
 }
 
 

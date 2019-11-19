@@ -67,7 +67,7 @@
                     </select>
                 </td>
                 <td style="width: 200px">
-                    <input type="text" maxlength="10" pInputText pKeyFilter="pnum" class="form-control" value="{{material.quantity}}" (input)="calculateQtySummation();calculateExtendedCost(material);calculateExtendedPrice(material);" [(ngModel)]="material.quantity" />
+                    <input type="text" maxlength="10" pInputText pKeyFilter="pnum" class="form-control" value="{{material.quantity}}"  (input)="validateQuantity($event, material);calculateQtySummation();calculateExtendedCost(material);calculateExtendedPrice(material);" [(ngModel)]="material.quantity" />
                 </td>
                 <td>
                     <select class="form-control custom-select wf-pub-id" id="ddlMaterialUOM" [(ngModel)]="material.unitOfMeasureId">
@@ -88,10 +88,6 @@
                 </td>
                 <td>
                     <input type="text" class="form-control" disabled pInputText pKeyFilter="money" value="{{material.extendedPrice}}" [(ngModel)]="material.extendedPrice" />
-                    <input type="text" class="form-control" pInputText pKeyFilter="money" value="{{material.price}}" [(ngModel)]="material.price" (input)="calculatePriceSummation();calculateExtendedPrice();" />
-                </td>
-                <td>
-                    <input type="text" class="form-control" pInputText pKeyFilter="money" value="{{material.extendedPrice}}" [(ngModel)]="material.price" (input)="calculatePriceSummation()" />
                 </td>
                 <td>
                     <textarea style="height: 25px;margin-top: 5px;min-width: 130px !important;" class="form-control" [(ngModel)]="material.memo" value="{{material.memo}}"></textarea>

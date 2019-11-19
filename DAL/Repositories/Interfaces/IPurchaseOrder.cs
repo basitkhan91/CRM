@@ -10,6 +10,9 @@ namespace DAL.Repositories.Interfaces
     {
         IEnumerable<object> GetPurchaseOrderlist(Filters<PurchaseOrderFilters> poFilters);
         IEnumerable<PurchaseOrder> GetPurchaseOrderListLite();
+        IEnumerable<PurchaseOrder> StockLinePOList();
+
+        IEnumerable<PurchaseOrder> POListByMasterItemId(int itemMasterId);
         int GetLastIdNumber(long puchaseOrderId, long purchaseOrderPartId);
         long CreatePOApprovers(PurchaseOrderApprover poApprover);
         void UpdatePOApprovers(PurchaseOrderApprover poApprover);
@@ -29,5 +32,10 @@ namespace DAL.Repositories.Interfaces
         void PurchaseOrderStatus(long purchaseOrderId, bool status, string updatedBy);
 
         IEnumerable<object> RecevingPolist();
+        IEnumerable<object> GetPurchaseOrderlistByVendor(long vendorId, int pageNo, int pageSize);
+        IEnumerable<object> GetPurchaseOrderHistory(long purchaseOrderId);
+        dynamic PurchaseOrderView(long purchaseOrderId);
+        List<PurchaseOrderPart> GetPurchaseOrderPartsView(long purchaseOrderId);
+        PurchaseOrderEmail PurchaseOrderEmail(long purchaseOrderId);
     }
 }

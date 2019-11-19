@@ -52,7 +52,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
     bulist: any[];
     departmentList: any[];
 	divisionlist: any[];
-	allManagemtninfo: any[] = [];
+    allManagemtninfo: any[] = [];
 	copyOfAllManagemtninfo: any[] = [];
 	maincompanylist: any[] = [];
 	divisionId: any;
@@ -116,34 +116,33 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
     hasSerialized: boolean;
     showSerialNumberError: boolean;
     disableSavepartNumber: boolean;
+
+    alllegalEntityInfo: any[] = [];
+    sourceEmployee: any = {};
+    managementStructureData: any[];
+    updateMode: boolean = false;
+
 	ngOnInit(): void
 	{
-		this.stocklineser.currentUrl = '/stocklinemodule/stocklinepages/app-stock-line-setup';
-		this.stocklineser.bredcrumbObj.next(this.stocklineser.currentUrl);
-		this.loadData();
-		this.loadCompanyData();
-		this.loadManagementdata();
-		this.loadSiteData();
-		this.Integration();
-		this.loadManufacturerData();
-		this.loadPoData();
-		this.loadRoData();
-		this.loadEmployeeData();
-		this.loadIntegrationPortal();
-		this.glAccountlistdata();
-		
-		//this.onDataLoadWareHouse();
-		//this.onDataLoadLocation();
-		
+        this.stocklineser.currentUrl = '/stocklinemodule/stocklinepages/app-stock-line-setup';
+        this.stocklineser.bredcrumbObj.next(this.stocklineser.currentUrl);
+        this.loadData();
+        this.loadCompanyData();
+        this.loadManagementdata();
+        this.loadSiteData();
+        this.Integration();
+        this.loadManufacturerData();
+        //this.loadPoData();
+        //this.loadRoData();
+        this.loadEmployeeData();
+        this.loadIntegrationPortal();
+        this.glAccountlistdata();
+        this.customerList();
+        this.vendorList();
+        this.loadGlAccountData();
+	    this.ptnumberlistdata();
+    }
 
-		
-		this.customerList();
-		this.vendorList();
-		this.loadGlAccountData();
-		this.ptnumberlistdata();
-
-		
-	}
 	selectedObtainFromValue: string = '';
 	selectedTracableToValue: string = '';
 	showLable: boolean;
@@ -166,10 +165,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 
 	constructor(public integrationService: IntegrationService,private empService: EmployeeService,public vendorservice: VendorService,public manufacturerService: ManufacturerService,public itemser: ItemMasterService,public glAccountService: GLAccountClassService,public vendorService: VendorService,public customerService: CustomerService,public inteService: IntegrationService,public workFlowtService1: LegalEntityService,public workFlowtService: BinService,public siteService: SiteService,public integration: IntegrationService, public stocklineser: StocklineService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public conditionService: ConditionService, private dialog: MatDialog)
 	{
-		this.dataSource = new MatTableDataSource();
-		
-		
-
+        this.dataSource = new MatTableDataSource();
 	}
 
 	private ptnumberlistdata() {
@@ -188,11 +184,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		this.loadingIndicator = false;
 		this.dataSource.data = allWorkFlows;
 		this.allPartnumbersInfo = allWorkFlows;
-
-
 		//console.log(this.allActions);
-
-
 	}
 
 	private glAccountlistdata() {
@@ -211,19 +203,14 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		this.loadingIndicator = false;
 		this.dataSource.data = allWorkFlows;
 		this.allglAccountInfo = allWorkFlows;
-
-
 		//console.log(this.allActions);
-
-
 	}
 
 	loadPoData()
 	{
 		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
-
-		this.vendorservice.getPurchaseOrderlist().subscribe(
+        this.loadingIndicator = true;
+        this.vendorservice.getPurchaseOrderByItemId(this.sourceItemMaster.partId).subscribe(
 			results => this.onPoListDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
@@ -236,18 +223,16 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		this.dataSource.data = getCreditTermsList;
 
 		this.allPolistInfo = getCreditTermsList;
-
 	}
 
 	loadRoData()
 	{
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
-
-		this.vendorservice.getRepaireOrderlist().subscribe(
-			results => this.onDataLoadRepairOrderDataSuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.vendorservice.getRepairOrderByItemId(this.sourceItemMaster.partId).subscribe(
+            results => this.onPoListDataLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
 	}
 	onDataLoadRepairOrderDataSuccessful(getCreditTermsList: any[])
 	{
@@ -300,22 +285,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 
 				);
 		}
-		//let valAirCraft = [];
-		//this.itemser.getAircraftManufacturer(this.sourceItemMaster.itemMasterId)
-		//	.subscribe(results => {
-		//		this.allIntegrationInfo = results;
-		//		if (results != null) {
-		//			for (let i = 0; i < this.allIntegrationInfo.length; i++) {
-		//				valAirCraft.push(this.allIntegrationInfo[i].integrationPortalId);
-		//			}
-		//			this.selectedAircraftTypes = valAirCraft;
-		//			console.log(this.selectedAircraftTypes);
-		//		}
-
-		//	},
-		//		error => this.onDataLoadFailed(error)
-		//	);
-
 
 	}
 
@@ -382,21 +351,21 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 
 
     filterpartItems(event) {
-
         this.partCollection = [];
         this.itemclaColl = [];
         if (this.allPartnumbersInfo) {
             if (this.allPartnumbersInfo.length > 0) {
-
+                
                 for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
                     let partName = this.allPartnumbersInfo[i].partNumber;
+                    console.log(partName);
                     if (partName) {
                         if (partName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                             this.itemclaColl.push([{
                                 "partId": this.allPartnumbersInfo[i].itemMasterId,
                                 "partName": partName
                             }]),
-
+                                
                                 this.partCollection.push(partName);
                         }
                     }
@@ -416,7 +385,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
                     this.disableSavepartNumber = false;
 				}
 			}
-			this.itemser.getDescriptionbypart(event).subscribe(
+            this.itemser.getDescriptionbypart(event).subscribe(
 				results => this.onpartnumberloadsuccessfull(results[0]),
 				error => this.onDataLoadFailed(error)
 
@@ -425,24 +394,23 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		}
 	}
 
-
-
 	private onpartnumberloadsuccessfull(allWorkFlows: any[])
-	{
-		//in This we are Getiing isSerialized,PartDescription,Tage Date,shelfLife,tagType,isPMA,isDER Basedon Part Selection
-
+    {
+        this.loadPoData();
+        this.loadRoData();
 		this.descriptionbyPart = allWorkFlows[0]
 		this.sourcePartAction = this.descriptionbyPart;
         this.sourceStockLineSetup.partDescription = allWorkFlows[0].partDescription; //Passing Part Description based on Change Part
         this.sourceStockLineSetup.shelfLife = allWorkFlows[0].t.shelfLife;
-		this.sourceStockLineSetup.isSerialized = allWorkFlows[0].isSerialized;
+        this.sourceStockLineSetup.isSerialized = allWorkFlows[0].isSerialized;
+        //this.sourceStockLineSetup.ITARNumber = allWorkFlows[0].t.ITARNumber;
+        //this.sourceStockLineSetup.NHA = allWorkFlows[0].t.NHA;
 
 		if (this.sourceStockLineSetup.isSerialized == true) {
 			this.hideSerialNumber = true;
 			this.showRestrictQuantity = true;
 			this.showFreeQuantity = false;
 			this.showNormalQuantity = false;
-
 			this.hasSerialized = true; //for Knowing is Serialized or not for Serial Number 
 
 		}
@@ -452,9 +420,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			this.showRestrictQuantity = false;
 			this.showFreeQuantity = true;
 			this.showNormalQuantity = false;
-
 			this.hasSerialized = false; //for Knowing is Serialized or not for Serial Number 
-
 		}
 
 		if (allWorkFlows[0].isShelfLifeAvailable == null)
@@ -466,23 +432,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			this.sourceStockLineSetup.shelfLife = allWorkFlows[0].isShelfLifeAvailable;
 		}
 
-		//if (allWorkFlows[0].tagType == null) {
-		//	this.sourceStockLineSetup.tagType = false;
-		//}
-		//else {
-		//	this.sourceStockLineSetup.tagType = allWorkFlows[0].tagType;
-		//}
-		
-		//this.sourceStockLineSetup.tagDate = new Date(allWorkFlows[0].tagDate);
-
-		//if (this.sourceStockLineSetup.tagDate == "0001-01-01T00:00:00" || this.sourceStockLineSetup.tagDate == undefined || this.sourceStockLineSetup.tagDate == "undefined") {
-		//	this.sourceStockLineSetup.tagDate = new Date();
-		//}
-		//else {
-		//	this.sourceStockLineSetup.tagDate = new Date(this.sourceStockLineSetup.tagDate);
-		//}
-
-		
 		this.sourceStockLineSetup.isPMA = allWorkFlows[0].pma;
 		this.sourceStockLineSetup.isDER = allWorkFlows[0].der;
 
@@ -499,7 +448,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 
 		this.sourceStockLineSetup.itemMasterId = allWorkFlows[0].itemMasterId;
 		this.sourceStockLineSetup.glAccountId = allWorkFlows[0].glAccountId;
-
+       
 	}
 
 	private customerList()
@@ -643,26 +592,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 	}
 
 	
-	//private onIntegrationData(getEmployeeCerficationList: any[]) {
-	//	// alert('success');
-	//	this.alertService.stopLoadingMessage();
-	//	this.loadingIndicator = false;
-	//	this.dataSource.data = getEmployeeCerficationList;
-	//	this.allintegrationdetails = getEmployeeCerficationList;
-	//	if (this.allintegrationdetails.length > 0) {
-	//		for (let i = 0; i < this.allintegrationdetails.length; i++)
-	//			this.integrationvalues.push(
-	//				{ value: this.allintegrationdetails[i].integrationPortalId, label: this.allintegrationdetails[i].description },
-	//				//{ value: '2', label: 'Shift 1' },
-	//				//{ value: '3', label: 'Shift 1' },
-	//				//{ value: '4', label: 'Shift 1' },
-
-	//			);
-	//	}
-	//}
-
-
-
 	private onDataLoadLocation(getLocationList: any) { //Storing WareHouse Data
 
 		this.alertService.stopLoadingMessage();
@@ -748,12 +677,12 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			}
 
 		}
-	}
+    }
+
 	locationValueChange(locationId)
 	{
 		this.allShelfs = [];
 		this.allBins = [];
-
 		
 		this.sourceStockLineSetup.shelfId = 0;
 		this.sourceStockLineSetup.binId = 0;
@@ -768,10 +697,8 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 	shelfValueChange(binId)
 	{
 		this.allBins = [];
-
 		
 		this.sourceStockLineSetup.binId = 0;
-
 		this.workFlowtService.getBinDataById(binId).subscribe(
 			results => this.onDataLoadBin(results), //sending Location
 			error => this.onDataLoadFailed(error));	
@@ -792,7 +719,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			error => this.onDataLoadFailed(error)
 		);
 		
-		
 	}
 
 	makeNestedObj(arr, parent) {
@@ -810,163 +736,187 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		return out
 	}
 
-	private onManagemtntdataLoad(getAtaMainList: any[])
-	{
-		// alert('success');
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.dataSource.data = getAtaMainList;
-		this.allManagemtninfo = getAtaMainList;
+    private onManagemtntdataLoad(getAtaMainList: any[]) {
+        // alert('success');
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = getAtaMainList;
+        this.allManagemtninfo = getAtaMainList;
+        for (let i = 0; i < this.allManagemtninfo.length; i++) {
+            if (this.allManagemtninfo[i].parentId == null) {
+                this.maincompanylist.push(this.allManagemtninfo[i]);
 
-		//if (this.allManagemtninfo)
-		//{
-		//	for (let i = 0; i < this.allManagemtninfo.length; i++)
-		//	{
-		//		this.copyOfAllManagemtninfo.push(JSON.parse(JSON.stringify(this.allManagemtninfo[i])));
-		//	}
-		//}
+            }
+        }
+        if (this.sourceEmployee.managmentLegalEntity != null && this.sourceEmployee.divmanagmentLegalEntity != null && this.sourceEmployee.biumanagmentLegalEntity != null && this.sourceEmployee.compmanagmentLegalEntity != null) {
+            this.sourceStockLineSetup.companyId = this.sourceEmployee.compmanagmentLegalEntity.managementStructureId;
+            this.sourceStockLineSetup.BusinessUnitId = this.sourceEmployee.biumanagmentLegalEntity.managementStructureId;
+            this.sourceStockLineSetup.divisionId = this.sourceEmployee.divmanagmentLegalEntity.managementStructureId;
+            this.sourceStockLineSetup.departmentId = this.sourceEmployee.managementStructeInfo.managementStructureId;
+        }
+        else if (this.sourceEmployee.biumanagmentLegalEntity != null && this.sourceEmployee.divmanagmentLegalEntity != null && this.sourceEmployee.managmentLegalEntity != null) {
+            this.sourceStockLineSetup.companyId = this.sourceEmployee.biumanagmentLegalEntity.managementStructureId;
+            this.sourceStockLineSetup.BusinessUnitId = this.sourceEmployee.divmanagmentLegalEntity.managementStructureId;
+            this.sourceStockLineSetup.divisionId = this.sourceEmployee.managmentLegalEntity.managementStructureId;
+        }
+        else if (this.sourceEmployee.divmanagmentLegalEntity != null && this.sourceEmployee.managmentLegalEntity != null) {
+            this.sourceStockLineSetup.companyId = this.sourceEmployee.divmanagmentLegalEntity.managementStructureId;
+            this.sourceStockLineSetup.BusinessUnitId = this.sourceEmployee.managmentLegalEntity.managementStructureId;
+        }
+        else if (this.sourceEmployee.managementStructeInfo != null) {
+            this.sourceStockLineSetup.companyId = this.sourceEmployee.managmentLegalEntity.managementStructureId;
+        }
+        else {
+            console.log("no Info Presnts")
+        }
+        this.setManagementStrucureData(this.sourceEmployee);
+    }
 
+    setManagementStrucureData(obj) {
+        this.managementStructureData = [];
+        this.checkMSParents(obj.managementStructureId);
+        if (this.managementStructureData.length == 4) {
+            this.sourceEmployee.companyId = this.managementStructureData[3];
+            this.sourceEmployee.buisinessUnitId = this.managementStructureData[2];
+            this.sourceEmployee.departmentId = this.managementStructureData[1];
+            this.sourceEmployee.divisionId = this.managementStructureData[0];
+            this.getBUList2(this.sourceEmployee.companyId);
+            this.getDepartmentlist2(this.sourceEmployee.buisinessUnitId);
+            this.getDivisionlist(this.sourceEmployee.departmentId);
+        }
+        if (this.managementStructureData.length == 3) {
+            this.sourceEmployee.companyId = this.managementStructureData[2];
+            this.sourceEmployee.buisinessUnitId = this.managementStructureData[1];
+            this.sourceEmployee.departmentId = this.managementStructureData[0];
+            this.getBUList2(this.sourceEmployee.companyId);
+            this.getDepartmentlist2(this.sourceEmployee.buisinessUnitId);
+        }
+        if (this.managementStructureData.length == 2) {
+            this.sourceEmployee.companyId = this.managementStructureData[1];
+            this.sourceEmployee.buisinessUnitId = this.managementStructureData[0];
+            this.getBUList2(this.sourceEmployee.companyId);
+        }
+        if (this.managementStructureData.length == 1) {
+            this.sourceEmployee.companyId = this.managementStructureData[0];
+        }
 
-		//this.copyOfAllManagemtninfo = getAtaMainList;
-		// i am Showing Managemnet Structure Data which Already has
-		//if (this.sourceStockLineSetup.managementStructureEntityId && this.allManagemtninfo) {
-		//	this.getBUList(this.sourceStockLineSetup.managementStructureEntityId);
-		//}
-
-		
-
-		for (let i = 0; i < this.allManagemtninfo.length; i++)
-		{
-
-			if (this.allManagemtninfo[i].parentId == null)
-			{
-				this.maincompanylist.push(this.allManagemtninfo[i]);
-
-			}
-
-			//console.log(this.maincompanylist);
-		}
-		
-	}
-
-	//Management Structure Wrong One Start
-
-			//getBUList(companyId) {
-
-			//	//for Structure
-			//	if (this.allManagemtninfo) {
-
-			//		this.gridData = this.makeNestedObj(this.allManagemtninfo, companyId);
-			//	}
-
-			//	if (this.gridData.length == 0)
-			//	{
-			//		this.workFlowtService1.getManagemententity().subscribe(
-			//			results => this.onManagemtntdataLoad(results[0]),
-			//			error => this.onDataLoadFailed(error)
-			//		);
-
-			//	}
-
-			//	if (this.gridData.length == 0)
-			//	{
-			//		this.gridData = this.makeNestedObj(this.allManagemtninfo, companyId);
-			//	}
-
-			//	this.cols1 = [
-			//		{ field: 'code', header: 'Code' },
-			//		{ field: 'name', header: 'Name' },
-			//		{ field: 'description', header: 'Description' },
-			//		//{ field: 'legalEntityId', header: 'ID' },
-			//	];
-			//	this.showManagement = true;
-			//}
-
-
-	//Management Structure Wrong One End
-
-
-
-		//this.bulist = [];
-		//this.departmentList = [];
-		//this.divisionlist = [];
-		//for (let i = 0; i < this.allManagemtninfo.length; i++) {
-		//	if (this.allManagemtninfo[i].parentId == companyId) {
-		//		this.bulist.push(this.allManagemtninfo[i]);
-		//	}
-	
+    }
+    getDepartmentlist2(value) {
+            this.departmentList = [];
+            this.divisionlist = [];
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                if (this.allManagemtninfo[i].parentId == value) {
+                    this.departmentList.push(this.allManagemtninfo[i]);
+                }
+            }
+    }
+    getBUList2(id) {
+        var companyId = id;
+        this.bulist = [];
+        this.departmentList = [];
+        this.divisionlist = [];
+        for (let i = 0; i < this.allManagemtninfo.length; i++) {
+            if (this.allManagemtninfo[i].parentId == companyId) {
+                this.bulist.push(this.allManagemtninfo[i])
+            }
+        }
+    }
+    checkMSParents(msId) {
+        this.managementStructureData.push(msId);
+        for (let a = 0; a < this.allManagemtninfo.length; a++) {
+            if (this.allManagemtninfo[a].managementStructureId == msId) {
+                if (this.allManagemtninfo[a].parentId) {
+                    this.checkMSParents(this.allManagemtninfo[a].parentId);
+                    break;
+                }
+            }
+        }
+    }
 
 	getBUList(companyId)
-	{
-		this.sourceStockLineSetup.managementStructureEntityId = companyId; //Saving Management Structure Id if there Company Id
-
-		this.bulist = [];
-		this.departmentList = [];
-		this.divisionlist = [];
-		for (let i = 0; i < this.allManagemtninfo.length; i++)
-		{
-			if (this.allManagemtninfo[i].parentId == companyId)
-			{
-				this.bulist.push(this.allManagemtninfo[i]);
-			}
-		}
-
-		if (this.bulist.length > 0)
-		{
-			this.BuHasData = true;
-		}
-
-		console.log(this.bulist);
-
+    {
+        if (this.updateMode == false) {
+            this.sourceEmployee.buisinessUnitId = "";
+            this.sourceEmployee.departmentId = "";
+            this.sourceEmployee.divisionId = "";
+            this.sourceEmployee.managementStructureId = companyId;
+            this.departmentList = [];
+            this.divisionlist = [];
+            this.bulist = [];
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                if (this.allManagemtninfo[i].parentId == companyId) {
+                    this.bulist.push(this.allManagemtninfo[i])
+                }
+            }
+        }
+        else {
+            this.sourceEmployee.buisinessUnitId = null;
+            this.sourceEmployee.departmentId = "";
+            this.sourceEmployee.divisionId = "";
+            this.sourceEmployee.buisinessUnitId = "";
+            this.bulist = [];
+            this.departmentList = [];
+            this.divisionlist = [];
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                if (this.allManagemtninfo[i].parentId == companyId) {
+                    this.bulist.push(this.allManagemtninfo[i])
+                }
+            }
+        }
 	}
 
 	getDepartmentlist(businessUnitId)
-	{
-		this.sourceStockLineSetup.managementStructureEntityId = businessUnitId;
+    {
+        if (this.updateMode == false) {
+            this.sourceEmployee.departmentId = "";
+            this.sourceEmployee.divisionId = "";
+            this.sourceEmployee.managementStructureId = businessUnitId;
+            this.departmentList = [];
+            this.divisionlist = [];
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                if (this.allManagemtninfo[i].parentId == businessUnitId) {
+                    this.departmentList.push(this.allManagemtninfo[i]);
+                }
+            }
 
-		this.departmentList = [];
-		this.divisionlist = [];
-		for (let i = 0; i < this.allManagemtninfo.length; i++)
-		{
-			if (this.allManagemtninfo[i].parentId == businessUnitId)
-			{
-				this.departmentList.push(this.allManagemtninfo[i]);
-			}
-		}
-
-		if (this.departmentList.length > 0)
-		{
-			this.DepaHasData = true;
-		}
-
-		console.log(this.departmentList);
+        }
+        else {
+            this.sourceEmployee.departmentId = "";
+            this.sourceEmployee.divisionId = "";
+            this.departmentList = [];
+            this.divisionlist = [];
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                if (this.allManagemtninfo[i].parentId == businessUnitId) {
+                    this.departmentList.push(this.allManagemtninfo[i]);
+                }
+            }
+        }
 	}
 
 	getDivisionlist(departmentId)
 	{
-		this.sourceStockLineSetup.managementStructureEntityId = departmentId;
-
-		this.divisionlist = [];
-		for (let i = 0; i < this.allManagemtninfo.length; i++)
-		{
-			if (this.allManagemtninfo[i].parentId == departmentId) {
-				this.divisionlist.push(this.allManagemtninfo[i]);
-			}
-		}
-
-		if (this.divisionlist.length > 0)
-		{
-			this.divHasData = true;
-		}
-
-		console.log(this.divisionlist);
+        if (this.updateMode == false) {
+            this.sourceEmployee.divisionId = "";
+            this.sourceEmployee.managementStructureId = departmentId;
+            this.divisionlist = [];
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                if (this.allManagemtninfo[i].parentId == departmentId) {
+                    this.divisionlist.push(this.allManagemtninfo[i]);
+                }
+            }
+        }
+        else {
+            this.divisionlist = [];
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                if (this.allManagemtninfo[i].parentId == departmentId) {
+                    this.divisionlist.push(this.allManagemtninfo[i]);
+                }
+            }
+        }
 	}
-
-	
-
 	getDivisionChangeManagementCode(divisionId)
 	{
-		this.sourceStockLineSetup.managementStructureEntityId = divisionId;
+        this.sourceEmployee.managementStructureId = divisionId;
 	}
 
 	POValueChange(POId)
@@ -983,8 +933,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		this.stocklineser.getROUnitCost(this.stocklineROObject[0][0]).subscribe(data => { });
 
 	}
-
-
 
 	private onDataLoadFailed(error: any)
 	{
@@ -1027,7 +975,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			this.showPartNumberError = false;
 		}
 
-
 		if (this.sourceStockLineSetup.companyId) {
 			this.showCompanyError = false;
 		}
@@ -1054,37 +1001,30 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		else {
 			this.showDepError = false;
 		}
-
-
 		if (this.sourceStockLineSetup.partDescription) {
 			this.showPartDescriptionError = false;
 		}
 		else { this.showPartDescriptionError = true; }
 
-
-		if (this.sourceStockLineSetup.conditionId) {
+        if (this.sourceStockLineSetup.conditionId) {
 			this.showConditionError = false;
 		}
 		else { this.showConditionError = true; }
-
 
 		if (this.sourceStockLineSetup.siteId) {
 			this.showSiteError = false;
 		}
 		else { this.showSiteError = true; }
 
-
 		if (this.sourceStockLineSetup.receivedDate) {
 			this.showReceiveDateError = false;
 		}
 		else { this.showReceiveDateError = true; }
 
-
 		if (this.sourceStockLineSetup.receiverNumber) {
 			this.showReceiverNumberError = false;
 		}
 		else { this.showReceiverNumberError = true; }
-
 
 		if (this.sourceStockLineSetup.glAccountId) {
 			this.showGlAccountNumberError = false;
@@ -1102,20 +1042,18 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			this.showSerialNumberError = true;
 		}
 
+        this.isSaving = true;
 
-
-
-		this.isSaving = true;
 		if (
 			((this.sourceStockLineSetup.partNumber == undefined) || (this.sourceStockLineSetup.partNumber == "undefined"))
 			|| ((this.sourceStockLineSetup.isSerialized == true) && (!this.sourceStockLineSetup.serialNumber))
 			|| (!this.sourceStockLineSetup.companyId) || (!this.sourceStockLineSetup.partNumber) || (!this.sourceStockLineSetup.partDescription)
 			|| (!this.sourceStockLineSetup.conditionId) || (!this.sourceStockLineSetup.siteId) || (!this.sourceStockLineSetup.receivedDate)
 			|| (!this.sourceStockLineSetup.receiverNumber) || (!this.sourceStockLineSetup.glAccountId)
-		) {
+        )
+        {
 			this.display = true;
 			this.disableSave = true;
-
 			this.modelValue = true;
 		}
 
@@ -1145,14 +1083,11 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 							this.collectionofstockLineTimeLife = data;
 							this.sourceStockLineSetup.timeLifeCyclesId = data.timeLifeCyclesId;
 							this.value = 1;
-
 							this.stocklineser.newStockLine(this.sourceStockLineSetup).subscribe(data => {
 								this.collectionofstockLine = data;
-
 								this.saveStocklineIntegrationPortalData(data.stockLineId, this.selectedModels); //for Saving Integration Data
 								this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
 								this.value = 1;
-
 							})
 						})
 					}
@@ -1168,67 +1103,10 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 
 						})
 					}
-
 				}
-
-
 			}
 		}
 
-		//if ((this.sourceStockLineSetup.isSerialized == true) && (this.sourceStockLineSetup.serialNumber)) {
-		//	if (!this.sourceStockLine.stockLineId) {
-		//		this.sourceStockLine.createdBy = this.userName;
-		//		this.sourceStockLine.updatedBy = this.userName;
-		//		this.sourceStockLine.masterCompanyId = 1;
-		//		this.sourceStockLine.itemTypeId = 1;
-		//		this.stocklineser.newStockLine(this.sourceStockLineSetup).subscribe(data => {
-		//			this.collectionofstockLine = data;
-
-		//			this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
-		//			this.value = 1;
-
-		//		})
-		//	}
-		//	else {
-
-		//		this.sourceStockLine.updatedBy = this.userName;
-		//		this.sourceStockLine.masterCompanyId = 1;
-		//		this.sourceItemMaster.itemMasterId = this.sourceStockLineSetup.itemMasterId;
-		//		this.sourceItemMaster.partId = this.selectedPartId
-		//		//Update Item Master
-		//		this.stocklineser.updateItemMasterPartPost(this.sourceItemMaster).subscribe(data => { });
-		//		//Updating Part
-
-		//		this.stocklineser.updateStockSetupLine(this.sourceStockLineSetup).subscribe(
-		//			response => this.saveCompleted(this.sourceStockLineSetup),
-		//			error => this.saveFailedHelper(error));
-
-		//		if (this.sourceStockLineSetup.timeLifeCyclesId) {
-		//			console.log("Update Timelife");
-		//			this.stocklineser.updateStockLineTimelife(this.sourceTimeLife).subscribe(data => {
-		//				this.collectionofstockLine = data;
-		//				this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
-		//			})
-
-		//		}
-		//		else {
-		//			this.stocklineser.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
-		//				this.collectionofstockLine = data;
-
-		//				this.value = 1;
-		//				this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
-		//			})
-		//		}
-
-
-
-		//	}
-		//}
-		//else
-		//{
-			
-		//}
-		
 	}
 
 	closethis()
@@ -1249,6 +1127,27 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			error => this.onDataLoadFailed(error)
 		);
 	}
+
+    loadLegalEntityData() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.stocklineser.getManagemtentLengalEntityData().subscribe(
+            results => this.onManagemtntlegaldataLoad(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private onManagemtntlegaldataLoad(getAtaMainList: any[]) {
+        // alert('success');
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.alllegalEntityInfo = getAtaMainList;
+        for (let i = 0; i < this.alllegalEntityInfo.length; i++) {
+            if (this.alllegalEntityInfo[i].parentId == null) {
+                this.maincompanylist.push(this.alllegalEntityInfo[i]);
+            }
+        }
+    }
 
 	private loadCompanyData() {
 		this.alertService.startLoadingMessage();
@@ -1285,19 +1184,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		return;
 	}
 
-	//isTimeLifeEdit(isEdit)
-	//{
-	//	if (isEdit == true)
-	//	{
-	//		this.AllowEdit = true;
-	//	}
-
-	//	else
-	//	{
-	//		this.AllowEdit = false;
-	//	}
-	//}
-
 	//for Saving Integration Data
 
 	saveStocklineIntegrationPortalData(id,models)
@@ -1306,8 +1192,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		{
 			models[i].StocklineId = id;
 			//data[i].partId = partid;
-
-
 			this.stocklineser.saveStocklineIntegrationPortalData(models[i]).subscribe(stocklineIntegrationPortalData => {
 				this.collectionofstocklineIntegrationPortalData = stocklineIntegrationPortalData;
 			})

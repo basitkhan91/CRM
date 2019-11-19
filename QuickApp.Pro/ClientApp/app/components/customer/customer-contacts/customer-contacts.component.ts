@@ -38,7 +38,11 @@ export class CustomerContactsComponent implements OnInit {
 	@Input() editMode;
 	@Input() editGeneralInformationData;
 	@Input() add_ataChapterList;
+
+	// @Input() ataListDataValues;
 	@Output() tab = new EventEmitter<any>();
+	@Output() saveCustomerContactATAMapped = new EventEmitter();
+	@Output() refreshCustomerATAMapped = new EventEmitter();
 	contactsListOriginal: any;
 	firstNamesList: any;
 	middleNamesList: any;
@@ -179,9 +183,9 @@ export class CustomerContactsComponent implements OnInit {
 		this.isEditButton = true;
 		this.contactInformation = {
 			...this.ediData,
-			firstName: getObjectByValue('firstName', this.ediData.firstName, this.contactsListOriginal),
-			middleName: getObjectByValue('middleName', this.ediData.middleName, this.contactsListOriginal),
-			lastName: getObjectByValue('lastName', this.ediData.lastName, this.contactsListOriginal),
+			// firstName: getObjectByValue('firstName', this.ediData.firstName, this.contactsListOriginal),
+			// middleName: getObjectByValue('middleName', this.ediData.middleName, this.contactsListOriginal),
+			// lastName: getObjectByValue('lastName', this.ediData.lastName, this.contactsListOriginal),
 		}
 		console.log(this.contactInformation);
 
@@ -296,23 +300,21 @@ export class CustomerContactsComponent implements OnInit {
 			}
 		})
 
-		this.customerService.postCustomerATAs(ataMappingData).subscribe(res => {
-			this.add_SelectedModels = undefined;
-			this.add_SelectedId = undefined;
-			this.alertService.showMessage(
-				'Success',
-				'Saved ATA Mapped Data Successfully ',
-				MessageSeverity.success
-			);
+		this.add_SelectedModels = undefined;
+		this.add_SelectedId = undefined;
 
-			this.getATACustomerContactMapped();
+		await this.saveCustomerContactATAMapped.emit(ataMappingData);
 
-		})
+
+		this.getATACustomerContactMapped();
+
+
 
 	}
 
 	getATACustomerContactMapped() {
 		this.customerService.getATAMappedByContactId(this.selectedContact.contactId).subscribe(res => {
+			console.log(res);
 			this.ataListDataValues = res;
 		})
 	}
@@ -320,6 +322,7 @@ export class CustomerContactsComponent implements OnInit {
 	deleteATAMapped(rowData) {
 		this.customerService.deleteATAMappedByContactId(rowData.customerContactATAMappingId).subscribe(res => {
 			this.getATACustomerContactMapped();
+			this.refreshCustomerATAMapped.emit(this.id)
 			this.alertService.showMessage(
 				'Success',
 				'Deleted ATA Mapped  Successfully ',

@@ -96,7 +96,7 @@ export class VendorContactsComponent implements OnInit {
     loadingIndicator: boolean;
     closeResult: string;
     selectedColumn: any[];
-    selectedColumns: any[];
+    
     cols: any[];
     title: string = "Create";
     id: number;
@@ -109,6 +109,21 @@ export class VendorContactsComponent implements OnInit {
     comName: string;
     isEditMode: boolean = false;
     isDeleteMode: boolean = false;
+    vendorContactsColumns = [
+        { field: 'firstName', header: 'FIRST NAME' },
+        { field: 'lastName', header: 'LAST NAME' },
+        { field: 'contactTitle', header: 'CONTACT TITLE' },
+        { field: 'email', header: 'EMAIL' },
+        { field: 'workPhone', header: 'MOBILE PHONE' },
+        // { field: 'mobilePhone', header: 'Mobile Phone' },
+        { field: 'fax', header: 'FAX' },
+        // { field: 'isDefaultContact', header: 'Primary Contact' },
+        // { field: 'notes', header: 'Memo' }
+        //{ field: 'updatedDate', header: 'Updated Date' },
+        //{ field: 'createdDate', header: 'Created Date' }
+    ];
+
+    selectedColumns = this.vendorContactsColumns;
     constructor(private router: ActivatedRoute, private route: Router, private customerser: CustomerService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         if (this.local) {
             this.workFlowtService.contactCollection = this.local;
@@ -175,29 +190,15 @@ export class VendorContactsComponent implements OnInit {
     }
 
 
-    private loadData() {
+    private loadData() {        
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         this.workFlowtService.getContacts(this.local.vendorId).subscribe(
-            results => this.onDataLoadSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
+            results => this.onDataLoadSuccessful(results[0]),           
+            error => this.onDataLoadFailed(error)            
         );
 
-        this.cols = [
-            { field: 'firstName', header: 'First Name' },
-            { field: 'lastName', header: 'Last Name' },
-            { field: 'contactTitle', header: 'Contact Title' },
-            { field: 'email', header: 'Email' },
-            { field: 'workPhone', header: 'Mobile Phone' },
-            { field: 'fax', header: 'Fax' },
-            //{ field: 'createdBy', header: 'Created By' },
-            //{ field: 'updatedBy', header: 'Updated By' },
-            //{ field: 'updatedDate', header: 'Updated Date' },
-            //{ field: 'createdDate', header: 'Created Date' }
-        ];
-        if (!this.selectedColumns) {
-            this.selectedColumns = this.cols;
-        }
+        
     }
 
     private loadCompleteddata() {
@@ -247,7 +248,6 @@ export class VendorContactsComponent implements OnInit {
         this.applyFilter(this.dataSource.filter);
     }
     private onDataLoadSuccessful(allWorkFlows: any[]) {
-
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
@@ -334,10 +334,10 @@ export class VendorContactsComponent implements OnInit {
         }, () => { console.log('Backdrop click') })
     }
 
-    openEdit(content, row) {
+    openEdit(content, row) {        
         this.isEditMode = true;
         this.isSaving = true;
-        this.sourceVendor = { ...row };
+        this.sourceVendor = { ...row };       
         this.loadMasterCompanies();
     }
     openView(content, row) {
@@ -401,6 +401,9 @@ export class VendorContactsComponent implements OnInit {
                 this.sourceVendor.updatedBy = this.userName;
                 this.sourceVendor.masterCompanyId = 1;
                 this.isDefault = this.sourceVendor.isDefaultContact;
+                if(!this.sourceVendor.isDefaultContact){
+                    this.sourceVendor.isDefaultContact = false;
+                }
                 // before you commit make sure u don't have conlog, debug, commented code...
                 this.workFlowtService.newAddContactInfo(this.sourceVendor).subscribe(data => {
                     console.log(data)
@@ -408,7 +411,6 @@ export class VendorContactsComponent implements OnInit {
                     this.sourceVendor = new Object();
                     this.localCollection.VendorId = this.local.vendorId;
                     this.localCollection.ContactId = this.local.contactId;
-                    this.localCollection.IsDefaultContact = false;
                     this.loadData();
                     if (data) {
                         this.updateVendorContact(this.localCollection);
@@ -446,11 +448,13 @@ export class VendorContactsComponent implements OnInit {
     previousClick() {
         this.activeIndex = 0;
         this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.changeStep('General Information');
         this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
     }
     nextClick() {
         this.activeIndex = 2;
         this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.changeStep('Financial Information');
         this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-financial-information');
     }
 

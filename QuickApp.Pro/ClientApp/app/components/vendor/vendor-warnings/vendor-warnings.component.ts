@@ -346,13 +346,15 @@ export class VendorWarningsComponent implements OnInit {
     }
 
     previousClick() {
-        this.activeIndex = 4;
-        this.vendorService.indexObj.next(this.activeIndex);
-        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-shipping-information');
-    }
-    nextClick() {
         this.activeIndex = 6;
         this.vendorService.indexObj.next(this.activeIndex);
+        this.vendorService.changeStep('Billing Information');
+        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-billing-information');
+    }
+    nextClick() {
+        this.activeIndex = 8;
+        this.vendorService.indexObj.next(this.activeIndex);
+        this.vendorService.changeStep('Documents');
         this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-memo');
     }
 

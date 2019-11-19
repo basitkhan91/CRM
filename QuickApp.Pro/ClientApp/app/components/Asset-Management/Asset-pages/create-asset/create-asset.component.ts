@@ -1,4 +1,6 @@
 ﻿import { Component, OnInit } from '@angular/core';
+import { AssetAttributeType } from '../../../../models/asset-attribute-type.model';
+import { AssetAttributeTypeService } from '../../../../services/asset-attribute-type/asset-attribute-type.service';
 import { AssetService } from '../../../../services/asset/Assetservice';
 import { LegalEntityService } from '../../../../services/legalentity.service';
 import { AlertService, MessageSeverity } from '../../../../services/alert.service';
@@ -8,12 +10,15 @@ import { Currency } from '../../../../models/currency.model';
 import { CurrencyService } from '../../../../services/currency.service';
 import { AuthService } from '../../../../services/auth.service';
 import { AssetIntangibleTypeService } from '../../../../services/asset-intangible-type/asset-intangible-type.service';
+import { AssetIntangibleAttributeTypeService } from '../../../../services/asset-intangible-attribute-type/asset-intangible-attribute-type.service';
 import { GlAccount } from '../../../../models/GlAccount.model';
 import { GlAccountService } from '../../../../services/glAccount/glAccount.service';
 import { AssetTypeService } from '../../../../services/asset-type/asset-type.service';
 import { DepriciationMethodService } from '../../../../services/depriciation-method/depriciation.service';
 import { DepriciationMethod } from '../../../../models/depriciation-method.model';
 import { Router } from '@angular/router';
+import { AssetIntangibleType } from '../../../../models/asset-intangible-type.model';
+import { AssetIntangibleAttributeType } from '../../../../models/asset-intangible-attribute-type.model';
 
 @Component({
     selector: 'app-create-asset',
@@ -28,6 +33,8 @@ export class CreateAssetComponent implements OnInit {
     allManagemtninfo: any[] = [];
     departmentList: any[];
     divisionlist: any[];
+    currentRow: AssetAttributeType;
+    currentIntangibleRow: AssetIntangibleAttributeType;
     BuData: boolean;
     DepData: boolean;
     divData: boolean;
@@ -36,6 +43,7 @@ export class CreateAssetComponent implements OnInit {
     allManufacturerInfo: any[];
     allUnitOfMeasureinfo: any[];
     allCurrencyInfo: any[];
+    allAssetAttrInfo: any[];
     allAssetTypeInfo: any[];
     allIntangibleInfo: any[];
     display: boolean = false;
@@ -57,41 +65,43 @@ export class CreateAssetComponent implements OnInit {
     allGlInfo: GlAccount[];
     currentSelectedIntangibleAssetType: any = {};
     currentSelectedAssetType: any = {};
+    currentSelectedAssetAttributeType: any = {};
     depriciationMethodList: DepriciationMethod[];
-    allAssets: any[]=[];
+    allAssets: any[] = [];
+    auditHistory: any[];
 
     constructor(private glAccountService: GlAccountService, private intangibleTypeService: AssetIntangibleTypeService, private route: Router, private assetService: AssetService, private legalEntityServices: LegalEntityService, private alertService: AlertService, public itemMasterservice: ItemMasterService,
-        public unitService: UnitOfMeasureService, public currencyService: CurrencyService, public assetTypeService: AssetTypeService, private depriciationMethodService: DepriciationMethodService,  private authService: AuthService, ) {
-       
-        if (this.assetService.listCollection != null && this.assetService.isEditMode == true) {
+        public unitService: UnitOfMeasureService, public currencyService: CurrencyService, public assetTypeService: AssetTypeService, private depriciationMethodService: DepriciationMethodService, private authService: AuthService, public assetattrService1: AssetAttributeTypeService, public assetIntangibleService: AssetIntangibleAttributeTypeService) {
 
+        if (this.assetService.listCollection != null && this.assetService.isEditMode == true) {
             this.showLable = true;
             this.currentAsset = this.assetService.listCollection;
             this.updateMode = true;
-
-            if (this.currentAsset.isIntangible ==true) {
+            if (this.currentAsset.isIntangible == true) {
                 this.currentAsset.isDepreciable = false;
                 this.currentAsset.isIntangible = true;
+                this.showItemEdit(this.currentAsset.assetIntangibleTypeId);
             }
             else {
                 this.currentAsset.isDepreciable = true;
                 this.currentAsset.isIntangible = false;
+                this.showItemEdit(this.currentAsset.assetTypeId);
             }
-           
+
         }
         if (this.currentAsset.expirationDate) {
             this.currentAsset.expirationDate = new Date(this.currentAsset.expirationDate);
         }
-        else {
-            this.currentAsset.expirationDate = new Date();
-        }
+        //else {
+        //    this.currentAsset.expirationDate = new Date();
+        //}
         if (this.currentAsset.manufacturedDate) {
             this.currentAsset.manufacturedDate = new Date(this.currentAsset.manufacturedDate);
         }
-        else {
-            this.currentAsset.manufacturedDate = new Date();
-        }
-     
+        //else {
+        //    this.currentAsset.manufacturedDate = new Date();
+        //}
+
     }
 
     ngOnInit() {
@@ -101,6 +111,8 @@ export class CreateAssetComponent implements OnInit {
         this.assetService.bredcrumbObj.next(this.assetService.currentUrl);
         //steps Code  Start
         this.assetService.ShowPtab = true;
+        this.AssetAttData();
+
         this.getAssetsList();
         this.assetService.alertObj.next(this.assetService.ShowPtab); //steps
         this.activeIndex = 0;
@@ -112,6 +124,23 @@ export class CreateAssetComponent implements OnInit {
         this.intangibleData();
         this.glList();
         this.loadDepricationMethod();
+    }
+
+    private AssetAttData() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+
+        this.assetattrService1.getAll().subscribe(
+            results => this.onattrSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+        this.selectedColumns = this.cols;
+    }
+
+    private onattrSuccessful(getAssetAttrType: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allAssetAttrInfo = getAssetAttrType;
     }
 
     private getAssetsList() {
@@ -133,7 +162,7 @@ export class CreateAssetComponent implements OnInit {
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
-    
+
     onAssetIdselection(event) {
         if (this.allAssets) {
 
@@ -147,11 +176,60 @@ export class CreateAssetComponent implements OnInit {
             }
         }
     }
-
+    showItemEdit(rowData): void {
+        if (this.currentAsset.isDepreciable == true) {
+            this.currentRow = rowData as AssetAttributeType;
+            this.assetattrService1.getByAssetTypeId(rowData).subscribe(audits => {
+                this.currentSelectedAssetAttributeType.assetAttributeTypeId = audits[0].assetAttributeTypeId;
+                this.currentSelectedAssetAttributeType.assetAttributeTypeName = audits[0].assetAttributeTypeName;
+                this.currentSelectedAssetAttributeType.description = audits[0].description;
+                this.currentSelectedAssetAttributeType.conventionType = audits[0].conventionType;
+                this.currentSelectedAssetAttributeType.depreciationMethod = audits[0].depreciationMethod;
+                this.currentSelectedAssetAttributeType.residualPercentage = audits[0].residualPercentage;
+                this.currentSelectedAssetAttributeType.residualValue = audits[0].residualValue;
+                this.currentSelectedAssetAttributeType.assetLife = audits[0].assetLife;
+                this.currentSelectedAssetAttributeType.depreciationFrequencyId = audits[0].depreciationFrequencyId;
+                this.currentSelectedAssetAttributeType.acquiredGLAccountId = audits[0].acquiredGLAccountId;
+                this.currentSelectedAssetAttributeType.deprExpenseGLAccountId = audits[0].deprExpenseGLAccountId;
+                this.currentSelectedAssetAttributeType.adDepsGLAccountId = audits[0].adDepsGLAccountId;
+                this.currentSelectedAssetAttributeType.assetSale = audits[0].assetSale;
+                this.currentSelectedAssetAttributeType.assetWriteOff = audits[0].assetWriteOff;
+                this.currentSelectedAssetAttributeType.assetWriteDown = audits[0].assetWriteDown;
+                this.currentSelectedAssetAttributeType.createdBy = audits[0].createdBy;
+                this.currentSelectedAssetAttributeType.updatedBy = audits[0].updatedBy;
+                this.currentSelectedAssetAttributeType.createdDate = audits[0].createdDate;
+                this.currentSelectedAssetAttributeType.updatedDate = audits[0].updatedDate;
+                this.currentSelectedAssetAttributeType.isDelete = audits[0].isDelete;
+                this.currentSelectedAssetAttributeType.isActive = audits[0].isActive;
+            });
+        }
+        else {
+            this.currentIntangibleRow = rowData as AssetIntangibleAttributeType;
+            this.assetIntangibleService.getById(rowData).subscribe(audits => {
+                this.currentSelectedIntangibleAssetType.assetIntangibleTypeId = audits[0].assetIntangibleTypeId;
+                this.currentSelectedIntangibleAssetType.assetDepreciationMethodId = audits[0].assetDepreciationMethodId;
+                this.currentSelectedIntangibleAssetType.intangibleLife = audits[0].intangibleLife;
+                this.currentSelectedIntangibleAssetType.amortizationFrequency = audits[0].amortizationFrequency;
+                this.currentSelectedIntangibleAssetType.intangibleGLAccountId = audits[0].intangibleGLAccountId;
+                this.currentSelectedIntangibleAssetType.amortExpenseGLAccountId = audits[0].amortExpenseGLAccountId;
+                this.currentSelectedIntangibleAssetType.accAmortDeprGLAccountId = audits[0].accAmortDeprGLAccountId;
+                this.currentSelectedIntangibleAssetType.intangibleWriteDownGLAccountId = audits[0].intangibleWriteDownGLAccountId;
+                this.currentSelectedIntangibleAssetType.intangibleWriteOffGLAccountId = audits[0].intangibleWriteOffGLAccountId;
+                this.currentSelectedIntangibleAssetType.managementStructureId = audits[0].managementStructureId;
+                this.currentSelectedIntangibleAssetType.masterCompanyId = audits[0].masterCompanyId;
+                this.currentSelectedIntangibleAssetType.createdBy = audits[0].createdBy;
+                this.currentSelectedIntangibleAssetType.updatedBy = audits[0].updatedBy;
+                this.currentSelectedIntangibleAssetType.createdDate = audits[0].createdDate;
+                this.currentSelectedIntangibleAssetType.updatedDate = audits[0].updatedDate;
+                this.currentSelectedIntangibleAssetType.isDelete = audits[0].isDelete;
+                this.currentSelectedIntangibleAssetType.isActive = audits[0].isActive;
+            });
+        }
+    }
     assetIdHandler(event) {
         if (event) {
-        if (event.target.value != "") {
-            
+            if (event.target.value != "") {
+
                 let value = event.target.value.toLowerCase();
                 if (this.onSelectedId) {
                     if (value == this.onSelectedId.toLowerCase()) {
@@ -162,7 +240,7 @@ export class CreateAssetComponent implements OnInit {
                     }
                 }
             }
-           
+
         }
     }
 
@@ -422,13 +500,13 @@ export class CreateAssetComponent implements OnInit {
     }
 
     private glList() {
-    this.alertService.startLoadingMessage();
-    this.loadingIndicator = true;
-    this.glAccountService.getAll().subscribe(
-        results => this.onGlAccountLoad(results[0]),
-        error => this.onDataLoadFailed(error)
-    );
-}
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.glAccountService.getAll().subscribe(
+            results => this.onGlAccountLoad(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
 
     private intangibleData() {
         this.alertService.startLoadingMessage();
@@ -448,12 +526,14 @@ export class CreateAssetComponent implements OnInit {
         this.currentAsset.isIntangible = true;
         this.currentAsset.isDepreciable = false;
     }
-    
+
     saveAsset(): void {
 
         if (this.currentAsset.isDepreciable == true) {
             if (!(this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.unitOfMeasureId
-                && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId)) {
+                && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId
+                && this.currentAsset.companyId && this.currentAsset.buisinessUnitId && this.currentAsset.departmentId && this.currentAsset.divisionId
+                && this.currentAsset.manufacturerId)) {
                 this.display = true;
                 this.modelValue = true;
             }
@@ -462,14 +542,18 @@ export class CreateAssetComponent implements OnInit {
             && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId)
 
             if (this.currentAsset.isIntangible == true) {
-                if (!(this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.assetIntangibleTypeId)) {
+                if (!(this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.assetIntangibleTypeId
+                    && this.currentAsset.companyId && this.currentAsset.buisinessUnitId && this.currentAsset.departmentId && this.currentAsset.divisionId
+                    && this.currentAsset.manufacturerId)) {
                     this.display = true;
                     this.modelValue = true;
                 }
             }
         if ((this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.assetIntangibleTypeId)
             || (this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.unitOfMeasureId
-            && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId)) {
+                && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId
+                && this.currentAsset.companyId && this.currentAsset.buisinessUnitId && this.currentAsset.departmentId && this.currentAsset.divisionId
+                && this.currentAsset.manufacturerId)) {
             this.isSaving = true;
 
             if (!this.currentAsset.assetRecordId) {
@@ -553,8 +637,14 @@ export class CreateAssetComponent implements OnInit {
                     this.currentAsset.updatedBy = this.userName;
                     this.listCollection = data;
                     this.assetService.generalCollection = this.listCollection;
-                    this.alertService.showMessage('Asset Created successfully.');
-                    this.activeIndex = 0;
+                    //this.alertService.showMessage('Asset Created successfully.');
+                    this.alertService.showMessage("Success", `Asset Created successfully.`, MessageSeverity.success);
+                    this.activeIndex = 1;
+                    this.currentAsset = this.assetService.listCollection;
+                    this.assetService.indexObj.next(this.activeIndex);
+                    this.route.navigateByUrl('/assetmodule/assetpages/app-asset-capes');
+
+
                 })
             }
             else {
@@ -659,8 +749,13 @@ export class CreateAssetComponent implements OnInit {
                     this.currentAsset.updatedBy = this.userName;
                     this.listCollection = data;
                     this.assetService.generalCollection = this.listCollection;
-                    this.alertService.showMessage('Asset Updated successfully.');
-                    this.activeIndex = 0;
+                    //this.alertService.showMessage('Asset Updated successfully.');
+                    this.alertService.showMessage("Success", `Asset Updated successfully.`, MessageSeverity.success);
+                    this.activeIndex = 1;
+                    this.currentAsset = this.assetService.listCollection;
+                    this.assetService.indexObj.next(this.activeIndex);
+                    this.route.navigateByUrl('/assetmodule/assetpages/app-asset-capes');
+
                 })
             }
         }
@@ -669,12 +764,12 @@ export class CreateAssetComponent implements OnInit {
         this.currentSelectedIntangibleAssetType = Object.assign({}, this.allIntangibleInfo.filter(function (intangible) {
             return intangible.assetIntangibleTypeId == selectedObj;
         })[0]);;
-       
-      
+
+
     }
 
     getSelectedAssetType(selectedAssetObj) {
-        
+
         this.currentSelectedAssetType = Object.assign({}, this.allAssetTypeInfo.filter(function (asset) {
             return asset.assetTypeId == selectedAssetObj;
         })[0]);;
@@ -687,6 +782,7 @@ export class CreateAssetComponent implements OnInit {
     }
 
     nextClick() {
+        this.currentAsset = this.assetService.listCollection;
         this.activeIndex = 1;
         this.assetService.indexObj.next(this.activeIndex);
         this.route.navigateByUrl('/assetmodule/assetpages/app-asset-capes');

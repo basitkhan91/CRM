@@ -18,7 +18,9 @@ export class CustomerATAInformationComponent implements OnInit {
     @Input() editGeneralInformationData;
     @Input() editMode;
     @Input() search_ataChapterList;
+    @Input() ataListDataValues;
     @Output() tab = new EventEmitter();
+    @Output() refreshCustomerATAMapped = new EventEmitter();
     // LoadAtachapter: any = [];
     // ataMainchapter: any;
     // atasubchapter: any;
@@ -34,7 +36,7 @@ export class CustomerATAInformationComponent implements OnInit {
         { field: 'ataChapterName', header: 'ATA Chapter' },
         { field: 'ataSubChapterDescription', header: 'ATA Sub-Chapter' }
     ]
-    ataListDataValues: any;
+    // ataListDataValues: any;
     ataChapterIdUrl: string;
     ataSubchapterIdUrl: any;
     search_ataSubChapterList: any;
@@ -259,6 +261,7 @@ export class CustomerATAInformationComponent implements OnInit {
 
     deleteATAMapping(rowData) {
         this.customerService.deleteATAMappedByContactId(rowData.customerContactATAMappingId).subscribe(res => {
+            this.refreshCustomerATAMapped.emit(this.id);
             this.alertService.showMessage(
                 'Success',
                 'Successfully Deleted ATA Mapped Data',

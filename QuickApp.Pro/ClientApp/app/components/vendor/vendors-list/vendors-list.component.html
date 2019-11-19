@@ -66,7 +66,7 @@
 						<tr>
 							<th *ngFor="let col of columns" [ngSwitch]="col.field">
 								<input style="width:100%;" pInputText type="text"
-									(input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+									(input)="dt.filter($event.target.value, col.field, 'contains')">
 
 							</th>
 							<th style="width:200px"></th>
@@ -75,8 +75,11 @@
 
 					<ng-template pTemplate="body" let-rowData let-columns="columns">
 						<tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openEdit(rowData)">
-							<td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+							<!-- <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
 								{{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+							</td> -->
+							<td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+								{{col.field == 'vendorPhone'?rowData['t']['vendorPhone']:rowData[col.field]}}
 							</td>
 
 							<td style="width:200px">
@@ -132,7 +135,7 @@
 			<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
 				<div class="modal-header">
 
-					<h4 class="modal-title">History of VendorList</h4>
+					<h4 class="modal-title">History of {{this.selectedRow['vendorName']}}</h4>
 					<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -141,7 +144,7 @@
 				</div>
 				<div class="modal-body">
 
-					<div class="table-responsive">
+					<div class="table-responsive" *ngIf="auditHisory.length > 0">
 						<table class="table table-bordered">
 							<thead>
 								<tr>
@@ -163,6 +166,9 @@
 							</tr>
 						</table>
 					</div>
+					<div class="history-no-record" *ngIf="auditHisory.length == 0">
+						No Record found
+					</div>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
@@ -176,7 +182,7 @@
 						<div class="modal-header">
 							<button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id=""
 								name="">×</button>
-							<h4 class="modal-title">Details of Vendor</h4>
+							<h4 class="modal-title">Details of {{vendorName}}</h4>
 
 						</div>
 
@@ -241,18 +247,20 @@
 												<div class="clear"></div>
 											</div>
 											<div class="modal-footer">
-												<button type="button" class="btn btn-info" data-dismiss="modal" id=""
-													name="" (click)="dismissModel()">Close</button>
+													<a data-toggle="collapse" href="#step1" class="btn btn-info">Close</a>
 											</div>
 										</div>
 									</div>
 								</div>
 							</div>
 							<div class="panel panel-default">
-								<div class="panel-heading">
-									<h4 class="panel-title"> <a class="" data-toggle="collapse" href="#step2"
-											aria-expanded="true">Contact</a> </h4>
-								</div>
+                                <div class="panel-heading">
+                                    
+                                    <h4 class="panel-title">
+                                        <a  data-toggle="collapse" href="#step2"
+                                           aria-expanded="false" class="collapsed">Contact</a>
+                                    </h4>
+                                </div>
 								<div id="step2" class="panel-collapse collapse in" aria-expanded="true" style="">
 									<div class="panel-body">
 										<div class="table-responsive">
@@ -450,9 +458,9 @@
 		<div class="panel-body">
 			<button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
 			<div class="table-responsive">
-				<h4 class="modal-title"> Contacts Details</h4>
+				<h4 class="modal-title"> Contacts of {{this.selectedRow['vendorName']}}</h4>
 
-				<p-table #dt [value]="allContacts" [metaKeySelection]="true" [rows]="10" [paginator]="true"
+				<p-table #dt *ngIf="allContacts.length > 0" [value]="allContacts" [metaKeySelection]="true" [rows]="10" [paginator]="true"
 					[pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedContactColumns"
 					[resizableColumns]="true" [reorderableColumns]="true">
 
@@ -480,6 +488,9 @@
 						</tr>
 					</ng-template>
 				</p-table>
+				<div class="contact-no-record" *ngIf="allContacts.length == 0">
+					No Records found
+				</div>
 			</div>
 		</div>
 

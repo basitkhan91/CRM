@@ -39,6 +39,7 @@ namespace DAL.Repositories
                             ad.AddressId,
                             ad.Country,
                             ad.PostalCode,
+                            ad.IsActive,
                             c.SiteName,
                             vc.CheckPaymentId,
                             vc,

@@ -250,6 +250,9 @@ namespace DAL.Repositories
                     UploadJobType(BindCustomData<JobType>(file, "JobTypeId", moduleName));
                     break;
 
+                case "StocklineAdjustmentReason":
+                    UploadStockAdjustmentReason(BindCustomData<StocklineAdjustmentReason>(file, "AdjustmentReasonId", moduleName));
+                    break;
                 default:
                     break;
             }
@@ -398,7 +401,7 @@ namespace DAL.Repositories
         {
             foreach (var item in priorityList)
             {
-                var flag = _appContext.Priority.Any(p => p.IsDelete == false
+                var flag = _appContext.Priority.Any(p => p.IsDeleted == false
                                                     && (p.Description.ToLower() == item.Description.Trim().ToLower()));
                 if (!flag)
                 {
@@ -556,8 +559,8 @@ namespace DAL.Repositories
                 var aircraftType = aircraftTypes.Where(p => p.Description.ToLower() == item.AircraftTypeName.ToLower()).FirstOrDefault();
                 if (aircraftType != null && aircraftType.AircraftTypeId > 0)
                 {
-                    item.AircraftTypeId =Convert.ToInt32(aircraftType.AircraftTypeId);
-                    var flag = _appContext.AircraftModel.Any(p => p.IsDeleted == false && p.ModelName.ToLower() == item.ModelName.Trim().ToLower() && p.AircraftTypeId==item.AircraftTypeId);
+                    item.AircraftTypeId = Convert.ToInt32(aircraftType.AircraftTypeId);
+                    var flag = _appContext.AircraftModel.Any(p => p.IsDeleted == false && p.ModelName.ToLower() == item.ModelName.Trim().ToLower() && p.AircraftTypeId == item.AircraftTypeId);
                     if (!flag)
                     {
                         _appContext.AircraftModel.Add(item);
@@ -569,10 +572,10 @@ namespace DAL.Repositories
 
         private void UploadATAChapter(List<ATAChapter> ataChapterList)
         {
-            
+
             foreach (var item in ataChapterList)
             {
-                
+
                 var flag = _appContext.ATAChapter.Any(p => p.IsDelete == false && p.ATAChapterName.ToLower() == item.ATAChapterName.Trim().ToLower());
                 if (!flag)
                 {
@@ -588,7 +591,7 @@ namespace DAL.Repositories
             {
 
                 var flag = _appContext.AssetDisposalType.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.AssetDisposalCode)
-                && !string.IsNullOrEmpty(p.AssetDisposalCode) && 
+                && !string.IsNullOrEmpty(p.AssetDisposalCode) &&
                 p.AssetDisposalCode.ToLower() == item.AssetDisposalCode.Trim().ToLower());
                 if (!flag)
                 {
@@ -678,6 +681,22 @@ namespace DAL.Repositories
                 if (!flag)
                 {
                     _appContext.GLAccountClass.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+        private void UploadStockAdjustmentReason(List<StocklineAdjustmentReason> stocklineAdjustmentReasonList)
+        {
+
+            foreach (var item in stocklineAdjustmentReasonList)
+            {
+
+                var flag = _appContext.stocklineAdjustmentReason.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.Description)
+                && !string.IsNullOrEmpty(p.Description) &&
+                p.Description.ToLower() == item.Description.Trim().ToLower());
+                if (!flag)
+                {
+                    _appContext.stocklineAdjustmentReason.Add(item);
                     _appContext.SaveChanges();
                 }
             }

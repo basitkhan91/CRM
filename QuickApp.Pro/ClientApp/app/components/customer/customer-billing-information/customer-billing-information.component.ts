@@ -36,6 +36,7 @@ export class CustomerBillingInformationComponent {
 	customerCode: any;
 	customerName: any;
 	isEditMode: boolean = false;
+	billingHistoryData: Object;
 	// isViewModel : boolean = false
 
 
@@ -147,7 +148,9 @@ export class CustomerBillingInformationComponent {
 		} else {
 			this.id = this.savedGeneralInformationData.customerId;
 			this.customerCode = this.savedGeneralInformationData.customerCode;
-			this.customerName = this.savedGeneralInformationData.name;
+            this.customerName = this.savedGeneralInformationData.name;
+            //Added By Vijay For Customer Create time IsBillingAddess is selected checkbox Then list page we are displaying list
+            this.getBillingDataById()
 		}
 
 
@@ -202,7 +205,7 @@ export class CustomerBillingInformationComponent {
 			masterCompanyId: 1,
 			createdBy: this.userName,
 			updatedBy: this.userName,
-			country: getValueFromObjectByKey('nice_name', this.billingInfo.country)
+			country: getValueFromObjectByKey('countries_id', this.billingInfo.country)
 		}).subscribe(
 			res => {
 				this.billingInfo = new CustomerBillingAddressModel()
@@ -230,6 +233,13 @@ export class CustomerBillingInformationComponent {
 	openEdit(rowData) {
 		this.isEditMode = true;
 		this.billingInfo = { ...rowData, country: getObjectByValue('nice_name', rowData.country, this.countryListOriginal) };
+	}
+
+	getCustomerBillingHistory(rowData){
+	  const {customerBillingAddressId} = rowData;
+		this.customerService.getCustomerBillingHistory(this.id, customerBillingAddressId).subscribe(res => {
+			this.billingHistoryData = res;
+		})
 	}
 
 	// openEdit(data){

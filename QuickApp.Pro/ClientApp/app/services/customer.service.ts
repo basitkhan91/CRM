@@ -131,13 +131,13 @@ export class CustomerService {
         return this.customerEndpoint.getAircraftMappingEndpoint<any>(customerId);
     }
 
-    getATAMappedByCustomerId(contactId: number) {
-        return this.customerEndpoint.getATAMappingByCustomerId<any>(contactId)
+    getATAMappedByCustomerId(customerId: number) {
+        return this.customerEndpoint.getATAMappingByCustomerId<any>(customerId)
     }
 
 
-    getATAMappedByContactId(customerId: number) {
-        return this.customerEndpoint.getATAMappingByContactId<any>(customerId);
+    getATAMappedByContactId(contactId: number) {
+        return this.customerEndpoint.getATAMappingByContactId<any>(contactId);
     }
 
 
@@ -462,7 +462,7 @@ export class CustomerService {
         return Observable.forkJoin(this.customerEndpoint.postCustomerAircraft<any>(data));
     }
     postCustomerATAs(data) {
-        return Observable.forkJoin(this.customerEndpoint.postCustomerATA<any>(data));
+        return this.customerEndpoint.postCustomerATA(data);
     }
     postCustomerTaxTypeRate(data) {
         return Observable.forkJoin(this.customerEndpoint.postCustomerTaxTypeRate<any>(data));
@@ -530,6 +530,23 @@ export class CustomerService {
 
     getCustomerContactAuditDetails(customerContactId) {
         return this.customerEndpoint.getCustomerContactAuditDetails<any>(customerContactId)
+    }
+    getDocumentList(customerId) {
+        return this.customerEndpoint.getDocumentList(customerId)
+    }
+
+    getCustomerWarningsById(customerId) {
+        return this.customerEndpoint.getCustomerWarningsById(customerId);
+    }
+    getShipViaByDomesticShippingId(customerShippingId) {
+        return this.customerEndpoint.getShipViaByDomesticShippingId(customerShippingId);
+    }
+    getCustomerBillingHistory(customerId, customerBillingAddressId) {
+        return this.customerEndpoint.getCustomerBillingHistory(customerId , customerBillingAddressId)
+    }
+
+    getCustomerClassificationMapping(customerId) {
+        return this.customerEndpoint.getCustomerClassificationMapping(customerId);
     }
 
 

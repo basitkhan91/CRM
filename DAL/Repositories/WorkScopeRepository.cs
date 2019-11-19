@@ -28,7 +28,7 @@ namespace DAL.Repositories
         {
             try
             {
-                var result = _appContext.WorkScope.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null).OrderBy(c => c.Description).ToList();
+                var result = _appContext.WorkScope.Include("MasterCompany").Where(c => (c.IsActive == true || c.IsActive == null) && (c.IsDelete == false || c.IsDelete == null)).OrderBy(c => c.Description).ToList();
                 return result;
             }
             catch (Exception ex)

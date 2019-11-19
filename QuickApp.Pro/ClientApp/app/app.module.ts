@@ -97,6 +97,8 @@ import { StageCodeEndpointService } from './services/stage-code/stage-code-endpo
 import { StageCodeService } from './services/stage-code/stage-code.service';
 import { GLAccountCategoryEndpointService } from './services/gl-account-category/gl-account-category-endpoint.service';
 import { GLAccountCategoryService } from './services/gl-account-category/gl-account-category.service';
+import { ExpenditureCategoryEndpointService } from './services/expenditure-category/expenditure-category-endpoint.service';
+import { ExpenditureCategoryService } from './services/expenditure-category/expenditure-category.service';
 import { IntegrationService } from './services/integration-service';
 import { IntegrationEndpointService } from './services/integration.endpoint-service';
 import { PriorityService } from './services/priority.service';
@@ -117,8 +119,6 @@ import { WorkScopeService } from './services/workscope.service';
 import { WorkScopeEndpointService } from './services/workscope-endpoint.service';
 import { EmployeeExpertiseService } from './services/employeeexpertise.service';
 import { EmployeeExpertiseEndpointService } from './services/employeeexpertise-endpoint.service';
-import { ExpenditureCategoryEndpoint } from './services/expenditurecategory-endpoint.service';
-import { ExpenditureCategoryService } from './services/expenditurecategory.service';
 import { DefaultMessageEndpoint } from './services/defaultmessage-endpoint.service';
 import { DefaultMessageService } from './services/defaultmessage.service';
 import { DocumentEndpointService } from './services/document-endpoint.service';
@@ -140,6 +140,8 @@ import { ItemMasterService } from './services/itemMaster.service';
 import { ItemMasterEndpoint } from './services/itemMaster-endpoint.service';
 import { StocklineService } from './services/stockline.service';
 import { StocklineEndpoint } from './services/stockline-endpoint.service';
+import { StocklineAdjustmentReasonEndpoint } from './services/stocklineadjustment-endpoint.service';
+import { StocklineAdjustReasonService } from './services/stockLineAdjustmentReason.service';
 import { ReceivingCustomerWorkService } from './services/receivingcustomerwork.service';
 import { ReceivingCustomerWorkEndpoint } from './services/receivingcustomerWork-endpoint.service';
 import { LegalEntityService } from './services/legalentity.service';
@@ -202,6 +204,10 @@ import { PurchaseOrderService } from './services/purchase-order.service';
 import { PurchaseOrderEndpoint } from './services/purchase-order-endpoint.service';
 import { GLAccountService } from './services/glAccount.service';
 import { GLAccountEndpoint } from './services/glAccount-endpoint.service';
+import { AssetAttributeTypeService } from './services/asset-attribute-type/asset-attribute-type.service';
+import { AssetAttributeTypeEndpointService } from './services/asset-attribute-type/asset-attribute-type-endpoint.service';
+import { AssetIntangibleAttributeTypeService } from './services/asset-intangible-attribute-type/asset-intangible-attribute-type.service';
+import { AssetIntangibleAttributeTypeEndpointService } from './services/asset-intangible-attribute-type/asset-intangible-attribute-type-endpoint.service';
 //import { AuditComponent } from "./components/Audit/audit.component";
 
 @NgModule({
@@ -259,6 +265,10 @@ import { GLAccountEndpoint } from './services/glAccount-endpoint.service';
         AlertService,
         ConfigurationService,
         AppTitleService,
+        AssetAttributeTypeService,
+        AssetAttributeTypeEndpointService,
+        AssetIntangibleAttributeTypeService,
+        AssetIntangibleAttributeTypeEndpointService,
         AppTranslationService,
         NotificationService,
         NotificationEndpoint,
@@ -309,6 +319,8 @@ import { GLAccountEndpoint } from './services/glAccount-endpoint.service';
         StageCodeEndpointService,
         GLAccountCategoryService,
         GLAccountCategoryEndpointService,
+        ExpenditureCategoryService,
+        ExpenditureCategoryEndpointService,
         IntegrationService,
         IntegrationEndpointService,
         PriorityService,
@@ -333,8 +345,6 @@ import { GLAccountEndpoint } from './services/glAccount-endpoint.service';
         WorkScopeEndpointService,
         EmployeeExpertiseService,
         EmployeeExpertiseEndpointService,
-        ExpenditureCategoryEndpoint,
-        ExpenditureCategoryService,
         DefaultMessageEndpoint,
         DefaultMessageService,
         DocumentService,
@@ -359,6 +369,8 @@ import { GLAccountEndpoint } from './services/glAccount-endpoint.service';
         ItemMasterService,
         StocklineService,
         StocklineEndpoint,
+        StocklineAdjustReasonService,
+        StocklineAdjustmentReasonEndpoint,
         ReceivingCustomerWorkService,
         ReceivingCustomerWorkEndpoint,
         LegalEntityService,

@@ -49,7 +49,7 @@ namespace QuickApp.Pro.Controllers
 
         [HttpGet]
         [Route("getrestrictedparts")]
-        public IActionResult GetRestrictedParts(int moduleId, long? referenceId, string partType)
+        public IActionResult GetRestrictedParts(long moduleId, long? referenceId, string partType)
         {
             var restrictedParts = _unitOfWork.CommonRepository.GetRestrictedParts(moduleId, referenceId, partType);
             return Ok(restrictedParts);
@@ -149,5 +149,14 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+
+        [HttpGet]
+        [Route("managementstructurecodes")]
+        public IActionResult GetManagementStructureCodes(long manmgStrucId)
+        {
+            var result = _unitOfWork.CommonRepository.GetManagementStructureCodes(manmgStrucId);
+            return Ok(result);
+
+        }
     }
 }

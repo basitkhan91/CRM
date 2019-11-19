@@ -1,4 +1,199 @@
-﻿<div [@fadeInOut] class="page-content">
+﻿<p-table
+  #dt
+  class="rpo-table-cstm rro-table-cstm"
+  [value]="workOrderData"
+  [first]="0"
+  [rows]="pageSize"
+  [paginator]="true"
+  [pageLinks]="3"
+  [rowsPerPageOptions]="[10, 20, 50, 100]"
+  [columns]="selectedColumns"
+  selectionMode="multiple"
+  expandableRows="true"
+  rowExpandMode="single"
+  [lazy]="true"
+  (onLazyLoad)="loadData($event)"
+  [resizableColumns]="true"
+  [reorderableColumns]="true"
+  [scrollable]="true"
+  [totalRecords]="totalRecords"
+  [dataKey]="workOrderPartListDataKeys"
+>
+  <ng-template pTemplate="caption">
+    <div style="text-align: right;margin-left:-6px !important;">
+      <p-multiSelect
+        [maxSelectedLabels]="2"
+        [options]="headers"
+        optionLabel="header"
+        [(ngModel)]="selectedColumns"
+        [style]="{ minWidth: '200px' }"
+        style="float:left"
+        (onChange)="columnsChanges()"
+      ></p-multiSelect>
+
+      <div
+        class="inner-addon right-addon w200 inline-block  g-filter-search-cstm"
+      >
+        <i class="fa fa-search"></i>
+        <input
+          type="text"
+          pInputText
+          size="50"
+          class="form-control ui-autocomplete-input"
+          (input)="globalSearch($event.target.value)"
+          placeholder="Global Filter"
+        />
+      </div>
+      <button
+        type="button"
+        class="btn btn-primary-cstm "
+        pTooltip="Download Selected"
+        tooltipPosition="top"
+        pButton
+        icon="fa-download"
+        iconPos="left"
+        label="Export All Data"
+        (click)="dt.exportCSV()"
+      ></button>
+      <button
+        type="button"
+        class="btn btn-primary-cstm "
+        pTooltip="Download All Data"
+        tooltipPosition="top"
+        pButton
+        icon="fa-download"
+        iconPos="left"
+        label="Export Selection Only"
+        (click)="dt.exportCSV({ selectionOnly: true })"
+      ></button>
+      <div class="excel-upload  excel-upload-cstm">
+        <input
+          type="file"
+          name="upload[]"
+          id="upload"
+          (change)="customExcelUpload($event)"
+          class="uploaddoc upload-file"
+          accept=".xlsx, .xls, .csv"
+        />
+        <label for="upload">
+          <span matTooltip="Upload Data (Excel)">
+            <i class="fa fa-upload"></i>
+          </span>
+        </label>
+        &nbsp; &nbsp;
+        <a
+          matTooltip="Create Customer"
+          class="btn btn-success nobg btn-cstm"
+          [routerLink]="[
+            '/workordersmodule/workorderspages/app-work-order-add'
+          ]"
+          ><span><i class="fa fa-plus"></i></span
+        ></a>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th>WorkOrder Number</th>
+      <th *ngFor="let col of columns">
+        {{ col.header }}
+      </th>
+      <th style="position:sticky" *ngIf="selectedColumns.length > 0">
+        Actions
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template
+    pTemplate="body"
+    let-rowData
+    let-rowIndex="rowIndex"
+    let-expanded="expanded"
+    let-columns="columns"
+  >
+    <tr class="ui-widget-header">
+      <td>
+        <a [pRowToggler]="rowData">
+          <i
+            (click)="getWorkOrderPartListByWorkOrderId(rowData)"
+            [ngClass]="
+              expanded
+                ? 'fa fa-fw fa-chevron-circle-down'
+                : 'fa fa-fw fa-chevron-circle-right'
+            "
+          ></i>
+          <span> {{ rowData.workOrderNum }}</span>
+        </a>
+      </td>
+      <td *ngFor="let col of columns">
+        {{
+          col.field == "openDate"
+            ? (rowData[col.field] | date: "MM/dd/yyyy")
+            : rowData[col.field] && col.field == "updatedDate"
+            ? (rowData[col.field] | date: "MM/dd/yyyy")
+            : rowData[col.field]
+        }}
+      </td>
+      <td style="width:200px" *ngIf="selectedColumns.length > 0">
+        <p-inputSwitch
+          [(ngModel)]="rowData['isActive']"
+          name="isActive{{ rowIndex }}"
+          (onChange)="changeStatus(rowData)"
+        ></p-inputSwitch>
+
+        <span data-toggle="modal" data-target="#view">
+          <a
+            class="btn btn-info boxed-float-btn nobg"
+            data-toggle="tooltip"
+            (click)="viewSelectedRow(rowData)"
+            data-target="#view"
+            data-toggle="modal"
+          >
+            <i class="fa fa-eye"></i>
+          </a>
+        </span>
+        <button
+          class="btn-edit ptable-wo-btns"
+          mat-icon-button
+          (click)="edit(rowData)"
+          matTooltip="Edit"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+
+        <button
+          class="btn-delete ptable-wo-btns"
+          mat-icon-button
+          matTooltip="Delete"
+          data-target="#delete"
+          data-toggle="modal"
+          (click)="delete(rowData)"
+        >
+          <mat-icon color="warn">delete</mat-icon>
+        </button>
+        <button
+          class="btn-history ptable-wo-btns"
+          mat-icon-button
+          matTooltip="History"
+          data-target="#contentHist"
+          data-toggle="modal"
+          (click)="getAuditHistoryById(rowData)"
+        >
+          <mat-icon color="green">history</mat-icon>
+        </button>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="rowexpansion" let-rowData let-rowIndex="rowIndex">
+    <tr>
+      <!-- <td>{{ partList.openDate }}</td> -->
+    </tr>
+  </ng-template>
+</p-table>
+
+<!-- *ngFor="let partList of workOrderPartListData; let i = index"
+[hidden]="rowIndex === i" -->
+
+<!-- <div [@fadeInOut] class="page-content">
     <div class="right_col" role="main">
         <div class="col-md-12">
             <div class="x_panel" style="">
@@ -222,4 +417,4 @@
         </div>
     </div>
 </div>
-
+ -->

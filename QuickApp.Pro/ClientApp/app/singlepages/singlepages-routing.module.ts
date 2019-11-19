@@ -16,12 +16,13 @@ import { CurrencyComponent } from "../components/currency/currency.component";
 import { CustomerClassificationComponent } from "../components/customer-classification/customer-classification.component";
 import { DocumentsComponent } from "../components/documents/documents.component";
 import { EmployeeExpertiseComponent } from "../components/employee-expertise/employee-expertise.component";
-import { ExpenditureComponent } from "../components/expenditure/expenditure.component";
 import { FindingsComponent } from "../components/findings/findings.component";
 import { AssetIntangibleTypeComponent } from "../components/asset-intangible-type/asset-intangible-type.component";
 import { AssetTypeComponent } from "../components/asset-type/asset-type.component";
 import { StageCodeComponent } from "../components/stage-code/stage-code.component";
 import { GLAccountCategoryComponent } from "../components/gl-account-category/gl-account-category.component";
+import { ExpenditureCategoryComponent } from "../components/expenditure-category/expenditure-category.component";
+import { AssetAttributeTypeComponent } from "../components/asset-attribute-type/asset-attribute-type.component";
 
 import { IntegrationComponent } from "../components/integration/integration.component";
 import { ItemClassificationComponent } from "../components/item-classification/item-classification.component";
@@ -64,6 +65,7 @@ import { ConditionsComponent } from "../components/conditions/conditions.compone
 import { SiteComponent } from "../components/site/site.component";
 //import { Warehouse } from '../models/warehouse.model';
 import { WarehouseComponent } from "../components/warehouse/warehouse.component";
+//import { StocklineAdjustmentReasonComponent } from "../components/stockline/stockline-adjustment-reason/stockline-adjustment-reason.component";
 
 import { ManufacturerComponent } from "../components/manufacturer/manufacturer.component";
 import { VendorcapabilitiesComponent } from "../components/vendorcapabilities/vendorcapabilities.component";
@@ -146,11 +148,6 @@ const singlePagesRoutes: Routes = [
                 data: { title: "Employee Expertise" }
             },
             {
-                path: "app-expenditure",
-                component: ExpenditureComponent,
-                data: { title: "Expenditure" }
-            },
-            {
                 path: "app-findings",
                 component: FindingsComponent,
                 data: { title: "Findings" }
@@ -174,6 +171,16 @@ const singlePagesRoutes: Routes = [
                 path: "app-gl-account-category",
                 component: GLAccountCategoryComponent,
                 data: { title: "GL Account Category" }
+            },
+            {
+                path: "app-expenditure-category",
+                component: ExpenditureCategoryComponent,
+                data: { title: "Expenditure Category" }
+            },
+            {
+                path: "app-asset-attribute-type",
+                component: AssetAttributeTypeComponent,
+                data: { title: "Asset Attribute Type" }
             },
             {
                 path: "app-integration",
@@ -313,11 +320,6 @@ const singlePagesRoutes: Routes = [
                 data: { title: "GL Financial Statement" }
             },
             {
-                path: "app-glaccount-category",
-                component: GLAccountCategoryComponent,
-                data: { title: "Expenditure Type" }
-            },
-            {
                 path: "app-journal-approvals",
                 component: JournalApprovalsComponent,
                 data: { title: "Journal Approvals" }
@@ -357,6 +359,11 @@ const singlePagesRoutes: Routes = [
                 component: DepriciationMethodComponent,
                 data: { title: "Depreciation Method" }
             },
+            //{
+            //    path: "app-stockline-adjustment-reason",
+            //    component: StocklineAdjustmentReasonComponent,
+            //    data: { title: "Adjustment Reason" }
+            //},
             {
                 path: "app-disposal-type",
                 component: DisposalTypeComponent,

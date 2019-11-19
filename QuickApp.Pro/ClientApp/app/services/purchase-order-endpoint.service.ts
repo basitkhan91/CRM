@@ -11,6 +11,8 @@ export class PurchaseOrderEndpoint extends EndpointFactory {
 
     private readonly _purchaseOrderLiteUrl: string = "/api/PurchaseOrder/basic";
     private readonly _poByIdUrl: string = "/api/purchaseorder/pobyid";
+    private readonly _saveCreatePOApproval: string = "/api/purchaseorder/createpoapprover";
+    private readonly _updatePOApproval: string = "/api/purchaseorder/updatepoapprover";
 
     get purchaseOrderBasicListUrl() { return this.configurations.baseUrl + this._purchaseOrderLiteUrl; }
 
@@ -33,6 +35,54 @@ export class PurchaseOrderEndpoint extends EndpointFactory {
 			.catch(error => {
 				return this.handleError(error, () => this.getVendorPOById(Id));
 			});
+    }
+
+    saveCreatePOApproval<T>(param: any): Observable<any> {
+		let body = JSON.stringify(param);
+		let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+		return this.http.post(this._saveCreatePOApproval, body, this.getRequestHeaders())
+			.map((response: Response) => {
+				return <any>response;
+
+			}).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+	}
+
+	updatePOApproval<T>(param: any): Observable<any> {
+		let body = JSON.stringify(param);
+		let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+		return this.http.post(this._updatePOApproval, body, this.getRequestHeaders())
+			.map((response: Response) => {
+				return <any>response;
+
+			}).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+    }
+
+    getPOApproverList(purchaseOrderId) {
+		return this.http.get<any>(`${this.configurations.baseUrl}/api/purchaseorder/poapproverslist?purchaseOrderId=${purchaseOrderId}`)
+    }
+    
+    getPurchaseOrderPartsById(purchaseOrderId) {
+		return this.http.get<any>(`${this.configurations.baseUrl}/api/purchaseorder/purchaseorderparts?purchaseOrderId=${purchaseOrderId}`)
+  }
+  
+  getPOStatus(purchaseOrderId, status, updatedBy) {
+		return this.http.get<any>(`${this.configurations.baseUrl}/api/purchaseorder/postatus?purchaseOrderId=${purchaseOrderId}&status=${status}&updatedBy=${updatedBy}`)
+  }
+  
+  getPOHistory(purchaseOrderId) {
+		return this.http.get<any>(`${this.configurations.baseUrl}/api/purchaseorder/pohistory?purchaseOrderId=${purchaseOrderId}`)
+  }
+  
+  deletePO(purchaseOrderId, updatedBy) {
+		return this.http.get<any>(`${this.configurations.baseUrl}/api/purchaseorder/deletepo?purchaseOrderId=${purchaseOrderId}&updatedBy=${updatedBy}`)
+  }
+
+  getPOViewById(purchaseOrderId) {
+    return this.http.get<any>(`${this.configurations.baseUrl}/api/purchaseorder/poview?purchaseOrderId=${purchaseOrderId}`)
+  }
+
+    getPOPartsViewById(purchaseOrderId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/purchaseorder/popartsview?purchaseOrderId=${purchaseOrderId}`)
     }
     /* ./vendor PO*/
 }
