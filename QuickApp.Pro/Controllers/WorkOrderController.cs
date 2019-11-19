@@ -526,8 +526,8 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
-                unitOfWork.WorkOrderRepository.CreateWorkOrderPublications(workOrderPublications);
-                return Ok();
+                var result=unitOfWork.WorkOrderRepository.CreateWorkOrderPublications(workOrderPublications);
+                return Ok(result);
             }
             else
             {
@@ -541,8 +541,8 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
-                unitOfWork.WorkOrderRepository.UpdateWorkOrderPublications(workOrderPublications);
-                return Ok();
+               var result= unitOfWork.WorkOrderRepository.UpdateWorkOrderPublications(workOrderPublications);
+                return Ok(result);
             }
             else
             {
@@ -571,6 +571,63 @@ namespace QuickApp.Pro.Controllers
             unitOfWork.WorkOrderRepository.GetWorkOrderPublications(wfwoId, workOrderId);
             return Ok();
         }
+
+        #endregion
+
+        #region Work Order Material List
+
+        [HttpPost("createworkordermaterials")]
+        public IActionResult CreateWorkOrderMaterials([FromBody]List<WorkOrderMaterials> workOrderMaterials)
+        {
+            if (ModelState.IsValid)
+            {
+               var result= unitOfWork.WorkOrderRepository.CreateWorkOrderMaterials(workOrderMaterials);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpPost("updateworkordermaterials")]
+        public IActionResult UpdateWorkOrderMaterials([FromBody]List<WorkOrderMaterials> workOrderMaterials)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = unitOfWork.WorkOrderRepository.UpdateWorkOrderMaterials(workOrderMaterials);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpGet("deleteworkordermaterial")]
+        public IActionResult DeleteWorkOrderMaterials(long workOrderMaterialsId, string updatedBy)
+        {
+            unitOfWork.WorkOrderRepository.DeleteWorkOrderPublication(workOrderMaterialsId, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("workordermateriallist")]
+        public IActionResult GetWorkOrderMaterialList(long wfwoId = 0, long workOrderId = 0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderMaterialList(wfwoId, workOrderId);
+            return Ok(result);
+        }
+
+        [HttpGet("getreservedissuesparts")]
+        public IActionResult GetReservedIssuesParts(long WorkFlowWorkOrderId=0,long workOrderId=0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetReservedIssuedParts(WorkFlowWorkOrderId, workOrderId);
+            return Ok(result);
+        }
+
+
 
         #endregion
 
@@ -702,12 +759,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
-        [HttpGet("workordermateriallist")]
-        public IActionResult GetWorkOrderMaterialList(long wfwoId = 0, long workOrderId = 0)
-        {
-            var result = unitOfWork.WorkOrderRepository.GetWorkOrderMaterialList(wfwoId, workOrderId);
-            return Ok(result);
-        }
+        
 
         [HttpGet("gettechnicians")]
         public IActionResult GetTechnicians()
