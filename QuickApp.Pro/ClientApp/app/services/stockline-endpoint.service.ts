@@ -55,7 +55,11 @@ export class StocklineEndpoint extends EndpointFactory
 
 	private readonly _stockLineAdjustmentUpdate: string = "/api/StockLine/stockLineAdjustmentReasonPut";
 
-	private readonly _stockLinePOUnitCost: string = "/api/StockLine/stockLinePOUnitCostGet";
+    private readonly _stockLinePOUnitCost: string = "/api/StockLine/stockLinePOUnitCostGet";
+
+    private readonly _POUnitCost: string = "/api/StockLine/PurchaseOrderUnitCost";
+
+    private readonly _ROUnitCost: string = "/api/StockLine/RepairOrderUnitCost";
 
 	private readonly _stockLineROUnitCost: string = "/api/StockLine/stockLineROUnitCostGet";
 
@@ -310,6 +314,20 @@ export class StocklineEndpoint extends EndpointFactory
                 return this.handleError(error, () => this.getDeleteStocklineAdjustmentReasonEndpoin(roleObject));
             });
 	}
+
+    getPurchaseOrderUnitCostEndpoint<T>(POId: any): Observable<T> {
+        return this.http.post<T>(this._POUnitCost, JSON.stringify(POId), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getPurchaseOrderUnitCostEndpoint(POId));
+            });
+    }
+
+    getRepairOrderUnitCostEndpoint<T>(ROId: any): Observable<T> {
+        return this.http.post<T>(this._ROUnitCost, JSON.stringify(ROId), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getRepairOrderUnitCostEndpoint(ROId));
+            });
+    }
 
 	getPOUnitCostEndpoint<T>(roleObject: any): Observable<T> {
 		//let endpointUrl = `${this._stockLinePOUnitCost}/${roleObject.itemMasterId}`;

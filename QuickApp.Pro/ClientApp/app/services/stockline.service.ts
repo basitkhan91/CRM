@@ -188,6 +188,14 @@ export class StocklineService {
 		return this.stocklineEndpoint.getROUnitCostEndpoint(Object);
 	}
 
+    getPurchaseOrderUnitCost(POId: any) {
+        return this.stocklineEndpoint.getPurchaseOrderUnitCostEndpoint(POId);
+    }
+
+    getRepairOrderUnitCost(ROId: any) {
+        return this.stocklineEndpoint.getRepairOrderUnitCostEndpoint(ROId);
+    }
+
 	deleteIntegrationById(actionId: number) {
 		return this.stocklineEndpoint.getDeleteIntegrationEndpoint(actionId);
 	}

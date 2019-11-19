@@ -164,7 +164,7 @@ namespace DAL.Repositories
                                          PurchaseOrderId = po.PurchaseOrderId,
                                          PurchaseOrderNumber = po.PurchaseOrderNumber
                                      });
-            return purchaseOrderList;
+            return purchaseOrderList.Distinct();
 
         }
 
