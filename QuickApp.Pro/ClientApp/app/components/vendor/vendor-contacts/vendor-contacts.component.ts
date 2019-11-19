@@ -401,7 +401,9 @@ export class VendorContactsComponent implements OnInit {
                 this.sourceVendor.updatedBy = this.userName;
                 this.sourceVendor.masterCompanyId = 1;
                 this.isDefault = this.sourceVendor.isDefaultContact;
-                this.sourceVendor.isDefaultContact = this.sourceVendor.isdefaultContact;
+                if(!this.sourceVendor.isDefaultContact){
+                    this.sourceVendor.isDefaultContact = false;
+                }
                 // before you commit make sure u don't have conlog, debug, commented code...
                 this.workFlowtService.newAddContactInfo(this.sourceVendor).subscribe(data => {
                     console.log(data)
@@ -409,7 +411,6 @@ export class VendorContactsComponent implements OnInit {
                     this.sourceVendor = new Object();
                     this.localCollection.VendorId = this.local.vendorId;
                     this.localCollection.ContactId = this.local.contactId;
-                    this.localCollection.IsDefaultContact = this.sourceVendor.isdefaultContact;
                     this.loadData();
                     if (data) {
                         this.updateVendorContact(this.localCollection);
