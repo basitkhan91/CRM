@@ -206,73 +206,99 @@
         <div class="card">
           <div class="card-body">
             <div class="table-responsive default-bg clear">
-              <div class="col-sm-3">
-                <p>
-                  <span class="label"><b>WorkOrder Number: </b></span
-                  ><span class="value">{{
-                    viewWorkOrderHeader.workOrderNumber
-                  }}</span>
-                </p>
-                <p>
-                  <span class="label"><b>Open Date: </b></span
-                  ><span class="value">{{
-                    viewWorkOrderHeader.openDate | date: 'MM/dd/yyyy'
-                  }}</span>
-                </p>
-                <p>
-                  <span class="label"><b>WO Status: </b></span
-                  ><span class="value">{{ viewWorkOrderHeader.woStatus }}</span>
-                </p>
-              </div>
-              <div class="col-sm-3">
-                <p>
-                  <span class="label"><b>Customer Name: </b></span
-                  ><span class="value">{{
-                    viewWorkOrderHeader.customerName
-                  }}</span>
-                </p>
-                <p>
-                  <span class="label"><b>Customer Code: </b></span
-                  ><span class="value"></span>
-                </p>
-                <p>
-                  <span class="label"><b>Customer Ref: </b></span
-                  ><span class="value"></span>
-                </p>
-              </div>
 
-              <div class="col-sm-3">
-                <p>
-                  <span class="label"><b>Contract: </b></span
+<div>
+          <div class="col-md-6">
+
+          <p>
+              <span class="label"><b>    MPN Type : </b></span
+              ><span class="value">{{
+                viewWorkOrderHeader.singleMPN }}</span>
+                
+            </p>  
+          </div>
+          <div class="col-md-6">
+
+
+              <p>
+                  <span class="label"><b> WorkOrder Type : </b></span
                   ><span class="value">{{
-                    viewWorkOrderHeader.isContractAvl
-                  }}</span>
-                </p>
-                <p *ngIf="isContractAvl">
-                  <span class="label"> <b>Contract Reference:</b> </span
-                  ><span class="value">{{
-                    viewWorkOrderHeader.contractReference
-                  }}</span>
-                </p>
-              </div>
-              <div class="col-sm-3">
-                <p>
-                  <span class="label"><b>Credit Limit & Terms: </b></span
-                  ><span class="value">
-                    {{ viewWorkOrderHeader.creditTerm }} &
-                    {{ viewWorkOrderHeader.creditLimit }}
-                  </span>
-                </p>
-                <p>
-                  <span class="label"><b>Employee: </b></span
-                  ><span class="value">{{ viewWorkOrderHeader.employee }}</span>
-                </p>
-                <p>
-                  <span class="label"><b>Salesperson: </b></span
-                  ><span class="value">{{
-                    viewWorkOrderHeader.salesperson
-                  }}</span>
-                </p>
+                    viewWorkOrderHeader.workOrderType }}</span>
+                    
+                </p>  
+          </div>
+          </div>
+          <hr style="clear: both;">
+
+              <div>
+                  <div class="col-sm-3">
+                      <p>
+                        <span class="label"><b>WorkOrder Number: </b></span
+                        ><span class="value">{{
+                          viewWorkOrderHeader.workOrderNumber
+                        }}</span>
+                      </p>
+                      <p>
+                        <span class="label"><b>Open Date: </b></span
+                        ><span class="value">{{
+                          viewWorkOrderHeader.openDate | date: 'MM/dd/yyyy'
+                        }}</span>
+                      </p>
+                      <p>
+                        <span class="label"><b>WO Status: </b></span
+                        ><span class="value">{{ viewWorkOrderHeader.woStatus }}</span>
+                      </p>
+                    </div>
+                    <div class="col-sm-3">
+                      <p>
+                        <span class="label"><b>Customer Name: </b></span
+                        ><span class="value">{{
+                          viewWorkOrderHeader.customerName
+                        }}</span>
+                      </p>
+                      <p>
+                        <span class="label"><b>Customer Code: </b></span
+                        ><span class="value"></span>
+                      </p>
+                      <p>
+                        <span class="label"><b>Customer Ref: </b></span
+                        ><span class="value"></span>
+                      </p>
+                    </div>
+      
+                    <div class="col-sm-3">
+                      <p>
+                        <span class="label"><b>Contract: </b></span
+                        ><span class="value">{{
+                          viewWorkOrderHeader.isContractAvl
+                        }}</span>
+                      </p>
+                      <p *ngIf="isContractAvl">
+                        <span class="label"> <b>Contract Reference:</b> </span
+                        ><span class="value">{{
+                          viewWorkOrderHeader.contractReference
+                        }}</span>
+                      </p>
+                    </div>
+                    <div class="col-sm-3">
+                      <p>
+                        <span class="label"><b>Credit Limit & Terms: </b></span
+                        ><span class="value">
+                          {{ viewWorkOrderHeader.creditTerm }} &
+                          {{ viewWorkOrderHeader.creditLimit }}
+                        </span>
+                      </p>
+                      <p>
+                        <span class="label"><b>Employee: </b></span
+                        ><span class="value">{{ viewWorkOrderHeader.employee }}</span>
+                      </p>
+                      <p>
+                        <span class="label"><b>Salesperson: </b></span
+                        ><span class="value">{{
+                          viewWorkOrderHeader.salesperson
+                        }}</span>
+                      </p>
+                    </div>
               </div>
             </div>
 
