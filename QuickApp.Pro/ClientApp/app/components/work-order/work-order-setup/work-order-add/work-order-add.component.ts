@@ -393,7 +393,7 @@ export class WorkOrderAddComponent implements OnInit {
       updatedBy: this.userName,
       partNumbers: generalInfo.partNumbers.map(x => {
         if (this.workOrderGeneralInformation.isSinglePN == false) {
-          this.mpnPartNumbersList.push({ label: x.masterPartId.partNumber, value: x.masterPartId })
+          this.mpnPartNumbersList.push({ label: x.masterPartId.partNumber, value: x.workflowId })
         }
 
 
@@ -421,10 +421,12 @@ export class WorkOrderAddComponent implements OnInit {
         if (this.workFlowWorkOrderId !== 0) {
           this.isDisabledSteps = true;
         }
-        // get WOrkFlow Equipment Details if WorFlow Exists
-        this.getWorkOrderWorkFlowNos();
-        this.getEquipmentByWorkOrderId();
-        this.getMaterialListByWorkOrderId();
+
+        if (this.workOrderGeneralInformation.isSinglePN == false) {
+          // get WOrkFlow Equipment Details if WorFlow Exists
+          this.getWorkFlowTabsData();
+
+        }
 
         this.showTableGrid = true; // Show Grid Boolean
         // this.workOrder = result;
@@ -439,27 +441,50 @@ export class WorkOrderAddComponent implements OnInit {
 
 
 
+  changeofMPN(workFlowWorkOrderId) {
+    console.log(workFlowWorkOrderId);
 
+    this.getWorkFlowTabsData();
 
-  savedWorkFlowData(workFlowDataObject) {
-    this.workOrderService.createWorkFlowWorkOrder(workFlowDataObject).subscribe(res => {
-      this.workFlowWorkOrderData = res;
-      this.workFlowWorkOrderId = res.workFlowWorkOrderId;
-
-      if (this.workFlowWorkOrderId !== 0) {
-        this.isDisabledSteps = true;
-      }
-      this.getWorkOrderWorkFlowNos();
-      this.alertService.showMessage(
-        '',
-        'Work Order Work Flow Saved Succesfully',
-        MessageSeverity.success
-      );
-    })
-
-    // this.workFlowWorkOrderData = responseData;
-    // this.workFlowWorkOrderId = responseData.workFlowWorkOrderId;
   }
+
+  getWorkFlowTabsData() {
+    this.getWorkOrderWorkFlowNos();
+    this.getEquipmentByWorkOrderId();
+    this.getMaterialListByWorkOrderId();
+    this.getWorkOrderWorkFlowBywfwoId(this.workFlowWorkOrderId);
+  }
+
+
+
+
+  getWorkOrderWorkFlowBywfwoId(workFlowWorkOrderId) {
+
+    this.workOrderService.getWorkOrderWorkFlowByWorkFlowWorkOrderId(workFlowWorkOrderId).subscribe(res => {
+
+    })
+  }
+
+
+  // savedWorkFlowData(workFlowDataObject) {
+  //   this.workOrderService.createWorkFlowWorkOrder(workFlowDataObject).subscribe(res => {
+  //     this.workFlowWorkOrderData = res;
+  //     this.workFlowWorkOrderId = res.workFlowWorkOrderId;
+
+  //     if (this.workFlowWorkOrderId !== 0) {
+  //       this.isDisabledSteps = true;
+  //     }
+  //     this.getWorkOrderWorkFlowNos();
+  //     this.alertService.showMessage(
+  //       '',
+  //       'Work Order Work Flow Saved Succesfully',
+  //       MessageSeverity.success
+  //     );
+  //   })
+
+  //   // this.workFlowWorkOrderData = responseData;
+  //   // this.workFlowWorkOrderId = responseData.workFlowWorkOrderId;
+  // }
 
   getWorkOrderWorkFlowNos() {
 
@@ -482,9 +507,9 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
   getEquipmentByWorkOrderId() {
-    if (this.workFlowWorkOrderId !== 0) {
+    if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
       // this.workFlowWorkOrderId = this.workFlowWorkOrderData.workFlowWorkOrderId;
-      this.workOrderService.getWorkOrderAssetList(this.workFlowWorkOrderId).subscribe(
+      this.workOrderService.getWorkOrderAssetList(this.workFlowWorkOrderId, this.workOrderId).subscribe(
         result => {
           this.workOrderAssetList = result;
         }
@@ -495,7 +520,7 @@ export class WorkOrderAddComponent implements OnInit {
 
   getMaterialListByWorkOrderId() {
     if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
-      this.workOrderService.getMaterialList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
+      this.workOrderService.getWorkOrderMaterialList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
 
         this.workOrderMaterialList = res;
 

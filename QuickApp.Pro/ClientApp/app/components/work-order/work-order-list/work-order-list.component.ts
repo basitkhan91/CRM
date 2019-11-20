@@ -40,6 +40,10 @@ export class WorkOrderListComponent implements OnInit {
     viewWorkOrderMPN: any;
     workOrderAssetList: any;
     workOrderMaterialList: Object;
+    workOrderPublicationList: Object;
+    workOrderChargesList: Object;
+    workOrderExclusionsList: Object;
+    workOrderLaborList: Object;
     constructor(private workOrderService: WorkOrderService,
         private route: Router,
         private authService: AuthService,
@@ -101,8 +105,11 @@ export class WorkOrderListComponent implements OnInit {
 
 
     async view(rowData) {
-        const { workOrderId } = rowData;
-        const { workFlowWorkOrderId } = rowData;
+        // const { workOrderId } = rowData;
+        // const {workFlowWorkOrderId} = rowData;
+        const workOrderId = 46;
+        const workFlowWorkOrderId = 0;
+
         await this.workOrderService.viewWorkOrderHeader(workOrderId).subscribe(res => {
             this.viewWorkOrderHeader = res;
         })
@@ -111,17 +118,21 @@ export class WorkOrderListComponent implements OnInit {
             this.viewWorkOrderMPN = res;
         })
 
-        this.getEquipmentByWorkOrderId(workFlowWorkOrderId);
-        this.getMaterialListByWorkOrderId(workFlowWorkOrderId, workOrderId)
+        this.getEquipmentByWorkOrderId(workFlowWorkOrderId, workOrderId);
+        this.getMaterialListByWorkOrderId(workFlowWorkOrderId, workOrderId);
+        this.getPublicationListByWorkOrderId(workFlowWorkOrderId, workOrderId);
+        this.getChargesListByWorkOrderId(workFlowWorkOrderId, workOrderId);
+        this.getExclusionListByWorkOrderId(workFlowWorkOrderId, workOrderId);
+        this.getLaborListByWorkOrderId(workFlowWorkOrderId, workOrderId);
 
 
     }
 
 
-    getEquipmentByWorkOrderId(workFlowWorkOrderId) {
-        if (workFlowWorkOrderId !== 0) {
+    getEquipmentByWorkOrderId(workFlowWorkOrderId, workOrderId) {
+        if (workFlowWorkOrderId) {
             // this.workFlowWorkOrderId = this.workFlowWorkOrderData.workFlowWorkOrderId;
-            this.workOrderService.getWorkOrderAssetList(workFlowWorkOrderId).subscribe(
+            this.workOrderService.getWorkOrderAssetList(workFlowWorkOrderId, workOrderId).subscribe(
                 result => {
                     this.workOrderAssetList = result;
                 }
@@ -131,8 +142,8 @@ export class WorkOrderListComponent implements OnInit {
     }
 
     getMaterialListByWorkOrderId(workFlowWorkOrderId, workOrderId) {
-        if (workFlowWorkOrderId !== 0 && workOrderId) {
-            this.workOrderService.getMaterialList(workFlowWorkOrderId, workOrderId).subscribe(res => {
+        if (workFlowWorkOrderId && workOrderId) {
+            this.workOrderService.getWorkOrderMaterialList(workFlowWorkOrderId, workOrderId).subscribe(res => {
 
                 this.workOrderMaterialList = res;
 
@@ -140,6 +151,54 @@ export class WorkOrderListComponent implements OnInit {
 
         }
     }
+
+    getPublicationListByWorkOrderId(workFlowWorkOrderId, workOrderId) {
+
+        if (workFlowWorkOrderId && workOrderId) {
+            this.workOrderService.getWorkOrderPublicationList(workFlowWorkOrderId, workOrderId).subscribe(res => {
+                this.workOrderPublicationList = res;
+            })
+
+        }
+    }
+
+    getChargesListByWorkOrderId(workFlowWorkOrderId, workOrderId) {
+
+        if (workFlowWorkOrderId && workOrderId) {
+            this.workOrderService.getWorkOrderChargesList(workFlowWorkOrderId, workOrderId).subscribe(res => {
+                this.workOrderChargesList = res;
+            })
+
+        }
+
+    }
+
+    getExclusionListByWorkOrderId(workFlowWorkOrderId, workOrderId) {
+
+        if (workFlowWorkOrderId && workOrderId) {
+            this.workOrderService.getWorkOrderExclusionsList(workFlowWorkOrderId, workOrderId).subscribe(res => {
+                this.workOrderExclusionsList = res;
+            })
+
+        }
+
+    }
+
+    getLaborListByWorkOrderId(workFlowWorkOrderId, workOrderId) {
+
+        if (workFlowWorkOrderId && workOrderId) {
+            this.workOrderService.getWorkOrderLaborList(workFlowWorkOrderId, workOrderId).subscribe(res => {
+                this.workOrderLaborList = res;
+            })
+
+        }
+
+    }
+
+
+
+
+
 
 
     edit(rowData) {
