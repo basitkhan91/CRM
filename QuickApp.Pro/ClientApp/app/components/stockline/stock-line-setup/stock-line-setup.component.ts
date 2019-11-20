@@ -840,7 +840,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 
 	getBUList(companyId)
     {
-        if (this.updateMode == false) {
             this.sourceEmployee.buisinessUnitId = "";
             this.sourceEmployee.departmentId = "";
             this.sourceEmployee.divisionId = "";
@@ -853,26 +852,10 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
                     this.bulist.push(this.allManagemtninfo[i])
                 }
             }
-        }
-        else {
-            this.sourceEmployee.buisinessUnitId = null;
-            this.sourceEmployee.departmentId = "";
-            this.sourceEmployee.divisionId = "";
-            this.sourceEmployee.buisinessUnitId = "";
-            this.bulist = [];
-            this.departmentList = [];
-            this.divisionlist = [];
-            for (let i = 0; i < this.allManagemtninfo.length; i++) {
-                if (this.allManagemtninfo[i].parentId == companyId) {
-                    this.bulist.push(this.allManagemtninfo[i])
-                }
-            }
-        }
 	}
 
 	getDepartmentlist(businessUnitId)
     {
-        if (this.updateMode == false) {
             this.sourceEmployee.departmentId = "";
             this.sourceEmployee.divisionId = "";
             this.sourceEmployee.managementStructureId = businessUnitId;
@@ -883,24 +866,10 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
                     this.departmentList.push(this.allManagemtninfo[i]);
                 }
             }
-
-        }
-        else {
-            this.sourceEmployee.departmentId = "";
-            this.sourceEmployee.divisionId = "";
-            this.departmentList = [];
-            this.divisionlist = [];
-            for (let i = 0; i < this.allManagemtninfo.length; i++) {
-                if (this.allManagemtninfo[i].parentId == businessUnitId) {
-                    this.departmentList.push(this.allManagemtninfo[i]);
-                }
-            }
-        }
 	}
 
 	getDivisionlist(departmentId)
 	{
-        if (this.updateMode == false) {
             this.sourceEmployee.divisionId = "";
             this.sourceEmployee.managementStructureId = departmentId;
             this.divisionlist = [];
@@ -909,15 +878,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
                     this.divisionlist.push(this.allManagemtninfo[i]);
                 }
             }
-        }
-        else {
-            this.divisionlist = [];
-            for (let i = 0; i < this.allManagemtninfo.length; i++) {
-                if (this.allManagemtninfo[i].parentId == departmentId) {
-                    this.divisionlist.push(this.allManagemtninfo[i]);
-                }
-            }
-        }
 	}
 	getDivisionChangeManagementCode(divisionId)
 	{
@@ -926,27 +886,26 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 
     POValueChange(purchaseOrderId)
     {
-        console.log(purchaseOrderId);
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-        this.stocklineser.getPurchaseOrderUnitCost(purchaseOrderId).subscribe(
-            results => this.onPOUnitCostLoadSuccessful(results[0]),
+        this.stocklineser.getPurchaseOrderUnitCost(purchaseOrderId).subscribe(   //Getting Site List Hear
+            results => this.onPOUnitCostLoadSuccessful(results), //Pasing first Array and calling Method
             error => this.onDataLoadFailed(error)
         );
     }
 
-    onPOUnitCostLoadSuccessful(getPOCost: any[]) {
+    onPOUnitCostLoadSuccessful(getPOCost: any) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
 
-        this.sourceStockLineSetup.purchaseOrderUnitCost = getPOCost[0].UnitCost;
+        this.sourceStockLineSetup.purchaseOrderUnitCost = getPOCost[0].unitCost;
+
+        
     }
 
     onROUnitCostLoadSuccessful(getROCost: any[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
 
-        this.sourceStockLineSetup.repairOrderUnitCost = getROCost[0].UnitCost;
+        this.sourceStockLineSetup.repairOrderUnitCost = getROCost[0].unitCost;
     }
 
 	ROValueChange(RoId)
@@ -1005,27 +964,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		}
 		else { this.showCompanyError = true; }
 
-		if ((this.BuHasData == true) && (!this.sourceStockLineSetup.businessUnitId)) {
-			this.showBuError = true;
-		}
-		else
-		{
-			this.showBuError = false;
-		}
-
-		if ((this.DepaHasData == true) && (!this.sourceStockLineSetup.departmentId)) {
-			this.showDivError = true;
-		}
-		else {
-			this.showDivError = false;
-		}
-
-		if ((this.divHasData == true) && (!this.sourceStockLineSetup.divisionId)) {
-			this.showDepError = true;
-		}
-		else {
-			this.showDepError = false;
-		}
 		if (this.sourceStockLineSetup.partDescription) {
 			this.showPartDescriptionError = false;
 		}

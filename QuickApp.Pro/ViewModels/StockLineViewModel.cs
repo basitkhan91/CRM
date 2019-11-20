@@ -20,8 +20,14 @@ namespace QuickApp.Pro.ViewModels
         public int daysSinceOpen { get; set; }
         public bool blackListed { get; set; }
         public Int32? Quantity { get; set; }
-        public int? QtyReserved { get; set; }
-        public int? QtyIssued { get; set; }
+        public int? QuantityOnOrder { get; set; }
+        public int? QuantityAvailable { get; set; }
+        public int? QuantityOnHand { get; set; }
+        public int? QuantityIssued { get; set; }
+        public int? QuantityTurnIn { get; set; }
+        public int? QuantityReserved { get; set; }
+        public long? WorkOrderPartNumberId { get; set; }
+        public long? WorkOrderId { get; set; }
         //[FK]
         [ForeignKey("ConditionId")]
         public long? ConditionId { get; set; }
