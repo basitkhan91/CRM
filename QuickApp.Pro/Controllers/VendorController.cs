@@ -1233,7 +1233,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("vendorPost")]
-        public IActionResult CreateAction([FromForm][FromBody] VendorViewModel vendorViewModel, Address address, VendorType vt)
+        public IActionResult CreateAction([FromBody][FromForm] VendorViewModel vendorViewModel, Address address, VendorType vt)
         {
             if (ModelState.IsValid)
             {
