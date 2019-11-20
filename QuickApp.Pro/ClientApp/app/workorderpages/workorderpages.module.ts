@@ -52,6 +52,7 @@ import { WorkOrderAddressesComponent } from '../components/work-order/work-order
 import { TooltipModule } from 'primeng/tooltip';
 import { CommonService } from '../services/common.service';
 import { MatIconModule } from "@angular/material/icon";
+import { TabViewModule } from 'primeng/tabview';
 import { WorkOrderSmartComponent } from '../components/work-order/work-order-setup/work-order-smart/work-order-smart.component';
 
 @NgModule({
@@ -72,7 +73,8 @@ import { WorkOrderSmartComponent } from '../components/work-order/work-order-set
     CheckboxModule,
     RadioButtonModule,
     InputSwitchModule,
-    TooltipModule
+    TooltipModule,
+    TabViewModule
   ],
   declarations: [
     WorkOrderPagesComponent,

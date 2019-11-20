@@ -32,7 +32,7 @@ import {
   AllTasks
 } from '../../../../models/work-order-labor.modal';
 import { CommonService } from '../../../../services/common.service';
-import { validateRecordExistsOrNot, selectedValueValidate, getValueFromObjectByKey, getObjectById } from '../../../../generic/autocomplete';
+import { validateRecordExistsOrNot, selectedValueValidate, getValueFromObjectByKey, getObjectById, getObjectByValue, editValueAssignByCondition } from '../../../../generic/autocomplete';
 import { AuthService } from '../../../../services/auth.service';
 import { ActivatedRoute } from '@angular/router';
 
@@ -462,9 +462,13 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
   getWorkOrderWorkFlowNos() {
-    this.workOrderService.getWorkOrderWorkFlowNumbers(this.workOrderId).subscribe(res => {
-      this.workOrderWorkFlowOriginalData = res;
-    })
+
+    if (this.workOrderId) {
+      this.workOrderService.getWorkOrderWorkFlowNumbers(this.workOrderId).subscribe(res => {
+        this.workOrderWorkFlowOriginalData = res;
+      })
+    }
+
   }
 
   saveworkOrderLabor(data) {
@@ -574,7 +578,12 @@ export class WorkOrderAddComponent implements OnInit {
     })
 
   }
+  getStockLineByItemMasterIdOnChangePN(workOrderPart, index) {
+    this.getStockLineByItemMasterId(workOrderPart.masterPartId, workOrderPart.conditionId, index);
+  }
+
   async getStockLineByItemMasterId(itemMasterId, conditionId, index) {
+    itemMasterId = editValueAssignByCondition('itemMasterId', itemMasterId)
     // const { conditionId } = workOrderPart;
     // const { itemMasterId } = workOrderPart.masterPartId;
     if (itemMasterId !== 0 && conditionId !== null) {
@@ -666,7 +675,7 @@ export class WorkOrderAddComponent implements OnInit {
   getSerialNoByStockLineId(workOrderPart) {
     const { stockLineId } = workOrderPart;
     const { conditionId } = workOrderPart;
-    if (stockLineId !== 0 && conditionId !== 0) {
+    if ((stockLineId !== null && stockLineId !== 0) && (conditionId !== null && conditionId !== 0)) {
       this.workOrderService.getSerialNoByStockLineId(stockLineId, conditionId).subscribe(res => {
         if (res) {
           workOrderPart.serialNumber = res.serialNumber;
@@ -678,10 +687,8 @@ export class WorkOrderAddComponent implements OnInit {
   getWorkFlowByPNandScope(workOrderPart) {
     const itemMasterId = getValueFromObjectByKey('itemMasterId', workOrderPart.masterPartId)
     const { workOrderScopeId } = workOrderPart;
-    console.log(workOrderPart);
 
-
-    if (itemMasterId !== 0 && workOrderScopeId !== 0) {
+    if ((itemMasterId !== 0 && itemMasterId !== null) && (workOrderScopeId !== null && workOrderScopeId !== 0)) {
       this.workOrderService.getWorkFlowByPNandScope(itemMasterId, workOrderScopeId).subscribe(res => {
         this.workFlowList = res.map(x => {
           return {
