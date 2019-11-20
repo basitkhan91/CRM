@@ -229,17 +229,20 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
 
         this.isSaving = true;
         if (!this.sourceEmployee.employeeLicensureId) {
-            console.log("save Date Route");
+            console.log("save Date Route");           
+           
             this.sourceEmployee.createdBy = this.userName;
             this.sourceEmployee.updatedBy = this.userName;
             this.sourceEmployee.isActive = true;
             this.sourceEmployee.masterCompanyId = 1;
             this.sourceEmployee.employeeId = this.empId;
             this.employeeService.newAddCertification(this.sourceEmployee).subscribe(
+               
                 data => {
-
+                  
                     console.log(data);
-                    this.alertService.showMessage('Employee Certification Added successfully.');
+                    //this.alertService.showMessage('Employee Certification Added successfully.');
+                    this.alertService.showMessage("Success",'Employee Certification Added successfully.', MessageSeverity.success);
                     this.localCollection = data;
                     this.nextClick();
                     this.employeeService.generalCollection = this.local;
@@ -255,7 +258,8 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
             this.sourceEmployee.updatedBy = this.userName;
             this.sourceEmployee.masterCompanyId = 1;
             this.employeeService.updateCertificationDetails(this.sourceEmployee).subscribe(data => {
-                this.alertService.showMessage('Employee Certification updated successfully.');
+                //this.alertService.showMessage('Employee Certification updated successfully.');
+                this.alertService.showMessage("Success",'Employee Certification updated successfully.', MessageSeverity.success);
                 this.employeeService.generalCollection = this.local;
             })
 
@@ -494,7 +498,8 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
             this.sourceEmployee.updatedBy = this.userName;
             this.sourceEmployee.masterCompanyId = 1;
             this.employeeService.updateCertificationDetails(this.sourceEmployee).subscribe(data => {
-                this.alertService.showMessage('Employee Certification updated successfully.');
+                //this.alertService.showMessage('Employee Certification updated successfully.');
+                this.alertService.showMessage("Success",'Employee Certification updated successfully.', MessageSeverity.success);
                 this.employeeService.generalCollection = this.local;
             })
 
