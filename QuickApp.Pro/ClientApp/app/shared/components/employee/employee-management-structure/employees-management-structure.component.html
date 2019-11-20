@@ -1,0 +1,79 @@
+﻿<div [@fadeInOut] class="page-content">
+    <div class="right_col" role="main">
+		<div class="x_panel">
+            <div class="x_content">
+                <div class="form-group col-sm-4 w400" style="display: inline-block;margin: 10px 5px 0 5px;">
+                    <p class="fs10"> <label class="control-label col-sm-4">Emp First Name:</label> {{this.employeeService.listCollection?this.employeeService.listCollection.firstName:''}}  </p>
+                </div>
+                <div class="form-group col-sm-4 w400" style="display: inline-block;margin: 10px 5px 0 5px;">
+                    <p class="fs10"><label class="control-label col-sm-4">Emp Last Name:</label>  {{this.employeeService.listCollection?this.employeeService.listCollection.lastName:''}}</p>
+                </div>
+                <div class="form-group col-sm-4 w400" style="display: inline-block;margin: 10px 5px 0 5px;">
+                    <p class="fs10"><label class="control-label col-sm-4">Emp Id:</label>  {{this.employeeService.listCollection?this.employeeService.listCollection.employeeId:''}}</p>
+                </div>
+                <h4 class="page-heading clr-green">Create Management Structure</h4>
+                <div class="clear"></div><br>
+
+                        <div class="employee-setup">
+    
+                            <div class="col-12 employer-block">
+    
+                                <div class="col-3">
+                                    <div class="tab-content form-bg" id="employee-block">
+                                        <div class="tab-pane step-data active" id="step3">
+                                            <div class="tab-pane">
+                                                <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Certification Type</label>
+                                                        <div class="inner-addon col-sm-7 display-flex">
+                                                            <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee">
+                                                                <option *ngFor="let certificationtype of ['allCertification','jlkjsdf']" [ngValue]="certificationtype">{{certificationtype}}</option>
+                                                            </select>
+                                                            <a href="#" data-toggle="modal" data-target="#addCertificationType" class="add-icon" (click)="openCertification(contentEdit)"><i class="fa fa-plus"></i></a>
+                                                        </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-9 management-structure">
+                                    <ul class="tree">
+                                            <li>
+                                                <span class="caret">CORPORATION</span>
+                                                <ul class="nested">
+                                                    <li>
+                                                        <span class="caret">DIVISION</span>
+                                                        <ul class="nested">
+                                                        <li>
+                                                            <span class="caret">MARKET</span>
+                                                            <ul class="nested">
+                                                                <li>Comm 1</li>
+                                                                <li>Comm 2</li>
+                                                                <li><span class="caret">ANOTHER LEVEL</span>
+                                                                    <ul class="nested">
+                                                                        <li><span class="caret">LEVEL 4</span>
+                                                                            <ul class="nested">
+                                                                                <li>Comm 1</li>
+                                                                                <li>Comm 2</li>
+                                                                                <li>Comm 3</li>
+                                                                            </ul>
+                                                                        </li>
+                                                                    </ul>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                        </ul>
+                                                    </li>
+                                                    <li> DIVISION</li>
+                                                </ul>
+                                            </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary-cstm pull-right" (click)="previousClick()">Previous</button>
+		<button type="button" class="btn btn-primary-cstm pull-right" (click)="previousClick()">Save</button>
+    </div>
+
+</div>
