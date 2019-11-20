@@ -312,6 +312,33 @@ namespace DAL.Repositories
             return data;
         }
 
+        public IEnumerable<object> EmpoyeeManagementStructure(List<EmployeeManagementStructure> objEmployeeManagementStructure)
+        {
+            foreach (var obj in objEmployeeManagementStructure)
+            {
+                if (obj.EmployeeManagementId > 0)
+                {
+                    _appContext.EmployeeManagementStructure.Update(obj);
+                }
+                else
+                {
+                    _appContext.EmployeeManagementStructure.Add(obj);
+                }
+
+                _appContext.SaveChanges();
+            }
+
+            return objEmployeeManagementStructure;
+        }
+
+        public IEnumerable<object> GetEmpoyeeManagementStructure(long employeeId)
+        {
+            var data = (from ems in _appContext.EmployeeManagementStructure
+                        where ems.EmployeeId == employeeId && ems.IsActive == true
+                        select ems).ToList();
+            return data;
+        }
+
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
