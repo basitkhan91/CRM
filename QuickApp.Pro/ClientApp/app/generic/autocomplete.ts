@@ -50,7 +50,7 @@ export function getValueFromArrayOfObjectById(field: string, idField: string, id
 export function editValueAssignByCondition(field: any, value: any) {
     if ((value !== undefined) && (field !== '' && field !== undefined)) {
 
-        if (typeof (value) === 'string') {
+        if (typeof (value) === 'string' || typeof (value) === 'number') {
             return value
         } else {
             return getValueFromObjectByKey(field, value)

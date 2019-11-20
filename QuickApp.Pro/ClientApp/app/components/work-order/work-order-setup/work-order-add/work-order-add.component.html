@@ -376,7 +376,7 @@
                                     [forceSelection]="true"
                                     [dropdown]="true"
                                     [suggestions]="partNumberList" 
-                                    (onSelect)="onSelectedPartNumber($event, workOrderPartNumber, i); getWorkFlowByPNandScope(workOrderPartNumber); getStockLineByItemMasterId(workOrderPartNumber,i);"
+                                    (onSelect)="onSelectedPartNumber($event, workOrderPartNumber, i); getWorkFlowByPNandScope(workOrderPartNumber); getStockLineByItemMasterIdOnChangePN(workOrderPartNumber,i);"
                                     (completeMethod)="filterPartNumber($event)"
                                     (onClear)="clearautoCompleteInput(workOrderPartNumber, 'masterPartId' )"
                                      [size]="30" [minLength]="1"
@@ -598,33 +598,33 @@
                                     <a class="dropdown-item" (click)="subTabWorkFlowChange()">View WF</a>
                                     <a class="dropdown-item" (click)="subTabWorkFlowChange('editworkFlow')">Edit
                                         Existing WF</a>
-                                    <a *ngIf="workFlowWorkOrderId == 0 " class="dropdown-item" (click)="subTabWorkFlowChange('createworkFlow')">Create New
-                                        WF</a>
+                                    <!-- <a *ngIf="workFlowWorkOrderId == 0 " class="dropdown-item" (click)="subTabWorkFlowChange('createworkFlow')">Create New
+                                        WF</a> -->
                                     <div class="dropdown-divider"></div>
                                 </div>
                             </li>
                             <li class="nav-item">
                                 <a id="pills-home-tab" role="tab" aria-controls="pills-home" aria-selected="true"
                                     [ngClass]="{active : gridActiveTab === 'labor'}"
-                                    [class.isDisabled]="!isDisabledSteps"
+                                
                                     (click)="gridTabChange('labor')">labor</a>
                             </li>
                             <li class="nav-item">
                                 <a id="pills-profile-tab" role="tab" aria-controls="pills-profile"
                                     [ngClass]="{active : gridActiveTab === 'equipment'}"
-                                    [class.isDisabled]="!isDisabledSteps"
+                                   
                                     (click)="gridTabChange('equipment');getEquipmentByWorkOrderId();">Equipment</a>
                             </li>
                             <li class="nav-item" [hidden]="workOrderGeneralInformation.isSinglePN">
                                 <a id="pills-contact-tab" role="tab" aria-controls="pills-contact"
                                     [ngClass]="{active : gridActiveTab === 'quote'}"
-                                    [class.isDisabled]="!isDisabledSteps"
+                                  
                                     (click)="gridTabChange('quote')">Quote</a>
                             </li>
                             <li class="nav-item">
                                 <a id="pills-contact-tab" role="tab"
                                     [ngClass]="{active : gridActiveTab === 'materialList'}"
-                                    [class.isDisabled]="!isDisabledSteps"
+                               
                                     (click)="gridTabChange('materialList'); getMaterialListByWorkOrderId();">Material List </a>
                             </li>
                             <li class="nav-item">

@@ -36,6 +36,10 @@ export class WorkOrderListComponent implements OnInit {
     totalPages: number;
     workOrderPartListData: any;
     workOrderPartListDataKeys: string[];
+    viewWorkOrderHeader: any;
+    viewWorkOrderMPN: any;
+    workOrderAssetList: any;
+    workOrderMaterialList: Object;
     constructor(private workOrderService: WorkOrderService,
         private route: Router,
         private authService: AuthService,
@@ -96,6 +100,48 @@ export class WorkOrderListComponent implements OnInit {
     }
 
 
+    async view(rowData) {
+        const { workOrderId } = rowData;
+        const { workFlowWorkOrderId } = rowData;
+        await this.workOrderService.viewWorkOrderHeader(workOrderId).subscribe(res => {
+            this.viewWorkOrderHeader = res;
+        })
+
+        await this.workOrderService.viewWorkOrderPartNumber(workOrderId).subscribe(res => {
+            this.viewWorkOrderMPN = res;
+        })
+
+        this.getEquipmentByWorkOrderId(workFlowWorkOrderId);
+        this.getMaterialListByWorkOrderId(workFlowWorkOrderId, workOrderId)
+
+
+    }
+
+
+    getEquipmentByWorkOrderId(workFlowWorkOrderId) {
+        if (workFlowWorkOrderId !== 0) {
+            // this.workFlowWorkOrderId = this.workFlowWorkOrderData.workFlowWorkOrderId;
+            this.workOrderService.getWorkOrderAssetList(workFlowWorkOrderId).subscribe(
+                result => {
+                    this.workOrderAssetList = result;
+                }
+            )
+        }
+
+    }
+
+    getMaterialListByWorkOrderId(workFlowWorkOrderId, workOrderId) {
+        if (workFlowWorkOrderId !== 0 && workOrderId) {
+            this.workOrderService.getMaterialList(workFlowWorkOrderId, workOrderId).subscribe(res => {
+
+                this.workOrderMaterialList = res;
+
+            })
+
+        }
+    }
+
+
     edit(rowData) {
         this.workOrderService.getWorkOrderById(rowData).subscribe(res => {
             const { workOrderId } = rowData;
@@ -124,12 +170,11 @@ export class WorkOrderListComponent implements OnInit {
             if (res.length > 0) {
                 this.workOrderPartListDataKeys = Object.keys(res[0]);
                 this.workOrderPartListData = res;
-
-
-
-
             }
         })
 
     }
+
+
+
 }
