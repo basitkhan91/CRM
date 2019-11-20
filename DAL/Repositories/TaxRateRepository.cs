@@ -51,13 +51,13 @@ namespace DAL.Repositories
 
         public IEnumerable<DAL.Models.TaxRates> GetAllTaxRateData()
         {
-            return _appContext.TaxRate.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.TaxRateId).ToList();
+            return _appContext.TaxRate.Include("MasterCompany").Where(c => c.IsDeleted == false || c.IsDeleted == null).OrderByDescending(c => c.TaxRateId).ToList();
         }
 
         override
         public IQueryable<DAL.Models.TaxRates> GetPaginationData()
         {
-            return _appContext.TaxRate.Where(c => (c.IsDelete == false || c.IsDelete == null))
+            return _appContext.TaxRate.Where(c => (c.IsDeleted == false || c.IsDeleted == null))
                 .OrderByDescending(c => c.TaxRateId).ToList().AsQueryable();
         }
 
