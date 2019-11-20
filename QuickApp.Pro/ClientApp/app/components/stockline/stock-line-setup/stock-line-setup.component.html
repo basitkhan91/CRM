@@ -92,36 +92,29 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">QTY ON HAND <strong class="clr-red">*</strong></label>
                     <div class="col-sm-7">
-                        <input class="form-control qty-input" *ngIf="showNormalQuantity" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityOnHand">
-                        <input class="form-control qty-input" *ngIf="showRestrictQuantity" type="number" min="0" max="1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityOnHand">
-                        <input class="form-control qty-input" *ngIf="showFreeQuantity" type="number" min="0" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityOnHand">
+                        <!--<input class="form-control qty-input" *ngIf="showRestrictQuantity" type="number" min="0" max="1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.Quantity">-->
+                        <input class="form-control qty-input"  (keypress)="calculateQtyAvailable($event)" type="number" min="0" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.Quantity">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">QTY RESERVED </label>
                     <div class="col-sm-7">
-                        <input class="form-control qty-input" *ngIf="showNormalQuantity" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityReserved">
-                        <input class="form-control qty-input" *ngIf="showRestrictQuantity" type="number" min="0" max="1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityReserved">
-                        <input class="form-control qty-input" *ngIf="showFreeQuantity" type="number" min="0" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityReserved">
+                        <input class="form-control qty-input"  type="number" [ngModelOptions]="{standalone: true}" (keypress)="calculateQtyAvailable($event)" [(ngModel)]="sourceStockLineSetup.QtyReserved">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">QTY ISSUED </label>
                     <div class="col-sm-7">
-                        <input class="form-control qty-input" *ngIf="showNormalQuantity" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityIssued">
-                        <input class="form-control qty-input" *ngIf="showRestrictQuantity" type="number" min="0" max="1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityIssued">
-                        <input class="form-control qty-input" *ngIf="showFreeQuantity" type="number" min="0" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityIssued">
+                        <input class="form-control qty-input"  type="number" [ngModelOptions]="{standalone: true}"(keypress)="calculateQtyAvailable($event)"  [(ngModel)]="sourceStockLineSetup.QtyIssued">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">QTY AVAILABLE </label>
                     <div class="col-sm-7">
-                        <input class="form-control qty-input" *ngIf="showNormalQuantity" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityAvailable">
-                        <input class="form-control qty-input" *ngIf="showRestrictQuantity" type="number" min="0" max="1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityAvailable">
-                        <input class="form-control qty-input" *ngIf="showFreeQuantity" type="number" min="0" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityAvailable">
+                        <input class="form-control qty-input" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="quantityAvailable">
                     </div>
                 </div>
 
@@ -148,10 +141,10 @@
                     </div>
                 </div>
 
-                <div class="form-group col-sm-12">
+                <div class="form-group col-sm-12" *ngIf="sourceStockLineSetup.shelfLife == 1">
                     <label class="control-label col-sm-4">SHELF LIFE EXP DATE</label>
                     <div class="col-sm-7">
-                        <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.shelfLifeExpirationDate"></p-calendar>
+                        <p-calendar [showIcon]="true"   [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.shelfLifeExpirationDate"></p-calendar>
                     </div>
                 </div>
 
@@ -321,7 +314,7 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">MFG DATE</label>
                     <div class="col-sm-7">
-                        <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.manufacturingDate"></p-calendar>
+                        <p-calendar [showIcon]="true" *ngIf="sourceStockLineSetup.IsManufacturingDateAvailable == 1"  [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.manufacturingDate"></p-calendar>
                     </div>
                 </div>
 
@@ -472,10 +465,24 @@
                     </div>
                 </div>
 
+                <label class="control-label col-sm-4"></label>
+                <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourceStockLineSetup.blackListed == 1">
+                    <div class="col-sm-7">
+                        <textarea style="height: 100px;" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.blackListedReason"></textarea>
+                    </div>
+                </div>
+
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">INCIDENT</label>
                     <div class="col-sm-7">
-                        <input class="form-control" type="checkbox" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.isIncident">
+                        <input class="form-control" type="checkbox" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.incident">
+                    </div>
+                </div>
+
+                <label class="control-label col-sm-4"></label>
+                <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourceStockLineSetup.incident == 1">
+                    <div class="col-sm-7">
+                        <textarea style="height: 100px;" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.incidentReason"></textarea>
                     </div>
                 </div>
 
@@ -486,14 +493,25 @@
                     </div>
                 </div>
 
+                <label class="control-label col-sm-4"></label>
+                <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourceStockLineSetup.accident == 1">
+                    <div class="col-sm-7">
+                        <textarea style="height: 100px;" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.accidentReason"></textarea>
+                    </div>
+                </div>
+
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">PO NUM </label>
                     <div class="col-sm-7">
-                        <select [(ngModel)]="sourceStockLineSetup.PurchaseOrderId" [ngModelOptions]="{standalone: true}" (change)="POValueChange(sourceStockLineSetup.purchaseOrderId)">
+                        <select [(ngModel)]="sourceStockLineSetup.PurchaseOrderId" [ngModelOptions]="{standalone: true}" (change)="POValueChange(sourceStockLineSetup.PurchaseOrderId)">
                             <option *ngFor="let po of allPolistInfo" [ngValue]="po.purchaseOrderId">{{po.purchaseOrderNumber}}</option>
                         </select>
                     </div>
                 </div>
+
+                <!--<select [(ngModel)]="sourceStockLineSetup.companyId" [ngModelOptions]="{standalone: true}" (change)="getBUList(sourceStockLineSetup.companyId)">
+                    <option *ngFor="let managementStructure of maincompanylist" [ngValue]="managementStructure.managementStructureId">{{managementStructure.name}}</option>
+                </select>-->
 
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">PO UNIT COST</label>
@@ -505,7 +523,7 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">RO NUM </label>
                     <div class="col-sm-7">
-                        <select [(ngModel)]="sourceStockLineSetup.RepairOrderId" [ngModelOptions]="{standalone: true}" (change)="ROValueChange(sourceStockLineSetup.repairOrderId)">
+                        <select [(ngModel)]="sourceStockLineSetup.RepairOrderId" [ngModelOptions]="{standalone: true}" (change)="ROValueChange(sourceStockLineSetup.RepairOrderId)">
                             <option *ngFor="let manufacturer of allRolistInfo" [ngValue]="manufacturer.repairOrderId">{{manufacturer.repairOrderNumber}}
                         </select>
                     </div>

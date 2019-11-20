@@ -15,6 +15,8 @@ namespace DAL.Models
         [ForeignKey("ItemMasterId")]
         public long? ItemMasterId { get; set; }
         public int? Quantity { get; set; }
+        public int? QtyReserved { get; set; }
+        public int? QtyIssued { get; set; }
         [ForeignKey("ConditionId")]
         public long? ConditionId { get; set; }
         public string SerialNumber { get; set; }
