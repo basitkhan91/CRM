@@ -3,7 +3,7 @@ import { MasterCompany } from './mastercompany.model';
 
 export class TaxRate {
     // Note: Using only optional constructor properties without backing store disables typescript's type checking for the type
-	constructor(masterCompany?: MasterCompany, taxRateId?: number, taxTypeId?: string, taxRate?: number, masterCompanyId?: number, createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string, isActive?: boolean, memo?: string) {
+    constructor(masterCompany?: MasterCompany, taxRateId?: number, taxTypeId?: string, taxRate?: number, masterCompanyId?: number, createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string, isActive?: boolean, isDeleted?: boolean, memo?: string) {
 
         this.taxRateId = taxRateId;
         this.taxTypeId = taxTypeId;
@@ -14,7 +14,8 @@ export class TaxRate {
         this.updatedDate = updatedDate;
         this.updatedBy = updatedBy;
         this.masterCompany = masterCompany;
-		this.isActive = isActive;
+        this.isActive = isActive;
+        this.isDeleted = isDeleted;
 		this.memo = memo;
     }
 
@@ -27,6 +28,7 @@ export class TaxRate {
     public createdDate: Date;
     public updatedDate: Date;
     public masterCompany?: MasterCompany;
-	public isActive: boolean;
+    public isActive: boolean;
+    public isDeleted: boolean;
 	public memo: string;
 }

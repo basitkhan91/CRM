@@ -345,6 +345,8 @@ export class CustomersListComponent implements OnInit {
         console.log(data);
     }
     changeStatus(rowData) {
+        debugger;
+
         this.customerService.updateActionforActive(rowData, this.userName).subscribe(res => {
             this.alertService.showMessage("Success", `Successfully Updated Status`, MessageSeverity.success);
         })
