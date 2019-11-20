@@ -78,7 +78,7 @@ namespace QuickApp.Pro.Controllers
                 taxTypeObj.Description = taxViewModel.Description;
                 taxTypeObj.MasterCompanyId = taxViewModel.MasterCompanyId;
                 taxTypeObj.IsActive = taxViewModel.IsActive;
-				taxTypeObj.IsDelete = false;
+				taxTypeObj.IsDeleted = false;
 				taxTypeObj.Memo = taxViewModel.Memo;
                 taxTypeObj.CreatedDate = DateTime.Now;
                 taxTypeObj.UpdatedDate = DateTime.Now;
@@ -110,7 +110,7 @@ namespace QuickApp.Pro.Controllers
                 existingResult.Description = taxTypeViewModel.Description;
                 existingResult.Memo = taxTypeViewModel.Memo;
                 existingResult.IsActive = taxTypeViewModel.IsActive;
-				existingResult.IsDelete = taxTypeViewModel.IsDelete;
+				existingResult.IsDeleted = taxTypeViewModel.IsDelete;
 				existingResult.MasterCompanyId = taxTypeViewModel.MasterCompanyId;
 
                 _unitOfWork.TaxType.Update(existingResult);
@@ -129,7 +129,7 @@ namespace QuickApp.Pro.Controllers
         {
             var existingResult = _unitOfWork.TaxType.GetSingleOrDefault(c => c.TaxTypeId == id);
 
-            existingResult.IsDelete = true;
+            existingResult.IsDeleted = true;
             _unitOfWork.TaxType.Update(existingResult);
 
 

@@ -41,7 +41,7 @@
           size="50"
           class="form-control ui-autocomplete-input"
           (input)="globalSearch($event.target.value)"
-          placeholder="Global Filter"
+          placeholder=" Filter"
         />
       </div>
       <button
@@ -126,10 +126,10 @@
       </td>
       <td *ngFor="let col of columns">
         {{
-          col.field == "openDate"
-            ? (rowData[col.field] | date: "MM/dd/yyyy")
-            : rowData[col.field] && col.field == "updatedDate"
-            ? (rowData[col.field] | date: "MM/dd/yyyy")
+          col.field == 'openDate'
+            ? (rowData[col.field] | date: 'MM/dd/yyyy')
+            : rowData[col.field] && col.field == 'updatedDate'
+            ? (rowData[col.field] | date: 'MM/dd/yyyy')
             : rowData[col.field]
         }}
       </td>
@@ -144,7 +144,7 @@
           <a
             class="btn btn-info boxed-float-btn nobg"
             data-toggle="tooltip"
-            (click)="viewSelectedRow(rowData)"
+            (click)="view(rowData)"
             data-target="#view"
             data-toggle="modal"
           >
@@ -189,6 +189,420 @@
     </tr>
   </ng-template>
 </p-table>
+
+<!-- Modal -->
+<div id="view" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+        <h4 class="modal-title">WorkOrder View</h4>
+      </div>
+
+      <div class="card-body" *ngIf="viewWorkOrderHeader">
+        <div class="card">
+          <div class="card-body">
+            <div class="table-responsive default-bg clear">
+
+<div>
+          <div class="col-md-6">
+
+          <p>
+              <span class="label"><b>    MPN Type : </b></span
+              ><span class="value">{{
+                viewWorkOrderHeader.singleMPN }}</span>
+                
+            </p>  
+          </div>
+          <div class="col-md-6">
+
+
+              <p>
+                  <span class="label"><b> WorkOrder Type : </b></span
+                  ><span class="value">{{
+                    viewWorkOrderHeader.workOrderType }}</span>
+                    
+                </p>  
+          </div>
+          </div>
+          <hr style="clear: both;">
+
+              <div>
+                  <div class="col-sm-3">
+                      <p>
+                        <span class="label"><b>WorkOrder Number: </b></span
+                        ><span class="value">{{
+                          viewWorkOrderHeader.workOrderNumber
+                        }}</span>
+                      </p>
+                      <p>
+                        <span class="label"><b>Open Date: </b></span
+                        ><span class="value">{{
+                          viewWorkOrderHeader.openDate | date: 'MM/dd/yyyy'
+                        }}</span>
+                      </p>
+                      <p>
+                        <span class="label"><b>WO Status: </b></span
+                        ><span class="value">{{ viewWorkOrderHeader.woStatus }}</span>
+                      </p>
+                    </div>
+                    <div class="col-sm-3">
+                      <p>
+                        <span class="label"><b>Customer Name: </b></span
+                        ><span class="value">{{
+                          viewWorkOrderHeader.customerName
+                        }}</span>
+                      </p>
+                      <p>
+                        <span class="label"><b>Customer Code: </b></span
+                        ><span class="value"></span>
+                      </p>
+                      <p>
+                        <span class="label"><b>Customer Ref: </b></span
+                        ><span class="value"></span>
+                      </p>
+                    </div>
+      
+                    <div class="col-sm-3">
+                      <p>
+                        <span class="label"><b>Contract: </b></span
+                        ><span class="value">{{
+                          viewWorkOrderHeader.isContractAvl
+                        }}</span>
+                      </p>
+                      <p *ngIf="isContractAvl">
+                        <span class="label"> <b>Contract Reference:</b> </span
+                        ><span class="value">{{
+                          viewWorkOrderHeader.contractReference
+                        }}</span>
+                      </p>
+                    </div>
+                    <div class="col-sm-3">
+                      <p>
+                        <span class="label"><b>Credit Limit & Terms: </b></span
+                        ><span class="value">
+                          {{ viewWorkOrderHeader.creditTerm }} &
+                          {{ viewWorkOrderHeader.creditLimit }}
+                        </span>
+                      </p>
+                      <p>
+                        <span class="label"><b>Employee: </b></span
+                        ><span class="value">{{ viewWorkOrderHeader.employee }}</span>
+                      </p>
+                      <p>
+                        <span class="label"><b>Salesperson: </b></span
+                        ><span class="value">{{
+                          viewWorkOrderHeader.salesperson
+                        }}</span>
+                      </p>
+                    </div>
+              </div>
+            </div>
+
+            <div
+              class="table-responsive"
+              *ngIf="viewWorkOrderMPN"
+              style="height: 300px;"
+            >
+              <table
+                class="table table-bordered table-striped table-fixed table-sorting mpn-list-table"
+                id="mpn-list-table"
+              >
+                <thead>
+                  <tr>
+                    <th rowspan="2">MPN *</th>
+                    <th rowspan="2">MPN Description *</th>
+                    <th rowspan="2">Revised MPN</th>
+                    <!-- <th rowspan="2">Work Scope *</th> -->
+                    <th rowspan="2">NTE</th>
+                    <th rowspan="2">Condition Id *</th>
+                    <th rowspan="2">Stock Line Num *</th>
+                    <th rowspan="2">Serial Num *</th>
+                    <th rowspan="2">CMM/Pub Ref</th>
+                    <!-- <th rowspan="2">Workflow ID </th> -->
+                    <th rowspan="2">Stage *</th>
+                    <th rowspan="2">Status *</th>
+                    <th rowspan="2">Priority *</th>
+                    <th rowspan="2">Customer Request Date *</th>
+                    <th rowspan="2">Promised Date *</th>
+                    <th rowspan="2">Est. Comp Date *</th>
+                    <th rowspan="2">Est. Ship Date *</th>
+                    <th colspan="2">Restrictions</th>
+                    <th rowspan="2">Tech Name</th>
+                    <th rowspan="2">Tech Station</th>
+                    <th rowspan="2">Tear Down Report</th>
+                    <th colspan="2">TAT (Days)</th>
+                    <th rowspan="2"></th>
+                  </tr>
+                  <tr>
+                    <th>PMA</th>
+                    <th>DER</th>
+                    <th>Current</th>
+                    <th>Standard</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    class="mpn-row"
+                    style="display: table-row;"
+                    *ngFor="let p of viewWorkOrderMPN; let i = index"
+                  >
+                    <td>
+                      {{ p.partNumber }}
+                    </td>
+                    <td>
+                      {{ p.partDescription }}
+                    </td>
+                    <td>
+                      {{ p.revisedPartNo }}
+                    </td>
+                    <td>
+                      {{ p.nte }}
+                    </td>
+                    <td>
+                      {{ p.condition }}
+                    </td>
+                    <td>
+                      {{ p.stockLine }}
+                    </td>
+
+                    <td>
+                      {{ p.serialNumber }}
+                    </td>
+
+                    <td>
+                      {{ p.publicationId }}
+                    </td>
+                    <td>
+                      {{ p.workOrderStage }}
+                    </td>
+                    <td>
+                      {{ p.workOrderStatus }}
+                    </td>
+                    <td>
+                      {{ p.priority }}
+                    </td>
+                    <td>
+                      {{ p.customerRequestDate | date: 'MM/dd/yyyy' }}
+                    </td>
+                    <td>
+                      {{ p.promisedDate | date: 'MM/dd/yyyy' }}
+                    </td>
+                    <td>
+                      {{ p.estimatedShipDate | date: 'MM/dd/yyyy' }}
+                    </td>
+
+                    <td>
+                      {{ p.estimatedCompletionDate | date: 'MM/dd/yyyy' }}
+                    </td>
+
+                    <td>
+                      {{ p.isDER }}
+                    </td>
+                    <td>
+                      {{ p.isPMA }}
+                    </td>
+                    <td>
+                      {{ p.firstName }}
+                    </td>
+                    <td>
+                      {{ p.techStation }}
+                    </td>
+                    <td>
+                      {{ p.tearDownReport }}
+                    </td>
+                    <td>
+                      {{ p.tatDaysCurrent }}
+                    </td>
+                    <td>
+                      {{ p.tatDaysStandard }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <p-tabView  class="pas-tabview">
+                        
+              <p-tabPanel header="Work Flow"> </p-tabPanel>
+              <p-tabPanel header="Labor"> </p-tabPanel>
+              <p-tabPanel header="Equipment">
+               
+                  <div class="equipment-tab-content" *ngIf="workOrderAssetList">
+                      <div class="x_panel">
+                          <div class="tab-content">
+                              <div class="table-responsive" id="workflow-attributes-block">
+                                  <table class="table table-bordered ">
+                                      <thead>
+                                          <tr>
+                                          </tr>
+                                          <tr>
+                                              <th colspan="4" class="text-center"></th>
+                                              <th colspan="4" class="text-center">TOLERANCE</th>
+                                              <th class="text-center"></th>
+                                          </tr>
+                                          <tr>
+                                              <th class="text-center">Equipment </th>
+                                              <th class="text-center">Equipment Description</th>
+                                              <th class="text-center">Equipment Type</th>
+                                              <th class="text-center">Qty</th>
+                                              <th class="text-center">Min</th>
+                                              <th class="text-center">Max</th>
+                                              <th class="text-center">Expected</th>
+                                              <th class="text-center">Findings</th>
+                                              <th class="text-center"></th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                          <tr *ngFor="let asset of workOrderAssetList; let i=index;">
+                                              <td>{{asset.asset}}</td>
+                                              <td>{{asset.description}}</td>
+                                              <td>{{asset.assetTypeName}}</td>
+                                              <td>{{asset.quantity}}</td>
+                                              <td>
+                                                 {{asset.minQuantity}}
+                                              </td>
+                                              <td>
+                                                 {{asset.maxQuantity}}
+                                              </td>
+                                              <td>
+                                                {{asset.expectedQuantity}}
+                                              </td>
+                                              <td>
+                                                {{asset.findings}}
+                                              </td>
+                        
+                                          </tr>
+
+                  
+                                          
+                   
+                                      </tbody>
+                                  </table>
+
+                              </div>
+                          </div>
+                          <div class="clear"></div>
+                          <br />
+                          <br />
+                          <br />
+                          <br />
+                      </div>
+                  </div>
+
+
+              </p-tabPanel>
+              <p-tabPanel header="Material List">
+                <div class="equipment-tab-content" >
+                    <div class="x_panel" *ngIf="workOrderMaterialList">
+                        <div class="tab-content">
+                            <div class="table-responsive table-overflow" id="workflow-attributes-block">
+                                <table class="table table-bordered ">
+                                    <thead>
+                                        <tr>
+
+                                            <th class="text-center">Part Number </th>
+                                            <th class="text-center">Part Description</th>
+                                            <th class="text-center">Alternate PN</th>
+                                            <th class="text-center">SerialNumber</th>
+                                            <th class="text-center">Provision</th>
+                                            <th class="text-center">OEM</th>
+                                            <th class="text-center">Control</th>
+                                            <th class="text-center">Condition</th>
+                                            <th class="text-center">Item Type</th>
+                                            <th class="text-center">Qunatity Requried</th>
+                                            <th class="text-center">Qunatity Reserved</th>
+                                            <th class="text-center">Qunatity TurnIn</th>
+                                            <th class="text-center">Qunatity Issued</th>
+                                            <th class="text-center">Qunatity BackOrder</th>
+                                            <th class="text-center">Qunatity Remaining</th>
+                                            <th class="text-center">Unit Cost</th>
+                                            <th class="text-center">Extended Cost</th>
+                                            <th class="text-center">Currency</th>
+                                            <th class="text-center">Purchase OrderNumber</th>
+                                            <th class="text-center">Repair OrderNumber</th>
+                                            <th class="text-center">Part Quantity OnHand</th>
+                                            <th class="text-center">Part Quantity Available</th>
+                                            <th class="text-center">Part Quantity OnOrder</th>
+                                            <th class="text-center">WorkOrder Number</th>
+                                            <th class="text-center">Sub WorkOrder</th>
+                                            <th class="text-center">SalesOrder</th>
+                                            <th class="text-center">Condition</th>
+                                            <th class="text-center">TimeLife</th>
+                                            <th class="text-center">Ware House</th>
+                                            <th class="text-center">Location</th>
+                                            <th class="text-center">Shelf</th>
+                                            <th class="text-center">Bin</th>
+
+                                        </tr>
+                                    </thead>
+                                
+                                    <tbody>
+                                        <tr *ngFor="let m  of workOrderMaterialList; let i=index;">
+                                            <td>{{m.partNumber}}</td>
+                                            <td>{{m.partDescription}}</td>
+                                            <td>{{m.altPartNumber}}</td>
+                                            <td>{{m.serialNumber}}</td>
+                                            <td>{{m.provision}}</td>
+                                            <td>{{m.oem}}</td>
+                                            <td>{{m.control}}</td>
+                                            <td>{{m.condition}}</td>
+                                            <td>{{m.itemType}}</td>
+                                            <td>{{m.qunatityRequried}}</td>
+                                            <td>{{m.qunatityReserved}}</td>
+                                            <td>{{m.qunatityTurnIn}}</td>
+                                            <td>{{m.qunatityIssued}}</td>
+                                            <td>{{m.qunatityBackOrder}}</td>
+                                            <td>{{m.qunatityRemaining}}</td>
+                                            <td>{{m.unitCost}}</td>
+                                            <td>{{m.extendedCost}}</td>
+                                            <td>{{m.currency}}</td>
+                                            <td>{{m.purchaseOrderNumber}}</td>
+                                            <td>{{m.repairOrderNumber}}</td>
+                                            <td>{{m.partQuantityOnHand}}</td>
+                                            <td>{{m.partQuantityAvailable}}</td>
+                                            <td>{{m.partQuantityOnOrder}}</td>
+                                            <td>{{m.receiver}}</td>
+                                            <td>{{m.workOrderNumber}}</td>
+                                            <td>{{m.subWorkOrder}}</td>
+                                            <td>{{m.salesOrder}}</td>
+                                            <td>{{m.timeLife}}</td>
+                                            <td>{{m.wareHouse}}</td>
+                                            <td>{{m.location}}</td>
+                                            <td>{{m.shelf}}</td>
+                                            <td>{{m.bin}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                    </div>
+                </div>
+              </p-tabPanel>
+            </p-tabView>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- *ngFor="let partList of workOrderPartListData; let i = index"
 [hidden]="rowIndex === i" -->

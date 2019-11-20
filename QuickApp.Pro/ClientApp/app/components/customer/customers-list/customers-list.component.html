@@ -158,52 +158,47 @@
             }}
           </td>
           <td style="width:200px" *ngIf="selectedColumns.length > 0">
-            <p-inputSwitch
-              [(ngModel)]="rowData['isActive']"
-              name="isActive{{ rowIndex }}"
-              (onChange)="changeStatus(rowData)"
-            ></p-inputSwitch>
+              <!--<p-inputSwitch [(ngModel)]="rowData['isActive']"
+                             name="isActive{{ rowIndex }}"
+                             (onChange)="changeStatus(rowData)"></p-inputSwitch>-->
 
-            <span data-toggle="modal" data-target="#view">
-              <a
-                class="btn btn-info boxed-float-btn nobg"
-                data-toggle="tooltip"
-                (click)="viewSelectedRow(rowData)"
-                data-target="#view"
-                data-toggle="modal"
-              >
-                <i class="fa fa-eye"></i>
-              </a>
-            </span>
-            <button
-              class="btn-edit"
-              mat-icon-button
-              (click)="edit(rowData)"
-              matTooltip="Edit"
-            >
-              <mat-icon>edit</mat-icon>
-            </button>
+              <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+              <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+              <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
 
-            <button
-              class="btn-delete"
-              mat-icon-button
-              matTooltip="Delete"
-              data-target="#delete"
-              data-toggle="modal"
-              (click)="delete(rowData)"
-            >
-              <mat-icon color="warn">delete</mat-icon>
-            </button>
-            <button
-              class="btn-history"
-              mat-icon-button
-              matTooltip="History"
-              data-target="#contentHist"
-              data-toggle="modal"
-              (click)="getAuditHistoryById(rowData)"
-            >
-              <mat-icon color="green">history</mat-icon>
-            </button>
+              <span data-toggle="modal" data-target="#view">
+                  <a class="btn btn-info boxed-float-btn nobg"
+                     data-toggle="tooltip"
+                     (click)="viewSelectedRow(rowData)"
+                     data-target="#view"
+                     
+                     matTooltip="View">
+                      <i class="fa fa-eye"></i>
+                  </a>
+              </span>
+              <button class="btn-edit"
+                      mat-icon-button
+                      (click)="edit(rowData)"
+                      matTooltip="Edit">
+                  <mat-icon>edit</mat-icon>
+              </button>
+
+              <button class="btn-delete"
+                      mat-icon-button
+                      matTooltip="Delete"
+                      data-target="#delete"
+                      data-toggle="modal"
+                      (click)="delete(rowData)">
+                  <mat-icon color="warn">delete</mat-icon>
+              </button>
+              <button class="btn-history"
+                      mat-icon-button
+                      matTooltip="History"
+                      data-target="#contentHist"
+                      data-toggle="modal"
+                      (click)="getAuditHistoryById(rowData)">
+                  <mat-icon color="green">history</mat-icon>
+              </button>
           </td>
         </tr>
       </ng-template>

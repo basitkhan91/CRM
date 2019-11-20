@@ -60,19 +60,32 @@ export class CustomerFinancialInformationComponent implements OnInit {
         memo: ''
     }
 
-    
+    taxRateNew = {
+        taxTypeId:'',
+       taxRateId:0,
+        taxRate: 0,
+        isActive: true,
+        isDeleted: false,
+        memo: ''
+    }
+
     addNewCreditTerms = { ...this.creditTermsNew }
 
     addNewTaxType = { ...this.taxTyeNew }
+    addNewTaxRate = { ...this.taxRateNew }
+
     isCreditTermsExists: boolean = false;
     isPercentageExists: boolean = false;
     isTaxTypeExists: boolean = false;
+    isTaxRateExists: boolean = false;
     _creditTermList: any[];
     _creditTermPercentageList: any;
     _TaxTypeList: any;
+    _TaxRateList: any;
     percentValue = null;
     percentageList: any;
     taxTypeList: any;
+    taxRateList: any;
     discontValue = null;
     _discountList: any;
     isDiscountExists: boolean = false;
@@ -243,6 +256,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
         this.getAllCurrency();
         this.getAllPercentage();
         this.getAllTaxTypes();
+        this.getTaxRates();
     
     }
 
@@ -280,6 +294,20 @@ export class CustomerFinancialInformationComponent implements OnInit {
         })
     }
 
+    //getTaxRates() {
+    //    this.taxRateService.getTaxRateList().subscribe(res => {
+    //        this.taxRateList = res[0];
+    //    })
+    //}
+
+    getTaxRates() {
+        this.commonservice.smartDropDownList('[TaxRate]', 'TaxRateId', 'TaxRate').subscribe(res => {
+
+            //this.percentService.getPercentages().subscribe(res => {
+            this.taxRateList = res;
+        })
+    }
+
     getAllTaxTypes() {
         //this.taxtypeser.getWorkFlows().subscribe(res => {
             this.commonservice.smartDropDownList('TaxType', 'TaxTypeId', 'Description').subscribe(res => {
@@ -287,7 +315,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
            // this.taxTypeList = res[0];
         })
     }
-
+    
 
     filterCreditTerms(event) {
         this._creditTermList = this.creditTermList;
@@ -299,6 +327,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     }
 
     checkCreditTermsExists(field, value) {
+        
         const exists = validateRecordExistsOrNot(field, value, this.creditTermList)
         console.log(exists);
         if (exists.length > 0) {
@@ -353,23 +382,51 @@ export class CustomerFinancialInformationComponent implements OnInit {
         })]
     }
 
+    filterTaxRate(event) {
+
+        console.log(parseInt(event.query));
+        this._TaxRateList = this.taxRateList;
+
+        this._TaxRateList = [...this.taxRateList.filter(x => {
+            console.log(x);
+            return x.label.includes(event.query.toLowerCase())
+
+
+        })]
+    }
+
+    
     checkTaxTypeExists(field, value) {
-        alert(field)
-        alert(value)
         const exists = validateRecordExistsOrNot(field, value, this.taxTypeList)
         console.log(exists);
         if (exists.length > 0) {
+         
             this.isTaxTypeExists = true;
         } else {
             this.isTaxTypeExists = false;
         }
     }
+    checkTaxRateExists(field, value) {
+        const exists = validateRecordExistsOrNot(field, value, this.taxTypeList)
+        console.log(exists);
+        if (exists.length > 0) {
 
+            this.isTaxRateExists = true;
+        } else {
+            this.isTaxRateExists = false;
+        }
+    }
+
+    
     selectedTaxTypes() {
         this.isTaxTypeExists = true;
     }
 
+    selectedTaxRate() {
+        this.isTaxRateExists = true;
+    }
 
+    
 
 
 
@@ -530,32 +587,58 @@ export class CustomerFinancialInformationComponent implements OnInit {
     newTaxTypeAdd() {
         const data = {
             ...this.addNewTaxType,
- masterCompanyId: 1,
+            masterCompanyId: 1,
             createdBy: this.userName,
             updatedBy: this.userName,
             createdDate: new Date(),
             updatedDate: new Date()
         }
-
-        this.customerService.newAddDiscount(data).subscribe(data => {
+        this.taxtypeser.newAction(data).subscribe(data => {
             this.getAllTaxTypes();
             this.alertService.showMessage(
                 'Success',
                 `Added New Tax Type  Successfully `,
                 MessageSeverity.success
             );
-            this.restDiscount();
-            this.savedGeneralInformationData.discountId = data.discountId;
+            this.resetTaxType();
+            //this.savedGeneralInformationData.discountId = data.discountId;
         })
 
     }
+    newTaxRateAdd() {
+        const data = {
+            ...this.addNewTaxRate,
+            masterCompanyId: 1,
+            createdBy: this.userName,
+            updatedBy: this.userName,
+            createdDate: new Date(),
+            updatedDate: new Date()
+        }
+
+        this.taxRateService.newTaxRate(data).subscribe(data => {
+            this.getAllTaxTypes();
+            this.alertService.showMessage(
+                'Success',
+                `Added New Tax Rate  Successfully `,
+                MessageSeverity.success
+            );
+            this.resetTaxType();
+            //this.savedGeneralInformationData.discountId = data.discountId;
+        })
 
 
-    resetTaxType() {
-        this.addNewTaxType = { ...this.taxTyeNew }
+
 
     }
 
+        resetTaxType() {
+            this.addNewTaxType = { ...this.taxTyeNew }
+
+        }
+    resetTaxRate() {
+        this.addNewTaxRate = { ...this.taxRateNew }
+
+    }
     nextClick() {
         this.tab.emit('Billing');
     }

@@ -120,7 +120,7 @@
                                             </select>
                                         </div> -->
 
-                                        <div class="form-group" style="margin-top: 15px;">
+                                        <div class="form-group" style="margin-top: 15px;margin-left:20px;">
                                             <div class="label-cstm">Allow Partial Billing</div>
                                             <span class="checkbox-cstm">
                                                 <label style="width: 20px;">
@@ -144,17 +144,18 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label class="fs12">
-                                                    TAX Type
-                                                </label><span style="margin-left:3px;cursor:pointer;"><a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addTaxType"></a></span>
-                                                <p-dropdown class="p-dropdown-custom-2" [options]="taxtypesList" placeholder="Select TaxType" name="taxType" [(ngModel)]="selectedTaxType"></p-dropdown>
+                                                    Tax Type
+                                                </label>
+                                                <span style="margin-left:3px;cursor:pointer;"><a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addTaxType"></a></span>
+                                                <p-dropdown  class="p-dropdown-custom-2" [options]="taxtypesList" placeholder="Select TaxType" name="taxType" [(ngModel)]="selectedTaxType"></p-dropdown>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="fs12">
-                                                    TAX Rate
+                                                    Tax Rate
                                                 </label>
-                                                <span style="margin-left:3px;cursor:pointer;"><a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#taxtype"></a></span>
+                                                <span style="margin-left:3px;cursor:pointer;"><a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addTaxRate"></a></span>
 
                                                 <p-multiSelect class="p-Multiselect-cstm" [options]="taxRatesList" name="taxRates" [(ngModel)]="selectedTaxRates"></p-multiSelect>
                                             </div>
@@ -673,17 +674,82 @@
 
 
 
-                      </div>
+                    </div>
                     <div class="modal-footer">
                         <button class="btn btn-primary-cstm" data-dismiss="modal" (click)="newTaxTypeAdd()" [disabled]="!addTaxTypes.valid || isTaxTypeExists">Submit</button>
 
-                        <!--<button type="button" class="btn btn-default" data-dismiss="modal" (click)="resetTaxTypePopUp()">Close</button>-->
+ 
+                        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="resetTaxType()">Close</button>
                     </div>
                 </div>
 
             </div>
         </form>
     </div>
+
+
+    <div id="addTaxRate" class="modal fade" role="dialog">
+        <form #addTaxRate="ngForm">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Add Tax Rate</h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Tax Type <span class="clr-red">*</span></label>
+                            <div class="inner-addon right-addon inline-block">
+                                <select name="taxTypeId" [(ngModel)]="addNewTaxRate.taxTypeId" placeholder="Select TaxType">
+                                  
+                                    <option *ngFor="let TaxTypelist of taxTypeList" [ngValue]="TaxTypelist.value">{{TaxTypelist.label}}</option>
+                                </select>
+
+                           
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label>Tax Rate <span class="clr-red">*</span></label>
+                            <div class="inner-addon right-addon inline-block">
+
+                                <p-autoComplete class="p-dropdown-custom-2" name="taxrate"
+                                                [(ngModel)]="addNewTaxRate.taxrate"
+                                                (onSelect)="selectedTaxRate()"
+                                                (onKeyUp)="checkTaxRateExists('field',$event.target.value)"
+                                                [suggestions]="_TaxRateList" field="label" (completeMethod)="filterTaxRate($event)"
+                                                [size]="30" [minLength]="1" [dropdown]="true" required>
+                                </p-autoComplete>
+                                <div *ngIf="isTaxRateExists" class="clr-red">Tax Rate Already Exists</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description" class="control-label w100">Memo</label>
+                            <div class="control-data">
+                                <input type="text" id="" class="form-control" name="memo" [(ngModel)]="addNewTaxRate.memo">
+
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary-cstm" data-dismiss="modal" (click)="newTaxRateAdd()" [disabled]="!addTaxRate.valid || isTaxTypeExists">Submit</button>
+
+                        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="resetTaxRate()">Close</button>
+
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
 
     <!-- <div  id="" class="modal fade" role="dialog">
         <div class="modal-header">

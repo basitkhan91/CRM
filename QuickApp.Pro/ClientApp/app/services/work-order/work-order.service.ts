@@ -130,4 +130,11 @@ export class WorkOrderService {
         return this.workOrderEndpointService.getMaterialList(workOrderWorkFlowId, workOrderId)
     }
 
+    viewWorkOrderHeader(workOrderId) {
+        return this.workOrderEndpointService.viewWorkOrderHeader(workOrderId);
+    }
+    viewWorkOrderPartNumber(workOrderId) {
+        return this.workOrderEndpointService.viewWorkOrderPartNumber(workOrderId);
+    }
+
 }
