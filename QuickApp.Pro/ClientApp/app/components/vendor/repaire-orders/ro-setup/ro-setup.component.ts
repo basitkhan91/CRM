@@ -197,6 +197,8 @@ export class RoSetupComponent implements OnInit {
 	allCountriesList: any = [];
 	countriesList: any = [];
 	inputValidCheck: any;
+	allStocklineInfo: any = [];
+	allStocklineDetails: any = [];
 
 	/** ro-approval ctor */
 	constructor(private route: Router,
@@ -240,6 +242,7 @@ export class RoSetupComponent implements OnInit {
 		this.glAccountData();
 		this.getLegalEntity();
 		this.getCountriesList();
+		this.getStocklineList();
 		this.loadPercentData();
 		this.sourceRoApproval.companyId = 0;
 		this.sourceRoApproval.buId = 0;
@@ -702,6 +705,12 @@ export class RoSetupComponent implements OnInit {
 		})
 	}
 
+	getStocklineList() {
+		this.commonService.smartDropDownList('Stockline', 'StockLineId', 'StockLineNumber').subscribe(res => {
+			this.allStocklineInfo = res;
+		})
+	}
+
 	filterCompanyNameforgrid(event) {
 		this.legalEntityList_Forgrid = this.legalEntity;
 
@@ -775,8 +784,8 @@ export class RoSetupComponent implements OnInit {
 			vendorContactPhone: this.sourceRoApproval.vendorContactPhone ? this.getVendorContactPhone(this.sourceRoApproval.vendorContactPhone) : '',
 			creditLimit: this.sourceRoApproval.creditLimit ? this.sourceRoApproval.creditLimit : '',
 			creditTermsId: this.sourceRoApproval.creditTermsId ? this.sourceRoApproval.creditTermsId : 0,
-			requisitionerId: this.sourceRoApproval.requisitionerId ? this.getEmployeeId(this.sourceRoApproval.requisitionerId) : 0,
-			approverId: this.sourceRoApproval.approverId ? this.getEmployeeId(this.sourceRoApproval.approverId) : 0,
+			requisitionerId: this.sourceRoApproval.requisitionerId ? this.getValueByObj(this.sourceRoApproval.requisitionerId) : 0,
+			approverId: this.sourceRoApproval.approverId ? this.getValueByObj(this.sourceRoApproval.approverId) : 0,
 			approvedDate: this.datePipe.transform(this.sourceRoApproval.approvedDate, "MM/dd/yyyy"),
 			statusId: this.sourceRoApproval.statusId ? this.sourceRoApproval.statusId : 0,
 			resale: this.sourceRoApproval.resale ? this.sourceRoApproval.resale : false,
@@ -900,6 +909,7 @@ export class RoSetupComponent implements OnInit {
 							UOMId: this.partListData[i].UOMId ? this.partListData[i].UOMId : 0,
 							quantityOrdered: childDataList[j].quantityOrdered ? childDataList[j].quantityOrdered : 0,
 							needByDate: this.datePipe.transform(childDataList[j].needByDate, "MM/dd/yyyy"),
+							stocklineId: childDataList[j].stocklineId ? this.getValueByObj(childDataList[j].stocklineId) : null,
 							managementStructureId: childDataList[j].managementStructureId ? childDataList[j].managementStructureId : 0, //109
 							//createdBy: this.userName,
 							//updatedBy: this.userName,
@@ -940,8 +950,8 @@ export class RoSetupComponent implements OnInit {
 					//reportCurrencyId: this.partListData[i].reportCurrencyId ? this.partListData[i].reportCurrencyId : 1,
 					reportCurrencyId: this.partListData[i].reportCurrencyId ? this.getCurrencyIdByObject(this.partListData[i].reportCurrencyId) : 1,
 					workOrderId: this.partListData[i].workOrderId ? this.partListData[i].workOrderId : 0,
-					//repairOrderId: this.partListData[i].repairOrderId ? this.partListData[i].repairOrderId : 0,
 					salesOrderId: this.partListData[i].salesOrderId ? this.partListData[i].salesOrderId : 0,
+					stocklineId: this.partListData[i].stocklineId ? this.getValueByObj(this.partListData[i].stocklineId) : null,
 					managementStructureId: this.partListData[i].managementStructureId ? this.partListData[i].managementStructureId : 0,
 					memo: this.partListData[i].memo,
 					masterCompanyId: 1,
@@ -2395,6 +2405,17 @@ export class RoSetupComponent implements OnInit {
 		}
 	}
 
+	filterStocklineNum(event) {
+		this.allStocklineDetails = this.allStocklineInfo;
+
+		if (event.query !== undefined && event.query !== null) {
+			const stockline = [...this.allStocklineInfo.filter(x => {
+				return x.label.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.allStocklineDetails = stockline;
+		}
+	}
+
 	private loadPercentData() {
 		//  this.commonService.smartDropDownList('Percent', 'PercentId', 'PercentValue').subscribe(res => {
 		// 	this.allPercentData = res;
@@ -2602,7 +2623,7 @@ export class RoSetupComponent implements OnInit {
 		}
 	}
 
-	getEmployeeId(obj) {
+	getValueByObj(obj) {
 		if (obj.value) {
 			return obj.value;
 		} else {

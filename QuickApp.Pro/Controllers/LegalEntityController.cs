@@ -44,8 +44,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
 
 

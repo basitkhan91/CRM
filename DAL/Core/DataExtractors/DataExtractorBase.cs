@@ -56,9 +56,9 @@ namespace DAL.Core.DataExtractors
                 }
             }
 
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw e;
+                throw ex;
             }
 
             return items;

@@ -333,6 +333,10 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         if (this.sourceWorkFlow.fixedAmount == undefined && this.sourceWorkFlow.percentOfNew == undefined && this.sourceWorkFlow.percentOfReplacement == undefined) {
             this.sourceWorkFlow.berThresholdAmount = 0;
         }
+
+        if (this.sourceWorkFlow.berThresholdAmount > 0) {
+            this.sourceWorkFlow.berThresholdAmount = parseFloat(this.sourceWorkFlow.berThresholdAmount).toFixed(2);
+        }
     }
 
     loadWorkFlow() {
@@ -935,9 +939,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     onPercentOfNew(myValue, percentValue) {
         this.sourceWorkFlow.percentOfNew = "";
         if (myValue && percentValue) {
-            this.sourceWorkFlow.percentOfNew = (myValue / 100) * percentValue;
-            //let afterpercent 
-            //this.sourceWorkFlow.percentOfNew = afterpercent * percentValue;
+            this.sourceWorkFlow.percentOfNew = parseFloat(((myValue / 100) * percentValue).toString()).toFixed(2);            
         }
         this.berDetermination();
     }
@@ -946,7 +948,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         this.sourceWorkFlow.percentOfReplacement = "";
         if (myValue && percentValue) {
             let afterpercent = myValue / 100;
-            this.sourceWorkFlow.percentOfReplacement = afterpercent * percentValue;
+            this.sourceWorkFlow.percentOfReplacement = parseFloat((afterpercent * percentValue).toString()).toFixed(2);
 
         }
         this.berDetermination();
@@ -1902,35 +1904,15 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     }
 
     addWorkFlow(isHeaderUpdate: boolean): void {
-        console.log(1);
         this.sourceWorkFlow.workflowId = undefined;
-        // // save Work Order Workflow
-        // console.log(this.validateWorkFlowHeader());
-
-        // if(this.isWorkOrder && this.validateWorkFlowHeader()){
-        //     console.log(2);
-        //     // if(this.responseDataForHeader){
-
-        //         this.actionService.addWorkFlowHeader(this.sourceWorkFlow).subscribe(result => {
-        //             this.sourceWorkFlow.workflowId = result.workflowId;
-        //             this.sourceWorkFlow.workOrderNumber = result.workOrderNumber;
-        //             this.alertService.showMessage(this.title, "Work Flow header added successfully.", MessageSeverity.success);
-        //              this.responseDataForHeader = result;
-        //             this.UpdateMode = true;
-        //             // this.SaveWorkFlow();
-        //         });
-        //     // } else {
-        //     //     this.SaveWorkFlow();
-        //     // }
-
-
-        // }else {
-        //     console.log(3);
-        // WorkFlow Create
+        
         if (!this.validateWorkFlowHeader() || !this.calculateTotalWorkFlowCost()) {
-            return;
+            var OkCancel = confirm("Work Flow total cost exceed the BER threshold amount. Do you still want to continue?");
+            if (OkCancel == false) {
+                return;
+            }
         }
-
+       
 
         this.SaveWorkFlow();
         if (isHeaderUpdate) {
@@ -1977,36 +1959,14 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     title: string = "Work Flow";
 
     updateWorkFlow(isHeaderUpdate: boolean): void {
-        // // save Work Order Workflow
-        // console.log(5);
-
-        // console.log(this.isWorkOrder, this.validateWorkFlowHeader())
-        // if(this.isWorkOrder  &&  this.validateWorkFlowHeader() ){
-        //     // this.SaveWorkFlow();
-        //     console.log(6);
-
-        //     if(this.responseDataForHeader){
-        //         console.log(7);
-        //         this.actionService.addWorkFlowHeader(this.sourceWorkFlow).subscribe(result => {
-        //             this.sourceWorkFlow.workflowId = result.workflowId;
-        //             this.sourceWorkFlow.workOrderNumber = result.workOrderNumber;
-        //             this.alertService.showMessage(this.title, "Work Flow header added successfully.", MessageSeverity.success);
-        //              this.responseDataForHeader = result;
-        //             this.UpdateMode = true;
-        //             this.SaveWorkFlow();
-        //         });
-        //     } else {
-        //         // this.SaveWorkFlow();
-        //     }
-
-        // }else {
-        //     console.log(8);
-        // WorkFlow Create 
+      
         if (!this.validateWorkFlowHeader() || !this.calculateTotalWorkFlowCost()) {
-            return;
+            var OkCancel = confirm("Work Flow total cost exceed the BER threshold amount. Do you still want to continue?");
+            if (OkCancel == false) {
+                return;
+            }
         }
         this.SaveWorkFlow();
-        console.log(9);
         if (isHeaderUpdate) {
             this.sourceWorkFlow.charges = [];
             this.sourceWorkFlow.directions = [];
@@ -2408,8 +2368,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     PercentBERThreshold: number;
     calculateTotalWorkFlowCost(): boolean {
         if (this.sourceWorkFlow.berThresholdAmount == undefined || this.sourceWorkFlow.berThresholdAmount == 0) {
-            this.alertService.showMessage(this.title, 'Please enter BER Determination values', MessageSeverity.error);
-            return;
+            this.sourceWorkFlow.berThresholdAmount = 0;
         }
 
         this.MaterialCost = 0;

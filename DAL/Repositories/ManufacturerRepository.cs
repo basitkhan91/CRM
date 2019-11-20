@@ -40,9 +40,9 @@ namespace DAL.Repositories
             {
                 return _appContext.ManufacturerAudit.Where(p => p.ManufacturerId == manufacturerId).OrderByDescending(p => p.UpdatedDate).ToList();
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
 
@@ -124,7 +124,7 @@ namespace DAL.Repositories
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Manufacturer manufacturer = new Manufacturer();
                 manufacturer.Name = name;

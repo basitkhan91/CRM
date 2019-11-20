@@ -2473,8 +2473,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
 
 
@@ -2496,8 +2495,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
 
 
@@ -2519,8 +2517,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
 
 
@@ -2540,8 +2537,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
 
 
@@ -2561,8 +2557,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
 
 
@@ -2584,8 +2579,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
 
 
@@ -2697,8 +2691,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
         }
 
@@ -3068,14 +3061,14 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("POListByMasterItemId")]
         public IActionResult POListByMasterItemId(int itemMasterId)
         {
-            var result = _unitOfWork.purchaseOrder.POListByMasterItemId(itemMasterId);
+            var result = _unitOfWork.purchaseOrder.POListByMasterItemId(itemMasterId).Distinct();
             return Ok(result);
         }
 
         [HttpGet("ROListByMasterItemId")]
         public IActionResult ROListByMasterItemId(int itemMasterId)
         {
-            var result = _unitOfWork.repairOrder.ROListByMasterItemId(itemMasterId);
+            var result = _unitOfWork.repairOrder.ROListByMasterItemId(itemMasterId).Distinct();
             return Ok(result);
         }
 

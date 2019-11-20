@@ -67,14 +67,22 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetPartPublications(long itemMasterId);
         IEnumerable<object> GetRevisedParts(long itemMasterId, int mappingType);
         IEnumerable<object> GetConditionDetailsByPartNo(long itemMasterId);
-        IEnumerable<object> GetWorkOrderMaterialList(long wfwoId, long workOrderId);
+        
         IEnumerable<object> GetTechnicians();
 
-        void CreateWorkOrderPublications(List<WorkOrderPublications> workOrderPublications);
-        void UpdateWorkOrderPublications(List<WorkOrderPublications> workOrderPublications);
+        List<WorkOrderPublications> CreateWorkOrderPublications(List<WorkOrderPublications> workOrderPublications);
+        List<WorkOrderPublications> UpdateWorkOrderPublications(List<WorkOrderPublications> workOrderPublications);
         void DeleteWorkOrderPublication(long workOrderPublicationId, string updatedBy);
         void WorkOrderPublicationStatus(long workOrderPublicationId, bool status, string updatedBy);
-        IEnumerable<object> GetWorkOrderPublications(long wfwoId = 0, long workOrderId = 0);
+        IEnumerable<object> GetWorkOrderPublications(long wfwoId, long workOrderId);
+
+
+        List<WorkOrderMaterials> CreateWorkOrderMaterials(List<WorkOrderMaterials> workOrderMaterials);
+        List<WorkOrderMaterials> UpdateWorkOrderMaterials(List<WorkOrderMaterials> workOrderMaterials);
+        IEnumerable<object> GetWorkOrderMaterialList(long wfwoId, long workOrderId);
+        void DeleteWorkOrderMaterials(long workOrderMaterialsId, string updatedBy);
+
+        IEnumerable<WorkOrderReserveIssuesParts> GetReservedIssuedParts(long WorkFlowWorkOrderId, long workOrderId);
 
     }
 }

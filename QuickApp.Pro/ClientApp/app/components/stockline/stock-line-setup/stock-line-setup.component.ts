@@ -121,6 +121,8 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
     sourceEmployee: any = {};
     managementStructureData: any[];
     updateMode: boolean = false;
+    quantityAvailable: any;
+    PurchaseOrderId: any;
 
 	ngOnInit(): void
 	{
@@ -152,7 +154,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 	sourceItemMaster: any = {};
 	private isSaving: boolean;
 	loadingIndicator: boolean;
-	private isEditMode: boolean = false;
 	private isDeleteMode: boolean = false;
 	isDisabled = true;
 	collectionofstockLine: any;
@@ -374,6 +375,9 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
         }
     }
 
+    calculateQtyAvailable(event) {
+        this.quantityAvailable = this.sourceStockLineSetup.Quantity - this.sourceStockLineSetup.Quantity - this.sourceStockLineSetup.Quantity;
+    }
 
 	partnmId(event) {
 		if (this.itemclaColl) {
@@ -403,8 +407,8 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
         this.sourceStockLineSetup.partDescription = allWorkFlows[0].partDescription; //Passing Part Description based on Change Part
         this.sourceStockLineSetup.shelfLife = allWorkFlows[0].t.shelfLife;
         this.sourceStockLineSetup.isSerialized = allWorkFlows[0].isSerialized;
-        //this.sourceStockLineSetup.ITARNumber = allWorkFlows[0].t.ITARNumber;
-        //this.sourceStockLineSetup.NHA = allWorkFlows[0].t.NHA;
+        this.sourceStockLineSetup.ITARNumber = allWorkFlows[0].t.ITARNumber;
+        this.sourceStockLineSetup.IsManufacturingDateAvailable = allWorkFlows[0].t.IsManufacturingDateAvailable;
 
 		if (this.sourceStockLineSetup.isSerialized == true) {
 			this.hideSerialNumber = true;
@@ -432,8 +436,9 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			this.sourceStockLineSetup.shelfLife = allWorkFlows[0].isShelfLifeAvailable;
 		}
 
-		this.sourceStockLineSetup.isPMA = allWorkFlows[0].pma;
-		this.sourceStockLineSetup.isDER = allWorkFlows[0].der;
+        this.sourceStockLineSetup.isPMA = allWorkFlows[0].IsPMA;
+        this.sourceStockLineSetup.isDER = allWorkFlows[0].IsDER;
+        this.sourceStockLineSetup.oem = allWorkFlows[0].OEM;
 
 		this.sourceTimeLife.timeLife = allWorkFlows[0].isTimeLife;
 
@@ -919,19 +924,39 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
         this.sourceEmployee.managementStructureId = divisionId;
 	}
 
-	POValueChange(POId)
-	{
-		let data = [{ itemMasterId: this.sourceStockLineSetup.itemMasterId, PurchaseOrderId: this.sourceStockLineSetup.PurchaseOrderId }]
-		this.stocklinePOObject.push(data);
-		this.stocklineser.getPOUnitCost(this.stocklinePOObject[0][0]).subscribe(data => { });
-		//this.stocklineser.updateStockLineAdjustmentToList(this.stocklineAdjustmentObject[0][0]).subscribe(data => { });
-	}
-	ROValueChange(RoId)
-	{
-		let data = [{ itemMasterId: this.sourceStockLineSetup.itemMasterId, RepairOrderId: this.sourceStockLineSetup.RepairOrderId }]
-		this.stocklineROObject.push(data);
-		this.stocklineser.getROUnitCost(this.stocklineROObject[0][0]).subscribe(data => { });
+    POValueChange(purchaseOrderId)
+    {
+        console.log(purchaseOrderId);
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.stocklineser.getPurchaseOrderUnitCost(purchaseOrderId).subscribe(
+            results => this.onPOUnitCostLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
 
+    onPOUnitCostLoadSuccessful(getPOCost: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+
+        this.sourceStockLineSetup.purchaseOrderUnitCost = getPOCost[0].UnitCost;
+    }
+
+    onROUnitCostLoadSuccessful(getROCost: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+
+        this.sourceStockLineSetup.repairOrderUnitCost = getROCost[0].UnitCost;
+    }
+
+	ROValueChange(RoId)
+    {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.stocklineser.getRepairOrderUnitCost(RoId).subscribe(
+            results => this.onROUnitCostLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
 	}
 
 	private onDataLoadFailed(error: any)

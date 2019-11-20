@@ -33,8 +33,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
 
 
@@ -46,10 +45,9 @@ namespace DAL.Repositories
             {
                 return _appContext.WorkScopeAudit.Where(p => p.WorkScopeId == workScopeId).OrderByDescending(p => p.UpdatedDate).ToList();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 

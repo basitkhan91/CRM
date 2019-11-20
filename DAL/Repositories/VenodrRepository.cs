@@ -525,10 +525,9 @@ namespace DAL.Repositories
 
                 return billingAddress.VendorBillingAddressId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -540,10 +539,9 @@ namespace DAL.Repositories
                 _appContext.VendorBillingAddress.Update(billingAddress);
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -565,10 +563,9 @@ namespace DAL.Repositories
 
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -594,10 +591,9 @@ namespace DAL.Repositories
 
                 //_appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -619,10 +615,9 @@ namespace DAL.Repositories
 
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -647,10 +642,9 @@ namespace DAL.Repositories
                             }).OrderByDescending(p=>p.CreatedDate).ToList();
                 return list;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -666,10 +660,9 @@ namespace DAL.Repositories
                             }).ToList();
                 return list;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -694,10 +687,9 @@ namespace DAL.Repositories
                           ).FirstOrDefault();
                 return data;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 

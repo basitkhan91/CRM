@@ -164,7 +164,7 @@ namespace DAL.Repositories
                                          PurchaseOrderId = po.PurchaseOrderId,
                                          PurchaseOrderNumber = po.PurchaseOrderNumber
                                      });
-            return purchaseOrderList;
+            return purchaseOrderList.Distinct();
 
         }
 
@@ -190,10 +190,9 @@ namespace DAL.Repositories
 
                 return poApprover.POApproverId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -205,10 +204,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -231,10 +229,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -260,10 +257,9 @@ namespace DAL.Repositories
                             ).ToList();
                 return list;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -276,10 +272,9 @@ namespace DAL.Repositories
 
                 return poAddress.POAddressId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -291,10 +286,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -428,10 +422,9 @@ namespace DAL.Repositories
 
                 return null;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -444,10 +437,9 @@ namespace DAL.Repositories
 
                 return poShipvia.POShipViaId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -459,10 +451,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -487,10 +478,9 @@ namespace DAL.Repositories
                 return data;
             }
 
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -525,10 +515,9 @@ namespace DAL.Repositories
                             .ToList();
                 return list;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -661,10 +650,9 @@ namespace DAL.Repositories
 
                 return purchaseOrderParts;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -686,10 +674,9 @@ namespace DAL.Repositories
 
                 _context.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -711,10 +698,9 @@ namespace DAL.Repositories
 
                 _context.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -799,10 +785,9 @@ namespace DAL.Repositories
 
                 return purchaseOrderList;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -906,10 +891,9 @@ namespace DAL.Repositories
 
                 return data;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1057,8 +1041,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1134,10 +1117,9 @@ namespace DAL.Repositories
 
                 return purchaseOrderEmail;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 

@@ -368,7 +368,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-                return Ok("Getting error");
+                return BadRequest(ex.Message);
             }
         }
     }

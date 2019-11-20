@@ -87,5 +87,7 @@ namespace DAL.Models
         public WorkOrderLaborHeader WorkOrderLaborHeader { get; set; }
         [NotMapped]
         public WorkOrderQuote WorkOrderQuote { get; set; }
+        [NotMapped]
+        public bool IsSaveToWorkFlow { get; set; }
     }
 }

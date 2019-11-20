@@ -76,6 +76,8 @@ namespace DAL.Repositories
                                   partDescription = im.PartDescription,
                                   stl.ManagementStructureEntityId,
                                   stl.Quantity,
+                                  stl.QtyReserved,
+                                  stl.QtyIssued,
                                   condition = co.Description,
                                   stl.ShelfLifeExpirationDate,
                                   siteName = si.Name,
@@ -176,7 +178,7 @@ namespace DAL.Repositories
             catch (Exception ex)
             {
 
-                return null;
+                throw ex;
             }
         }
 
@@ -199,8 +201,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
 
 
@@ -228,8 +229,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
 
 
@@ -256,8 +256,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
         }
 
@@ -282,8 +281,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
         }
 
@@ -305,8 +303,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
         }
 
@@ -331,8 +328,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
         }
 
@@ -357,8 +353,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
         }
 
@@ -391,8 +386,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
         }
 
@@ -417,8 +411,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
         }
 
@@ -437,9 +430,9 @@ namespace DAL.Repositories
                 _appContext.StockLine.Add(model);
                 _appContext.SaveChanges();
                 }
-                 catch (Exception)
+                 catch (Exception ex)
             {
-            throw;
+                throw ex;
             }
             }
 
@@ -530,9 +523,9 @@ namespace DAL.Repositories
 
                 return stockLines;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
 
@@ -611,6 +604,8 @@ namespace DAL.Repositories
                               partDescription = im.PartDescription,
                               stl.ManagementStructureEntityId,
                               stl.Quantity,
+                              stl.QtyIssued,
+                              stl.QtyReserved,
                               condition = co.Description,
                               stl.ShelfLifeExpirationDate,
                               siteName = si.Name,

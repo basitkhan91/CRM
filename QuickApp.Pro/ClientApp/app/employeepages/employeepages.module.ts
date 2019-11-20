@@ -28,6 +28,7 @@ import { EmployeeGeneralInformationComponent } from "../shared/components/employ
 import { EmployeeCertificationComponent } from "../shared/components/employee/employee-certification/employee-certification.component";
 import { EmployeeTrainingComponent } from "../shared/components/employee/employee-training/employee-training.component";
 import { EmployeeStepsPrimeNgComponent } from "../shared/components/employee/employee-steps-prime-ng/employee-steps-prime-ng.component";
+import { EmployeesManagementStructureComponent } from "../shared/components/employee/employee-management-structure/employees-management-structure.component";
 @NgModule({
     imports: [
         FlexLayoutModule,
@@ -55,7 +56,8 @@ import { EmployeeStepsPrimeNgComponent } from "../shared/components/employee/emp
 		EmployeeGeneralInformationComponent,
 		EmployeeCertificationComponent,
 		EmployeeTrainingComponent,
-		EmployeeStepsPrimeNgComponent
+        EmployeeStepsPrimeNgComponent,
+        EmployeesManagementStructureComponent
     ],
     providers: [
       

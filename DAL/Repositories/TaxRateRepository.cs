@@ -32,9 +32,8 @@ namespace DAL.Repositories
 //                return result;
 //            }
 //            catch (Exception ex)
-//            {
-
-//                return null;
+//              {
+//                throw ex;
 //            }
 
 

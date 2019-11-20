@@ -30,10 +30,9 @@ namespace DAL.Repositories
                 var result = _appContext.ATAChapter.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.ATAChapterId).ToList();
                 return result;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
-                return null;
+                throw;
             }
 
           

@@ -52,8 +52,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
         }
 
@@ -72,8 +71,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
         }
 
@@ -89,8 +87,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
         }
 
@@ -107,8 +104,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
         }
 
@@ -125,8 +121,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
         }
 
@@ -143,8 +138,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
 
         }
@@ -161,8 +155,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
 
         }
@@ -179,8 +172,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
 
         }
@@ -290,6 +282,8 @@ namespace QuickApp.Pro.Controllers
                 actionobject1.ControlNumber = stockLineViewModel.ControlNumber;
                 actionobject1.ItemMasterId = stockLineViewModel.ItemMasterId;
                 actionobject1.Quantity = stockLineViewModel.Quantity;
+                actionobject1.QtyReserved = stockLineViewModel.QtyReserved;
+                actionobject1.QtyIssued = stockLineViewModel.QtyIssued;
                 actionobject1.ConditionId = stockLineViewModel.ConditionId;
                 actionobject1.SerialNumber = stockLineViewModel.SerialNumber;
                 actionobject1.ShelfLife = stockLineViewModel.ShelfLife;
@@ -387,6 +381,8 @@ namespace QuickApp.Pro.Controllers
             actionobject1.ControlNumber = stockLineViewModel.ControlNumber;
             actionobject1.ItemMasterId = stockLineViewModel.ItemMasterId;
             actionobject1.Quantity = stockLineViewModel.Quantity;
+            actionobject1.QtyIssued = stockLineViewModel.QtyIssued;
+            actionobject1.QtyReserved = stockLineViewModel.QtyReserved;
             actionobject1.ConditionId = stockLineViewModel.ConditionId;
             actionobject1.SerialNumber = stockLineViewModel.SerialNumber;
             actionobject1.ShelfLife = stockLineViewModel.ShelfLife;
@@ -629,6 +625,14 @@ namespace QuickApp.Pro.Controllers
                 {
                     actionobject.Quantity = 0;
                 }
+                if (stockLineViewModel.QtyIssued != 0)
+                {
+                    actionobject.QtyIssued = stockLineViewModel.QtyIssued;
+                }
+                if (stockLineViewModel.QtyReserved != 0)
+                {
+                    actionobject.QtyReserved = stockLineViewModel.QtyReserved;
+                }
                 if (stockLineViewModel.CoreUnitCost != 0)
                 {
                     actionobject.CoreUnitCost = stockLineViewModel.CoreUnitCost;
@@ -863,10 +867,49 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpPost("PurchaseOrderUnitCost/{POId}")]
+        public IActionResult PurchaseOrderUnitCost(long POId)
+        {
+            try
+            {
+                var result = (from pop in _context.PurchaseOrderPart
+                              where pop.PurchaseOrderId== POId
+                              select new
+                              {
+                                  pop.UnitCost,
+                              }).ToList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
 
                 throw;
             }
+        }
 
+        [HttpPost("RepairOrderUnitCost/{ROId}")]
+        public IActionResult RepairOrderUnitCost(long ROId)
+        {
+            try
+            {
+                var result = (from rop in _context.RepairOrderPart
+                              where rop.RepairOrderId == ROId
+                              select new
+                              {
+                                  rop.UnitCost,
+                              }).ToList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
 
         [HttpPost("stockLineROUnitCostGet")]
@@ -892,8 +935,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
 
         }

@@ -20,6 +20,8 @@ namespace QuickApp.Pro.ViewModels
         public string SerialNumber { get; set; }
         public string PartNumber { get; set; }
         public int Quantity { get; set; }
+        public int? QtyReserved { get; set; }
+        public int? QtyIssued { get; set; }
         public long CoreUnitCost { get; set; }
         public long UnitSalesPrice { get; set; }
         public long DiscountSalesPrice { get; set; }
