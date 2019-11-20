@@ -20,6 +20,7 @@ import { EditRoComponent } from '../components/receiving/repair-order/edit-ro/ed
 import { RoComponent } from '../components/receiving/repair-order/ro/ro.component';
 import { ReceivingRoComponent } from '../components/receiving/repair-order/receiving-ro/receiving-ro.component';
 import { ViewRoComponent } from '../components/receiving/repair-order/view-ro/view-ro.component';
+import { POViewListComponent } from '../components/receiving/po-ro/po-view-list/po-view-list.component';
 //import { ShippingComponent } from '../components/receiving/shipping/shipping.component';
 
 const receivingPagesRoutes: Routes = [
@@ -33,7 +34,7 @@ const receivingPagesRoutes: Routes = [
 			{ path: "app-customer-work-setup", component: CustomerWorkSetupComponent, data: { title: "Customer Work Setup" } },
 			{ path: "app-customer-work-edit", component: CustomerWorkEditComponent, data: { title: "Customer Work Edit" } },
             { path: "app-edit-po", component: EditPoComponent, data: { title: "Edit PO" } },
-            { path: "app-view-po", component: ViewPoComponent, data: { title: "View PO" } },
+			{ path: "app-view-po", component: ViewPoComponent, data: { title: "View PO" } },
 			{ path: "app-purchase-order", component: PurchaseOrderComponent, data: { title: "Purchase Order" } },
             { path: "app-receivng-po", component : ReceivngPoComponent, data: { title: "Receivng PO" } },
             { path: 'app-repair-order', component: RepairOrderComponent, data: { title: "Repair Order" } },
