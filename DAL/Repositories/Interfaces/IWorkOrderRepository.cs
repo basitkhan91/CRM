@@ -19,8 +19,6 @@ namespace DAL.Repositories.Interfaces
         object WorkOrderHeaderView(long workOrderId);
         IEnumerable<object> WorkOrderPartsView(long workOrderId);
 
-
-
         long CreateWorkFlowWorkOrder(WorkOrderWorkFlow workFlowWorkOrder);
         void UpdateWorkFlowWorkOrder(WorkOrderWorkFlow workFlowWorkOrder);
         WorkOrderWorkFlow GetWorkFlowWorkOrderById(long workFlowWorkOrderId);
@@ -34,7 +32,7 @@ namespace DAL.Repositories.Interfaces
 
         long CreateWorkOrderCharges(WorkOrderCharges workOrderCharges);
         void UpdateWorkOrderCharges(WorkOrderCharges workOrderCharges);
-        IEnumerable<WorkOrderCharges> GetWorkFlowWorkOrderChargesList(long wfwoId = 0, long workOrderId = 0);
+        IEnumerable<object> GetWorkFlowWorkOrderChargesList(long wfwoId = 0, long workOrderId = 0);
 
         long CreateWorkOrderAssets(WorkOrderAssets workOrderAssets);
         void UpdateWorkOrderAssets(WorkOrderAssets workOrderAssets);
@@ -74,7 +72,7 @@ namespace DAL.Repositories.Interfaces
         List<WorkOrderPublications> UpdateWorkOrderPublications(List<WorkOrderPublications> workOrderPublications);
         void DeleteWorkOrderPublication(long workOrderPublicationId, string updatedBy);
         void WorkOrderPublicationStatus(long workOrderPublicationId, bool status, string updatedBy);
-        IEnumerable<object> GetWorkOrderPublications(long wfwoId, long workOrderId);
+        IEnumerable<WorkOrderPublicationList> GetWorkOrderPublications(long wfwoId, long workOrderId);
 
 
         List<WorkOrderMaterials> CreateWorkOrderMaterials(List<WorkOrderMaterials> workOrderMaterials);
@@ -83,6 +81,7 @@ namespace DAL.Repositories.Interfaces
         void DeleteWorkOrderMaterials(long workOrderMaterialsId, string updatedBy);
 
         IEnumerable<WorkOrderReserveIssuesParts> GetReservedIssuedParts(long WorkFlowWorkOrderId, long workOrderId);
+        List<WorkOrderReserveIssuesParts> SaveReserveIssuesParts(List<WorkOrderReserveIssuesParts> reserveIssuesParts);
 
     }
 }
