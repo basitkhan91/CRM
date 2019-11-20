@@ -248,9 +248,8 @@ export class WorkflowListComponent implements OnInit {
                 this.sourceWorkFlow = workflow[0];
                 var part = this.allParts.filter(x => x.itemMasterId == rowData.changedPartNumberId)[0];
                 this.sourceWorkFlow.changedPartNumber = part != undefined ? part.partNumber : '';
-
                 this.sourceWorkFlow.workflowCreateDate = new Date(this.sourceWorkFlow.workflowCreateDate).toLocaleDateString();
-                this.sourceWorkFlow.workflowCreateDate = this.sourceWorkFlow.workflowExpirationDate != null && this.sourceWorkFlow.workflowExpirationDate != '' ? new Date(this.sourceWorkFlow.workflowCreateDate).toLocaleDateString() : '';
+                this.sourceWorkFlow.workflowExpirationDate = this.sourceWorkFlow.workflowExpirationDate != null && this.sourceWorkFlow.workflowExpirationDate != '' ? new Date(this.sourceWorkFlow.workflowExpirationDate).toLocaleDateString() : '';
 
                 this.calculatePercentOfNew(workflow[0].costOfNew, workflow[0].percentageOfNew);
                 this.calculatePercentOfReplacement(workflow[0].costOfReplacement, workflow[0].percentageOfReplacement);
