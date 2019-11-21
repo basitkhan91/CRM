@@ -188,7 +188,12 @@ namespace QuickApp.Pro.Controllers
                 employeeobject.WorkPhone = employeeViewModel.WorkPhone;
                 employeeobject.Fax = employeeViewModel.Fax;
                 employeeobject.ManagementStructureId = employeeViewModel.ManagementStructureId;
-                employeeobject.LegalEntityId = entityobject.LegalEntityId;
+                if(entityobject != null && entityobject.LegalEntityId != null)
+                {
+                    employeeobject.LegalEntityId = entityobject.LegalEntityId;
+                }
+               
+               
                 employeeobject.SSN = employeeViewModel.SSN;
                 employeeobject.Email = employeeViewModel.Email;
                 employeeobject.AllowDoubleTime = employeeViewModel.AllowDoubleTime;
