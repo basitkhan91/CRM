@@ -155,7 +155,7 @@ export class VendorGeneralInformationComponent implements OnInit {
             this.sourceVendor.stateOrProvince = this.vendorService.listCollection.stateOrProvince;
             this.sourceVendor.PostalCode = this.vendorService.listCollection.postalCode;
 
-        }
+        }        
         if (this.customerser.isCustomerAlsoVendor == true) {
             this.sourceVendor = this.customerser.localCollectiontoVendor;
             this.sourceVendor.vendorEmail = this.customerser.localCollectiontoVendor.email;
@@ -164,8 +164,8 @@ export class VendorGeneralInformationComponent implements OnInit {
             this.sourceVendor.vendorCode = this.customerser.localCollectiontoVendor.customerCode;
             this.sourceVendor.doingBusinessAsName = this.customerser.localCollectiontoVendor.doingBuinessAsName;
             this.sourceVendor.PostalCode = this.customerser.localCollectiontoVendor.postalCode;
-        }
-    }
+        }        
+    }   
 
     ngOnInit(): void {
         this.matSpinner = false;
@@ -187,7 +187,7 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.sourceVendor.vendorTypeId = 1;
         if (this.vendorService.isEditMode == false) {
             this.sourceVendor.vendorTypeId = 2;
-            this.viewName = "Create";
+            this.viewName = "Create";           
         }
         if (this.vendorService.enableExternal == false) {
             this.sourceVendor.vendorTypeId = 2;
@@ -206,7 +206,8 @@ export class VendorGeneralInformationComponent implements OnInit {
         ];
         if (!this.intSelectedColumns) {
             this.intSelectedColumns = this.cols;
-        }
+        }        
+       this.CreateVendorOnClick();               
     }
 
     sourceVendor: any = {};
@@ -620,6 +621,13 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.vendorService.indexObj.next(this.activeIndex);
         this.vendorService.changeStep('Contacts');
         this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
+    }
+
+    CreateVendorOnClick() {       
+        this.activeIndex = 1;       
+        this.vendorService.indexObj.next(this.activeIndex);
+        this.vendorService.changeStep('General Information');
+        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
     }
 
     dismissModel() {

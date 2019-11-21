@@ -249,7 +249,7 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
                 })
 
             response => this.saveCompleted(this.sourceEmployee)
-            this.activeIndex = 1;
+            this.activeIndex = 2;
             this.employeeService.indexObj.next(this.activeIndex);
 
         }
@@ -264,8 +264,17 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
             })
 
             response => this.saveCompleted(this.sourceEmployee)
-            this.activeIndex = 1;
+            this.activeIndex = 2;
             this.employeeService.indexObj.next(this.activeIndex);
+
+            var data = { "empId": this.empId, "firstName": this.firstName, "lastName": this.lastName };
+
+            var stringData = JSON.stringify(data);
+            
+            var encryptedData = btoa(JSON.stringify(data));
+    
+            this.router.navigate(['/employeesmodule/employeepages/app-employee-training'], { queryParams: { order: this.empId, 'firstName': this.firstName, 'lastName': this.lastName }, skipLocationChange: true });
+         
 
         }
     }
