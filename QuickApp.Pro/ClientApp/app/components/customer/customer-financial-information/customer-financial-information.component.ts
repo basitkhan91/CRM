@@ -478,18 +478,20 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
     mapTaxTypeandRate() {
         // let i = 0;
-        const data = this.selectedTaxRates.map(x => {
-            // i++;
-            this.taxTypeRateMapping.push({
-                // id: i,
-                customerId: this.id,
-                taxType: this.selectedTaxType,
-                taxRate: x
-            })
-        })
-        this.selectedTaxRates = [];
-        this.selectedTaxType = undefined;
+        if ( this.selectedTaxType.length > 0 ) {
 
+            const data = this.selectedTaxRates.map(x => {
+                // i++;
+                this.taxTypeRateMapping.push({
+                    // id: i,
+                    customerId: this.id,
+                    taxType: this.selectedTaxType,
+                    taxRate: x
+                })
+            })
+            this.selectedTaxRates = [];
+            this.selectedTaxType = undefined;
+        }
     }
 
 

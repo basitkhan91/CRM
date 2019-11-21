@@ -50,7 +50,7 @@ export class CustomerContactsComponent implements OnInit {
 	contactInformation = new CustomerContactModel()
 	customerContacts: any = [];
 	customerContactsColumns = [
-		{ field: 'tag', header: 'TAG' },
+		{ field: 'tag', header: 'Tag' },
 		{ field: 'firstName', header: 'First Name' },
 		{ field: 'lastName', header: 'Last Name' },
 		{ field: 'contactTitle', header: 'Contact Title' },
@@ -177,7 +177,12 @@ export class CustomerContactsComponent implements OnInit {
 
 	viewSelectedRow(rowData) {
 		this.sourceViewforContact = rowData;
-	}
+    }
+    onAddContactInfo() {
+        this.contactInformation = new CustomerContactModel()
+
+
+    }
 	editCustomerContact(rowData) {
 		this.ediData = { ...rowData };
 		this.isEditButton = true;
@@ -187,7 +192,8 @@ export class CustomerContactsComponent implements OnInit {
 			// middleName: getObjectByValue('middleName', this.ediData.middleName, this.contactsListOriginal),
 			// lastName: getObjectByValue('lastName', this.ediData.lastName, this.contactsListOriginal),
 		}
-		console.log(this.contactInformation);
+        console.log(this.contactInformation);
+        this.sourceViewforContact = '';
 
 	}
 
@@ -336,7 +342,8 @@ export class CustomerContactsComponent implements OnInit {
 		this.customerService.getCustomerContactAuditDetails(rowData.customerContactId).subscribe(res => {
 			this.auditHistory = res;
 		})
-	}
+    }
+  
 	getColorCodeForHistory(i, field, value) {
 		const data = this.auditHistory;
 		const dataLength = data.length;
@@ -356,6 +363,7 @@ export class CustomerContactsComponent implements OnInit {
 	backClick() {
 		this.tab.emit('General');
 	}
+   
 
 
 
