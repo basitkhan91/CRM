@@ -282,8 +282,12 @@ namespace QuickApp.Pro.Controllers
                 actionobject1.ControlNumber = stockLineViewModel.ControlNumber;
                 actionobject1.ItemMasterId = stockLineViewModel.ItemMasterId;
                 actionobject1.Quantity = stockLineViewModel.Quantity;
-                actionobject1.QtyReserved = stockLineViewModel.QtyReserved;
-                actionobject1.QtyIssued = stockLineViewModel.QtyIssued;
+                actionobject1.QuantityOnOrder = stockLineViewModel.QuantityOnOrder;
+                actionobject1.QuantityAvailable = stockLineViewModel.QuantityAvailable;
+                actionobject1.QuantityOnHand = stockLineViewModel.QuantityOnOrder;
+                actionobject1.QuantityIssued = stockLineViewModel.QuantityAvailable;
+                actionobject1.QuantityTurnIn = stockLineViewModel.QuantityTurnIn;
+                actionobject1.QuantityReserved = stockLineViewModel.QuantityReserved;
                 actionobject1.ConditionId = stockLineViewModel.ConditionId;
                 actionobject1.SerialNumber = stockLineViewModel.SerialNumber;
                 actionobject1.ShelfLife = stockLineViewModel.ShelfLife;
@@ -381,8 +385,12 @@ namespace QuickApp.Pro.Controllers
             actionobject1.ControlNumber = stockLineViewModel.ControlNumber;
             actionobject1.ItemMasterId = stockLineViewModel.ItemMasterId;
             actionobject1.Quantity = stockLineViewModel.Quantity;
-            actionobject1.QtyIssued = stockLineViewModel.QtyIssued;
-            actionobject1.QtyReserved = stockLineViewModel.QtyReserved;
+            actionobject1.QuantityOnOrder = stockLineViewModel.QuantityOnOrder;
+            actionobject1.QuantityAvailable = stockLineViewModel.QuantityAvailable;
+            actionobject1.QuantityOnHand = stockLineViewModel.QuantityOnOrder;
+            actionobject1.QuantityIssued = stockLineViewModel.QuantityAvailable;
+            actionobject1.QuantityTurnIn = stockLineViewModel.QuantityTurnIn;
+            actionobject1.QuantityReserved = stockLineViewModel.QuantityReserved;
             actionobject1.ConditionId = stockLineViewModel.ConditionId;
             actionobject1.SerialNumber = stockLineViewModel.SerialNumber;
             actionobject1.ShelfLife = stockLineViewModel.ShelfLife;
@@ -625,14 +633,12 @@ namespace QuickApp.Pro.Controllers
                 {
                     actionobject.Quantity = 0;
                 }
-                if (stockLineViewModel.QtyIssued != 0)
-                {
-                    actionobject.QtyIssued = stockLineViewModel.QtyIssued;
-                }
-                if (stockLineViewModel.QtyReserved != 0)
-                {
-                    actionobject.QtyReserved = stockLineViewModel.QtyReserved;
-                }
+                actionobject.QuantityOnOrder = stockLineViewModel.QuantityOnOrder;
+                actionobject.QuantityAvailable = stockLineViewModel.QuantityAvailable;
+                actionobject.QuantityOnHand = stockLineViewModel.QuantityOnOrder;
+                actionobject.QuantityIssued = stockLineViewModel.QuantityAvailable;
+                actionobject.QuantityTurnIn = stockLineViewModel.QuantityTurnIn;
+                actionobject.QuantityReserved = stockLineViewModel.QuantityReserved;
                 if (stockLineViewModel.CoreUnitCost != 0)
                 {
                     actionobject.CoreUnitCost = stockLineViewModel.CoreUnitCost;
@@ -873,15 +879,17 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("PurchaseOrderUnitCost/{POId}")]
+        [Produces(typeof(List<PurchaseOrderPart>))]
         public IActionResult PurchaseOrderUnitCost(long POId)
         {
             try
             {
                 var result = (from pop in _context.PurchaseOrderPart
                               where pop.PurchaseOrderId== POId
-                              select new
+                              select new PurchaseOrderPart
                               {
-                                  pop.UnitCost,
+                                UnitCost=  pop.UnitCost,
+                                PurchaseOrderId=pop.PurchaseOrderId
                               }).ToList();
                 return Ok(result);
             }
@@ -893,15 +901,17 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("RepairOrderUnitCost/{ROId}")]
+        [Produces(typeof(List<RepairOrderPart>))]
         public IActionResult RepairOrderUnitCost(long ROId)
         {
             try
             {
                 var result = (from rop in _context.RepairOrderPart
                               where rop.RepairOrderId == ROId
-                              select new
+                              select new RepairOrderPart
                               {
-                                  rop.UnitCost,
+                                UnitCost =   rop.UnitCost,
+                                RepairOrderId=rop.RepairOrderId
                               }).ToList();
                 return Ok(result);
             }
