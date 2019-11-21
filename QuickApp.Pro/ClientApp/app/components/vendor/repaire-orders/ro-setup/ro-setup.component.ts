@@ -433,7 +433,7 @@ export class RoSetupComponent implements OnInit {
 						this.newPartsList = {
 							...x,
 							partNumberId: getObjectById('value', x.itemMasterId, this.allPartnumbersInfo),					
-							ifSplitShip: x.roPartSplits ? true : false,
+							ifSplitShip: x.roPartSplits.length > 0 ? true : false,
 							partNumber: x.partNumber,
 							partDescription: x.partDescription,
 							needByDate: new Date(x.needByDate),
@@ -899,13 +899,13 @@ export class RoSetupComponent implements OnInit {
 							roPartSplitUserTypeId: childDataList[j].partListUserTypeId ? parseInt(childDataList[j].partListUserTypeId) : 0,
 							roPartSplitUserId: childDataList[j].partListUserId ? this.getIdByObject(childDataList[j].partListUserId) : 0,
 							roPartSplitAddressId: childDataList[j].partListAddressId ? parseInt(childDataList[j].partListAddressId) : 0,
-							roPartSplitAddress1: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('address1', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
-							roPartSplitAddress2: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('address2', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
-							roPartSplitAddress3: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('address3', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
-							roPartSplitCity: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('city', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
-							roPartSplitStateOrProvince: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('stateOrProvince', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
-							roPartSplitPostalCode: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('postalCode', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
-							roPartSplitCountry: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('country', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							roPartSplitAddress1: this["splitAddressData"+i+j].length > 0 ? getValueFromArrayOfObjectById('address1', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							roPartSplitAddress2: this["splitAddressData"+i+j].length > 0 ? getValueFromArrayOfObjectById('address2', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							roPartSplitAddress3: this["splitAddressData"+i+j].length > 0 ? getValueFromArrayOfObjectById('address3', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							roPartSplitCity: this["splitAddressData"+i+j].length > 0 ? getValueFromArrayOfObjectById('city', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							roPartSplitStateOrProvince: this["splitAddressData"+i+j].length > 0 ? getValueFromArrayOfObjectById('stateOrProvince', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							roPartSplitPostalCode: this["splitAddressData"+i+j].length > 0 ? getValueFromArrayOfObjectById('postalCode', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							roPartSplitCountry: this["splitAddressData"+i+j].length > 0 ? getValueFromArrayOfObjectById('country', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
 							UOMId: this.partListData[i].UOMId ? this.partListData[i].UOMId : 0,
 							quantityOrdered: childDataList[j].quantityOrdered ? childDataList[j].quantityOrdered : 0,
 							needByDate: this.datePipe.transform(childDataList[j].needByDate, "MM/dd/yyyy"),
@@ -1217,6 +1217,7 @@ export class RoSetupComponent implements OnInit {
 			//this["splitAddressData"+index] = returnedcustomerAddressses[0];
 			//console.log(this["splitAddressData"+index])
 			 //this.splitAddressData = returnedcustomerAddressses[0];
+			 this["splitAddressData"+pindex+cindex] = [];
 			 this["splitAddressData"+pindex+cindex] = returnedcustomerAddressses[0];
 			if(this.isEditMode) {
 				if(data.roPartSplitAddressId == 0) {
@@ -1230,6 +1231,8 @@ export class RoSetupComponent implements OnInit {
 				//this.onShipToGetAddress(data, data.roPartSplitAddressId);
 			}
 			//part.roPartSplitAddressId = 0;
+			data.poPartSplitAddressId = null;
+			data.partListAddressId = null;
 		});
 	}
 
@@ -1254,6 +1257,7 @@ export class RoSetupComponent implements OnInit {
 		this.vendorService.getVendorShipAddressGet(vendorId).subscribe(
 			vendorAddresses => {
 				//this.vendorSelectedforSplit = vendorAddresses[0];
+				this["splitAddressData"+pindex+cindex] = [];
 				this["splitAddressData"+pindex+cindex] = vendorAddresses[0];
 				//part.addressData = vendorAddresses[0];;
 				//this.splitAddressData = vendorAddresses[0];
@@ -1263,11 +1267,14 @@ export class RoSetupComponent implements OnInit {
 					}
 					//this.onShipToGetAddress(data, data.roPartSplitAddressId);
 				}
+				data.poPartSplitAddressId = null;
+				data.partListAddressId = null;
 			})
 	}
 
 	onCompanyNameChange(companyId, data?, pindex?, cindex?) {
 		this.legalEntityService.getLegalEntityAddressById(companyId).subscribe(response => {
+			this["splitAddressData"+pindex+cindex] = [];
 			this["splitAddressData"+pindex+cindex] = response[0].map(x => {
 				return {
 					...x,
@@ -1283,7 +1290,9 @@ export class RoSetupComponent implements OnInit {
 			} else {
 				this.onShipToGetCompanyAddress(this.companySiteList_Shipping[0].legalEntityShippingAddressId);
 			}	
-		})	
+			data.poPartSplitAddressId = null;
+			data.partListAddressId = null;
+		})			
 	}
 
 	onGetSplitAddress(splitPart) {
@@ -2835,7 +2844,7 @@ export class RoSetupComponent implements OnInit {
 					this.sourceRoApproval.shipToAddressId = x.legalEntityShippingAddressId;
 				}
 			});
-			this.shipToAddress = this.addressFormForShipping;
+			this.shipToAddress = addressInfo;
 			//this.onShipToGetCompanyAddressThisPO(this.sourceRoApproval.shipToAddressId);
 		}
 		if(!this.isEditModeShipping) {
@@ -2993,7 +3002,7 @@ export class RoSetupComponent implements OnInit {
 					this.sourceRoApproval.billToAddressId = x.legalEntityBillingAddressId;
 				}
 			});
-			this.billToAddress = this.addressFormForBilling;
+			this.billToAddress = addressInfo;
 		}		
 		if(!this.isEditModeBilling) {
 			this.alertService.showMessage(
@@ -3288,7 +3297,8 @@ export class RoSetupComponent implements OnInit {
 	onEditShipVia(data) {
 		//if(value == 'EditCustShipVia') {
 			this.tempshipVia = getObjectById('shippingViaId', data.shipViaId, this.shipViaList);
-			this.addShipViaFormForShipping = {...this.tempshipVia};
+			this.addShipViaFormForShipping = {...this.tempshipVia, shipVia: this.tempshipVia.name};
+			console.log(this.addShipViaFormForShipping);
 			this.isEditModeShipVia = true;
 		//}
 	}
