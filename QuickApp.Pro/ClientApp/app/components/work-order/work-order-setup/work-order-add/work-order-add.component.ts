@@ -156,7 +156,7 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
   async ngOnInit() {
-    // this.getAllGridModals();
+
     this.mpnFlag = true;
     this.isDetailedView = true;
     this.selectedCustomer = new Customer();
@@ -173,6 +173,7 @@ export class WorkOrderAddComponent implements OnInit {
     if (!this.isEdit) {
 
       this.addMPN();
+      this.getAllGridModals();
     } else {
       const data = this.workOrderGeneralInformation;
       this.workOrderGeneralInformation = {
@@ -377,6 +378,10 @@ export class WorkOrderAddComponent implements OnInit {
     this.gridActiveTab = '';
   }
 
+  deleteMPN(index) {
+    this.workOrderGeneralInformation.partNumber = this.workOrderGeneralInformation.partNumber.splice(index, 1);
+  }
+
 
   saveWorkOrder(): void {
     this.mpnPartNumbersList = [];
@@ -392,9 +397,9 @@ export class WorkOrderAddComponent implements OnInit {
       createdBy: this.userName,
       updatedBy: this.userName,
       partNumbers: generalInfo.partNumbers.map(x => {
-        if (this.workOrderGeneralInformation.isSinglePN == false) {
-          this.mpnPartNumbersList.push({ label: x.masterPartId.partNumber, value: x.workflowId })
-        }
+        // if (this.workOrderGeneralInformation.isSinglePN == false) {
+        //   this.mpnPartNumbersList.push({ label: x.masterPartId.partNumber, value: x.workflowId })
+        // }
 
 
         return {
@@ -422,6 +427,8 @@ export class WorkOrderAddComponent implements OnInit {
           this.isDisabledSteps = true;
         }
 
+
+        this.getWorkOrderWorkFlowNos();
         if (this.workOrderGeneralInformation.isSinglePN == false) {
           // get WOrkFlow Equipment Details if WorFlow Exists
           this.getWorkFlowTabsData();
@@ -449,7 +456,7 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
   getWorkFlowTabsData() {
-    this.getWorkOrderWorkFlowNos();
+
     this.getEquipmentByWorkOrderId();
     this.getMaterialListByWorkOrderId();
     this.getWorkOrderWorkFlowBywfwoId(this.workFlowWorkOrderId);
@@ -491,6 +498,15 @@ export class WorkOrderAddComponent implements OnInit {
     if (this.workOrderId) {
       this.workOrderService.getWorkOrderWorkFlowNumbers(this.workOrderId).subscribe(res => {
         this.workOrderWorkFlowOriginalData = res;
+        this.mpnPartNumbersList = res.map(x => {
+          return {
+            ...x,
+            workOrderId: x.value,
+            value: x.workflowId,
+            label: x.workflowNo,
+            workOrderNo: x.label,
+          }
+        })
       })
     }
 

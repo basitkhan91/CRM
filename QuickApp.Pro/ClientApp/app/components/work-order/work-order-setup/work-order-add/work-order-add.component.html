@@ -519,6 +519,7 @@
                               
                                 <td><span *ngIf="!workOrderGeneralInformation.isSinglePN "  class="delete-row-btn"> <a
                                             class="btn btn-danger boxed-float-btn nobg"
+                                            (click)="deleteMPN(i)"
                                             data-toggle="tooltip" title="Delete"><i
                                                 class="fa fa-trash"></i></a>
                                     </span></td>
