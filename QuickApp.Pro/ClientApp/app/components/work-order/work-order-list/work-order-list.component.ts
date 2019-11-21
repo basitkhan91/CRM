@@ -105,9 +105,9 @@ export class WorkOrderListComponent implements OnInit {
 
 
     async view(rowData) {
-        // const { workOrderId } = rowData;
-        // const {workFlowWorkOrderId} = rowData;
-        const workOrderId = 46;
+        const { workOrderId } = rowData;
+        // const { workFlowWorkOrderId } = rowData;
+        // const workOrderId = 46;
         const workFlowWorkOrderId = 0;
 
         await this.workOrderService.viewWorkOrderHeader(workOrderId).subscribe(res => {
@@ -130,10 +130,14 @@ export class WorkOrderListComponent implements OnInit {
 
 
     getEquipmentByWorkOrderId(workFlowWorkOrderId, workOrderId) {
-        if (workFlowWorkOrderId) {
-            // this.workFlowWorkOrderId = this.workFlowWorkOrderData.workFlowWorkOrderId;
+        console.log(workFlowWorkOrderId, workOrderId);
+
+        // if (workFlowWorkOrderId || workFlowWorkOrderId === 0) {
+        // this.workFlowWorkOrderId = this.workFlowWorkOrderData.workFlowWorkOrderId;
+        if (workOrderId) {
             this.workOrderService.getWorkOrderAssetList(workFlowWorkOrderId, workOrderId).subscribe(
                 result => {
+                    console.log(result);
                     this.workOrderAssetList = result;
                 }
             )
@@ -142,7 +146,7 @@ export class WorkOrderListComponent implements OnInit {
     }
 
     getMaterialListByWorkOrderId(workFlowWorkOrderId, workOrderId) {
-        if (workFlowWorkOrderId && workOrderId) {
+        if (workOrderId) {
             this.workOrderService.getWorkOrderMaterialList(workFlowWorkOrderId, workOrderId).subscribe(res => {
 
                 this.workOrderMaterialList = res;
@@ -154,7 +158,7 @@ export class WorkOrderListComponent implements OnInit {
 
     getPublicationListByWorkOrderId(workFlowWorkOrderId, workOrderId) {
 
-        if (workFlowWorkOrderId && workOrderId) {
+        if (workOrderId) {
             this.workOrderService.getWorkOrderPublicationList(workFlowWorkOrderId, workOrderId).subscribe(res => {
                 this.workOrderPublicationList = res;
             })
@@ -164,7 +168,7 @@ export class WorkOrderListComponent implements OnInit {
 
     getChargesListByWorkOrderId(workFlowWorkOrderId, workOrderId) {
 
-        if (workFlowWorkOrderId && workOrderId) {
+        if (workOrderId) {
             this.workOrderService.getWorkOrderChargesList(workFlowWorkOrderId, workOrderId).subscribe(res => {
                 this.workOrderChargesList = res;
             })
@@ -175,7 +179,7 @@ export class WorkOrderListComponent implements OnInit {
 
     getExclusionListByWorkOrderId(workFlowWorkOrderId, workOrderId) {
 
-        if (workFlowWorkOrderId && workOrderId) {
+        if (workOrderId) {
             this.workOrderService.getWorkOrderExclusionsList(workFlowWorkOrderId, workOrderId).subscribe(res => {
                 this.workOrderExclusionsList = res;
             })
@@ -186,7 +190,7 @@ export class WorkOrderListComponent implements OnInit {
 
     getLaborListByWorkOrderId(workFlowWorkOrderId, workOrderId) {
 
-        if (workFlowWorkOrderId && workOrderId) {
+        if (workOrderId) {
             this.workOrderService.getWorkOrderLaborList(workFlowWorkOrderId, workOrderId).subscribe(res => {
                 this.workOrderLaborList = res;
             })

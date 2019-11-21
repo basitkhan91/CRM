@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, Input } from '@angular/core';
+﻿import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { fadeInOut } from '../../../../services/animations';
 import { PageHeaderComponent } from '../../../../shared/page-header.component';
 import * as $ from 'jquery';
@@ -35,6 +35,7 @@ import { CommonService } from '../../../../services/common.service';
 import { validateRecordExistsOrNot, selectedValueValidate, getValueFromObjectByKey, getObjectById, getObjectByValue, editValueAssignByCondition } from '../../../../generic/autocomplete';
 import { AuthService } from '../../../../services/auth.service';
 import { ActivatedRoute } from '@angular/router';
+import { WorkFlowtService } from '../../../../services/workflow.service';
 
 @Component({
   selector: 'app-work-order-add',
@@ -57,6 +58,7 @@ export class WorkOrderAddComponent implements OnInit {
   @Input() priorityList;
   @Input() partNumberOriginalData;
   @Input() workOrderGeneralInformation;
+  // @Output() viewWorkFlow = new EventEmitter();
 
   // workOrderTypes: WorkOrderType[];
   // workOrderStatusList: any;
@@ -132,6 +134,8 @@ export class WorkOrderAddComponent implements OnInit {
   stockLineList: any;
   workOrderWorkFlowOriginalData: any;
   isDisabledSteps: boolean = false;
+  workFlowId: any;
+  editWorkFlowData: any;
 
 
   constructor(
@@ -145,7 +149,9 @@ export class WorkOrderAddComponent implements OnInit {
     private stocklineService: StocklineService,
     private commonService: CommonService,
     private authService: AuthService,
-    private acRouter: ActivatedRoute
+    private acRouter: ActivatedRoute,
+    private workFlowtService: WorkFlowtService,
+
   ) {
     // this.workOrderPartNumbers = [];
     // this.workOrder = new WorkOrder();
@@ -156,7 +162,7 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
   async ngOnInit() {
-    // this.getAllGridModals();
+
     this.mpnFlag = true;
     this.isDetailedView = true;
     this.selectedCustomer = new Customer();
@@ -173,6 +179,7 @@ export class WorkOrderAddComponent implements OnInit {
     if (!this.isEdit) {
 
       this.addMPN();
+      this.getAllGridModals();
     } else {
       const data = this.workOrderGeneralInformation;
       this.workOrderGeneralInformation = {
@@ -373,8 +380,33 @@ export class WorkOrderAddComponent implements OnInit {
   }
   // subtab in grid change
   subTabWorkFlowChange(value) {
+
     this.subTabWorkFlow = value;
+
+    if (value === 'editworkFlow') {
+      this.editWorkFlowData = undefined;
+      this.workFlowtService.getWorkFlowDataByIdForEdit(this.workFlowId).subscribe(res => {
+        console.log(res);
+
+        this.workFlowtService.listCollection = res[0];
+        this.workFlowtService.enableUpdateMode = true;
+        this.workFlowtService.currentWorkFlowId = res.workflowId;
+        this.editWorkFlowData = res;
+
+      })
+
+    }
+
+
+
+    // if(value === 'viewworkFlow'){
+    //   this.viewWorkFlow.emit(this.workFlowWorkOrderId)
+    // }
     this.gridActiveTab = '';
+  }
+
+  deleteMPN(index) {
+    this.workOrderGeneralInformation.partNumber = this.workOrderGeneralInformation.partNumber.splice(index, 1);
   }
 
 
@@ -392,9 +424,9 @@ export class WorkOrderAddComponent implements OnInit {
       createdBy: this.userName,
       updatedBy: this.userName,
       partNumbers: generalInfo.partNumbers.map(x => {
-        if (this.workOrderGeneralInformation.isSinglePN == false) {
-          this.mpnPartNumbersList.push({ label: x.masterPartId.partNumber, value: x.workflowId })
-        }
+        // if (this.workOrderGeneralInformation.isSinglePN == false) {
+        //   this.mpnPartNumbersList.push({ label: x.masterPartId.partNumber, value: x.workflowId })
+        // }
 
 
         return {
@@ -416,15 +448,19 @@ export class WorkOrderAddComponent implements OnInit {
 
         this.workOrderId = result.workOrderId;
         this.workOrderGeneralInformation.workOrderNumber = result.workOrderNum;
-        this.workFlowWorkOrderId = result.workFlowWorkOrderId;
+
 
         if (this.workFlowWorkOrderId !== 0) {
           this.isDisabledSteps = true;
         }
 
-        if (this.workOrderGeneralInformation.isSinglePN == false) {
+
+        this.getWorkOrderWorkFlowNos();
+        if (this.workOrderGeneralInformation.isSinglePN == true) {
           // get WOrkFlow Equipment Details if WorFlow Exists
           this.getWorkFlowTabsData();
+          this.workFlowId = generalInfo.partNumbers[0].workflowId;
+          this.workFlowWorkOrderId = result.workFlowWorkOrderId;
 
         }
 
@@ -441,29 +477,34 @@ export class WorkOrderAddComponent implements OnInit {
 
 
 
-  changeofMPN(workFlowWorkOrderId) {
-    console.log(workFlowWorkOrderId);
+  changeofMPN(data) {
+    console.log(data)
+    // data.workOrderWorkFlowId
+    // const data = object;
+    this.workFlowId = data.workflowId,
+      this.workFlowWorkOrderId = data.workOrderWorkFlowId;
+    // console.log(workFlowWorkOrderId);
 
     this.getWorkFlowTabsData();
 
   }
 
   getWorkFlowTabsData() {
-    this.getWorkOrderWorkFlowNos();
+
     this.getEquipmentByWorkOrderId();
     this.getMaterialListByWorkOrderId();
-    this.getWorkOrderWorkFlowBywfwoId(this.workFlowWorkOrderId);
+    // this.getWorkOrderWorkFlowBywfwoId(this.workFlowWorkOrderId);
   }
 
 
 
 
-  getWorkOrderWorkFlowBywfwoId(workFlowWorkOrderId) {
+  // getWorkOrderWorkFlowBywfwoId(workFlowWorkOrderId) {
 
-    this.workOrderService.getWorkOrderWorkFlowByWorkFlowWorkOrderId(workFlowWorkOrderId).subscribe(res => {
+  //   this.workOrderService.getWorkOrderWorkFlowByWorkFlowWorkOrderId(workFlowWorkOrderId).subscribe(res => {
 
-    })
-  }
+  //   })
+  // }
 
 
   // savedWorkFlowData(workFlowDataObject) {
@@ -491,6 +532,20 @@ export class WorkOrderAddComponent implements OnInit {
     if (this.workOrderId) {
       this.workOrderService.getWorkOrderWorkFlowNumbers(this.workOrderId).subscribe(res => {
         this.workOrderWorkFlowOriginalData = res;
+        this.mpnPartNumbersList = res.map(x => {
+          return {
+            value:
+            {
+              workOrderWorkFlowId: x.value,
+              workOrderNo: x.label,
+              masterPartId: x.masterPartId,
+              workflowId: x.workflowId,
+              workflowNo: x.workflowNo,
+              partNumber: x.partNumber
+            },
+            label: x.workflowNo
+          }
+        })
       })
     }
 
