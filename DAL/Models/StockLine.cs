@@ -15,6 +15,12 @@ namespace DAL.Models
         [ForeignKey("ItemMasterId")]
         public long? ItemMasterId { get; set; }
         public int? Quantity { get; set; }
+        public bool BlackListed { get; set; }
+        public string BlackListedReason { get; set; }
+        public bool Incident { get; set; }
+        public string IncidentReason { get; set; }
+        public bool Accident { get; set; }
+        public string AccidentReason { get; set; }
         public int? QuantityOnOrder { get; set; }
         public int? QuantityAvailable { get; set; }
         public int? QuantityOnHand { get; set; }
