@@ -96,6 +96,8 @@ export class ExpertiseCreateComponent implements OnInit, OnChanges {
         this.workFlow.sumofestimatedhrs = this.workFlow.expertise.reduce((acc, x) => {
             return acc + parseFloat(x.estimatedHours === undefined || x.estimatedHours === '' ? 0 : x.estimatedHours)
         }, 0);
+
+        this.workFlow.sumofestimatedhrs = parseFloat(this.workFlow.sumofestimatedhrs.toFixed(2));
     }
 
     // sum of labour direct cost 

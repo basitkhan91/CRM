@@ -379,11 +379,8 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
     }
 
     savetrainigSection() {
-
-        console.log();
-
+        
         if (!this.sourceEmployee.employeeTrainingTypeId) {
-
 
             this.alertService.showMessage("Failure", `Training Type Required`, MessageSeverity.success);
 
@@ -412,7 +409,21 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
                     error => this.saveFailedHelper(error));
             }
 
+            this.activeIndex = 3;
+            this.employeeService.indexObj.next(this.activeIndex)
+
         }
+        this.activeIndex = 3;
+        this.employeeService.indexObj.next(this.activeIndex)
+        
+        var data = { "empId": this.empId, "firstName": this.firstName, "lastName": this.lastName };
+
+        var stringData = JSON.stringify(data);
+        
+        var encryptedData = btoa(JSON.stringify(data));
+
+        this.router.navigate(['/employeesmodule/employeepages/app-employees-management-structure'], { queryParams: { order: this.empId, 'firstName': this.firstName, 'lastName': this.lastName }, skipLocationChange: true });
+     
     
     }
 

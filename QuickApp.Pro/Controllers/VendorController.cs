@@ -1233,7 +1233,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("vendorPost")]
-        public IActionResult CreateAction([FromForm][FromBody] VendorViewModel vendorViewModel, Address address, VendorType vt)
+        public IActionResult CreateAction([FromBody][FromForm] VendorViewModel vendorViewModel, Address address, VendorType vt)
         {
             if (ModelState.IsValid)
             {
@@ -1273,10 +1273,10 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.SaveChanges();
 
 
-                if (Request.Form.Files.Count > 0)
-                {
-                    actionobject.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, actionobject.VendorId, Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), actionobject.UpdatedBy, actionobject.MasterCompanyId);
-                }
+                //if (Request.Form.Files.Count > 0)
+                //{
+                //    actionobject.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, actionobject.VendorId, Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), actionobject.UpdatedBy, actionobject.MasterCompanyId);
+                //}
 
 
                 return Ok(actionobject);
@@ -1338,7 +1338,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPut("vendorUpdate/{id}")]
-        public IActionResult UpdateVendorList(long id, [FromForm][FromBody] VendorViewModel vendorViewModel, VendorType vt)
+        public IActionResult UpdateVendorList(long id, [FromBody][FromForm] VendorViewModel vendorViewModel, VendorType vt)
         {
             if (ModelState.IsValid)
             {
@@ -1393,10 +1393,10 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.Vendor.Update(actionobject);
                 _unitOfWork.SaveChanges();
 
-                if (Request.Form.Files.Count > 0)
-                {
-                    actionobject.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, actionobject.VendorId, Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), actionobject.UpdatedBy, actionobject.MasterCompanyId);
-                }
+                //if (Request.Form.Files.Count > 0)
+                //{
+                //    actionobject.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, actionobject.VendorId, Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), actionobject.UpdatedBy, actionobject.MasterCompanyId);
+                //}
                 return Ok(actionobject);
             }
 
@@ -3061,14 +3061,14 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("POListByMasterItemId")]
         public IActionResult POListByMasterItemId(int itemMasterId)
         {
-            var result = _unitOfWork.purchaseOrder.POListByMasterItemId(itemMasterId);
+            var result = _unitOfWork.purchaseOrder.POListByMasterItemId(itemMasterId).Distinct();
             return Ok(result);
         }
 
         [HttpGet("ROListByMasterItemId")]
         public IActionResult ROListByMasterItemId(int itemMasterId)
         {
-            var result = _unitOfWork.repairOrder.ROListByMasterItemId(itemMasterId);
+            var result = _unitOfWork.repairOrder.ROListByMasterItemId(itemMasterId).Distinct();
             return Ok(result);
         }
 

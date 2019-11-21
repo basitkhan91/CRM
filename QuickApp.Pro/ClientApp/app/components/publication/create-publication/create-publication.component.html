@@ -5,7 +5,7 @@
     (click)="changeOfTab('General')"
   >
     <div class="md-step-circle"><span>1</span></div>
-    <div class="md-step-title">General Information</div>
+    <div class="md-step-title">General Info</div>
     <div class="md-step-bar-left"></div>
     <div class="md-step-bar-right"></div>
   </div>
@@ -32,7 +32,7 @@
 
   >
     <div class="md-step-circle"><span>3</span></div>
-    <div class="md-step-title">Aircraft Information</div>
+    <div class="md-step-title">Aircraft Info</div>
 
     <div class="md-step-bar-left"></div>
     <div class="md-step-bar-right"></div>
@@ -53,7 +53,7 @@
 <div class="card">
   <div [ngClass]="{hideTab : currentTab !== 'General'}">
     <div class="card-header header-text ">
-      General Information
+      General Info
     </div>
   <div class="card-body">
     <form #generalInfoForm="ngForm">
@@ -309,7 +309,7 @@
 
     <div [ngClass]="{hideTab : currentTab !== 'Aircraft'}">
       <div class="card-header header-text ">
-        Aircraft Information
+        Aircraft Info
       </div>
       <div class="card-body">
         <div class="col-md-12">
@@ -439,7 +439,7 @@
 
     <div [ngClass]="{hideTab : currentTab !== 'Atachapter'}" >
       <div class="card-header header-text ">
-        ATA Information
+        ATA Info
       </div>
       <div class="card-body">
         <div class="col-md-12">

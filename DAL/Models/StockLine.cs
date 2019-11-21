@@ -15,6 +15,20 @@ namespace DAL.Models
         [ForeignKey("ItemMasterId")]
         public long? ItemMasterId { get; set; }
         public int? Quantity { get; set; }
+        public bool BlackListed { get; set; }
+        public string BlackListedReason { get; set; }
+        public bool Incident { get; set; }
+        public string IncidentReason { get; set; }
+        public bool Accident { get; set; }
+        public string AccidentReason { get; set; }
+        public int? QuantityOnOrder { get; set; }
+        public int? QuantityAvailable { get; set; }
+        public int? QuantityOnHand { get; set; }
+        public int? QuantityIssued { get; set; }
+        public int? QuantityTurnIn { get; set; }
+        public int? QuantityReserved { get; set; }
+        public long? WorkOrderPartNumberId { get; set; }
+        public long? WorkOrderId { get; set; }
         [ForeignKey("ConditionId")]
         public long? ConditionId { get; set; }
         public string SerialNumber { get; set; }
@@ -90,14 +104,7 @@ namespace DAL.Models
         public string ShippingReference { get; set; }
         public long? TimeLifeCyclesId { get; set; }
         public bool TimeLifeDetailsNotProvided { get; set; }
-        public long? WorkOrderId { get; set; }
-        public long? WorkOrderPartNumberId { get; set; }
-        public int? QuantityReserved { get; set; }
-        public int? QuantityTurnIn { get; set; }
-        public int? QuantityIssued { get; set; }
-        public int? QuantityOnHand { get; set; }
-        public int? QuantityAvailable { get; set; }
-        public int? QuantityOnOrder { get; set; }
+        
 
         public virtual PurchaseOrder PurchaseOrder { get; set; }
         public virtual PurchaseOrderPart PurchaseOrderPartRecord { get; set; }

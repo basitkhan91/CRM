@@ -145,6 +145,7 @@ namespace DAL
         public DbSet<EmployeeTraining> EmployeeTraining { get; set; }
         public DbSet<EmployeeTrainingType> EmployeeTrainingType { get; set; }
         public DbSet<EmployeeUserRole> EmployeeUserRole { get; set; }
+        public DbSet<EmployeeManagementStructure> EmployeeManagementStructure { get; set; }
         // public DbSet<EmployeeShift> EmployeeShift { get; set; }
         
         public DbSet<CustomerBillingAddress> CustomerBillingAddress { get; set; }

@@ -1,7 +1,5 @@
 ﻿using DAL.Models;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DAL.Repositories.Interfaces
 {
@@ -18,5 +16,7 @@ namespace DAL.Repositories.Interfaces
         object GetEmployeeData(long employeeId);
         IEnumerable<object> EmployeeUserRole(List<EmployeeUserRole> objEmployeeUserRoles);
         IEnumerable<object> GetEmployeeUserRole(long employeeId);
+        IEnumerable<object> EmpoyeeManagementStructure(List<EmployeeManagementStructure> objEmployeeManagementStructure);
+        IEnumerable<object> GetEmpoyeeManagementStructure(long employeeId);
     }
 }

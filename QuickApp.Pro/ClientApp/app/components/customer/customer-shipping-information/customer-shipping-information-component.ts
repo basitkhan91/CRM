@@ -279,6 +279,7 @@ export class CustomerShippingInformationComponent implements OnInit {
         })
     }
     openInterShippingView(rowData) {
+       
         this.sourceViewforInterShipping = rowData;
         // this.getShipViaDataByInternationalShippingId();
 

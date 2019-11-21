@@ -627,7 +627,22 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpPost("savereserveissuesparts")]
+        public IActionResult SaveReserveIssuesParts([FromBody]List<WorkOrderReserveIssuesParts> reserveIssuesParts)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = unitOfWork.WorkOrderRepository.SaveReserveIssuesParts(reserveIssuesParts);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
 
+        }
+
+        
 
         #endregion
 

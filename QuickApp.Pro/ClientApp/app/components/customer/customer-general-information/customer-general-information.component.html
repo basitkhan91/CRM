@@ -1,6 +1,6 @@
 ﻿
 <div>
-    <!--<h4 class="page-heading clr-green"> Create Customer</h4>-->
+    <h4 class="page-heading clr-green"> Creating Customer</h4>
     <div>
 
 
@@ -141,7 +141,7 @@
                                                         </div>
                                                         
                                                         <div class="col-md-4">
-                                                                <input type="text"  name="phoneExt" pInputText pKeyFilter="num" maxlength="3" [(ngModel)]="generalInformation.customerPhoneExt" required>
+                                                                <input type="text"  name="phoneExt" pInputText pKeyFilter="num" maxlength="3" [(ngModel)]="generalInformation.customerPhoneExt">
                                                         </div>
 
                                                     </div>
@@ -169,7 +169,7 @@
                                                     <label>Address Line 2</label>
                                                     <input class="form-control" type="text" id="cmaddress2" name="cmaddress2" [(ngModel)]="generalInformation.address2">
                                                 </div>
-                                                <div class="form-group">
+                                                <div class="form-group" style="display:none">
                                                     <label>Address Line 3</label>
                                                     <input class="form-control" type="text" id="cmaddress3" name="cmaddress3" [(ngModel)]="generalInformation.address3">
                                                 </div>
@@ -775,10 +775,11 @@
                 <div class="form-group">
                         <label>Name <span class="clr-red">*</span></label>
                         <div class="inner-addon right-addon inline-block">
-                                <p-autoComplete class="p-dropdown-custom-2" name="classificationName"  
+                                <p-autoComplete class="p-dropdown-custom-2 p-dropdown-custom-gen" name="classificationName"  
                                 [(ngModel)]="addNewclassification.description" 
                                 (onSelect)="selectedClassification($event)"
-                                (onKeyUp)="checkClassificationExists('label',$event.target.value)"
+                            
+                                (onKeyUp)="checkClassificationExists('field',$event.target.value)"
                                 [suggestions]="classificationList" field="label" (completeMethod)="filterclassifications($event)" 
                                 [size]="30"[minLength]="1" [dropdown]="true" required> 
                                </p-autoComplete> 
@@ -811,61 +812,64 @@
 
 
 
-  <div id="addIntergation" class="modal fade" role="dialog">
+<div id="addIntergation" class="modal fade" role="dialog">
+    <form #addIntergation="ngForm">
         <div class="modal-dialog">
-      
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" (click)="resetIntegrationPopUp()">&times;</button>
-              <h4 class="modal-title">Add Intergation</h4>
-            </div>
-            <div class="modal-body">
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" (click)="resetIntegrationPopUp()">&times;</button>
+                    <h4 class="modal-title">Add Intergation</h4>
+                </div>
+                <div class="modal-body">
                     <div class="form-group">
-                            <label>WebSite url  <span class="clr-red">*</span></label>
-                            <div class="inner-addon right-addon inline-block">
-    
-                                <p-autoComplete class="p-dropdown-custom-2" name="url"  
-                                 [(ngModel)]="addNewIntergation.portalURL" 
-                                 (onKeyUp)="checkIntergationExists('description',$event.target.value)"
-                                 [suggestions]="integrationList" field="description" (completeMethod)="filterIntegrations($event)" 
-                                 [size]="30"[minLength]="1" [dropdown]="true" required>
-                                </p-autoComplete>
-                               <div *ngIf="isIntegrationAlreadyExists" class="clr-red">Entry Already Exists</div>  
-                            </div>
+                        <label>WebSite url  <span class="clr-red">*</span></label>
+                        <div class="inner-addon right-addon inline-block">
+
+                            <p-autoComplete class="p-dropdown-custom-2 p-dropdown-custom-gen" name="url" 
+                                            [(ngModel)]="addNewIntergation.portalURL"
+                                            (onKeyUp)="checkIntergationExists('field',$event.target.value)"
+                                            (onSelect)="selectedWebSite()"
+                                            [suggestions]="integrationList" field="label" (completeMethod)="filterIntegrations($event)"
+                                            [size]="30" [minLength]="1" [dropdown]="true" required>
+                            </p-autoComplete>
+                            <div *ngIf="isIntegrationAlreadyExists" class="clr-red">Entry Already Exists</div>
                         </div>
-                        <div class="form-group">
-                                <label>Intergation</label>
-                                <input class="form-control" [(ngModel)]="addNewIntergation.description" name="description">
-                            </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Intergation</label>
+                        <input class="form-control" [(ngModel)]="addNewIntergation.description" name="description">
+                    </div>
 
-                        <div class="form-group">
-                                <label>Memo</label>
-                                <input class="form-control" [(ngModel)]="addNewIntergation.memo" name="memo">
-                            </div>
+                    <div class="form-group">
+                        <label>Memo</label>
+                        <input class="form-control" [(ngModel)]="addNewIntergation.memo" name="memo">
+                    </div>
 
-                        <div class="form-group">
-                                <div class="col-sm-6">
-                                    <span class="checkbox-cstm">
-                                        <label style="margin-top: 12px;" class="form-check-label" for="isActive">
-                                            <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="addNewIntergation.isActive">
-                                            <span class="cr"><i class="cr-icon pi pi-check"></i></span> Active
-                                        </label>
-                                    </span>
-                                </div>
-                                <div class="clear"></div>
-                            </div>
-                        
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                            <span class="checkbox-cstm">
+                                <label style="margin-top: 12px;" class="form-check-label" for="isActive">
+                                    <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="addNewIntergation.isActive">
+                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span> Active
+                                </label>
+                            </span>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="newIntegrationAdd()" [disabled]="!addIntergation.valid || isIntegrationAlreadyExists">Save</button>
+                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetIntegrationPopUp()">Close</button>
+                </div>
             </div>
-    
-            
-            <div class="modal-footer">
-              <button type="button"class="btn btn-primary-cstm" data-dismiss="modal" (click)="newIntegrationAdd()" [disabled]="isClassificationAlreadyExists">Save</button>
-              <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetIntegrationPopUp()">Close</button>
-            </div>
-          </div>
-      
+
         </div>
-      </div> 
+        </form>
+</div> 
 
 <div class="modal fade" id="memo-popup" role="dialog">
     <div class="modal-dialog modal-sm" style="max-width: 400px !important;">

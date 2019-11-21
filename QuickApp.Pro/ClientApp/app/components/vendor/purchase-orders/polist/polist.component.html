@@ -63,7 +63,7 @@
 					size="50"
 					class="form-control ui-autocomplete-input"
 					(input)="globalSearch($event.target.value)"
-					placeholder="Global Filter"
+					placeholder=" Filter"
 				  />
 				</div>
 				<button
@@ -330,9 +330,9 @@
 									<div class="table-responsive default-bg clear">
 										<div class="col-sm-3">
 											<p><span class="label"><b>PO Num: </b></span><span class="value">{{poHeaderAdd.purchaseOrderNumber ? poHeaderAdd.purchaseOrderNumber : '-'}}</span></p>
-											<p><span class="label"><b>Open Date: </b></span><span class="value">{{poHeaderAdd.openDate | date: 'dd/MM/yyyy'}}</span></p>
-											<p><span class="label"><b>Closed/Cancelled Date: </b></span><span class="value">{{poHeaderAdd.closedDate | date: 'dd/MM/yyyy'}}</span></p>
-											<p><span class="label"><b>Need By: </b></span><span class="value">{{poHeaderAdd.needByDate | date: 'dd/MM/yyyy'}}</span></p>
+											<p><span class="label"><b>Open Date: </b></span><span class="value">{{poHeaderAdd.openDate | date: 'MM/dd/yyyy'}}</span></p>
+											<p><span class="label"><b>Closed/Cancelled Date: </b></span><span class="value">{{poHeaderAdd.closedDate | date: 'MM/dd/yyyy'}}</span></p>
+											<p><span class="label"><b>Need By: </b></span><span class="value">{{poHeaderAdd.needByDate | date: 'MM/dd/yyyy'}}</span></p>
 											<p><span class="label"><b>Priority: </b></span><span class="value">{{poHeaderAdd.priority ? poHeaderAdd.priority : '-'}}</span></p>
 											<p><span class="label"><b>Deferred Receiver: </b></span><span class="value">{{poHeaderAdd.deferredReceiver ? poHeaderAdd.deferredReceiver : '-'}}</span></p>
 										</div>
@@ -349,7 +349,7 @@
 										<div class="col-sm-3">
 												<p><span class="label"><b>Requisitioner: </b></span><span class="value">{{poHeaderAdd.requisitioner ? poHeaderAdd.requisitioner : '-'}}</span></p>
 												<p><span class="label"><b>Approver: </b></span><span class="value">{{poHeaderAdd.approver ? poHeaderAdd.approver : '-'}}</span></p>
-												<p><span class="label"><b>Approved Date: </b></span><span class="value">{{poHeaderAdd.dateApproved | date: 'dd/MM/yyyy'}}</span></p>
+												<p><span class="label"><b>Approved Date: </b></span><span class="value">{{poHeaderAdd.dateApproved | date: 'MM/dd/yyyy'}}</span></p>
 												<p><span class="label"><b>Status: </b></span><span class="value">{{poHeaderAdd.status ? poHeaderAdd.status : '-'}}</span></p>
 												<p><span class="label"><b>Resale: </b></span><span class="value">{{poHeaderAdd.resale ? poHeaderAdd.resale : '-'}}</span></p>
 										</div>
@@ -421,7 +421,7 @@
 																<td colspan="4">{{partList?.level1}},{{partList?.level2}},{{partList?.level3}},{{partList?.level4}}</td>
 																<td>{{partList?.memo}}</td>
 															</tr>
-															<tr class="child-header splitship-head" *ngIf="partList.purchaseOrderSplitParts">
+															<tr class="child-header splitship-head" *ngIf="partList.purchaseOrderSplitParts.length > 0">
 																<th></th>
 																<th></th>
 																<th>PN</th>

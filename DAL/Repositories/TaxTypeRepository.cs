@@ -18,14 +18,14 @@ namespace DAL.Repositories
 
         public IEnumerable<DAL.Models.TaxType> GetAllTaxTypeData()
         {
-            return _appContext.TaxType.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.TaxTypeId).ToList();
+            return _appContext.TaxType.Include("MasterCompany").Where(c => c.IsDeleted == false || c.IsDeleted == null).OrderByDescending(c => c.TaxTypeId).ToList();
 
         }
 
         override
        public IQueryable<DAL.Models.TaxType> GetPaginationData()
         {
-            return _appContext.TaxType.Where(c => (c.IsDelete == false || c.IsDelete == null))
+            return _appContext.TaxType.Where(c => (c.IsDeleted == false || c.IsDeleted == null))
                 .OrderByDescending(c => c.TaxTypeId).ToList().AsQueryable();
         }
 

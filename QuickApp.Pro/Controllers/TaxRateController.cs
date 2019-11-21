@@ -98,6 +98,8 @@ namespace QuickApp.Pro.Controllers
                 taxrateobject.Memo = taxrateViewModel.Memo;
                 taxrateobject.MasterCompanyId = taxrateViewModel.MasterCompanyId;
                 taxrateobject.IsActive = taxrateViewModel.IsActive;
+                taxrateobject.IsDeleted = taxrateViewModel.IsDeleted;
+
                 taxrateobject.CreatedDate = DateTime.Now;
                 taxrateobject.UpdatedDate = DateTime.Now;
                 taxrateobject.CreatedBy = taxrateViewModel.CreatedBy;
@@ -146,7 +148,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult DeleteAction(long id)
         {
             var existingResult = _unitOfWork.TaxRate.GetSingleOrDefault(c => c.TaxRateId == id);
-            existingResult.IsDelete = true;
+            existingResult.IsDeleted = true;
             _unitOfWork.TaxRate.Update(existingResult);
 
             //_unitOfWork.TaxRates.Remove(existingResult);

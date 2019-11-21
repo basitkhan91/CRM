@@ -781,6 +781,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     }
     checkClassificationExists(field, value, ) {
+        
         const exists = validateRecordExistsOrNot(field, value, this.allcustomerclassificationInfo)
 
 
@@ -833,10 +834,11 @@ export class CustomerGeneralInformationComponent implements OnInit {
     filterIntegrations(event) {
         this.integrationList = this.integrationOriginalList;
         this.integrationList = [...this.integrationOriginalList.filter(x => {
-            return x.description.toLowerCase().includes(event.query.toLowerCase())
+            return x.label.toLowerCase().includes(event.query.toLowerCase())
         })]
     }
     checkIntergationExists(field, value) {
+     
         const exists = validateRecordExistsOrNot(field, value, this.integrationOriginalList)
         if (exists.length > 0) {
 
@@ -845,7 +847,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
             this.isIntegrationAlreadyExists = false;
         }
     }
-
+    selectedWebSite() {
+        this.isIntegrationAlreadyExists = true;
+    }
     newIntegrationAdd() {
         const data = {
             ...this.addNewIntergation,

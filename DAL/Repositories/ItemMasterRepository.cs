@@ -183,7 +183,8 @@ namespace DAL.Repositories
                                 t.ItemMasterId,
                                 t.GLAccountId,
                                 t.ManufacturerId,
-                                t.Manufacturer
+                                t.Manufacturer,
+                                t.NHA
                             }).ToList();
                 return data;
             }

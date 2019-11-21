@@ -47,7 +47,8 @@ namespace DAL.Repositories
                               join ro in _appContext.RepairOrder on stl.RepairOrderId equals ro.RepairOrderId into repair
                               from ro in repair.DefaultIfEmpty()
 
-                              join mana in _appContext.ManagementStructure on stl.ManagementStructureEntityId equals mana.ManagementStructureId
+                              join mana in _appContext.ManagementStructure on stl.ManagementStructureEntityId equals mana.ManagementStructureId into manage
+                              from mana in manage.DefaultIfEmpty()
 
                               join ti in _appContext.TimeLife on stl.TimeLifeCyclesId equals ti.TimeLifeCyclesId into time
                               from ti in time.DefaultIfEmpty()
@@ -76,6 +77,12 @@ namespace DAL.Repositories
                                   partDescription = im.PartDescription,
                                   stl.ManagementStructureEntityId,
                                   stl.Quantity,
+                                  stl.QuantityOnOrder,
+                                  stl.QuantityAvailable,
+                                  stl.QuantityIssued,
+                                  stl.QuantityOnHand,
+                                  stl.QuantityTurnIn,
+                                  stl.QuantityReserved,
                                   condition = co.Description,
                                   stl.ShelfLifeExpirationDate,
                                   siteName = si.Name,
@@ -602,6 +609,12 @@ namespace DAL.Repositories
                               partDescription = im.PartDescription,
                               stl.ManagementStructureEntityId,
                               stl.Quantity,
+                              stl.QuantityOnOrder,
+                              stl.QuantityAvailable,
+                              stl.QuantityIssued,
+                              stl.QuantityOnHand,
+                              stl.QuantityTurnIn,
+                              stl.QuantityReserved,
                               condition = co.Description,
                               stl.ShelfLifeExpirationDate,
                               siteName = si.Name,
