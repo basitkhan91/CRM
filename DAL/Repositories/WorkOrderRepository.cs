@@ -500,11 +500,19 @@ namespace DAL.Repositories
             try
             {
                 var list = (from w in _appContext.WorkOrderWorkFlow
+                            join wop in _appContext.WorkOrderPartNumber on w.WorkOrderId equals wop.WorkOrderId
+                            join im in _appContext.ItemMaster on wop.MasterPartId  equals im.ItemMasterId
+                            join wf in _appContext.Workflow on w.WorkflowId equals wf.WorkflowId into wwf
+                            from wf in wwf.DefaultIfEmpty()
                             where w.IsDeleted == false && w.IsActive == true && w.WorkOrderId == workOrderId
                             select new
                             {
                                 value = w.WorkFlowWorkOrderId,
-                                label = w.WorkFlowWorkOrderNo
+                                label = w.WorkFlowWorkOrderNo,
+                                wop.MasterPartId,
+                                WorkflowId= wf ==null?0:wf.WorkflowId,
+                                WorkflowNo=wf==null?"":wf.WorkOrderNumber,
+                                im.PartNumber
                             }
                           ).ToList();
                 return list;
