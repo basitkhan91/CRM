@@ -44,8 +44,12 @@ namespace DAL.Repositories
         {
             return _appContext.Workflow.Include("ItemMaster").Include("WorkScope").Include("Customer").Where(workflow => workflow.IsDelete == null || workflow.IsDelete != true).OrderByDescending(x => x.WorkflowId).ToList();
         }
+		public List<Workflow> getAllWorkFlowById(long workFlowId)
+		{
+			return _appContext.Workflow.Include("ItemMaster").Include("WorkScope").Include("Customer").Where(workflow => (workflow.IsDelete == null || workflow.IsDelete != true) && workflow.WorkflowId== workFlowId).ToList();
+		}
 
-        public Workflow getWorkFlowWithMaterialList(int WorkflowId)
+		public Workflow getWorkFlowWithMaterialList(int WorkflowId)
         {
             var workFlow = _appContext.Set<Workflow>().Include("ItemMaster").Include("WorkScope").Include("Customer").Where(x => x.WorkflowId == WorkflowId).FirstOrDefault();
 

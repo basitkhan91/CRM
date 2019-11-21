@@ -76,7 +76,35 @@ namespace QuickApp.Pro.Controllers
                 }); ;
         }
 
-        [HttpGet("GetActionAttributes")]
+		[HttpGet("GetWorkFlowbyIdforEdit")]
+		public object GetWorkFlows(long workFlowId)
+		{
+			var workflows = _unitOfWork.workFlowRepositoryTest.getAllWorkFlowById(workFlowId); 
+			return workflows.Select(workflow =>
+				new
+				{
+					workflow = workflow,
+					WorkflowId = workflow.WorkflowId,
+					Description = workflow.WorkScope != null ? workflow.WorkScope.Description : "",
+					WorkScopeId = workflow.WorkScopeId,
+					Name = workflow.Customer != null ? workflow.Customer.Name : "",
+					PartDescription = workflow.ItemMaster.PartDescription,
+					WorkOrderNumber = workflow.WorkOrderNumber,
+					CreatedDate = workflow.CreatedDate,
+					WorkflowExpirationDate = workflow.WorkflowExpirationDate,
+					WorkflowCreateDate = workflow.WorkflowCreateDate != null ? workflow.WorkflowCreateDate.Value.ToShortDateString() : "",
+					Version = workflow.Version,
+					OtherCost = workflow.OtherCost,
+					ItemMasterId = workflow.ItemMasterId,
+					PartNumber = workflow.ItemMaster.PartNumber,
+					PartNumberDescription = workflow.ItemMaster.PartDescription,
+					ChangedPartNumberId = workflow.ChangedPartNumberId,
+					ChangedPartNumber = workflow.ChangedPartNumber != null ? workflow.ChangedPartNumber.PartNumber : "",
+					ChangedPartNumberDescription = workflow.ChangedPartNumber != null ? workflow.ChangedPartNumber.PartDescription : ""
+				}); ;
+		}
+
+		[HttpGet("GetActionAttributes")]
         [Produces(typeof(List<ActionAttributeViewModel>))]
         public IActionResult GetActionAttributes()
         {

@@ -550,10 +550,6 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
             this.sourceEmployee.dateOfBirth = null;
         }
-
-        console.log("this.empCreationForm.get('departmentId').value" + this.empCreationForm.get('departmentId').value);
-        console.log("this.empCreationForm.get('divisionId').value" + this.empCreationForm.get('divisionId').value);
-        console.log("this.empCreationForm.get('BusinessUnitId').value" + this.empCreationForm.get('BusinessUnitId').value);
         // if (this.sourceEmployee.firstName !== '' && this.sourceEmployee.lastName && this.sourceEmployee.middleName && this.sourceEmployee.jobTitleId && this.sourceEmployee.employeeExpertiseId && this.sourceEmployee.JobTypeId
         //     && this.sourceEmployee.startDate
         // ) {
@@ -561,37 +557,24 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
 
 
-        if (this.empCreationForm.get('departmentId').value != null) {
-
-
-
+        if (this.empCreationForm.get('departmentId').value != null && this.empCreationForm.get('departmentId').value >0) {
 
             this.sourceEmployee.managementStructureId = this.empCreationForm.get('departmentId').value;
 
         }
-
-
-        else if (this.empCreationForm.get('divisionId').value != null && this.sourceEmployee.departmentId == '') {
-
-
-
+        else if (this.empCreationForm.get('divisionId').value != null && this.sourceEmployee.departmentId == '' && this.sourceEmployee.departmentId>0) {
 
             this.sourceEmployee.managementStructureId = this.empCreationForm.get('divisionId').value;
-
-
         }
-        else if (this.empCreationForm.get('BusinessUnitId').value != null && this.sourceEmployee.departmentId == '' && this.sourceEmployee.divisionId == '') {
-
-
+        else if (this.empCreationForm.get('BusinessUnitId').value != null && this.sourceEmployee.departmentId == '' && this.sourceEmployee.divisionId == '' && this.sourceEmployee.divisionId >0) {
             this.sourceEmployee.managementStructureId = this.empCreationForm.get('BusinessUnitId').value;
-
-
         }
         else {
 
             this.sourceEmployee.managementStructureId = this.empCreationForm.get('companyId').value;
         }
-
+        
+       
 
         if (this.sourceEmployee.employeeId) {
             this.sourceEmployee.IsHourly = this.sourceEmployee.isHourly;
@@ -616,30 +599,6 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         }
 
 
-
-            if (this.empCreationForm.get('departmentId').value != null) {
-
-                this.sourceEmployee.managementStructureId = this.empCreationForm.get('departmentId').value;
-
-            }
-
-            else if (this.empCreationForm.get('divisionId').value != null && this.sourceEmployee.departmentId == '') {
-
-                this.sourceEmployee.managementStructureId = this.empCreationForm.get('divisionId').value;
-
-
-            }
-            else if (this.empCreationForm.get('BusinessUnitId').value != null && this.sourceEmployee.departmentId == '' && this.sourceEmployee.divisionId == '') {
-
-
-                this.sourceEmployee.managementStructureId = this.empCreationForm.get('BusinessUnitId').value;
-
-
-            }
-            else {
-
-                this.sourceEmployee.managementStructureId = this.empCreationForm.get('companyId').value;
-            }
 
             this.sourceEmployee.employeeLeaveTypeId = this.selectedLeaveValues;
 
@@ -925,16 +884,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     onSubmit() {
         this.sourceEmployee.firstName;
 
-        //console.log(this.sourceEmpFirst.firstName);
-
-        //console.log(this.selectedFirstName);
-
-        //console.log(this.sourceEmpFirst.firstName);
-
-        //console.log(this.selectedFirstName);
-
-
-        this.employeeService.newAddEmployee(this.sourceEmployee).subscribe(
+              this.employeeService.newAddEmployee(this.sourceEmployee).subscribe(
             results => this.empAdd(this.sourceEmployee, results),
 
             error => this.onDataLoadFailed(error)

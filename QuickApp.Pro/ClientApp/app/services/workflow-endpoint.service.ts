@@ -193,5 +193,15 @@ export class WorkFlowEndpoint extends EndpointFactory {
 
 	}
 
+	getWorkFlowDataById(workFlowId) {
+		return this.http.get<any>(`${this.configurations.baseUrl}/api/workflow/getWorkFlow/${workFlowId}`)
+	}
+
+
+	getWorkFlowDataByIdForEdit(workFlowId) {
+		return this.http.get<any>(`${this.configurations.baseUrl}/api/workflowAction/GetWorkFlowbyIdforEdit?workFlowId=${workFlowId}`)
+	}
+
+
 
 }

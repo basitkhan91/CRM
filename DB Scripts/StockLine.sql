@@ -82,7 +82,13 @@ CREATE TABLE [dbo].[Stockline](
 	[ShippingAccount]	nvarchar	(400)	NULL,
 	[ShippingReference]	nvarchar	(400)	NULL,
 	[TimeLifeCyclesId]	bigint	NULL,
-	[TimeLifeDetailsNotProvided]	bit	NOT NULL
+	[TimeLifeDetailsNotProvided]	bit	NOT NULL,
+	[BlackListed]	bit		NOT NULL Default 0,
+	[BlackListedReason]	varchar(500)	NULL,
+	[Incident]	bit		NOT NULL Default 0,
+	[IncidentReason]	varchar(500)	NULL,
+	[Accident]	bit		NOT NULL Default 0,
+	[AccidentReason]	varchar(500)	NULL	
 
  CONSTRAINT [PK_Stockline] PRIMARY KEY CLUSTERED 
 (

@@ -35,6 +35,7 @@ import { PercentService } from "../services/percent.service";
 import { WorkOrderService } from "../services/work-order/work-order.service";
 import { AuthService } from "../services/auth.service";
 
+
 @Component({
     selector: 'wf-create',
     templateUrl: './workflow-Create.component.html',
@@ -43,6 +44,8 @@ import { AuthService } from "../services/auth.service";
 export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     @Input() isWorkOrder;
     @Input() savedWorkOrderData;
+    @Input() WorkOrderType;
+    @Input() workFlowId;
     @Output() savedWorkFlowWorkOrderData = new EventEmitter()
     UpdateMode: boolean;
     workFlow: any;
@@ -160,6 +163,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     @ViewChild(ChargesCreateComponent) chargesCreateComponent: ChargesCreateComponent;
     responseDataForHeader: any;
     tasksData: any = [];
+    typeOfForm: string = 'Create';
 
     constructor(private actionService: ActionService,
         private workOrderService: WorkOrderService,
@@ -181,6 +185,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this._workflowService.listCollection = null;
+        this.typeOfForm = 'Create';
         this._workflowService.enableUpdateMode = false;
         this._workflowService.currentWorkFlowId = null;
     }
@@ -236,7 +241,16 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
 
     ngOnInit(): void {
-        console.log(this.isWorkOrder);
+
+
+
+        console.log(this.isWorkOrder, this._workflowService.enableUpdateMode);
+        console.log(this._workflowService.listCollection);
+
+        if (this._workflowService.enableUpdateMode) {
+            this.typeOfForm = 'Edit';
+        }
+
         this.isFixedcheck('');
         this.loadCurrencyData();
         this.loadWorkScopedata();
@@ -279,6 +293,13 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
         this.loadWorkFlow();
         this.getAllPercentages();
+
+
+
+
+
+
+
     }
 
 
@@ -939,7 +960,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     onPercentOfNew(myValue, percentValue) {
         this.sourceWorkFlow.percentOfNew = "";
         if (myValue && percentValue) {
-            this.sourceWorkFlow.percentOfNew = parseFloat(((myValue / 100) * percentValue).toString()).toFixed(2);            
+            this.sourceWorkFlow.percentOfNew = parseFloat(((myValue / 100) * percentValue).toString()).toFixed(2);
         }
         this.berDetermination();
     }
@@ -1905,14 +1926,14 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
     addWorkFlow(isHeaderUpdate: boolean): void {
         this.sourceWorkFlow.workflowId = undefined;
-        
+
         if (!this.validateWorkFlowHeader() || !this.calculateTotalWorkFlowCost()) {
             var OkCancel = confirm("Work Flow total cost exceed the BER threshold amount. Do you still want to continue?");
             if (OkCancel == false) {
                 return;
             }
         }
-       
+
 
         this.SaveWorkFlow();
         if (isHeaderUpdate) {
@@ -1959,7 +1980,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     title: string = "Work Flow";
 
     updateWorkFlow(isHeaderUpdate: boolean): void {
-      
+
         if (!this.validateWorkFlowHeader() || !this.calculateTotalWorkFlowCost()) {
             var OkCancel = confirm("Work Flow total cost exceed the BER threshold amount. Do you still want to continue?");
             if (OkCancel == false) {
