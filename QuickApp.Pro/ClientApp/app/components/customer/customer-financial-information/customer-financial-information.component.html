@@ -529,6 +529,7 @@
                             <label>Percentage <span class="clr-red">*</span></label>
                             <div class="inner-addon right-addon inline-block">
                                 <select name="percentage" [(ngModel)]="addNewCreditTerms.percentage">
+                                    <option value="">Select Percentage</option>
                                     <option *ngFor="let Percentlist of percentageList" [ngValue]="Percentlist.label">{{Percentlist.label}}</option>
                                 </select>
 
@@ -703,7 +704,7 @@
                             <label>Tax Type <span class="clr-red">*</span></label>
                             <div class="inner-addon right-addon inline-block">
                                 <select name="taxTypeId" [(ngModel)]="addNewTaxRate.taxTypeId" placeholder="Select TaxType">
-                                  
+                                  <option value="">Select Tax Type</option>
                                     <option *ngFor="let TaxTypelist of taxTypeList" [ngValue]="TaxTypelist.value">{{TaxTypelist.label}}</option>
                                 </select>
 

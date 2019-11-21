@@ -140,11 +140,11 @@ export class CustomersListComponent implements OnInit {
     totalPages: number = 0;
     headers = [
         { field: 'name', header: 'Customer Name' },
-        { field: 'customerCode', header: 'customerCode' },
+        { field: 'customerCode', header: 'Customer Code' },
         { field: 'customerClassification', header: 'Classification' },
         { field: 'email', header: 'Customer Email' },
         { field: 'city', header: 'City' },
-        { field: 'stateOrProvince', header: 'StateOrProvince' },
+        { field: 'stateOrProvince', header: 'State or Province' },
         { field: 'contact', header: 'Contact' },
         { field: 'salesPersonPrimary', header: 'Primary Sales Person' }
 
@@ -345,8 +345,7 @@ export class CustomersListComponent implements OnInit {
         console.log(data);
     }
     changeStatus(rowData) {
-        debugger;
-
+      
         this.customerService.updateActionforActive(rowData, this.userName).subscribe(res => {
             this.alertService.showMessage("Success", `Successfully Updated Status`, MessageSeverity.success);
         })
