@@ -548,7 +548,9 @@
                             <label class="control-label col-sm-3">MPN </label>
                             <div class="col-sm-7">
 
-                                <p-dropdown [options]="mpnPartNumbersList" placeholder="Select Part Number" class="p-dropdown-custom-md" >
+                                <p-dropdown [options]="mpnPartNumbersList" placeholder="Select Part Number" class="p-dropdown-custom-md" 
+                                (onChange)="changeofMPN($event.value)"
+                                >
                                   </p-dropdown>
                                 <!-- <select class="mpn-select">
                                     <option>Select</option>
