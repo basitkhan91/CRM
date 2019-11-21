@@ -1,0 +1,8 @@
+﻿<ng-container *ngIf="gridData[0] && gridData[0].data">
+<ul class="tree">
+    <li *ngFor="let structure of gridData">
+        <span class="caret" [innerHTML]="structure.data.name"></span><input (click)="storeLegalEntity(structure)" type="checkbox" class="radio" value="1" name="fooby[1][]" />
+        <app-tree-structure *ngIf="structure.children != undefined" [gridData]="structure.children"></app-tree-structure>
+    </li>
+</ul>
+</ng-container>
