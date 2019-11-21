@@ -1,7 +1,7 @@
 ﻿<ng-container *ngIf="gridData[0] && gridData[0].data">
 <ul class="tree">
     <li *ngFor="let structure of gridData">
-        <span class="caret" [innerHTML]="structure.data.name"></span><input (click)="storeLegalEntity(structure)" type="checkbox" class="radio" value="1" name="fooby[1][]" />
+        <span class="caret" [innerHTML]="structure.data.name"></span><input (click)="storeLegalEntity(structure)" [checked]="checkLegalEntityExist(structure.data.managementStructureId)" type="checkbox" class="radio" value="1" [id]="structure.data.managementStructureId" [name]="structure.data.managementStructureId" />
         <app-tree-structure *ngIf="structure.children != undefined" [gridData]="structure.children"></app-tree-structure>
     </li>
 </ul>

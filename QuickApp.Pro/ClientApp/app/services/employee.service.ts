@@ -201,5 +201,11 @@ export class EmployeeService {
     getAllRolesOfEmployee() {
         return this.employeeEndpoint.getAllRolesOfEmployee<any>();
     }
+    storeEmployeeRoles(data: any){
+        return this.employeeEndpoint.storeEmployeeRoles<any>(data);
+    }
+    storeEmployeeManagementStructure(data: any){
+        return this.employeeEndpoint.storeEmployeeManagementStructure<any>(data);
+    }
 
 }

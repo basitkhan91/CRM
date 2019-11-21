@@ -14,12 +14,28 @@ export class TreeStructureComponent implements OnInit{
         // console.log(this.gridData);
     }
     storeLegalEntity(structure){
-        if(this.employeeService.legalEnityList.indexOf(structure.data.managementStructureId) != -1){
-            let index = this.employeeService.legalEnityList.indexOf(structure.data.managementStructureId);
-            this.employeeService.legalEnityList.splice(index, index+1);
+        var findIndex = -1;
+        this.employeeService.legalEnityList.forEach((legEntity, index)=>{
+            if(legEntity.managementStructureId == structure.data.managementStructureId){
+                findIndex = index;
+            }
+        })
+        if(findIndex != -1){
+            this.employeeService.legalEnityList.splice(findIndex, findIndex+1);
+            document.getElementById(`${structure.data.managementStructureId}`)['checked'] = false;
         }
         else{
-            this.employeeService.legalEnityList.push(structure.data.managementStructureId);
+            document.getElementById(`${structure.data.managementStructureId}`)['checked'] = true;
+            this.employeeService.legalEnityList.push({
+                managementStructureId: structure.data.managementStructureId,
+                isActive: structure.data.isActive,
+                isDeleted: structure.data.isDeleted
+            });
+        }
+        if(structure.children){
+            structure.children.forEach(element => {
+                this.storeLegalEntity(element)
+            });
         }
     }
     ngOnInit(){
@@ -36,5 +52,14 @@ export class TreeStructureComponent implements OnInit{
             this.classList.toggle("caret-down");
         });
         }
+    }
+
+    checkLegalEntityExist(id){
+        this.employeeService.legalEnityList.forEach((legEntity, index)=>{
+            if(id == legEntity.managementStructureId){
+                return true;
+            }
+        })
+        return false;
     }
 }

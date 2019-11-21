@@ -3,13 +3,13 @@
 		<div class="x_panel">
             <div class="x_content">
                 <div class="form-group col-sm-4 w400" style="display: inline-block;margin: 10px 5px 0 5px;">
-                    <p class="fs10"> <label class="control-label col-sm-4">Emp First Name:</label> {{this.employeeService.listCollection?this.employeeService.listCollection.firstName:''}}  </p>
+                    <p class="fs10"> <label class="control-label col-sm-4">Emp First Name:</label> {{firstName}}  </p>
                 </div>
                 <div class="form-group col-sm-4 w400" style="display: inline-block;margin: 10px 5px 0 5px;">
-                    <p class="fs10"><label class="control-label col-sm-4">Emp Last Name:</label>  {{this.employeeService.listCollection?this.employeeService.listCollection.lastName:''}}</p>
+                    <p class="fs10"><label class="control-label col-sm-4">Emp Last Name:</label>  {{lastName}}</p>
                 </div>
                 <div class="form-group col-sm-4 w400" style="display: inline-block;margin: 10px 5px 0 5px;">
-                    <p class="fs10"><label class="control-label col-sm-4">Emp Id:</label>  {{this.employeeService.listCollection?this.employeeService.listCollection.employeeId:''}}</p>
+                    <p class="fs10"><label class="control-label col-sm-4">Emp Id:</label>  {{empId}}</p>
                 </div>
                 <h4 class="page-heading clr-green">Create Management Structure</h4>
                 <div class="clear"></div><br>
@@ -34,7 +34,7 @@
                                                                 [settings]="dropdownSettings"
                                                                 >
                                                             </ng-multiselect-dropdown>
-                                                            <a href="#" data-toggle="modal" data-target="#addCertificationType" class="add-icon" (click)="openCertification(contentEdit)"><i class="fa fa-plus"></i></a>
+                                                            <a href="#" data-toggle="modal" data-target="#addCertificationType" class="add-icon"><i class="fa fa-plus"></i></a>
                                                         </div>
                                                 </div>
                                                 <div class="form-group col-sm-12 display-flex">
@@ -100,8 +100,8 @@
                         </div>
             </div>
         </div>
-        <!--<button type="button" class="btn btn-primary-cstm pull-right" (click)="previousClick()">Previous</button>
-		<button type="button" class="btn btn-primary-cstm pull-right" (click)="previousClick()">Save</button>-->
+        <button type="button" class="btn btn-primary-cstm pull-right" (click)="previousClick()">Previous</button>
+		<button type="button" class="btn btn-primary-cstm pull-right" (click)="saveManagementStructure()">Save</button>
     </div>
 
 </div>
