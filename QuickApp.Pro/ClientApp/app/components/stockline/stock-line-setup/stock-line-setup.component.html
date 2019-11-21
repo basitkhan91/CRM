@@ -42,15 +42,17 @@
                     </div>
                     <div class="clear"></div>
                 </div>
+
                 <div class="form-group col-sm-12">
-                    <label for="partNumber" class="control-label col-sm-4">PN <strong class="clr-red">*</strong></label>
-                    <div class="inner-addon col-sm-7">
+                    <label class="inner-addon col-sm-4">PN <strong class="clr-red">*</strong></label>
+                    <div class="inner-addon col-sm-7  display-flex">
                         <p-autoComplete [(ngModel)]="sourceStockLineSetup.partNumber" (onKeyUp)=eventHandler($event) (onSelect)="partnmId($event)" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
                                         [minLength]="1" [dropdown]="true">
                             <ng-template let-partName pTemplate="part">
                                 <div class="ui-helper-clearfix">{{partName}}</div>
                             </ng-template>
                         </p-autoComplete>
+                        <a target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
                     </div>
                 </div>
 
@@ -92,8 +94,8 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">QTY ON HAND <strong class="clr-red">*</strong></label>
                     <div class="col-sm-7">
-                        <!--<input class="form-control qty-input" *ngIf="showRestrictQuantity" type="number" min="0" max="1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.Quantity">-->
-                        <input class="form-control qty-input"  (keypress)="calculateQtyAvailable($event)" type="number" min="0" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.QuantityOnHand">
+                        <input class="form-control qty-input" *ngIf="showRestrictQuantity" type="number" size="1" min="0" max="1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.Quantity">
+                        <input class="form-control qty-input" *ngIf="showFreeQuantity" (keypress)="calculateQtyAvailable($event)" type="number" min="0" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.QuantityOnHand">
                     </div>
                 </div>
 
@@ -107,7 +109,7 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">QTY ISSUED </label>
                     <div class="col-sm-7">
-                        <input class="form-control qty-input"  type="number" [ngModelOptions]="{standalone: true}"(keypress)="calculateQtyAvailable($event)"  [(ngModel)]="sourceStockLineSetup.QuantityIssued">
+                        <input class="form-control qty-input" type="number" [ngModelOptions]="{standalone: true}" (keypress)="calculateQtyAvailable($event)" [(ngModel)]="sourceStockLineSetup.QuantityIssued">
                     </div>
                 </div>
 
@@ -144,7 +146,7 @@
                 <div class="form-group col-sm-12" *ngIf="sourceStockLineSetup.shelfLife == 1">
                     <label class="control-label col-sm-4">SHELF LIFE EXP DATE</label>
                     <div class="col-sm-7">
-                        <p-calendar [showIcon]="true"   [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.shelfLifeExpirationDate"></p-calendar>
+                        <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [minDate]="minDateValue" [(ngModel)]="sourceStockLineSetup.shelfLifeExpirationDate"></p-calendar>
                     </div>
                 </div>
 
@@ -311,10 +313,10 @@
                     </div>
                 </div>
 
-                <div class="form-group col-sm-12" *ngIf="sourceStockLineSetup.IsManufacturingDateAvailable == 1" >
+                <div class="form-group col-sm-12" *ngIf="sourceStockLineSetup.IsManufacturingDateAvailable == 1">
                     <label class="control-label col-sm-4">MFG DATE</label>
                     <div class="col-sm-7">
-                        <p-calendar [showIcon]="true"  [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.manufacturingDate"></p-calendar>
+                        <p-calendar [showIcon]="true" [maxDate]="minDateValue" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.manufacturingDate"></p-calendar>
                     </div>
                 </div>
 
@@ -343,6 +345,13 @@
                     <label class="control-label col-sm-4">ITAR NUM</label>
                     <div class="col-sm-7">
                         <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.itarNum">
+                    </div>
+                </div>
+
+                <div class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">NHA</label>
+                    <div class="col-sm-7">
+                        <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.NHA">
                     </div>
                 </div>
 
@@ -391,14 +400,14 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">CERTIFIED DATE</label>
                     <div class="col-sm-7">
-                        <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.certifiedDate"></p-calendar>
+                        <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [minDate]="minDateValue"  [(ngModel)]="sourceStockLineSetup.certifiedDate"></p-calendar>
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">TAG DATE</label>
                     <div class="col-sm-7">
-                        <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.tagDate"></p-calendar>
+                        <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [minDate]="minDateValue"  [(ngModel)]="sourceStockLineSetup.tagDate"></p-calendar>
                     </div>
                 </div>
 
@@ -461,12 +470,12 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">BLACKLISTED</label>
                     <div class="col-sm-7">
-                        <input class="form-control" type="checkbox" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.blackListed">
+                        <input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.blackListed">
                     </div>
                 </div>
 
                 <label class="control-label col-sm-4"></label>
-                <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourceStockLineSetup.blackListed == 1">
+                <div class="inner-addon col-sm-7 display-flex" *ngIf="sourceStockLineSetup.blackListed == 1">
                     <div class="col-sm-7">
                         <textarea style="height: 100px;" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.blackListedReason"></textarea>
                     </div>
@@ -475,12 +484,12 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">INCIDENT</label>
                     <div class="col-sm-7">
-                        <input class="form-control" type="checkbox" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.incident">
+                        <input class="form-control" type="checkbox"  [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.incident">
                     </div>
                 </div>
 
                 <label class="control-label col-sm-4"></label>
-                <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourceStockLineSetup.incident == 1">
+                <div class="inner-addon col-sm-7  display-flex" *ngIf="sourceStockLineSetup.incident == 1">
                     <div class="col-sm-7">
                         <textarea style="height: 100px;" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.incidentReason"></textarea>
                     </div>
@@ -489,12 +498,12 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">ACCIDENT</label>
                     <div class="col-sm-7">
-                        <input class="form-control" type="checkbox" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.isAccident">
+                        <input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.accident">
                     </div>
                 </div>
 
                 <label class="control-label col-sm-4"></label>
-                <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourceStockLineSetup.accident == 1">
+                <div class="inner-addon col-sm-7 display-flex" *ngIf="sourceStockLineSetup.accident == 1">
                     <div class="col-sm-7">
                         <textarea style="height: 100px;" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.accidentReason"></textarea>
                     </div>
@@ -539,7 +548,7 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">RECEIVED DATE <strong class="clr-red">*</strong></label>
                     <div class="col-sm-7">
-                        <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.receivedDate"></p-calendar>
+                        <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [minDate]="sourceStockLineSetup.orderDate"  [(ngModel)]="sourceStockLineSetup.receivedDate"></p-calendar>
                     </div>
                 </div>
 

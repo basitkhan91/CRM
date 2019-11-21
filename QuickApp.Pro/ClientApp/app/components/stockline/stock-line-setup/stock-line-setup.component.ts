@@ -42,6 +42,9 @@ import { EmployeeService } from '../../../services/employee.service';
 })
 /** stock-line-setup component*/
 export class StockLineSetupComponent implements OnInit, AfterViewInit {
+    ngAfterViewInit(): void {
+        throw new Error("Method not implemented.");
+    }
 	allSites: Site[]
 	public sourceBin: any = {};
     allWareHouses: any;
@@ -84,7 +87,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 	modelValue: boolean;
 	allPolistInfo: any[] = [];
 	allRolistInfo: any[] = [];
-	allEmployeeList: any[] = [];
+	//allEmployeeList: any[] = [];
     showRestrictQuantity: boolean;
 	showFreeQuantity: boolean;
 	stocklinePOObject: any[] = [];
@@ -123,26 +126,30 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
     updateMode: boolean = false;
     quantityAvailable: any;
     PurchaseOrderId: any;
+    minDateValue: Date;
 
 	ngOnInit(): void
 	{
         this.stocklineser.currentUrl = '/stocklinemodule/stocklinepages/app-stock-line-setup';
         this.stocklineser.bredcrumbObj.next(this.stocklineser.currentUrl);
         this.loadData();
-        this.loadCompanyData();
-        this.loadManagementdata();
+        this.loadEmployeeData();
+        
         this.loadSiteData();
         this.Integration();
         this.loadManufacturerData();
         //this.loadPoData();
         //this.loadRoData();
-        this.loadEmployeeData();
+        
         this.loadIntegrationPortal();
         this.glAccountlistdata();
         this.customerList();
         this.vendorList();
         this.loadGlAccountData();
-	    this.ptnumberlistdata();
+        this.ptnumberlistdata();
+
+        this.minDateValue = new Date();
+        this.sourceStockLineSetup.oem = true;
     }
 
 	selectedObtainFromValue: string = '';
@@ -314,10 +321,8 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		{
 			selectedRow.isListed = false;
 		}
-		//Moveing getSelectedItem from here Below Code
 		let ischange = false;
 		if (this.selectedModels.length > 0) {
-			//praveen's code//
 			this.selectedModels.map((row) => {
 				if (selectedRow.integrationPortalId == row.integrationPortalId)
 				{
@@ -329,8 +334,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		{
 			this.selectedModels.push(selectedRow);
 		}
-		console.log(this.selectedModels);
-
 	}
 	public getSelectedItem(selectedRow, event) {
 		//;
@@ -392,8 +395,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
             this.itemser.getDescriptionbypart(event).subscribe(
 				results => this.onpartnumberloadsuccessfull(results[0]),
 				error => this.onDataLoadFailed(error)
-
-
 			);
 		}
 	}
@@ -408,6 +409,10 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
         this.sourceStockLineSetup.shelfLife = allWorkFlows[0].t.shelfLife;
         this.sourceStockLineSetup.isSerialized = allWorkFlows[0].isSerialized;
         this.sourceStockLineSetup.ITARNumber = allWorkFlows[0].t.ITARNumber;
+        this.sourceStockLine.tagDate = allWorkFlows[0].t.TagDate;
+        this.sourceStockLine.daysSinceTagged = allWorkFlows[0].t.TagDays;
+        this.sourceStockLine.daysSinceOpen = allWorkFlows[0].t.OpenDays;
+        this.sourceStockLine.openDate = allWorkFlows[0].t.OpenDate;
         this.sourceStockLineSetup.IsManufacturingDateAvailable = allWorkFlows[0].t.IsManufacturingDateAvailable;
 
 		if (this.sourceStockLineSetup.isSerialized == true) {
@@ -452,7 +457,8 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		}
 
 		this.sourceStockLineSetup.itemMasterId = allWorkFlows[0].itemMasterId;
-		this.sourceStockLineSetup.glAccountId = allWorkFlows[0].glAccountId;
+        this.sourceStockLineSetup.glAccountId = allWorkFlows[0].glAccountId;
+        this.sourceStockLineSetup.NHA = allWorkFlows[0].NHA;
        
 	}
 
@@ -492,8 +498,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		this.loadingIndicator = false;
 		this.dataSource.data = allVendorWorkFlows;
 		this.allVendorList = allVendorWorkFlows;
-
-
 	}
 
 	loadEmployeeData()
@@ -505,8 +509,11 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 	}
 	onDataLoadEmployeeSuccessful(allWorkFlows: any[])
 	{
-		this.dataSource.data = allWorkFlows;
-		this.allEmployeeList = allWorkFlows;
+        this.dataSource.data = allWorkFlows;
+        this.sourceEmployee = allWorkFlows;
+
+        this.loadCompanyData();
+
 	}
 
 
@@ -521,12 +528,10 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 
 	private onDataLoadGlAccountSuccessful(allWorkFlows: any[]) {
 
-		// alert('success');
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		//this.dataSource.data = allWorkFlows;
 		this.allGLAccountClassData = allWorkFlows;
-
 	}
 
 	private loadSiteData()  //retriving SIte Information
@@ -547,7 +552,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		this.loadingIndicator = false;
 		this.allWareHouses = getWarehousList; //cha
 		//this.warehouseId = this.allWareHouses.warehouseId;
-
 	}
 
 	//GL Account
@@ -603,7 +607,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		this.loadingIndicator = false;
 		this.allLocations = getLocationList; //cha
 		//this.locationId = this.allWareHouses.locationId;
-
 	}
 
 	private onDataLoadShelf(getShelfList: any) {
@@ -627,7 +630,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 
 	siteValueChange(data) //Site Valu Selection in Form
 	{
-		
 		this.allWareHouses = [];
 		this.allLocations = [];
 		this.allShelfs = [];
@@ -637,8 +639,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		this.sourceStockLineSetup.locationId = 0;
 		this.sourceStockLineSetup.shelfId = 0;
 		this.sourceStockLineSetup.binId = 0;
-		
-		
 		
 		this.workFlowtService.getWareHouseDate(this.sourceStockLineSetup.siteId).subscribe( //calling and Subscribing for WareHouse Data
 				results => this.onDataLoadWareHouse(results), //sending WareHouse
@@ -665,7 +665,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			error => this.onDataLoadFailed(error)
 		);
 	}
-    
 
 	eventHandler(event) {
 		if (event.target.value != "") {
@@ -843,7 +842,9 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
             this.sourceEmployee.buisinessUnitId = "";
             this.sourceEmployee.departmentId = "";
             this.sourceEmployee.divisionId = "";
-            this.sourceEmployee.managementStructureId = companyId;
+        this.sourceEmployee.managementStructureId = companyId;
+        this.sourceStockLineSetup.managementStructureId = companyId;
+        this.sourceStockLineSetup.masterCompanyId = 1;
             this.departmentList = [];
             this.divisionlist = [];
             this.bulist = [];
@@ -851,7 +852,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
                 if (this.allManagemtninfo[i].parentId == companyId) {
                     this.bulist.push(this.allManagemtninfo[i])
                 }
-            }
+        }
 	}
 
 	getDepartmentlist(businessUnitId)
@@ -878,7 +879,8 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
                     this.divisionlist.push(this.allManagemtninfo[i]);
                 }
             }
-	}
+    }
+
 	getDivisionChangeManagementCode(divisionId)
 	{
         this.sourceEmployee.managementStructureId = divisionId;
@@ -951,7 +953,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 
 	savestockLineclose()
 	{
-		if ((this.sourceStockLineSetup.partNumber == undefined) || (this.sourceStockLineSetup.partNumber == "undefined")) {
+		if ((this.sourceStockLineSetup.partNumber)) {
 			this.showPartNumberError = true;
 		}
 		else
@@ -1035,16 +1037,16 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		{
 			if (!this.sourceStockLine.stockLineId) {
 				this.sourceStockLine.createdBy = this.userName;
-				this.sourceStockLine.updatedBy = this.userName;
-				this.sourceStockLine.masterCompanyId = 1;
-				this.sourceStockLine.itemTypeId = 1;
+                this.sourceStockLine.updatedBy = this.userName;
+                this.sourceStockLine.masterCompanyId = 1;
+                this.sourceStockLine.itemTypeId = 1;
 				//for Saving timeLife,Stockline,Integration
 				if ((this.sourceTimeLife != null) || (this.sourceTimeLife != "null"))
 					{
 					if (this.sourceTimeLife.timeLife) {
 						this.stocklineser.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
 							this.collectionofstockLineTimeLife = data;
-							this.sourceStockLineSetup.timeLifeCyclesId = data.timeLifeCyclesId;
+                            this.sourceStockLineSetup.timeLifeCyclesId = data.timeLifeCyclesId;
 							this.value = 1;
 							this.stocklineser.newStockLine(this.sourceStockLineSetup).subscribe(data => {
 								this.collectionofstockLine = data;
@@ -1071,15 +1073,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		}
 
 	}
-
-	closethis()
-	{
-
-	}
-	ngAfterViewInit()
-	{
-	}
-
 	private loadData()
 	{
 		this.alertService.startLoadingMessage();
@@ -1127,7 +1120,9 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.dataSource.data = getCompanyListList;
-		this.allCompanys = getCompanyListList;
+        this.allCompanys = getCompanyListList;
+
+        this.loadManagementdata();
 	}
 
 	private onDataLoadSuccessful(getConditionList: Condition[])
@@ -1137,11 +1132,9 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		this.dataSource.data = getConditionList;
 		this.allConditionInfo = getConditionList;
 	}
-
 	dataSource: MatTableDataSource<any>;
 
-	
-	triggerSomeEvent()
+    triggerSomeEvent()
 	{
 		this.isDisabled = !this.isDisabled;
 		return;
@@ -1161,6 +1154,4 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 
 		}
 	}
-
-
 }
