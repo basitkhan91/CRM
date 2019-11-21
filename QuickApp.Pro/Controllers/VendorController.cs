@@ -1273,10 +1273,10 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.SaveChanges();
 
 
-                if (Request.Form.Files.Count > 0)
-                {
-                    actionobject.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, actionobject.VendorId, Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), actionobject.UpdatedBy, actionobject.MasterCompanyId);
-                }
+                //if (Request.Form.Files.Count > 0)
+                //{
+                //    actionobject.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, actionobject.VendorId, Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), actionobject.UpdatedBy, actionobject.MasterCompanyId);
+                //}
 
 
                 return Ok(actionobject);
@@ -1338,7 +1338,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPut("vendorUpdate/{id}")]
-        public IActionResult UpdateVendorList(long id, [FromForm][FromBody] VendorViewModel vendorViewModel, VendorType vt)
+        public IActionResult UpdateVendorList(long id, [FromBody][FromForm] VendorViewModel vendorViewModel, VendorType vt)
         {
             if (ModelState.IsValid)
             {
@@ -1393,10 +1393,10 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.Vendor.Update(actionobject);
                 _unitOfWork.SaveChanges();
 
-                if (Request.Form.Files.Count > 0)
-                {
-                    actionobject.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, actionobject.VendorId, Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), actionobject.UpdatedBy, actionobject.MasterCompanyId);
-                }
+                //if (Request.Form.Files.Count > 0)
+                //{
+                //    actionobject.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, actionobject.VendorId, Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), actionobject.UpdatedBy, actionobject.MasterCompanyId);
+                //}
                 return Ok(actionobject);
             }
 
