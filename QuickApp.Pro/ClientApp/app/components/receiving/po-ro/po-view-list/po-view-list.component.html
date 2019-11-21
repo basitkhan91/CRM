@@ -7,106 +7,54 @@
                             <table class="table table-bordered table-wrap">
                                 <thead>
                                     <tr class="po-table-tr">
-                                        <th></th>
                                         <th>Line no</th>
                                         <th>PN</th>
                                         <th>Qty Ordered</th>
                                         <th>Qty Received</th>
-                                        <th>Qty Rejected</th>
                                         <th>Qty Backordered</th>
-                                        <th>Status</th>
-                                        <th colspan="3"></th>
-                                        <th colspan="4">Management Structure</th>
-                                        <th>Is Serialized</th>
-                                        <th>Is TimeLife</th>
-                                        <th>Quantity Receive</th>
                                         <th></th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <ng-container>
-                                        <tr class="basic-info">
+                                <tbody *ngIf="purchaseOrderData != undefined && purchaseOrderData.purchaseOderPart != undefined">
+                                    <ng-container *ngFor="let part of purchaseOrderData.purchaseOderPart;let row_index=index">
+                                        <tr class="basic-info" *ngIf="part.stockLine != null && part.stockLine.length > 0">
+                                            <td>{{row_index + 1}}</td>
+                                            <td>{{part.itemMaster?.partNumber}}</td>
+                                            <td>{{part.quantityOrdered}}</td>
+                                            <td>{{part.stockLine.length}}</td>
+                                            <td>{{part.quantityOrdered - part.stockLine.length}}</td>
                                             <td class="details-control eachcol" style="padding: 4px 6px;">
-                                                <i class="fa fa-{{ toggleIcon ? 'minus':'plus'}} btn btn-success btn-cstm btn-xs margin0" (click)="toggleExpandIcon()"></i>
+                                                <i class="fa fa-{{ toggleIcon ? 'minus':'plus'}} btn btn-success btn-cstm btn-xs margin0" (click)="toggleExpandIcon(part)">Show StockLine</i>
                                             </td>
-                                            <td>1</td>
-                                            <td>12345</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td colspan="3"></td>
-                                            <td colspan="4"></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
                                         </tr>
 
-                                        <tr class="basic-info splitshipment po-sub-tr" *ngIf="toggleIcon">
-                                            <th></th>
-                                            <th></th>
-                                            <th>PN</th>
-                                            <th>Qty Ordered</th>
-                                            <th>Qty Received</th>
-                                            <th>Qty Rejected</th>
-                                            <th>Qty Backordered</th>
-                                            <th>Status</th>
-                                            <th>User Type</th>
-                                            <th>User Name</th>
-                                            <th>Address</th>
-                                            <th colspan="5">Management Structure</th>
-                                            <th>Receive Quantity</th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-
-                                        <tr class="basic-info splitshipment" *ngIf="toggleIcon">
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td>{{'NA'}}</td>
-                                            <td>{{'NA'}}</td>
-                                            <td>{{'NA'}}</td>
-                                            <td> </td>
-                                            <td>{{'NA'}}</td>
-                                            <td></td>
-                                            <td colspan="5"></td>
-                                            <td></td>
-                                            <td style="padding: 3px;"><a class="btn btn-primary-cstm btn-po-details" (click)="addStockLine()">{{ toggleAddDetails ? 'Close' : 'Show Details'}}</a></td>
-                                            <td></td>
-                                        </tr>
-
-                                        <tr class="more-info" *ngIf="toggleAddDetails">
-                                            <td colspan="19">
+                                        <tr class="more-info" *ngIf="part.showStockLineGrid">
+                                            <td colspan="6">
                                                 <div class="label-value-row">
                                                     <div class="col-sm-3">
-                                                        <p><span class="label"><b>PN: </b></span><span class="value">-</span></p>
-                                                        <p><span class="label"><b>Qty Actually Received: </b></span><span class="value">-</span></p>
+                                                        <p><span class="label"><b>PN: </b></span><span class="value"> {{part.itemMaster?.partNumber}}</span></p>
+                                                        <p><span class="label"><b>Qty Actually Received: </b></span><span class="value">{{part.stockLine?.length}}</span></p>
                                                     </div>
                                                     <div class="col-sm-3">
-                                                        <p><span class="label"><b>PN Description: </b></span><span class="value">-</span></p>
-                                                        <p><span class="label"><b>Qty Rejected: </b></span><span class="value">-</span></p>
+                                                        <p><span class="label"><b>PN Description: </b></span><span class="value">{{part.itemMaster?.partDescription}}</span></p>
+                                                        <p><span class="label"><b>Qty Rejected: </b></span><span class="value">{{part.itemMaster?.quantityRejected}}</span></p>
                                                     </div>
                                                     <div class="col-sm-3">
-                                                        <p><span class="label"><b>Cond: </b></span><span class="value">-</span></p>
-                                                        <p><span class="label"><b>GL Account: </b></span><span class="value">-</span></p>
-                                                    </div>
-                                                    <div class="col-sm-3">
-                                                        <p><span class="label"><b>Qty To Receive: </b></span><span class="value">-</span></p>
-                                                    </div>
+                                                        <p><span class="label"><b>Cond: </b></span><span class="value">####</span></p>
+                                                        <p><span class="label"><b>GL Account: </b></span><span class="value">####</span></p>
+                                                    </div>                                                   
                                                 </div>
 
                                                 <div style="margin-left: 6px;clear: both !important;">
-                                                    <h3 class="add-details-heading" style="padding-top: 10px;">Receiving Qty-1 of part PN1234</h3>
-                                                    <div class="pull-right" style="margin-top: -37px;margin-right: 85px;">
-                                                        <i class="fa fa-chevron-left btn btn-primary-cstm btn-ad-icons"></i>
-                                                        <input type="text" pInputText pKeyFilter="pnum" class="form-control" style="width: 50px;border-radius: 0 !important;" />
-                                                        <i class="fa fa-chevron-right btn btn-primary-cstm btn-ad-icons"></i>
+                                                    <h3 class="add-details-heading" style="padding-top: 10px;"> {{ part.itemMaster?.partNumber }} receiving Qty  {{ (part.currentSLIndex + 1) }} of {{ part.stockLine.length }}</h3>
+                                                   
+                                                    <div class="pull-right" style="margin-top: -37px;margin-right: 85px;" *ngIf="part.itemMaster?.isSerialized">
+                                                        <i class="fa fa-chevron-left btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage('stockline', part.currentSLIndex - 1, part)"></i>
+                                                        <input [value]="part.currentSLIndex + 1" type="text" pInputText pKeyFilter="pnum" (keyup)="gotoStockLinePage($event, part)" (focusout)="paginatorFocusOut($event, part)" class="form-control" style="width: 50px;border-radius: 0 !important;" />
+                                                        <i class="fa fa-chevron-right btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage('stockline', part.currentSLIndex + 1, part)"></i>
+                                                        <p>Page {{part.currentSLIndex + 1}} of {{part.stockLine.length}} Pages</p>
                                                     </div>
+                                                
 
                                                     <section class="receiving-stockline-view">
                                                         <div class="label-value-row">
@@ -116,10 +64,10 @@
                                                                         <h5 style="margin-bottom: 0; font-size: 12px;">Management Structure</h5>
                                                                     </div>
                                                                     <div class="card-body" style="padding: 0 12px 12px;">
-                                                                        <p><span class="label"><b>Company: </b></span><span class="value">-</span></p>
-                                                                        <p><span class="label"><b>BU: </b></span><span class="value">-</span></p>
-                                                                        <p><span class="label"><b>Division: </b></span><span class="value">-</span></p>
-                                                                        <p><span class="label"><b>Dept: </b></span><span class="value">-</span></p>
+                                                                        <p><span class="label"><b>Company: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].companyText}}</span></p>
+                                                                        <p><span class="label"><b>BU: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].businessUnitText}}</span></p>
+                                                                        <p><span class="label"><b>Division: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].divisionText}}</span></p>
+                                                                        <p><span class="label"><b>Dept: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].departmentText}}</span></p>
                                                                     </div>
                                                                 </div>
                                                                
@@ -133,29 +81,29 @@
                                                                 <p><span class="label"><b>Obtain From: </b></span><span class="value">-</span></p>
                                                                 <p><span class="label"><b>Owner: </b></span><span class="value">-</span></p>
                                                                 <p><span class="label"><b>Traceable To: </b></span><span class="value">-</span></p>
-                                                                <p><span class="label"><b>MFG: </b></span><span class="value">-</span></p>
-                                                                <p><span class="label"><b>MFG Lot Num: </b></span><span class="value">-</span></p>
-                                                                <p><span class="label"><b>MFG Date: </b></span><span class="value">-</span></p>
-                                                                <p><span class="label"><b>MFG Trace: </b></span><span class="value">-</span></p>
+                                                                <p><span class="label"><b>MFG: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].manufacturerLotNumber}}</span></p>
+                                                                <p><span class="label"><b>MFG Lot Num: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].manufacturerLotNumber}}</span></p>
+                                                                <p><span class="label"><b>MFG Date: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].manufacturingDate}}</span></p>
+                                                                <p><span class="label"><b>MFG Trace: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].manufacturingTrace}}</span></p>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <p><span class="label"><b>MFG Batch Num: </b></span><span class="value">-</span></p>
-                                                                <p><span class="label"><b>Expiration Date: </b></span><span class="value">-</span></p>
-                                                                <p><span class="label"><b>Unit Cost: </b></span><span class="value">-</span></p>
-                                                                <p><span class="label"><b>Extended Cost: </b></span><span class="value">-</span></p>
-                                                                <p><span class="label"><b>Parts Cert Num: </b></span><span class="value">-</span></p>
-                                                                <p><span class="label"><b>Cert By: </b></span><span class="value">-</span></p>
-                                                                <p><span class="label"><b>Certified Date: </b></span><span class="value">-</span></p>
-                                                                <p><span class="label"><b>Certified Due Date: </b></span><span class="value">-</span></p>
+                                                                <p><span class="label"><b>MFG Batch Num: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].manufacturingBatchNumber}}</span></p>
+                                                                <p><span class="label"><b>Expiration Date: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].expirationDate}}</span></p>
+                                                                <p><span class="label"><b>Unit Cost: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].purchaseOrderUnitCost}}</span></p>
+                                                                <p><span class="label"><b>Extended Cost: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].purchaseOrderExtendedCost}}</span></p>
+                                                                <p><span class="label"><b>Parts Cert Num: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].partCertificationNumber}}</span></p>
+                                                                <p><span class="label"><b>Cert By: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].certifiedBy}}</span></p>
+                                                                <p><span class="label"><b>Certified Date: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].certifiedDate}}</span></p>
+                                                                <p><span class="label"><b>Certified Due Date: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].certifiedDueDate}}</span></p>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <p><span class="label"><b>Tag Type: </b></span><span class="value">-</span></p>
-                                                                <p><span class="label"><b>Tag Date: </b></span><span class="value">-</span></p>
-                                                                <p><span class="label"><b>ESN: </b></span><span class="value">-</span></p>
-                                                                <p><span class="label"><b>Aircraft Tail Num: </b></span><span class="value">-</span></p>
-                                                                <p><span class="label"><b>Ship Via: </b></span><span class="value">-</span></p>
-                                                                <p><span class="label"><b>Shipping Ref: </b></span><span class="value">-</span></p>
-                                                                <p><span class="label"><b>Shipping Account: </b></span><span class="value">-</span></p>
+                                                                <p><span class="label"><b>Tag Type: </b></span><span class="value">####</span></p>
+                                                                <p><span class="label"><b>Tag Date: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].tagDate}}</span></p>
+                                                                <p><span class="label"><b>ESN: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].engineSerialNumber}}</span></p>
+                                                                <p><span class="label"><b>Aircraft Tail Num: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].aircraftTailNumber}}</span></p>
+                                                                <p><span class="label"><b>Ship Via: </b></span><span class="value">####</span></p>
+                                                                <p><span class="label"><b>Shipping Ref: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].shippingReference}}</span></p>
+                                                                <p><span class="label"><b>Shipping Account: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].shippingAccount}}</span></p>
                                                             </div>
                                                         </div>
                                                     </section>
@@ -164,7 +112,7 @@
                                                         <h3 class="add-details-heading" style="text-align: left;padding-top: 30px;">Serialized</h3>
                                                         <div class="form-row">
                                                             <div class="col-md-3">
-                                                                <p><span class="label"><b>Serial Num: </b></span><span class="value">-</span></p>
+                                                                <p><span class="label"><b>Serial Num: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].serialNumber}}</span></p>
                                                             </div>
                                                         </div>
                                                     </section>
@@ -183,41 +131,41 @@
                                                                 <tbody>
                                                                     <tr>
                                                                         <td>Remaining</td>
-                                                                        <td>-</td>
+                                                                        <td>{{part.timeLife[part.currentSLIndex].cyclesRemaining}}</td>
                                                                         <td>Remaining</td>
-                                                                        <td>-</td>
+                                                                        <td>{{part.timeLife[part.currentSLIndex].timeRemaining}}</td>
                                                                         <td>Since New</td>
-                                                                        <td>-</td>
+                                                                        <td>{{part.timeLife[part.currentSLIndex].lastSinceNew}}</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td>Since New</td>
-                                                                        <td>-</td>
+                                                                        <td>{{part.timeLife[part.currentSLIndex].cyclesSinceNew}}</td>
                                                                         <td>Since New</td>
-                                                                        <td>-</td>
+                                                                        <td>{{part.timeLife[part.currentSLIndex].timeSinceNew}}</td>
                                                                         <td>Since Ovh</td>
-                                                                        <td>-</td>
+                                                                        <td>{{part.timeLife[part.currentSLIndex].lastSinceOVH}}</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td>Since Ovh</td>
-                                                                        <td>-</td>
+                                                                        <td>{{part.timeLife[part.currentSLIndex].cyclesSinceOVH}}</td>
                                                                         <td>Since Ovh</td>
-                                                                        <td>-</td>
+                                                                        <td>{{part.timeLife[part.currentSLIndex].timeSinceOVH}}</td>
                                                                         <td>Since Insp</td>
-                                                                        <td>-</td>
+                                                                        <td>{{part.timeLife[part.currentSLIndex].lastSinceInspection}}</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td>Since Insp</td>
-                                                                        <td>-</td>
+                                                                        <td>{{part.timeLife[part.currentSLIndex].cyclesSinceInspection}}</td>
                                                                         <td>Since Insp</td>
-                                                                        <td>-</td>
+                                                                        <td>{{part.timeLife[part.currentSLIndex].timeSinceInspection}}</td>
                                                                         <td></td>
                                                                         <td></td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td>Since Repair</td>
-                                                                        <td>-</td>
+                                                                        <td>{{part.timeLife[part.currentSLIndex].cyclesSinceRepair}}</td>
                                                                         <td>Since Repair</td>
-                                                                        <td>-</td>
+                                                                        <td>{{part.timeLife[part.currentSLIndex].timeSinceRepair}}</td>
                                                                         <td></td>
                                                                         <td></td>
                                                                     </tr>
@@ -226,7 +174,7 @@
                                                         </div>
                                                     </section>
 
-                                                    <section>
+                                                    <!--<section>
                                                         <h3 class="add-details-heading" style="text-align: left;">Calibrated Equipment</h3>
                                                         <div class="form-row">
                                                             <div class="col-md-3">
@@ -236,7 +184,7 @@
                                                                 <p><span class="label"><b>Frequency: </b></span><span class="value">-</span></p>
                                                             </div>
                                                         </div>
-                                                    </section>
+                                                    </section>-->
                                                 </div>
                                             </td>
                                         </tr>

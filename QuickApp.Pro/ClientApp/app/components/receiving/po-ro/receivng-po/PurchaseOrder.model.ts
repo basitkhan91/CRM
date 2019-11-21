@@ -152,6 +152,12 @@ export class PurchaseOrderPart {
     businessUnitId: number;
     divisionId: number;
     departmentId: number;
+
+    companyText: string;
+    businessUnitText: string;
+    divisionText: string;
+    departmentText: string;
+
     CompanyList: DropDownData[];
     BusinessUnitList: DropDownData[];
     DivisionList: DropDownData[];
@@ -279,11 +285,23 @@ export class StockLine {
     timeLifeDetailsNotProvided: boolean;
 
     //View Properties
+
+    companyText: string;
+    businessUnitText: string;
+    divisionText: string;
+    departmentText: string;
+    siteText: string;
+    wareHouseText: string;
+    locationText: string;
+    shelfText: string;
+    binText: string;
+
     isEnabled: boolean;
     CompanyList: DropDownData[];
     BusinessUnitList: DropDownData[];
     DivisionList: DropDownData[];
     DepartmentList: DropDownData[];
+
     SiteList: DropDownData[];
     WareHouseList: DropDownData[];
     LocationList: DropDownData[];
