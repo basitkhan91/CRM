@@ -715,8 +715,8 @@
                             <label>Tax Rate <span class="clr-red">*</span></label>
                             <div class="inner-addon right-addon inline-block">
 
-                                <p-autoComplete class="p-dropdown-custom-2" name="taxrate"
-                                                [(ngModel)]="addNewTaxRate.taxrate"
+                                <p-autoComplete class="p-dropdown-custom-2" name="taxRate"
+                                                [(ngModel)]="addNewTaxRate.taxRate"
                                                 (onSelect)="selectedTaxRate()"
                                                 (onKeyUp)="checkTaxRateExists('field',$event.target.value)"
                                                 [suggestions]="_TaxRateList" field="label" (completeMethod)="filterTaxRate($event)"
