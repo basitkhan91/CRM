@@ -109,6 +109,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
     showReceiveDateError: boolean;
     showReceiverNumberError: boolean;
     showGlAccountNumberError: boolean;
+    QuantityOnHandError: boolean;
     disableSave: boolean;
     BuHasData: boolean;
     DepaHasData: boolean;
@@ -169,7 +170,8 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 	modal: NgbModalRef;
 	timeLifeEditAllow: any;
 	allConditionInfo: Condition[] = [];
-	allManufacturerInfo: any[] = [];
+    allManufacturerInfo: any[] = [];
+    availableQty: number;
 
 	constructor(public integrationService: IntegrationService,private empService: EmployeeService,public vendorservice: VendorService,public manufacturerService: ManufacturerService,public itemser: ItemMasterService,public glAccountService: GLAccountClassService,public vendorService: VendorService,public customerService: CustomerService,public inteService: IntegrationService,public workFlowtService1: LegalEntityService,public workFlowtService: BinService,public siteService: SiteService,public integration: IntegrationService, public stocklineser: StocklineService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public conditionService: ConditionService, private dialog: MatDialog)
 	{
@@ -379,7 +381,15 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
     }
 
     calculateQtyAvailable(event) {
-        this.sourceStockLineSetup.quantityAvailable = this.sourceStockLineSetup.QuantityOnHand - this.sourceStockLineSetup.QuantityReserved - this.sourceStockLineSetup.QuantityIssued;
+        
+        if (this.sourceStockLineSetup.QuantityOnHand) { this.availableQty = 0 };
+        if (this.sourceStockLineSetup.QuantityOnHand && this.sourceStockLineSetup.QuantityReserved) {
+            this.availableQty = this.sourceStockLineSetup.QuantityOnHand - this.sourceStockLineSetup.QuantityReserved
+        }
+        if (this.sourceStockLineSetup.QuantityOnHand && this.sourceStockLineSetup.QuantityReserved && this.sourceStockLineSetup.QuantityIssued) {
+            this.availableQty = this.sourceStockLineSetup.QuantityOnHand - this.sourceStockLineSetup.QuantityReserved - this.sourceStockLineSetup.QuantityIssued;
+        }
+        this.sourceStockLineSetup.quantityAvailable = this.availableQty;
     }
 
 	partnmId(event) {
@@ -749,15 +759,15 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
         for (let i = 0; i < this.allManagemtninfo.length; i++) {
             if (this.allManagemtninfo[i].parentId == null) {
                 this.maincompanylist.push(this.allManagemtninfo[i]);
-
             }
+            this.setManagementStrucureData(this.sourceEmployee[i]);
         }
-        this.setManagementStrucureData(this.sourceEmployee);
+        
     }
 
     setManagementStrucureData(obj) {
         this.managementStructureData = [];
-        this.checkMSParents(obj.managementStructureId);
+        this.checkMSParents(obj.ManagementStructureEntityId);
         if (this.managementStructureData.length == 4) {
             this.sourceEmployee.companyId = this.managementStructureData[3];
             this.sourceEmployee.buisinessUnitId = this.managementStructureData[2];
@@ -820,8 +830,9 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
     {
             this.sourceEmployee.buisinessUnitId = "";
             this.sourceEmployee.departmentId = "";
-            this.sourceEmployee.divisionId = "";
-            this.sourceStockLineSetup.managementStructureId = companyId;
+        this.sourceEmployee.divisionId = "";
+        this.sourceStockLineSetup.LegalEntityId = companyId;
+            this.sourceStockLineSetup.ManagementStructureEntityId = companyId;
             this.sourceStockLineSetup.masterCompanyId = 1;
             this.departmentList = [];
             this.divisionlist = [];
@@ -837,7 +848,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
     {
             this.sourceEmployee.departmentId = "";
             this.sourceEmployee.divisionId = "";
-            this.sourceEmployee.managementStructureId = businessUnitId;
+            this.sourceEmployee.ManagementStructureEntityId = businessUnitId;
             this.departmentList = [];
             this.divisionlist = [];
             for (let i = 0; i < this.allManagemtninfo.length; i++) {
@@ -850,7 +861,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 	getDivisionlist(departmentId)
 	{
             this.sourceEmployee.divisionId = "";
-            this.sourceEmployee.managementStructureId = departmentId;
+        this.sourceEmployee.ManagementStructureEntityId = departmentId;
             this.divisionlist = [];
             for (let i = 0; i < this.allManagemtninfo.length; i++) {
                 if (this.allManagemtninfo[i].parentId == departmentId) {
@@ -861,7 +872,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 
 	getDivisionChangeManagementCode(divisionId)
 	{
-        this.sourceEmployee.managementStructureId = divisionId;
+        this.sourceEmployee.ManagementStructureEntityId = divisionId;
 	}
 
     POValueChange(purchaseOrderId)
@@ -973,6 +984,11 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			this.showGlAccountNumberError = false;
 		}
 		else { this.showGlAccountNumberError = true; }
+
+        if (this.sourceStockLineSetup.QuantityOnHand) {
+            this.QuantityOnHandError = false;
+        }
+        else { this.QuantityOnHandError = true; }
 
 		if ((this.hasSerialized == true) && (this.sourceStockLineSetup.serialNumber)) {
 			this.showSerialNumberError = false;

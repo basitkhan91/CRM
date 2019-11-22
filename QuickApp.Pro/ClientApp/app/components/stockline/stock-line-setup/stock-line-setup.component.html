@@ -95,7 +95,7 @@
                     <label class="control-label col-sm-4">QTY ON HAND <strong class="clr-red">*</strong></label>
                     <div class="col-sm-7">
                         <input class="form-control qty-input" *ngIf="showRestrictQuantity" type="number" maxlength="1" min="0" max="1"  (keypress)="calculateQtyAvailable($event)" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.QuantityOnHand">
-                        <input class="form-control qty-input"  (keypress)="calculateQtyAvailable($event)" type="number" min="0" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.QuantityOnHand">
+                        <input class="form-control qty-input"  *ngIf="showFreeQuantity" (keypress)="calculateQtyAvailable($event)" type="number" min="0" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.QuantityOnHand">
                     </div>
                 </div>
 
@@ -728,18 +728,13 @@
           [width]="350" [minWidth]="200" [responsive]="true"
           [minY]="1050" [baseZIndex]="1100000">
     <p *ngIf="showCompanyError" [ngStyle]="{'color':'red'}"> Please Enter Company</p>
-    <p *ngIf="showBuError" [ngStyle]="{'color':'red'}"> Please Enter BU</p>
-    <p *ngIf="showDivError" [ngStyle]="{'color':'red'}"> Please Enter Div</p>
-    <p *ngIf="showDepError" [ngStyle]="{'color':'red'}"> Please Enter Dept</p>
     <p *ngIf="showPartNumberError" [ngStyle]="{'color':'red'}"> Please Enter Part Number</p>
     <p *ngIf="showSerialNumberError" [ngStyle]="{'color':'red'}"> Please Enter Serial Number </p>
-
-
-    <p *ngIf="showPartDescriptionError" [ngStyle]="{'color':'red'}"> Please Enter Part Description</p>
     <p *ngIf="showConditionError" [ngStyle]="{'color':'red'}"> Please Enter Condition</p>
     <p *ngIf="showSiteError" [ngStyle]="{'color':'red'}"> Please Select Site</p>
     <p *ngIf="showReceiveDateError" [ngStyle]="{'color':'red'}"> Please Select Receive Date</p>
     <p *ngIf="showReceiverNumberError" [ngStyle]="{'color':'red'}"> Please Enter receive Number</p>
     <p *ngIf="showGlAccountNumberError" [ngStyle]="{'color':'red'}"> Please Enter GL Account</p>
-
+    <p *ngIf="QuantityOnHandError" [ngStyle]="{'color':'red'}"> Please Enter Quantity On Hand</p>
+    
 </p-dialog>
