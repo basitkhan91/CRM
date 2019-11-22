@@ -823,6 +823,22 @@ namespace QuickApp.Pro.Controllers
             {
                 if(workFlow.IsSaveToWorkFlow)
                 {
+                    workFlow.WorkflowId = 0;
+                    workFlow.Customer = null;
+                    workFlow.ItemMaster = null;
+                    workFlow.WorkScope = null;
+                    workFlow.ChangedPartNumber = null;
+                    if(workFlow.Publication!=null && workFlow.Publication.Count>0)
+                    {
+                        foreach(var pub in workFlow.Publication)
+                        {
+                            if(pub.WorkflowPublicationDashNumbers!=null && pub.WorkflowPublicationDashNumbers.Count>0)
+                            {
+                                pub.WorkflowPublicationDashNumbers.ForEach(p => p.WorkflowPublicationDashNumberId = 0);
+                            }
+                        }
+                    }
+
                     List<long> taskIds = new List<long>();
                     if (workFlow.ExistingWorkFlowId > 0)
                     {
