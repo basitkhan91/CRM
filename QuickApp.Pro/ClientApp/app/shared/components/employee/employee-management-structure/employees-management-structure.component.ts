@@ -21,9 +21,11 @@ import { InputTextModule } from 'primeng/inputtext';
 
 import { CheckboxModule } from 'primeng/checkbox';
 import { EmployeeService } from '../../../../services/employee.service';
-import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
-import { Router } from '@angular/router';
+import { OnInit, AfterViewInit } from '@angular/core/src/metadata/lifecycle_hooks';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AppTranslationService } from '../../../../services/app-translation.service';
+import { LegalEntityService } from '../../../../services/legalentity.service';
+
 
 
 @Component({
@@ -33,16 +35,51 @@ import { AppTranslationService } from '../../../../services/app-translation.serv
     animations: [fadeInOut]
 })
 /** employees-list component*/
-export class EmployeesManagementStructureComponent implements OnInit{
-    sourceEmployee: any;
+export class EmployeesManagementStructureComponent implements OnInit,AfterViewInit{
+    selectedRoles: any = [];
+    memoText: string;
     employeeRolesList: object[];
-    constructor(public employeeService: EmployeeService){
+    employeeRoleLabel = [];
+    allManagemtninfo: any[];
+    tagNameCollection: any[] = [];
+    empId: any;
+    firstName: any;
+    lastName: any;
+
+    dropdownSettings = {
+        singleSelection: false,
+        idField: 'dashNumberId',
+        textField: 'dashNumber',
+        selectAllText: 'Select All',
+        unSelectAllText: 'UnSelect All',
+        itemsShowLimit: 1,
+        allowSearchFilter: false
+    };
+    gridData = [];
+    
+    constructor(private router: Router, private route: ActivatedRoute, public employeeService: EmployeeService, private legalEntityService: LegalEntityService){
 
     }
 
     ngOnInit(){
         this.structureInit();
         this.loadEmployeeRoles();
+        this.loadManagementStructure();
+    }
+
+    ngAfterViewInit() {
+
+        this.route.queryParams
+        .filter(params => params.order)
+        .subscribe(params => {
+            console.log(params); // {order: "popular"}
+            //  console.log(params.order);
+            this.empId = params.order;
+
+            this.empId = params.order;
+            this.firstName = params.firstname;
+            this.lastName = params.lastname;
+        });
     }
     structureInit(){
         var toggler = document.getElementsByClassName("caret");
@@ -59,11 +96,113 @@ export class EmployeesManagementStructureComponent implements OnInit{
         this.employeeService.getAllRolesOfEmployee().subscribe(
             results => {
                 this.employeeRolesList = results;
+                this.employeeRoleLabel = this.employeeRolesList.map((emp)=>{ return emp['name']})
             },
             error => console.log(error)
         );
     }
+    loadManagementStructure(){
+        this.legalEntityService.getManagemententity().subscribe(
+            (results: any)=>{
+                this.onManagemtntdataLoad(results[0])
+            },
+            (error: any)=>{
+                console.log(error);
+            }
+        )
+    }
 
+    private onManagemtntdataLoad(getAtaMainList: any[]) {
+		// alert('success');
+		// this.alertService.stopLoadingMessage();
+		// this.loadingIndicator = false;
+		// this.dataSource.data = getAtaMainList;
+		this.allManagemtninfo = getAtaMainList;
+		for (let i = 0; i < this.allManagemtninfo.length; i++) {
+			if (this.allManagemtninfo[i].tagName != null) {
+				this.tagNameCollection.push(this.allManagemtninfo[i]);
+			}
+		}
+		//debugger;
+		if (this.allManagemtninfo)
+		{
+			
+            this.gridData = [{
+                data: {
+                    name: "ABC Inc",
+                    isRoot: true
+                },
+                children: this.makeNestedObj(this.allManagemtninfo, null)}];
+            // this.employeeService.structureData = this.gridData;
+		}
+
+		
+		// console.log(this.gridData);
+    }
+    makeNestedObj(arr, parent) {
+		var out = []
+		for (var i in arr) {
+			if (arr[i].parentId == parent) {
+				var children = this.makeNestedObj(arr, arr[i].managementStructureId)
+				arr[i] = { "data": arr[i] };
+				if (children.length) {
+					arr[i].children = children
+				}
+				out.push(arr[i])
+			}
+		}
+		return out
+    }
+    
+    saveManagementStructure(){
+        this.employeeService.storeEmployeeRoles(this.getEmployeeRolesList()).subscribe(
+            (result)=>{
+                this.employeeService.storeEmployeeManagementStructure(this.getLegalEntityList()).subscribe(
+                    (result)=>{
+                        this.router.navigateByUrl('/employeesmodule/employeepages/app-employees-list');
+                    },
+                    (error)=>{
+                    }
+                )
+            },
+            (error)=>{
+            }
+        )
+
+        
+    }
+    getEmployeeRolesList(){
+        let result = [];
+        this.employeeRolesList.forEach((role)=>{
+            if(this.selectedRoles.indexOf(role['name']) != -1){
+                result.push(
+                    {
+                        "employeeId": this.empId,
+                        "roleId": role['id'],
+                        "createdBy": "admin",
+                        "updatedBy": "admin",
+                        "isActive": role['isActive'],
+                        "isDeleted": role['isDeleted']
+                    }
+                )
+            }
+        })
+        return result;
+    }
+
+    getLegalEntityList(){
+        let result = [];
+        this.employeeService.legalEnityList.forEach((ele, index)=>{
+            this.employeeService.legalEnityList[index]['employeeId'] = this.empId;
+        })
+        return this.employeeService.legalEnityList;
+    }
+
+    previousClick(){
+		this.employeeService.indexObj.next(2);
+		//this.saveCompleted(this.sourceCustomer);
+        this.router.navigate(['/employeesmodule/employeepages/app-employee-training'], { queryParams: { order: this.empId, 'firstName': this.firstName, 'lastName': this.lastName } });
+    }
      
 
 }

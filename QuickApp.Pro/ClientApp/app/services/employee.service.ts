@@ -33,6 +33,9 @@ export class EmployeeService {
     financeCollection: any;
     ShowPtab: boolean = true;
     leaveObj: any[];
+    structureData: any[];
+    legalEnityList = [];
+
     public static readonly roleAddedOperation: RolesChangedOperation = "add";
     public static readonly roleDeletedOperation: RolesChangedOperation = "delete";
     public static readonly roleModifiedOperation: RolesChangedOperation = "modify";
@@ -197,6 +200,12 @@ export class EmployeeService {
     }
     getAllRolesOfEmployee() {
         return this.employeeEndpoint.getAllRolesOfEmployee<any>();
+    }
+    storeEmployeeRoles(data: any){
+        return this.employeeEndpoint.storeEmployeeRoles<any>(data);
+    }
+    storeEmployeeManagementStructure(data: any){
+        return this.employeeEndpoint.storeEmployeeManagementStructure<any>(data);
     }
 
 }
