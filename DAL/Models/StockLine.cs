@@ -15,11 +15,17 @@ namespace DAL.Models
         [ForeignKey("ItemMasterId")]
         public long? ItemMasterId { get; set; }
         public int? Quantity { get; set; }
+        [NotMapped]
         public bool BlackListed { get; set; }
+        [NotMapped]
         public string BlackListedReason { get; set; }
+        [NotMapped]
         public bool Incident { get; set; }
+        [NotMapped]
         public string IncidentReason { get; set; }
+        [NotMapped]
         public bool Accident { get; set; }
+        [NotMapped]
         public string AccidentReason { get; set; }
         public int? QuantityOnOrder { get; set; }
         public int? QuantityAvailable { get; set; }
@@ -104,6 +110,8 @@ namespace DAL.Models
         public string ShippingReference { get; set; }
         public long? TimeLifeCyclesId { get; set; }
         public bool TimeLifeDetailsNotProvided { get; set; }
+        [NotMapped]
+        public long? RepairOrderPartRecordId { get; set; }
         
 
         public virtual PurchaseOrder PurchaseOrder { get; set; }
