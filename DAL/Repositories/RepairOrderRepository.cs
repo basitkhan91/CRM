@@ -290,10 +290,9 @@ namespace DAL.Repositories
 
                 return data;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -507,9 +506,23 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
+        }
+
+        public IEnumerable<RepairOrder> ROListByMasterItemId(int itemMasterId)
+        {
+            var repairOrderList = (from ro in _appContext.RepairOrder
+                                     join rop in _appContext.RepairOrderPart on ro.RepairOrderId equals rop.RepairOrderId
+                                     join im in _appContext.ItemMaster on rop.ItemMasterId equals im.ItemMasterId
+                                     where im.ItemMasterId == itemMasterId &&
+                                     ro.IsDeleted == false
+                                     select new RepairOrder
+                                     {
+                                         RepairOrderId = ro.RepairOrderId,
+                                         RepairOrderNumber = ro.RepairOrderNumber
+                                     });
+            return repairOrderList;
         }
     }
 }

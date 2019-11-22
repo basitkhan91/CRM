@@ -21,7 +21,7 @@
 								</div>
 								<div class="form-group">
 									<label>Open Date <span class="clr-red">*</span></label>
-									<p-calendar class="pas-clder" [showIcon]="true" name="openDate" [(ngModel)]="sourceRoApproval.openDate" #openDate="ngModel" required></p-calendar>
+									<p-calendar [ngClass]="inputValidCheck ? 'p-clder-validate' : ''" class="pas-clder" [showIcon]="true" name="openDate" [(ngModel)]="sourceRoApproval.openDate" #openDate="ngModel" required></p-calendar>
 									<div *ngIf="openDate.invalid && (openDate.dirty || openDate.touched)" class="alert alert-danger alert-danger-cstm">
 										<div *ngIf="openDate.errors.required">
 											<small> Open Date is required </small>
@@ -44,7 +44,7 @@
 								<div class="form-group">
 									<label>Priority <span class="clr-red">*</span></label>
 									<div class="inner-addon right-addon inline-block">
-										<p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="sourceRoApproval.priorityId" name="priorityName" [suggestions]="allPriorityDetails" (completeMethod)="filterPriorityNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" #priorityId="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
+										<p-autoComplete field="label" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" [(ngModel)]="sourceRoApproval.priorityId" name="priorityName" [suggestions]="allPriorityDetails" (completeMethod)="filterPriorityNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" #priorityId="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
 										<div *ngIf="priorityId.invalid && (priorityId.dirty || priorityId.touched)" class="alert alert-danger alert-danger-cstm">
 												<div *ngIf="priorityId.errors.required">
 													<small> Priority is required </small>
@@ -256,14 +256,14 @@
 						<thead>
 							<tr class="partsList-table-tr">
 								<th style="min-width: 40px;"></th>
-								<th style="padding-bottom: 2px !important;min-width: 50px;">
+								<!-- <th style="padding-bottom: 2px !important;min-width: 50px;">
 									<span class="checkbox-cstm">
 										<label style="width: 20px;">
-											<input type="checkbox" name="checkAllPartsList" [(ngModel)]="checkAllPartsList" #checkAllPartsList1> <!--checkAllPartDetails()-->
+											<input type="checkbox" name="checkAllPartsList" [(ngModel)]="checkAllPartsList" #checkAllPartsList1>
 											<span class="cr"><i class="cr-icon pi pi-check"></i></span>
 										</label>
 									</span>
-								</th>
+								</th> -->
 								<th>Split Shipment</th>
 								<th>PN <span class="clr-red">*</span></th>
 								<th>Alt PN</th>
@@ -283,6 +283,10 @@
 								<th>Functional CUR <span class="clr-red">*</span></th>
 								<th>FX Rate <span class="clr-red">*</span></th>
 								<th>Report CUR <span class="clr-red">*</span></th>
+								<th>Stockline Num</th>
+								<th>Control Id</th>
+								<th>Control Num</th>
+								<th>PO</th>
 								<th>WO</th>
 								<!-- <th>RO</th> -->
 								<th>SO</th>
@@ -295,14 +299,14 @@
 								<!--createPOPartsList-->
 								<tr class="parent-data">
 									<td><i class="fa fa-trash" style="color: red;font-size: 15px;cursor: pointer;" (click)="onDelPNRow(row_index)"></i></td>
-									<td>
+									<!-- <td>
 										<span class="checkbox-cstm">
 											<label style="width: 20px;">
-												<input type="checkbox" name="checkPartList{{row_index}}" [checked]="checkAllPartsList1.checked"> <!--isCheckedPartListRow-->
+												<input type="checkbox" name="checkPartList{{row_index}}" [checked]="checkAllPartsList1.checked">
 												<span class="cr"><i class="cr-icon pi pi-check"></i></span>
 											</label>
 										</span>
-									</td>
+									</td> -->
 									<td>
 										<span class="checkbox-cstm">
 											<label style="width: 20px;">
@@ -366,7 +370,7 @@
 												</div>
 										</div>     
 									</td>
-									<td><input type="number" class="form-control" [(ngModel)]="partList.quantityOrdered" name="parentQtyOrdered{{row_index}}" pKeyFilter="pint" #parentQtyOrdered="ngModel" (keyup)="onChangeParentQtyOrdered($event, partList); onGetDiscAmount(partList); onGetExtCost(partList);" required>
+									<td><input type="number" [ngClass]="inputValidCheck ? 'input-validate' : ''" class="form-control" [(ngModel)]="partList.quantityOrdered" name="parentQtyOrdered{{row_index}}" pKeyFilter="pint" #parentQtyOrdered="ngModel" (keyup)="onChangeParentQtyOrdered($event, partList); onGetDiscAmount(partList); onGetExtCost(partList);" required>
 										<div *ngIf="parentQtyOrdered.invalid && (parentQtyOrdered.dirty || parentQtyOrdered.touched)" class="alert alert-danger alert-danger-cstm">
 												<div *ngIf="parentQtyOrdered.errors.required">
 													<small> Order Qty is required </small>
@@ -399,11 +403,15 @@
 										> <!--[disabled]=true-->          
 										</p-autoComplete>
 									</td>
+									<td>
+										<p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="partList.stocklineId" name="stocklineNum{{row_index}}" [suggestions]="allStocklineDetails" (completeMethod)="filterStocklineNum($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
+									</td>
+									<td><input type="text" class="form-control" [(ngModel)]="partList.controlId" name="controlId{{row_index}}" disabled></td>
+									<td><input type="text" class="form-control" [(ngModel)]="partList.controlNumber" name="controlNumber{{row_index}}" disabled></td>
+									<td><input type="text" class="form-control" [(ngModel)]="partList.purchaseOrderId" name="purchaseOrderId{{row_index}}" disabled></td>
 									<td><input type="number" class="form-control" [(ngModel)]="partList.workOrderId" name="workOrderId{{row_index}}"></td>
-									<!-- <td><input type="number" class="form-control" [(ngModel)]="partList.repairOrderId" name="repairOrderId{{row_index}}"></td> -->
 									<td><input type="number" class="form-control" [(ngModel)]="partList.salesOrderId" name="salesOrderId{{row_index}}"></td>
-									<td style="min-width: 90px;">
-									
+									<td style="min-width: 90px;">									
 										<label style="width:90px;">Company:</label>
 										<select class="form-control" [(ngModel)]="partList.parentCompanyId" name="parentCompanyName{{row_index}}" (change)="getParentBUList(partList)" #pcompanyName required>
 											<option value="0">Select</option>
@@ -450,6 +458,10 @@
 									<th>UOM</th>
 									<th>Order Qty</th>
 									<th>Need By</th>
+									<th>Stockline Num</th>
+									<th>Control Id</th>
+									<th>Control Num</th>
+									<th>PO</th>
 									<th colspan="4">Management Structure <span class="clr-red">*</span></th>
 									<th colspan="10"></th>
 								</tr>
@@ -543,6 +555,12 @@
 									<td>{{partList.UOMShortName}}</td>
 									<td><input class="form-control" type="number" pKeyFilter="pint" [(ngModel)]="partChildList.quantityOrdered" name="childQtyOrdered{{row_index}}{{row_no}}" (keyup)="onChangeChildQtyOrdered(partList)" /></td> <!--[disabled]="!partList.quantityOrdered"-->
 									<td><p-calendar class="pcal-cpo-grid" [showIcon]="true" [minDate]="sourceRoApproval.openDate" [(ngModel)]="partChildList.needByDate" name="childNeedByDate{{row_index}}{{row_no}}"></p-calendar></td>
+									<td>
+										<p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="partChildList.stocklineId" name="stocklineNum{{row_index}}{{row_no}}" [suggestions]="allStocklineDetails" (completeMethod)="filterStocklineNum($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
+									</td>
+									<td><input type="text" class="form-control" [(ngModel)]="partChildList.controlId" name="controlId{{row_index}}{{row_no}}" disabled></td>
+									<td><input type="text" class="form-control" [(ngModel)]="partChildList.controlNumber" name="controlNumber{{row_index}}{{row_no}}" disabled></td>
+									<td><input type="text" class="form-control" [(ngModel)]="partChildList.purchaseOrderId" name="purchaseOrderId{{row_index}}{{row_no}}" disabled></td>
 									<td>
 										<label style="width:90px;">Company:</label>
 										<select class="inner-addon right-addon autosuggesions-add inline-block mw400"

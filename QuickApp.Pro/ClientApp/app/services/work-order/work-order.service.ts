@@ -24,8 +24,12 @@ export class WorkOrderService {
         return this.workOrderEndpointService.getAllWorkOrders<WorkOrder[]>();
     }
 
-    getById(workOrderId: number) {
-        return this.workOrderEndpointService.getWorkOrderById<WorkOrder>(workOrderId);
+    // getById(workOrderId: number) {
+    //     return this.workOrderEndpointService.getWorkOrderById<WorkOrder>(workOrderId);
+    // }
+
+    getWorkOrderById(workOrderId) {
+        return this.workOrderEndpointService.getWorkOrderById(workOrderId);
     }
 
     createNewWorkOrder(workOrder) {
@@ -113,8 +117,8 @@ export class WorkOrderService {
         return this.workOrderEndpointService.getWorkOrderWorkFlowNumbers(workOrderId);
     }
 
-    getWorkOrderAssetList(workFlowWorkOrderId) {
-        return this.workOrderEndpointService.getWorkOrderAssetList(workFlowWorkOrderId);
+    getWorkOrderAssetList(workFlowWorkOrderId, workOrderId) {
+        return this.workOrderEndpointService.getWorkOrderAssetList(workFlowWorkOrderId, workOrderId);
     }
     createWorkOrderLabor(data) {
         return this.workOrderEndpointService.createWorkOrderLabor(data);
@@ -122,8 +126,33 @@ export class WorkOrderService {
     getAllTasks() {
         return this.workOrderEndpointService.getTasks();
     }
-    getMaterialList(workOrderWorkFlowId, workOrderId) {
-        return this.workOrderEndpointService.getMaterialList(workOrderWorkFlowId, workOrderId)
+    getWorkOrderMaterialList(workFlowWorkOrderId, workOrderId) {
+        return this.workOrderEndpointService.getWorkOrderMaterialList(workFlowWorkOrderId, workOrderId)
+    }
+    getWorkOrderPublicationList(workFlowWorkOrderId, workOrderId) {
+        return this.workOrderEndpointService.getWorkOrderPublicationList(workFlowWorkOrderId, workOrderId)
+    }
+
+    getWorkOrderChargesList(workFlowWorkOrderId, workOrderId) {
+        return this.workOrderEndpointService.getWorkOrderChargesList(workFlowWorkOrderId, workOrderId)
+    }
+
+    getWorkOrderExclusionsList(workFlowWorkOrderId, workOrderId) {
+        return this.workOrderEndpointService.getWorkOrderExclusionsList(workFlowWorkOrderId, workOrderId)
+    }
+    getWorkOrderLaborList(workFlowWorkOrderId, workOrderId) {
+        return this.workOrderEndpointService.getWorkOrderLaborList(workFlowWorkOrderId, workOrderId)
+    }
+
+    getWorkOrderWorkFlowByWorkFlowWorkOrderId(workFlowWorkOrderId) {
+        return this.workOrderEndpointService.getWorkOrderWorkFlowByWorkFlowWorkOrderId(workFlowWorkOrderId)
+    }
+
+    viewWorkOrderHeader(workOrderId) {
+        return this.workOrderEndpointService.viewWorkOrderHeader(workOrderId);
+    }
+    viewWorkOrderPartNumber(workOrderId) {
+        return this.workOrderEndpointService.viewWorkOrderPartNumber(workOrderId);
     }
 
 }

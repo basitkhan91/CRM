@@ -42,7 +42,7 @@ namespace DAL.Repositories
                     _appContext.SaveChanges();
                     item.UploadTag = UploadTag.Success;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     item.UploadTag = UploadTag.Failed;
                     //log exception

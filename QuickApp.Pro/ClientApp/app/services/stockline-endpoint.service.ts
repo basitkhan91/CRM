@@ -15,7 +15,9 @@ export class StocklineEndpoint extends EndpointFactory
 	  
 	private readonly _actionsUrlNew: string = "/api/StockLine/stockLinepost";//which will be specified in the Controller
 
-	private readonly _actionsCompanyUrl: string = "/api/StockLine/GetCompanyData";//which will be specified in the Controller
+    private readonly _actionsCompanyUrl: string = "/api/StockLine/GetCompanyData";//which will be specified in the Controller
+
+    private readonly _actionsLegalEntityUrl: string = "/api/ManagementStrcture/ManagementGetView";
 
 	private readonly _actionsAdjustmentToListEdit: string = "/api/StockLine/stockLineAdjustmentToListpost";//which will be specified in the Controller
 
@@ -53,7 +55,11 @@ export class StocklineEndpoint extends EndpointFactory
 
 	private readonly _stockLineAdjustmentUpdate: string = "/api/StockLine/stockLineAdjustmentReasonPut";
 
-	private readonly _stockLinePOUnitCost: string = "/api/StockLine/stockLinePOUnitCostGet";
+    private readonly _stockLinePOUnitCost: string = "/api/StockLine/stockLinePOUnitCostGet";
+
+    private readonly _POUnitCost: string = "/api/StockLine/PurchaseOrderUnitCost";
+
+    private readonly _ROUnitCost: string = "/api/StockLine/RepairOrderUnitCost";
 
 	private readonly _stockLineROUnitCost: string = "/api/StockLine/stockLineROUnitCostGet";
 
@@ -72,6 +78,8 @@ export class StocklineEndpoint extends EndpointFactory
 	get adjustmentUrl() { return this.configurations.baseUrl + this._actionsUrl1; }
 
 	get companyUrl() { return this.configurations.baseUrl + this._actionsCompanyUrl; }
+
+    get legalEntityUrl() { return this.configurations.baseUrl + this._actionsLegalEntityUrl; }
 
 	constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 		super(http, configurations, injector);
@@ -110,6 +118,12 @@ export class StocklineEndpoint extends EndpointFactory
 			});
 	}
 
+    getManagemtentLengalEntityEndpoint<T>(): Observable<T> {
+        return this.http.get<T>(this.legalEntityUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getManagemtentLengalEntityEndpoint());
+            });
+    }
 	//for getting new stockline Adjustment Datatype
 	getNewstockLineEndpoint<T>(userObject: any): Observable<T> {
 
@@ -300,6 +314,23 @@ export class StocklineEndpoint extends EndpointFactory
                 return this.handleError(error, () => this.getDeleteStocklineAdjustmentReasonEndpoin(roleObject));
             });
 	}
+
+    getPurchaseOrderUnitCostEndpoint<T>(POId: any): Observable<T> {
+        let endpointUrl = `${this._POUnitCost}/${POId}`;
+
+        return this.http.post<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getPurchaseOrderUnitCostEndpoint(POId));
+            });
+    }
+
+    getRepairOrderUnitCostEndpoint<T>(ROId: any): Observable<T> {
+        let endpointUrl = `${this._ROUnitCost}/${ROId}`;
+        return this.http.post<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getRepairOrderUnitCostEndpoint(ROId));
+            });
+    }
 
 	getPOUnitCostEndpoint<T>(roleObject: any): Observable<T> {
 		//let endpointUrl = `${this._stockLinePOUnitCost}/${roleObject.itemMasterId}`;

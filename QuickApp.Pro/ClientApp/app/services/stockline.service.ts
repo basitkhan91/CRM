@@ -69,6 +69,10 @@ export class StocklineService {
 			this.stocklineEndpoint.getStockLineCompanyListEndpoint<any[]>());
 	}
 
+    getManagemtentLengalEntityData() {
+        return Observable.forkJoin(
+            this.stocklineEndpoint.getManagemtentLengalEntityEndpoint<any[]>());
+    }
 	//For entering into the new stockline values
 	newStockLine(sourceStockLine: any) {
 		return this.stocklineEndpoint.getNewstockLineEndpoint<any>(sourceStockLine);
@@ -183,6 +187,14 @@ export class StocklineService {
 	getROUnitCost(Object: any) {
 		return this.stocklineEndpoint.getROUnitCostEndpoint(Object);
 	}
+
+    getPurchaseOrderUnitCost(POId: any) {
+        return this.stocklineEndpoint.getPurchaseOrderUnitCostEndpoint(POId);
+    }
+
+    getRepairOrderUnitCost(ROId: any) {
+        return this.stocklineEndpoint.getRepairOrderUnitCostEndpoint(ROId);
+    }
 
 	deleteIntegrationById(actionId: number) {
 		return this.stocklineEndpoint.getDeleteIntegrationEndpoint(actionId);

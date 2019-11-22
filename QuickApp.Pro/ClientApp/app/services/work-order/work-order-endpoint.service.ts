@@ -48,14 +48,14 @@ export class WorkOrderEndpointService extends EndpointFactory {
             });
     }
 
-    getWorkOrderById<T>(workOrderId: number): Observable<T> {
-        let endpointUrl = `${this.getById}/${workOrderId}`;
+    // getWorkOrderById<T>(workOrderId: number): Observable<T> {
+    //     let endpointUrl = `${this.getById}/${workOrderId}`;
 
-        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getWorkOrderById(workOrderId));
-            });
-    }
+    //     return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+    //         .catch(error => {
+    //             return this.handleError(error, () => this.getWorkOrderById(workOrderId));
+    //         });
+    // }
 
     createNewWorkOrder<T>(workOrder: WorkOrder): Observable<T> {
 
@@ -182,9 +182,9 @@ export class WorkOrderEndpointService extends EndpointFactory {
     }
 
 
-    getWorkOrderAssetList(workFlowWorkOrderId) {
+    getWorkOrderAssetList(workFlowWorkOrderId, workOrderId) {
 
-        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderassetlist?wfwoId=${workFlowWorkOrderId}`, this.getRequestHeaders())
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderassetlist?wfwoId=${workFlowWorkOrderId}&workOrderId=${workOrderId}`, this.getRequestHeaders())
     }
 
     createWorkOrderLabor(data) {
@@ -195,8 +195,49 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/Task/Get`, this.getRequestHeaders())
     }
 
-    getMaterialList(workOrderWorkFlowId, workOrderId) {
-        return this.http.get(`${this.configurations.baseUrl}/api/workOrder/workordermateriallist?wfwoId=${workOrderWorkFlowId}&workOrderId=${workOrderId}`)
+    getWorkOrderMaterialList(workFlowWorkOrderId, workOrderId) {
+        return this.http.get(`${this.configurations.baseUrl}/api/workOrder/workordermateriallist?wfwoId=${workFlowWorkOrderId}&workOrderId=${workOrderId}`)
     }
+
+    getWorkOrderPublicationList(workFlowWorkOrderId, workOrderId) {
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/getworkorderpublications?wfwoId=${workFlowWorkOrderId}&workOrderId=${workOrderId}`, this.getRequestHeaders())
+    }
+
+    getWorkOrderChargesList(workFlowWorkOrderId, workOrderId) {
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/getworkflowworkorderchargeslist?wfwoId=${workFlowWorkOrderId}&workOrderId=${workOrderId}`, this.getRequestHeaders())
+
+    }
+
+    getWorkOrderExclusionsList(workFlowWorkOrderId, workOrderId) {
+
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/getworkflowworkorderexclusionslist?wfwoId=${workFlowWorkOrderId}&workOrderId=${workOrderId}`, this.getRequestHeaders())
+
+    }
+
+    getWorkOrderLaborList(workFlowWorkOrderId, workOrderId) {
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/getworkflowworkorderlabourlist?wfwoId=${workFlowWorkOrderId}&workOrderId=${workOrderId}`, this.getRequestHeaders())
+
+    }
+
+    getWorkOrderWorkFlowByWorkFlowWorkOrderId(workFlowWorkOrderId) {
+
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/workorderworkflowview?workFlowWorkOrderId=${workFlowWorkOrderId}`, this.getRequestHeaders())
+
+    }
+
+
+
+    getWorkOrderById(workOrderId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderbyid?workOrderId=${workOrderId}`, this.getRequestHeaders())
+    }
+
+    viewWorkOrderHeader(workOrderId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderheaderview?workOrderId=${workOrderId}`, this.getRequestHeaders())
+    }
+    viewWorkOrderPartNumber(workOrderId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderpartsview?workOrderId=${workOrderId}`, this.getRequestHeaders())
+    }
+
+
 
 }

@@ -7,12 +7,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 using DAL.Models;
-using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 
 namespace QuickApp.Pro.ViewModels
@@ -108,5 +104,8 @@ namespace QuickApp.Pro.ViewModels
         public virtual VendorShipping VendorShipping { get; set; }
 
         public virtual MasterCompany MasterCompany { get; set; }
+        
+        public IFormFile VendorFileCertified { get; set; }
+        public IFormFile VendorFileAudit { get; set; }
     }
 }

@@ -376,7 +376,7 @@
                                     [forceSelection]="true"
                                     [dropdown]="true"
                                     [suggestions]="partNumberList" 
-                                    (onSelect)="onSelectedPartNumber($event, workOrderPartNumber); getWorkFlowByPNandScope(workOrderPartNumber); getStockLineByItemMasterId(workOrderPartNumber);"
+                                    (onSelect)="onSelectedPartNumber($event, workOrderPartNumber, i); getWorkFlowByPNandScope(workOrderPartNumber); getStockLineByItemMasterIdOnChangePN(workOrderPartNumber,i);"
                                     (completeMethod)="filterPartNumber($event)"
                                     (onClear)="clearautoCompleteInput(workOrderPartNumber, 'masterPartId' )"
                                      [size]="30" [minLength]="1"
@@ -393,8 +393,8 @@
                                     errorMessage="Records not found" 
                                     [forceSelection]="true"
                                     [dropdown]="true"
-                                    [suggestions]="revisedPartNumberList" 
-                                    (completeMethod)="filterRevisedPartNumber($event)"
+                                    [suggestions]="getDynamicVariableData('revisedPartNumberList',i)" 
+                                    (completeMethod)="filterRevisedPartNumber($event, i)"
                                      [size]="30" [minLength]="1"
                                     [dropdown]="true" class="p-autoComplete-ctsm"  >
                                   </p-autoComplete>
@@ -408,19 +408,19 @@
                                     >
                                       </p-dropdown>
                                 </td>
-                                <td><input type="text" class="form-control w50" [(ngModel)]="workOrderPartNumber.nTE"  
+                                <td><input type="text" class="form-control w50" [(ngModel)]="workOrderPartNumber.nte"  
                                   name="nte{{i}}"  #nte="ngModel" 
                                   disabled></td>
                                 <td>
-                                  <p-dropdown  placeholder="Select Condition" [options]="conditionList"
+                                  <p-dropdown  placeholder="Select Condition" [options]="getDynamicVariableData('conditionList',i)"
                                   name="condition{{i}}"  #condition="ngModel" 
-                                  (onChange)="getStockLineByItemMasterId(workOrderPartNumber);"
+                                  (onChange)="getStockLineByItemMasterId(workOrderPartNumber.masterPartId,workOrderPartNumber.conditionId,  i);"
                                    class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.conditionId"  required>
                                     </p-dropdown>
                               </td>
 
                                 <td>
-                                    <p-dropdown  placeholder="Select StockLine" [options]="stockLineList" 
+                                    <p-dropdown  placeholder="Select StockLine" [options]="getDynamicVariableData('stockLineList',i)" 
                                     name="stockLine{{i}}"  #stockLine="ngModel" 
                                     class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.stockLineId"
                                     (onChange)="getSerialNoByStockLineId(workOrderPartNumber)"
@@ -438,7 +438,7 @@
                                 <td>
                                     <p-dropdown placeholder="Select CMM" 
                                     name="cmm{{i}}"  #cmm="ngModel" 
-                                    [options]="cmmList" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.cMMId">
+                                    [options]="cmmList" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.cmmId">
                                       </p-dropdown>
                                    
                     
@@ -514,11 +514,12 @@
                                       </p-dropdown>
 
                                 </td>
-                                <td><input type="text" class="form-control w50" ></td>
-                                <td><input type="text" class="form-control w50" name="tATDaysStandard{{i}}"  #tATDaysStandard="ngModel"   [(ngModel)]="workOrderPartNumber.tATDaysStandard"></td>
+                                <td><input type="text" class="form-control w50" name="tatDaysCurrent{{i}}"  #tatDaysCurrent="ngModel"   [(ngModel)]="workOrderPartNumber.tatDaysCurrent" ></td>
+                                <td><input type="text" class="form-control w50" name="tatDaysStandard{{i}}"  #tatDaysStandard="ngModel"   [(ngModel)]="workOrderPartNumber.tatDaysStandard"></td>
                               
                                 <td><span *ngIf="!workOrderGeneralInformation.isSinglePN "  class="delete-row-btn"> <a
                                             class="btn btn-danger boxed-float-btn nobg"
+                                            (click)="deleteMPN(i)"
                                             data-toggle="tooltip" title="Delete"><i
                                                 class="fa fa-trash"></i></a>
                                     </span></td>
@@ -530,7 +531,8 @@
                   
                 </div>
                 <div>
-                  <button class="btn btn-primary-cstm pull-right" *ngIf="!showTableGrid" type="button"  [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Save</button>
+                  <button class="btn btn-primary-cstm pull-right" *ngIf="!showTableGrid && !isEdit" type="button"  [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Save</button>
+                  <button class="btn btn-primary-cstm pull-right" *ngIf="!showTableGrid && isEdit" type="button"  [disabled]="!workOrderForm.valid" >Update</button>
                 <button  *ngIf="showTableGrid && workOrderGeneralInformation.isSinglePN " class="btn btn-success pull-right" [routerLink]="['/workordersmodule/workorderspages/app-work-order-quote']"  >Create Quote</button>
                 </div>
             </form>
@@ -547,7 +549,9 @@
                             <label class="control-label col-sm-3">MPN </label>
                             <div class="col-sm-7">
 
-                                <p-dropdown [options]="mpnPartNumbersList" placeholder="Select Part Number" class="p-dropdown-custom-md" >
+                                <p-dropdown [options]="mpnPartNumbersList" placeholder="Select Part Number" class="p-dropdown-custom-md" 
+                                (onChange)="changeofMPN($event.value)"
+                                >
                                   </p-dropdown>
                                 <!-- <select class="mpn-select">
                                     <option>Select</option>
@@ -589,41 +593,41 @@
                     </div>
                     <div class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;">
                         <ul class="nav nav-pills nav-pills-cstm" id="pills-tab" role="tablist">
-                            <li class="nav-item dropdown">
+                            <li class="nav-item dropdown" *ngIf="workFlowId !==0" >
                                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
                                     aria-haspopup="true" aria-expanded="false"
                                     [ngClass]="{active : gridActiveTab === 'workFlow' ||  subTabWorkFlow === 'editworkFlow' || subTabWorkFlow === 'createworkFlow'  }">Workflow</a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" (click)="subTabWorkFlowChange()">View WF</a>
+                                <div class="dropdown-menu" >
+                                    <a class="dropdown-item" (click)="subTabWorkFlowChange('viewworkFlow');">View WF</a>
                                     <a class="dropdown-item" (click)="subTabWorkFlowChange('editworkFlow')">Edit
                                         Existing WF</a>
-                                    <a *ngIf="workFlowWorkOrderId == 0 " class="dropdown-item" (click)="subTabWorkFlowChange('createworkFlow')">Create New
-                                        WF</a>
+                                    <!-- <a *ngIf="workFlowWorkOrderId == 0 " class="dropdown-item" (click)="subTabWorkFlowChange('createworkFlow')">Create New
+                                        WF</a> -->
                                     <div class="dropdown-divider"></div>
                                 </div>
                             </li>
                             <li class="nav-item">
                                 <a id="pills-home-tab" role="tab" aria-controls="pills-home" aria-selected="true"
                                     [ngClass]="{active : gridActiveTab === 'labor'}"
-                                    [class.isDisabled]="!isDisabledSteps"
+                                
                                     (click)="gridTabChange('labor')">labor</a>
                             </li>
                             <li class="nav-item">
                                 <a id="pills-profile-tab" role="tab" aria-controls="pills-profile"
                                     [ngClass]="{active : gridActiveTab === 'equipment'}"
-                                    [class.isDisabled]="!isDisabledSteps"
+                                   
                                     (click)="gridTabChange('equipment');getEquipmentByWorkOrderId();">Equipment</a>
                             </li>
                             <li class="nav-item" [hidden]="workOrderGeneralInformation.isSinglePN">
                                 <a id="pills-contact-tab" role="tab" aria-controls="pills-contact"
                                     [ngClass]="{active : gridActiveTab === 'quote'}"
-                                    [class.isDisabled]="!isDisabledSteps"
+                                  
                                     (click)="gridTabChange('quote')">Quote</a>
                             </li>
                             <li class="nav-item">
                                 <a id="pills-contact-tab" role="tab"
                                     [ngClass]="{active : gridActiveTab === 'materialList'}"
-                                    [class.isDisabled]="!isDisabledSteps"
+                               
                                     (click)="gridTabChange('materialList'); getMaterialListByWorkOrderId();">Material List </a>
                             </li>
                             <li class="nav-item">
@@ -706,10 +710,15 @@
                     </ul>
                     <br>
                     <div [ngClass]="{hidedata :  subTabWorkFlow !== 'createworkFlow' }">
-                        <wf-create [isWorkOrder]="isWorkOrder" [savedWorkOrderData]="savedWorkOrderData" (savedWorkFlowWorkOrderData)="savedWorkFlowData($event)" > </wf-create>
+                        <!-- <wf-create [isWorkOrder]="isWorkOrder" [savedWorkOrderData]="savedWorkOrderData" (savedWorkFlowWorkOrderData)="savedWorkFlowData($event)" > </wf-create> -->
                     </div>
-                    <div [ngClass]="{hidedata: subTabWorkFlow !== 'editworkFlow' }">
+                    <div *ngIf="workFlowId && subTabWorkFlow && editWorkFlowData" [ngClass]="{hidedata: subTabWorkFlow !== 'editworkFlow' }">
+                        <wf-create [isWorkOrder]="isWorkOrder" [savedWorkOrderData]="savedWorkOrderData" (savedWorkFlowWorkOrderData)="savedWorkFlowData($event)" > </wf-create>
                         <!-- <app-workflow-list></app-workflow-list> -->
+                    </div>
+
+                    <div *ngIf="workFlowId && subTabWorkFlow " class="wf-label-cstm" [ngClass]="{hidedata :  subTabWorkFlow !== 'viewworkFlow' }" >
+                      <app-workflow-list [isWorkOrder]="isWorkOrder"  [workFlowType]="subTabWorkFlow" [workFlowId]="workFlowId" ></app-workflow-list>
                     </div>
                     <div *ngIf="labor" [ngClass]="{hidedata : gridActiveTab !== 'labor'}">
                         <app-work-order-labor [laborForm]="labor" [workOrderWorkFlowOriginalData]="workOrderWorkFlowOriginalData" [savedWorkOrderData]="savedWorkOrderData"
@@ -767,7 +776,7 @@
             <div class="panel-group" id="accordion">
               <div class="panel panel-default">
                 <div class="panel-heading">
-                  <h4 class="panel-title"> <a data-toggle="collapse" href="#step1" aria-expanded="true" aria-controls="receive">General Information</a> </h4>
+                  <h4 class="panel-title"> <a data-toggle="collapse" href="#step1" aria-expanded="true" aria-controls="receive">General Info</a> </h4>
                 </div>
                 <div id="step1" class="panel-collapse collapse in">
                   <div class="panel-body">
@@ -842,7 +851,7 @@
               </div>
                 <div class="panel panel-default">
                 <div class="panel-heading">
-                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step3">Aircraft Information</a> </h4>
+                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step3">Aircraft Info</a> </h4>
                 </div>
                 <div id="step3" class="panel-collapse collapse">
                   <div class="panel-body">
@@ -927,7 +936,7 @@
               </div>
               <div class="panel panel-default">
                 <div class="panel-heading">
-                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step4">Financial Information</a> </h4>
+                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step4">Financial Info</a> </h4>
                 </div>
                 <div id="step4" class="panel-collapse collapse">
                   <div class="panel-body">
@@ -951,7 +960,7 @@
               </div>
               <div class="panel panel-default">
                 <div class="panel-heading">
-                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step5">Billing Information</a> </h4>
+                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step5">Billing Info</a> </h4>
                 </div>
                 <div id="step5" class="panel-collapse collapse">
                   <div class="panel-body">
@@ -1008,7 +1017,7 @@
               </div>
               <div class="panel panel-default">
                 <div class="panel-heading">
-                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step6">Shipping Information</a> </h4>
+                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step6">Shipping Info</a> </h4>
                 </div>
                 <div id="step6" class="panel-collapse collapse">
                   <div class="panel-body">
@@ -1081,7 +1090,7 @@
               </div>
               <div class="panel panel-default">
                 <div class="panel-heading">
-                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step7">Sales Person/Agent Information</a> </h4>
+                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step7">Sales Person/Agent Info</a> </h4>
                 </div>
                 <div id="step7" class="panel-collapse collapse">
                   <div class="panel-body">

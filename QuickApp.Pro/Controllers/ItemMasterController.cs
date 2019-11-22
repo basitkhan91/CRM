@@ -80,8 +80,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
 
         }
@@ -781,7 +780,7 @@ namespace QuickApp.Pro.Controllers
                     }
                     catch (Exception ex)
                     {
-
+                        return BadRequest(ex.Message);
                     }
                     var MfgName = _unitOfWork.Manufacturer.GetSingleOrDefault(c => c.ManufacturerId == itemmaserObj.ManufacturerId);
                     itemmaserObj.Manufacturer.Name = MfgName.Name;
@@ -792,7 +791,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
+                return BadRequest(ex.Message);
             }
             return Ok(itemMasterViewModel);
         }
@@ -1195,7 +1194,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-                throw ex;
+                return BadRequest(ex.Message);
             }
             return Ok(ModelState);
         }
@@ -1277,7 +1276,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-                throw;
+                return BadRequest(ex.Message);
             }
         }
         //updates
@@ -1647,7 +1646,7 @@ namespace QuickApp.Pro.Controllers
                                 join P in _context.Priority on IM.PriorityId equals P.PriorityId into pir
                                 from P in pir.DefaultIfEmpty()
                                 where (
-                                IM.PartNumber.ToLower().Contains(partNo.ToLower())
+                                IM.PartNumber.ToLower().Contains(partNo.ToLower()) && IM.IsActive==true && IM.IsDeleted==false
                                 )
                                 select new
                                 {

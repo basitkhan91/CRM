@@ -63,7 +63,7 @@
 					size="50"
 					class="form-control ui-autocomplete-input"
 					(input)="globalSearch($event.target.value)"
-					placeholder="Global Filter"
+					placeholder=" Filter"
 				  />
 				</div>
 				<button
@@ -332,9 +332,9 @@
 									<div class="table-responsive default-bg clear">
 										<div class="col-sm-3">
 											<p><span class="label"><b>RO Num: </b></span><span class="value">{{roHeaderAdd.repairOrderNumber ? roHeaderAdd.repairOrderNumber : '-'}}</span></p>
-											<p><span class="label"><b>Open Date: </b></span><span class="value">{{roHeaderAdd.openDate | date: 'dd/MM/yyyy'}}</span></p>
-											<p><span class="label"><b>Closed/Cancelled Date: </b></span><span class="value">{{roHeaderAdd.closedDate | date: 'dd/MM/yyyy'}}</span></p>
-											<p><span class="label"><b>Need By: </b></span><span class="value">{{roHeaderAdd.needByDate | date: 'dd/MM/yyyy'}}</span></p>
+											<p><span class="label"><b>Open Date: </b></span><span class="value">{{roHeaderAdd.openDate | date: 'MM/dd/yyyy'}}</span></p>
+											<p><span class="label"><b>Closed/Cancelled Date: </b></span><span class="value">{{roHeaderAdd.closedDate | date: 'MM/dd/yyyy'}}</span></p>
+											<p><span class="label"><b>Need By: </b></span><span class="value">{{roHeaderAdd.needByDate | date: 'MM/dd/yyyy'}}</span></p>
 											<p><span class="label"><b>Priority: </b></span><span class="value">{{roHeaderAdd.priority ? roHeaderAdd.priority : '-'}}</span></p>
 											<p><span class="label"><b>Deferred Receiver: </b></span><span class="value">{{roHeaderAdd.deferredReceiver ? roHeaderAdd.deferredReceiver : '-'}}</span></p>
 										</div>
@@ -351,7 +351,7 @@
 										<div class="col-sm-3">
 												<p><span class="label"><b>Requisitioner: </b></span><span class="value">{{roHeaderAdd.requisitioner ? roHeaderAdd.requisitioner : '-'}}</span></p>
 												<p><span class="label"><b>Approver: </b></span><span class="value">{{roHeaderAdd.approver ? roHeaderAdd.approver : '-'}}</span></p>
-												<p><span class="label"><b>Approved Date: </b></span><span class="value">{{roHeaderAdd.approvedDate | date: 'dd/MM/yyyy'}}</span></p>
+												<p><span class="label"><b>Approved Date: </b></span><span class="value">{{roHeaderAdd.approvedDate | date: 'MM/dd/yyyy'}}</span></p>
 												<p><span class="label"><b>Status: </b></span><span class="value">{{roHeaderAdd.status ? roHeaderAdd.status : '-'}}</span></p>
 												<p><span class="label"><b>Resale: </b></span><span class="value">{{roHeaderAdd.resale ? roHeaderAdd.resale : '-'}}</span></p>
 										</div>
@@ -423,7 +423,7 @@
 																<td colspan="4">{{partList?.level1}},{{partList?.level2}},{{partList?.level3}},{{partList?.level4}}</td>
 																<td>{{partList?.memo}}</td>
 															</tr>
-															<tr class="child-header splitship-head" *ngIf="partList.purchaseOrderSplitParts">
+															<tr class="child-header splitship-head" *ngIf="partList.purchaseOrderSplitParts.length > 0">
 																<th></th>
 																<th></th>
 																<th>PN</th>

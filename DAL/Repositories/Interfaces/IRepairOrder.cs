@@ -13,6 +13,7 @@ namespace DAL.Repositories.Interfaces
         object RepairOrderView(long repairOrderId);
         object RepairOrderById(long repairOrderId);
         object RepairOrderPartsById(long repairOrderId);
+        IEnumerable<RepairOrder> ROListByMasterItemId(int itemMasterId);
         List<RepairOrderPartViewDto> GetRepairOrderPartsView(long repairOrderId);
     }
 }

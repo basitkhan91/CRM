@@ -23,6 +23,9 @@ namespace DAL.Repositories
 
                               join co in _appContext.Condition on stl.ConditionId equals co.ConditionId
 
+                              join ig in _appContext.Itemgroup on im.ItemGroupId equals ig.ItemGroupId into itemgroup
+                              from ig in itemgroup.DefaultIfEmpty()
+
                               join si in _appContext.Site on stl.SiteId equals si.SiteId into sit
                               from si in sit.DefaultIfEmpty()
 
@@ -44,14 +47,15 @@ namespace DAL.Repositories
                               join ro in _appContext.RepairOrder on stl.RepairOrderId equals ro.RepairOrderId into repair
                               from ro in repair.DefaultIfEmpty()
 
-                              join mana in _appContext.ManagementStructure on stl.ManagementStructureEntityId equals mana.ManagementStructureId
+                              join mana in _appContext.ManagementStructure on stl.ManagementStructureEntityId equals mana.ManagementStructureId into manage
+                              from mana in manage.DefaultIfEmpty()
 
                               join ti in _appContext.TimeLife on stl.TimeLifeCyclesId equals ti.TimeLifeCyclesId into time
                               from ti in time.DefaultIfEmpty()
 
                               join man in _appContext.Manufacturer on stl.ManufacturerId equals man.ManufacturerId into manufa
                               from man in manufa.DefaultIfEmpty()
-
+                              
                               select new
                               {
                                   stl,
@@ -62,15 +66,23 @@ namespace DAL.Repositories
                                   stockLineNumber = stl.StockLineNumber,
                                   stl.ControlNumber,
                                   stl.TagDate,
+                                  glGLAccountId = stl.GLAccountId,
                                   location = l.Name,
                                   warehouse = w.Name,
                                   im.ExpirationDate,
                                   stl.SerialNumber,
                                   conditionId = co.ConditionId,
+                                  itemGroup = ig.Description,
                                   stl.IdNumber,
                                   partDescription = im.PartDescription,
                                   stl.ManagementStructureEntityId,
                                   stl.Quantity,
+                                  stl.QuantityOnOrder,
+                                  stl.QuantityAvailable,
+                                  stl.QuantityIssued,
+                                  stl.QuantityOnHand,
+                                  stl.QuantityTurnIn,
+                                  stl.QuantityReserved,
                                   condition = co.Description,
                                   stl.ShelfLifeExpirationDate,
                                   siteName = si.Name,
@@ -171,7 +183,7 @@ namespace DAL.Repositories
             catch (Exception ex)
             {
 
-                return null;
+                throw ex;
             }
         }
 
@@ -194,8 +206,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
 
 
@@ -223,8 +234,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
 
 
@@ -251,8 +261,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
         }
 
@@ -277,8 +286,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
         }
 
@@ -300,8 +308,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
         }
 
@@ -326,8 +333,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
         }
 
@@ -352,8 +358,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
         }
 
@@ -386,8 +391,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
         }
 
@@ -412,8 +416,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
         }
 
@@ -432,9 +435,9 @@ namespace DAL.Repositories
                 _appContext.StockLine.Add(model);
                 _appContext.SaveChanges();
                 }
-                 catch (Exception)
+                 catch (Exception ex)
             {
-            throw;
+                throw ex;
             }
             }
 
@@ -525,9 +528,9 @@ namespace DAL.Repositories
 
                 return stockLines;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
 
@@ -606,6 +609,12 @@ namespace DAL.Repositories
                               partDescription = im.PartDescription,
                               stl.ManagementStructureEntityId,
                               stl.Quantity,
+                              stl.QuantityOnOrder,
+                              stl.QuantityAvailable,
+                              stl.QuantityIssued,
+                              stl.QuantityOnHand,
+                              stl.QuantityTurnIn,
+                              stl.QuantityReserved,
                               condition = co.Description,
                               stl.ShelfLifeExpirationDate,
                               siteName = si.Name,

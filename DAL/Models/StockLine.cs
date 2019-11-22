@@ -15,6 +15,20 @@ namespace DAL.Models
         [ForeignKey("ItemMasterId")]
         public long? ItemMasterId { get; set; }
         public int? Quantity { get; set; }
+        public bool BlackListed { get; set; }
+        public string BlackListedReason { get; set; }
+        public bool Incident { get; set; }
+        public string IncidentReason { get; set; }
+        public bool Accident { get; set; }
+        public string AccidentReason { get; set; }
+        public int? QuantityOnOrder { get; set; }
+        public int? QuantityAvailable { get; set; }
+        public int? QuantityOnHand { get; set; }
+        public int? QuantityIssued { get; set; }
+        public int? QuantityTurnIn { get; set; }
+        public int? QuantityReserved { get; set; }
+        public long? WorkOrderPartNumberId { get; set; }
+        public long? WorkOrderId { get; set; }
         [ForeignKey("ConditionId")]
         public long? ConditionId { get; set; }
         public string SerialNumber { get; set; }
@@ -28,6 +42,7 @@ namespace DAL.Models
         public string Owner { get; set; }
         public string TraceableTo { get; set; }
         public long? ManufacturerId { get; set; }
+        public string Manufacturer { get; set; }
         public string ManufacturerLotNumber { get; set; }
         public DateTime? ManufacturingDate { get; set; }
         public string ManufacturingBatchNumber { get; set; }
@@ -59,7 +74,6 @@ namespace DAL.Models
         public bool? OEM { get; set; }
         public string Memo { get; set; }
         public long? ManagementStructureEntityId { get; set; }
-        [NotMapped]
         public long? LegalEntityId { get; set; }
         [ForeignKey("MasterCompanyId")]
         public int? MasterCompanyId { get; set; }
@@ -90,6 +104,8 @@ namespace DAL.Models
         public string ShippingReference { get; set; }
         public long? TimeLifeCyclesId { get; set; }
         public bool TimeLifeDetailsNotProvided { get; set; }
+        
+
         public virtual PurchaseOrder PurchaseOrder { get; set; }
         public virtual PurchaseOrderPart PurchaseOrderPartRecord { get; set; }
 

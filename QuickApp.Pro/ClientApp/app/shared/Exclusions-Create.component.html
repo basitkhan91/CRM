@@ -31,7 +31,7 @@
                 </p-autoComplete>
             </td>
             <td><input type="text" class="form-control" [(ngModel)]="exclusion.partDescription" value="{{exclusion.partDescription}}" [disabled]="true"></td>
-            <td><input type="text" class="form-control" pInputText pKeyFilter="pnum" maxlength="10" (input)="calculateExtendedCost(exclusion); calculateQtySummation();" [(ngModel)]="exclusion.quantity" value="{{exclusion.quantity}}" ></td>
+            <td><input type="text" class="form-control" pInputText pKeyFilter="pnum" maxlength="10" (input)="validateQuantity($event, exclusion);calculateExtendedCost(exclusion); calculateQtySummation();" [(ngModel)]="exclusion.quantity" value="{{exclusion.quantity}}" ></td>
             <td><input type="text" class="form-control" pInputText pKeyFilter="money" (input)="calculateExtendedCost(exclusion)"  [(ngModel)]="exclusion.unitCost" value="{{exclusion.unitCost}}"></td>
             <td><input type="text" class="form-control" pInputText pKeyFilter="money"  [(ngModel)]="exclusion.extendedCost" value="{{exclusion.extendedCost}}" disabled></td>
             <td style="padding: 4px 8px;">

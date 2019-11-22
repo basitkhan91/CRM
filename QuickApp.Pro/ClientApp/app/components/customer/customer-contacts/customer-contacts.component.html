@@ -24,8 +24,8 @@
                                       class="plusicon-cstm"
                                       href="#"
                                       data-toggle="modal"
-                                      data-target="#addContactDetails"
-                                      ><i class="fa fa-plus-circle fa-lg"></i
+                                      data-target="#addContactDetails" 
+                                      ><i class="fa fa-plus-circle fa-lg" (click)="onAddContactInfo()"></i
                                     ></a>
                                   </h4>
                         </div>
@@ -40,7 +40,7 @@
                                                selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
                                 <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
                                     <i class="fa fa-search"></i>
-                                    <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter" style="height: 28px !important;">
+                                    <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Filter" style="height: 28px !important;">
                                 </div>
                                 <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
                                 <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
@@ -157,7 +157,7 @@
                             <tr>
 
                   
-                                <th>TAG</th>
+                                <th>Tag</th>
                                 <th>First Name</th>
                                 <th>Last Name</th>
                                 <th>Contact Title</th>
@@ -390,7 +390,14 @@
                             </div>
                             <div class="form-group">
                                 <label>Email <span class="clr-red">*</span></label>
-                                <input class="form-control"  email type="text" name="email" [pattern]="emailPattern" [(ngModel)]="contactInformation.email" required>
+                                <input class="form-control" email type="text" name="email" [pattern]="emailPattern" #contactEmail="ngModel" [(ngModel)]="contactInformation.email" required>
+                                <div *ngIf="contactEmail.errors" [ngClass]="'error'">
+                                    <div *ngIf="contactEmail.errors.pattern">
+                                        <span style="color:red">Contact Email  not valid</span>
+                                    </div>
+                                </div>
+
+
                             </div>
                         </div>
                     </div>
@@ -417,7 +424,7 @@
             </div>
             <div class="modal-body">
                     <div class="col-sm-12">
-                            <p><span class="label"><b>TAG: </b></span><span class="value">{{sourceViewforContact.tag}}</span></p>
+                            <p><span class="label"><b>Tag: </b></span><span class="value">{{sourceViewforContact.tag}}</span></p>
                             <p><span class="label"><b>Prefix: </b></span><span class="value">{{sourceViewforContact.prefix}}</span></p>
                             <p><span class="label"><b>First Name: </b></span><span class="value">{{sourceViewforContact.firstName}}</span></p>
                             <p><span class="label"><b>Middle Name: </b></span><span class="value">{{sourceViewforContact.middleName}}</span></p>

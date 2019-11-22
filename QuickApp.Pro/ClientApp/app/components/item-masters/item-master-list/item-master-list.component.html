@@ -29,7 +29,7 @@
 									   selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
                			<div class="inner-addon right-addon w200 inline-block">
 							<i class="fa fa-search"></i>
-							<input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter">
+							<input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter">
 						</div>
 						<button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data"  (click)="dt.exportCSV()"></button>
 						<button type="button" pButton icon="fa-download" iconPos="left" label="Export Selected"  (click)="dt.exportCSV({selectionOnly:true})"></button>
@@ -107,7 +107,7 @@
 
 						<div class="inner-addon right-addon w200 inline-block">
 							<i class="fa fa-search"></i>
-							<input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter">
+							<input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter">
 						</div>
 
 
@@ -236,7 +236,7 @@
 						<div class="inner-addon right-addon w200 inline-block">
 							<i class="fa fa-search"></i>
 
-							<input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter">
+							<input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter">
 						</div>
 
 
@@ -368,7 +368,7 @@
                 <div class="panel-group" id="accordion">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step1">General Information</a> </h4>
+                            <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step1">General Info</a> </h4>
                         </div>
                         <div id="step1" class="panel-collapse collapse in">
                             <div class="panel-body">
@@ -423,7 +423,7 @@
                                             <p><span class="label"><b>Priority: </b></span><span class="value">{{priorityId}}</span></p>
                                             <!--<p><span class="label"><b>Integrate With: </b></span><span class="value">145.com</span></p>-->
                                             <p><span class="label"><b>Memo: </b></span><span class="value">{{memo}}</span></p>
-                                            <p><span class="label"><b>Export Information</b></span></p>
+                                            <p><span class="label"><b>Export Info</b></span></p>
                                             <p><span class="label"><b>Country: </b></span><span class="value">{{exportCountryId}}</span></p>
                                             <p><span class="label"><b>Value: </b></span><span class="value">{{exportValue}}</span></p>
                                             <p><span class="label"><b>Currency: </b></span><span class="value">{{exportCurrencyId}}</span></p>
@@ -470,7 +470,7 @@
                         </div>
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step3">Export Information</a> </h4>
+                                <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step3">Export Info</a> </h4>
                             </div>
                             <div id="step3" class="panel-collapse collapse">
                                 <div class="panel-body">

@@ -59,10 +59,10 @@ namespace DAL.Repositories
                                 file.CopyTo(stream);
                             }
 
-                            attachmentDetails.Code = "";
-                            attachmentDetails.Description = "";
+                            //attachmentDetails.Code = "";
+                            attachmentDetails.Description = file.Name;
                             attachmentDetails.FileFormat = "";
-                            attachmentDetails.Memo = "";
+                            //attachmentDetails.Memo = "";
 
                             attachmentDetails.FileSize = Math.Round(Convert.ToDecimal(fileSize / (1024 * 1024)), 2);
                             attachmentDetails.FileName = fileName;
@@ -86,9 +86,9 @@ namespace DAL.Repositories
                 }
                 return attachmentId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
 
         }
@@ -114,10 +114,9 @@ namespace DAL.Repositories
 
                 return attachmentDetails;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -144,10 +143,9 @@ namespace DAL.Repositories
 
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
 
 
@@ -349,6 +347,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
+                throw ex;
             }
             return result;
         }
@@ -415,7 +414,7 @@ namespace DAL.Repositories
         {
             foreach (var item in taxTypeList)
             {
-                var flag = _appContext.TaxType.Any(p => p.IsDelete == false
+                var flag = _appContext.TaxType.Any(p => p.IsDeleted == false
                                                     && (p.Description.ToLower() == item.Description.Trim().ToLower()));
                 if (!flag)
                 {

@@ -14006,7 +14006,12 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .p-autocomplete-ctsm-1 .ui-autocomplete .ui-autocomplete-panel{
     width: 135px !important;
 }
-
+.wf-label-cstm label {
+    font-size: 12px !important;
+  }
+  .wf-label-cstm h5 {
+    color: red;
+  }
 
 .p-dropdown-custom .ui-dropdown label.ui-dropdown-label {
     text-align: left;
@@ -14022,7 +14027,14 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     text-align: left;
     font-size: 12px !important;
   }
-.p-dropdown-custom-md .ui-dropdown{
+.p-dropdown-custom-gen .ui-autocomplete {
+    padding: 0;
+}
+.p-dropdown-custom-gen .ui-autocomplete .ui-autocomplete-panel {
+    top: 24px !important;
+}
+
+.p-dropdown-custom-md .ui-dropdown {
     width: 138px !important;
 }
 .p-dropdown-custom-md-Header .ui-dropdown{
@@ -14181,6 +14193,11 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .pub-ptable-cstm .ui-table-summary {
     text-align: right !important;
 }
+// .input-validate.ng-untouched.ng-invalid, .input-validate.ng-touched.ng-invalid,
+// .p-acomp-validate.ng-untouched.ng-invalid .ui-autocomplete input, .p-acomp-validate.ng-touched.ng-invalid .ui-autocomplete input,
+// .p-clder-validate.ng-untouched.ng-invalid .ui-calendar input, .p-clder-validate.ng-touched.ng-invalid .ui-calendar input {
+//     border: 1px solid #ff586b;
+// }
 .cus-contact-table tr th {
     padding: 7px !important;
 }

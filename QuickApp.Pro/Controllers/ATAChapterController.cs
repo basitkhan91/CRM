@@ -77,7 +77,7 @@ namespace QuickApp.Pro.Controllers
             catch (Exception ex)
             {
 
-                throw;
+                return BadRequest(ex.Message);
             }
 
 
@@ -113,7 +113,7 @@ namespace QuickApp.Pro.Controllers
                 }
             }catch(Exception ex)
             {
-                throw;
+                return BadRequest(ex.Message);
 
             }
             return Ok(ModelState);
@@ -167,7 +167,7 @@ namespace QuickApp.Pro.Controllers
                 return Ok(id);
             }catch(Exception ex)
             {
-                throw;
+                return BadRequest(ex.Message);
             }
         }
 

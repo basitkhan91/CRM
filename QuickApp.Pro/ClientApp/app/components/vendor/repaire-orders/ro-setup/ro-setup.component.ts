@@ -94,7 +94,7 @@ export class RoSetupComponent implements OnInit {
 	showInput: boolean = false;
 	partNumbers: any;
 	tempMemo: any;
-	checkAllPartsList: boolean;
+	//checkAllPartsList: boolean;
 	multiplePNDetails: boolean;
 	addressMemoLabel: string;
 	addressHeader: string;
@@ -196,6 +196,9 @@ export class RoSetupComponent implements OnInit {
 	childIndex: number;
 	allCountriesList: any = [];
 	countriesList: any = [];
+	inputValidCheck: any;
+	allStocklineInfo: any = [];
+	allStocklineDetails: any = [];
 
 	/** ro-approval ctor */
 	constructor(private route: Router,
@@ -239,6 +242,7 @@ export class RoSetupComponent implements OnInit {
 		this.glAccountData();
 		this.getLegalEntity();
 		this.getCountriesList();
+		this.getStocklineList();
 		this.loadPercentData();
 		this.sourceRoApproval.companyId = 0;
 		this.sourceRoApproval.buId = 0;
@@ -249,7 +253,7 @@ export class RoSetupComponent implements OnInit {
 		}
 
 		this.vendorCapesCols = [
-			{ field: 'vcId', header: 'VCID' },
+			//{ field: 'vcId', header: 'VCID' },
 			{ field: 'ranking', header: 'Ranking' },
 			{ field: 'partNumber', header: 'PN' },
 			{ field: 'partDescription', header: 'PN Description' },
@@ -429,7 +433,7 @@ export class RoSetupComponent implements OnInit {
 						this.newPartsList = {
 							...x,
 							partNumberId: getObjectById('value', x.itemMasterId, this.allPartnumbersInfo),					
-							ifSplitShip: x.roPartSplits ? true : false,
+							ifSplitShip: x.roPartSplits.length > 0 ? true : false,
 							partNumber: x.partNumber,
 							partDescription: x.partDescription,
 							needByDate: new Date(x.needByDate),
@@ -701,6 +705,12 @@ export class RoSetupComponent implements OnInit {
 		})
 	}
 
+	getStocklineList() {
+		this.commonService.smartDropDownList('Stockline', 'StockLineId', 'StockLineNumber').subscribe(res => {
+			this.allStocklineInfo = res;
+		})
+	}
+
 	filterCompanyNameforgrid(event) {
 		this.legalEntityList_Forgrid = this.legalEntity;
 
@@ -774,8 +784,8 @@ export class RoSetupComponent implements OnInit {
 			vendorContactPhone: this.sourceRoApproval.vendorContactPhone ? this.getVendorContactPhone(this.sourceRoApproval.vendorContactPhone) : '',
 			creditLimit: this.sourceRoApproval.creditLimit ? this.sourceRoApproval.creditLimit : '',
 			creditTermsId: this.sourceRoApproval.creditTermsId ? this.sourceRoApproval.creditTermsId : 0,
-			requisitionerId: this.sourceRoApproval.requisitionerId ? this.getEmployeeId(this.sourceRoApproval.requisitionerId) : 0,
-			approverId: this.sourceRoApproval.approverId ? this.getEmployeeId(this.sourceRoApproval.approverId) : 0,
+			requisitionerId: this.sourceRoApproval.requisitionerId ? this.getValueByObj(this.sourceRoApproval.requisitionerId) : 0,
+			approverId: this.sourceRoApproval.approverId ? this.getValueByObj(this.sourceRoApproval.approverId) : 0,
 			approvedDate: this.datePipe.transform(this.sourceRoApproval.approvedDate, "MM/dd/yyyy"),
 			statusId: this.sourceRoApproval.statusId ? this.sourceRoApproval.statusId : 0,
 			resale: this.sourceRoApproval.resale ? this.sourceRoApproval.resale : false,
@@ -826,8 +836,9 @@ export class RoSetupComponent implements OnInit {
 
 		if (this.createPOForm.invalid) { //invalid
 			//  $('.createPO-form input.ng-invalid, .createPO-form select.ng-invalid, .createPO-form p-calendar.ng-invalid input').addClass('border-red-clr');
-			//  $('.createPO-form input.ng-valid, .createPO-form select.ng-valid').removeClass('border-red-clr');
+			//  $('.createPO-form input.ng-valid, .createPO-form select.ng-valid').removeClass('border-red-clr');		
 			alert('Please enter required fields!');
+			this.inputValidCheck = true;
 		}
 		else {
 			// header save 
@@ -888,16 +899,17 @@ export class RoSetupComponent implements OnInit {
 							roPartSplitUserTypeId: childDataList[j].partListUserTypeId ? parseInt(childDataList[j].partListUserTypeId) : 0,
 							roPartSplitUserId: childDataList[j].partListUserId ? this.getIdByObject(childDataList[j].partListUserId) : 0,
 							roPartSplitAddressId: childDataList[j].partListAddressId ? parseInt(childDataList[j].partListAddressId) : 0,
-							roPartSplitAddress1: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('address1', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
-							roPartSplitAddress2: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('address2', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
-							roPartSplitAddress3: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('address3', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
-							roPartSplitCity: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('city', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
-							roPartSplitStateOrProvince: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('stateOrProvince', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
-							roPartSplitPostalCode: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('postalCode', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
-							roPartSplitCountry: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('country', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							roPartSplitAddress1: this["splitAddressData"+i+j].length > 0 ? getValueFromArrayOfObjectById('address1', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							roPartSplitAddress2: this["splitAddressData"+i+j].length > 0 ? getValueFromArrayOfObjectById('address2', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							roPartSplitAddress3: this["splitAddressData"+i+j].length > 0 ? getValueFromArrayOfObjectById('address3', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							roPartSplitCity: this["splitAddressData"+i+j].length > 0 ? getValueFromArrayOfObjectById('city', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							roPartSplitStateOrProvince: this["splitAddressData"+i+j].length > 0 ? getValueFromArrayOfObjectById('stateOrProvince', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							roPartSplitPostalCode: this["splitAddressData"+i+j].length > 0 ? getValueFromArrayOfObjectById('postalCode', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							roPartSplitCountry: this["splitAddressData"+i+j].length > 0 ? getValueFromArrayOfObjectById('country', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
 							UOMId: this.partListData[i].UOMId ? this.partListData[i].UOMId : 0,
 							quantityOrdered: childDataList[j].quantityOrdered ? childDataList[j].quantityOrdered : 0,
 							needByDate: this.datePipe.transform(childDataList[j].needByDate, "MM/dd/yyyy"),
+							stocklineId: childDataList[j].stocklineId ? this.getValueByObj(childDataList[j].stocklineId) : null,
 							managementStructureId: childDataList[j].managementStructureId ? childDataList[j].managementStructureId : 0, //109
 							//createdBy: this.userName,
 							//updatedBy: this.userName,
@@ -938,8 +950,8 @@ export class RoSetupComponent implements OnInit {
 					//reportCurrencyId: this.partListData[i].reportCurrencyId ? this.partListData[i].reportCurrencyId : 1,
 					reportCurrencyId: this.partListData[i].reportCurrencyId ? this.getCurrencyIdByObject(this.partListData[i].reportCurrencyId) : 1,
 					workOrderId: this.partListData[i].workOrderId ? this.partListData[i].workOrderId : 0,
-					//repairOrderId: this.partListData[i].repairOrderId ? this.partListData[i].repairOrderId : 0,
 					salesOrderId: this.partListData[i].salesOrderId ? this.partListData[i].salesOrderId : 0,
+					stocklineId: this.partListData[i].stocklineId ? this.getValueByObj(this.partListData[i].stocklineId) : null,
 					managementStructureId: this.partListData[i].managementStructureId ? this.partListData[i].managementStructureId : 0,
 					memo: this.partListData[i].memo,
 					masterCompanyId: 1,
@@ -1205,6 +1217,7 @@ export class RoSetupComponent implements OnInit {
 			//this["splitAddressData"+index] = returnedcustomerAddressses[0];
 			//console.log(this["splitAddressData"+index])
 			 //this.splitAddressData = returnedcustomerAddressses[0];
+			 this["splitAddressData"+pindex+cindex] = [];
 			 this["splitAddressData"+pindex+cindex] = returnedcustomerAddressses[0];
 			if(this.isEditMode) {
 				if(data.roPartSplitAddressId == 0) {
@@ -1218,6 +1231,8 @@ export class RoSetupComponent implements OnInit {
 				//this.onShipToGetAddress(data, data.roPartSplitAddressId);
 			}
 			//part.roPartSplitAddressId = 0;
+			data.poPartSplitAddressId = null;
+			data.partListAddressId = null;
 		});
 	}
 
@@ -1242,6 +1257,7 @@ export class RoSetupComponent implements OnInit {
 		this.vendorService.getVendorShipAddressGet(vendorId).subscribe(
 			vendorAddresses => {
 				//this.vendorSelectedforSplit = vendorAddresses[0];
+				this["splitAddressData"+pindex+cindex] = [];
 				this["splitAddressData"+pindex+cindex] = vendorAddresses[0];
 				//part.addressData = vendorAddresses[0];;
 				//this.splitAddressData = vendorAddresses[0];
@@ -1251,11 +1267,14 @@ export class RoSetupComponent implements OnInit {
 					}
 					//this.onShipToGetAddress(data, data.roPartSplitAddressId);
 				}
+				data.poPartSplitAddressId = null;
+				data.partListAddressId = null;
 			})
 	}
 
 	onCompanyNameChange(companyId, data?, pindex?, cindex?) {
 		this.legalEntityService.getLegalEntityAddressById(companyId).subscribe(response => {
+			this["splitAddressData"+pindex+cindex] = [];
 			this["splitAddressData"+pindex+cindex] = response[0].map(x => {
 				return {
 					...x,
@@ -1271,7 +1290,9 @@ export class RoSetupComponent implements OnInit {
 			} else {
 				this.onShipToGetCompanyAddress(this.companySiteList_Shipping[0].legalEntityShippingAddressId);
 			}	
-		})	
+			data.poPartSplitAddressId = null;
+			data.partListAddressId = null;
+		})			
 	}
 
 	onGetSplitAddress(splitPart) {
@@ -2393,6 +2414,17 @@ export class RoSetupComponent implements OnInit {
 		}
 	}
 
+	filterStocklineNum(event) {
+		this.allStocklineDetails = this.allStocklineInfo;
+
+		if (event.query !== undefined && event.query !== null) {
+			const stockline = [...this.allStocklineInfo.filter(x => {
+				return x.label.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.allStocklineDetails = stockline;
+		}
+	}
+
 	private loadPercentData() {
 		//  this.commonService.smartDropDownList('Percent', 'PercentId', 'PercentValue').subscribe(res => {
 		// 	this.allPercentData = res;
@@ -2600,7 +2632,7 @@ export class RoSetupComponent implements OnInit {
 		}
 	}
 
-	getEmployeeId(obj) {
+	getValueByObj(obj) {
 		if (obj.value) {
 			return obj.value;
 		} else {
@@ -2812,7 +2844,7 @@ export class RoSetupComponent implements OnInit {
 					this.sourceRoApproval.shipToAddressId = x.legalEntityShippingAddressId;
 				}
 			});
-			this.shipToAddress = this.addressFormForShipping;
+			this.shipToAddress = addressInfo;
 			//this.onShipToGetCompanyAddressThisPO(this.sourceRoApproval.shipToAddressId);
 		}
 		if(!this.isEditModeShipping) {
@@ -2970,7 +3002,7 @@ export class RoSetupComponent implements OnInit {
 					this.sourceRoApproval.billToAddressId = x.legalEntityBillingAddressId;
 				}
 			});
-			this.billToAddress = this.addressFormForBilling;
+			this.billToAddress = addressInfo;
 		}		
 		if(!this.isEditModeBilling) {
 			this.alertService.showMessage(
@@ -3265,7 +3297,8 @@ export class RoSetupComponent implements OnInit {
 	onEditShipVia(data) {
 		//if(value == 'EditCustShipVia') {
 			this.tempshipVia = getObjectById('shippingViaId', data.shipViaId, this.shipViaList);
-			this.addShipViaFormForShipping = {...this.tempshipVia};
+			this.addShipViaFormForShipping = {...this.tempshipVia, shipVia: this.tempshipVia.name};
+			console.log(this.addShipViaFormForShipping);
 			this.isEditModeShipVia = true;
 		//}
 	}

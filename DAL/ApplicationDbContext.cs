@@ -107,8 +107,10 @@ namespace DAL
         public DbSet<CustomerContact> CustomerContact { get; set; }
         public DbSet<CustomerShipping> CustomerShipping { get; set; }
         public DbSet<CustomerShippingAddress> CustomerShippingAddress { get; set; }
+        public DbSet<CustomerShippingAddressAudit> CustomerShippingAddressAudit { get; set; }
 
         public DbSet<VendorContact> VendorContact { get; set; }
+        public DbSet<VendorContactAudit> VendorContactAudit { get; set; }
         public DbSet<VendorPayment> VendorPayment { get; set; }
         public DbSet<VendorPaymentMethod> VendorPaymentMethod { get; set; }
         public DbSet<VendorShipping> VendorShipping { get; set; }
@@ -128,6 +130,7 @@ namespace DAL
         public DbSet<InternationalwirePayment> InternationalWirePayment { get; set; }
 
         public DbSet<VendorShippingAddress> VendorShippingAddress { get; set; }
+        public DbSet<VendorShippingAddressAudit> VendorShippingAddressAudit { get; set; }
         // public DbSet<VendorShippingDetails> VendorShippingDetails { get; set; }
         public DbSet<VendorWarnings> VendorWarning { get; set; }
         public DbSet<CustomerWarning> CustomerWarning { get; set; }
@@ -141,8 +144,12 @@ namespace DAL
 
         public DbSet<EmployeeTraining> EmployeeTraining { get; set; }
         public DbSet<EmployeeTrainingType> EmployeeTrainingType { get; set; }
+        public DbSet<EmployeeUserRole> EmployeeUserRole { get; set; }
+        public DbSet<EmployeeManagementStructure> EmployeeManagementStructure { get; set; }
         // public DbSet<EmployeeShift> EmployeeShift { get; set; }
+        
         public DbSet<CustomerBillingAddress> CustomerBillingAddress { get; set; }
+        public DbSet<CustomerBillingAddressAudit> CustomerBillingAddressAudit { get; set; }
         public DbSet<ATAChapter> ATAChapter { get; set; }
 
         public DbSet<AircraftType> AircraftType { get; set; }
@@ -403,6 +410,17 @@ namespace DAL
         public DbSet<WorkOrderQuote> WorkOrderQuote { get; set; }
         public DbSet<WorkOrderFreight> WorkOrderFreight { get; set; }
         public DbSet<PublicationTypeAudit> PublicationTypeAudit { get; set; }
+        public DbSet<Memo> Memo { get; set; }
+        public DbSet<MemoAudit> MemoAudit { get; set; }
+        public DbSet<Email> Email { get; set; }
+        public DbSet<EmailAudit> EmailAudit { get; set; }
+        public DbSet<CommunicationContact> CommunicationContact { get; set; }
+        public DbSet<CommunicationContactAudit> CommunicationContactAudit { get; set; }
+        public DbSet<CommunicationChat> CommunicationChat { get; set; }
+        public DbSet<CommunicationChatAudit> CommunicationChatAudit { get; set; }
+
+
+
         public DbSet<Dropdowns> Dropdowns { get; set; }
         public DbSet<Percentage> Percentage { get; set; }
         public DbSet<AssetIntangibleAttributeType> AssetIntangibleAttributeType { get; set; }
@@ -412,6 +430,7 @@ namespace DAL
         public DbSet<POBillingShippingAddress> POBillingShippingAddress { get; set; }
         public DbSet<PurchaseOrderAddress> PurchaseOrderAddress { get; set; }
         public DbSet<VendorBillingAddress> VendorBillingAddress { get; set; }
+        public DbSet<VendorBillingAddressAudit> VendorBillingAddressAudit { get; set; }
         public DbSet<PurchaseOrderShipVia> PurchaseOrderShipVia { get; set; }
         public DbSet<LegalEntityBillingAddress> LegalEntityBillingAddress { get; set; }
         public DbSet<LegalEntityShippingAddress> LegalEntityShippingAddress { get; set; }

@@ -52,6 +52,11 @@ import { WorkOrderAddressesComponent } from '../components/work-order/work-order
 import { TooltipModule } from 'primeng/tooltip';
 import { CommonService } from '../services/common.service';
 import { MatIconModule } from "@angular/material/icon";
+import { TabViewModule } from 'primeng/tabview';
+import { WorkOrderSmartComponent } from '../components/work-order/work-order-setup/work-order-smart/work-order-smart.component';
+import { AccordionModule } from 'primeng/accordion';
+
+import { WorkFlowtService } from '../services/workflow.service';
 
 @NgModule({
   imports: [
@@ -71,7 +76,9 @@ import { MatIconModule } from "@angular/material/icon";
     CheckboxModule,
     RadioButtonModule,
     InputSwitchModule,
-    TooltipModule
+    TooltipModule,
+    TabViewModule,
+    AccordionModule
   ],
   declarations: [
     WorkOrderPagesComponent,
@@ -97,10 +104,12 @@ import { MatIconModule } from "@angular/material/icon";
     DirectLabourComponent,
     WorkOrderLaborComponent,
     WorkOrderAssetsComponent,
-    WorkOrderAddressesComponent
+    WorkOrderAddressesComponent,
+    WorkOrderSmartComponent,
   ],
   entryComponents: [],
   providers: [
+    WorkFlowtService,
     WorkOrderService,
     WorkOrderEndpointService,
     WorkOrderPartNumberService,

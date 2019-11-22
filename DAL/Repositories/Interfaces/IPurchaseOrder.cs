@@ -11,6 +11,8 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetPurchaseOrderlist(Filters<PurchaseOrderFilters> poFilters);
         IEnumerable<PurchaseOrder> GetPurchaseOrderListLite();
         IEnumerable<PurchaseOrder> StockLinePOList();
+
+        IEnumerable<PurchaseOrder> POListByMasterItemId(int itemMasterId);
         int GetLastIdNumber(long puchaseOrderId, long purchaseOrderPartId);
         long CreatePOApprovers(PurchaseOrderApprover poApprover);
         void UpdatePOApprovers(PurchaseOrderApprover poApprover);

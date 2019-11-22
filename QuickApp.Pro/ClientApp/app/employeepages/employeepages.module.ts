@@ -1,4 +1,4 @@
-﻿import { NgModule } from "@angular/core";
+﻿import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { FlexLayoutModule } from '@angular/flex-layout'
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
@@ -28,6 +28,10 @@ import { EmployeeGeneralInformationComponent } from "../shared/components/employ
 import { EmployeeCertificationComponent } from "../shared/components/employee/employee-certification/employee-certification.component";
 import { EmployeeTrainingComponent } from "../shared/components/employee/employee-training/employee-training.component";
 import { EmployeeStepsPrimeNgComponent } from "../shared/components/employee/employee-steps-prime-ng/employee-steps-prime-ng.component";
+import { EmployeesManagementStructureComponent } from "../shared/components/employee/employee-management-structure/employees-management-structure.component";
+import { TreeStructureComponent } from "../shared/components/employee/employee-management-structure/tree-structure/tree-structure.component";
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+
 @NgModule({
     imports: [
         FlexLayoutModule,
@@ -47,7 +51,8 @@ import { EmployeeStepsPrimeNgComponent } from "../shared/components/employee/emp
         GMapModule
 		, RadioButtonModule,
         CalendarModule, StepsModule, BreadcrumbModule,
-        DialogModule
+        DialogModule,
+        NgMultiSelectDropDownModule.forRoot()
     ],
     declarations: [
         EmployeePagesComponent,
@@ -55,7 +60,9 @@ import { EmployeeStepsPrimeNgComponent } from "../shared/components/employee/emp
 		EmployeeGeneralInformationComponent,
 		EmployeeCertificationComponent,
 		EmployeeTrainingComponent,
-		EmployeeStepsPrimeNgComponent
+        EmployeeStepsPrimeNgComponent,
+        EmployeesManagementStructureComponent,
+        TreeStructureComponent
     ],
     providers: [
       
@@ -63,6 +70,9 @@ import { EmployeeStepsPrimeNgComponent } from "../shared/components/employee/emp
     entryComponents: [
        
     ],
+    schemas:[
+        CUSTOM_ELEMENTS_SCHEMA
+    ]
 
 
 })

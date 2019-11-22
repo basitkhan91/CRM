@@ -7,7 +7,7 @@
     <div class="col-md-12 ">
       <div class="shadow-Box">
         <div class="col-sm-12">
-          <h4 class="float-left">Search Inventory</h4>
+          <h4 class="float-left">Search Aircraft Information</h4>
           <h4 class="float-right">
             Add Inventory
             <a
@@ -125,7 +125,8 @@
             (click)="
               deleteAircraftMappedInventory(rowData.customerAircraftMappingId)
             "
-          >
+          matTooltip="Delete"
+                  >
             <i class="fa fa-trash"></i>
           </button>
         </td>

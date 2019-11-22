@@ -23,6 +23,9 @@ import { GlAccountService } from '../../../../services/glAccount/glAccount.servi
 import { SiteService } from '../../../../services/site.service';
 import { ShippingService } from '../../../../services/shipping/shipping-service';
 import { BinService } from '../../../../services/bin.service';
+import { PurchaseOrderService } from '../../../../services/purchase-order.service';
+import { VendorCapabilitiesService } from '../../../../services/vendorcapabilities.service';
+import { CommonService } from '../../../../services/common.service';
 
 @Component({
     selector: 'app-purchase-order',
@@ -50,6 +53,12 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
 
     auditHisory: AuditHistory[];
     Active: string = "Active";
+    poHeaderAdd: any = {};
+    headerManagementStructure: any = {};
+    poPartsList: any = [];
+    approveList: any = [];
+    vendorCapesInfo: any = [];
+    vendorCapesCols: any[];
     /** Currency ctor */
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -114,7 +123,10 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
         private siteService: SiteService,
         private route: Router,
         private shippingService: ShippingService,
-        private binservice: BinService
+        private binservice: BinService,
+        private purchaseOrderService: PurchaseOrderService,
+        private vendorCapesService: VendorCapabilitiesService,
+        private commonService: CommonService
     ) {
 
         this.displayedColumns.push('action');
@@ -164,7 +176,15 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
         //this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
         this.selectedColumns = this.cols;
         this.getStatus();
-
+        this.vendorCapesCols = [
+            { field: 'ranking', header: 'Ranking' },
+            { field: 'partNumber', header: 'PN' },
+            { field: 'partDescription', header: 'PN Description' },
+            { field: 'capabilityType', header: 'Capability Type' },
+            { field: 'cost', header: 'Cost' },
+            { field: 'tat', header: 'TAT' },
+            { field: 'name', header: 'PN Mfg' },
+        ];
     }
 
     ngAfterViewInit() {
@@ -423,9 +443,8 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
         this.modal.close();
     }
 
-    private viewPurchaseOrder(purchaseOrder: PurchaseOrder): void {
-        debugger;
-        this.receivingService.getPurchaseOrderDataForEditById(purchaseOrder.purchaseOrderId).subscribe(
+    private viewPurchaseOrder(purchaseOrderId: number): void {
+        this.receivingService.getPurchaseOrderDataForEditById(purchaseOrderId).subscribe(
             results => {
                 this.purchaseOrderData = results[0];
                 this.purchaseOrderData.openDate = new Date(results[0].openDate).toLocaleDateString();
@@ -457,6 +476,13 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
 
 
                         for (let part of this.purchaseOrderData.purchaseOderPart) {
+                            part.toggleIcon = false;
+                            part.currentSLIndex = 0;
+                            part.currentTLIndex = 0;
+                            part.currentSERIndex = 0;
+                            part.visible = false;
+                            part.showStockLineGrid = false;
+
                             part.isEnabled = false;
                             part.conditionId = 0;
                             let managementHierarchy: ManagementStructure[][] = [];
@@ -467,6 +493,9 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
 
                             if (managementHierarchy[0] != undefined && managementHierarchy[0].length > 0) {
                                 part.companyId = selectedManagementStructure[0].managementStructureId;
+                                var management = managementHierarchy[0].filter(x => x.managementStructureId == part.companyId)[0];
+                                part.companyText = management != undefined ? management.code : '';
+
                                 part.CompanyList = [];
                                 for (let managementStruct of managementHierarchy[0]) {
                                     var dropdown = new DropDownData();
@@ -477,6 +506,9 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
                             }
                             if (managementHierarchy[1] != undefined && managementHierarchy[1].length > 0) {
                                 part.businessUnitId = selectedManagementStructure[1].managementStructureId;
+                                var management = managementHierarchy[1].filter(x => x.managementStructureId == part.businessUnitId)[0];
+                                part.businessUnitText = management != undefined ? management.code : '';
+
                                 part.BusinessUnitList = [];
                                 for (let managementStruct of managementHierarchy[1]) {
                                     var dropdown = new DropDownData();
@@ -487,6 +519,8 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
                             }
                             if (managementHierarchy[2] != undefined && managementHierarchy[2].length > 0) {
                                 part.divisionId = selectedManagementStructure[2].managementStructureId;
+                                var management = managementHierarchy[2].filter(x => x.managementStructureId == part.divisionId)[0];
+                                part.divisionText = management != undefined ? management.code : '';
                                 part.DivisionList = [];
                                 for (let managementStruct of managementHierarchy[2]) {
                                     var dropdown = new DropDownData();
@@ -497,6 +531,9 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
                             }
                             if (managementHierarchy[3] != undefined && managementHierarchy[3].length > 0) {
                                 part.departmentId = selectedManagementStructure[3].managementStructureId;
+                                var management = managementHierarchy[3].filter(x => x.managementStructureId == part.departmentId)[0];
+                                part.departmentText = management != undefined ? management.code : '';
+
                                 part.DepartmentList = [];
                                 for (let managementStruct of managementHierarchy[3]) {
                                     var dropdown = new DropDownData();
@@ -517,6 +554,9 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
 
                                     if (stockLinemanagementHierarchy[0] != undefined && stockLinemanagementHierarchy[0].length > 0) {
                                         SL.companyId = stockLineSelectedManagementStructure[0].managementStructureId;
+                                        var management = managementHierarchy[0].filter(x => x.managementStructureId == part.companyId)[0];
+                                        SL.companyText = management != undefined ? management.code : '';
+
                                         SL.CompanyList = [];
                                         for (let managementStruct of stockLinemanagementHierarchy[0]) {
                                             var dropdown = new DropDownData();
@@ -526,7 +566,11 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
                                         }
                                     }
                                     if (stockLinemanagementHierarchy[1] != undefined && stockLinemanagementHierarchy[1].length > 0) {
+
                                         SL.businessUnitId = stockLineSelectedManagementStructure[1].managementStructureId;
+                                        var management = managementHierarchy[1].filter(x => x.managementStructureId == part.businessUnitId)[0];
+                                        SL.businessUnitText = management != undefined ? management.code : '';
+
                                         SL.BusinessUnitList = [];
                                         for (let managementStruct of stockLinemanagementHierarchy[1]) {
                                             var dropdown = new DropDownData();
@@ -537,6 +581,9 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
                                     }
                                     if (stockLinemanagementHierarchy[2] != undefined && stockLinemanagementHierarchy[2].length > 0) {
                                         SL.divisionId = stockLineSelectedManagementStructure[2].managementStructureId;
+                                        var management = managementHierarchy[2].filter(x => x.managementStructureId == part.divisionId)[0];
+                                        SL.divisionText = management != undefined ? management.code : '';
+
                                         SL.DivisionList = [];
                                         for (let managementStruct of stockLinemanagementHierarchy[2]) {
                                             var dropdown = new DropDownData();
@@ -547,6 +594,9 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
                                     }
                                     if (stockLinemanagementHierarchy[3] != undefined && stockLinemanagementHierarchy[3].length > 0) {
                                         SL.departmentId = stockLineSelectedManagementStructure[3].managementStructureId;
+                                        var management = managementHierarchy[3].filter(x => x.managementStructureId == part.departmentId)[0];
+                                        SL.departmentText = management != undefined ? management.code : '';
+
                                         SL.DepartmentList = [];
                                         for (let managementStruct of stockLinemanagementHierarchy[3]) {
                                             var dropdown = new DropDownData();
@@ -713,19 +763,41 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
                                 row.Value = site.name;
                                 SL.SiteList.push(row);
                             }
+                            //var filterSite = SL.SiteList.filter(x => x.Key == SL.siteId.toString())[0];
+
+                            //if (filterSite) {
+                            //    SL.siteText = filterSite.Value;
+                            //}
 
                             if (SL.warehouseId > 0) {
                                 this.getStockLineWareHouse(SL, true);
                             }
+
                             if (SL.locationId > 0) {
                                 this.getStockLineLocation(SL, true);
                             }
+                            //var filterWareHouse = SL.WareHouseList.filter(x => x.Key == SL.warehouseId.toString())[0];
+                            //if (filterWareHouse) {
+                            //    SL.wareHouseText = filterWareHouse.Value;
+                            //}
                             if (SL.shelfId > 0) {
                                 this.getStockLineShelf(SL, true);
                             }
+
+                            //var filterLocation = SL.LocationList.filter(x => x.Key == SL.locationId.toString())[0];
+                            //if (filterLocation) {
+                            //    SL.locationText = filterLocation.Value;
+                            //}
+
                             if (SL.binId > 0) {
                                 this.getStockLineBin(SL, true);
                             }
+
+                            //var filterShelf = SL.ShelfList.filter(x => x.Key == SL.shelfId.toString())[0];
+                            //if (filterShelf) {
+                            //    SL.shelfText = filterShelf.Value;
+                            //}
+
                         }
                     }
                 }
@@ -751,7 +823,7 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
 
         });
     }
-    
+
     private getShippingVia(): void {
         this.shippingService.getAllShippingVia().subscribe(results => {
             this.ShippingViaList = [];
@@ -856,6 +928,112 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
             },
             error => this.onDataLoadFailed(error)
         );
+    }
+
+    viewSelectedRow(rowData) {
+        this.getPOViewById(rowData.purchaseOrderId);
+        this.getPOPartsViewById(rowData.purchaseOrderId);
+        this.getApproversListById(rowData.purchaseOrderId);
+        this.viewPurchaseOrder(rowData.purchaseOrderId);
+    }
+
+    getPOViewById(poId) {
+        this.purchaseOrderService.getPOViewById(poId).subscribe(res => {
+            console.log(res);
+            this.poHeaderAdd = res;
+            this.getVendorCapesByID(this.poHeaderAdd.vendorId);
+            this.getManagementStructureCodes(res.managementStructureId);
+        });
+    }
+    getPOPartsViewById(poId) {
+        this.poPartsList = [];
+        this.purchaseOrderService.getPOPartsViewById(poId).subscribe(res => {
+            console.log(res);
+            res.map(x => {
+                const partList = {
+                    ...x,
+                    purchaseOrderSplitParts: this.getPurchaseOrderSplit(x)
+                }
+                this.getManagementStructureCodesParent(partList);
+                this.poPartsList.push(partList);
+            });
+        });
+    }
+
+    getPurchaseOrderSplit(partList) {
+        if (partList.purchaseOrderSplitParts) {
+            return partList.purchaseOrderSplitParts.map(y => {
+                const splitpart = {
+                    ...y,
+                }
+                this.getManagementStructureCodesChild(splitpart);
+                return splitpart;
+            })
+        }
+    }
+
+    getApproversListById(poId) {
+        this.purchaseOrderService.getPOApproverList(poId).subscribe(response => {
+            console.log(response);
+            this.approveList = response;
+        });
+    }
+
+    getVendorCapesByID(vendorId) {
+        this.vendorCapesService.getVendorCapesById(vendorId).subscribe(res => {
+            this.vendorCapesInfo = res;
+        })
+    }
+
+    getManagementStructureCodes(id) {
+        this.commonService.getManagementStructureCodes(id).subscribe(res => {
+            if (res.Level1) {
+                this.headerManagementStructure.level1 = res.Level1;
+            }
+            if (res.Level2) {
+                this.headerManagementStructure.level2 = res.Level2;
+            }
+            if (res.Level3) {
+                this.headerManagementStructure.level3 = res.Level3;
+            }
+            if (res.Level4) {
+                this.headerManagementStructure.level4 = res.Level4;
+            }
+        })
+    }
+
+    getManagementStructureCodesParent(partList) {
+        this.commonService.getManagementStructureCodes(partList.managementStructureId).subscribe(res => {
+            if (res.Level1) {
+                partList.level1 = res.Level1;
+            }
+            if (res.Level2) {
+                partList.level2 = res.Level2;
+            }
+            if (res.Level3) {
+                partList.level3 = res.Level3;
+            }
+            if (res.Level4) {
+                partList.level4 = res.Level4;
+            }
+        })
+    }
+
+    getManagementStructureCodesChild(partChild) {
+        this.commonService.getManagementStructureCodes(partChild.managementStructureId).subscribe(res => {
+            if (res.Level1) {
+                partChild.level1 = res.Level1;
+            }
+            if (res.Level2) {
+                partChild.level2 = res.Level2;
+            }
+            if (res.Level3) {
+                partChild.level3 = res.Level3;
+            }
+            if (res.Level4) {
+                partChild.level4 = res.Level4;
+            }
+        })
     }
 
 }

@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
 using DAL;
 using DAL.Common;
 using DAL.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using OfficeOpenXml;
@@ -46,7 +43,7 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<StockLineViewModel>))]
         public IActionResult Get()
         {
-            
+
             try
             {
                 var result = _unitOfWork.stockLineList.GetAllStockLinelistData();
@@ -55,8 +52,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
         }
 
@@ -75,26 +71,23 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
         }
 
+        
         [HttpGet("GetCompanyData")]
         [Produces(typeof(List<StockLineViewModel>))]
         public IActionResult GetCompanyData()
         {
-
             try
             {
                 var result = _unitOfWork.stockLineList.GetAllCompanyData();
-
                 return Ok(result);
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
         }
 
@@ -111,8 +104,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
         }
 
@@ -129,23 +121,9 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
         }
-
-
-        // [HttpGet("AdjustmentGet")]
-
-        //// [Produces(typeof(List<StockLineAdjustmentViewModel>))]
-        // public IActionResult getstocklineadjustement()
-        // {
-        //     var allcustomertype = _context.StockLineAdjustment.
-        //     //.getStockLineAdjustmentList()
-        //     return Ok(stockLineAdjustmentViewModel);
-
-        // }
-
 
         //For getting the stocklineAdjustment Data
         [HttpGet("AdjustmentGet/{id}")]
@@ -160,8 +138,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
 
         }
@@ -178,8 +155,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
 
         }
@@ -196,14 +172,10 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
 
         }
-
-
-
 
         [HttpPost("stockLineAdjustmentReasonpost")]
         public IActionResult stockLineAdjustmentReasonpost([FromBody] StocklineAdjustmnetReasonViewModel stocklineAdjustmnetReasonViewModel)
@@ -236,7 +208,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-       
+
         [HttpPut("stockLineAdjustmentReasonPut/{id}")]
         public IActionResult stockLineAdjustmentReasonPut(long id, [FromBody] StocklineAdjustmnetReasonViewModel stocklineAdjustmnetReasonViewModel)
         {
@@ -262,7 +234,7 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(StocklineAdjustmnetReasonViewModel))]
         public IActionResult stockLineAdjustmentReasonDelete(long id)
         {
-           // var existingResult = _unitOfWork.stocklineAdjustmentReasonRepository.GetSingleOrDefault(c => c.AdjustmentReasonId == id);
+            // var existingResult = _unitOfWork.stocklineAdjustmentReasonRepository.GetSingleOrDefault(c => c.AdjustmentReasonId == id);
             var existingResultofstocklineList = _unitOfWork.StocklineAdjustmentReasonRepository.GetSingleOrDefault(c => c.AdjustmentReasonId == id);
             _unitOfWork.StocklineAdjustmentReasonRepository.Remove(existingResultofstocklineList);
             _unitOfWork.SaveChanges();
@@ -278,22 +250,21 @@ namespace QuickApp.Pro.Controllers
                 return BadRequest($"{nameof(stockLineViewModel)} cannot be null");
             if (ModelState.IsValid)
             {
-                    StocklineIntegrationPortal actionobject = new StocklineIntegrationPortal();
-                    actionobject.MasterCompanyId = 1;
-                    actionobject.StocklineId = stockLineViewModel.StockLineId;
-                    actionobject.IntegrationPortalId = stockLineViewModel.IntegrationPortalId;
-                    actionobject.IsListed = stockLineViewModel.IsListed;
-                    actionobject.CreatedDate = DateTime.Now;
-                    actionobject.UpdatedDate = DateTime.Now;
-                    actionobject.CreatedBy = stockLineViewModel.CreatedBy;
-                    actionobject.UpdatedBy = stockLineViewModel.UpdatedBy;
+                StocklineIntegrationPortal actionobject = new StocklineIntegrationPortal();
+                actionobject.MasterCompanyId = 1;
+                actionobject.StocklineId = stockLineViewModel.StockLineId;
+                actionobject.IntegrationPortalId = stockLineViewModel.IntegrationPortalId;
+                actionobject.IsListed = stockLineViewModel.IsListed;
+                actionobject.CreatedDate = DateTime.Now;
+                actionobject.UpdatedDate = DateTime.Now;
+                actionobject.CreatedBy = stockLineViewModel.CreatedBy;
+                actionobject.UpdatedBy = stockLineViewModel.UpdatedBy;
 
-                    _context.StocklineIntegrationPortal.Add(actionobject);
-                    _context.SaveChanges();
+                _context.StocklineIntegrationPortal.Add(actionobject);
+                _context.SaveChanges();
 
-               // _context.stocklineAdjustmentReasons.Add(actionobject);
+                // _context.stocklineAdjustmentReasons.Add(actionobject);
             }
-
             return Ok(ModelState);
         }
         //  For saving the values in Db
@@ -305,36 +276,35 @@ namespace QuickApp.Pro.Controllers
                 if (stockLineViewModel == null) return BadRequest($"{nameof(stockLineViewModel)} cannot be null");
                 StockLine actionobject1 = new StockLine();
 
-                actionobject1.MasterCompanyId = 1;
                 actionobject1.PartNumber = stockLineViewModel.PartNumber;
-                actionobject1.ManagementStructureEntityId = stockLineViewModel.ManagementStructureEntityId;
-                actionobject1.IsSerialized = stockLineViewModel.isSerialized;
-                actionobject1.ItemMasterId = stockLineViewModel.ItemMasterId;
-                actionobject1.PurchaseOrderId = stockLineViewModel.PurchaseOrderId;
-                actionobject1.RepairOrderId = stockLineViewModel.RepairOrderId;
-                actionobject1.SiteId = stockLineViewModel.SiteId;
-                actionobject1.ShelfId = stockLineViewModel.ShelfId;
-                actionobject1.BinId = stockLineViewModel.BinId;
-                actionobject1.WarehouseId = stockLineViewModel.WarehouseId;
-                actionobject1.LocationId = stockLineViewModel.LocationId;
-                actionobject1.QuantityToReceive = stockLineViewModel.QuantityToReceive;
-                actionobject1.SiteId = stockLineViewModel.SiteId == 0 ? null : stockLineViewModel.SiteId;
-                actionobject1.WarehouseId = stockLineViewModel.WarehouseId == 0 ? null : stockLineViewModel.WarehouseId;
-                actionobject1.LocationId = stockLineViewModel.LocationId == 0 ? null : stockLineViewModel.LocationId;
-                actionobject1.ShelfId = stockLineViewModel.ShelfId == 0 ? null : stockLineViewModel.ShelfId;
-                actionobject1.BinId = stockLineViewModel.BinId == 0 ? null : stockLineViewModel.BinId;
-                actionobject1.ConditionId = stockLineViewModel.ConditionId;
                 actionobject1.StockLineNumber = stockLineViewModel.StockLineNumber;
                 actionobject1.StocklineMatchKey = stockLineViewModel.StocklineMatchKey;
                 actionobject1.ControlNumber = stockLineViewModel.ControlNumber;
+                actionobject1.ItemMasterId = stockLineViewModel.ItemMasterId;
                 actionobject1.Quantity = stockLineViewModel.Quantity;
+                actionobject1.QuantityOnOrder = stockLineViewModel.QuantityOnOrder;
+                actionobject1.QuantityAvailable = stockLineViewModel.QuantityAvailable;
+                actionobject1.QuantityOnHand = stockLineViewModel.QuantityOnOrder;
+                actionobject1.QuantityIssued = stockLineViewModel.QuantityAvailable;
+                actionobject1.QuantityTurnIn = stockLineViewModel.QuantityTurnIn;
+                actionobject1.QuantityReserved = stockLineViewModel.QuantityReserved;
+                actionobject1.ConditionId = stockLineViewModel.ConditionId;
                 actionobject1.SerialNumber = stockLineViewModel.SerialNumber;
                 actionobject1.ShelfLife = stockLineViewModel.ShelfLife;
+                //actionobject1.BlackListed = stockLineViewModel.BlackListed;
+                //actionobject1.BlackListedReason = stockLineViewModel.BlackListedReason;
+                //actionobject1.Incident = stockLineViewModel.Incident;
+                //actionobject1.IncidentReason = stockLineViewModel.IncidentReason;
+                //actionobject1.Accident = stockLineViewModel.Accident;
+                //actionobject1.AccidentReason = stockLineViewModel.AccidentReason;
                 actionobject1.ShelfLifeExpirationDate = stockLineViewModel.ShelfLifeExpirationDate;
+                actionobject1.WarehouseId = stockLineViewModel.WarehouseId;
+                actionobject1.LocationId = stockLineViewModel.LocationId;
                 actionobject1.ObtainFrom = stockLineViewModel.ObtainFrom;
                 actionobject1.Owner = stockLineViewModel.Owner;
                 actionobject1.TraceableTo = stockLineViewModel.TraceableTo;
                 actionobject1.ManufacturerId = stockLineViewModel.ManufacturerId;
+                actionobject1.Manufacturer = stockLineViewModel.Manufacturer;
                 actionobject1.ManufacturerLotNumber = stockLineViewModel.ManufacturerLotNumber;
                 actionobject1.ManufacturingDate = stockLineViewModel.ManufacturingDate;
                 actionobject1.ManufacturingBatchNumber = stockLineViewModel.ManufacturingBatchNumber;
@@ -363,14 +333,32 @@ namespace QuickApp.Pro.Controllers
                 actionobject1.IsDER = stockLineViewModel.IsDER;
                 actionobject1.OEM = stockLineViewModel.OEM;
                 actionobject1.Memo = stockLineViewModel.Memo;
-                // Approach is changed and due to which the time life will have a stock line id and not vice versa. due to serialized and non serialized item master configuration.
+                actionobject1.ManagementStructureEntityId = stockLineViewModel.ManagementStructureEntityId;
                 actionobject1.TimeLifeCyclesId = stockLineViewModel.TimeLifeCyclesId == 0 ? null : stockLineViewModel.TimeLifeCyclesId;
-                actionobject1.LegalEntityId = stockLineViewModel.LegalEntityId == 0?null:stockLineViewModel.LegalEntityId;
+                actionobject1.MasterCompanyId = stockLineViewModel.MasterCompanyId;
+                actionobject1.IsSerialized = stockLineViewModel.isSerialized;
+                actionobject1.ShelfId = stockLineViewModel.ShelfId == 0 ? null : stockLineViewModel.ShelfId;
+                actionobject1.BinId = stockLineViewModel.BinId == 0 ? null : stockLineViewModel.BinId;
+                actionobject1.SiteId = stockLineViewModel.SiteId == 0 ? null : stockLineViewModel.SiteId;
+                actionobject1.LegalEntityId = stockLineViewModel.LegalEntityId == 0 ? null : stockLineViewModel.LegalEntityId;
                 actionobject1.ObtainFromType = stockLineViewModel.ObtainFromType;
                 actionobject1.OwnerType = stockLineViewModel.OwnerType;
                 actionobject1.TraceableToType = stockLineViewModel.TraceableToType;
                 actionobject1.UnitCostAdjustmentReasonTypeId = stockLineViewModel.UnitCostAdjustmentReasonTypeId;
                 actionobject1.UnitSalePriceAdjustmentReasonTypeId = stockLineViewModel.UnitSalePriceAdjustmentReasonTypeId;
+                actionobject1.IdNumber = stockLineViewModel.IdNumber;
+                actionobject1.QuantityToReceive = stockLineViewModel.QuantityToReceive;
+                actionobject1.PurchaseOrderExtendedCost = stockLineViewModel.PurchaseOrderExtendedCost;
+                actionobject1.ManufacturingTrace = stockLineViewModel.ManufacturingTrace;
+                actionobject1.ExpirationDate = stockLineViewModel.ExpirationDate;
+                actionobject1.AircraftTailNumber = stockLineViewModel.AircraftTailNumber;
+                actionobject1.ShippingViaId = stockLineViewModel.ShippingViaId;
+                actionobject1.EngineSerialNumber = stockLineViewModel.EngineSerialNumber;
+                actionobject1.QuantityRejected = stockLineViewModel.QuantityRejected;
+                actionobject1.PurchaseOrderPartRecordId = stockLineViewModel.PurchaseOrderPartRecordId;
+                actionobject1.ShippingAccount = stockLineViewModel.ShippingAccount;
+                actionobject1.ShippingReference = stockLineViewModel.ShippingReference;
+                actionobject1.TimeLifeDetailsNotProvided = stockLineViewModel.TimeLifeDetailsNotProvided;
 
                 _context.StockLine.Add(actionobject1);
                 _context.SaveChanges();
@@ -380,7 +368,7 @@ namespace QuickApp.Pro.Controllers
                     var exists = _context.StockLine.Where(a => a.StockLineId == actionobject1.StockLineId).SingleOrDefault();
                     exists.StockLineNumber = "STL-" + actionobject1.StockLineId;
                     exists.ControlNumber = "CNT-" + actionobject1.StockLineId;
-                    exists.IdNumber = "Id-"+actionobject1.StockLineId;
+                    exists.IdNumber = "Id-" + actionobject1.StockLineId;
                     _context.StockLine.Update(exists);
                     _context.SaveChanges();
                 }
@@ -391,148 +379,104 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-
-       // If Id exists update into the Db
+        // If Id exists update into the Db
         [HttpPut("stockLinepost/{id}")]
         public IActionResult UpdateStockline(long id, [FromBody] StockLineViewModel stockLineViewModel)
         {
 
-            var actionobject = _unitOfWork.stockLineList.GetSingleOrDefault(a => a.StockLineId == id);
-            //var address = _unitOfWork.Address.GetSingleOrDefault(a => a.AddressId == customerViewModel.Addressid);
-
-            stockLineViewModel.MasterCompanyId = 1;
-            //actionobject.IsSerialized = true;
-            
-           // actionobject.SiteId = stockLineViewModel.SiteId;
-           // actionobject.ShelfId = stockLineViewModel.ShelfId;
-           // actionobject.BinId = stockLineViewModel.BinId;
-           // actionobject.WarehouseId = stockLineViewModel.WarehouseId;
-           // actionobject.LocationId = stockLineViewModel.LocationId;
-           // actionobject.QuantityToReceive = stockLineViewModel.QuantityToReceive;
-           // if (stockLineViewModel.SiteId == 0)
-           // {
-           //     actionobject.SiteId = null;
-           // }
-
-
-           // if (stockLineViewModel.WarehouseId == 0)
-           // {
-           //     actionobject.WarehouseId = null;
-           // }
-
-
-           // if (stockLineViewModel.LocationId == 0)
-           // {
-           //     actionobject.LocationId = null;
-           // }
-
-
-           // if (stockLineViewModel.ShelfId == 0)
-           // {
-           //     actionobject.ShelfId = null;
-           // }
-
-           // if (stockLineViewModel.BinId == 0)
-           // {
-           //     actionobject.BinId = null;
-           // }
-           
-            
-           // actionobject.PartNumber = stockLineViewModel.PartNumber;
-           // actionobject.StockLineNumber = stockLineViewModel.StockLineNumber;
-           // //actionobject.StocklineMatchKey = stockLineViewModel.StocklineMatchKey;
-           // actionobject.ControlNumber = stockLineViewModel.ControlNumber;
-           // actionobject.Quantity = stockLineViewModel.Quantity;
-           // actionobject.SerialNumber = stockLineViewModel.SerialNumber;
-           // actionobject.ShelfLife = stockLineViewModel.ShelfLife;
-           // actionobject.ShelfLifeExpirationDate = stockLineViewModel.ShelfLifeExpirationDate;
-           // actionobject.ObtainFrom = stockLineViewModel.ObtainFrom;
-           // actionobject.Owner = stockLineViewModel.Owner;
-           // actionobject.ConditionId = stockLineViewModel.ConditionId;
-           // actionobject.TraceableTo = stockLineViewModel.TraceableTo;
-           // actionobject.ManufacturerId = stockLineViewModel.ManufacturerId;
-           //// actionobject.Manufacturer = stockLineViewModel.Manufacturer;
-           // actionobject.ManufacturerLotNumber = stockLineViewModel.ManufacturerLotNumber;
-           // actionobject.ManufacturingDate = stockLineViewModel.ManufacturingDate;
-           // actionobject.ManufacturingBatchNumber = stockLineViewModel.ManufacturingBatchNumber;
-           // actionobject.PartCertificationNumber = stockLineViewModel.PartCertificationNumber;
-           // actionobject.CertifiedBy = stockLineViewModel.CertifiedBy;
-           // actionobject.CertifiedDate = stockLineViewModel.CertifiedDate;
-           // actionobject.TagDate = stockLineViewModel.TagDate;
-           // actionobject.TagType = stockLineViewModel.TagType;
-           // actionobject.CertifiedDueDate = stockLineViewModel.CertifiedDueDate;
-           // actionobject.CalibrationMemo = stockLineViewModel.CalibrationMemo;
-           // actionobject.OrderDate = stockLineViewModel.OrderDate;
-           // actionobject.PurchaseOrderId = stockLineViewModel.PurchaseOrderId;
-           // actionobject.PurchaseOrderUnitCost = stockLineViewModel.PurchaseOrderUnitCost;
-           // actionobject.InventoryUnitCost = stockLineViewModel.InventoryUnitCost;
-           // //actionobject.MasterCompanyId = stockLineViewModel.MasterCompanyId;
-           // actionobject.RepairOrderId = stockLineViewModel.RepairOrderId;
-           // actionobject.RepairOrderUnitCost = stockLineViewModel.RepairOrderUnitCost;
-           // actionobject.ReceivedDate = stockLineViewModel.ReceivedDate;
-           // actionobject.ReceiverNumber = stockLineViewModel.ReceiverNumber;
-           // actionobject.ReconciliationNumber = stockLineViewModel.ReconciliationNumber;
-           // actionobject.UnitSalesPrice = stockLineViewModel.UnitSalesPrice;
-           // actionobject.CoreUnitCost = stockLineViewModel.CoreUnitCost;
-           // actionobject.GLAccountId = stockLineViewModel.GLAccountId;
-           // actionobject.AssetId = stockLineViewModel.AssetId;
-           // //actionobject.IsHazardousMaterial = stockLineViewModel.IsHazardousMaterial;
-           // actionobject.IsPMA = stockLineViewModel.IsPMA;
-           // actionobject.IsDER = stockLineViewModel.IsDER;
-           // actionobject.OEM = stockLineViewModel.OEM;
-           // actionobject.Memo = stockLineViewModel.Memo;
-            actionobject.ManagementStructureEntityId = stockLineViewModel.ManagementStructureEntityId;
-            //actionobject.CompanyId = stockLineViewModel.CompanyId;
-            //actionobject.BusinessUnitId = stockLineViewModel.BusinessUnitId;
-            //actionobject.DivisionId = stockLineViewModel.DivisionId;
-            //actionobject.DepartmentId = stockLineViewModel.DepartmentId;
-
-            //actionobject.Site = stockLineViewModel.Site;
-            //actionobject.Shelf = stockLineViewModel.Shelf;
-            //actionobject.Bin = stockLineViewModel.Bin;
-            //actionobject.TimeLife = stockLineViewModel.TimeLife;
-            
-            // Approach is changed and due to which the time life will have a stock line id and not vice versa. due to serialized and non serialized item master configuration.
-            //actionobject.TimeLifeCyclesId = stockLineViewModel.TimeLifeCyclesId;
-           // actionobject.ObtainFromType = stockLineViewModel.ObtainFromType;
-            //actionobject.OwnerType = stockLineViewModel.OwnerType;
-            //actionobject.TraceableToType = stockLineViewModel.TraceableToType;
-            actionobject.UnitCostAdjustmentReasonTypeId = stockLineViewModel.UnitCostAdjustmentReasonTypeId;
-            actionobject.UnitSalePriceAdjustmentReasonTypeId = stockLineViewModel.UnitSalePriceAdjustmentReasonTypeId;
-            //actionobject.IsActive = customerViewModel.IsActive;
-            actionobject.CreatedDate = DateTime.Now;
-            actionobject.UpdatedDate = DateTime.Now;
-            //actionobject.CreatedBy = stockLineViewModel.CreatedBy;
-            //actionobject.UpdatedBy = stockLineViewModel.UpdatedBy;
-            //actionobject.IdNumber = stockLineViewModel.IdNumber;
-            //_unitOfWork.SaveChanges();
-
-
-
-
-            //if (stockLineViewModel.PurchaseOrderId == null)
-            //{
-            //    actionobject.PurchaseOrderId = null;
-            //}
-            //if (stockLineViewModel.RepairOrderId == null)
-            //{
-            //    actionobject.RepairOrderId = null;
-            //}
-
-            //if (stockLineViewModel.BusinessUnitId == null)
-            //{
-            //    actionobject.BusinessUnitId = null;
-            //}
-            //if (stockLineViewModel.DepartmentId == null)
-            //{
-            //    actionobject.DepartmentId = null;
-
-            //}
-            //if (stockLineViewModel.DivisionId == null)
-            //{
-            //    actionobject.DivisionId = null;
-            //}
-            _context.StockLine.Update(actionobject);
+            var actionobject1 = _unitOfWork.stockLineList.GetSingleOrDefault(a => a.StockLineId == id);
+            actionobject1.PartNumber = stockLineViewModel.PartNumber;
+            actionobject1.StockLineNumber = stockLineViewModel.StockLineNumber;
+            actionobject1.StocklineMatchKey = stockLineViewModel.StocklineMatchKey;
+            actionobject1.ControlNumber = stockLineViewModel.ControlNumber;
+            actionobject1.ItemMasterId = stockLineViewModel.ItemMasterId;
+            //actionobject1.BlackListed = stockLineViewModel.BlackListed;
+            //actionobject1.BlackListedReason = stockLineViewModel.BlackListedReason;
+            //actionobject1.Incident = stockLineViewModel.Incident;
+            //actionobject1.IncidentReason = stockLineViewModel.IncidentReason;
+            //actionobject1.Accident = stockLineViewModel.Accident;
+            //actionobject1.AccidentReason = stockLineViewModel.AccidentReason;
+            actionobject1.Quantity = stockLineViewModel.Quantity;
+            actionobject1.QuantityOnOrder = stockLineViewModel.QuantityOnOrder;
+            actionobject1.QuantityAvailable = stockLineViewModel.QuantityAvailable;
+            actionobject1.QuantityOnHand = stockLineViewModel.QuantityOnOrder;
+            actionobject1.QuantityIssued = stockLineViewModel.QuantityAvailable;
+            actionobject1.QuantityTurnIn = stockLineViewModel.QuantityTurnIn;
+            actionobject1.QuantityReserved = stockLineViewModel.QuantityReserved;
+            actionobject1.ConditionId = stockLineViewModel.ConditionId;
+            actionobject1.SerialNumber = stockLineViewModel.SerialNumber;
+            actionobject1.ShelfLife = stockLineViewModel.ShelfLife;
+            actionobject1.ShelfLifeExpirationDate = stockLineViewModel.ShelfLifeExpirationDate;
+            actionobject1.WarehouseId = stockLineViewModel.WarehouseId;
+            actionobject1.LocationId = stockLineViewModel.LocationId;
+            actionobject1.ObtainFrom = stockLineViewModel.ObtainFrom;
+            actionobject1.Owner = stockLineViewModel.Owner;
+            actionobject1.TraceableTo = stockLineViewModel.TraceableTo;
+            actionobject1.ManufacturerId = stockLineViewModel.ManufacturerId;
+            actionobject1.Manufacturer = stockLineViewModel.Manufacturer;
+            actionobject1.ManufacturerLotNumber = stockLineViewModel.ManufacturerLotNumber;
+            actionobject1.ManufacturingDate = stockLineViewModel.ManufacturingDate;
+            actionobject1.ManufacturingBatchNumber = stockLineViewModel.ManufacturingBatchNumber;
+            actionobject1.PartCertificationNumber = stockLineViewModel.PartCertificationNumber;
+            actionobject1.CertifiedBy = stockLineViewModel.CertifiedBy;
+            actionobject1.CertifiedDate = stockLineViewModel.CertifiedDate;
+            actionobject1.TagDate = stockLineViewModel.TagDate;
+            actionobject1.TagType = stockLineViewModel.TagType;
+            actionobject1.CertifiedDueDate = stockLineViewModel.CertifiedDueDate;
+            actionobject1.CalibrationMemo = stockLineViewModel.CalibrationMemo;
+            actionobject1.OrderDate = stockLineViewModel.OrderDate;
+            actionobject1.PurchaseOrderId = stockLineViewModel.PurchaseOrderId;
+            actionobject1.PurchaseOrderUnitCost = stockLineViewModel.PurchaseOrderUnitCost;
+            actionobject1.InventoryUnitCost = stockLineViewModel.InventoryUnitCost;
+            actionobject1.RepairOrderId = stockLineViewModel.RepairOrderId;
+            actionobject1.RepairOrderUnitCost = stockLineViewModel.RepairOrderUnitCost;
+            actionobject1.ReceivedDate = stockLineViewModel.ReceivedDate;
+            actionobject1.ReceiverNumber = stockLineViewModel.ReceiverNumber;
+            actionobject1.ReconciliationNumber = stockLineViewModel.ReconciliationNumber;
+            actionobject1.UnitSalesPrice = stockLineViewModel.UnitSalesPrice;
+            actionobject1.CoreUnitCost = stockLineViewModel.CoreUnitCost;
+            actionobject1.GLAccountId = stockLineViewModel.GLAccountId;
+            actionobject1.AssetId = stockLineViewModel.AssetId;
+            actionobject1.IsHazardousMaterial = stockLineViewModel.IsHazardousMaterial;
+            actionobject1.IsPMA = stockLineViewModel.IsPMA;
+            actionobject1.IsDER = stockLineViewModel.IsDER;
+            actionobject1.OEM = stockLineViewModel.OEM;
+            actionobject1.Memo = stockLineViewModel.Memo;
+            actionobject1.ManagementStructureEntityId = stockLineViewModel.ManagementStructureEntityId;
+            actionobject1.TimeLifeCyclesId = stockLineViewModel.TimeLifeCyclesId == 0 ? null : stockLineViewModel.TimeLifeCyclesId;
+            actionobject1.MasterCompanyId = 1;
+            actionobject1.IsSerialized = stockLineViewModel.isSerialized;
+            actionobject1.ShelfId = stockLineViewModel.ShelfId == 0 ? null : stockLineViewModel.ShelfId;
+            actionobject1.BinId = stockLineViewModel.BinId == 0 ? null : stockLineViewModel.BinId;
+            actionobject1.SiteId = stockLineViewModel.SiteId == 0 ? null : stockLineViewModel.SiteId;
+            actionobject1.LegalEntityId = stockLineViewModel.LegalEntityId == 0 ? null : stockLineViewModel.LegalEntityId;
+            actionobject1.ObtainFromType = stockLineViewModel.ObtainFromType;
+            actionobject1.OwnerType = stockLineViewModel.OwnerType;
+            actionobject1.TraceableToType = stockLineViewModel.TraceableToType;
+            actionobject1.UnitCostAdjustmentReasonTypeId = stockLineViewModel.UnitCostAdjustmentReasonTypeId;
+            actionobject1.UnitSalePriceAdjustmentReasonTypeId = stockLineViewModel.UnitSalePriceAdjustmentReasonTypeId;
+            actionobject1.IdNumber = stockLineViewModel.IdNumber;
+            actionobject1.QuantityToReceive = stockLineViewModel.QuantityToReceive;
+            actionobject1.PurchaseOrderExtendedCost = stockLineViewModel.PurchaseOrderExtendedCost;
+            actionobject1.ManufacturingTrace = stockLineViewModel.ManufacturingTrace;
+            actionobject1.ExpirationDate = stockLineViewModel.ExpirationDate;
+            actionobject1.AircraftTailNumber = stockLineViewModel.AircraftTailNumber;
+            actionobject1.ShippingViaId = stockLineViewModel.ShippingViaId;
+            actionobject1.EngineSerialNumber = stockLineViewModel.EngineSerialNumber;
+            actionobject1.QuantityRejected = stockLineViewModel.QuantityRejected;
+            actionobject1.PurchaseOrderPartRecordId = stockLineViewModel.PurchaseOrderPartRecordId;
+            actionobject1.ShippingAccount = stockLineViewModel.ShippingAccount;
+            actionobject1.ShippingReference = stockLineViewModel.ShippingReference;
+            actionobject1.TimeLifeDetailsNotProvided = stockLineViewModel.TimeLifeDetailsNotProvided;
+            actionobject1.UnitCostAdjustmentReasonTypeId = stockLineViewModel.UnitCostAdjustmentReasonTypeId;
+            actionobject1.UnitSalePriceAdjustmentReasonTypeId = stockLineViewModel.UnitSalePriceAdjustmentReasonTypeId;
+            actionobject1.QuantityOnHand = stockLineViewModel.QuantityOnHand;
+            actionobject1.QuantityAvailable = stockLineViewModel.QuantityAvailable;
+            actionobject1.QuantityIssued = stockLineViewModel.QuantityIssued;
+            actionobject1.QuantityReserved = stockLineViewModel.QuantityReserved;
+            actionobject1.CreatedDate = DateTime.Now;
+            actionobject1.UpdatedDate = DateTime.Now;
+            _context.StockLine.Update(actionobject1);
             _context.SaveChanges();
 
             return Ok(ModelState);
@@ -542,8 +486,8 @@ namespace QuickApp.Pro.Controllers
         [HttpPut("stockLineAdjustmentToListpostIfExist/{id}")]
         public IActionResult UpdateStocklineAdjustmentIfExist(long id, [FromBody] StockLAdjustmentViewModel stockLineViewModel)
         {
-            
-            var actionobject = _unitOfWork.stocklineAdjustmentRepository.GetSingleOrDefault(a => a.StockLineId == id && a.StocklineAdjustmentDataTypeId == stockLineViewModel.AdjustmentDataTypeId) ;
+
+            var actionobject = _unitOfWork.stocklineAdjustmentRepository.GetSingleOrDefault(a => a.StockLineId == id && a.StocklineAdjustmentDataTypeId == stockLineViewModel.AdjustmentDataTypeId);
 
 
 
@@ -561,19 +505,12 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-        
-
         //If Id exists update Time Life 
         [HttpPut("timeLifeUpdate/{id}")]
         public IActionResult UpdateTimeLifeIfExist(long id, [FromBody] TimeLifeViewModel timeLifeViewModel)
         {
-
             var actionobject = _unitOfWork.timeLife.GetSingleOrDefault(a => a.TimeLifeCyclesId == id);
-
-
-
             timeLifeViewModel.MasterCompanyId = 1;
-
             actionobject.TimeRemaining = timeLifeViewModel.TimeRemaining;
             actionobject.TimeSinceInspection = timeLifeViewModel.TimeSinceInspection;
             actionobject.TimeSinceNew = timeLifeViewModel.TimeSinceNew;
@@ -598,8 +535,6 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
-
-
 
         //If Id exists update into the Db Adjustment to List Update
         [HttpPut("stockLineAdjustmentToListpost/{id}")]
@@ -641,63 +576,16 @@ namespace QuickApp.Pro.Controllers
                     actionobject.ShelfId = null;
                     actionobject.BinId = null;
                 }
-
-
                 if (stockLineViewModel.shelftryChange == true)
                 {
                     actionobject.ShelfId = stockLineViewModel.ShelfId;
                     actionobject.BinId = null;
                 }
-
-
                 if (stockLineViewModel.bintryChnage == true)
                 {
                     actionobject.BinId = stockLineViewModel.BinId;
                 }
 
-
-
-                //if (stockLineViewModel.SiteId != 0)
-                //{
-
-                //}
-                //else
-                //{
-                //    actionobject.SiteId = null;
-                //}
-
-                //if (stockLineViewModel.WarehouseId != 0)
-                //{
-                //    actionobject.WarehouseId = stockLineViewModel.WarehouseId;
-                //}
-                //else
-                //{
-                //    actionobject.WarehouseId = null;
-                //}
-                //if (stockLineViewModel.LocationId != 0)
-                //{
-                //    actionobject.LocationId = stockLineViewModel.LocationId;
-                //}
-                //else
-                //{
-                //    actionobject.LocationId = null;
-                //}
-                //if (stockLineViewModel.ShelfId != 0)
-                //{
-                //    actionobject.ShelfId = stockLineViewModel.ShelfId;
-                //}
-                //else
-                //{
-                //    actionobject.ShelfId = null;
-                //}
-                //if (stockLineViewModel.BinId != 0)
-                //{
-                //    actionobject.BinId = stockLineViewModel.BinId;
-                //}
-                //else
-                //{
-                //    actionobject.BinId = null;
-                //}
                 if (stockLineViewModel.PartNumber != null)
                 {
                     actionobject.PartNumber = stockLineViewModel.PartNumber;
@@ -714,6 +602,12 @@ namespace QuickApp.Pro.Controllers
                 {
                     actionobject.Quantity = 0;
                 }
+                actionobject.QuantityOnOrder = stockLineViewModel.QuantityOnOrder;
+                actionobject.QuantityAvailable = stockLineViewModel.QuantityAvailable;
+                actionobject.QuantityOnHand = stockLineViewModel.QuantityOnOrder;
+                actionobject.QuantityIssued = stockLineViewModel.QuantityAvailable;
+                actionobject.QuantityTurnIn = stockLineViewModel.QuantityTurnIn;
+                actionobject.QuantityReserved = stockLineViewModel.QuantityReserved;
                 if (stockLineViewModel.CoreUnitCost != 0)
                 {
                     actionobject.CoreUnitCost = stockLineViewModel.CoreUnitCost;
@@ -735,22 +629,20 @@ namespace QuickApp.Pro.Controllers
                     actionobject.UnitSalePriceAdjustmentReasonTypeId = stockLineViewModel.UnitSalePriceAdjustmentReasonTypeId;
                 }
 
-                if(stockLineViewModel.isSerialized == false)
+                if (stockLineViewModel.isSerialized == false)
                 {
                     actionobject.SerialNumber = null;
                 }
-                //if (stockLineViewModel.DiscountSalesPrice != 0)
-                //{
-                //    actionobject. = stockLineViewModel.DiscountSalesPrice;
-                //}
-                //if (stockLineViewModel.LotCostAdjustment != 0)
-                //{
-                //    actionobject.ManufacturerLotNumber = stockLineViewModel.LotCostAdjustment;
-                //}
-                //if (stockLineViewModel.RevalueStockCost != 0)
-                //{
-                //    actionobject. = stockLineViewModel.RevalueStockCost;
-                //}
+                actionobject.BlackListed = stockLineViewModel.BlackListed;
+                actionobject.BlackListedReason = stockLineViewModel.BlackListedReason;
+                actionobject.Incident = stockLineViewModel.Incident;
+                actionobject.IncidentReason = stockLineViewModel.IncidentReason;
+                actionobject.Accident = stockLineViewModel.Accident;
+                actionobject.AccidentReason = stockLineViewModel.AccidentReason;
+                actionobject.QuantityOnHand = stockLineViewModel.QuantityOnHand;
+                actionobject.QuantityAvailable = stockLineViewModel.QuantityAvailable;
+                actionobject.QuantityIssued = stockLineViewModel.QuantityIssued;
+                actionobject.QuantityReserved = stockLineViewModel.QuantityReserved;
 
                 actionobject.CreatedDate = DateTime.Now;
                 actionobject.UpdatedDate = DateTime.Now;
@@ -789,7 +681,7 @@ namespace QuickApp.Pro.Controllers
                 actionobject.AdjustmentMemo = stockLAdjustmentViewModel.AdjustmentMemo;
                 actionobject.MasterCompanyId = 1;
                 actionobject.IsActive = true;
-                
+
 
                 _context.StocklineAdjustment.Add(actionobject);
                 _context.SaveChanges();
@@ -798,13 +690,12 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
-
         //
         //For Id exists updating the stockline adjustment and Add New 
         [HttpPut("stockLineAdjustmentpost/{id}")]
         public IActionResult updateStockLineAdjustment(long id, [FromBody] ManagementStructureViewModel managementStructureEntityViewModel)
         {
-            
+
             var actionobject = _unitOfWork.stockLineList.GetSingleOrDefault(a => a.StockLineId == id);
             //var address = _unitOfWork.Address.GetSingleOrDefault(a => a.AddressId == customerViewModel.Addressid);
 
@@ -843,10 +734,6 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-
-
-
-
         [HttpDelete("stockLineList/{id}")]
         [Produces(typeof(StockLineViewModel))]
         public IActionResult DeleteAction(long id)
@@ -860,8 +747,6 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(id);
         }
-
-
 
         [HttpPost("stockLineTimeLifeAdjustment")]
         public IActionResult stockLineTimeLifeAdjustment([FromBody] TimeLifeViewModel timeLifeViewModel)
@@ -907,25 +792,13 @@ namespace QuickApp.Pro.Controllers
         {
 
             var actionobject = _unitOfWork.itemMaster.GetSingleOrDefault(a => a.ItemMasterId == id);
-            //var address = _unitOfWork.Address.GetSingleOrDefault(a => a.AddressId == customerViewModel.Addressid);
-
             actionobject.PartNumber = itemMasterViewModel.PartNumber;
             actionobject.PartDescription = itemMasterViewModel.Partdescription;
-            
-            //if (itemMasterViewModel.PartId != null)
-            //{
-            //    actionobject.PartId = itemMasterViewModel.PartId;
-            //}
-
-            
-
-            
-           
             actionobject.CreatedDate = DateTime.Now;
             actionobject.UpdatedDate = DateTime.Now;
             actionobject.CreatedBy = itemMasterViewModel.CreatedBy;
             actionobject.UpdatedBy = itemMasterViewModel.UpdatedBy;
-            
+
             _context.ItemMaster.Update(actionobject);
             _context.SaveChanges();
 
@@ -949,8 +822,30 @@ namespace QuickApp.Pro.Controllers
                                   pop.UnitCost,
 
                               }).ToList();
-                
 
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpPost("PurchaseOrderUnitCost/{POId}")]
+        [Produces(typeof(List<PurchaseOrderPart>))]
+        public IActionResult PurchaseOrderUnitCost(long POId)
+        {
+            try
+            {
+                var result = (from pop in _context.PurchaseOrderPart
+                              where pop.PurchaseOrderId== POId
+                              select new PurchaseOrderPart
+                              {
+                                UnitCost=  pop.UnitCost,
+                                PurchaseOrderId=pop.PurchaseOrderId
+                              }).ToList();
                 return Ok(result);
             }
             catch (Exception ex)
@@ -958,7 +853,28 @@ namespace QuickApp.Pro.Controllers
 
                 throw;
             }
+        }
 
+        [HttpPost("RepairOrderUnitCost/{ROId}")]
+        [Produces(typeof(List<RepairOrderPart>))]
+        public IActionResult RepairOrderUnitCost(long ROId)
+        {
+            try
+            {
+                var result = (from rop in _context.RepairOrderPart
+                              where rop.RepairOrderId == ROId
+                              select new RepairOrderPart
+                              {
+                                UnitCost =   rop.UnitCost,
+                                RepairOrderId=rop.RepairOrderId
+                              }).ToList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
 
         [HttpPost("stockLineROUnitCostGet")]
@@ -984,12 +900,11 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
 
         }
-        
+
         [HttpDelete("deleteIntegration/{id}")]
         [Produces(typeof(StockLineViewModel))]
         public IActionResult deleteIntegration(long id)
@@ -1018,14 +933,11 @@ namespace QuickApp.Pro.Controllers
             return Ok(id);
         }
 
-
         [HttpGet("stocklinereoprt")]
         public IActionResult GenerateStockLineReoprt()
         {
             var result = _unitOfWork.stockLineList.GenerateStockLineReoprt();
-
             var stream = new MemoryStream();
-
             using (var package = new ExcelPackage(stream))
             {
                 var workSheet = package.Workbook.Worksheets.Add("Stock Line Report");
@@ -1034,11 +946,7 @@ namespace QuickApp.Pro.Controllers
             }
             stream.Position = 0;
             string excelName = $"StockLineReport-{DateTime.Now.ToString("ddMMMyyyy")}.xlsx";
-
-            //return File(stream, "application/octet-stream", excelName);  
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
-
         }
-
     }
 }

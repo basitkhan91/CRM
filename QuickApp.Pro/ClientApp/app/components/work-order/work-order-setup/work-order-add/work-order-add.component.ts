@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { fadeInOut } from '../../../../services/animations';
 import { PageHeaderComponent } from '../../../../shared/page-header.component';
 import * as $ from 'jquery';
@@ -32,8 +32,10 @@ import {
   AllTasks
 } from '../../../../models/work-order-labor.modal';
 import { CommonService } from '../../../../services/common.service';
-import { validateRecordExistsOrNot, selectedValueValidate, getValueFromObjectByKey } from '../../../../generic/autocomplete';
+import { validateRecordExistsOrNot, selectedValueValidate, getValueFromObjectByKey, getObjectById, getObjectByValue, editValueAssignByCondition } from '../../../../generic/autocomplete';
 import { AuthService } from '../../../../services/auth.service';
+import { ActivatedRoute } from '@angular/router';
+import { WorkFlowtService } from '../../../../services/workflow.service';
 
 @Component({
   selector: 'app-work-order-add',
@@ -45,11 +47,24 @@ import { AuthService } from '../../../../services/auth.service';
 export class WorkOrderAddComponent implements OnInit {
   // workOrder: WorkOrder;
   // workOrderPartNumbers: WorkOrderPartNumber[];
-  workOrderTypes: WorkOrderType[];
-  workOrderStatusList: any;
-  workScopesList: any;
-  workOrderStagesList: any;
-  creditTerms: any;
+
+  @Input() isEdit;
+  @Input() workOrderTypes;
+  @Input() workOrderStatusList;
+  @Input() creditTerms;
+  @Input() employeesOriginalData;
+  @Input() workScopesList;
+  @Input() workOrderStagesList;
+  @Input() priorityList;
+  @Input() partNumberOriginalData;
+  @Input() workOrderGeneralInformation;
+  // @Output() viewWorkFlow = new EventEmitter();
+
+  // workOrderTypes: WorkOrderType[];
+  // workOrderStatusList: any;
+  // workScopesList: any;
+  // workOrderStagesList: any;
+  // creditTerms: any;
   // customers: Customer[];
   selectedCustomer: Customer;
   selectedEmployee: any;
@@ -60,7 +75,7 @@ export class WorkOrderAddComponent implements OnInit {
   filteredCustomerCode: any[];
   employeeNames: any[];
   filteredEmployeeNames: any[];
-  employeesOriginalData: any;
+  // employeesOriginalData: any;
   customersOriginalData: any;
   contactInfo: any;
   sourceVendor: any;
@@ -74,7 +89,7 @@ export class WorkOrderAddComponent implements OnInit {
   gridActiveTab: String = 'workFlow';
   subTabWorkFlow: String;
   // WorkOrder general Information Object Modal
-  workOrderGeneralInformation: workOrderGeneralInfo = new workOrderGeneralInfo();
+
   // Address Information Object Modal
   addresses: addressesForm;
   // Document Object Modal
@@ -102,13 +117,13 @@ export class WorkOrderAddComponent implements OnInit {
   salesPersonList: any[];
   technicianList: any[];
   partNumberList: any;
-  partNumberOriginalData: any;
-  revisedPartOriginalData: any;
-  revisedPartNumberList: any;
+  // partNumberOriginalData: any;
+  // revisedPartOriginalData: any;
+  // revisedPartNumberList: any;
   // stockLineList: any;
-  conditionList: any;
+  // conditionList: any;
   cmmList: any;
-  priorityList: Object;
+  // priorityList: Object;
   savedWorkOrderData: any;
   workFlowWorkOrderData: any;
   workOrderAssetList: any;
@@ -119,6 +134,8 @@ export class WorkOrderAddComponent implements OnInit {
   stockLineList: any;
   workOrderWorkFlowOriginalData: any;
   isDisabledSteps: boolean = false;
+  workFlowId: any;
+  editWorkFlowData: any;
 
 
   constructor(
@@ -132,6 +149,9 @@ export class WorkOrderAddComponent implements OnInit {
     private stocklineService: StocklineService,
     private commonService: CommonService,
     private authService: AuthService,
+    private acRouter: ActivatedRoute,
+    private workFlowtService: WorkFlowtService,
+
   ) {
     // this.workOrderPartNumbers = [];
     // this.workOrder = new WorkOrder();
@@ -141,22 +161,47 @@ export class WorkOrderAddComponent implements OnInit {
     this.moduleName = 'Work Order';
   }
 
-  ngOnInit(): void {
-    this.getAllGridModals();
+  async ngOnInit() {
+
     this.mpnFlag = true;
     this.isDetailedView = true;
     this.selectedCustomer = new Customer();
-    this.getAllWorkOrderTypes();
-    this.getAllWorkOrderStatus();
-    this.getAllCreditTerms();
-    // this.getAllCustomers();
-    this.getAllEmployees();
-    this.getAllWorkScpoes();
-    this.getAllWorkOrderStages();
-    this.getMultiplePartsNumbers();
-    this.getAllPriority();
+    // this.getAllWorkOrderTypes();
+    // this.getAllWorkOrderStatus();
+    // this.getAllCreditTerms();
+    // // this.getAllCustomers();
+    // this.getAllEmployees();
+    // this.getAllWorkScpoes();
+    // this.getAllWorkOrderStages();
+    // this.getMultiplePartsNumbers();
+    // this.getAllPriority();
     // this.getStockLines();
-    this.addMPN();
+    if (!this.isEdit) {
+
+      this.addMPN();
+      this.getAllGridModals();
+    } else {
+      const data = this.workOrderGeneralInformation;
+      this.workOrderGeneralInformation = {
+        ...data,
+        partNumbers: data.partNumbers.map((x, index) => {
+
+          this.getRevisedpartNumberByItemMasterId(x.masterPartId, index);
+          this.getStockLineByItemMasterId(x.masterPartId, x.conditionId, index);
+          this.getConditionByItemMasterId(x.masterPartId, index);
+          return {
+            ...x,
+            masterPartId: getObjectById('itemMasterId', x.masterPartId, this.partNumberOriginalData),
+            mappingItemMasterId: getObjectById('mappingItemMasterId', x.mappingItemMasterId, this.getDynamicVariableData('revisedPartOriginalData', index)),
+
+
+          }
+
+        })
+      }
+    }
+
+
   }
 
   get userName(): string {
@@ -191,25 +236,27 @@ export class WorkOrderAddComponent implements OnInit {
 
 
 
-  getAllWorkOrderTypes(): void {
-    this.workOrderService.getAllWorkOrderTypes().subscribe(
-      result => {
-        this.workOrderTypes = result;
-      }
-    );
-  }
 
-  getAllWorkOrderStatus(): void {
-    this.commonService.smartDropDownList('WorkOrderStatus', 'ID', 'Description').subscribe(res => {
-      this.workOrderStatusList = res.sort(function (a, b) { return a.value - b.value; });
-    })
-  }
 
-  getAllCreditTerms(): void {
-    this.commonService.smartDropDownList('CreditTerms', 'CreditTermsId', 'Name').subscribe(res => {
-      this.creditTerms = res;
-    })
-  }
+  // getAllWorkOrderTypes(): void {
+  //   this.workOrderService.getAllWorkOrderTypes().subscribe(
+  //     result => {
+  //       this.workOrderTypes = result;
+  //     }
+  //   );
+  // }
+
+  // getAllWorkOrderStatus(): void {
+  //   this.commonService.smartDropDownList('WorkOrderStatus', 'ID', 'Description').subscribe(res => {
+  //     this.workOrderStatusList = res.sort(function (a, b) { return a.value - b.value; });
+  //   })
+  // }
+
+  // getAllCreditTerms(): void {
+  //   this.commonService.smartDropDownList('CreditTerms', 'CreditTermsId', 'Name').subscribe(res => {
+  //     this.creditTerms = res;
+  //   })
+  // }
 
   // getAllCustomers(): void {
   //   this.customerService.getAllCustomersInfo().subscribe(
@@ -239,11 +286,11 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
 
-  getAllEmployees(): void {
-    this.commonService.smartDropDownList('Employee', 'EmployeeId', 'FirstName').subscribe(res => {
-      this.employeesOriginalData = res;
-    })
-  }
+  // async getAllEmployees() {
+  //   await this.commonService.smartDropDownList('Employee', 'EmployeeId', 'FirstName').subscribe(res => {
+  //     this.employeesOriginalData = res;
+  //   })
+  // }
 
 
   filterEmployee(event): void {
@@ -284,30 +331,30 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
 
-  getAllWorkScpoes(): void {
-    this.workOrderService.getAllWorkScopes().subscribe(
-      result => {
-        this.workScopesList = result.map(x => {
-          return {
-            label: x.description,
-            value: x.workScopeId
-          }
-        })
-      }
-    );
-  }
+  // getAllWorkScpoes(): void {
+  //   this.workOrderService.getAllWorkScopes().subscribe(
+  //     result => {
+  //       this.workScopesList = result.map(x => {
+  //         return {
+  //           label: x.description,
+  //           value: x.workScopeId
+  //         }
+  //       })
+  //     }
+  //   );
+  // }
 
-  getAllWorkOrderStages(): void {
-    this.commonService.smartDropDownList('WorkOrderStage', 'ID', 'Description').subscribe(res => {
-      this.workOrderStagesList = res;
-    })
-  }
+  // getAllWorkOrderStages(): void {
+  //   this.commonService.smartDropDownList('WorkOrderStage', 'ID', 'Description').subscribe(res => {
+  //     this.workOrderStagesList = res;
+  //   })
+  // }
 
-  getAllPriority() {
-    this.commonService.smartDropDownList('Priority', 'PriorityId', 'Description').subscribe(res => {
-      this.priorityList = res;
-    })
-  }
+  // getAllPriority() {
+  //   this.commonService.smartDropDownList('Priority', 'PriorityId', 'Description').subscribe(res => {
+  //     this.priorityList = res;
+  //   })
+  // }
 
 
 
@@ -333,8 +380,33 @@ export class WorkOrderAddComponent implements OnInit {
   }
   // subtab in grid change
   subTabWorkFlowChange(value) {
+
     this.subTabWorkFlow = value;
+
+    if (value === 'editworkFlow') {
+      this.editWorkFlowData = undefined;
+      this.workFlowtService.getWorkFlowDataByIdForEdit(this.workFlowId).subscribe(res => {
+        console.log(res);
+
+        this.workFlowtService.listCollection = res[0];
+        this.workFlowtService.enableUpdateMode = true;
+        this.workFlowtService.currentWorkFlowId = res.workflowId;
+        this.editWorkFlowData = res;
+
+      })
+
+    }
+
+
+
+    // if(value === 'viewworkFlow'){
+    //   this.viewWorkFlow.emit(this.workFlowWorkOrderId)
+    // }
     this.gridActiveTab = '';
+  }
+
+  deleteMPN(index) {
+    this.workOrderGeneralInformation.partNumber = this.workOrderGeneralInformation.partNumber.splice(index, 1);
   }
 
 
@@ -352,9 +424,9 @@ export class WorkOrderAddComponent implements OnInit {
       createdBy: this.userName,
       updatedBy: this.userName,
       partNumbers: generalInfo.partNumbers.map(x => {
-        if (this.workOrderGeneralInformation.isSinglePN == false) {
-          this.mpnPartNumbersList.push({ label: x.masterPartId.partNumber, value: x.masterPartId })
-        }
+        // if (this.workOrderGeneralInformation.isSinglePN == false) {
+        //   this.mpnPartNumbersList.push({ label: x.masterPartId.partNumber, value: x.workflowId })
+        // }
 
 
         return {
@@ -376,15 +448,21 @@ export class WorkOrderAddComponent implements OnInit {
 
         this.workOrderId = result.workOrderId;
         this.workOrderGeneralInformation.workOrderNumber = result.workOrderNum;
-        this.workFlowWorkOrderId = result.workFlowWorkOrderId;
+
 
         if (this.workFlowWorkOrderId !== 0) {
           this.isDisabledSteps = true;
         }
-        // get WOrkFlow Equipment Details if WorFlow Exists
+
+
         this.getWorkOrderWorkFlowNos();
-        this.getEquipmentByWorkOrderId();
-        this.getMaterialListByWorkOrderId();
+        if (this.workOrderGeneralInformation.isSinglePN == true) {
+          // get WOrkFlow Equipment Details if WorFlow Exists
+          this.getWorkFlowTabsData();
+          this.workFlowId = generalInfo.partNumbers[0].workflowId;
+          this.workFlowWorkOrderId = result.workFlowWorkOrderId;
+
+        }
 
         this.showTableGrid = true; // Show Grid Boolean
         // this.workOrder = result;
@@ -399,32 +477,78 @@ export class WorkOrderAddComponent implements OnInit {
 
 
 
+  changeofMPN(data) {
+    console.log(data)
+    // data.workOrderWorkFlowId
+    // const data = object;
+    this.workFlowId = data.workflowId,
+      this.workFlowWorkOrderId = data.workOrderWorkFlowId;
+    // console.log(workFlowWorkOrderId);
 
+    this.getWorkFlowTabsData();
 
-  savedWorkFlowData(workFlowDataObject) {
-    this.workOrderService.createWorkFlowWorkOrder(workFlowDataObject).subscribe(res => {
-      this.workFlowWorkOrderData = res;
-      this.workFlowWorkOrderId = res.workFlowWorkOrderId;
-
-      if (this.workFlowWorkOrderId !== 0) {
-        this.isDisabledSteps = true;
-      }
-      this.getWorkOrderWorkFlowNos();
-      this.alertService.showMessage(
-        '',
-        'Work Order Work Flow Saved Succesfully',
-        MessageSeverity.success
-      );
-    })
-
-    // this.workFlowWorkOrderData = responseData;
-    // this.workFlowWorkOrderId = responseData.workFlowWorkOrderId;
   }
 
+  getWorkFlowTabsData() {
+
+    this.getEquipmentByWorkOrderId();
+    this.getMaterialListByWorkOrderId();
+    // this.getWorkOrderWorkFlowBywfwoId(this.workFlowWorkOrderId);
+  }
+
+
+
+
+  // getWorkOrderWorkFlowBywfwoId(workFlowWorkOrderId) {
+
+  //   this.workOrderService.getWorkOrderWorkFlowByWorkFlowWorkOrderId(workFlowWorkOrderId).subscribe(res => {
+
+  //   })
+  // }
+
+
+  // savedWorkFlowData(workFlowDataObject) {
+  //   this.workOrderService.createWorkFlowWorkOrder(workFlowDataObject).subscribe(res => {
+  //     this.workFlowWorkOrderData = res;
+  //     this.workFlowWorkOrderId = res.workFlowWorkOrderId;
+
+  //     if (this.workFlowWorkOrderId !== 0) {
+  //       this.isDisabledSteps = true;
+  //     }
+  //     this.getWorkOrderWorkFlowNos();
+  //     this.alertService.showMessage(
+  //       '',
+  //       'Work Order Work Flow Saved Succesfully',
+  //       MessageSeverity.success
+  //     );
+  //   })
+
+  //   // this.workFlowWorkOrderData = responseData;
+  //   // this.workFlowWorkOrderId = responseData.workFlowWorkOrderId;
+  // }
+
   getWorkOrderWorkFlowNos() {
-    this.workOrderService.getWorkOrderWorkFlowNumbers(this.workOrderId).subscribe(res => {
-      this.workOrderWorkFlowOriginalData = res;
-    })
+
+    if (this.workOrderId) {
+      this.workOrderService.getWorkOrderWorkFlowNumbers(this.workOrderId).subscribe(res => {
+        this.workOrderWorkFlowOriginalData = res;
+        this.mpnPartNumbersList = res.map(x => {
+          return {
+            value:
+            {
+              workOrderWorkFlowId: x.value,
+              workOrderNo: x.label,
+              masterPartId: x.masterPartId,
+              workflowId: x.workflowId,
+              workflowNo: x.workflowNo,
+              partNumber: x.partNumber
+            },
+            label: x.workflowNo
+          }
+        })
+      })
+    }
+
   }
 
   saveworkOrderLabor(data) {
@@ -438,9 +562,9 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
   getEquipmentByWorkOrderId() {
-    if (this.workFlowWorkOrderId !== 0) {
+    if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
       // this.workFlowWorkOrderId = this.workFlowWorkOrderData.workFlowWorkOrderId;
-      this.workOrderService.getWorkOrderAssetList(this.workFlowWorkOrderId).subscribe(
+      this.workOrderService.getWorkOrderAssetList(this.workFlowWorkOrderId, this.workOrderId).subscribe(
         result => {
           this.workOrderAssetList = result;
         }
@@ -451,7 +575,7 @@ export class WorkOrderAddComponent implements OnInit {
 
   getMaterialListByWorkOrderId() {
     if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
-      this.workOrderService.getMaterialList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
+      this.workOrderService.getWorkOrderMaterialList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
 
         this.workOrderMaterialList = res;
 
@@ -467,14 +591,11 @@ export class WorkOrderAddComponent implements OnInit {
 
 
   // grid Service Calls
-  getMultiplePartsNumbers() {
-    this.workOrderService.getMultipleParts().subscribe(res => {
-      this.partNumberOriginalData = res;
-    })
-    // this.commonService.getItemMasterDetails().subscribe(res => {
-    //   this.partNumberOriginalData = res;
-    // })
-  }
+  // getMultiplePartsNumbers() {
+  //   this.workOrderService.getMultipleParts().subscribe(res => {
+  //     this.partNumberOriginalData = res;
+  //   })
+  // }
 
   filterPartNumber(event) {
     this.partNumberList = this.partNumberOriginalData;
@@ -488,7 +609,7 @@ export class WorkOrderAddComponent implements OnInit {
     }
   }
 
-  onSelectedPartNumber(object, currentRecord) {
+  onSelectedPartNumber(object, currentRecord, index) {
     console.log('Sample PN');
 
 
@@ -501,9 +622,9 @@ export class WorkOrderAddComponent implements OnInit {
 
     // const { conditionId } = currentRecord;
 
-    this.getRevisedpartNumberByItemMasterId(itemMasterId)
+    this.getRevisedpartNumberByItemMasterId(itemMasterId, index)
     // this.getStockLineByItemMasterId(itemMasterId)
-    this.getConditionByItemMasterId(itemMasterId)
+    this.getConditionByItemMasterId(itemMasterId, index)
     this.getPartPublicationByItemMasterId(itemMasterId)
     currentRecord.description = object.partDescription
     currentRecord.nTE = object.nte;
@@ -528,19 +649,26 @@ export class WorkOrderAddComponent implements OnInit {
   // }
 
 
-  async  getRevisedpartNumberByItemMasterId(itemMasterId) {
+  async  getRevisedpartNumberByItemMasterId(itemMasterId, index) {
 
     await this.workOrderService.getRevisedPartNumbers(itemMasterId).subscribe(res => {
-      this.revisedPartOriginalData = res;
+      this['revisedPartOriginalData' + index] = res;
+      console.log(this['revisedPartOriginalData' + index]);
+
     })
 
   }
-  async getStockLineByItemMasterId(workOrderPart) {
-    const { conditionId } = workOrderPart;
-    const { itemMasterId } = workOrderPart.masterPartId;
-    if (itemMasterId !== 0 && conditionId !== 0) {
+  getStockLineByItemMasterIdOnChangePN(workOrderPart, index) {
+    this.getStockLineByItemMasterId(workOrderPart.masterPartId, workOrderPart.conditionId, index);
+  }
+
+  async getStockLineByItemMasterId(itemMasterId, conditionId, index) {
+    itemMasterId = editValueAssignByCondition('itemMasterId', itemMasterId)
+    // const { conditionId } = workOrderPart;
+    // const { itemMasterId } = workOrderPart.masterPartId;
+    if (itemMasterId !== 0 && conditionId !== null) {
       await this.workOrderService.getStockLineByItemMasterId(itemMasterId, conditionId).subscribe(res => {
-        this.stockLineList = res.map(x => {
+        this['stockLineList' + index] = res.map(x => {
           return {
             label: x.stockLineNumber,
             value: x.stockLineId,
@@ -550,6 +678,10 @@ export class WorkOrderAddComponent implements OnInit {
       })
     }
   }
+
+
+
+
   // async getStockLineByItemMasterId(workOrderPart) {
   //   const { conditionId } = workOrderPart;
   //   const { itemMasterId } = workOrderPart.masterPartId;
@@ -567,15 +699,28 @@ export class WorkOrderAddComponent implements OnInit {
   //   }
   // }
 
-  async getConditionByItemMasterId(itemMasterId) {
+  async getConditionByItemMasterId(itemMasterId, index) {
     await this.workOrderService.getConditionByItemMasterId(itemMasterId).subscribe(res => {
-      this.conditionList = res.map(x => {
+      this['conditionList' + index] = res.map(x => {
         return {
           label: x.description,
           value: x.conditionId,
         }
       })
     })
+  }
+  // getDynamicVariableData(variable, index) {
+  //   return this[variable + index];
+  // }
+  // getConditionDyVariable(variable, index) {
+  //   return this[variable + index];
+  // }
+  // getRevisedPNDyVariable(variable, index) {
+  //   return this[variable + index]
+  // }
+
+  getDynamicVariableData(variable, index) {
+    return this[variable + index]
   }
 
   async getPartPublicationByItemMasterId(itemMasterId) {
@@ -588,23 +733,29 @@ export class WorkOrderAddComponent implements OnInit {
 
 
 
-  filterRevisedPartNumber(event) {
-    this.revisedPartNumberList = this.revisedPartOriginalData;
+
+  filterRevisedPartNumber(event, index) {
+    this['revisedPartNumberList' + index] = this['revisedPartOriginalData' + index]
+    // this.revisedPartNumberList = this.revisedPartOriginalData;
 
     if (event.query !== undefined && event.query !== null) {
-      const partNumbers = [...this.revisedPartOriginalData.filter(x => {
+      const partNumbers = [...this['revisedPartOriginalData' + index].filter(x => {
 
         return x.revisedPartNo.toLowerCase().includes(event.query.toLowerCase())
       })]
-      this.revisedPartNumberList = partNumbers;
+      this['revisedPartNumberList' + index] = partNumbers;
     }
   }
+
+
+
+
 
 
   getSerialNoByStockLineId(workOrderPart) {
     const { stockLineId } = workOrderPart;
     const { conditionId } = workOrderPart;
-    if (stockLineId !== 0 && conditionId !== 0) {
+    if ((stockLineId !== null && stockLineId !== 0) && (conditionId !== null && conditionId !== 0)) {
       this.workOrderService.getSerialNoByStockLineId(stockLineId, conditionId).subscribe(res => {
         if (res) {
           workOrderPart.serialNumber = res.serialNumber;
@@ -616,10 +767,8 @@ export class WorkOrderAddComponent implements OnInit {
   getWorkFlowByPNandScope(workOrderPart) {
     const itemMasterId = getValueFromObjectByKey('itemMasterId', workOrderPart.masterPartId)
     const { workOrderScopeId } = workOrderPart;
-    console.log(workOrderPart);
 
-
-    if (itemMasterId !== 0 && workOrderScopeId !== 0) {
+    if ((itemMasterId !== 0 && itemMasterId !== null) && (workOrderScopeId !== null && workOrderScopeId !== 0)) {
       this.workOrderService.getWorkFlowByPNandScope(itemMasterId, workOrderScopeId).subscribe(res => {
         this.workFlowList = res.map(x => {
           return {

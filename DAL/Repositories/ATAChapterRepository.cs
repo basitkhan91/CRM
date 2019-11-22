@@ -70,10 +70,9 @@ namespace DAL.Repositories
             {
                 return _appContext.ATAChapterAudit.Where(p => p.ATAChapterId == ataChapterId).OrderByDescending(p => p.UpdatedDate).ToList();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
     }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using DAL;
 using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using QuickApp.Pro.Helpers;
 using QuickApp.Pro.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 namespace QuickApp.Pro.Controllers
 {
 
@@ -155,7 +154,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-                throw;
+                return BadRequest(ex.Message);
             }
         }
 
@@ -189,7 +188,12 @@ namespace QuickApp.Pro.Controllers
                 employeeobject.WorkPhone = employeeViewModel.WorkPhone;
                 employeeobject.Fax = employeeViewModel.Fax;
                 employeeobject.ManagementStructureId = employeeViewModel.ManagementStructureId;
-                employeeobject.LegalEntityId = entityobject.LegalEntityId;
+                if(entityobject != null && entityobject.LegalEntityId != null)
+                {
+                    employeeobject.LegalEntityId = entityobject.LegalEntityId;
+                }
+               
+               
                 employeeobject.SSN = employeeViewModel.SSN;
                 employeeobject.Email = employeeViewModel.Email;
                 employeeobject.AllowDoubleTime = employeeViewModel.AllowDoubleTime;
@@ -204,17 +208,14 @@ namespace QuickApp.Pro.Controllers
                 employeeobject.UpdatedDate = DateTime.Now;
                 employeeobject.CreatedBy = employeeViewModel.CreatedBy;
                 employeeobject.UpdatedBy = employeeViewModel.UpdatedBy;
+                employeeobject.Memo = employeeViewModel.Memo;
+
                 _unitOfWork.employee.Add(employeeobject);
                 _unitOfWork.SaveChanges();
 
                 long? empGeneratedId = employeeobject.EmployeeId;
 
                 long? empId = empGeneratedId;
-
-
-
-
-
 
 
                 var existingResult = _unitOfWork.employee.GetSingleOrDefault(c => c.EmployeeId == employeeobject.EmployeeId);
@@ -242,11 +243,11 @@ namespace QuickApp.Pro.Controllers
             DAL.Models.EmployeeLeaveTypeMapping integrationTypes = new DAL.Models.EmployeeLeaveTypeMapping();
             integrationTypes.EmployeeLeaveTypeId = employeetypeViewModel.LeaveTypeId;
             integrationTypes.MasterCompanyId = 1;
-			// integrationTypes.EmployeeId = empId;
-			//integrationTypes.EmployeeId = aarayEmpid;
-			//  integrationTypes2.EmployeeId = ShiftaarayEmpid;
-			integrationTypes.JobTypeId = employeetypeViewModel.JobTypeId;
-			integrationTypes.EmployeeId = employeetypeViewModel.EmployeeId;
+            // integrationTypes.EmployeeId = empId;
+            //integrationTypes.EmployeeId = aarayEmpid;
+            //  integrationTypes2.EmployeeId = ShiftaarayEmpid;
+            integrationTypes.JobTypeId = employeetypeViewModel.JobTypeId;
+            integrationTypes.EmployeeId = employeetypeViewModel.EmployeeId;
             integrationTypes.CreatedBy = employeetypeViewModel.CreatedBy;
             integrationTypes.UpdatedBy = employeetypeViewModel.UpdatedBy;
             integrationTypes.CreatedDate = DateTime.Now;
@@ -269,12 +270,12 @@ namespace QuickApp.Pro.Controllers
             var x = (from y in _appContext.EmployeeLeaveTypeMapping
 
                      where y.EmployeeId == employeetypeViewModel.EmployeeId && y.EmployeeLeaveTypeId == employeetypeViewModel.LeaveTypeId
-                     orderby y.EmployeeId descending 
+                     orderby y.EmployeeId descending
                      select y).FirstOrDefault();
 
             _appContext.EmployeeLeaveTypeMapping.Remove(x);
             _appContext.SaveChanges();
-          
+
             integrationTypes.ShiftId = employeetypeViewModel.ShiftTypeId;
             integrationTypes.MasterCompanyId = 1;
             return Ok(integrationTypes);
@@ -291,9 +292,9 @@ namespace QuickApp.Pro.Controllers
             //integrationTypes.EmployeeId = aarayEmpid;
             integrationTypes.ShiftId = employeetypeViewModel.ShiftTypeId;
             integrationTypes.MasterCompanyId = 1;
-			//  integrationTypes2.EmployeeId = ShiftaarayEmpid;
-			integrationTypes.JobTypeId = employeetypeViewModel.JobTypeId;
-			integrationTypes.EmployeeId = employeetypeViewModel.EmployeeId;
+            //  integrationTypes2.EmployeeId = ShiftaarayEmpid;
+            integrationTypes.JobTypeId = employeetypeViewModel.JobTypeId;
+            integrationTypes.EmployeeId = employeetypeViewModel.EmployeeId;
             integrationTypes.CreatedBy = employeetypeViewModel.CreatedBy;
             integrationTypes.UpdatedBy = employeetypeViewModel.UpdatedBy;
             integrationTypes.CreatedDate = DateTime.Now;
@@ -333,7 +334,7 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
-                Console.WriteLine("This is C#"+ employeeViewModel.IsHourly);
+                Console.WriteLine("This is C#" + employeeViewModel.IsHourly);
                 if (employeeViewModel == null)
                     return BadRequest($"{nameof(EmployeeViewModel)} cannot be null");
                 var entityobject = _context.ManagementStructure.Where(a => a.ManagementStructureId == employeeViewModel.ManagementStructureId).SingleOrDefault();
@@ -363,12 +364,12 @@ namespace QuickApp.Pro.Controllers
                 existingResult.IsHourly = employeeViewModel.IsHourly;
                 existingResult.HourlyPay = employeeViewModel.HourlyPay;
                 existingResult.ManagementStructureId = employeeViewModel.ManagementStructureId;
-                existingResult.LegalEntityId = entityobject.LegalEntityId;                
+                existingResult.LegalEntityId = entityobject.LegalEntityId;
                 existingResult.SupervisorId = employeeViewModel.SupervisorId;
                 existingResult.EmployeeCertifyingStaff = employeeViewModel.EmployeeCertifyingStaff;
                 existingResult.MasterCompanyId = 1;
-             
-
+                existingResult.Memo = employeeViewModel.Memo;
+                
                 if (employeeViewModel.EmployeeLeaveTypeId != null)
                 {
                     var integrationList = _unitOfWork.EmployeeLeaveTypeMappingRepository.GetAllData().ToList();
@@ -411,8 +412,8 @@ namespace QuickApp.Pro.Controllers
                             integrationTypes.CreatedDate = DateTime.Now;
                             integrationTypes.UpdatedDate = DateTime.Now;
                             integrationTypes.IsActive = true;
-                          //  _unitOfWork.EmployeeShiftMappingRepository.Add(integrationTypes);
-                        //    _unitOfWork.SaveChanges();
+                            //  _unitOfWork.EmployeeShiftMappingRepository.Add(integrationTypes);
+                            //    _unitOfWork.SaveChanges();
                             return Ok(integrationTypes);
                         }
 
@@ -657,7 +658,7 @@ namespace QuickApp.Pro.Controllers
                 employeeobject.UpdatedDate = DateTime.Now;
                 employeeobject.UpdatedBy = employeeLicensureViewModel.UpdatedBy;
                 // employeeobject.ExpirationDate = DateTime.Now;
-              //  employeeobject.IsExpirationDate = false;
+                //  employeeobject.IsExpirationDate = false;
 
                 _unitOfWork.employeeLicensure.Add(employeeobject);
                 _unitOfWork.SaveChanges();
@@ -719,7 +720,7 @@ namespace QuickApp.Pro.Controllers
                 employeeobject.ExpirationDate = employeeTrainingViewModel.ExpirationDate;
                 employeeobject.UnitOfMeasureId = employeeTrainingViewModel.UnitOfMeasureId;
                 employeeobject.CreatedBy = employeeTrainingViewModel.CreatedBy;
-                
+
                 employeeobject.CreatedDate = DateTime.Now;
                 employeeobject.UpdatedDate = DateTime.Now;
 
@@ -967,6 +968,54 @@ namespace QuickApp.Pro.Controllers
             var result = _unitOfWork.employee.GetEmployeeData(employeeId);
             return Ok(result);
 
+        }
+
+        /// <summary>
+        /// To Save Employee user multiple roles
+        /// </summary>
+        /// <param name="objEmployeeUserRoles"></param>
+        /// <returns></returns>
+        [HttpPost("employeeroles")]
+        public IActionResult EmpoyeeUserRole([FromBody]List<EmployeeUserRole> objEmployeeUserRoles)
+        {
+            var result = _unitOfWork.employee.EmployeeUserRole(objEmployeeUserRoles);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// To Get Employee roles based in employeeId
+        /// </summary>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        [HttpGet("getEmployeeRoles")]
+        public IActionResult GetEmpoyeeUserRole(long employeeId)
+        {
+            var result = _unitOfWork.employee.GetEmployeeUserRole(employeeId);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// To save Employee management structure
+        /// </summary>
+        /// <param name="objEmployeeManagementStructure"></param>
+        /// <returns></returns>
+        [HttpPost("employeeManagementStructure")]
+        public IActionResult EmpoyeeManagementStructure([FromBody]List<EmployeeManagementStructure> objEmployeeManagementStructure)
+        {
+            var result = _unitOfWork.employee.EmpoyeeManagementStructure(objEmployeeManagementStructure);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// To get management structure based on employeeid
+        /// </summary>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        [HttpGet("getemployeeManagementStructure")]
+        public IActionResult GetEmpoyeeManagementStructure(long employeeId)
+        {
+            var result = _unitOfWork.employee.GetEmpoyeeManagementStructure(employeeId);
+            return Ok(result);
         }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

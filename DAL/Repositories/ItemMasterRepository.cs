@@ -159,7 +159,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
         public IEnumerable<DAL.Models.ItemMaster> getAlldata()
@@ -169,13 +169,9 @@ namespace DAL.Repositories
         }
         public IEnumerable<object> Getdescriptionbypart(string partNumber)
         {
-
             {
                 var data = (from t in _appContext.ItemMaster
-
-
                             where t.PartNumber == partNumber
-
                             select new
                             {
                                 t,
@@ -188,7 +184,8 @@ namespace DAL.Repositories
                                 t.ItemMasterId,
                                 t.GLAccountId,
                                 t.ManufacturerId,
-                                t.Manufacturer
+                                t.Manufacturer,
+                                t.NHA
                             }).ToList();
                 return data;
             }
@@ -233,7 +230,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
 
@@ -882,10 +879,9 @@ namespace DAL.Repositories
 
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -910,10 +906,9 @@ namespace DAL.Repositories
 
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -974,10 +969,9 @@ namespace DAL.Repositories
 
                 return getData;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1011,10 +1005,9 @@ namespace DAL.Repositories
                 }
                 return itemMapping;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 

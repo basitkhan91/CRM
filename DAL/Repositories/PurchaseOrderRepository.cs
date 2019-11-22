@@ -152,6 +152,22 @@ namespace DAL.Repositories
             return purchaseOrderList;
         }
 
+        public IEnumerable<PurchaseOrder> POListByMasterItemId(int itemMasteId)
+        {
+            var purchaseOrderList = (from po in _appContext.PurchaseOrder
+                                     join pop in _appContext.PurchaseOrderPart on po.PurchaseOrderId equals pop.PurchaseOrderId
+                                     join im in _appContext.ItemMaster on pop.ItemMasterId equals im.ItemMasterId
+                                     where im.ItemMasterId == itemMasteId &&
+                                     po.IsDeleted == false
+                                     select new PurchaseOrder
+                                     {
+                                         PurchaseOrderId = po.PurchaseOrderId,
+                                         PurchaseOrderNumber = po.PurchaseOrderNumber
+                                     });
+            return purchaseOrderList.Distinct();
+
+        }
+
         public int GetLastIdNumber(long puchaseOrderId, long purchaseOrderPartId)
         {
             var stockLine = _appContext.StockLine.Where(x => x.PurchaseOrderId == puchaseOrderId && x.PurchaseOrderPartRecordId == purchaseOrderPartId).OrderByDescending(x => x.StockLineId).FirstOrDefault();
@@ -174,10 +190,9 @@ namespace DAL.Repositories
 
                 return poApprover.POApproverId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -189,10 +204,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -215,10 +229,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -244,10 +257,9 @@ namespace DAL.Repositories
                             ).ToList();
                 return list;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -260,10 +272,9 @@ namespace DAL.Repositories
 
                 return poAddress.POAddressId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -275,10 +286,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -412,10 +422,9 @@ namespace DAL.Repositories
 
                 return null;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -428,10 +437,9 @@ namespace DAL.Repositories
 
                 return poShipvia.POShipViaId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -443,10 +451,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -471,10 +478,9 @@ namespace DAL.Repositories
                 return data;
             }
 
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -491,6 +497,8 @@ namespace DAL.Repositories
                             //join ma in _appContext.Manufacturer on mp.ManufacturerId equals ma.ManufacturerId
                             join ma in _appContext.Manufacturer on mp.ManufacturerId equals ma.ManufacturerId into manu
                             from ma in manu.DefaultIfEmpty()
+                            where vc.IsActive == true
+
                             select new
                             {
                                 VCId = vc.VendorCapabilityId,
@@ -507,10 +515,9 @@ namespace DAL.Repositories
                             .ToList();
                 return list;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -533,26 +540,32 @@ namespace DAL.Repositories
         {
             List<PurchaseOrderPart> purchaseOrderParts = new List<PurchaseOrderPart>();
             List<PurchaseOrderSplitParts> purchaseOrderSplitParts = new List<PurchaseOrderSplitParts>();
-            
-            PurchaseOrderPart purchaseOrderPart=null;
+
+            PurchaseOrderPart purchaseOrderPart = null;
+
             PurchaseOrderSplitParts purchaseOrderSplitPart;
             try
             {
                 var list = (from pop in _appContext.PurchaseOrderPart
                             join po in _appContext.PurchaseOrder on pop.PurchaseOrderId equals po.PurchaseOrderId
-                            where pop.PurchaseOrderId==purchaseOrderId 
+
+                            where pop.PurchaseOrderId == purchaseOrderId
                             select new
                             {
                                 pop
                             }).ToList();
 
-                if(list!=null && list.Count>0)
+                if (list != null && list.Count > 0)
                 {
-                    foreach(var part in list)
+
+                    foreach (var part in list)
                     {
                         if (part.pop.isParent)
                         {
                             purchaseOrderPart = new PurchaseOrderPart();
+                            purchaseOrderPart.PurchaseOrderSplitParts = new List<PurchaseOrderSplitParts>();
+
+
                             purchaseOrderPart.PurchaseOrderPartRecordId = part.pop.PurchaseOrderPartRecordId;
                             purchaseOrderPart.PurchaseOrderId = part.pop.PurchaseOrderId;
                             purchaseOrderPart.isParent = true;
@@ -583,63 +596,63 @@ namespace DAL.Repositories
                             purchaseOrderPart.UpdatedDate = part.pop.UpdatedDate;
                             purchaseOrderPart.IsActive = part.pop.IsActive;
                             purchaseOrderPart.DiscountPerUnit = part.pop.DiscountPerUnit;
-                            
+
 
                             purchaseOrderParts.Add(purchaseOrderPart);
                         }
                         else
                         {
-                            purchaseOrderPart.PurchaseOrderSplitParts = new List<PurchaseOrderSplitParts>();
+                            //purchaseOrderPart.PurchaseOrderSplitParts = new List<PurchaseOrderSplitParts>();
+
                             purchaseOrderSplitPart = new PurchaseOrderSplitParts();
-                            var splitParts = list.Where(p => p.pop.ParentId == part.pop.ParentId).ToList();
+                            //var splitParts = list.Where(p => p.pop.ParentId == part.pop.ParentId).ToList();
 
-                            if(splitParts != null && splitParts.Count>0)
-                            {
-                                foreach(var splitPart in splitParts)
-                                {
-                                    purchaseOrderSplitPart.AssetId = 0;
-                                    purchaseOrderSplitPart.isParent = false;
-                                    purchaseOrderSplitPart.ItemMasterId = splitPart.pop.ItemMasterId;
-                                    purchaseOrderSplitPart.ManagementStructureId = splitPart.pop.ManagementStructureId;
-                                    purchaseOrderSplitPart.NeedByDate = splitPart.pop.NeedByDate;
-                                    purchaseOrderSplitPart.PartNumberId = splitPart.pop.ItemMasterId;
-                                    purchaseOrderSplitPart.POPartSplitAddressId = splitPart.pop.POPartSplitAddressId;
-                                    purchaseOrderSplitPart.POPartSplitUserId = splitPart.pop.POPartSplitUserId;
-                                    purchaseOrderSplitPart.POPartSplitUserTypeId = splitPart.pop.POPartSplitUserTypeId;
-                                    purchaseOrderSplitPart.PurchaseOrderId = splitPart.pop.PurchaseOrderId;
-                                    purchaseOrderSplitPart.PurchaseOrderPartRecordId = splitPart.pop.PurchaseOrderPartRecordId;
-                                    purchaseOrderSplitPart.QuantityOrdered = splitPart.pop.QuantityOrdered;
-                                    purchaseOrderSplitPart.SerialNumber = splitPart.pop.SerialNumber;
-                                    purchaseOrderSplitPart.UOMId = splitPart.pop.UOMId;
-                                    purchaseOrderSplitPart.POPartSplitAddress1 = splitPart.pop.POPartSplitAddress1;
-                                    purchaseOrderSplitPart.POPartSplitAddress2 = splitPart.pop.POPartSplitAddress2;
-                                    purchaseOrderSplitPart.POPartSplitAddress3 = splitPart.pop.POPartSplitAddress3;
-                                    purchaseOrderSplitPart.POPartSplitCity = splitPart.pop.POPartSplitCity;
-                                    purchaseOrderSplitPart.POPartSplitState = splitPart.pop.POPartSplitState;
-                                    purchaseOrderSplitPart.POPartSplitCountry = splitPart.pop.POPartSplitCountry;
-                                    purchaseOrderSplitPart.POPartSplitPostalCode = splitPart.pop.POPartSplitPostalCode;
-                                    purchaseOrderSplitPart.POPartSplitAddressId = splitPart.pop.POPartSplitAddressId;
+                            //if(splitParts != null && splitParts.Count>0)
+                            //{
+                            //    foreach(var splitPart in splitParts)
+                            //    {
+                            purchaseOrderSplitPart.AssetId = 0;
+                            purchaseOrderSplitPart.isParent = false;
+                            purchaseOrderSplitPart.ItemMasterId = part.pop.ItemMasterId;
+                            purchaseOrderSplitPart.ManagementStructureId = part.pop.ManagementStructureId;
+                            purchaseOrderSplitPart.NeedByDate = part.pop.NeedByDate;
+                            purchaseOrderSplitPart.PartNumberId = part.pop.ItemMasterId;
+                            purchaseOrderSplitPart.POPartSplitAddressId = part.pop.POPartSplitAddressId;
+                            purchaseOrderSplitPart.POPartSplitUserId = part.pop.POPartSplitUserId;
+                            purchaseOrderSplitPart.POPartSplitUserTypeId = part.pop.POPartSplitUserTypeId;
+                            purchaseOrderSplitPart.PurchaseOrderId = part.pop.PurchaseOrderId;
+                            purchaseOrderSplitPart.PurchaseOrderPartRecordId = part.pop.PurchaseOrderPartRecordId;
+                            purchaseOrderSplitPart.QuantityOrdered = part.pop.QuantityOrdered;
+                            purchaseOrderSplitPart.SerialNumber = part.pop.SerialNumber;
+                            purchaseOrderSplitPart.UOMId = part.pop.UOMId;
+                            purchaseOrderSplitPart.POPartSplitAddress1 = part.pop.POPartSplitAddress1;
+                            purchaseOrderSplitPart.POPartSplitAddress2 = part.pop.POPartSplitAddress2;
+                            purchaseOrderSplitPart.POPartSplitAddress3 = part.pop.POPartSplitAddress3;
+                            purchaseOrderSplitPart.POPartSplitCity = part.pop.POPartSplitCity;
+                            purchaseOrderSplitPart.POPartSplitState = part.pop.POPartSplitState;
+                            purchaseOrderSplitPart.POPartSplitCountry = part.pop.POPartSplitCountry;
+                            purchaseOrderSplitPart.POPartSplitPostalCode = part.pop.POPartSplitPostalCode;
+                            purchaseOrderSplitPart.POPartSplitAddressId = part.pop.POPartSplitAddressId;
 
-                                    purchaseOrderPart.PurchaseOrderSplitParts.Add(purchaseOrderSplitPart);
-                                }
-                               // purchaseOrderParts.Add(purchaseOrderPart);
-
-
-                            }
+                            purchaseOrderPart.PurchaseOrderSplitParts.Add(purchaseOrderSplitPart);
                         }
+                        // purchaseOrderParts.Add(purchaseOrderPart);
+
+
+                        //}
+                        //}
 
 
 
-                        
+
                     }
                 }
 
                 return purchaseOrderParts;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -661,10 +674,9 @@ namespace DAL.Repositories
 
                 _context.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -686,10 +698,9 @@ namespace DAL.Repositories
 
                 _context.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -774,19 +785,20 @@ namespace DAL.Repositories
 
                 return purchaseOrderList;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
-        public dynamic PurchaseOrderView(long purchaseOrderId)
+        public object PurchaseOrderView(long purchaseOrderId)
         {
             try
             {
                 var data = (from po in _appContext.PurchaseOrder
                             join v in _appContext.Vendor on po.VendorId equals v.VendorId
+                            //join VAddr in _appContext.VendorShippingAddress on po.VendorId equals VAddr.VendorId
+                            // join Addr in _appContext.Address on VAddr.AddressId equals Addr.AddressId
                             join req in _appContext.Employee on po.RequestedBy equals req.EmployeeId
 
                             join app in _appContext.Employee on po.ApproverId equals app.EmployeeId into approver
@@ -795,6 +807,13 @@ namespace DAL.Repositories
                             join pr in _appContext.Priority on po.PriorityId equals pr.PriorityId
                             join vc in _appContext.VendorContact on v.VendorId equals vc.VendorId
                             join con in _appContext.Contact on vc.ContactId equals con.ContactId
+
+                            join shcont in _appContext.Contact on po.ShipToContactId equals shcont.ContactId into shipToCont
+                            from shcont in shipToCont.DefaultIfEmpty()
+
+                            join blcont in _appContext.Contact on po.BillToContactId equals blcont.ContactId into billToCont
+                            from blcont in billToCont.DefaultIfEmpty()
+
                             join ct in _appContext.CreditTerms on v.CreditTermsId equals ct.CreditTermsId
                             join shcust in _appContext.Customer on po.ShipToUserId equals shcust.CustomerId into shipToCust
                             from shcust in shipToCust.DefaultIfEmpty()
@@ -802,7 +821,7 @@ namespace DAL.Repositories
                             from shcomp in shipToComp.DefaultIfEmpty()
                             join shv in _appContext.Vendor on po.ShipToUserId equals shv.VendorId into shipToVen
                             from shv in shipToVen.DefaultIfEmpty()
-                            join blcust in _appContext.Customer on po.ShipToUserId equals blcust.CustomerId into billToCust
+                            join blcust in _appContext.Customer on po.BillToUserId equals blcust.CustomerId into billToCust
                             from blcust in billToCust.DefaultIfEmpty()
                             join blcomp in _appContext.LegalEntity on po.ShipToUserId equals blcomp.LegalEntityId into billToComp
                             from blcomp in billToComp.DefaultIfEmpty()
@@ -815,11 +834,16 @@ namespace DAL.Repositories
                                 po.PurchaseOrderNumber,
                                 v.VendorName,
                                 Requisitioner = req.FirstName,
-                                po.OpenDate, 
+                                po.OpenDate,
                                 v.VendorCode,
+
+                                Priority = pr.Description,
                                 Approver = app.FirstName,
                                 po.ClosedDate,
                                 con.WorkPhone,
+
+                                VendorContact = con.FirstName,
+
                                 Status = po.StatusId == 1 ? "Open" : (po.StatusId == 2 ? "Pending" : (po.StatusId == 3 ? "Fulfilling" : "Closed")),
                                 pr.Description,
                                 v.CreditLimit,
@@ -837,7 +861,7 @@ namespace DAL.Repositories
                                 po.ShipToState,
                                 po.ShipToCountry,
                                 po.ShipToPostalCode,
-                                po.ShipToContact,
+                                ShipToContact = shcont.FirstName,
                                 po.ShipToMemo,
                                 po.ShipVia,
                                 po.ShippingCost,
@@ -856,20 +880,20 @@ namespace DAL.Repositories
                                 po.BillToState,
                                 po.BillToCountry,
                                 po.BillToPostalCode,
-                                po.BillToContact,
+                                BillToContact = blcont.FirstName,
                                 po.BillToMemo,
                                 po.VendorId,
                                 po.ManagementStructureId,
                                 po.NeedByDate,
                                 po.DateApproved
+
                             }).FirstOrDefault();
 
                 return data;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -898,9 +922,9 @@ namespace DAL.Repositories
                             from wo in won.DefaultIfEmpty()
                                 //join wo in _appContext.SalesOrder on pop.SalesOrderId equals wo.WorkOrderId into won
                                 //from wo in won.DefaultIfEmpty()
-                            //join ro in _appContext.RepairOrder on pop.RepairOrderId equals ro.RepairOrderId into ron
-                            //from ro in ron.DefaultIfEmpty()
-                            join shcust in _appContext.Customer on po.ShipToUserId equals shcust.CustomerId into shipToCust
+                                //join ro in _appContext.RepairOrder on pop.RepairOrderId equals ro.RepairOrderId into ron
+                                //from ro in ron.DefaultIfEmpty()
+                            join shcust in _appContext.Customer on pop.POPartSplitUserId equals shcust.CustomerId into shipToCust
                             from shcust in shipToCust.DefaultIfEmpty()
                             join shcomp in _appContext.LegalEntity on po.ShipToUserId equals shcomp.LegalEntityId into shipToComp
                             from shcomp in shipToComp.DefaultIfEmpty()
@@ -922,10 +946,10 @@ namespace DAL.Repositories
                                 ReportCurrency = rcurr.DisplayName,
                                 WorkOrderNo = wo.WorkOrderNum,
                                 SalesOrderNo = "",
-                               // ReapairOrderNo=ro.RepairOrderNumber,
-                                CustomerName=shcust.Name,
-                                VendorName=shv.VendorName,
-                                ComapnyName=shcomp.Name
+                                // ReapairOrderNo=ro.RepairOrderNumber,
+                                CustomerName = shcust.Name,
+                                VendorName = shv.VendorName,
+                                ComapnyName = shcomp.Name
 
                             }).ToList();
 
@@ -936,6 +960,8 @@ namespace DAL.Repositories
                         if (part.pop.isParent)
                         {
                             purchaseOrderPart = new PurchaseOrderPart();
+                            purchaseOrderPart.PurchaseOrderSplitParts = new List<PurchaseOrderSplitParts>();
+
 
                             purchaseOrderPart.PartNumber = part.PartNumber;
                             purchaseOrderPart.AltPartNumber = "";
@@ -958,7 +984,7 @@ namespace DAL.Repositories
                             purchaseOrderPart.SalesOrderNo = part.SalesOrderNo;
                             //  purchaseOrderPart.ReapairOrderNo = part.ReapairOrderNo;
                             purchaseOrderPart.Memo = part.pop.Memo;
-                            purchaseOrderPart.isParent=true;
+                            purchaseOrderPart.isParent = true;
                             purchaseOrderPart.PurchaseOrderPartRecordId = part.pop.PurchaseOrderPartRecordId;
                             purchaseOrderPart.ParentId = part.pop.ParentId;
                             purchaseOrderPart.ManagementStructureId = part.pop.ManagementStructureId;
@@ -968,44 +994,42 @@ namespace DAL.Repositories
                         }
                         else
                         {
-                            purchaseOrderPart.PurchaseOrderSplitParts = new List<PurchaseOrderSplitParts>();
                             purchaseOrderSplitPart = new PurchaseOrderSplitParts();
-                            var splitParts = list.Where(p => p.pop.ParentId == part.pop.ParentId).ToList();
+                            //var splitParts = list.Where(p => p.pop.ParentId == part.pop.ParentId).ToList();
 
-                            if (splitParts != null && splitParts.Count > 0)
-                            {
-                                foreach (var splitPart in splitParts)
-                                {
-                                    purchaseOrderSplitPart.AssetId = 0;
-                                    purchaseOrderSplitPart.isParent = false;
-                                    purchaseOrderSplitPart.AltPartNumber = "";
-                                    purchaseOrderSplitPart.PartDescription = part.PartDescription;
-                                    purchaseOrderSplitPart.Manufacturer = part.Manufacturer;
-                                    purchaseOrderSplitPart.UserType = splitPart.pop.POPartSplitUserTypeId == 1 ? "Customer" : (splitPart.pop.POPartSplitUserTypeId == 2 ? "Vendor" : "Company");
-                                    purchaseOrderSplitPart.User = splitPart.pop.POPartSplitUserId == 1 ? splitPart.CustomerName : (splitPart.pop.POPartSplitUserId == 2 ? splitPart.VendorName : splitPart.ComapnyName);
-                                    purchaseOrderSplitPart.POPartSplitAddress1 = splitPart.pop.POPartSplitAddress1;
-                                    purchaseOrderSplitPart.POPartSplitAddress2 = splitPart.pop.POPartSplitAddress2;
-                                    purchaseOrderSplitPart.POPartSplitAddress3 = splitPart.pop.POPartSplitAddress3;
-                                    purchaseOrderSplitPart.POPartSplitCity = splitPart.pop.POPartSplitCity;
-                                    purchaseOrderSplitPart.POPartSplitState = splitPart.pop.POPartSplitState;
-                                    purchaseOrderSplitPart.POPartSplitCountry = splitPart.pop.POPartSplitCountry;
-                                    purchaseOrderSplitPart.POPartSplitPostalCode = splitPart.pop.POPartSplitPostalCode;
-                                    purchaseOrderSplitPart.NeedByDate = splitPart.pop.NeedByDate;
-                                    purchaseOrderSplitPart.QuantityOrdered = splitPart.pop.QuantityOrdered;
-                                    purchaseOrderSplitPart.UnitOfMeasure = splitPart.UnitOfMeasure;
-                                    purchaseOrderSplitPart.SerialNumber = splitPart.pop.SerialNumber;
-                                    purchaseOrderSplitPart.PurchaseOrderId = splitPart.pop.PurchaseOrderId;
-                                    purchaseOrderSplitPart.PurchaseOrderPartRecordId = splitPart.pop.PurchaseOrderPartRecordId;
-                                    purchaseOrderSplitPart.ManagementStructureId = splitPart.pop.ManagementStructureId;
-                                    purchaseOrderSplitPart.POPartSplitAddressId = splitPart.pop.POPartSplitAddressId;
-
-                                    purchaseOrderPart.PurchaseOrderSplitParts.Add(purchaseOrderSplitPart);
-                                }
-                                // purchaseOrderParts.Add(purchaseOrderPart);
+                            //if (splitParts != null && splitParts.Count > 0)
+                            //{
+                            //    foreach (var splitPart in splitParts)
+                            //    {
+                            //        purchaseOrderSplitPart.AssetId = 0;
+                            purchaseOrderSplitPart.isParent = false;
+                            purchaseOrderSplitPart.AltPartNumber = "";
+                            purchaseOrderSplitPart.PartDescription = part.PartDescription;
+                            purchaseOrderSplitPart.Manufacturer = part.Manufacturer;
+                            purchaseOrderSplitPart.UserType = part.pop.POPartSplitUserTypeId == 1 ? "Customer" : (part.pop.POPartSplitUserTypeId == 2 ? "Vendor" : "Company");
+                            purchaseOrderSplitPart.User = part.pop.POPartSplitUserTypeId == 1 ? part.CustomerName : (part.pop.POPartSplitUserTypeId == 2 ? part.VendorName : part.ComapnyName);
+                            purchaseOrderSplitPart.POPartSplitAddress1 = part.pop.POPartSplitAddress1;
+                            purchaseOrderSplitPart.POPartSplitAddress2 = part.pop.POPartSplitAddress2;
+                            purchaseOrderSplitPart.POPartSplitAddress3 = part.pop.POPartSplitAddress3;
+                            purchaseOrderSplitPart.POPartSplitCity = part.pop.POPartSplitCity;
+                            purchaseOrderSplitPart.POPartSplitState = part.pop.POPartSplitState;
+                            purchaseOrderSplitPart.POPartSplitCountry = part.pop.POPartSplitCountry;
+                            purchaseOrderSplitPart.POPartSplitPostalCode = part.pop.POPartSplitPostalCode;
+                            purchaseOrderSplitPart.NeedByDate = part.pop.NeedByDate;
+                            purchaseOrderSplitPart.QuantityOrdered = part.pop.QuantityOrdered;
+                            purchaseOrderSplitPart.UnitOfMeasure = part.UnitOfMeasure;
+                            purchaseOrderSplitPart.SerialNumber = part.pop.SerialNumber;
+                            purchaseOrderSplitPart.PurchaseOrderId = part.pop.PurchaseOrderId;
+                            purchaseOrderSplitPart.PurchaseOrderPartRecordId = part.pop.PurchaseOrderPartRecordId;
+                            purchaseOrderSplitPart.ManagementStructureId = part.pop.ManagementStructureId;
+                            purchaseOrderSplitPart.POPartSplitAddressId = part.pop.POPartSplitAddressId;
 
 
-                            }
+                            purchaseOrderPart.PurchaseOrderSplitParts.Add(purchaseOrderSplitPart);
                         }
+                        // purchaseOrderParts.Add(purchaseOrderPart);
+
+
 
 
 
@@ -1017,10 +1041,10 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
+
 
         public PurchaseOrderEmail PurchaseOrderEmail(long purchaseOrderId)
         {
@@ -1093,10 +1117,9 @@ namespace DAL.Repositories
 
                 return purchaseOrderEmail;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 

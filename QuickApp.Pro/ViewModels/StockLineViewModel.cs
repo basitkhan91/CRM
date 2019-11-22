@@ -18,8 +18,21 @@ namespace QuickApp.Pro.ViewModels
         public int daysSinceMfg { get; set; }
         public int daysSinceTagged { get; set; }
         public int daysSinceOpen { get; set; }
-        public bool blackListed { get; set; }
+        //public bool BlackListed { get; set; }
+        //public string BlackListedReason { get; set; }
+        //public bool Incident { get; set; }
+        //public string IncidentReason { get; set; }
+        //public bool Accident { get; set; }
+        //public string AccidentReason { get; set; }
         public Int32? Quantity { get; set; }
+        public int? QuantityOnOrder { get; set; }
+        public int? QuantityAvailable { get; set; }
+        public int? QuantityOnHand { get; set; }
+        public int? QuantityIssued { get; set; }
+        public int? QuantityTurnIn { get; set; }
+        public int? QuantityReserved { get; set; }
+        public long? WorkOrderPartNumberId { get; set; }
+        public long? WorkOrderId { get; set; }
         //[FK]
         [ForeignKey("ConditionId")]
         public long? ConditionId { get; set; }
@@ -55,6 +68,16 @@ namespace QuickApp.Pro.ViewModels
         public string CalibrationMemo { get; set; }
         public DateTime? OrderDate { get; set; }
         public Int32? QuantityToReceive { get; set; }
+        public decimal PurchaseOrderExtendedCost { get; set; }
+        public string ManufacturingTrace { get; set; }
+        public DateTime? ExpirationDate { get; set; }
+        public long? ShippingViaId { get; set; }
+        public string EngineSerialNumber { get; set; }
+        public int QuantityRejected { get; set; }
+        public long? PurchaseOrderPartRecordId { get; set; }
+        public string ShippingAccount { get; set; }
+        public string ShippingReference { get; set; }
+        public bool TimeLifeDetailsNotProvided { get; set; }
         //[FK]
         [ForeignKey("PurchaseOrderId")]
         public long? PurchaseOrderId { get; set; }
