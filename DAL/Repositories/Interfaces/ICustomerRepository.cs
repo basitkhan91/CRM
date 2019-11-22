@@ -69,5 +69,5 @@ namespace DAL.Repositories.Interfaces
     		IEnumerable<object> GetCustomerNameAndCodesByCustomerId(long customerId);
         IEnumerable<object> SearchCustomer(string value, CustomerSearchType searchType);
     }
-	}
+	
 }
