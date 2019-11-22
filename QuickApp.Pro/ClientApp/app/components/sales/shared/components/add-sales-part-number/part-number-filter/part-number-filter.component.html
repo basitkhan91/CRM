@@ -1,0 +1,87 @@
+<div class="row">
+  <div class="col-md-12 col-sm-12 col-12">
+    <div class="col-2 column">
+      <div class="form-group">
+        <label>PN<span class="clr-red">*</span></label>
+        <input
+          type="text"
+          pInputText
+          name="partNumber"
+          [(ngModel)]="query.partSearchParamters.partNumber"
+        />
+      </div>
+    </div>
+    <div class="col-2 column">
+      <div class="form-group">
+        <label>Cond Type<span class="clr-red">*</span></label>
+        <select>
+          <option>--select--</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-1 column">
+      <div class="form-group">
+        <label>Qty Required</label>
+        <input type="text" pInputText name="qtyRequired" />
+      </div>
+    </div>
+    <div class="col-1 column">
+      <div class="form-group">
+        <label>Qty to Quote</label>
+        <input type="text" pInputText name="qtyRequired" />
+      </div>
+    </div>
+    <div class="col-1 column">
+      <div class="form-group">
+        <label>Qty On Hand</label>
+        <input type="text" pInputText name="qtyOnHand" disabled="true" />
+      </div>
+    </div>
+    <div class="col-1 column">
+      <div class="form-group">
+        <label>Qty Available</label>
+        <input type="text" pInputText name="qtyAvailable" disabled="true" />
+      </div>
+    </div>
+    <div class="col-1 column">
+      <div class="form-group">
+        <label>&nbsp;</label>
+        <button class="btn btn-primary" (click)="search($event)">
+          Search PN
+        </button>
+      </div>
+    </div>
+    <div class="col-1 column">
+      <div class="form-group">
+        <label>&nbsp;</label>
+        <button class="btn btn-primary">Historical</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row filter-method">
+  <div>
+    <label>Method</label>
+  </div>
+  <div>
+    <label><input type="radio" name="method" />&nbsp;Item Master</label>
+  </div>
+  <div>
+    <label><input type="radio" name="method" />&nbsp;Stock Line</label>
+  </div>
+  <div>
+    <label
+      ><input type="checkbox" name="includeAlternalePN" />&nbsp;Include
+      Alternate PN</label
+    >
+  </div>
+  <div>
+    <label
+      ><input
+        type="checkbox"
+        name="method"
+        name="includeMultiplePN"
+      />&nbsp;Multiple PN's</label
+    >
+  </div>
+</div>

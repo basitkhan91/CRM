@@ -507,25 +507,25 @@ export class WorkOrderAddComponent implements OnInit {
   // }
 
 
-  // savedWorkFlowData(workFlowDataObject) {
-  //   this.workOrderService.createWorkFlowWorkOrder(workFlowDataObject).subscribe(res => {
-  //     this.workFlowWorkOrderData = res;
-  //     this.workFlowWorkOrderId = res.workFlowWorkOrderId;
+  savedWorkFlowData(workFlowDataObject) {
+    this.workOrderService.createWorkFlowWorkOrder(workFlowDataObject).subscribe(res => {
+      this.workFlowWorkOrderData = res;
+      this.workFlowWorkOrderId = res.workFlowWorkOrderId;
 
-  //     if (this.workFlowWorkOrderId !== 0) {
-  //       this.isDisabledSteps = true;
-  //     }
-  //     this.getWorkOrderWorkFlowNos();
-  //     this.alertService.showMessage(
-  //       '',
-  //       'Work Order Work Flow Saved Succesfully',
-  //       MessageSeverity.success
-  //     );
-  //   })
+      if (this.workFlowWorkOrderId !== 0) {
+        this.isDisabledSteps = true;
+      }
+      this.getWorkOrderWorkFlowNos();
+      this.alertService.showMessage(
+        '',
+        'Work Order Work Flow Saved Succesfully',
+        MessageSeverity.success
+      );
+    })
 
-  //   // this.workFlowWorkOrderData = responseData;
-  //   // this.workFlowWorkOrderId = responseData.workFlowWorkOrderId;
-  // }
+    // this.workFlowWorkOrderData = responseData;
+    // this.workFlowWorkOrderId = responseData.workFlowWorkOrderId;
+  }
 
   getWorkOrderWorkFlowNos() {
 

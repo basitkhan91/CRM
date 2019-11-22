@@ -235,12 +235,12 @@ namespace QuickApp.Pro.Controllers
         #region Work Order Charges
 
         [HttpPost("createworkordercharges")]
-        public IActionResult CreateWorkOrderCharges([FromBody]WorkOrderCharges workOrderCharges)
+        public IActionResult CreateWorkOrderCharges([FromBody]List<WorkOrderCharges> workOrderCharges)
         {
             if (ModelState.IsValid)
             {
-                workOrderCharges.WorkOrderChargesId = unitOfWork.WorkOrderRepository.CreateWorkOrderCharges(workOrderCharges);
-                return Ok(workOrderCharges);
+                var result = unitOfWork.WorkOrderRepository.CreateWorkOrderCharges(workOrderCharges);
+                return Ok(result);
             }
             else
             {
@@ -250,12 +250,12 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("updateworkordercharges")]
-        public IActionResult UpdateWorkOrderCharges([FromBody]WorkOrderCharges workOrderCharges)
+        public IActionResult UpdateWorkOrderCharges([FromBody]List<WorkOrderCharges> workOrderCharges)
         {
             if (ModelState.IsValid)
             {
-                unitOfWork.WorkOrderRepository.UpdateWorkOrderCharges(workOrderCharges);
-                return Ok(workOrderCharges);
+                var reult=unitOfWork.WorkOrderRepository.UpdateWorkOrderCharges(workOrderCharges);
+                return Ok(reult);
             }
             else
             {
@@ -276,12 +276,12 @@ namespace QuickApp.Pro.Controllers
         #region Work Order Assets
 
         [HttpPost("createworkorderassets")]
-        public IActionResult CreateWorkOrderAssets([FromBody]WorkOrderAssets workOrderAssets)
+        public IActionResult CreateWorkOrderAssets([FromBody]List<WorkOrderAssets> workOrderAssets)
         {
             if (ModelState.IsValid)
             {
-                workOrderAssets.WorkOrderAssetId = unitOfWork.WorkOrderRepository.CreateWorkOrderAssets(workOrderAssets);
-                return Ok(workOrderAssets);
+                var result = unitOfWork.WorkOrderRepository.CreateWorkOrderAssets(workOrderAssets);
+                return Ok(result);
             }
             else
             {
@@ -291,12 +291,12 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("updateworkorderassets")]
-        public IActionResult UpdateWorkOrderAssets([FromBody]WorkOrderAssets workOrderAssets)
+        public IActionResult UpdateWorkOrderAssets([FromBody]List<WorkOrderAssets> workOrderAssets)
         {
             if (ModelState.IsValid)
             {
-                unitOfWork.WorkOrderRepository.UpdateWorkOrderAssets(workOrderAssets);
-                return Ok(workOrderAssets);
+                var result=unitOfWork.WorkOrderRepository.UpdateWorkOrderAssets(workOrderAssets);
+                return Ok(result);
             }
             else
             {
@@ -312,17 +312,38 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("saveassetcheckedin")]
+        public IActionResult SaveAssetCheckedIn(long WorkOrderAssetId, long? checkedInById, DateTime? checkedInDate, string updatedBy)
+        {
+             unitOfWork.WorkOrderRepository.SaveAssetCheckedIn(WorkOrderAssetId, checkedInById, checkedInDate, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("saveassetcheckedout")]
+        public IActionResult SaveAssetCheckedOut(long WorkOrderAssetId, long? checkedOutById, DateTime? checkedOutDate, string updatedBy)
+        {
+            unitOfWork.WorkOrderRepository.SaveAssetCheckedOut(WorkOrderAssetId, checkedOutById, checkedOutDate, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("assetcheckedinandoutdetails")]
+        public IActionResult GetAssetCheckedInandOutDetails(long assetRecordId=0, long workOrderAssetId=0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetAssetCheckedInandOutDetails(assetRecordId, workOrderAssetId);
+            return Ok(result);
+        }
+
         #endregion
 
         #region Work Order Exclusions
 
         [HttpPost("createworkorderexclusions")]
-        public IActionResult CreateWorkOrderExclusions([FromBody]WorkOrderExclusions workOrderExclusions)
+        public IActionResult CreateWorkOrderExclusions([FromBody]List<WorkOrderExclusions> workOrderExclusions)
         {
             if (ModelState.IsValid)
             {
-                workOrderExclusions.WorkOrderExclusionsId = unitOfWork.WorkOrderRepository.CreateWorkOrderExclusions(workOrderExclusions);
-                return Ok(workOrderExclusions);
+                var result = unitOfWork.WorkOrderRepository.CreateWorkOrderExclusions(workOrderExclusions);
+                return Ok(result);
             }
             else
             {
@@ -332,12 +353,12 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("updateworkorderexclusions")]
-        public IActionResult UpdateWorkOrderExclusions([FromBody]WorkOrderExclusions workOrderExclusions)
+        public IActionResult UpdateWorkOrderExclusions([FromBody]List<WorkOrderExclusions> workOrderExclusions)
         {
             if (ModelState.IsValid)
             {
-                unitOfWork.WorkOrderRepository.UpdateWorkOrderExclusions(workOrderExclusions);
-                return Ok(workOrderExclusions);
+                var result=unitOfWork.WorkOrderRepository.UpdateWorkOrderExclusions(workOrderExclusions);
+                return Ok(result);
             }
             else
             {
@@ -802,6 +823,22 @@ namespace QuickApp.Pro.Controllers
             {
                 if(workFlow.IsSaveToWorkFlow)
                 {
+                    workFlow.WorkflowId = 0;
+                    workFlow.Customer = null;
+                    workFlow.ItemMaster = null;
+                    workFlow.WorkScope = null;
+                    workFlow.ChangedPartNumber = null;
+                    if(workFlow.Publication!=null && workFlow.Publication.Count>0)
+                    {
+                        foreach(var pub in workFlow.Publication)
+                        {
+                            if(pub.WorkflowPublicationDashNumbers!=null && pub.WorkflowPublicationDashNumbers.Count>0)
+                            {
+                                pub.WorkflowPublicationDashNumbers.ForEach(p => p.WorkflowPublicationDashNumberId = 0);
+                            }
+                        }
+                    }
+
                     List<long> taskIds = new List<long>();
                     if (workFlow.ExistingWorkFlowId > 0)
                     {

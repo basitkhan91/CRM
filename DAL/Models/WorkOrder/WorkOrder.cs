@@ -61,6 +61,12 @@ namespace DAL.Models
 
 		[NotMapped]
 		public long WorkFlowWorkOrderId { get; set; }
+        [NotMapped]
+        public string CustomerName { get; set; }
+        [NotMapped]
+        public string CustomerReference { get; set;}
+        [NotMapped]
+        public string CSR { get; set; }
 
 
 	}

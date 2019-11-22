@@ -101,7 +101,8 @@ namespace DAL.Repositories
                     DeferredReceiver = purchaseOrder.DeferredReceiver,
                     Resale = purchaseOrder.Resale,
                     Notes = purchaseOrder.Notes,
-                    PurchaseOderPart = purchaseOrder.PurchaseOderPart.Select(x => new {
+                    PurchaseOderPart = purchaseOrder.PurchaseOderPart.Select(x => new
+                    {
                         ItemMaster = x.ItemMaster,
                         PurchaseOrderId = x.PurchaseOrderId,
                         PurchaseOrderPartRecordId = x.PurchaseOrderPartRecordId,
@@ -138,18 +139,19 @@ namespace DAL.Repositories
                             ManufacturerId = SL.ManufacturerId,
                             ManufacturerLotNumber = SL.ManufacturerLotNumber,
                             ManufacturingDate = SL.ManufacturingDate != null ? Convert.ToDateTime(SL.ManufacturingDate).ToShortDateString() : null,
+                            AircraftTailNumber = SL.AircraftTailNumber,
                             ManufacturingBatchNumber = SL.ManufacturingBatchNumber,
                             PartCertificationNumber = SL.PartCertificationNumber,
                             EngineSerialNumber = SL.EngineSerialNumber,
                             ShippingViaId = SL.ShippingViaId,
                             ShippingReference = SL.ShippingReference,
                             ShippingAccount = SL.ShippingAccount,
-                            CertifiedDate = SL.CertifiedDate != null ? Convert.ToDateTime(SL.CertifiedDate).ToShortDateString(): null,
+                            CertifiedDate = SL.CertifiedDate != null ? Convert.ToDateTime(SL.CertifiedDate).ToShortDateString() : null,
                             CertifiedBy = SL.CertifiedBy,
                             TagDate = SL.TagDate != null ? Convert.ToDateTime(SL.TagDate).ToShortDateString() : null,
                             ExpirationDate = SL.ExpirationDate != null ? Convert.ToDateTime(SL.ExpirationDate).ToShortDateString() : null,
                             CertifiedDueDate = SL.CertifiedDueDate != null ? Convert.ToDateTime(SL.CertifiedDueDate).ToShortDateString() : null,
-                            GLAccountId  = SL.GLAccountId,
+                            GLAccountId = SL.GLAccountId,
                             ManagementStructureEntityId = SL.ManagementStructureEntityId,
                             SiteId = SL.SiteId,
                             WarehouseId = SL.WarehouseId,
@@ -166,6 +168,219 @@ namespace DAL.Repositories
                 throw ex;
             }
 
+        }
+
+        public object GetReceivingPurchaseOrderView(long id)
+        {
+            try
+            {
+                var purchaseOrder = _appContext.PurchaseOrder
+                                   .Include("Vendor")
+                                   .Include("StockLine")
+                                   .Include("TimeLife")
+                                   .Where(x => x.PurchaseOrderId == id).FirstOrDefault();
+
+                purchaseOrder.PurchaseOderPart = _appContext.PurchaseOrderPart
+                                        .Where(x => x.PurchaseOrderId == id)
+                                        .ToList();
+
+                purchaseOrder.PurchaseOderPart.ToList().ForEach(part =>
+                {
+                    part.ItemMaster = _appContext.ItemMaster.Include("Manufacturer").Where(x => x.ItemMasterId == part.ItemMasterId).FirstOrDefault();
+                    part.ItemMaster.GLAccount = part.ItemMaster.GLAccountId != null ? _appContext.GLAccount.Where(x => x.GLAccountId == part.ItemMaster.GLAccountId).FirstOrDefault() : null;
+
+                    if (part.StockLine != null && part.StockLine.Count > 0)
+                    {
+                        part.StockLine = part.StockLine.OrderBy(x => x.StockLineId).ToList();
+                        part.TimeLife = part.TimeLife.OrderBy(x => x.StockLineId).ToList();
+                        part.StockLineCount = (long)part.StockLine.Sum(x => x.Quantity);
+
+                    }
+
+
+
+                    if (!part.isParent)
+                    {
+                        part.POPartSplitAddress = _appContext.Address.Where(x => x.AddressId == part.POPartSplitAddressId).FirstOrDefault();
+                    }
+                });
+
+                var approver = purchaseOrder.ApproverId != null ? _appContext.Employee.Find(purchaseOrder.ApproverId) : null;
+
+                return new
+                {
+                    StatusId = purchaseOrder.StatusId,
+                    PurchaseOrderId = purchaseOrder.PurchaseOrderId,
+                    PurchaseOrderNumber = purchaseOrder.PurchaseOrderNumber,
+                    RequestedBy = purchaseOrder.RequestedBy,
+                    Vendor = purchaseOrder.Vendor,
+                    OpenDate = purchaseOrder.OpenDate,
+                    Approver = approver != null ? approver.FirstName + " " + approver.LastName : "",
+                    NeedByDate = purchaseOrder.NeedByDate,
+                    DateApproved = purchaseOrder.DateApproved,
+                    DeferredReceiver = purchaseOrder.DeferredReceiver,
+                    Resale = purchaseOrder.Resale,
+                    Notes = purchaseOrder.Notes,
+                    PurchaseOderPart = purchaseOrder.PurchaseOderPart.Select(x => new
+                    {
+                        ItemMaster = x.ItemMaster,
+                        PurchaseOrderId = x.PurchaseOrderId,
+                        PurchaseOrderPartRecordId = x.PurchaseOrderPartRecordId,
+                        UOMId = x.UOMId,
+                        ConditionId = x.ConditionId,
+                        IsParent = x.isParent,
+                        ManagementStructureId = x.ManagementStructureId,
+                        QuantityOrdered = x.QuantityOrdered,
+                        DiscountPerUnit = x.DiscountPercent,
+                        ExtendedCost = x.ExtendedCost,
+                        UnitCost = x.UnitCost,
+                        StockLine = x.StockLine == null ? null : x.StockLine.Select(SL => new
+                        {
+                            StockLineId = SL.StockLineId,
+                            StockLineNumber = SL.StockLineNumber,
+                            ControlNumber = SL.ControlNumber,
+                            IdNumber = SL.IdNumber,
+                            ConditionId = SL.ConditionId,
+                            SerialNumber = SL.SerialNumber,
+                            Quantity = SL.Quantity,
+                            PurchaseOrderUnitCost = SL.PurchaseOrderUnitCost,
+                            PurchaseOrderExtendedCost = SL.PurchaseOrderExtendedCost,
+                            ReceiverNumber = SL.ReceiverNumber,
+                            WorkOrder = 0,
+                            SalesOrder = 0,
+                            SubWorkOrder = 0,
+                            OwnerType = SL.OwnerType,
+                            ObtainFromType = SL.ObtainFromType,
+                            TraceableToType = SL.TraceableToType,
+                            ManufacturingTrace = SL.ManufacturingTrace,
+                            ManufacturerId = SL.ManufacturerId,
+                            ManufacturerLotNumber = SL.ManufacturerLotNumber,
+                            ManufacturingDate = SL.ManufacturingDate != null ? Convert.ToDateTime(SL.ManufacturingDate).ToShortDateString() : null,
+                            ManufacturingBatchNumber = SL.ManufacturingBatchNumber,
+                            PartCertificationNumber = SL.PartCertificationNumber,
+                            EngineSerialNumber = SL.EngineSerialNumber,
+                            ShippingViaId = SL.ShippingViaId,
+                            ShippingReference = SL.ShippingReference,
+                            ShippingAccount = SL.ShippingAccount,
+                            CertifiedDate = SL.CertifiedDate != null ? Convert.ToDateTime(SL.CertifiedDate).ToShortDateString() : null,
+                            CertifiedBy = SL.CertifiedBy,
+                            TagDate = SL.TagDate != null ? Convert.ToDateTime(SL.TagDate).ToShortDateString() : null,
+                            ExpirationDate = SL.ExpirationDate != null ? Convert.ToDateTime(SL.ExpirationDate).ToShortDateString() : null,
+                            CertifiedDueDate = SL.CertifiedDueDate != null ? Convert.ToDateTime(SL.CertifiedDueDate).ToShortDateString() : null,
+                            AircraftTailNumber = SL.AircraftTailNumber,
+                            GLAccountId = SL.GLAccountId,
+                            GLAccountText = _appContext.GLAccount.Where(p=> p.GLAccountId == SL.GLAccountId).FirstOrDefault().AccountName,
+                            ConditionText = SL.ConditionId != null ? _appContext.Condition.Where(p => p.ConditionId == SL.ConditionId).FirstOrDefault().Description : "",
+                            ManagementStructureEntityId = SL.ManagementStructureEntityId,
+                            SiteId = SL.SiteId,
+                            WarehouseId = SL.WarehouseId,
+                            LocationId = SL.LocationId,
+                            ShelfId = SL.ShelfId,
+                            BinId = SL.BinId,
+                            SiteText = GetSiteText(SL.SiteId),
+                            WarehouseText = GetWarehouseText(SL.WarehouseId),
+                            LocationText = GetLocationText(SL.LocationId),
+                            ShelfText = GetShelfText(SL.ShelfId),
+                            BinText = GetBinText(SL.BinId),
+                            ObtainFrom = SL.ObtainFromType == 2 ? SL.ObtainFrom : GetCustomerVendor(SL.ObtainFrom, SL.ObtainFromType),
+                            Owner = SL.OwnerType == 2 ? SL.Owner : GetCustomerVendor(SL.Owner, SL.OwnerType),
+                            TraceableTo = SL.TraceableToType == 2 ? SL.TraceableTo : GetCustomerVendor(SL.TraceableTo, SL.TraceableToType)
+                        }),
+                        TimeLife = x.TimeLife
+                    })
+                };
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private string GetCustomerVendor(string id, int? typeId)
+        {
+            if (typeId != null)
+            {
+                if (typeId == 1 && id != "") {
+                    var customer = _appContext.Customer.Where(x => x.CustomerId == Convert.ToInt64(id)).FirstOrDefault();
+                    if (customer != null)
+                    {
+                        return customer.Name;
+                    }
+                }
+                if (typeId == 3 && id != "") {
+                    var vendor = _appContext.Vendor.Where(x => x.VendorId == Convert.ToInt64(id)).FirstOrDefault();
+                    if (vendor != null)
+                    {
+                        return vendor.VendorName;
+                    }
+                }                
+            }
+            return "";
+        }
+
+        private string GetSiteText(long? siteId)
+        {
+            if (siteId != null)
+            {
+                var site = _appContext.Site.Where(p => p.SiteId == siteId).FirstOrDefault();
+                if (site != null)
+                {
+                    return site.Name;
+                }
+            }
+            return "";
+        }
+
+        private string GetWarehouseText(long? warehouseId)
+        {
+            if (warehouseId != null)
+            {
+                var warehouse = _appContext.Warehouse.Where(p => p.WarehouseId == warehouseId).FirstOrDefault();
+                if (warehouse != null)
+                {
+                    return warehouse.Name;
+                }
+            }
+            return "";
+        }
+
+        private string GetLocationText(long? locationId)
+        {
+            if (locationId != null)
+            {
+                var location = _appContext.Location.Where(p => p.LocationId == locationId).FirstOrDefault();
+                if (location != null)
+                {
+                    return location.Name;
+                }
+            }
+            return "";
+        }
+
+        private string GetShelfText(long? shelfId)
+        {
+            if (shelfId != null)
+            {
+                var shelf = _appContext.Shelf.Where(p => p.ShelfId == shelfId).FirstOrDefault();
+                if (shelf != null)
+                {
+                    return shelf.Name;
+                }
+            }
+            return "";
+        }
+
+        private string GetBinText(long? binId)
+        {
+            if (binId != null)
+            {
+                var bin = _appContext.Bin.Where(p => p.BinId == binId).FirstOrDefault();
+                if (bin != null)
+                {
+                    return bin.Name;
+                }
+            }
+            return "";
         }
 
 

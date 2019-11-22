@@ -29,7 +29,7 @@ namespace QuickApp.Pro.ViewModels
 
         public string CustomerCode { get; set; }
 
-        public int CustomerContactId { get; set; }
+        public long? CustomerContactId { get; set; }
 
         public string CustomerContactName { get; set; }
 

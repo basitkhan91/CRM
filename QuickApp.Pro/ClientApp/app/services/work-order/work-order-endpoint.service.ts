@@ -175,7 +175,7 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderpartlist?workOrderId=${workOrderId}`, this.getRequestHeaders());
     }
     createWorkFlowWorkOrder(object) {
-        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/createworkflowworkorder`, JSON.stringify(object), this.getRequestHeaders())
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/updateworkorderworkFlow`, JSON.stringify(object), this.getRequestHeaders())
     }
     getWorkOrderWorkFlowNumbers(workOrderId) {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderworkflownos?workOrderId=${workOrderId}`, this.getRequestHeaders())
@@ -237,6 +237,8 @@ export class WorkOrderEndpointService extends EndpointFactory {
     viewWorkOrderPartNumber(workOrderId) {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderpartsview?workOrderId=${workOrderId}`, this.getRequestHeaders())
     }
+
+    
 
 
 

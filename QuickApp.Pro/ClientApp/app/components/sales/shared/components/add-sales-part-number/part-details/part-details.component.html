@@ -1,0 +1,67 @@
+<div class="row">
+  <div style="overflow-y: auto;">
+    <p-table
+      #dt
+      class="rpo-table-cstm rro-table-cstm"
+      [value]="parts"
+      [rows]="10"
+      [lazy]="true"
+      [paginator]="showPaginator"
+      [rowsPerPageOptions]="[10, 20, 30]"
+      [totalRecords]="totalRecords"
+      [pageLinks]="pageLinks"
+      [columns]="selectedColumns"
+      [scrollable]="true"
+      scrollHeight="450px"
+      (onLazyLoad)="onPaging($event)"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th></th>
+          <th>Method</th>
+          <th>PN</th>
+          <th>Alternater For</th>
+          <th>PN Description</th>
+          <th>Cond Type</th>
+          <th>UOM</th>
+          <th>Unit Cost</th>
+          <th>Unit List Price</th>
+          <th>Qty On Hand</th>
+          <th>Qty To Order</th>
+          <th>Qty On Order</th>
+          <th>Item Classification</th>
+          <th>Item Group</th>
+          <th>OEM/PMA/DER</th>
+          <th>MFG</th>
+          <th>Customer Ref</th>
+          <th>Currency</th>
+          <th>Core Unit Cost</th>
+          <th>GL Account</th>
+          <th>ITAR</th>
+          <th>ECCN</th>
+          <th>Memo</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-item> </ng-template>
+      <ng-template pTemplate="summary" id="footer">
+        <label id="footer" class="footer-t-rec">No'of records:</label>
+        <input
+          style="width: 5%;"
+          [(ngModel)]="totalRecords"
+          [disabled]="true"
+          pInputText
+          type="text"
+        />
+        &nbsp;&nbsp;
+        <label id="footer" class="footer-p-count">Pages Count:</label>
+        <input
+          style="width: 5%;"
+          [(ngModel)]="totalPages"
+          [disabled]="true"
+          pInputText
+          type="text"
+        />
+      </ng-template>
+    </p-table>
+  </div>
+</div>
