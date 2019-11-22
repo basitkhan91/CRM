@@ -40,8 +40,8 @@
                                                         <p><span class="label"><b>Qty Rejected: </b></span><span class="value">{{part.itemMaster?.quantityRejected}}</span></p>
                                                     </div>
                                                     <div class="col-sm-3">
-                                                        <p><span class="label"><b>Cond: </b></span><span class="value">####</span></p>
-                                                        <p><span class="label"><b>GL Account: </b></span><span class="value">####</span></p>
+                                                        <p><span class="label"><b>Cond: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].conditionText}}</span></p>
+                                                        <p><span class="label"><b>GL Account: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].glAccountText}}</span></p>
                                                     </div>                                                   
                                                 </div>
 
@@ -71,17 +71,17 @@
                                                                     </div>
                                                                 </div>
                                                                
-                                                                <p><span class="label"><b>Site: </b></span><span class="value">-</span></p>
-                                                                <p><span class="label"><b>Warehouse: </b></span><span class="value">-</span></p>
-                                                                <p><span class="label"><b>Location: </b></span><span class="value">-</span></p>
-                                                                <p><span class="label"><b>Shelf: </b></span><span class="value">-</span></p>
+                                                                <p><span class="label"><b>Site: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].siteText}}</span></p>
+                                                                <p><span class="label"><b>Warehouse: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].warehouseText}}</span></p>
+                                                                <p><span class="label"><b>Location: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].locationText}}</span></p>
+                                                                <p><span class="label"><b>Shelf: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].shelfText}}</span></p>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <p><span class="label"><b>Bin: </b></span><span class="value">-</span></p>
-                                                                <p><span class="label"><b>Obtain From: </b></span><span class="value">-</span></p>
-                                                                <p><span class="label"><b>Owner: </b></span><span class="value">-</span></p>
-                                                                <p><span class="label"><b>Traceable To: </b></span><span class="value">-</span></p>
-                                                                <p><span class="label"><b>MFG: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].manufacturerLotNumber}}</span></p>
+                                                                <p><span class="label"><b>Bin: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].binText}}</span></p>
+                                                                <p><span class="label"><b>Obtain From: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].obtainFrom}}</span></p>
+                                                                <p><span class="label"><b>Owner: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].owner}}</span></p>
+                                                                <p><span class="label"><b>Traceable To: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].traceableTo}}</span></p>
+                                                                <p><span class="label"><b>MFG: </b></span><span class="value">{{part.itemMaster?.manufacturer?.Name}}</span></p>
                                                                 <p><span class="label"><b>MFG Lot Num: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].manufacturerLotNumber}}</span></p>
                                                                 <p><span class="label"><b>MFG Date: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].manufacturingDate}}</span></p>
                                                                 <p><span class="label"><b>MFG Trace: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].manufacturingTrace}}</span></p>

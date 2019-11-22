@@ -35,6 +35,7 @@ namespace DAL.Models
         public DateTime UpdatedDate { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
+        public bool? IsFromWorkFlow { get; set; }
 
         [NotMapped]
         public string VendorName { get; set; }
