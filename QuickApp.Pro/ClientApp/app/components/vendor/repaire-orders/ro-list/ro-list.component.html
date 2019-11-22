@@ -182,6 +182,7 @@
 					[(ngModel)]="rowData['isActive']"
 					name="isActive{{ rowIndex }}"
 					(onChange)="changeStatus(rowData)"
+					matTooltip="{{rowData['isActive']==true ? 'Active' : 'In Active'}}"
 				  ></p-inputSwitch>
 	  
 				  <span data-toggle="modal" data-target="#view">
@@ -191,6 +192,7 @@
 					  (click)="viewSelectedRow(rowData)"
 					  data-target="#view"
 					  data-toggle="modal"
+					  matTooltip="View"
 					>
 					  <i class="fa fa-eye"></i>
 					</a>
