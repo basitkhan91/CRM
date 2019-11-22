@@ -581,6 +581,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
             this.employeeService.updateEmployee(this.sourceEmployee).subscribe(
                 results => {
+                    this.employeeService.employeeStored = results;
                     this.empUpdate(this.sourceEmployee, results),
                         this.employeeLeavetypeUpdate(this.sourceEmployee.employeeId);
                     //this.employeeShifttypeAdd(this.sourceEmployee.employeeId);
@@ -604,7 +605,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
             this.employeeService.newAddEmployee(this.sourceEmployee).subscribe(
                 results => {
-
+                    this.employeeService.employeeStored = results;
                     this.empAdd(this.sourceEmployee, results);
 
                     this.employeeLeavetypeAdd(results.employeeId);
