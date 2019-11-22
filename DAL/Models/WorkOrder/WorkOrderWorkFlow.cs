@@ -11,17 +11,17 @@ namespace DAL.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public WorkOrderWorkFlow()
         {
-            WorkOrderCharges = new List<WorkOrderCharges>();
-            WorkOrderEquipments = new List<WorkOrderAssets>();
-            WorkOrderExclusions = new List<WorkOrderExclusions>();
-            WorkOrderExpertise = new List<WorkOrderExpertise>();
-            WorkOrderMaterialList = new List<WorkOrderMaterials>();
-            WorkOrderDocuments = new List<WorkOrderDocuments>();
+            Charges = new List<WorkOrderCharges>();
+            Equipments = new List<WorkOrderAssets>();
+            Exclusions = new List<WorkOrderExclusions>();
+            Expertise = new List<WorkOrderExpertise>();
+            MaterialList = new List<WorkOrderMaterials>();
+            Documents = new List<WorkOrderDocuments>();
             WorkOrderAddress = new List<WorkOrderAddress>();
             // WorkOrderQuote = new WorkOrderQuote();
             WorkOrderFreight = new List<WorkOrderFreight>();
-            WorkOrderDirections = new List<WorkOrderDirections>();
-            WorkOrderPublication = new List<WorkOrderPublications>();
+            Directions = new List<WorkOrderDirections>();
+            Publication = new List<WorkOrderPublications>();
         }
 
         [Key]
@@ -72,16 +72,16 @@ namespace DAL.Models
         public int? PerOfBerThreshold {get;set;}
 
 
-        public virtual List<WorkOrderCharges> WorkOrderCharges { get; set; }
-        public virtual List<WorkOrderAssets> WorkOrderEquipments { get; set; }
-        public virtual List<WorkOrderExclusions> WorkOrderExclusions { get; set; }
-        public virtual List<WorkOrderMaterials> WorkOrderMaterialList { get; set; }
-        public virtual List<WorkOrderDocuments> WorkOrderDocuments { get; set; }
+        public virtual List<WorkOrderCharges> Charges { get; set; }
+        public virtual List<WorkOrderAssets> Equipments { get; set; }
+        public virtual List<WorkOrderExclusions> Exclusions { get; set; }
+        public virtual List<WorkOrderMaterials> MaterialList { get; set; }
+        public virtual List<WorkOrderDocuments> Documents { get; set; }
         public virtual List<WorkOrderAddress> WorkOrderAddress { get; set; }
         public virtual List<WorkOrderFreight> WorkOrderFreight { get; set; }
-        public virtual List<WorkOrderExpertise> WorkOrderExpertise { get; set; }
-        public virtual List<WorkOrderDirections> WorkOrderDirections { get; set; }
-        public virtual List<WorkOrderPublications> WorkOrderPublication { get; set; }
+        public virtual List<WorkOrderExpertise> Expertise { get; set; }
+        public virtual List<WorkOrderDirections> Directions { get; set; }
+        public virtual List<WorkOrderPublications> Publication { get; set; }
 
         //[NotMapped]
         //public WorkOrderLaborHeader WorkOrderLaborHeader { get; set; }
@@ -89,21 +89,6 @@ namespace DAL.Models
         //public WorkOrderQuote WorkOrderQuote { get; set; }
         [NotMapped]
         public bool IsSaveToWorkFlow { get; set; }
-        [NotMapped]
-        public List<WorkflowChargesList> Charges { get; set; }
-        [NotMapped]
-        public List<WorkFlowDirection> Directions { get; set; }
-        [NotMapped]
-        public List<WorkflowEquipmentList> Equipments { get; set; }
-        [NotMapped]
-        public List<WorkFlowExclusion> Exclusions { get; set; }
-        [NotMapped]
-        public List<WorkflowExpertiseList> Expertise { get; set; }
-        [NotMapped]
-        public List<WorkflowMaterial> MaterialList { get; set; }
-        [NotMapped]
-        public List<WorkflowMeasurement> Measurements { get; set; }
-        [NotMapped]
-        public List<Publications> Publication { get; set; }
+         
     }
 }

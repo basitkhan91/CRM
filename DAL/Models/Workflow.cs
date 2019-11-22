@@ -138,5 +138,11 @@ namespace DAL.Models
         [NotMapped]
         public long ExistingWorkFlowId { get; set; }
 
+        [NotMapped]
+        public long workOrderId { get; set; }
+
+        [NotMapped]
+        public long workFlowWorkOrderId { get; set; }
+
     }
 }

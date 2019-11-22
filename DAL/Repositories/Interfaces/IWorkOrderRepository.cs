@@ -20,7 +20,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> WorkOrderPartsView(long workOrderId);
 
         long CreateWorkFlowWorkOrder(WorkOrderWorkFlow workFlowWorkOrder);
-        void UpdateWorkFlowWorkOrder(WorkOrderWorkFlow workFlowWorkOrder);
+        void UpdateWorkOrderWorkFlow(Workflow workflow);
         WorkOrderWorkFlow GetWorkFlowWorkOrderById(long workFlowWorkOrderId);
         IEnumerable<object> GetWorkOrderWorkFlowNos(long workOrderId);
         IEnumerable<object> GetWorkOrderTaskAttributes(long workOrderTaskId);

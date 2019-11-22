@@ -146,20 +146,20 @@ namespace QuickApp.Pro.Controllers
             
         }
 
-        [HttpPost("updateworkflowworkorder")]
-        public IActionResult UpdateWorkFlowWorkOrder([FromBody]WorkOrderWorkFlow workFlowWorkOrder)
-        {
-            if (ModelState.IsValid)
-            {
-                 unitOfWork.WorkOrderRepository.UpdateWorkFlowWorkOrder(workFlowWorkOrder);
-                return Ok(workFlowWorkOrder);
-            }
-            else
-            {
-                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
-            }
+        //[HttpPost("updateworkflowworkorder")]
+        //public IActionResult UpdateWorkFlowWorkOrder([FromBody]WorkOrderWorkFlow workFlowWorkOrder)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //         unitOfWork.WorkOrderRepository.UpdateWorkFlowWorkOrder(workFlowWorkOrder);
+        //        return Ok(workFlowWorkOrder);
+        //    }
+        //    else
+        //    {
+        //        return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+        //    }
 
-        }
+        //}
 
         [HttpGet("workflowworkorderbyid")]
         public IActionResult GetWorkFlowWorkOrderById(long workFlowWorkOrderId)
@@ -792,8 +792,8 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
-        [HttpPost("addWorkFlow")]
-        public IActionResult addWorkFlow([FromBody] Workflow workFlow)
+        [HttpPost("updateworkorderworkFlow")]
+        public IActionResult UpdateWorkOrderWorkFlow([FromBody] Workflow workFlow)
         {
              int masterCompanyId = 1;
              string userName = "admin";
@@ -1218,7 +1218,8 @@ namespace QuickApp.Pro.Controllers
                     workFlow.IsActive = true;
                     unitOfWork.Repository<Workflow>().Add(workFlow);
                     unitOfWork.SaveChanges();
-                    
+
+                    unitOfWork.WorkOrderRepository.UpdateWorkOrderWorkFlow(workFlow);
                 }
                 return Ok(workFlow);
 
