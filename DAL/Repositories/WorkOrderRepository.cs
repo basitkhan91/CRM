@@ -2162,6 +2162,7 @@ namespace DAL.Repositories
                             // if (!isExists)
                             // {
                             WorkOrderWorkFlow workFlowWorkOrder = new WorkOrderWorkFlow();
+                            WorkOrderLaborHeader workOrderLaborHeader = new WorkOrderLaborHeader();
                             var workFlow = _appContext.Set<Workflow>().Where(x => x.WorkflowId == workFlowId).FirstOrDefault();
 
                             if (workFlow != null)
@@ -2192,31 +2193,42 @@ namespace DAL.Repositories
                                 if (workFlow.Charges != null && workFlow.Charges.Count > 0)
                                 {
                                     workFlowWorkOrder.Charges = BindWorkFlowWorkOrderCharges(workFlow.Charges, workOrderId, createdBy, item.MasterCompanyId);
+                                    workFlowWorkOrder.Charges.ForEach(p => p.IsFromWorkFlow = true);
                                 }
                                 if (workFlow.Equipments != null && workFlow.Equipments.Count > 0)
                                 {
                                     workFlowWorkOrder.Equipments = BindWorkFlowWorkOrderAssets(workFlow.Equipments, workOrderId, createdBy, item.MasterCompanyId);
+                                    workFlowWorkOrder.Equipments.ForEach(p => p.IsFromWorkFlow = true);
                                 }
                                 if (workFlow.Exclusions != null && workFlow.Exclusions.Count > 0)
                                 {
                                     workFlowWorkOrder.Exclusions = BindWorkFlowWorkOrderExclusions(workFlow.Exclusions, workOrderId, createdBy, item.MasterCompanyId);
+                                    workFlowWorkOrder.Exclusions.ForEach(p => p.IsFromWorkFlow = true);
                                 }
                                 if (workFlow.Expertise != null && workFlow.Expertise.Count > 0)
                                 {
                                     workFlowWorkOrder.Expertise = BindWorkFlowWorkOrderExpertise(workFlow.Expertise, workOrderId, createdBy, item.MasterCompanyId);
+                                    workFlowWorkOrder.Expertise.ForEach(p => p.IsFromWorkFlow = true);
                                 }
                                 if (workFlow.MaterialList != null && workFlow.MaterialList.Count > 0)
                                 {
                                     workFlowWorkOrder.MaterialList = BindWorkFlowWorkOrderMaterials(workFlow.MaterialList, workOrderId, createdBy, item.MasterCompanyId);
+                                    workFlowWorkOrder.MaterialList.ForEach(p => p.IsFromWorkFlow = true);
                                 }
 
                                 if (workFlow.Directions != null && workFlow.Directions.Count > 0)
                                 {
                                     workFlowWorkOrder.Directions = BindWorkFlowWorkOrderDirections(workFlow.Directions, workOrderId, createdBy, item.MasterCompanyId);
+                                    workFlowWorkOrder.Directions.ForEach(p => p.IsFromWorkFlow = true);
                                 }
                                 if (workFlow.Publication != null && workFlow.Publication.Count > 0)
                                 {
                                     workFlowWorkOrder.Publication = BindWorkFlowWorkOrderPublications(workFlow.Publication, workOrderId, createdBy, item.MasterCompanyId);
+                                    workFlowWorkOrder.Publication.ForEach(p => p.IsFromWorkFlow = true);
+                                }
+                                if (workFlow.Expertise != null && workFlow.Expertise.Count > 0)
+                                {
+                                    workOrderLaborHeader = BindWorkFlowWorkOrderLabor(workFlow.Expertise, workOrderId, createdBy, item.MasterCompanyId);
                                 }
 
                                 _appContext.WorkOrderWorkFlow.Add(workFlowWorkOrder);
@@ -2227,6 +2239,16 @@ namespace DAL.Repositories
                                 _appContext.SaveChanges();
 
                                 workFlowWorkOrderId = workFlowWorkOrder.WorkFlowWorkOrderId;
+
+                                if (workOrderLaborHeader != null)
+                                {
+                                    workOrderLaborHeader.LaborList.ForEach(p => p.IsFromWorkFlow = true);
+                                    workOrderLaborHeader.WorkFlowWorkOrderId = workFlowWorkOrderId;
+                                    _appContext.WorkOrderLaborHeader.Add(workOrderLaborHeader);
+                                    _appContext.SaveChanges();
+                                }
+
+                                
                             }
 
 
@@ -2994,31 +3016,38 @@ namespace DAL.Repositories
                     if (workFlow.Charges != null && workFlow.Charges.Count > 0)
                     {
                         workFlowWorkOrder.Charges = BindWorkFlowWorkOrderCharges(workFlow.Charges, workFlow.workOrderId, workFlow.CreatedBy, workFlow.MasterCompanyId);
+                        workFlowWorkOrder.Charges.ForEach(p => p.IsFromWorkFlow = true) ;
                     }
                     if (workFlow.Equipments != null && workFlow.Equipments.Count > 0)
                     {
                         workFlowWorkOrder.Equipments = BindWorkFlowWorkOrderAssets(workFlow.Equipments, workFlow.workOrderId, workFlow.CreatedBy, workFlow.MasterCompanyId);
+                        workFlowWorkOrder.Equipments.ForEach(p => p.IsFromWorkFlow = true);
                     }
                     if (workFlow.Exclusions != null && workFlow.Exclusions.Count > 0)
                     {
                         workFlowWorkOrder.Exclusions = BindWorkFlowWorkOrderExclusions(workFlow.Exclusions, workFlow.workOrderId, workFlow.CreatedBy, workFlow.MasterCompanyId);
+                        workFlowWorkOrder.Exclusions.ForEach(p => p.IsFromWorkFlow = true);
                     }
                     if (workFlow.Expertise != null && workFlow.Expertise.Count > 0)
                     {
                         workFlowWorkOrder.Expertise = BindWorkFlowWorkOrderExpertise(workFlow.Expertise, workFlow.workOrderId, workFlow.CreatedBy, workFlow.MasterCompanyId);
+                        workFlowWorkOrder.Expertise.ForEach(p => p.IsFromWorkFlow = true);
                     }
                     if (workFlow.MaterialList != null && workFlow.MaterialList.Count > 0)
                     {
                         workFlowWorkOrder.MaterialList = BindWorkFlowWorkOrderMaterials(workFlow.MaterialList, workFlow.workOrderId, workFlow.CreatedBy, workFlow.MasterCompanyId);
+                        workFlowWorkOrder.MaterialList.ForEach(p => p.IsFromWorkFlow = true);
                     }
 
                     if (workFlow.Directions != null && workFlow.Directions.Count > 0)
                     {
                         workFlowWorkOrder.Directions = BindWorkFlowWorkOrderDirections(workFlow.Directions, workFlow.workOrderId, workFlow.CreatedBy, workFlow.MasterCompanyId);
+                        workFlowWorkOrder.Directions.ForEach(p => p.IsFromWorkFlow = true);
                     }
                     if (workFlow.Publication != null && workFlow.Publication.Count > 0)
                     {
                         workFlowWorkOrder.Publication = BindWorkFlowWorkOrderPublications(workFlow.Publication, workFlow.workOrderId, workFlow.CreatedBy, workFlow.MasterCompanyId);
+                        workFlowWorkOrder.Publication.ForEach(p => p.IsFromWorkFlow = true);
                     }
                     if (workFlow.Expertise != null && workFlow.Expertise.Count > 0)
                     {
@@ -3061,6 +3090,7 @@ namespace DAL.Repositories
                     _appContext.WorkOrderPublications.RemoveRange(exPublication);
 
 
+
                     _appContext.WorkOrderWorkFlow.Update(workFlowWorkOrder);
                     _appContext.SaveChanges();
 
@@ -3068,11 +3098,14 @@ namespace DAL.Repositories
                     _appContext.WorkOrderWorkFlow.Update(workFlowWorkOrder);
                     _appContext.SaveChanges();
 
-                    laborHeader.WorkFlowWorkOrderId = workFlowWorkOrder.WorkFlowWorkOrderId;
-                    _appContext.WorkOrderLaborHeader.Add(laborHeader);
-                    _appContext.SaveChanges();
+                    if (workOrderLaborHeader != null)
+                    {
+                        workOrderLaborHeader.LaborList.ForEach(p => p.IsFromWorkFlow = true);
+                        workOrderLaborHeader.WorkFlowWorkOrderId = workFlow.workFlowWorkOrderId;
+                        _appContext.WorkOrderLaborHeader.Add(workOrderLaborHeader);
+                        _appContext.SaveChanges();
+                    }
 
-                    workFlow.workFlowWorkOrderId = workFlowWorkOrder.WorkFlowWorkOrderId;
                 }
                 return workFlow.workFlowWorkOrderId;
             }

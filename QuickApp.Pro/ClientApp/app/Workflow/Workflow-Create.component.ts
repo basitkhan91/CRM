@@ -2251,7 +2251,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                 expertise: data.expertise.map(x => { return { ...x, workflowExpertiseListId : 0 ,  workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
                 materialList: data.materialList.map(x => { return { ...x, workflowMaterialListId: 0 , workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
                 measurements: data.measurements.map(x => { return { ...x, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
-                publication: data.publication.map(x => { return { ...x, publicationId: 0 , workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } })
+                publication: data.publication.map(x => { return { ...x, Id: 0 , workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } })
 
 
             }
