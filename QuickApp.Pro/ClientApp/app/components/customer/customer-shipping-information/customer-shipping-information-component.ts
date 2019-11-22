@@ -66,6 +66,7 @@ export class CustomerShippingInformationComponent implements OnInit {
     pageSizeForInternationalShipVia: number = 10;
     totalRecordsForInternationalShipping: any;
     sourceViewforInterShipping: any;
+    sourceViewforInterShippingVia: any;
     shipViaInternational = new CustomerInternationalShipVia();
     shipViaDomestic = new CustomerInternationalShipVia();
     editableRowIndexForIS: any;
@@ -278,12 +279,23 @@ export class CustomerShippingInformationComponent implements OnInit {
             );
         })
     }
+
+  
     openInterShippingView(rowData) {
        
+        
         this.sourceViewforInterShipping = rowData;
         // this.getShipViaDataByInternationalShippingId();
 
     }
+    openInterShippingViewVia(rowData) {
+
+        debugger
+        this.sourceViewforInterShippingVia = rowData;
+        // this.getShipViaDataByInternationalShippingId();
+
+    }
+    
     async getInternationalShippingById(rowData) {
 
         await this.customerService.getInternationalShippingById(rowData.internationalShippingId).subscribe(res => {
@@ -293,6 +305,8 @@ export class CustomerShippingInformationComponent implements OnInit {
     }
     selectedInternationalShipForShipVia(rowData) {
         this.selectedShipViaInternational = rowData;
+        
+       this.getShipViaDataByInternationalShippingId();
     }
     selectedDomesticForShipVia(rowData) {
         this.selectedShipViaDomestic = rowData;
@@ -302,6 +316,16 @@ export class CustomerShippingInformationComponent implements OnInit {
         this.internationalShippingInfo = new CustomerInternationalShippingModel()
     }
     deleteInternationalShipping(rowData) {
+        this.customerService.deleteInternationalShipping(rowData.internationalShippingId, this.userName).subscribe(res => {
+            this.getInternationalShippingByCustomerId();
+            this.alertService.showMessage(
+                'Success',
+                `Sucessfully Deleted International Shipping`,
+                MessageSeverity.success
+            );
+        })
+    }
+    deleteInternationalShippingVia(rowData) {
         this.customerService.deleteInternationalShipping(rowData.internationalShippingId, this.userName).subscribe(res => {
             this.getInternationalShippingByCustomerId();
             this.alertService.showMessage(

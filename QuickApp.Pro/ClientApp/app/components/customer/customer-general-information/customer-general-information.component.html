@@ -71,12 +71,12 @@
                                                     <div class="inner-addon right-addon inline-block">
 
                                                         <p-autoComplete class="autocomp-customer-cstm" name="customerName"  
-                                                      [(ngModel)]="generalInformation.name" (onKeyUp)="checkCustomerNameExists('name',$event.target.value)"
+                                                      [(ngModel)]="generalInformation.name" (onKeyUp)="checkCustomerNameExist($event.target.value)" (onChange)="checkCustomerNameExist()"
                                                        (onSelect)="selectedCustomerName()" [suggestions]="customerNames" field="name" (completeMethod)="filterCustomerNames($event)"                                                         
                                                         [size]="30" [minLength]="1" [dropdown]="true" required>
-                                                            <!-- <ng-template let-name pTemplate="item">
+                                                             <!--<ng-template let-name pTemplate="item">
                                                                 <div class="ui-helper-clearfix">{{name}}</div>
-                                                            </ng-template> -->
+                                                            </ng-template>--> 
                                                         </p-autoComplete>
                                                        <div *ngIf="isCustomerNameAlreadyExists" class="clr-red">Entry Already Exists</div>  
                                                     </div>
@@ -87,7 +87,7 @@
 
                                                         <p-autoComplete  class="autocomp-customer-cstm" 
                                                         name="customerCode"
-                                                        (onKeyUp)="checkCustomerCodeExists('customerCode',$event.target.value)"
+                                                       (onKeyUp)="checkCustomerCodeExist($event.target.value)"
                                                         (onSelect)="selectedCustomerCode()"
                                                          [(ngModel)]="generalInformation.customerCode" [suggestions]="customerCodes" 
                                                          field="customerCode"
@@ -135,9 +135,8 @@
                                                     <label>Phone <span class="clr-red">*</span></label>
                                                     <div class="col-md-12">
                                                         <div class="col-md-8">
-                                                                <input type="text" id="phone"  name="phone" pInputText pKeyFilter="num" #mobPattern="ngModel" minlength=10 maxlength=13 class="form-control" ng-pattern="phoneNumbr" [(ngModel)]="generalInformation.customerPhone" required>
-                                                                <div *ngIf="mobPattern.errors" [ngClass]="'error'">
-                                                                </div>
+                                                                      <input type="text" id="phone" name="phone" pInputText pKeyFilter="num"  minlength=10 maxlength=13 class="form-control" [(ngModel)]="generalInformation.customerPhone" required>
+                                                           
                                                         </div>
                                                         
                                                         <div class="col-md-4">
@@ -489,7 +488,7 @@
                                             </div>
                                         </div>
                                         <div class="form-row pull-right">
-                                            <button type="submit" class="btn btn-primary-cstm submit-btn" [disabled]="!generalInfoForm.valid" (click)="saveGeneralInformation()">Save &amp; Next</button>
+                                            <button type="submit" class="btn btn-primary-cstm submit-btn" [disabled]="!generalInfoForm.valid || isCustomerNameAlreadyExists || disableSaveCustomerName || isCustomerCodeAlreadyExists" (click)="saveGeneralInformation()">Save &amp; Next</button>
                                         </div>
 
                                     </div>
@@ -779,7 +778,7 @@
                                 [(ngModel)]="addNewclassification.description" 
                                 (onSelect)="selectedClassification($event)"
                             
-                                (onKeyUp)="checkClassificationExists('field',$event.target.value)"
+                                (onKeyUp)="checkClassificationExists($event.target.value)"
                                 [suggestions]="classificationList" field="label" (completeMethod)="filterclassifications($event)" 
                                 [size]="30"[minLength]="1" [dropdown]="true" required> 
                                </p-autoComplete> 
