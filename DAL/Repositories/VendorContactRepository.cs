@@ -10,19 +10,24 @@ namespace DAL.Repositories
 {
     public class VendorContactRepository : Repository<VendorContact>, IVendorContactRepository
     {
-            public VendorContactRepository(ApplicationDbContext context) : base(context)
-            { }
+        public VendorContactRepository(ApplicationDbContext context) : base(context)
+        { }
 
-            public IEnumerable<VendorContact> GetVendorContacts()
-            {
-                return _appContext.VendorContact.Include("MasterCompany").OrderByDescending(c => c.VendorContactId).ToList();
-            }
+        public IEnumerable<VendorContact> GetVendorContacts()
+        {
+            return _appContext.VendorContact.Include("MasterCompany").OrderByDescending(c => c.VendorContactId).ToList();
+        }
+
+        public VendorContact GetVendorContactsbyContctId(long contctId)
+        {
+            return _appContext.VendorContact.Where(c => c.ContactId == contctId).FirstOrDefault();
+        }
 
 
-            //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
+        //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 
-            private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
-       
+        private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
+
     }
-    }
+}
 
