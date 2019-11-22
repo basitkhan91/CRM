@@ -379,7 +379,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
     }
 
     calculateQtyAvailable(event) {
-        this.quantityAvailable = this.sourceStockLineSetup.Quantity - this.sourceStockLineSetup.Quantity - this.sourceStockLineSetup.Quantity;
+        this.sourceStockLineSetup.quantityAvailable = this.sourceStockLineSetup.QuantityOnHand - this.sourceStockLineSetup.QuantityReserved - this.sourceStockLineSetup.QuantityIssued;
     }
 
 	partnmId(event) {
@@ -752,27 +752,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 
             }
         }
-        if (this.sourceEmployee.managmentLegalEntity != null && this.sourceEmployee.divmanagmentLegalEntity != null && this.sourceEmployee.biumanagmentLegalEntity != null && this.sourceEmployee.compmanagmentLegalEntity != null) {
-            this.sourceStockLineSetup.companyId = this.sourceEmployee.compmanagmentLegalEntity.managementStructureId;
-            this.sourceStockLineSetup.BusinessUnitId = this.sourceEmployee.biumanagmentLegalEntity.managementStructureId;
-            this.sourceStockLineSetup.divisionId = this.sourceEmployee.divmanagmentLegalEntity.managementStructureId;
-            this.sourceStockLineSetup.departmentId = this.sourceEmployee.managementStructeInfo.managementStructureId;
-        }
-        else if (this.sourceEmployee.biumanagmentLegalEntity != null && this.sourceEmployee.divmanagmentLegalEntity != null && this.sourceEmployee.managmentLegalEntity != null) {
-            this.sourceStockLineSetup.companyId = this.sourceEmployee.biumanagmentLegalEntity.managementStructureId;
-            this.sourceStockLineSetup.BusinessUnitId = this.sourceEmployee.divmanagmentLegalEntity.managementStructureId;
-            this.sourceStockLineSetup.divisionId = this.sourceEmployee.managmentLegalEntity.managementStructureId;
-        }
-        else if (this.sourceEmployee.divmanagmentLegalEntity != null && this.sourceEmployee.managmentLegalEntity != null) {
-            this.sourceStockLineSetup.companyId = this.sourceEmployee.divmanagmentLegalEntity.managementStructureId;
-            this.sourceStockLineSetup.BusinessUnitId = this.sourceEmployee.managmentLegalEntity.managementStructureId;
-        }
-        else if (this.sourceEmployee.managementStructeInfo != null) {
-            this.sourceStockLineSetup.companyId = this.sourceEmployee.managmentLegalEntity.managementStructureId;
-        }
-        else {
-            console.log("no Info Presnts")
-        }
         this.setManagementStrucureData(this.sourceEmployee);
     }
 
@@ -842,9 +821,8 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
             this.sourceEmployee.buisinessUnitId = "";
             this.sourceEmployee.departmentId = "";
             this.sourceEmployee.divisionId = "";
-        this.sourceEmployee.managementStructureId = companyId;
-        this.sourceStockLineSetup.managementStructureId = companyId;
-        this.sourceStockLineSetup.masterCompanyId = 1;
+            this.sourceStockLineSetup.managementStructureId = companyId;
+            this.sourceStockLineSetup.masterCompanyId = 1;
             this.departmentList = [];
             this.divisionlist = [];
             this.bulist = [];
