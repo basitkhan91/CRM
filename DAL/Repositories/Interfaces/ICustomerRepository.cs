@@ -8,6 +8,7 @@ using DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DAL.Models.Enums;  
 
 namespace DAL.Repositories.Interfaces
 {
@@ -66,6 +67,6 @@ namespace DAL.Repositories.Interfaces
         void AddCustomerShippingAddress(Customer objCustomer);
         void AddCustomerBillinggAddress(Customer objCustomer);
 
-
+        IEnumerable<object> SearchCustomer(string value, CustomerSearchType searchType);
     }
 }

@@ -62,7 +62,7 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<CustomerViewModel>))]
         public IActionResult GetCustomerByNameList(string name, CustomerViewModel customerViewModel)
         {
-            var allCustomerBynamelistDetails = _unitOfWork.Customer.GetCustomerBynameList(name); //.GetAllCustomersData();
+            var allCustomerBynamelistDetails = _unitOfWork.Customer.SearchCustomer(name, DAL.Models.Enums.CustomerSearchType.ContainsName); //.GetAllCustomersData();
             return Ok(allCustomerBynamelistDetails);
         }
 

@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using DAL.Models;
 using DAL.Repositories.Interfaces;
 using DAL.Common;
+using DAL.Models.Enums; 
 
 namespace DAL.Repositories
 {
@@ -362,6 +363,16 @@ namespace DAL.Repositories
                             }).ToList();
                 return data;
             }
+        }
+
+        public IEnumerable<object> SearchCustomer(string value, CustomerSearchType searchType = CustomerSearchType.None)
+        {
+            if (string.IsNullOrWhiteSpace(value) || searchType == CustomerSearchType.None)
+            {
+                return Enumerable.Empty<object>();
+            }
+
+            return Search(value, searchType);
         }
 
         public IEnumerable<object> GetCustomerListDetails()
@@ -1526,5 +1537,67 @@ namespace DAL.Repositories
 
 
         #endregion
+
+        private IEnumerable<object> Search(string value, CustomerSearchType searchType)
+        {
+            var data = from t in _appContext.Customer
+                       join ad in _appContext.Address on t.AddressId equals ad.AddressId
+                       join vt in _appContext.CustomerType on t.CustomerTypeId equals vt.CustomerTypeId
+                       join v in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals v.CustomerAffiliationId
+                       join cc in _appContext.CustomerClassification on t.CustomerClassificationId equals cc.CustomerClassificationId
+                       select new
+                       {
+                           ad,
+                           t.PrimarySalesPersonFirstName,
+                           t.CustomerId,
+                           t,
+                           t.Email,
+                           t.IsActive,
+                           t.CustomerPhone,
+                           t.CustomerPhoneExt,
+                           Address1 = ad.Line1,
+                           Address2 = ad.Line2,
+                           Address3 = ad.Line3,
+                           t.CustomerCode,
+                           t.CustomerClassificationId,
+                           t.Name,
+                           vt.CustomerTypeId,
+                           ad.City,
+                           ad.StateOrProvince,
+                           t.CreatedDate,
+                           t.CreatedBy,
+                           t.UpdatedBy,
+                           t.UpdatedDate,
+                           ad.AddressId,
+                           ad.Country,
+                           ad.PostalCode,
+                           t.ContractReference
+
+                       };
+
+
+            switch (searchType)
+            {
+                case CustomerSearchType.ExactName:
+                    data = data.Where(t => t.IsActive == true && t.Name.ToLowerInvariant() == value.ToLowerInvariant());
+                    break;
+                case CustomerSearchType.ContainsName:
+                    data = data.Where(t => t.IsActive == true && t.Name.ToLowerInvariant().Contains(value.ToLowerInvariant()));
+                    break;
+
+                case CustomerSearchType.ExactCode:
+                    data = data.Where(t => t.IsActive == true && t.CustomerCode.ToLowerInvariant() == value.ToLowerInvariant());
+                    break;
+
+                case CustomerSearchType.ContainsCode:
+                    data = data.Where(t => t.IsActive == true && t.CustomerCode.ToLowerInvariant().Contains(value.ToLowerInvariant()));
+
+                    break;
+
+            }
+
+
+            return data.ToList(); ;
+        }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using DAL;
+using DAL.Common;
 using DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -256,18 +257,18 @@ namespace QuickApp.Pro.Controllers
 
         [HttpGet("exchangeloan/{id}")]
         [Produces(typeof(ExchangeLoandViewModel))]
-        public IActionResult GetExchangeAndLoan(long id )
+        public IActionResult GetExchangeAndLoan(long id)
         {
 
 
-            var itemMasterExchangeLoan = _unitOfWork.ItemMasterExchangeLoan.GetSingleOrDefault(c=> c.ItemMasterId==id);
+            var itemMasterExchangeLoan = _unitOfWork.ItemMasterExchangeLoan.GetSingleOrDefault(c => c.ItemMasterId == id);
             var itemMasterExchangeLoanVM = Mapper.Map<ExchangeLoandViewModel>(itemMasterExchangeLoan);
 
             return Ok(itemMasterExchangeLoanVM);
 
         }
 
-       [HttpPost("exchangeloan")]
+        [HttpPost("exchangeloan")]
         public IActionResult CreateExchangeLoan([FromBody] ExchangeLoandViewModel exchangeLoandViewModel)
         {
 
@@ -1717,7 +1718,8 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetPartDetailsDropDown()
         {
             var allPartDetails = _context.ItemMaster.Where(a => (a.IsActive == null || a.IsActive == true) && (a.IsDeleted == false || a.IsDeleted == null))
-                .Select(x => new {
+                .Select(x => new
+                {
                     ItemMasterId = x.ItemMasterId,
                     PartNumber = x.PartNumber,
                     PartDescription = x.PartDescription
@@ -1726,7 +1728,67 @@ namespace QuickApp.Pro.Controllers
             return Ok(allPartDetails);
         }
 
-       
-    }
+        [HttpPost("search")]
+        public IActionResult SearchItemMaster([FromBody]ItemMasterSearchViewModel searchView)
+        {
+            if (searchView == null 
+                   || string.IsNullOrWhiteSpace(searchView?.partSearchParamters?.partNumber))
+                  
+              return BadRequest(new Exception("Error Occured while fetching item master details.")); 
+                
 
+            var result = from item in _context.ItemMaster
+                         join uom in _context.UnitOfMeasure on item.ConsumeUnitOfMeasureId equals uom.UnitOfMeasureId
+                         join part in _context.Part on item.PartAlternatePartId equals part.PartId into ip
+                         from subset in ip.DefaultIfEmpty()
+                         where item.IsActive.HasValue && item.IsActive.Value == true
+                                && (item.MasterCompanyId.HasValue && item.MasterCompanyId.Value == 1)
+                                && IsValidSearch(item, searchView.partSearchParamters)
+                         select new
+                         {
+                             itemId = item.ItemMasterId,
+                             partNumber = item.PartNumber,
+                             alternatePartId = item.PartAlternatePartId,
+                             alternatePartNumber = subset.PartNumber,
+                             description = item.PartDescription,
+                             conditionType = string.Empty,
+                             uomDescription = uom.Description,
+                             unitCost = item.UnitCost,
+                             unitListPrice = item.ListPrice,
+                             qtyOnHand = item.StockLevel,
+                             qtyToOrder = item.ReorderQuantiy,
+                             qtyOnOrder = item.MinimumOrderQuantity,
+                             itemClassification = item.ItemClassification,
+                             itemGroup = string.Empty,
+                             pma = item.PMA,
+                             der = item.DER,
+                             manufacturer = item.Manufacturer,
+                             customerRef = string.Empty,
+                             currency = item.Currency,
+                             costPerUnit = string.Empty,
+                             glAccount = item.GLAccount,
+                             itar = item.ITARNumber,
+                             eccn = item.ExportECCN,
+                             memo = item.Memo
+                         };
+
+
+           
+            var pageCount = (searchView.first / searchView.rows) + 1;
+
+            var searchData = new GetSearchData<object>();
+
+            searchData.Data = DAL.Common.PaginatedList<object>.Create(result.AsQueryable<object>(), pageCount, searchView.rows);
+
+            return Ok(searchData);
+        }
+
+
+        private bool IsValidSearch(ItemMaster master, PartSearchParamters parameters)
+        {
+            return master.PartNumber.ToLower().Contains(parameters.partNumber.ToLower())
+                || master.PartDescription.ToLower().Contains(parameters.partDescription.ToLower());
+        }
+        
+    }
 }
