@@ -190,6 +190,9 @@ export class WorkOrderEndpointService extends EndpointFactory {
     createWorkOrderLabor(data) {
         return this.http.post(`${this.configurations.baseUrl}/api/workOrder/createworkorderlabor`, JSON.stringify(data), this.getRequestHeaders())
     }
+    createWorkOrderMaterialList(data){
+        return this.http.post(`${this.configurations.baseUrl}/api/workOrder/createworkordermaterials`, JSON.stringify(data) , this.getRequestHeaders())
+    }
 
     getTasks() {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/Task/Get`, this.getRequestHeaders())
@@ -236,6 +239,10 @@ export class WorkOrderEndpointService extends EndpointFactory {
     }
     viewWorkOrderPartNumber(workOrderId) {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderpartsview?workOrderId=${workOrderId}`, this.getRequestHeaders())
+    }
+
+    getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId){
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/getreservedissuesparts?WorkFlowWorkOrderId=${WorkFlowWorkOrderId}`)
     }
 
     

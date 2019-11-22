@@ -1,4 +1,157 @@
 ﻿
+
+
+
+<!-- <div  >
+
+    <grd-material  [isWorkOrder]="isWorkOrder" [workFlowObject]="workFlowObject" (saveMaterialList)="saveMaterialListForWO.emit($event)" ></grd-material>
+</div> -->
+
+
+<div>
+    <button *ngIf="!addNewMaterial" class="btn btn-primary btn-primary-cstm"  (click)="addNew()" style="padding: 6px 12px !important;">Add New Material</button>
+    <button *ngIf="addNewMaterial" class="btn btn-primary btn-primary-cstm"  (click)="addNew()" style="padding: 6px 12px !important;">Add New Material</button>
+    <button class="btn btn-primary btn-primary-cstm"  style="padding: 6px 12px !important;" (click)="getReservedData()" data-toggle="modal" data-target="#reserve" >Reserve Stock</button>
+
+</div>
+
+<div *ngIf="addNewMaterial" class="fixed-table-container-inner table-responsive cat4-table fixed-column-table column-r1-fixed">
+        <div>
+            <span class="cat-heading cat4">
+                Add New Material List<i (click)="addRow()" class="fa fa-plus"></i>
+                <span class="float-right">
+                    Deferred &nbsp;<input type="checkbox" (click)="isDeferredEnable($event)" />
+                </span>
+            </span>
+            
+        </div>
+       
+        <table class="table table-bordered table-fixed workflow-table-material">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>PN *</th>
+                    <th>Description *</th>
+                    <th>Cond *</th>
+                    <th>Mandatory / Supplemental *</th>
+                    <th>Item Classification</th>
+                    <th>QTY *</th>
+                    <th>UOM *</th>
+                    <th>Unit Cost *</th>
+                    <th>Extended Cost *</th>
+                    <th>Unit Price *</th>
+                    <th>Extended Price</th>
+                    <th>Memo</th>
+                    <th>Deferred</th>
+                    <th>Action</th>
+                </tr>
+            </thead>       
+            <tbody>
+                <tr class="material-tr" [hidden]="material.isDelete" *ngFor="let material of workFlow.materialList;let i = index">
+                    <td>{{(currentPage - 1) * itemsPerPage + i + 1}}</td>
+                    <td>
+                        <p-autoComplete (onSelect)="onPartSelect($event, material)" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [(ngModel)]="material.partNumber"
+                                        [minLength]="1" [dropdown]="true" class="workflow-measurement-select">
+                            <ng-template let-partName pTemplate="part">
+                                <div class="ui-helper-clearfix">{{partName}}</div>
+                            </ng-template>
+                        </p-autoComplete>
+                    </td>
+                    <td>
+                        <input rows="1" value="{{material.partDescription}}" [disabled]="true" [(ngModel)]="material.partDescription">
+                    </td>
+                    <td>
+                        <select class="form-control custom-select wf-pub-id" id="ddlMaterialCondition" [(ngModel)]="material.conditionCodeId">
+                            <option value="">Select</option>
+                            <option *ngFor="let condition of materialCondition" value="{{condition.conditionId}}">
+                                {{condition.description}}
+                            </option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-control custom-select wf-pub-id" id="ddlMandatoryOrSupplemental" [(ngModel)]="material.mandatoryOrSupplemental" style="margin:auto;">
+                            <option value="">Select</option>
+                            <option *ngFor="let mandatory of materialMandatory" value="{{mandatory.name}}">
+                                {{mandatory.name}}
+                            </option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-control custom-select dropdown-select wf-pub-id" [(ngModel)]="material.itemClassificationId" [disabled]="true">
+                            <option *ngFor="let item of itemClassInfo" value="{{item.itemClassificationId}}">
+                                {{item.description}}
+                            </option>
+                        </select>
+                    </td>
+                    <td style="width: 200px">
+                        <input type="text" maxlength="10" pInputText pKeyFilter="pnum" class="form-control" value="{{material.quantity}}"  (input)="validateQuantity($event, material);calculateQtySummation();calculateExtendedCost(material);calculateExtendedPrice(material);" [(ngModel)]="material.quantity" />
+                    </td>
+                    <td>
+                        <select class="form-control custom-select wf-pub-id" id="ddlMaterialUOM" [(ngModel)]="material.unitOfMeasureId">
+                            <option value="">Select</option>
+                            <option *ngFor="let uom of materialUOM" value="{{uom.unitOfMeasureId}}">
+                                {{uom.shortName}}
+                            </option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" pInputText pKeyFilter="money" value="{{material.unitCost}}" (input)="calculateExtendedCost(material)" [(ngModel)]="material.unitCost" />
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" pInputText pKeyFilter="money" [disabled]="true" value="{{material.extendedCost}}" [(ngModel)]="material.extendedCost" />
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" pInputText pKeyFilter="money" value="{{material.price}}" [(ngModel)]="material.price" (input)="calculatePriceSummation();calculateExtendedPrice(material);" />
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" disabled pInputText pKeyFilter="money" value="{{material.extendedPrice}}" [(ngModel)]="material.extendedPrice" />
+                    </td>
+                    <td>
+                        <textarea style="height: 25px;margin-top: 5px;min-width: 130px !important;" class="form-control" [(ngModel)]="material.memo" value="{{material.memo}}"></textarea>
+                    </td>
+                    <td style="width:30px;">
+                        <div class="custom-checkbox-box">
+                            <input class="filled-in" id="PMS" type="checkbox" value="{{material.isDeferred}}" [(ngModel)]="material.isDeferred">
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger nobg" (click)="deleteRow(i)">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot *ngIf="workFlow.materialList.length > 0" >
+                <tr>
+                    <td>
+                        Total
+                    </td>
+                    <td> &nbsp;</td>
+    
+                    <td> &nbsp;</td>
+                    <td> &nbsp;</td>
+                    <td> &nbsp;</td>
+                    <td> &nbsp;</td>
+                    <td> {{workFlow.materialQtySummation}}</td>
+                    <td> &nbsp;</td>
+                    <td> &nbsp;</td>
+                    <td>{{workFlow.materialExtendedCostSummation}}</td>
+                    <td>{{workFlow.totalMaterialCost}}</td>
+                    <td>{{workFlow.materialExtendedPriceSummation}}</td>
+                    <td> &nbsp;</td>
+                    <td> &nbsp;</td>
+                    <td> &nbsp;</td>
+                </tr>
+            </tfoot>
+    
+    
+            
+        </table>
+    
+    
+        <button *ngIf="isWorkOrder" class="btn btn-primary btn-primary-cstm"  (click)="saveMaterialListForWorkOrder()" style="padding: 6px 12px !important;">Save</button>
+</div>
+    
 <div class="equipment-tab-content">
         <div class="x_panel">
             <div class="tab-content">
@@ -106,410 +259,95 @@
             <br />
             <br />
         </div>
-    </div>
+</div>
 
 
 
-
-
-<!-- <div [@fadeInOut] class="page-content">
-    <div class="right_col" role="main">
-        <div class="col-md-12">
-            <div class="x_panel" style="">
-                <div class="x_content">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a routerLink="/">Dashboard</a></li>
-                            <li class="breadcrumb-item"><a routerLink="/">WO Setup</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">WO Complete Material List</li>
-                        </ol>
-                    </nav>
-                    <div class="pheading">
-                        <h4 class="page-heading clr-green">WO Setup - Complete Material List</h4>
-                    </div>
-                    <div class="cdetails-top">
-                        <div class="col-sm-12">
-                            <label>Company</label>
-                            <span>Silverxis</span>
-                        </div>
-                        <div class="col-sm-12">
-                            <label>BU</label>
-                            <span>Adso</span>
-                        </div>
-                        <div class="col-sm-12">
-                            <label>Division</label>
-                            <span>Development</span>
-                        </div>
-                        <div class="col-sm-12">
-                            <label>Dept</label>
-                            <span>Java</span>
-                        </div>
-
-                    </div>
-                    <div class="clear"></div>
-                </div>
+<div id="reserve" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+      
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Reserved Parts</h4>
             </div>
-        </div>
-        <div class="col-md-12 col-sm-12 col-12 po-ro-setup">
-            <div class="x_panel">
-                <div class="tab-content">
+            <div class="modal-body" *ngIf="reservedList">
+        
+                                    <div class="table-responsive" id="workflow-attributes-block">
+                                        <table class="table table-bordered ">
+                                            <thead>
+                                                <!-- <tr>
+                                                </tr> -->
+                                                <!-- <tr>
+                                                    <th colspan="4" class="text-center"></th>
+                                                    <th colspan="4" class="text-center">TOLERANCE</th>
+                     
+                                                </tr> -->
+                                                <tr>
+                                                    <th class="text-center">PN </th>
+                                                    <th class="text-center">Description</th>
+                                                    <th class="text-center">Qty Requried</th>
+                                                    <th class="text-center">Qty Reserved</th>
+                                                    <th class="text-center">Qty Turn IN </th>
+                                                    <th class="text-center">Qty Issued</th>
+                                                    <th class="text-center">Reserved By</th>
+                                                    <th class="text-center">Reserved Date</th>
+                                                    <th class="text-center">Issued By</th>
+                                                    <th class="text-center">Issed Date</th>
 
-                    <div class="table-responsive default-bg clear ro-grid-table">
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let x of reservedList; let i=index;">
+                                                    <td>{{x.partNumber}}</td>
+                                                    <td>{{x.partDescription}}</td>
+                                                    <td>
+                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantity">
+                                                    </td>
+                                                    <td>
+                                                            <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityReserved">
+                                                        </td>
+                                                    <td>
+                                                            <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityTurnIn">
+                                                      
+                                                    </td>
+                                                    <td>
+                                                            <input type="number" name="quantity{{i}}" [(ngModel)]="x.qunatityIssued">
+                                                      
+                                                    </td>
+                                                    <td>
+                                                      {{x.reservedBy}}
+                                                    </td>
+                                                    <td>
+                                                      {{x.reservedDate}}
+                                                    </td>
+                                                    <td>
+                                                    {{x.issuedBy}}
+                                                    </td>
+                                                    <td>
+                                                     {{x.issuedDate}}
+                                                    </td>
+                                                </tr>
+      
+                                             <button  class="btn btn-primary btn-primary-cstm"  (click)="saveReserved()" style="padding: 6px 12px !important;">Save Reserved</button>
+                                                
+                         
+                                            </tbody>
+                                        </table>
 
-                        <table class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Line #</th>
-                                    <th>Stock Line</th>
-                                    <th>PN</th>
-                                    <th>PN Des.</th>
-                                    <th>Alternate</th>
-                                    <th>SN</th>
-                                    <th>OEM/PMA/DER</th>
-                                    <th>Control #</th>
-                                    <th>Control ID</th>
-                                    <th>Cond</th>
-                                    <th>Item Type</th>
-                                    <th>Qty Required</th>
-                                    <th>QTY Reserved</th>
-                                    <th>Qty Turn In</th>
-                                    <th>Qty Issued</th>
-                                    <th>Unit Cost</th>
-                                    <th>Extended Cost</th>
-                                    <th>Cur</th>
-                                    <th>RO #</th>
-                                    <th>PO #</th>
-                                    <th>Receiver #</th>
-                                    <th>WO #</th>
-                                    <th>Sub-WO #</th>
-                                    <th>Memo</th>
-                                    <th>Employee</th>
-                                    <th>Time Life</th>
-                                    <th>Warehouse</th>
-                                    <th colspan="2">Location</th>
-                                    <th class="w150"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="parent-data">
-                                    <td>MC</td>
-                                    <td>SL-12378</td>
-                                    <td>123455</td>
-                                    <td>Actuator</td>
-                                    <td>S-1002456</td>
-                                    <td>4978</td>
-                                    <td>OEM</td>
-                                    <td>4537</td>
-                                    <td>12</td>
-                                    <td>AR</td>
-                                    <td>CS</td>
-                                    <td></td>
-                                    <td>1</td>
-                                    <td></td>
-                                    <td> - </td>
-                                    <td> $12.00 </td>
-                                    <td> $12.00 </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td colspan="2"></td>
-                                    <td>
-                                        <span data-toggle="modal" data-target="#">
-                                            <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" title="View"><i class="fa fa-eye"></i></a>
-                                        </span>
-                                        <a data-toggle="tooltip" title="Edit" class="btn btn-primary boxed-float-btn nobg"><i class="fa fa-edit"></i></a>
-                                        <span data-toggle="modal" data-target="#">
-                                            <a class="btn btn-success nobg" data-toggle="tooltip" title="History"><i class="fa fa-history"></i></a>
-                                        </span>
-                                        <span data-toggle="modal" data-target="#">
-                                            <a class="btn btn-success nobg" data-toggle="tooltip" title="Reserve"><i class="fa fa-check"></i></a>
-                                        </span>
-                                        <span data-toggle="modal" data-target="#">
-                                            <a class="btn btn-success nobg" data-toggle="tooltip" title="Issued"><i class="fa fa-check"></i></a>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr class="parent2-data">
-                                    <td>1</td>
-                                    <td></td>
-                                    <td>34455</td>
-                                    <td>Bushings</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>5</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td colspan="2"></td>
-                                    <td>
-                                        <span data-toggle="modal" data-target="#">
-                                            <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" title="View"><i class="fa fa-eye"></i></a>
-                                        </span>
-                                        <a data-toggle="tooltip" title="Edit" class="btn btn-primary boxed-float-btn nobg"><i class="fa fa-edit"></i></a>
-                                        <span data-toggle="modal" data-target="#">
-                                            <a class="btn btn-success nobg" data-toggle="tooltip" title="History"><i class="fa fa-history"></i></a>
-                                        </span>
-                                        <span data-toggle="modal" data-target="#">
-                                            <a class="btn btn-success nobg" data-toggle="tooltip" title="Reserve"><i class="fa fa-check"></i></a>
-                                        </span>
-                                        <span data-toggle="modal" data-target="#">
-                                            <a class="btn btn-success nobg" data-toggle="tooltip" title="Issued"><i class="fa fa-check"></i></a>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr class="child-header">
-                                    <th></th>
-                                    <th>Stock Line</th>
-                                    <th>PN</th>
-                                    <th>PN Des.</th>
-                                    <th>Alternate</th>
-                                    <th>Provision</th>
-                                    <th>OEM/PMA/DER</th>
-                                    <th>SN</th>
-                                    <th>Control #</th>
-                                    <th>Control ID</th>
-                                    <th>Cond</th>
-                                    <th>Item Type</th>
-                                    <th>Qty Required</th>
-                                    <th>Qty Reserved</th>
-                                    <th>Qty Turn In</th>
-                                    <th>Qty Issued</th>
-                                    <th>QTY Back Order</th>
-                                    <th>Unit Cost</th>
-                                    <th>Extended Cost</th>
-                                    <th> Cur</th>
-                                    <th>PO #</th>
-                                    <th>RO #</th>
-                                    <th>Receiver #</th>
-                                    <th>WO #</th>
-                                    <th>Sub-WO #</th>
-                                    <th>SO #</th>
-                                    <th>Time Life</th>
-                                    <th>Warehouse</th>
-                                    <th>Location</th>
-                                    <th></th>
-                                </tr>
-                                <tr class="child-data">
-                                    <td>2</td>
-                                    <td>SL-12378</td>
-                                    <td>123455</td>
-                                    <td>Bearing</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>OEM</td>
-                                    <td></td>
-                                    <td>4537</td>
-                                    <td>12</td>
-                                    <td>New</td>
-                                    <td>S</td>
-                                    <td>5</td>
-                                    <td>4</td>
-                                    <td></td>
-                                    <td>4</td>
-                                    <td>1</td>
-                                    <td> $25.00 </td>
-                                    <td> $100.00 </td>
-                                    <td></td>
-                                    <td>2345</td>
-                                    <td></td>
-                                    <td>345676</td>
-                                    <td></td>
-                                    <td>724-1</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        <span data-toggle="modal" data-target="#">
-                                            <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" title="View"><i class="fa fa-eye"></i></a>
-                                        </span>
-                                        <a data-toggle="tooltip" title="Edit" class="btn btn-primary boxed-float-btn nobg"><i class="fa fa-edit"></i></a>
-                                        <span data-toggle="modal" data-target="#">
-                                            <a class="btn btn-success nobg" data-toggle="tooltip" title="History"><i class="fa fa-history"></i></a>
-                                        </span>
-                                        <span data-toggle="modal" data-target="#">
-                                            <a class="btn btn-success nobg" data-toggle="tooltip" title="Reserve"><i class="fa fa-check"></i></a>
-                                        </span>
-                                        <span data-toggle="modal" data-target="#">
-                                            <a class="btn btn-success nobg" data-toggle="tooltip" title="Issued"><i class="fa fa-check"></i></a>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr class="child-data">
-                                    <td>3</td>
-                                    <td></td>
-                                    <td>9486547</td>
-                                    <td>Link</td>
-                                    <td>PMA1260</td>
-                                    <td></td>
-                                    <td>PMA</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>3</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        <span data-toggle="modal" data-target="#">
-                                            <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" title="View"><i class="fa fa-eye"></i></a>
-                                        </span>
-                                        <a data-toggle="tooltip" title="Edit" class="btn btn-primary boxed-float-btn nobg"><i class="fa fa-edit"></i></a>
-                                        <span data-toggle="modal" data-target="#">
-                                            <a class="btn btn-success nobg" data-toggle="tooltip" title="History"><i class="fa fa-history"></i></a>
-                                        </span>
-                                        <span data-toggle="modal" data-target="#">
-                                            <a class="btn btn-success nobg" data-toggle="tooltip" title="Reserve"><i class="fa fa-check"></i></a>
-                                        </span>
-                                        <span data-toggle="modal" data-target="#">
-                                            <a class="btn btn-success nobg" data-toggle="tooltip" title="Issued"><i class="fa fa-check"></i></a>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr class="child-data">
-                                    <td>4</td>
-                                    <td></td>
-                                    <td>65657</td>
-                                    <td>Oring</td>
-                                    <td>Able-65657</td>
-                                    <td></td>
-                                    <td>PMA</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>5</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        <span data-toggle="modal" data-target="#">
-                                            <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" title="View"><i class="fa fa-eye"></i></a>
-                                        </span>
-                                        <a data-toggle="tooltip" title="Edit" class="btn btn-primary boxed-float-btn nobg"><i class="fa fa-edit"></i></a>
-                                        <span data-toggle="modal" data-target="#">
-                                            <a class="btn btn-success nobg" data-toggle="tooltip" title="History"><i class="fa fa-history"></i></a>
-                                        </span>
-                                        <span data-toggle="modal" data-target="#">
-                                            <a class="btn btn-success nobg" data-toggle="tooltip" title="Reserve"><i class="fa fa-check"></i></a>
-                                        </span>
-                                        <span data-toggle="modal" data-target="#">
-                                            <a class="btn btn-success nobg" data-toggle="tooltip" title="Issued"><i class="fa fa-check"></i></a>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr class="child-data">
-                                    <td>5</td>
-                                    <td></td>
-                                    <td>76986</td>
-                                    <td>Shaft</td>
-                                    <td>76986-5</td>
-                                    <td></td>
-                                    <td>DER</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>7</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        <span data-toggle="modal" data-target="#">
-                                            <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" title="View"><i class="fa fa-eye"></i></a>
-                                        </span>
-                                        <a data-toggle="tooltip" title="Edit" class="btn btn-primary boxed-float-btn nobg"><i class="fa fa-edit"></i></a>
-                                        <span data-toggle="modal" data-target="#">
-                                            <a class="btn btn-success nobg" data-toggle="tooltip" title="History"><i class="fa fa-history"></i></a>
-                                        </span>
-                                        <span data-toggle="modal" data-target="#">
-                                            <a class="btn btn-success nobg" data-toggle="tooltip" title="Reserve"><i class="fa fa-check"></i></a>
-                                        </span>
-                                        <span data-toggle="modal" data-target="#">
-                                            <a class="btn btn-success nobg" data-toggle="tooltip" title="Issued"><i class="fa fa-check"></i></a>
-                                        </span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <br />
-                    <a routerLink="/app-work-order-reserve-issue" class="btn btn-info pull-right">Reserve PN's</a>
-                </div>
-                <div class="clear"></div>
-                <br />
-                <br />
-                <br />
-                <br />
+                                        
+      
+                                    </div>
+                                </div>
+
+   
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
+          </div>
+      
         </div>
-    </div>
+      </div>
 
-</div> -->
+

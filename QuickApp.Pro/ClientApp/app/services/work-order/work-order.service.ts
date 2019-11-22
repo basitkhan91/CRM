@@ -123,6 +123,10 @@ export class WorkOrderService {
     createWorkOrderLabor(data) {
         return this.workOrderEndpointService.createWorkOrderLabor(data);
     }
+    
+    createWorkOrderMaterialList(data){
+        return this.workOrderEndpointService.createWorkOrderMaterialList(data);
+    }
     getAllTasks() {
         return this.workOrderEndpointService.getTasks();
     }
@@ -155,4 +159,8 @@ export class WorkOrderService {
         return this.workOrderEndpointService.viewWorkOrderPartNumber(workOrderId);
     }
 
+    getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId){
+        return this.workOrderEndpointService.getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId);
+    }
+    
 }
