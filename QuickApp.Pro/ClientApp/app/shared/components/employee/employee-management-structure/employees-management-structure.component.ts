@@ -68,7 +68,6 @@ export class EmployeesManagementStructureComponent implements OnInit,AfterViewIn
     }
 
     ngAfterViewInit() {
-
         this.route.queryParams
         .filter(params => params.order)
         .subscribe(params => {
@@ -155,20 +154,26 @@ export class EmployeesManagementStructureComponent implements OnInit,AfterViewIn
     }
     
     saveManagementStructure(){
-        this.employeeService.storeEmployeeRoles(this.getEmployeeRolesList()).subscribe(
-            (result)=>{
-                this.employeeService.storeEmployeeManagementStructure(this.getLegalEntityList()).subscribe(
+        this.employeeService.employeeStored['memo'] = this.memoText;
+        this.employeeService.updateEmployee(this.employeeService.employeeStored).subscribe(
+            results => {
+                this.employeeService.storeEmployeeRoles(this.getEmployeeRolesList()).subscribe(
                     (result)=>{
-                        this.router.navigateByUrl('/employeesmodule/employeepages/app-employees-list');
+                        this.employeeService.storeEmployeeManagementStructure(this.getLegalEntityList()).subscribe(
+                            (result)=>{
+                                this.router.navigateByUrl('/employeesmodule/employeepages/app-employees-list');
+                            },
+                            (error)=>{
+                            }
+                        )
                     },
                     (error)=>{
                     }
                 )
             },
-            (error)=>{
-            }
-        )
 
+            error => console.log(error)
+        );
         
     }
     getEmployeeRolesList(){
