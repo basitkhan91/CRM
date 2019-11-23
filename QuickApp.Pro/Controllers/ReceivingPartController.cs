@@ -157,6 +157,22 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [HttpGet("getReceivingRepairList/{receivingId}")]
+        [Produces(typeof(List<RepairOrderViewModel>))]
+        public IActionResult GetReceivingRepairOrderList(long receivingId)
+        {
+            try
+            {
+                var receivingData = unitOfWork.PartStockLineMapper.GetReceivingRepairOrderList(receivingId);
+                return Ok(receivingData);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+        }
+
         [HttpGet("GetReceivingPurchaseForEdit/{receivingId}")]
         public IActionResult GetReceivingPurchaseOrderForEditById(long receivingId)
         {
