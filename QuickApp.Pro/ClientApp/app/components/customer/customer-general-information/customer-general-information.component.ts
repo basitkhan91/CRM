@@ -81,6 +81,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
     partListForPMA: any;
     partListForDER: any;
     partListOriginal: any;
+    selectedActionName: any;
+    disableSaveCustomerName: boolean;
     // restrictsPMAList: any;
     // restrictBERList: any;
     restictDERtempList: any = [];
@@ -698,6 +700,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
         this.memoPopupContent = '';
     }
     selectedCustomerName() {
+       
         this.isCustomerNameAlreadyExists = true;
     }
     selectedCustomerCode() {
@@ -713,6 +716,53 @@ export class CustomerGeneralInformationComponent implements OnInit {
             this.isCustomerNameAlreadyExists = false;
         }
     }
+
+    checkCustomerNameExist(value) {
+     
+        this.isCustomerNameAlreadyExists = false;
+        this.disableSaveCustomerName = false;
+        for (let i = 0; i < this.customerListOriginal.length; i++) {
+           
+            if (this.generalInformation.name == this.customerListOriginal[i].name || value == this.customerListOriginal[i].name ) {
+                this.isCustomerNameAlreadyExists = true;
+                // this.disableSave = true;
+                this.disableSaveCustomerName = true;
+                this.selectedActionName = event;
+                return;
+            }
+           
+        }
+
+    }
+    checkCustomerCodeExist(value) {
+     
+        this.isCustomerCodeAlreadyExists = false;
+     
+        for (let i = 0; i < this.customerListOriginal.length; i++) {
+            if (this.generalInformation.customerCode == this.customerListOriginal[i].customerCode || value == this.customerListOriginal[i].customerCode) {
+                this.isCustomerCodeAlreadyExists = true;
+                // this.disableSave = true;
+            
+                return;
+            }
+
+        }
+
+    }
+   
+    //onCustomerselected(event) {
+    //    debugger
+    //    for (let i = 0; i < this.customerListOriginal.length; i++) {
+    //        if (event == this.customerListOriginal[i].name) {
+    //            this.isCustomerNameAlreadyExists = true;
+    //            //this.disableSave = true;
+    //            this.disableSaveCustomerName = true;
+    //            this.selectedActionName = event;
+    //        }
+    //    }
+    //}
+
+
 
     checkCustomerCodeExists(field, value) {
         const exists = validateRecordExistsOrNot(field, value, this.customerListOriginal)
@@ -780,18 +830,34 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
 
     }
-    checkClassificationExists(field, value, ) {
-        
-        const exists = validateRecordExistsOrNot(field, value, this.allcustomerclassificationInfo)
+    checkClassificationExists(value) {
+        debugger
+        this.isClassificationAlreadyExists = false;
 
+        for (let i = 0; i < this.allcustomerclassificationInfo.length; i++) {
+            if (this.addNewclassification.description == this.allcustomerclassificationInfo[i].label || value == this.allcustomerclassificationInfo[i].label) {
+                this.isClassificationAlreadyExists = true;
+                // this.disableSave = true;
 
-        if (exists.length > 0) {
+                return;
+            }
 
-            this.isClassificationAlreadyExists = true;
-        } else {
-            this.isClassificationAlreadyExists = false;
         }
+
+
     }
+    //checkClassificationExists(field, value, ) {
+        
+    //    const exists = validateRecordExistsOrNot(field, value, this.allcustomerclassificationInfo)
+
+
+    //    if (exists.length > 0) {
+
+    //        this.isClassificationAlreadyExists = true;
+    //    } else {
+    //        this.isClassificationAlreadyExists = false;
+    //    }
+    //}
 
     selectedClassification(object) {
         const exists = selectedValueValidate('label', object, this.selectedClassificationRecordForEdit)
