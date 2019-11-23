@@ -1737,7 +1737,10 @@ namespace QuickApp.Pro.Controllers
                 
 
             var result = from item in _context.ItemMaster
-                         join uom in _context.UnitOfMeasure on item.ConsumeUnitOfMeasureId equals uom.UnitOfMeasureId
+                         join uom in _context.UnitOfMeasure on item.ConsumeUnitOfMeasureId equals uom.UnitOfMeasureId into iuom
+                         from iu in iuom.DefaultIfEmpty()
+                         join currency in _context.Currency on item.CurrencyId equals currency.CurrencyId into itemcurrecy
+                         from ic in itemcurrecy.DefaultIfEmpty()
                          join part in _context.Part on item.PartAlternatePartId equals part.PartId into ip
                          from subset in ip.DefaultIfEmpty()
                          where item.IsActive.HasValue && item.IsActive.Value == true
@@ -1751,7 +1754,7 @@ namespace QuickApp.Pro.Controllers
                              alternatePartNumber = subset.PartNumber,
                              description = item.PartDescription,
                              conditionType = string.Empty,
-                             uomDescription = uom.Description,
+                             uomDescription = iu.Description,
                              unitCost = item.UnitCost,
                              unitListPrice = item.ListPrice,
                              qtyOnHand = item.StockLevel,
@@ -1764,11 +1767,13 @@ namespace QuickApp.Pro.Controllers
                              manufacturer = item.Manufacturer,
                              customerRef = string.Empty,
                              currency = item.Currency,
-                             costPerUnit = string.Empty,
+                             coreUnitPrice = item.CoreValue,
                              glAccount = item.GLAccount,
                              itar = item.ITARNumber,
                              eccn = item.ExportECCN,
-                             memo = item.Memo
+                             memo = item.Memo, 
+                             currencyId = item.CurrencyId,  
+                             currencyDescription = ic.DisplayName
                          };
 
 
@@ -1785,8 +1790,8 @@ namespace QuickApp.Pro.Controllers
 
         private bool IsValidSearch(ItemMaster master, PartSearchParamters parameters)
         {
-            return master.PartNumber.ToLower().Contains(parameters.partNumber.ToLower())
-                || master.PartDescription.ToLower().Contains(parameters.partDescription.ToLower());
+            return (parameters.partNumber != null && master.PartNumber.ToLower().StartsWith(parameters.partNumber.ToLower()))
+                ;
         }
         
     }
