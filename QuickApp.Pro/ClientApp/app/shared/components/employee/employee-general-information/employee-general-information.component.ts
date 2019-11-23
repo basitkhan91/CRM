@@ -1769,8 +1769,14 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     }
 
     editItemLeaveCloseModel() {
-        console.log("hii2");
+        
         this.isSaving = true;
+       
+				 if (this.description.toLowerCase().trim()=="")
+                 {
+                     this.alertService.showMessage("Empty", 'Cannot Submit Empty', MessageSeverity.warn);
+                     return;
+                 }
 
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;

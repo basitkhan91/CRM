@@ -597,6 +597,32 @@ namespace DAL.Repositories
             }
         }
 
+        public bool DeleteVendorShippingViaAddress(long vendorShippingId, string updatedBy)
+        {
+            bool result = false;
+            try
+            {
+               
+                var vendorShippingDetails = _appContext.VendorShipping.Where(x => x.VendorShippingId == vendorShippingId).FirstOrDefault();
+                if (vendorShippingDetails != null)
+                {
+                    vendorShippingDetails.UpdatedBy = updatedBy;
+                    vendorShippingDetails.UpdatedDate = DateTime.Now;
+                    vendorShippingDetails.IsDelete = true;
+                    _appContext.VendorShipping.Update(vendorShippingDetails);
+                    _appContext.SaveChanges();
+                    result = true;
+                }
+                return result;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+        }
+
         public void VendorBillingAddressStatus(long billingAddressId,bool status, string updatedBy)
         {
             try
