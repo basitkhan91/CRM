@@ -9,8 +9,8 @@
 
 
 <div>
-    <button *ngIf="!addNewMaterial" class="btn btn-primary btn-primary-cstm"  (click)="addNew()" style="padding: 6px 12px !important;">Add New Material</button>
-    <button *ngIf="addNewMaterial" class="btn btn-primary btn-primary-cstm"  (click)="addNew()" style="padding: 6px 12px !important;">Add New Material</button>
+    <button *ngIf="!addNewMaterial" class="btn btn-primary btn-primary-cstm"  (click)="addNew(); " style="padding: 6px 12px !important;">Add New Material</button>
+    <button *ngIf="addNewMaterial" class="btn btn-primary btn-primary-cstm"  (click)="closeAddNew()" style="padding: 6px 12px !important;">Close Add New  Material</button>
     <button class="btn btn-primary btn-primary-cstm"  style="padding: 6px 12px !important;" (click)="getReservedData()" data-toggle="modal" data-target="#reserve" >Reserve Stock</button>
 
 </div>
@@ -148,8 +148,12 @@
             
         </table>
     
+
+        <div style="float:right"> 
+
+                <button *ngIf="isWorkOrder" class="btn btn-primary btn-primary-cstm"  (click)="saveMaterialListForWorkOrder()" style="padding: 6px 12px !important;">Save</button>
+        </div>
     
-        <button *ngIf="isWorkOrder" class="btn btn-primary btn-primary-cstm"  (click)="saveMaterialListForWorkOrder()" style="padding: 6px 12px !important;">Save</button>
 </div>
     
 <div class="equipment-tab-content">

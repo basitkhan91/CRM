@@ -532,7 +532,7 @@
                 </div>
                 <div>
                   <button class="btn btn-primary-cstm pull-right" *ngIf="!showTableGrid && !isEdit" type="button"  [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Save</button>
-                  <button class="btn btn-primary-cstm pull-right" *ngIf="!showTableGrid && isEdit" type="button"  [disabled]="!workOrderForm.valid" >Update</button>
+                  <button class="btn btn-primary-cstm pull-right" *ngIf="isEdit" type="button"  [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()" >Update</button>
                 <button  *ngIf="showTableGrid && workOrderGeneralInformation.isSinglePN " class="btn btn-success pull-right" [routerLink]="['/workordersmodule/workorderspages/app-work-order-quote']"  >Create Quote</button>
                 </div>
             </form>

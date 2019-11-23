@@ -110,6 +110,13 @@ export class WorkOrderCompleteMaterialListComponent {
 
     addNew(){
         this.addNewMaterial = true;
+        if(this.workFlow.materialList.length === 0){
+            this.addRow();
+        }
+    }
+
+    closeAddNew(){
+        this.addNewMaterial = false;
     }
     filterpartItems(event) {
 
