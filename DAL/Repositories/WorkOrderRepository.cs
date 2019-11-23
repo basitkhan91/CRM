@@ -549,7 +549,8 @@ namespace DAL.Repositories
                                 WorkflowNo = wf == null ? "" : wf.WorkOrderNumber,
                                 im.PartNumber
                             }
-                          ).ToList();
+                          ).Distinct()
+                          .ToList();
                 return list;
             }
             catch (Exception)
@@ -2017,7 +2018,7 @@ namespace DAL.Repositories
                                    where (wf.IsDelete == false || wf.IsDelete == null) && wf.IsActive == true && wf.ItemMasterId == partId && wf.WorkScopeId == workScopeId
                                    select new
                                    {
-                                       WorkFlowNo = wf.WorkOrderNumber,
+                                       WorkFlowNo = wf.WorkOrderNumber + "_"+wf.Version,
                                        WorkFlowId = wf.WorkflowId
                                    }).Distinct().ToList();
 
