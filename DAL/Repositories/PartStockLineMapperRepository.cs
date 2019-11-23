@@ -13,10 +13,11 @@ namespace DAL.Repositories
         {
         }
 
-        public PurchaseOrder GetReceivingPurchaseOrderList(long id)
+        public object GetReceivingPurchaseOrderList(long id)
         {
             try
             {
+                
                 var purchaseOrder = _appContext.PurchaseOrder
                                    .Include("Vendor")
                                    .Where(x => x.PurchaseOrderId == id).FirstOrDefault();
@@ -24,7 +25,6 @@ namespace DAL.Repositories
                 purchaseOrder.PurchaseOderPart = _appContext.PurchaseOrderPart
                                         .Where(x => x.PurchaseOrderId == id)
                                         .ToList();
-
 
                 purchaseOrder.PurchaseOderPart.ToList().ForEach(part =>
                 {
@@ -47,7 +47,26 @@ namespace DAL.Repositories
                     part.ItemMaster.Manufacturer = _appContext.Manufacturer.Where(x => x.ManufacturerId == part.ItemMaster.ManufacturerId).FirstOrDefault();
                 }
 
-                return purchaseOrder;
+                var approver = purchaseOrder.ApproverId != null ? _appContext.Employee.Find(purchaseOrder.ApproverId) : null;
+
+                return new
+                {
+                    StatusId = purchaseOrder.StatusId,
+                    PurchaseOrderId = purchaseOrder.PurchaseOrderId,
+                    PurchaseOrderNumber = purchaseOrder.PurchaseOrderNumber,
+                    RequestedBy = purchaseOrder.RequestedBy,
+                    Vendor = purchaseOrder.Vendor,
+                    OpenDate = purchaseOrder.OpenDate,
+                    Approver = approver != null ? approver.FirstName + " " + approver.LastName : "",
+                    NeedByDate = purchaseOrder.NeedByDate,
+                    DateApproved = purchaseOrder.DateApproved,
+                    DeferredReceiver = purchaseOrder.DeferredReceiver,
+                    Resale = purchaseOrder.Resale,
+                    Notes = purchaseOrder.Notes,
+                    PurchaseOderPart = purchaseOrder.PurchaseOderPart                    
+                };
+
+                //return purchaseOrder;
             }
             catch (Exception ex)
             {

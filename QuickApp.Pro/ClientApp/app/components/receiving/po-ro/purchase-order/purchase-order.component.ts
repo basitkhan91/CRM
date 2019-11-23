@@ -272,12 +272,16 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allComapnies = allComapnies;
-
     }
 
     public getSelectedRow(rowData) {
         this.receivingService.purchaseOrderId = rowData.purchaseOrderId;
         this._router.navigateByUrl('/receivingmodule/receivingpages/app-receivng-po');
+    }
+
+    public editStockLine(rowData) {
+        this.receivingService.purchaseOrderId = rowData.purchaseOrderId;
+        return this.route.navigate(['/receivingmodule/receivingpages/app-edit-po']);
     }
 
     private onDataLoadordrSuccessful(purchaseOrder: PurchaseOrder) {
