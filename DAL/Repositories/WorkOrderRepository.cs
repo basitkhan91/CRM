@@ -1259,6 +1259,23 @@ namespace DAL.Repositories
         {
             try
             {
+				if(workOrderMaterials!=null && workOrderMaterials.Count>0)
+				{
+					var flag = workOrderMaterials.Any(p => p.WorkFlowWorkOrderId > 0);
+					if (!flag)
+					{
+						WorkOrderWorkFlow workOrderWorkFlow = new WorkOrderWorkFlow();
+						workOrderWorkFlow.WorkOrderId = workOrderMaterials.FirstOrDefault().WorkOrderId;
+						workOrderWorkFlow.MasterCompanyId = 1;
+						workOrderWorkFlow.UpdatedBy = workOrderWorkFlow.CreatedBy = "admin";
+						workOrderWorkFlow.UpdatedDate = workOrderWorkFlow.CreatedDate = DateTime.Now;
+						workOrderWorkFlow.IsActive = true;
+						workOrderWorkFlow.IsDeleted = false;
+						_appContext.WorkOrderWorkFlow.Add(workOrderWorkFlow);
+						_appContext.SaveChanges();
+						workOrderMaterials.ForEach(p => p.WorkFlowWorkOrderId = workOrderWorkFlow.WorkFlowWorkOrderId);
+					}
+				}
                 _appContext.WorkOrderMaterials.AddRange(workOrderMaterials);
                 _appContext.SaveChanges();
                 return workOrderMaterials;
