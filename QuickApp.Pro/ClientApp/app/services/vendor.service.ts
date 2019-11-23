@@ -334,7 +334,7 @@ export class VendorService {
 
     deleteVendorAcion(actionId: any) {
 
-        return this.actionEndpoint.getDeletevendorshippingEndpoint(actionId);
+        return this.actionEndpoint.getDeletevendorshippingViaEndpoint(actionId);
 
     }
 
