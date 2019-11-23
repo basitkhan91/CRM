@@ -137,7 +137,7 @@ export class WorkOrderAddComponent implements OnInit {
   workFlowId: any;
   editWorkFlowData: any;
   workFlowObject = {
-    materialList  : []
+    materialList: []
   }
 
 
@@ -165,7 +165,7 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
   async ngOnInit() {
-  //  this.showTableGrid = true;
+    //  this.showTableGrid = true;
     this.mpnFlag = true;
     this.isDetailedView = true;
     this.selectedCustomer = new Customer();
@@ -188,14 +188,15 @@ export class WorkOrderAddComponent implements OnInit {
       this.workOrderGeneralInformation = {
         ...data,
         partNumbers: data.partNumbers.map((x, index) => {
-
+          debugger
           this.getRevisedpartNumberByItemMasterId(x.masterPartId, index);
           this.getStockLineByItemMasterId(x.masterPartId, x.conditionId, index);
           this.getConditionByItemMasterId(x.masterPartId, index);
           return {
             ...x,
             masterPartId: getObjectById('itemMasterId', x.masterPartId, this.partNumberOriginalData),
-            mappingItemMasterId: getObjectById('mappingItemMasterId', x.mappingItemMasterId, this.getDynamicVariableData('revisedPartOriginalData', index)),
+            mappingItemMasterId: getObjectById('mappingItemMasterId', x.mappingItemMasterId, this['revisedPartOriginalData' + index]),
+
 
 
           }
@@ -564,24 +565,24 @@ export class WorkOrderAddComponent implements OnInit {
     })
   }
 
-  saveWorkOrderMaterialList(data){
+  saveWorkOrderMaterialList(data) {
 
     const materialArr = data.materialList.map(x => {
       return {
         ...x,
-        workOrderId: this.workOrderId , workFlowWorkOrderId : this.workFlowWorkOrderId 
+        workOrderId: this.workOrderId, workFlowWorkOrderId: this.workFlowWorkOrderId
       }
     })
     console.log(data);
-  this.workOrderService.createWorkOrderMaterialList(materialArr).subscribe(res => {
-    this.workFlowObject.materialList = [];
-    this.alertService.showMessage(
-      this.moduleName,
-      'Saved Work Order MaterialList  Succesfully',
-      MessageSeverity.success
-    );
-    this.getMaterialListByWorkOrderId();
-  })
+    this.workOrderService.createWorkOrderMaterialList(materialArr).subscribe(res => {
+      this.workFlowObject.materialList = [];
+      this.alertService.showMessage(
+        this.moduleName,
+        'Saved Work Order MaterialList  Succesfully',
+        MessageSeverity.success
+      );
+      this.getMaterialListByWorkOrderId();
+    })
 
   }
 
@@ -677,7 +678,7 @@ export class WorkOrderAddComponent implements OnInit {
 
     await this.workOrderService.getRevisedPartNumbers(itemMasterId).subscribe(res => {
       this['revisedPartOriginalData' + index] = res;
-      console.log(this['revisedPartOriginalData' + index]);
+
 
     })
 
