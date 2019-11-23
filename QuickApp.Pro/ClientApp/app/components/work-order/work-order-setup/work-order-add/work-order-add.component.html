@@ -713,7 +713,7 @@
                         <!-- <wf-create [isWorkOrder]="isWorkOrder" [savedWorkOrderData]="savedWorkOrderData" (savedWorkFlowWorkOrderData)="savedWorkFlowData($event)" > </wf-create> -->
                     </div>
                     <div *ngIf="workFlowId && subTabWorkFlow && editWorkFlowData" [ngClass]="{hidedata: subTabWorkFlow !== 'editworkFlow' }">
-                        <wf-create [isWorkOrder]="isWorkOrder" [savedWorkOrderData]="savedWorkOrderData" (savedWorkFlowWorkOrderData)="savedWorkFlowData($event)" > </wf-create>
+                        <wf-create [isWorkOrder]="isWorkOrder" [workFlowWorkOrderId]="workFlowWorkOrderId" [savedWorkOrderData]="savedWorkOrderData" (savedWorkFlowWorkOrderData)="savedWorkFlowData($event)" > </wf-create>
                         <!-- <app-workflow-list></app-workflow-list> -->
                     </div>
 
@@ -722,7 +722,7 @@
                     </div>
                     <div *ngIf="labor" [ngClass]="{hidedata : gridActiveTab !== 'labor'}">
                         <app-work-order-labor [laborForm]="labor" [workOrderWorkFlowOriginalData]="workOrderWorkFlowOriginalData" [savedWorkOrderData]="savedWorkOrderData"
-                        (saveworkOrderLabor)="saveworkOrderLabor($event)"
+                        (saveworkOrderLabor)="saveWorkOrderLabor($event)"
                         ></app-work-order-labor>
                     </div>
 
@@ -733,8 +733,8 @@
                     <div  *ngIf="quote" [ngClass]="{hidedata : gridActiveTab !== 'quote' }" >
                             <app-work-order-quote [quoteForm]="quote"></app-work-order-quote>
                         </div>
-                    <div  [ngClass]="{hidedata : gridActiveTab !== 'materialList' }" >  
-                      <app-work-order-complete-material-list  [workOrderMaterialList]="workOrderMaterialList"></app-work-order-complete-material-list>
+                    <div *ngIf="workOrderId" [ngClass]="{hidedata : gridActiveTab !== 'materialList' }" >  
+                      <app-work-order-complete-material-list [isWorkOrder]="isWorkOrder" [workFlow]="workFlowObject" [savedWorkOrderData]="savedWorkOrderData" [workOrderMaterialList]="workOrderMaterialList" (saveMaterialListForWO)="saveWorkOrderMaterialList($event)"></app-work-order-complete-material-list>
                     </div>
                       
 

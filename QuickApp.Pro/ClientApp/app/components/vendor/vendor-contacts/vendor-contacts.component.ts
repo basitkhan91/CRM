@@ -114,7 +114,7 @@ export class VendorContactsComponent implements OnInit {
         { field: 'lastName', header: 'LAST NAME' },
         { field: 'contactTitle', header: 'CONTACT TITLE' },
         { field: 'email', header: 'EMAIL' },
-        { field: 'workPhone', header: 'MOBILE PHONE' },
+        { field: 'fullContactNo', header: 'MOBILE PHONE' },
         // { field: 'mobilePhone', header: 'Mobile Phone' },
         { field: 'fax', header: 'FAX' },
         // { field: 'isDefaultContact', header: 'Primary Contact' },
@@ -247,11 +247,19 @@ export class VendorContactsComponent implements OnInit {
     private refresh() {
         this.applyFilter(this.dataSource.filter);
     }
-    private onDataLoadSuccessful(allWorkFlows: any[]) {
+    private onDataLoadSuccessful(allWorkFlows: any[]) {       
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.dataSource.data = allWorkFlows;
+        this.dataSource.data = allWorkFlows;      
         this.allActions = allWorkFlows;
+        //const responseData = allWorkFlows;
+        // this.allActions = allWorkFlows.map(x => {
+        //   return {
+        //       ...x,
+        //     workPhone: `${x.workPhone} - ${x.workPhoneExtn}`,            
+           
+        //   };
+        // });         
     }
     private ondata(allWorkFlows: any[]) {
         this.alertService.stopLoadingMessage();
@@ -327,7 +335,7 @@ export class VendorContactsComponent implements OnInit {
         this.isEditMode = false;
         this.isDeleteMode = true;
         delete row.updatedBy;
-        this.localCollection = row;
+        this.localCollection = row;       
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -339,7 +347,7 @@ export class VendorContactsComponent implements OnInit {
         this.isSaving = true;
         this.sourceVendor = { ...row };       
         this.loadMasterCompanies();
-    }
+    }    
     openView(content, row) {
         this.sourceVendor = row;
         this.action_name = row.description;
@@ -436,8 +444,8 @@ export class VendorContactsComponent implements OnInit {
         }
 
         else {
-        }
-        this.workFlowtService.contactCollection = this.local;
+        }       
+        this.workFlowtService.contactCollection = this.local;        
     }
 
 
@@ -458,11 +466,16 @@ export class VendorContactsComponent implements OnInit {
         this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-financial-information');
     }
 
-    deleteItemAndCloseModel(contactId) {
+    deleteItemAndCloseModel() {       
+       let contactId=this.localCollection.contactId;
+       if(contactId >0)
+       {
         this.isSaving = true;
         this.workFlowtService.deleteContact(contactId).subscribe(
             response => this.saveCompleted(this.sourceVendor),
             error => this.saveFailedHelper(error));
+       }
+       this.modal.close();      
     }
 
     updateVendorContact(updateObj: any) {

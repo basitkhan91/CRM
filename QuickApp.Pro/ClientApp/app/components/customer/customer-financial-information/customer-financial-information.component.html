@@ -614,11 +614,13 @@
                             <label>Discount Percentage<span class="clr-red">*</span></label>
                             <div class="inner-addon right-addon inline-block">
 
-                                <p-autoComplete class="p-dropdown-custom-2" name="discontValue"
+                                <p-autoComplete  class="p-dropdown-custom-2" name="discontValue"
                                                 [(ngModel)]="discontValue"
-                                                (onSelect)="selectedDiscount()"
-                                                (onKeyUp)="checkDiscountExists('discontValue',$event.target.value)"
-                                                [suggestions]="_discountList" field="discontValue" (completeMethod)="filterDiscount($event)"
+                                               
+                                               (onSelect)="selectedDiscount()"
+                                                (onKeyUp)="checkDiscountExists($event)"
+                                               
+                                                [suggestions]="_discountList" field="label" (completeMethod)="filterDiscount($event)"
                                                 [size]="30" [minLength]="1" [dropdown]="true" required>
                                 </p-autoComplete>
                                 <div *ngIf="isDiscountExists" class="clr-red">Entry Already Exists</div>
@@ -627,7 +629,7 @@
                     </div>
                     <div class="modal-footer">
 
-                        <button class="btn btn-primary-cstm" data-dismiss="modal" (click)="newDiscountAdd()" [disabled]="!discount.valid">Submit</button>
+                        <button class="btn btn-primary-cstm" data-dismiss="modal" (click)="newDiscountAdd()" [disabled]="!discount.valid || isDiscountExists">Submit</button>
                         <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="restDiscount()">Close</button>
 
                     </div>

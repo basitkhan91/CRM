@@ -69,6 +69,4 @@ export class ParetDetailsComponent implements OnChanges {
     <th>Memo</th>
     */
   }
-
-
 }

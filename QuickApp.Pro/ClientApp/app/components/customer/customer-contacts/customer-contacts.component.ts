@@ -179,6 +179,7 @@ export class CustomerContactsComponent implements OnInit {
 		this.sourceViewforContact = rowData;
     }
     onAddContactInfo() {
+        this.isEditButton = false;
         this.contactInformation = new CustomerContactModel()
 
 

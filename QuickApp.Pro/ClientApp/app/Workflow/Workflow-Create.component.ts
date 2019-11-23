@@ -46,6 +46,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     @Input() savedWorkOrderData;
     @Input() WorkOrderType;
     @Input() workFlowId;
+    @Input() workFlowWorkOrderId;
     @Output() savedWorkFlowWorkOrderData = new EventEmitter()
     UpdateMode: boolean;
     workFlow: any;
@@ -2126,7 +2127,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         }
     }
 
-    saveWorkFlowWorkOrder() {
+    saveWorkFlowWorkOrder(isSaveToWorkFlow) {
         if (this.workFlowList != undefined && this.workFlowList.length > 0) {
 
             this.sourceWorkFlow.charges = [];
@@ -2238,15 +2239,19 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             const saveWorkFlowWorkOrderData = {
                 ...this.sourceWorkFlow,
                 // ...tasks[0],
+                isSaveToWorkFlow : isSaveToWorkFlow,
+                workflowId: 0 , 
                 workOrderId: this.savedWorkOrderData.workOrderId,
-                charges: data.charges.map(x => { return { ...x, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
-                directions: data.directions.map(x => { return { ...x, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
-                equipments: data.equipments.map(x => { return { ...x, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
-                exclusions: data.exclusions.map(x => { return { ...x, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
-                expertise: data.expertise.map(x => { return { ...x, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
-                materialList: data.materialList.map(x => { return { ...x, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
+                workFlowWorkOrderId: this.workFlowWorkOrderId,
+                existingWorkFlowId : this.sourceWorkFlow.workflowId,
+                charges: data.charges.map(x => { return { ...x, workflowChargesListId:0 , workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
+                directions: data.directions.map(x => { return { ...x, workflowDirectionId : 0, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
+                equipments: data.equipments.map(x => { return { ...x, workflowEquipmentListId : 0 , workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
+                exclusions: data.exclusions.map(x => { return { ...x, workflowExclusionId:0 , workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
+                expertise: data.expertise.map(x => { return { ...x, workflowExpertiseListId : 0 ,  workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
+                materialList: data.materialList.map(x => { return { ...x, workflowMaterialListId: 0 , workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
                 measurements: data.measurements.map(x => { return { ...x, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
-                publication: data.publication.map(x => { return { ...x, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } })
+                publication: data.publication.map(x => { return { ...x, Id: 0 , workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } })
 
 
             }
