@@ -21,7 +21,6 @@ namespace DAL.Repositories
         {
             var data = (from c in _appContext.Contact
                         join vc in _appContext.VendorContact on c.ContactId equals vc.ContactId
-
                         where vc.VendorId== id
                         // select new { t, ad, vt }).ToList();
                         select new
@@ -49,8 +48,9 @@ namespace DAL.Repositories
                            c.CreatedDate,
                            c.UpdatedDate,
                            c.WorkPhoneExtn,
-                           vc.IsDefaultContact
-                           
+                           vc.IsDefaultContact,
+                           FullContactNo= c.WorkPhoneExtn + " - "+ c.WorkPhone,
+
                         }).ToList();
             return data;
             //return _appContext.Contact.Include("MasterCompany").OrderByDescending(c => c.ContactId).ToList();
@@ -60,7 +60,6 @@ namespace DAL.Repositories
         {
             var data = (from c in _appContext.Contact
                         join vc in _appContext.CustomerContact on c.ContactId equals vc.ContactId
-
                         where vc.CustomerId == id
                         // select new { t, ad, vt }).ToList();
                         select new
@@ -89,6 +88,7 @@ namespace DAL.Repositories
                             c.CreatedDate,
                             c.UpdatedDate,
                             c.WorkPhoneExtn,
+                            FullContactNo = c.WorkPhoneExtn + " - " + c.WorkPhone,
 
                         }).ToList();
             return data;
