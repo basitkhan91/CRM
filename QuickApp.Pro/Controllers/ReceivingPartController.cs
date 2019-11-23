@@ -142,7 +142,6 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("GetReceivingPurchaseList/{receivingId}")]
-        [Produces(typeof(List<PurchaseOrderViewModel>))]
         public IActionResult GetReceivingPurchaseOrderListById(long receivingId)
         {
             try
