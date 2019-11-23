@@ -43,7 +43,7 @@ export class WorkScopeComponent implements OnInit {
     headers = [
         
         { field: 'workScopeCode', header: 'Work Scope Code' },
-        { field: 'description', header: 'Work Scope Description' },
+        { field: 'description', header: 'Work Scope Name' },
         { field: 'memo', header: 'Memo' },
     ]
     selectedColumns = this.headers;
