@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Models
 {
@@ -28,7 +30,8 @@ namespace DAL.Models
         public int TATDaysStandard { get; set; }
         public long ConditionId { get; set; }
         public long MappingItemMasterId { get; set; }
-        
+        public int? TATDaysCurrent { get; set; }
+
 
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
@@ -37,5 +40,18 @@ namespace DAL.Models
         public DateTime UpdatedDate { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
+
+        [NotMapped]
+        public List<RevisedPart> RevisedParts { get; set; }
+        [NotMapped]
+        public string PartDescription { get; set; }
+        [NotMapped]
+        public string SerialNo { get; set; }
+    }
+
+    public class RevisedPart
+    {
+        public long MappingItemMasterId { get; set; }
+        public string RevisedPartNo { get; set; }
     }
 }
