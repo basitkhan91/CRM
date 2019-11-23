@@ -44,9 +44,10 @@ namespace DAL.Models
         [NotMapped]
         public List<RevisedPart> RevisedParts { get; set; }
         [NotMapped]
-        public string PartDescription { get; set; }
+        public string Description { get; set; }
         [NotMapped]
-        public string SerialNo { get; set; }
+        public string SerialNumber { get; set; }
+
     }
 
     public class RevisedPart

@@ -68,9 +68,7 @@ namespace DAL.Repositories
             try
             {
                 workOrder.UpdatedDate = DateTime.Now;
-                workOrder.UpdatedBy = "admin";
-                workOrder.IsDeleted = false;
-                _appContext.WorkOrder.Add(workOrder);
+                _appContext.WorkOrder.Update(workOrder);
                 _appContext.SaveChanges();
                 return workOrder;
             }
@@ -295,22 +293,22 @@ namespace DAL.Repositories
                         workOrder.CustomerDetails.CustomerContact = string.Empty;
                 }
 
-                foreach(var part in  workOrder.PartNumbers)
+                foreach (var part in workOrder.PartNumbers)
                 {
-                    part.RevisedParts  = WORevisedParts(part.MasterPartId,1);
-                    var itemMaster=WorkOrderPartDetails(part.MasterPartId);
+                    part.RevisedParts = WORevisedParts(part.MasterPartId, 1);
+                    var itemMaster = WorkOrderPartDetails(part.MasterPartId);
                     if (itemMaster != null)
-                        part.PartDescription = itemMaster.PartDescription;
+                        part.Description = itemMaster.PartDescription;
                     else
-                        part.PartDescription = string.Empty;
-                    var stockLine= WOPartSerialNo(part.StockLineId);
+                        part.Description = string.Empty;
+                    var stockLine = WOPartSerialNo(part.StockLineId);
                     if (stockLine != null)
-                        part.SerialNo = stockLine.SerialNumber;
+                        part.SerialNumber = stockLine.SerialNumber;
                     else
-                        part.SerialNo = string.Empty;
+                        part.SerialNumber = string.Empty;
                 }
 
-               
+
 
                 return workOrder;
             }
@@ -715,7 +713,20 @@ namespace DAL.Repositories
                                      DataEnteredByName = deby.FirstName,
                                      ExpertiseType = exp.Description,
                                      EmployeeName = emp.FirstName,
-                                     LaborList = _appContext.WorkOrderLabor.Where(p => p.WorkOrderLaborHeaderId == lh.WorkOrderLaborHeaderId).ToList()
+                                     LaborList = (from wol in _appContext.WorkOrderLabor
+                                                  join exp in _appContext.ExpertiseType on wol.ExpertiseId equals exp.ExpertiseTypeId into wolexp
+                                                  from exp in wolexp.DefaultIfEmpty()
+                                                  join emp in _appContext.Employee on wol.EmployeeId equals emp.EmployeeId into wolemp
+                                                  from emp in wolemp.DefaultIfEmpty()
+                                                  where wol.WorkOrderLaborHeaderId == lh.WorkOrderLaborHeaderId
+                                                  select new
+                                                  {
+                                                      wol,
+                                                      ExpertiseType = exp.Description,
+                                                      EmployeeName=emp.FirstName
+                                                  }
+                                                 ).ToList()
+                                     // _appContext.WorkOrderLabor.Where(p => p.WorkOrderLaborHeaderId == lh.WorkOrderLaborHeaderId).ToList()
                                  }
 
                                ).FirstOrDefault();
@@ -1091,8 +1102,10 @@ namespace DAL.Repositories
 
                 var result = (from we in _appContext.WorkOrderExclusions
                               join im in _appContext.ItemMaster on we.ItemMasterId equals im.ItemMasterId
-                              join eo in _appContext.ExclusionEstimatedOccurances on we.EstOcuuranceId equals eo.Id
-                              join mp in _appContext.MarkUpPercentage on we.MarkUpPercentageId equals mp.MarkUpPercentageId
+                              join eo in _appContext.ExclusionEstimatedOccurances on we.EstOcuuranceId equals eo.Id into weeo
+                              from eo in weeo.DefaultIfEmpty()
+                              join mp in _appContext.MarkUpPercentage on we.MarkUpPercentageId equals mp.MarkUpPercentageId into wemp
+                              from mp in wemp.DefaultIfEmpty()
                               where we.IsDeleted == false && (we.WorkFlowWorkOrderId == wfwoId || we.WorkOrderId == workOrderId)
                               select new
                               {
@@ -1102,7 +1115,7 @@ namespace DAL.Repositories
                                   Source = string.Empty,
                                   EstOcuurance = eo.Name,
                                   MarkUpPercentage = mp.MarkUpValue
-                              })
+                              }).Distinct()
                              .ToList();
 
                 if (result != null && result.Count > 0)
@@ -1404,7 +1417,7 @@ namespace DAL.Repositories
                             into wopsl
                             from sl in wopsl.DefaultIfEmpty()
 
-                            where wom.IsDeleted == false && wom.IsActive == true && wom.IsAltPart == false
+                            where wom.IsDeleted == false && wom.IsActive == true && (wom.IsAltPart == false || wom.IsAltPart == false)
 
                             && (wom.WorkFlowWorkOrderId == WorkFlowWorkOrderId || wom.WorkOrderId == workOrderId)
                             select new
@@ -3174,9 +3187,9 @@ namespace DAL.Repositories
                             })
                             .Distinct()
                             .ToList();
-                if(list!=null && list.Count>0)
+                if (list != null && list.Count > 0)
                 {
-                    foreach(var part in list)
+                    foreach (var part in list)
                     {
                         revisedPart = new RevisedPart();
                         revisedPart.MappingItemMasterId = part.MappingItemMasterId;
