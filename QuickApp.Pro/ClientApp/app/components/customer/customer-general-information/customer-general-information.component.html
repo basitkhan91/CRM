@@ -71,7 +71,7 @@
                                                     <div class="inner-addon right-addon inline-block">
 
                                                         <p-autoComplete class="autocomp-customer-cstm" name="customerName"  
-                                                      [(ngModel)]="generalInformation.name" (onKeyUp)="checkCustomerNameExist($event.target.value)" (onChange)="checkCustomerNameExist()"
+                                                      [(ngModel)]="generalInformation.name" (onKeyUp)="checkCustomerNameExist($event.target.value)" (onChange)="checkCustomerNameExist($event.target.value)"
                                                        (onSelect)="selectedCustomerName()" [suggestions]="customerNames" field="name" (completeMethod)="filterCustomerNames($event)"                                                         
                                                         [size]="30" [minLength]="1" [dropdown]="true" required>
                                                              <!--<ng-template let-name pTemplate="item">

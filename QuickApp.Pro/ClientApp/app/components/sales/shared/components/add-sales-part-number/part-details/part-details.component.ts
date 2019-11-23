@@ -6,5 +6,12 @@ import { Component, Input, Output, EventEmitter } from "@angular/core";
   styleUrls: ["./part-details.component.scss"]
 })
 export class ParetDetailsComponent {
+    showPaginator: any;
+    pageLinks: any;
+    parts: any;
+    selectedColumns: any;
+    totalRecords: any;
+    onPaging: any;
+
   constructor() {}
 }
