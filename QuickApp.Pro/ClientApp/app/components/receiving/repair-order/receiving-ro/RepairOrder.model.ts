@@ -1,8 +1,9 @@
 ﻿import { Vendor } from "../../../../models/vendor.model";
 import { AddressModel } from "../../../../models/address.model";
+import { Dropdown } from "primeng/dropdown";
 
 export class RepairOrder {
-
+    repairOrderPartRecordId: number;
     repairOrderId: number;
     repairOrderNumber: string;
     referenceId: string;
@@ -40,15 +41,17 @@ export class RepairOrder {
     deferredReceiver: boolean;
     resale: boolean;
     isActive: boolean;
+    managementStructureId: number;
+    openDate: string;
+    
+    dateApproved: string;
 
-
-    repairOrderPart: RepairOrderPart[];
+    repairOderPart: RepairOrderPart[];
     vendor: Vendor;
     stockLine: StockLine[];
 }
 
-export class PartStockLineMapper
-{
+export class PartStockLineMapper {
     id: number;
     repairOrderPartRecordId: number;
     stockLineId: number;
@@ -69,8 +72,12 @@ export class RepairOrderPart {
     status: string;
     trace: string;
     conditionCode: string;
-    uOMId: number;
+    quantityActuallyReceived: number;
+    quantityRejected: string;
+    uomId: number;
+
     quantityOrdered: number;
+    quantityBackOrdered: number;
     unitCost: number;
     discountPerUnit: number;
     discountCostPerUnit: number;
@@ -79,20 +86,20 @@ export class RepairOrderPart {
     functionalCurrencyId: number;
     foreignExchangeRate: number;
     workOrderId: number;
-    //repairOrderId: number;
+    // repairOrderId: number;
     salesOrderId: number;
     generalLedgerAccounId: number;
     memo: string;
-    roPartSplitUserTypeId: number;
-    roPartSplitUserId: number;
-    roPartSplitAddress1: string;
-    roPartSplitAddress2: string;
-    roPartSplitAddress3: string;
-    roPartSplitCity: string;
-    roPartSplitState: string;
-    roPartSplitPostalCodestring; string;
-    roPartSplitCountry: string;
-    roPartSplitAddressId: number;
+    poPartSplitUserTypeId: number;
+    poPartSplitUserId: number;
+    poPartSplitAddress1: string;
+    poPartSplitAddress2: string;
+    poPartSplitAddress3: string;
+    poPartSplitCity: string;
+    poPartSplitState: string;
+    poPartSplitPostalCodestring; string;
+    poPartSplitCountry: string;
+    poPartSplitAddressId: number;
     managementStructureId: number;
     createdBy: string;
     updatedBy: string;
@@ -102,45 +109,97 @@ export class RepairOrderPart {
     isParent: boolean;
     itemMaster: any;
     visible: boolean;
-   
-    stocklineListObj: StockLine[];
-    roPartSplitAddress: AddressModel;
+    conditionId: number;
+
+    public stocklineListObj: StockLine[];
+    public timeLifeList: TimeLife[];
+    poPartSplitAddress: AddressModel;
     // UI Properties
     // below properties does not play role on the server side and are being used to show the data on UI and should be limited to UI only.
+    siteId: number;
+    shelfId: number;
+    binId: number;
+    warehouseId: number;
+    locationId: number;
 
     managementStructureName: string[];
     statusText: string;
+    UOMText: string;
+    isPMA: true;
+    isOEM: true;
+    isDER: true;
     userTypeName: string;
     userName: string;
     addressText: string;
     showStockLineGrid: boolean;
     quantityToReceive: number;
+    isSameDetailsForAllParts: boolean;
+    isTimeLifeUpdateLater: boolean;
+    hasChildren: boolean;
+    eCCNAlreadyExist: boolean;
+    itarNumberExist: boolean;
 
+    stockLineCount: number;
 
+    currentSLIndex: number;
+    currentTLIndex: number;
+    currentSERIndex: number;
+    isDisabledTLboxes: boolean;
+    toggleIcon: boolean;
+    isEnabled: boolean;
+
+    companyId: number;
+    businessUnitId: number;
+    divisionId: number;
+    departmentId: number;
+
+    companyText: string;
+    businessUnitText: string;
+    divisionText: string;
+    departmentText: string;
+
+    CompanyList: DropDownData[];
+    BusinessUnitList: DropDownData[];
+    DivisionList: DropDownData[];
+    DepartmentList: DropDownData[];
+    SiteList: DropDownData[];
+    WareHouseList: DropDownData[];
+    LocationList: DropDownData[];
+    ShelfList: DropDownData[];
+    BinList: DropDownData[];
+    stockLine: StockLine[];
+    timeLife: TimeLife[];
 }
 
 export class TimeLife {
 
     timeLifeCyclesId: number;
-    cyclesRemaining: number;
-    cyclesSinceNew: number;
-    cyclesSinceOVH: number;
-    cyclesSinceInspection: number;
-    cyclesSinceRepair: number;
-    timeRemaining: number;
-    timeSinceNew: number;
-    timeSinceOVH: number;
-    timeSinceInspection: number;
-    timeSinceRepair: number;
-    lastSinceNew: number;
-    lastSinceOVH: number;
-    lastSinceInspection: number;
+    repairOrderId: number;
+    repairOrderPartRecordId: number;
+    cyclesRemaining: string;
+    cyclesSinceNew: string;
+    cyclesSinceOVH: string;
+    cyclesSinceInspection: string;
+    cyclesSinceRepair: string;
+
+    timeRemaining: string;
+    timeSinceNew: string;
+    timeSinceOVH: string;
+    timeSinceInspection: string;
+    timeSinceRepair: string;
+
+    lastSinceNew: string;
+    lastSinceOVH: string;
+    lastSinceInspection: string;
+
     masterCompanyId: number;
     isActive: boolean;
+
+    detailsNotProvided: boolean;
+    stockLineId: number;
 }
 
-export class StockLine
-{
+export class StockLine {
     stockLineId: number;
     partNumber: string;
     stockLineNumber: string;
@@ -148,6 +207,7 @@ export class StockLine
     controlNumber: string;
     itemMasterId: number;
     quantity: number;
+    quantityRejected: number;
     conditionId: number;
     serialNumber: string;
     shelfLife: boolean;
@@ -164,7 +224,9 @@ export class StockLine
     manufacturer: string;
     manufacturerLotNumber: string;
     manufacturingDate: Date;
+    expirationDate: Date;
     manufacturingBatchNumber: string;
+    manufacturingTrace: string;
     partCertificationNumber: string;
     certifiedBy: string;
     certifiedDate: Date;
@@ -175,15 +237,17 @@ export class StockLine
     orderDate: Date;
     repairOrderId: number;
     repairOrderUnitCost: number;
+    repairOrderExtendedCost: number;
     inventoryUnitCost: number;
-    //repairOrderId: number;
-    //repairOrderUnitCost: number;
+    // repairOrderId: number;
+    // repairOrderUnitCost: number;
     receivedDate: Date;
     receiverNumber: string;
     reconciliationNumber: string;
     unitSalesPrice: number;
     coreUnitCost: number;
     gLAccountId: number;
+    glAccountId: number;
     assetId: number;
     isHazardousMaterial: boolean;
     isPMA: boolean;
@@ -191,6 +255,7 @@ export class StockLine
     oEM: boolean;
     memo: string;
     managementStructureEntityId: number;
+    managementStructureId: number;
     timeLifeCyclesId: number;
     site: string;
     shelf: string;
@@ -210,12 +275,33 @@ export class StockLine
     quantityToReceive: number;
     isSerialized: boolean;
     idNumber: number;
+    aircraftTailNumber: string;
+    shippingReference: string;
+    shippingViaId: number;
+    shippingAccount: string;
+    engineSerialNumber: string;
+    createdDate: Date;
+    repairOrderPartRecordId: number;
+    timeLifeDetailsNotProvided: boolean;
 
-    /////////////////////
+    //View Properties
+
+    companyText: string;
+    businessUnitText: string;
+    divisionText: string;
+    departmentText: string;
+    siteText: string;
+    wareHouseText: string;
+    locationText: string;
+    shelfText: string;
+    binText: string;
+
+    isEnabled: boolean;
     CompanyList: DropDownData[];
     BusinessUnitList: DropDownData[];
     DivisionList: DropDownData[];
     DepartmentList: DropDownData[];
+
     SiteList: DropDownData[];
     WareHouseList: DropDownData[];
     LocationList: DropDownData[];
@@ -223,8 +309,20 @@ export class StockLine
     BinList: DropDownData[];
     CustomerList: DropDownData[];
     VendorList: DropDownData[];
-
     visible: boolean;
+    serialNumberNotProvided: boolean;
+    isDisabledSNboxes: boolean;
+    currentDate: Date;
+    glAccountText: string;
+    obtainFromObject: DropDownData;
+    ownerObject: DropDownData;
+    traceableToObject: DropDownData;
+}
+
+export class ReceiveParts {
+    repairOrderPartRecordId: number;
+    stockLines: StockLine[];
+    timeLife: TimeLife[];
 }
 
 export class DropDownData {
