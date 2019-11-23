@@ -1487,4 +1487,8 @@ updateROApproval<T>(param: any): Observable<any> {
 getROApproverList(repairOrderId) {
 	return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/roApproversList?repairOrderId=${repairOrderId}`)
 }
+
+getReceivingROList() {
+	return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/recevingRoList`)
+}
 }

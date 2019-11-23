@@ -18,7 +18,7 @@
                             <div>
                                 <div class="pull-left" style="margin-top: 4px; margin-right: 15px;" *ngFor="let status of poStatus">
                                     <label class="radio-cstm wauto">
-                                        <input type="radio"  name="postatus" class="form-control" value="{{status.Key}}" disabled> <!--[checked]="status.Key == repairOrderData.statusId"-->
+                                        <input type="radio" [checked]="status.Key == repairOrderData.statusId" name="postatus" class="form-control" value="{{status.Key}}" disabled>
                                         <span class="checkmark"></span>
                                         {{status.Value}}
                                     </label>
@@ -32,51 +32,51 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>RO Num</label>
-                            <input class="form-control" type="text" name="repairOrderNumber" disabled > <!--[(ngModel)]="repairOrderData.repairOrderNumber"-->
+                            <input class="form-control" type="text" name="repairOrderNumber" [(ngModel)]="repairOrderData.repairOrderNumber" disabled >
                         </div>
                         <div class="form-group">
                             <label>Open Date</label>
-                            <p-calendar class="pas-clder" [showIcon]="true" name="openDate" [disabled]="true"></p-calendar> <!--[(ngModel)]="repairOrderData.openDate"-->
+                            <p-calendar class="pas-clder" [showIcon]="true" name="openDate" [(ngModel)]="repairOrderData.openDate" [disabled]="true"></p-calendar>
                         </div>
                         <div class="form-group">
                             <label>Closed/Cancelled Date</label>
-                            <p-calendar class="pas-clder" [showIcon]="true" name="closedDate" [disabled]="true"></p-calendar> <!--[(ngModel)]="repairOrderData.closedDate"-->
+                            <p-calendar class="pas-clder" [showIcon]="true" name="closedDate" [(ngModel)]="repairOrderData.closedDate" [disabled]="true"></p-calendar>
                         </div>
                         <div class="form-group">
                             <label>Need By</label>
-                            <p-calendar class="pas-clder" [showIcon]="true" name="needByDate" [disabled]="true"></p-calendar> <!--[(ngModel)]="repairOrderData.needByDate"-->                       
+                            <p-calendar class="pas-clder" [showIcon]="true" name="needByDate" [(ngModel)]="repairOrderData.needByDate" [disabled]="true"></p-calendar>  
                         </div>
                         <div class="form-group">
                             <label>Priority</label>
-                            <input class="form-control" type="text" name="priority" disabled> <!--[(ngModel)]="repairOrderData.priority"-->
+                            <input class="form-control" type="text" name="priority" [(ngModel)]="repairOrderData.priority" disabled>
                         </div>
                         
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Vendor Name</label>
-                            <input class="form-control" type="text" name="vendorName" disabled> <!--[(ngModel)]="repairOrderData.vendorName"-->
+                            <input class="form-control" type="text" name="vendorName" [(ngModel)]="repairOrderData.vendorName" disabled>
                         </div>
                         <div class="form-group">
                             <label>Vendor Code</label>
-                            <input class="form-control" type="text" name="vendorCode" disabled> <!--[(ngModel)]="repairOrderData.vendorCode"-->
+                            <input class="form-control" type="text" name="vendorCode" [(ngModel)]="repairOrderData.vendorCode" disabled>
                         </div>
                         <div class="form-group">
                             <label>Vendor Contact</label>
-                            <input class="form-control" type="text" name="vendorContact" disabled> <!--[(ngModel)]="repairOrderData.vendorContact"-->
+                            <input class="form-control" type="text" name="vendorContact" [(ngModel)]="repairOrderData.vendorContact" disabled>
                         </div>
                         <div class="form-group">
                             <label>Contact Phone</label>
-                            <input class="form-control" type="text" name="contactPhone" disabled> <!--[(ngModel)]="repairOrderData.contactPhone"-->
+                            <input class="form-control" type="text" name="contactPhone" [(ngModel)]="repairOrderData.contactPhone" disabled>
                         </div>
                         <div class="form-group">
                             <label>Credit Limit &amp; Terms</label>
                             <div class="form-row">
                                 <div class="col-sm-5">
-                                    <input class="form-control" type="text" placeholder="limit" name="creditLimit" disabled> <!--[(ngModel)]="repairOrderData.creditLimit"-->
+                                    <input class="form-control" type="text" placeholder="limit" name="creditLimit" [(ngModel)]="repairOrderData.creditLimit" disabled>
                                 </div>
                                 <div class="col-sm-7">
-                                    <input class="form-control" type="text" name="creditTerms" disabled> <!--[(ngModel)]="repairOrderData.terms"-->
+                                    <input class="form-control" type="text" name="creditTerms" [(ngModel)]="repairOrderData.terms" disabled>
                                 </div>
                             </div>
                         </div>
@@ -85,21 +85,21 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Requisitioner</label>
-                            <input class="form-control" type="text" name="requestedBy" disabled> <!--[(ngModel)]="repairOrderData.requestedBy"-->
+                            <input class="form-control" type="text" name="requestedBy" [(ngModel)]="repairOrderData.requestedBy" disabled>
                         </div>
                         <div class="form-group">
                             <label>Approver</label>
-                            <input class="form-control" type="text" name="approver" disabled> <!--[(ngModel)]="repairOrderData.approver"-->
+                            <input class="form-control" type="text" name="approver" [(ngModel)]="repairOrderData.approver" disabled>
                         </div>
                         <div class="form-group">
                             <label>Approved Date</label>
-                            <p-calendar class="pas-clder" [showIcon]="true" name="approvedDate" [disabled]="true"></p-calendar> <!--[(ngModel)]="repairOrderData.dateApproved"-->
+                            <p-calendar class="pas-clder" [showIcon]="true" name="approvedDate" [(ngModel)]="repairOrderData.dateApproved" [disabled]="true"></p-calendar>
                         </div>
                         <div class="form-group memo-popup-cstm" style="margin-top: 12px;">
                                 <label>Memo</label>
-                                <span tooltipPosition="top"> <!--pTooltip="{{repairOrderData.memo}}"-->
-                                    <input type="text" name="memo" pInputText class="form-control" disabled /></span> <!--value="{{repairOrderData.memo}}"-->
-                                <i class="fa fa-info-circle fa-lg" tooltipPosition="top"></i> <!--pTooltip="{{repairOrderData.memo}}"-->
+                                <span tooltipPosition="top" pTooltip="{{repairOrderData.memo}}">
+                                    <input type="text" name="memo" pInputText class="form-control" value="{{repairOrderData.memo}}" disabled /></span>
+                                <i class="fa fa-info-circle fa-lg" tooltipPosition="top" pTooltip="{{repairOrderData.memo}}"></i>
                             </div>
                         <!-- <div class="form-group">
                             <label>Status <span class="clr-red">*</span></label>
@@ -118,7 +118,7 @@
                         <div class="form-group">
                             <div class="checkbox-cstm" style="margin-top: 15px;">
                                 <label>
-                                    <input type="checkbox" name="resale" class="form-control" disabled> <!--[(ngModel)]="repairOrderData.resale"-->
+                                    <input type="checkbox" name="resale" class="form-control" [(ngModel)]="repairOrderData.resale" disabled>
                                     <span class="cr" style="opacity: 0.6;"><i class="cr-icon pi pi-check"></i></span>
                                     Resale
                                 </label>
@@ -127,7 +127,7 @@
                         <div class="form-group">
                             <div class="checkbox-cstm" style="margin-top: 10px;">
                                 <label>
-                                    <input type="checkbox" name="deferredReceiver" disabled> <!--[(ngModel)]="repairOrderData.deferredReceiver"-->
+                                    <input type="checkbox" name="deferredReceiver" [(ngModel)]="repairOrderData.deferredReceiver" disabled>
                                     <span class="cr" style="opacity: 0.6;"><i class="cr-icon pi pi-check"></i></span>
                                     Deferred Receiver
                                 </label>
@@ -142,19 +142,19 @@
                             <div class="card-body" style="padding: 4px 12px 6px;">
                                 <div class="form-group" style="margin-bottom: 2px;">
                                     <label>Company</label>
-                                    <input class="form-control" type="text" name="companyName" disabled> <!--[(ngModel)]="repairOrderData.company"-->
+                                    <input class="form-control" type="text" name="companyName" [(ngModel)]="headerManagementStructure.level1" disabled>
                                 </div>
                                 <div class="form-group" style="margin-bottom: 2px;">
                                     <label>BU</label>
-                                    <input class="form-control" type="text" name="BUName" disabled> <!--[(ngModel)]="repairOrderData.BU"-->
+                                    <input class="form-control" type="text" name="BUName" [(ngModel)]="headerManagementStructure.level2" disabled>
                                 </div>
                                 <div class="form-group" style="margin-bottom: 2px;">
                                     <label>Division</label>
-                                    <input class="form-control" type="text" name="divisionName" disabled> <!--[(ngModel)]="repairOrderData.division"-->
+                                    <input class="form-control" type="text" name="divisionName" [(ngModel)]="headerManagementStructure.level3" disabled>
                                 </div>
                                 <div class="form-group" style="margin-bottom: 2px;">
                                     <label>Dept</label>
-                                    <input class="form-control" type="text" name="deptName" disabled> <!--[(ngModel)]="repairOrderData.dept"-->
+                                    <input class="form-control" type="text" name="deptName" [(ngModel)]="headerManagementStructure.level4" disabled>
                                 </div>
                             </div>
                         </div>
@@ -300,7 +300,7 @@
             <div>
                 <div id="adminsearchlocationajax">
                     <div class="">
-                        <table class="table table-bordered table-wrap"> <!--*ngIf="repairOrderData != undefined && repairOrderData.repairOderPart != undefined"-->
+                        <table class="table table-bordered table-wrap" *ngIf="repairOrderData != undefined && repairOrderData.repairOrderPart != undefined">
                             <thead>
                                 <tr class="po-table-tr">
                                     <th></th>
@@ -323,61 +323,62 @@
                                     <th></th>
                                 </tr>
                             </thead>
-                            <tbody *ngIf="repairOrderData != undefined && repairOrderData.repairOderPart != undefined">
-                                <ng-container *ngFor="let part of repairOrderData.repairOderPart;let row_index=index">
+                            <tbody>
+                                <ng-container *ngFor="let part of repairOrderData.repairOrderPart;let row_index=index">
                                     <!--this row is for the parent part-->
                                     <tr class="basic-info" *ngIf="part.isParent">
                                         <td class="details-control eachcol" style="padding: 4px 6px;">
-                                            <section *ngIf="isSplitShipmentPart(part.itemMasterId)">
+                                            <section > <!--*ngIf="isSplitShipmentPart(part.itemMasterId)"-->
                                                 <i class="fa fa-{{ part.toggleIcon ? 'minus':'plus'}} btn btn-success btn-cstm btn-xs margin0" (click)="showSplitShipmentParts(part)"></i>
                                             </section>
                                         </td>
                                         <td>{{row_index + 1}}</td>
                                         <td>
-                                            {{part.itemMaster.partNumber}}
+                                            {{part.partNumber}}
                                         </td>
                                         <td>
-                                            {{part?.quantityOrdered}}
+                                            {{part.quantityOrdered}}
                                         </td>
 
                                         <td>
-                                            {{part.stockLineCount}}
+                                            {{part.quantityReceived}}
                                         </td>
 
-                                        <td>{{part?.userName}}</td>
+                                        <td>{{part.quantityRejected}}</td>
                                         <td>
-                                            {{part.quantityOrdered - part.stockLineCount}}
+                                            {{part.quantityOrdered - part.quantityReceived}}
                                         </td>
-                                        <td>{{part.stockLineCount == 0 ? 'Pending' : part.stockLineCount < part.quantityOrdered ? 'Fulfilling' : 'Received'}}</td>
+                                        <td>{{part.quantityReceived == 0 ? 'Pending' : part.quantityReceived < part.quantityOrdered ? 'Fulfilling' : 'Received'}}</td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
                                         <td colspan="3"></td>
-                                        <td *ngIf="part.managementStructureName != undefined && part.managementStructureName.length > 0" colspan="2">{{part?.managementStructureName[0]}}, {{part?.managementStructureName[1]}}, {{part?.managementStructureName[2]}}, {{part?.managementStructureName[3]}}</td>
+                                        <td colspan="2"></td>
+                                        <!-- <td *ngIf="part.managementStructureName != undefined && part.managementStructureName.length > 0" colspan="2">{{part?.managementStructureName[0]}}, {{part?.managementStructureName[1]}}, {{part?.managementStructureName[2]}}, {{part?.managementStructureName[3]}}</td> -->
                                         <td>
-                                            <section *ngIf="part.itemMaster != null && part.stockLineCount < part.quantityOrdered">
-                                                <p-inputSwitch *ngIf="part.itemMaster.isSerialized == true" [(ngModel)]="part.itemMaster.isSerialized" pTooltip="Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartSerialized(part)"></p-inputSwitch>
-                                                <p-inputSwitch *ngIf="part.itemMaster.isSerialized == false" [(ngModel)]="part.itemMaster.isSerialized" pTooltip="In Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartSerialized(part)"></p-inputSwitch>
-                                                <p-inputSwitch *ngIf="part.itemMaster.isSerialized == null" [(ngModel)]="part.itemMaster.isSerialized" pTooltip="Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartSerialized(part)"></p-inputSwitch>
+                                            <section *ngIf="part.quantityReceived < part.quantityOrdered">
+                                                <p-inputSwitch *ngIf="part.isSerialized == true" [(ngModel)]="part.isSerialized" pTooltip="Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartSerialized(part)"></p-inputSwitch>
+                                                <p-inputSwitch *ngIf="part.isSerialized == false" [(ngModel)]="part.isSerialized" pTooltip="In Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartSerialized(part)"></p-inputSwitch>
+                                                <p-inputSwitch *ngIf="part.isSerialized == null" [(ngModel)]="part.isSerialized" pTooltip="Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartSerialized(part)"></p-inputSwitch>
                                             </section>
                                         </td>
                                         <td>
-                                            <section *ngIf="part.itemMaster != null && part.stockLineCount < part.quantityOrdered">
-                                                <p-inputSwitch *ngIf="part.itemMaster.isTimeLife == true" [(ngModel)]="part.itemMaster.isTimeLife" pTooltip="Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartTimeLife(part)"></p-inputSwitch>
-                                                <p-inputSwitch *ngIf="part.itemMaster.isTimeLife == false" [(ngModel)]="part.itemMaster.isTimeLife" pTooltip="In Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartTimeLife(part)"></p-inputSwitch>
-                                                <p-inputSwitch *ngIf="part.itemMaster.isTimeLife == null" [(ngModel)]="part.itemMaster.isTimeLife" pTooltip="Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartTimeLife(part)"></p-inputSwitch>
+                                            <section *ngIf="part.quantityReceived < part.quantityOrdered">
+                                                <p-inputSwitch *ngIf="part.isTimeLife == true" [(ngModel)]="part.isTimeLife" pTooltip="Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartTimeLife(part)"></p-inputSwitch>
+                                                <p-inputSwitch *ngIf="part.isTimeLife == false" [(ngModel)]="part.isTimeLife" pTooltip="In Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartTimeLife(part)"></p-inputSwitch>
+                                                <p-inputSwitch *ngIf="part.isTimeLife == null" [(ngModel)]="part.isTimeLife" pTooltip="Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartTimeLife(part)"></p-inputSwitch>
                                             </section>
                                         </td>
                                         <td style="padding:4px;">
-                                            <input type="text" *ngIf="!part.hasChildren && part.stockLineCount < part.quantityOrdered" [(ngModel)]="part.quantityActuallyReceived" (keyup)="addStockLine(part, false)" pInputText pKeyFilter="pnum" class="form-control" />
+                                            <input type="text" *ngIf="!part.hasChildren && part.quantityReceived < part.quantityOrdered" [(ngModel)]="part.quantityActuallyReceived" (keyup)="addStockLine(part, false)" pInputText pKeyFilter="pnum" class="form-control" />
 
                                             <!--<a *ngIf="part.quantityBackOrdered" (click)="addDetailsClick(part)" style="color:red">Add Details</a>-->
                                         </td>
-                                        <td><a *ngIf="!part.hasChildren && part.stockLineCount < part.quantityOrdered" class="btn btn-primary-cstm btn-po-details" (click)="toggleStockLine($event, part)">{{ part.showStockLineGrid ? 'Close' : 'Receive'}}</a></td>
+                                        <td><a class="btn btn-primary-cstm btn-po-details" *ngIf="!part.hasChildren && part.quantityReceived < part.quantityOrdered" (click)="toggleStockLine($event, part)">{{ part.showStockLineGrid ? 'Close' : 'Receive'}}</a></td>
 
                                     </tr>
 
-                                    <tr class="basic-info splitshipment po-sub-tr" [hidden]="repairOrderData.repairOderPart[row_index+1] != undefined && !repairOrderData.repairOderPart[row_index+1].visible" *ngIf="part.isParent && repairOrderData.repairOderPart[row_index+1] != undefined && (!repairOrderData.repairOderPart[row_index+1].isParent)">
+                                    <tr class="basic-info splitshipment po-sub-tr" [hidden]="repairOrderData.repairOrderPart[row_index+1] != undefined && !repairOrderData.repairOrderPart[row_index+1].visible" *ngIf="part.isParent && repairOrderData.repairOrderPart[row_index+1] != undefined && (!repairOrderData.repairOrderPart[row_index+1].isParent)">
                                         <th></th>
                                         <th></th>
                                         <th>PN</th>
@@ -401,14 +402,14 @@
                                     <tr class="basic-info splitshipment" [hidden]="!part.visible" *ngIf="!part.isParent">
                                         <td>&nbsp;</td>
                                         <td>&nbsp;</td>
-                                        <td>{{part?.itemMaster?.partNumber}}</td>
+                                        <td>{{part?.partNumber}}</td>
                                         <td>{{part?.quantityOrdered}}</td>
-                                        <td>{{part?.stockLineCount}}</td>
+                                        <td>{{part?.quantityReceived}}</td>
 
                                         <td>{{'NA'}}</td>
-                                        <td>{{part.quantityOrdered - part.stockLineCount}}</td>
+                                        <td>{{part.quantityOrdered - part.quantityReceived}}</td>
                                         <td>
-                                            {{part.stockLineCount == 0 ? 'Pending' : part.stockLineCount < part.quantityOrdered ? 'Fulfilling' : 'Received'}}
+                                            {{part.quantityReceived == 0 ? 'Pending' : part.quantityReceived < part.quantityOrdered ? 'Fulfilling' : 'Received'}}
                                         </td>
                                         <td></td>
                                         <td></td>
@@ -417,14 +418,15 @@
                                         <td>{{part?.userName}}</td>
                                         <td>{{part.addressText }}</td>
                                         <td *ngIf="part.managementStructureName != undefined && part.managementStructureName.length > 0" colspan="3">{{part.managementStructureName[0]}}, {{part.managementStructureName[1]}}, {{part.managementStructureName[2]}}, {{part.managementStructureName[3]}}</td>
-                                        <td><input type="text" *ngIf="part.stockLineCount < part.quantityOrdered" [(ngModel)]="part.quantityActuallyReceived" (keyup)="addStockLine(part, false)" pInputText pKeyFilter="pnum" class="form-control" /></td>
-                                        <td><a class="btn btn-primary-cstm btn-po-details" *ngIf="part.stockLineCount < part.quantityOrdered" (click)="toggleStockLine($event, part)">{{ part.showStockLineGrid ? 'Close' : 'Receive'}}</a></td>
+                                        <td><input type="text"  [(ngModel)]="part.quantityActuallyReceived" (keyup)="addStockLine(part, false)" pInputText pKeyFilter="pnum" class="form-control" /></td> <!--*ngIf="part.quantityReceived < part.quantityOrdered"-->
+                                        <td><a class="btn btn-primary-cstm btn-po-details" (click)="toggleStockLine($event, part)">{{ part.showStockLineGrid ? 'Close' : 'Receive'}}</a></td> <!--*ngIf="part.quantityReceived < part.quantityOrdered"-->
+
                                         <!--<td><a (click)="addStockLine(part)" class="btn btn-primary-cstm btn-po-details">Add Details</a></td>-->
                                         <!--<button type="button" (click)="showDialog()" pButton icon="fa-external-link-square" label="Show"></button>-->
                                     </tr>
 
                                     <tr class="more-info" *ngIf="part.showStockLineGrid" [hidden]="!part.visible">
-                                        <td colspan="17">
+                                        <td colspan="20">
                                             <div class="form-row" style="margin-top: 10px;padding: 0px 7px;">
                                                 <div class="col-md-2">
                                                     <div class="form-group">
@@ -459,7 +461,7 @@
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label>Qty Actually Received</label>
-                                                        <input type="text" *ngIf="part.stockLineCount < part.quantityOrdered" value="{{part.quantityActuallyReceived}}" pInputText pKeyFilter="pnum" class="form-control" required />
+                                                        <input type="text" *ngIf="part.quantityReceived < part.quantityOrdered" value="{{part.quantityActuallyReceived}}" pInputText pKeyFilter="pnum" class="form-control" required />
                                                     </div>
                                                 </div>
 
@@ -476,7 +478,7 @@
                                                     <div class="form-group">
                                                         <label>GL Account <span class="clr-red">*</span></label>
                                                         <select class="form-control"
-                                                                [(ngModel)]="part.itemMaster.glAccountId"
+                                                                [(ngModel)]="part.glAccountId"
                                                                 #selects="ngModel"
                                                                 [ngModelOptions]="{standalone: true}">
                                                             <option value="0">Select</option>
@@ -521,7 +523,7 @@
                                             </div>-->
                                             <div style="margin-left: 6px;" *ngIf="part.stocklineListObj != undefined && part.stocklineListObj.length > 0">
                                                 <h3 class="add-details-heading">{{ part.itemMaster?.partNumber }} receiving Qty  {{ (part.currentSLIndex + 1) }} of {{ part.stocklineListObj.length }} </h3>
-                                                <div class="pull-right" style="margin-top: -37px;margin-right: 85px;" *ngIf="part.itemMaster.isSerialized">
+                                                <div class="pull-right" style="margin-top: -37px;margin-right: 85px;" *ngIf="part.isSerialized">
                                                     <i class="fa fa-chevron-left btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage('stockline', part.currentSLIndex - 1, part)"></i>
                                                     <input [value]="part.currentSLIndex + 1" type="text" pInputText pKeyFilter="pnum" (keyup)="gotoStockLinePage($event, part)" (focusout)="paginatorFocusOut($event, part)" class="form-control" style="width: 50px;border-radius: 0 !important;" />
                                                     <i class="fa fa-chevron-right btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage('stockline', part.currentSLIndex + 1, part)"></i>
@@ -532,7 +534,7 @@
                                                         <div class="col-md-3">
                                                             <div class="form-group">
                                                                 <div class="checkbox-cstm" style="margin-top: 4px">
-                                                                    <label style="width: 200px;" *ngIf="part.itemMaster.isSerialized">
+                                                                    <label style="width: 200px;" *ngIf="part.isSerialized">
                                                                         <input type="checkbox" class="form-control" (change)="toggleSameDetailsForAllParts($event, part)">
                                                                         <span class="cr"><i class="cr-icon pi pi-check"></i></span> Same Details For All Parts
                                                                     </label>
@@ -876,14 +878,14 @@
                                                 </section>
                                                 <br />
                                                 <section>
-                                                    <h4 class="add-details-heading" style="text-align: left;" *ngIf="part.itemMaster.isSerialized">Serialized</h4>
-                                                    <div class="pull-right" style="margin-top: -37px;margin-right: 85px;" *ngIf="part.itemMaster.isSerialized">
+                                                    <h4 class="add-details-heading" style="text-align: left;" *ngIf="part.isSerialized">Serialized</h4>
+                                                    <div class="pull-right" style="margin-top: -37px;margin-right: 85px;" *ngIf="part.isSerialized">
                                                         <i class="fa fa-chevron-left btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage('stockline', part.currentSERIndex - 1, part)"></i>
                                                         <input [value]="part.currentSERIndex + 1" type="text" pInputText pKeyFilter="pnum" (keyup)="gotoStockLinePage($event, part)" (focusout)="paginatorFocusOut($event, part)" class="form-control" style="width: 50px;border-radius: 0 !important;" />
                                                         <i class="fa fa-chevron-right btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage('stockline', part.currentSERIndex + 1, part)"></i>
                                                         <p>Page {{part.currentSERIndex + 1}} of {{part.stocklineListObj.length}} Pages</p>
                                                     </div>
-                                                    <div class="form-row" *ngIf="part.itemMaster.isSerialized">
+                                                    <div class="form-row" *ngIf="part.isSerialized">
                                                         <div class="col-md-3">
                                                             <div class="form-group">
                                                                 <label>Serial Num</label>
@@ -899,9 +901,9 @@
                                                     </div>
                                                 </section>
                                                 <br />
-                                                <section *ngIf="part.itemMaster.isTimeLife">
+                                                <section *ngIf="part.isTimeLife">
                                                     <h3 class="add-details-heading"> {{ part.itemMaster?.partNumber }} receiving Qty Time Life  {{ (part.currentTLIndex + 1) }} of {{ part.timeLifeList.length }}   </h3>
-                                                    <div class="pull-right" style="margin-top: -37px;margin-right: 85px;" *ngIf="part.itemMaster.isTimeLife">
+                                                    <div class="pull-right" style="margin-top: -37px;margin-right: 85px;" *ngIf="part.isTimeLife">
                                                         <i class="fa fa-chevron-left btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage('timelife', part.currentTLIndex - 1, part)"></i>
                                                         <input [value]="part.currentTLIndex + 1" type="text" pInputText pKeyFilter="pnum" (keyup)="gotoStockLinePage($event, part)" (focusout)="paginatorFocusOut($event, part)" class="form-control" style="width: 50px;border-radius: 0 !important;" />
                                                         <i class="fa fa-chevron-right btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage('timelife', part.currentTLIndex + 1, part)"></i>

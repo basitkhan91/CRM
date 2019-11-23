@@ -46,7 +46,7 @@ export class RepairOrder {
     
     dateApproved: string;
 
-    repairOderPart: RepairOrderPart[];
+    repairOrderPart: RepairOrderPart[];
     vendor: Vendor;
     stockLine: StockLine[];
 }
@@ -169,6 +169,7 @@ export class RepairOrderPart {
     BinList: DropDownData[];
     stockLine: StockLine[];
     timeLife: TimeLife[];
+    partNumber: any;
 }
 
 export class TimeLife {
