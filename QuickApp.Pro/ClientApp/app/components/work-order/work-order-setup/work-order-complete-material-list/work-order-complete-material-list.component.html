@@ -69,7 +69,7 @@
                         </select>
                     </td>
                     <td>
-                        <select class="form-control custom-select wf-pub-id" id="ddlMandatoryOrSupplemental" [(ngModel)]="material.mandatoryOrSupplemental" style="margin:auto;">
+                        <select class="form-control custom-select wf-pub-id" id="ddlMandatoryOrSupplemental" [(ngModel)]="material.mandatoryOrSupplemental" name="mandatoryOrSupplemental{{i}}" style="margin:auto;">
                             <option value="">Select</option>
                             <option *ngFor="let mandatory of materialMandatory" value="{{mandatory.name}}">
                                 {{mandatory.name}}
@@ -334,12 +334,13 @@
                                                     </td>
                                                 </tr>
       
-                                             <button  class="btn btn-primary btn-primary-cstm"  (click)="saveReserved()" style="padding: 6px 12px !important;">Save Reserved</button>
-                                                
+                                                                                   
                          
                                             </tbody>
                                         </table>
-
+                                        <div style="float:right"> 
+                                                <button  class="btn btn-primary btn-primary-cstm"  (click)="saveReserved()" style="padding: 6px 12px !important;">Save Reserved</button>
+                                            </div>  
                                         
       
                                     </div>

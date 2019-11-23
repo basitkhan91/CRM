@@ -120,20 +120,25 @@ export class WorkOrderListComponent implements OnInit {
 
         await this.workOrderService.viewWorkOrderHeader(this.workOrderId).subscribe(res => {
             this.viewWorkOrderHeader = res;
+            debugger
+            if (res.singleMPN !== "Single MPN") {
+                this.showMPN = true;
+            } else {
+                this.showMPN = false;
+            }
+
         })
 
         await this.workOrderService.viewWorkOrderPartNumber(this.workOrderId).subscribe(res => {
             this.viewWorkOrderMPN = res;
         })
 
-        if (rowData.singleMPN !== 'Single MPN') {
-            this.showMPN = true;
-        } else {
-            this.showMPN = false;
-        }
+        console.log(rowData);
 
 
-        this.getWorkOrderWorkFlowNos(this.workOrderId, rowData)
+
+
+        this.getWorkOrderWorkFlowNos(this.workOrderId)
 
 
 
@@ -143,7 +148,7 @@ export class WorkOrderListComponent implements OnInit {
 
 
 
-    getWorkOrderWorkFlowNos(workOrderId, rowData) {
+    getWorkOrderWorkFlowNos(workOrderId) {
         if (workOrderId) {
             this.workOrderService.getWorkOrderWorkFlowNumbers(workOrderId).subscribe(res => {
 
@@ -155,8 +160,8 @@ export class WorkOrderListComponent implements OnInit {
                         label: x.workflowNo
                     }
                 })
-
-                if (rowData.singleMPN === 'Single MPN') {
+                debugger
+                if (this.viewWorkOrderHeader.singleMPN === 'Single MPN') {
                     const data = this.mpnPartNumbersList;
 
                     if (data.length === 1) {
