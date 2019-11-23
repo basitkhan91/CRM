@@ -170,6 +170,7 @@ namespace DAL.Repositories
         {
             {
                 var data = (from t in _appContext.ItemMaster
+                            join gl in _appContext.GLAccount on t.GLAccountId equals gl.GLAccountId
                             where t.PartNumber == partNumber
                             select new
                             {
@@ -184,7 +185,9 @@ namespace DAL.Repositories
                                 t.GLAccountId,
                                 t.ManufacturerId,
                                 t.Manufacturer,
-                                t.NHA
+                                t.NHA,
+                                gl.AccountName,
+                                t.ShelfLife
                             }).ToList();
                 return data;
             }

@@ -454,6 +454,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
         this.sourceStockLineSetup.isPMA = allWorkFlows[0].IsPMA;
         this.sourceStockLineSetup.isDER = allWorkFlows[0].IsDER;
         this.sourceStockLineSetup.oem = allWorkFlows[0].OEM;
+        this.sourceStockLineSetup.oem = true;
 
 		this.sourceTimeLife.timeLife = allWorkFlows[0].isTimeLife;
 
@@ -468,6 +469,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 
 		this.sourceStockLineSetup.itemMasterId = allWorkFlows[0].itemMasterId;
         this.sourceStockLineSetup.glAccountId = allWorkFlows[0].glAccountId;
+        this.sourceStockLineSetup.glAccountName = allWorkFlows[0].accountName;
         this.sourceStockLineSetup.NHA = allWorkFlows[0].NHA;
        
 	}
@@ -571,13 +573,10 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			let value = event.target.value.toLowerCase();
 			if (this.selectedActionName) {
 				if (value == this.selectedActionName.toLowerCase()) {
-					//alert("Action Name already Exists");
 					this.disableSaveglAccount = true;
-
 				}
 				else {
 					this.disableSaveglAccount = false;
-
 				}
 			}
 
