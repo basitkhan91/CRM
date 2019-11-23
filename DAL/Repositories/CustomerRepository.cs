@@ -1555,6 +1555,31 @@ namespace DAL.Repositories
 
         #endregion
 
+        public void DeleteRestrictedParts(long id, string updatedBy)
+        {
+            try
+            {
+                RestrictedParts model = new RestrictedParts();
+                model.RestrictedPartId = id;
+                model.UpdatedDate = DateTime.Now;
+                model.IsDeleted = true;
+                model.UpdatedBy = updatedBy;
+
+                _appContext.RestrictedParts.Attach(model);
+
+                _appContext.Entry(model).Property(x => x.IsDeleted).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
+
+                _appContext.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         private IEnumerable<object> Search(string value, CustomerSearchType searchType)
         {
             var data = from t in _appContext.Customer
@@ -1616,5 +1641,30 @@ namespace DAL.Repositories
 
             return data.ToList(); ;
         }
+        public void CustomerShippingDetailsStatus(long id, bool status, string updatedBy)
+        {
+            try
+            {
+                CustomerShippingAddress model = new CustomerShippingAddress();
+                model.CustomerShippingAddressId = id;
+                model.UpdatedDate = DateTime.Now;
+                model.IsActive = status;
+                model.UpdatedBy = updatedBy;
+
+                _appContext.CustomerShippingAddress.Attach(model);
+
+                _appContext.Entry(model).Property(x => x.IsActive).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
+
+                _appContext.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }
