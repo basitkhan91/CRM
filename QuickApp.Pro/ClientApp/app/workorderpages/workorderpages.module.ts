@@ -57,6 +57,9 @@ import { WorkOrderSmartComponent } from '../components/work-order/work-order-set
 import { AccordionModule } from 'primeng/accordion';
 
 import { WorkFlowtService } from '../services/workflow.service';
+// import { MaterialListCreateComponent } from '../shared/Material-List-Create.component';
+// import { SharedModule } from '../shared/shared.module';
+// import { BrowserModule } from '@angular/platform-browser';
 
 @NgModule({
   imports: [
@@ -78,7 +81,7 @@ import { WorkFlowtService } from '../services/workflow.service';
     InputSwitchModule,
     TooltipModule,
     TabViewModule,
-    AccordionModule
+    AccordionModule,
   ],
   declarations: [
     WorkOrderPagesComponent,
@@ -106,6 +109,8 @@ import { WorkFlowtService } from '../services/workflow.service';
     WorkOrderAssetsComponent,
     WorkOrderAddressesComponent,
     WorkOrderSmartComponent,
+
+
   ],
   entryComponents: [],
   providers: [

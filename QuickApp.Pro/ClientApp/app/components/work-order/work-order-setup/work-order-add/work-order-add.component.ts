@@ -127,7 +127,7 @@ export class WorkOrderAddComponent implements OnInit {
   savedWorkOrderData: any;
   workFlowWorkOrderData: any;
   workOrderAssetList: any;
-  workOrderId: (responseData: any) => void;
+  workOrderId;
   workFlowWorkOrderId: any = 0;
   workOrderMaterialList: any;
   mpnPartNumbersList: any = [];
@@ -136,6 +136,9 @@ export class WorkOrderAddComponent implements OnInit {
   isDisabledSteps: boolean = false;
   workFlowId: any;
   editWorkFlowData: any;
+  workFlowObject = {
+    materialList  : []
+  }
 
 
   constructor(
@@ -162,7 +165,7 @@ export class WorkOrderAddComponent implements OnInit {
   }
 
   async ngOnInit() {
-
+  //  this.showTableGrid = true;
     this.mpnFlag = true;
     this.isDetailedView = true;
     this.selectedCustomer = new Customer();
@@ -551,7 +554,7 @@ export class WorkOrderAddComponent implements OnInit {
 
   }
 
-  saveworkOrderLabor(data) {
+  saveWorkOrderLabor(data) {
     this.workOrderService.createWorkOrderLabor(data).subscribe(res => {
       this.alertService.showMessage(
         this.moduleName,
@@ -559,6 +562,27 @@ export class WorkOrderAddComponent implements OnInit {
         MessageSeverity.success
       );
     })
+  }
+
+  saveWorkOrderMaterialList(data){
+
+    const materialArr = data.materialList.map(x => {
+      return {
+        ...x,
+        workOrderId: this.workOrderId , workFlowWorkOrderId : this.workFlowWorkOrderId 
+      }
+    })
+    console.log(data);
+  this.workOrderService.createWorkOrderMaterialList(materialArr).subscribe(res => {
+    this.workFlowObject.materialList = [];
+    this.alertService.showMessage(
+      this.moduleName,
+      'Saved Work Order MaterialList  Succesfully',
+      MessageSeverity.success
+    );
+    this.getMaterialListByWorkOrderId();
+  })
+
   }
 
   getEquipmentByWorkOrderId() {
