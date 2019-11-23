@@ -1654,6 +1654,10 @@ namespace QuickApp.Pro.Controllers
                 contactObj.WorkPhoneExtn = contactViewModel.WorkPhoneExtn;
                 _unitOfWork.ContactRepository.Update(contactObj);
                 _unitOfWork.SaveChanges();
+                var vendorContactObj = _unitOfWork.vendorContactRepository.GetVendorContactsbyContctId(id);
+                vendorContactObj.IsDefaultContact = Convert.ToBoolean(contactViewModel.IsDefaultContact);
+                _unitOfWork.vendorContactRepository.Update(vendorContactObj);
+                _unitOfWork.SaveChanges();
 
             }
 
