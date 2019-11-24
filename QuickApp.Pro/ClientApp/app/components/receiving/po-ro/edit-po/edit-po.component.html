@@ -91,7 +91,7 @@
                                     </div>
                                 </div>
                             </div>
-                           
+
                         </div>
 
                         <div class="form-row">
@@ -110,7 +110,8 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label>Approved Date</label>
-                                    <p-calendar disabled="disabled" class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.dateApproved" [required]="true"></p-calendar>
+                                    <p>{{purchaseOrderData.dateApproved | date: 'dd/MM/yyyy'}}</p>
+                                    <!--<p-calendar disabled="disabled" class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.dateApproved" [required]="true"></p-calendar>-->
                                 </div>
                             </div>
                         </div>
@@ -157,7 +158,7 @@
                         <th>Cond</th>
                         <th>UOM</th>
                         <th>OEM, DER,PMA FLAG</th>
-                        <th>Qty Ordered</th>
+                        <th colspan="3">Qty Ordered</th>
                         <th>Discount</th>
                         <th>Unit Cost</th>
                         <th>Extended Cost</th>
@@ -195,7 +196,7 @@
                             </td>
                             <td>{{part.uomText}}</td>
                             <td>{{part.itemMaster.pma ? "PMA," : '' + part.itemMaster.der ? "DER" : ''}}</td>
-                            <td>{{part.quantityOrdered}}</td>
+                            <td colspan="3">{{part.quantityOrdered}}</td>
                             <td>{{part.DiscountPerUnit}}</td>
                             <td>
                                 <input type="text" class="form-control" pInputText pKeyFilter="pnum"
@@ -332,8 +333,8 @@
                                 <th>PN Description</th>
                                 <th>Control Num</th>
                                 <th>ID</th>
-                                <th>Serial Num</th>
                                 <th>Cond</th>
+                                <th colspan="2">Serial Num</th>
                                 <th>Qty Ordered</th>
                                 <th>Qty Receieved</th>
                                 <th>Qty BackOrdered</th>
@@ -349,12 +350,12 @@
                                 <th>Location</th>
                                 <th>Shelf</th>
                                 <th>Bin</th>
-                                <th>Owner</th>
+                                <!--<th>Owner</th>
                                 <th>Name</th>
                                 <th>Obtain From</th>
                                 <th>Name</th>
                                 <th>Traceable to</th>
-                                <th>Name</th>
+                                <th>Name</th>-->
                                 <th>Trace</th>
                                 <th>Mfg</th>
                                 <th>Mfg Lot Num</th>
@@ -385,7 +386,6 @@
                                 <td>{{part.itemMaster.partDescription}}</td>
                                 <td>{{SL.controlNumber}}</td>
                                 <td>{{SL.idNumber}}</td>
-                                <td>{{SL.serialNumber}}</td>
                                 <td>
                                     <select class="form-control"
                                             [(ngModel)]="SL.conditionId"
@@ -396,6 +396,7 @@
                                         <option *ngFor="let condition of ConditionList" [value]="condition.Key">{{condition.Value}}</option>
                                     </select>
                                 </td>
+                                <td colspan="2">{{SL.serialNumber}}</td>
                                 <td>{{part.quantityOrdered}}</td>
                                 <td>{{SL.quantity}}</td>
                                 <td>{{part.quantityOrdered -  SL.quantity}}</td>
@@ -409,7 +410,7 @@
                                 <td>
                                     <input class="form-control" type="text" disabled pInputText pKeyFilter="pnum"
                                            [(ngModel)]="SL.purchaseOrderExtendedCost"
-                                           [disabled]="!SL.isEnabled">
+                                           disabled="disabled">
 
 
                                 </td>
@@ -518,12 +519,13 @@
                                         <option *ngFor="let bin of SL.BinList" [value]="bin.Key">{{bin.Value}}</option>
                                     </select>
                                 </td>
-                                <td>{{SL.ownerType}}</td>
+                                >
+                                <!--<td>{{SL.ownerType}}</td>
                                 <td>{{SL.owner}}</td>
                                 <td>{{SL.obtainFromType}}</td>
                                 <td>{{SL.obtainFrom}}</td>
                                 <td>{{SL.traceableToType}}</td>
-                                <td>{{SL.traceableTo}}</td>
+                                <td>{{SL.traceableTo}}</td>-->
                                 <td>
                                     <input class="form-control" type="text"
                                            [disabled]="!SL.isEnabled"
@@ -630,51 +632,51 @@
                                     <input type="checkbox" disabled [checked]="part.itemMaster.isTimeLife != false" />
                                 </td>
                                 <td>
-                                    <input class="form-control"  [disabled]="!SL.isEnabled" placeholder="Cycle" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].cyclesRemaining">
+                                    <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Cycle" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].cyclesRemaining">
                                 </td>
                                 <td>
-                                    <input class="form-control"  [disabled]="!SL.isEnabled" placeholder="Cycle" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].cyclesSinceNew">
+                                    <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Cycle" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].cyclesSinceNew">
                                 </td>
                                 <td>
-                                    <input class="form-control"  [disabled]="!SL.isEnabled" placeholder="Cycle" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].cyclesSinceOVH">
+                                    <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Cycle" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].cyclesSinceOVH">
                                 </td>
                                 <td>
-                                    <input class="form-control"  [disabled]="!SL.isEnabled" placeholder="Cycle" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].cyclesSinceInspection">
+                                    <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Cycle" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].cyclesSinceInspection">
                                 </td>
                                 <td>
-                                    <input class="form-control"  [disabled]="!SL.isEnabled" placeholder="Cycle" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].cyclesSinceRepair">
-                                </td>
-
-                                <td>
-                                    <input class="form-control"  [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].timeRemaining">
+                                    <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Cycle" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].cyclesSinceRepair">
                                 </td>
 
                                 <td>
-                                    <input class="form-control"  [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].timeSinceNew">
+                                    <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].timeRemaining">
                                 </td>
 
                                 <td>
-                                    <input class="form-control"  [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].timeSinceOVH">
+                                    <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].timeSinceNew">
                                 </td>
 
                                 <td>
-                                    <input class="form-control"  [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].timeSinceInspection">
+                                    <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].timeSinceOVH">
                                 </td>
 
                                 <td>
-                                    <input class="form-control"  [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].timeSinceRepair">
+                                    <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].timeSinceInspection">
                                 </td>
 
                                 <td>
-                                    <input class="form-control"  [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].lastSinceNew">
+                                    <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].timeSinceRepair">
                                 </td>
 
                                 <td>
-                                    <input class="form-control"  [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].lastSinceNew">
+                                    <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].lastSinceNew">
                                 </td>
 
                                 <td>
-                                    <input class="form-control"  [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].lastSinceNew">
+                                    <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].lastSinceOVH">
+                                </td>
+
+                                <td>
+                                    <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].lastSinceInspection">
                                 </td>
 
                             </tr>

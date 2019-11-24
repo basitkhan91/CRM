@@ -23,7 +23,7 @@
                         Add Shipping Info
                         <a class="plusicon-cstm"
                            data-toggle="modal"
-                           data-target="#addShippingInfo">
+                           data-target="#addShippingInfo" (click)="addDomesticShipping()">
                             <i class="fa fa-plus-circle fa-lg"></i>
                         </a>
                     </h4>
@@ -93,9 +93,9 @@
                             </td>
 
                             <td>
-                                <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="updateActiveorInActiveForShipping(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="updateActiveorInActiveForShipping(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="updateActiveorInActiveForShipping(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                 <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openShippinggView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
 
                                 <button class="btn-edit" mat-icon-button (click)="openEditDomestic(rowData)" matTooltip="edit" data-toggle="modal" data-target="#addShippingInfo">
@@ -140,7 +140,7 @@
                         Add International Shipping Details
                         <a class="plusicon-cstm"
                            data-toggle="modal"
-                           data-target="#addInternationalShippingInfo">
+                           data-target="#addInternationalShippingInfo" (click)="addInternationalShipping()">
                             <i class="fa fa-plus-circle fa-lg"></i>
                         </a>
                     </h4>
@@ -1051,7 +1051,7 @@
 
 
     <div class="modal fade" id="addDomesticShipVia">
-        <div class="modal-dialog modal-lg">
+       <form #addShippingVia="ngForm">        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">{{isEditDomesticShipVia ? 'Edit' : 'Add'}} Shipping Ship Via  </h4>
@@ -1096,7 +1096,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <br>
-                                <button type="button" class="btn btn-primary-cstm" (click)="saveshipViaDomestic()">{{isEditDomesticShipVia ? 'Update Ship Via' : 'Save Ship Via'}}</button>
+                                <button type="button" class="btn btn-primary-cstm" [disabled]="!addShippingVia.valid" (click)="saveshipViaDomestic()">{{isEditDomesticShipVia ? 'Update Ship Via' : 'Save Ship Via'}}</button>
                             </div>
 
                         </div>
@@ -1187,7 +1187,9 @@
                 </div>
 
             </div>
+          
         </div>
+        </form>
     </div>
 
     <div class="modal fade" id="addInternationShipVia">
@@ -1266,7 +1268,7 @@
                                 <div class="form-group">
                                     <label>Memo</label>
                                     <textarea class="form-control" name="memo" rows="2" [(ngModel)]="shipViaInternational.memo"></textarea>
-                                </div>
+                                      </div>
                             </div>
 
                             <div class="col-md-2">

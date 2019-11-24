@@ -139,7 +139,7 @@
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-columns="columns">
-        <tr [pSelectableRow]="rowData" pReorderableRowHandle>
+        <tr [pSelectableRow]="rowData" pReorderableRowHandle (click)="viewSelectedRow(rowData)" data-target="#view">
           <td
             style="width:120px"
             *ngFor="let col of columns"

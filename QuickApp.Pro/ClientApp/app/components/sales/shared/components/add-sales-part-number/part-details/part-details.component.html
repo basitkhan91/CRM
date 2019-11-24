@@ -10,11 +10,17 @@
       [rowsPerPageOptions]="[10, 20, 30]"
       [totalRecords]="totalRecords"
       [pageLinks]="pageLinks"
-      [columns]="selectedColumns"
+      [columns]="columns"
       [scrollable]="true"
       scrollHeight="450px"
+      [style]="{ width: '100%' }"
       (onLazyLoad)="onPaging($event)"
     >
+      <ng-template pTemplate="colgroup" let-columns>
+        <colgroup>
+          <col *ngFor="let col of columns" style="width:200px" />
+        </colgroup>
+      </ng-template>
       <ng-template pTemplate="header">
         <tr>
           <th></th>
@@ -42,7 +48,41 @@
           <th>Memo</th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-item> </ng-template>
+      <ng-template pTemplate="body" let-part>
+        <tr>
+          <td></td>
+          <td>Item Master</td>
+          <td>{{ part.partNumber }}</td>
+          <td>{{ part.alternatePartNumber }}</td>
+          <td>{{ part.description }}</td>
+          <td>{{ part.conditionType }}</td>
+          <td>{{ part.uon }}</td>
+          <td>{{ part.unitCost }}</td>
+          <td>{{ part.unitListPrice }}</td>
+          <td>{{ part.qtyOnHand }}</td>
+          <td>{{ part.qtyToOrder }}</td>
+          <td>{{ part.qtyOnOrder }}</td>
+          <td>
+            {{
+              part.itemClassification !== null
+                ? part.itemClassification.itemType
+                : ""
+            }}
+          </td>
+          <td>{{ part.itemGroup }}</td>
+          <td>{{ part.pma }}/{{ part.der }}</td>
+          <td>{{ part.manufacturer.name }}</td>
+          <td>{{ part.customerRef }}</td>
+          <td>{{ part.currency !== null ? part.currency.symbol : "" }}</td>
+          <td>{{ part.coreUnitPrice }}</td>
+          <td>
+            {{ part.glAccount !== null ? part.glAccount.accountName : "" }}
+          </td>
+          <td>{{ part.itar }}</td>
+          <td>{{ part.eccn }}</td>
+          <td>{{ part.memo }}</td>
+        </tr>
+      </ng-template>
       <ng-template pTemplate="summary" id="footer">
         <label id="footer" class="footer-t-rec">No'of records:</label>
         <input

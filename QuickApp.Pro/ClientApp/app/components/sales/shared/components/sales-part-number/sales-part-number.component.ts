@@ -11,7 +11,7 @@ export class SalesPartNumberComponent {
     this.show = false;
   }
 
-  addPartNumber() {
+  addPartNumber(value) {
     this.show = true;
   }
 

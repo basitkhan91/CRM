@@ -246,7 +246,7 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<VendorViewModel>))]
         public IActionResult GetVendorDefault(long vendorId)
         {
-            var vendorDtails = _context.VendorPayment.Where(a => a.VendorId == vendorId).SingleOrDefault(); //.GetAllCustomersData();
+            var vendorDtails = _context.VendorPayment.Where(a => a.VendorId == vendorId).ToList(); //.GetAllCustomersData();
             return Ok(vendorDtails);
 
         }
@@ -1654,6 +1654,10 @@ namespace QuickApp.Pro.Controllers
                 contactObj.WorkPhoneExtn = contactViewModel.WorkPhoneExtn;
                 _unitOfWork.ContactRepository.Update(contactObj);
                 _unitOfWork.SaveChanges();
+                var vendorContactObj = _unitOfWork.vendorContactRepository.GetVendorContactsbyContctId(id);
+                vendorContactObj.IsDefaultContact = Convert.ToBoolean(contactViewModel.IsDefaultContact);
+                _unitOfWork.vendorContactRepository.Update(vendorContactObj);
+                _unitOfWork.SaveChanges();
 
             }
 
@@ -2350,7 +2354,7 @@ namespace QuickApp.Pro.Controllers
 
                 vendorShippingDetailsViewModel.MasterCompanyId = 1;
                 actionobject.VendorId = vendorShippingDetailsViewModel.VendorId;
-                //actionobject.VendorShippingAddressId = vendorShippingDetailsViewModel.VendorShippingAddressId;
+                actionobject.VendorShippingAddressId = vendorShippingDetailsViewModel.VendorShippingAddressId;
                 actionobject.ShipVia = vendorShippingDetailsViewModel.ShipVia;
                 actionobject.ShippingAccountinfo = vendorShippingDetailsViewModel.ShippingAccountinfo;
                 actionobject.ShippingId = vendorShippingDetailsViewModel.ShippingId;
@@ -3362,6 +3366,13 @@ namespace QuickApp.Pro.Controllers
         {
             _unitOfWork.Vendor.DeleteVendorShippingAddress(vendorShippingAddressId, "");
             return Ok();
+        }
+
+        [HttpDelete("deletevendorshippingviaaddress/{vendorShippingId}")]
+        public IActionResult DeleteVendorShippingViaAddress(long vendorShippingId, string updatedBy)
+        {
+            var response = _unitOfWork.Vendor.DeleteVendorShippingViaAddress(vendorShippingId, updatedBy);
+            return Ok(response);
         }
 
         [HttpGet("vendorbillingaddressstatus")]

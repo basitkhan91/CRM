@@ -106,7 +106,6 @@ export class WorkflowListComponent implements OnInit {
         this.getAllWorkflows();
         this.getWorkFlowActions();
         this.LoadParts();
-        console.log(this.workFlowId, this.workFlowType);
         if (this.isWorkOrder) {
             this.workFlowtService.getWorkFlowDataById(this.workFlowId).subscribe(res => {
                 console.log(res);

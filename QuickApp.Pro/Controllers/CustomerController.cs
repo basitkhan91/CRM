@@ -2838,6 +2838,19 @@ namespace QuickApp.Pro.Controllers
             return Ok(allCusShippingDetails);
         }
 
+        [HttpGet("deletesRestrictedParts")]
+        public IActionResult DeleteRestrictedParts(long id, string updatedBy)
+        {
+            _unitOfWork.Customer.DeleteRestrictedParts(id, updatedBy);
+            return Ok();
+        }
+        [HttpGet("shippingdetailsstatus")]
+        public IActionResult CustomerShippingDetailsStatus(long id, bool status, string updatedBy)
+        {
+            _unitOfWork.Customer.CustomerShippingDetailsStatus(id, status, updatedBy);
+            return Ok();
+        }
+      
     }
 
 }
