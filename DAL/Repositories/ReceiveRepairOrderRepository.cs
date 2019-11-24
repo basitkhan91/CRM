@@ -66,7 +66,6 @@ namespace DAL.Repositories
             return repairOrderHeader;
         }
 
-
         public object GetRepairOrderPartsByRepairOrderId(long repairOrderId)
         {
             var repairOrderParts = (from rop in _appContext.RepairOrderPart
@@ -146,5 +145,19 @@ namespace DAL.Repositories
             return repairOrderParts;
 
         }
+
+        public int GetLastIdNumber(long repairOrderId, long repairOrderPartId)
+        {
+            var stockLine = _appContext.StockLine.Where(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == repairOrderPartId).OrderByDescending(x => x.StockLineId).FirstOrDefault();
+            if (stockLine != null)
+            {
+                return Convert.ToInt32(stockLine.IdNumber);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
     }
 }
