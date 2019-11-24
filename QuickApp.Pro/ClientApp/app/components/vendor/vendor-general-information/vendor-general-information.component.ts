@@ -356,7 +356,11 @@ export class VendorGeneralInformationComponent implements OnInit {
             this.sourceAction.classificationName = this.vendorClassName;
             this.sourceAction.masterCompanyId = 1;
             this.vendorclassificationService.newVendorClassification(this.sourceAction).subscribe(data => {
-                if (data) { this.sourceVendor.vendorClassificationId = data.vendorClassificationId }
+                if (data) { 
+                    this.sourceVendor.vendorClassificationId = data.vendorClassificationId 
+                }
+                this.alertService.showMessage("Success", 'Added New Vendor Classification Successfully.', MessageSeverity.success);
+
                 this.loadDataVendorData();
             })
         }

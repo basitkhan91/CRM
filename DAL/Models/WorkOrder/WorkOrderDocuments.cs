@@ -13,9 +13,7 @@ namespace DAL.Models
         [ForeignKey("WorkFlowWorkOrderId")]
         public long WorkFlowWorkOrderId { get; set; }
         public int CompanyId { get; set; }
-        public int BusinessUnitId { get; set; }
-        public int DivisionId { get; set; }
-        public int DepartmentId { get; set; }
+        public long ManagementStructureId { get; set; }
         public long DocumentId { get; set; }
         public string Description { get; set; }
         public string DocumentLink {get;set;}
@@ -27,14 +25,6 @@ namespace DAL.Models
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
 
-        [NotMapped]
-        public string Company { get; set; }
-        [NotMapped]
-        public string BusinessUnit { get; set; }
-        [NotMapped]
-        public string Divison { get; set; }
-        [NotMapped]
-        public string Department { get; set; }
         [NotMapped]
         public string DocumentCode { get; set; }
 

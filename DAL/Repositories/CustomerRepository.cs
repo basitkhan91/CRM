@@ -1641,6 +1641,7 @@ namespace DAL.Repositories
 
             return data.ToList(); ;
         }
+        
         public void CustomerShippingDetailsStatus(long id, bool status, string updatedBy)
         {
             try

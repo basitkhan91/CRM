@@ -104,6 +104,8 @@ namespace DAL.Models
         public string ShippingReference { get; set; }
         public long? TimeLifeCyclesId { get; set; }
         public bool TimeLifeDetailsNotProvided { get; set; }
+        [NotMapped]
+        public long? RepairOrderPartRecordId { get; set; }
         
 
         public virtual PurchaseOrder PurchaseOrder { get; set; }

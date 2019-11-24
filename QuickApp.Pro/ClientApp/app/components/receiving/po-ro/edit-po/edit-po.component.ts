@@ -83,9 +83,13 @@ export class EditPoComponent implements OnInit {
         this.currentDate = new Date();
     }
 
-    ngOnInit(): void {
+    ngOnInit() {
+        if (this.receivingService.purchaseOrderId == undefined && this.receivingService.purchaseOrderId == null ) {
+            this.alertService.showMessage(this.pageTitle, "No purchase order is selected to edit.", MessageSeverity.error);
+            return this.route.navigate(['/receivingmodule/receivingpages/app-purchase-order']);
+        }
 
-        this.receivingService.getPurchaseOrderDataForEditById(126).subscribe(
+        this.receivingService.getPurchaseOrderDataForEditById(this.receivingService.purchaseOrderId).subscribe(
             results => {
                 this.purchaseOrderData = results[0];
                 this.purchaseOrderData.openDate = new Date(results[0].openDate).toLocaleDateString();

@@ -589,8 +589,8 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getworkorderpublications")]
         public IActionResult GetWorkOrderPublications(long wfwoId = 0, long workOrderId = 0)
         {
-            unitOfWork.WorkOrderRepository.GetWorkOrderPublications(wfwoId, workOrderId);
-            return Ok();
+           var result= unitOfWork.WorkOrderRepository.GetWorkOrderPublications(wfwoId, workOrderId);
+            return Ok(result);
         }
 
         #endregion
@@ -874,7 +874,6 @@ namespace QuickApp.Pro.Controllers
                             }
 
                             workFlow.Charges.AddRange(itemsToRemove);
-
                         }
 
                     }

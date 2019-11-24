@@ -18,6 +18,7 @@ import { Router } from '@angular/router';
 export class WorkOrderListComponent implements OnInit {
     /** WorkOrderList ctor */
     workOrderData: any;
+    isWorkOrder = true;
     pageSize: number = 10;
     @ViewChild('dt')
     private table: Table;
@@ -44,6 +45,11 @@ export class WorkOrderListComponent implements OnInit {
     workOrderChargesList: Object;
     workOrderExclusionsList: Object;
     workOrderLaborList: Object;
+    mpnPartNumbersList: any;
+    workOrderId: any;
+    workFlowId: any;
+    showTableGrid: boolean = false;
+    showMPN: boolean = false;
     constructor(private workOrderService: WorkOrderService,
         private route: Router,
         private authService: AuthService,
@@ -105,27 +111,89 @@ export class WorkOrderListComponent implements OnInit {
 
 
     async view(rowData) {
-        const { workOrderId } = rowData;
+
+        this.workOrderId = rowData.workOrderId;;
+
         // const { workFlowWorkOrderId } = rowData;
         // const workOrderId = 46;
         const workFlowWorkOrderId = 0;
 
-        await this.workOrderService.viewWorkOrderHeader(workOrderId).subscribe(res => {
+        await this.workOrderService.viewWorkOrderHeader(this.workOrderId).subscribe(res => {
             this.viewWorkOrderHeader = res;
+            debugger
+            if (res.singleMPN !== "Single MPN") {
+                this.showMPN = true;
+            } else {
+                this.showMPN = false;
+            }
+
         })
 
-        await this.workOrderService.viewWorkOrderPartNumber(workOrderId).subscribe(res => {
+        await this.workOrderService.viewWorkOrderPartNumber(this.workOrderId).subscribe(res => {
             this.viewWorkOrderMPN = res;
         })
 
+        console.log(rowData);
+
+
+
+
+        this.getWorkOrderWorkFlowNos(this.workOrderId)
+
+
+
+
+    }
+
+
+
+
+    getWorkOrderWorkFlowNos(workOrderId) {
+        if (workOrderId) {
+            this.workOrderService.getWorkOrderWorkFlowNumbers(workOrderId).subscribe(res => {
+
+                this.mpnPartNumbersList = res.map(x => {
+
+
+                    return {
+                        value: { workflowId: x.workflowId, workFlowWorkOrderId: x.value },
+                        label: x.workflowNo
+                    }
+                })
+                debugger
+                if (this.viewWorkOrderHeader.singleMPN === 'Single MPN') {
+                    const data = this.mpnPartNumbersList;
+
+                    if (data.length === 1) {
+                        this.getAllTabsData(data[0].value.workFlowWorkOrderId, this.workOrderId);
+                        this.showTableGrid = true;
+                    }
+                }
+                // else {
+                //     this.showTableGrid = true;
+                // }
+
+            })
+        }
+
+    }
+
+    changeofMPN(object) {
+        console.log(this.showTableGrid);
+
+        this.showTableGrid = true;
+        this.workFlowId = object.workflowId;
+        this.getAllTabsData(object.workFlowWorkOrderId, this.workOrderId);
+
+    }
+
+    getAllTabsData(workFlowWorkOrderId, workOrderId) {
         this.getEquipmentByWorkOrderId(workFlowWorkOrderId, workOrderId);
         this.getMaterialListByWorkOrderId(workFlowWorkOrderId, workOrderId);
         this.getPublicationListByWorkOrderId(workFlowWorkOrderId, workOrderId);
         this.getChargesListByWorkOrderId(workFlowWorkOrderId, workOrderId);
         this.getExclusionListByWorkOrderId(workFlowWorkOrderId, workOrderId);
         this.getLaborListByWorkOrderId(workFlowWorkOrderId, workOrderId);
-
-
     }
 
 
@@ -206,8 +274,8 @@ export class WorkOrderListComponent implements OnInit {
 
 
     edit(rowData) {
-        this.workOrderService.getWorkOrderById(rowData).subscribe(res => {
-            const { workOrderId } = rowData;
+        const { workOrderId } = rowData;
+        this.workOrderService.getWorkOrderById(workOrderId).subscribe(res => {
             this.route.navigate([`workordersmodule/workorderspages/app-work-order-edit/${workOrderId}`]);
         })
     }

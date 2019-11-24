@@ -18,28 +18,30 @@ namespace DAL.Repositories
 
         public IEnumerable<object> RecevingRolist()
         {
-
             var roList = (from ro in _appContext.RepairOrder
-                          join rop in _appContext.RepairOrderPart on ro.RepairOrderId equals rop.RepairOrderId
+                          join emp in _appContext.Employee on ro.RequestedBy equals emp.EmployeeId
                           join v in _appContext.Vendor on ro.VendorId equals v.VendorId
-                          join sl in _appContext.StockLine on ro.RepairOrderId equals sl.RepairOrderId
-                          join emp in _appContext.Employee on ro.ApproverId equals emp.EmployeeId
+                          join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
+                          from appr in approver.DefaultIfEmpty()
+                          join vc in _appContext.VendorContact on v.VendorId equals vc.VendorId
+                          join con in _appContext.Contact on vc.ContactId equals con.ContactId
+                          where ro.IsDeleted == false
                           select new
                           {
-                              Status = ro.StatusId == 1 ? "Open" : (ro.StatusId == 2 ? "Pending" : (ro.StatusId == 3 ? "Fulfilling" : "Closed")),
-                              NoOfItems = sl.Quantity,
-                              RoNumber = ro.RepairOrderNumber,
-                              Currency = v.CurrencyId, // Get currency
-                              RoTotalCost = sl.RepairOrderUnitCost, // Not sure if this is accurate
-                              VendorName = v.VendorName,
-                              VendorContact = ro.VendorContactId, // TODO = Do we need another join to get name?
-                              EmployeeName = emp.EmployeeId, // TODO = Do we need another join to get name?
-                              ContactPhone = emp.WorkPhone, //TODO = added work phone for now, is this correct?
-                              OpenDate = ro.CreatedDate,
-                              Reference = sl.ShippingReference,
-                              RequestedBy = "Test" // TODO = Did not find any recored here, where to get this from.
-                          }).Distinct()
-                    .ToList();
+                              ro.RepairOrderId,
+                              ro.RepairOrderNumber,
+                              Status = ro.StatusId == 1
+                                  ? "Open"
+                                  : (ro.StatusId == 2 ? "Pending" : (ro.StatusId == 3 ? "Fulfilling" : "Closed")),
+                              ro.OpenDate,
+                              v.VendorName,
+                              v.VendorCode,
+                              vendorContact = con.FirstName,
+                              RequestedBy = emp.FirstName,
+                              ApprovedBy = appr == null ? "" : appr.FirstName,
+                              ro.IsActive,
+                          }).Distinct().OrderByDescending(p => p.RepairOrderId)
+                .ToList();
 
             return roList;
 
@@ -242,7 +244,7 @@ namespace DAL.Repositories
                                 Approver = app.FirstName,
                                 ro.ClosedDate,
                                 con.WorkPhone,
-                                ContactName=con.FirstName,
+                                ContactName = con.FirstName,
                                 Status = ro.StatusId == 1 ? "Open" : (ro.StatusId == 2 ? "Pending" : (ro.StatusId == 3 ? "Fulfilling" : "Closed")),
                                 pr.Description,
                                 v.CreditLimit,
@@ -513,15 +515,15 @@ namespace DAL.Repositories
         public IEnumerable<RepairOrder> ROListByMasterItemId(int itemMasterId)
         {
             var repairOrderList = (from ro in _appContext.RepairOrder
-                                     join rop in _appContext.RepairOrderPart on ro.RepairOrderId equals rop.RepairOrderId
-                                     join im in _appContext.ItemMaster on rop.ItemMasterId equals im.ItemMasterId
-                                     where im.ItemMasterId == itemMasterId &&
-                                     ro.IsDeleted == false
-                                     select new RepairOrder
-                                     {
-                                         RepairOrderId = ro.RepairOrderId,
-                                         RepairOrderNumber = ro.RepairOrderNumber
-                                     });
+                                   join rop in _appContext.RepairOrderPart on ro.RepairOrderId equals rop.RepairOrderId
+                                   join im in _appContext.ItemMaster on rop.ItemMasterId equals im.ItemMasterId
+                                   where im.ItemMasterId == itemMasterId &&
+                                   ro.IsDeleted == false
+                                   select new RepairOrder
+                                   {
+                                       RepairOrderId = ro.RepairOrderId,
+                                       RepairOrderNumber = ro.RepairOrderNumber
+                                   });
             return repairOrderList;
         }
     }
