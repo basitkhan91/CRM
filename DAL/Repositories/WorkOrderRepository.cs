@@ -2312,7 +2312,7 @@ namespace DAL.Repositories
 
                                 workFlowWorkOrderId = workFlowWorkOrder.WorkFlowWorkOrderId;
 
-                                if (workOrderLaborHeader != null)
+                                if (workOrderLaborHeader != null && workOrderLaborHeader.LaborList!=null && workOrderLaborHeader.LaborList.Count>0)
                                 {
                                     workOrderLaborHeader.LaborList.ForEach(p => p.IsFromWorkFlow = true);
                                     workOrderLaborHeader.WorkFlowWorkOrderId = workFlowWorkOrderId;
