@@ -24,10 +24,12 @@ export class WorkOrderCompleteMaterialListComponent {
     @Input() isWorkOrder;
     @Input() workFlow;
     @Input() savedWorkOrderData;
+    @Input() materialStatus;
     @Output() saveMaterialListForWO = new EventEmitter();
+    @Output() saveRIParts = new EventEmitter();
+    statusId = null;
 
-
-// workflow Variables 
+    // workflow Variables 
     materialCondition: any[] = [];
     materialMandatory: IMaterialMandatory[];
     materialUOM: any[] = [];
@@ -54,20 +56,25 @@ export class WorkOrderCompleteMaterialListComponent {
     defaultMaterialMandatory: string;
     workFlowWorkOrderId: any;
     reservedList: any;
-    
-   
+    alternatePartData: any = [];
+    checkedParts: any = [];
+
+
+
     /** WorkOrderCompleteMaterialList ctor */
     constructor(private actionService: ActionService, private itemser: ItemMasterService,
-         private vendorService: VendorService, 
-         private workOrderService: WorkOrderService,
-         private conditionService: ConditionService,
-          public itemClassService: ItemClassificationService,
-           public unitofmeasureService: UnitOfMeasureService,
-            private alertService: AlertService) {
+        private vendorService: VendorService,
+        private workOrderService: WorkOrderService,
+        private conditionService: ConditionService,
+        public itemClassService: ItemClassificationService,
+        public unitofmeasureService: UnitOfMeasureService,
+        private alertService: AlertService) {
 
     }
 
-    ngOnInit(){
+    ngOnInit() {
+        console.log(this.materialStatus);
+
         this.workFlowWorkOrderId = this.savedWorkOrderData.workFlowWorkOrderId;
 
         this.actionService.GetMaterialMandatory().subscribe(
@@ -80,15 +87,15 @@ export class WorkOrderCompleteMaterialListComponent {
             },
             error => this.errorMessage = <any>error
         );
-    
-    
-    
-    
-                this.loadConditionData();
-                this.loadItemClassData();
-                this.loadPartData();
-                this.loadUOMData();
-                this.ptnumberlistdata();
+
+
+
+
+        this.loadConditionData();
+        this.loadItemClassData();
+        this.loadPartData();
+        this.loadUOMData();
+        this.ptnumberlistdata();
     }
 
 
@@ -100,7 +107,7 @@ export class WorkOrderCompleteMaterialListComponent {
 
 
 
-// code for workFlow
+    // code for workFlow
     reCalculate() {
         this.calculateExtendedCostSummation();
         this.calculateQtySummation();
@@ -108,14 +115,14 @@ export class WorkOrderCompleteMaterialListComponent {
         this.calculateExtendedPriceSummation();
     }
 
-    addNew(){
+    addNew() {
         this.addNewMaterial = true;
-        if(this.workFlow.materialList.length === 0){
+        if (this.workFlow.materialList.length === 0) {
             this.addRow();
         }
     }
 
-    closeAddNew(){
+    closeAddNew() {
         this.addNewMaterial = false;
     }
     filterpartItems(event) {
@@ -257,7 +264,7 @@ export class WorkOrderCompleteMaterialListComponent {
         this.reCalculate();
     }
 
-    
+
     calculateExtendedCost(material): void {
         if (material.quantity != "" && material.unitCost) {
             material.extendedCost = parseFloat((material.quantity * material.unitCost).toString()).toFixed(2);
@@ -344,18 +351,64 @@ export class WorkOrderCompleteMaterialListComponent {
         }
     }
 
-    saveMaterialListForWorkOrder(){
+    saveMaterialListForWorkOrder() {
 
         this.saveMaterialListForWO.emit(this.workFlow)
     }
 
-    getReservedData(){
+    partsIssueRI(statusId) {
+        this.statusId = statusId;
+        this.reservedList = [];
+        this.alternatePartData = [];
         // workFlowWorkOrderId
-        this.workOrderService.getReservedPartsByWorkFlowWOId(this.workFlowWorkOrderId).subscribe(res => {
-            this.reservedList = res;
-        })
+        // 85
+        if (this.workFlowWorkOrderId) {
+            this.workOrderService.getReservedPartsByWorkFlowWOId(this.workFlowWorkOrderId).subscribe(res => {
+                this.reservedList = res.map(x => {
+
+                    return {
+                        ...x,
+                        isParentChecked: false,
+                        woReservedIssuedAltParts: x.woReservedIssuedAltParts.map(y => {
+                            return {
+                                ...y,
+                                isChildChecked: false
+                            }
+                        })
+                    }
+
+                });
+            }, err => {
+                this.reservedList = []
+            })
+        }
+
     }
-    saveReserved(){
+
+    showAlternateParts(isChecked, childPart) {
+        this.alternatePartData = []
+        this.alternatePartData = childPart;
+        if (isChecked === false) {
+            this.alternatePartData = []
+        }
+    }
+    saveRIPart() {
+        this.checkedParts = []
+        const checkedData = this.reservedList.map(x => {
+            if (x.isParentChecked) {
+                this.checkedParts.push({ ...x, partStatusId: this.statusId });
+            }
+            x.woReservedIssuedAltParts.map(c => {
+                if (c.isChildChecked) {
+                    this.checkedParts.push({ ...c, partStatusId: this.statusId });
+                }
+
+            })
+        })
+        console.log
+        this.saveRIParts.emit(this.checkedParts);
+
+
 
     }
 

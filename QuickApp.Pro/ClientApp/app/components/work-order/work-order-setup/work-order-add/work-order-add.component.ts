@@ -139,6 +139,7 @@ export class WorkOrderAddComponent implements OnInit {
   workFlowObject = {
     materialList: []
   }
+  materialStatus: any;
 
 
   constructor(
@@ -619,23 +620,46 @@ export class WorkOrderAddComponent implements OnInit {
 
   }
 
+  saveReservedPartorIssue(alternatePartData) {
+    this.workOrderService.saveReservedPartorIssue(alternatePartData).subscribe(res => {
+      this.alertService.showMessage(
+        this.moduleName,
+        'Updated Parts Data',
+        MessageSeverity.success
+      );
+      this.getMaterialListByWorkOrderId();
+    })
+  }
+
+
+
   getEquipmentByWorkOrderId() {
-    if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
-      // this.workFlowWorkOrderId = this.workFlowWorkOrderData.workFlowWorkOrderId;
-      this.workOrderService.getWorkOrderAssetList(this.workFlowWorkOrderId, this.workOrderId).subscribe(
-        result => {
-          this.workOrderAssetList = result;
-        }
-      )
-    }
+    // if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
+    // this.workFlowWorkOrderId = this.workFlowWorkOrderData.workFlowWorkOrderId;
+    this.workOrderService.getWorkOrderAssetList(84, 101).subscribe(
+      result => {
+        this.workOrderAssetList = result;
+      }
+    )
+    // }
 
   }
 
   getMaterialListByWorkOrderId() {
+    // this.workFlowWorkOrderId, this.workOrderId
+    // 89,102
     if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
       this.workOrderService.getWorkOrderMaterialList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
 
+
         this.workOrderMaterialList = res;
+
+        if (res.length > 0) {
+
+          this.materialStatus = res[0].partStatusId;
+
+
+        }
 
       })
 
@@ -685,7 +709,7 @@ export class WorkOrderAddComponent implements OnInit {
     this.getConditionByItemMasterId(itemMasterId, index)
     this.getPartPublicationByItemMasterId(itemMasterId)
     currentRecord.description = object.partDescription
-    currentRecord.nTE = object.nte;
+    currentRecord.nte = object.nte;
     currentRecord.isPMA = object.pma === null ? false : object.pma;
     currentRecord.isDER = object.der === null ? false : object.der;
   }

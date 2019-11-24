@@ -162,5 +162,15 @@ export class WorkOrderService {
     getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId) {
         return this.workOrderEndpointService.getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId);
     }
+    saveReservedPartorIssue(alternatePart){
+        return this.workOrderEndpointService.saveReservedPartorIssue(alternatePart)
+    }
+    assetsCheckInByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy){
+        return this.workOrderEndpointService.assetsCheckInByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy);
+    }
+    assetsCheckOutByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy){ 
+        return this.workOrderEndpointService.assetsCheckOutByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy);
+    }
+
 
 }
