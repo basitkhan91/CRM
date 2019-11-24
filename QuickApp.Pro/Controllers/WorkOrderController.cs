@@ -379,12 +379,12 @@ namespace QuickApp.Pro.Controllers
         #region Work Order Documents
 
         [HttpPost("createworkorderdocuments")]
-        public IActionResult CreateWorkOrderDocuments([FromBody]WorkOrderDocuments workOrderDocuments)
+        public IActionResult CreateWorkOrderDocuments([FromBody]List<WorkOrderDocuments> workOrderDocuments)
         {
             if (ModelState.IsValid)
             {
-                workOrderDocuments.WorkOrderDocumentsId = unitOfWork.WorkOrderRepository.CreateWorkOrderDocuments(workOrderDocuments);
-                return Ok(workOrderDocuments);
+                var result = unitOfWork.WorkOrderRepository.CreateWorkOrderDocuments(workOrderDocuments);
+                return Ok(result);
             }
             else
             {
@@ -874,7 +874,6 @@ namespace QuickApp.Pro.Controllers
                             }
 
                             workFlow.Charges.AddRange(itemsToRemove);
-
                         }
 
                     }
