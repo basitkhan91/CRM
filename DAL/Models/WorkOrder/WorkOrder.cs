@@ -69,6 +69,8 @@ namespace DAL.Models
         public string CSR { get; set; }
         [NotMapped]
         public CustomerDetails CustomerDetails { get;set;}
+        [NotMapped]
+        public bool IsSubWorkOrder { get; set; }
 
 
     }
