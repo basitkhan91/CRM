@@ -1365,7 +1365,8 @@ namespace DAL.Repositories
                                                   WareHouse = wh.Name,
                                                   Location = lo.Name,
                                                   Shelf = sh.Name,
-                                                  Bin = bi.Name
+                                                  Bin = bi.Name,
+                                                  wom.PartStatusId
 
                                               }).Distinct().ToList();
 
@@ -1444,7 +1445,9 @@ namespace DAL.Repositories
                                 wom.IsAltPart,
                                 im.ItemClassificationId,
                                 im.PurchaseUnitOfMeasureId,
-                                wom.TaskId
+                                wom.TaskId,
+                                wom.PartStatusId
+
                             }
                           ).Distinct()
                           .ToList();
@@ -1480,6 +1483,7 @@ namespace DAL.Repositories
                         workOrderReserveIssuesPart.TaskId = item.TaskId;
                         workOrderReserveIssuesPart.UnitOfMeasureId = item.PurchaseUnitOfMeasureId;
                         workOrderReserveIssuesPart.ItemClassificationId = item.ItemClassificationId;
+                        workOrderReserveIssuesPart.PartStatusId = item.PartStatusId;
                         workOrderReserveIssuesParts.Add(workOrderReserveIssuesPart);
                     }
                 }
@@ -2841,6 +2845,7 @@ namespace DAL.Repositories
                             WorkOrderMaterialsId = wom == null ? 0 : wom.WorkOrderMaterialsId,
                             im.PurchaseUnitOfMeasureId,
                             im.ItemClassificationId,
+                            PartStatusId=wom.PartStatusId==null?0:wom.PartStatusId,
                         })
                          .Distinct()
                          .ToList();
@@ -2874,6 +2879,7 @@ namespace DAL.Repositories
                     woReservedIssuedAltPart.UnitOfMeasureId = item.PurchaseUnitOfMeasureId;
                     woReservedIssuedAltPart.ItemClassificationId = item.ItemClassificationId;
                     woReservedIssuedAltPart.ItemMasterId = itemMasterId;
+                    woReservedIssuedAltPart.PartStatusId = item.PartStatusId;
                     woReservedIssuedAltParts.Add(woReservedIssuedAltPart);
                 }
             }
@@ -2896,6 +2902,7 @@ namespace DAL.Repositories
                 woMaterial.IssuedBy = part.IssuedBy;
                 woMaterial.IssuedDate = part.IssuedDate;
                 woMaterial.UpdatedDate = DateTime.Now;
+                woMaterial.PartStatusId = part.PartStatusId;
 
                 _appContext.WorkOrderMaterials.Update(woMaterial);
             }
@@ -2927,7 +2934,7 @@ namespace DAL.Repositories
                 workOrderMaterial.UpdatedDate = DateTime.Now;
                 workOrderMaterial.WorkFlowWorkOrderId = part.WorkFlowWorkOrderId;
                 workOrderMaterial.WorkOrderId = part.WorkOrderId;
-                workOrderMaterial.WorkOrderMaterialsId = part.WorkOrderMaterialsId;
+                workOrderMaterial.PartStatusId = part.PartStatusId;
 
                 _appContext.WorkOrderMaterials.Add(workOrderMaterial);
             }
@@ -2941,18 +2948,33 @@ namespace DAL.Repositories
             {
                 var woStockLine = _appContext.StockLine.Where(p => p.StockLineId == part.StockLineId).FirstOrDefault();
                 woStockLine.QuantityOnHand = part.QuantityOnHand;
-                woStockLine.QuantityAvailable = part.QuantityAvailable;
+                if (Convert.ToInt32(PartStatusEnum.Reserve) == part.PartStatusId || Convert.ToInt32(PartStatusEnum.ReserveAndIssue) == part.PartStatusId)
+                {
+                    woStockLine.QuantityAvailable = (woStockLine.QuantityAvailable - part.QuantityIssued);
+                }
+                if (Convert.ToInt32(PartStatusEnum.UnReserve) == part.PartStatusId)
+                {
+                    woStockLine.QuantityAvailable = (woStockLine.QuantityAvailable + part.QuantityIssued);
+                }
                 woStockLine.QuantityOnOrder = part.QuantityOnOrder;
                 woStockLine.StockLineId = part.StockLineId;
                 woStockLine.UpdatedDate = DateTime.Now;
                 woStockLine.UpdatedBy = part.UpdatedBy;
+                woStockLine.WorkOrderMaterialsId = part.WorkOrderMaterialsId;
                 _appContext.StockLine.Update(woStockLine);
             }
             else
             {
                 StockLine stockLine = new StockLine();
                 stockLine.QuantityOnHand = part.QuantityOnHand;
-                stockLine.QuantityAvailable = part.QuantityAvailable;
+                if (Convert.ToInt32(PartStatusEnum.Reserve) == part.PartStatusId || Convert.ToInt32(PartStatusEnum.ReserveAndIssue) == part.PartStatusId)
+                {
+                    stockLine.QuantityAvailable = (stockLine.QuantityAvailable - part.QuantityIssued);
+                }
+                if (Convert.ToInt32(PartStatusEnum.UnReserve) == part.PartStatusId)
+                {
+                    stockLine.QuantityAvailable = (stockLine.QuantityAvailable + part.QuantityIssued);
+                }
                 stockLine.QuantityOnOrder = part.QuantityOnOrder;
                 stockLine.StockLineId = part.StockLineId;
                 stockLine.CreatedDate = DateTime.Now;
@@ -2965,6 +2987,7 @@ namespace DAL.Repositories
                 stockLine.PurchaseOrderExtendedCost = 0;
                 stockLine.QuantityRejected = 0;
                 stockLine.TimeLifeDetailsNotProvided = false;
+                stockLine.WorkOrderMaterialsId = part.WorkOrderMaterialsId;
                 _appContext.StockLine.Add(stockLine);
             }
 
@@ -2986,7 +3009,7 @@ namespace DAL.Repositories
                 woMaterial.IssuedBy = part.IssuedBy;
                 woMaterial.IssuedDate = part.IssuedDate;
                 woMaterial.UpdatedDate = DateTime.Now;
-
+                woMaterial.PartStatusId = part.PartStatusId;
                 _appContext.WorkOrderMaterials.Update(woMaterial);
             }
             else
@@ -3021,6 +3044,8 @@ namespace DAL.Repositories
                 workOrderMaterial.MandatoryOrSupplemental = "Mandatory";
                 workOrderMaterial.UnitCost = 0;
                 workOrderMaterial.ExtendedCost = 0;
+                workOrderMaterial.PartStatusId = part.PartStatusId;
+
                 _appContext.WorkOrderMaterials.Add(workOrderMaterial);
             }
 
@@ -3033,18 +3058,34 @@ namespace DAL.Repositories
             {
                 var woStockLine = _appContext.StockLine.Where(p => p.StockLineId == part.StockLineId).FirstOrDefault();
                 woStockLine.QuantityOnHand = part.QuantityOnHand;
-                woStockLine.QuantityAvailable = part.QuantityAvailable;
+                if(Convert.ToInt32(PartStatusEnum.Reserve)==part.PartStatusId || Convert.ToInt32(PartStatusEnum.ReserveAndIssue) == part.PartStatusId)
+                {
+                    woStockLine.QuantityAvailable = (woStockLine.QuantityAvailable - part.QuantityIssued);
+                }
+                if (Convert.ToInt32(PartStatusEnum.UnReserve) == part.PartStatusId)
+                {
+                    woStockLine.QuantityAvailable = (woStockLine.QuantityAvailable + part.QuantityIssued);
+                }
+
                 woStockLine.QuantityOnOrder = part.QuantityOnOrder;
                 woStockLine.StockLineId = part.StockLineId;
                 woStockLine.UpdatedDate = DateTime.Now;
                 woStockLine.UpdatedBy = part.UpdatedBy;
+                woStockLine.WorkOrderMaterialsId = part.WorkOrderMaterialsId;
                 _appContext.StockLine.Update(woStockLine);
             }
             else
             {
                 StockLine stockLine = new StockLine();
                 stockLine.QuantityOnHand = part.QuantityOnHand;
-                stockLine.QuantityAvailable = part.QuantityAvailable;
+                if (Convert.ToInt32(PartStatusEnum.Reserve) == part.PartStatusId || Convert.ToInt32(PartStatusEnum.ReserveAndIssue) == part.PartStatusId)
+                {
+                    stockLine.QuantityAvailable = (stockLine.QuantityAvailable - part.QuantityIssued);
+                }
+                if (Convert.ToInt32(PartStatusEnum.UnReserve) == part.PartStatusId)
+                {
+                    stockLine.QuantityAvailable = (stockLine.QuantityAvailable + part.QuantityIssued);
+                }
                 stockLine.QuantityOnOrder = part.QuantityOnOrder;
                 stockLine.StockLineId = part.StockLineId;
                 stockLine.CreatedDate = DateTime.Now;
@@ -3057,6 +3098,7 @@ namespace DAL.Repositories
                 stockLine.PurchaseOrderExtendedCost = 0;
                 stockLine.QuantityRejected = 0;
                 stockLine.TimeLifeDetailsNotProvided = false;
+                stockLine.WorkOrderMaterialsId = part.WorkOrderMaterialsId;
                 _appContext.StockLine.Add(stockLine);
             }
 
