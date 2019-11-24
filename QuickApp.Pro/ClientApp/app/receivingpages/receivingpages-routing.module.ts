@@ -40,7 +40,8 @@ const receivingPagesRoutes: Routes = [
             { path: 'app-repair-order', component: RepairOrderComponent, data: { title: "Repair Order" } },
             { path: 'app-edit-ro', component: EditRoComponent, data: { title: "Edit RO" } },
             { path: 'app-ro', component: RoComponent, data: { title: "Repair Order" } },
-            { path: 'app-receiving-ro', component: ReceivingRoComponent, data: { title: "Receivng RO" } },
+			{ path: 'app-receiving-ro', component: ReceivingRoComponent, data: { title: "Receivng RO" } },
+			{ path: 'app-receiving-ro?repairOrderId=:id', component: ReceivingRoComponent, data: { title: "Receivng RO" } },
             { path: 'app-view-ro', component: ViewRoComponent, data: { title: "View RO" } },
             //{ path: 'app-shipping', component: ShippingComponent, data: {title: "shipping"} }
 			

@@ -189,7 +189,7 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.post(`${this.configurations.baseUrl}/api/workOrder/createworkorderlabor`, JSON.stringify(data), this.getRequestHeaders())
     }
     createWorkOrderMaterialList(data) {
-        return this.http.post(`${this.configurations.baseUrl}/api/workOrder/createworkordermaterials`, JSON.stringify(data), this.getRequestHeaders())
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/createworkordermaterials`, JSON.stringify(data), this.getRequestHeaders())
     }
 
     getTasks() {
@@ -197,7 +197,7 @@ export class WorkOrderEndpointService extends EndpointFactory {
     }
 
     getWorkOrderMaterialList(workFlowWorkOrderId, workOrderId) {
-        return this.http.get(`${this.configurations.baseUrl}/api/workOrder/workordermateriallist?wfwoId=${workFlowWorkOrderId}&workOrderId=${workOrderId}`)
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workordermateriallist?wfwoId=${workFlowWorkOrderId}&workOrderId=${workOrderId}`)
     }
 
     getWorkOrderPublicationList(workFlowWorkOrderId, workOrderId) {
@@ -242,6 +242,18 @@ export class WorkOrderEndpointService extends EndpointFactory {
     getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId) {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/getreservedissuesparts?WorkFlowWorkOrderId=${WorkFlowWorkOrderId}`)
     }
+
+    saveReservedPartorIssue(alternatePart){
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/savereserveissuesparts` , JSON.stringify(alternatePart) , this.getRequestHeaders());
+    }
+
+    assetsCheckInByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy){
+       return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/saveassetcheckedin?WorkOrderAssetId=${workOrderAssetId}&checkedInById=${employeeId}&checkedInDate=${checkedInDate}&updatedBy=${updatedBy}`)  
+    }
+
+    assetsCheckOutByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy){
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/saveassetcheckedout?WorkOrderAssetId=${workOrderAssetId}&checkedInById=${employeeId}&checkedInDate=${checkedInDate}&updatedBy=${updatedBy}`)  
+     }
 
 
 
