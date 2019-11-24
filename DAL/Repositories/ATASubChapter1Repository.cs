@@ -38,6 +38,12 @@ namespace DAL.Repositories
 
         }
 
+        public IEnumerable<ATASubChapterAudit> GetATASubChapterAuditDetails(long aTASubChapterId)
+        {
+            return _appContext.ATASubChapterAudit.Where(c => c.ATASubChapterId == aTASubChapterId).OrderByDescending(p => p.UpdatedDate).ToList();
+
+        }
+
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
     }

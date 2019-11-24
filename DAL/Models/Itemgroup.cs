@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DAL.Models
 {
-   public class Itemgroup:IAudit
+   public class Itemgroup: PasBase, IAudit
     {  
         [Key]
         public long ItemGroupId { get; set; }
@@ -19,13 +19,13 @@ namespace DAL.Models
         [ForeignKey("MasterCompanyId")]
         public Int32 MasterCompanyId { get; set; }
 
-        public string CreatedBy { get; set; }
+        //public string CreatedBy { get; set; }
 
-        public string UpdatedBy { get; set; }
+        //public string UpdatedBy { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        //public DateTime CreatedDate { get; set; }
 
-        public DateTime UpdatedDate { get; set; }
+        //public DateTime UpdatedDate { get; set; }
 
         public bool IsActive { get; set; }
 

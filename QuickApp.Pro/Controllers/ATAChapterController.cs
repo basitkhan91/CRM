@@ -86,7 +86,7 @@ namespace QuickApp.Pro.Controllers
 
         [HttpPost("actions")]
         //[Authorize(Authorization.Policies.ManageAllRolesPolicy)]
-        public IActionResult CreateAction([FromBody] ATAChapterViewModel ataMainViewModel)
+        public IActionResult CreateAction([FromBody] ATAChapter ataMainViewModel)
         {
             try
             {
