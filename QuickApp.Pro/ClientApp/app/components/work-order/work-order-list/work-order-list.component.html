@@ -427,11 +427,22 @@
           </div>
         </div>
 
-        <div class="card">
-          <div class="card-body">
+        <div class="card" *ngIf="showMPN">
+        <div class="card-body">
+            <p-dropdown [options]="mpnPartNumbersList" placeholder="Select Part Number" class="p-dropdown-custom-md" 
+            (onChange)="changeofMPN($event.value)"
+            >
+              </p-dropdown>
+        </div>
+        </div>
+
+        <div class="card"  >
+          <div class="card-body" *ngIf="showTableGrid">
             <p-tabView  class="pas-tabview">
                         
-              <p-tabPanel header="Work Flow"> </p-tabPanel>
+              <p-tabPanel  *ngIf="workFlowId" header="Work Flow">
+                  <app-workflow-list [isWorkOrder]="isWorkOrder"   [workFlowId]="workFlowId" ></app-workflow-list>  
+              </p-tabPanel>
               <p-tabPanel header="Labor"> </p-tabPanel>
               <p-tabPanel header="Equipment">
                
@@ -599,78 +610,29 @@
                           <div class="table-responsive table-overflow" id="workflow-attributes-block">
                               <table class="table table-bordered ">
                                   <thead>
-                                      <!-- <tr>
-                                          <th class="text-center">Part Number </th>
-                                          <th class="text-center">Part Description</th>
-                                          <th class="text-center">Alternate PN</th>
-                                          <th class="text-center">SerialNumber</th>
-                                          <th class="text-center">Provision</th>
-                                          <th class="text-center">OEM</th>
-                                          <th class="text-center">Control</th>
-                                          <th class="text-center">Condition</th>
-                                          <th class="text-center">Item Type</th>
-                                          <th class="text-center">Qunatity Requried</th>
-                                          <th class="text-center">Qunatity Reserved</th>
-                                          <th class="text-center">Qunatity TurnIn</th>
-                                          <th class="text-center">Qunatity Issued</th>
-                                          <th class="text-center">Qunatity BackOrder</th>
-                                          <th class="text-center">Qunatity Remaining</th>
+                                      <tr>
+                                          <th class="text-center">Charge Type </th>
+                                          <th class="text-center">Description</th>
+                                          <th class="text-center">Quantity</th>
                                           <th class="text-center">Unit Cost</th>
-                                          <th class="text-center">Extended Cost</th>
-                                          <th class="text-center">Currency</th>
-                                          <th class="text-center">Purchase OrderNumber</th>
-                                          <th class="text-center">Repair OrderNumber</th>
-                                          <th class="text-center">Part Quantity OnHand</th>
-                                          <th class="text-center">Part Quantity Available</th>
-                                          <th class="text-center">Part Quantity OnOrder</th>
-                                          <th class="text-center">WorkOrder Number</th>
-                                          <th class="text-center">Sub WorkOrder</th>
-                                          <th class="text-center">SalesOrder</th>
-                                          <th class="text-center">Condition</th>
-                                          <th class="text-center">TimeLife</th>
-                                          <th class="text-center">Ware House</th>
-                                          <th class="text-center">Location</th>
-                                          <th class="text-center">Shelf</th>
-                                          <th class="text-center">Bin</th>
-
-                                      </tr> -->
+                                          <th class="text-center">Extented Cost</th>
+                                          <th class="text-center">Unit Price</th>
+                                          <th class="text-center">Extended Price</th>
+                                          <th class="text-center">vendorName</th>
+                                      </tr> 
                                   </thead>
                               
                                   <tbody>
-                                      <!-- <tr *ngFor="let m  of workOrderChargesList; let i=index;">
-                                          <td>{{m.partNumber}}</td>
-                                          <td>{{m.partDescription}}</td>
-                                          <td>{{m.altPartNumber}}</td>
-                                          <td>{{m.serialNumber}}</td>
-                                          <td>{{m.provision}}</td>
-                                          <td>{{m.oem}}</td>
-                                          <td>{{m.control}}</td>
-                                          <td>{{m.condition}}</td>
-                                          <td>{{m.itemType}}</td>
-                                          <td>{{m.qunatityRequried}}</td>
-                                          <td>{{m.qunatityReserved}}</td>
-                                          <td>{{m.qunatityTurnIn}}</td>
-                                          <td>{{m.qunatityIssued}}</td>
-                                          <td>{{m.qunatityBackOrder}}</td>
-                                          <td>{{m.qunatityRemaining}}</td>
-                                          <td>{{m.unitCost}}</td>
-                                          <td>{{m.extendedCost}}</td>
-                                          <td>{{m.currency}}</td>
-                                          <td>{{m.purchaseOrderNumber}}</td>
-                                          <td>{{m.repairOrderNumber}}</td>
-                                          <td>{{m.partQuantityOnHand}}</td>
-                                          <td>{{m.partQuantityAvailable}}</td>
-                                          <td>{{m.partQuantityOnOrder}}</td>
-                                          <td>{{m.receiver}}</td>
-                                          <td>{{m.workOrderNumber}}</td>
-                                          <td>{{m.subWorkOrder}}</td>
-                                          <td>{{m.salesOrder}}</td>
-                                          <td>{{m.timeLife}}</td>
-                                          <td>{{m.wareHouse}}</td>
-                                          <td>{{m.location}}</td>
-                                          <td>{{m.shelf}}</td>
-                                          <td>{{m.bin}}</td>
-                                      </tr> -->
+                                    <tr *ngFor="let w  of workOrderChargesList; let i=index;">
+                                          <td>{{w.chargeType}}</td>
+                                          <td>{{w.description}}</td>
+                                          <td>{{w.quantity}}</td>
+                                          <td>{{w.unitCost}}</td>
+                                          <td>{{w.extendedCost}}</td>
+                                          <td>{{w.unitPrice}}</td>
+                                          <td>{{w.extendedPrice}}</td>
+                                          <td>{{w.vendorName}}</td>
+                                      </tr> 
                                   </tbody>
                               </table>
                           </div>
