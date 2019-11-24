@@ -3181,7 +3181,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("roPartsViewById")]
         public IActionResult GetRepairOrderPartsView(long repairOrderId)
         {
-            var list = _unitOfWork.repairOrder.GetRepairOrderPartsView(repairOrderId);
+            var list = _unitOfWork.repairOrder.GetRepairOrderPartsView2(repairOrderId);
             return Ok(list);
         }
 

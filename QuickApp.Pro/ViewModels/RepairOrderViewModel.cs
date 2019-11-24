@@ -15,7 +15,7 @@ namespace QuickApp.Pro.ViewModels
         public int? VendorContactId { get; set; }
         public string VendorContactPhone { get; set; }
         public decimal? CreditLimit { get; set; }
-        public int? CreditTermsId { get; set; }
+        public short? CreditTermsId { get; set; }
         public int RequisitionerId { get; set; }
         public int ApproverId { get; set; }
         public DateTime? ApprovedDate { get; set; }
