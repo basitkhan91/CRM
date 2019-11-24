@@ -48,13 +48,14 @@ namespace DAL.Repositories
                 }
 
                 var approver = purchaseOrder.ApproverId != null ? _appContext.Employee.Find(purchaseOrder.ApproverId) : null;
-
+                var requestedByObject = _appContext.Employee.Where(x => x.EmployeeId == purchaseOrder.RequestedBy).FirstOrDefault();
                 return new
                 {
                     StatusId = purchaseOrder.StatusId,
                     PurchaseOrderId = purchaseOrder.PurchaseOrderId,
                     PurchaseOrderNumber = purchaseOrder.PurchaseOrderNumber,
                     RequestedBy = purchaseOrder.RequestedBy,
+                    RequestedByText = requestedByObject.FirstName + " " + requestedByObject.LastName,
                     Vendor = purchaseOrder.Vendor,
                     OpenDate = purchaseOrder.OpenDate,
                     Approver = approver != null ? approver.FirstName + " " + approver.LastName : "",
@@ -106,13 +107,14 @@ namespace DAL.Repositories
                 });
 
                 var approver = purchaseOrder.ApproverId != null ? _appContext.Employee.Find(purchaseOrder.ApproverId) : null;
-
+                var requestedByObject = _appContext.Employee.Where(x => x.EmployeeId == purchaseOrder.RequestedBy).FirstOrDefault();
                 return new
                 {
                     StatusId = purchaseOrder.StatusId,
                     PurchaseOrderId = purchaseOrder.PurchaseOrderId,
                     PurchaseOrderNumber = purchaseOrder.PurchaseOrderNumber,
                     RequestedBy = purchaseOrder.RequestedBy,
+                    RequestedByText = requestedByObject.FirstName + " " + requestedByObject.LastName,
                     Vendor = purchaseOrder.Vendor,
                     OpenDate = purchaseOrder.OpenDate,
                     Approver = approver != null ? approver.FirstName + " " + approver.LastName : "",

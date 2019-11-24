@@ -449,7 +449,9 @@ namespace DAL
         public DbSet<MasterSalesLeadSources> MasterSalesLeadSources { get; set; }
 
         public DbSet<MasterSalesProbablity> MasterSalesProbablity { get; set; }
+        public DbSet<SubWorkOrder> SubWorkOrder { get; set; }
 
+        
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }

@@ -51,6 +51,16 @@ namespace DAL.Repositories
                 _appContext.WorkOrder.Update(workOrder);
                 _appContext.SaveChanges();
 
+                if(workOrder.IsSubWorkOrder)
+                {
+                    SubWorkOrder subWorkOrder = new SubWorkOrder();
+                    subWorkOrder.WorkOrderId = workOrder.WorkOrderId;
+                    subWorkOrder.IsActive = true;
+                    subWorkOrder.IsDeleted = false;
+                    _appContext.SubWorkOrder.Add(subWorkOrder);
+                    _appContext.SaveChanges();
+                }
+
                 // Creating WorkflowWorkOrder From Work Flow
                 workOrder.WorkFlowWorkOrderId = CreateWorkFlowWorkOrderFromWorkFlow(workOrder.PartNumbers, workOrder.WorkOrderId, workOrder.CreatedBy);
 
@@ -868,7 +878,6 @@ namespace DAL.Repositories
         {
             try
             {
-
                 _appContext.WorkOrderAssets.AddRange(workOrderAssets);
                 _appContext.SaveChanges();
                 return workOrderAssets;
@@ -928,7 +937,12 @@ namespace DAL.Repositories
                                                wa.MinQuantity,
                                                wa.MaxQuantity,
                                                wa.ExpectedQuantity,
-                                               wa.Findings
+                                               wa.Findings,
+                                               wa.CheckedInById,
+                                               wa.CheckedInDate,
+                                               wa.CheckedOutById,
+                                               wa.CheckedOutDate
+                                               
                                            }).Distinct().ToList();
 
                 return workOrderAssetsList;
@@ -2298,7 +2312,7 @@ namespace DAL.Repositories
 
                                 workFlowWorkOrderId = workFlowWorkOrder.WorkFlowWorkOrderId;
 
-                                if (workOrderLaborHeader != null)
+                                if (workOrderLaborHeader != null && workOrderLaborHeader.LaborList!=null && workOrderLaborHeader.LaborList.Count>0)
                                 {
                                     workOrderLaborHeader.LaborList.ForEach(p => p.IsFromWorkFlow = true);
                                     workOrderLaborHeader.WorkFlowWorkOrderId = workFlowWorkOrderId;
