@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter } from "@angular/core";
+import { ISalesQuote } from "../../../../../../models/sales/ISalesQuote.model";
 
 @Component({
   selector: "app-customer-detail",
@@ -6,5 +7,6 @@ import { Component, Input, Output, EventEmitter } from "@angular/core";
   styleUrls: ["./customer-detail.component.scss"]
 })
 export class CustomerDetailComponent {
-  constructor() {}
+  @Input() customer: any;
+  constructor() { }
 }
