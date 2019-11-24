@@ -39,6 +39,13 @@ namespace QuickApp.Pro
             return Ok(repairOrderHeader);
         }
 
+        [HttpGet("getRepairOrderPartById/{repairOrderId}")]
+        public IActionResult GetRepairOrderPartById(long repairOrderId)
+        {
+            var repairOrderParts = unitOfWork.ReceiveRepairOrder.GetRepairOrderPartsByRepairOrderId(repairOrderId);
+            return Ok(repairOrderParts);
+        }
+
         #endregion Public Members
 
 
