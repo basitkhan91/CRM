@@ -631,9 +631,9 @@ export class ReceivingRoComponent implements OnInit {
         }
     }
 
-    private showSplitShipmentParts(purchaseOrderPart : RepairOrderPart): void {
+    private showSplitShipmentParts(repairOrderPart : RepairOrderPart): void {
         var selectedParts = this.repairOrderData.filter(function (part) {
-            return part.itemMasterId == purchaseOrderPart.itemMasterId;
+            return part.itemMasterId == repairOrderPart.itemMasterId;
         });
 
         selectedParts.forEach(part => {
@@ -802,7 +802,7 @@ export class ReceivingRoComponent implements OnInit {
                 stockLine.shelfId = null;
                 stockLine.warehouseId = null;
                 stockLine.binId = null;
-                stockLine.repairOrderId = null;
+                //stockLine.repairOrderId = null;
                 stockLine.locationId = null;
                 stockLine.shippingAccount = '';
                 stockLine.conditionId = 0;
@@ -840,7 +840,7 @@ export class ReceivingRoComponent implements OnInit {
             stockLine.shelfId = null;
             stockLine.warehouseId = null;
             stockLine.binId = null;
-            stockLine.repairOrderId = null;
+            //stockLine.repairOrderId = null;
             stockLine.locationId = null;
             stockLine.shippingAccount = '';
             stockLine.conditionId = 0;
@@ -1190,7 +1190,7 @@ export class ReceivingRoComponent implements OnInit {
         }
         //let partsToPost: ReceiveParts[] = this.extractAllAllStockLines();
         let partsToPost: any = this.extractAllAllStockLines();
-        this.shippingService.receiveParts(partsToPost).subscribe(data => {
+        this.receivingService.receiveParts(partsToPost).subscribe(data => {
             this.alertService.showMessage(this.pageTitle, 'Parts Received successfully.', MessageSeverity.success);
             return this.route.navigate(['/receivingmodule/receivingpages/app-edit-ro']);
         },
