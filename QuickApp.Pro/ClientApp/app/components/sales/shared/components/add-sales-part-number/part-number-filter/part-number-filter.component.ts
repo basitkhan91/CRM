@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from "@angular/core";
 import { ItemMasterSearchQuery } from "../../../../quotes/models/item-master-search-query";
 import { ItemMasterService } from "../../../../../../services/itemMaster.service";
+import { ISalesQuote } from "../../../../../../models/sales/ISalesQuote.model";
 
 @Component({
   selector: "app-part-number-filter",
@@ -8,6 +9,8 @@ import { ItemMasterService } from "../../../../../../services/itemMaster.service
   styleUrls: ["./part-number-filter.component.scss"]
 })
 export class PartNumberFilterComponent {
+  @Input() customer: any;
+  @Output() onPartSearch: EventEmitter<any> = new EventEmitter<any>();
   query: ItemMasterSearchQuery;
   constructor(private itemMasterService: ItemMasterService) {
     this.query = new ItemMasterSearchQuery();
@@ -18,7 +21,7 @@ export class PartNumberFilterComponent {
     $event.preventDefault();
     this.itemMasterService.search(this.query)
       .subscribe(result => {
-        //TODO: Parse and bind the data
+        this.onPartSearch.emit(result);
       });
   }
 }

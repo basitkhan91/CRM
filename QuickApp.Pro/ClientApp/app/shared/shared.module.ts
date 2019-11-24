@@ -18,6 +18,7 @@ import { UserEditorComponent } from '../admin/user-editor.component';
 import { AppDialogComponent } from './app-dialog.component';
 
 import { GroupByPipe } from '../pipes/group-by.pipe';
+import { CommonModule } from "@angular/common";
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { GroupByPipe } from '../pipes/group-by.pipe';
         FormsModule, ReactiveFormsModule,
         BrowserModule, BrowserAnimationsModule,
         QuickAppProMaterialModule,
-        TranslateModule
+        TranslateModule,
+        CommonModule
     ],
     exports: [
         FlexLayoutModule,
@@ -37,7 +39,10 @@ import { GroupByPipe } from '../pipes/group-by.pipe';
         PageHeaderComponent,
         GroupByPipe,
         UserEditorComponent,
-        AppDialogComponent
+        AppDialogComponent,
+        
+        
+        
     ],
     declarations: [
         PageHeaderComponent,

@@ -32,6 +32,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
     taxRatesList: any = [];
     creditTermList: any;
     discountList: any;
+    discountList1: any;
+
     markUpList: any;
     taxrateList: any;
     state_taxRateList: any;
@@ -95,6 +97,10 @@ export class CustomerFinancialInformationComponent implements OnInit {
     selectedTaxRates = [];
     selectedTaxType: any;
     taxTypeRateMapping: any = [];
+    selectedConsume: any;
+    disableSaveConsume: boolean;
+    discountcollection: any[] = [];
+       namecolle: any[] = [];
     // discountNew = {
 
 
@@ -257,6 +263,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
         this.getAllPercentage();
         this.getAllTaxTypes();
         this.getTaxRates();
+        this.getAllDiscountList1();
+
     
     }
 
@@ -436,13 +444,26 @@ export class CustomerFinancialInformationComponent implements OnInit {
             this.discountList = res[0];
         })
     }
-    filterDiscount(event) {
-        console.log(parseInt(event.query));
-        this._discountList = this.discountList;
+   
+    getAllDiscountList1() {
+        this.commonservice.smartDropDownList('[Discount]', 'DiscountId', 'DiscontValue').subscribe(res => {
+            this.discountList1 = res;
+        })
+    }
 
-        this._discountList = [...this.discountList.filter(x => {
+   
+
+    filterDiscount(event) {
+     
+        console.log();
+        this._discountList = this.discountList1;
+    
+
+        this._discountList = [...this.discountList1.filter(x => {
             console.log(x);
-            return x.discontValue.includes(parseInt(event.query))
+            return x.label.includes(event.query.toLowerCase())
+
+           
         })]
     }
 
@@ -455,6 +476,21 @@ export class CustomerFinancialInformationComponent implements OnInit {
             this.isDiscountExists = false;
         }
     }
+    checkDiscountExistss(value) {
+      
+        this.isDiscountExists = false;
+
+        for (let i = 0; i < this.discountList1.length; i++) {
+            if (this.discontValue == this.discountList1[i].label || value == this.discountList[i].label) {
+                this.isDiscountExists = true;
+                // this.disableSave = true;
+
+                return;
+            }
+
+        }
+    }
+
     selectedDiscount() {
         this.isDiscountExists = true;
     }

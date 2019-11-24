@@ -303,7 +303,8 @@ export class CustomerWarningsComponent implements OnInit {
 
 		if (!this.warningsUpdateBoolean) {
 			this.customerService.saveCustomerwarnings(data).subscribe(res => {
-				this.router.navigateByUrl('/customersmodule/customerpages/app-customers-list')
+				//this.router.navigateByUrl('/customersmodule/customerpages/app-customers-list')
+                this.nextClick();
 				this.warningMessages = res;
 				// this.customerWarningId = res.customerWarningId;
 				this.alertService.showMessage(
@@ -314,7 +315,8 @@ export class CustomerWarningsComponent implements OnInit {
 			})
 		} else {
 			this.customerService.updateCustomerWarnings(data, this.id).subscribe(res => {
-				this.router.navigateByUrl('/customersmodule/customerpages/app-customers-list')
+               // this.router.navigateByUrl('/customersmodule/customerpages/app-customers-list')
+                this.nextClick();
 				this.alertService.showMessage(
 					'Success',
 					`Updated Warning Messages Successfully `,
@@ -323,16 +325,16 @@ export class CustomerWarningsComponent implements OnInit {
 			})
 		}
 
-
+    
 
 
 	}
 
-	// nextClick() {
-	//     this.tab.emit('Sales');
-	// }
+	 nextClick() {
+         this.tab.emit('Documents');
+	 }
 	backClick() {
-		this.tab.emit('Billing');
+        this.tab.emit('Shipping');
 	}
 
 

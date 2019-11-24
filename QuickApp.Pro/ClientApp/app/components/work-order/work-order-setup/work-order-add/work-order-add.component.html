@@ -532,7 +532,7 @@
                 </div>
                 <div>
                   <button class="btn btn-primary-cstm pull-right" *ngIf="!showTableGrid && !isEdit" type="button"  [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Save</button>
-                  <button class="btn btn-primary-cstm pull-right" *ngIf="!showTableGrid && isEdit" type="button"  [disabled]="!workOrderForm.valid" >Update</button>
+                  <button class="btn btn-primary-cstm pull-right" *ngIf="!showTableGrid && isEdit" type="button"  [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Update</button>
                 <button  *ngIf="showTableGrid && workOrderGeneralInformation.isSinglePN " class="btn btn-success pull-right" data-toggle="modal" data-target="#quote-details" >Create Quote</button>
                 </div>
             </form>
@@ -722,7 +722,7 @@
                     </div>
                     <div *ngIf="labor" [ngClass]="{hidedata : gridActiveTab !== 'labor'}">
                         <app-work-order-labor [laborForm]="labor" [workOrderWorkFlowOriginalData]="workOrderWorkFlowOriginalData" [savedWorkOrderData]="savedWorkOrderData"
-                        (saveworkOrderLabor)="saveworkOrderLabor($event)"
+                        (saveworkOrderLabor)="saveWorkOrderLabor($event)"
                         ></app-work-order-labor>
                     </div>
 
@@ -733,8 +733,8 @@
                     <div  *ngIf="quote" [ngClass]="{hidedata : gridActiveTab !== 'quote' }" >
                             <app-work-order-quote [quoteForm]="quote"></app-work-order-quote>
                         </div>
-                    <div  [ngClass]="{hidedata : gridActiveTab !== 'materialList' }" >  
-                      <app-work-order-complete-material-list  [workOrderMaterialList]="workOrderMaterialList"></app-work-order-complete-material-list>
+                    <div *ngIf="workOrderId" [ngClass]="{hidedata : gridActiveTab !== 'materialList' }" >  
+                      <app-work-order-complete-material-list [isWorkOrder]="isWorkOrder" [workFlow]="workFlowObject" [savedWorkOrderData]="savedWorkOrderData" [workOrderMaterialList]="workOrderMaterialList" (saveMaterialListForWO)="saveWorkOrderMaterialList($event)"></app-work-order-complete-material-list>
                     </div>
                       
 

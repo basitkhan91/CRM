@@ -2239,7 +2239,8 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             const saveWorkFlowWorkOrderData = {
                 ...this.sourceWorkFlow,
                 // ...tasks[0],
-                isSaveToWorkFlow: isSaveToWorkFlow,
+                isSaveToWorkFlow : isSaveToWorkFlow,
+                workflowId: 0 , 
                 workOrderId: this.savedWorkOrderData.workOrderId,
                 workFlowWorkOrderId: this.workFlowWorkOrderId,
                 existingWorkFlowId : this.sourceWorkFlow.workflowId,

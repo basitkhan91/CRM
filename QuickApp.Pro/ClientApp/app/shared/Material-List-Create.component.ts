@@ -18,6 +18,7 @@ import { AlertService, MessageSeverity } from "../services/alert.service";
     styleUrls: ['./Material-List-Create.component.css']
 })
 export class MaterialListCreateComponent implements OnInit {
+    @Input() workFlowObject;
     partCollection: any[] = [];
     itemclaColl: any[] = [];
     allPartnumbersInfo: any[] = [];
@@ -25,6 +26,7 @@ export class MaterialListCreateComponent implements OnInit {
     itemClassInfo: any[] = [];
     allconditioninfo: any[] = [];
     partListData: any[] = [];
+    @Input() isWorkOrder;
     @Input() workFlow: IWorkFlow;
     @Input() UpdateMode: boolean;
     @Output() workFlowChange = new EventEmitter();
@@ -52,21 +54,25 @@ export class MaterialListCreateComponent implements OnInit {
     defaultMaterialMandatory: string;
 
     ngOnInit(): void {
-        this.row = this.workFlow.materialList[0];
-        if (this.row == undefined) {
-            this.row = {};
-        }
-        this.row.taskId = this.workFlow.taskId;
-        this.actionService.GetMaterialMandatory().subscribe(
-            mandatory => {
-                this.materialMandatory = mandatory;
-                this.defaultMaterialMandatory = 'Mandatory';
-                if (this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') {
-                    this.workFlow.materialList[0].mandatoryOrSupplemental = this.defaultMaterialMandatory;
-                }
-            },
-            error => this.errorMessage = <any>error
-        );
+
+            this.row = this.workFlow.materialList[0];
+            if (this.row == undefined) {
+                this.row = {};
+            }
+            this.row.taskId = this.workFlow.taskId;
+            this.actionService.GetMaterialMandatory().subscribe(
+                mandatory => {
+                    this.materialMandatory = mandatory;
+                    this.defaultMaterialMandatory = 'Mandatory';
+                    if (this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') {
+                        this.workFlow.materialList[0].mandatoryOrSupplemental = this.defaultMaterialMandatory;
+                    }
+                },
+                error => this.errorMessage = <any>error
+            );
+        
+
+
 
         this.loadConditionData();
         this.loadItemClassData();
@@ -312,5 +318,6 @@ export class MaterialListCreateComponent implements OnInit {
             this.isDeferredBoolean = false;
         }
     }
+
 
 }

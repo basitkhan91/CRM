@@ -81,6 +81,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
     partListForPMA: any;
     partListForDER: any;
     partListOriginal: any;
+    selectedActionName: any;
+    disableSaveCustomerName: boolean;
+    disableRestrictedDER: boolean = false;
+    disableRestrictedPMA: boolean = false;
     // restrictsPMAList: any;
     // restrictBERList: any;
     restictDERtempList: any = [];
@@ -485,6 +489,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     async getCustomerRestrictedPMAByCustomerId() {
         await this.commonService.getRestrictedParts(1, this.id, 'PMA').subscribe(res => {
             this.generalInformation.restrictedPMAParts = res;
+          
             this.restictPMAtempList = res.map(x => x.itemMasterId);
             // this.generalInformation.restrictedPMAParts = res.map(x => {
             //     return  { 
@@ -503,6 +508,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
         await this.commonService.getRestrictedParts(1, this.id, 'DER').subscribe(res => {
 
             this.generalInformation.restrictedDERParts = res;
+           
             this.restictDERtempList = res.map(x => x.itemMasterId);
             // this.generalInformation.restrictedDERParts = res.map(x => {
             //     return  { 
@@ -605,7 +611,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     // }
 
     addRestrictPMA() {
-
+       
         this.generalInformation.restrictedPMAParts = this.restictPMAtempList;
 
         this.partListForPMA = this.restictPMAtempList.reduce((acc, obj) => {
@@ -613,19 +619,45 @@ export class CustomerGeneralInformationComponent implements OnInit {
         }, this.partListOriginal)
     }
     deleteRestirctPMA(i, rowData) {
+      
+        if (rowData.restrictedPartId > 0) {
+
+            this.customerService.deleteRestrictedPartsById(rowData.restrictedPartId, this.userName).subscribe(res => {
+                this.alertService.showMessage(
+                    'Success',
+                    `Sucessfully Deleted Restricted Part`,
+                    MessageSeverity.success
+                );
+            })
+        }
         this.partListForPMA = [{ label: rowData.partNumber, value: rowData }, ...this.partListForPMA];
         this.generalInformation.restrictedPMAParts.splice(i, 1);
+       
     }
 
     addRestrictBER() {
+        
+
         this.generalInformation.restrictedDERParts = this.restictDERtempList;
         this.partListForDER = this.restictDERtempList.reduce((acc, obj) => {
             return acc.filter(x => x.value.masterPartId !== obj.masterPartId)
         }, this.partListOriginal)
     }
     deleteRestrictDER(i, rowData) {
+        if (rowData.restrictedPartId > 0) {
+
+            this.customerService.deleteRestrictedPartsById(rowData.restrictedPartId, this.userName).subscribe(res => {
+                this.alertService.showMessage(
+                    'Success',
+                    `Sucessfully Deleted Restricted Part`,
+                    MessageSeverity.success
+                );
+            })
+        }
         this.partListForDER = [{ label: rowData.partNumber, value: rowData }, ...this.partListForDER];
         this.generalInformation.restrictedDERParts.splice(i, 1);
+       
+
     }
 
 
@@ -698,6 +730,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
         this.memoPopupContent = '';
     }
     selectedCustomerName() {
+       
         this.isCustomerNameAlreadyExists = true;
     }
     selectedCustomerCode() {
@@ -713,6 +746,53 @@ export class CustomerGeneralInformationComponent implements OnInit {
             this.isCustomerNameAlreadyExists = false;
         }
     }
+
+    checkCustomerNameExist(value) {
+     
+        this.isCustomerNameAlreadyExists = false;
+        this.disableSaveCustomerName = false;
+        for (let i = 0; i < this.customerListOriginal.length; i++) {
+           
+            if (this.generalInformation.name == this.customerListOriginal[i].name || value == this.customerListOriginal[i].name ) {
+                this.isCustomerNameAlreadyExists = true;
+                // this.disableSave = true;
+                this.disableSaveCustomerName = true;
+                this.selectedActionName = event;
+                return;
+            }
+           
+        }
+
+    }
+    checkCustomerCodeExist(value) {
+     
+        this.isCustomerCodeAlreadyExists = false;
+     
+        for (let i = 0; i < this.customerListOriginal.length; i++) {
+            if (this.generalInformation.customerCode == this.customerListOriginal[i].customerCode || value == this.customerListOriginal[i].customerCode) {
+                this.isCustomerCodeAlreadyExists = true;
+                // this.disableSave = true;
+            
+                return;
+            }
+
+        }
+
+    }
+   
+    //onCustomerselected(event) {
+    //    debugger
+    //    for (let i = 0; i < this.customerListOriginal.length; i++) {
+    //        if (event == this.customerListOriginal[i].name) {
+    //            this.isCustomerNameAlreadyExists = true;
+    //            //this.disableSave = true;
+    //            this.disableSaveCustomerName = true;
+    //            this.selectedActionName = event;
+    //        }
+    //    }
+    //}
+
+
 
     checkCustomerCodeExists(field, value) {
         const exists = validateRecordExistsOrNot(field, value, this.customerListOriginal)
@@ -780,18 +860,34 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
 
     }
-    checkClassificationExists(field, value, ) {
-        
-        const exists = validateRecordExistsOrNot(field, value, this.allcustomerclassificationInfo)
+    checkClassificationExists(value) {
+    
+        this.isClassificationAlreadyExists = false;
 
+        for (let i = 0; i < this.allcustomerclassificationInfo.length; i++) {
+            if (this.addNewclassification.description == this.allcustomerclassificationInfo[i].label || value == this.allcustomerclassificationInfo[i].label) {
+                this.isClassificationAlreadyExists = true;
+                // this.disableSave = true;
 
-        if (exists.length > 0) {
+                return;
+            }
 
-            this.isClassificationAlreadyExists = true;
-        } else {
-            this.isClassificationAlreadyExists = false;
         }
+
+
     }
+    //checkClassificationExists(field, value, ) {
+        
+    //    const exists = validateRecordExistsOrNot(field, value, this.allcustomerclassificationInfo)
+
+
+    //    if (exists.length > 0) {
+
+    //        this.isClassificationAlreadyExists = true;
+    //    } else {
+    //        this.isClassificationAlreadyExists = false;
+    //    }
+    //}
 
     selectedClassification(object) {
         const exists = selectedValueValidate('label', object, this.selectedClassificationRecordForEdit)
