@@ -46,7 +46,7 @@ export class RepairOrder {
     
     dateApproved: string;
 
-    repairOrderPart: RepairOrderPart[];
+    repairOderPart: RepairOrderPart[];
     vendor: Vendor;
     stockLine: StockLine[];
 }
@@ -86,7 +86,7 @@ export class RepairOrderPart {
     functionalCurrencyId: number;
     foreignExchangeRate: number;
     workOrderId: number;
-    // repairOrderId: number;
+    //repairOrderId: number;
     salesOrderId: number;
     generalLedgerAccounId: number;
     memo: string;
@@ -169,7 +169,6 @@ export class RepairOrderPart {
     BinList: DropDownData[];
     stockLine: StockLine[];
     timeLife: TimeLife[];
-    partNumber: any;
 }
 
 export class TimeLife {
@@ -240,8 +239,8 @@ export class StockLine {
     repairOrderUnitCost: number;
     repairOrderExtendedCost: number;
     inventoryUnitCost: number;
-    // repairOrderId: number;
-    // repairOrderUnitCost: number;
+    //repairOrderId: number;
+    //repairOrderUnitCost: number;
     receivedDate: Date;
     receiverNumber: string;
     reconciliationNumber: string;
