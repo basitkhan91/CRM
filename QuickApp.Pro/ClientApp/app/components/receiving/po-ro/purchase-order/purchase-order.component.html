@@ -66,17 +66,12 @@
                                                     <i class="fa fa-eye"></i>
                                                 </a>
                                             </span>
-                                            <span (click)="openEdit(rowData)" *ngIf="rowData.statusId != 4">
-                                                <a data-toggle="tooltip" pTooltip="Edit" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="" edit="">
-                                                    <i class="fa fa-edit"></i>
-                                                </a>
-                                            </span>
                                             <span *ngIf="rowData.statusId == 3" (click)="getSelectedRow(rowData)">
                                                 <a data-toggle="tooltip" pTooltip="Receive PO" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="" edit="">
                                                     <i class=" fa fa-chevron-down"></i>
                                                 </a>
                                             </span>
-                                            <span (click)="editStockLine(rowData)" *ngIf="rowData.statusId != 4">
+                                            <span (click)="editStockLine(rowData)">
                                                 <a data-toggle="tooltip" pTooltip="Edit Stockline" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="" edit="">
                                                     <i class="fa fa-edit"></i>
                                                 </a>
