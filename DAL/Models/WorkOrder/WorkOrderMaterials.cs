@@ -34,6 +34,7 @@ namespace DAL.Models
         public DateTime? ReservedDate { get; set; }
         public bool? IsAltPart { get; set; }
         public long? AltPartMasterPartId { get; set; }
+        public int? PartStatusId { get; set; }
 
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
@@ -44,5 +45,7 @@ namespace DAL.Models
         public bool IsDeleted { get; set; }
         public bool? IsFromWorkFlow { get; set; }
         public virtual ItemMaster ItemMaster { get; set; }
+
+        
     }
 }
