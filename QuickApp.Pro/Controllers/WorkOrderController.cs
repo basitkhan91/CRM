@@ -874,7 +874,6 @@ namespace QuickApp.Pro.Controllers
                             }
 
                             workFlow.Charges.AddRange(itemsToRemove);
-
                         }
 
                     }

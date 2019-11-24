@@ -147,10 +147,11 @@
                                                     Tax Type
                                                 </label>
                                                 <span style="margin-left:3px;cursor:pointer;"><a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addTaxType"></a></span>
-                                                <p-dropdown  class="p-dropdown-custom-2" [options]="taxtypesList" placeholder="Select TaxType" name="taxType" [(ngModel)]="selectedTaxType"></p-dropdown>
+                                               
+                                                <p-dropdown class="p-dropdown-custom-2" [options]="taxtypesList" placeholder="Select TaxType" name="taxType" [(ngModel)]="selectedTaxType"></p-dropdown>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label class="fs12">
                                                     Tax Rate
@@ -618,7 +619,7 @@
                                                 [(ngModel)]="discontValue"
                                                
                                                (onSelect)="selectedDiscount()"
-                                                (onKeyUp)="checkDiscountExists($event)"
+                                                (onKeyUp)="checkDiscountExistss($event)"
                                                
                                                 [suggestions]="_discountList" field="label" (completeMethod)="filterDiscount($event)"
                                                 [size]="30" [minLength]="1" [dropdown]="true" required>
