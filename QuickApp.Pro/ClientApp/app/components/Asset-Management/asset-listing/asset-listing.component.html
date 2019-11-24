@@ -1,4 +1,5 @@
-﻿<div [@fadeInOut] class="page-content">
+﻿<div *ngIf="!isWorkOrder" >
+<div [@fadeInOut] class="page-content">
     <div class="right_col" role="main">
         <div class="x_panel">
             <div class="x_content">
@@ -125,6 +126,13 @@
     </div>
 
 </ng-template>
+
+</div>
+
+
+<div *ngIf="isWorkOrder">
+    <app-view-asset [assetViewList]="assetViewList"></app-view-asset>
+</div>
 <!--code for asset creation audit
             <ng-template #auditContent let-c="close" let-d="dismiss">
                 <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">

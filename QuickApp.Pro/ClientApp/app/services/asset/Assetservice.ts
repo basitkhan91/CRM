@@ -99,6 +99,10 @@ export class AssetService {
     getCapabilityData(assetRecordId?: number) {
         return this.assetEndpoint.getCapabilityDataEndpoint<any>(assetRecordId);
     }
+
+    getAssetsById(assetsRecordsId){
+        return this.assetEndpoint.getAssetsById(assetsRecordsId);
+    }
   //  Audit method in services
     //getAudit(assetRecordId: number) {
     //    return this.assetEndpoint.getAudit<any[]>(assetRecordId);

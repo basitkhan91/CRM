@@ -1,465 +1,213 @@
 <div class="equipment-tab-content">
-    <div class="x_panel">
-        <div class="tab-content">
-            <div class="table-responsive" id="workflow-attributes-block">
-                <table class="table table-bordered ">
-                    <thead>
-                        <tr>
-                            <!-- <th colspan="9" class="text-center">
+  <div class="x_panel">
+    <div class="tab-content">
+      <div class="table-responsive" id="workflow-attributes-block">
+        <table class="table table-bordered ">
+          <thead>
+            <tr>
+              <!-- <th colspan="9" class="text-center">
                                 Equipment &nbsp; &nbsp;<a class="add-asset-checkin-checkout" data-toggle="modal"
                                     data-target=".asset-checkin-checkout"><i class="fa fa-plus plus-icon"></i></a>
                             </th> -->
-                        </tr>
-                        <tr>
-                            <th colspan="4" class="text-center"></th>
-                            <th colspan="4" class="text-center">TOLERANCE</th>
-                        
-                        </tr>
-                        <tr>
-                            <th class="text-center">Equipment </th>
-                            <th class="text-center">Equipment Description</th>
-                            <th class="text-center">Equipment Type</th>
-                            <th class="text-center">Qty</th>
-                            <th class="text-center">Min</th>
-                            <th class="text-center">Max</th>
-                            <th class="text-center">Expected</th>
-                            <th class="text-center">Findings</th>
+            </tr>
+            <tr>
+              <th colspan="4" class="text-center"></th>
+              <th colspan="4" class="text-center">TOLERANCE</th>
+            </tr>
+            <tr>
+              <th class="text-center">Equipment</th>
+              <th class="text-center">Equipment Description</th>
+              <th class="text-center">Equipment Type</th>
+              <th class="text-center">Qty</th>
+              <th class="text-center">Min</th>
+              <th class="text-center">Max</th>
+              <th class="text-center">Expected</th>
+              <th class="text-center">Findings</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let asset of workOrderAssetList; let i = index">
+              <td>{{ asset.asset }}</td>
+              <td>{{ asset.description }}</td>
+              <td>{{ asset.assetTypeName }}</td>
+              <td>{{ asset.quantity }}</td>
+              <td>
+                <input
+                  type="number"
+                  [(ngModel)]="asset.minQuantity"
+                  name="minQuantity{{ i }}"
+                />
+              </td>
+              <td>
+                <input
+                  type="number"
+                  [(ngModel)]="asset.maxQuantity"
+                  name="maxQuantity{{ i }}"
+                />
+              </td>
+              <td>
+                <input
+                  type="number"
+                  [(ngModel)]="asset.expectedQuantity"
+                  name="expectedQuantity{{ i }}"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  [(ngModel)]="asset.findings"
+                  name="findings{{ i }}"
+                />
+              </td>
 
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let asset of workOrderAssetList; let i=index;">
-                            <td>{{asset.asset}}</td>
-                            <td>{{asset.description}}</td>
-                            <td>{{asset.assetTypeName}}</td>
-                            <td>{{asset.quantity}}</td>
-                            <td>
-                                <input type="number" [(ngModel)]="asset.minQuantity" name="minQuantity{{i}}">
-                            </td>
-                            <td>
-                                    <input type="number" [(ngModel)]="asset.maxQuantity" name="maxQuantity{{i}}">
-                            </td>
-                            <td>
-                                    <input type="number" [(ngModel)]="asset.expectedQuantity" name="expectedQuantity{{i}}">
-                            </td>
-                            <td>
-                                    <input type="text" [(ngModel)]="asset.findings" name="findings{{i}}">
-                            </td>
-                            <td>
-                                <span data-toggle="modal" data-target="#delete">
-                                    <a class="btn btn-success boxed-float-btn nobg" data-toggle="tooltip"
-                                        title="Delete Asset"><i class="fa fa-trash"></i></a>
-                                </span>
-                            </td>
-                        </tr>
-                        <!-- <div class="text-right">
+              <td>
+                <a>
+                  <i
+                    _ngcontent-c13=""
+                    class="fa fa-eye"
+                    #data-toggle="view"
+                    (click)="viewAsstes(rowData)"
+                  ></i>
+                </a>
+              </td>
+              <td *ngIf="rowData.checkedInById === null">
+                <a>
+                  <i
+                    _ngcontent-c13=""
+                    class="fa fa-sign-in clr-blue"
+                    #data-toggle="checkIn"
+                    (click)="checkStatus(rowData , 'checkIn')"
+                  ></i>
+                </a>
+              </td>
+              <td
+                *ngIf="
+                  rowData.checkedInById !== null &&
+                  rowData.checkedInById === null
+                "
+              >
+                <a>
+                  <i
+                    _ngcontent-c13=""
+                    class="fa fa-sign-in clr-blue"
+                    #data-toggle="checkIn"
+                    (click)="checkStatus(rowData 'checkOut')"
+                  ></i>
+                </a>
+              </td>
+              <td>
+                <span data-toggle="modal" data-target="#delete">
+                  <a
+                    class="btn btn-success boxed-float-btn nobg"
+                    data-toggle="tooltip"
+                    title="Delete Asset"
+                    ><i class="fa fa-trash"></i
+                  ></a>
+                </span>
+              </td>
+            </tr>
+            <!-- <div class="text-right">
                                 <button class="btn btn-primary" (click)="saveAssets()" >
                                         save Assets
                                     </button>
                         </div> -->
-
-                        
- 
-                    </tbody>
-                </table>
-                <div *ngIf="workOrderAssetList" class="text-right save-work-btn" >
-                        <button class="btn btn-primary btn-primary-cstm" (click)="saveAssets()" style="padding: 6px 12px !important;">Save Assets</button>
-                    </div>
-            </div>
+          </tbody>
+        </table>
+        <div *ngIf="workOrderAssetList" class="text-right save-work-btn">
+          <button
+            class="btn btn-primary btn-primary-cstm"
+            (click)="saveAssets()"
+            style="padding: 6px 12px !important;"
+          >
+            Save Assets
+          </button>
         </div>
-        <div class="clear"></div>
-        <br />
-        <br />
-        <br />
-        <br />
+      </div>
     </div>
+    <div class="clear"></div>
+    <br />
+    <br />
+    <br />
+    <br />
+  </div>
+</div>
+
+<div id="view" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-dialog-lg">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+        <h4 class="modal-title">Asstes View</h4>
+      </div>
+      <div class="modal-body" *ngIf="assetRecordId">
+        <app-asset-listing
+          [assetsId]="AssetRecordId"
+          [isWorkOrder]="isWorkOrder"
+        >
+        </app-asset-listing>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-dialog-lg">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+        <h4 class="modal-title">Asstes CheckIn</h4>
+      </div>
+      <div class="modal-body" *ngIf="assetRecordId">
+            <div class="form-row" style="margin-top: 10px;">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Asset Description</label>
+                            <input class="form-control" type="text"  [(ngModel)]="assetsform.description" name="assetDescription" disabled > 
+                        </div>							
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Asset ID Number</label>
+                            <input class="form-control" type="text" [(ngModel)]="assetsform.assetsIdNumber"   name="assetIdNumber" disabled > 
+                        </div>							
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Checked In By</label>
+                            <p-autoComplete field="label" class="pautocomp-cstm" 
+                            [(ngModel)]="assetsform.employeeId" name="checkInBy" [suggestions]="employeeList"  (completeMethod)="filterEmployees($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true">
+                            </p-autoComplete>
+                        </div>							
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Date</label>
+                            <p-calendar class="pas-clder" [(ngModel)]="assetsform.date" [showIcon]="true" name="date" ></p-calendar>
+                        </div>							
+                    </div>
+
+            
+                </div>
+        <!-- <app-asset-listing [assetsId]="AssetRecordId" [isWorkOrder]="isWorkOrder"> </app-asset-listing> -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 
 
-
-
-
-
-<div class="modal fade asset-checkin-checkout" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">×</button>
-                <h4 class="modal-title"> Asset checkin checkout</h4>
-            </div>
-            <div class="modal-body">
-                <form action="#" method="post" id="" name="" class="form-horizontal add-custustomer">
-                    <div class="employee-setup">
-                        <div class="col-md-12 col-sm-12 col-xs-12 employer-block">
-                            <div class="col-sm-2 text-center">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label">CHECK OUT
-                                        <input type="radio" id="" name="check-in-out">
-                                    </label>
-                                </div>
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label">CHECK IN
-                                        <input type="radio" id="" name="check-in-out">
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-sm-5">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4">Search Asset Description </label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon inline-block"> <i class="fa fa-search"></i>
-                                            <input type="text" class="form-control" id="" name="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4">Asset ID Number</label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon inline-block"> <i class="fa fa-search"></i>
-                                            <input type="text" class="form-control" id="" name="">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4">Checked Out By</label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon inline-block"> <i class="fa fa-search"></i>
-                                            <input type="text" class="form-control" id="" name="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4">Checked In By</label>
-                                    <div class="col-sm-7">
-                                        <div class="inner-addon right-addon inline-block"> <i class="fa fa-search"></i>
-                                            <input type="text" class="form-control" id="" name="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4">Date</label>
-                                    <div class="col-sm-7">
-                                        <input type="text" class="form-control datepicker" id="" name="">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="clear"></div>
-                            <hr class="hr-dark">
-                            <a class="btn btn-primary openall">open all</a> <a class="btn btn-warning closeall">close
-                                all</a>
-                            <hr>
-                            <div class="panel-group" id="accordion">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title"> <a data-toggle="collapse" href="#info"
-                                                aria-expanded="true" aria-controls="info">General Information</a> </h4>
-                                    </div>
-                                    <div id="info" class="panel-collapse collapse in">
-                                        <div class="panel-body">
-                                            <div class="col-sm-4">
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Asset Number</label>
-                                                    <div class="col-sm-7">13</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Asset Description</label>
-                                                    <div class="col-sm-7">Description</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Asset Type</label>
-                                                    <div class="col-sm-7">Measurement</div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Serial Number</label>
-                                                    <div class="col-sm-7">13</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Date place in Service</label>
-                                                    <div class="col-sm-7">03/27/2018</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Location</label>
-                                                    <div class="col-sm-7">Hyderabad</div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Last Checked-In by</label>
-                                                    <div class="col-sm-7">Shabbir</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Date Last checked-In</label>
-                                                    <div class="col-sm-7">03/27/2018</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Last Check in Memo</label>
-                                                    <div class="col-sm-7">Memo</div>
-                                                </div>
-                                            </div>
-                                            <div class="clear"></div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse"
-                                                href="#ctools">Calibrated Tools</a> </h4>
-                                    </div>
-                                    <div id="ctools" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            <div class="col-sm-4">
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Calibration Required</label>
-                                                    <div class="col-sm-7">Yes</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Date last Calibrated</label>
-                                                    <div class="col-sm-7">03/27/2018</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Number of Days to Next
-                                                        Calibration</label>
-                                                    <div class="col-sm-7">90</div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Next Calibration Due Date
-                                                    </label>
-                                                    <div class="col-sm-7">03/27/2018</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Todays Date</label>
-                                                    <div class="col-sm-7">03/27/2018</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Days to Next
-                                                        Calibration</label>
-                                                    <div class="col-sm-7">-113</div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Calibrated By</label>
-                                                    <div class="col-sm-7">Shabbir</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Calibration Results</label>
-                                                    <div class="col-sm-7">03/27/2018</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Check Out Ready?</label>
-                                                    <div class="col-sm-7">Yes</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Calibration Memo</label>
-                                                    <div class="col-sm-7">Calibration Memo</div>
-                                                </div>
-                                            </div>
-                                            <div class="clear"></div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse"
-                                                href="#certification">Certification</a> </h4>
-                                    </div>
-                                    <div id="certification" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            <div class="col-sm-4">
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Date last Certified</label>
-                                                    <div class="col-sm-7">9/1/2017</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Number of Days to Next
-                                                        Certification</label>
-                                                    <div class="col-sm-7">90</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Next Certification Due Date
-                                                    </label>
-                                                    <div class="col-sm-7">11/30/2017</div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Todays Date</label>
-                                                    <div class="col-sm-7">3/27/2018</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Days to Next
-                                                        Certification</label>
-                                                    <div class="col-sm-7">-117</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Certified By</label>
-                                                    <div class="col-sm-7">Shabbir</div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Certification Results</label>
-                                                    <div class="col-sm-7">Certification Results</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Check Out Ready?</label>
-                                                    <div class="col-sm-7">Yes</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Certification Memo</label>
-                                                    <div class="col-sm-7">Memo</div>
-                                                </div>
-                                            </div>
-                                            <div class="clear"></div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse"
-                                                href="#inspection">Inspection</a> </h4>
-                                    </div>
-                                    <div id="inspection" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            <div class="col-sm-4">
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Inspection Required</label>
-                                                    <div class="col-sm-7">Yes</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Date last Inspected</label>
-                                                    <div class="col-sm-7">9/5/2017</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Number of Days to Next
-                                                        Inspection</label>
-                                                    <div class="col-sm-7">90</div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Next Inspection Due Date
-                                                    </label>
-                                                    <div class="col-sm-7">12/4/2017</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Todays Date</label>
-                                                    <div class="col-sm-7">3/27/2018</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Days to Next
-                                                        Inspection</label>
-                                                    <div class="col-sm-7">-113</div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Inspected By</label>
-                                                    <div class="col-sm-7">Shabbir</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Inspection Results</label>
-                                                    <div class="col-sm-7">Inspection Results</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Check Out Ready?</label>
-                                                    <div class="col-sm-7">Yes</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Inspection Memo</label>
-                                                    <div class="col-sm-7">Inspection Memo</div>
-                                                </div>
-                                            </div>
-                                            <div class="clear"></div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse"
-                                                href="#vtools">Verified Tools</a> </h4>
-                                    </div>
-                                    <div id="vtools" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            <div class="col-sm-4">
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Verification Required</label>
-                                                    <div class="col-sm-7">Yes</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Date last verified</label>
-                                                    <div class="col-sm-7">9/5/2017</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Number of Days to Next
-                                                        Verification</label>
-                                                    <div class="col-sm-7">90</div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Next Verification Due Date
-                                                    </label>
-                                                    <div class="col-sm-7">12/4/2017</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Todays Date</label>
-                                                    <div class="col-sm-7">3/27/2018</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Days to Next
-                                                        Verification</label>
-                                                    <div class="col-sm-7">-113</div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Verified By</label>
-                                                    <div class="col-sm-7">Shabbir</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Verification Results</label>
-                                                    <div class="col-sm-7">Verification Results</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Check Out Ready?</label>
-                                                    <div class="col-sm-7">Yes</div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Verification Memo</label>
-                                                    <div class="col-sm-7">Verification Memo</div>
-                                                </div>
-                                            </div>
-                                            <div class="clear"></div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="clear"></div>
-                        <hr class="hr-light-grey">
-                        <button type="button" class="btn btn-success pull-right" data-dismiss="modal">Save</button>
-                    </div>
-                    <div class="clear"></div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-
-    </div>
-</div>

@@ -21,8 +21,10 @@
           </div>
           <div class="modal-body">
             <app-customer-detail></app-customer-detail>
-            <app-part-number-filter></app-part-number-filter>
-            <app-part-details></app-part-details>
+            <app-part-number-filter
+              (onPartSearch)="onPartSearch($event)"
+            ></app-part-number-filter>
+            <app-part-details [parts]="parts"></app-part-details>
           </div>
           <div class="modal-footer">
             <button type="submit" class="btn btn-success">

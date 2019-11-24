@@ -59,12 +59,18 @@ namespace DAL.Models
 
         public virtual List<WorkOrderPartNumber> PartNumbers { get; set; }
 
+		[NotMapped]
+		public long WorkFlowWorkOrderId { get; set; }
         [NotMapped]
-        public long WorkFlowWorkOrderId { get; set; }
+        public string CustomerName { get; set; }
+        [NotMapped]
+        public string CustomerReference { get; set;}
+        [NotMapped]
+        public string CSR { get; set; }
         [NotMapped]
         public CustomerDetails CustomerDetails { get;set;}
-        
-
+        [NotMapped]
+        public bool IsSubWorkOrder { get; set; }
 
 
     }

@@ -50,5 +50,7 @@ namespace DAL.Models
         public long? TaskId { get; set; }
         public long? ItemClassificationId { get; set; }
         public long? UnitOfMeasureId { get; set; }
+        public int? PartStatusId { get; set; }
+
     }
 }

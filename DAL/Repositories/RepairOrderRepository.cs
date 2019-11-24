@@ -30,6 +30,7 @@ namespace DAL.Repositories
                           {
                               ro.RepairOrderId,
                               ro.RepairOrderNumber,
+                              ro.StatusId,
                               Status = ro.StatusId == 1
                                   ? "Open"
                                   : (ro.StatusId == 2 ? "Pending" : (ro.StatusId == 3 ? "Fulfilling" : "Closed")),

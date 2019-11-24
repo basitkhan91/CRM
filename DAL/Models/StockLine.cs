@@ -27,7 +27,7 @@ namespace DAL.Models
         public int? QuantityIssued { get; set; }
         public int? QuantityTurnIn { get; set; }
         public int? QuantityReserved { get; set; }
-        public long? WorkOrderPartNumberId { get; set; }
+        public long? WorkOrderMaterialsId { get; set; }
         public long? WorkOrderId { get; set; }
         [ForeignKey("ConditionId")]
         public long? ConditionId { get; set; }

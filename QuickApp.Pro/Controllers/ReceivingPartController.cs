@@ -236,7 +236,7 @@ namespace QuickApp.Pro.Controllers
                                 var isSerialExist = unitOfWork.Repository<StockLine>().Find(x => x.ItemMasterId == stockLine.ItemMasterId && x.ManufacturerId == stockLine.ManufacturerId && x.SerialNumber == stockLine.SerialNumber).FirstOrDefault();
                                 if (isSerialExist != null)
                                 {
-                                    return BadRequest("Serial Number - " + stockLine.SerialNumber + " at page - " + (index + 1) + " already exists.");
+                                    return BadRequest(new Exception("Serial Number - " + stockLine.SerialNumber + " at page - " + (index + 1) + " already exists."));
                                 }
                             }
                             quantity = (int)stockLine.Quantity;
@@ -416,7 +416,6 @@ namespace QuickApp.Pro.Controllers
                     unitOfWork.SaveChanges();
                 }
             }
-
         }
 
         #endregion Private Methods
