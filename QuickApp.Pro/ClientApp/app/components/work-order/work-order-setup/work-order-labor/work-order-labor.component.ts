@@ -73,15 +73,32 @@ export class WorkOrderLaborComponent implements OnInit {
 
 
   getTaskList(){
+    this.laborForm.workOrderLaborList = [];
+    this.laborForm.workOrderLaborList.push({})
     this.workOrderService.getAllTasks()
     .subscribe(
       (taskList)=>{
+        this.laborForm.workOrderLaborList[0] = {}
         this.taskList = taskList;
+        this.taskList.forEach(task => {
+          this.laborForm.workOrderLaborList[0][task.description.toLowerCase()] = [new AllTasks()];
+        });
       },
       (error)=>{
         console.log(error);
       }
     )
+  }
+
+  generateLaborForm() {
+    const keysArray = Object.keys(this.laborForm.workOrderLaborList[0]);
+    for (let i = 0; i < keysArray.length; i++) {
+      this.laborForm = {
+        ...this.laborForm,
+        workOrderLaborList: [{ ...this.laborForm.workOrderLaborList[0], [keysArray[i]]: [new AllTasks()] }]
+      };
+    }
+    console.log(this.laborForm);
   }
 
   calculateHoursDifference(obj){
@@ -229,6 +246,18 @@ export class WorkOrderLaborComponent implements OnInit {
     }
 
     let tasksData = this.laborForm.workOrderLaborList[0];
+    let formedData = {}
+    for(let tdata in tasksData){
+      formedData[tdata] = tasksData[tdata].map(x=>{
+        console.log(x);
+        return {
+          ...x,
+          ...excessParams,
+          taskId: 1,
+          employeeId: getValueFromObjectByKey('value', x.employeeId)
+        }
+      })
+    }
     this.saveFormdata = {
       ...this.laborForm,
       hoursorClockorScan: hoursorClockorScan,
@@ -238,89 +267,7 @@ export class WorkOrderLaborComponent implements OnInit {
       ...excessParams,
       workOrderId: this.id,
       workFlowWorkOrderId: getValueFromObjectByKey('value', this.laborForm.workFlowWorkOrderId),
-      workOrderLaborList:
-      {
-        receive: tasksData['receive'].map(x => {
-          return {
-            ...x,
-            ...excessParams,
-            taskId: 1,
-            employeeId: getValueFromObjectByKey('value', x.employeeId)
-          }
-        }),
-        inspect: tasksData['inspect'].map(x => {
-          return {
-            ...x,
-            ...excessParams,
-            taskId: 2,
-            employeeId: getValueFromObjectByKey('value', x.employeeId)
-          }
-        }),
-        evaluate: tasksData['evaluate'].map(x => {
-          return {
-            ...x,
-            ...excessParams,
-            taskId: 3,
-            employeeId: getValueFromObjectByKey('value', x.employeeId)
-          }
-        }),
-        tearDown: tasksData['tearDown'].map(x => {
-          return {
-            ...x,
-            ...excessParams,
-            taskId: 4,
-            employeeId: getValueFromObjectByKey('value', x.employeeId)
-          }
-        }),
-        disassemble: tasksData['disassemble'].map(x => {
-          return {
-            ...x,
-            ...excessParams,
-            taskId: 5,
-            employeeId: getValueFromObjectByKey('value', x.employeeId)
-          }
-        }),
-        assemble: tasksData['assemble'].map(x => {
-          return {
-            ...x,
-            ...excessParams,
-            taskId: 6,
-            employeeId: getValueFromObjectByKey('value', x.employeeId)
-          }
-        }),
-        testing: tasksData['testing'].map(x => {
-          return {
-            ...x,
-            ...excessParams,
-            taskId: 7,
-            employeeId: getValueFromObjectByKey('value', x.employeeId)
-          }
-        }),
-        qualityControl: tasksData['qualityControl'].map(x => {
-          return {
-            ...x,
-            ...excessParams,
-            taskId: 8,
-            employeeId: getValueFromObjectByKey('value', x.employeeId)
-          }
-        }),
-        ship: tasksData['ship'].map(x => {
-          return {
-            ...x,
-            ...excessParams,
-            taskId: 9,
-            employeeId: getValueFromObjectByKey('value', x.employeeId)
-          }
-        }),
-        clean: tasksData['clean'].map(x => {
-          return {
-            ...x,
-            ...excessParams,
-            taskId: 10,
-            employeeId: getValueFromObjectByKey('value', x.employeeId)
-          }
-        })
-      }
+      workOrderLaborList: formedData
 
 
     }

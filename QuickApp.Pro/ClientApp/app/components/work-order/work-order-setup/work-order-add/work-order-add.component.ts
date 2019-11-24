@@ -88,6 +88,7 @@ export class WorkOrderAddComponent implements OnInit {
   moduleName: string;
   showTableGrid: Boolean = false;
   worflowId = [];
+  selectedWorkFlowId: number;
   isContract = true;
   gridActiveTab: String = 'workFlow';
   subTabWorkFlow: String;
@@ -140,6 +141,7 @@ export class WorkOrderAddComponent implements OnInit {
   workFlowId: any;
   editWorkFlowData: any;
   modal: NgbModalRef;
+  MPNList = [];
   workFlowObject = {
     materialList: []
   }
@@ -192,9 +194,9 @@ export class WorkOrderAddComponent implements OnInit {
       this.workOrderGeneralInformation = {
         ...data,
         workOrderTypeId: String(data.workOrderTypeId),
-        customerReference: data.customerDetails.customerRef,
-        csr: data.customerDetails.csrName,
-        customerId: data.customerDetails,
+        customerReference: data.customerReference,
+        csr: data.csr,
+        customerId: data.customerId,
         partNumbers: data.partNumbers.map((x, index) => {
 
           this.getRevisedpartNumberByItemMasterId(x.masterPartId, index);
@@ -225,6 +227,26 @@ export class WorkOrderAddComponent implements OnInit {
     return this.authService.currentUser ? this.authService.currentUser.userName : "";
   }
 
+  loadMPNlist(){
+    this.savedWorkOrderData.partNumbers.forEach(pn => {
+      this.partNumberList.forEach(list => {
+        if(list.itemMasterId == pn.masterPartId){
+          this.MPNList.push(list);
+        }
+      });
+    });
+  }
+
+  saveworkOrderLabor(data) {
+    this.workOrderService.createWorkOrderLabor(this.formWorkerOrderLaborJson(data)).subscribe(res => {
+      this.alertService.showMessage(
+        this.moduleName,
+        'Saved Work Order Labor  Succesfully',
+        MessageSeverity.success
+      );
+    })
+  }
+
 
   openCurrency(content) {
     this.modal = this.modalService.open(content, { size: 'sm' });
@@ -242,19 +264,10 @@ export class WorkOrderAddComponent implements OnInit {
     this.quote = new WorkOrderQuote();
     this.labor = new WorkOrderLabor();
     // adding Form Object Dynamically
-    this.generateLaborForm();
+    // this.generateLaborForm();
   }
 
-  generateLaborForm() {
-    const keysArray = Object.keys(this.labor.workOrderLaborList[0]);
-    for (let i = 0; i < keysArray.length; i++) {
-      this.labor = {
-        ...this.labor,
-        workOrderLaborList: [{ ...this.labor.workOrderLaborList[0], [keysArray[i]]: [new AllTasks()] }]
-      };
-    }
-    console.log(this.labor);
-  }
+  
 
 
 
@@ -499,7 +512,8 @@ export class WorkOrderAddComponent implements OnInit {
 
   saveWorkOrderGridLogic(result, data) {
     this.savedWorkOrderData = result;
-
+    this.loadMPNlist();
+    this.getWorkFlowData();
     this.workOrderId = result.workOrderId;
     this.workOrderGeneralInformation.workOrderNumber = result.workOrderNum;
 
@@ -518,6 +532,20 @@ export class WorkOrderAddComponent implements OnInit {
 
     }
     this.showTableGrid = true; // Show Grid Boolean
+  }
+
+
+  getWorkFlowData(){
+    this.selectedWorkFlowId = this.savedWorkOrderData.partNumbers[0].workflowId;
+    if(this.selectedWorkFlowId != 0){
+      this.workFlowtService.getWorkFlowDataByIdForEdit(this.selectedWorkFlowId)
+      .subscribe(
+        (workFlowData)=>{
+          this.employeeService.workFlowIdData = workFlowData;
+          console.log(this.employeeService.workFlowIdData);
+        }
+      )
+    }
   }
 
 
@@ -598,16 +626,6 @@ export class WorkOrderAddComponent implements OnInit {
       })
     }
 
-  }
-
-  saveworkOrderLabor(data) {
-    this.workOrderService.createWorkOrderLabor(this.formWorkerOrderLaborJson(data)).subscribe(res => {
-      this.alertService.showMessage(
-        this.moduleName,
-        'Saved Work Order Labor  Succesfully',
-        MessageSeverity.success
-      );
-    })
   }
 
   saveWorkOrderMaterialList(data) {
@@ -698,6 +716,7 @@ export class WorkOrderAddComponent implements OnInit {
 
   filterPartNumber(event) {
     this.partNumberList = this.partNumberOriginalData;
+    this.loadMPNlist();
 
     if (event.query !== undefined && event.query !== null) {
       const partNumbers = [...this.partNumberOriginalData.filter(x => {
@@ -705,6 +724,7 @@ export class WorkOrderAddComponent implements OnInit {
         return x.partNumber.toLowerCase().includes(event.query.toLowerCase())
       })]
       this.partNumberList = partNumbers;
+      this.loadMPNlist();
     }
   }
 

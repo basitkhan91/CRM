@@ -6,20 +6,7 @@ export class WorkOrderLabor {
   isTaskCompletedByOne: false;
   workFloworSpecificTaskorWorkOrder: 'specificTasks';
   hoursorClockorScan: 'labourHours';
-  workOrderLaborList: [
-    {
-      receive: AllTasks[];
-      inspect: AllTasks[];
-      evaluate: AllTasks[];
-      tearDown: AllTasks[];
-      disassemble: AllTasks[];
-      assemble: AllTasks[];
-      testing: AllTasks[];
-      qualityControl: AllTasks[];
-      ship: AllTasks[];
-      clean: AllTasks[];
-    }
-  ];
+  workOrderLaborList: any;
 
   constructor() {
     this.workFlowWorkOrderId = null;
@@ -29,20 +16,6 @@ export class WorkOrderLabor {
     this.isTaskCompletedByOne = false;
     this.workFloworSpecificTaskorWorkOrder = 'specificTasks';
     this.hoursorClockorScan = 'labourHours';
-    this.workOrderLaborList = [
-      {
-        receive: [],
-        inspect: [],
-        evaluate: [],
-        tearDown: [],
-        disassemble: [],
-        assemble: [],
-        testing: [],
-        qualityControl: [],
-        ship: [],
-        clean: []
-      }
-    ];
   }
 }
 

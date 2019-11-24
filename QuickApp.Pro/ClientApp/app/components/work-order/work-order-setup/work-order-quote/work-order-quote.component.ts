@@ -15,33 +15,6 @@ export class WorkOrderQuoteComponent implements OnInit {
 
   constructor() {}
   ngOnInit() {
-    if(this.quoteForm == undefined){
-      this.quoteForm = {quoteNumber: "",
-  openDate: "",
-  quoteDueDate: "",
-  validForDays: null,
-  expirationDate: Date,
-  expirationDateStatus: "",
-  workOrderNumber: "",
-  customerId: "",
-  customerCodeId: null,
-  customerReference: "",
-  isContract: true,
-  contract: "",
-  quantity: null,
-  customerRequestDate: Date,
-  promiseDate: Date,
-  estCompletionDate: Date,
-  estShipDate: Date,
-  creditTerms: "",
-  creditTermsandLimit: "",
-  itemCount: null,
-  currency: "",
-  dso: "",
-  accountsReceivableBalance: "",
-  partsDetails: []
-}
-    }
   }
   saveQuoteDetails() {
     console.log(this.quoteForm);
