@@ -45,7 +45,7 @@ export class RoComponent implements OnInit, AfterViewInit {
     vendorCapesCols: any[];
     selectedColumns: any[];
     selectedColumn: any[];
-    allPolistInfo: any;
+    allROlistInfo: any;
 
     /*selectedRow: any;
     purchaseOrderNumber: any = "";
@@ -96,7 +96,7 @@ export class RoComponent implements OnInit, AfterViewInit {
     currencyName: string;
     filteredBrands: any[];
     localCollection: any[] = [];
-    allPolistInfo: any;
+    allROlistInfo: any;
     allPurchaseorderInfo: PurchaseOrder;
     toggle_po_header: boolean = false;
 
@@ -175,14 +175,14 @@ export class RoComponent implements OnInit, AfterViewInit {
     }
 
     private loadData() {
-        this.allPolistInfo = [
-            {'repairOrderNumber': 'RO1', 'statusId': 3},
-            {'repairOrderNumber': 'RO2', 'statusId': 3},
-            {'repairOrderNumber': 'RO3', 'statusId': 2}
-        ]
-    //  this.vendorService.getReceivingPOListing().subscribe(res => {
-    //         this.allPolistInfo = res;
-    //     });
+        // this.allROlistInfo = [
+        //     {'repairOrderNumber': 'RO1', 'statusId': 3},
+        //     {'repairOrderNumber': 'RO2', 'statusId': 3},
+        //     {'repairOrderNumber': 'RO3', 'statusId': 2}
+        // ]
+     this.vendorService.getReceivingROList().subscribe(res => {
+            this.allROlistInfo = res;
+        });
     }
 
     openCreateRO() {
@@ -202,7 +202,8 @@ export class RoComponent implements OnInit, AfterViewInit {
 
     public getSelectedRow(rowData) {
         //this.receivingService.purchaseOrderId = rowData.purchaseOrderId;
-        this._router.navigateByUrl('/receivingmodule/receivingpages/app-receiving-ro');
+        // this._router.navigateByUrl('/receivingmodule/receivingpages/app-receiving-ro');
+        this._router.navigateByUrl(`/receivingmodule/receivingpages/app-receiving-ro?repairOrderId=${rowData.repairOrderId}`);
     }
 
     getROViewById(roId) {
@@ -355,7 +356,7 @@ export class RoComponent implements OnInit, AfterViewInit {
     //     }
 
     //     this.dataSource.data = purchaseOrderList;
-    //     this.allPolistInfo = purchaseOrderList;
+    //     this.allROlistInfo = purchaseOrderList;
     // }
 
     // private onDataLoadFailed(error: any) {

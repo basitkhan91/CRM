@@ -86,7 +86,7 @@ export class RepairOrderPart {
     functionalCurrencyId: number;
     foreignExchangeRate: number;
     workOrderId: number;
-    // repairOrderId: number;
+    //repairOrderId: number;
     salesOrderId: number;
     generalLedgerAccounId: number;
     memo: string;
@@ -239,8 +239,8 @@ export class StockLine {
     repairOrderUnitCost: number;
     repairOrderExtendedCost: number;
     inventoryUnitCost: number;
-    // repairOrderId: number;
-    // repairOrderUnitCost: number;
+    //repairOrderId: number;
+    //repairOrderUnitCost: number;
     receivedDate: Date;
     receiverNumber: string;
     reconciliationNumber: string;
