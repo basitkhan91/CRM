@@ -212,6 +212,7 @@ namespace DAL
         IMasterSalesProbablityRepository _masterSalesProbablityRepository;
 
         IItemMasterExchangeLoanRepository itemMasterExchangeLoanRepository;
+        IReceiveRepairOrderRepository _receiveRepairOrder;
 
         public UnitOfWork(ApplicationDbContext context, IOptions<AppSettings> appSettings)
         {
@@ -1897,6 +1898,15 @@ namespace DAL
                     itemMasterExchangeLoanRepository = new ItemMasterExchangeLoanRepository(_context, _appSettings);
                 }
                 return itemMasterExchangeLoanRepository;
+            }
+        }
+
+        public IReceiveRepairOrderRepository ReceiveRepairOrder {
+            get {
+                if (_receiveRepairOrder == null) {
+                    _receiveRepairOrder = new ReceiveRepairOrderRepository(_context);
+                }
+                return _receiveRepairOrder;
             }
         }
     }

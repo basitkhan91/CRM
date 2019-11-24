@@ -385,8 +385,9 @@
                 </div>
                 <div class="clear"></div>
             </div>
-            <div class="form-group credit">
-                <label for="percentage" class="control-label">Percentage</label>
+            <div class="form-group input-icon1">
+				<label for="percentage" class="control-label">Percentage</label>
+				<div class="col-sm-7">
 				<div class="control-data">
 
 							<select #percentage="ngModel" id="percentage" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.percentage">
@@ -394,7 +395,9 @@
 									<option [ngValue]="discountObj.discontId">{{discountObj.discontValue}}%</option>
 								</ng-container>
 							</select>
-							<a href="#" data-toggle="modal" data-target="#addCurreny" class="add-icon" (click)="openCrediTerms(contenCreditTerms)"><i class="fa fa-plus"></i></a>
+
+						</div>
+							<!-- <a href="#" data-toggle="modal" data-target="#addCurreny" class="add-icon" (click)="openCrediTerms(contenCreditTerms)"><i class="fa fa-plus"></i></a> -->
 					<!--<input #percentage="ngModel" id="percentage" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.percentage">-->
 					<!-- <select #percentage="ngModel" id="percentage" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.percentage">
 						<option value="0">0%</option>
@@ -502,9 +505,10 @@
 				</div>
                 <div class="clear"></div>
             </div>
-            <div class="form-group credit">
+            <div class="form-group">
                 <label for="days" class="control-label">Days</label>
 				<div class="control-data">
+						<div class="col-sm-7">
 					<!--<input #days="ngModel" id="days" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.days">-->
 					<select #days="ngModel" id="days" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.days">
 						<option value="0">0</option>
@@ -540,12 +544,14 @@
 						<option value="30">30</option>
 					</select>
 				</div>
+				</div>
                 <div class="clear"></div>
             </div>
-            <div class="form-group credit">
+            <div class="form-group">
                 <label for="netDays" class="control-label">Net Days</label>
 				<div class="control-data">
 					<!--<input #netDays="ngModel" id="netDays" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.netDays">-->
+					<div class="col-sm-7">
 					<select  #netDays="ngModel" id="netDays" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.netDays">
 						<option value="0">0</option>
 						<option value="1">1</option>
@@ -914,6 +920,7 @@
 						<option value="365">365</option>
 						<option value="366">366</option>
 					</select>
+				</div>
 				</div>
                 <div class="clear"></div>
             </div>
