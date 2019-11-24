@@ -11,7 +11,13 @@
 <div>
     <button *ngIf="!addNewMaterial" class="btn btn-primary btn-primary-cstm"  (click)="addNew(); " style="padding: 6px 12px !important;">Add New Material</button>
     <button *ngIf="addNewMaterial" class="btn btn-primary btn-primary-cstm"  (click)="closeAddNew()" style="padding: 6px 12px !important;">Close Add New  Material</button>
-    <button class="btn btn-primary btn-primary-cstm"  style="padding: 6px 12px !important;" (click)="getReservedData()" data-toggle="modal" data-target="#reserve" >Reserve Stock</button>
+
+
+    <button *ngIf="(materialStatus === null || materialStatus === 4)" class="btn btn-primary btn-primary-cstm"  style="padding: 6px 12px !important;" (click)="partsIssueRI(1)" data-toggle="modal" data-target="#reserve" >Reserve Stock</button>
+    <button  *ngIf="materialStatus === 1" class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px !important" (click)="partsIssueRI(2)" data-toggle="modal" data-target="#reserve" > Issue </button>
+    <button *ngIf="(materialStatus === null  || materialStatus === 4)" class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px !important" (click)="partsIssueRI(3)" data-toggle="modal" data-target="#reserve" > Reserve & Issue </button>
+    <button *ngIf="(materialStatus === 1 || materialStatus === 5)" class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px !important" (click)="partsIssueRI(4)" data-toggle="modal" data-target="#reserve" > Unreserve </button>
+    <button *ngIf="materialStatus === 2" class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px !important" (click)="partsIssueRI(5)" data-toggle="modal" data-target="#reserve" > UnIssue </button>
 
 </div>
 
@@ -287,6 +293,7 @@
                                                     <th colspan="4" class="text-center">STOCk (NON ALTERNATE)</th>
                                                     <th colspan="4" class="text-center">STOCk (ALTERNATE)</th>
                                                     <th colspan="4" class="text-center"></th>
+                                                    <th class="text-center"></th>
                                                 </tr>
                                                 <tr>
                                                     <th class="text-center"> 
@@ -322,7 +329,7 @@
                                                 <tr *ngFor="let x of reservedList; let i=index;">
 
                                                     <td>
-                                                        <input type="checkbox" name="isParentChecked{{i}}" (change)="showAlternateParts($event.target.checked , x.woReservedIssuedAltParts)" [(ngModel)]="x.isParentChecked">
+                                                        <input type="checkbox" name="isParentChecked{{i}}" (ngModelChange)="showAlternateParts($event , x.woReservedIssuedAltParts)" [(ngModel)]="x.isParentChecked">
                                                     </td>
 
                                                       
@@ -366,7 +373,10 @@
                                                 </tr>
 
                                             
-                                                <tr *ngIf="alternatePartData.length > 0">
+                                                <tr [hidden]="alternatePartData.length === 0">
+                                                        <th class="text-center"> 
+                                                               
+                                                        </th>
                                                         <th class="text-center"> 
                                                                
                                                         </th>
@@ -390,16 +400,14 @@
                                                         <th class="text-center">Reserved Date</th>
                                                         <th class="text-center">Issued By</th>
                                                         <th class="text-center">Issed Date</th>
-                                                        <th class="text-center"> 
-                                                               
-                                                            </th>
+
     
                                                     </tr>
                                              
                                                 <tr   *ngFor="let x of alternatePartData; "  >
-                                                   
+                                                   <td></td>
                                                         <td>
-                                                            <input type="checkbox" [(ngModel)]="x.isChildChecked" name="isChildChecked{{i}}">
+                                                            <input type="checkbox" [(ngModel)]="x.isChildChecked" name="isChildChecked{{i}}" >
                                                         </td>
                                                         <td>{{x.altPartNumber}}</td>
                                                         <td>{{x.altPartDescription}}</td>
@@ -453,7 +461,7 @@
                                             </tbody>
                                         </table>
                                         <div style="float:right"> 
-                                                <button  class="btn btn-primary btn-primary-cstm"  (click)="saveReserved()" style="padding: 6px 12px !important;">Save Reserved</button>
+                                                <button  class="btn btn-primary btn-primary-cstm"  (click)="saveRIPart()" style="padding: 6px 12px !important;">Save </button>
                                             </div>  
                                         
       

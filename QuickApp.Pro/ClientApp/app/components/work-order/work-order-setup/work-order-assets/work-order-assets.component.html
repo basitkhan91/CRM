@@ -45,6 +45,17 @@
                             <td>
                                     <input type="text" [(ngModel)]="asset.findings" name="findings{{i}}">
                             </td>
+
+                            <td>
+                                <a>
+                                    <i _ngcontent-c13="" class="fa fa-eye" #data-toggle="view" (click)="viewAsstes(rowData)"></i>
+                                </a>
+                            </td>
+                            <td>
+                                 <a>
+                                        <i _ngcontent-c13="" class="fa fa-sign-in clr-blue" #data-toggle="checkIn" (click)="checkIn(rowData)"></i>
+                                    </a>
+                                </td>
                             <td>
                                 <span data-toggle="modal" data-target="#delete">
                                     <a class="btn btn-success boxed-float-btn nobg" data-toggle="tooltip"
@@ -76,11 +87,53 @@
 </div>
 
 
+<div id="view" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-dialog-lg">
+      
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Asstes View</h4>
+            </div>
+            <div class="modal-body" *ngIf="assetRecordId">
+                    <app-asset-listing [assetsId]="AssetRecordId" [isWorkOrder]="isWorkOrder"> </app-asset-listing>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+      
+        </div>
+</div>
+
+
+<div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-dialog-lg">
+      
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Asstes CheckIn</h4>
+            </div>
+            <div class="modal-body" *ngIf="assetRecordId">
+                     
+                    <!-- <app-asset-listing [assetsId]="AssetRecordId" [isWorkOrder]="isWorkOrder"> </app-asset-listing> -->
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+      
+        </div>
+</div>
 
 
 
 
-<div class="modal fade asset-checkin-checkout" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+
+<!-- <div class="modal fade asset-checkin-checkout" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -462,4 +515,4 @@
         </div>
 
     </div>
-</div>
+</div> -->

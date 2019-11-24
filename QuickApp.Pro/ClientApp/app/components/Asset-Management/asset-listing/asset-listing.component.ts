@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit, Input } from '@angular/core';
 //import { AlertService } from '../../../services/alert.service';
 import { AssetService } from '../../../services/asset/Assetservice';
 import { Router } from '@angular/router';
@@ -15,6 +15,8 @@ import { AlertService, DialogType, MessageSeverity } from '../../../services/ale
 })
 /** Asset-listing component*/
 export class AssetListingComponent implements OnInit {
+    @Input() isWorkOrder = false;
+    @Input() assetsId;
     isSaving: boolean;
     activeIndex: number;
     assetViewList: any = {};
@@ -38,6 +40,12 @@ export class AssetListingComponent implements OnInit {
         this.loadData();
         this.activeIndex = 0;
         this.assetService.indexObj.next(this.activeIndex);
+        if(this.isWorkOrder){
+            this.assetService.getAssetsById(this.assetsId).subscribe(res => {
+                this.openView('view', res );
+            })
+        }
+
     }
     /** Asset-listing ctor */
     loadingIndicator: boolean;

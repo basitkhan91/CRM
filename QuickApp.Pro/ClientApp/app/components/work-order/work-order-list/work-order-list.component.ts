@@ -120,7 +120,6 @@ export class WorkOrderListComponent implements OnInit {
 
         await this.workOrderService.viewWorkOrderHeader(this.workOrderId).subscribe(res => {
             this.viewWorkOrderHeader = res;
-            debugger
             if (res.singleMPN !== "Single MPN") {
                 this.showMPN = true;
             } else {
@@ -160,14 +159,14 @@ export class WorkOrderListComponent implements OnInit {
                         label: x.workflowNo
                     }
                 })
-                debugger
+     
                 if (this.viewWorkOrderHeader.singleMPN === 'Single MPN') {
                     const data = this.mpnPartNumbersList;
 
-                    if (data.length === 1) {
+                    // if (data.length === 1) {
                         this.getAllTabsData(data[0].value.workFlowWorkOrderId, this.workOrderId);
                         this.showTableGrid = true;
-                    }
+                    // }
                 }
                 // else {
                 //     this.showTableGrid = true;

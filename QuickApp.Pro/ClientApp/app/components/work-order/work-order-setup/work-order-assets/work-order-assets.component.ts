@@ -9,6 +9,7 @@ export class WorkOrderAssetsComponent implements OnInit {
     //@Input() workOrderAssetList: any;
     @Input() savedWorkOrderData : any
     @Input() workOrderAssetList: any
+    assetRecordId: any;
     ngOnInit(): void {
         console.log('test');
         
@@ -19,6 +20,10 @@ export class WorkOrderAssetsComponent implements OnInit {
     constructor(private workOrderService: WorkOrderService) {
 
 
+    }
+
+    viewAsstes(rowData){
+        this.assetRecordId = rowData.assetRecordId;
     }
 
     saveAssets(){

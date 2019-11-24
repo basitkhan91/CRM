@@ -24,8 +24,10 @@ export class WorkOrderCompleteMaterialListComponent {
     @Input() isWorkOrder;
     @Input() workFlow;
     @Input() savedWorkOrderData;
+    @Input() materialStatus;
     @Output() saveMaterialListForWO = new EventEmitter();
-
+    @Output() saveRIParts = new EventEmitter();
+    statusId = null;
 
     // workflow Variables 
     materialCondition: any[] = [];
@@ -55,6 +57,8 @@ export class WorkOrderCompleteMaterialListComponent {
     workFlowWorkOrderId: any;
     reservedList: any;
     alternatePartData: any = [];
+    checkedParts: any = [];
+
 
 
     /** WorkOrderCompleteMaterialList ctor */
@@ -69,6 +73,8 @@ export class WorkOrderCompleteMaterialListComponent {
     }
 
     ngOnInit() {
+        console.log(this.materialStatus);
+
         this.workFlowWorkOrderId = this.savedWorkOrderData.workFlowWorkOrderId;
 
         this.actionService.GetMaterialMandatory().subscribe(
@@ -350,24 +356,33 @@ export class WorkOrderCompleteMaterialListComponent {
         this.saveMaterialListForWO.emit(this.workFlow)
     }
 
-    getReservedData() {
+    partsIssueRI(statusId) {
+        this.statusId = statusId;
+        this.reservedList = [];
+        this.alternatePartData = [];
         // workFlowWorkOrderId
-        this.workOrderService.getReservedPartsByWorkFlowWOId(85).subscribe(res => {
-            this.reservedList = res.map(x => {
+        // 85
+        if (this.workFlowWorkOrderId) {
+            this.workOrderService.getReservedPartsByWorkFlowWOId(this.workFlowWorkOrderId).subscribe(res => {
+                this.reservedList = res.map(x => {
 
-                return {
-                    ...x,
-                    isParentChecked: false,
-                    woReservedIssuedAltParts: x.woReservedIssuedAltParts.map(y => {
-                        return {
-                            ...y,
-                            isChildChecked: false
-                        }
-                    })
-                }
+                    return {
+                        ...x,
+                        isParentChecked: false,
+                        woReservedIssuedAltParts: x.woReservedIssuedAltParts.map(y => {
+                            return {
+                                ...y,
+                                isChildChecked: false
+                            }
+                        })
+                    }
 
-            });
-        })
+                });
+            }, err => {
+                this.reservedList = []
+            })
+        }
+
     }
 
     showAlternateParts(isChecked, childPart) {
@@ -377,7 +392,23 @@ export class WorkOrderCompleteMaterialListComponent {
             this.alternatePartData = []
         }
     }
-    saveReserved() {
+    saveRIPart() {
+        this.checkedParts = []
+        const checkedData = this.reservedList.map(x => {
+            if (x.isParentChecked) {
+                this.checkedParts.push({ ...x, partStatusId: this.statusId });
+            }
+            x.woReservedIssuedAltParts.map(c => {
+                if (c.isChildChecked) {
+                    this.checkedParts.push({ ...c, partStatusId: this.statusId });
+                }
+
+            })
+        })
+        console.log
+        this.saveRIParts.emit(this.checkedParts);
+
+
 
     }
 
