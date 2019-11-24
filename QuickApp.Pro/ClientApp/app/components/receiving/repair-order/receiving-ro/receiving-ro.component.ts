@@ -8,7 +8,7 @@ import { UnitOfMeasureService } from '../../../../services/unitofmeasure.service
 import { CurrencyService } from '../../../../services/currency.service';
 import { AlertService, MessageSeverity } from '../../../../services/alert.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Router } from '@angular/router'
+import { Router, ActivatedRoute } from '@angular/router'
 import { ModalService } from '../../../../services/Index';
 import { EmployeeService } from '../../../../services/employee.service';
 import { ItemMasterService } from '../../../../services/itemMaster.service';
@@ -37,6 +37,7 @@ import { GlAccountService } from '../../../../services/glAccount/glAccount.servi
 import { Console } from '@angular/core/src/console';
 import { ShippingService } from '../../../../services/shipping/shipping-service';
 import { forEach } from '@angular/router/src/utils/collection';
+import { CommonService } from '../../../../services/common.service';
 
 @Component({
     selector: 'app-receiving-ro',
@@ -46,6 +47,9 @@ import { forEach } from '@angular/router/src/utils/collection';
 
 export class ReceivingRoComponent implements OnInit {
     repairOrderData: RepairOrder;
+    repairOrderId: number;
+    repairOrderHeaderData: any;
+    headerManagementStructure: any = {};
     managementStructure: ManagementStructure[];
     roCompanyList: DropDownData[];
     roBusinessUnitList: DropDownData[];
@@ -174,7 +178,9 @@ export class ReceivingRoComponent implements OnInit {
         private alertService: AlertService,
         private accountService: AccountService,
         private glAccountService: GlAccountService,
-        private shippingService: ShippingService
+        private shippingService: ShippingService,
+        private _actRoute: ActivatedRoute,
+        private commonService: CommonService
     ) {
         this.getAllSite();
         this.getCustomers();
@@ -188,6 +194,17 @@ export class ReceivingRoComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.repairOrderId = this._actRoute.snapshot.queryParams['repairorderid'];
+        this.receivingService.getReceivingROHeaderById(this.repairOrderId).subscribe(res => {
+            console.log(res);
+            this.repairOrderHeaderData = res;
+            this.repairOrderHeaderData.openDate = this.repairOrderHeaderData.openDate ? new Date(this.repairOrderHeaderData.openDate) : '';
+            this.repairOrderHeaderData.closedDate = this.repairOrderHeaderData.closedDate ? new Date(this.repairOrderHeaderData.closedDate) : '';
+            this.repairOrderHeaderData.dateApproved = this.repairOrderHeaderData.dateApproved ? new Date(this.repairOrderHeaderData.dateApproved) : '';
+            this.repairOrderHeaderData.needByDate = this.repairOrderHeaderData.needByDate ? new Date(this.repairOrderHeaderData.needByDate) : '';
+            this.getManagementStructureCodes(this.repairOrderHeaderData.managementStructureId);
+                
+        })
         // this.receivingService.getPurchaseOrderDataById(this.receivingService.repairOrderId).subscribe(
         //     results => {
         //         this.receivingService.purchaseOrder = results[0];
@@ -204,6 +221,23 @@ export class ReceivingRoComponent implements OnInit {
         this.getAllCreditTerms();
         this.getAllPriority();
         this.getStatus();
+    }
+
+    getManagementStructureCodes(id) {
+        this.commonService.getManagementStructureCodes(id).subscribe(res => {       
+			if (res.Level1) {
+				this.headerManagementStructure.level1 = res.Level1;
+            }
+            if (res.Level2) {
+				this.headerManagementStructure.level2 = res.Level2;
+            }
+            if (res.Level3) {
+				this.headerManagementStructure.level3 = res.Level3;
+            }
+            if (res.Level4) {
+				this.headerManagementStructure.level4 = res.Level4;
+			}
+		})
     }
 
     private getItemMasterById(type: string, part: RepairOrderPart) {
@@ -432,24 +466,7 @@ export class ReceivingRoComponent implements OnInit {
         );
 
 
-    }
-
-    // getManagementStructureCodes(id) {
-    //     this.commonService.getManagementStructureCodes(id).subscribe(res => {            
-	// 		if (res.Level1) {
-	// 			this.headerManagementStructure.level1 = res.Level1;
-    //         }
-    //         if (res.Level2) {
-	// 			this.headerManagementStructure.level2 = res.Level2;
-    //         }
-    //         if (res.Level3) {
-	// 			this.headerManagementStructure.level3 = res.Level3;
-    //         }
-    //         if (res.Level4) {
-	// 			this.headerManagementStructure.level4 = res.Level4;
-	// 		}
-	// 	})
-    // }
+    }    
 
     private getManagementStructure() {
         return this.legalEntityService.getManagemententity();

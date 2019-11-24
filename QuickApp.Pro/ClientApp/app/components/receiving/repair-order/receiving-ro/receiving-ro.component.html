@@ -1,4 +1,4 @@
-﻿<div class="x_content" *ngIf="repairOrderData">
+﻿<div class="x_content" *ngIf="repairOrderHeaderData">
 
         <div class="card receiving-po">
             <div class="card-header">
@@ -18,7 +18,7 @@
                                         <div>
                                             <div class="pull-left" style="margin-top: 4px; margin-right: 15px;" *ngFor="let status of roStatus">
                                                 <label class="radio-cstm wauto">
-                                                    <input type="radio" [checked]="status.Key == repairOrderData.statusId" name="roStatus" class="form-control" value="{{status.Key}}" disabled>
+                                                    <input type="radio" [checked]="status.Key == repairOrderHeaderData.statusId" name="roStatus" class="form-control" value="{{status.Key}}" disabled>
                                                     <span class="checkmark"></span>
                                                     {{status.Value}}
                                                 </label>
@@ -32,51 +32,51 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>RO Num</label>
-                        <input class="form-control" type="text" name="repairOrderNumber" [(ngModel)]="repairOrderData.repairOrderNumber" disabled >
+                        <input class="form-control" type="text" name="repairOrderNumber" [(ngModel)]="repairOrderHeaderData.repairOrderNumber" disabled >
                     </div>
                     <div class="form-group">
                         <label>Open Date</label>
-                        <p-calendar class="pas-clder" [showIcon]="true" name="openDate" [(ngModel)]="repairOrderData.openDate" [disabled]="true"></p-calendar>
+                        <p-calendar class="pas-clder" [showIcon]="true" name="openDate" [(ngModel)]="repairOrderHeaderData.openDate" [disabled]="true"></p-calendar>
                     </div>
                     <div class="form-group">
                         <label>Closed/Cancelled Date</label>
-                        <p-calendar class="pas-clder" [showIcon]="true" name="closedDate" [(ngModel)]="repairOrderData.closedDate" [disabled]="true"></p-calendar>
+                        <p-calendar class="pas-clder" [showIcon]="true" name="closedDate" [(ngModel)]="repairOrderHeaderData.closedDate" [disabled]="true"></p-calendar>
                     </div>
                     <div class="form-group">
                         <label>Need By</label>
-                        <p-calendar class="pas-clder" [showIcon]="true" name="needByDate" [(ngModel)]="repairOrderData.needByDate" [disabled]="true"></p-calendar>  
+                        <p-calendar class="pas-clder" [showIcon]="true" name="needByDate" [(ngModel)]="repairOrderHeaderData.needByDate" [disabled]="true"></p-calendar>  
                     </div>
                     <div class="form-group">
                         <label>Priority</label>
-                        <input class="form-control" type="text" name="priority" [(ngModel)]="repairOrderData.priority" disabled>
+                        <input class="form-control" type="text" name="priority" [(ngModel)]="repairOrderHeaderData.priority" disabled>
                     </div>
                     
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>Vendor Name</label>
-                        <input class="form-control" type="text" name="vendorName" [(ngModel)]="repairOrderData.vendorName" disabled>
+                        <input class="form-control" type="text" name="vendorName" [(ngModel)]="repairOrderHeaderData.vendorName" disabled>
                     </div>
                     <div class="form-group">
                         <label>Vendor Code</label>
-                        <input class="form-control" type="text" name="vendorCode" [(ngModel)]="repairOrderData.vendorCode" disabled>
+                        <input class="form-control" type="text" name="vendorCode" [(ngModel)]="repairOrderHeaderData.vendorCode" disabled>
                     </div>
                     <div class="form-group">
                         <label>Vendor Contact</label>
-                        <input class="form-control" type="text" name="vendorContact" [(ngModel)]="repairOrderData.vendorContact" disabled>
+                        <input class="form-control" type="text" name="vendorContact" [(ngModel)]="repairOrderHeaderData.vendorContact" disabled>
                     </div>
                     <div class="form-group">
                         <label>Contact Phone</label>
-                        <input class="form-control" type="text" name="contactPhone" [(ngModel)]="repairOrderData.contactPhone" disabled>
+                        <input class="form-control" type="text" name="contactPhone" [(ngModel)]="repairOrderHeaderData.contactPhone" disabled>
                     </div>
                     <div class="form-group">
                         <label>Credit Limit &amp; Terms</label>
                         <div class="form-row">
                             <div class="col-sm-5">
-                                <input class="form-control" type="text" placeholder="limit" name="creditLimit" [(ngModel)]="repairOrderData.creditLimit" disabled>
+                                <input class="form-control" type="text" placeholder="limit" name="creditLimit" [(ngModel)]="repairOrderHeaderData.creditLimit" disabled>
                             </div>
                             <div class="col-sm-7">
-                                <input class="form-control" type="text" name="creditTerms" [(ngModel)]="repairOrderData.terms" disabled>
+                                <input class="form-control" type="text" name="creditTerms" [(ngModel)]="repairOrderHeaderData.terms" disabled>
                             </div>
                         </div>
                     </div>
@@ -85,21 +85,21 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>Requisitioner</label>
-                        <input class="form-control" type="text" name="requestedBy" [(ngModel)]="repairOrderData.requestedBy" disabled>
+                        <input class="form-control" type="text" name="requestedBy" [(ngModel)]="repairOrderHeaderData.requestedBy" disabled>
                     </div>
                     <div class="form-group">
                         <label>Approver</label>
-                        <input class="form-control" type="text" name="approver" [(ngModel)]="repairOrderData.approver" disabled>
+                        <input class="form-control" type="text" name="approver" [(ngModel)]="repairOrderHeaderData.approver" disabled>
                     </div>
                     <div class="form-group">
                         <label>Approved Date</label>
-                        <p-calendar class="pas-clder" [showIcon]="true" name="approvedDate" [(ngModel)]="repairOrderData.dateApproved" [disabled]="true"></p-calendar>
+                        <p-calendar class="pas-clder" [showIcon]="true" name="approvedDate" [(ngModel)]="repairOrderHeaderData.dateApproved" [disabled]="true"></p-calendar>
                     </div>
                     <div class="form-group memo-popup-cstm" style="margin-top: 12px;">
                             <label>Memo</label>
-                            <span tooltipPosition="top" pTooltip="{{repairOrderData.memo}}">
-                                <input type="text" name="memo" pInputText class="form-control" value="{{repairOrderData.memo}}" disabled /></span>
-                            <i class="fa fa-info-circle fa-lg" tooltipPosition="top" pTooltip="{{repairOrderData.memo}}"></i>
+                            <span tooltipPosition="top" pTooltip="{{repairOrderHeaderData.memo}}">
+                                <input type="text" name="memo" pInputText class="form-control" value="{{repairOrderHeaderData.memo}}" disabled /></span>
+                            <i class="fa fa-info-circle fa-lg" tooltipPosition="top" pTooltip="{{repairOrderHeaderData.memo}}"></i>
                         </div>
                     <!-- <div class="form-group">
                         <label>Status <span class="clr-red">*</span></label>
@@ -118,7 +118,7 @@
                     <div class="form-group">
                         <div class="checkbox-cstm" style="margin-top: 15px;">
                             <label>
-                                <input type="checkbox" name="resale" class="form-control" [(ngModel)]="repairOrderData.resale" disabled>
+                                <input type="checkbox" name="resale" class="form-control" [(ngModel)]="repairOrderHeaderData.resale" disabled>
                                 <span class="cr" style="opacity: 0.6;"><i class="cr-icon pi pi-check"></i></span>
                                 Resale
                             </label>
@@ -127,7 +127,7 @@
                     <div class="form-group">
                         <div class="checkbox-cstm" style="margin-top: 10px;">
                             <label>
-                                <input type="checkbox" name="deferredReceiver" [(ngModel)]="repairOrderData.deferredReceiver" disabled>
+                                <input type="checkbox" name="deferredReceiver" [(ngModel)]="repairOrderHeaderData.deferredReceiver" disabled>
                                 <span class="cr" style="opacity: 0.6;"><i class="cr-icon pi pi-check"></i></span>
                                 Deferred Receiver
                             </label>
@@ -180,10 +180,9 @@
                                         <th></th>
                                         <th>Line no</th>
                                         <th>PN</th>
-                                        <th>Qty Ordered </th>
-                                        <th>Qty Received</th>
-    
-                                        <th>Qty Rejected</th>
+                                        <th>Qty to Repair </th> <!--Qty Ordered-->
+                                        <th>Qty Repaired</th> <!--Qty Received-->
+                                        <!-- <th>Qty Rejected</th> -->
                                         <th>Qty Backordered </th>
                                         <th>Status</th>
                                         <th colspan="3" class="text-center"></th>
@@ -215,7 +214,7 @@
                                                 {{part.stockLineCount}}
                                             </td>
     
-                                            <td>{{part?.userName}}</td>
+                                            <!-- <td>{{part?.userName}}</td> -->
                                             <td>
                                                 {{part.quantityOrdered - part.stockLineCount}}
                                             </td>
@@ -249,10 +248,9 @@
                                             <th></th>
                                             <th></th>
                                             <th>PN</th>
-                                            <th>Qty Ordered</th>
-                                            <th>Qty Received</th>
-    
-                                            <th>Qty Rejected</th>
+                                            <th>Qty to Repair </th> <!--Qty Ordered-->
+                                            <th>Qty Repaired</th> <!--Qty Received-->
+                                            <!-- <th>Qty Rejected</th> -->
                                             <th>Qty Backordered</th>
                                             <th>Status</th>
                                             <th>User Type</th>
@@ -270,7 +268,7 @@
                                             <td>{{part?.quantityOrdered}}</td>
                                             <td>{{part?.stockLineCount}}</td>
     
-                                            <td>{{'NA'}}</td>
+                                            <!-- <td>{{'NA'}}</td> -->
                                             <td>{{part.quantityOrdered - part.stockLineCount}}</td>
                                             <td>
                                                 {{part.stockLineCount == 0 ? 'Pending' : part.stockLineCount < part.quantityOrdered ? 'Fulfilling' : 'Received'}}

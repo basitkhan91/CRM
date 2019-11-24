@@ -125,5 +125,9 @@ export class ReceivingEndpointService extends EndpointFactory {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/receivingPart/GetReceivingRepairList/${repairOrderId}`)
     }
 
+    getReceivingROHeaderById(repairOrderId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/receivingRO/getRepairOrderHeaderById/${repairOrderId}`)
+    }
+
 
 }
