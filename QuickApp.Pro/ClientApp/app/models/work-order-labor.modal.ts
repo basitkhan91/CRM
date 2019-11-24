@@ -4,7 +4,7 @@ export class WorkOrderLabor {
   expertiseId: null;
   employeeId: null;
   isTaskCompletedByOne: false;
-  workFloworSpecificTaskorWorkOrder: 'workFlow';
+  workFloworSpecificTaskorWorkOrder: 'specificTasks';
   hoursorClockorScan: 'labourHours';
   workOrderLaborList: [
     {
@@ -27,7 +27,7 @@ export class WorkOrderLabor {
     this.expertiseId = null;
     this.employeeId = null;
     this.isTaskCompletedByOne = false;
-    this.workFloworSpecificTaskorWorkOrder = 'workFlow';
+    this.workFloworSpecificTaskorWorkOrder = 'specificTasks';
     this.hoursorClockorScan = 'labourHours';
     this.workOrderLaborList = [
       {

@@ -36,6 +36,9 @@ import { validateRecordExistsOrNot, selectedValueValidate, getValueFromObjectByK
 import { AuthService } from '../../../../services/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { WorkFlowtService } from '../../../../services/workflow.service';
+import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
+
 
 @Component({
   selector: 'app-work-order-add',
@@ -136,6 +139,7 @@ export class WorkOrderAddComponent implements OnInit {
   isDisabledSteps: boolean = false;
   workFlowId: any;
   editWorkFlowData: any;
+  modal: NgbModalRef;
 
 
   constructor(
@@ -150,7 +154,7 @@ export class WorkOrderAddComponent implements OnInit {
     private commonService: CommonService,
     private authService: AuthService,
     private acRouter: ActivatedRoute,
-    private workFlowtService: WorkFlowtService,
+    private workFlowtService: WorkFlowtService, private modalService: NgbModal
 
   ) {
     // this.workOrderPartNumbers = [];
@@ -207,6 +211,14 @@ export class WorkOrderAddComponent implements OnInit {
   get userName(): string {
     return this.authService.currentUser ? this.authService.currentUser.userName : "";
   }
+
+
+  openCurrency(content) {
+    this.modal = this.modalService.open(content, { size: 'sm' });
+    this.modal.result.then(() => {
+        console.log('When user closes');
+    }, () => { console.log('Backdrop click') })
+}
 
 
   // create all Forms in the Grid
@@ -530,35 +542,75 @@ export class WorkOrderAddComponent implements OnInit {
   getWorkOrderWorkFlowNos() {
 
     if (this.workOrderId) {
-      this.workOrderService.getWorkOrderWorkFlowNumbers(this.workOrderId).subscribe(res => {
-        this.workOrderWorkFlowOriginalData = res;
-        this.mpnPartNumbersList = res.map(x => {
-          return {
-            value:
-            {
-              workOrderWorkFlowId: x.value,
-              workOrderNo: x.label,
-              masterPartId: x.masterPartId,
-              workflowId: x.workflowId,
-              workflowNo: x.workflowNo,
-              partNumber: x.partNumber
-            },
-            label: x.workflowNo
+      for( let savedParts of this.savedWorkOrderData['partNumbers']){
+        for(let part of this.workOrderGeneralInformation.partNumbers){
+          if(part['masterPartId']['itemMasterId'] == savedParts['masterPartId']){
+            this.mpnPartNumbersList.push( {
+                value : savedParts['masterPartId'],
+                label: part['partNumber']
+              }
+            )
           }
-        })
-      })
+        }
+      }
+      // this.workOrderService.getWorkOrderWorkFlowNumbers(this.workOrderId).subscribe(res => {
+        // this.workOrderWorkFlowOriginalData = res;
+        // this.mpnPartNumbersList = res.map(x => {
+        //   return {
+        //     value:
+        //     {
+        //       workOrderWorkFlowId: x.value,
+        //       workOrderNo: x.label,
+        //       masterPartId: x.masterPartId,
+        //       workflowId: x.workflowId,
+        //       workflowNo: x.workflowNo,
+        //       partNumber: x.partNumber
+        //     },
+        //     label: x.workflowNo
+        //   }
+        // })
+      // })
     }
 
   }
 
   saveworkOrderLabor(data) {
-    this.workOrderService.createWorkOrderLabor(data).subscribe(res => {
+    this.workOrderService.createWorkOrderLabor(this.formWorkerOrderLaborJson(data)).subscribe(res => {
       this.alertService.showMessage(
         this.moduleName,
         'Saved Work Order Labor  Succesfully',
         MessageSeverity.success
       );
     })
+  }
+
+  formWorkerOrderLaborJson(data){
+    
+   let result = {  
+      "workFlowWorkOrderId":data['workFlowWorkOrderId'],
+      "workOrderId":data['workOrderId'],
+      "dataEnteredBy":data['dataEnteredBy'],
+      "expertise":data['expertiseId'],
+      "employeeId":data['employeeId'],
+      "isTaskCompletedByOne":data['isTaskCompletedByOne'],
+      "workFloworSpecificTaskorWorkOrder":data['workFloworSpecificTaskorWorkOrder'],
+      "hoursorClockorScan":data['hoursorClockorScan'],
+      "masterCompanyId":1,
+      "CreatedBy":"admin",
+       "UpdatedBy":"admin",
+       "IsActive":true,
+       "IsDeleted":false,
+      "LaborList":[
+
+      ]
+    }
+    for(let labList in data.workOrderLaborList){
+      for(let labSubList of data.workOrderLaborList[labList]){
+        if(labSubList['expertiseId'] != null)
+        result.LaborList.push(labSubList);
+      }
+    }
+    return result;
   }
 
   getEquipmentByWorkOrderId() {

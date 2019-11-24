@@ -26,7 +26,9 @@ export class WorkOrderLaborComponent implements OnInit {
   dataEnteredByList: any;
   expertiseTypeList: Object;
   id: any;
+  taskList: any;
   saveFormdata: any;
+  totalWorkHours: any;
   minDateValue: Date = new Date()
   billableList = [
     { label: 'Billable', value: 1 },
@@ -49,8 +51,10 @@ export class WorkOrderLaborComponent implements OnInit {
   ngOnInit() {
 
     // this.getWorkOrderWorkFlowNos();
+    console.log(this.savedWorkOrderData);
     this.getAllEmployees();
     this.getAllExpertiseType();
+    this.getTaskList()
     this.id = this.savedWorkOrderData.workOrderId;
   }
 
@@ -68,6 +72,51 @@ export class WorkOrderLaborComponent implements OnInit {
 
 
 
+  getTaskList(){
+    this.workOrderService.getAllTasks()
+    .subscribe(
+      (taskList)=>{
+        this.taskList = taskList;
+      },
+      (error)=>{
+        console.log(error);
+      }
+    )
+  }
+
+  calculateHoursDifference(obj){
+    if(obj.hours != '' && obj.adjustments != ""){
+      this.totalWorkHours = 0;
+
+      let hoursArr = obj.hours.split(':');
+      if(hoursArr.length == 1){ hoursArr.push(0)}
+      let hoursInSeconds = (+hoursArr[0]) * 60 * 60 + (+hoursArr[1]) * 60;
+      let adjustmentsHoursArr = obj.adjustments.split(':');
+      if(adjustmentsHoursArr.length == 1){ adjustmentsHoursArr.push(0)}
+      let adjustmentsInSec = (+obj.adjustments) * 60 * 60 + (+hoursArr[1]) * 60;
+      let diff = hoursInSeconds - adjustmentsInSec;
+      let h = Math.floor(diff / 3600).toString();
+      let m = Math.floor(diff % 3600 / 60).toString();
+      let s = Math.floor(diff % 3600 % 60).toString();
+      h = 
+      obj['adjustedHours'] = `${(h.length ==1)?'0'+h:h}.${(m.length ==1)?'0'+m:m}`;
+      var totalSec = 0;
+      for(let task in this.laborForm.workOrderLaborList[0]){
+        if(this.laborForm.workOrderLaborList[0][task][0]['hours'] != ''){
+          for (let taskList of this.laborForm.workOrderLaborList[0][task] ){
+            hoursArr = taskList['hours'].split(":");
+            if(hoursArr.length == 1){ hoursArr.push(0)}
+            hoursInSeconds = (+hoursArr[0]) * 60 * 60 + (+hoursArr[1]) * 60;
+            totalSec += hoursInSeconds;
+          }
+        }
+      }
+      h = Math.floor(totalSec / 3600).toString();
+      m = Math.floor(totalSec % 3600 / 60).toString();
+      s = Math.floor(totalSec % 3600 % 60).toString();
+      this.totalWorkHours = `${(h.length ==1)?'0'+h:h}:${(m.length ==1)?'0'+m:m}:${(s.length ==1)?'0'+s:s}`;
+    }
+  }
   filterWorkFlowNumbers(event): void {
 
     this.workOrderWorkFlowList = this.workOrderWorkFlowOriginalData;
