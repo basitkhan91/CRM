@@ -929,6 +929,7 @@ namespace DAL.Repositories
                                            where wa.IsDeleted == false && (wa.WorkOrderId == workOrderId || wa.WorkFlowWorkOrderId == wfwoId)
                                            select new
                                            {
+                                               wa.AssetRecordId,
                                                wa.WorkOrderAssetId,
                                                Asset = a.Name,
                                                a.Description,
@@ -1057,6 +1058,18 @@ namespace DAL.Repositories
 
                 throw;
             }
+        }
+
+        public object WorkOrderAssetView(long assetRecordId)
+        {
+            var data = _appContext.Asset.Where(c => (c.IsDelete == false || c.IsDelete == null) && c.AssetRecordId==assetRecordId);
+            var temp = data.Include("Manufacturer");
+            var temp1 = temp.Include("GLAccount");
+            var temp2 = temp1.Include("Currency");
+            var temp3 = temp2.Include("UnitOfMeasure");
+            var temp4 = temp3.Include("AssetType");
+            var temp5 = temp4.OrderByDescending(c => c.AssetRecordId).ToList();
+            return data;
         }
 
         #endregion
@@ -1634,6 +1647,12 @@ namespace DAL.Repositories
 
                 _appContext.WorkOrderQuote.Add(workOrderQuote);
                 _appContext.SaveChanges();
+
+
+                workOrderQuote.QuoteNumber = "WOQ" + workOrderQuote.WorkOrderQuoteId;
+                _appContext.WorkOrderQuote.Update(workOrderQuote);
+                _appContext.SaveChanges();
+
                 return workOrderQuote.WorkOrderQuoteId;
             }
             catch (Exception)
@@ -1672,9 +1691,12 @@ namespace DAL.Repositories
                               join cur in _appContext.Currency on wq.CurrencyId equals cur.CurrencyId
                               join emp in _appContext.Employee on wq.EmployeeId equals emp.EmployeeId
                               join sp in _appContext.Employee on wq.SalesPersonId equals sp.EmployeeId
-                              join cc in _appContext.CustomerContact on cust.CustomerId equals cc.CustomerId
-                              join con in _appContext.Contact on cc.ContactId equals con.ContactId
-                              join ct in _appContext.CreditTerms on cust.CreditTermsId equals ct.CreditTermsId
+                              join cc in _appContext.CustomerContact on cust.CustomerId equals cc.CustomerId into custcc
+                              from cc in custcc.DefaultIfEmpty()
+                              join con in _appContext.Contact on cc.ContactId equals con.ContactId into cccon
+                              from con in cccon.DefaultIfEmpty()
+                              join ct in _appContext.CreditTerms on cust.CreditTermsId equals ct.CreditTermsId into custct
+                              from ct in custct.DefaultIfEmpty()
                               where (wq.WorkFlowWorkOrderId == wfwoId || wq.WorkOrderId == workOrderId) && wq.IsDeleted == false
                               select new
                               {
@@ -1684,13 +1706,13 @@ namespace DAL.Repositories
                                   CurrencyCode = cur.Code,
                                   CustomerName = cust.Name,
                                   CustomerCode = cust.CustomerCode,
-                                  CustomerContact = con.WorkPhone,
+                                  CustomerContact = con==null?"": con.WorkPhone,
                                   CustomerEmail = cust.Email,
                                   CustomerPhone = cust.CustomerPhone,
                                   CustomerReference = cust.CSRName,
                                   CreditLimit = cust.CreditLimit,
-                                  CreditTermId = ct.CreditTermsId,
-                                  CreditTerm = ct.Name,
+                                  CreditTermId =ct==null?0: ct.CreditTermsId,
+                                  CreditTerm =ct==null?"": ct.Name,
                                   SalesPersonName = sp.FirstName + ' ' + sp.LastName,
                                   EmployeeName = emp.FirstName + ' ' + emp.LastName
 
