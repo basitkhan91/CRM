@@ -289,6 +289,10 @@ namespace DAL.Repositories
         {
             foreach (var obj in objEmployeeUserRoles)
             {
+                obj.IsActive = true;
+                obj.IsDeleted = false;
+                obj.CreatedDate = DateTime.Now;
+                obj.UpdatedDate = DateTime.Now;
                 if (obj.EmployeeUserRoleId > 0)
                 {
                     _appContext.EmployeeUserRole.Update(obj);

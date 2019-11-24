@@ -250,7 +250,8 @@ export class AppComponent implements OnInit, AfterViewInit {
                 items: [
 
                     { label: 'Vendor List', routerLink: '/vendorsmodule/vendorpages/app-vendors-list' },
-                    { label: 'Create Vendor', routerLink: '/vendorsmodule/vendorpages/app-vendor-general-information' },
+                     { label: 'Create Vendor', routerLink: '/vendorsmodule/vendorpages/app-vendor-general-information' },
+                    //{ label: 'Create Vendor',  command: (event?: any) => { this.newVendorClick(); } },
                     { label: 'Vendor Classification', routerLink: '/singlepages/singlepages/app-vendor-classification' },
                     { label: 'Process 1099', routerLink: '/#' },
                     {
@@ -756,6 +757,12 @@ export class AppComponent implements OnInit, AfterViewInit {
         window.location.assign(url);
     }
 
+    newVendorClick() {
+       
+        const url = `${this.configurations.baseUrl}/vendorsmodule/vendorpages/app-vendor-general-information`;
+        location.assign(url);
+    }
+    
     initNotificationsLoading() {
         this.notificationsLoadingSubscription = this.notificationService.getNewNotificationsPeriodically()
             .subscribe(notifications => {
