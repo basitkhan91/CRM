@@ -727,7 +727,7 @@
                     </div>
 
                     <div [ngClass]="{hidedata : gridActiveTab !== 'equipment'}">
-                        <app-work-order-assets  [isWorkOrder]="isWorkOrder" [workOrderAssetList]="workOrderAssetList" [savedWorkOrderData]="savedWorkOrderData" ></app-work-order-assets>
+                        <app-work-order-assets [employeesOriginalData]="employeesOriginalData"  [isWorkOrder]="isWorkOrder" [workOrderAssetList]="workOrderAssetList" [savedWorkOrderData]="savedWorkOrderData" ></app-work-order-assets>
                     </div>
 
                     <div  *ngIf="quote" [ngClass]="{hidedata : gridActiveTab !== 'quote' }" >

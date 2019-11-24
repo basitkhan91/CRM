@@ -159,14 +159,14 @@ export class WorkOrderListComponent implements OnInit {
                         label: x.workflowNo
                     }
                 })
-     
+
                 if (this.viewWorkOrderHeader.singleMPN === 'Single MPN') {
                     const data = this.mpnPartNumbersList;
 
-                    // if (data.length === 1) {
+                    if (data.length === 1) {
                         this.getAllTabsData(data[0].value.workFlowWorkOrderId, this.workOrderId);
                         this.showTableGrid = true;
-                    // }
+                    }
                 }
                 // else {
                 //     this.showTableGrid = true;

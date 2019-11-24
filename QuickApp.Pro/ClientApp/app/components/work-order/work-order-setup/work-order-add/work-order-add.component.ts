@@ -635,12 +635,12 @@ export class WorkOrderAddComponent implements OnInit {
 
   getEquipmentByWorkOrderId() {
     // if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
-      // this.workFlowWorkOrderId = this.workFlowWorkOrderData.workFlowWorkOrderId;
-      this.workOrderService.getWorkOrderAssetList( 84, 101).subscribe(
-        result => {
-          this.workOrderAssetList = result;
-        }
-      )
+    // this.workFlowWorkOrderId = this.workFlowWorkOrderData.workFlowWorkOrderId;
+    this.workOrderService.getWorkOrderAssetList(84, 101).subscribe(
+      result => {
+        this.workOrderAssetList = result;
+      }
+    )
     // }
 
   }
