@@ -281,29 +281,51 @@
                                     <div class="table-responsive" id="workflow-attributes-block">
                                         <table class="table table-bordered ">
                                             <thead>
-                                                <!-- <tr>
-                                                </tr> -->
-                                                <!-- <tr>
-                                                    <th colspan="4" class="text-center"></th>
-                                                    <th colspan="4" class="text-center">TOLERANCE</th>
-                     
-                                                </tr> -->
                                                 <tr>
+                                                    <th class="text-center"></th>
+                                                    <th colspan="4" class="text-center"></th>
+                                                    <th colspan="4" class="text-center">STOCk (NON ALTERNATE)</th>
+                                                    <th colspan="4" class="text-center">STOCk (ALTERNATE)</th>
+                                                    <th colspan="4" class="text-center"></th>
+                                                </tr>
+                                                <tr>
+                                                    <th class="text-center"> 
+                                                           
+                                                    </th>
                                                     <th class="text-center">PN </th>
                                                     <th class="text-center">Description</th>
                                                     <th class="text-center">Qty Requried</th>
                                                     <th class="text-center">Qty Reserved</th>
                                                     <th class="text-center">Qty Turn IN </th>
                                                     <th class="text-center">Qty Issued</th>
+
+                                                    <th class="text-center"> Qty ON Hand </th>
+                                                    <th class="text-center"> Qty ON Available </th>
+                                                    <th class="text-center"> Qty ON  ORDER  </th>
+                                                 
+
+                                                    <th class="text-center"> Qty ON Hand </th>
+                                                    <th class="text-center"> Qty ON Available </th>
+                                                    <th class="text-center"> Qty ON  ORDER  </th>
+
                                                     <th class="text-center">Reserved By</th>
                                                     <th class="text-center">Reserved Date</th>
                                                     <th class="text-center">Issued By</th>
                                                     <th class="text-center">Issed Date</th>
+                                                    <th class="text-center"> 
+                                                           
+                                                        </th>
 
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr *ngFor="let x of reservedList; let i=index;">
+
+                                                    <td>
+                                                        <input type="checkbox" name="isParentChecked{{i}}" (change)="showAlternateParts($event.target.checked , x.woReservedIssuedAltParts)" [(ngModel)]="x.isParentChecked">
+                                                    </td>
+
+                                                      
                                                     <td>{{x.partNumber}}</td>
                                                     <td>{{x.partDescription}}</td>
                                                     <td>
@@ -320,19 +342,111 @@
                                                             <input type="number" name="quantity{{i}}" [(ngModel)]="x.qunatityIssued">
                                                       
                                                     </td>
+
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
                                                     <td>
                                                       {{x.reservedBy}}
                                                     </td>
                                                     <td>
-                                                      {{x.reservedDate}}
+                                                      {{x.reservedDate | date:'MM-dd-yyyy'}}
                                                     </td>
                                                     <td>
                                                     {{x.issuedBy}}
                                                     </td>
                                                     <td>
-                                                     {{x.issuedDate}}
+                                                     {{x.issuedDate | date:'MM-dd-yyyy'}}
                                                     </td>
+                                              
                                                 </tr>
+
+                                            
+                                                <tr *ngIf="alternatePartData.length > 0">
+                                                        <th class="text-center"> 
+                                                               
+                                                        </th>
+                                                        <th class="text-center">PN </th>
+                                                        <th class="text-center">Description</th>
+                                                        <th class="text-center">Qty Requried</th>
+                                                        <th class="text-center">Qty Reserved</th>
+                                                        <th class="text-center">Qty Turn IN </th>
+                                                        <th class="text-center">Qty Issued</th>
+    
+                                                        <th class="text-center"> Qty ON Hand </th>
+                                                        <th class="text-center"> Qty ON Available </th>
+                                                        <th class="text-center"> Qty ON  ORDER  </th>
+                                                     
+    
+                                                        <th class="text-center"> Qty ON Hand </th>
+                                                        <th class="text-center"> Qty ON Available </th>
+                                                        <th class="text-center"> Qty ON  ORDER  </th>
+    
+                                                        <th class="text-center">Reserved By</th>
+                                                        <th class="text-center">Reserved Date</th>
+                                                        <th class="text-center">Issued By</th>
+                                                        <th class="text-center">Issed Date</th>
+                                                        <th class="text-center"> 
+                                                               
+                                                            </th>
+    
+                                                    </tr>
+                                             
+                                                <tr   *ngFor="let x of alternatePartData; "  >
+                                                   
+                                                        <td>
+                                                            <input type="checkbox" [(ngModel)]="x.isChildChecked" name="isChildChecked{{i}}">
+                                                        </td>
+                                                        <td>{{x.altPartNumber}}</td>
+                                                        <td>{{x.altPartDescription}}</td>
+                                                        <td>
+                                                            <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantity">
+                                                        </td>
+                                                        <td>
+                                                                <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityReserved">
+                                                            </td>
+                                                        <td>
+                                                                <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityTurnIn">
+                                                          
+                                                        </td>
+                                                        <td>
+                                                                <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityIssued">
+                                                          
+                                                        </td>
+    
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+    
+                                                        <td>
+                                                            <input type="number" name="alterHand{{i}}" [(ngModel)]="x.quantityOnHand">
+                                                        </td>
+                                                        <td>
+                                                          <input type="number" name="alterAvailable{{i}}" [(ngModel)]="x.quantityAvailable">
+                                                        </td>
+                                                        <td>
+                                                          <input type="number" name="alterOrder{{i}}" [(ngModel)]="x.quantityOnOrder">
+                                                        </td>
+                                                        <td>
+                                                          {{x.reservedBy}}
+                                                        </td>
+                                                        <td>
+                                                          {{x.reservedDate | date:'MM-dd-yyyy'}}
+                                                        </td>
+                                                        <td>
+                                                        {{x.issuedBy}}
+                                                        </td>
+                                                        <td>
+                                                         {{x.issuedDate | date:'MM-dd-yyyy'}}
+                                                        </td>
+                                                </tr>
+                                                
+
+
       
                                                                                    
                          

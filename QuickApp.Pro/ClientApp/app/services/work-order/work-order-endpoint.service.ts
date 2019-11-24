@@ -189,7 +189,7 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.post(`${this.configurations.baseUrl}/api/workOrder/createworkorderlabor`, JSON.stringify(data), this.getRequestHeaders())
     }
     createWorkOrderMaterialList(data) {
-        return this.http.post(`${this.configurations.baseUrl}/api/workOrder/createworkordermaterials`, JSON.stringify(data), this.getRequestHeaders())
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/createworkordermaterials`, JSON.stringify(data), this.getRequestHeaders())
     }
 
     getTasks() {
