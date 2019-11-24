@@ -46,7 +46,7 @@ namespace DAL.Repositories.Interfaces
         List<WorkOrderExclusions> UpdateWorkOrderExclusions(List<WorkOrderExclusions> workOrderExclusions);
         IEnumerable<WorkOrderExclusions> GetWorkFlowWorkOrderExclusionsList(long wfwoId = 0, long workOrderId = 0);
 
-        long CreateWorkOrderDocuments(WorkOrderDocuments workOrderDocuments);
+        List<WorkOrderDocuments> CreateWorkOrderDocuments(List<WorkOrderDocuments> workOrderDocuments);
         void UpdateWorkOrderDocuments(WorkOrderDocuments workOrderDocuments);
         IEnumerable<WorkOrderDocuments> GetWorkFlowWorkOrderDocumentsList(long wfwoId = 0, long workOrderId = 0);
 

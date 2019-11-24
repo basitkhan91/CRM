@@ -641,6 +641,7 @@ namespace DAL.Repositories
         {
             try
             {
+
                 workOrderLaborHeader.CreatedDate = workOrderLaborHeader.UpdatedDate = DateTime.Now;
                 workOrderLaborHeader.IsActive = true;
                 workOrderLaborHeader.IsDeleted = false;
@@ -724,7 +725,7 @@ namespace DAL.Repositories
                                                   {
                                                       wol,
                                                       ExpertiseType = exp.Description,
-                                                      EmployeeName=emp.FirstName
+                                                      EmployeeName = emp.FirstName
                                                   }
                                                  ).ToList()
                                      // _appContext.WorkOrderLabor.Where(p => p.WorkOrderLaborHeaderId == lh.WorkOrderLaborHeaderId).ToList()
@@ -867,6 +868,7 @@ namespace DAL.Repositories
         {
             try
             {
+
                 _appContext.WorkOrderAssets.AddRange(workOrderAssets);
                 _appContext.SaveChanges();
                 return workOrderAssets;
@@ -1149,17 +1151,13 @@ namespace DAL.Repositories
 
         #region Work Order Documents
 
-        public long CreateWorkOrderDocuments(WorkOrderDocuments workOrderDocuments)
+        public List<WorkOrderDocuments> CreateWorkOrderDocuments(List<WorkOrderDocuments> workOrderDocuments)
         {
             try
             {
-                workOrderDocuments.CreatedDate = workOrderDocuments.UpdatedDate = DateTime.Now;
-                workOrderDocuments.IsActive = true;
-                workOrderDocuments.IsDeleted = false;
-
-                _appContext.WorkOrderDocuments.Add(workOrderDocuments);
+                _appContext.WorkOrderDocuments.AddRange(workOrderDocuments);
                 _appContext.SaveChanges();
-                return workOrderDocuments.WorkOrderDocumentsId;
+                return workOrderDocuments;
             }
             catch (Exception)
             {
@@ -1260,23 +1258,6 @@ namespace DAL.Repositories
         {
             try
             {
-				if(workOrderMaterials!=null && workOrderMaterials.Count>0)
-				{
-					var flag = workOrderMaterials.Any(p => p.WorkFlowWorkOrderId > 0);
-					if (!flag)
-					{
-						WorkOrderWorkFlow workOrderWorkFlow = new WorkOrderWorkFlow();
-						workOrderWorkFlow.WorkOrderId = workOrderMaterials.FirstOrDefault().WorkOrderId;
-						workOrderWorkFlow.MasterCompanyId = 1;
-						workOrderWorkFlow.UpdatedBy = workOrderWorkFlow.CreatedBy = "admin";
-						workOrderWorkFlow.UpdatedDate = workOrderWorkFlow.CreatedDate = DateTime.Now;
-						workOrderWorkFlow.IsActive = true;
-						workOrderWorkFlow.IsDeleted = false;
-						_appContext.WorkOrderWorkFlow.Add(workOrderWorkFlow);
-						_appContext.SaveChanges();
-						workOrderMaterials.ForEach(p => p.WorkFlowWorkOrderId = workOrderWorkFlow.WorkFlowWorkOrderId);
-					}
-				}
                 _appContext.WorkOrderMaterials.AddRange(workOrderMaterials);
                 _appContext.SaveChanges();
                 return workOrderMaterials;
@@ -1435,7 +1416,7 @@ namespace DAL.Repositories
                             into wopsl
                             from sl in wopsl.DefaultIfEmpty()
 
-                            where wom.IsDeleted == false && wom.IsActive == true && (wom.IsAltPart == false || wom.IsAltPart == false)
+                            where wom.IsDeleted == false && wom.IsActive == true && (wom.IsAltPart == null || wom.IsAltPart == false)
 
                             && (wom.WorkFlowWorkOrderId == WorkFlowWorkOrderId || wom.WorkOrderId == workOrderId)
                             select new
@@ -1822,6 +1803,7 @@ namespace DAL.Repositories
                     _appContext.WorkOrderPublications.AddRange(workOrderPublications);
                     _appContext.SaveChanges();
                 }
+
                 return workOrderPublications;
             }
             catch (Exception)
@@ -2035,7 +2017,7 @@ namespace DAL.Repositories
                                    where (wf.IsDelete == false || wf.IsDelete == null) && wf.IsActive == true && wf.ItemMasterId == partId && wf.WorkScopeId == workScopeId
                                    select new
                                    {
-                                       WorkFlowNo = wf.WorkOrderNumber + "_"+wf.Version,
+                                       WorkFlowNo = wf.WorkOrderNumber + "_" + wf.Version,
                                        WorkFlowId = wf.WorkflowId
                                    }).Distinct().ToList();
 
@@ -2318,6 +2300,7 @@ namespace DAL.Repositories
                                     workOrderLaborHeader.WorkFlowWorkOrderId = workFlowWorkOrderId;
                                     _appContext.WorkOrderLaborHeader.Add(workOrderLaborHeader);
                                     _appContext.SaveChanges();
+
                                 }
 
 
@@ -2326,6 +2309,24 @@ namespace DAL.Repositories
 
 
                             // }
+                        }
+                        else
+                        {
+                            WorkOrderWorkFlow workOrderWorkFlow = new WorkOrderWorkFlow();
+                            workOrderWorkFlow.WorkOrderId = workOrderId;
+                            workOrderWorkFlow.MasterCompanyId = 1;
+                            workOrderWorkFlow.WorkflowId = 0;
+                            workOrderWorkFlow.UpdatedBy = workOrderWorkFlow.CreatedBy = "admin";
+                            workOrderWorkFlow.UpdatedDate = workOrderWorkFlow.CreatedDate = DateTime.Now;
+                            workOrderWorkFlow.IsActive = true;
+                            workOrderWorkFlow.IsDeleted = false;
+                            _appContext.WorkOrderWorkFlow.Add(workOrderWorkFlow);
+                            _appContext.SaveChanges();
+                            workFlowWorkOrderId = workOrderWorkFlow.WorkFlowWorkOrderId;
+
+                            workOrderWorkFlow.WorkFlowWorkOrderNo = "WOWF" + workOrderWorkFlow.WorkFlowWorkOrderId;
+                            _appContext.WorkOrderWorkFlow.Update(workOrderWorkFlow);
+                            _appContext.SaveChanges();
                         }
                     }
                 }
