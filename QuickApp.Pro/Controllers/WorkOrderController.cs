@@ -333,6 +333,13 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("workorderassetview")]
+        public IActionResult WorkOrderAssetView(long assetRecordId)
+        {
+            var result = unitOfWork.WorkOrderRepository.WorkOrderAssetView(assetRecordId);
+            return Ok(result);
+        }
+
         #endregion
 
         #region Work Order Exclusions

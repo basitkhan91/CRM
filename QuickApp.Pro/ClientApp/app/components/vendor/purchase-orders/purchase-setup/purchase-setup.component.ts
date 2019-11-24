@@ -473,7 +473,8 @@ export class PurchaseSetupComponent implements OnInit {
 	}	
 
 	getManagementStructureForParentEdit(partList) {
-		this.commonService.getManagementStructureDetails(partList.managementStructureId).subscribe(msparent => {
+		const msId = partList.managementStructureId ? partList.managementStructureId : this.sourcePoApproval.managementStructureId;
+		this.commonService.getManagementStructureDetails(msId).subscribe(msparent => {
 			if (msparent.Level1) {
 				partList.parentCompanyId = msparent.Level1;
 				this.getParentBUList(partList);				
@@ -2031,6 +2032,7 @@ export class PurchaseSetupComponent implements OnInit {
 						...newParentObject,
 						partNumberId: getObjectById('value', x.itemMasterId, this.allPartnumbersInfo)
 					}
+					this.getManagementStructureForParentEdit(newObject);
 					this.getPNDetailsById(newObject)
 					this.partListData = [...this.partListData, newObject]
 				}
@@ -3372,6 +3374,7 @@ export class PurchaseSetupComponent implements OnInit {
 	onChangeChildQtyOrdered(partList) {
 		this.childOrderQtyArray = [];
 		this.childOrderQtyTotal = null;
+		this.parentQty = this.parentQty ? this.parentQty : partList.quantityOrdered;
 		console.log(partList.childList);
 		for (let i = 0; i < partList.childList.length; i++) {
 			if (partList.childList[i].quantityOrdered === null || partList.childList[i].quantityOrdered === undefined) {

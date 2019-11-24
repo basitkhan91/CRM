@@ -40,6 +40,7 @@ namespace DAL.Repositories.Interfaces
         void SaveAssetCheckedIn(long WorkOrderAssetId, long? checkedInById, DateTime? checkedInDate, string updatedBy);
         void SaveAssetCheckedOut(long WorkOrderAssetId, long? checkedoutById, DateTime? checkedoutDate, string updatedBy);
         object GetAssetCheckedInandOutDetails(long assetRecordId, long workOrderAssetId);
+        object WorkOrderAssetView(long assetRecordId);
 
 
         List<WorkOrderExclusions> CreateWorkOrderExclusions(List<WorkOrderExclusions> workOrderExclusions);

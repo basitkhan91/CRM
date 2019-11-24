@@ -82,4 +82,8 @@ export class ReceivingService {
         return this.receivingEndpoing.addPartStocklineMapper<any>(mapperData);
     }
 
+    getReceivingRODataById(repairOrderId){
+        return this.receivingEndpoing.getReceivingRODataById(repairOrderId);
+      }
+
 }

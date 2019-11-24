@@ -687,6 +687,10 @@ export class VendorService {
     getROApproverList(purchaseOrderId){
         return this.actionEndpoint.getROApproverList(purchaseOrderId);
       }
+
+    getReceivingROList(){
+    return this.actionEndpoint.getReceivingROList();
+    }
       
 }
 
