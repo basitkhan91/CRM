@@ -35,6 +35,7 @@ export class EmployeeService {
     leaveObj: any[];
     structureData: any[];
     legalEnityList = [];
+    employeeStored: any;
 
     public static readonly roleAddedOperation: RolesChangedOperation = "add";
     public static readonly roleDeletedOperation: RolesChangedOperation = "delete";

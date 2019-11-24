@@ -8,15 +8,15 @@ import { ItemMasterService } from "../../../../../services/itemMaster.service";
 })
 export class AddSalesPartNumberComponent implements OnInit {
   @Input() display: boolean;
+  @Input() customer: any;
   @Output() close: EventEmitter<boolean> = new EventEmitter<boolean>();
+  parts: any[];
   constructor(private itemMasterService: ItemMasterService) {
     console.log("add...");
   }
 
   ngOnInit() {
-    // this.itemMasterService.search({}).subscribe(result => {
-    //   console.log(result);
-    // });
+    this.parts = [];
   }
   show(value: boolean): void {
     this.display = value;
@@ -28,5 +28,10 @@ export class AddSalesPartNumberComponent implements OnInit {
 
   onAddPartNumberSubmit($event) {
     this.display = false;
+  }
+
+  onPartSearch(parts) {
+    console.log(parts);
+    this.parts = parts.data;
   }
 }

@@ -298,7 +298,7 @@
                             <div class="form-group">
                                 <label>Middle Name</label>
                                 <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                    <input type="text" class="form-control" [(ngModel)]="contactInformation.middleName"  name="middleName" required>
+                                    <input type="text" class="form-control" [(ngModel)]="contactInformation.middleName"  name="middleName">
                                     <!-- <p-autoComplete class="autocomp-customer-cstm" [(ngModel)]="contactInformation.middleName" 
                                                     name="middleName"  [suggestions]="middleNamesList" field="middleName" (completeMethod)="filterMiddleNames($event)" [size]="30"
                                                     [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}">
@@ -403,7 +403,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button"  *ngIf="!isEditButton" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" (click)="saveContactInformation()" data-dismiss="modal">Save</button>
+                    <button type="button"  *ngIf="!isEditButton" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" [disabled]="!addContactForm.valid" (click)="saveContactInformation()" data-dismiss="modal">Save</button>
                     <button type="button"  *ngIf="isEditButton" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" (click)="updateCustomerContact()" data-dismiss="modal">Update</button>
                     <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
                 </div>

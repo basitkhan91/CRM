@@ -363,6 +363,7 @@ export class CustomersListComponent implements OnInit {
         })
     }
     viewSelectedRow(rowData) {
+      
         const { customerId } = rowData;
         this.customerService.getCustomerdataById(customerId).subscribe(res => {
             this.viewDataGeneralInformation = res[0];

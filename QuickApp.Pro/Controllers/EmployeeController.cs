@@ -426,6 +426,29 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
+        [HttpPut("employeeupdatememo")]
+        public IActionResult EmployeeUpdateAction(long employyeId, string memo)
+        {
+            bool result = false;
+            if (!string.IsNullOrEmpty(memo))
+            {              
+                try
+                {                   
+                    var existingResult = _unitOfWork.employee.GetSingleOrDefault(c => c.EmployeeId == employyeId);
+                    existingResult.Memo = memo;
+                    _unitOfWork.employee.Update(existingResult);
+                    _unitOfWork.SaveChanges();
+                    result = true;
+                }
+                catch (Exception)
+                {
+                    throw;
+                }                
+               
+            }
+            return Ok(result);
+        }
+
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult addEmployeeShiftDetails([FromBody] long employeeid, int shifid, EmployeeViewModel employeeViewModel)
         {

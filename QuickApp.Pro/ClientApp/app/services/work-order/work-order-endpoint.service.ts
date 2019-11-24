@@ -64,13 +64,11 @@ export class WorkOrderEndpointService extends EndpointFactory {
 
     }
 
-    updateWorkOrder<T>(workOrder: WorkOrder): Observable<T> {
-        let endpointUrl = this.update;
 
-        return this.http.post<T>(endpointUrl, JSON.stringify(workOrder), this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.updateWorkOrder(workOrder));
-            });
+
+
+    updateNewWorkOrder<T>(workOrder: WorkOrder): Observable<T> {
+        return this.http.post<T>(`${this.configurations.baseUrl}/api/workOrder/updateworkorder`, JSON.stringify(workOrder), this.getRequestHeaders())
     }
 
     removeWorkOrderById<T>(workOrderId: number): Observable<T> {
@@ -149,7 +147,7 @@ export class WorkOrderEndpointService extends EndpointFactory {
     }
 
     getPartPublicationByItemMaster(itemMasterId) {
-        return this.http.get(`${this.configurations.baseUrl}/api/workOrder/partpublications?itemMasterId=${itemMasterId}`, this.getRequestHeaders())
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/partpublications?itemMasterId=${itemMasterId}`, this.getRequestHeaders())
     }
 
     getSerialNoByStockLineId(stockLineId, conditionId) {
@@ -190,13 +188,16 @@ export class WorkOrderEndpointService extends EndpointFactory {
     createWorkOrderLabor(data) {
         return this.http.post(`${this.configurations.baseUrl}/api/workOrder/createworkorderlabor`, JSON.stringify(data), this.getRequestHeaders())
     }
+    createWorkOrderMaterialList(data) {
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/createworkordermaterials`, JSON.stringify(data), this.getRequestHeaders())
+    }
 
     getTasks() {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/Task/Get`, this.getRequestHeaders())
     }
 
     getWorkOrderMaterialList(workFlowWorkOrderId, workOrderId) {
-        return this.http.get(`${this.configurations.baseUrl}/api/workOrder/workordermateriallist?wfwoId=${workFlowWorkOrderId}&workOrderId=${workOrderId}`)
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workordermateriallist?wfwoId=${workFlowWorkOrderId}&workOrderId=${workOrderId}`)
     }
 
     getWorkOrderPublicationList(workFlowWorkOrderId, workOrderId) {
@@ -238,7 +239,22 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderpartsview?workOrderId=${workOrderId}`, this.getRequestHeaders())
     }
 
-    
+    getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/getreservedissuesparts?WorkFlowWorkOrderId=${WorkFlowWorkOrderId}`)
+    }
+
+    saveReservedPartorIssue(alternatePart){
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/savereserveissuesparts` , JSON.stringify(alternatePart) , this.getRequestHeaders());
+    }
+
+    assetsCheckInByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy){
+       return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/saveassetcheckedin?WorkOrderAssetId=${workOrderAssetId}&checkedInById=${employeeId}&checkedInDate=${checkedInDate}&updatedBy=${updatedBy}`)  
+    }
+
+    assetsCheckOutByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy){
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/saveassetcheckedout?WorkOrderAssetId=${workOrderAssetId}&checkedInById=${employeeId}&checkedInDate=${checkedInDate}&updatedBy=${updatedBy}`)  
+     }
+
 
 
 

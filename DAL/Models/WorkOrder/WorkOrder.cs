@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Models
 {
-    public class WorkOrder 
+    public class WorkOrder
     {
         public WorkOrder()
         {
@@ -61,7 +61,28 @@ namespace DAL.Models
 
 		[NotMapped]
 		public long WorkFlowWorkOrderId { get; set; }
+        [NotMapped]
+        public string CustomerName { get; set; }
+        [NotMapped]
+        public string CustomerReference { get; set;}
+        [NotMapped]
+        public string CSR { get; set; }
+        [NotMapped]
+        public CustomerDetails CustomerDetails { get;set;}
+        [NotMapped]
+        public bool IsSubWorkOrder { get; set; }
 
 
-	}
+    }
+
+    public class CustomerDetails
+    {
+        public long CustomerId { get; set; }
+        public string CustomerName { get; set; }
+        public decimal? CreditLimit { get; set; }
+        public short? CreditTermsId { get; set; }
+        public string CustomerContact { get; set; }
+        public string CustomerRef { get; set; }
+        public string CSRName { get; set; }
+    }
 }

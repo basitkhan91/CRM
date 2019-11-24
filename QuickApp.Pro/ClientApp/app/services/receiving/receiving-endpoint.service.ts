@@ -19,6 +19,7 @@ export class ReceivingEndpointService extends EndpointFactory {
     private readonly itemMasterDataById: string = "/api/receivingPart/getById";
     private readonly receivingPurchaseOrderDataById: string = "/api/receivingPart/GetReceivingPurchaseList";
     private readonly receivingPurchaseOrderDataForEditById: string = "/api/receivingPart/GetReceivingPurchaseForEdit";
+    private readonly receivingPurchaseOrderDataForViewById: string = "/api/receivingPart/GetReceivingPurchaseForView";
     private readonly addStocklineMapperData: string = "/api/receivingPart/addStocklineMapperData";
 
     get getAll() { return this.configurations.baseUrl + this.getAllURL; }
@@ -26,6 +27,7 @@ export class ReceivingEndpointService extends EndpointFactory {
     get itemMasterDataGet() { return this.configurations.baseUrl + this.itemMasterDataById; }
     get receivingPurchaseOrderDataGet() { return this.configurations.baseUrl + this.receivingPurchaseOrderDataById; }
     get receivingPurchaseOrderForEditDataGet() { return this.configurations.baseUrl + this.receivingPurchaseOrderDataForEditById; }
+    get receivingPurchaseOrderForViewDataGet() { return this.configurations.baseUrl + this.receivingPurchaseOrderDataForViewById; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -101,6 +103,15 @@ export class ReceivingEndpointService extends EndpointFactory {
             });
     }
 
+    getReceivingPurchaseForView<T>(receivingId: any): Observable<T> {
+
+        let url = `${this.receivingPurchaseOrderForViewDataGet}/${receivingId}`;
+        return this.http.get<T>(url, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getReceivingPurchaseForView(receivingId));
+            });
+    }
+
     addPartStocklineMapper<T>(mapperObject: any): Observable<T>
     {
         debugger;
@@ -108,6 +119,10 @@ export class ReceivingEndpointService extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.addPartStocklineMapper(mapperObject));
             });
+    }
+
+    getReceivingRODataById(repairOrderId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/receivingPart/GetReceivingRepairList/${repairOrderId}`)
     }
 
 

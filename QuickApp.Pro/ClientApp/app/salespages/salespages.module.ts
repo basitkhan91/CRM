@@ -54,6 +54,7 @@ import { CustomerDetailComponent } from "../components/sales/shared/components/a
 import { PartNumberFilterComponent } from "../components/sales/shared/components/add-sales-part-number/part-number-filter/part-number-filter.component";
 import { ParetDetailsComponent } from "../components/sales/shared/components/add-sales-part-number/part-details/part-details.component";
 import { ItemMasterService } from "../services/itemMaster.service";
+import { SalesPartNumbersComponent } from "../components/sales/quotes/shared/components/sales-part-number/sales-part-numbers.component";
 
 @NgModule({
   imports: [
@@ -98,7 +99,9 @@ import { ItemMasterService } from "../services/itemMaster.service";
     AddSalesPartNumberComponent,
     CustomerDetailComponent,
     PartNumberFilterComponent,
-    ParetDetailsComponent
+      ParetDetailsComponent,
+      SalesPartNumbersComponent
+
   ],
   providers: [CustomerService, SalesQuoteService, SalesQuoteEndpointService, ItemMasterService],
   entryComponents: []

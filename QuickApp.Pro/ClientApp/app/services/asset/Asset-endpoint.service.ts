@@ -97,6 +97,10 @@ export class AssetEndpoint extends EndpointFactory  {
             });
     }
 
+    getAssetsById(assetRecordId){
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/getAssetsById/GetById/${assetRecordId}`, this.getRequestHeaders());
+    }
+
     //Audit method in end pont services
 
     //getAudit<T>(assetRecordId: number): Observable<T> {

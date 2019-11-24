@@ -72,8 +72,18 @@ export class ReceivingService {
             this.receivingEndpoing.getReceivingPODataForEditById<any>(receivingId));
     }
 
+    getPurchaseOrderDataForViewById(receivingId: any) {
+
+        return Observable.forkJoin(
+            this.receivingEndpoing.getReceivingPurchaseForView<any>(receivingId));
+    }
+
     addPartStocklineMapper(mapperData: any) {
         return this.receivingEndpoing.addPartStocklineMapper<any>(mapperData);
     }
+
+    getReceivingRODataById(repairOrderId){
+        return this.receivingEndpoing.getReceivingRODataById(repairOrderId);
+      }
 
 }

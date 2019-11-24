@@ -126,8 +126,13 @@
                 <td> &nbsp;</td>
             </tr>
         </tfoot>
+
+
         
     </table>
+
+
+    <button *ngIf="isWorkOrder" class="btn btn-primary btn-primary-cstm"  (click)="saveMaterialListForWorkOrder()" style="padding: 6px 12px !important;">Save</button>
 </div>
 
 

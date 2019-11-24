@@ -5,5 +5,8 @@ namespace DAL.Repositories.Interfaces
     {
         object GetReceivingPurchaseOrderList(long id);
         object GetReceivingPurchaseOrderEdit(long id);
+        object GetReceivingPurchaseOrderView(long id);
+        //RepairOrder GetReceivingRepairOrderList(long id);
+        RepairOrderDto GetReceivingRepairOrderList(long id);
     }
 }

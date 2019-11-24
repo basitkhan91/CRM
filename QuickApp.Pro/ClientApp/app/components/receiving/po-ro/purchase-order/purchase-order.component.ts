@@ -448,7 +448,7 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
     }
 
     private viewPurchaseOrder(purchaseOrderId: number): void {
-        this.receivingService.getPurchaseOrderDataForEditById(purchaseOrderId).subscribe(
+        this.receivingService.getPurchaseOrderDataForViewById(purchaseOrderId).subscribe(
             results => {
                 this.purchaseOrderData = results[0];
                 this.purchaseOrderData.openDate = new Date(results[0].openDate).toLocaleDateString();

@@ -159,17 +159,16 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
 
 
 
-        console.log(newData);
+        //console.log(newData);
 
-        console.log("bind data");
+        //console.log("bind data");
 
-        console.log(data[0].t.isExpirationDate);
-        console.log(data[0].t.expirationDate);
+        // console.log(data[0].t.isExpirationDate);
+        // console.log(data[0].t.expirationDate);
         this.sourceEmployee.ExpirationDate = new Date(this.sourceEmployee.expirationDate);
+       
         this.sourceEmployee.IsExpirationDate = data[0].t.isExpirationDate;
-
-
-        console.log(this.sourceEmployee);
+              // console.log(this.sourceEmployee);
 
 
     }
