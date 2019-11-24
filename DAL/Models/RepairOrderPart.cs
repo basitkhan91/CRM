@@ -61,6 +61,7 @@ namespace DAL.Models
         [NotMapped]
         public int? StatusId { get; set; }
 
+        public List<StockLine> StockLine { get; set; }
     }
 
     [NotMapped]

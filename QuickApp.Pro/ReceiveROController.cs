@@ -1,6 +1,7 @@
 ﻿using DAL;
 using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
+using QuickApp.Pro.Helpers;
 using QuickApp.Pro.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -56,7 +57,7 @@ namespace QuickApp.Pro
             {
                 if (receiveParts != null)
                 {
-                    var purchaseOrderId = 0L;
+                    var repairOrderId = 0L;
                     foreach (var receivePart in receiveParts)
                     {
                         var index = 0;
@@ -74,7 +75,7 @@ namespace QuickApp.Pro
                             stockLine.CreatedDate = DateTime.Now;
                             stockLine.UpdatedDate = DateTime.Now;
 
-                            var lastIdNumber = unitOfWork.purchaseOrder.GetLastIdNumber(stockLine.PurchaseOrderId.Value, stockLine.PurchaseOrderPartRecordId.Value);
+                            var lastIdNumber = unitOfWork.ReceiveRepairOrder.GetLastIdNumber(stockLine.RepairOrderId.Value, stockLine.RepairOrderPartRecordId.Value);
                             stockLine.IdNumber = (lastIdNumber + 1).ToString();
 
                             if (!string.IsNullOrEmpty(stockLine.SerialNumber))
@@ -89,18 +90,18 @@ namespace QuickApp.Pro
                             index++;
                         }
 
-                        var purchaseOrderPart = unitOfWork.Repository<PurchaseOrderPart>().Get(receivePart.PurchaseOrderPartRecordId);
+                        //var repairOrderPart = unitOfWork.Repository<RepairOrderPart>().Get(receivePart.RepairOrderPartRecordId);
 
-                        if (purchaseOrderPart.QuantityBackOrdered > 0)
-                        {
-                            purchaseOrderPart.QuantityBackOrdered = (short?)(purchaseOrderPart.QuantityBackOrdered - quantity);
-                        }
-                        else
-                        {
-                            purchaseOrderPart.QuantityBackOrdered = (short?)(purchaseOrderPart.QuantityOrdered - quantity);
-                        }
+                        //if (repairOrderPart.QuantityBackOrdered > 0)
+                        //{
+                        //    repairOrderPart.QuantityBackOrdered = (short?)(repairOrderPart.QuantityBackOrdered - quantity);
+                        //}
+                        //else
+                        //{
+                        //    repairOrderPart.QuantityBackOrdered = (short?)(repairOrderPart.QuantityOrdered - quantity);
+                        //}
 
-                        unitOfWork.Repository<PurchaseOrderPart>().Update(purchaseOrderPart);
+                        //unitOfWork.Repository<PurchaseOrderPart>().Update(purchaseOrderPart);
 
                         unitOfWork.Repository<StockLine>().AddRange(receivePart.StockLines);
 
@@ -111,12 +112,12 @@ namespace QuickApp.Pro
                         {
                             if (receivePart.StockLines.Count == 1)
                             {
-                                timeLife.StockLineId = (receivePart.StockLines.Where(x => x.PurchaseOrderPartRecordId == timeLife.PurchaseOrderPartRecordId))
+                                timeLife.StockLineId = (receivePart.StockLines.Where(x => x.RepairOrderPartRecordId == timeLife.RepairOrderPartRecordId))
                                 .ToArray()[0].StockLineId;
                             }
                             else
                             {
-                                timeLife.StockLineId = (receivePart.StockLines.Where(x => x.PurchaseOrderPartRecordId == timeLife.PurchaseOrderPartRecordId))
+                                timeLife.StockLineId = (receivePart.StockLines.Where(x => x.RepairOrderPartRecordId == timeLife.RepairOrderPartRecordId))
                                 .ToArray()[stockLineIndex].StockLineId;
                             }
 
@@ -130,7 +131,7 @@ namespace QuickApp.Pro
 
                         unitOfWork.Repository<TimeLife>().AddRange(receivePart.TimeLife);
 
-                        purchaseOrderId = (long)receivePart.StockLines.FirstOrDefault().PurchaseOrderId;
+                        repairOrderId = (long)receivePart.StockLines.FirstOrDefault().RepairOrderId;
 
                     }
 
@@ -145,7 +146,7 @@ namespace QuickApp.Pro
                     }
                     unitOfWork.SaveChanges();
 
-                    setPurchaseOrderStatus(purchaseOrderId);
+                    setRepairOrderStatus(repairOrderId);
                 }
                 else
                 {
@@ -161,6 +162,41 @@ namespace QuickApp.Pro
 
 
         #endregion Public Members
+
+        #region Private Methods
+
+        private void setRepairOrderStatus(long repairOrderId)
+        {
+            var parts = unitOfWork.Repository<RepairOrderPart>().Find(x => x.RepairOrderId == repairOrderId);
+            var isPOReceived = true;
+            foreach (var part in parts)
+            {
+                part.StockLine = unitOfWork.Repository<StockLine>().Find(x => x.RepairOrderPartRecordId == part.RepairOrderPartRecordId).ToList();
+                if (part.QuantityOrdered != (short?)(part.StockLine.Sum(x => x.Quantity)))
+                {
+                    isPOReceived = false;
+                    break;
+                }
+            }
+            var repairOrder = unitOfWork.Repository<RepairOrder>().Get(repairOrderId);
+            if (isPOReceived)
+            {
+                repairOrder.StatusId = (short)PurchaseOrderStatus.Closed;
+                unitOfWork.Repository<RepairOrder>().Update(repairOrder);
+                unitOfWork.SaveChanges();
+            }
+            else
+            {
+                if (repairOrder.StatusId == (short)PurchaseOrderStatus.Pending)
+                {
+                    repairOrder.StatusId = (short)PurchaseOrderStatus.Fulfilling;
+                    unitOfWork.Repository<RepairOrder>().Update(repairOrder);
+                    unitOfWork.SaveChanges();
+                }
+            }
+        }
+
+        #endregion Private Methods
 
 
     }
