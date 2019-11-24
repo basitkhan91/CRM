@@ -90,4 +90,8 @@ export class ReceivingService {
         return this.receivingEndpoing.getReceivingROHeaderById(repairOrderId);
     }
 
+    getReceivingROPartById(repairOrderId){
+        return this.receivingEndpoing.getReceivingROPartById(repairOrderId);
+    }
+
 }

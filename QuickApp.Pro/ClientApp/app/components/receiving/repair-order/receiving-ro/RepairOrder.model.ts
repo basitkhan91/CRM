@@ -90,16 +90,16 @@ export class RepairOrderPart {
     salesOrderId: number;
     generalLedgerAccounId: number;
     memo: string;
-    poPartSplitUserTypeId: number;
-    poPartSplitUserId: number;
-    poPartSplitAddress1: string;
-    poPartSplitAddress2: string;
-    poPartSplitAddress3: string;
-    poPartSplitCity: string;
-    poPartSplitState: string;
-    poPartSplitPostalCodestring; string;
-    poPartSplitCountry: string;
-    poPartSplitAddressId: number;
+    roPartSplitUserTypeId: number;
+    roPartSplitUserId: number;
+    roPartSplitAddress1: string;
+    roPartSplitAddress2: string;
+    roPartSplitAddress3: string;
+    roPartSplitCity: string;
+    roPartSplitState: string;
+    roPartSplitPostalCodestring; string;
+    roPartSplitCountry: string;
+    roPartSplitAddressId: number;
     managementStructureId: number;
     createdBy: string;
     updatedBy: string;
@@ -110,10 +110,12 @@ export class RepairOrderPart {
     itemMaster: any;
     visible: boolean;
     conditionId: number;
+    quantityRepaired: number;
+    quantityToRepair: number;
 
     public stocklineListObj: StockLine[];
     public timeLifeList: TimeLife[];
-    poPartSplitAddress: AddressModel;
+    roPartSplitAddress: AddressModel;
     // UI Properties
     // below properties does not play role on the server side and are being used to show the data on UI and should be limited to UI only.
     siteId: number;
