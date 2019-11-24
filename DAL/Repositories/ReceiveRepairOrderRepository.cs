@@ -82,7 +82,7 @@ namespace DAL.Repositories
                                         PartNumberId = rop.PartNumberId,
                                         ItemTypeId = rop.ItemTypeId,
                                         QuantityToRepair = rop.QuantityOrdered,
-                                        QuantityRepaired = _appContext.StockLine.Where(s =>  s.RepairOrderPartRecordId == rop.RepairOrderPartRecordId && s.RepairOrderId == rop.RepairOrderId),
+                                        QuantityRepaired = _appContext.StockLine.Count(s =>  s.RepairOrderPartRecordId == rop.RepairOrderPartRecordId && s.RepairOrderId == rop.RepairOrderId),
                                         ConditionId = rop.ConditionId,
                                         DiscountAmount = rop.DiscountAmount,
                                         DiscountPercent = rop.DiscountPercent,
