@@ -999,15 +999,15 @@ export class EditRoComponent implements OnInit {
     }
 
     //remove once add dynamic content
-    editPart(part: RepairOrderPart) {
-        part.isEnabled = !part.isEnabled;
-        if (part.stockLine) {
-            for (var sl of part.stockLine) {
-                sl.isEnabled = part.isEnabled;
-                sl.quantityRejected = 0;
-            }
-        }
-    }
+    // editPart(part: RepairOrderPart) {
+    //     part.isEnabled = !part.isEnabled;
+    //     if (part.stockLine) {
+    //         for (var sl of part.stockLine) {
+    //             sl.isEnabled = part.isEnabled;
+    //             sl.quantityRejected = 0;
+    //         }
+    //     }
+    // }
 
     editStockLine(stockLine: StockLine) {
         stockLine.isEnabled = !stockLine.isEnabled;
