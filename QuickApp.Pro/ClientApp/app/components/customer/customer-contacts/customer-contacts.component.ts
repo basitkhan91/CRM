@@ -229,7 +229,9 @@ export class CustomerContactsComponent implements OnInit {
 		})
 	}
 
-	handleChange(rowData) {
+    handleChange(rowData) {
+        this.sourceViewforContact = '';
+
 		// if (e.checked == false) {
 		const data = { ...rowData, updatedBy: this.userName };
 

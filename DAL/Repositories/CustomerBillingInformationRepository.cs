@@ -44,7 +44,8 @@ namespace DAL.Repositories.Interfaces
                             v.IsActive,
                             v.IsDelete,
                             v.IsPrimary,
-                            Country = c.countries_name
+                            Country = c.countries_id,
+                            CountryName=c.countries_name
 
 
                         }).ToList();

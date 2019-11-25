@@ -55,7 +55,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     memoPopupValue: any;
     isCustomerNameAlreadyExists: boolean = false;
     isCustomerCodeAlreadyExists: boolean = false;
-    emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{3,}";
+    emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}";
     urlPattern = "^((ht|f)tp(s?))\://([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(/\S*)?$";
 
     classificationNew = {
@@ -489,7 +489,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
     async getCustomerRestrictedPMAByCustomerId() {
         await this.commonService.getRestrictedParts(1, this.id, 'PMA').subscribe(res => {
             this.generalInformation.restrictedPMAParts = res;
-          
+            //if (this.generalInformation.restrictedPMAParts.length > 0) {
+            //    this.disableRestrictedPMA = true;
+            //}
             this.restictPMAtempList = res.map(x => x.itemMasterId);
             // this.generalInformation.restrictedPMAParts = res.map(x => {
             //     return  { 
@@ -612,6 +614,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     addRestrictPMA() {
        
+        //if (this.restictPMAtempList.length>0) {
+        //    this.disableRestrictedPMA = true;
+        //}
         this.generalInformation.restrictedPMAParts = this.restictPMAtempList;
 
         this.partListForPMA = this.restictPMAtempList.reduce((acc, obj) => {
@@ -632,6 +637,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
         }
         this.partListForPMA = [{ label: rowData.partNumber, value: rowData }, ...this.partListForPMA];
         this.generalInformation.restrictedPMAParts.splice(i, 1);
+       
+        //if (this.generalInformation.restrictedPMAParts.length == 0) {
+        //    this.disableRestrictedPMA = false;
+        //}
        
     }
 

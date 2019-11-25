@@ -777,6 +777,8 @@ namespace QuickApp.Pro.Controllers
                 contactObj.MiddleName = contactViewModel.MiddleName;
                 contactObj.ContactTitle = contactViewModel.ContactTitle;
                 contactObj.MobilePhone = contactViewModel.MobilePhone;
+                contactObj.Tag = contactViewModel.Tag;
+
                 contactObj.Notes = contactViewModel.Notes;
                 contactObj.WorkPhone = contactViewModel.WorkPhone;
                 contactObj.WebsiteURL = contactViewModel.WebsiteURL;
@@ -1716,7 +1718,7 @@ namespace QuickApp.Pro.Controllers
                 customerObj.TaxRateStateOrProvince = customerViewModel.TaxRateStateOrProvince;
                 customerObj.AllowPartialBilling = customerViewModel.AllowPartialBilling;
                 customerObj.AllowProformaBilling = customerViewModel.AllowProformaBilling;
-                customerObj.CurrencyId = customerViewModel.CurrencyId;
+                customerObj.CurrencyId = customerViewModel.GeneralCurrencyId;
                 customerObj.Discount = customerViewModel.Discount;
                 customerObj.DiscountId = customerViewModel.DiscountId;
                 customerObj.EDIDescription = customerViewModel.EDIDescription;
@@ -2850,7 +2852,13 @@ namespace QuickApp.Pro.Controllers
             _unitOfWork.Customer.CustomerShippingDetailsStatus(id, status, updatedBy);
             return Ok();
         }
-      
+        [HttpGet("customersBillingUpdateStatus")]
+        public IActionResult CustomerBillingStatus(long id, bool status, string updatedBy)
+        {
+            _unitOfWork.Customer.CustomerBillingStatus(id, status, updatedBy);
+            return Ok();
+
+        }
     }
 
 }
