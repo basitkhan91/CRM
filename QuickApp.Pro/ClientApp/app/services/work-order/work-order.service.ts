@@ -127,6 +127,9 @@ export class WorkOrderService {
     createWorkOrderMaterialList(data) {
         return this.workOrderEndpointService.createWorkOrderMaterialList(data);
     }
+    createWorkOrderEquipmentList(data){
+        return this.workOrderEndpointService.createWorkOrderEquipmentList(data);
+    }
     getAllTasks() {
         return this.workOrderEndpointService.getTasks();
     }
