@@ -313,14 +313,14 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("saveassetcheckedin")]
-        public IActionResult SaveAssetCheckedIn(long WorkOrderAssetId, long? checkedInById, DateTime? checkedInDate, string updatedBy)
+        public IActionResult SaveAssetCheckedIn(long WorkOrderAssetId, long checkedInById, DateTime checkedInDate, string updatedBy)
         {
              unitOfWork.WorkOrderRepository.SaveAssetCheckedIn(WorkOrderAssetId, checkedInById, checkedInDate, updatedBy);
             return Ok();
         }
 
         [HttpGet("saveassetcheckedout")]
-        public IActionResult SaveAssetCheckedOut(long WorkOrderAssetId, long? checkedOutById, DateTime? checkedOutDate, string updatedBy)
+        public IActionResult SaveAssetCheckedOut(long WorkOrderAssetId, long checkedOutById, DateTime checkedOutDate, string updatedBy)
         {
             unitOfWork.WorkOrderRepository.SaveAssetCheckedOut(WorkOrderAssetId, checkedOutById, checkedOutDate, updatedBy);
             return Ok();

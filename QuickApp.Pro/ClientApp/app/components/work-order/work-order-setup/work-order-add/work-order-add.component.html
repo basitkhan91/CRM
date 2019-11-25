@@ -532,7 +532,7 @@
                 </div>
                 <div>
                   <button class="btn btn-primary-cstm pull-right" *ngIf="!showTableGrid && !isEdit" type="button"  [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Save</button>
-                  <button class="btn btn-primary-cstm pull-right" *ngIf="!showTableGrid && isEdit" type="button"  [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Update</button>
+                  <button class="btn btn-primary-cstm pull-right" *ngIf="isEdit" type="button"  [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Update</button>
                   <button  *ngIf="showTableGrid && workOrderGeneralInformation.isSinglePN " class="btn btn-success pull-right" [routerLink]="['/workordersmodule/workorderspages/app-work-order-quote']"  >Create Quote</button>
                 </div>
             </form>
@@ -727,7 +727,12 @@
                     </div>
 
                     <div [ngClass]="{hidedata : gridActiveTab !== 'equipment'}">
-                        <app-work-order-assets [employeesOriginalData]="employeesOriginalData"  [isWorkOrder]="isWorkOrder" [workOrderAssetList]="workOrderAssetList" [savedWorkOrderData]="savedWorkOrderData" ></app-work-order-assets>
+                        <app-work-order-assets (saveEquipmentListForWO)="saveWorkOrderEquipmentList($event)" 
+                         (getEquipmentData)="getEquipmentByWorkOrderId($event)" 
+                         [employeesOriginalData]="employeesOriginalData" 
+                          [isWorkOrder]="isWorkOrder" 
+                          [workFlowObject]="workFlowObject"
+                          [workOrderAssetList]="workOrderAssetList" [savedWorkOrderData]="savedWorkOrderData" ></app-work-order-assets>
                     </div>
 
                     <div  *ngIf="quote" [ngClass]="{hidedata : gridActiveTab !== 'quote' }" >

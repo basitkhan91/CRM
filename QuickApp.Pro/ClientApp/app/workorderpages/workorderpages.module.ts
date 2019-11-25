@@ -83,7 +83,8 @@ import { AssetmanagementModule } from '../assetmanagement/assetmanagement.module
     TooltipModule,
     TabViewModule,
     AccordionModule,
-    AssetmanagementModule
+    AssetmanagementModule,
+    WorkFlowPagesModule
   ],
   declarations: [
     WorkOrderPagesComponent,
