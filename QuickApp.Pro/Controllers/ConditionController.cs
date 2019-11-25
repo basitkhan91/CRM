@@ -50,17 +50,23 @@ namespace QuickApp.Pro.Controllers
 
         }
         [HttpGet("auditHistoryById/{id}")]
-        [Produces(typeof(List<AuditHistory>))]
+        [Produces(typeof(List<ConditionAudit>))]
         public IActionResult GetAuditHostoryById(long id)
         {
-            var result = _unitOfWork.AuditHistory.GetAllHistory("Condition", id); //.GetAllCustomersData();
+            //var result = _unitOfWork.AuditHistory.GetAllHistory("Condition", id); //.GetAllCustomersData();
 
+
+            //try
+            //{
+            //    var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
+
+            //    return Ok(resul1);
+            //}
 
             try
             {
-                var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
-
-                return Ok(resul1);
+                var result = _unitOfWork.Conditions.GetAuditDetails(id);
+                return Ok(result);
             }
             catch (Exception ex)
             {

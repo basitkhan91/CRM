@@ -6,6 +6,7 @@ import 'rxjs/add/operator/map';
 
 import { EndpointFactory } from './endpoint-factory.service';
 import { ConfigurationService } from './configuration.service';
+import { Itemgroup } from '../models/item-group.model';
 
 @Injectable()
 export class ItemgroupEndpointService extends EndpointFactory {
@@ -51,12 +52,12 @@ export class ItemgroupEndpointService extends EndpointFactory {
             });
     }
 
-    getUpdateActionEndpoint<T>(roleObject: any, actionId: number): Observable<T> {
+    getUpdateActionEndpoint<T>(roleObject: Itemgroup, actionId): Observable<T> {
         let endpointUrl = `${this._itemgroupUrlNew}/${actionId}`;
 
         return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getUpdateActionEndpoint(roleObject, actionId));
+                return this.handleError(error, () => this.getUpdateActionEndpoint(actionId, roleObject));
             });
     }
 

@@ -60,7 +60,7 @@ export class ConditionService {
     }
     
     getConditionAudit(conditionId: number) {
-        return this.conditionEndpoint.getConditionAuditById<any>(conditionId);
+        return this.conditionEndpoint.getConditionAuditById<any[]>(conditionId);
     }
 
 }

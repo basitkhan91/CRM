@@ -14,6 +14,8 @@ namespace DAL.Repositories.Interfaces
 
         IEnumerable<ItemClassfication> UploadCustomData(IFormFile file);
 
+        IEnumerable<ItemClassficationAudit> GetItemClassficationAuditDetails(long iItemClassificationId);
+
         //  void CreateAction(DAL.Models.Action action);
 
     }

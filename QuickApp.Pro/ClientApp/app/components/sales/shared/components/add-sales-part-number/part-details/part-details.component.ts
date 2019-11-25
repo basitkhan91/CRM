@@ -12,7 +12,10 @@ export class ParetDetailsComponent implements OnChanges {
   @Input() parts: any[];
   selectedColumns: any[];
   //@ViewChild('parts') partsComponent: DataTable;
-  columns: any[];
+    columns: any[];
+    totalRecords: number = 0;
+    showPaginator: boolean = true;
+    pageLinks: number = 3;
   constructor() {
     this.parts = [];
     this.columns = [];
@@ -23,6 +26,10 @@ export class ParetDetailsComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     //this.partsComponent.reset();
   }
+
+    onPaging(event) {
+        console.log(event);
+    }
 
   initColumns() {
     this.columns = [
