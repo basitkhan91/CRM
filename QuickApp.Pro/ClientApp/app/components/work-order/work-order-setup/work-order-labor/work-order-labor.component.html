@@ -172,6 +172,7 @@
       <tbody>
         <!-- Receive -->
         <ng-container *ngFor="let task of taskList; let taskIndex = index">
+          <!-- <ng-container *ngIf="isAllowedTask(task.taskId)"> -->
             <tr *ngFor="let rec of laborForm.workOrderLaborList[0][task.description | lowercase]; let i = index">
                 <td *ngIf="i < 1">
                   {{task.description}}
@@ -183,12 +184,19 @@
                 </td>
                 <td *ngIf="i >= 1">&nbsp;</td>
                 <td>
-                    <p-dropdown
+                    <!-- <p-dropdown
                     placeholder="Select Expertise Type"
-                      [options]="expertiseTypeList"
+                      [options]="getExpertise(expertiseTypeList, task.taskId)"
                       class="p-dropdown-custom-2"
                       [(ngModel)]="rec.expertiseId"
-                    ></p-dropdown>
+                    ></p-dropdown> -->
+
+                    <select [(ngModel)]="rec.expertiseId">
+                      <option>Select</option>
+                      <ng-container *ngFor="let exp of expertiseTypeList">
+                        <option [value]="exp.value">{{exp.label}}</option> 
+                      </ng-container>
+                    </select>
                 </td>
                 <td class="emp-labour-cstm">
                     <p-autoComplete
@@ -202,6 +210,7 @@
                     (completeMethod)="filterEmployee($event)"
                     [size]="30" [minLength]="1"
                     [(ngModel)]="rec.employeeId"
+                    required
                   >
                   </p-autoComplete>
                   <i
@@ -254,10 +263,10 @@
                   {{ rec.hours }}
                 </td>
                 <td *ngIf="laborForm.hoursorClockorScan === 'labourHours'"> 
-                  <input type="text" (blur)="calculateHoursDifference(rec)" [(ngModel)]="rec.hours" name="hours" [disabled]="laborForm.workFloworSpecificTaskorWorkOrder == 'workOrder'" placeholder="HH:MM"> 
+                  <input type="number" (blur)="calculateHoursDifference(rec)" [(ngModel)]="rec.hours" name="hours"  placeholder="HH:MM" [disabled]="checkDisability(rec, task.taskId)"> 
                 </td>
                 <td>
-                  <input type="text" (blur)="calculateHoursDifference(rec)" [(ngModel)]="rec.adjustments" [disabled]="laborForm.workFloworSpecificTaskorWorkOrder == 'workOrder'" placeholder="HH:MM"/>
+                  <input type="number" (blur)="calculateHoursDifference(rec)" [(ngModel)]="rec.adjustments" [disabled]="laborForm.workFloworSpecificTaskorWorkOrder == 'workOrder'" placeholder="HH:MM"/>
                 </td>
                 <td>
                   {{ rec.adjustedHours }}
@@ -266,6 +275,7 @@
                   <input type="text" [(ngModel)]="rec.memo" />
                 </td>
             </tr>
+          <!-- </ng-container> -->
           </ng-container>
               <tr>
 

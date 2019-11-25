@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+﻿import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { fadeInOut } from '../../../../services/animations';
 import { PageHeaderComponent } from '../../../../shared/page-header.component';
 import * as $ from 'jquery';
@@ -47,7 +47,7 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
   animations: [fadeInOut]
 })
 /** WorkOrderAdd component*/
-export class WorkOrderAddComponent implements OnInit {
+export class WorkOrderAddComponent implements OnInit, AfterViewInit {
   // workOrder: WorkOrder;
   // workOrderPartNumbers: WorkOrderPartNumber[];
 
@@ -147,6 +147,8 @@ export class WorkOrderAddComponent implements OnInit {
     equipments: []
   }
   materialStatus: any;
+  workOrderLaborList: any;
+  taskList: any;
 
 
   constructor(
@@ -172,6 +174,9 @@ export class WorkOrderAddComponent implements OnInit {
     this.moduleName = 'Work Order';
   }
 
+  ngAfterViewInit(){
+    this.getTaskList();
+  }
   async ngOnInit() {
     //  this.showTableGrid = true;
     this.mpnFlag = true;
@@ -218,6 +223,7 @@ export class WorkOrderAddComponent implements OnInit {
       this.savedWorkOrderData = this.workOrderGeneralInformation;
       this.getWorkOrderWorkFlowNos();
 
+
     }
 
 
@@ -227,6 +233,27 @@ export class WorkOrderAddComponent implements OnInit {
 
   get userName(): string {
     return this.authService.currentUser ? this.authService.currentUser.userName : "";
+  }
+
+  getTaskList(){
+    if(this.labor == undefined){
+      this.labor = new WorkOrderLabor()
+    }
+    this.labor.workOrderLaborList = [];
+    this.labor.workOrderLaborList.push({})
+    this.workOrderService.getAllTasks()
+    .subscribe(
+      (taskList)=>{
+        this.labor.workOrderLaborList[0] = {}
+        this.taskList = taskList;
+        this.taskList.forEach(task => {
+          this.labor.workOrderLaborList[0][task.description.toLowerCase()] = [new AllTasks()];
+        });
+      },
+      (error)=>{
+        console.log(error);
+      }
+    )
   }
 
   // loadMPNlist() {
@@ -571,6 +598,7 @@ export class WorkOrderAddComponent implements OnInit {
 
     this.getEquipmentByWorkOrderId();
     this.getMaterialListByWorkOrderId();
+    this.getWorkFlowLaborList();
     // this.getWorkOrderWorkFlowBywfwoId(this.workFlowWorkOrderId);
   }
 
@@ -652,6 +680,7 @@ export class WorkOrderAddComponent implements OnInit {
         MessageSeverity.success
       );
       this.getMaterialListByWorkOrderId();
+      this.getWorkFlowLaborList();
     })
 
   }
@@ -717,6 +746,7 @@ export class WorkOrderAddComponent implements OnInit {
         MessageSeverity.success
       );
       this.getMaterialListByWorkOrderId();
+      this.getWorkFlowLaborList();
     })
   }
 
@@ -752,6 +782,36 @@ export class WorkOrderAddComponent implements OnInit {
 
       })
 
+    }
+  }
+
+  getWorkFlowLaborList(){
+    if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
+      this.workOrderService.getWorkOrderLaborList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
+        this.workOrderLaborList = res;
+        if(res){
+          for( let labList of res['laborList']){
+            for(let task of this.taskList){
+              if(task.taskId == labList['wol']['taskId']){
+                if(this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == undefined || this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == null){
+                  this.labor.workOrderLaborList[0][task.description.toLowerCase()].splice(0,1);
+                }
+                let taskData = new AllTasks()
+                taskData['expertiseId'] = labList['wol']['expertiseId'];
+                taskData['employeeId'] = labList['wol']['employeeId'];
+                taskData['billableId'] = labList['wol']['billableId'];
+                taskData['startDate'] = labList['wol']['startDate'];
+                taskData['endDate'] = labList['wol']['endDate'];
+                taskData['hours'] = labList['wol']['hours'];
+                taskData['adjustments'] = labList['wol']['adjustments'];
+                taskData['adjustedHours'] = labList['wol']['adjustedHours'];
+                taskData['memo'] = labList['wol']['memo'];
+                this.labor.workOrderLaborList[0][task.description.toLowerCase()].push(taskData);
+              }
+            }
+          }
+        }
+      })
     }
   }
 

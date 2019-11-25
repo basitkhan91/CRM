@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import * as moment from 'moment';
 import {
   WorkOrderLabor,
@@ -14,11 +14,13 @@ import { AuthService } from '../../../../services/auth.service';
   styleUrls: ['./work-order-labor.component.css']
 })
 /** WorkOrderMainComponent component*/
-export class WorkOrderLaborComponent implements OnInit {
+export class WorkOrderLaborComponent implements OnInit, OnChanges {
   @Input() savedWorkOrderData;
   @Input() laborForm: WorkOrderLabor;
   @Input() workOrderWorkFlowOriginalData: any;
   @Output() saveworkOrderLabor = new EventEmitter();
+  @Input() workOrderLaborList: any;
+  @Input() taskList: any;
 
   workOrderWorkFlowList: any;
   employeesOriginalData: any;
@@ -26,7 +28,6 @@ export class WorkOrderLaborComponent implements OnInit {
   dataEnteredByList: any;
   expertiseTypeList: Object;
   id: any;
-  taskList: any;
   saveFormdata: any;
   totalWorkHours: any;
   minDateValue: Date = new Date()
@@ -50,12 +51,26 @@ export class WorkOrderLaborComponent implements OnInit {
   // ];
   ngOnInit() {
 
-    // this.getWorkOrderWorkFlowNos();
-    console.log(this.savedWorkOrderData);
+    if(this.workOrderLaborList){
+      this.laborForm.workFlowWorkOrderId = this.workOrderLaborList['workFlowWorkOrderNo'];
+      this.laborForm.dataEnteredBy = this.workOrderLaborList['dataEnteredBy'];
+      this.laborForm.employeeId = this.workOrderLaborList['employeeId'];
+      this.laborForm.isTaskCompletedByOne = this.workOrderLaborList['isTaskCompletedByOne'];
+      this.laborForm.expertiseId = this.workOrderLaborList['expertiseId'];
+    }
     this.getAllEmployees();
     this.getAllExpertiseType();
-    this.getTaskList()
     this.id = this.savedWorkOrderData.workOrderId;
+  }
+
+  ngOnChanges(){
+    if(this.workOrderLaborList){
+      this.laborForm.workFlowWorkOrderId = this.workOrderLaborList['workFlowWorkOrderNo'];
+      this.laborForm.dataEnteredBy = this.workOrderLaborList['dataEnteredBy'];
+      this.laborForm.employeeId = this.workOrderLaborList['employeeId'];
+      this.laborForm.isTaskCompletedByOne = this.workOrderLaborList['isTaskCompletedByOne'];
+      this.laborForm.expertiseId = this.workOrderLaborList['expertiseId'];
+    }
   }
 
 
@@ -72,24 +87,6 @@ export class WorkOrderLaborComponent implements OnInit {
 
 
 
-  getTaskList(){
-    this.laborForm.workOrderLaborList = [];
-    this.laborForm.workOrderLaborList.push({})
-    this.workOrderService.getAllTasks()
-    .subscribe(
-      (taskList)=>{
-        this.laborForm.workOrderLaborList[0] = {}
-        this.taskList = taskList;
-        this.taskList.forEach(task => {
-          this.laborForm.workOrderLaborList[0][task.description.toLowerCase()] = [new AllTasks()];
-        });
-      },
-      (error)=>{
-        console.log(error);
-      }
-    )
-  }
-
   generateLaborForm() {
     const keysArray = Object.keys(this.laborForm.workOrderLaborList[0]);
     for (let i = 0; i < keysArray.length; i++) {
@@ -102,36 +99,37 @@ export class WorkOrderLaborComponent implements OnInit {
   }
 
   calculateHoursDifference(obj){
-    if(obj.hours != '' && obj.adjustments != ""){
+    if(obj.hours != null && obj.adjustments != null){
       this.totalWorkHours = 0;
 
-      let hoursArr = obj.hours.split(':');
-      if(hoursArr.length == 1){ hoursArr.push(0)}
-      let hoursInSeconds = (+hoursArr[0]) * 60 * 60 + (+hoursArr[1]) * 60;
-      let adjustmentsHoursArr = obj.adjustments.split(':');
-      if(adjustmentsHoursArr.length == 1){ adjustmentsHoursArr.push(0)}
-      let adjustmentsInSec = (+obj.adjustments) * 60 * 60 + (+hoursArr[1]) * 60;
-      let diff = hoursInSeconds - adjustmentsInSec;
-      let h = Math.floor(diff / 3600).toString();
-      let m = Math.floor(diff % 3600 / 60).toString();
-      let s = Math.floor(diff % 3600 % 60).toString();
-      h = 
-      obj['adjustedHours'] = `${(h.length ==1)?'0'+h:h}.${(m.length ==1)?'0'+m:m}`;
-      var totalSec = 0;
+      // let hoursArr = obj.hours.split(':');
+      // if(hoursArr.length == 1){ hoursArr.push(0)}
+      // let hoursInSeconds = (+hoursArr[0]) * 60 * 60 + (+hoursArr[1]) * 60;
+      // let adjustmentsHoursArr = obj.adjustments.split(':');
+      // if(adjustmentsHoursArr.length == 1){ adjustmentsHoursArr.push(0)}
+      // let adjustmentsInSec = (+obj.adjustments) * 60 * 60 + (+hoursArr[1]) * 60;
+      // let diff = hoursInSeconds - adjustmentsInSec;
+      // let h = Math.floor(diff / 3600).toString();
+      // let m = Math.floor(diff % 3600 / 60).toString();
+      // let s = Math.floor(diff % 3600 % 60).toString();
+      // obj['adjustedHours'] = `${(h.length ==1)?'0'+h:h}.${(m.length ==1)?'0'+m:m}`;
+      obj['adjustedHours'] = Number(obj.hours) - Number(obj.adjustments)
+      var totalHours = 0;
       for(let task in this.laborForm.workOrderLaborList[0]){
-        if(this.laborForm.workOrderLaborList[0][task][0]['hours'] != ''){
+        if(this.laborForm.workOrderLaborList[0][task][0]['hours'] != null){
           for (let taskList of this.laborForm.workOrderLaborList[0][task] ){
-            hoursArr = taskList['hours'].split(":");
-            if(hoursArr.length == 1){ hoursArr.push(0)}
-            hoursInSeconds = (+hoursArr[0]) * 60 * 60 + (+hoursArr[1]) * 60;
-            totalSec += hoursInSeconds;
+            // hoursArr = taskList['hours'].split(":");
+            // if(hoursArr.length == 1){ hoursArr.push(0)}
+            // hoursInSeconds = (+hoursArr[0]) * 60 * 60 + (+hoursArr[1]) * 60;
+            this.totalWorkHours += taskList['hours'];
           }
         }
       }
-      h = Math.floor(totalSec / 3600).toString();
-      m = Math.floor(totalSec % 3600 / 60).toString();
-      s = Math.floor(totalSec % 3600 % 60).toString();
-      this.totalWorkHours = `${(h.length ==1)?'0'+h:h}:${(m.length ==1)?'0'+m:m}:${(s.length ==1)?'0'+s:s}`;
+      // h = Math.floor(totalSec / 3600).toString();
+      // m = Math.floor(totalSec % 3600 / 60).toString();
+      // s = Math.floor(totalSec % 3600 % 60).toString();
+      // this.totalWorkHours = `${(h.length ==1)?'0'+h:h}:${(m.length ==1)?'0'+m:m}:${(s.length ==1)?'0'+s:s}`;
+      // this.totalWorkHours = totalHours;
     }
   }
   filterWorkFlowNumbers(event): void {
@@ -298,6 +296,78 @@ export class WorkOrderLaborComponent implements OnInit {
 
     this.saveworkOrderLabor.emit(this.saveFormdata);
 
+  }
+
+  getExpertise(expertiseType, taskId){
+
+    // try{
+    //   if(this.workOrderLaborList){
+    //     for(let workOrdLList of this.workOrderLaborList){
+    //       if ()
+    //     }
+    //   }
+    // }
+    // catch{
+      try{
+        if(this.workOrderLaborList){
+          for(let workOrdLList of this.workOrderLaborList['laborList']){
+            if (workOrdLList['wol']['taskId'] == taskId && workOrdLList['wol']['expertiseId'] == expertiseType['value']){
+              return true;
+            }
+          }
+          return false
+        }
+        return true;
+      }
+      catch{
+        return true;
+      }
+    // }
+    // console.log(expertiseTypeList)
+    // console.log(taskId);
+    // console.log(this.workOrderLaborList);
+    // return expertiseTypeList;
+  }
+
+  isAllowedTask(taskId){
+    try{
+      if(this.workOrderLaborList){
+        for(let workOrdLList of this.workOrderLaborList['laborList']){
+          if (workOrdLList['wol']['taskId'] == taskId){
+            return true;
+          }
+        }
+        return false
+      }
+      return true;
+    }
+    catch{
+      return true;
+    }
+  }
+
+  checkDisability(record, taskId){
+    try{
+      if(this.workOrderLaborList){
+        if(this.laborForm['workFloworSpecificTaskorWorkOrder'] == 'workOrder'){
+          return true;
+        }
+        else if (this.laborForm['workFloworSpecificTaskorWorkOrder'] == 'workFlow'){
+          for(let workOrdLList of this.workOrderLaborList['laborList']){
+            if (workOrdLList['wol']['taskId'] == taskId && workOrdLList['wol']['expertiseId'] == record['expertiseId']){
+              record['hours'] = workOrdLList['wol']['hours'];
+              this.calculateHoursDifference(record);
+            }
+          }
+          return true;
+        }
+      }
+      return false;
+    }
+    catch{
+      return false;
+    }
+    
   }
   // tasks : this.laborForm.tasks[0][keysArray[i]].map(x => {
   //   return {

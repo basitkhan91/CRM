@@ -4,7 +4,7 @@ export class WorkOrderLabor {
   expertiseId: null;
   employeeId: null;
   isTaskCompletedByOne: false;
-  workFloworSpecificTaskorWorkOrder: 'specificTasks';
+  workFloworSpecificTaskorWorkOrder: string;
   hoursorClockorScan: 'labourHours';
   workOrderLaborList: any;
 
