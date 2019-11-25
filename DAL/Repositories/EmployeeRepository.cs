@@ -65,7 +65,7 @@ namespace DAL.Repositories
 
 
 
-                           where t.IsDeleted == false || t.IsDeleted == null
+                           where t.IsDeleted == false || t.IsDeleted == null 
                            // select new { t, ad, vt }).ToList();
                            select new
                            {

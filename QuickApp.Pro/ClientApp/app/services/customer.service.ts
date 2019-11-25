@@ -343,6 +343,7 @@ export class CustomerService {
     }
 
     updateCustomerBillingAddressDetails(customercntct: any, customerId: any) {
+        debugger
         return this.customerEndpoint.updateCustomerBillingAddressDetails<any>(customercntct, customerId);
     }
     newBillingAddWithAddress(action: any, billingAddressId: any) {
@@ -558,5 +559,7 @@ export class CustomerService {
         return this.customerEndpoint.updateStatusForShippingDetails(id, status, updatedBy)
     }
 
-
+    CustomersBillingUpdateforActive(id, status, updatedBy) {
+        return this.customerEndpoint.CustomersBillingUpdateforActive(id, status, updatedBy)
+    }
 }

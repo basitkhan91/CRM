@@ -105,6 +105,7 @@ namespace DAL.Models
         public long? TimeLifeCyclesId { get; set; }
         public bool TimeLifeDetailsNotProvided { get; set; }
         public long? RepairOrderPartRecordId { get; set; }
+        public decimal? WorkOrderExtendedCost { get; set; }
         public virtual PurchaseOrder PurchaseOrder { get; set; }
         public virtual PurchaseOrderPart PurchaseOrderPartRecord { get; set; }
 

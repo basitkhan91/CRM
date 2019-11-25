@@ -1,3 +1,41 @@
+<div>
+  <button
+    *ngIf="!addNewMaterial"
+    data-target="#addNewEquipments"
+    data-toggle="modal"
+    class="btn btn-primary btn-primary-cstm"
+    style="padding: 6px 12px !important;"
+  >
+    Add Assets
+  </button>
+</div>
+
+<div id="addNewEquipments" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+        <h4 class="modal-title">Assets Create</h4>
+      </div>
+      <div class="modal-body">
+        <grd-equipment
+          [workFlowObject]="workFlowObject"
+          [isWorkOrder]="isWorkOrder"
+          (saveEquipmentListForWO)="saveEquipmentListForWO.emit($event)"
+        ></grd-equipment>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="equipment-tab-content">
   <div class="x_panel">
     <div class="tab-content">
@@ -34,50 +72,32 @@
               <td>{{ asset.assetTypeName }}</td>
               <td>{{ asset.quantity }}</td>
               <td>
-                <input
-                  type="number"
-                  [(ngModel)]="asset.minQuantity"
-                  name="minQuantity{{ i }}"
-                />
+                {{ asset.minQuantity }}
               </td>
               <td>
-                <input
-                  type="number"
-                  [(ngModel)]="asset.maxQuantity"
-                  name="maxQuantity{{ i }}"
-                />
+                {{ asset.maxQuantity }}
               </td>
               <td>
-                <input
-                  type="number"
-                  [(ngModel)]="asset.expectedQuantity"
-                  name="expectedQuantity{{ i }}"
-                />
+                {{ asset.expectedQuantity }}
               </td>
               <td>
-                <input
-                  type="text"
-                  [(ngModel)]="asset.findings"
-                  name="findings{{ i }}"
-                />
+                {{ asset.findings }}
               </td>
 
               <td>
-                <a>
-                  <a
-                    class="btn btn-info boxed-float-btn nobg"
-                    data-toggle="modal"
-                    data-target="#view"
-                    (click)="viewAsstes(asset)"
-                  >
-                    <i class="fa fa-eye"></i>
-                  </a>
-                </a>
-              </td>
-              <td *ngIf="asset.checkedInById === null">
                 <a
                   class="btn btn-info boxed-float-btn nobg"
-                  (click)="checkStatus(asset, 'checkIn')"
+                  data-toggle="modal"
+                  data-target="#view"
+                  (click)="viewAsstes(asset)"
+                >
+                  <i class="fa fa-eye"></i>
+                </a>
+              </td>
+              <td *ngIf="asset.checkedInDate === null">
+                <a
+                  class="btn btn-info boxed-float-btn nobg"
+                  (click)="checkStatus(asset, 'checkIn'); viewAsstes(asset)"
                   data-toggle="modal"
                   data-target="#checkIn"
                 >
@@ -86,12 +106,12 @@
               </td>
               <td
                 *ngIf="
-                  asset.checkedInById !== null && asset.checkedInById === null
+                  asset.checkedInDate !== null && asset.checkedOutDate === null
                 "
               >
                 <a
                   class="btn btn-info boxed-float-btn nobg"
-                  (click)="checkStatus(asset, 'checkOut')"
+                  (click)="checkStatus(asset, 'checkOut'); viewAsstes(asset)"
                   data-toggle="modal"
                   data-target="#checkIn"
                 >
@@ -116,15 +136,6 @@
                         </div> -->
           </tbody>
         </table>
-        <div *ngIf="workOrderAssetList" class="text-right save-work-btn">
-          <button
-            class="btn btn-primary btn-primary-cstm"
-            (click)="saveAssets()"
-            style="padding: 6px 12px !important;"
-          >
-            Save Assets
-          </button>
-        </div>
       </div>
     </div>
     <div class="clear"></div>
@@ -136,7 +147,7 @@
 </div>
 
 <div id="view" class="modal fade" role="dialog">
-  <div class="modal-dialog modal-dialog-lg">
+  <div class="modal-dialog modal-lg">
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
@@ -146,11 +157,11 @@
         <h4 class="modal-title">Asstes View</h4>
       </div>
       <div class="modal-body" *ngIf="assetRecordId">
-        <!-- <app-asset-listing
-          [assetsId]="AssetRecordId"
+        <app-asset-listing
+          [assetsId]="assetRecordId"
           [isWorkOrder]="isWorkOrder"
         >
-        </app-asset-listing> -->
+        </app-asset-listing>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">
@@ -161,8 +172,8 @@
   </div>
 </div>
 
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog modal-dialog-lg">
+<div id="checkIn" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
@@ -173,7 +184,7 @@
       </div>
       <div class="modal-body" *ngIf="assetRecordId">
         <div class="form-row" style="margin-top: 10px;">
-          <div class="col-md-3">
+          <div class="col-md-2">
             <div class="form-group">
               <label>Asset Description</label>
               <input
@@ -185,7 +196,7 @@
               />
             </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-2">
             <div class="form-group">
               <label>Asset ID Number</label>
               <input
@@ -206,7 +217,7 @@
                 [(ngModel)]="assetsform.employeeId"
                 name="checkInBy"
                 [suggestions]="employeeList"
-                (completeMethod)="filterEmployees($event)"
+                (completeMethod)="filterEmployee($event)"
                 [size]="30"
                 [minLength]="1"
                 [dropdown]="true"
@@ -228,7 +239,22 @@
             </div>
           </div>
         </div>
-        <!-- <app-asset-listing [assetsId]="AssetRecordId" [isWorkOrder]="isWorkOrder"> </app-asset-listing> -->
+        <div class="text-right save-work-btn">
+          <button
+            class="btn btn-primary btn-primary-cstm"
+            (click)="saveAssets(); getEquipmentData.emit()"
+            style="padding: 6px 12px !important;"
+            data-dismiss="modal"
+          >
+            Save Assets
+          </button>
+        </div>
+
+        <app-asset-listing
+          [assetsId]="assetRecordId"
+          [isWorkOrder]="isWorkOrder"
+        >
+        </app-asset-listing>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">
