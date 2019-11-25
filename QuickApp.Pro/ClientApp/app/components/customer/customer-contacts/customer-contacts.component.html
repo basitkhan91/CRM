@@ -251,7 +251,7 @@
 	</div>
 </ng-template> -->
 
-<div class="modal fade" id="addContactDetails" role="dialog">
+<div class="modal"   #addContactDetails class="modal fade" id="addContactDetails" role="dialog">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -403,8 +403,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button"  *ngIf="!isEditButton" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" [disabled]="!addContactForm.valid" (click)="saveContactInformation()" data-dismiss="modal">Save</button>
-                    <button type="button"  *ngIf="isEditButton" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" (click)="updateCustomerContact()" data-dismiss="modal">Update</button>
+                    <button type="button"  *ngIf="!isEditButton" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" [disabled]="!addContactForm.valid ||contactEmail.errors" (click)="saveContactInformation()" data-dismiss="modal">Save</button>
+                    <button type="button"  *ngIf="isEditButton" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" (click)="updateCustomerContact()" [disabled]="!addContactForm.valid ||contactEmail.errors" data-dismiss="modal">Update</button>
                     <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
                 </div>
             </form>

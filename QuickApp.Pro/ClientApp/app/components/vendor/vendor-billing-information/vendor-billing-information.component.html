@@ -48,7 +48,7 @@
 									<p-sortIcon [field]="col.field"></p-sortIcon>
 								</th>
 
-								<th></th>
+								<th class="headerList"></th>
 
 							</tr>
 						</ng-template>
@@ -61,7 +61,7 @@
 									{{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
 								</td>
 
-								<td>
+								<td class="headerList">
 									<p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
 									<p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
 									<p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
