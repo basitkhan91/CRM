@@ -162,6 +162,26 @@ namespace DAL.Repositories
                                    .Take(take)
                                    .ToList();
 
+            if (roFilters.filters.OpenDate != null)
+            {
+                if (repairOrderList != null && repairOrderList.Any())
+                {
+                    repairOrderList = repairOrderList
+                        .Where(x => x.OpenDate == roFilters.filters.OpenDate)
+                        .ToList();
+                }
+            }
+           
+            if (roFilters.filters.ClosedDate != null)
+            {
+                if (repairOrderList != null && repairOrderList.Any())
+                {
+                    repairOrderList = repairOrderList
+                        .Where(x => x.ClosedDate == roFilters.filters.ClosedDate)
+                        .ToList();
+                }
+            }
+
             return repairOrderList;
         }
 
