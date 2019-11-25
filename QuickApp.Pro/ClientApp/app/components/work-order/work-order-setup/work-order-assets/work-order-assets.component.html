@@ -34,32 +34,16 @@
               <td>{{ asset.assetTypeName }}</td>
               <td>{{ asset.quantity }}</td>
               <td>
-                <input
-                  type="number"
-                  [(ngModel)]="asset.minQuantity"
-                  name="minQuantity{{ i }}"
-                />
+                {{ asset.minQuantity }}
               </td>
               <td>
-                <input
-                  type="number"
-                  [(ngModel)]="asset.maxQuantity"
-                  name="maxQuantity{{ i }}"
-                />
+                {{ asset.maxQuantity }}
               </td>
               <td>
-                <input
-                  type="number"
-                  [(ngModel)]="asset.expectedQuantity"
-                  name="expectedQuantity{{ i }}"
-                />
+                {{ asset.expectedQuantity }}
               </td>
               <td>
-                <input
-                  type="text"
-                  [(ngModel)]="asset.findings"
-                  name="findings{{ i }}"
-                />
+                {{ asset.findings }}
               </td>
 
               <td>
@@ -77,7 +61,7 @@
               <td *ngIf="asset.checkedInById === null">
                 <a
                   class="btn btn-info boxed-float-btn nobg"
-                  (click)="checkStatus(asset, 'checkIn')"
+                  (click)="checkStatus(asset, 'checkIn'); viewAsstes(asset)"
                   data-toggle="modal"
                   data-target="#checkIn"
                 >
@@ -91,7 +75,7 @@
               >
                 <a
                   class="btn btn-info boxed-float-btn nobg"
-                  (click)="checkStatus(asset, 'checkOut')"
+                  (click)="checkStatus(asset, 'checkOut'); viewAsstes(asset)"
                   data-toggle="modal"
                   data-target="#checkIn"
                 >
@@ -116,15 +100,6 @@
                         </div> -->
           </tbody>
         </table>
-        <div *ngIf="workOrderAssetList" class="text-right save-work-btn">
-          <button
-            class="btn btn-primary btn-primary-cstm"
-            (click)="saveAssets()"
-            style="padding: 6px 12px !important;"
-          >
-            Save Assets
-          </button>
-        </div>
       </div>
     </div>
     <div class="clear"></div>
@@ -136,7 +111,7 @@
 </div>
 
 <div id="view" class="modal fade" role="dialog">
-  <div class="modal-dialog modal-dialog-lg">
+  <div class="modal-dialog modal-lg">
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
@@ -146,11 +121,11 @@
         <h4 class="modal-title">Asstes View</h4>
       </div>
       <div class="modal-body" *ngIf="assetRecordId">
-        <!-- <app-asset-listing
-          [assetsId]="AssetRecordId"
+        <app-asset-listing
+          [assetsId]="assetRecordId"
           [isWorkOrder]="isWorkOrder"
         >
-        </app-asset-listing> -->
+        </app-asset-listing>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">
@@ -161,8 +136,8 @@
   </div>
 </div>
 
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog modal-dialog-lg">
+<div id="checkIn" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
@@ -206,7 +181,7 @@
                 [(ngModel)]="assetsform.employeeId"
                 name="checkInBy"
                 [suggestions]="employeeList"
-                (completeMethod)="filterEmployees($event)"
+                (completeMethod)="filterEmployee($event)"
                 [size]="30"
                 [minLength]="1"
                 [dropdown]="true"
@@ -228,7 +203,11 @@
             </div>
           </div>
         </div>
-        <!-- <app-asset-listing [assetsId]="AssetRecordId" [isWorkOrder]="isWorkOrder"> </app-asset-listing> -->
+        <app-asset-listing
+          [assetsId]="assetRecordId"
+          [isWorkOrder]="isWorkOrder"
+        >
+        </app-asset-listing>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">

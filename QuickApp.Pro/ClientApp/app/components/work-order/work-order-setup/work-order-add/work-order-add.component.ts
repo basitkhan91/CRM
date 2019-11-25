@@ -776,6 +776,7 @@ export class WorkOrderAddComponent implements OnInit {
     currentRecord.nte = object.nte;
     currentRecord.isPMA = object.pma === null ? false : object.pma;
     currentRecord.isDER = object.der === null ? false : object.der;
+    // currentRecord.tatDaysCurrent = object.tatDaysCurrent === null? '' :  object.tatDaysCurrent 
   }
 
 
