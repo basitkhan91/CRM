@@ -13,6 +13,7 @@
             <tr>
               <th colspan="4" class="text-center"></th>
               <th colspan="4" class="text-center">TOLERANCE</th>
+              <th colspan="4" class="text-center"></th>
             </tr>
             <tr>
               <th class="text-center">Equipment</th>
@@ -23,9 +24,10 @@
               <th class="text-center">Max</th>
               <th class="text-center">Expected</th>
               <th class="text-center">Findings</th>
+              <th colspan="4" class="text-center"></th>
             </tr>
           </thead>
-          <tbody>
+          <tbody *ngIf="workOrderAssetList.length > 0">
             <tr *ngFor="let asset of workOrderAssetList; let i = index">
               <td>{{ asset.asset }}</td>
               <td>{{ asset.description }}</td>
@@ -62,37 +64,38 @@
 
               <td>
                 <a>
-                  <i
-                    _ngcontent-c13=""
-                    class="fa fa-eye"
-                    #data-toggle="view"
-                    (click)="viewAsstes(rowData)"
-                  ></i>
+                  <a
+                    class="btn btn-info boxed-float-btn nobg"
+                    data-toggle="modal"
+                    data-target="#view"
+                    (click)="viewAsstes(asset)"
+                  >
+                    <i class="fa fa-eye"></i>
+                  </a>
                 </a>
               </td>
-              <td *ngIf="rowData.checkedInById === null">
-                <a>
-                  <i
-                    _ngcontent-c13=""
-                    class="fa fa-sign-in clr-blue"
-                    #data-toggle="checkIn"
-                    (click)="checkStatus(rowData , 'checkIn')"
-                  ></i>
+              <td *ngIf="asset.checkedInById === null">
+                <a
+                  class="btn btn-info boxed-float-btn nobg"
+                  (click)="checkStatus(asset, 'checkIn')"
+                  data-toggle="modal"
+                  data-target="#checkIn"
+                >
+                  <i class="fa fa-sign-in"></i>
                 </a>
               </td>
               <td
                 *ngIf="
-                  rowData.checkedInById !== null &&
-                  rowData.checkedInById === null
+                  asset.checkedInById !== null && asset.checkedInById === null
                 "
               >
-                <a>
-                  <i
-                    _ngcontent-c13=""
-                    class="fa fa-sign-in clr-blue"
-                    #data-toggle="checkIn"
-                    (click)="checkStatus(rowData 'checkOut')"
-                  ></i>
+                <a
+                  class="btn btn-info boxed-float-btn nobg"
+                  (click)="checkStatus(asset, 'checkOut')"
+                  data-toggle="modal"
+                  data-target="#checkIn"
+                >
+                  <i class="fa fa-sign-out"></i>
                 </a>
               </td>
               <td>
@@ -143,11 +146,11 @@
         <h4 class="modal-title">Asstes View</h4>
       </div>
       <div class="modal-body" *ngIf="assetRecordId">
-        <app-asset-listing
+        <!-- <app-asset-listing
           [assetsId]="AssetRecordId"
           [isWorkOrder]="isWorkOrder"
         >
-        </app-asset-listing>
+        </app-asset-listing> -->
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">
@@ -169,36 +172,62 @@
         <h4 class="modal-title">Asstes CheckIn</h4>
       </div>
       <div class="modal-body" *ngIf="assetRecordId">
-            <div class="form-row" style="margin-top: 10px;">
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label>Asset Description</label>
-                            <input class="form-control" type="text"  [(ngModel)]="assetsform.description" name="assetDescription" disabled > 
-                        </div>							
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label>Asset ID Number</label>
-                            <input class="form-control" type="text" [(ngModel)]="assetsform.assetsIdNumber"   name="assetIdNumber" disabled > 
-                        </div>							
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label>Checked In By</label>
-                            <p-autoComplete field="label" class="pautocomp-cstm" 
-                            [(ngModel)]="assetsform.employeeId" name="checkInBy" [suggestions]="employeeList"  (completeMethod)="filterEmployees($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true">
-                            </p-autoComplete>
-                        </div>							
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label>Date</label>
-                            <p-calendar class="pas-clder" [(ngModel)]="assetsform.date" [showIcon]="true" name="date" ></p-calendar>
-                        </div>							
-                    </div>
-
-            
-                </div>
+        <div class="form-row" style="margin-top: 10px;">
+          <div class="col-md-3">
+            <div class="form-group">
+              <label>Asset Description</label>
+              <input
+                class="form-control"
+                type="text"
+                [(ngModel)]="assetsform.description"
+                name="assetDescription"
+                disabled
+              />
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label>Asset ID Number</label>
+              <input
+                class="form-control"
+                type="text"
+                [(ngModel)]="assetsform.assetsIdNumber"
+                name="assetIdNumber"
+                disabled
+              />
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label>Checked In By</label>
+              <p-autoComplete
+                field="label"
+                class="pautocomp-cstm"
+                [(ngModel)]="assetsform.employeeId"
+                name="checkInBy"
+                [suggestions]="employeeList"
+                (completeMethod)="filterEmployees($event)"
+                [size]="30"
+                [minLength]="1"
+                [dropdown]="true"
+                errorMessage="Records not found"
+                [forceSelection]="true"
+              >
+              </p-autoComplete>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label>Date</label>
+              <p-calendar
+                class="pas-clder"
+                [(ngModel)]="assetsform.date"
+                [showIcon]="true"
+                name="date"
+              ></p-calendar>
+            </div>
+          </div>
+        </div>
         <!-- <app-asset-listing [assetsId]="AssetRecordId" [isWorkOrder]="isWorkOrder"> </app-asset-listing> -->
       </div>
       <div class="modal-footer">
@@ -209,5 +238,3 @@
     </div>
   </div>
 </div>
-
-
