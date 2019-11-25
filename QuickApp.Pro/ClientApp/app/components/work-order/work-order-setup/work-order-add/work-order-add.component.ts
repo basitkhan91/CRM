@@ -143,7 +143,8 @@ export class WorkOrderAddComponent implements OnInit {
   modal: NgbModalRef;
   MPNList = [];
   workFlowObject = {
-    materialList: []
+    materialList: [],
+    equipments: []
   }
   materialStatus: any;
 
@@ -197,7 +198,7 @@ export class WorkOrderAddComponent implements OnInit {
         workOrderTypeId: String(data.workOrderTypeId),
         customerReference: data.customerReference,
         csr: data.csr,
-        customerId: data.customerId,
+        customerId: data.customerDetails,
         partNumbers: data.partNumbers.map((x, index) => {
 
           this.getRevisedpartNumberByItemMasterId(x.masterPartId, index);
@@ -637,6 +638,8 @@ export class WorkOrderAddComponent implements OnInit {
     const materialArr = data.materialList.map(x => {
       return {
         ...x,
+        masterCompanyId: 1,
+        isActive: true,
         workOrderId: this.workOrderId, workFlowWorkOrderId: this.workFlowWorkOrderId
       }
     })
@@ -650,6 +653,30 @@ export class WorkOrderAddComponent implements OnInit {
       );
       this.getMaterialListByWorkOrderId();
     })
+
+  }
+
+
+
+  saveWorkOrderEquipmentList(data) {
+    const equipmentArr = data.equipments.map(x => {
+      return {
+        ...x,
+        masterCompanyId: 1,
+        isActive: true,
+        workOrderId: this.workOrderId, workFlowWorkOrderId: this.workFlowWorkOrderId
+      }
+    })
+    this.workOrderService.createWorkOrderEquipmentList(equipmentArr).subscribe(res => {
+      this.workFlowObject.equipments = [];
+      this.alertService.showMessage(
+        this.moduleName,
+        'Saved Work Order Equipment Succesfully',
+        MessageSeverity.success
+      );
+      this.getEquipmentByWorkOrderId();
+    })
+
 
   }
 
@@ -695,15 +722,15 @@ export class WorkOrderAddComponent implements OnInit {
 
 
 
-  getEquipmentByWorkOrderId() {
-    // if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
-    // this.workFlowWorkOrderId = this.workFlowWorkOrderData.workFlowWorkOrderId;
-    this.workOrderService.getWorkOrderAssetList(84, 101).subscribe(
-      result => {
-        this.workOrderAssetList = result;
-      }
-    )
-    // }
+  getEquipmentByWorkOrderId(event?) {
+    if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
+      // this.workFlowWorkOrderId = this.workFlowWorkOrderData.workFlowWorkOrderId;
+      this.workOrderService.getWorkOrderAssetList(this.workFlowWorkOrderId, this.workOrderId).subscribe(
+        result => {
+          this.workOrderAssetList = result;
+        }
+      )
+    }
 
   }
 
@@ -776,6 +803,7 @@ export class WorkOrderAddComponent implements OnInit {
     currentRecord.nte = object.nte;
     currentRecord.isPMA = object.pma === null ? false : object.pma;
     currentRecord.isDER = object.der === null ? false : object.der;
+    currentRecord.tatDaysCurrent = object.tatDaysCurrent === null ? '' : object.tatDaysCurrent
   }
 
 

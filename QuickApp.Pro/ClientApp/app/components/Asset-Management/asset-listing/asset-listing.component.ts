@@ -17,6 +17,7 @@ import { AlertService, DialogType, MessageSeverity } from '../../../services/ale
 export class AssetListingComponent implements OnInit {
     @Input() isWorkOrder = false;
     @Input() assetsId;
+    // isWorkOrder = false;
     isSaving: boolean;
     activeIndex: number;
     assetViewList: any = {};
@@ -32,7 +33,7 @@ export class AssetListingComponent implements OnInit {
     assetTypeId: any;
     selectedColumn: any;
 
-   // comented for asset audit
+    // comented for asset audit
     //AuditDetails: SingleScreenAuditDetails[];
 
 
@@ -40,9 +41,9 @@ export class AssetListingComponent implements OnInit {
         this.loadData();
         this.activeIndex = 0;
         this.assetService.indexObj.next(this.activeIndex);
-        if(this.isWorkOrder){
+        if (this.isWorkOrder) {
             this.assetService.getAssetsById(this.assetsId).subscribe(res => {
-                this.openView('view', res );
+                this.openView('', res[0]);
             })
         }
 
@@ -100,7 +101,7 @@ export class AssetListingComponent implements OnInit {
     openAssetToEdit(row) {
         this.assetService.isEditMode = true;
         this.isSaving = true;
-       // this.assetService.currentAssetId = row.assetRecordId;
+        // this.assetService.currentAssetId = row.assetRecordId;
         this.assetService.listCollection = row;
         this._route.navigateByUrl('assetmodule/assetpages/app-create-asset');
     }
@@ -185,8 +186,7 @@ export class AssetListingComponent implements OnInit {
         if (row.currency) {
             this.assetViewList.currencyId = row.currency.symbol;
         }
-        else
-        {
+        else {
             this.assetViewList.currencyId = ""
         }
         if (row.glAccount) {
@@ -200,7 +200,7 @@ export class AssetListingComponent implements OnInit {
         this.assetViewList.inspectionGlaAccountId = row.inspectionGlaAccountId;
         this.assetViewList.inspectionMemo = row.inspectionMemo;
         this.assetViewList.manufacturedDate = row.manufacturedDate;
-        this.assetViewList.isSerialized = row.isSerialized;        
+        this.assetViewList.isSerialized = row.isSerialized;
         if (row.unitOfMeasure) {
             this.assetViewList.unitOfMeasureId = row.unitOfMeasure.description;
         }
@@ -238,13 +238,17 @@ export class AssetListingComponent implements OnInit {
         this.assetViewList.assetCalibrationExpected = row.assetCalibrationExpected;
         this.assetViewList.assetCalibrationExpectedTolerance = row.assetCalibrationExpectedTolerance;
         this.assetViewList.assetCalibrationMemo = row.assetCalibrationMemo;
-        this.modal = this.modalService.open(content, { size: 'lg' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+
+        if (!this.isWorkOrder) {
+
+            this.modal = this.modalService.open(content, { size: 'lg' });
+            this.modal.result.then(() => {
+                console.log('When user closes');
+            }, () => { console.log('Backdrop click') })
+        }
     }
 
-   // AssetCreation Audit please check
+    // AssetCreation Audit please check
     //showAuditPopup(template, assetRecordId): void {
     //    this.audit(assetRecordId);
     //    this.modal = this.modalService.open(template, { size: 'sm' });

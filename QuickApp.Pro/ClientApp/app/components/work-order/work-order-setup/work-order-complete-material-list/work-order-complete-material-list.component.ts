@@ -396,7 +396,8 @@ export class WorkOrderCompleteMaterialListComponent {
         this.checkedParts = []
         const checkedData = this.reservedList.map(x => {
             if (x.isParentChecked) {
-                this.checkedParts.push({ ...x, partStatusId: this.statusId });
+                const {woReservedIssuedAltParts , ...rest} = x
+                this.checkedParts.push({  ...rest, partStatusId: this.statusId });
             }
             x.woReservedIssuedAltParts.map(c => {
                 if (c.isChildChecked) {
