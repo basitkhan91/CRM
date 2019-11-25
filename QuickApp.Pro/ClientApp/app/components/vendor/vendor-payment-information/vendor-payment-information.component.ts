@@ -625,7 +625,8 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 				})
 			}
 			else {
-
+				this.sourceVendor.createdBy = this.userName;
+				this.sourceVendor.updatedBy = this.userName;
 				this.sourceVendor.updatedBy = this.userName;
 				this.sourceVendor.masterCompanyId = 1;
 				this.workFlowtService.updateCheckPaymentInfo(this.sourceVendor).subscribe(data => {

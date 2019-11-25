@@ -295,7 +295,7 @@
 															<td><input type="checkbox" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.v1099Rent"></td>
 															<td>1.Rent</td>		
 		
-															<td><input type="radio" [value]="sourceVendor.v1099RentDefault" name="optradio" class="radio-inline"   (change)="changevalue('sourceVendor.v1099RentDefault')"></td>
+															<td><input type="radio" [value]="sourceVendor.v1099RentDefault"  [checked]="sourceVendor.v1099RentDefault == true" name="optradio" class="radio-inline"   (change)="changevalue('sourceVendor.v1099RentDefault')"></td>
 															<!--{{sourceVendor.v1099RentDefault}}-->
 		
 														</tr>
@@ -303,41 +303,41 @@
 															<td><input type="checkbox" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.v1099Royalties"></td>
 															<td>2.Royalties</td>
 		
-															<td><input type="radio" [value]="sourceVendor.v1099RoyaltiesDefault" name="optradio" class="radio-inline"   (change)="changevalue('sourceVendor.v1099RoyaltiesDefault')"></td>
+															<td><input type="radio" [value]="sourceVendor.v1099RoyaltiesDefault" [checked]="sourceVendor.v1099RoyaltiesDefault == true" name="optradio" class="radio-inline"   (change)="changevalue('sourceVendor.v1099RoyaltiesDefault')"></td>
 		
 														</tr>
 		
 														<tr>
 															<td><input type="checkbox" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.v1099OtherIncome"></td>
 															<td>3.Other Income</td>
-															<td><input type="radio" [value]="sourceVendor.v1099OtherIncomeDefault" name="optradio" class="radio-inline"   (change)="changevalue('sourceVendor.v1099OtherIncomeDefault')"></td>
+															<td><input type="radio" [value]="sourceVendor.v1099OtherIncomeDefault" [checked]="sourceVendor.v1099OtherIncomeDefault == true" name="optradio" class="radio-inline"   (change)="changevalue('sourceVendor.v1099OtherIncomeDefault')"></td>
 		
 														</tr>
 		
 														<tr>
 															<td><input type="checkbox" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.v1099MedicalHealthPayments"></td>
 															<td>4.Medical and Healthcare Payments</td>
-															<td><input type="radio" [value]="sourceVendor.v1099MedicalHealthPaymentsDefault" name="optradio" class="radio-inline"   (change)="changevalue('sourceVendor.v1099MedicalHealthPaymentsDefault')"></td>
+															<td><input type="radio" [value]="sourceVendor.v1099MedicalHealthPaymentsDefault" [checked]="sourceVendor.v1099MedicalHealthPaymentsDefault == true" name="optradio" class="radio-inline"   (change)="changevalue('sourceVendor.v1099MedicalHealthPaymentsDefault')"></td>
 															
 														</tr>
 														<tr>
 															<td><input type="checkbox" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.v1099NonEmployeeComp"></td>
 															<td>5.Non Employee Comp</td>
 		
-															<td><input type="radio" [value]="sourceVendor.v1099NonEmployeeCompDefault" name="optradio" class="radio-inline"  (change)="changevalue('sourceVendor.v1099NonEmployeeCompDefault')"></td>
+															<td><input type="radio" [value]="sourceVendor.v1099NonEmployeeCompDefault" [checked]="sourceVendor.v1099NonEmployeeCompDefault == true" name="optradio" class="radio-inline"  (change)="changevalue('sourceVendor.v1099NonEmployeeCompDefault')"></td>
 														</tr>
 														<tr>
 															<td><input type="checkbox" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.v1099GoldenParachute"></td>
 															<td>6.Golden Parachute</td>
 		
-															<td><input type="radio" [value]="sourceVendor.v1099GoldenParachuteDefault" name="optradio" class="radio-inline"   (change)="changevalue('sourceVendor.v1099GoldenParachuteDefault')"></td>
+															<td><input type="radio" [value]="sourceVendor.v1099GoldenParachuteDefault" [checked]="sourceVendor.v1099GoldenParachuteDefault == true" name="optradio" class="radio-inline"   (change)="changevalue('sourceVendor.v1099GoldenParachuteDefault')"></td>
 														</tr>
 														<tr>
 															<td><input type="checkbox" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.v1099GrossProceedsPaidToAttorney"></td>
 															<td>7.Gross Proceeds paid to an attorney</td>
 		
 		
-															<td><input type="radio"  [value]="sourceVendor.v1099GrossProceedsPaidToAttorneyDefault" name="optradio" class="radio-inline"   (change)="changevalue('sourceVendor.v1099GrossProceedsPaidToAttorneyDefault')"></td>
+															<td><input type="radio"  [value]="sourceVendor.v1099GrossProceedsPaidToAttorneyDefault" [checked]="sourceVendor.v1099GrossProceedsPaidToAttorneyDefault == true" name="optradio" class="radio-inline"   (change)="changevalue('sourceVendor.v1099GrossProceedsPaidToAttorneyDefault')"></td>
 														</tr>
 													</tbody>
 												</table>

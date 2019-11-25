@@ -1906,7 +1906,7 @@ namespace QuickApp.Pro.Controllers
                 addressObj.UpdatedBy = checkPaymentViewModel.UpdatedBy;
                 addressObj.CreatedDate = DateTime.Now;
                 addressObj.UpdatedDate = DateTime.Now;
-                _unitOfWork.Address.Update(address);
+                _unitOfWork.Address.Update(addressObj);
                 _unitOfWork.vendorPaymentRepository.Update(checkPaymentObj);
                 _unitOfWork.SaveChanges();
                 return Ok(checkPaymentObj);
