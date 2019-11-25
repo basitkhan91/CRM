@@ -23,6 +23,6 @@ namespace DAL.Models
         public string UpdatedBy { get; set; }
         public DateTime UpdatedDate { get; set; }
         public DateTime CreatedDate { get; set; }
-        public bool? IsDelete { get; set; }
+        public bool? IsDeleted { get; set; }
     }
 }

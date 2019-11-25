@@ -9,7 +9,9 @@ namespace DAL.Repositories.Interfaces
     {
         Workflow getCompleteWorkFlowEntity(int workFlowId);
         List<Workflow> getAllWorkFlow();
-        Workflow getWorkFlowWithMaterialList(int WorkflowId);
+		List<Workflow> getAllWorkFlowById(long workFlowId);
+
+		Workflow getWorkFlowWithMaterialList(int WorkflowId);
     }
 }   
     

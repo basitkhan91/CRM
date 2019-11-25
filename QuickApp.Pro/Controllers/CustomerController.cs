@@ -62,7 +62,7 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<CustomerViewModel>))]
         public IActionResult GetCustomerByNameList(string name, CustomerViewModel customerViewModel)
         {
-            var allCustomerBynamelistDetails = _unitOfWork.Customer.GetCustomerBynameList(name); //.GetAllCustomersData();
+            var allCustomerBynamelistDetails = _unitOfWork.Customer.SearchCustomer(name, DAL.Models.Enums.CustomerSearchType.ContainsName); //.GetAllCustomersData();
             return Ok(allCustomerBynamelistDetails);
         }
 
@@ -841,8 +841,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
 
 
@@ -2263,7 +2262,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
 
@@ -2690,7 +2689,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-                throw;
+                return BadRequest(ex.Message);
             }
         }
 
@@ -2839,6 +2838,19 @@ namespace QuickApp.Pro.Controllers
             return Ok(allCusShippingDetails);
         }
 
+        [HttpGet("deletesRestrictedParts")]
+        public IActionResult DeleteRestrictedParts(long id, string updatedBy)
+        {
+            _unitOfWork.Customer.DeleteRestrictedParts(id, updatedBy);
+            return Ok();
+        }
+        [HttpGet("shippingdetailsstatus")]
+        public IActionResult CustomerShippingDetailsStatus(long id, bool status, string updatedBy)
+        {
+            _unitOfWork.Customer.CustomerShippingDetailsStatus(id, status, updatedBy);
+            return Ok();
+        }
+      
     }
 
 }

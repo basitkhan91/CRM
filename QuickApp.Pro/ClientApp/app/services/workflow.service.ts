@@ -30,8 +30,8 @@ export class WorkFlowtService {
 
 	private _rolesChanged = new Subject<RolesChangedEventArg>();
 	public listCollection: any;
-    public enableUpdateMode: boolean = false;
-    public currentWorkFlowId: number;
+	public enableUpdateMode: boolean = false;
+	public currentWorkFlowId: number;
 	constructor(
 		private router: Router,
 		private http: HttpClient,
@@ -44,12 +44,12 @@ export class WorkFlowtService {
 		return Observable.forkJoin(
 			this.workflowEndpoint.getWorkFlowEndpoint<any[]>());
 	}
-	
+
 	getWorkFlowActions() {
 
 		return Observable.forkJoin(
 			this.workflowEndpoint.getWorkFlowActions<any[]>());
-    }
+	}
 
 	getMaterialType() {
 
@@ -61,7 +61,7 @@ export class WorkFlowtService {
 
 		return Observable.forkJoin(
 			this.workflowEndpoint.getworkflowActionAttributesCollection<any[]>(workflowId));
-    }
+	}
 
 	getWorkFlowMaterial() {
 
@@ -84,7 +84,7 @@ export class WorkFlowtService {
 
 		return Observable.forkJoin(
 			this.workflowEndpoint.getworkflowExpertiseCollection<any[]>());
-    }
+	}
 
 	getActionAttributes() {
 
@@ -94,34 +94,41 @@ export class WorkFlowtService {
 
 	newWorkFlow(workFlowAction: WorkFlowAction) {
 		return this.workflowEndpoint.getNewWorkFlowEndpoint<WorkFlowAction>(workFlowAction);
-    }
+	}
 
 	addMaterialListdata(mateListObj: any) {
 		return this.workflowEndpoint.addMatList<any>(mateListObj);
-    }
+	}
 
 	addchargelist(chargeListObj: any) {
 		return this.workflowEndpoint.addchargelist<any>(chargeListObj);
 	}
-    
+
 	addEquipment(chargeListObj: any) {
 		return this.workflowEndpoint.addEquipmentList<any>(chargeListObj);
 	}
-    
+
 	addExclsuion(chargeListObj: any) {
 		return this.workflowEndpoint.addExclusionsList<any>(chargeListObj);
 	}
-    
+
 	addExpertise(chargeListObj: any) {
 		return this.workflowEndpoint.addExpertiseList<any>(chargeListObj);
 	}
 
 	addWorkFlow(workFlow: any) {
 		return this.workflowEndpoint.addWorkflowdetails<any>(workFlow);
-    }
-    
+	}
+
 	addWorkFlowActionAttributes(workFlow: any) {
 		return this.workflowEndpoint.addWorkflowactionattributes<any>(workFlow);
 	}
-    
+
+	getWorkFlowDataById(workFlowId) {
+		return this.workflowEndpoint.getWorkFlowDataById(workFlowId);
+	}
+	getWorkFlowDataByIdForEdit(workFlowId) {
+		return this.workflowEndpoint.getWorkFlowDataByIdForEdit(workFlowId);
+	}
+
 }

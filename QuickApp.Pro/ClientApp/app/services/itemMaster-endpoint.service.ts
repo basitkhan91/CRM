@@ -79,6 +79,8 @@ export class ItemMasterEndpoint extends EndpointFactory {
     private readonly _updateItemMasterTimeLife: string = '/api/itemmaster/itemMasterTimeLife';
     private readonly _getPartsDropDown: string = '/api/itemmaster/GetPartDetailsDropDown';
     private readonly _getpartdetailsWithidUrl: string = "/api/ItemMaster/GetpartdetailsWithid";
+    private readonly _searchItemMaster: string = "/api/ItemMaster/search";
+
 
     get getItemMasterAircrafPosttUrl() { return this.configurations.baseUrl + this._ItemMasterAircraftPostUrlNew }
     get getAircraftUrl() { return this.configurations.baseUrl + this._getAircraftUrl }
@@ -109,6 +111,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
     get GetPartsDropDownURL() { return this.configurations.baseUrl + this._getPartsDropDown }
     get getpartdetailsWithidUrl() { return this.configurations.baseUrl + this._getpartdetailsWithidUrl };
     get ExchangeLoanUrl(){ return this.configurations.baseUrl+ this._getExchangeLoan};
+    get getSearchUrl(){ return this.configurations.baseUrl+ this._searchItemMaster};
 
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -977,7 +980,10 @@ export class ItemMasterEndpoint extends EndpointFactory {
     }
 
 
-
-
-
+    searchItemMaster<T>(searchParameters: any): Observable<T> {
+        return this.http.post<T>(this.getSearchUrl, JSON.stringify(searchParameters), this.getRequestHeaders())
+            .catch(err => {
+                return this.handleError(err, () => this.saveATAMapping(searchParameters));
+            })
+    }
 }

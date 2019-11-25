@@ -525,10 +525,9 @@ namespace DAL.Repositories
 
                 return billingAddress.VendorBillingAddressId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -540,10 +539,9 @@ namespace DAL.Repositories
                 _appContext.VendorBillingAddress.Update(billingAddress);
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -565,10 +563,9 @@ namespace DAL.Repositories
 
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -594,11 +591,36 @@ namespace DAL.Repositories
 
                 //_appContext.SaveChanges();
             }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public bool DeleteVendorShippingViaAddress(long vendorShippingId, string updatedBy)
+        {
+            bool result = false;
+            try
+            {
+               
+                var vendorShippingDetails = _appContext.VendorShipping.Where(x => x.VendorShippingId == vendorShippingId).FirstOrDefault();
+                if (vendorShippingDetails != null)
+                {
+                    vendorShippingDetails.UpdatedBy = updatedBy;
+                    vendorShippingDetails.UpdatedDate = DateTime.Now;
+                    vendorShippingDetails.IsDelete = true;
+                    _appContext.VendorShipping.Update(vendorShippingDetails);
+                    _appContext.SaveChanges();
+                    result = true;
+                }
+                return result;
+            }
             catch (Exception)
             {
 
                 throw;
             }
+
         }
 
         public void VendorBillingAddressStatus(long billingAddressId,bool status, string updatedBy)
@@ -619,10 +641,9 @@ namespace DAL.Repositories
 
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -647,10 +668,9 @@ namespace DAL.Repositories
                             }).OrderByDescending(p=>p.CreatedDate).ToList();
                 return list;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -666,10 +686,9 @@ namespace DAL.Repositories
                             }).ToList();
                 return list;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -694,10 +713,9 @@ namespace DAL.Repositories
                           ).FirstOrDefault();
                 return data;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 

@@ -334,7 +334,7 @@ export class VendorService {
 
     deleteVendorAcion(actionId: any) {
 
-        return this.actionEndpoint.getDeletevendorshippingEndpoint(actionId);
+        return this.actionEndpoint.getDeletevendorshippingViaEndpoint(actionId);
 
     }
 
@@ -687,6 +687,10 @@ export class VendorService {
     getROApproverList(purchaseOrderId){
         return this.actionEndpoint.getROApproverList(purchaseOrderId);
       }
+
+    getReceivingROList(){
+    return this.actionEndpoint.getReceivingROList();
+    }
       
 }
 

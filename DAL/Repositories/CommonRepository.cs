@@ -84,9 +84,9 @@ namespace DAL.Repositories
                 //}
                 return vendorContacts;
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
 
         }
@@ -143,9 +143,9 @@ namespace DAL.Repositories
                 }
                 return customerContacts;
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
 
         }
@@ -158,10 +158,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
                 return masterPart.MasterPartId;
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -173,10 +172,9 @@ namespace DAL.Repositories
                 _appContext.MasterParts.Update(masterPart);
                 _appContext.SaveChanges();
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -197,10 +195,9 @@ namespace DAL.Repositories
                 _appContext.Entry(masterPart).Property(x => x.UpdatedBy).IsModified = true;
                 _appContext.SaveChanges();
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -220,10 +217,9 @@ namespace DAL.Repositories
                 _appContext.Entry(masterPart).Property(x => x.UpdatedBy).IsModified = true;
                 _appContext.SaveChanges();
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -233,10 +229,9 @@ namespace DAL.Repositories
             {
                 return _appContext.MasterParts.Where(p => p.IsDeleted == false).ToList();
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -261,10 +256,9 @@ namespace DAL.Repositories
                     _appContext.SaveChanges();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -290,10 +284,9 @@ namespace DAL.Repositories
                     _appContext.SaveChanges();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -325,10 +318,9 @@ namespace DAL.Repositories
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -340,10 +332,9 @@ namespace DAL.Repositories
                                                    .OrderBy(p => p.RestrictedPartId)
                                                    .ToList();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -361,10 +352,9 @@ namespace DAL.Repositories
                     _appContext.SaveChanges();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -389,10 +379,9 @@ namespace DAL.Repositories
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -404,10 +393,9 @@ namespace DAL.Repositories
                                                    .OrderBy(p => p.RestrictedPMAId)
                                                    .ToList();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -426,10 +414,9 @@ namespace DAL.Repositories
                     _appContext.SaveChanges();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -454,10 +441,9 @@ namespace DAL.Repositories
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -469,10 +455,9 @@ namespace DAL.Repositories
                                                    .OrderBy(p => p.RestrictedBERId)
                                                    .ToList();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -489,10 +474,9 @@ namespace DAL.Repositories
                     _appContext.SaveChanges();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -515,10 +499,9 @@ namespace DAL.Repositories
                     _appContext.SaveChanges();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -543,10 +526,9 @@ namespace DAL.Repositories
 
                 return ClassificationMappingList;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -570,10 +552,9 @@ namespace DAL.Repositories
 
                 return ClassificationMappingList;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -626,10 +607,9 @@ namespace DAL.Repositories
                 var result = _appContext.Dropdowns.FromSql("BindDropdowns @p0,@p1,@p2,@p3", tableName, primaryColumn, textColumn, count).ToList();
                 return result;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -654,10 +634,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
                 return shippingVia.ShippingViaId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -669,10 +648,9 @@ namespace DAL.Repositories
                 _appContext.ShippingVia.Update(shippingVia);
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -709,10 +687,9 @@ namespace DAL.Repositories
                             }).OrderBy(p => p.Name).ToList();
                 return list;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -731,10 +708,9 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
                 return address.AddressId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -746,10 +722,9 @@ namespace DAL.Repositories
                 _appContext.Address.Update(address);
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -772,10 +747,9 @@ namespace DAL.Repositories
                             }).FirstOrDefault();
                 return data;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -795,10 +769,9 @@ namespace DAL.Repositories
                     return data;
                 else return null;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -851,10 +824,9 @@ namespace DAL.Repositories
                 }
                 return keyValuePairs;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -906,10 +878,9 @@ namespace DAL.Repositories
                 }
                 return keyValuePairs;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 

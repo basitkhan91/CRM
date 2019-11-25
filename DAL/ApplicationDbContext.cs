@@ -144,7 +144,10 @@ namespace DAL
 
         public DbSet<EmployeeTraining> EmployeeTraining { get; set; }
         public DbSet<EmployeeTrainingType> EmployeeTrainingType { get; set; }
+        public DbSet<EmployeeUserRole> EmployeeUserRole { get; set; }
+        public DbSet<EmployeeManagementStructure> EmployeeManagementStructure { get; set; }
         // public DbSet<EmployeeShift> EmployeeShift { get; set; }
+        
         public DbSet<CustomerBillingAddress> CustomerBillingAddress { get; set; }
         public DbSet<CustomerBillingAddressAudit> CustomerBillingAddressAudit { get; set; }
         public DbSet<ATAChapter> ATAChapter { get; set; }
@@ -446,7 +449,9 @@ namespace DAL
         public DbSet<MasterSalesLeadSources> MasterSalesLeadSources { get; set; }
 
         public DbSet<MasterSalesProbablity> MasterSalesProbablity { get; set; }
+        public DbSet<SubWorkOrder> SubWorkOrder { get; set; }
 
+        
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }

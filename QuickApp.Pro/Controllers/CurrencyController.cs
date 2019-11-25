@@ -43,8 +43,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
         }
 
@@ -63,8 +62,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
 
 
@@ -90,6 +88,7 @@ namespace QuickApp.Pro.Controllers
                 curreobj.UpdatedDate = DateTime.Now;
                 curreobj.CreatedBy = currencyViewModel.CreatedBy;
                 curreobj.UpdatedBy = currencyViewModel.UpdatedBy;
+                curreobj.IsDelete = false;
                 _unitOfWork.Currencys.Add(curreobj);
                 _unitOfWork.SaveChanges();
                 return Ok(curreobj);

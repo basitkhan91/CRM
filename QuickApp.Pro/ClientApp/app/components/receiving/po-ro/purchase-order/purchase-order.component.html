@@ -7,7 +7,7 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb rpo-bcrumb" style="background-color: transparent;">
                                 <li class="breadcrumb-item active" aria-current="page">Receiving</li>
-                                <li class="breadcrumb-item" aria-current="page">Purchases Order</li>
+                                <li class="breadcrumb-item" aria-current="page">Purchase Order</li>
                             </ol>
                         </nav>
                     </div>
@@ -25,7 +25,7 @@
                                                        selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
                                         <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
                                             <i class="fa fa-search"></i>
-                                            <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter">
+                                            <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter">
                                         </div>
                                         <!--<button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
                                         <button type="button" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>-->
@@ -61,19 +61,19 @@
                                             {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
                                         </td>
                                         <td>
-                                            <span data-toggle="modal" data-target="#view" (click)="viewPurchaseOrder(rowData)">
+                                            <span data-toggle="modal" data-target="#view" (click)="viewSelectedRow(rowData)">
                                                 <a data-toggle="tooltip" pTooltip="View" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="View">
                                                     <i class="fa fa-eye"></i>
-                                                </a>
-                                            </span>
-                                            <span (click)="openEdit(rowData)" *ngIf="rowData.statusId != 4">
-                                                <a data-toggle="tooltip" pTooltip="Edit" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="" edit="">
-                                                    <i class="fa fa-edit"></i>
                                                 </a>
                                             </span>
                                             <span *ngIf="rowData.statusId == 3" (click)="getSelectedRow(rowData)">
                                                 <a data-toggle="tooltip" pTooltip="Receive PO" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="" edit="">
                                                     <i class=" fa fa-chevron-down"></i>
+                                                </a>
+                                            </span>
+                                            <span (click)="editStockLine(rowData)">
+                                                <a data-toggle="tooltip" pTooltip="Edit Stockline" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="" edit="">
+                                                    <i class="fa fa-edit"></i>
                                                 </a>
                                             </span>
                                         </td>
@@ -87,705 +87,250 @@
         </div>
     </div>
 </div>
-<div class="modal fade bd-example-modal-lg" tabindex="-1" id="view" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <!--*ngIf="sourceWorkFlow != undefined"-->
+
+<div class="modal fade" id="view" role="dialog">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-                <h4 class="modal-title">Purchase Order </h4>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Details of Purchase Order</h4>
             </div>
             <div class="modal-body">
+              <div>
                 <div class="card">
-                    <div class="card-header">
-                        <nav class="pull-left" aria-label="breadcrumb">
-                            <ol class="breadcrumb" style="background-color: transparent;">
-                                <li class="breadcrumb-item active" aria-current="page" style="font-size: 16px;margin-top: 3px;">Purchase Order Details</li>
-                            </ol>
-                        </nav>
-                        <button class="btn btn-primary-cstm pull-right" (click)="toggle_po_header=!toggle_po_header">
-                            {{toggle_po_header ? 'See Less' : 'See More...'}}
-                        </button>
-                    </div>
-                    <div class="card-body" *ngIf="toggle_po_header">
-                        <div class="form-horizontal wf-popup-form">
-                            <h4 class="po-head">Receiving - PO Grid (Single PO)</h4>
-                            <form id="" class="ro-grid-form" name="">
-                                <div class="form-row">
-                                    <div class="col-md-8">
-                                        <div class="form-group">
-                                            <label style="float:left; width:auto; margin-right:20px; padding-top:3px;">Status:</label>
-                                            <div>
-                                                <div class="pull-left" style="margin-top: 4px; margin-right: 15px;" *ngFor="let status of poStatus">
-                                                    <label class="radio-cstm wauto">
-                                                        <input type="radio" [checked]="status.Key == purchaseOrderData.statusId" name="postatus" class="form-control" value="{{status.Key}}" disabled required>
-                                                        <span class="checkmark"></span>
-                                                        {{status.Value}}
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr />
-                                <div class="form-row" style="margin-top: 15px;">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>PO Num</label>
-                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.purchaseOrderNumber" disabled="disabled" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Vendor Num</label>
-                                            <div class="inner-addon right-addon inline-block">
-                                                <input class="form-control" type="text" [value]="purchaseOrderData.vendor.vendorCode" disabled="disabled" required>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Requisitioner</label>
-                                            <p-autoComplete disabled="disabled" [size]="32" class="rpo-acomp-header"
-                                                            [minLength]="1" [dropdown]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.requestedBy">
-                                            </p-autoComplete>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="form-row">
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label>Open Date</label>
-                                                <p-calendar disabled="disabled" class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.openDate" [required]="true"></p-calendar>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label>Vendor Name</label>
-                                                <div class="inner-addon right-addon inline-block">
-                                                    <input type="text" class="form-control" [value]="purchaseOrderData.vendor.vendorName" disabled="disabled" required>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label>Approver</label>
-                                                <div class="inner-addon">
-                                                    <input disabled="disabled" type="text" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.approver" required>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label>Need By</label>
-                                                <p-calendar disabled="disabled" class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.needByDate" [required]="true"></p-calendar>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label>Vendor Contact</label>
-                                                <input class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.vendor.vendorName" type="text" disabled="disabled" />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label>Approved Date</label>
-                                                <p-calendar disabled="disabled" class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.dateApproved" [required]="true"></p-calendar>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label>Deferred Receiver</label>
-                                                <input type="checkbox" disabled [checked]="purchaseOrderData.deferredReceiver" class="form-control names ui-autocomplete-input">
-
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label>Resale</label>
-                                                <input type="checkbox" disabled [checked]="purchaseOrderData.resale" class="form-control names ui-autocomplete-input">
-
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label>Memo</label>
-                                                <textarea disabled class="form-control h100 scroll-x" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.notes"></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-12 col-sm-12 col-xs-12 po-ro-setup">
-                                    <div class="x_panel">
-                                        <ul class="nav nav-pills">
-                                            <li class="active"><a data-toggle="tab" href="#tab_receiving" aria-expanded="false">Receiving</a></li>
-                                        </ul>
-                                        <div class="tab-content">
-                                            <div id="tab_receiving" class="tab-pane fade">
-                                                <div id="" class="default-bg clear ro-grid-table">
-                                                    <div class="table-responsive pas-table-cstm ero-table-cstm">
-                                                        <table class="table table-bordered " id="po-table">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>Item Num</th>
-                                                                    <th>PN</th>
-                                                                    <th>Alt PN</th>
-                                                                    <th>PN Description</th>
-                                                                    <th>Manufacturer</th>
-                                                                    <th>Cond</th>
-                                                                    <th>UOM</th>
-                                                                    <th>OEM, DER,PMA FLAG</th>
-                                                                    <th>Qty Ordered</th>
-                                                                    <th>Discount</th>
-                                                                    <th>Unit Cost</th>
-                                                                    <th>Extended Cost</th>
-                                                                    <th>WO</th>
-                                                                    <th>SO</th>
-                                                                    <th>Sub-WO</th>
-                                                                    <th colspan="4" style="text-align: center;">Management Structure</th>
-                                                                    <th>Site</th>
-                                                                    <th>Warehouse</th>
-                                                                    <th>Location</th>
-                                                                    <th>Shelf</th>
-                                                                    <th>Bin</th>
-                                                                    <th colspan="43"></th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody *ngIf="purchaseOrderData != undefined && purchaseOrderData.purchaseOderPart != undefined">
-                                                                <ng-container *ngFor="let part of purchaseOrderData.purchaseOderPart;let row_index=index">
-                                                                    <tr *ngIf="part.stockLine != null && part.stockLine.length > 0" class="parent-data">
-                                                                        <td>{{row_index + 1}}</td>
-                                                                        <td>{{part.itemMaster.partNumber}}</td>
-                                                                        <td>#######</td>
-                                                                        <td>{{part.itemMaster.partDescription}}</td>
-                                                                        <td>{{part.itemMaster.manufacturer?.name}}</td>
-                                                                        <td>
-                                                                            <select class="form-control"
-                                                                                    [(ngModel)]="part.conditionId"
-                                                                                    #selects="ngModel"
-                                                                                    [ngModelOptions]="{standalone: true}"
-                                                                                    [disabled]="!part.isEnabled"
-                                                                                    (change)="conditionChange(part)">
-                                                                                <option value="0">Select</option>
-                                                                                <option *ngFor="let condition of ConditionList" [value]="condition.Key">{{condition.Value}}</option>
-                                                                            </select>
-                                                                        </td>
-                                                                        <td>{{part.uomText}}</td>
-                                                                        <td>{{part.itemMaster.pma ? "PMA," : '' + part.itemMaster.der ? "DER" : ''}}</td>
-                                                                        <td>{{part.quantityOrdered}}</td>
-                                                                        <td>{{part.DiscountPerUnit}}</td>
-                                                                        <td>
-                                                                            <input type="text" class="form-control" pInputText pKeyFilter="pnum"
-                                                                                   (focusout)="calculatePartExtendedCost(part, SL)"
-                                                                                   [disabled]="!part.isEnabled"
-                                                                                   [(ngModel)]="part.unitCost">
-                                                                        </td>
-                                                                        <td>
-                                                                            <input class="form-control" type="text" disabled pInputText pKeyFilter="pnum"
-                                                                                   [(ngModel)]="part.extendedCost"
-                                                                                   [disabled]="!part.isEnabled">
-
-                                                                        </td>
-                                                                        <td>
-                                                                            <input type="text" class="form-control" value="Pending" [disabled]="true">
-                                                                        </td>
-                                                                        <td>
-                                                                            <input type="text" class="form-control" value="Pending" [disabled]="true">
-                                                                        </td>
-                                                                        <td>
-                                                                            <input type="text" class="form-control" value="Pending" [disabled]="true">
-                                                                        </td>
-                                                                        <td>
-                                                                            <label style="width:90px;">Company:</label>
-                                                                            <select class="form-control"
-                                                                                    [(ngModel)]="part.companyId"
-                                                                                    #selects="ngModel"
-                                                                                    [ngModelOptions]="{standalone: true}"
-                                                                                    (change)="getPartBusinessUnitList(part)"
-                                                                                    [disabled]="!part.isEnabled">
-                                                                                <option value="0">Select</option>
-                                                                                <option *ngFor="let company of part.CompanyList" [value]="company.Key">{{company.Value}}</option>
-                                                                            </select>
-                                                                        </td>
-                                                                        <td>
-                                                                            <label style="width:90px;">BU:</label>
-                                                                            <select class="form-control"
-                                                                                    [(ngModel)]="part.businessUnitId"
-                                                                                    #selects="ngModel"
-                                                                                    [ngModelOptions]="{standalone: true}"
-                                                                                    [disabled]="!part.isEnabled"
-                                                                                    (change)="getPartDivision(part)">
-                                                                                <option value="0">Select</option>
-                                                                                <option *ngFor="let businessUnit of part.BusinessUnitList" [value]="businessUnit.Key">{{businessUnit.Value}}</option>
-                                                                            </select>
-                                                                        </td>
-                                                                        <td>
-
-                                                                            <label style="width:90px;">Division:</label>
-                                                                            <select class="form-control"
-                                                                                    [(ngModel)]="part.divisionId"
-                                                                                    #selects="ngModel"
-                                                                                    [ngModelOptions]="{standalone: true}"
-                                                                                    [disabled]="!part.isEnabled"
-                                                                                    (change)="getPartDepartment(part)">
-                                                                                <option value="0">Select</option>
-                                                                                <option *ngFor="let division of part.DivisionList" [value]="division.Key">{{division.Value}}</option>
-                                                                            </select>
-                                                                        </td>
-                                                                        <td>
-                                                                            <label style="width:90px;">Dept:</label>
-                                                                            <select class="form-control"
-                                                                                    [(ngModel)]="part.departmentId"
-                                                                                    #selects="ngModel"
-                                                                                    [ngModelOptions]="{standalone: true}"
-                                                                                    [disabled]="!part.isEnabled"
-                                                                                    (change)="setPartDepartmentManagementStructureId(part)">
-                                                                                <option value="0">Select</option>
-                                                                                <option *ngFor="let department of part.DepartmentList" [value]="department.Key">{{department.Value}}</option>
-                                                                            </select>
-                                                                        </td>
-                                                                        <td>
-                                                                            <select class="form-control"
-                                                                                    [(ngModel)]="part.siteId"
-                                                                                    #selects="ngModel"
-                                                                                    [ngModelOptions]="{standalone: true}"
-                                                                                    [disabled]="!part.isEnabled"
-                                                                                    (change)="getPartWareHouse(part)">
-                                                                                <option value="0">Select</option>
-                                                                                <option *ngFor="let site of part.SiteList" [value]="site.Key">{{site.Value}}</option>
-                                                                            </select>
-                                                                        </td>
-                                                                        <td>
-                                                                            <select class="form-control"
-                                                                                    [(ngModel)]="part.warehouseId"
-                                                                                    #selects="ngModel"
-                                                                                    [ngModelOptions]="{standalone: true}"
-                                                                                    [disabled]="!part.isEnabled"
-                                                                                    (change)="getPartLocation(part)">
-                                                                                <option value="0">Select</option>
-                                                                                <option *ngFor="let warehouse of part.WareHouseList" [value]="warehouse.Key">{{warehouse.Value}}</option>
-                                                                            </select>
-                                                                        </td>
-                                                                        <td>
-                                                                            <select class="form-control"
-                                                                                    [(ngModel)]="part.locationId"
-                                                                                    #selects="ngModel"
-                                                                                    [ngModelOptions]="{standalone: true}"
-                                                                                    [disabled]="!part.isEnabled"
-                                                                                    (change)="getPartShelf(part)">
-                                                                                <option value="0">Select</option>
-                                                                                <option *ngFor="let loc of part.LocationList" [value]="loc.Key">{{loc.Value}}</option>
-                                                                            </select>
-                                                                        </td>
-                                                                        <td>
-
-                                                                            <select class="form-control"
-                                                                                    [(ngModel)]="part.shelfId"
-                                                                                    #selects="ngModel"
-                                                                                    [ngModelOptions]="{standalone: true}"
-                                                                                    [disabled]="!part.isEnabled"
-                                                                                    (change)="getPartBin(part)">
-                                                                                <option value="0">Select</option>
-                                                                                <option *ngFor="let shelf of part.ShelfList" [value]="shelf.Key">{{shelf.Value}}</option>
-                                                                            </select>
-                                                                        </td>
-                                                                        <td>
-                                                                            <select class="form-control"
-                                                                                    [(ngModel)]="part.binId"
-                                                                                    #selects="ngModel"
-                                                                                    [ngModelOptions]="{standalone: true}"
-                                                                                    [disabled]="!part.isEnabled"
-                                                                                    (change)="setPartBinIdToStockline(part)">
-                                                                                <option value="0">Select</option>
-                                                                                <option *ngFor="let bin of part.BinList" [value]="bin.Key">{{bin.Value}}</option>
-                                                                            </select>
-                                                                        </td>
-                                                                        <th colspan="43"></th>
-                                                                    </tr>
-                                                                    <ng-container>
-                                                                        <tr *ngIf="part.stockLine != null">
-                                                                            <th>Stock Line</th>
-                                                                            <th>PN</th>
-                                                                            <th>PN Description</th>
-                                                                            <th>Control Num</th>
-                                                                            <th>ID</th>
-                                                                            <th>Serial Num</th>
-                                                                            <th>Cond</th>
-                                                                            <th>Qty Ordered</th>
-                                                                            <th>Qty Receieved</th>
-                                                                            <th>Qty BackOrdered</th>
-                                                                            <th>Receiver No.</th>
-                                                                            <th>Unit Cost</th>
-                                                                            <th>Extended Cost</th>
-                                                                            <th>WO </th>
-                                                                            <th>SO </th>
-                                                                            <th>Sub-WO </th>
-                                                                            <th colspan="4" style="text-align: center;">Management Structure</th>
-                                                                            <th>Site</th>
-                                                                            <th>Warehouse</th>
-                                                                            <th>Location</th>
-                                                                            <th>Shelf</th>
-                                                                            <th>Bin</th>
-                                                                            <th>Owner</th>
-                                                                            <th>Name</th>
-                                                                            <th>Obtain From</th>
-                                                                            <th>Name</th>
-                                                                            <th>Traceable to</th>
-                                                                            <th>Name</th>
-                                                                            <th>Trace</th>
-                                                                            <th>Mfg</th>
-                                                                            <th>Mfg Lot Num</th>
-                                                                            <th>Mfg Date</th>
-                                                                            <th>Mfg Batch Num</th>
-                                                                            <th>Part Cert Num </th>
-                                                                            <th>Certified Date</th>
-                                                                            <th class="date">Certified Due Date</th>
-                                                                            <th>Tagged By </th>
-                                                                            <th class="date">Date Tagged </th>
-                                                                            <th class="date">Tag Exp Date </th>
-                                                                            <th>Shipping Ref</th>
-                                                                            <th>Ship Via</th>
-                                                                            <th>Shipping Account</th>
-                                                                            <th>ESN</th>
-                                                                            <th class="date">Core Due Date</th>
-                                                                            <th class="date"> Core Returned Date</th>
-                                                                            <th>GL Account</th>
-                                                                            <th>Time Life</th>
-                                                                            <th colspan="5">Cycles</th>
-                                                                            <th colspan="5">Time</th>
-                                                                            <th colspan="5">Last</th>
-                                                                        </tr>
-                                                                        <tr *ngFor="let SL of part.stockLine;let stockline_row_index=index">
-                                                                            <td>{{SL.stockLineNumber}}</td>
-                                                                            <td>{{part.itemMaster.partNumber}}</td>
-                                                                            <td>{{part.itemMaster.partDescription}}</td>
-                                                                            <td>{{SL.controlNumber}}</td>
-                                                                            <td>{{SL.idNumber}}</td>
-                                                                            <td>{{SL.serialNumber}}</td>
-                                                                            <td>
-                                                                                <select class="form-control"
-                                                                                        [(ngModel)]="SL.conditionId"
-                                                                                        #selects="ngModel"
-                                                                                        [ngModelOptions]="{standalone: true}"
-                                                                                        [disabled]="true">
-                                                                                    <option value="0">Select</option>
-                                                                                    <option *ngFor="let condition of ConditionList" [value]="condition.Key">{{condition.Value}}</option>
-                                                                                </select>
-                                                                            </td>
-                                                                            <td>{{part.quantityOrdered}}</td>
-                                                                            <td>{{SL.quantity}}</td>
-                                                                            <td>{{part.quantityOrdered -  SL.quantity}}</td>
-                                                                            <td>{{SL.ReceiverNumber}}</td>
-                                                                            <td>
-                                                                                <input type="text" class="form-control" pInputText pKeyFilter="pnum"
-                                                                                       
-                                                                                       [disabled]="true"
-                                                                                       [(ngModel)]="SL.purchaseOrderUnitCost">
-                                                                            </td>
-                                                                            <td>
-                                                                                <input class="form-control" type="text" disabled pInputText pKeyFilter="pnum"
-                                                                                       [(ngModel)]="SL.purchaseOrderExtendedCost"
-                                                                                       [disabled]="true">
-
-
-                                                                            </td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td>
-                                                                                <label style="width:90px;">Company:</label>
-                                                                                <select class="form-control"
-                                                                                        [(ngModel)]="SL.companyId"
-                                                                                        #selects="ngModel"
-                                                                                        [ngModelOptions]="{standalone: true}"
-                                                                                        (change)="getStockLineBusinessUnitList(SL)"
-                                                                                        [disabled]="true">
-                                                                                    <option value="0">Select</option>
-                                                                                    <option *ngFor="let company of SL.CompanyList" [value]="company.Key">{{company.Value}}</option>
-                                                                                </select>
-                                                                            </td>
-                                                                            <td>
-                                                                                <label style="width:90px;">BU:</label>
-                                                                                <select class="form-control"
-                                                                                        [(ngModel)]="SL.businessUnitId"
-                                                                                        #selects="ngModel"
-                                                                                        [ngModelOptions]="{standalone: true}"
-                                                                                        [disabled]="true"
-                                                                                        (change)="getStockLineDivision(SL)">
-                                                                                    <option value="0">Select</option>
-                                                                                    <option *ngFor="let businessUnit of SL.BusinessUnitList" [value]="businessUnit.Key">{{businessUnit.Value}}</option>
-                                                                                </select>
-                                                                            </td>
-                                                                            <td>
-                                                                                <label style="width:90px;">Division:</label>
-                                                                                <select class="form-control"
-                                                                                        [(ngModel)]="SL.divisionId"
-                                                                                        #selects="ngModel"
-                                                                                        [ngModelOptions]="{standalone: true}"
-                                                                                        [disabled]="true"
-                                                                                        (change)="getStockLineDepartment(SL)">
-                                                                                    <option value="0">Select</option>
-                                                                                    <option *ngFor="let division of part.DivisionList" [value]="division.Key">{{division.Value}}</option>
-                                                                                </select>
-                                                                            </td>
-                                                                            <td>
-                                                                                <label style="width:90px;">Dept:</label>
-                                                                                <select class="form-control"
-                                                                                        [(ngModel)]="SL.departmentId"
-                                                                                        #selects="ngModel"
-                                                                                        [ngModelOptions]="{standalone: true}"
-                                                                                        [disabled]="true"
-                                                                                        (change)="setStockLineDepartmentManagementStructureId(SL)">
-                                                                                    <option value="0">Select</option>
-                                                                                    <option *ngFor="let department of SL.DepartmentList" [value]="department.Key">{{department.Value}}</option>
-                                                                                </select>
-                                                                            </td>
-                                                                            <td>
-                                                                                <select class="form-control"
-                                                                                        [(ngModel)]="SL.siteId"
-                                                                                        #selects="ngModel"
-                                                                                        [ngModelOptions]="{standalone: true}"
-                                                                                        [disabled]="true"
-                                                                                        (change)="getStockLineWareHouse(SL)">
-                                                                                    <option value="0">Select</option>
-                                                                                    <option *ngFor="let site of SL.SiteList" [value]="site.Key">{{site.Value}}</option>
-                                                                                </select>
-                                                                            </td>
-                                                                            <td>
-                                                                                <select class="form-control"
-                                                                                        [(ngModel)]="SL.warehouseId"
-                                                                                        #selects="ngModel"
-                                                                                        [ngModelOptions]="{standalone: true}"
-                                                                                        [disabled]="true"
-                                                                                        (change)="getStockLineLocation(SL)">
-                                                                                    <option value="0">Select</option>
-                                                                                    <option *ngFor="let warehouse of SL.WareHouseList" [value]="warehouse.Key">{{warehouse.Value}}</option>
-                                                                                </select>
-                                                                            </td>
-                                                                            <td>
-                                                                                <select class="form-control"
-                                                                                        [(ngModel)]="SL.locationId"
-                                                                                        #selects="ngModel"
-                                                                                        [disabled]="true"
-                                                                                        [ngModelOptions]="{standalone: true}"
-                                                                                        (change)="getStockLineShelf(SL)">
-                                                                                    <option value="0">Select</option>
-                                                                                    <option *ngFor="let loc of SL.LocationList" [value]="loc.Key">{{loc.Value}}</option>
-                                                                                </select>
-                                                                            </td>
-                                                                            <td>
-                                                                                <select class="form-control"
-                                                                                        [(ngModel)]="SL.shelfId"
-                                                                                        #selects="ngModel"
-                                                                                        [disabled]="true"
-                                                                                        [ngModelOptions]="{standalone: true}"
-                                                                                        (change)="getStockLineBin(SL)">
-                                                                                    <option value="0">Select</option>
-                                                                                    <option *ngFor="let shelf of SL.ShelfList" [value]="shelf.Key">{{shelf.Value}}</option>
-                                                                                </select>
-                                                                            </td>
-                                                                            <td>
-                                                                                <select class="form-control"
-                                                                                        [(ngModel)]="SL.binId"
-                                                                                        #selects="ngModel"
-                                                                                        [disabled]="true"
-                                                                                        [ngModelOptions]="{standalone: true}">
-                                                                                    <option value="0">Select</option>
-                                                                                    <option *ngFor="let bin of SL.BinList" [value]="bin.Key">{{bin.Value}}</option>
-                                                                                </select>
-                                                                            </td>
-                                                                            <td>{{SL.ownerType}}</td>
-                                                                            <td>{{SL.owner}}</td>
-                                                                            <td>{{SL.obtainFrom}}</td>
-                                                                            <td>{{SL.obtainFromType}}</td>
-                                                                            <td>{{SL.traceableToType}}</td>
-                                                                            <td>{{SL.traceableTo}}</td>
-                                                                            <td>
-                                                                                <input class="form-control" type="text"
-                                                                                       [disabled]="true"
-                                                                                       [(ngModel)]="SL.manufacturingTrace"
-                                                                                       pInputText [maxLength]="200">
-                                                                            </td>
-                                                                            <td>
-                                                                                <select class="form-control"
-                                                                                        [(ngModel)]="SL.manufacturerId"
-                                                                                        disabled>
-                                                                                    <option [value]="0">Select</option>
-                                                                                    <option [value]="manufacturer.Key" *ngFor="let manufacturer of ManufacturerList">{{manufacturer.Value}}</option>
-                                                                                </select>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input class="form-control"
-                                                                                       [(ngModel)]="SL.manufacturerLotNumber"
-                                                                                       type="text"
-                                                                                       [disabled]="true"
-                                                                                       pInputText [maxLength]="200">
-                                                                            </td>
-                                                                            <td>
-                                                                                <p-calendar class="pas-clder pas-clder-po-table"
-                                                                                            [disabled]="true"
-                                                                                            [(ngModel)]="SL.manufacturingDate"
-                                                                                            [showIcon]="true"></p-calendar>
-
-                                                                            </td>
-                                                                            <td>
-                                                                                <input class="form-control"
-                                                                                       [disabled]="true"
-                                                                                       [(ngModel)]="SL.manufacturingBatchNumber"
-                                                                                       type="text" pInputText
-                                                                                       [maxLength]="200">
-                                                                            </td>
-                                                                            <td>
-                                                                                <input class="form-control"
-                                                                                       type="text" pInputText
-                                                                                       [disabled]="true"
-                                                                                       [(ngModel)]="SL.partCertificationNumber"
-                                                                                       [maxLength]="200">
-                                                                            </td>
-                                                                            <td>
-                                                                                <p-calendar class="pas-clder pas-clder-po-table"
-                                                                                            [maxDate]="currentDate"
-                                                                                            [disabled]="true"
-                                                                                            [showIcon]="true"
-                                                                                            [ngModelOptions]="{standalone: true}"
-                                                                                            [(ngModel)]="SL.certifiedDate"></p-calendar>
-                                                                            </td>
-                                                                            <td>
-                                                                                <p-calendar class="pas-clder pas-clder-po-table"
-                                                                                            [maxDate]="currentDate"
-                                                                                            [disabled]="true"
-                                                                                            [showIcon]="true"
-                                                                                            [ngModelOptions]="{standalone: true}"
-                                                                                            [(ngModel)]="SL.certifiedDueDate"></p-calendar>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input class="form-control"
-                                                                                       [(ngModel)]="SL.certifiedBy"
-                                                                                       type="text" pInputText
-                                                                                       [disabled]="true"
-                                                                                       [maxLength]="200">
-                                                                            </td>
-                                                                            <td>
-                                                                                <p-calendar class="pas-clder pas-clder-po-table"
-                                                                                            [maxDate]="currentDate"
-                                                                                            [disabled]="true"
-                                                                                            [showIcon]="true"
-                                                                                            [ngModelOptions]="{standalone: true}"
-                                                                                            [(ngModel)]="SL.tagDate"></p-calendar>
-                                                                            </td>
-                                                                            <td>
-                                                                                <p-calendar class="pas-clder pas-clder-po-table"
-                                                                                            [showIcon]="true"
-                                                                                            [disabled]="true"
-                                                                                            [ngModelOptions]="{standalone: true}"
-                                                                                            [(ngModel)]="SL.expirationDate"></p-calendar>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input class="form-control" type="text" [(ngModel)]="SL.shippingReference" pInputText [maxLength]="200">
-                                                                            </td>
-                                                                            <td>
-                                                                                <select class="form-control" required [(ngModel)]="SL.shippingViaId">
-                                                                                    <option value="0">Select</option>
-                                                                                    <option *ngFor="let shippingVia of ShippingViaList" [value]="shippingVia.Key">{{shippingVia.Value}}</option>
-                                                                                </select>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input class="form-control" type="text" [(ngModel)]="SL.shippingAccount" pInputText [maxLength]="200">
-                                                                            </td>
-                                                                            <td>
-                                                                                <input class="form-control" type="text" [(ngModel)]="SL.engineSerialNumber" pInputText [maxLength]="200">
-                                                                            </td>
-                                                                            <td>
-                                                                                <input type="text" class="form-control" disabled value="unknown field" />
-                                                                            </td>
-                                                                            <td>
-                                                                                <input type="text" class="form-control" disabled value="unknown field" />
-                                                                            </td>
-                                                                            <td>{{SL.glAccountText}}</td>
-                                                                            <td>
-                                                                                <input type="checkbox" disabled [checked]="part.itemMaster.isTimeLife != false" />
-                                                                            </td>
-                                                                            <td>
-                                                                                <input class="form-control" [disabled]="true" placeholder="Cycle" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].cyclesRemaining">
-                                                                            </td>                                       
-                                                                            <td>                                        
-                                                                                <input class="form-control" [disabled]="true" placeholder="Cycle" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].cyclesSinceNew">
-                                                                            </td>                                       
-                                                                            <td>                                        
-                                                                                <input class="form-control" [disabled]="true" placeholder="Cycle" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].cyclesSinceOVH">
-                                                                            </td>                                       
-                                                                            <td>                                        
-                                                                                <input class="form-control" [disabled]="true" placeholder="Cycle" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].cyclesSinceInspection">
-                                                                            </td>                                       
-                                                                            <td>                                        
-                                                                                <input class="form-control" [disabled]="true" placeholder="Cycle" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].cyclesSinceRepair">
-                                                                            </td>                                       
-                                                                                                                        
-                                                                            <td>                                        
-                                                                                <input class="form-control" [disabled]="true" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].timeRemaining">
-                                                                            </td>                                       
-                                                                                                                        
-                                                                            <td>                                        
-                                                                                <input class="form-control" [disabled]="true" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].timeSinceNew">
-                                                                            </td>                                       
-                                                                                                                        
-                                                                            <td>                                        
-                                                                                <input class="form-control" [disabled]="true" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].timeSinceOVH">
-                                                                            </td>                                       
-                                                                                                                        
-                                                                            <td>                                        
-                                                                                <input class="form-control" [disabled]="true" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].timeSinceInspection">
-                                                                            </td>                                       
-                                                                                                                        
-                                                                            <td>                                        
-                                                                                <input class="form-control" [disabled]="true" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].timeSinceRepair">
-                                                                            </td>                                       
-                                                                                                                        
-                                                                            <td>                                        
-                                                                                <input class="form-control" [disabled]="true" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].lastSinceNew">
-                                                                            </td>                                       
-                                                                                                                        
-                                                                            <td>                                        
-                                                                                <input class="form-control" [disabled]="true" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].lastSinceNew">
-                                                                            </td>                                       
-                                                                                                                        
-                                                                            <td>                                        
-                                                                                <input class="form-control" [disabled]="true" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].lastSinceNew">
-                                                                            </td>
-
-                                                                        </tr>
-
-                                                                    </ng-container>
-                                                                </ng-container>
-
-                                                            </tbody>
-                                                        </table>
-
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
+                    <div class="card-body">
+                        <div class="table-responsive default-bg clear">
+                            <div class="col-sm-3">
+                                <p><span class="label"><b>PO Num: </b></span><span class="value">{{poHeaderAdd.purchaseOrderNumber ? poHeaderAdd.purchaseOrderNumber : '-'}}</span></p>
+                                <p><span class="label"><b>Open Date: </b></span><span class="value">{{poHeaderAdd.openDate | date: 'dd/MM/yyyy'}}</span></p>
+                                <p><span class="label"><b>Closed/Cancelled Date: </b></span><span class="value">{{poHeaderAdd.closedDate | date: 'dd/MM/yyyy'}}</span></p>
+                                <p><span class="label"><b>Need By: </b></span><span class="value">{{poHeaderAdd.needByDate | date: 'dd/MM/yyyy'}}</span></p>
+                                <p><span class="label"><b>Priority: </b></span><span class="value">{{poHeaderAdd.priority ? poHeaderAdd.priority : '-'}}</span></p>
+                                <p><span class="label"><b>Deferred Receiver: </b></span><span class="value">{{poHeaderAdd.deferredReceiver ? poHeaderAdd.deferredReceiver : '-'}}</span></p>
+                            </div>
+                            <div class="col-sm-3">
+                                    <p><span class="label"><b>Vendor Name: </b></span><span class="value">{{poHeaderAdd.vendorName ? poHeaderAdd.vendorName : '-'}}</span></p>
+                                    <p><span class="label"><b>Vendor Code: </b></span><span class="value">{{poHeaderAdd.vendorCode ? poHeaderAdd.vendorCode : '-'}}</span></p>
+                                    <p><span class="label"><b>Vendor Contact: </b></span><span class="value">{{poHeaderAdd.vendorContact ? poHeaderAdd.vendorContact : '-'}}</span></p>
+                                    <p><span class="label"><b>Contact Phone: </b></span><span class="value">{{poHeaderAdd.workPhone ? poHeaderAdd.workPhone : '-'}}</span></p>
+                                    <p><span class="label"><b>Credit Limit & Terms: </b></span><span class="value">
+                                        {{poHeaderAdd.creditLimit ? poHeaderAdd.creditLimit : '-'}} &
+                                        {{poHeaderAdd.creditTerm ? poHeaderAdd.creditTerm : '-'}}
+                                    </span></p>
+                            </div>
+                            <div class="col-sm-3">
+                                    <p><span class="label"><b>Requisitioner: </b></span><span class="value">{{poHeaderAdd.requisitioner ? poHeaderAdd.requisitioner : '-'}}</span></p>
+                                    <p><span class="label"><b>Approver: </b></span><span class="value">{{poHeaderAdd.approver ? poHeaderAdd.approver : '-'}}</span></p>
+                                    <p><span class="label"><b>Approved Date: </b></span><span class="value">{{poHeaderAdd.dateApproved | date: 'dd/MM/yyyy'}}</span></p>
+                                    <p><span class="label"><b>Status: </b></span><span class="value">{{poHeaderAdd.status ? poHeaderAdd.status : '-'}}</span></p>
+                                    <p><span class="label"><b>Resale: </b></span><span class="value">{{poHeaderAdd.resale ? poHeaderAdd.resale : '-'}}</span></p>
+                            </div>
+                            <div class="col-sm-3">
+                                <h5>Management Structure</h5>
+                                    <p><span class="label"><b>Company: </b></span><span class="value">{{headerManagementStructure.level1 ? headerManagementStructure.level1 : '-'}}</span></p>
+                                    <p><span class="label"><b>BU: </b></span><span class="value">{{headerManagementStructure.level2 ? headerManagementStructure.level2 : '-'}}</span></p>
+                                    <p><span class="label"><b>Division: </b></span><span class="value">{{headerManagementStructure.level3 ? headerManagementStructure.level3 : '-'}}</span></p>
+                                    <p><span class="label"><b>Department: </b></span><span class="value">{{headerManagementStructure.level4 ? headerManagementStructure.level4 : '-'}}</span></p>
+                                    <p><span class="label"><b>Memo: </b></span><span class="value">{{poHeaderAdd.notes ? poHeaderAdd.notes : '-'}}</span></p>
+                            </div>
                         </div>
                     </div>
+                    <p-tabView class="pas-tabview">
+                        <p-tabPanel header="Parts List">											
+                            <div class="table-responsive pas-table-cstm roview-table-cstm" style="margin-top: 5px;">
+                                <table class="table table-bordered" id="po-table">
+                                    <thead>
+                                        <tr class="partsList-table-tr">
+                                            <th>PN</th>
+                                            <th>Alt PN</th>
+                                            <th>PN Description</th>
+                                            <th>Item Type</th>
+                                            <th>Mfr</th>
+                                            <th>GL Account</th>
+                                            <th>UOM</th>
+                                            <th>Need By</th>
+                                            <th>Cond</th>
+                                            <th>Order Qty</th>
+                                            <th>Unit Cost</th>
+                                            <th>Disc Percent</th>
+                                            <th>Disc./unit</th>
+                                            <th>Disc. Amount</th> 
+                                            <th>Ext Cost</th>
+                                            <th>Functional CUR</th>
+                                            <th>FX Rate</th>
+                                            <th>Report CUR</th>
+                                            <th>WO</th>
+                                            <th>RO</th>
+                                            <th>SO</th>
+                                            <th colspan="4">Management Structure</th>
+                                            <th>Memo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ng-container *ngFor="let partList of poPartsList">
+                                            <tr class="parent-data">
+                                                <td>{{partList?.partNumber}}</td>
+                                                <td>{{partList?.altPartNumber}}</td>
+                                                <td>{{partList?.partDescription}}</td>
+                                                <td>{{partList?.itemType}}</td>
+                                                <td>{{partList?.manufacturer}}</td>
+                                                <td>{{partList?.glAccount}}</td>
+                                                <td>{{partList?.unitOfMeasure}}</td>
+                                                <td>{{partList?.needByDate}}</td>
+                                                <td>{{partList?.condition}}</td>
+                                                <td>{{partList?.quantityOrdered}}</td>
+                                                <td>{{partList?.unitCost}}</td>
+                                                <td>{{partList?.discountPercent}}</td>
+                                                <td>{{partList?.discountPerUnit}}</td>
+                                                <td>{{partList?.discountAmount}}</td>
+                                                <td>{{partList?.extendedCost}}</td>
+                                                <td>{{partList?.functionalCurrency}}</td>
+                                                <td>{{partList?.foreignExchangeRate}}</td>
+                                                <td>{{partList?.reportCurrency}}</td>
+                                                <td>{{partList?.workOrderNo}}</td>
+                                                <td>{{partList?.reapairOrderNo}}</td>
+                                                <td>{{partList?.salesOrderNo}}</td>
+                                                <td colspan="4">{{partList?.level1}},{{partList?.level2}},{{partList?.level3}},{{partList?.level4}}</td>
+                                                <td>{{partList?.memo}}</td>
+                                            </tr>
+                                            <tr class="child-header splitship-head" *ngIf="partList.purchaseOrderSplitParts">
+                                                <th></th>
+                                                <th></th>
+                                                <th>PN</th>
+                                                <th>PN Description</th>
+                                                <th>User Type</th>
+                                                <th>Name</th>
+                                                <th colspan="5">Select Address</th>
+                                                <th>UOM</th>
+                                                <th>Order Qty</th>
+                                                <th>Need By</th>
+                                                <th colspan="4">Management Structure</th>
+                                                <th colspan="10"></th>
+                                            </tr>
+                                            <tr class="child-data" *ngFor="let partChild of partList.purchaseOrderSplitParts">
+                                                <td></td>
+                                                <td></td>
+                                                <td>{{partList?.partNumber}}</td>
+                                                <td>{{partList?.partDescription}}</td>
+                                                <td>{{partChild?.userType}}</td>
+                                                <td>{{partChild?.user}}</td>
+                                                <td colspan="5">
+                                                    {{partChild.poPartSplitAddress1 ? partChild.poPartSplitAddress1 : ''}}, 
+                                                    {{partChild.poPartSplitCity ? partChild.poPartSplitCity : ''}},
+                                                    {{partChild.poPartSplitState ? partChild.poPartSplitState : ''}} ,
+                                                    {{partChild.poPartSplitPostalCode ? partChild.poPartSplitPostalCode : ''}}, 
+                                                    {{partChild.poPartSplitCountry ? partChild.poPartSplitCountry : ''}}</td>
+                                                <td>{{partList?.unitOfMeasure}}</td>
+                                                <td>{{partChild?.quantityOrdered}}</td>
+                                                <td>{{partChild?.needByDate}}</td>
+                                                <td colspan="4">{{partChild?.level1}},{{partChild?.level2}},{{partChild?.level3}},{{partChild?.level4}}</td>
+                                                <td colspan="10"></td>
+                                            </tr>
+                                        </ng-container>
+                                    </tbody>
+                                </table>									
+                            </div>
+                        </p-tabPanel>
+
+                        <p-tabPanel header="Approve">
+                                <div class="approver-tab-cstm">
+                                    <h5 class="po-head">Approvers List</h5>
+                                    <div class="form-row" *ngFor="let approver of approveList" style="margin-top: 15px;">
+                                        <div class="col-md-3">
+                                            <label>Approver {{approver.level}}</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="approver-details-cstm">
+                                                <p><b>Name: </b>{{approver.employeeName}}</p>
+                                                <p><b>Code: </b>{{approver.employeeCode}}</p>
+                                                <p><b>Email: </b>{{approver.email}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                        </p-tabPanel>
+
+                        <p-tabPanel header="Vendor Capes">
+                                <p-table class="rpo-table-cstm" #dt [value]="vendorCapesInfo" [metaKeySelection]="true"
+                                            [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]"
+                                            [columns]="vendorCapesCols" selectionMode="multiple"
+                                            [resizableColumns]="true" [reorderableColumns]="true" [responsive]="true">
+                        
+                                    <ng-template pTemplate="header" let-columns>
+                                        <tr>
+                                            <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                                {{col.header}}
+                                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th *ngFor="let col of columns" [ngSwitch]="col.field">
+                                                <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                                            </th>
+                                        </tr>
+                                    </ng-template>
+                        
+                                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                        <tr [pSelectableRow]="rowData">
+                                            <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                                                {{rowData[col.field]}}
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                        </p-tabPanel>
+
+                        <p-tabPanel header="Address">
+                            <div class="table-responsive default-bg clear">
+                                <div class="col-sm-4">
+                                    <h5 class="po-head">Ship To</h5>
+                                    <p><span class="label"><b>User Type: </b></span><span class="value">{{poHeaderAdd.shipToUserType ? poHeaderAdd.shipToUserType : '-'}}</span></p>
+                                    <p><span class="label"><b>User: </b></span><span class="value">{{poHeaderAdd.shipToUser ? poHeaderAdd.shipToUser : '-'}}</span></p>
+                                    <p><span class="label"><b>Site Name: </b></span><span class="value">{{poHeaderAdd.shipToSiteName ? poHeaderAdd.shipToSiteName : '-'}}</span></p>
+                                    <p><span class="label"><b>Address1: </b></span><span class="value">{{poHeaderAdd.shipToAddress1 ? poHeaderAdd.shipToAddress1 : '-'}}</span></p>
+                                    <p><span class="label"><b>Address2: </b></span><span class="value">{{poHeaderAdd.shipToAddress2 ? poHeaderAdd.shipToAddress2 : '-'}}</span></p>
+                                    <p><span class="label"><b>Address3: </b></span><span class="value">{{poHeaderAdd.shipToAddress3 ? poHeaderAdd.shipToAddress3 : '-'}}</span></p>
+                                    <p><span class="label"><b>City: </b></span><span class="value">{{poHeaderAdd.shipToCity ? poHeaderAdd.shipToCity : '-'}}</span></p>
+                                    <p><span class="label"><b>Primary State/Province: </b></span><span class="value">{{poHeaderAdd.shipToState ? poHeaderAdd.shipToState : '-'}}</span></p>
+                                    <p><span class="label"><b>Postal: </b></span><span class="value">{{poHeaderAdd.shipToPostalCode ? poHeaderAdd.shipToPostalCode : '-'}}</span></p>
+                                    <p><span class="label"><b>Country: </b></span><span class="value">{{poHeaderAdd.shipToCountry ? poHeaderAdd.shipToCountry : '-'}}</span></p>
+                                    <p><span class="label"><b>Contact Name: </b></span><span class="value">{{poHeaderAdd.shipToContact ? poHeaderAdd.shipToContact : '-'}}</span></p>
+                                    <p><span class="label"><b>Memo: </b></span><span class="value">{{poHeaderAdd.shipToMemo ? poHeaderAdd.shipToMemo : '-'}}</span></p>
+                                    <p><span class="label"><b>Ship Via: </b></span><span class="value">{{poHeaderAdd.shipVia ? poHeaderAdd.shipVia : '-'}}</span></p>
+                                    <p><span class="label"><b>Shipping Cost: </b></span><span class="value">{{poHeaderAdd.shippingCost ? poHeaderAdd.shippingCost : '-'}}</span></p>
+                                    <p><span class="label"><b>Handling Cost: </b></span><span class="value">{{poHeaderAdd.handlingCost ? poHeaderAdd.handlingCost : '-'}}</span></p>
+                                    <p><span class="label"><b>Shipping Acct Num: </b></span><span class="value">{{poHeaderAdd.shippingAccountNo ? poHeaderAdd.shippingAccountNo : '-'}}</span></p>
+                                    <p><span class="label"><b>Shipping Id (AWB): </b></span><span class="value">{{poHeaderAdd.shippingId ? poHeaderAdd.shippingId : '-'}}</span></p>
+                                    <p><span class="label"><b>URL: </b></span><span class="value">{{poHeaderAdd.shippingURL ? poHeaderAdd.shippingURL : '-'}}</span></p>
+                                </div>
+                                <div class="col-sm-4">
+                                    <h5 class="po-head">Bill To</h5>
+                                    <p><span class="label"><b>User Type: </b></span><span class="value">{{poHeaderAdd.billToToUserType ? poHeaderAdd.billToToUserType : '-'}}</span></p>
+                                    <p><span class="label"><b>User: </b></span><span class="value">{{poHeaderAdd.billToUser ? poHeaderAdd.billToUser : '-'}}</span></p>
+                                    <p><span class="label"><b>Site Name: </b></span><span class="value">{{poHeaderAdd.billToSiteName ? poHeaderAdd.billToSiteName : '-'}}</span></p>
+                                    <p><span class="label"><b>Address1: </b></span><span class="value">{{poHeaderAdd.billToAddress1 ? poHeaderAdd.billToAddress1 : '-'}}</span></p>
+                                    <p><span class="label"><b>Address2: </b></span><span class="value">{{poHeaderAdd.billToAddress2 ? poHeaderAdd.billToAddress2 : '-'}}</span></p>
+                                    <p><span class="label"><b>Address3: </b></span><span class="value">{{poHeaderAdd.billToAddress3 ? poHeaderAdd.billToAddress3 : '-'}}</span></p>
+                                    <p><span class="label"><b>City: </b></span><span class="value">{{poHeaderAdd.billToCity ? poHeaderAdd.billToCity : '-'}}</span></p>
+                                    <p><span class="label"><b>Primary State/Province: </b></span><span class="value">{{poHeaderAdd.billToState ? poHeaderAdd.billToState : '-'}}</span></p>
+                                    <p><span class="label"><b>Postal: </b></span><span class="value">{{poHeaderAdd.billToPostalCode ? poHeaderAdd.billToPostalCode : '-'}}</span></p>
+                                    <p><span class="label"><b>Country: </b></span><span class="value">{{poHeaderAdd.billToCountry ? poHeaderAdd.billToCountry : '-'}}</span></p>
+                                    <p><span class="label"><b>Contact Name: </b></span><span class="value">{{poHeaderAdd.billToContact ? poHeaderAdd.billToContact : '-'}}</span></p>
+                                    <p><span class="label"><b>Memo: </b></span><span class="value">{{poHeaderAdd.billToMemo ? poHeaderAdd.billToMemo : '-'}}</span></p>
+                                </div>
+                            </div>
+                        </p-tabPanel>
+
+                        <p-tabPanel header="Receiving">
+                            <app-po-view-list [purchaseOrderData]="purchaseOrderData" ></app-po-view-list>
+                        </p-tabPanel>
+                    </p-tabView>
                 </div>
-                <div>
-                    <div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
-                        </div>
-                    </div>
-                </div>
+              </div>
             </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+            </div>
+          </div>
         </div>
-    </div>
-</div>
+      </div>

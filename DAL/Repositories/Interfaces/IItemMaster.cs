@@ -48,7 +48,6 @@ namespace DAL.Repositories.Interfaces
         GetData<Nha_Tla_Alt_Equ_ItemMapping_List> NhaTlaAltEquItemMappingList(int mappingType, int pageNumber, int pageSize);
         Nha_Tla_Alt_Equ_ItemMapping NhaTlaAltEquItemMappingById(long itemMappingId, int mappingType);
 
-        
-
+        IEnumerable<ItemMaster> SearchItemMaster(ItemMaster master);
     }
 }

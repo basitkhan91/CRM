@@ -117,7 +117,7 @@ namespace DAL.Repositories
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 ItemClassfication itemClassfication = new ItemClassfication();
                 itemClassfication.ItemClassificationCode = itemClassificationCode;

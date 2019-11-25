@@ -14,7 +14,8 @@ export class WorkOrderQuoteComponent implements OnInit {
   @Input() quoteForm: WorkOrderQuote;
 
   constructor() {}
-  ngOnInit() {}
+  ngOnInit() {
+  }
   saveQuoteDetails() {
     console.log(this.quoteForm);
   }

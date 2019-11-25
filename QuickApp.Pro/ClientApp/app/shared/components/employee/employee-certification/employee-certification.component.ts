@@ -159,17 +159,16 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
 
 
 
-        console.log(newData);
+        //console.log(newData);
 
-        console.log("bind data");
+        //console.log("bind data");
 
-        console.log(data[0].t.isExpirationDate);
-        console.log(data[0].t.expirationDate);
+        // console.log(data[0].t.isExpirationDate);
+        // console.log(data[0].t.expirationDate);
         this.sourceEmployee.ExpirationDate = new Date(this.sourceEmployee.expirationDate);
+       
         this.sourceEmployee.IsExpirationDate = data[0].t.isExpirationDate;
-
-
-        console.log(this.sourceEmployee);
+              // console.log(this.sourceEmployee);
 
 
     }
@@ -229,24 +228,27 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
 
         this.isSaving = true;
         if (!this.sourceEmployee.employeeLicensureId) {
-            console.log("save Date Route");
+            console.log("save Date Route");           
+           
             this.sourceEmployee.createdBy = this.userName;
             this.sourceEmployee.updatedBy = this.userName;
             this.sourceEmployee.isActive = true;
             this.sourceEmployee.masterCompanyId = 1;
             this.sourceEmployee.employeeId = this.empId;
             this.employeeService.newAddCertification(this.sourceEmployee).subscribe(
+               
                 data => {
-
+                  
                     console.log(data);
-                    this.alertService.showMessage('Employee Certification Added successfully.');
+                    //this.alertService.showMessage('Employee Certification Added successfully.');
+                    this.alertService.showMessage("Success",'Employee Certification Added successfully.', MessageSeverity.success);
                     this.localCollection = data;
                     this.nextClick();
                     this.employeeService.generalCollection = this.local;
                 })
 
             response => this.saveCompleted(this.sourceEmployee)
-            this.activeIndex = 1;
+            this.activeIndex = 2;
             this.employeeService.indexObj.next(this.activeIndex);
 
         }
@@ -255,13 +257,23 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
             this.sourceEmployee.updatedBy = this.userName;
             this.sourceEmployee.masterCompanyId = 1;
             this.employeeService.updateCertificationDetails(this.sourceEmployee).subscribe(data => {
-                this.alertService.showMessage('Employee Certification updated successfully.');
+                //this.alertService.showMessage('Employee Certification updated successfully.');
+                this.alertService.showMessage("Success",'Employee Certification updated successfully.', MessageSeverity.success);
                 this.employeeService.generalCollection = this.local;
             })
 
             response => this.saveCompleted(this.sourceEmployee)
-            this.activeIndex = 1;
+            this.activeIndex = 2;
             this.employeeService.indexObj.next(this.activeIndex);
+
+            var data = { "empId": this.empId, "firstName": this.firstName, "lastName": this.lastName };
+
+            var stringData = JSON.stringify(data);
+            
+            var encryptedData = btoa(JSON.stringify(data));
+    
+            this.router.navigate(['/employeesmodule/employeepages/app-employee-training'], { queryParams: { order: this.empId, 'firstName': this.firstName, 'lastName': this.lastName }, skipLocationChange: true });
+         
 
         }
     }
@@ -494,7 +506,8 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
             this.sourceEmployee.updatedBy = this.userName;
             this.sourceEmployee.masterCompanyId = 1;
             this.employeeService.updateCertificationDetails(this.sourceEmployee).subscribe(data => {
-                this.alertService.showMessage('Employee Certification updated successfully.');
+                //this.alertService.showMessage('Employee Certification updated successfully.');
+                this.alertService.showMessage("Success",'Employee Certification updated successfully.', MessageSeverity.success);
                 this.employeeService.generalCollection = this.local;
             })
 

@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import { EndpointFactory } from '../endpoint-factory.service';
 import { ConfigurationService } from '../configuration.service';
-
+import { ReceiveParts } from '../../components/receiving/repair-order/receiving-ro/RepairOrder.model';
 
 
 @Injectable()
@@ -19,13 +19,17 @@ export class ReceivingEndpointService extends EndpointFactory {
     private readonly itemMasterDataById: string = "/api/receivingPart/getById";
     private readonly receivingPurchaseOrderDataById: string = "/api/receivingPart/GetReceivingPurchaseList";
     private readonly receivingPurchaseOrderDataForEditById: string = "/api/receivingPart/GetReceivingPurchaseForEdit";
+    private readonly receivingPurchaseOrderDataForViewById: string = "/api/receivingPart/GetReceivingPurchaseForView";
     private readonly addStocklineMapperData: string = "/api/receivingPart/addStocklineMapperData";
+    private readonly _receivePartsUrl: string = "/api/receivingro/receiveParts";
 
     get getAll() { return this.configurations.baseUrl + this.getAllURL; }
     get removeById() { return this.configurations.baseUrl + this.removeByIdURL; }
     get itemMasterDataGet() { return this.configurations.baseUrl + this.itemMasterDataById; }
     get receivingPurchaseOrderDataGet() { return this.configurations.baseUrl + this.receivingPurchaseOrderDataById; }
     get receivingPurchaseOrderForEditDataGet() { return this.configurations.baseUrl + this.receivingPurchaseOrderDataForEditById; }
+    get receivingPurchaseOrderForViewDataGet() { return this.configurations.baseUrl + this.receivingPurchaseOrderDataForViewById; }
+    get ReceivePartsURL() { return this.configurations.baseUrl + this._receivePartsUrl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -101,6 +105,15 @@ export class ReceivingEndpointService extends EndpointFactory {
             });
     }
 
+    getReceivingPurchaseForView<T>(receivingId: any): Observable<T> {
+
+        let url = `${this.receivingPurchaseOrderForViewDataGet}/${receivingId}`;
+        return this.http.get<T>(url, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getReceivingPurchaseForView(receivingId));
+            });
+    }
+
     addPartStocklineMapper<T>(mapperObject: any): Observable<T>
     {
         debugger;
@@ -108,6 +121,38 @@ export class ReceivingEndpointService extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.addPartStocklineMapper(mapperObject));
             });
+    }
+
+    getReceivingRODataById(repairOrderId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/receivingPart/GetReceivingRepairList/${repairOrderId}`)
+    }
+
+    getReceivingROHeaderById(repairOrderId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/receivingRO/getRepairOrderHeaderById/${repairOrderId}`)
+    }
+
+    getReceivingROPartById(repairOrderId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/receivingro/getRepairOrderPartById/${repairOrderId}`)
+    }
+
+    receiveParts<T>(receiveParts: ReceiveParts[]): Observable<T> {
+        var listObj = [];
+
+        for (let part of receiveParts) {
+            let Obj = {
+                'repairOrderPartRecordId': part.repairOrderPartRecordId,
+                'stockLines': part.stockLines,
+                'timeLife': part.timeLife
+            };
+
+            listObj.push(Obj);
+        }
+
+        return this.http.post<T>(this.ReceivePartsURL, JSON.parse(JSON.stringify(listObj)), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.receiveParts(receiveParts));
+            });
+
     }
 
 

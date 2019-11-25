@@ -548,6 +548,15 @@ export class CustomerService {
     getCustomerClassificationMapping(customerId) {
         return this.customerEndpoint.getCustomerClassificationMapping(customerId);
     }
+    deleteInternationalShipViaId(id, updatedBy) {
+        return this.customerEndpoint.deleteInternationalShipViaId(id, updatedBy)
+    }
+    deleteRestrictedPartsById(id, updatedBy) {
+        return this.customerEndpoint.deleteRestrictedPartsById(id, updatedBy)
+    }
+    updateStatusForShippingDetails(id, status, updatedBy) {
+        return this.customerEndpoint.updateStatusForShippingDetails(id, status, updatedBy)
+    }
 
 
 }

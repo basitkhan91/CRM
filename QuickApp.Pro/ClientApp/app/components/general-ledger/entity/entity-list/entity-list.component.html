@@ -70,7 +70,7 @@
 								<div class="margin0">
 									<ul class="nav nav-pills">
 
-										<li><button class="btn my-btn" (click)="GeneralInformation()" [class.extraclass]="GeneralInformationStyle">General Information</button></li>
+										<li><button class="btn my-btn" (click)="GeneralInformation()" [class.extraclass]="GeneralInformationStyle">General Info</button></li>
 
 										<li><button class="btn my-btn" (click)="Lockbox()" [class.extraclass]="LockboxStyle" *ngIf="sourceLegalEntity.isBankingInfo">Lockbox</button></li>
 										<li><button class="btn my-btn" (click)="DomesticWire()" [class.extraclass]="domesticWireStyle" *ngIf="sourceLegalEntity.isBankingInfo">Domestic Wire</button></li>

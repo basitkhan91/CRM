@@ -8,10 +8,10 @@ namespace DAL.Common
         [Key]
         public long AttachmentDetailId { get; set; }
         public long AttachmentId { get; set; }
-        public string Code { get;set; }
+        //public string Code { get;set; }
         public string FileName { get; set; }
         public string Description { get; set; }
-        public string Memo { get; set; }
+        //public string Memo { get; set; }
         public string Link { get; set; }
         public string FileFormat { get; set; }
         public decimal? FileSize { get; set; }

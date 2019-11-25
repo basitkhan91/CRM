@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using DAL.Core;
 using DAL.Models;
 using DAL.Common;
+using System.Linq.Expressions;
 
 namespace DAL.Repositories
 {
@@ -158,7 +159,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
         public IEnumerable<DAL.Models.ItemMaster> getAlldata()
@@ -170,6 +171,7 @@ namespace DAL.Repositories
         {
             {
                 var data = (from t in _appContext.ItemMaster
+                            join gl in _appContext.GLAccount on t.GLAccountId equals gl.GLAccountId
                             where t.PartNumber == partNumber
                             select new
                             {
@@ -183,7 +185,10 @@ namespace DAL.Repositories
                                 t.ItemMasterId,
                                 t.GLAccountId,
                                 t.ManufacturerId,
-                                t.Manufacturer
+                                t.Manufacturer,
+                                t.NHA,
+                                gl.AccountName,
+                                t.ShelfLife
                             }).ToList();
                 return data;
             }
@@ -228,7 +233,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
 
@@ -877,10 +882,9 @@ namespace DAL.Repositories
 
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -905,10 +909,9 @@ namespace DAL.Repositories
 
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -969,10 +972,9 @@ namespace DAL.Repositories
 
                 return getData;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1006,12 +1008,44 @@ namespace DAL.Repositories
                 }
                 return itemMapping;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
+        public IEnumerable<ItemMaster> SearchItemMaster(ItemMaster itemMaster)
+        {
+            var result = Enumerable.Empty<ItemMaster>();
+            
+            return result;
+        }
+
+        public Expression<Func<ItemMaster, bool>> GetPredicate(ItemMaster itemMaster)
+        {
+            Expression<Func<ItemMaster, bool>> predicate = null;
+
+            if (!string.IsNullOrWhiteSpace(itemMaster.PartNumber) && !string.IsNullOrWhiteSpace(itemMaster.PartDescription))
+            {
+                predicate = item => item.PartNumber.Contains(itemMaster.PartNumber) && item.PartDescription.ToLower().Contains(itemMaster.PartDescription.ToLower());
+
+            }
+
+            else if (!string.IsNullOrWhiteSpace(itemMaster.PartNumber) && string.IsNullOrWhiteSpace(itemMaster.PartDescription))
+            {
+                predicate = item => item.PartNumber.Contains(itemMaster.PartNumber);
+
+            }
+
+            else if (string.IsNullOrWhiteSpace(itemMaster.PartNumber) && !string.IsNullOrWhiteSpace(itemMaster.PartDescription))
+            {
+                predicate = item => item.PartDescription.ToLower().Contains(itemMaster.PartDescription.ToLower());
+
+            }
+
+
+            return predicate;  
+
+        }
     }
 }
