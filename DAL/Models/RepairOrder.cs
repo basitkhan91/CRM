@@ -19,7 +19,7 @@ namespace DAL.Models
         public int? VendorContactId { get; set; }
         public string VendorContactPhone { get; set; }
         public decimal? CreditLimit { get; set; }
-        public int? CreditTermsId { get; set; }
+        public short? CreditTermsId { get; set; }
         public int? RequisitionerId { get; set; }
         public int? ApproverId { get; set; }
         public DateTime? ApprovedDate { get; set; }
@@ -116,8 +116,8 @@ namespace DAL.Models
         public string PartDescription { get; set; }
         public bool? IsSerialized { get; set; }
         public bool? IsTimeLife { get; set; }
-        public int? ConditionId { get; set; }
-        public int? GlAccountId { get; set; }
+        public long? ConditionId { get; set; }
+        public long? GlAccountId { get; set; }
         public int? UnitCost { get; set; }
         public decimal? ExtendedCost { get; set; }
         public int? ManufacturerId { get; set; }
@@ -141,10 +141,10 @@ namespace DAL.Models
         public int? QuantityOrdered { get; set; }
         public int? QuantityReceived { get; set; }
         public int? QuantityRejected { get; set; }
-        public int? QuantityBackOrdered { get; set; }
+        public short? QuantityBackOrdered { get; set; }
         public string Status { get; set; }
         public int? ManagementStructureId { get; set; }
-        public int? StockLineId { get; set; }
+        public long? StockLineId { get; set; }
         public string StockLineNumber { get; set; }
         public string ControlId { get; set; }
         public string ControlNumber { get; set; }

@@ -34,6 +34,7 @@ namespace DAL.Repositories
                               Status = ro.StatusId == 1
                                   ? "Open"
                                   : (ro.StatusId == 2 ? "Pending" : (ro.StatusId == 3 ? "Fulfilling" : "Closed")),
+                              ro.StatusId,
                               ro.OpenDate,
                               v.VendorName,
                               v.VendorCode,

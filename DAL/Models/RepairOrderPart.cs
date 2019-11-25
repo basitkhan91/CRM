@@ -60,6 +60,8 @@ namespace DAL.Models
         public virtual Address RoPartSplitAddress { get; set; }
         [NotMapped]
         public int? StatusId { get; set; }
+        public short? QuantityBackOrdered { get; set; }
+        public bool IsActive { get; set; }
 
         public List<StockLine> StockLine { get; set; }
     }
