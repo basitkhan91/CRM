@@ -246,9 +246,14 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 			this.sourceTimeLife.timeLife = this.sourceStockLine.timeLife;
 			this.sourceStockLineSetup.timeLifeCyclesId = this.sourceStockLine.timeLifeCyclesId  //TimeLifeId
 			this.sourceStockLineSetup.managementCode = this.sourceStockLine.code
-			this.sourceStockLineSetup.itemTypeId = this.sourceStockLine.itemTypeId
-			this.sourceStockLineSetup.PurchaseOrderId=this.sourceStockLine.po.purchaseOrderId
-			this.sourceStockLineSetup.RepairOrderId = this.sourceStockLine.ro.repairOrderId
+            this.sourceStockLineSetup.itemTypeId = this.sourceStockLine.itemTypeId
+            if (this.sourceStockLine.po != null) {
+                this.sourceStockLineSetup.PurchaseOrderId = this.sourceStockLine.po.purchaseOrderId
+
+            }
+            if (this.sourceStockLine.ro != null) {
+                this.sourceStockLineSetup.RepairOrderId = this.sourceStockLine.ro.repairOrderId
+            }
             this.sourceStockLineSetup.manufacturerId = this.sourceStockLine.manufacturerId;
             this.sourceStockLineSetup.blackListed = this.sourceStockLine.blackListed;
             this.sourceStockLineSetup.blackListedReason = this.sourceStockLine.blackListedReason;
