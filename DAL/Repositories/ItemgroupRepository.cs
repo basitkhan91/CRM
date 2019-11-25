@@ -15,6 +15,12 @@ namespace DAL.Repositories
             return _appContext.Itemgroup.Include("MasterCompany").Where(c=> c.IsDelete== false) .OrderByDescending(c => c.ItemGroupId).ToList();
         }
 
+        public IEnumerable<DAL.Models.ItemgroupAudit> GetItemGroupAuditDetails(long itemGroupId)
+        {
+            return _appContext.ItemGroupAudit.Where(c => c.ItemGroupId == itemGroupId).OrderByDescending(p => p.UpdatedDate).ToList();
+
+        }
+
         override
         public IQueryable<DAL.Models.Itemgroup> GetPaginationData()
         {
