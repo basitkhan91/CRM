@@ -247,11 +247,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
         const control = new FormControl('1', Validators.pattern('[a-zA-Z ]*'));
 
-        console.log(control.errors);
-
         this.dataSource = new MatTableDataSource();
-
-        console.log(this.employeeService.listCollection);
 
         if (this.employeeService.listCollection != null && this.employeeService.isEditMode == true) {
 
@@ -262,11 +258,6 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
 
             this.sourceEmployee = this.employeeService.listCollection;
-            console.log(this.sourceEmployee)
-
-            console.log("setting jpo1b title*" + this.sourceEmployee.jobTitleId);
-
-            console.log("setting jpob title*")
 
             this.empCreationForm.controls['jobTitleId'].setValue(this.sourceEmployee.jobTitleId);
 

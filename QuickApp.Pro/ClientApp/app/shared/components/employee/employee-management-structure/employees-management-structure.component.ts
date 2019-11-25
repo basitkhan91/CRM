@@ -62,9 +62,13 @@ export class EmployeesManagementStructureComponent implements OnInit,AfterViewIn
     }
 
     ngOnInit(){
+        console.log(this.employeeService.listCollection);
         this.structureInit();
         this.loadEmployeeRoles();
         this.loadManagementStructure();
+        if (this.employeeService.listCollection != null && this.employeeService.isEditMode == true) {
+            // this.employeeService.storeEmployeeManagementStructure
+        }
     }
 
     ngAfterViewInit() {

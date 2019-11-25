@@ -532,8 +532,8 @@
                 </div>
                 <div>
                   <button class="btn btn-primary-cstm pull-right" *ngIf="!showTableGrid && !isEdit" type="button"  [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Save</button>
-                  <button class="btn btn-primary-cstm pull-right" *ngIf="isEdit" type="button"  [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()" >Update</button>
-                <button  *ngIf="showTableGrid && workOrderGeneralInformation.isSinglePN " class="btn btn-success pull-right" [routerLink]="['/workordersmodule/workorderspages/app-work-order-quote']"  >Create Quote</button>
+                  <button class="btn btn-primary-cstm pull-right" *ngIf="!showTableGrid && isEdit" type="button"  [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Update</button>
+                  <button  *ngIf="showTableGrid && workOrderGeneralInformation.isSinglePN " class="btn btn-success pull-right" [routerLink]="['/workordersmodule/workorderspages/app-work-order-quote']"  >Create Quote</button>
                 </div>
             </form>
             </div>
@@ -547,18 +547,18 @@
                     <div class="col-md-12" [hidden]="workOrderGeneralInformation.isSinglePN">
                         <div class="col-md-2">
                             <label class="control-label col-sm-3">MPN </label>
-                            <div class="col-sm-7">
+                            <!-- <div class="col-sm-7">
 
                                 <p-dropdown [options]="mpnPartNumbersList" placeholder="Select Part Number" class="p-dropdown-custom-md" 
                                 (onChange)="changeofMPN($event.value)"
                                 >
-                                  </p-dropdown>
-                                <!-- <select class="mpn-select">
-                                    <option>Select</option>
-                                    <option>12548454-1</option>
-                                    <option>125487457-A</option>
-                                    <option>78546687-114F</option>
-                                </select> -->
+                                  </p-dropdown> -->
+                            <!-- </div> -->
+
+                            <div class="col-sm-7">
+                              <select>
+                                <option *ngFor="let mpn of MPNList">{{mpn.partNumber}}</option>
+                              </select>
                             </div>
                         </div>
                         <div class="col-md-10" style="background-color: white" [hidden]="workOrderGeneralInformation.isSinglePN">
@@ -722,7 +722,7 @@
                     </div>
                     <div *ngIf="labor" [ngClass]="{hidedata : gridActiveTab !== 'labor'}">
                         <app-work-order-labor [laborForm]="labor" [workOrderWorkFlowOriginalData]="workOrderWorkFlowOriginalData" [savedWorkOrderData]="savedWorkOrderData"
-                        (saveworkOrderLabor)="saveWorkOrderLabor($event)"
+                        (saveworkOrderLabor)="saveworkOrderLabor($event)"
                         ></app-work-order-labor>
                     </div>
 
@@ -1126,6 +1126,16 @@
       </div>
     </div>
   </div> 
+  <div class="modal fade" id="quote-details" role="dialog">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- <app-work-order-quote></app-work-order-quote> -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
 </div>
 
 
