@@ -496,7 +496,7 @@ namespace DAL.Repositories
                                 parent = t.Parent,
                                 customerParentName = t.CustomerParentName,
                                 customerURL = t.CustomerURL,
-                                generalCurrencyId = t.GeneralCurrencyId,
+                                generalCurrencyId = t.CurrencyId,
                                 customerClassificationId = t.CustomerClassificationId,
                                 contractReference = t.ContractReference,
                                 isPBHCustomer = t.IsPBHCustomer,
@@ -1653,6 +1653,29 @@ namespace DAL.Repositories
                 model.UpdatedBy = updatedBy;
 
                 _appContext.CustomerShippingAddress.Attach(model);
+
+                _appContext.Entry(model).Property(x => x.IsActive).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
+
+                _appContext.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public void CustomerBillingStatus(long id, bool status, string updatedBy)
+        {
+            try
+            {
+                CustomerBillingAddress model = new CustomerBillingAddress();
+                model.CustomerBillingAddressId = id;
+                model.UpdatedDate = DateTime.Now;
+                model.IsActive = status;
+
+                _appContext.CustomerBillingAddress.Attach(model);
 
                 _appContext.Entry(model).Property(x => x.IsActive).IsModified = true;
                 _appContext.Entry(model).Property(x => x.UpdatedDate).IsModified = true;

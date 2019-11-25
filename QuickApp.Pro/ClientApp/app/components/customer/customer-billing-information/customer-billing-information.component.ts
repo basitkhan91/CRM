@@ -1,5 +1,6 @@
 ﻿import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CustomerService } from '../../../services/customer.service';
+import { AlertService, MessageSeverity } from '../../../services/alert.service';
 import { CustomerBillingAddressModel } from '../../../models/customer-billing-address.model';
 import { AuthService } from '../../../services/auth.service';
 import { getValueFromObjectByKey, getObjectByValue, editValueAssignByCondition } from '../../../generic/autocomplete';
@@ -29,7 +30,7 @@ export class CustomerBillingInformationComponent {
 		{ field: 'city', header: 'City' },
 		{ field: 'stateOrProvince', header: 'State/Prov' },
 		{ field: 'postalCode', header: 'Postal Code' },
-		{ field: 'country', header: 'Country' }
+		{ field: 'countryName', header: 'Country' }
 	]
 	viewData: any;
 	id: number;
@@ -113,7 +114,7 @@ export class CustomerBillingInformationComponent {
 	// xlocation: string[];
 
 
-	constructor(public customerService: CustomerService, private authService: AuthService) {
+    constructor(public customerService: CustomerService, private authService: AuthService, private alertService: AlertService,) {
 		// if (this.workFlowtService.financeCollection) {
 		// 	this.local = this.workFlowtService.financeCollection;
 		// }
@@ -198,21 +199,52 @@ export class CustomerBillingInformationComponent {
 		this.countryList = countryData;
 
 	}
-	saveBillingInformation() {
-		this.customerService.newBillingAdd({
-			...this.billingInfo,
-			customerId: this.id,
-			masterCompanyId: 1,
-			createdBy: this.userName,
-			updatedBy: this.userName,
-			country: getValueFromObjectByKey('countries_id', this.billingInfo.country)
-		}).subscribe(
-			res => {
-				this.billingInfo = new CustomerBillingAddressModel()
-				this.getBillingDataById();
-			}
-		)
-	}
+    saveBillingInformation() {
+    
+            const data = {
+                ...this.billingInfo,
+                createdBy: this.userName,
+                updatedBy: this.userName,
+                country: getValueFromObjectByKey('countries_id', this.billingInfo.country),
+	      masterCompanyId: 1,
+                isPrimary: false,
+                isActive: true,
+                customerId: this.id
+             
+            }
+            // create shipping 
+            if (!this.isEditMode) {
+                this.customerService.newBillingAdd(data).subscribe(() => {
+                    this.billingInfo = new CustomerBillingAddressModel();
+                    this.alertService.showMessage(
+                        'Success',
+                        `Saved  Billing Information Sucessfully `,
+                        MessageSeverity.success
+                    );
+                    this.getBillingDataById();
+                })
+            } else {
+                // update shipping 
+                this.customerService.updateBillinginfo(data).subscribe(() => {
+                    this.billingInfo = new CustomerBillingAddressModel();
+                    this.alertService.showMessage(
+                        'Success',
+                        `Updated  Billing Information Sucessfully `,
+                        MessageSeverity.success
+                    );
+                    this.getBillingDataById();
+                })
+            }
+
+
+
+        }
+
+	
+    addBillingIfo() {
+        this.isEditMode = false;
+        this.billingInfo = new CustomerBillingAddressModel();
+    }
 	getBillingDataById() {
 		this.customerService.getCustomerBillViaDetails(this.id).subscribe(res => {
 			this.billingInfoList = res[0]
@@ -221,7 +253,8 @@ export class CustomerBillingInformationComponent {
 
 	openBillingView(data) {
 		console.log(data);
-		this.viewData = data;
+        this.viewData = data;
+
 		// this.isViewModel = false;
 	}
 	nextClick() {
@@ -230,9 +263,10 @@ export class CustomerBillingInformationComponent {
 	backClick() {
 		this.tab.emit('Financial');
 	}
-	openEdit(rowData) {
-		this.isEditMode = true;
-		this.billingInfo = { ...rowData, country: getObjectByValue('nice_name', rowData.country, this.countryListOriginal) };
+    openEdit(rowData) {
+        
+      	this.isEditMode = true;
+        this.billingInfo = { ...rowData, country: getObjectByValue('countries_id', rowData.country, this.countryListOriginal) };
 	}
 
 	getCustomerBillingHistory(rowData){
@@ -242,6 +276,41 @@ export class CustomerBillingInformationComponent {
 		})
 	}
 
+    deleteBillingInfo(rowData) {
+        const obj = {
+            isActive: false,
+            addressStatus: false,
+            updatedBy: this.userName,
+            customerBillingAddressId: rowData.customerBillingAddressId
+        }
+        // delete customer shipping 
+        this.customerService.updateDeleteBillinginfo(obj).subscribe(() => {
+            // toaster
+            this.alertService.showMessage(
+                'Success',
+                `Deleted Billing Sucessfully `,
+                MessageSeverity.success
+            );
+            this.getBillingDataById();
+        })
+
+
+    }
+
+    async updateActiveorInActiveForBilling(rowData) {
+  
+        console.log(rowData);
+
+        await this.customerService.CustomersBillingUpdateforActive(rowData.customerBillingAddressId, rowData.isActive, this.userName).subscribe(res => {
+
+            this.getBillingDataById();
+            this.alertService.showMessage(
+                'Success',
+                `Sucessfully Updated  Billing Status`,
+                MessageSeverity.success
+            );
+        })
+    }
 	// openEdit(data){
 	// 	this.billingInfo = data;
 	// }
