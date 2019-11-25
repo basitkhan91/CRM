@@ -169,7 +169,10 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 			this.sourceStockLineSetup.controlNumber = this.sourceStockLine.controlNumber;
 			this.sourceStockLineSetup.isSerialized = this.sourceStockLine.isSerialized;
 			
-			this.sourceStockLineSetup.quantity = this.sourceStockLine.quantity;
+            this.sourceStockLineSetup.quantity = this.sourceStockLine.quantityOnHand;
+            this.sourceStockLineSetup.quantity = this.sourceStockLine.quantityReserved;
+            this.sourceStockLineSetup.quantity = this.sourceStockLine.quantityIssued;
+            this.sourceStockLineSetup.quantity = this.sourceStockLine.quantityAvailable;
 			this.sourceStockLineSetup.condition = this.sourceStockLine.condition;
 			this.sourceStockLineSetup.conditionId = this.sourceStockLine.conditionId;
 			this.sourceStockLineSetup.serialNumber = this.sourceStockLine.serialNumber;
@@ -182,8 +185,6 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 			{
 				this.sourceStockLineSetup.isSerialized = false;
 			}
-
-
 			if (this.sourceStockLineSetup.isSerialized == false) {
 				this.hideSerialNumber = false;
 			}
@@ -246,11 +247,15 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 			this.sourceStockLineSetup.timeLifeCyclesId = this.sourceStockLine.timeLifeCyclesId  //TimeLifeId
 			this.sourceStockLineSetup.managementCode = this.sourceStockLine.code
 			this.sourceStockLineSetup.itemTypeId = this.sourceStockLine.itemTypeId
-			//this.sourceStockLineSetup.PurchaseOrderId=this.sourceStockLine.po.purchaseOrderId
-			//this.sourceStockLineSetup.RepairOrderId = this.sourceStockLine.ro.repairOrderId
-			this.sourceStockLineSetup.manufacturerId = this.sourceStockLine.manufacturerId;
-
-
+			this.sourceStockLineSetup.PurchaseOrderId=this.sourceStockLine.po.purchaseOrderId
+			this.sourceStockLineSetup.RepairOrderId = this.sourceStockLine.ro.repairOrderId
+            this.sourceStockLineSetup.manufacturerId = this.sourceStockLine.manufacturerId;
+            this.sourceStockLineSetup.blackListed = this.sourceStockLine.blackListed;
+            this.sourceStockLineSetup.blackListedReason = this.sourceStockLine.blackListedReason;
+            this.sourceStockLineSetup.incident = this.sourceStockLine.incident;
+            this.sourceStockLineSetup.incidentReason = this.sourceStockLine.incidentReason;
+            this.sourceStockLineSetup.accident = this.sourceStockLine.accident;
+            this.sourceStockLineSetup.accidentReason = this.sourceStockLine.accidentReason;
 			//TimeLife
 			this.sourceTimeLife.timeLifeCyclesId = this.sourceStockLine.timeLifeCyclesId
 			this.sourceTimeLife.cyclesSinceNew = this.sourceStockLine.cyclesSinceNew;
