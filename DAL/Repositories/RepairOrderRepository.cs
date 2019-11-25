@@ -25,7 +25,7 @@ namespace DAL.Repositories
                           from appr in approver.DefaultIfEmpty()
                           join vc in _appContext.VendorContact on v.VendorId equals vc.VendorId
                           join con in _appContext.Contact on vc.ContactId equals con.ContactId
-                          where ro.IsDeleted == false
+                          where ro.IsDeleted == false && (ro.IsActive == null || ro.IsActive == true)
                           select new
                           {
                               ro.RepairOrderId,
