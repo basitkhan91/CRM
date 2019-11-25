@@ -47,7 +47,10 @@ export class StockLineListComponent implements OnInit {
     selectedColumn: any[];
     selectedColumns: any[];
     createdBy: any = "";
-    quantity: any = "";
+    quantityOnHand: any = "";
+    quantityReserved: any = "";
+    quantityIssued: any = "";
+    quantityAvailable: any = "";
     memo: any = "";
     //shelfLife: any = "";
     stockLineNumber: any = "";
@@ -155,8 +158,8 @@ export class StockLineListComponent implements OnInit {
             { field: 'partCertificationNumber', header: 'PART CERT NUM' },
 
             { field: 'condition', header: 'COND' },
-            { field: 'quantity', header: 'QTY ON HAND' },
-            { field: 'quantity', header: 'QTY AVAIL' },
+            { field: 'quantityOnHand', header: 'QTY ON HAND' },
+            { field: 'quantityAvailable', header: 'QTY AVAIL' },
             { field: 'glAccountId', header: 'GL ACCT' }
 
         ];
@@ -267,7 +270,10 @@ export class StockLineListComponent implements OnInit {
         }
 
         this.controlNumber = row.controlNumber;
-        this.quantity = row.quantity;
+        this.quantityOnHand = row.quantityOnHand;
+        this.quantityReserved = row.quantityReserved;
+        this.quantityIssued = row.quantityIssued;
+        this.quantityAvailable = row.quantityAvailable;
         this.condition = row.condition;
         this.serialNumber = row.serialNumber;
         this.shelfLife = row.shelfLife;

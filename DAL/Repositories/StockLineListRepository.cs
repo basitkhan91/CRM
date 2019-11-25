@@ -76,7 +76,6 @@ namespace DAL.Repositories
                                   stl.IdNumber,
                                   partDescription = im.PartDescription,
                                   stl.ManagementStructureEntityId,
-                                  stl.Quantity,
                                   stl.QuantityOnOrder,
                                   stl.QuantityAvailable,
                                   stl.QuantityIssued,
