@@ -268,81 +268,83 @@
                                             <option value="60">60</option>
                                         </select>
                                     </div>
-                                </div>-->
-                                <div class="form-group col-sm-12">
-                                    <label class="control-label col-sm-4">1099 Required </label>
-                                    <div class="col-sm-7">
-                                        <input class="" type="checkbox" id="finc-info-check" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.is1099Required">
-                                    </div>
-                                </div>
-                                <div class="finc-info form-group col-sm-12" *ngIf="sourceVendor.is1099Required">
-                                    <div class="col-sm-12 table-responsive">
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>&nbsp;</th>
-                                                    <th>&nbsp;</th>
-                                                    <th>Default</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-
-                                                <tr>
-
-                                                    <td><input type="checkbox" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.v1099Rent"></td>
-                                                    <td>1.Rent</td>
-
-
-                                                    <td><input type="radio" [value]="sourceVendor.v1099RentDefault" name="optradio" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.v1099RentDefault" (change)="changevalue('sourceVendor.v1099RentDefault')"></td>
-                                                    <!--{{sourceVendor.v1099RentDefault}}-->
-
-                                                </tr>
-                                                <tr>
-                                                    <td><input type="checkbox" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.v1099Royalties"></td>
-                                                    <td>2.Royalties</td>
-
-                                                    <td><input type="radio" [value]="sourceVendor.v1099RoyaltiesDefault" name="optradio" class="radio-inline" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.v1099RoyaltiesDefault" (change)="changevalue('sourceVendor.v1099RoyaltiesDefault')"></td>
-
-                                                </tr>
-
-                                                <tr>
-                                                    <td><input type="checkbox" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.v1099OtherIncome"></td>
-                                                    <td>3.Other Income</td>
-                                                    <td><input type="radio" [value]="sourceVendor.v1099OtherIncomeDefault" name="optradio" class="radio-inline" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.v1099OtherIncomeDefault" (change)="changevalue('sourceVendor.v1099OtherIncomeDefault')"></td>
-
-                                                </tr>
-
-                                                <tr>
-                                                    <td><input type="checkbox" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.v1099MedicalHealthPayments"></td>
-                                                    <td>6.Medical and Healthcare Payments</td>
-
-                                                    <td><input type="radio" name="optradio" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.v1099MedicalHealthPaymentsDefault" (change)="changevalue('sourceVendor.v1099MedicalHealthPaymentsDefault')"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><input type="checkbox" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.v1099NonEmployeeComp"></td>
-                                                    <td>7.Non Employee Comp</td>
-
-                                                    <td><input type="radio" [value]="sourceVendor.v1099NonEmployeeCompDefault" name="optradio" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.v1099NonEmployeeCompDefault" (change)="changevalue('sourceVendor.v1099NonEmployeeCompDefault')"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><input type="checkbox" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.v1099GoldenParachute"></td>
-                                                    <td>13.Golden Parachute</td>
-
-                                                    <td><input type="radio" [value]="sourceVendor.v1099GoldenParachuteDefault" name="optradio" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.v1099GoldenParachuteDefault" (change)="changevalue('sourceVendor.v1099GoldenParachuteDefault')"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><input type="checkbox" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.v1099GrossProceedsPaidToAttorney"></td>
-                                                    <td>14.Gross Proceeds paid to an attorney</td>
-
-
-                                                    <td><input type="radio" name="optradio" [value]="sourceVendor.v1099GrossProceedsPaidToAttorneyDefault" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.v1099GrossProceedsPaidToAttorneyDefault" (change)="changevalue('sourceVendor.v1099GrossProceedsPaidToAttorneyDefault')"></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="clear"></div>
-                                </div>
-                            </div>
+								</div>-->
+								
+                                
+							</div>
+							
+							<div class="col-sm-6 w400"> 
+									<div class="form-group col-sm-12">
+											<label class="control-label col-sm-4">1099 Required </label>
+											<div class="col-sm-7">
+												<input class="" type="checkbox" id="finc-info-check" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.is1099Required">
+											</div>
+										</div>
+										<div class="finc-info form-group col-sm-12" *ngIf="sourceVendor.is1099Required">
+											<div class="col-sm-12 table-responsive">
+												<table class="table table-striped">
+													<thead>
+														<tr>
+															<th>&nbsp;</th>
+															<th>&nbsp;</th>
+															<th>Default</th>
+														</tr>
+													</thead>
+													<tbody>		
+														<tr>		
+															<td><input type="checkbox" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.v1099Rent"></td>
+															<td>1.Rent</td>		
+		
+															<td><input type="radio" [value]="sourceVendor.v1099RentDefault" name="optradio" class="radio-inline"   (change)="changevalue('sourceVendor.v1099RentDefault')"></td>
+															<!--{{sourceVendor.v1099RentDefault}}-->
+		
+														</tr>
+														<tr>
+															<td><input type="checkbox" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.v1099Royalties"></td>
+															<td>2.Royalties</td>
+		
+															<td><input type="radio" [value]="sourceVendor.v1099RoyaltiesDefault" name="optradio" class="radio-inline"   (change)="changevalue('sourceVendor.v1099RoyaltiesDefault')"></td>
+		
+														</tr>
+		
+														<tr>
+															<td><input type="checkbox" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.v1099OtherIncome"></td>
+															<td>3.Other Income</td>
+															<td><input type="radio" [value]="sourceVendor.v1099OtherIncomeDefault" name="optradio" class="radio-inline"   (change)="changevalue('sourceVendor.v1099OtherIncomeDefault')"></td>
+		
+														</tr>
+		
+														<tr>
+															<td><input type="checkbox" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.v1099MedicalHealthPayments"></td>
+															<td>4.Medical and Healthcare Payments</td>
+															<td><input type="radio" [value]="sourceVendor.v1099MedicalHealthPaymentsDefault" name="optradio" class="radio-inline"   (change)="changevalue('sourceVendor.v1099MedicalHealthPaymentsDefault')"></td>
+															
+														</tr>
+														<tr>
+															<td><input type="checkbox" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.v1099NonEmployeeComp"></td>
+															<td>5.Non Employee Comp</td>
+		
+															<td><input type="radio" [value]="sourceVendor.v1099NonEmployeeCompDefault" name="optradio" class="radio-inline"  (change)="changevalue('sourceVendor.v1099NonEmployeeCompDefault')"></td>
+														</tr>
+														<tr>
+															<td><input type="checkbox" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.v1099GoldenParachute"></td>
+															<td>6.Golden Parachute</td>
+		
+															<td><input type="radio" [value]="sourceVendor.v1099GoldenParachuteDefault" name="optradio" class="radio-inline"   (change)="changevalue('sourceVendor.v1099GoldenParachuteDefault')"></td>
+														</tr>
+														<tr>
+															<td><input type="checkbox" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.v1099GrossProceedsPaidToAttorney"></td>
+															<td>7.Gross Proceeds paid to an attorney</td>
+		
+		
+															<td><input type="radio"  [value]="sourceVendor.v1099GrossProceedsPaidToAttorneyDefault" name="optradio" class="radio-inline"   (change)="changevalue('sourceVendor.v1099GrossProceedsPaidToAttorneyDefault')"></td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											<div class="clear"></div>
+										</div>
+							</div>
                             <div class="clear"></div>
                             <hr>
                             <button type="button" [validate] moduleName="app-vendor-contacts" requirePermission="canAdd" *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel()">Save</button>

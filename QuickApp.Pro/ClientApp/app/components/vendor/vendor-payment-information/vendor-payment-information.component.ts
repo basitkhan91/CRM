@@ -535,6 +535,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	}
 
 	toggledbldisplay(data) {
+
 		this.sourceVendor = data;
 	}
 
@@ -855,6 +856,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	}
 	dismissModel() { this.modal.close(); }
 	handleChanges(rowData, e) {
+		
 		if (e.checked == false) {
 			this.sourceVendor.checkPaymentId = rowData.checkPaymentId;
 			this.sourceVendor.updatedBy = this.userName;
