@@ -26,7 +26,7 @@ namespace DAL.Repositories
         }
 
 
-        public IEnumerable<PriorityAudit> GetPriorityHistory(long priorityId)
+        public IEnumerable<PriorityAudit> GetPriorityHistoryAudit(long priorityId)
         {
             try
             {

@@ -19,6 +19,8 @@ import { SingleScreenBreadcrumbService } from "../../services/single-screens-bre
 import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
 import { getObjectByValue, validateRecordExistsOrNot, selectedValueValidate, editValueAssignByCondition, getObjectById } from '../../generic/autocomplete';
 import { Table } from 'primeng/table';
+import { ConfigurationService } from '../../services/configuration.service';
+
 @Component({
     selector: 'app-integration',
     templateUrl: './integration.component.html',
@@ -69,7 +71,7 @@ export class IntegrationComponent implements OnInit {
         private activeModal: NgbActiveModal,
         private _fb: FormBuilder,
         private alertService: AlertService,
-        public integrationService: IntegrationService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+        public integrationService: IntegrationService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
        
     }
 
@@ -121,11 +123,11 @@ export class IntegrationComponent implements OnInit {
         // }
 
     }
-    sampleExcelDownload() {
-        // const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=UnitOfMeasure&fileName=uom.xlsx`;
+    //sampleExcelDownload() {
+    //    // const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=UnitOfMeasure&fileName=uom.xlsx`;
 
-        // window.location.assign(url);
-    }
+    //    // window.location.assign(url);
+    //}
 
     getList() {
         this.integrationService.getWorkFlows().subscribe(res => {
@@ -262,7 +264,7 @@ export class IntegrationComponent implements OnInit {
     }
 
     getAuditHistoryById(rowData) {
-        this.integrationService.getAudit(rowData.integrationPortalId).subscribe(res => {
+        this.integrationService.historyintegration(rowData.integrationPortalId).subscribe(res => {
             this.auditHistory = res;
         })
     }
@@ -276,5 +278,11 @@ export class IntegrationComponent implements OnInit {
                 return data[i + 1][field] === value
             }
         }
+    }
+
+    sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=IntegrationPortal&fileName=IntegrationPortal.xlsx`;
+
+        window.location.assign(url);
     }
 }
