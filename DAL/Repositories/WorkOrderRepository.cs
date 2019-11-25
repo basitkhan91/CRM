@@ -271,7 +271,6 @@ namespace DAL.Repositories
                 if (customer != null)
                 {
                     workOrder.CustomerDetails = new CustomerDetails();
-                    var emp = _appContext.Employee.Where(p => p.EmployeeId == customer.CsrId).FirstOrDefault();
 
                     var customerContact = (from cust in _appContext.Customer
                                            join cc in _appContext.CustomerContact on cust.CustomerId equals cc.CustomerId into custcc
@@ -289,14 +288,8 @@ namespace DAL.Repositories
                     workOrder.CustomerDetails.CustomerName = customer.Name;
                     workOrder.CustomerDetails.CreditLimit = workOrder.CreditLimit;
                     workOrder.CustomerDetails.CreditTermsId = workOrder.CreditTermsId;
-                    if (emp != null)
-                        workOrder.CustomerDetails.CSRName = emp.FirstName;
-                    else
-                        workOrder.CustomerDetails.CSRName = string.Empty;
-
                     workOrder.CustomerDetails.CustomerId = workOrder.CustomerId;
                     workOrder.CustomerDetails.CustomerName = customer.Name;
-                    workOrder.CustomerDetails.CustomerRef = customer.ContractReference;
                     if (customerContact != null && customerContact.con != null)
                         workOrder.CustomerDetails.CustomerContact = customerContact.con.FirstName;
                     else
@@ -356,7 +349,9 @@ namespace DAL.Repositories
                                            Salesperson = sp.FirstName,
                                            WOStatus = ws.Description,
                                            c.CustomerCode,
-                                           c.CustomerContact
+                                           c.CustomerContact,
+                                           wo.CSR,
+                                           wo.CustomerReference
                                        }).FirstOrDefault();
                 return workOrderHeader;
             }
@@ -549,6 +544,9 @@ namespace DAL.Repositories
                             join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
                             join wf in _appContext.Workflow on w.WorkflowId equals wf.WorkflowId into wwf
                             from wf in wwf.DefaultIfEmpty()
+                            join ws in _appContext.WorkScope on w.WorkScopeId equals ws.WorkScopeId
+                            join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.ID
+
                             where w.IsDeleted == false && w.IsActive == true && w.WorkOrderId == workOrderId
                             select new
                             {
@@ -557,7 +555,12 @@ namespace DAL.Repositories
                                 wop.MasterPartId,
                                 WorkflowId = wf == null ? 0 : wf.WorkflowId,
                                 WorkflowNo = wf == null ? "" : wf.WorkOrderNumber,
-                                im.PartNumber
+                                im.PartNumber,
+                                Description=im.PartDescription,
+                                Workscope=ws.Description,
+                                NTE = (im.OverhaulHours == null ? 0 : im.OverhaulHours) + (im.RPHours == null ? 0 : im.RPHours) + (im.mfgHours == null ? 0 : im.mfgHours) + (im.TestHours == null ? 0 : im.TestHours),
+                                Qty= wop.Quantity,
+                                Stage=wop.Description
                             }
                           ).Distinct()
                           .ToList();
@@ -2083,7 +2086,8 @@ namespace DAL.Repositories
                                 im.PartDescription,
                                 im.DER,
                                 PMA = im.isPma,
-                                NTE = (im.OverhaulHours == null ? 0 : im.OverhaulHours) + (im.RPHours == null ? 0 : im.RPHours) + (im.mfgHours == null ? 0 : im.mfgHours) + (im.TestHours == null ? 0 : im.TestHours)
+                                NTE = (im.OverhaulHours == null ? 0 : im.OverhaulHours) + (im.RPHours == null ? 0 : im.RPHours) + (im.mfgHours == null ? 0 : im.mfgHours) + (im.TestHours == null ? 0 : im.TestHours),
+                                TATDaysCurrent = (im.TurnTimeOverhaulHours == null ? 0 : im.TurnTimeOverhaulHours) + (im.TurnTimeRepairHours == null ? 0 : im.TurnTimeRepairHours) + (im.turnTimeMfg == null ? 0 : im.turnTimeMfg) + (im.turnTimeBenchTest == null ? 0 : im.turnTimeBenchTest)
                             })
                             .Distinct()
                             .ToList();
