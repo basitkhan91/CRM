@@ -63,6 +63,7 @@ namespace DAL.Models
         public short? QuantityBackOrdered { get; set; }
         public bool IsActive { get; set; }
 
+        public List<StockLine> StockLine { get; set; }
     }
 
     [NotMapped]

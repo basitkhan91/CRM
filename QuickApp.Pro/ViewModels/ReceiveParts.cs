@@ -9,6 +9,7 @@ namespace QuickApp.Pro.ViewModels
     public class ReceiveParts
     {
         public long PurchaseOrderPartRecordId { get; set; }
+        public long RepairOrderPartRecordId { get; set; }
         public List<StockLine> StockLines { get; set; }
         public List<TimeLife> TimeLife { get; set; }
     }
