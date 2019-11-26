@@ -1,14 +1,13 @@
 ﻿using DAL;
+using System;
 using DAL.Models;
-using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using QuickApp.Pro.Helpers;
 using QuickApp.Pro.ViewModels;
-using System;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace QuickApp.Pro
+namespace QuickApp.Pro.Controllers
 {
 
     [Route("api/receivingRO")]
@@ -161,6 +160,20 @@ namespace QuickApp.Pro
         }
 
 
+        [HttpGet("GetReceieveROPartsForView/{repairOrderId}")]
+        public IActionResult GetReceivingPurchaseOrderForViewId(long repairOrderId)
+        {
+            try
+            {
+                var parts = unitOfWork.ReceiveRepairOrder.GetReceivingRepairOrderForView(repairOrderId);
+                return Ok(parts);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+        }
         #endregion Public Members
 
         #region Private Methods
@@ -195,6 +208,7 @@ namespace QuickApp.Pro
                 }
             }
         }
+
 
         #endregion Private Methods
 
