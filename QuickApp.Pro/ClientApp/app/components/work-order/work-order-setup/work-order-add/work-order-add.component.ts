@@ -206,6 +206,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         customerReference: data.customerReference,
         csr: data.csr,
         customerId: data.customerDetails,
+        employeeId: getObjectById('value', data.employeeId, this.employeesOriginalData),
+        salesPersonId: getObjectById('value', data.employeeId, this.employeesOriginalData),
         partNumbers: data.partNumbers.map((x, index) => {
 
           this.getRevisedpartNumberByItemMasterId(x.masterPartId, index);
@@ -213,6 +215,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
           this.getConditionByItemMasterId(x.masterPartId, index);
           return {
             ...x,
+            technicianId: getObjectById('value', x.technicianId, this.employeesOriginalData),
             masterPartId: getObjectById('itemMasterId', x.masterPartId, this.partNumberOriginalData),
             mappingItemMasterId: getObjectById('mappingItemMasterId', x.mappingItemMasterId, x.revisedParts),
           }
@@ -807,7 +810,13 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
   getWorkFlowLaborList() {
     if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
       this.workOrderService.getWorkOrderLaborList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
-        this.workOrderLaborList = res;
+        const data = res;
+        this.workOrderLaborList = {
+          ...data,
+          workFlowWorkOrderId: getObjectById('value', data.workFlowWorkOrderId, this.workOrderWorkFlowOriginalData),
+          employeeId: getObjectById('value', data.employeeId, this.employeesOriginalData),
+          dataEnteredBy: getObjectById('value', data.employeeId, this.employeesOriginalData),
+        };
         if (res) {
           for (let labList of res['laborList']) {
             for (let task of this.taskList) {
@@ -830,6 +839,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             }
           }
         }
+        console.log(this.workOrderLaborList);
       })
     }
   }

@@ -733,6 +733,7 @@ namespace DAL.Repositories
                                      lh.WorkOrderHoursType,
                                      lh.WorkOrderId,
                                      lh.WorkOrderLaborHeaderId,
+                                     lh.ExpertiseId,
                                      wfwo.WorkFlowWorkOrderNo,
                                      DataEnteredByName = deby.FirstName,
                                      ExpertiseType = exp.Description,
