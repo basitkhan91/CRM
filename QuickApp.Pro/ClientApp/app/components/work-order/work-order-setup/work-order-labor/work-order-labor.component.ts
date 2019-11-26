@@ -149,6 +149,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   getAllEmployees(): void {
     this.commonService.smartDropDownList('Employee', 'EmployeeId', 'FirstName').subscribe(res => {
       this.employeesOriginalData = res;
+      this.employeeList = res;
     })
   }
 

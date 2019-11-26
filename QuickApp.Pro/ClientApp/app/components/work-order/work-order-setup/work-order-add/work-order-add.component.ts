@@ -820,20 +820,20 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         if (res) {
           for (let labList of res['laborList']) {
             for (let task of this.taskList) {
-              if (task.taskId == labList['wol']['taskId']) {
+              if (task.taskId == labList['taskId']) {
                 if (this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == undefined || this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == null) {
                   this.labor.workOrderLaborList[0][task.description.toLowerCase()].splice(0, 1);
                 }
                 let taskData = new AllTasks()
-                taskData['expertiseId'] = labList['wol']['expertiseId'];
-                taskData['employeeId'] = labList['wol']['employeeId'];
-                taskData['billableId'] = labList['wol']['billableId'];
-                taskData['startDate'] = labList['wol']['startDate'];
-                taskData['endDate'] = labList['wol']['endDate'];
-                taskData['hours'] = labList['wol']['hours'];
-                taskData['adjustments'] = labList['wol']['adjustments'];
-                taskData['adjustedHours'] = labList['wol']['adjustedHours'];
-                taskData['memo'] = labList['wol']['memo'];
+                taskData['expertiseId'] = labList['expertiseId'];
+                taskData['employeeId'] = labList['employeeId'];
+                taskData['billableId'] = labList['billableId'];
+                taskData['startDate'] = labList['startDate'];
+                taskData['endDate'] = labList['endDate'];
+                taskData['hours'] = labList['hours'];
+                taskData['adjustments'] = labList['adjustments'];
+                taskData['adjustedHours'] = labList['adjustedHours'];
+                taskData['memo'] = labList['memo'];
                 this.labor.workOrderLaborList[0][task.description.toLowerCase()].push(taskData);
               }
             }
