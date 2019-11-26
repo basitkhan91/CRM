@@ -222,7 +222,7 @@ export class WorkOrderEndpointService extends EndpointFactory {
     }
 
     getWorkOrderLaborList(workFlowWorkOrderId, workOrderId) {
-        return this.http.get(`${this.configurations.baseUrl}/api/workorder/getworkflowworkorderlabourlist?wfwoId=${workFlowWorkOrderId}&workOrderId=${workOrderId}`, this.getRequestHeaders())
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workorder/getworkflowworkorderlabourlist?wfwoId=${workFlowWorkOrderId}&workOrderId=${workOrderId}`, this.getRequestHeaders())
 
     }
 
