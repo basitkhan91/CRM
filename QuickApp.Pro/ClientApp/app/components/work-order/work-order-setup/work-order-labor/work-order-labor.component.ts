@@ -51,6 +51,8 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   // ];
   ngOnInit() {
 
+    
+
     if(this.workOrderLaborList){
       this.laborForm.workFlowWorkOrderId = this.workOrderLaborList['workFlowWorkOrderNo'];
       this.laborForm.dataEnteredBy = this.workOrderLaborList['dataEnteredBy'];

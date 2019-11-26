@@ -204,6 +204,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         customerReference: data.customerReference,
         csr: data.csr,
         customerId: data.customerDetails,
+        employeeId: getObjectById('value', data.employeeId, this.employeesOriginalData),
+        salesPersonId: getObjectById('value', data.employeeId, this.employeesOriginalData),
         partNumbers: data.partNumbers.map((x, index) => {
 
           this.getRevisedpartNumberByItemMasterId(x.masterPartId, index);
@@ -211,6 +213,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
           this.getConditionByItemMasterId(x.masterPartId, index);
           return {
             ...x,
+            technicianId: getObjectById('value', x.technicianId, this.employeesOriginalData),
             masterPartId: getObjectById('itemMasterId', x.masterPartId, this.partNumberOriginalData),
             mappingItemMasterId: getObjectById('mappingItemMasterId', x.mappingItemMasterId, x.revisedParts),
           }
@@ -788,29 +791,35 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
   getWorkFlowLaborList(){
     if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
       this.workOrderService.getWorkOrderLaborList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
-        this.workOrderLaborList = res;
-        if(res){
-          for( let labList of res['laborList']){
-            for(let task of this.taskList){
-              if(task.taskId == labList['wol']['taskId']){
-                if(this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == undefined || this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == null){
-                  this.labor.workOrderLaborList[0][task.description.toLowerCase()].splice(0,1);
-                }
-                let taskData = new AllTasks()
-                taskData['expertiseId'] = labList['wol']['expertiseId'];
-                taskData['employeeId'] = labList['wol']['employeeId'];
-                taskData['billableId'] = labList['wol']['billableId'];
-                taskData['startDate'] = labList['wol']['startDate'];
-                taskData['endDate'] = labList['wol']['endDate'];
-                taskData['hours'] = labList['wol']['hours'];
-                taskData['adjustments'] = labList['wol']['adjustments'];
-                taskData['adjustedHours'] = labList['wol']['adjustedHours'];
-                taskData['memo'] = labList['wol']['memo'];
-                this.labor.workOrderLaborList[0][task.description.toLowerCase()].push(taskData);
-              }
-            }
-          }
-        }
+        const data  = res;
+        this.workOrderLaborList = {...data,
+          workFlowWorkOrderId : getObjectById ('value' ,  data.workFlowWorkOrderId , this.workOrderWorkFlowOriginalData),
+          employeeId : getObjectById ('value' ,  data.employeeId , this.employeesOriginalData),
+          dataEnteredBy: getObjectById ('value' ,  data.employeeId , this.employeesOriginalData),
+        };
+        // if(res){
+        //   for( let labList of res['laborList']){
+        //     for(let task of this.taskList){
+        //       if(task.taskId == labList['wol']['taskId']){
+        //         if(this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == undefined || this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == null){
+        //           this.labor.workOrderLaborList[0][task.description.toLowerCase()].splice(0,1);
+        //         }
+        //         let taskData = new AllTasks()
+        //         taskData['expertiseId'] = labList['wol']['expertiseId'];
+        //         taskData['employeeId'] = labList['wol']['employeeId'];
+        //         taskData['billableId'] = labList['wol']['billableId'];
+        //         taskData['startDate'] = labList['wol']['startDate'];
+        //         taskData['endDate'] = labList['wol']['endDate'];
+        //         taskData['hours'] = labList['wol']['hours'];
+        //         taskData['adjustments'] = labList['wol']['adjustments'];
+        //         taskData['adjustedHours'] = labList['wol']['adjustedHours'];
+        //         taskData['memo'] = labList['wol']['memo'];
+        //         this.labor.workOrderLaborList[0][task.description.toLowerCase()].push(taskData);
+        //       }
+        //     }
+        //   }
+        // }
+        console.log(this.workOrderLaborList);
       })
     }
   }
