@@ -113,20 +113,24 @@ export class WorkOrderListComponent implements OnInit {
 
     async view(rowData) {
 
-        this.workOrderId = rowData.workOrderId;;
+        this.workOrderId = rowData.workOrderId;
+
+
+
 
         // const { workFlowWorkOrderId } = rowData;
         // const workOrderId = 46;
-        const workFlowWorkOrderId = 0;
+        // const workFlowWorkOrderId = 0;
 
         await this.workOrderService.viewWorkOrderHeader(this.workOrderId).subscribe(res => {
             this.viewWorkOrderHeader = res;
             if (res.singleMPN === "Single MPN") {
                 this.showMPN = false;
-                this.getAllTabsData(res.workFlowWorkOrderId, this.workOrderId);
+                this.getAllTabsData(res.workFlowWorkOrderId, 0);
             } else {
                 this.showMPN = true;
             }
+            this.workFlowId = res.workFlowId;
 
         })
 
@@ -138,7 +142,7 @@ export class WorkOrderListComponent implements OnInit {
 
 
 
-
+        // this.workOrderId = 0;
         this.getWorkOrderWorkFlowNos(this.workOrderId)
 
 
@@ -205,7 +209,7 @@ export class WorkOrderListComponent implements OnInit {
 
         // if (workFlowWorkOrderId || workFlowWorkOrderId === 0) {
         // this.workFlowWorkOrderId = this.workFlowWorkOrderData.workFlowWorkOrderId;
-        if (workOrderId) {
+        if (workFlowWorkOrderId) {
             this.workOrderService.getWorkOrderAssetList(workFlowWorkOrderId, workOrderId).subscribe(
                 result => {
                     console.log(result);
@@ -217,7 +221,7 @@ export class WorkOrderListComponent implements OnInit {
     }
 
     getMaterialListByWorkOrderId(workFlowWorkOrderId, workOrderId) {
-        if (workOrderId) {
+        if (workFlowWorkOrderId) {
             this.workOrderService.getWorkOrderMaterialList(workFlowWorkOrderId, workOrderId).subscribe(res => {
 
                 this.workOrderMaterialList = res;
@@ -229,7 +233,7 @@ export class WorkOrderListComponent implements OnInit {
 
     getPublicationListByWorkOrderId(workFlowWorkOrderId, workOrderId) {
 
-        if (workOrderId) {
+        if (workFlowWorkOrderId) {
             this.workOrderService.getWorkOrderPublicationList(workFlowWorkOrderId, workOrderId).subscribe(res => {
                 this.workOrderPublicationList = res;
             })
@@ -239,7 +243,7 @@ export class WorkOrderListComponent implements OnInit {
 
     getChargesListByWorkOrderId(workFlowWorkOrderId, workOrderId) {
 
-        if (workOrderId) {
+        if (workFlowWorkOrderId) {
             this.workOrderService.getWorkOrderChargesList(workFlowWorkOrderId, workOrderId).subscribe(res => {
                 this.workOrderChargesList = res;
             })
@@ -250,7 +254,7 @@ export class WorkOrderListComponent implements OnInit {
 
     getExclusionListByWorkOrderId(workFlowWorkOrderId, workOrderId) {
 
-        if (workOrderId) {
+        if (workFlowWorkOrderId) {
             this.workOrderService.getWorkOrderExclusionsList(workFlowWorkOrderId, workOrderId).subscribe(res => {
                 this.workOrderExclusionsList = res;
             })
@@ -261,17 +265,18 @@ export class WorkOrderListComponent implements OnInit {
 
     getLaborListByWorkOrderId(workFlowWorkOrderId, workOrderId) {
 
-        if (workOrderId) {
+        if (workFlowWorkOrderId) {
             this.workOrderService.getWorkOrderLaborList(workFlowWorkOrderId, workOrderId).subscribe(res => {
-                this.workOrderLaborList = res;
+                this.workOrderLaborList = res.laborList;
+
             })
 
         }
 
     }
 
-    getDirectionByWorkOrderId(workFlowWorkOrderId, workOrderId){
-        if (workOrderId) {
+    getDirectionByWorkOrderId(workFlowWorkOrderId, workOrderId) {
+        if (workFlowWorkOrderId) {
             this.workOrderService.getWorkOrderDirectionList(workFlowWorkOrderId, workOrderId).subscribe(res => {
                 this.workOrderDirectionList = res;
             })

@@ -512,8 +512,8 @@
               </p-tabPanel> 
 
 
-              <p-tabPanel header="Material List">
-                <div class="equipment-tab-content" >
+               <p-tabPanel header="Material List">
+                <div class="equipment-tab-content"  >
                     <div class="x_panel" *ngIf="workOrderMaterialList">
                         <div class="tab-content">
                             <div class="table-responsive table-overflow" id="workflow-attributes-block">
@@ -603,63 +603,54 @@
                         <br />
                     </div>
                 </div>
-              </p-tabPanel>
+              </p-tabPanel> 
 
 
-              <!-- <p-tabPanel  header="Labor">
+               <p-tabPanel  header="Labor">
+
+                  <p-accordion [multiple]="true">
+
+                        <p-accordionTab header="{{x.task}}" *ngFor="let x of workOrderLaborList; let i = index;" >
+            
+                            <div class="equipment-tab-content" >
+                                <div class="x_panel" *ngIf="workOrderLaborList">
+                                    <div class="tab-content">
+                                        <div class="table-responsive table-overflow" id="workflow-attributes-block">
+                                            <table class="table table-bordered ">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center">Expertise</th>
+                                                        <th class="text-center">Description</th>
+     
+                                                    </tr> 
+                                                </thead>
+                                            
+                                                <tbody>
+                                                  <tr >
+                                                        <td>{{x.expertise}}</td>
+                                                        <td>{{x.hours}}</td>
+                                                    </tr> 
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="clear"></div>
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                </div>
+                            </div> 
+                          </p-accordionTab>
+      
+     
+                    
+                    
+                  </p-accordion>
                
-                  <div class="equipment-tab-content" >
-                      <div class="x_panel" *ngIf="workOrderLaborList">
-                          <div class="tab-content">
-                              <div class="table-responsive table-overflow" id="workflow-attributes-block">
-                                  <table class="table table-bordered ">
-                                      <thead>
-                                          <tr>
-                                              <th class="text-center">Publication ID</th>
-                                              <th class="text-center">Description</th>
-                                              <th class="text-center">Type</th>
-                                              <th class="text-center">Revision Date</th>
-                                              <th class="text-center">Sequence</th>
-                                              <th class="text-center">Source</th>
-                                              <th class="text-center">AirCraft Manufacturer</th>
-                                              <th class="text-center">AirCraft Model</th>
-                                              <th class="text-center">AirCraft DashNumber</th>
-                                              <th class="text-center">Location</th>
-                                              <th class="text-center">VerifiedBy</th>
-                                              <th class="text-center">VerifiedDate</th>
-                                              <th class="text-center">Status</th>
-                                          </tr> 
-                                      </thead>
-                                  
-                                      <tbody>
-                                        <tr *ngFor="let w  of workOrderLaborList; let i=index;">
-                                              <td>{{w.PublicationId}}</td>
-                                              <td>{{w.publicationDescription}}</td>
-                                              <td>{{w.publicationType}}</td>
-                                              <td>{{w.revisionDate}}</td>
-                                              <td>{{w.sequence}}</td>
-                                              <td>{{w.source}}</td>
-                                              <td>{{w.airCraftManufacturer}}</td>
-                                              <td>{{w.model}}</td>
-                                              <td></td>
-                                              <td>{{w.location}}</td>
-                                              <td>{{w.verifiedBy}}</td>
-                                              <td>{{w.verifiedDate}}</td>
-                                              <td>{{w.status}}</td>
-                                          </tr> 
-                                      </tbody>
-                                  </table>
-                              </div>
-                          </div>
-                          <div class="clear"></div>
-                          <br />
-                          <br />
-                          <br />
-                          <br />
-                      </div>
-                  </div>
 
-              </p-tabPanel> -->
+
+              </p-tabPanel> 
 
               
               <p-tabPanel header="Charges">
@@ -735,7 +726,7 @@
                                               <td>{{w.PublicationId}}</td>
                                               <td>{{w.publicationDescription}}</td>
                                               <td>{{w.publicationType}}</td>
-                                              <td>{{w.revisionDate}}</td>
+                                              <td>{{w.revisionDate | date: 'MM-dd-YYYY'}}</td>
                                               <td>{{w.sequence}}</td>
                                               <td>{{w.source}}</td>
                                               <td>{{w.airCraftManufacturer}}</td>
@@ -743,7 +734,7 @@
                                               <td></td>
                                               <td>{{w.location}}</td>
                                               <td>{{w.verifiedBy}}</td>
-                                              <td>{{w.verifiedDate}}</td>
+                                              <td>{{w.verifiedDate | date: 'MM-dd-YYYY'}}</td>
                                               <td>{{w.status}}</td>
                                           </tr> 
                                       </tbody>
