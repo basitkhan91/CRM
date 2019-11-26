@@ -448,28 +448,12 @@ export class VendorShippingInformationComponent {
                 return;
             }
 
-        if (!this.shipViaObj.vendorShippingId) {            
+        if (this.shipViaObj.vendorShippingId>0) {            
             this.shipViaObj.createdBy = this.userName;
             this.shipViaObj.updatedBy = this.userName;
             this.shipViaObj.masterCompanyId = 1;
             this.shipViaObj.isActive = true;
-            this.workFlowtService.newShippingViaAdd(this.shipViaObj).subscribe(data => {
-                this.shipViaCollection = data;
-                this.loadShipViaCollection(this.shipViaCollection);
-                if (this.shipViaCollection) {
-                    this.shipViaObj.shipVia = "";
-                    this.shipViaObj.shippingAccountinfo = "";
-                    this.shipViaObj.shippingURL = "";
-                    this.shipViaObj.shippingId = "";
-                    this.shipViaObj.memo = "";
-                }
-            })
-        }
-        else {
-
-            this.sourceVendor.updatedBy = this.userName;
-            this.sourceVendor.masterCompanyId = 1;
-            this.shipViaObj.isActive = true;
+           
             this.workFlowtService.updateshippingViainfo(this.shipViaObj).subscribe(data => {
                 this.shipViaCollection = data;
                 this.loadShipViaCollection(this.shipViaCollection);
@@ -479,8 +463,28 @@ export class VendorShippingInformationComponent {
                     this.shipViaObj.shippingURL = "";
                     this.shipViaObj.shippingId = "";
                     this.shipViaObj.memo = "";
+                    this.shipViaObj.vendorShippingId=0;
                 }
             })
+        }
+        else {
+            this.shipViaObj.createdBy = this.userName;
+            this.sourceVendor.updatedBy = this.userName;
+            this.sourceVendor.masterCompanyId = 1;
+            this.shipViaObj.isActive = true;
+
+            this.workFlowtService.newShippingViaAdd(this.shipViaObj).subscribe(data => {
+                this.shipViaCollection = data;
+                this.loadShipViaCollection(this.shipViaCollection);
+                if (this.shipViaCollection) {
+                    this.shipViaObj.shipVia = "";
+                    this.shipViaObj.shippingAccountinfo = "";
+                    this.shipViaObj.shippingURL = "";
+                    this.shipViaObj.shippingId = "";
+                    this.shipViaObj.memo = "";
+                    this.shipViaObj.vendorShippingId=0;
+                }
+            })            
         }
 
     }
