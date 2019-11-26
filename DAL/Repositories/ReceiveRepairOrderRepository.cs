@@ -1,9 +1,7 @@
-﻿using DAL.Repositories.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
+using DAL.Repositories.Interfaces;
+
 namespace DAL.Repositories
 {
     public class ReceiveRepairOrderRepository : Repository<ReceiveRepairOrderRepository>, IReceiveRepairOrderRepository
