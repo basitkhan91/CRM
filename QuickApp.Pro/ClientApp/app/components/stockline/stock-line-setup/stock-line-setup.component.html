@@ -59,28 +59,28 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">PN DESCRIPTION</label>
                     <div class="col-sm-7">
-                        <input [disabled]="true" class="form-control" type="text" id="" id="" name="" autocomplete="off" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.partDescription">
+                        <input [disabled]="true" class="form-control" type="text" id=""  name="" autocomplete="off" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.partDescription">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">STOCK LINE NUM</label>
                     <div class="col-sm-7">
-                        <input class="form-control" [disabled]=true type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.stockLineNumber">
+                        <input class="form-control" [disabled]=true type="text" id=""  value="Generating">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">CONTROL NUM</label>
                     <div class="col-sm-7">
-                        <input class="form-control" [disabled]=true type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.controlNumber">
+                        <input class="form-control" [disabled]=true type="text" id="" value="Generating">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">ID NUMBER</label>
                     <div class="col-sm-7">
-                        <input class="form-control" [disabled]=true type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.idNumber">
+                        <input class="form-control" [disabled]=true type="text" id="" value="Generating">
                     </div>
                 </div>
 
@@ -139,7 +139,7 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">SHELF LIFE</label>
                     <div class="col-sm-7">
-                        <input class="form-control" type="checkbox" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.shelfLife">
+                        <input class="form-control" type="checkbox" [disabled]="true" [ngModelOptions]="{standalone: true}" (change)="triggerSomeEvent()" [(ngModel)]="sourceStockLineSetup.shelfLife">
                     </div>
                 </div>
 
@@ -590,7 +590,7 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">GL ACCOUNT <strong class="clr-red">*</strong></label>
                     <div class="inner-addon col-sm-7">
-                        <p-autoComplete [disabled]=true [(ngModel)]="sourceStockLineSetup.glAccountId" (onKeyUp)=glAccountHandler($event) (onSelect)="glAccountId($event)" [ngModelOptions]="{standalone: true}" [suggestions]="glAccountCollection" (completeMethod)="filterglAccount($event)" [size]="30"
+                        <p-autoComplete [disabled]=true [(ngModel)]="sourceStockLineSetup.glAccountName" (onKeyUp)=glAccountHandler($event) (onSelect)="glAccountId($event)" [ngModelOptions]="{standalone: true}" [suggestions]="glAccountCollection" (completeMethod)="filterglAccount($event)" [size]="30"
                                         [minLength]="1" [dropdown]="true">
                             <ng-template let-glAccountId pTemplate="glAccount">
                                 <div class="ui-helper-clearfix">{{sourceStockLineSetup.glAccountName}}</div>

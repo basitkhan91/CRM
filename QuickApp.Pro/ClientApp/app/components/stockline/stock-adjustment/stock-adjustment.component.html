@@ -18,10 +18,10 @@
 							<thead>
 								<tr>
 									<th></th>
-									<th>Field Name</th>
-									<th>Existing Value</th>
-									<th>Changed To</th>
-									<th>Adjustment Reason</th>
+									<th>FIELD NAME</th>
+									<th>EXISTING VALUE</th>
+									<th>CHANGED TO</th>
+									<th>ADJUSTMENT REASON</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -515,7 +515,7 @@
 								<!-- Quantity Start -->
 								<tr>
 									<td><input type="checkbox" class="check" [ngModelOptions]="{standalone: true}" [(ngModel)]="quantityAllow" (change)="isQuantityEnable(quantityAllow ?'A':'B')"></td>
-									<td>Quantity</td>
+									<td>Qty On Hand</td>
 									<td>{{sourceStockLineSetup.Beforequantity}}</td>
 									<td  *ngIf="hideQuantity"></td>
 									<td *ngIf="hideQuantity"></td>
