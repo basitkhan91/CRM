@@ -2045,8 +2045,9 @@ namespace DAL.Repositories
                                 VerifiedBy = vfb.FirstName,
                                 pub.VerifiedDate,
                                 Status = "",
-                                Image = ""
-                            }).Distinct().ToList();
+                                Image = "",
+								PublicationName = pub.PublicationId,
+							}).Distinct().ToList();
 
                 if (list != null && list.Count > 0)
                 {
@@ -2071,6 +2072,7 @@ namespace DAL.Repositories
                         workOrderPublication.WorkFlowWorkOrderId = item.WorkFlowWorkOrderId;
                         workOrderPublication.WorkOrderId = item.WorkOrderId;
                         workOrderPublication.WorkOrderPublicationId = item.WorkOrderPublicationId;
+						workOrderPublication.PublicationName = item.PublicationName;
                         workOrderPublication.WorkOrderPublicationDashNumber = _appContext.WorkOrderPublicationDashNumber.Where(x => x.WorkOrderPublicationId == item.WorkOrderPublicationId).ToList();
 
                         workOrderPublicationList.Add(workOrderPublication);
