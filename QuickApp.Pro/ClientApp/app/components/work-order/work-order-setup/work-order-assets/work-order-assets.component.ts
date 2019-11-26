@@ -17,7 +17,8 @@ export class WorkOrderAssetsComponent implements OnInit {
   @Input() workFlowObject;
   @Output() getEquipmentData = new EventEmitter();
   @Output() saveEquipmentListForWO = new EventEmitter();
-  assetRecordId: any;
+    assetRecordId: any;
+    addNewMaterial: any;
   assets = {
     description: '',
     assetIdNumber: null,
