@@ -740,10 +740,31 @@ namespace DAL.Repositories
                                                   join emp in _appContext.Employee on wol.EmployeeId equals emp.EmployeeId into wolemp
                                                   from emp in wolemp.DefaultIfEmpty()
                                                   where wol.WorkOrderLaborHeaderId == lh.WorkOrderLaborHeaderId
+                                                  join task in _appContext.Task on wol.TaskId equals task.TaskId into woltask
+                                                  from task in woltask.DefaultIfEmpty()
                                                   select new
                                                   {
-                                                      wol,
-                                                      ExpertiseType = exp.Description,
+                                                      wol.AdjustedHours,
+                                                      wol.Adjustments,
+                                                      wol.BillableId,
+                                                      wol.CreatedBy,
+                                                      wol.CreatedDate,
+                                                      wol.EmployeeId,
+                                                      wol.EndDate,
+                                                      wol.ExpertiseId,
+                                                      Expertise = exp.Description,
+                                                      wol.Hours,
+                                                      wol.IsActive,
+                                                      wol.IsDeleted,
+                                                      wol.IsFromWorkFlow,
+                                                      wol.Memo,
+                                                      wol.StartDate,
+                                                      wol.TaskId,
+                                                      Task=task.Description,
+                                                      wol.UpdatedBy,
+                                                      wol.UpdatedDate,
+                                                      wol.WorkOrderLaborHeaderId,
+                                                      wol.WorkOrderLaborId,
                                                       EmployeeName = emp.FirstName
                                                   }
                                                  ).ToList()
