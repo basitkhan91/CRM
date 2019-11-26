@@ -9,5 +9,7 @@ namespace DAL.Repositories.Interfaces
         object GetRepairOrderHeader(long repairOrderId);
         object GetRepairOrderPartsByRepairOrderId(long repairOrderId);
         int GetLastIdNumber(long repairOrderId, long repairOrderPartId);
+
+        object GetReceivingRepairOrderForView(long repairOrderId);
     }
 }
