@@ -51,6 +51,18 @@ export class WorkOrderListComponent implements OnInit {
     showTableGrid: boolean = false;
     showMPN: boolean = false;
     workOrderDirectionList: Object;
+    otherOptions = [
+        { label: 'Other Options', value: '' },
+        { label: 'Freight', value: 'freight' },
+        { label: 'ContactGrid', value: 'contactGrid' },
+        { label: 'Accounting', value: 'accounting' },
+        { label: 'Charges', value: 'charges' },
+        { label: 'Exclusion', value: 'exclusion' },
+
+    ]
+    selectedOtherSubTask: string = ''
+    activeIndex: number;
+    otherOptionShow: boolean = false;
     constructor(private workOrderService: WorkOrderService,
         private route: Router,
         private authService: AuthService,
@@ -97,6 +109,10 @@ export class WorkOrderListComponent implements OnInit {
             }
 
         })
+    }
+    otherOptionSelected(value) {
+        this.selectedOtherSubTask = value;
+        this.otherOptionShow = false;
     }
 
     globalSearch(value) {
@@ -201,6 +217,7 @@ export class WorkOrderListComponent implements OnInit {
         this.getLaborListByWorkOrderId(workFlowWorkOrderId, workOrderId);
         this.getDirectionByWorkOrderId(workFlowWorkOrderId, workOrderId);
         this.showTableGrid = true;
+        this.activeIndex = 0;
     }
 
 
@@ -323,6 +340,9 @@ export class WorkOrderListComponent implements OnInit {
 
     }
 
+    showOtherOptions() {
+        this.otherOptionShow = !this.otherOptionShow;
+    }
 
 
 }

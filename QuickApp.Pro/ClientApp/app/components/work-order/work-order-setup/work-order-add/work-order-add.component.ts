@@ -149,6 +149,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
   materialStatus: any;
   workOrderLaborList: any;
   taskList: any;
+  subTabOtherOptions: any;
+  workOrderChargesList: Object;
 
 
   constructor(
@@ -604,6 +606,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     this.getEquipmentByWorkOrderId();
     this.getMaterialListByWorkOrderId();
     this.getWorkFlowLaborList();
+    this.getChargesListByWorkOrderId();
     // this.getWorkOrderWorkFlowBywfwoId(this.workFlowWorkOrderId);
   }
 
@@ -790,6 +793,17 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     }
   }
 
+  getChargesListByWorkOrderId() {
+
+    if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
+      this.workOrderService.getWorkOrderChargesList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
+        this.workOrderChargesList = res;
+      })
+
+    }
+
+  }
+
   getWorkFlowLaborList() {
     if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
       this.workOrderService.getWorkOrderLaborList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
@@ -822,7 +836,13 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
 
 
+  otherOptionSelected(value) {
+    this.subTabOtherOptions = value;
+    if (value === 'charges') {
+      this.getChargesListByWorkOrderId();
+    }
 
+  }
 
 
 
