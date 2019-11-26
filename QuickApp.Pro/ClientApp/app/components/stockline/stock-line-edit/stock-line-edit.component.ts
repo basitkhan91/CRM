@@ -169,7 +169,10 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 			this.sourceStockLineSetup.controlNumber = this.sourceStockLine.controlNumber;
 			this.sourceStockLineSetup.isSerialized = this.sourceStockLine.isSerialized;
 			
-			this.sourceStockLineSetup.quantity = this.sourceStockLine.quantity;
+            this.sourceStockLineSetup.quantity = this.sourceStockLine.quantityOnHand;
+            this.sourceStockLineSetup.quantity = this.sourceStockLine.quantityReserved;
+            this.sourceStockLineSetup.quantity = this.sourceStockLine.quantityIssued;
+            this.sourceStockLineSetup.quantity = this.sourceStockLine.quantityAvailable;
 			this.sourceStockLineSetup.condition = this.sourceStockLine.condition;
 			this.sourceStockLineSetup.conditionId = this.sourceStockLine.conditionId;
 			this.sourceStockLineSetup.serialNumber = this.sourceStockLine.serialNumber;
@@ -182,8 +185,6 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 			{
 				this.sourceStockLineSetup.isSerialized = false;
 			}
-
-
 			if (this.sourceStockLineSetup.isSerialized == false) {
 				this.hideSerialNumber = false;
 			}
@@ -245,14 +246,28 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 			this.sourceTimeLife.timeLife = this.sourceStockLine.timeLife;
 			this.sourceStockLineSetup.timeLifeCyclesId = this.sourceStockLine.timeLifeCyclesId  //TimeLifeId
 			this.sourceStockLineSetup.managementCode = this.sourceStockLine.code
-			this.sourceStockLineSetup.itemTypeId = this.sourceStockLine.itemTypeId
-			this.sourceStockLineSetup.PurchaseOrderId=this.sourceStockLine.purchaseOrderId
-			this.sourceStockLineSetup.RepairOrderId = this.sourceStockLine.repairOrderId
-			this.sourceStockLineSetup.manufacturerId = this.sourceStockLine.manufacturerId;
+
+            this.sourceStockLineSetup.itemTypeId = this.sourceStockLine.itemTypeId
+            if (this.sourceStockLine.po != null) {
+                this.sourceStockLineSetup.PurchaseOrderId = this.sourceStockLine.po.purchaseOrderId
+
+            }
+            if (this.sourceStockLine.ro != null) {
+                this.sourceStockLineSetup.RepairOrderId = this.sourceStockLine.ro.repairOrderId
+            }
+            this.sourceStockLineSetup.manufacturerId = this.sourceStockLine.manufacturerId;
+            this.sourceStockLineSetup.blackListed = this.sourceStockLine.blackListed;
+            this.sourceStockLineSetup.blackListedReason = this.sourceStockLine.blackListedReason;
+            this.sourceStockLineSetup.incident = this.sourceStockLine.incident;
+            this.sourceStockLineSetup.incidentReason = this.sourceStockLine.incidentReason;
+            this.sourceStockLineSetup.accident = this.sourceStockLine.accident;
+            this.sourceStockLineSetup.accidentReason = this.sourceStockLine.accidentReason;
+
             this.sourceStockLineSetup.quantityOnHand = this.sourceStockLine.quantityOnHand
             this.sourceStockLineSetup.quantityReserved = this.sourceStockLine.quantityReserved
             this.sourceStockLineSetup.quantityIssued = this.sourceStockLine.quantityIssued
             this.sourceStockLineSetup.quantityAvailable = this.sourceStockLine.quantityAvailable;
+
 
 			//TimeLife
 			this.sourceTimeLife.timeLifeCyclesId = this.sourceStockLine.timeLifeCyclesId

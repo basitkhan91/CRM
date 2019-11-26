@@ -477,6 +477,13 @@
                     </div>
                 </div>
 
+                <label class="control-label col-sm-4"></label>
+                <div class="inner-addon col-sm-7 display-flex" *ngIf="sourceStockLineSetup.blackListed == 1">
+                    <div class="col-sm-7">
+                        <textarea style="height: 100px;" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.blackListedReason"></textarea>
+                    </div>
+                </div>
+
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">INCIDENT</label>
                     <div class="col-sm-7">
@@ -575,7 +582,7 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">GL Account<strong style="color:red">*</strong> </label>
                     <div class="col-sm-7">
-                     
+
                         <p-autoComplete [(ngModel)]="sourceStockLineSetup.glAccountId" [disabled]="true" (onKeyUp)=glAccountHandler($event) (onSelect)="glAccountId($event)" [ngModelOptions]="{standalone: true}" [suggestions]="glAccountCollection" (completeMethod)="filterglAccount($event)" [size]="30"
                                         [minLength]="1" [dropdown]="true">
                             <ng-template let-glAccountId pTemplate="glAccount">
@@ -583,7 +590,7 @@
                             </ng-template>
                         </p-autoComplete>
                     </div>
-                    
+
                 </div>
 
                 <div class="form-group col-sm-12">
@@ -658,7 +665,7 @@
                         <textarea style="height: 100px;" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.memo">Memo</textarea>
                     </div>
                 </div>
-               
+
             </div>
 		</div>
 		<div class="clear"></div>
