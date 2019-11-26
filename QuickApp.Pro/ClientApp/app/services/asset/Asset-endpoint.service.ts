@@ -17,6 +17,7 @@ export class AssetEndpoint extends EndpointFactory  {
     private readonly _getCapabilityUrl: string = "/api/AssetModule/capabilityGet";
     private readonly getAuditById: string = "/api/AssetModule/audits";
     private readonly capesPost: string = "/api/AssetModule/Mancapespost";
+    private readonly addassetcapes: string = "/api/AssetModule/addAssetCapes";
 
     get allAssetListURL() { return this.configurations.baseUrl + this._allAssetlistUrl; }
     get assetListurl() { return this.configurations.baseUrl + this._assetlistUrl; }
@@ -75,6 +76,13 @@ export class AssetEndpoint extends EndpointFactory  {
         return this.http.post<T>(this.capesPost, JSON.stringify(data), this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.saveAssetCapesInfo(data));
+            });
+    }
+
+    addNewAssetCapesInfo<T>(data: any): Observable<T> {
+        return this.http.post<T>(this.addassetcapes, JSON.stringify(data), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.addNewAssetCapesInfo(data));
             });
     }
 

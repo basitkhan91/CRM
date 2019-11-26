@@ -11,6 +11,7 @@ export class DashNumberEndpointService extends EndpointFactory {
 
     private readonly getAllURL: string = "/api/dashnumber/getAll";
     private readonly getByIdURL: string = "/api/dashnumber/getById";
+    private readonly getAllModelIDURL: string = "/api/dashnumber/getByModelId";
     private readonly addURL: string = "/api/dashnumber/add";
     private readonly updateURL: string = "/api/dashnumber/update";
     private readonly removeByIdURL: string = "/api/dashnumber/removeById";
@@ -22,6 +23,7 @@ export class DashNumberEndpointService extends EndpointFactory {
     private readonly getDashListByMultiIdsURL: string = "/api/dashnumber/getDashListBy_MUTLI_MID_TID_DID";
 
     get getAll() { return this.configurations.baseUrl + this.getAllURL; }
+    get getByModelId() { return this.configurations.baseUrl + this.getAllModelIDURL; }
     get getById() { return this.configurations.baseUrl + this.getByIdURL; }
     get add() { return this.configurations.baseUrl + this.addURL; }
     get update() { return this.configurations.baseUrl + this.updateURL; }
@@ -48,6 +50,15 @@ export class DashNumberEndpointService extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getDashNumberById(dashNumberId));
+            });
+    }
+
+    getDashNumberByModelId<T>(AircraftModelId: number): Observable<T> {
+        let endpointUrl = `${this.getByModelId}/${AircraftModelId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getDashNumberByModelId(AircraftModelId));
             });
     }
 
