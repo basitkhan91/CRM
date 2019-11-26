@@ -1057,8 +1057,22 @@ namespace QuickApp.Pro.Controllers
                                 var repairOrderPartObj = _context.RepairOrderPart
                                                                 .Where(a => a.RepairOrderPartRecordId == roPartSplit.RepairOrderPartRecordId)
                                                                 .SingleOrDefault();
-                                repairOrderPartObj = FillRepairOrderSplitPart(repairOrderPartObj, roPartSplit);
-                                UpdateRepairOrderPart(repairOrderPartObj);
+                                // TO DO = Do save
+                                if(repairOrderPartObj == null)
+                                {
+                                    var roPartModel2 = new RepairOrderPart();
+                                    roPartModel2 = FillRepairOrderSplitPart(roPartModel2, roPartSplit);
+                                    SaveRepairOrderPart(roPartModel2);
+                                    if(roPartSplit.RepairOrderPartRecordId == 0)
+                                    {
+                                        roPartSplit.RepairOrderPartRecordId = roPartModel2.RepairOrderPartRecordId;
+                                    }
+                                }
+                                else
+                                {
+                                   repairOrderPartObj = FillRepairOrderSplitPart(repairOrderPartObj, roPartSplit);
+                                   UpdateRepairOrderPart(repairOrderPartObj);
+                                }
                             }
                         }
                     }
