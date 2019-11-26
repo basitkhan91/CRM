@@ -442,15 +442,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			this.hasSerialized = false; //for Knowing is Serialized or not for Serial Number 
 		}
 
-		if (allWorkFlows[0].isShelfLifeAvailable == null)
-		{
-			this.sourceStockLineSetup.shelfLife = false;
-		}
-		else
-		{
-			this.sourceStockLineSetup.shelfLife = allWorkFlows[0].isShelfLifeAvailable;
-		}
-
         this.sourceStockLineSetup.isPMA = allWorkFlows[0].IsPMA;
         this.sourceStockLineSetup.isDER = allWorkFlows[0].IsDER;
         this.sourceStockLineSetup.oem = allWorkFlows[0].OEM;
