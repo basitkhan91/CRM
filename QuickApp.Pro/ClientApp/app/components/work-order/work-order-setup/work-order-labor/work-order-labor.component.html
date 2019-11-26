@@ -278,10 +278,10 @@
                   {{ rec.hours }}
                 </td>
                 <td *ngIf="laborForm.hoursorClockorScan === 'labourHours'"> 
-                  <input type="number" (blur)="calculateHoursDifference(rec)" [(ngModel)]="rec.hours" name="hours"  placeholder="HH:MM" [disabled]="checkDisability(rec, task.taskId)"> 
+                  <input type="number" (blur)="calculateHoursDifference(rec)" [(ngModel)]="rec.hours" name="hours" [disabled]="checkDisability(rec, task.taskId)"> 
                 </td>
                 <td>
-                  <input type="number" (blur)="calculateHoursDifference(rec)" [(ngModel)]="rec.adjustments" [disabled]="laborForm.workFloworSpecificTaskorWorkOrder == 'workOrder'" placeholder="HH:MM"/>
+                  <input type="number" (blur)="calculateHoursDifference(rec)" [(ngModel)]="rec.adjustments" [disabled]="laborForm.workFloworSpecificTaskorWorkOrder == 'workOrder'"/>
                 </td>
                 <td>
                   {{ rec.adjustedHours }}
