@@ -94,7 +94,7 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">QTY ON HAND <strong class="clr-red">*</strong></label>
                     <div class="col-sm-7">
-                        <input class="form-control qty-input" *ngIf="showRestrictQuantity" type="number" maxlength="1" min="0" max="1"  (keypress)="calculateQtyAvailable($event)" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.QuantityOnHand">
+                        <input class="form-control qty-input"  *ngIf="showRestrictQuantity" type="number" maxlength="1" min="0" max="1"  (change)="calculateQtyAvailable($event)" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.QuantityOnHand">
                         <input class="form-control qty-input"  *ngIf="showFreeQuantity" (keypress)="calculateQtyAvailable($event)" type="number" min="0" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.QuantityOnHand">
                     </div>
                 </div>
@@ -102,14 +102,14 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">QTY RESERVED </label>
                     <div class="col-sm-7">
-                        <input class="form-control qty-input"  type="number" [ngModelOptions]="{standalone: true}" (keypress)="calculateQtyAvailable($event)" [(ngModel)]="sourceStockLineSetup.QuantityReserved">
+                        <input class="form-control qty-input"  type="number" [ngModelOptions]="{standalone: true}" (change)="calculateQtyAvailable($event)" [(ngModel)]="sourceStockLineSetup.QuantityReserved">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">QTY ISSUED </label>
                     <div class="col-sm-7">
-                        <input class="form-control qty-input" type="number" [ngModelOptions]="{standalone: true}" (keypress)="calculateQtyAvailable($event)" [(ngModel)]="sourceStockLineSetup.QuantityIssued">
+                        <input class="form-control qty-input" type="number" [ngModelOptions]="{standalone: true}" (change)="calculateQtyAvailable($event)" [(ngModel)]="sourceStockLineSetup.QuantityIssued">
                     </div>
                 </div>
 
@@ -330,7 +330,7 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">ESN</label>
                     <div class="col-sm-7">
-                        <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.esn">
+                        <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.EngineSerialNumber">
                     </div>
                 </div>
 
@@ -344,7 +344,7 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">ITAR NUM</label>
                     <div class="col-sm-7">
-                        <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.itarNum">
+                        <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.ITARNumber">
                     </div>
                 </div>
 
@@ -372,7 +372,7 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">AIRCRAFT TAIL NUM</label>
                     <div class="col-sm-7">
-                        <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.tailNumber">
+                        <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.aircraftTailNumber">
                     </div>
                 </div>
             </div>
@@ -736,5 +736,6 @@
     <p *ngIf="showReceiverNumberError" [ngStyle]="{'color':'red'}"> Please Enter receive Number</p>
     <p *ngIf="showGlAccountNumberError" [ngStyle]="{'color':'red'}"> Please Enter GL Account</p>
     <p *ngIf="QuantityOnHandError" [ngStyle]="{'color':'red'}"> Please Enter Quantity On Hand</p>
-    
+    <p *ngIf="invalidQtyError" [ngStyle]="{'color':'red'}"> Available Quantity cannot be negative</p>
+
 </p-dialog>
