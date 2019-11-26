@@ -443,7 +443,7 @@
               <p-tabPanel  *ngIf="workFlowId" header="Work Flow">
                   <app-workflow-list [isWorkOrder]="isWorkOrder"   [workFlowId]="workFlowId" ></app-workflow-list>  
               </p-tabPanel>
-              <p-tabPanel header="Labor"> </p-tabPanel>
+
               <p-tabPanel header="Equipment">
                
                   <div class="equipment-tab-content" *ngIf="workOrderAssetList">
@@ -509,7 +509,9 @@
                   </div>
 
 
-              </p-tabPanel>
+              </p-tabPanel> 
+
+
               <p-tabPanel header="Material List">
                 <div class="equipment-tab-content" >
                     <div class="x_panel" *ngIf="workOrderMaterialList">
@@ -602,6 +604,63 @@
                     </div>
                 </div>
               </p-tabPanel>
+
+
+              <!-- <p-tabPanel  header="Labor">
+               
+                  <div class="equipment-tab-content" >
+                      <div class="x_panel" *ngIf="workOrderLaborList">
+                          <div class="tab-content">
+                              <div class="table-responsive table-overflow" id="workflow-attributes-block">
+                                  <table class="table table-bordered ">
+                                      <thead>
+                                          <tr>
+                                              <th class="text-center">Publication ID</th>
+                                              <th class="text-center">Description</th>
+                                              <th class="text-center">Type</th>
+                                              <th class="text-center">Revision Date</th>
+                                              <th class="text-center">Sequence</th>
+                                              <th class="text-center">Source</th>
+                                              <th class="text-center">AirCraft Manufacturer</th>
+                                              <th class="text-center">AirCraft Model</th>
+                                              <th class="text-center">AirCraft DashNumber</th>
+                                              <th class="text-center">Location</th>
+                                              <th class="text-center">VerifiedBy</th>
+                                              <th class="text-center">VerifiedDate</th>
+                                              <th class="text-center">Status</th>
+                                          </tr> 
+                                      </thead>
+                                  
+                                      <tbody>
+                                        <tr *ngFor="let w  of workOrderLaborList; let i=index;">
+                                              <td>{{w.PublicationId}}</td>
+                                              <td>{{w.publicationDescription}}</td>
+                                              <td>{{w.publicationType}}</td>
+                                              <td>{{w.revisionDate}}</td>
+                                              <td>{{w.sequence}}</td>
+                                              <td>{{w.source}}</td>
+                                              <td>{{w.airCraftManufacturer}}</td>
+                                              <td>{{w.model}}</td>
+                                              <td></td>
+                                              <td>{{w.location}}</td>
+                                              <td>{{w.verifiedBy}}</td>
+                                              <td>{{w.verifiedDate}}</td>
+                                              <td>{{w.status}}</td>
+                                          </tr> 
+                                      </tbody>
+                                  </table>
+                              </div>
+                          </div>
+                          <div class="clear"></div>
+                          <br />
+                          <br />
+                          <br />
+                          <br />
+                      </div>
+                  </div>
+
+              </p-tabPanel> -->
+
               
               <p-tabPanel header="Charges">
                 <div class="equipment-tab-content" >
@@ -644,8 +703,97 @@
                       <br />
                   </div>
               </div>
+              </p-tabPanel>
 
+              <p-tabPanel header="Publications">
 
+                  <div class="equipment-tab-content" >
+                      <div class="x_panel" *ngIf="workOrderPublicationList">
+                          <div class="tab-content">
+                              <div class="table-responsive table-overflow" id="workflow-attributes-block">
+                                  <table class="table table-bordered ">
+                                      <thead>
+                                          <tr>
+                                              <th class="text-center">Publication ID</th>
+                                              <th class="text-center">Description</th>
+                                              <th class="text-center">Type</th>
+                                              <th class="text-center">Revision Date</th>
+                                              <th class="text-center">Sequence</th>
+                                              <th class="text-center">Source</th>
+                                              <th class="text-center">AirCraft Manufacturer</th>
+                                              <th class="text-center">AirCraft Model</th>
+                                              <th class="text-center">AirCraft DashNumber</th>
+                                              <th class="text-center">Location</th>
+                                              <th class="text-center">VerifiedBy</th>
+                                              <th class="text-center">VerifiedDate</th>
+                                              <th class="text-center">Status</th>
+                                          </tr> 
+                                      </thead>
+                                  
+                                      <tbody>
+                                        <tr *ngFor="let w  of workOrderPublicationList; let i=index;">
+                                              <td>{{w.PublicationId}}</td>
+                                              <td>{{w.publicationDescription}}</td>
+                                              <td>{{w.publicationType}}</td>
+                                              <td>{{w.revisionDate}}</td>
+                                              <td>{{w.sequence}}</td>
+                                              <td>{{w.source}}</td>
+                                              <td>{{w.airCraftManufacturer}}</td>
+                                              <td>{{w.model}}</td>
+                                              <td></td>
+                                              <td>{{w.location}}</td>
+                                              <td>{{w.verifiedBy}}</td>
+                                              <td>{{w.verifiedDate}}</td>
+                                              <td>{{w.status}}</td>
+                                          </tr> 
+                                      </tbody>
+                                  </table>
+                              </div>
+                          </div>
+                          <div class="clear"></div>
+                          <br />
+                          <br />
+                          <br />
+                          <br />
+                      </div>
+                  </div>
+              </p-tabPanel>
+
+              <p-tabPanel  header="Directions" >
+
+                  <div class="equipment-tab-content" >
+                      <div class="x_panel" *ngIf="workOrderDirectionList">
+                          <div class="tab-content">
+                              <div class="table-responsive table-overflow" id="workflow-attributes-block">
+                                  <table class="table table-bordered ">
+                                      <thead>
+                                          <tr>
+                                              <th class="text-center">Action</th>
+                                              <th class="text-center">Direction Name</th>
+                                              <th class="text-center">Sequence</th>
+                                              <th class="text-center">Memo</th>
+                                          </tr> 
+                                      </thead>
+                                  
+                                      <tbody>
+                                        <tr *ngFor="let w  of workOrderDirectionList; let i=index;">
+                                              <td>{{w.action}}</td>
+                                              <td>{{w.directionName}}</td>
+                                              <td>{{w.sequence}}</td>
+                                              <td>{{w.memo}}</td>
+     
+                                          </tr> 
+                                      </tbody>
+                                  </table>
+                              </div>
+                          </div>
+                          <div class="clear"></div>
+                          <br />
+                          <br />
+                          <br />
+                          <br />
+                      </div>
+                  </div>
               </p-tabPanel>
 
 

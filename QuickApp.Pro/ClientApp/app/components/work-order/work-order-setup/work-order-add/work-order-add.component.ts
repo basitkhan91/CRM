@@ -174,7 +174,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     this.moduleName = 'Work Order';
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     this.getTaskList();
   }
   async ngOnInit() {
@@ -219,6 +219,11 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
       }
       this.showTableGrid = true;
       this.workFlowWorkOrderId = data.workFlowWorkOrderId;
+      if (data.isSinglePN) {
+        this.workFlowId = data.partNumbers[0].workflowId;
+
+      }
+
       this.workOrderId = data.workOrderId;
       this.savedWorkOrderData = this.workOrderGeneralInformation;
       this.getWorkOrderWorkFlowNos();
@@ -235,25 +240,25 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     return this.authService.currentUser ? this.authService.currentUser.userName : "";
   }
 
-  getTaskList(){
-    if(this.labor == undefined){
+  getTaskList() {
+    if (this.labor == undefined) {
       this.labor = new WorkOrderLabor()
     }
     this.labor.workOrderLaborList = [];
     this.labor.workOrderLaborList.push({})
     this.workOrderService.getAllTasks()
-    .subscribe(
-      (taskList)=>{
-        this.labor.workOrderLaborList[0] = {}
-        this.taskList = taskList;
-        this.taskList.forEach(task => {
-          this.labor.workOrderLaborList[0][task.description.toLowerCase()] = [new AllTasks()];
-        });
-      },
-      (error)=>{
-        console.log(error);
-      }
-    )
+      .subscribe(
+        (taskList) => {
+          this.labor.workOrderLaborList[0] = {}
+          this.taskList = taskList;
+          this.taskList.forEach(task => {
+            this.labor.workOrderLaborList[0][task.description.toLowerCase()] = [new AllTasks()];
+          });
+        },
+        (error) => {
+          console.log(error);
+        }
+      )
   }
 
   // loadMPNlist() {
@@ -785,16 +790,16 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     }
   }
 
-  getWorkFlowLaborList(){
+  getWorkFlowLaborList() {
     if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
       this.workOrderService.getWorkOrderLaborList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
         this.workOrderLaborList = res;
-        if(res){
-          for( let labList of res['laborList']){
-            for(let task of this.taskList){
-              if(task.taskId == labList['wol']['taskId']){
-                if(this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == undefined || this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == null){
-                  this.labor.workOrderLaborList[0][task.description.toLowerCase()].splice(0,1);
+        if (res) {
+          for (let labList of res['laborList']) {
+            for (let task of this.taskList) {
+              if (task.taskId == labList['wol']['taskId']) {
+                if (this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == undefined || this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == null) {
+                  this.labor.workOrderLaborList[0][task.description.toLowerCase()].splice(0, 1);
                 }
                 let taskData = new AllTasks()
                 taskData['expertiseId'] = labList['wol']['expertiseId'];

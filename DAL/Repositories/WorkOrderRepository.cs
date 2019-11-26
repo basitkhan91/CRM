@@ -338,7 +338,11 @@ namespace DAL.Repositories
                                        join e in _appContext.Employee on wo.EmployeeId equals e.EmployeeId
                                        join sp in _appContext.Employee on wo.SalesPersonId equals sp.EmployeeId
                                        join ws in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals ws.Id
-                                       where wo.WorkOrderId == workOrderId
+									   join wf in _appContext.WorkOrderWorkFlow on wo.WorkOrderId equals wf.WorkOrderId
+
+									   where wo.WorkOrderId == workOrderId
+
+
                                        select new
                                        {
                                            SingleMPN = wo.IsSinglePN == true ? "Single MPN" : "Multiple MPN",
@@ -357,9 +361,11 @@ namespace DAL.Repositories
                                            c.CustomerCode,
                                            c.CustomerContact,
                                            wo.CSR,
-                                           wo.CustomerReference
-                                       }).FirstOrDefault();
-                return workOrderHeader;
+                                           wo.CustomerReference,
+										   workFlowWorkOrderId =  wo.IsSinglePN == true ?  wf.WorkFlowWorkOrderId  : 0
+									   }).FirstOrDefault();
+
+				return workOrderHeader;
             }
             catch (Exception)
             {
