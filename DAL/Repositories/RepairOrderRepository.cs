@@ -1,6 +1,7 @@
 ﻿using DAL.Common;
 using DAL.Models;
 using DAL.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -171,7 +172,7 @@ namespace DAL.Repositories
                         .ToList();
                 }
             }
-           
+
             if (roFilters.filters.ClosedDate != null)
             {
                 if (repairOrderList != null && repairOrderList.Any())
@@ -350,6 +351,7 @@ namespace DAL.Repositories
             var roPartsList = (from ro in _appContext.RepairOrder
                                join rop in _appContext.RepairOrderPart on ro.RepairOrderId equals rop.RepairOrderId
                                where rop.RepairOrderId == repairOrderId
+                                && ro.IsDeleted == false
                                select new
                                {
                                    rop
@@ -430,6 +432,10 @@ namespace DAL.Repositories
                         repairOrderPartDto.RoPartSplits.Add(roPartSplit);
                     }
                 }
+            }
+            else
+            {
+                repairOrderDtoList = null;
             }
 
             return repairOrderDtoList;
@@ -567,9 +573,10 @@ namespace DAL.Repositories
 
             try
             {
-                var repairOrderPartList = _appContext.RepairOrderPart
-                    .Where(x => x.RepairOrderId == repairOrderId)
-                    .ToList();
+                var repairOrderPartList = _appContext.RepairOrder
+                  .Include("RepairOrderPart")
+                  .Where(x => x.RepairOrderId == repairOrderId && x.IsDeleted == false)
+                  .SelectMany(y => y.RepairOrderPart);
 
                 if (repairOrderPartList != null && repairOrderPartList.Any())
                 {
@@ -635,6 +642,10 @@ namespace DAL.Repositories
                             repairOrderPartViewDto.RepairOrderSplitParts.Add(repairOrderSplitPart);
                         }
                     }
+                }
+                else
+                {
+                    returnObjects = null;
                 }
 
                 return returnObjects;
