@@ -326,7 +326,7 @@
                             </div>
                         </p-tabPanel>
 
-                        <p-tabPanel header="Receiving">
+                        <p-tabPanel header="Receiving" *ngIf="repairOrderData">
                             <app-ro-view-list [repairOrderData]="repairOrderData" ></app-ro-view-list>
                         </p-tabPanel>
                     </p-tabView>
