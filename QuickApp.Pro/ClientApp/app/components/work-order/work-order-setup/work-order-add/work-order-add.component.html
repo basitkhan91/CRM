@@ -700,11 +700,12 @@
                             aria-expanded="false" [ngClass]="{active : gridActiveTab === 'otherOptions'}"
                             (click)="gridTabChange('otherOptions')">Other Options</a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item">Charges</a>
-                            <a class="dropdown-item">Freight</a>
-                            <a class="dropdown-item">Contact Grid</a>
-                            <a class="dropdown-item">Accounting</a>
-                            <a class="dropdown-item">Exclusion </a>
+              
+                            <a class="dropdown-item" (click)="otherOptionSelected('freight')" >Freight</a>
+                            <a class="dropdown-item" (click)="otherOptionSelected('contactGrid')">Contact Grid</a>
+                            <a class="dropdown-item" (click)="otherOptionSelected('accounting')" >Accounting</a>
+                            <a class="dropdown-item" (click)="otherOptionSelected('charges')">Charges</a>
+                            <a class="dropdown-item" (click)="otherOptionSelected('exclusion')" >Exclusion </a>
                         </div>
                     </li>
                     </ul>
@@ -720,6 +721,8 @@
                     <div *ngIf="workFlowId && subTabWorkFlow " class="wf-label-cstm" [ngClass]="{hidedata :  subTabWorkFlow !== 'viewworkFlow' }" >
                       <app-workflow-list [isWorkOrder]="isWorkOrder"  [workFlowType]="subTabWorkFlow" [workFlowId]="workFlowId" ></app-workflow-list>
                     </div>
+
+
                     <div *ngIf="labor" [ngClass]="{hidedata : gridActiveTab !== 'labor'}">
                         <app-work-order-labor [taskList]="taskList" [laborForm]="labor" [workOrderLaborList]="workOrderLaborList" [workOrderWorkFlowOriginalData]="workOrderWorkFlowOriginalData" [savedWorkOrderData]="savedWorkOrderData"
                         (saveworkOrderLabor)="saveworkOrderLabor($event)"
@@ -758,6 +761,13 @@
                     <div *ngIf="documents" [ngClass]="{hidedata: gridActiveTab !== 'documents'}">
                             <app-work-order-documents [documentForm]="documents"></app-work-order-documents>
                     </div>
+
+
+                    <div  class="wf-label-cstm" [ngClass]="{hidedataCharges :  subTabOtherOptions !== 'charges'} ">
+                        <app-work-order-charges [workOrderChargesList]="workOrderChargesList" ></app-work-order-charges>
+                    </div>
+
+
                 </div>
             </div>
         </div>

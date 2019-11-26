@@ -151,6 +151,10 @@ export class WorkOrderService {
         return this.workOrderEndpointService.getWorkOrderLaborList(workFlowWorkOrderId, workOrderId)
     }
 
+    getWorkOrderDirectionList(workFlowWorkOrderId, workOrderId){
+        return this.workOrderEndpointService.getWorkOrderDirectionList(workFlowWorkOrderId, workOrderId)
+    }
+
     getWorkOrderWorkFlowByWorkFlowWorkOrderId(workFlowWorkOrderId) {
         return this.workOrderEndpointService.getWorkOrderWorkFlowByWorkFlowWorkOrderId(workFlowWorkOrderId)
     }
