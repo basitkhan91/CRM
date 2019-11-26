@@ -497,7 +497,7 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        [HttpGet("getworkflowWorkorderquote")]
+        [HttpGet("getworkorderquote")]
         public IActionResult GetWorkFlowWorkOrderQuote(long wfwoId = 0, long workOrderId = 0)
         {
             var result = unitOfWork.WorkOrderRepository.GetWorkFlowWorkOrderQuote(wfwoId, workOrderId);
