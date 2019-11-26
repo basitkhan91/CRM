@@ -101,7 +101,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
   // quote Object Modal
   quote: WorkOrderQuote;
   // labor Object Modal
-  labor: WorkOrderLabor;
+  labor = new WorkOrderLabor();
   isWorkOrder: boolean = true;
 
   workFlowList: any;
