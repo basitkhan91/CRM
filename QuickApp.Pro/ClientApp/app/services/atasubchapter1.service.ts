@@ -47,7 +47,7 @@ export class AtaSubChapter1Service {
 	}
 
 	historyATASubChapter1(ataSubChapterId: number) {
-		return Observable.forkJoin(this.ataSubChapter1Endpoint.getHistoryATASubChapter1Endpoint<AuditHistory[]>(ataSubChapterId));
+		return this.ataSubChapter1Endpoint.getHistoryATASubChapter1Endpoint<any[]>(ataSubChapterId);
 	}
 
 	getATASubChapter1(ataSubChapterId?: number) {
@@ -65,7 +65,7 @@ export class AtaSubChapter1Service {
 	}
 
 	getAtaSubChapterAudit(ataSubChapterId: number) {
-		return this.ataSubChapter1Endpoint.getATASubChapterAuditById<any>(ataSubChapterId);
+		return this.ataSubChapter1Endpoint.getATASubChapterAuditById<any[]>(ataSubChapterId);
 	}
 
 	getATASubChapterListByATAChapterId(ataChapterId: number) {

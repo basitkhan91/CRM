@@ -14,12 +14,17 @@ namespace QuickApp.Pro.Controllers
             var creditTerms = this.UnitOfWork.MasterSalesCreditTermsRepository.GetAll();
             var salesProbabilities = this.UnitOfWork.MasterSalesProbablityRepository.GetAll();
             var leadSources = this.UnitOfWork.MasterSalesLeadSourcesRepository.GetAll(); 
-
+            
             if (customer != null)
             {
                 model.CustomerId = customer.CustomerId;
                 model.CustomerName = customer.Name;
                 model.CustomerCode = customer.CustomerCode;
+                //if (customer.CustomerContact != null) {
+                //    var contact = UnitOfWork.ContactRepository.Get(customer.CustomerContact.ContactId);
+                //    model.CustomerContactId = contact.ContactId;
+                //    model.CustomerContactName = contact.FirstName;
+                //}
             }
 
             if (quoteTypes.Any())

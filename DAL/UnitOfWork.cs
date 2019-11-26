@@ -203,6 +203,7 @@ namespace DAL
         IAssetDepConvention _assetDepConvention;
 
         IPublicationTypesRepository _publicationTypesRepository;
+        ICommunicationRepository _communicationRepository;
         IPercentageRepository _percentageRepository;
 
         IMasterSalesOrderQuoteTypesRepository _masterSalesOrderQuoteTypesRepository;
@@ -211,6 +212,7 @@ namespace DAL
         IMasterSalesProbablityRepository _masterSalesProbablityRepository;
 
         IItemMasterExchangeLoanRepository itemMasterExchangeLoanRepository;
+        IReceiveRepairOrderRepository _receiveRepairOrder;
 
         public UnitOfWork(ApplicationDbContext context, IOptions<AppSettings> appSettings)
         {
@@ -1817,6 +1819,16 @@ namespace DAL
             }
         }
 
+        public ICommunicationRepository CommunicationRepository
+        {
+            get
+            {
+                if (_communicationRepository == null)
+                    _communicationRepository = new CommunicationRepository(_context, _appSettings);
+                return _communicationRepository;
+            }
+        }
+        
         public IPercentageRepository PercentageRepository
         {
             get
@@ -1886,6 +1898,15 @@ namespace DAL
                     itemMasterExchangeLoanRepository = new ItemMasterExchangeLoanRepository(_context, _appSettings);
                 }
                 return itemMasterExchangeLoanRepository;
+            }
+        }
+
+        public IReceiveRepairOrderRepository ReceiveRepairOrder {
+            get {
+                if (_receiveRepairOrder == null) {
+                    _receiveRepairOrder = new ReceiveRepairOrderRepository(_context);
+                }
+                return _receiveRepairOrder;
             }
         }
     }

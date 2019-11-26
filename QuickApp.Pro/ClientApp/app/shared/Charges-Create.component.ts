@@ -147,8 +147,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
     calculateExtendedCost(charge): void {
         var value = Number.parseFloat(charge.quantity) * Number.parseFloat(charge.unitCost);
         if (value > 0) {
-            charge.extendedCost = value;
-
+            charge.extendedCost = parseFloat(value.toFixed(2));
         }
         else {
             charge.extendedCost = "";
@@ -159,12 +158,20 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
     calculateExtendedPrice(charge) {
         var value = Number.parseFloat(charge.quantity) * Number.parseFloat(charge.unitPrice);
         if (value > 0) {
-            charge.extendedPrice = value;
+            charge.extendedPrice = parseFloat(value.toFixed(2));
         }
         else {
             charge.extendedPrice = "";
         }
         this.calculateExtendedPriceSummation();
+    }
+
+    validateQuantity(event, charges): void {
+
+        event.target.value = event.target.value == '' ? '' : parseInt(charges.quantity);
+        if (event.target.value != '') {
+            charges.quantity = parseInt(charges.quantity);
+        }        
     }
 
     // sum of the qty
@@ -174,6 +181,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
             return acc + parseFloat(x.quantity == undefined || x.quantity === '' ? 0 : x.quantity)
         }, 0);
 
+        this.workFlow.qtySummation = parseFloat(this.workFlow.qtySummation.toFixed(2));
     }
 
     // sum of extended cost 
@@ -182,7 +190,8 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         this.workFlow.extendedCostSummation = charges.reduce((acc, x) => {
             return acc + parseFloat(x.extendedCost == undefined || x.extendedCost === '' ? 0 : x.extendedCost)
         }, 0);
-        //this.workFlow.totalChargesCost = this.workFlow.extendedCostSummation;
+
+        this.workFlow.extendedCostSummation = parseFloat(this.workFlow.extendedCostSummation.toFixed(2));
     }
 
     // sum of extended price
@@ -191,6 +200,8 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         this.workFlow.totalChargesCost = charges.reduce((acc, x) => {
             return acc + parseFloat(x.extendedPrice == undefined || x.extendedPrice === '' ? 0 : x.extendedPrice)
         }, 0);
+
+        this.workFlow.totalChargesCost = parseFloat(this.workFlow.totalChargesCost.toFixed(2));
     }
 
 

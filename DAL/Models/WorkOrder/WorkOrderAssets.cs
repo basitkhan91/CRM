@@ -27,7 +27,11 @@ namespace DAL.Models
         public DateTime UpdatedDate { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
-
+        public bool? IsFromWorkFlow { get; set; }
+        public long? CheckedInById { get; set; }
+        public DateTime? CheckedInDate { get; set; }
+        public long? CheckedOutById { get; set; }
+        public DateTime? CheckedOutDate { get; set; }
         [NotMapped]
         public string AssetId { get; set; }
         [NotMapped]
@@ -42,4 +46,6 @@ namespace DAL.Models
 
 
     }
+
+    
 }

@@ -67,8 +67,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
         }
         public IEnumerable<object> GetAllBinDataById(long id)
@@ -92,8 +91,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
         }
         public IEnumerable<object> GetAllShelfData(long id)
@@ -116,10 +114,9 @@ namespace DAL.Repositories
                     return result;
                 }
                 catch (Exception ex)
-                {
-
-                    return null;
-                }
+            {
+                throw ex;
+            }
             }
 
             public IEnumerable<object> GetAllAddressData(long id)
@@ -146,10 +143,9 @@ namespace DAL.Repositories
                     return result;
                 }
                 catch (Exception ex)
-                {
-
-                    return null;
-                }
+            {
+                throw ex;
+            }
 
 
             }
@@ -174,10 +170,9 @@ namespace DAL.Repositories
                     return result;
                 }
                 catch (Exception ex)
-                {
-
-                    return null;
-                }
+            {
+                throw ex;
+            }
 
 
             }
@@ -203,10 +198,9 @@ namespace DAL.Repositories
                     return result;
                 }
                 catch (Exception ex)
-                {
-
-                    return null;
-                }
+            {
+                throw ex;
+            }
 
 
             }
@@ -231,8 +225,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
 
 

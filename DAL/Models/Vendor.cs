@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace DAL.Models
 {
@@ -111,8 +110,14 @@ namespace DAL.Models
         //public string country { get; set; }
         //public string email { get; set; }
         public string VendorPhone { get; set; }
+       
         //public string customertypedesc { get; set; }
         public Nullable<bool> IsDelete { get; set; }
+        [NotMapped]
+        public long AttachmentId { get; set; }
+
+
+
 
 
     }

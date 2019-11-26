@@ -18,6 +18,7 @@ import { AlertService, MessageSeverity } from "../services/alert.service";
     styleUrls: ['./Material-List-Create.component.css']
 })
 export class MaterialListCreateComponent implements OnInit {
+    @Input() workFlowObject;
     partCollection: any[] = [];
     itemclaColl: any[] = [];
     allPartnumbersInfo: any[] = [];
@@ -25,6 +26,7 @@ export class MaterialListCreateComponent implements OnInit {
     itemClassInfo: any[] = [];
     allconditioninfo: any[] = [];
     partListData: any[] = [];
+    @Input() isWorkOrder;
     @Input() workFlow: IWorkFlow;
     @Input() UpdateMode: boolean;
     @Output() workFlowChange = new EventEmitter();
@@ -52,21 +54,25 @@ export class MaterialListCreateComponent implements OnInit {
     defaultMaterialMandatory: string;
 
     ngOnInit(): void {
-        this.row = this.workFlow.materialList[0];
-        if (this.row == undefined) {
-            this.row = {};
-        }
-        this.row.taskId = this.workFlow.taskId;
-        this.actionService.GetMaterialMandatory().subscribe(
-            mandatory => {
-                this.materialMandatory = mandatory;
-                this.defaultMaterialMandatory = 'Mandatory';
-                if (this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') {
-                    this.workFlow.materialList[0].mandatoryOrSupplemental = this.defaultMaterialMandatory;
-                }
-            },
-            error => this.errorMessage = <any>error
-        );
+
+            this.row = this.workFlow.materialList[0];
+            if (this.row == undefined) {
+                this.row = {};
+            }
+            this.row.taskId = this.workFlow.taskId;
+            this.actionService.GetMaterialMandatory().subscribe(
+                mandatory => {
+                    this.materialMandatory = mandatory;
+                    this.defaultMaterialMandatory = 'Mandatory';
+                    if (this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') {
+                        this.workFlow.materialList[0].mandatoryOrSupplemental = this.defaultMaterialMandatory;
+                    }
+                },
+                error => this.errorMessage = <any>error
+            );
+        
+
+
 
         this.loadConditionData();
         this.loadItemClassData();
@@ -226,9 +232,10 @@ export class MaterialListCreateComponent implements OnInit {
         this.reCalculate();
     }
 
+    
     calculateExtendedCost(material): void {
         if (material.quantity != "" && material.unitCost) {
-            material.extendedCost = material.quantity * material.unitCost;
+            material.extendedCost = parseFloat((material.quantity * material.unitCost).toString()).toFixed(2);
         }
         else {
             material.extendedCost = "";
@@ -242,12 +249,13 @@ export class MaterialListCreateComponent implements OnInit {
         this.workFlow.materialExtendedCostSummation = this.workFlow.materialList.reduce((acc, x) => {
             return acc + parseFloat(x.extendedCost == undefined || x.extendedCost === '' ? 0 : x.extendedCost)
         }, 0);
-        this.workFlow.totalMaterialCostValue = this.workFlow.materialExtendedCostSummation;
+
+        this.workFlow.totalMaterialCostValue = parseFloat(this.workFlow.materialExtendedCostSummation.toFixed(2));
     }
 
     calculateExtendedPrice(material): void {
         if (material.quantity != "" && material.price != "") {
-            material.extendedPrice = material.quantity * material.price;
+            material.extendedPrice = parseFloat((material.quantity * material.price).toFixed(2));
         }
         else {
             material.extendedPrice = "";
@@ -261,20 +269,34 @@ export class MaterialListCreateComponent implements OnInit {
         this.workFlow.materialExtendedPriceSummation = this.workFlow.materialList.reduce((acc, x) => {
             return acc + parseFloat(x.extendedPrice == undefined || x.extendedPrice === '' ? 0 : x.extendedPrice)
         }, 0);
+
+        this.workFlow.materialExtendedPriceSummation = parseFloat(this.workFlow.materialExtendedPriceSummation.toFixed(2));
     }
 
     // sum of the qty
     calculateQtySummation() {
         this.workFlow.materialQtySummation = this.workFlow.materialList.reduce((acc, x) => {
-            return acc + parseFloat(x.quantity == undefined || x.quantity === '' ? 0 : x.quantity)
+            return acc + parseInt((x.quantity == undefined || x.quantity === '' ? 0 : x.quantity))
         }, 0);
 
+        this.workFlow.materialList.forEach(function (material) {
+            material.quantity = parseInt(material.quantity);
+        });
+
     }
+
+    validateQuantity(event, material): void {
+        event.target.value = parseInt(material.quantity);
+        material.quantity = parseInt(material.quantity);
+    }
+
     // calculate the price summation 
     calculatePriceSummation() {
         this.workFlow.totalMaterialCost = this.workFlow.materialList.reduce((acc, x) => {
             return acc + parseFloat(x.price == undefined || x.price === '' ? 0 : x.price)
         }, 0);
+
+        this.workFlow.totalMaterialCost = parseFloat(this.workFlow.totalMaterialCost.toFixed(2));
     }
 
     isDeferredEnable(e) {
@@ -296,5 +318,6 @@ export class MaterialListCreateComponent implements OnInit {
             this.isDeferredBoolean = false;
         }
     }
+
 
 }

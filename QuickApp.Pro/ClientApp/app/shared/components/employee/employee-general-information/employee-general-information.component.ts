@@ -247,11 +247,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
         const control = new FormControl('1', Validators.pattern('[a-zA-Z ]*'));
 
-        console.log(control.errors);
-
         this.dataSource = new MatTableDataSource();
-
-        console.log(this.employeeService.listCollection);
 
         if (this.employeeService.listCollection != null && this.employeeService.isEditMode == true) {
 
@@ -262,11 +258,6 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
 
             this.sourceEmployee = this.employeeService.listCollection;
-            console.log(this.sourceEmployee)
-
-            console.log("setting jpo1b title*" + this.sourceEmployee.jobTitleId);
-
-            console.log("setting jpob title*")
 
             this.empCreationForm.controls['jobTitleId'].setValue(this.sourceEmployee.jobTitleId);
 
@@ -550,10 +541,6 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
             this.sourceEmployee.dateOfBirth = null;
         }
-
-        console.log("this.empCreationForm.get('departmentId').value" + this.empCreationForm.get('departmentId').value);
-        console.log("this.empCreationForm.get('divisionId').value" + this.empCreationForm.get('divisionId').value);
-        console.log("this.empCreationForm.get('BusinessUnitId').value" + this.empCreationForm.get('BusinessUnitId').value);
         // if (this.sourceEmployee.firstName !== '' && this.sourceEmployee.lastName && this.sourceEmployee.middleName && this.sourceEmployee.jobTitleId && this.sourceEmployee.employeeExpertiseId && this.sourceEmployee.JobTypeId
         //     && this.sourceEmployee.startDate
         // ) {
@@ -561,43 +548,31 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
 
 
-        if (this.empCreationForm.get('departmentId').value != null) {
-
-
-
+        if (this.empCreationForm.get('departmentId').value != null && this.empCreationForm.get('departmentId').value >0) {
 
             this.sourceEmployee.managementStructureId = this.empCreationForm.get('departmentId').value;
 
         }
-
-
-        else if (this.empCreationForm.get('divisionId').value != null && this.sourceEmployee.departmentId == '') {
-
-
-
+        else if (this.empCreationForm.get('divisionId').value != null && this.sourceEmployee.departmentId == '' && this.sourceEmployee.departmentId>0) {
 
             this.sourceEmployee.managementStructureId = this.empCreationForm.get('divisionId').value;
-
-
         }
-        else if (this.empCreationForm.get('BusinessUnitId').value != null && this.sourceEmployee.departmentId == '' && this.sourceEmployee.divisionId == '') {
-
-
+        else if (this.empCreationForm.get('BusinessUnitId').value != null && this.sourceEmployee.departmentId == '' && this.sourceEmployee.divisionId == '' && this.sourceEmployee.divisionId >0) {
             this.sourceEmployee.managementStructureId = this.empCreationForm.get('BusinessUnitId').value;
-
-
         }
         else {
 
             this.sourceEmployee.managementStructureId = this.empCreationForm.get('companyId').value;
         }
-
+        
+       
 
         if (this.sourceEmployee.employeeId) {
             this.sourceEmployee.IsHourly = this.sourceEmployee.isHourly;
 
             this.employeeService.updateEmployee(this.sourceEmployee).subscribe(
                 results => {
+                    this.employeeService.employeeStored = results;
                     this.empUpdate(this.sourceEmployee, results),
                         this.employeeLeavetypeUpdate(this.sourceEmployee.employeeId);
                     //this.employeeShifttypeAdd(this.sourceEmployee.employeeId);
@@ -617,35 +592,11 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
 
 
-            if (this.empCreationForm.get('departmentId').value != null) {
-
-                this.sourceEmployee.managementStructureId = this.empCreationForm.get('departmentId').value;
-
-            }
-
-            else if (this.empCreationForm.get('divisionId').value != null && this.sourceEmployee.departmentId == '') {
-
-                this.sourceEmployee.managementStructureId = this.empCreationForm.get('divisionId').value;
-
-
-            }
-            else if (this.empCreationForm.get('BusinessUnitId').value != null && this.sourceEmployee.departmentId == '' && this.sourceEmployee.divisionId == '') {
-
-
-                this.sourceEmployee.managementStructureId = this.empCreationForm.get('BusinessUnitId').value;
-
-
-            }
-            else {
-
-                this.sourceEmployee.managementStructureId = this.empCreationForm.get('companyId').value;
-            }
-
             this.sourceEmployee.employeeLeaveTypeId = this.selectedLeaveValues;
 
             this.employeeService.newAddEmployee(this.sourceEmployee).subscribe(
                 results => {
-
+                    this.employeeService.employeeStored = results;
                     this.empAdd(this.sourceEmployee, results);
 
                     this.employeeLeavetypeAdd(results.employeeId);
@@ -925,16 +876,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     onSubmit() {
         this.sourceEmployee.firstName;
 
-        //console.log(this.sourceEmpFirst.firstName);
-
-        //console.log(this.selectedFirstName);
-
-        //console.log(this.sourceEmpFirst.firstName);
-
-        //console.log(this.selectedFirstName);
-
-
-        this.employeeService.newAddEmployee(this.sourceEmployee).subscribe(
+              this.employeeService.newAddEmployee(this.sourceEmployee).subscribe(
             results => this.empAdd(this.sourceEmployee, results),
 
             error => this.onDataLoadFailed(error)
@@ -1818,8 +1760,14 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     }
 
     editItemLeaveCloseModel() {
-        console.log("hii2");
+        
         this.isSaving = true;
+       
+				 if (this.description.toLowerCase().trim()=="")
+                 {
+                     this.alertService.showMessage("Empty", 'Cannot Submit Empty', MessageSeverity.warn);
+                     return;
+                 }
 
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;

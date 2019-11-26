@@ -1,19 +1,7 @@
-﻿
-using DAL.Models;
-using DAL.Repositories.Interfaces;
-using System;
+﻿using DAL.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
-using DAL;
-using DAL.Core.Interfaces;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-
-using System.Threading.Tasks;
-using DAL.Core;
 
 
 namespace DAL.Repositories
@@ -32,9 +20,8 @@ namespace DAL.Repositories
 //                return result;
 //            }
 //            catch (Exception ex)
-//            {
-
-//                return null;
+//              {
+//                throw ex
 //            }
 
 
@@ -52,13 +39,13 @@ namespace DAL.Repositories
 
         public IEnumerable<DAL.Models.TaxRates> GetAllTaxRateData()
         {
-            return _appContext.TaxRate.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.TaxRateId).ToList();
+            return _appContext.TaxRate.Include("MasterCompany").Where(c => c.IsDeleted == false || c.IsDeleted == null).OrderByDescending(c => c.TaxRateId).ToList();
         }
 
         override
         public IQueryable<DAL.Models.TaxRates> GetPaginationData()
         {
-            return _appContext.TaxRate.Where(c => (c.IsDelete == false || c.IsDelete == null))
+            return _appContext.TaxRate.Where(c => (c.IsDeleted == false || c.IsDeleted == null))
                 .OrderByDescending(c => c.TaxRateId).ToList().AsQueryable();
         }
 

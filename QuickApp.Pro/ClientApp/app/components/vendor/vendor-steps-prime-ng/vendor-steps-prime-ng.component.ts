@@ -12,6 +12,7 @@ import { VendorService } from '../../../services/vendor.service';
 })
 /** vendor-steps-primeNG component*/
 export class VendorStepsPrimeNgComponent implements OnInit {
+	activeMenuItem: number = 1;
 	ifvalue: boolean;
 	generalcollection: any;
 	collection: any;
@@ -21,8 +22,7 @@ export class VendorStepsPrimeNgComponent implements OnInit {
 
 	msgs: Message[] = [];
 
-    activeMenuItem: number = 1;
-	
+    	
 	showComponentPTab: boolean;
 
 	constructor(private router: ActivatedRoute, private route: Router, private vendorService: VendorService) {
@@ -35,7 +35,7 @@ export class VendorStepsPrimeNgComponent implements OnInit {
     }
 
 
-    changeStep(value) {
+    changeStep(value) {		
         if (value == 'General Information') {
             //	this.showComponentPTab = this.vendorService.ShowPtab;
             this.activeMenuItem = 1;
@@ -75,7 +75,12 @@ export class VendorStepsPrimeNgComponent implements OnInit {
 
             this.activeMenuItem = 8;
             this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-memo');
-        }
+		}
+		else{
+				this.activeMenuItem = 1;
+				this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
+		}
+		
     }
 
     ngOnInit() {

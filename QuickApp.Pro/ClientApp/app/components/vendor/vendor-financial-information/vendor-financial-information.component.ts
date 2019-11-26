@@ -118,18 +118,24 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     public allWorkFlows: any[] = [];
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
-
-    constructor(private cdRef: ChangeDetectorRef, public CreditTermsService: CreditTermsService, public currencyService: CurrencyService, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private commonservice: CommonService) {
+    
+    constructor(private cdRef: ChangeDetectorRef, public CreditTermsService: CreditTermsService, public currencyService: CurrencyService, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private commonservice: CommonService) {       
         if (this.workFlowtService.contactCollection) {
             this.local = this.workFlowtService.contactCollection;
-            this.sourceVendor = this.local;
+            this.sourceVendor = this.local;           
         }
         this.dataSource = new MatTableDataSource();
         if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
             this.viewName = "Edit";
             this.local = this.workFlowtService.listCollection.t;
             this.sourceVendor = this.workFlowtService.listCollection.t;
-        }
+        }        
+        //if(this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault)
+        //{
+        //    console.log(this.sourceVendor);
+        //}
+        //console.log(this.sourceVendor);
+       
     }
     private getVendorsList() {
         this.alertService.startLoadingMessage();
@@ -208,7 +214,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         );
     }
 
-    private onFinalObjUrl(allWorkFlows: any) {
+    private onFinalObjUrl(allWorkFlows: any) {       
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
@@ -350,69 +356,38 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     }
 
     changevalue(value) {
+
+        this.sourceVendor.v1099RentDefault = false;
+        this.sourceVendor.v1099RoyaltiesDefault = false;
+        this.sourceVendor.v1099OtherIncomeDefault = false;
+        this.sourceVendor.v1099MedicalHealthPaymentsDefault = false;
+        this.sourceVendor.v1099NonEmployeeCompDefault = false;
+        this.sourceVendor.v1099GoldenParachuteDefault = false;
+        this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = false;
+
         if (value == "sourceVendor.v1099RentDefault") {
-            this.sourceVendor.v1099RentDefault = true;
-            this.sourceVendor.v1099RoyaltiesDefault = null;
-            this.sourceVendor.v1099OtherIncomeDefault = null;
-            this.sourceVendor.v1099MedicalHealthPaymentsDefault = null;
-            this.sourceVendor.v1099NonEmployeeCompDefault = null;
-            this.sourceVendor.v1099GoldenParachuteDefault = null;
-            this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = null;
+            this.sourceVendor.v1099RentDefault = true;            
         }
-        if (value == "sourceVendor.v1099RoyaltiesDefault") {
-            this.sourceVendor.v1099RoyaltiesDefault = true;
-            this.sourceVendor.v1099RentDefault = null;
-            this.sourceVendor.v1099OtherIncomeDefault = null;
-            this.sourceVendor.v1099MedicalHealthPaymentsDefault = null;
-            this.sourceVendor.v1099NonEmployeeCompDefault = null;
-            this.sourceVendor.v1099GoldenParachuteDefault = null;
-            this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = null;
+        else if (value == "sourceVendor.v1099RoyaltiesDefault") {
+            this.sourceVendor.v1099RoyaltiesDefault = true;          
         }
-        if (value == "sourceVendor.v1099OtherIncomeDefault") {
-            this.sourceVendor.v1099OtherIncomeDefault = true;
-            this.sourceVendor.v1099RentDefault = null;
-            this.sourceVendor.v1099RoyaltiesDefault = null;
-            this.sourceVendor.v1099OtherIncomeDefault = null;
-            this.sourceVendor.v1099MedicalHealthPaymentsDefault = null;
-            this.sourceVendor.v1099NonEmployeeCompDefault = null;
-            this.sourceVendor.v1099GoldenParachuteDefault = null;
-            this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = null;
+        else if (value == "sourceVendor.v1099OtherIncomeDefault") {
+            this.sourceVendor.v1099OtherIncomeDefault = true;            
         }
-        if (value == "sourceVendor.v1099MedicalHealthPaymentsDefault") {
-            this.sourceVendor.v1099MedicalHealthPaymentsDefault = true;
-            this.sourceVendor.v1099RentDefault = null;
-            this.sourceVendor.v1099RoyaltiesDefault = null;
-            this.sourceVendor.v1099OtherIncomeDefault = null;
-            this.sourceVendor.v1099NonEmployeeCompDefault = null;
-            this.sourceVendor.v1099GoldenParachuteDefault = null;
-            this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = null;
+        else if (value == "sourceVendor.v1099MedicalHealthPaymentsDefault") {
+            this.sourceVendor.v1099MedicalHealthPaymentsDefault = true;            
         }
-        if (value == "sourceVendor.v1099NonEmployeeCompDefault") {
-            this.sourceVendor.v1099NonEmployeeCompDefault = true;
-            this.sourceVendor.v1099RoyaltiesDefault = null;
-            this.sourceVendor.v1099RentDefault = null;
-            this.sourceVendor.v1099MedicalHealthPaymentsDefault = null;
-            this.sourceVendor.v1099OtherIncomeDefault = null;
-            this.sourceVendor.v1099GoldenParachuteDefault = null;
-            this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = null;
+        else if (value == "sourceVendor.v1099NonEmployeeCompDefault") {
+            this.sourceVendor.v1099NonEmployeeCompDefault = true;            
         }
-        if (value == "sourceVendor.v1099GoldenParachuteDefault") {
-            this.sourceVendor.v1099GoldenParachuteDefault = true;
-            this.sourceVendor.v1099NonEmployeeCompDefault = null;
-            this.sourceVendor.v1099RoyaltiesDefault = null;
-            this.sourceVendor.v1099RentDefault = null;
-            this.sourceVendor.v1099MedicalHealthPaymentsDefault = null;
-            this.sourceVendor.v1099OtherIncomeDefault = null;
-            this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = null;
+        else if (value == "sourceVendor.v1099GoldenParachuteDefault") {
+            this.sourceVendor.v1099GoldenParachuteDefault = true;          
         }
-        if (value == "sourceVendor.v1099GrossProceedsPaidToAttorneyDefault") {
-            this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = true;
-            this.sourceVendor.v1099GoldenParachuteDefault = null;
-            this.sourceVendor.v1099NonEmployeeCompDefault = null;
-            this.sourceVendor.v1099RoyaltiesDefault = null;
-            this.sourceVendor.v1099RentDefault = null;
-            this.sourceVendor.v1099MedicalHealthPaymentsDefault = null;
-            this.sourceVendor.v1099OtherIncomeDefault = null;
+        else if (value == "sourceVendor.v1099GrossProceedsPaidToAttorneyDefault") {
+            this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = true;         
+        }
+        else{
+            this.sourceVendor.v1099RentDefault = true;   
         }
     }
 
@@ -429,6 +404,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
             if (this.sourceVendor.vendorId) {
                 this.sourceVendor.createdBy = this.userName;
                 this.sourceVendor.updatedBy = this.userName;
+                
                 if (this.sourceVendor.v1099RentDefault == true) {
                     this.sourceVendor.v1099RentDefault = true;
                     this.sourceVendor.v1099RoyaltiesDefault = null;

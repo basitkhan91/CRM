@@ -56,10 +56,6 @@ namespace DAL.Models
         public bool? IsDelete { get; set; }
         public bool? IsExpirationDate { get; set; }
         public string PartNumber { get; set; }
-        public string CreatedBy { get; set; }
-        public string UpdatedBy { get; set; }
-        public DateTime? UpdatedDate { get; set; }
-        public DateTime? CreatedDate { get; set; }
         public virtual Condition Condition { get; set; }
         public virtual ItemMaster ItemMaster { get; set; }
        // public virtual Company Company { get; set; }

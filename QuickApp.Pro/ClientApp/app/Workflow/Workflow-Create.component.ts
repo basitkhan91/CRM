@@ -35,6 +35,7 @@ import { PercentService } from "../services/percent.service";
 import { WorkOrderService } from "../services/work-order/work-order.service";
 import { AuthService } from "../services/auth.service";
 
+
 @Component({
     selector: 'wf-create',
     templateUrl: './workflow-Create.component.html',
@@ -43,6 +44,9 @@ import { AuthService } from "../services/auth.service";
 export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     @Input() isWorkOrder;
     @Input() savedWorkOrderData;
+    @Input() WorkOrderType;
+    @Input() workFlowId;
+    @Input() workFlowWorkOrderId;
     @Output() savedWorkFlowWorkOrderData = new EventEmitter()
     UpdateMode: boolean;
     workFlow: any;
@@ -160,6 +164,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     @ViewChild(ChargesCreateComponent) chargesCreateComponent: ChargesCreateComponent;
     responseDataForHeader: any;
     tasksData: any = [];
+    typeOfForm: string = 'Create';
 
     constructor(private actionService: ActionService,
         private workOrderService: WorkOrderService,
@@ -181,6 +186,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this._workflowService.listCollection = null;
+        this.typeOfForm = 'Create';
         this._workflowService.enableUpdateMode = false;
         this._workflowService.currentWorkFlowId = null;
     }
@@ -236,7 +242,16 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
 
     ngOnInit(): void {
-        console.log(this.isWorkOrder);
+
+
+
+        console.log(this.isWorkOrder, this._workflowService.enableUpdateMode);
+        console.log(this._workflowService.listCollection);
+
+        if (this._workflowService.enableUpdateMode) {
+            this.typeOfForm = 'Edit';
+        }
+
         this.isFixedcheck('');
         this.loadCurrencyData();
         this.loadWorkScopedata();
@@ -279,6 +294,13 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
         this.loadWorkFlow();
         this.getAllPercentages();
+
+
+
+
+
+
+
     }
 
 
@@ -332,6 +354,10 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         //1 and 2 and 3 check box all uncheck 
         if (this.sourceWorkFlow.fixedAmount == undefined && this.sourceWorkFlow.percentOfNew == undefined && this.sourceWorkFlow.percentOfReplacement == undefined) {
             this.sourceWorkFlow.berThresholdAmount = 0;
+        }
+
+        if (this.sourceWorkFlow.berThresholdAmount > 0) {
+            this.sourceWorkFlow.berThresholdAmount = parseFloat(this.sourceWorkFlow.berThresholdAmount).toFixed(2);
         }
     }
 
@@ -935,9 +961,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     onPercentOfNew(myValue, percentValue) {
         this.sourceWorkFlow.percentOfNew = "";
         if (myValue && percentValue) {
-            this.sourceWorkFlow.percentOfNew = (myValue / 100) * percentValue;
-            //let afterpercent 
-            //this.sourceWorkFlow.percentOfNew = afterpercent * percentValue;
+            this.sourceWorkFlow.percentOfNew = parseFloat(((myValue / 100) * percentValue).toString()).toFixed(2);
         }
         this.berDetermination();
     }
@@ -946,7 +970,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         this.sourceWorkFlow.percentOfReplacement = "";
         if (myValue && percentValue) {
             let afterpercent = myValue / 100;
-            this.sourceWorkFlow.percentOfReplacement = afterpercent * percentValue;
+            this.sourceWorkFlow.percentOfReplacement = parseFloat((afterpercent * percentValue).toString()).toFixed(2);
 
         }
         this.berDetermination();
@@ -1902,33 +1926,13 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     }
 
     addWorkFlow(isHeaderUpdate: boolean): void {
-        console.log(1);
         this.sourceWorkFlow.workflowId = undefined;
-        // // save Work Order Workflow
-        // console.log(this.validateWorkFlowHeader());
 
-        // if(this.isWorkOrder && this.validateWorkFlowHeader()){
-        //     console.log(2);
-        //     // if(this.responseDataForHeader){
-
-        //         this.actionService.addWorkFlowHeader(this.sourceWorkFlow).subscribe(result => {
-        //             this.sourceWorkFlow.workflowId = result.workflowId;
-        //             this.sourceWorkFlow.workOrderNumber = result.workOrderNumber;
-        //             this.alertService.showMessage(this.title, "Work Flow header added successfully.", MessageSeverity.success);
-        //              this.responseDataForHeader = result;
-        //             this.UpdateMode = true;
-        //             // this.SaveWorkFlow();
-        //         });
-        //     // } else {
-        //     //     this.SaveWorkFlow();
-        //     // }
-
-
-        // }else {
-        //     console.log(3);
-        // WorkFlow Create
         if (!this.validateWorkFlowHeader() || !this.calculateTotalWorkFlowCost()) {
-            return;
+            var OkCancel = confirm("Work Flow total cost exceed the BER threshold amount. Do you still want to continue?");
+            if (OkCancel == false) {
+                return;
+            }
         }
 
 
@@ -1977,36 +1981,14 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     title: string = "Work Flow";
 
     updateWorkFlow(isHeaderUpdate: boolean): void {
-        // // save Work Order Workflow
-        // console.log(5);
 
-        // console.log(this.isWorkOrder, this.validateWorkFlowHeader())
-        // if(this.isWorkOrder  &&  this.validateWorkFlowHeader() ){
-        //     // this.SaveWorkFlow();
-        //     console.log(6);
-
-        //     if(this.responseDataForHeader){
-        //         console.log(7);
-        //         this.actionService.addWorkFlowHeader(this.sourceWorkFlow).subscribe(result => {
-        //             this.sourceWorkFlow.workflowId = result.workflowId;
-        //             this.sourceWorkFlow.workOrderNumber = result.workOrderNumber;
-        //             this.alertService.showMessage(this.title, "Work Flow header added successfully.", MessageSeverity.success);
-        //              this.responseDataForHeader = result;
-        //             this.UpdateMode = true;
-        //             this.SaveWorkFlow();
-        //         });
-        //     } else {
-        //         // this.SaveWorkFlow();
-        //     }
-
-        // }else {
-        //     console.log(8);
-        // WorkFlow Create 
         if (!this.validateWorkFlowHeader() || !this.calculateTotalWorkFlowCost()) {
-            return;
+            var OkCancel = confirm("Work Flow total cost exceed the BER threshold amount. Do you still want to continue?");
+            if (OkCancel == false) {
+                return;
+            }
         }
         this.SaveWorkFlow();
-        console.log(9);
         if (isHeaderUpdate) {
             this.sourceWorkFlow.charges = [];
             this.sourceWorkFlow.directions = [];
@@ -2145,7 +2127,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         }
     }
 
-    saveWorkFlowWorkOrder() {
+    saveWorkFlowWorkOrder(isSaveToWorkFlow) {
         if (this.workFlowList != undefined && this.workFlowList.length > 0) {
 
             this.sourceWorkFlow.charges = [];
@@ -2257,15 +2239,19 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             const saveWorkFlowWorkOrderData = {
                 ...this.sourceWorkFlow,
                 // ...tasks[0],
+                isSaveToWorkFlow : isSaveToWorkFlow,
+                workflowId: 0 , 
                 workOrderId: this.savedWorkOrderData.workOrderId,
-                charges: data.charges.map(x => { return { ...x, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
-                directions: data.directions.map(x => { return { ...x, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
-                equipments: data.equipments.map(x => { return { ...x, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
-                exclusions: data.exclusions.map(x => { return { ...x, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
-                expertise: data.expertise.map(x => { return { ...x, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
-                materialList: data.materialList.map(x => { return { ...x, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
+                workFlowWorkOrderId: this.workFlowWorkOrderId,
+                existingWorkFlowId : this.sourceWorkFlow.workflowId,
+                charges: data.charges.map(x => { return { ...x, workflowChargesListId:0 , workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
+                directions: data.directions.map(x => { return { ...x, workflowDirectionId : 0, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
+                equipments: data.equipments.map(x => { return { ...x, workflowEquipmentListId : 0 , workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
+                exclusions: data.exclusions.map(x => { return { ...x, workflowExclusionId:0 , workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
+                expertise: data.expertise.map(x => { return { ...x, workflowExpertiseListId : 0 ,  workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
+                materialList: data.materialList.map(x => { return { ...x, workflowMaterialListId: 0 , workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
                 measurements: data.measurements.map(x => { return { ...x, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
-                publication: data.publication.map(x => { return { ...x, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } })
+                publication: data.publication.map(x => { return { ...x, Id: 0 , workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } })
 
 
             }
@@ -2408,8 +2394,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     PercentBERThreshold: number;
     calculateTotalWorkFlowCost(): boolean {
         if (this.sourceWorkFlow.berThresholdAmount == undefined || this.sourceWorkFlow.berThresholdAmount == 0) {
-            this.alertService.showMessage(this.title, 'Please enter BER Determination values', MessageSeverity.error);
-            return;
+            this.sourceWorkFlow.berThresholdAmount = 0;
         }
 
         this.MaterialCost = 0;

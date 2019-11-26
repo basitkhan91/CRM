@@ -74,22 +74,27 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("ataauditHistoryById/{id}")]
-        [Produces(typeof(List<AuditHistory>))]
+        [Produces(typeof(List<ATASubChapterAudit>))]
         public IActionResult GetAuditHostoryById(long id)
         {
-            var result = _unitOfWork.AuditHistory.GetAllHistory("ATAMain", id); //.GetAllCustomersData();
+            //var result = _unitOfWork.AuditHistory.GetAllHistory("ATAMain", id); //.GetAllCustomersData();
 
+
+            //try
+            //{
+            //    var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
+
+            //    return Ok(resul1);
+            //}
 
             try
             {
-                var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
-
-                return Ok(resul1);
+                var result = _unitOfWork.ATASubChapter.GetATASubChapterAuditDetails(id);
+                return Ok(result);
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
 
 

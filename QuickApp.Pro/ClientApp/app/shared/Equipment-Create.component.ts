@@ -15,8 +15,11 @@ import { MessageSeverity, AlertService } from "../services/alert.service";
 })
 export class EquipmentCreateComponent implements OnInit, OnChanges {
     partCollection: any[];
+    @Input() workFlowObject;
+    @Input() isWorkOrder = false;
     @Input() workFlow: IWorkFlow;
     @Input() UpdateMode: boolean;
+    @Output() saveEquipmentListForWO = new EventEmitter();
     @Output() notify: EventEmitter<IWorkFlow> =
         new EventEmitter<IWorkFlow>();
     allUomdata: any[] = [];
@@ -37,11 +40,18 @@ export class EquipmentCreateComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {
 
-        this.row = this.workFlow.equipments[0];
-        if (this.row == undefined) {
-            this.row = {};
+        if (this.isWorkOrder) {
+            this.workFlow = this.workFlowObject;
+            this.row = this.workFlow.equipments[0];
+        } else {
+            this.row = this.workFlow.equipments[0];
+            if (this.row == undefined) {
+                this.row = {};
+            }
+            this.row.taskId = this.workFlow.taskId;
         }
-        this.row.taskId = this.workFlow.taskId;
+
+
         this.actionService.getEquipmentAssetType().subscribe(
             equipmentAssetType => {
                 this.equipmentAssetType = equipmentAssetType;
@@ -173,5 +183,9 @@ export class EquipmentCreateComponent implements OnInit, OnChanges {
 
         this.allPartnumbersInfo = allWorkFlows;
 
+    }
+
+    saveEquipmentWorkOrder() {
+        this.saveEquipmentListForWO.emit(this.workFlow)
     }
 }

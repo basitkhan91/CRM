@@ -1,6 +1,6 @@
 ﻿
 <div>
-    <!--<h4 class="page-heading clr-green"> Create Customer</h4>-->
+    <h4 class="page-heading clr-green">  Customer General Info</h4>
     <div>
 
 
@@ -71,12 +71,12 @@
                                                     <div class="inner-addon right-addon inline-block">
 
                                                         <p-autoComplete class="autocomp-customer-cstm" name="customerName"  
-                                                      [(ngModel)]="generalInformation.name" (onKeyUp)="checkCustomerNameExists('name',$event.target.value)"
+                                                      [(ngModel)]="generalInformation.name" (onKeyUp)="checkCustomerNameExist($event.target.value)" (onChange)="checkCustomerNameExist($event.target.value)"
                                                        (onSelect)="selectedCustomerName()" [suggestions]="customerNames" field="name" (completeMethod)="filterCustomerNames($event)"                                                         
                                                         [size]="30" [minLength]="1" [dropdown]="true" required>
-                                                            <!-- <ng-template let-name pTemplate="item">
+                                                             <!--<ng-template let-name pTemplate="item">
                                                                 <div class="ui-helper-clearfix">{{name}}</div>
-                                                            </ng-template> -->
+                                                            </ng-template>--> 
                                                         </p-autoComplete>
                                                        <div *ngIf="isCustomerNameAlreadyExists" class="clr-red">Entry Already Exists</div>  
                                                     </div>
@@ -87,7 +87,7 @@
 
                                                         <p-autoComplete  class="autocomp-customer-cstm" 
                                                         name="customerCode"
-                                                        (onKeyUp)="checkCustomerCodeExists('customerCode',$event.target.value)"
+                                                       (onKeyUp)="checkCustomerCodeExist($event.target.value)"
                                                         (onSelect)="selectedCustomerCode()"
                                                          [(ngModel)]="generalInformation.customerCode" [suggestions]="customerCodes" 
                                                          field="customerCode"
@@ -135,13 +135,12 @@
                                                     <label>Phone <span class="clr-red">*</span></label>
                                                     <div class="col-md-12">
                                                         <div class="col-md-8">
-                                                                <input type="text" id="phone"  name="phone" pInputText pKeyFilter="num" #mobPattern="ngModel" minlength=10 maxlength=13 class="form-control" ng-pattern="phoneNumbr" [(ngModel)]="generalInformation.customerPhone" required>
-                                                                <div *ngIf="mobPattern.errors" [ngClass]="'error'">
-                                                                </div>
+                                                                      <input type="text" id="phone" name="phone" pInputText pKeyFilter="num"  minlength=10 maxlength=13 class="form-control" [(ngModel)]="generalInformation.customerPhone" required>
+                                                           
                                                         </div>
                                                         
                                                         <div class="col-md-4">
-                                                                <input type="text"  name="phoneExt" pInputText pKeyFilter="num" maxlength="3" [(ngModel)]="generalInformation.customerPhoneExt" required>
+                                                                <input type="text"  name="phoneExt" pInputText pKeyFilter="num" maxlength="3" [(ngModel)]="generalInformation.customerPhoneExt">
                                                         </div>
 
                                                     </div>
@@ -169,7 +168,7 @@
                                                     <label>Address Line 2</label>
                                                     <input class="form-control" type="text" id="cmaddress2" name="cmaddress2" [(ngModel)]="generalInformation.address2">
                                                 </div>
-                                                <div class="form-group">
+                                                <div class="form-group" style="display:none">
                                                     <label>Address Line 3</label>
                                                     <input class="form-control" type="text" id="cmaddress3" name="cmaddress3" [(ngModel)]="generalInformation.address3">
                                                 </div>
@@ -192,7 +191,7 @@
                                                         <p-autoComplete class="autocomp-customer-cstm" filter="true" 
                                                         [(ngModel)]="generalInformation.country" 
                                                         emptyMessage="No Match Found"
-                                                         name="country" [suggestions]="countrycollection"  field="nice_name" (completeMethod)="filterCountries($event)" [size]="30"
+                                                         name="country1" [suggestions]="countrycollection"  field="nice_name" (completeMethod)="filterCountries($event)" [size]="30"
                                                                         [minLength]="1" [dropdown]="true" [forceSelection]="true" required>
                                                             <!-- <ng-template let-nice_name pTemplate="item">
                                                                 <div class="ui-helper-clearfix">{{nice_name}}</div>
@@ -360,26 +359,28 @@
                                                                     <span style="margin-left:3px;cursor:pointer;"><a  class="fa fa-plus-circle fa-lg" (click)="addRestrictPMA()" ></a></span>
                                                                 </div>
                                                                 </div>
-                                                                    <p-table class="table-responsive" [value]="generalInformation.restrictedPMAParts"  [paginator]="true" [rows]="3" [columns]="restrictHeaders">
-                                                                        <ng-template pTemplate="header" let-columns>
-                                                                            <tr>
-                                                                                <th *ngFor="let col of columns">
-                                                                                    {{col.header}}
-                                                                                </th>
-                                                                                <th>Actions</th>
-                                                                            </tr>
-                                                                        </ng-template>
-                                                                        <ng-template pTemplate="body" let-part let-rowData let-columns="columns"  let-i="rowIndex">
-                                                                            <tr>
-                                                                                <td *ngFor="let col of columns">
+                                                                    <div>
+                                                                        <p-table class="table-responsive" [value]="generalInformation.restrictedPMAParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
+                                                                            <ng-template pTemplate="header" let-columns>
+                                                                                <tr>
+                                                                                    <th *ngFor="let col of columns">
+                                                                                        {{col.header}}
+                                                                                    </th>
+                                                                                    <th>Actions</th>
+                                                                                </tr>
+                                                                            </ng-template>
+                                                                            <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
+                                                                                <tr>
+                                                                                    <td *ngFor="let col of columns">
                                                                                         {{part[col.field]}}
-                                                                                </td>
-                                                                                <button class="btn-delete"  (click)="deleteRestirctPMA(i, rowData)" mat-icon-button matTooltip="Delete" >
-                                                                                    <mat-icon color="warn">delete</mat-icon>
-                                                                                </button>
-                                                                            </tr>
-                                                                        </ng-template>
-                                                                    </p-table>
+                                                                                    </td>
+                                                                                    <button class="btn-delete" (click)="deleteRestirctPMA(i, rowData)" mat-icon-button matTooltip="Delete">
+                                                                                        <mat-icon color="warn">delete</mat-icon>
+                                                                                    </button>
+                                                                                </tr>
+                                                                            </ng-template>
+                                                                        </p-table>
+                                                                    </div>
 
 
         
@@ -489,7 +490,7 @@
                                             </div>
                                         </div>
                                         <div class="form-row pull-right">
-                                            <button type="submit" class="btn btn-primary-cstm submit-btn" [disabled]="!generalInfoForm.valid" (click)="saveGeneralInformation()">Save &amp; Next</button>
+                                            <button type="submit" class="btn btn-primary-cstm submit-btn" [disabled]="!generalInfoForm.valid || isCustomerNameAlreadyExists || disableSaveCustomerName || isCustomerCodeAlreadyExists" (click)="saveGeneralInformation()">Save &amp; Next</button>
                                         </div>
 
                                     </div>
@@ -764,108 +765,111 @@
 
 <div id="addCustomerClassification" class="modal fade" role="dialog">
     <div class="modal-dialog">
-  
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Add Customer Classification</h4>
-        </div>
-        <div class="modal-body">
-                <div class="form-group">
+        <form #addCustomerClassification="ngForm">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add Customer Classification</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
                         <label>Name <span class="clr-red">*</span></label>
                         <div class="inner-addon right-addon inline-block">
-                                <p-autoComplete class="p-dropdown-custom-2" name="classificationName"  
-                                [(ngModel)]="addNewclassification.description" 
-                                (onSelect)="selectedClassification($event)"
-                                (onKeyUp)="checkClassificationExists('label',$event.target.value)"
-                                [suggestions]="classificationList" field="label" (completeMethod)="filterclassifications($event)" 
-                                [size]="30"[minLength]="1" [dropdown]="true" required> 
-                               </p-autoComplete> 
-                           <div *ngIf="isClassificationAlreadyExists" class="clr-red">Entry Already Exists</div>  
+                            <p-autoComplete class="p-dropdown-custom-2 p-dropdown-custom-gen" name="classificationName"
+                                            [(ngModel)]="addNewclassification.description"
+                                            (onSelect)="selectedClassification($event)"
+                                            (onKeyUp)="checkClassificationExists($event.target.value)"
+                                            [suggestions]="classificationList" field="label" (completeMethod)="filterclassifications($event)"
+                                            [size]="30" [minLength]="1" [dropdown]="true" required>
+                            </p-autoComplete>
+                            <div *ngIf="isClassificationAlreadyExists" class="clr-red">Entry Already Exists</div>
                         </div>
                     </div>
                     <div class="form-group">
-                            <div class="col-sm-6">
-                                <span class="checkbox-cstm">
-                                    <label style="margin-top: 12px;" class="form-check-label" for="isActive">
-                                        <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="addNewclassification.isActive">
-                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span> Active
-                                    </label>
-                                </span>
-                            </div>
-                            <div class="clear"></div>
+                        <div class="col-sm-6">
+                            <span class="checkbox-cstm">
+                                <label style="margin-top: 12px;" class="form-check-label" for="isActive">
+                                    <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="addNewclassification.isActive">
+                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span> Active
+                                </label>
+                            </span>
                         </div>
-                    
-        </div>
+                        <div class="clear"></div>
+                    </div>
 
-        
-        <div class="modal-footer">
-          <button type="button"class="btn btn-primary-cstm" data-dismiss="modal" (click)="addClassification()" [disabled]="isClassificationAlreadyExists">Save</button>
-          <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetClassificationPopUp()">Close</button>
-        </div>
-      </div>
-  
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="addClassification()" [disabled]="isClassificationAlreadyExists ||addCustomerClassification.invalid ">Save</button>
+                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetClassificationPopUp()">Close</button>
+                </div>
+            </div>
+        </form>
     </div>
   </div>
 
 
 
-  <div id="addIntergation" class="modal fade" role="dialog">
+<div id="addIntergation" class="modal fade" role="dialog">
+    <form #addIntergation="ngForm">
         <div class="modal-dialog">
-      
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" (click)="resetIntegrationPopUp()">&times;</button>
-              <h4 class="modal-title">Add Intergation</h4>
-            </div>
-            <div class="modal-body">
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" (click)="resetIntegrationPopUp()">&times;</button>
+                    <h4 class="modal-title">Add Intergation</h4>
+                </div>
+                <div class="modal-body">
                     <div class="form-group">
-                            <label>WebSite url  <span class="clr-red">*</span></label>
-                            <div class="inner-addon right-addon inline-block">
-    
-                                <p-autoComplete class="p-dropdown-custom-2" name="url"  
-                                 [(ngModel)]="addNewIntergation.portalURL" 
-                                 (onKeyUp)="checkIntergationExists('description',$event.target.value)"
-                                 [suggestions]="integrationList" field="description" (completeMethod)="filterIntegrations($event)" 
-                                 [size]="30"[minLength]="1" [dropdown]="true" required>
-                                </p-autoComplete>
-                               <div *ngIf="isIntegrationAlreadyExists" class="clr-red">Entry Already Exists</div>  
-                            </div>
+                        <label>WebSite url  <span class="clr-red">*</span></label>
+                        <div class="inner-addon right-addon inline-block">
+
+                            <p-autoComplete class="p-dropdown-custom-2 p-dropdown-custom-gen" name="url" 
+                                            [(ngModel)]="addNewIntergation.portalURL"
+                                            (onKeyUp)="checkIntergationExists('field',$event.target.value)"
+                                            (onSelect)="selectedWebSite()"
+                                            [suggestions]="integrationList" field="label" (completeMethod)="filterIntegrations($event)"
+                                            [size]="30" [minLength]="1" [dropdown]="true" required>
+                            </p-autoComplete>
+                            <div *ngIf="isIntegrationAlreadyExists" class="clr-red">Entry Already Exists</div>
                         </div>
-                        <div class="form-group">
-                                <label>Intergation</label>
-                                <input class="form-control" [(ngModel)]="addNewIntergation.description" name="description">
-                            </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Intergation</label>
+                        <input class="form-control" [(ngModel)]="addNewIntergation.description" name="description">
+                    </div>
 
-                        <div class="form-group">
-                                <label>Memo</label>
-                                <input class="form-control" [(ngModel)]="addNewIntergation.memo" name="memo">
-                            </div>
+                    <div class="form-group">
+                        <label>Memo</label>
+                        <input class="form-control" [(ngModel)]="addNewIntergation.memo" name="memo">
+                    </div>
 
-                        <div class="form-group">
-                                <div class="col-sm-6">
-                                    <span class="checkbox-cstm">
-                                        <label style="margin-top: 12px;" class="form-check-label" for="isActive">
-                                            <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="addNewIntergation.isActive">
-                                            <span class="cr"><i class="cr-icon pi pi-check"></i></span> Active
-                                        </label>
-                                    </span>
-                                </div>
-                                <div class="clear"></div>
-                            </div>
-                        
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                            <span class="checkbox-cstm">
+                                <label style="margin-top: 12px;" class="form-check-label" for="isActive">
+                                    <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="addNewIntergation.isActive">
+                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span> Active
+                                </label>
+                            </span>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="newIntegrationAdd()" [disabled]="!addIntergation.valid || isIntegrationAlreadyExists">Save</button>
+                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetIntegrationPopUp()">Close</button>
+                </div>
             </div>
-    
-            
-            <div class="modal-footer">
-              <button type="button"class="btn btn-primary-cstm" data-dismiss="modal" (click)="newIntegrationAdd()" [disabled]="isClassificationAlreadyExists">Save</button>
-              <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetIntegrationPopUp()">Close</button>
-            </div>
-          </div>
-      
+
         </div>
-      </div> 
+        </form>
+</div> 
 
 <div class="modal fade" id="memo-popup" role="dialog">
     <div class="modal-dialog modal-sm" style="max-width: 400px !important;">

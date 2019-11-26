@@ -204,6 +204,10 @@ import { PurchaseOrderService } from './services/purchase-order.service';
 import { PurchaseOrderEndpoint } from './services/purchase-order-endpoint.service';
 import { GLAccountService } from './services/glAccount.service';
 import { GLAccountEndpoint } from './services/glAccount-endpoint.service';
+import { AssetAttributeTypeService } from './services/asset-attribute-type/asset-attribute-type.service';
+import { AssetAttributeTypeEndpointService } from './services/asset-attribute-type/asset-attribute-type-endpoint.service';
+import { AssetIntangibleAttributeTypeService } from './services/asset-intangible-attribute-type/asset-intangible-attribute-type.service';
+import { AssetIntangibleAttributeTypeEndpointService } from './services/asset-intangible-attribute-type/asset-intangible-attribute-type-endpoint.service';
 //import { AuditComponent } from "./components/Audit/audit.component";
 
 @NgModule({
@@ -261,6 +265,10 @@ import { GLAccountEndpoint } from './services/glAccount-endpoint.service';
         AlertService,
         ConfigurationService,
         AppTitleService,
+        AssetAttributeTypeService,
+        AssetAttributeTypeEndpointService,
+        AssetIntangibleAttributeTypeService,
+        AssetIntangibleAttributeTypeEndpointService,
         AppTranslationService,
         NotificationService,
         NotificationEndpoint,

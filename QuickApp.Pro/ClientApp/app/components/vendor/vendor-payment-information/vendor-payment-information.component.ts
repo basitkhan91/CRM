@@ -535,6 +535,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	}
 
 	toggledbldisplay(data) {
+
 		this.sourceVendor = data;
 	}
 
@@ -624,7 +625,8 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 				})
 			}
 			else {
-
+				this.sourceVendor.createdBy = this.userName;
+				this.sourceVendor.updatedBy = this.userName;
 				this.sourceVendor.updatedBy = this.userName;
 				this.sourceVendor.masterCompanyId = 1;
 				this.workFlowtService.updateCheckPaymentInfo(this.sourceVendor).subscribe(data => {
@@ -855,6 +857,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	}
 	dismissModel() { this.modal.close(); }
 	handleChanges(rowData, e) {
+		
 		if (e.checked == false) {
 			this.sourceVendor.checkPaymentId = rowData.checkPaymentId;
 			this.sourceVendor.updatedBy = this.userName;

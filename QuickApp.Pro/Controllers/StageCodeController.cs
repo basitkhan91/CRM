@@ -149,7 +149,7 @@ namespace QuickApp.Pro.Controllers
                         catch (Exception ex)
                         {
 
-                            throw ex;
+                            return BadRequest(ex.Message);
                         }
                     }
                     else

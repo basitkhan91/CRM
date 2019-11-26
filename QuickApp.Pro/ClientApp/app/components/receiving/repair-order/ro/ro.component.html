@@ -15,7 +15,7 @@
                         <h4 class="po-head">Search Repair Order</h4>
 
                         <div class="form-row">
-                            <p-table class="rpo-table-cstm rro-table-cstm" #dt [value]="allPolistInfo" [metaKeySelection]="true"
+                            <p-table class="ptable-custom" #dt [value]="allROlistInfo" [metaKeySelection]="true"
                                      [rows]="20" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]"
                                      [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn"
                                      [resizableColumns]="true" [reorderableColumns]="true" [responsive]="true">
@@ -25,11 +25,11 @@
                                                        selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
                                         <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
                                             <i class="fa fa-search"></i>
-                                            <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter">
+                                            <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter">
                                         </div>
                                         <!--<button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
                                         <button type="button" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>-->
-                                        <a (click)="onCreateRO()" matTooltip="Create RO" class="btn btn-success nobg btn-cstm"><span><i class="fa fa-plus"></i></span></a>
+                                        <a (click)="openCreateRO()" matTooltip="Create RO" class="btn btn-success nobg btn-cstm"><span><i class="fa fa-plus"></i></span></a>
                                         <div class="excel-upload">
                                             <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                                             <!--<label for="upload">
@@ -41,15 +41,13 @@
 
                                 <ng-template pTemplate="header" let-columns>
                                     <tr>
-                                        <th style="width: 40px;"></th>
                                         <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                             {{col.header}}
                                             <p-sortIcon [field]="col.field"></p-sortIcon>
                                         </th>
-                                        <th style="width: 70px;"></th>
+                                        <th></th>
                                     </tr>
                                     <tr>
-                                        <th></th>
                                         <th *ngFor="let col of columns" [ngSwitch]="col.field">
                                             <input style="width:100%;" pInputText type="text">
                                         </th>
@@ -59,18 +57,27 @@
 
                                 <ng-template pTemplate="body" let-rowData let-columns="columns">
                                     <tr [pSelectableRow]="rowData">
-                                        <td><input type="radio" (change)="getSelectedColumn(rowData)" /></td>
                                         <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                             {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
                                         </td>
                                         <td>
-                                            <span data-toggle="modal" data-target="#view">
-                                                <a data-toggle="tooltip" pTooltip="View" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="">
+                                            <span data-toggle="modal" data-target="#view" (click)="viewSelectedRow(rowData)">
+                                                <a data-toggle="tooltip" pTooltip="View" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="View">
                                                     <i class="fa fa-eye"></i>
                                                 </a>
                                             </span>
-                                            <span (click)="openEdit(rowData)">
+                                            <!-- <span (click)="editSelectedRO(rowData)" *ngIf="rowData.statusId != 4">
                                                 <a data-toggle="tooltip" pTooltip="Edit" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="" edit="">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                            </span> -->
+                                            <span *ngIf="rowData.statusId == 3" (click)="getSelectedRow(rowData)">
+                                                <a data-toggle="tooltip" pTooltip="Receive RO" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="" edit="">
+                                                    <i class=" fa fa-chevron-down"></i>
+                                                </a>
+                                            </span>
+                                            <span (click)="editStockLine(rowData)">
+                                                <a data-toggle="tooltip" pTooltip="Edit Stockline" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="" edit="">
                                                     <i class="fa fa-edit"></i>
                                                 </a>
                                             </span>
@@ -79,779 +86,256 @@
                                 </ng-template>
                             </p-table>
                         </div>
-                        <button class="btn btn-primary-cstm pull-right rro-btn" (click)="getSelectedRow()">Receive RO</button>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade bd-example-modal-lg" tabindex="-1" id="view" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-                    <h4 class="modal-title">"RO12345" details of "Shabbir Ahmad"</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="card">
-                        <div class="card-header">
-                            <nav class="pull-left" aria-label="breadcrumb">
-                                <ol class="breadcrumb" style="background-color: transparent;">
-                                    <li class="breadcrumb-item active" aria-current="page" style="font-size: 16px;margin-top: 3px;">"RO12345" details of "Shabbir Ahmad"</li>
-                                </ol>
-                            </nav>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-horizontal ro-popupview-form">
-                                <div class="form-row">
-                                    <div class="col-md-12">
-                                        <div class="form-row">
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <label>Status: </label>Open
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>RO Number: </label>RO123
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Open Date: </label>6/2/2019
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Need By: </label>7/4/2019
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Priority: </label>AOG
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Memo: </label>This is Repair Order memo of Vendor named Albert Einstein.
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <label>Vendor Num: </label>12345
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Vendor Name: </label>Albert Einstein
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Vendor Contact: </label>Blaise Pascal
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Contact Phone: </label>12345
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Deferred Receiver: </label>Yes
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <label>Requisitioner: </label>Shabbir
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Approver: </label>Shabbir
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Approved Date: </label>6/2/2019
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Resale: </label>Yes
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Credit Limit & Terms: </label>10000 & Credit Card
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="card">
-                                                    <div class="card-header" style="padding: 0 12px;">
-                                                        <h5 style="margin-bottom: 0; font-size: 12px;">Management Structure</h5>
-                                                    </div>
-                                                    <div class="card-body" style="padding: 12px 12px 4px;">
-                                                        <div class="form-group">
-                                                            <label>Company: </label>Adso
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>BU: </label>Silverxis
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Division: </label>Designing
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Dept: </label>.net
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <p-tabView class="pas-tabview">
-                        <p-tabPanel header="Parts List">
-                            <div class="table-responsive pas-table-cstm roview-table-cstm">
-                                <table class="table table-bordered " id="po-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Split Shipment</th>
-                                            <th>PN</th>
-                                            <th>Alt PN</th>
-                                            <th>PN Description</th>
-                                            <th>Item Type</th>
-                                            <th>Cost Category</th>
-                                            <th>Mfr</th>
-                                            <th>Need By</th>
-                                            <th>Cond</th>
-                                            <th>UOM</th>
-                                            <th>Qty to Repair</th>
-                                            <th>Unit Cost</th>
-                                            <th>Disc./unit</th>
-                                            <th>Disc. Cost/unit</th>
-                                            <th>Ext Cost</th>
-                                            <th>Tax Code</th>
-                                            <th>Tax Amount</th>
-                                            <th>Shipping Cost</th>
-                                            <th>Handling Cost</th>
-                                            <th>Misc Cost</th>
-                                            <th>Total Cost</th>
-                                            <th>Trans. CUR</th>
-                                            <th>FX Rate</th>
-                                            <th>Functional CUR</th>
-                                            <th>WO</th>
-                                            <th>SO</th>
-                                            <th>Management Structure</th>
-                                            <th>GL Account</th>
-                                            <th>Memo</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr class="parent-data">
-                                            <td></td>
-                                            <td>PN123</td>
-                                            <td>PN12346</td>
-                                            <td>Drum towing winch</td>
-                                            <td>Stock</td>
-                                            <td>Inventory</td>
-                                            <td>PAS</td>
-                                            <td>01/24/2019</td>
-                                            <td>NEW</td>
-                                            <td>Ea</td>
-                                            <td>1</td>
-                                            <td>100.00</td>
-                                            <td>10%</td>
-                                            <td>10.00</td>
-                                            <td>90.00</td>
-                                            <td>12345</td>
-                                            <td>20.00</td>
-                                            <td>20.00</td>
-                                            <td>20.00</td>
-                                            <td>20.00</td>
-                                            <td>20.00</td>
-                                            <td>$</td>
-                                            <td>10</td>
-                                            <td>$</td>
-                                            <td>WO123</td>
-                                            <td>SO123</td>
-                                            <td>Company, BU, Division, Dept</td>
-                                            <td>12345</td>
-                                            <td>Sample Description</td>
-                                        </tr>
-                                        <tr class="child-header">
-                                            <th></th>
-                                            <th>PN</th>
-                                            <th colspan="2">PN Description</th>
-                                            <th>User Type</th>
-                                            <th>Name</th>
-                                            <th colspan="7">Address</th>
-                                            <th>Item Type</th>
-                                            <th>UOM</th>
-                                            <th>Qty to Repair</th>
-                                            <th>Need By</th>
-                                            <th colspan="12"></th>
-                                        </tr>
-                                        <tr class="child-data splitship-child">
-                                            <td></td>
-                                            <td>SL-33653</td>
-                                            <td colspan="2">single drum towing winch</td>
-                                            <td>Customer</td>
-                                            <td>Shabbir</td>
-                                            <td colspan="7">10656 S De Anza Blvd, Suite 859, Cupertino, CA, 95014, USA</td>
-                                            <td>Stock</td>
-                                            <td>Each</td>
-                                            <td>5</td>
-                                            <td>01/24/2019</td>
-                                            <td colspan="12"></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
-                            </div>
-                        </p-tabPanel>
-                        <p-tabPanel header="Approve">
-                            <h5>Approve Content Not given</h5>
-                        </p-tabPanel>
-                        <p-tabPanel header="Vendor Capes">
-                            <h5>Vendor Capes Content Not given</h5>
-                        </p-tabPanel>
-                        <p-tabPanel header="Address">
-                            <div class="form-row ro-view-address">
-                                <div class="col-md-3">
-                                    <h5 class="po-head">Ship To</h5>
-                                    <div class="form-group">
-                                        <label>Site Name</label>
-                                        <input class="form-control" type="text" value="NewYork Location" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Address</label>
-                                        <input class="form-control" type="text" value="438 Cherry Hill Road, 8996 X Eisenhower PkwyAnn Arbor" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>City</label>
-                                        <input class="form-control" type="text" value="Bloomfield Hills" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Primary State/Province</label>
-                                        <input class="form-control" type="text" value="MI" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Postal</label>
-                                        <input class="form-control" type="text" value="48302" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Country</label>
-                                        <input class="form-control" type="text" value="USA" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Contact</label>
-                                        <input class="form-control" type="text" value="Shabbir" disabled>
-                                    </div>
-                                    <div class="form-group memo-popup-cstm">
-                                        <label>Memo</label>
-                                        <span pTooltip="{{'memoNotes'}}" tooltipPosition="top"><input type="text" pInputText class="form-control" value="{{'memoNotes'}}" disabled /></span>
-                                        <i class="fa fa-info-circle fa-lg" pTooltip="{{'memoNotes'}}" tooltipPosition="top"></i>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Ship Via</label>
-                                        <input class="form-control" type="text" value="FedEx" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Shipping Cost</label>
-                                        <input class="form-control" type="text" value="50.00" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Handling Cost</label>
-                                        <input class="form-control" type="text" value="50.00" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Shipping Account Num</label>
-                                        <input class="form-control" type="text" value="12345678" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Shipping ID (AWB)</label>
-                                        <input class="form-control" type="text" value="12345" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>URL</label>
-                                        <input class="form-control" type="text" value="http://www.google.com/" disabled>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <h5 class="po-head">Bill To</h5>
-                                    <div class="form-group">
-                                        <label>Site Name</label>
-                                        <input class="form-control" type="text" value="NewYork Location" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Address</label>
-                                        <input class="form-control" type="text" value="438 Cherry Hill Road, 8996 X Eisenhower PkwyAnn Arbor" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>City</label>
-                                        <input class="form-control" type="text" value="Bloomfield Hills" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Primary State/Province</label>
-                                        <input class="form-control" type="text" value="MI" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Postal</label>
-                                        <input class="form-control" type="text" value="48302" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Country</label>
-                                        <input class="form-control" type="text" value="USA" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Contact</label>
-                                        <input class="form-control" type="text" value="Shabbir" disabled>
-                                    </div>
-                                    <div class="form-group memo-popup-cstm">
-                                        <label>Memo</label>
-                                        <span pTooltip="{{'memoNotes'}}" tooltipPosition="top"><input type="text" pInputText class="form-control" value="{{'memoNotes'}}" disabled /></span>
-                                        <i class="fa fa-info-circle fa-lg" pTooltip="{{'memoNotes'}}" tooltipPosition="top"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </p-tabPanel>
-                <p-tabPanel header="Receiving">
-                    <div class="ro-view-receiving">
-                        <div class="x_panel">
-                            <div>
-                                <div>
-                                    <div id="adminsearchlocationajax">
-                                        <div class="">
-                                            <table class="table table-bordered table-wrap">
-                                                <thead>
-                                                    <tr class="po-table-tr">
-                                                        <th></th>
-                                                        <th>Line no</th>
-                                                        <th>PN</th>
-                                                        <th>Qty Ordered</th>
-                                                        <th>Qty Received</th>
-                                                        <th>Qty Actually Received</th>
-                                                        <th>Qty Rejected</th>
-                                                        <th>Qty Backordered</th>
-                                                        <th>Status</th>
-                                                        <th colspan="3" class="text-center">User Name</th>
-                                                        <th colspan="4">Management Structure</th>
-                                                        <th></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <ng-container>
-                                                        <tr class="basic-info">
-                                                            <td class="details-control eachcol" style="padding: 4px 6px;">
-                                                                <i class="fa fa-{{ toggleIcon ? 'minus':'plus'}} btn btn-success btn-cstm btn-xs margin0" (click)="toggleExpandIcon()"></i>
-                                                            </td>
-                                                            <td>1</td>
-                                                            <td>12345</td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td colspan="3"></td>
-                                                            <td colspan="4"></td>
-                                                            <td></td>
-                                                        </tr>
-
-                                                        <tr class="basic-info splitshipment po-sub-tr" *ngIf="toggleIcon">
-                                                            <th></th>
-                                                            <th></th>
-                                                            <th>PN</th>
-                                                            <th>Qty Ordered</th>
-                                                            <th>Qty Received</th>
-                                                            <th>Qty Actually Received</th>
-                                                            <th>Qty Rejected</th>
-                                                            <th>Qty Backordered</th>
-                                                            <th>Status</th>
-                                                            <th>User Type</th>
-                                                            <th>User Name</th>
-                                                            <th>Address</th>
-                                                            <th colspan="4">Management Structure</th>
-                                                            <th> </th>
-                                                        </tr>
-
-                                                        <tr class="basic-info splitshipment" *ngIf="toggleIcon">
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td>{{'NA'}}</td>
-                                                            <td>{{'NA'}}</td>
-                                                            <td>{{'NA'}}</td>
-                                                            <td> </td>
-                                                            <td>{{'NA'}}</td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td colspan="4"></td>
-                                                            <td style="padding: 3px;"><a class="btn btn-primary-cstm btn-po-details" (click)="addStockLine()">{{ toggleAddDetails ? 'Close' : 'Add Details'}}</a></td>
-                                                        </tr>
-
-                                                        <tr class="more-info" *ngIf="toggleAddDetails">
-                                                            <td colspan="17">
-                                                                <div class="form-row" style="margin-top: 10px;padding: 0px 7px;">
-                                                                    <div class="col-md-2">
-                                                                        <div class="form-group">
-                                                                            <label>PN</label>
-                                                                            <input type="text" class="form-control" value="" disabled />
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-2">
-                                                                        <div class="form-group">
-                                                                            <label>PN Description</label>
-                                                                            <input type="text" class="form-control" value="" disabled />
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-2">
-                                                                        <div class="form-group">
-                                                                            <label>Cond</label>
-                                                                            <input type="text" class="form-control" value="" disabled />
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-2">
-                                                                        <div class="form-group">
-                                                                            <label>QTY To Receive</label>
-                                                                            <input type="text" class="form-control" value="" disabled />
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-2">
-                                                                        <div class="form-group">
-                                                                            <label>QTY Actually Received</label>
-                                                                            <input type="text" class="form-control" value="" disabled />
-                                                                        </div>
-                                                                    </div>
-
-                                                                </div>
-
-                                                                <div class="form-row" style="margin-top: 10px;padding: 0px 7px;">
-                                                                    <div class="col-md-2">
-                                                                        <div class="form-group">
-                                                                            <label>QTY Rejected</label>
-                                                                            <input type="text" class="form-control" value="" disabled />
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-2">
-                                                                        <div class="form-group">
-                                                                            <label>GL Account</label>
-                                                                            <input type="text" class="form-control" value="" disabled />
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-2">
-                                                                        <div class="form-group">
-                                                                            <label matTooltip="Export Control Classification Number">ECCN</label>
-                                                                            <input type="text" class="form-control" value="" disabled />
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-2">
-                                                                        <div class="form-group">
-                                                                            <label matTooltip="International Traffic in Arms Regulations Number">ITAR Num</label>
-                                                                            <input type="text" class="form-control" value="" disabled />
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-2">
-                                                                        <div class="form-group">
-                                                                            <label matTooltip="National Stock Number">NSN</label>
-                                                                            <input type="text" class="form-control" value="" disabled />
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-2">
-                                                                        <div class="form-group">
-                                                                            <label matTooltip="Top Level Assembly">TLA</label>
-                                                                            <input type="text" class="form-control" value="" disabled />
-                                                                        </div>
-                                                                    </div>
-
-                                                                </div>
-
-                                                                <div class="form-row" style="margin-top: 10px;padding: 0px 7px;">
-                                                                    <div class="col-md-2">
-                                                                        <div class="form-group">
-                                                                            <label matTooltip="Next Higher Assembly">NHA</label>
-                                                                            <input type="text" class="form-control" value="" disabled />
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-                                                                <div style="margin-left: 6px;">
-                                                                    <h3 class="add-details-heading">Receiving Qty-1 of part PN1234</h3>
-                                                                    <div class="pull-right" style="margin-top: -37px;margin-right: 85px;">
-                                                                        <i class="fa fa-chevron-left btn btn-primary-cstm btn-ad-icons"></i>
-                                                                        <input type="text" pInputText pKeyFilter="pnum" class="form-control" style="width: 50px;border-radius: 0 !important;" />
-                                                                        <i class="fa fa-chevron-right btn btn-primary-cstm btn-ad-icons"></i>
-                                                                        <!--<p>Page {{currentSLIndex + 1}} of {{part.stocklineListObj.length}} Pages</p>-->
-                                                                    </div>
-
-                                                                    <section>
-                                                                        <div class="form-row">
-                                                                            <div class="col-md-3">
-                                                                                <div class="form-group">
-                                                                                    <div class="checkbox-cstm" style="margin-top: 4px">
-                                                                                        <label style="width: 200px;">
-                                                                                            <input type="checkbox" class="form-control" disabled>
-                                                                                            <span class="cr"><i class="cr-icon pi pi-check"></i></span> Same Details For All Parts
-                                                                                        </label>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <div class="form-row">
-                                                                            <div class="col-md-3">
-                                                                                <div class="card" style="margin-top: 13px;">
-                                                                                    <div class="card-header" style="padding: 8px 14px;">
-                                                                                        <label>Management Structure</label>
-                                                                                    </div>
-                                                                                    <div class="card-body" style="padding: 12px 12px 4px;">
-                                                                                        <div class="form-group">
-                                                                                            <input type="text" class="form-control" value="Adso" disabled />
-                                                                                        </div>
-                                                                                        <div class="form-group">
-                                                                                            <input type="text" class="form-control" value="Silverxis" disabled />
-                                                                                        </div>
-                                                                                        <div class="form-group">
-                                                                                            <input type="text" class="form-control" value="Designing" disabled />
-                                                                                        </div>
-                                                                                        <div class="form-group">
-                                                                                            <input type="text" class="form-control" value=".net" disabled />
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="form-group" style="margin-top: 9px;">
-                                                                                    <label>Site</label>
-                                                                                    <input type="text" class="form-control" value="" disabled />
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label>Warehouse</label>
-                                                                                    <input type="text" class="form-control" value="" disabled />
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label>Location</label>
-                                                                                    <input type="text" class="form-control" value="" disabled />
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label>Shelf</label>
-                                                                                    <input type="text" class="form-control" value="" disabled />
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-md-3">
-                                                                                <div class="form-group">
-                                                                                    <label>Bin</label>
-                                                                                    <input type="text" class="form-control" value="" disabled />
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label>Obtain From </label>
-                                                                                    <input type="text" class="form-control" value="11" disabled />
-                                                                                </div>
-                                                                                <div class="form-group" style="display: none;">
-                                                                                    <input type="text" class="form-control" value="" disabled />
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label>Owner </label>
-                                                                                    <input type="text" class="form-control" value="" disabled />
-                                                                                </div>
-                                                                                <div class="form-group" style="display: none;">
-                                                                                    <input type="text" class="form-control" value="" disabled />
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label>Traceable To </label>
-                                                                                    <input type="text" class="form-control" value="" disabled />
-                                                                                </div>
-                                                                                <div class="form-group" style="display: none;">
-                                                                                    <input type="text" class="form-control" value="" disabled />
-                                                                                </div>
-
-                                                                                <div class="form-group">
-                                                                                    <label>MFG</label>
-                                                                                    <input type="text" class="form-control" value="" disabled />
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label>MFG Lot Num</label>
-                                                                                    <input type="text" class="form-control" value="" disabled />
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label>MFG Date</label>
-                                                                                    <p-calendar class="pas-clder pas-clder-po-table ro-popup-clder" [showIcon]="true" [disabled]="true"></p-calendar>
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label>MFG Trace</label>
-                                                                                    <input type="text" class="form-control" value="" disabled />
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-md-3">
-                                                                                <div class="form-group">
-                                                                                    <label>MFG Batch Num</label>
-                                                                                    <input type="text" class="form-control" value="" disabled />
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label>Expiration Date</label>
-                                                                                    <div class="form-group">
-                                                                                        <div class="checkbox-cstm" style="margin-top: 4px">
-                                                                                            <label>
-                                                                                                <input type="checkbox" class="form-control" disabled>
-                                                                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                                                            </label>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label>Unit Cost</label>
-                                                                                    <input type="text" class="form-control" value="" disabled />
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label>Extended Cost</label>
-                                                                                    <input type="text" class="form-control" value="" disabled />
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label>Parts Cert Num</label>
-                                                                                    <input type="text" class="form-control" value="" disabled />
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label>Cert By</label>
-                                                                                    <input type="text" class="form-control" value="" disabled />
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label>Certified Date</label>
-                                                                                    <p-calendar class="pas-clder pas-clder-po-table ro-popup-clder" [showIcon]="true" [disabled]="true"></p-calendar>
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label>Certified Due Date</label>
-                                                                                    <p-calendar class="pas-clder pas-clder-po-table ro-popup-clder" [showIcon]="true" [disabled]="true"></p-calendar>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-md-3">
-                                                                                <div class="form-group">
-                                                                                    <label>Tag Type</label>
-                                                                                    <input type="text" class="form-control" value="" disabled />
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label>Tag Date</label>
-                                                                                    <p-calendar class="pas-clder pas-clder-po-table ro-popup-clder" [showIcon]="true" [disabled]="true"></p-calendar>
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label>Shipping Ref</label>
-                                                                                    <input type="text" class="form-control" value="" disabled />
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label>Ship Via</label>
-                                                                                    <input type="text" class="form-control" value="" disabled />
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label>Shipping Account</label>
-                                                                                    <input type="text" class="form-control" value="" disabled />
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label matTooltip="Engine Serial Number">ESN</label>
-                                                                                    <input type="text" class="form-control" value="" disabled />
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                    <label>Aircraft Tail Num</label>
-                                                                                    <input type="text" class="form-control" value="" disabled />
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </section>
-
-                                                                    <section>
-                                                                        <h3 class="add-details-heading" style="text-align: left;">Is Serialized</h3>
-                                                                        <div class="form-row">
-                                                                            <div class="col-md-3">
-                                                                                <div class="form-group">
-                                                                                    <label>Serial Num</label>
-                                                                                    <input type="text" class="form-control" value="" disabled />
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </section>
-
-                                                                    <section>
-                                                                        <h3 class="add-details-heading" style="text-align: left;">Time Life</h3>
-                                                                        <div class="time-remaining">
-                                                                            <table class="table table-bordered">
-                                                                                <thead>
-                                                                                    <tr class="po-table-tr">
-                                                                                        <th colspan="2" class="text-center">Cycles (in hours)</th>
-                                                                                        <th colspan="2" class="text-center">Time (in hours)</th>
-                                                                                        <th colspan="2" class="text-center">Last (in hours)</th>
-                                                                                    </tr>
-                                                                                </thead>
-                                                                                <tbody>
-                                                                                    <tr>
-                                                                                        <td>Remaining</td>
-                                                                                        <td><input type="text" class="form-control" value="" disabled /></td>
-                                                                                        <td>Remaining</td>
-                                                                                        <td><input type="text" class="form-control" value="" disabled /></td>
-                                                                                        <td>Since New</td>
-                                                                                        <td><input type="text" class="form-control" value="" disabled /></td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <td>Since New</td>
-                                                                                        <td><input type="text" class="form-control" value="" disabled /></td>
-                                                                                        <td>Since New</td>
-                                                                                        <td><input type="text" class="form-control" value="" disabled /></td>
-                                                                                        <td>Since Ovh</td>
-                                                                                        <td><input type="text" class="form-control" value="" disabled /></td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <td>Since Ovh</td>
-                                                                                        <td><input type="text" class="form-control" value="" disabled /></td>
-                                                                                        <td>Since Ovh</td>
-                                                                                        <td><input type="text" class="form-control" value="" disabled /></td>
-                                                                                        <td>Since Insp</td>
-                                                                                        <td><input type="text" class="form-control" value="" disabled /></td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <td>Since Insp</td>
-                                                                                        <td><input type="text" class="form-control" value="" disabled /></td>
-                                                                                        <td>Since Insp</td>
-                                                                                        <td><input type="text" class="form-control" value="" disabled /></td>
-                                                                                        <td></td>
-                                                                                        <td></td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <td>Since Repair</td>
-                                                                                        <td><input type="text" class="form-control" value="" disabled /></td>
-                                                                                        <td>Since Repair</td>
-                                                                                        <td><input type="text" class="form-control" value="" disabled /></td>
-                                                                                        <td></td>
-                                                                                        <td></td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
-                                                                    </section>
-
-                                                                    <section>
-                                                                        <h3 class="add-details-heading" style="text-align: left;">Calibrated Equipment</h3>
-                                                                        <div class="form-row">
-                                                                            <div class="col-md-3">
-                                                                                <div class="form-group">
-                                                                                    <label>Inspection Date</label>
-                                                                                    <p-calendar class="pas-clder pas-clder-po-table ro-popup-clder" [showIcon]="true" [disabled]="true"></p-calendar>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-md-3">
-                                                                                <div class="form-group">
-                                                                                    <label>Frequency</label>
-                                                                                    <input type="text" class="form-control" value="" disabled />
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </section>
-                                                                </div>
-
-                                                            </td>
-                                                        </tr>
-
-                                                    </ng-container>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </p-tabPanel>
-                    </p-tabView>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success">Edit</button>
-                    <button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<div class="modal fade" id="view" role="dialog">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Details of Repair Order</h4>
+            </div>
+            <div class="modal-body">
+              <div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive default-bg clear">
+                            <div class="col-sm-3">
+                                <p><span class="label"><b>PO Num: </b></span><span class="value">{{roHeaderAdd.repairOrderNumber ? roHeaderAdd.repairOrderNumber : '-'}}</span></p>
+                                <p><span class="label"><b>Open Date: </b></span><span class="value">{{roHeaderAdd.openDate | date: 'MM/dd/yyyy'}}</span></p>
+                                <p><span class="label"><b>Closed/Cancelled Date: </b></span><span class="value">{{roHeaderAdd.closedDate | date: 'MM/dd/yyyy'}}</span></p>
+                                <p><span class="label"><b>Need By: </b></span><span class="value">{{roHeaderAdd.needByDate | date: 'MM/dd/yyyy'}}</span></p>
+                                <p><span class="label"><b>Priority: </b></span><span class="value">{{roHeaderAdd.priority ? roHeaderAdd.priority : '-'}}</span></p>
+                                <p><span class="label"><b>Deferred Receiver: </b></span><span class="value">{{roHeaderAdd.deferredReceiver ? roHeaderAdd.deferredReceiver : '-'}}</span></p>
+                            </div>
+                            <div class="col-sm-3">
+                                    <p><span class="label"><b>Vendor Name: </b></span><span class="value">{{roHeaderAdd.vendorName ? roHeaderAdd.vendorName : '-'}}</span></p>
+                                    <p><span class="label"><b>Vendor Code: </b></span><span class="value">{{roHeaderAdd.vendorCode ? roHeaderAdd.vendorCode : '-'}}</span></p>
+                                    <p><span class="label"><b>Vendor Contact: </b></span><span class="value">{{roHeaderAdd.vendorContact ? roHeaderAdd.vendorContact : '-'}}</span></p>
+                                    <p><span class="label"><b>Contact Phone: </b></span><span class="value">{{roHeaderAdd.workPhone ? roHeaderAdd.workPhone : '-'}}</span></p>
+                                    <p><span class="label"><b>Credit Limit & Terms: </b></span><span class="value">
+                                        {{roHeaderAdd.creditLimit ? roHeaderAdd.creditLimit : '-'}} &
+                                        {{roHeaderAdd.creditTerm ? roHeaderAdd.creditTerm : '-'}}
+                                    </span></p>
+                            </div>
+                            <div class="col-sm-3">
+                                    <p><span class="label"><b>Requisitioner: </b></span><span class="value">{{roHeaderAdd.requisitioner ? roHeaderAdd.requisitioner : '-'}}</span></p>
+                                    <p><span class="label"><b>Approver: </b></span><span class="value">{{roHeaderAdd.approver ? roHeaderAdd.approver : '-'}}</span></p>
+                                    <p><span class="label"><b>Approved Date: </b></span><span class="value">{{roHeaderAdd.dateApproved | date: 'MM/dd/yyyy'}}</span></p>
+                                    <p><span class="label"><b>Status: </b></span><span class="value">{{roHeaderAdd.status ? roHeaderAdd.status : '-'}}</span></p>
+                                    <p><span class="label"><b>Resale: </b></span><span class="value">{{roHeaderAdd.resale ? roHeaderAdd.resale : '-'}}</span></p>
+                            </div>
+                            <div class="col-sm-3">
+                                <h5>Management Structure</h5>
+                                    <p><span class="label"><b>Company: </b></span><span class="value">{{headerManagementStructure.level1 ? headerManagementStructure.level1 : '-'}}</span></p>
+                                    <p><span class="label"><b>BU: </b></span><span class="value">{{headerManagementStructure.level2 ? headerManagementStructure.level2 : '-'}}</span></p>
+                                    <p><span class="label"><b>Division: </b></span><span class="value">{{headerManagementStructure.level3 ? headerManagementStructure.level3 : '-'}}</span></p>
+                                    <p><span class="label"><b>Department: </b></span><span class="value">{{headerManagementStructure.level4 ? headerManagementStructure.level4 : '-'}}</span></p>
+                                    <p><span class="label"><b>Memo: </b></span><span class="value">{{roHeaderAdd.notes ? roHeaderAdd.notes : '-'}}</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <p-tabView class="pas-tabview">
+                        <p-tabPanel header="Parts List">											
+                            <div class="table-responsive pas-table-cstm roview-table-cstm" style="margin-top: 5px;">
+                                <table class="table table-bordered" id="po-table">
+                                    <thead>
+                                        <tr class="partsList-table-tr">
+                                            <th>PN</th>
+                                            <th>Alt PN</th>
+                                            <th>PN Description</th>
+                                            <th>Item Type</th>
+                                            <th>Mfr</th>
+                                            <th>GL Account</th>
+                                            <th>UOM</th>
+                                            <th>Need By</th>
+                                            <th>Cond</th>
+                                            <th>Order Qty</th>
+                                            <th>Unit Cost</th>
+                                            <th>Disc Percent</th>
+                                            <th>Disc./unit</th>
+                                            <th>Disc. Amount</th> 
+                                            <th>Ext Cost</th>
+                                            <th>Functional CUR</th>
+                                            <th>FX Rate</th>
+                                            <th>Report CUR</th>
+                                            <th>WO</th>
+                                            <th>RO</th>
+                                            <th>SO</th>
+                                            <th colspan="4">Management Structure</th>
+                                            <th>Memo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ng-container *ngFor="let partList of roPartsList">
+                                            <tr class="parent-data">
+                                                <td>{{partList?.partNumber}}</td>
+                                                <td>{{partList?.altPartNumber}}</td>
+                                                <td>{{partList?.partDescription}}</td>
+                                                <td>{{partList?.itemType}}</td>
+                                                <td>{{partList?.manufacturer}}</td>
+                                                <td>{{partList?.glAccount}}</td>
+                                                <td>{{partList?.unitOfMeasure}}</td>
+                                                <td>{{partList?.needByDate}}</td>
+                                                <td>{{partList?.condition}}</td>
+                                                <td>{{partList?.quantityOrdered}}</td>
+                                                <td>{{partList?.unitCost}}</td>
+                                                <td>{{partList?.discountPercent}}</td>
+                                                <td>{{partList?.discountPerUnit}}</td>
+                                                <td>{{partList?.discountAmount}}</td>
+                                                <td>{{partList?.extendedCost}}</td>
+                                                <td>{{partList?.functionalCurrency}}</td>
+                                                <td>{{partList?.foreignExchangeRate}}</td>
+                                                <td>{{partList?.reportCurrency}}</td>
+                                                <td>{{partList?.workOrderNo}}</td>
+                                                <td>{{partList?.reapairOrderNo}}</td>
+                                                <td>{{partList?.salesOrderNo}}</td>
+                                                <td colspan="4">{{partList?.level1}},{{partList?.level2}},{{partList?.level3}},{{partList?.level4}}</td>
+                                                <td>{{partList?.memo}}</td>
+                                            </tr>
+                                            <tr class="child-header splitship-head" *ngIf="partList.repairOrderSplitParts">
+                                                <th></th>
+                                                <th></th>
+                                                <th>PN</th>
+                                                <th>PN Description</th>
+                                                <th>User Type</th>
+                                                <th>Name</th>
+                                                <th colspan="5">Select Address</th>
+                                                <th>UOM</th>
+                                                <th>Order Qty</th>
+                                                <th>Need By</th>
+                                                <th colspan="4">Management Structure</th>
+                                                <th colspan="10"></th>
+                                            </tr>
+                                            <tr class="child-data" *ngFor="let partChild of partList.repairOrderSplitParts">
+                                                <td></td>
+                                                <td></td>
+                                                <td>{{partList?.partNumber}}</td>
+                                                <td>{{partList?.partDescription}}</td>
+                                                <td>{{partChild?.userType}}</td>
+                                                <td>{{partChild?.user}}</td>
+                                                <td colspan="5">
+                                                    {{partChild.poPartSplitAddress1 ? partChild.poPartSplitAddress1 : ''}}, 
+                                                    {{partChild.poPartSplitCity ? partChild.poPartSplitCity : ''}},
+                                                    {{partChild.poPartSplitState ? partChild.poPartSplitState : ''}} ,
+                                                    {{partChild.poPartSplitPostalCode ? partChild.poPartSplitPostalCode : ''}}, 
+                                                    {{partChild.poPartSplitCountry ? partChild.poPartSplitCountry : ''}}</td>
+                                                <td>{{partList?.unitOfMeasure}}</td>
+                                                <td>{{partChild?.quantityOrdered}}</td>
+                                                <td>{{partChild?.needByDate}}</td>
+                                                <td colspan="4">{{partChild?.level1}},{{partChild?.level2}},{{partChild?.level3}},{{partChild?.level4}}</td>
+                                                <td colspan="10"></td>
+                                            </tr>
+                                        </ng-container>
+                                    </tbody>
+                                </table>									
+                            </div>
+                        </p-tabPanel>
 
+                        <p-tabPanel header="Approve">
+                                <div class="approver-tab-cstm">
+                                    <h5 class="po-head">Approvers List</h5>
+                                    <div class="form-row" *ngFor="let approver of approveList" style="margin-top: 15px;">
+                                        <div class="col-md-3">
+                                            <label>Approver {{approver.level}}</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="approver-details-cstm">
+                                                <p><b>Name: </b>{{approver.employeeName}}</p>
+                                                <p><b>Code: </b>{{approver.employeeCode}}</p>
+                                                <p><b>Email: </b>{{approver.email}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                        </p-tabPanel>
 
+                        <p-tabPanel header="Vendor Capes">
+                                <p-table class="rpo-table-cstm" #dt [value]="vendorCapesInfo" [metaKeySelection]="true"
+                                            [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]"
+                                            [columns]="vendorCapesCols" selectionMode="multiple"
+                                            [resizableColumns]="true" [reorderableColumns]="true" [responsive]="true">
+                        
+                                    <ng-template pTemplate="header" let-columns>
+                                        <tr>
+                                            <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                                {{col.header}}
+                                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th *ngFor="let col of columns" [ngSwitch]="col.field">
+                                                <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                                            </th>
+                                        </tr>
+                                    </ng-template>
+                        
+                                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                        <tr [pSelectableRow]="rowData">
+                                            <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                                                {{rowData[col.field]}}
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                        </p-tabPanel>
 
+                        <p-tabPanel header="Address">
+                            <div class="table-responsive default-bg clear">
+                                <div class="col-sm-4">
+                                    <h5 class="po-head">Ship To</h5>
+                                    <p><span class="label"><b>User Type: </b></span><span class="value">{{roHeaderAdd.shipToUserType ? roHeaderAdd.shipToUserType : '-'}}</span></p>
+                                    <p><span class="label"><b>User: </b></span><span class="value">{{roHeaderAdd.shipToUser ? roHeaderAdd.shipToUser : '-'}}</span></p>
+                                    <p><span class="label"><b>Site Name: </b></span><span class="value">{{roHeaderAdd.shipToSiteName ? roHeaderAdd.shipToSiteName : '-'}}</span></p>
+                                    <p><span class="label"><b>Address1: </b></span><span class="value">{{roHeaderAdd.shipToAddress1 ? roHeaderAdd.shipToAddress1 : '-'}}</span></p>
+                                    <p><span class="label"><b>Address2: </b></span><span class="value">{{roHeaderAdd.shipToAddress2 ? roHeaderAdd.shipToAddress2 : '-'}}</span></p>
+                                    <p><span class="label"><b>Address3: </b></span><span class="value">{{roHeaderAdd.shipToAddress3 ? roHeaderAdd.shipToAddress3 : '-'}}</span></p>
+                                    <p><span class="label"><b>City: </b></span><span class="value">{{roHeaderAdd.shipToCity ? roHeaderAdd.shipToCity : '-'}}</span></p>
+                                    <p><span class="label"><b>Primary State/Province: </b></span><span class="value">{{roHeaderAdd.shipToState ? roHeaderAdd.shipToState : '-'}}</span></p>
+                                    <p><span class="label"><b>Postal: </b></span><span class="value">{{roHeaderAdd.shipToPostalCode ? roHeaderAdd.shipToPostalCode : '-'}}</span></p>
+                                    <p><span class="label"><b>Country: </b></span><span class="value">{{roHeaderAdd.shipToCountry ? roHeaderAdd.shipToCountry : '-'}}</span></p>
+                                    <p><span class="label"><b>Contact Name: </b></span><span class="value">{{roHeaderAdd.shipToContact ? roHeaderAdd.shipToContact : '-'}}</span></p>
+                                    <p><span class="label"><b>Memo: </b></span><span class="value">{{roHeaderAdd.shipToMemo ? roHeaderAdd.shipToMemo : '-'}}</span></p>
+                                    <p><span class="label"><b>Ship Via: </b></span><span class="value">{{roHeaderAdd.shipVia ? roHeaderAdd.shipVia : '-'}}</span></p>
+                                    <p><span class="label"><b>Shipping Cost: </b></span><span class="value">{{roHeaderAdd.shippingCost ? roHeaderAdd.shippingCost : '-'}}</span></p>
+                                    <p><span class="label"><b>Handling Cost: </b></span><span class="value">{{roHeaderAdd.handlingCost ? roHeaderAdd.handlingCost : '-'}}</span></p>
+                                    <p><span class="label"><b>Shipping Acct Num: </b></span><span class="value">{{roHeaderAdd.shippingAccountNo ? roHeaderAdd.shippingAccountNo : '-'}}</span></p>
+                                    <p><span class="label"><b>Shipping Id (AWB): </b></span><span class="value">{{roHeaderAdd.shippingId ? roHeaderAdd.shippingId : '-'}}</span></p>
+                                    <p><span class="label"><b>URL: </b></span><span class="value">{{roHeaderAdd.shippingURL ? roHeaderAdd.shippingURL : '-'}}</span></p>
+                                </div>
+                                <div class="col-sm-4">
+                                    <h5 class="po-head">Bill To</h5>
+                                    <p><span class="label"><b>User Type: </b></span><span class="value">{{roHeaderAdd.billToToUserType ? roHeaderAdd.billToToUserType : '-'}}</span></p>
+                                    <p><span class="label"><b>User: </b></span><span class="value">{{roHeaderAdd.billToUser ? roHeaderAdd.billToUser : '-'}}</span></p>
+                                    <p><span class="label"><b>Site Name: </b></span><span class="value">{{roHeaderAdd.billToSiteName ? roHeaderAdd.billToSiteName : '-'}}</span></p>
+                                    <p><span class="label"><b>Address1: </b></span><span class="value">{{roHeaderAdd.billToAddress1 ? roHeaderAdd.billToAddress1 : '-'}}</span></p>
+                                    <p><span class="label"><b>Address2: </b></span><span class="value">{{roHeaderAdd.billToAddress2 ? roHeaderAdd.billToAddress2 : '-'}}</span></p>
+                                    <p><span class="label"><b>Address3: </b></span><span class="value">{{roHeaderAdd.billToAddress3 ? roHeaderAdd.billToAddress3 : '-'}}</span></p>
+                                    <p><span class="label"><b>City: </b></span><span class="value">{{roHeaderAdd.billToCity ? roHeaderAdd.billToCity : '-'}}</span></p>
+                                    <p><span class="label"><b>Primary State/Province: </b></span><span class="value">{{roHeaderAdd.billToState ? roHeaderAdd.billToState : '-'}}</span></p>
+                                    <p><span class="label"><b>Postal: </b></span><span class="value">{{roHeaderAdd.billToPostalCode ? roHeaderAdd.billToPostalCode : '-'}}</span></p>
+                                    <p><span class="label"><b>Country: </b></span><span class="value">{{roHeaderAdd.billToCountry ? roHeaderAdd.billToCountry : '-'}}</span></p>
+                                    <p><span class="label"><b>Contact Name: </b></span><span class="value">{{roHeaderAdd.billToContact ? roHeaderAdd.billToContact : '-'}}</span></p>
+                                    <p><span class="label"><b>Memo: </b></span><span class="value">{{roHeaderAdd.billToMemo ? roHeaderAdd.billToMemo : '-'}}</span></p>
+                                </div>
+                            </div>
+                        </p-tabPanel>
 
-
-
+                        <p-tabPanel header="Receiving">
+                            <app-ro-view-list [repairOrderData]="repairOrderData" ></app-ro-view-list>
+                        </p-tabPanel>
+                    </p-tabView>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>

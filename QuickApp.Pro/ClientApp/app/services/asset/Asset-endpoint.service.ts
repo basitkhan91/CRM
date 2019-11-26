@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { EndpointFactory } from '../endpoint-factory.service';
 
 @Injectable()
-export class AssetEndpoint extends EndpointFactory  {
+export class AssetEndpoint extends EndpointFactory {
 
     private readonly _assetlistUrl: string = "/api/AssetModule/Get";
     private readonly _allAssetlistUrl: string = "/api/AssetModule/GetAll";
@@ -35,7 +35,7 @@ export class AssetEndpoint extends EndpointFactory  {
             .catch(error => {
                 return this.handleError(error, () => this.getAllAssetList());
             });
-    } 
+    }
 
     getNewAsset<T>(userObject: any): Observable<T> {
 
@@ -95,6 +95,10 @@ export class AssetEndpoint extends EndpointFactory  {
             .catch(error => {
                 return this.handleError(error, () => this.getCapabilityDataEndpoint(assetRecordId));
             });
+    }
+
+    getAssetsById(assetRecordId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderassetview?assetRecordId=${assetRecordId}`, this.getRequestHeaders());
     }
 
     //Audit method in end pont services

@@ -1,10 +1,7 @@
 ﻿using DAL.Models;
 using FluentValidation;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace QuickApp.Pro.ViewModels
 {
@@ -63,6 +60,7 @@ namespace QuickApp.Pro.ViewModels
         public string[] EmployeeLeaveTypeId { get; set; }
         public string[] EmployeeShiftId { get; set; }
         public string[] ShiftId { get; set; }
+        public string Memo { get; set; }
         public class EmployeeViewModelValidator : AbstractValidator<EmployeeViewModel>
         {
             public EmployeeViewModelValidator()

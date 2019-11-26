@@ -31,10 +31,15 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
 
+
+        }
+
+        public IEnumerable<ATASubChapterAudit> GetATASubChapterAuditDetails(long aTASubChapterId)
+        {
+            return _appContext.ATASubChapterAudit.Where(c => c.ATASubChapterId == aTASubChapterId).OrderByDescending(p => p.UpdatedDate).ToList();
 
         }
 

@@ -119,8 +119,12 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _customerGetWarning: string = '/api/Customer/GetCustomerWarnings';
     private readonly _customerBillingHistory: string = "/api/Customer/getCustomerBillingHistory"
     private readonly _customerclassificationMapUrl: string = "/api/Customer/customerclassificationmappings";
+    private readonly _deleteInternationalShippingViaMapUrl: string = '/api/Customer/deleteshippingviadetails';
+    private readonly _deleteRestrictedParts: string = '/api/Customer/deletesRestrictedParts';
 
+    private readonly _shippingDetailsStatus: string = '/api/Customer/shippingdetailsstatus'
 
+    private readonly _customersBillingUpdateforActive: string = '/api/Customer/customersBillingUpdateStatus'
 
 
 
@@ -183,6 +187,12 @@ export class CustomerEndpoint extends EndpointFactory {
     get deleteTaxTypeRateMapped() { return this.configurations.baseUrl + this._deleteTaxTypeRateMapped }
     get domesticShipVia() { return this.configurations.baseUrl + this._addShipViaDetails }
     get customerclassificationMapUrl() { return this.configurations.baseUrl + this._customerclassificationMapUrl; }
+    get deleteInternationalShippingViaMapUrl() { return this.configurations.baseUrl + this._deleteInternationalShippingViaMapUrl; }
+    get deleteRestrictedParts() { return this.configurations.baseUrl + this._deleteRestrictedParts; }
+    get ShippingDetailsStatus() { return this.configurations.baseUrl + this._shippingDetailsStatus }
+
+    get customersBillingUpdateforActive() { return this.configurations.baseUrl + this._customersBillingUpdateforActive }
+
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -1229,8 +1239,30 @@ export class CustomerEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getCustomerClassificationMapping(customerId));
             });
     }
-
-
+    deleteInternationalShipViaId<T>(id, updatedBy) {
+        return this.http.get<T>(`${this._deleteInternationalShippingViaMapUrl}?id=${id}&updatedBy=${updatedBy}`)
+            .catch(error => {
+                return this.handleError(error, () => this.deleteInternationalShipViaId(id, updatedBy));
+            });
+    }
+    deleteRestrictedPartsById<T>(id, updatedBy) {
+        return this.http.get<T>(`${this._deleteRestrictedParts}?id=${id}&updatedBy=${updatedBy}`)
+            .catch(error => {
+                return this.handleError(error, () => this.deleteRestrictedPartsById(id, updatedBy));
+            });
+    }
+    updateStatusForShippingDetails<T>(id, status, updatedBy) {
+        return this.http.get<T>(`${this.ShippingDetailsStatus}?id=${id}&status=${status}&updatedBy=${updatedBy}`)
+            .catch(error => {
+                return this.handleError(error, () => this.updateStatusForShippingDetails(id, status, updatedBy));
+            });
+    }  
+    CustomersBillingUpdateforActive<T>(id, status, updatedBy) {
+        return this.http.get<T>(`${this.customersBillingUpdateforActive}?id=${id}&status=${status}&updatedBy=${updatedBy}`)
+            .catch(error => {
+                return this.handleError(error, () => this.CustomersBillingUpdateforActive(id, status, updatedBy));
+            });
+    }  
 
 }
 

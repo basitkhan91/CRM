@@ -43,9 +43,8 @@ namespace QuickApp.Pro.Controllers
             }
             catch(Exception ex)
             {
-
+                return BadRequest(ex.Message);
             }
-            return Ok(ModelState);
 
         }
         [HttpGet("basic")]

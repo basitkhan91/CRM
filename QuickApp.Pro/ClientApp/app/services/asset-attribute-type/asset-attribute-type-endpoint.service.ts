@@ -12,6 +12,7 @@ export class AssetAttributeTypeEndpointService extends EndpointFactory {
     private readonly item: string = "AssetAttributeType";
     private readonly getAllItemsEndPointTemplate: string = "getAll";
     private readonly getItemByIdEndPointTemplate: string = "getById";
+    private readonly getByAssetTypeIdEndPointTemplate: string = "getByAssetTypeId";
     private readonly addItemEndPointTemplate: string = "add";
     private readonly updateItemEndPointTemplate: string = "update";
     private readonly removeItemByIdEndPointTemplate: string = "removeById";
@@ -20,6 +21,7 @@ export class AssetAttributeTypeEndpointService extends EndpointFactory {
 
 
     get getAll() { return `${this.configurations.baseUrl}/api/${this.item}/${this.getAllItemsEndPointTemplate}`; }
+    get getByAssetTypeId() { return `${this.configurations.baseUrl}/api/${this.item}/${this.getByAssetTypeIdEndPointTemplate}`; }
     get getById() { return `${this.configurations.baseUrl}/api/${this.item}/${this.getItemByIdEndPointTemplate}`; }
     get add() { return `${this.configurations.baseUrl}/api/${this.item}/${this.addItemEndPointTemplate}`; }
     get update() { return `${this.configurations.baseUrl}/api/${this.item}/${this.updateItemEndPointTemplate}`; }
@@ -50,6 +52,15 @@ export class AssetAttributeTypeEndpointService extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getAllItems());
+            });
+    }
+
+    getByAssetType<T>(id: number): Observable<T> {
+        let endpointUrl = `${this.getByAssetTypeId}/${id}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getByAssetType(id));
             });
     }
 

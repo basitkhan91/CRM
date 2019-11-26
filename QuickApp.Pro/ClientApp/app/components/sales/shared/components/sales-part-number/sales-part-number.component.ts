@@ -6,5 +6,16 @@ import { Component } from "@angular/core";
   styleUrls: ["./sales-part-number.component.css"]
 })
 export class SalesPartNumberComponent {
-  constructor() {}
+  show: boolean;
+  constructor() {
+    this.show = false;
+  }
+
+  addPartNumber(value) {
+    this.show = true;
+  }
+
+  onClose(event) {
+    this.show = false;
+  }
 }

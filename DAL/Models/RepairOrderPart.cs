@@ -51,6 +51,19 @@ namespace DAL.Models
         public int? RoPartSplitUserId { get; set; }
         public int? RoPartSplitUserTypeId { get; set; }
         public List<RoPartSplits> RoPartSplits { get; set; }
+        [NotMapped]
+        public virtual ItemMaster ItemMaster { get; set; }
+        [NotMapped]
+        public long StockLineCount { get; set; }
+        [NotMapped]
+        [ForeignKey("RepairOrderPartRecordId")]
+        public virtual Address RoPartSplitAddress { get; set; }
+        [NotMapped]
+        public int? StatusId { get; set; }
+        public short? QuantityBackOrdered { get; set; }
+        public bool IsActive { get; set; }
+
+        public List<StockLine> StockLine { get; set; }
     }
 
     [NotMapped]
@@ -143,7 +156,7 @@ namespace DAL.Models
         public int? ManagementStructureId { get; set; }
         public string Memo { get; set; }
         public List<RepairOrderSplitParts> RepairOrderSplitParts { get; set; }
- 
+
     }
 
     [NotMapped]
@@ -158,7 +171,7 @@ namespace DAL.Models
         public string RoPartSplitAddress1 { get; set; }
         public string RoPartSplitAddress2 { get; set; }
         public string RoPartSplitAddress3 { get; set; }
-       public string RoPartSplitCity { get; set; }
+        public string RoPartSplitCity { get; set; }
         public string RoPartSplitCountry { get; set; }
         public string RoPartSplitPostalCode { get; set; }
         public string RoPartSplitState { get; set; }
@@ -166,9 +179,9 @@ namespace DAL.Models
         public string UnitOfMeasure { get; set; }
         public int? QuantityOrdered { get; set; }
         public DateTime? NeedByDate { get; set; }
-     
-     
+
+
         //"poPartSplitState":null,
-     
+
     }
 }

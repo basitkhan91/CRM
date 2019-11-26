@@ -11,7 +11,7 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h5 class="po-head" style="padding: 0px 10px;">{{ viewName }} General Information</h5>
+                    <h5 class="po-head" style="padding: 0px 10px;"> General Info</h5>
                 </div>
                 <div class="card-body">
                     <div class="col-md-4">
@@ -42,7 +42,7 @@
                                         Vendor Name
                                         <span class="clr-red">*</span>
                                     </label>
-                                    <p-autoComplete class="pautocomp-cstm" (onSelect)="onVendorselected($event)"
+                                    <p-autoComplete class="pautocomp-cstm" (onSelect)="onVendorselected($event)" (onKeyUp)="eventHandler($event)"
                                                     [(ngModel)]="sourceVendor.vendorName" name="vendorName"
                                                     [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
                                                     [minLength]="1" [dropdown]="true" required (onBlur)="checkVendorExist()">
@@ -143,7 +143,7 @@
 
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group" style="display:none">
                                     <label for="address3">
                                         Address Line 3
                                     </label>
@@ -249,7 +249,7 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="vendorname">
+                                            <label for="licenseNumber">
                                                 License
                                             </label>
                                             <input class="form-control" type="text" name="licenseNumber" [(ngModel)]="sourceVendor.licenseNumber">
@@ -262,8 +262,8 @@
                                                        data-toggle="modal" (click)="onAddCapabilities()"></i>
                                                 </span>
                                             </label>
-                                            <select class="form-control"  [(ngModel)]="sourceVendor.capabilityId">
-                                                <option *ngFor="let capabilty of dropDownVendorCapabilitiesList" [ngValue]="capabilty.capabilityId">  {{capabilty.label}}</option>
+                                            <select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.capabilityId">
+                                                <option *ngFor="let capabilty of dropDownVendorCapabilitiesList" [ngValue]="capabilty.value">  {{capabilty.label}}</option>
                                             </select>
                                            
                                             <!--<select class="form-control">
@@ -486,7 +486,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary-cstm" [disabled]="disablesaveForClassification">
-                    Submit
+                    Save
                 </button>
                 <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">
                     Close

@@ -324,6 +324,18 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
         })
     }
 
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
+
     customExcelUpload(event) {
         const file = event.target.files;
 

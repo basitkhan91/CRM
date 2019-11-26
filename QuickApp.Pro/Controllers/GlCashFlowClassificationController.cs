@@ -40,9 +40,8 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
+                return BadRequest(ex.Message);
             }
-            return null;
 
         }
 
@@ -60,12 +59,8 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
-
-
-
         }
 
         [HttpPost("glcashflowpost")]

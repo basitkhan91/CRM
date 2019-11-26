@@ -41,7 +41,7 @@ export class PriorityComponent implements OnInit {
             description: "",           
             masterCompanyId: 1,
             isActive: true,
-            isDelete: false,
+            isDeleted: false,
             memo: "",
           
         }
@@ -256,10 +256,22 @@ export class PriorityComponent implements OnInit {
     }
 
     getAuditHistoryById(rowData) {
-        this.priorityService.getPriorityAudit(rowData.priorityId).subscribe(res => {
+        this.priorityService.historyPriority(rowData.priorityId).subscribe(res => {
             console.log(res)
             this.auditHistory = res;
         })
+    }
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
     }
     
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -18,7 +19,7 @@ namespace DAL.Models
         public int? VendorContactId { get; set; }
         public string VendorContactPhone { get; set; }
         public decimal? CreditLimit { get; set; }
-        public int? CreditTermsId { get; set; }
+        public short? CreditTermsId { get; set; }
         public int? RequisitionerId { get; set; }
         public int? ApproverId { get; set; }
         public DateTime? ApprovedDate { get; set; }
@@ -72,5 +73,81 @@ namespace DAL.Models
         public string VendorCode { get; set; }
         [NotMapped]
         public string VendorName { get; set; }
+        //[NotMapped]
+        public long? RequestedBy { get; set; }
+        public virtual ICollection<RepairOrderPart> RepairOrderPart { get; set; }
+        public virtual Vendor Vendor { get; set; }
+    }
+
+    [NotMapped]
+    public class RepairOrderDto
+    {
+        public long RepairOrderId { get; set; }
+        public string RepairOrderNumber { get; set; }
+        public int? StatusId { get; set; }
+        public string Status { get; set; }
+        public string VendorName { get; set; }
+        public string VendorCode { get; set; }
+        public string VendorContact { get; set; }
+        public string ContactPhone { get; set; }
+        public string RequestedBy { get; set; }
+        public DateTime? OpenDate { get; set; }
+        public DateTime? ClosedDate { get; set; }
+        public DateTime? NeedByDate { get; set; }
+        public DateTime? DateApproved { get; set; }
+        public string Approver { get; set; }
+        public decimal? CreditLimit { get; set; }
+        public string Terms { get; set; }
+        public string Priority { get; set; }
+        public bool? DeferredReceiver { get; set; }
+        public bool? Resale { get; set; }
+        public int? ManagementStructureId { get; set; }
+        public string Memo { get; set; }
+        public List<RepairOrderPartsDto> RepairOrderPart { get; set; }
+    }
+
+    [NotMapped]
+    public class RepairOrderPartsDto : BaseDto
+    {
+        public long RepairOrderId { get; set; }
+        public long RepairOrderPartRecordId { get; set; }
+        public bool? IsActive { get; set; }
+        public bool? IsParent { get; set; }
+        public string PartDescription { get; set; }
+        public bool? IsSerialized { get; set; }
+        public bool? IsTimeLife { get; set; }
+        public long? ConditionId { get; set; }
+        public long? GlAccountId { get; set; }
+        public int? UnitCost { get; set; }
+        public decimal? ExtendedCost { get; set; }
+        public int? ManufacturerId { get; set; }
+        public string ManufacturerName { get; set; }
+        public List<RepairOrderSplitPartsDto> RepairOrderSplitParts { get; set; }
+    }
+
+    [NotMapped]
+    public class RepairOrderSplitPartsDto : BaseDto
+    {
+        public string UserType { get; set; }
+        public string UserName { get; set; }
+        public string Address { get; set; }
+    }
+
+    [NotMapped]
+    public class BaseDto
+    {
+        public long ItemMasterId { get; set; }
+        public string PartNumber { get; set; }
+        public int? QuantityOrdered { get; set; }
+        public int? QuantityReceived { get; set; }
+        public int? QuantityRejected { get; set; }
+        public short? QuantityBackOrdered { get; set; }
+        public string Status { get; set; }
+        public int? ManagementStructureId { get; set; }
+        public long? StockLineId { get; set; }
+        public string StockLineNumber { get; set; }
+        public string ControlId { get; set; }
+        public string ControlNumber { get; set; }
+
     }
 }

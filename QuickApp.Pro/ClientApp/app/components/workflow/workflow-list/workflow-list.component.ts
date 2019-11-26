@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+﻿import { Component, ViewChild, OnInit, AfterViewInit, Input } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatDialog, MatIcon } from '@angular/material';
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -37,6 +37,9 @@ import { PublicationService } from '../../../services/publication.service';
 
 
 export class WorkflowListComponent implements OnInit {
+    @Input() isWorkOrder;
+    @Input() workFlowId;
+    @Input() workFlowType;
     sourceWorkFlow: any;
     title: string = "Work Flow";
     workFlowGridSource: MatTableDataSource<any>;
@@ -73,6 +76,7 @@ export class WorkflowListComponent implements OnInit {
     itemClassification: any[];
     publications: any[];
     allVendors: any[];
+    responseDataForWorkFlow: Object;
 
     constructor(private actionService: ActionService,
         private router: ActivatedRoute,
@@ -102,6 +106,17 @@ export class WorkflowListComponent implements OnInit {
         this.getAllWorkflows();
         this.getWorkFlowActions();
         this.LoadParts();
+        if (this.isWorkOrder) {
+            this.workFlowtService.getWorkFlowDataById(this.workFlowId).subscribe(res => {
+                console.log(res);
+
+                this.onViewWFDetails(res);
+                this.responseDataForWorkFlow = res;
+
+            })
+
+        }
+
     }
 
     public allWorkFlows: any[] = [];
@@ -205,6 +220,7 @@ export class WorkflowListComponent implements OnInit {
     }
 
     onOpenAll() {
+        console.log(this.addedTasks);
         for (let task of this.addedTasks) {
             task.selected = true;
         }
@@ -248,9 +264,8 @@ export class WorkflowListComponent implements OnInit {
                 this.sourceWorkFlow = workflow[0];
                 var part = this.allParts.filter(x => x.itemMasterId == rowData.changedPartNumberId)[0];
                 this.sourceWorkFlow.changedPartNumber = part != undefined ? part.partNumber : '';
-
                 this.sourceWorkFlow.workflowCreateDate = new Date(this.sourceWorkFlow.workflowCreateDate).toLocaleDateString();
-                this.sourceWorkFlow.workflowCreateDate = this.sourceWorkFlow.workflowExpirationDate != null && this.sourceWorkFlow.workflowExpirationDate != '' ? new Date(this.sourceWorkFlow.workflowCreateDate).toLocaleDateString() : '';
+                this.sourceWorkFlow.workflowExpirationDate = this.sourceWorkFlow.workflowExpirationDate != null && this.sourceWorkFlow.workflowExpirationDate != '' ? new Date(this.sourceWorkFlow.workflowExpirationDate).toLocaleDateString() : '';
 
                 this.calculatePercentOfNew(workflow[0].costOfNew, workflow[0].percentageOfNew);
                 this.calculatePercentOfReplacement(workflow[0].costOfReplacement, workflow[0].percentageOfReplacement);

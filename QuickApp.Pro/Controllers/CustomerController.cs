@@ -62,7 +62,7 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<CustomerViewModel>))]
         public IActionResult GetCustomerByNameList(string name, CustomerViewModel customerViewModel)
         {
-            var allCustomerBynamelistDetails = _unitOfWork.Customer.GetCustomerBynameList(name); //.GetAllCustomersData();
+            var allCustomerBynamelistDetails = _unitOfWork.Customer.SearchCustomer(name, DAL.Models.Enums.CustomerSearchType.ContainsName); //.GetAllCustomersData();
             return Ok(allCustomerBynamelistDetails);
         }
 
@@ -777,6 +777,8 @@ namespace QuickApp.Pro.Controllers
                 contactObj.MiddleName = contactViewModel.MiddleName;
                 contactObj.ContactTitle = contactViewModel.ContactTitle;
                 contactObj.MobilePhone = contactViewModel.MobilePhone;
+                contactObj.Tag = contactViewModel.Tag;
+
                 contactObj.Notes = contactViewModel.Notes;
                 contactObj.WorkPhone = contactViewModel.WorkPhone;
                 contactObj.WebsiteURL = contactViewModel.WebsiteURL;
@@ -841,8 +843,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
 
 
@@ -1717,7 +1718,7 @@ namespace QuickApp.Pro.Controllers
                 customerObj.TaxRateStateOrProvince = customerViewModel.TaxRateStateOrProvince;
                 customerObj.AllowPartialBilling = customerViewModel.AllowPartialBilling;
                 customerObj.AllowProformaBilling = customerViewModel.AllowProformaBilling;
-                customerObj.CurrencyId = customerViewModel.CurrencyId;
+                customerObj.CurrencyId = customerViewModel.GeneralCurrencyId;
                 customerObj.Discount = customerViewModel.Discount;
                 customerObj.DiscountId = customerViewModel.DiscountId;
                 customerObj.EDIDescription = customerViewModel.EDIDescription;
@@ -2263,7 +2264,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
 
@@ -2690,7 +2691,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-                throw;
+                return BadRequest(ex.Message);
             }
         }
 
@@ -2839,6 +2840,25 @@ namespace QuickApp.Pro.Controllers
             return Ok(allCusShippingDetails);
         }
 
+        [HttpGet("deletesRestrictedParts")]
+        public IActionResult DeleteRestrictedParts(long id, string updatedBy)
+        {
+            _unitOfWork.Customer.DeleteRestrictedParts(id, updatedBy);
+            return Ok();
+        }
+        [HttpGet("shippingdetailsstatus")]
+        public IActionResult CustomerShippingDetailsStatus(long id, bool status, string updatedBy)
+        {
+            _unitOfWork.Customer.CustomerShippingDetailsStatus(id, status, updatedBy);
+            return Ok();
+        }
+        [HttpGet("customersBillingUpdateStatus")]
+        public IActionResult CustomerBillingStatus(long id, bool status, string updatedBy)
+        {
+            _unitOfWork.Customer.CustomerBillingStatus(id, status, updatedBy);
+            return Ok();
+
+        }
     }
 
 }

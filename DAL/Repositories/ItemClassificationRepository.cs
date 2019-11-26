@@ -117,7 +117,7 @@ namespace DAL.Repositories
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 ItemClassfication itemClassfication = new ItemClassfication();
                 itemClassfication.ItemClassificationCode = itemClassificationCode;
@@ -136,6 +136,12 @@ namespace DAL.Repositories
                 itemClassfications.Add(itemClassfication);
             }
             return itemClassfications;
+        }
+
+        public IEnumerable<ItemClassficationAudit> GetItemClassficationAuditDetails(long itemClassificationId)
+        {
+            return _appContext.ItemClassificationAudit.Where(c => c.ItemClassificationId == itemClassificationId).OrderByDescending(p => p.UpdatedDate).ToList();
+
         }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

@@ -130,9 +130,12 @@ export class VendorGeneralInformationComponent implements OnInit {
     integrationCols: any[];
     intSelectedColumns: any[];
     dropDownVendorCapabilitiesList: any[];
+    form: any;
+    //@ViewChild('f') form: any;
 
     constructor(public vendorclassificationService: VendorClassificationService, private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public customerser: CustomerService, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, public commonService: CommonService) {
-        this.dataSource = new MatTableDataSource();
+        this.dataSource = new MatTableDataSource();   
+                     
         if (this.local)
         {
             this.vendorService.contactCollection = this.local;
@@ -155,7 +158,7 @@ export class VendorGeneralInformationComponent implements OnInit {
             this.sourceVendor.stateOrProvince = this.vendorService.listCollection.stateOrProvince;
             this.sourceVendor.PostalCode = this.vendorService.listCollection.postalCode;
 
-        }
+        }        
         if (this.customerser.isCustomerAlsoVendor == true) {
             this.sourceVendor = this.customerser.localCollectiontoVendor;
             this.sourceVendor.vendorEmail = this.customerser.localCollectiontoVendor.email;
@@ -164,8 +167,30 @@ export class VendorGeneralInformationComponent implements OnInit {
             this.sourceVendor.vendorCode = this.customerser.localCollectiontoVendor.customerCode;
             this.sourceVendor.doingBusinessAsName = this.customerser.localCollectiontoVendor.doingBuinessAsName;
             this.sourceVendor.PostalCode = this.customerser.localCollectiontoVendor.postalCode;
-        }
-    }
+        }    
+        
+        //if(!this.vendorService.isEditMode)
+        //{            
+        //    if(this.viewName == "Create")
+        //    {
+        //        this.vendorService.listCollection=[];
+        //        this.local=[];
+        //        this.sourceVendor="";
+        //        this.vendorService.isEditMode=false;
+        //    }         
+            
+        //}        
+
+        // if(this.viewName == "Create")
+        // {
+        //     alert(this.viewName);
+        //     this.form.reset();
+        // }
+        // else{
+        //     alert(this.viewName);
+           
+        // }
+    }   
 
     ngOnInit(): void {
         this.matSpinner = false;
@@ -184,10 +209,10 @@ export class VendorGeneralInformationComponent implements OnInit {
             center: { lat: 36.890257, lng: 30.707417 },
             zoom: 12
         };
-        this.sourceVendor.vendorTypeId = 1;
+        this.sourceVendor.vendorTypeId = 1;       
         if (this.vendorService.isEditMode == false) {
             this.sourceVendor.vendorTypeId = 2;
-            this.viewName = "Create";
+            this.viewName = "Create";             
         }
         if (this.vendorService.enableExternal == false) {
             this.sourceVendor.vendorTypeId = 2;
@@ -206,7 +231,8 @@ export class VendorGeneralInformationComponent implements OnInit {
         ];
         if (!this.intSelectedColumns) {
             this.intSelectedColumns = this.cols;
-        }
+        }        
+       this.CreateVendorOnClick();               
     }
 
     sourceVendor: any = {};
@@ -355,7 +381,11 @@ export class VendorGeneralInformationComponent implements OnInit {
             this.sourceAction.classificationName = this.vendorClassName;
             this.sourceAction.masterCompanyId = 1;
             this.vendorclassificationService.newVendorClassification(this.sourceAction).subscribe(data => {
-                if (data) { this.sourceVendor.vendorClassificationId = data.vendorClassificationId }
+                if (data) { 
+                    this.sourceVendor.vendorClassificationId = data.vendorClassificationId 
+                }
+                this.alertService.showMessage("Success", 'Added New Vendor Classification Successfully.', MessageSeverity.success);
+
                 this.loadDataVendorData();
             })
         }
@@ -620,6 +650,13 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.vendorService.indexObj.next(this.activeIndex);
         this.vendorService.changeStep('Contacts');
         this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
+    }
+
+    CreateVendorOnClick() {       
+        this.activeIndex = 1;       
+        this.vendorService.indexObj.next(this.activeIndex);
+        this.vendorService.changeStep('General Information');
+        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
     }
 
     dismissModel() {

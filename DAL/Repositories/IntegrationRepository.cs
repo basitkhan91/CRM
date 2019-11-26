@@ -32,6 +32,11 @@ namespace DAL.Repositories
                 Description = v.Description }).OrderBy(c => c.Description).ToList();
         }
 
+        public IEnumerable<DAL.Models.IntegrationPortalAudit> GetIntegrationPortalAuditDetails(long integrationPortalId)
+        {
+            return _appContext.IntegrationPortalAudit.Where(c => c.IntegrationPortalId == integrationPortalId).OrderByDescending(p => p.UpdatedDate).ToList();
+
+        }
 
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 
