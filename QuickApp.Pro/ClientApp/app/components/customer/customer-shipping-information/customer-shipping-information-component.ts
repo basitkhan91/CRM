@@ -28,6 +28,7 @@ export class CustomerShippingInformationComponent implements OnInit {
     internationalShippingInfo = new CustomerInternationalShippingModel()
 
     internationalShippingViaData: any;
+    demosticShippingViaData: any;
     totalRecordsForInternationalShipVia: any;
     isEditInternationalShipVia: boolean = false;
     isEditDomesticShipVia: boolean = false;
@@ -53,6 +54,7 @@ export class CustomerShippingInformationComponent implements OnInit {
     ]
     selectedColumnsForDomesticTable = this.domesticShippingHeaders;
     selectedColumnsForInternationTable = this.internationalShippingHeaders;
+   
     domesticShippingData: any[];
     sourceViewforShipping: any;
     isEditDomestic: boolean = false;
@@ -67,6 +69,7 @@ export class CustomerShippingInformationComponent implements OnInit {
     totalRecordsForInternationalShipping: any;
     sourceViewforInterShipping: any;
     sourceViewforInterShippingVia: any;
+    sourceViewforDomesticShippingVia: any;
     shipViaInternational = new CustomerInternationalShipVia();
     shipViaDomestic = new CustomerInternationalShipVia();
     editableRowIndexForIS: any;
@@ -84,6 +87,8 @@ export class CustomerShippingInformationComponent implements OnInit {
     selectedShipViaDomestic: any;
     customerCode: any;
     customerName: any;
+    selectedColumnsForDomesticShipVia = this.selectedColumnsForInternationShipViaTable;
+
     constructor(private customerService: CustomerService, private authService: AuthService,
         private alertService: AlertService,
     ) { }
@@ -169,6 +174,7 @@ export class CustomerShippingInformationComponent implements OnInit {
         // const id = this.savedGeneralInformationData.customerId;
         this.customerService.getCustomerShipAddressGet(this.id).subscribe(res => {
             console.log(res);
+            
             this.domesticShippingData = res[0];
         })
     }
@@ -178,7 +184,7 @@ export class CustomerShippingInformationComponent implements OnInit {
     }
     // edit Domestic details data 
     openEditDomestic(rowData) {
-        debugger
+       
         console.log(rowData);
         this.isEditDomestic = true;
         // this.selectedShipViaDomestic = rowData;
@@ -313,10 +319,16 @@ export class CustomerShippingInformationComponent implements OnInit {
         // this.getShipViaDataByInternationalShippingId();
 
     }
+    openDomesticShippingViewVia(rowData) {
+
+
+        this.sourceViewforDomesticShippingVia = rowData;
+        // this.getShipViaDataByInternationalShippingId();
+
+    }
 
     async getInternationalShippingById(rowData) {
-        debugger
-
+        
         await this.customerService.getInternationalShippingById(rowData.internationalShippingId).subscribe(res => {
             this.isEditInternational = true;
             this.internationalShippingInfo = { ...res, shipToCountryId: getObjectById('countries_id', res.shipToCountryId, this.countryListOriginal) };
@@ -329,6 +341,8 @@ export class CustomerShippingInformationComponent implements OnInit {
     }
     selectedDomesticForShipVia(rowData) {
         this.selectedShipViaDomestic = rowData;
+        this.getShipViaByDomesticShippingId(rowData.customerShippingAddressId)
+
     }
     closeInternationalModal() {
         this.isEditInternational = false;
@@ -421,6 +435,7 @@ export class CustomerShippingInformationComponent implements OnInit {
         this.customerService.getShipViaByDomesticShippingId(customerShippingAddressId).subscribe(res => {
 
 
+            this.demosticShippingViaData = res;
         })
     }
 
@@ -449,6 +464,12 @@ export class CustomerShippingInformationComponent implements OnInit {
         this.shipViaInternational = { ...rowData };
 
     }
+    editDomesticShipVia(rowData) {
+        this.isEditDomesticShipVia = true;
+        this.shipViaDomestic = { ...rowData };
+
+    }
+    
     resetShipViaInternational() {
         this.shipViaInternational = new CustomerInternationalShipVia();
     }

@@ -141,6 +141,9 @@ export class CustomersListComponent implements OnInit {
     headers = [
         { field: 'name', header: 'Customer Name' },
         { field: 'customerCode', header: 'Customer Code' },
+        { field: 'accountType', header: 'Account Type' },
+        { field: 'customerType', header: 'Customer Type' },
+
         { field: 'customerClassification', header: 'Classification' },
         { field: 'email', header: 'Customer Email' },
         { field: 'city', header: 'City' },
@@ -193,7 +196,7 @@ export class CustomersListComponent implements OnInit {
         { field: 'city', header: 'City' },
         { field: 'stateOrProvince', header: 'State/Prov' },
         { field: 'postalCode', header: 'Postal Code' },
-        { field: 'country', header: 'Country' }
+        { field: 'countryName', header: 'Country' }
     ]
     domesticShippingHeaders = [
         { field: 'siteName', header: 'Site Name' },
@@ -203,7 +206,7 @@ export class CustomersListComponent implements OnInit {
         { field: 'city', header: 'City' },
         { field: 'stateOrProvince', header: 'State Or Province' },
         { field: 'postalCode', header: 'Postal Code' },
-        { field: 'country', header: 'Country' }
+        { field: 'countryName', header: 'Country' }
     ]
     internationalShippingHeaders = [
         { field: 'exportLicense', header: 'Export License' },
@@ -445,6 +448,26 @@ export class CustomersListComponent implements OnInit {
         })
     }
     getAuditHistoryById(rowData) {
+    }
+    ExpandAllCustomerDetailsModel() {
+        $('#step1').collapse('show');
+        $('#step2').collapse('show');
+        $('#step3').collapse('show');
+        $('#step4').collapse('show');
+        $('#step5').collapse('show');
+        $('#step6').collapse('show');
+        $('#step7').collapse('show');
+        $('#step8').collapse('show');
+    }
+    CloseAllCustomerDetailsModel() {
+        $('#step1').collapse('hide');
+        $('#step2').collapse('hide');
+        $('#step3').collapse('hide');
+        $('#step4').collapse('hide');
+        $('#step5').collapse('hide');
+        $('#step6').collapse('hide');
+        $('#step7').collapse('hide');
+        $('#step8').collapse('hide');
     }
 
     // ngAfterViewInit() {

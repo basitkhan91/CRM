@@ -140,7 +140,7 @@
                                                         </div>
                                                         
                                                         <div class="col-md-4">
-                                                                <input type="text"  name="phoneExt" pInputText pKeyFilter="num" maxlength="3" [(ngModel)]="generalInformation.customerPhoneExt">
+                                                                <input type="text"  name="phoneExt" pInputText  maxlength="5" [(ngModel)]="generalInformation.customerPhoneExt">
                                                         </div>
 
                                                     </div>
@@ -235,7 +235,7 @@
                                                 <div class="form-group">
                                                     <label>
                                                         <span class="pull-left">Customer Classification</span> <span class="clr-red">*</span>
-                                                        <span style="margin-left:3px;cursor:pointer;"><a  class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClassification" ></a></span>
+                                                        <span style="margin-left:3px;cursor:pointer;"><a  class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClassification" (click)="addclassification()" ></a></span>
                                                     </label>
                                                    
                                                     <p-multiSelect [options]="allcustomerclassificationInfo" [(ngModel)]="generalInformation.customerClassificationIds"  name="customerClassificationId" required>
@@ -600,7 +600,7 @@
             <div class="form-group">
                 <label for="description" class="control-label">Memo</label>
                 <div class="control-data">
-                    <input #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2">
+                    <input #memo="ngModel" placeholder="Tool Bar" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2">
                     <div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
                         Memo required.
                     </div>
@@ -843,7 +843,7 @@
 
                     <div class="form-group">
                         <label>Memo</label>
-                        <input class="form-control" [(ngModel)]="addNewIntergation.memo" name="memo">
+                        <input class="form-control" [(ngModel)]="addNewIntergation.memo" name="memo" placeholder="Tool Bar">
                     </div>
 
                     <div class="form-group">
