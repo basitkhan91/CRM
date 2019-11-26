@@ -542,7 +542,7 @@ export class RoComponent implements OnInit, AfterViewInit {
     // }
 
     private viewRepairOrder(repairOrderId: number): void {
-        this.receivingService.getPurchaseOrderDataForViewById(repairOrderId).subscribe(
+        this.receivingService.getReceivingROPartsForViewById(repairOrderId).subscribe(
             results => {
                 this.repairOrderData = results[0];
                 // this.repairOrderData.openDate = new Date(results[0].openDate).toLocaleDateString();

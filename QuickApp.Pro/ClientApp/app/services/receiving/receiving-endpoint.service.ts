@@ -155,5 +155,9 @@ export class ReceivingEndpointService extends EndpointFactory {
 
     }
 
+    getReceivingROPartsForViewById(repairOrderId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/receivingro/GetReceieveROPartsForView/${repairOrderId}`)
+    }
+
 
 }

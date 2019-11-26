@@ -99,4 +99,8 @@ export class ReceivingService {
         return this.receivingEndpoing.receiveParts<any>(receiveParts);
     }
 
+    getReceivingROPartsForViewById(repairOrderId){
+        return this.receivingEndpoing.getReceivingROPartsForViewById(repairOrderId);
+    }
+
 }
