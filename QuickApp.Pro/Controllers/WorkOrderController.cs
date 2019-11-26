@@ -73,7 +73,7 @@ namespace QuickApp.Pro.Controllers
                 }
             }catch(Exception ex)
             {
-                throw;
+                return BadRequest(ex.Message);
             }
         }
 
@@ -90,8 +90,6 @@ namespace QuickApp.Pro.Controllers
             unitOfWork.WorkOrderRepository.WorkOrderStatus(workOrderId, status, updatedBy);
             return Ok(ModelState);
         }
-
-        
 
         [HttpGet("workorderlist")]
         public IActionResult GetWorkOrdersList(int pageNo = 0, int pageSize = 10)
@@ -114,6 +112,21 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("workorderheaderview")]
+        public IActionResult WorkOrderHeaderView(long workOrderId)
+        {
+            var result = unitOfWork.WorkOrderRepository.WorkOrderHeaderView(workOrderId);
+            return Ok(result);
+        }
+
+        [HttpGet("workorderpartsview")]
+        public IActionResult WorkOrderPartsView(long workOrderId)
+        {
+            var result = unitOfWork.WorkOrderRepository.WorkOrderPartsView(workOrderId);
+            return Ok(result);
+        }
+
+
         #endregion
 
         #region Work Flow Work Order
@@ -133,20 +146,20 @@ namespace QuickApp.Pro.Controllers
             
         }
 
-        [HttpPost("updateworkflowworkorder")]
-        public IActionResult UpdateWorkFlowWorkOrder([FromBody]WorkOrderWorkFlow workFlowWorkOrder)
-        {
-            if (ModelState.IsValid)
-            {
-                 unitOfWork.WorkOrderRepository.UpdateWorkFlowWorkOrder(workFlowWorkOrder);
-                return Ok(workFlowWorkOrder);
-            }
-            else
-            {
-                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
-            }
+        //[HttpPost("updateworkflowworkorder")]
+        //public IActionResult UpdateWorkFlowWorkOrder([FromBody]WorkOrderWorkFlow workFlowWorkOrder)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //         unitOfWork.WorkOrderRepository.UpdateWorkFlowWorkOrder(workFlowWorkOrder);
+        //        return Ok(workFlowWorkOrder);
+        //    }
+        //    else
+        //    {
+        //        return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+        //    }
 
-        }
+        //}
 
         [HttpGet("workflowworkorderbyid")]
         public IActionResult GetWorkFlowWorkOrderById(long workFlowWorkOrderId)
@@ -166,6 +179,13 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetWorkOrderTaskAttributes(long workOrderTaskId)
         {
             var result = unitOfWork.WorkOrderRepository.GetWorkOrderTaskAttributes(workOrderTaskId);
+            return Ok(result);
+        }
+
+        [HttpGet("workorderworkflowview")]
+        public IActionResult WorkOrderWorkFlowView(long workFlowWorkOrderId)
+        {
+            var result = unitOfWork.WorkOrderRepository.WorkOrderWorkFlowView(workFlowWorkOrderId);
             return Ok(result);
         }
 
@@ -215,12 +235,12 @@ namespace QuickApp.Pro.Controllers
         #region Work Order Charges
 
         [HttpPost("createworkordercharges")]
-        public IActionResult CreateWorkOrderCharges([FromBody]WorkOrderCharges workOrderCharges)
+        public IActionResult CreateWorkOrderCharges([FromBody]List<WorkOrderCharges> workOrderCharges)
         {
             if (ModelState.IsValid)
             {
-                workOrderCharges.WorkOrderChargesId = unitOfWork.WorkOrderRepository.CreateWorkOrderCharges(workOrderCharges);
-                return Ok(workOrderCharges);
+                var result = unitOfWork.WorkOrderRepository.CreateWorkOrderCharges(workOrderCharges);
+                return Ok(result);
             }
             else
             {
@@ -230,12 +250,12 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("updateworkordercharges")]
-        public IActionResult UpdateWorkOrderCharges([FromBody]WorkOrderCharges workOrderCharges)
+        public IActionResult UpdateWorkOrderCharges([FromBody]List<WorkOrderCharges> workOrderCharges)
         {
             if (ModelState.IsValid)
             {
-                unitOfWork.WorkOrderRepository.UpdateWorkOrderCharges(workOrderCharges);
-                return Ok(workOrderCharges);
+                var reult=unitOfWork.WorkOrderRepository.UpdateWorkOrderCharges(workOrderCharges);
+                return Ok(reult);
             }
             else
             {
@@ -256,12 +276,12 @@ namespace QuickApp.Pro.Controllers
         #region Work Order Assets
 
         [HttpPost("createworkorderassets")]
-        public IActionResult CreateWorkOrderAssets([FromBody]WorkOrderAssets workOrderAssets)
+        public IActionResult CreateWorkOrderAssets([FromBody]List<WorkOrderAssets> workOrderAssets)
         {
             if (ModelState.IsValid)
             {
-                workOrderAssets.WorkOrderAssetId = unitOfWork.WorkOrderRepository.CreateWorkOrderAssets(workOrderAssets);
-                return Ok(workOrderAssets);
+                var result = unitOfWork.WorkOrderRepository.CreateWorkOrderAssets(workOrderAssets);
+                return Ok(result);
             }
             else
             {
@@ -271,12 +291,12 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("updateworkorderassets")]
-        public IActionResult UpdateWorkOrderAssets([FromBody]WorkOrderAssets workOrderAssets)
+        public IActionResult UpdateWorkOrderAssets([FromBody]List<WorkOrderAssets> workOrderAssets)
         {
             if (ModelState.IsValid)
             {
-                unitOfWork.WorkOrderRepository.UpdateWorkOrderAssets(workOrderAssets);
-                return Ok(workOrderAssets);
+                var result=unitOfWork.WorkOrderRepository.UpdateWorkOrderAssets(workOrderAssets);
+                return Ok(result);
             }
             else
             {
@@ -292,17 +312,45 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("saveassetcheckedin")]
+        public IActionResult SaveAssetCheckedIn(long WorkOrderAssetId, long checkedInById, DateTime checkedInDate, string updatedBy)
+        {
+             unitOfWork.WorkOrderRepository.SaveAssetCheckedIn(WorkOrderAssetId, checkedInById, checkedInDate, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("saveassetcheckedout")]
+        public IActionResult SaveAssetCheckedOut(long WorkOrderAssetId, long checkedOutById, DateTime checkedOutDate, string updatedBy)
+        {
+            unitOfWork.WorkOrderRepository.SaveAssetCheckedOut(WorkOrderAssetId, checkedOutById, checkedOutDate, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("assetcheckedinandoutdetails")]
+        public IActionResult GetAssetCheckedInandOutDetails(long assetRecordId=0, long workOrderAssetId=0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetAssetCheckedInandOutDetails(assetRecordId, workOrderAssetId);
+            return Ok(result);
+        }
+
+        [HttpGet("workorderassetview")]
+        public IActionResult WorkOrderAssetView(long assetRecordId)
+        {
+            var result = unitOfWork.WorkOrderRepository.WorkOrderAssetView(assetRecordId);
+            return Ok(result);
+        }
+
         #endregion
 
         #region Work Order Exclusions
 
         [HttpPost("createworkorderexclusions")]
-        public IActionResult CreateWorkOrderExclusions([FromBody]WorkOrderExclusions workOrderExclusions)
+        public IActionResult CreateWorkOrderExclusions([FromBody]List<WorkOrderExclusions> workOrderExclusions)
         {
             if (ModelState.IsValid)
             {
-                workOrderExclusions.WorkOrderExclusionsId = unitOfWork.WorkOrderRepository.CreateWorkOrderExclusions(workOrderExclusions);
-                return Ok(workOrderExclusions);
+                var result = unitOfWork.WorkOrderRepository.CreateWorkOrderExclusions(workOrderExclusions);
+                return Ok(result);
             }
             else
             {
@@ -312,12 +360,12 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("updateworkorderexclusions")]
-        public IActionResult UpdateWorkOrderExclusions([FromBody]WorkOrderExclusions workOrderExclusions)
+        public IActionResult UpdateWorkOrderExclusions([FromBody]List<WorkOrderExclusions> workOrderExclusions)
         {
             if (ModelState.IsValid)
             {
-                unitOfWork.WorkOrderRepository.UpdateWorkOrderExclusions(workOrderExclusions);
-                return Ok(workOrderExclusions);
+                var result=unitOfWork.WorkOrderRepository.UpdateWorkOrderExclusions(workOrderExclusions);
+                return Ok(result);
             }
             else
             {
@@ -338,12 +386,12 @@ namespace QuickApp.Pro.Controllers
         #region Work Order Documents
 
         [HttpPost("createworkorderdocuments")]
-        public IActionResult CreateWorkOrderDocuments([FromBody]WorkOrderDocuments workOrderDocuments)
+        public IActionResult CreateWorkOrderDocuments([FromBody]List<WorkOrderDocuments> workOrderDocuments)
         {
             if (ModelState.IsValid)
             {
-                workOrderDocuments.WorkOrderDocumentsId = unitOfWork.WorkOrderRepository.CreateWorkOrderDocuments(workOrderDocuments);
-                return Ok(workOrderDocuments);
+                var result = unitOfWork.WorkOrderRepository.CreateWorkOrderDocuments(workOrderDocuments);
+                return Ok(result);
             }
             else
             {
@@ -499,7 +547,143 @@ namespace QuickApp.Pro.Controllers
 
         #endregion
 
+        #region Work Order Publications
 
+        [HttpPost("createworkorderpublications")]
+        public IActionResult CreateWorkOrderPublications([FromBody]List<WorkOrderPublications> workOrderPublications)
+        {
+            if (ModelState.IsValid)
+            {
+                var result=unitOfWork.WorkOrderRepository.CreateWorkOrderPublications(workOrderPublications);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpPost("updateworkorderpublications")]
+        public IActionResult UpdateWorkOrderPublications([FromBody]List<WorkOrderPublications> workOrderPublications)
+        {
+            if (ModelState.IsValid)
+            {
+               var result= unitOfWork.WorkOrderRepository.UpdateWorkOrderPublications(workOrderPublications);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpGet("deleteworkorderpublication")]
+        public IActionResult DeleteWorkOrderPublication(long workOrderPublicationId, string updatedBy)
+        {
+            unitOfWork.WorkOrderRepository.DeleteWorkOrderPublication(workOrderPublicationId, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("workorderpublicationstatus")]
+        public IActionResult WorkOrderPublicationStatus(long workOrderPublicationId, bool status, string updatedBy)
+        {
+            unitOfWork.WorkOrderRepository.WorkOrderPublicationStatus(workOrderPublicationId, status, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("getworkorderpublications")]
+        public IActionResult GetWorkOrderPublications(long wfwoId = 0, long workOrderId = 0)
+        {
+           var result= unitOfWork.WorkOrderRepository.GetWorkOrderPublications(wfwoId, workOrderId);
+            return Ok(result);
+        }
+
+        #endregion
+
+        #region Work Order Material List
+
+        [HttpPost("createworkordermaterials")]
+        public IActionResult CreateWorkOrderMaterials([FromBody]List<WorkOrderMaterials> workOrderMaterials)
+        {
+            if (ModelState.IsValid)
+            {
+               var result= unitOfWork.WorkOrderRepository.CreateWorkOrderMaterials(workOrderMaterials);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpPost("updateworkordermaterials")]
+        public IActionResult UpdateWorkOrderMaterials([FromBody]List<WorkOrderMaterials> workOrderMaterials)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = unitOfWork.WorkOrderRepository.UpdateWorkOrderMaterials(workOrderMaterials);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpGet("deleteworkordermaterial")]
+        public IActionResult DeleteWorkOrderMaterials(long workOrderMaterialsId, string updatedBy)
+        {
+            unitOfWork.WorkOrderRepository.DeleteWorkOrderPublication(workOrderMaterialsId, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("workordermateriallist")]
+        public IActionResult GetWorkOrderMaterialList(long wfwoId = 0, long workOrderId = 0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderMaterialList(wfwoId, workOrderId);
+            return Ok(result);
+        }
+
+        [HttpGet("getreservedissuesparts")]
+        public IActionResult GetReservedIssuesParts(long WorkFlowWorkOrderId=0,long workOrderId=0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetReservedIssuedParts(WorkFlowWorkOrderId, workOrderId);
+            return Ok(result);
+        }
+
+        [HttpPost("savereserveissuesparts")]
+        public IActionResult SaveReserveIssuesParts([FromBody]List<WorkOrderReserveIssuesParts> reserveIssuesParts)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = unitOfWork.WorkOrderRepository.SaveReserveIssuesParts(reserveIssuesParts);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+
+
+        #endregion
+
+        #region Work Order Directions
+
+        [HttpGet("workorderdirections")]
+        public IActionResult GetWorkOrderDirections(long wfwoId = 0, long workOrderId = 0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderDirections(wfwoId, workOrderId);
+            return Ok(result);
+        }
+
+        #endregion
 
         [HttpGet("getAll")]
         public IActionResult Index()
@@ -627,18 +811,520 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
-        [HttpGet("workordermateriallist")]
-        public IActionResult GetWorkOrderMaterialList(long wfwoId = 0, long workOrderId = 0)
-        {
-            var result = unitOfWork.WorkOrderRepository.GetWorkOrderMaterialList(wfwoId, workOrderId);
-            return Ok(result);
-        }
+        
 
         [HttpGet("gettechnicians")]
         public IActionResult GetTechnicians()
         {
             var result = unitOfWork.WorkOrderRepository.GetTechnicians();
             return Ok(result);
+        }
+
+        [HttpPost("updateworkorderworkFlow")]
+        public IActionResult UpdateWorkOrderWorkFlow([FromBody] Workflow workFlow)
+        {
+             int masterCompanyId = 1;
+             string userName = "admin";
+
+            if (ModelState.IsValid)
+            {
+                if(workFlow.IsSaveToWorkFlow)
+                {
+                    workFlow.WorkflowId = 0;
+                    workFlow.Customer = null;
+                    workFlow.ItemMaster = null;
+                    workFlow.WorkScope = null;
+                    workFlow.ChangedPartNumber = null;
+                    if(workFlow.Publication!=null && workFlow.Publication.Count>0)
+                    {
+                        foreach(var pub in workFlow.Publication)
+                        {
+                            if(pub.WorkflowPublicationDashNumbers!=null && pub.WorkflowPublicationDashNumbers.Count>0)
+                            {
+                                pub.WorkflowPublicationDashNumbers.ForEach(p => p.WorkflowPublicationDashNumberId = 0);
+                            }
+                        }
+                    }
+
+                    List<long> taskIds = new List<long>();
+                    if (workFlow.ExistingWorkFlowId > 0)
+                    {
+                        taskIds = getAllUniqueTaskIds(workFlow);
+                    }
+
+                    if (workFlow.Charges != null && workFlow.Charges.Count > 0)
+                    {
+
+                        var currentIds = workFlow.Charges.Select(x => x.WorkflowChargesListId).ToList();
+                        List<WorkflowChargesList> itemsToRemove = new List<WorkflowChargesList>();
+
+                        workFlow.Charges.ForEach(x =>
+                        {
+                            x.MasterCompanyId = masterCompanyId;
+                            x.CreatedBy = userName;
+                            x.CreatedDate = DateTime.Now;
+                            x.UpdatedBy = userName;
+                            x.UpdatedDate = DateTime.Now;
+                        });
+
+                        if (workFlow.ExistingWorkFlowId > 0)
+                        {
+
+                            itemsToRemove = unitOfWork.Repository<WorkflowChargesList>()
+                            .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId &&
+                            x.IsDelete == false && !currentIds.Contains(x.WorkflowChargesListId)
+                            ).ToList();
+
+                            foreach (var charges in itemsToRemove)
+                            {
+                                charges.IsDelete = true;
+                            }
+
+                            workFlow.Charges.AddRange(itemsToRemove);
+                        }
+
+                    }
+                    else
+                    {
+                        if (workFlow.ExistingWorkFlowId > 0)
+                        {
+                            workFlow.Charges = unitOfWork.Repository<WorkflowChargesList>()
+                                                .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId &&
+                                                    x.IsDelete == false
+                                                ).ToList();
+
+                            workFlow.Charges.ForEach(x =>
+                            {
+                                x.UpdatedBy = userName;
+                                x.UpdatedDate = DateTime.Now;
+                                x.IsDelete = true;
+                            });
+                        }
+                    }
+
+                    if (workFlow.Directions != null && workFlow.Directions.Count > 0)
+                    {
+                        var currentIds = workFlow.Directions.Select(x => x.WorkflowDirectionId).ToList();
+                        List<WorkFlowDirection> itemsToRemove = new List<WorkFlowDirection>();
+
+                        workFlow.Directions.ForEach(x =>
+                        {
+                            x.MasterCompanyId = masterCompanyId;
+                            x.CreatedBy = userName;
+                            x.CreatedDate = DateTime.Now;
+                            x.UpdatedBy = userName;
+                            x.UpdaedDate = DateTime.Now;
+                        });
+
+                        if (workFlow.ExistingWorkFlowId > 0)
+                        {
+                            itemsToRemove = unitOfWork.Repository<WorkFlowDirection>()
+                            .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId &&
+                            x.IsDelete == false && !currentIds.Contains(x.WorkflowDirectionId)
+                            ).ToList();
+
+                            foreach (var item in itemsToRemove)
+                            {
+                                item.IsDelete = true;
+                            }
+                            workFlow.Directions.AddRange(itemsToRemove);
+                        }
+                    }
+                    else
+                    {
+                        if (workFlow.ExistingWorkFlowId > 0)
+                        {
+                            workFlow.Directions = unitOfWork.Repository<WorkFlowDirection>()
+                                                .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId
+                                                && x.IsDelete == false
+                                                ).ToList();
+
+                            workFlow.Directions.ForEach(x =>
+                            {
+                                x.UpdatedBy = userName;
+                                x.UpdaedDate = DateTime.Now;
+                                x.IsDelete = true;
+                            });
+                        }
+                    }
+
+                    if (workFlow.Equipments != null && workFlow.Equipments.Count > 0)
+                    {
+                        var currentIds = workFlow.Equipments.Select(x => x.WorkflowEquipmentListId).ToList();
+                        List<WorkflowEquipmentList> itemsToRemove = new List<WorkflowEquipmentList>();
+
+                        workFlow.Equipments.ForEach(x =>
+                        {
+                            x.MasterCompanyId = masterCompanyId;
+                            x.CreatedBy = userName;
+                            x.CreatedDate = DateTime.Now;
+                            x.UpdatedBy = userName;
+                            x.UpdatedDate = DateTime.Now;
+                        });
+
+                        if (workFlow.ExistingWorkFlowId > 0)
+                        {
+                            itemsToRemove = unitOfWork.Repository<WorkflowEquipmentList>()
+                            .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId &&
+                            x.IsDelete == false && !currentIds.Contains(x.WorkflowEquipmentListId)
+                            ).ToList();
+
+                            foreach (var item in itemsToRemove)
+                            {
+                                item.IsDelete = true;
+                            }
+                            workFlow.Equipments.AddRange(itemsToRemove);
+                        }
+                    }
+                    else
+                    {
+                        if (workFlow.ExistingWorkFlowId > 0)
+                        {
+                            workFlow.Equipments = unitOfWork.Repository<WorkflowEquipmentList>()
+                                                .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId
+                                                    && x.IsDelete == false
+                                                ).ToList();
+                            workFlow.Equipments.ForEach(x =>
+                            {
+                                x.UpdatedBy = userName;
+                                x.UpdatedDate = DateTime.Now;
+                                x.IsDelete = true;
+                            });
+                        }
+                    }
+
+                    if (workFlow.Exclusions != null && workFlow.Exclusions.Count > 0)
+                    {
+                        var currentIds = workFlow.Exclusions.Select(x => x.WorkflowExclusionId).ToList();
+                        List<WorkFlowExclusion> itemsToRemove = new List<WorkFlowExclusion>();
+
+                        workFlow.Exclusions.ForEach(x =>
+                        {
+                            x.MasterCompanyId = masterCompanyId;
+                            x.CreatedBy = userName;
+                            x.CreatedDate = DateTime.Now;
+                            x.UpdatedBy = userName;
+                            x.UpdatedDate = DateTime.Now;
+                        });
+
+                        if (workFlow.ExistingWorkFlowId > 0)
+                        {
+                            itemsToRemove = unitOfWork.Repository<WorkFlowExclusion>()
+                            .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId &&
+                            x.IsDelete == false && !currentIds.Contains(x.WorkflowExclusionId)
+                            ).ToList();
+
+                            foreach (var item in itemsToRemove)
+                            {
+                                item.IsDelete = true;
+                            }
+
+                            workFlow.Exclusions.AddRange(itemsToRemove);
+                        }
+
+                    }
+                    else
+                    {
+                        if (workFlow.ExistingWorkFlowId > 0)
+                        {
+                            workFlow.Exclusions = unitOfWork.Repository<WorkFlowExclusion>()
+                                                .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId
+                                                    && x.IsDelete == false
+                                                ).ToList();
+                            workFlow.Exclusions.ForEach(x =>
+                            {
+                                x.UpdatedBy = userName;
+                                x.UpdatedDate = DateTime.Now;
+                                x.IsDelete = true;
+                            });
+                        }
+                    }
+
+                    if (workFlow.Expertise != null && workFlow.Expertise.Count > 0)
+                    {
+                        var currentIds = workFlow.Expertise.Select(x => x.WorkflowExpertiseListId).ToList();
+                        List<WorkflowExpertiseList> itemsToRemove = new List<WorkflowExpertiseList>();
+
+                        workFlow.Expertise.ForEach(x =>
+                        {
+                            x.MasterCompanyId = masterCompanyId;
+                            x.CreatedBy = userName;
+                            x.CreatedDate = DateTime.Now;
+                            x.UpdatedBy = userName;
+                            x.UpdatedDate = DateTime.Now;
+                        });
+
+                        if (workFlow.ExistingWorkFlowId > 0)
+                        {
+                            itemsToRemove = unitOfWork.Repository<WorkflowExpertiseList>()
+                            .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId &&
+                            x.IsDelete == false && !currentIds.Contains(x.WorkflowExpertiseListId)
+                            ).ToList();
+
+                            foreach (var item in itemsToRemove)
+                            {
+                                item.IsDelete = true;
+                            }
+
+                            workFlow.Expertise.AddRange(itemsToRemove);
+                        }
+                    }
+                    else
+                    {
+                        if (workFlow.ExistingWorkFlowId > 0)
+                        {
+                            workFlow.Expertise = unitOfWork.Repository<WorkflowExpertiseList>()
+                                                .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId
+                                                    && x.IsDelete == false
+                                                ).ToList();
+
+                            workFlow.Expertise.ForEach(x =>
+                            {
+                                x.UpdatedBy = userName;
+                                x.UpdatedDate = DateTime.Now;
+                                x.IsDelete = true;
+                            });
+                        }
+                    }
+
+                    if (workFlow.MaterialList != null && workFlow.MaterialList.Count > 0)
+                    {
+                        var currentIds = workFlow.MaterialList.Select(x => x.WorkflowMaterialListId).ToList();
+                        List<WorkflowMaterial> itemsToRemove = new List<WorkflowMaterial>();
+
+                        workFlow.MaterialList.ForEach(x =>
+                        {
+                            x.MasterCompanyId = masterCompanyId;
+                            x.CreatedBy = userName;
+                            x.CreatedDate = DateTime.Now;
+                            x.UpdatedBy = userName;
+                            x.UpdatedDate = DateTime.Now;
+                        });
+
+                        if (workFlow.ExistingWorkFlowId > 0)
+                        {
+                            itemsToRemove = unitOfWork.Repository<WorkflowMaterial>()
+                            .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId &&
+                            x.IsDelete == false && !currentIds.Contains(x.WorkflowMaterialListId)
+                            ).ToList();
+
+                            foreach (var item in itemsToRemove)
+                            {
+                                item.IsDelete = true;
+                            }
+
+                            workFlow.MaterialList.AddRange(itemsToRemove);
+                        }
+
+                    }
+                    else
+                    {
+                        if (workFlow.ExistingWorkFlowId > 0)
+                        {
+                            workFlow.MaterialList = unitOfWork.Repository<WorkflowMaterial>()
+                                                .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId
+                                                    && x.IsDelete == false
+                                                ).ToList();
+
+                            workFlow.MaterialList.ForEach(x =>
+                            {
+                                x.UpdatedBy = userName;
+                                x.UpdatedDate = DateTime.Now;
+                                x.IsDelete = true;
+                            });
+                        }
+                    }
+
+                    if (workFlow.Measurements != null && workFlow.Measurements.Count > 0)
+                    {
+                        var currentIds = workFlow.Measurements.Select(x => x.WorkflowMeasurementId).ToList();
+                        List<WorkflowMeasurement> itemsToRemove = new List<WorkflowMeasurement>();
+
+                        workFlow.Measurements.ForEach(x =>
+                        {
+                            x.MasterCompanyId = masterCompanyId;
+                            x.CreatedBy = userName;
+                            x.CreatedDate = DateTime.Now;
+                            x.UpdatedBy = userName;
+                            x.UpdatedDate = DateTime.Now;
+                        });
+
+                        if (workFlow.ExistingWorkFlowId > 0)
+                        {
+                            itemsToRemove = unitOfWork.Repository<WorkflowMeasurement>()
+                            .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId &&
+                            x.IsDelete == false && !currentIds.Contains(x.WorkflowMeasurementId)
+                            ).ToList();
+
+                            foreach (var item in itemsToRemove)
+                            {
+                                item.IsDelete = true;
+                            }
+                            workFlow.Measurements.AddRange(itemsToRemove);
+                        }
+                    }
+                    else
+                    {
+                        if (workFlow.ExistingWorkFlowId > 0)
+                        {
+                            workFlow.Measurements = unitOfWork.Repository<WorkflowMeasurement>()
+                                                .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId
+                                                    && x.IsDelete == false
+                                                ).ToList();
+                            workFlow.Measurements.ForEach(x =>
+                            {
+                                x.UpdatedBy = userName;
+                                x.UpdatedDate = DateTime.Now;
+                                x.IsDelete = true;
+                            });
+                        }
+                    }
+
+
+                    if (workFlow.Publication != null && workFlow.Publication.Count > 0)
+                    {
+                        var currentids = workFlow.Publication.Select(x => x.Id).ToList();
+
+                        workFlow.Publication.ForEach(x =>
+                        {
+                            x.MasterCompanyId = masterCompanyId;
+                            x.CreatedBy = userName;
+                            x.CreatedDate = DateTime.Now;
+                            x.UpdatedBy = userName;
+                            x.UpdatedDate = DateTime.Now;
+                        });
+                        if (workFlow.ExistingWorkFlowId > 0)
+                        {
+                            var itemsToRemove = unitOfWork.Repository<Publications>()
+                            .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId
+                            && x.IsDeleted == false && !currentids.Contains(x.Id)
+                            ).ToList();
+
+                            foreach (var publication in itemsToRemove)
+                            {
+                                publication.IsDeleted = true;
+                            }
+
+                            workFlow.Publication.AddRange(itemsToRemove);
+                        }
+
+                        List<long> ids = new List<long>();
+                        foreach (var publication in workFlow.Publication)
+                        {
+                            ids.Clear();
+
+                            if (publication.WorkflowPublicationDashNumbers != null)
+                            {
+                                ids = publication.WorkflowPublicationDashNumbers.Select(x => x.WorkflowPublicationDashNumberId).ToList();
+                            }
+
+                            var itemsToDelete = unitOfWork.Repository<WorkflowPublicationDashNumber>()
+                                .Find(x =>
+                                x.PublicationsId == publication.Id &&
+                                !ids.Contains(x.WorkflowPublicationDashNumberId)
+                                );
+
+                            foreach (var item in itemsToDelete)
+                            {
+                                unitOfWork.Repository<WorkflowPublicationDashNumber>().Remove(item);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (workFlow.ExistingWorkFlowId > 0)
+                        {
+                            workFlow.Publication = unitOfWork.Repository<Publications>()
+                             .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId
+                                && x.IsDeleted == false
+                             ).ToList();
+
+                            workFlow.Publication.ForEach(x =>
+                            {
+                                x.UpdatedBy = userName;
+                                x.UpdatedDate = DateTime.Now;
+                                x.IsDeleted = true;
+                            });
+                        }
+                    }
+                    if (workFlow != null && workFlow.ExistingWorkFlowId > 0)
+                    {
+                        var exworkFlow = GetWorkFlowDetails(workFlow.ExistingWorkFlowId);
+                        int versionNo = 0;
+                        versionNo = Convert.ToInt32(workFlow.Version.Substring(workFlow.Version.IndexOf("-") + 1));
+
+                        workFlow.WorkOrderNumber = exworkFlow.WorkOrderNumber;
+                        workFlow.Version = "V-" + Convert.ToString(versionNo + 1);
+                        workFlow.CreatedDate = DateTime.Now;
+                        workFlow.UpdatedDate = DateTime.Now;
+                        workFlow.CreatedBy = userName;
+                        workFlow.UpdatedBy = userName;
+                        workFlow.MasterCompanyId = masterCompanyId;
+                        workFlow.IsActive = true;
+                        unitOfWork.Repository<Workflow>().Add(workFlow);
+                        unitOfWork.SaveChanges();
+
+                        unitOfWork.WorkOrderRepository.UpdateWorkOrderWorkFlow(workFlow);
+                    }
+                    return Ok(workFlow);
+                }
+                else
+                {
+                    workFlow.WorkflowId = workFlow.ExistingWorkFlowId;
+                    unitOfWork.WorkOrderRepository.UpdateWorkOrderWorkFlow(workFlow);
+                    return Ok(workFlow);
+                }
+
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+        }
+
+
+        private List<long> getAllUniqueTaskIds(Workflow workflow)
+        {
+            var ids = new List<long>();
+
+            if (workflow.Charges != null && workflow.Charges.Count > 0)
+            {
+                ids.AddRange(workflow.Charges.Select(x => x.TaskId).Distinct().ToList());
+            }
+            if (workflow.Directions != null && workflow.Directions.Count > 0)
+            {
+                ids.AddRange(workflow.Directions.Select(x => x.TaskId.Value).Distinct().ToList());
+            }
+            if (workflow.Equipments != null && workflow.Equipments.Count > 0)
+            {
+                ids.AddRange(workflow.Equipments.Select(x => x.TaskId).Distinct().ToList());
+            }
+            if (workflow.Exclusions != null && workflow.Exclusions.Count > 0)
+            {
+                ids.AddRange(workflow.Exclusions.Select(x => x.TaskId.Value).Distinct().ToList());
+            }
+            if (workflow.Expertise != null && workflow.Expertise.Count > 0)
+            {
+                ids.AddRange(workflow.Expertise.Select(x => x.TaskId).Distinct().ToList());
+            }
+            if (workflow.MaterialList != null && workflow.MaterialList.Count > 0)
+            {
+                ids.AddRange(workflow.MaterialList.Select(x => x.TaskId.Value).Distinct().ToList());
+            }
+            if (workflow.Measurements != null && workflow.Measurements.Count > 0)
+            {
+                ids.AddRange(workflow.Measurements.Select(x => x.TaskId).Distinct().ToList());
+            }
+            if (workflow.Publication != null && workflow.Publication.Count > 0)
+            {
+                ids.AddRange(workflow.Publication.Select(x => x.TaskId).Distinct().ToList());
+            }
+            return ids;
+        }
+
+        private Workflow GetWorkFlowDetails(long workFlowId)
+        {
+            return unitOfWork.Repository<Workflow>().Find(p => p.WorkflowId == workFlowId).FirstOrDefault();
         }
     }
 }

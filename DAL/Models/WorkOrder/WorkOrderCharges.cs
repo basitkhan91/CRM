@@ -22,6 +22,12 @@ namespace DAL.Models
         public decimal CostPlusAmount {get;set;}
         public decimal FixedAmount { get; set; }
         public long TaskId { get; set; }
+        public string Description { get; set; }
+        public decimal? UnitCost { get; set; }
+        public decimal? ExtentedCost { get; set; }
+        public decimal? UnitPrice { get; set; }
+        public decimal? ExtentedPrice { get; set; }
+
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
@@ -29,6 +35,7 @@ namespace DAL.Models
         public DateTime UpdatedDate { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
+        public bool? IsFromWorkFlow { get; set; }
 
         [NotMapped]
         public string VendorName { get; set; }

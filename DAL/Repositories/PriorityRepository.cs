@@ -26,16 +26,15 @@ namespace DAL.Repositories
         }
 
 
-        public IEnumerable<PriorityAudit> GetPriorityHistory(long priorityId)
+        public IEnumerable<PriorityAudit> GetPriorityHistoryAudit(long priorityId)
         {
             try
             {
                 return _appContext.PriorityAudit.Where(p => p.PriorityId == priorityId).OrderByDescending(p => p.UpdatedDate).ToList();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 

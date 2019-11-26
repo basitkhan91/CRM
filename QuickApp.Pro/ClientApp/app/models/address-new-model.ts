@@ -12,7 +12,7 @@ export class AddressNew {
     public city: string;
     public stateOrProvince: string;
     public postalCode: string;
-    public country: string;
+    public country: any;
 
     constructor() {
         this.line1 = ''
@@ -21,6 +21,6 @@ export class AddressNew {
         this.city = ''
         this.stateOrProvince = ''
         this.postalCode = ''
-        this.country = ''
+        this.country = {}
     }
 }

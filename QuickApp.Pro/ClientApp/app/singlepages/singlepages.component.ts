@@ -433,7 +433,14 @@ export class SingleComponent {
 					{ label: 'Single Screens' },
 					{ label: 'Bin' }
 				];
-			}
+            }
+            else if (this.currentUrl == '/singlepages/singlepages/app-dashnumber') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Dash Numbers' }
+
+                ];
+            }
 		}
 
 		
@@ -844,10 +851,10 @@ export class SingleComponent {
                     { label: 'Aircraft Manufacturer' }
                 ];
 			}
-			else if (this.currentUrl == '/singlepages/singlepages/app-dashNumber') {
+			else if (this.currentUrl == '/singlepages/singlepages/app-dashnumber') {
                 this.items = [
                     { label: 'Single Screens' },
-                    { label: 'Dash Number' }
+                    { label: 'Dash Numbers' }
                     
                 ];
 			}

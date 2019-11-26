@@ -96,39 +96,30 @@
                     <label class="control-label col-sm-4">QTY ON HAND<strong style="color:red">*</strong></label>
                     <div class="col-sm-7">
                         <!--<input class="form-control qty-input" type="number" min="0" max="1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantity">-->
-                        <input class="form-control qty-input" *ngIf="showNormalQuantity" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantity">
-                        <input class="form-control qty-input" *ngIf="showRestrictQuantity" type="number" min="0" max="1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantity">
-                        <input class="form-control qty-input" *ngIf="showFreeQuantity" type="number" min="0" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantity">
+                        <input class="form-control qty-input" *ngIf="showNormalQuantity" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityOnHand">
+                        <input class="form-control qty-input" *ngIf="showRestrictQuantity" type="number" min="0" max="1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityOnHand">
+                        <input class="form-control qty-input" *ngIf="showFreeQuantity" type="number" min="0" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityOnHand">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">QTY RESERVED<strong style="color:red">*</strong></label>
                     <div class="col-sm-7">
-                        <!--<input class="form-control qty-input" type="number" min="0" max="1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantity">-->
-                        <input class="form-control qty-input" *ngIf="showNormalQuantity" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantity">
-                        <input class="form-control qty-input" *ngIf="showRestrictQuantity" type="number" min="0" max="1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantity">
-                        <input class="form-control qty-input" *ngIf="showFreeQuantity" type="number" min="0" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantity">
+                        <input class="form-control qty-input"  type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityReserved">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">QTY ISSUED<strong style="color:red">*</strong></label>
                     <div class="col-sm-7">
-                        <!--<input class="form-control qty-input" type="number" min="0" max="1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantity">-->
-                        <input class="form-control qty-input" *ngIf="showNormalQuantity" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantity">
-                        <input class="form-control qty-input" *ngIf="showRestrictQuantity" type="number" min="0" max="1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantity">
-                        <input class="form-control qty-input" *ngIf="showFreeQuantity" type="number" min="0" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantity">
+                        <input class="form-control qty-input" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityIssued">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">QTY AVAILABLE<strong style="color:red">*</strong></label>
                     <div class="col-sm-7">
-                        <!--<input class="form-control qty-input" type="number" min="0" max="1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantity">-->
-                        <input class="form-control qty-input" *ngIf="showNormalQuantity" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantity">
-                        <input class="form-control qty-input" *ngIf="showRestrictQuantity" type="number" min="0" max="1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantity">
-                        <input class="form-control qty-input" *ngIf="showFreeQuantity" type="number" min="0" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantity">
+                        <input class="form-control qty-input" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityAvailable">
                     </div>
                 </div>
 
@@ -286,7 +277,6 @@
                             <option [value]="2">Other </option>
                             <option [value]="3">Vendor</option>
                         </select>
-                        ct
                     </div>
                     <div class="form-group col-sm-12">
                         <label class="control-label col-sm-4"></label>
@@ -524,14 +514,14 @@
                     </div>
                 </div>
 
-                <div class="form-group col-sm-12">
+                <!--<div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">RO NUM</label>
                     <div class="col-sm-7">
                         <select [(ngModel)]="allRolistInfo.RepairOrderId" [disabled]=true [ngModelOptions]="{standalone: true}" (onchange)="ROValueChange(allRolistInfo.RepairOrderId)">
-                            <option *ngFor="let ro of allRolistInfo" [ngValue]="ro.RepairOrderId">{{manufacturer.repairOrderNumber}}</option><!---->
+                            <option *ngFor="let ro of allRolistInfo" [ngValue]="ro.RepairOrderId">{{manufacturer.repairOrderNumber}}</option>
                         </select>
                     </div>
-                </div>
+                </div>-->
 
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">RO UNIT COST</label>

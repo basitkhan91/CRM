@@ -79,9 +79,9 @@ namespace DAL.Repositories
                 return publication;
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
 
@@ -596,7 +596,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
 
 
@@ -861,9 +861,9 @@ namespace DAL.Repositories
 
                 return getData;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
 
 
@@ -908,9 +908,9 @@ namespace DAL.Repositories
                 return result;
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
 
@@ -930,10 +930,9 @@ namespace DAL.Repositories
                 _appContext.Entry(publication).Property(x => x.UpdatedBy).IsModified = true;
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -951,10 +950,9 @@ namespace DAL.Repositories
                               .ToList();
                 return result;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -1143,6 +1141,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
+                throw ex;
             }
             return publications;
         }
@@ -1174,10 +1173,9 @@ namespace DAL.Repositories
 
                 return list;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
     }

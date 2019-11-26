@@ -36,6 +36,12 @@
                     <i class="fa fa-trash"></i>
                 </button>
             </td>
+
         </tr>
     </table>
+    <div *ngIf="isWorkOrder" style="float:right"> 
+                    
+            <button *ngIf="isWorkOrder" class="btn btn-primary btn-primary-cstm"  (click)="saveEquipmentWorkOrder(); " style="padding: 6px 12px !important;">Save</button>
+    </div>
+
 </div>

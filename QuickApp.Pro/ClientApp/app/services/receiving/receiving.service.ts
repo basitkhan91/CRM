@@ -11,6 +11,7 @@ import { Role } from '../../models/role.model';
 import { AuthService } from '../auth.service';
 import { ReceivingEndpointService } from './receiving-endpoint.service';
 import { PurchaseOrder } from '../../components/receiving/po-ro/receivng-po/PurchaseOrder.model';
+import { ReceiveParts } from '../../components/receiving/repair-order/receiving-ro/RepairOrder.model';
 
 export type RolesChangedOperation = "add" | "delete" | "modify";
 export type RolesChangedEventArg = { roles: Role[] | string[], operation: RolesChangedOperation };
@@ -72,8 +73,30 @@ export class ReceivingService {
             this.receivingEndpoing.getReceivingPODataForEditById<any>(receivingId));
     }
 
+    getPurchaseOrderDataForViewById(receivingId: any) {
+
+        return Observable.forkJoin(
+            this.receivingEndpoing.getReceivingPurchaseForView<any>(receivingId));
+    }
+
     addPartStocklineMapper(mapperData: any) {
         return this.receivingEndpoing.addPartStocklineMapper<any>(mapperData);
+    }
+
+    getReceivingRODataById(repairOrderId){
+        return this.receivingEndpoing.getReceivingRODataById(repairOrderId);
+      }
+
+    getReceivingROHeaderById(repairOrderId){
+        return this.receivingEndpoing.getReceivingROHeaderById(repairOrderId);
+    }
+
+    getReceivingROPartById(repairOrderId){
+        return this.receivingEndpoing.getReceivingROPartById(repairOrderId);
+    }
+
+    receiveParts(receiveParts: ReceiveParts[]) {
+        return this.receivingEndpoing.receiveParts<any>(receiveParts);
     }
 
 }

@@ -87,7 +87,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 	modelValue: boolean;
 	allPolistInfo: any[] = [];
 	allRolistInfo: any[] = [];
-	//allEmployeeList: any[] = [];
+	allEmployeeList: any[] = [];
     showRestrictQuantity: boolean;
 	showFreeQuantity: boolean;
 	stocklinePOObject: any[] = [];

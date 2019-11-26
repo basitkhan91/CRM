@@ -327,7 +327,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-                string x = "";
+                throw ex;
             }
         }
 

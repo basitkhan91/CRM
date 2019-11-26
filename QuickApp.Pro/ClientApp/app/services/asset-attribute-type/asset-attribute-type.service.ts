@@ -7,13 +7,19 @@ import { AssetAttributeType } from '../../models/asset-attribute-type.model';
 import { AssetAttributeTypeEndpointService } from './asset-attribute-type-endpoint.service';
 @Injectable()
 export class AssetAttributeTypeService {
-
+    listCollection: any;
     constructor(private endpointService: AssetAttributeTypeEndpointService) {
     }
 
     getAll() {
         return Observable.forkJoin(
             this.endpointService.getAllItems<AssetAttributeType[]>()
+        );
+    }
+
+    getByAssetTypeId(id: number) {
+        return Observable.forkJoin(
+            this.endpointService.getByAssetType<AssetAttributeType>(id)
         );
     }
 

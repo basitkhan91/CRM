@@ -24,6 +24,8 @@ namespace DAL.Models
         public bool IsTaskCompletedByOne { get; set; }
         public int WorkOrderHoursType { get; set; }
         public string LabourMemo { get; set; }
+
+        public long? EmployeeId { get; set; }
         public long? ExpertiseId { get; set; }
         [ForeignKey("MasterCompanyId")]
         public int? MasterCompanyId { get; set; }
@@ -35,7 +37,7 @@ namespace DAL.Models
         public bool IsDeleted { get; set; }
 
         public virtual List<WorkOrderLabor> LaborList { get; set; }
-        [NotMapped]
-        public WorkOrderLaborList WorkOrderLaborList { get; set; }
+        //[NotMapped]
+        //public WorkOrderLaborList WorkOrderLaborList { get; set; }
     }
 }

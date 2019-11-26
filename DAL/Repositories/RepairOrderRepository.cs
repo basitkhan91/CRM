@@ -1,6 +1,7 @@
 ﻿using DAL.Common;
 using DAL.Models;
 using DAL.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,28 +19,31 @@ namespace DAL.Repositories
 
         public IEnumerable<object> RecevingRolist()
         {
-
             var roList = (from ro in _appContext.RepairOrder
-                          join rop in _appContext.RepairOrderPart on ro.RepairOrderId equals rop.RepairOrderId
+                          join emp in _appContext.Employee on ro.RequestedBy equals emp.EmployeeId
                           join v in _appContext.Vendor on ro.VendorId equals v.VendorId
-                          join sl in _appContext.StockLine on ro.RepairOrderId equals sl.RepairOrderId
-                          join emp in _appContext.Employee on ro.ApproverId equals emp.EmployeeId
+                          join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
+                          from appr in approver.DefaultIfEmpty()
+                          join vc in _appContext.VendorContact on v.VendorId equals vc.VendorId
+                          join con in _appContext.Contact on vc.ContactId equals con.ContactId
+                          where ro.IsDeleted == false && (ro.IsActive == null || ro.IsActive == true)
                           select new
                           {
-                              Status = ro.StatusId == 1 ? "Open" : (ro.StatusId == 2 ? "Pending" : (ro.StatusId == 3 ? "Fulfilling" : "Closed")),
-                              NoOfItems = sl.Quantity,
-                              RoNumber = ro.RepairOrderNumber,
-                              Currency = v.CurrencyId, // Get currency
-                              RoTotalCost = sl.RepairOrderUnitCost, // Not sure if this is accurate
-                              VendorName = v.VendorName,
-                              VendorContact = ro.VendorContactId, // TODO = Do we need another join to get name?
-                              EmployeeName = emp.EmployeeId, // TODO = Do we need another join to get name?
-                              ContactPhone = emp.WorkPhone, //TODO = added work phone for now, is this correct?
-                              OpenDate = ro.CreatedDate,
-                              Reference = sl.ShippingReference,
-                              RequestedBy = "Test" // TODO = Did not find any recored here, where to get this from.
-                          }).Distinct()
-                    .ToList();
+                              ro.RepairOrderId,
+                              ro.RepairOrderNumber,
+                              ro.StatusId,
+                              Status = ro.StatusId == 1
+                                  ? "Open"
+                                  : (ro.StatusId == 2 ? "Pending" : (ro.StatusId == 3 ? "Fulfilling" : "Closed")),
+                              ro.OpenDate,
+                              v.VendorName,
+                              v.VendorCode,
+                              vendorContact = con.FirstName,
+                              RequestedBy = emp.FirstName,
+                              ApprovedBy = appr == null ? "" : appr.FirstName,
+                              ro.IsActive,
+                          }).Distinct().OrderByDescending(p => p.RepairOrderId)
+                .ToList();
 
             return roList;
 
@@ -242,7 +246,7 @@ namespace DAL.Repositories
                                 Approver = app.FirstName,
                                 ro.ClosedDate,
                                 con.WorkPhone,
-                                ContactName=con.FirstName,
+                                ContactName = con.FirstName,
                                 Status = ro.StatusId == 1 ? "Open" : (ro.StatusId == 2 ? "Pending" : (ro.StatusId == 3 ? "Fulfilling" : "Closed")),
                                 pr.Description,
                                 v.CreditLimit,
@@ -290,10 +294,9 @@ namespace DAL.Repositories
 
                 return data;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -399,7 +402,6 @@ namespace DAL.Repositories
 
         public List<RepairOrderPartViewDto> GetRepairOrderPartsView(long repairOrderId)
         {
-
             var returnObjects = new List<RepairOrderPartViewDto>();
 
             try
@@ -445,8 +447,6 @@ namespace DAL.Repositories
                     {
                         if (part.rop.IsParent == true)
                         {
-                            //var repairOrderPartViewDto = new RepairOrderPartViewDto()
-                            //{
                             repairOrderPartViewDto.PartNumber = part.PartNumber;
                             repairOrderPartViewDto.AltPartNumber = part.AltPartNumber;
                             repairOrderPartViewDto.PartDescription = part.PartDescription;
@@ -471,9 +471,6 @@ namespace DAL.Repositories
                             repairOrderPartViewDto.FunctionalCurrencyId = part.rop.FunctionalCurrencyId;
                             repairOrderPartViewDto.ForeignExchangeRate = part.rop.ForeignExchangeRate;
                             repairOrderPartViewDto.ManagementStructureId = part.rop.ManagementStructureId;
-                            //};
-
-
                         }
                         else
                         {
@@ -507,24 +504,263 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
         public IEnumerable<RepairOrder> ROListByMasterItemId(int itemMasterId)
         {
             var repairOrderList = (from ro in _appContext.RepairOrder
-                                     join rop in _appContext.RepairOrderPart on ro.RepairOrderId equals rop.RepairOrderId
-                                     join im in _appContext.ItemMaster on rop.ItemMasterId equals im.ItemMasterId
-                                     where im.ItemMasterId == itemMasterId &&
-                                     ro.IsDeleted == false
-                                     select new RepairOrder
-                                     {
-                                         RepairOrderId = ro.RepairOrderId,
-                                         RepairOrderNumber = ro.RepairOrderNumber
-                                     });
+                                   join rop in _appContext.RepairOrderPart on ro.RepairOrderId equals rop.RepairOrderId
+                                   join im in _appContext.ItemMaster on rop.ItemMasterId equals im.ItemMasterId
+                                   where im.ItemMasterId == itemMasterId &&
+                                   ro.IsDeleted == false
+                                   select new RepairOrder
+                                   {
+                                       RepairOrderId = ro.RepairOrderId,
+                                       RepairOrderNumber = ro.RepairOrderNumber
+                                   });
             return repairOrderList;
+        }
+
+        public List<RepairOrderPartViewDto> GetRepairOrderPartsView2(long repairOrderId)
+        {
+            var returnObjects = new List<RepairOrderPartViewDto>();
+
+            try
+            {
+                var repairOrderPartList = _appContext.RepairOrderPart
+                    .Where(x => x.RepairOrderId == repairOrderId)
+                    .ToList();
+
+                if (repairOrderPartList != null && repairOrderPartList.Any())
+                {
+                    var repairOrderPartViewDto = new RepairOrderPartViewDto();
+                    repairOrderPartViewDto.RepairOrderSplitParts = new List<RepairOrderSplitParts>();
+
+                    foreach (var repairOrderPart in repairOrderPartList)
+                    {
+                        if (repairOrderPart.IsParent == true)
+                        {
+                            repairOrderPartViewDto.PartNumber = _getItemMaster(repairOrderPart.ItemMasterId)?.PartNumber;
+                            repairOrderPartViewDto.AltPartNumber = _getItemMaster(repairOrderPart.ItemMasterId)?.PartNumber;
+                            repairOrderPartViewDto.PartDescription = _getItemMaster(repairOrderPart.ItemMasterId)?.PartDescription;
+                            repairOrderPartViewDto.ItemType = _getItemType(repairOrderPart.ItemTypeId)?.Description;
+                            repairOrderPartViewDto.Manufacturer = _getManufacturer(repairOrderPart.RepairOrderId);
+                            repairOrderPartViewDto.GlAccount = _getGlAccountName(repairOrderPart.RepairOrderId);
+                            repairOrderPartViewDto.UnitOfMeasure = _getUnitOfMeasure(repairOrderPart.RepairOrderId);
+                            repairOrderPartViewDto.Condition = _getCondtion(repairOrderPart.ConditionId)?.Description;
+                            repairOrderPartViewDto.FunctionalCurrency = _getCurrency(repairOrderPart.FunctionalCurrencyId)?.DisplayName;
+                            repairOrderPartViewDto.ReportCurrency = _getCurrency(repairOrderPart.ReportCurrencyId)?.DisplayName;
+                            repairOrderPartViewDto.WorkOrderNo = _getWorkOrder(repairOrderPart.WorkOrderId)?.WorkOrderNum;
+                            repairOrderPartViewDto.SalesOrderNo = repairOrderPart.SalesOrderId;
+                            repairOrderPartViewDto.RepairOrderId = repairOrderPart.RepairOrderId;
+                            repairOrderPartViewDto.NeedByDate = repairOrderPart.NeedByDate;
+                            repairOrderPartViewDto.QuantityOrdered = repairOrderPart.QuantityOrdered;
+                            repairOrderPartViewDto.UnitCost = repairOrderPart.UnitCost;
+                            repairOrderPartViewDto.DiscountPercent = repairOrderPart.DiscountPercent;
+                            repairOrderPartViewDto.DiscountPerUnit = repairOrderPart.DiscountPerUnit;
+                            repairOrderPartViewDto.DiscountAmount = repairOrderPart.DiscountAmount;
+                            repairOrderPartViewDto.ExtendedCost = repairOrderPart.ExtendedCost;
+                            repairOrderPartViewDto.ReportCurrencyId = repairOrderPart.ReportCurrencyId;
+                            repairOrderPartViewDto.FunctionalCurrencyId = repairOrderPart.FunctionalCurrencyId;
+                            repairOrderPartViewDto.ForeignExchangeRate = repairOrderPart.ForeignExchangeRate;
+                            repairOrderPartViewDto.ManagementStructureId = repairOrderPart.ManagementStructureId;
+                        }
+                        else
+                        {
+                            var repairOrderSplitPart = new RepairOrderSplitParts()
+                            {
+                                RepairOrderPartRecordId = repairOrderPart.RepairOrderPartRecordId,
+                                RepairOrderId = repairOrderPart.RepairOrderId,
+                                ManagementStructureId = repairOrderPart.ManagementStructureId,
+                                NeedByDate = repairOrderPart.NeedByDate,
+                                QuantityOrdered = repairOrderPart.QuantityOrdered,
+                                RoPartSplitAddress1 = repairOrderPart.RoPartSplitAddress1,
+                                RoPartSplitAddress2 = repairOrderPart.RoPartSplitAddress2,
+                                RoPartSplitAddress3 = repairOrderPart.RoPartSplitAddress3,
+                                RoPartSplitCity = repairOrderPart.RoPartSplitCity,
+                                RoPartSplitState = repairOrderPart.RoPartSplitStateOrProvince,
+                                RoPartSplitPostalCode = repairOrderPart.RoPartSplitPostalCode,
+                                RoPartSplitCountry = repairOrderPart.RoPartSplitCountry,
+                                UnitOfMeasure = _getUnitOfMeasure(repairOrderPart.RepairOrderId),
+                                PartNumber = _getItemMaster(repairOrderPart.ItemMasterId)?.PartNumber,
+                                PartDescription = _getItemMaster(repairOrderPart.ItemMasterId)?.PartDescription,
+                                UserType = repairOrderPart.RoPartSplitUserTypeId == 1
+                                    ? "Customer"
+                                    : (repairOrderPart.RoPartSplitUserTypeId == 2 ? "Vendor" : "Company"),
+                                User = _getUser(repairOrderPart.RoPartSplitUserTypeId, repairOrderPart.RepairOrderId)
+                            };
+                            repairOrderPartViewDto.RepairOrderSplitParts.Add(repairOrderSplitPart);
+                        }
+                    }
+                    returnObjects.Add(repairOrderPartViewDto);
+                }
+
+                return returnObjects;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private ItemMaster _getItemMaster(long itemMasterId)
+        {
+            var itemMaster = _appContext.ItemMaster
+                .Where(x => x.ItemMasterId == itemMasterId)
+                .FirstOrDefault();
+
+            return itemMaster;
+        }
+
+        private ItemType _getItemType(int? itemTypeId)
+        {
+            var itemType = _appContext.ItemType
+                .Where(x => x.ItemTypeId == itemTypeId)
+                .FirstOrDefault();
+
+            return itemType;
+        }
+
+        private string _getManufacturer(long repairOrderId)
+        {
+            var manufacturerName = (from rop in _appContext.RepairOrderPart
+                                    join ro in _appContext.RepairOrder on rop.RepairOrderId equals ro.RepairOrderId
+                                    join im in _appContext.ItemMaster on rop.ItemMasterId equals im.ItemMasterId
+                                    join ip in _appContext.ItemType on rop.ItemTypeId equals ip.ItemTypeId
+                                    join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId
+
+                                    join gla in _appContext.GLAccount on im.GLAccountId equals gla.GLAccountId into glacc
+                                    from gla in glacc.DefaultIfEmpty()
+
+                                    join uom in _appContext.UnitOfMeasure on im.RepairUnitOfMeasureId equals uom.UnitOfMeasureId into uoms
+                                    from uom in uoms.DefaultIfEmpty()
+
+                                    where rop.RepairOrderId == repairOrderId
+                                    select new
+                                    {
+                                        Manufacturer = man.Name,
+                                        //GLAccount = gla.AccountName,
+                                        //UnitOfMeasure = uom.Description,
+                                    }).FirstOrDefault();
+
+            return manufacturerName.Manufacturer;
+        }
+
+        private string _getGlAccountName(long repairOrderId)
+        {
+            var glAccountName = (from rop in _appContext.RepairOrderPart
+                                 join ro in _appContext.RepairOrder on rop.RepairOrderId equals ro.RepairOrderId
+                                 join im in _appContext.ItemMaster on rop.ItemMasterId equals im.ItemMasterId
+                                 join ip in _appContext.ItemType on rop.ItemTypeId equals ip.ItemTypeId
+                                 join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId
+
+                                 join gla in _appContext.GLAccount on im.GLAccountId equals gla.GLAccountId into glacc
+                                 from gla in glacc.DefaultIfEmpty()
+
+                                     //join uom in _appContext.UnitOfMeasure on im.RepairUnitOfMeasureId equals uom.UnitOfMeasureId into uoms
+                                     //from uom in uoms.DefaultIfEmpty()
+
+                                 where rop.RepairOrderId == repairOrderId
+                                 select new
+                                 {
+                                     //Manufacturer = man.Name,
+                                     GLAccount = gla.AccountName,
+                                     //UnitOfMeasure = uom.Description,
+                                 }).FirstOrDefault();
+
+            return glAccountName.GLAccount;
+        }
+
+        private string _getUnitOfMeasure(long repairOrderId)
+        {
+            var unitOfMeasure = (from rop in _appContext.RepairOrderPart
+                                 join ro in _appContext.RepairOrder on rop.RepairOrderId equals ro.RepairOrderId
+                                 join im in _appContext.ItemMaster on rop.ItemMasterId equals im.ItemMasterId
+                                 join ip in _appContext.ItemType on rop.ItemTypeId equals ip.ItemTypeId
+                                 join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId
+                                 join gla in _appContext.GLAccount on im.GLAccountId equals gla.GLAccountId into glacc
+                                 from gla in glacc.DefaultIfEmpty()
+                                 join uom in _appContext.UnitOfMeasure on im.RepairUnitOfMeasureId equals uom.UnitOfMeasureId into uoms
+                                 from uom in uoms.DefaultIfEmpty()
+
+                                 where rop.RepairOrderId == repairOrderId
+                                 select new
+                                 {
+                                     UnitOfMeasure = uom.Description,
+                                 }).FirstOrDefault();
+
+            return unitOfMeasure.UnitOfMeasure;
+        }
+
+        private Condition _getCondtion(long? conditionId)
+        {
+            var condition = _appContext.Condition
+                .Where(x => x.ConditionId == conditionId)
+                .FirstOrDefault();
+
+            return condition;
+        }
+
+        private Currency _getCurrency(int? currencyId)
+        {
+            var currency = _appContext.Currency
+                .Where(x => x.CurrencyId == currencyId)
+                .FirstOrDefault();
+
+            return currency;
+        }
+
+        private WorkOrder _getWorkOrder(long? workOrderId)
+        {
+            var workOrder = _appContext.WorkOrder
+                .Where(x => x.WorkOrderId == workOrderId)
+                .FirstOrDefault();
+
+            return workOrder;
+        }
+
+        private string _getUser(int? roPartSplitUserTypeId, long repairOrderId)
+        {
+            var user = string.Empty;
+
+            switch (roPartSplitUserTypeId.Value)
+            {
+                case 1:
+                    var test = (from rop in _appContext.RepairOrderPart
+                                join ro in _appContext.RepairOrder on rop.RepairOrderId equals ro.RepairOrderId
+                                join cus in _appContext.Customer on rop.RoPartSplitUserTypeId equals (int?)cus.CustomerId
+                                where rop.RepairOrderId == repairOrderId
+                                select new
+                                {
+                                    CustomerName = cus.Name,
+                                }).FirstOrDefault();
+                    user = test == null ? "" : test.CustomerName;
+                    break;
+                case 2:
+                    var test2 = (from ro in _appContext.RepairOrder
+                                 join v in _appContext.Vendor on ro.ShipToUserId equals v.VendorId
+                                 where ro.RepairOrderId == repairOrderId
+                                 select new
+                                 {
+                                     v.VendorName,
+                                 }).FirstOrDefault();
+                    user = test2 == null ? "" :  test2.VendorName;
+                    break;
+                default:
+                    var test3 = (from ro in _appContext.RepairOrder
+                                 join le in _appContext.LegalEntity on ro.ShipToUserId equals le.LegalEntityId
+                                 where ro.RepairOrderId == repairOrderId
+                                 select new
+                                 {
+                                     CompanyName = le.Name,
+                                 }).FirstOrDefault();
+                    user = test3 == null ? "" :  test3.CompanyName;
+                    break;
+            }
+
+            return user;
         }
     }
 }

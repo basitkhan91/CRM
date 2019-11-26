@@ -1,17 +1,13 @@
 ﻿
+using DAL.Models;
 using DAL.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
-using DAL.Core;
-using DAL.Models;
 
 namespace DAL.Repositories
 {
-    
+
     public class VenodrRepository : Repository<Vendor>, IVendor
     {
         List<Vendor> iList = new List<Vendor>();
@@ -529,10 +525,9 @@ namespace DAL.Repositories
 
                 return billingAddress.VendorBillingAddressId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -544,10 +539,9 @@ namespace DAL.Repositories
                 _appContext.VendorBillingAddress.Update(billingAddress);
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -569,10 +563,9 @@ namespace DAL.Repositories
 
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -598,11 +591,36 @@ namespace DAL.Repositories
 
                 //_appContext.SaveChanges();
             }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public bool DeleteVendorShippingViaAddress(long vendorShippingId, string updatedBy)
+        {
+            bool result = false;
+            try
+            {
+               
+                var vendorShippingDetails = _appContext.VendorShipping.Where(x => x.VendorShippingId == vendorShippingId).FirstOrDefault();
+                if (vendorShippingDetails != null)
+                {
+                    vendorShippingDetails.UpdatedBy = updatedBy;
+                    vendorShippingDetails.UpdatedDate = DateTime.Now;
+                    vendorShippingDetails.IsDelete = true;
+                    _appContext.VendorShipping.Update(vendorShippingDetails);
+                    _appContext.SaveChanges();
+                    result = true;
+                }
+                return result;
+            }
             catch (Exception)
             {
 
                 throw;
             }
+
         }
 
         public void VendorBillingAddressStatus(long billingAddressId,bool status, string updatedBy)
@@ -623,10 +641,9 @@ namespace DAL.Repositories
 
                 _appContext.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -651,10 +668,9 @@ namespace DAL.Repositories
                             }).OrderByDescending(p=>p.CreatedDate).ToList();
                 return list;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -670,10 +686,9 @@ namespace DAL.Repositories
                             }).ToList();
                 return list;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -698,10 +713,9 @@ namespace DAL.Repositories
                           ).FirstOrDefault();
                 return data;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 
@@ -736,6 +750,36 @@ namespace DAL.Repositories
             return _appContext.Vendor.Where(x => 
             (x.IsActive != null && x.IsActive == true) && 
             (x.IsDelete == null || x.IsDelete == false));
+        }
+
+        public IEnumerable<object> GetVendorBillingAddressAudit(long vendorId, long vendorBillingaddressId)
+        {
+            try
+            {
+                var list = (from vba in _appContext.VendorBillingAddressAudit
+                            join ad in _appContext.Address on vba.AddressId equals ad.AddressId
+                            where vba.VendorId== vendorId && vba.VendorBillingAddressId== vendorBillingaddressId
+                            select new
+                            {
+                                vba.SiteName,
+                                vba.AuditVendorBillingAddressId,
+                                vba.VendorBillingAddressId,
+                                ad.Line1,
+                                ad.Line2,
+                                ad.Line3,
+                                ad.City,
+                                ad.StateOrProvince,
+                                ad.PostalCode,
+                                ad.Country,
+                                vba.CreatedDate
+                            }).OrderByDescending(p => p.AuditVendorBillingAddressId).ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
     }

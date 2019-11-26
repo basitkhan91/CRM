@@ -135,5 +135,16 @@ namespace DAL.Models
 
         public virtual List<Publications> Publication { get; set; }
 
+        [NotMapped]
+        public long ExistingWorkFlowId { get; set; }
+
+        [NotMapped]
+        public long workOrderId { get; set; }
+
+        [NotMapped]
+        public long workFlowWorkOrderId { get; set; }
+        [NotMapped]
+        public bool IsSaveToWorkFlow { get; set; }
+
     }
 }

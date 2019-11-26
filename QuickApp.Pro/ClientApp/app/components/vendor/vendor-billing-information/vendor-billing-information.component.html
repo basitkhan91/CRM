@@ -48,7 +48,7 @@
 									<p-sortIcon [field]="col.field"></p-sortIcon>
 								</th>
 
-								<th></th>
+								<th class="headerList"></th>
 
 							</tr>
 						</ng-template>
@@ -61,7 +61,7 @@
 									{{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
 								</td>
 
-								<td>
+								<td class="headerList">
 									<p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
 									<p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
 									<p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
@@ -71,7 +71,7 @@
 										<mat-icon>edit</mat-icon>
 									</button>
 
-									<button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteItemAndCloseModel(rowData.vendorBillingAddressId)">
+									<button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteItemAndCloseModel(rowData.vendorShippingAddressId)">
 										<mat-icon color="warn">delete</mat-icon>
 									</button>
 
@@ -109,7 +109,7 @@
             </p>
         </div>-->
                             </div>
-                            <h5 class="heading">{{viewName}} Billing Information</h5>
+                            <h5 class="heading">{{viewName}} Billing Info</h5>
                             <div class="col-sm-6 w400 page-2blocks">
                                 <div class="form-group col-sm-12">
                                     <label class="control-label col-sm-4">Bill To <strong class="clr-red">*</strong> </label>
@@ -210,8 +210,8 @@
 
 <ng-template #contentBillVia let-c="close" let-d="dismiss" style="width:auto">
 	<div class="modal-header">
-		<h4 class="modal-title" *ngIf="isEditMode">Edit Bill Via Information</h4>
-		<h4 class="modal-title" *ngIf="!isEditMode">Add Bill Via Information</h4>
+		<h4 class="modal-title" *ngIf="isEditMode">Edit Bill Via Info</h4>
+		<h4 class="modal-title" *ngIf="!isEditMode">Add Bill Via Info</h4>
 		<!--<label>Vendor Name{{local?.vendorName}}</label>
 		<h4 class="modal-title">{{BillViaObj?.siteName}}</h4>-->
 		<button type="button" class="close" aria-label="Close" (click)="dismissBillViaModelModel()">

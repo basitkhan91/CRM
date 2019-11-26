@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Models
 {
-    public class WorkOrder 
+    public class WorkOrder
     {
         public WorkOrder()
         {
@@ -47,9 +47,9 @@ namespace DAL.Models
 
         [Required(ErrorMessage = "Sales person is required")]
         public long SalesPersonId { get; set; }
-
+        public string CustomerReference { get; set; }
+        public string CSR { get; set; }
         public int MasterCompanyId { get; set; }
-
         public string CreatedBy { get; set; }
         public Nullable<DateTime> CreatedDate { get; set; }
         public string UpdatedBy { get; set; }
@@ -61,7 +61,24 @@ namespace DAL.Models
 
 		[NotMapped]
 		public long WorkFlowWorkOrderId { get; set; }
+        [NotMapped]
+        public string CustomerName { get; set; }
+        [NotMapped]
+        public CustomerDetails CustomerDetails { get;set;}
+        [NotMapped]
+        public bool IsSubWorkOrder { get; set; }
 
 
-	}
+    }
+
+    public class CustomerDetails
+    {
+        public long CustomerId { get; set; }
+        public string CustomerName { get; set; }
+        public decimal? CreditLimit { get; set; }
+        public short? CreditTermsId { get; set; }
+        public string CustomerContact { get; set; }
+        public string CustomerRef { get; set; }
+        public string CSRName { get; set; }
+    }
 }

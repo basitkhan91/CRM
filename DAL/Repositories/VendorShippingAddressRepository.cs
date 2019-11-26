@@ -1,14 +1,9 @@
-﻿using DAL.Repositories.Interfaces;
+﻿using DAL.Models;
+using DAL.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
-using Microsoft.EntityFrameworkCore;
-
-using System.Threading.Tasks;
-using DAL.Core;
-using DAL.Models;
 
 namespace DAL.Repositories
 {
@@ -55,7 +50,7 @@ namespace DAL.Repositories
         {
             var data = (from vs in _appContext.VendorShipping
                         join vsa in  _appContext.VendorShippingAddress on Selectedrow equals vsa.VendorShippingAddressId  
-                        where ((vs.VendorShippingAddressId == Selectedrow) && (vs.IsActive==true))
+                        where ((vs.VendorShippingAddressId == Selectedrow) && (vs.IsActive==true && vs.IsDelete!=true))
 
                         // select new { t, ad, vt }).ToList();
             select new
@@ -79,6 +74,31 @@ namespace DAL.Repositories
         }
 
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
+        public IEnumerable<object> GetVendorShippingAddressAudit(long vendorId, long vendirShippingAddressId)
+        {
+            var data = (from v in _appContext.VendorShippingAddressAudit
+                        join ad in _appContext.Address on v.AddressId equals ad.AddressId
+                        where (v.VendorId == vendorId && v.VendorShippingAddressId== vendirShippingAddressId)                        
+                        select new
+                        {
+                            Address1 = ad.Line1,
+                            Address2 = ad.Line2,
+                            Address3 = ad.Line3,
+                            ad.AddressId,
+                            ad.Country,
+                            ad.PostalCode,
+                            ad.City,
+                            ad.StateOrProvince,
+                            v.SiteName,
+                            v.AuditVendorShippingAddressId,
+                            v.VendorShippingAddressId,
+                            v.CreatedDate,
+                            v.UpdatedDate,
+                            v.VendorId,
+                            v.IsActive
+                        }).OrderByDescending(c=>c.AuditVendorShippingAddressId).ToList();
+            return data;
+        }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 

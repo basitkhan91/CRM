@@ -16,7 +16,7 @@
 
 							<div class="inner-addon right-addon w200 inline-block">
 								<i class="fa fa-search"></i>
-								<input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter">
+								<input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter">
 							</div>
 							<button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
 							<!--<button type="button" pButton icon="fa-download" iconPos="left" label="Export Selection Only" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button>-->
@@ -96,7 +96,7 @@
 								<div class="margin0">
 									<ul class="nav nav-pills">
 
-										<li><button class="btn my-btn" (click)="GeneralInformation()" [class.extraclass]="GeneralInformationStyle">General Information</button></li>
+										<li><button class="btn my-btn" (click)="GeneralInformation()" [class.extraclass]="GeneralInformationStyle">General Info</button></li>
 
 										<li><button class="btn my-btn" (click)="Lockbox()" [class.extraclass]="LockboxStyle" *ngIf="sourceLegalEntity.isBankingInfo">Lockbox</button></li>
 										<li><button class="btn my-btn" (click)="DomesticWire()" [class.extraclass]="domesticWireStyle" *ngIf="sourceLegalEntity.isBankingInfo">Domestic Wire</button></li>

@@ -1,0 +1,38 @@
+button {
+  border-radius: 5px;
+}
+
+.form-group > label {
+  width: 100%;
+}
+
+div.row {
+  padding: 10px;
+  background-color: #e5e5e5;
+}
+
+#footer {
+  display: inline-flex;
+  font-size: 11px !important;
+}
+.footer-t-rec {
+  margin-left: 65%;
+}
+.footer--count {
+  margin-right: 0px;
+}
+
+.ui-table-scrollable-header-box {
+  margin-right: 17px !important;
+}
+
+.ui-table-scrollable-body {
+  margin-right: 17px !important;
+}
+///// this code below is for width of the scroll bar
+::-webkit-scrollbar {
+  width: 10px;
+}
+.ui-table-scrollable-header {
+  overflow-y: scroll;
+}

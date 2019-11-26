@@ -25,7 +25,7 @@
                                   class="plusicon-cstm"
                           
                                   data-toggle="modal"
-                                  data-target="#addBillingInfo"
+                                  data-target="#addBillingInfo" (click)="addBillingIfo()"
                                   ><i class="fa fa-plus-circle fa-lg"></i
                                 ></a>
                               </h4>
@@ -45,7 +45,7 @@
                                                selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
                                 <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
                                     <i class="fa fa-search"></i>
-                                    <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter" style="height: 28px !important;">
+                                    <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Filter" style="height: 28px !important;">
                                 </div>
                                 <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
                                 <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button>
@@ -83,16 +83,16 @@
                                 </td>
 
                                 <td>
-                                    <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                    <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                    <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                    <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="updateActiveorInActiveForBilling(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                    <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="updateActiveorInActiveForBilling(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                    <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="updateActiveorInActiveForBilling(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                     <!--<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" title="View"><i class="fa fa-eye"></i></a> </span>-->
                                     <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openBillingView(rowData)" title="View"><i class="fa fa-eye"></i></a> </span>
                                     <button class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="edit" data-toggle="modal" data-target="#addBillingInfo">
                                         <mat-icon>edit</mat-icon>
                                     </button>
 
-                                    <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteItemAndCloseModel(rowData)">
+                                    <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteBillingInfo(rowData)">
                                         <mat-icon color="warn">delete</mat-icon>
                                     </button>
 
@@ -346,7 +346,7 @@
                             <p><span class="label"><b>Bill To City: </b></span><span class="value">{{viewData.city}}</span></p>
                             <p><span class="label"><b>Bill To State/Prov: </b></span><span class="value">{{viewData.stateOrProvince}}</span></p>
                             <p><span class="label"><b>Bill To Postal Code :</b></span><span class="value">{{viewData.postalCode}}</span></p>
-                            <p><span class="label"><b>Bill To Country: </b></span><span class="value">{{viewData.country}}</span></p>
+                            <p><span class="label"><b>Bill To Country: </b></span><span class="value">{{viewData.countryName}}</span></p>
         
                             <div class="clear"></div>
                         </div>

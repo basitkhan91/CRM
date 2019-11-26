@@ -37,28 +37,28 @@ namespace QuickApp.Pro.Controllers
             return Ok(Mapper.Map<IEnumerable<PriorityViewModel>>(allGatecodeinfo));
 
         }
-        [HttpGet("auditHistoryById/{id}")]
-        [Produces(typeof(List<AuditHistory>))]
-        public IActionResult GetAuditHostoryById(long id)
-        {
-            var result = _unitOfWork.AuditHistory.GetAllHistory("Priority", id); //.GetAllCustomersData();
+        //[HttpGet("auditHistoryById/{id}")]
+        //[Produces(typeof(List<AuditHistory>))]
+        //public IActionResult GetAuditHostoryById(long id)
+        //{
+        //    var result = _unitOfWork.AuditHistory.GetAllHistory("Priority", id); //.GetAllCustomersData();
 
 
-            try
-            {
-                var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
+        //    try
+        //    {
+        //        var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
 
-                return Ok(resul1);
-            }
-            catch (Exception ex)
-            {
+        //        return Ok(resul1);
+        //    }
+        //    catch (Exception ex)
+        //    {
 
-                throw;
-            }
+        //        return BadRequest(ex.Message);
+        //    }
 
 
 
-        }
+        //}
 
         [HttpPost("priority")]
         //[Authorize(Authorization.Policies.ManageAllRolesPolicy)]
@@ -145,13 +145,23 @@ namespace QuickApp.Pro.Controllers
             return Ok(auditResult);
         }
 
-        [HttpGet("priorityhistory")]
-        public IActionResult GetPriorityHistory(long priorityId)
+        [HttpGet("auditHistoryById/{id}")]
+        [Produces(typeof(List<PriorityAudit>))]
+        public IActionResult GetAuditHostoryById(long id)
         {
-            var reult = _unitOfWork.Priority.GetPriorityHistory(priorityId);
-            return Ok(reult);
-        }
+            try
+            {
+                var reult = _unitOfWork.Priority.GetPriorityHistoryAudit(id);
+                return Ok(reult);
+            }
 
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+        }
 
     }
 

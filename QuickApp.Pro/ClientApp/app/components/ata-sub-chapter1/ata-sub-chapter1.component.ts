@@ -183,7 +183,10 @@ export class AtaSubChapter1Component implements OnInit {
 	save() {
 		const data = {
 			...this.addNew, createdBy: this.userName, updatedBy: this.userName,
-		    description: editValueAssignByCondition('description',this.addNew.description)
+            description: editValueAssignByCondition('description', this.addNew.description),
+            ataChapterCategory: editValueAssignByCondition('ataChapterCategory', this.addNew.ataChapterCategory),
+            //ataChapterCode: editValueAssignByCondition('ataChapterCode', this.addNew.ataChapterCode),
+            ataChapterName: editValueAssignByCondition('ataChapterId', this.addNew.ataChapterId)            
 		};
 		console.log(data)
 		if (!this.isEdit) {
@@ -273,7 +276,7 @@ export class AtaSubChapter1Component implements OnInit {
 	}
 
 	getAuditHistoryById(rowData) {
-		this.atasubchapterService.getAtaSubChapterAudit(rowData.ataSubChapterId).subscribe(res => {
+        this.atasubchapterService.historyATASubChapter1(rowData.ataSubChapterId).subscribe(res => {
 			this.auditHistory = res;
 		})
 	}

@@ -246,6 +246,7 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 			this.sourceTimeLife.timeLife = this.sourceStockLine.timeLife;
 			this.sourceStockLineSetup.timeLifeCyclesId = this.sourceStockLine.timeLifeCyclesId  //TimeLifeId
 			this.sourceStockLineSetup.managementCode = this.sourceStockLine.code
+
             this.sourceStockLineSetup.itemTypeId = this.sourceStockLine.itemTypeId
             if (this.sourceStockLine.po != null) {
                 this.sourceStockLineSetup.PurchaseOrderId = this.sourceStockLine.po.purchaseOrderId
@@ -261,6 +262,13 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
             this.sourceStockLineSetup.incidentReason = this.sourceStockLine.incidentReason;
             this.sourceStockLineSetup.accident = this.sourceStockLine.accident;
             this.sourceStockLineSetup.accidentReason = this.sourceStockLine.accidentReason;
+
+            this.sourceStockLineSetup.quantityOnHand = this.sourceStockLine.quantityOnHand
+            this.sourceStockLineSetup.quantityReserved = this.sourceStockLine.quantityReserved
+            this.sourceStockLineSetup.quantityIssued = this.sourceStockLine.quantityIssued
+            this.sourceStockLineSetup.quantityAvailable = this.sourceStockLine.quantityAvailable;
+
+
 			//TimeLife
 			this.sourceTimeLife.timeLifeCyclesId = this.sourceStockLine.timeLifeCyclesId
 			this.sourceTimeLife.cyclesSinceNew = this.sourceStockLine.cyclesSinceNew;

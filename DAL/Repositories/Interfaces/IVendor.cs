@@ -33,6 +33,7 @@ namespace DAL.Repositories.Interfaces
         void UpdateVendorBillingAddress(VendorBillingAddress billingAddress);
         void DeleteVendorBillingAddress(long billingAddressId, string updatedBy);
         void DeleteVendorShippingAddress(long shippingAddressId, string updatedBy);
+        bool DeleteVendorShippingViaAddress(long vendorShippingId, string updatedBy);
         void VendorBillingAddressStatus(long billingAddressId, bool status, string updatedBy);
         IEnumerable<object> GetVendorBillingAddress();
         object VendorBillingAddressById(long billingAddressId);
@@ -41,5 +42,7 @@ namespace DAL.Repositories.Interfaces
 
         IEnumerable<object> GetVendorBillingSiteNames(long vendorId);
         IEnumerable<Vendor> getVendorsForDropdown();
+
+        IEnumerable<object> GetVendorBillingAddressAudit(long vendorId, long vendorBillingaddressId);
     }
 }

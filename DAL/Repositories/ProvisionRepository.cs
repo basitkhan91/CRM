@@ -33,8 +33,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
 
 
@@ -47,10 +46,9 @@ namespace DAL.Repositories
             {
                 return _appContext.ProvisionAudit.Where(p => p.ProvisionId == provisionId).OrderByDescending(p => p.UpdatedDate).ToList();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 

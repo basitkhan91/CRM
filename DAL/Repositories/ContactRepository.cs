@@ -1,14 +1,8 @@
-﻿using DAL.Repositories.Interfaces;
-using System;
+﻿using DAL.Models;
+using DAL.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
-using Microsoft.EntityFrameworkCore;
-
-using System.Threading.Tasks;
-using DAL.Core;
-using DAL.Models;
 
 namespace DAL.Repositories
 {
@@ -27,7 +21,6 @@ namespace DAL.Repositories
         {
             var data = (from c in _appContext.Contact
                         join vc in _appContext.VendorContact on c.ContactId equals vc.ContactId
-
                         where vc.VendorId== id
                         // select new { t, ad, vt }).ToList();
                         select new
@@ -55,8 +48,9 @@ namespace DAL.Repositories
                            c.CreatedDate,
                            c.UpdatedDate,
                            c.WorkPhoneExtn,
-                           vc.IsDefaultContact
-                           
+                           vc.IsDefaultContact,
+                           FullContactNo= c.WorkPhoneExtn + " - "+ c.WorkPhone,
+
                         }).ToList();
             return data;
             //return _appContext.Contact.Include("MasterCompany").OrderByDescending(c => c.ContactId).ToList();
@@ -66,7 +60,6 @@ namespace DAL.Repositories
         {
             var data = (from c in _appContext.Contact
                         join vc in _appContext.CustomerContact on c.ContactId equals vc.ContactId
-
                         where vc.CustomerId == id
                         // select new { t, ad, vt }).ToList();
                         select new
@@ -95,12 +88,48 @@ namespace DAL.Repositories
                             c.CreatedDate,
                             c.UpdatedDate,
                             c.WorkPhoneExtn,
+                            FullContactNo = c.WorkPhoneExtn + " - " + c.WorkPhone,
 
                         }).ToList();
             return data;
             //return _appContext.Contact.Include("MasterCompany").OrderByDescending(c => c.ContactId).ToList();
         }
 
+        public IEnumerable<object> GetVendorContactsAudit(long vendorId, long vendorContactId)
+        {
+            var data = (from c in _appContext.Contact
+                        join vc in _appContext.VendorContactAudit on c.ContactId equals vc.ContactId
+                        where vc.VendorId == vendorId && vc.VendorContactId== vendorContactId
+                        select new
+                        {
+                            c.ContactId,
+                            c.ContactTitle,
+                            c.AlternatePhone,
+                            c.CreatedBy,
+                            c.UpdatedBy,
+                            c.Email,
+                            c.Tag,
+                            c.Fax,
+                            c.FirstName,
+                            c.LastName,
+                            c.MiddleName,
+                            c.MobilePhone,
+                            c.Notes,
+                            c.Prefix,
+                            c.Suffix,
+                            c.WebsiteURL,
+                            c.WorkPhone,
+                            c.IsActive,
+                            vc.AuditVendorContactId,
+                            vc.VendorContactId,
+                            vc.VendorId,
+                            c.CreatedDate,
+                            c.UpdatedDate,
+                            c.WorkPhoneExtn,
+                            vc.IsDefaultContact
+                        }).OrderByDescending(c=>c.AuditVendorContactId).ToList();
+            return data;
+        }
 
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 

@@ -142,7 +142,6 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("GetReceivingPurchaseList/{receivingId}")]
-        [Produces(typeof(List<PurchaseOrderViewModel>))]
         public IActionResult GetReceivingPurchaseOrderListById(long receivingId)
         {
             try
@@ -157,13 +156,43 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [HttpGet("getReceivingRepairList/{receivingId}")]
+        [Produces(typeof(List<RepairOrderViewModel>))]
+        public IActionResult GetReceivingRepairOrderList(long receivingId)
+        {
+            try
+            {
+                var receivingData = unitOfWork.PartStockLineMapper.GetReceivingRepairOrderList(receivingId);
+                return Ok(receivingData);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+        }
+
         [HttpGet("GetReceivingPurchaseForEdit/{receivingId}")]
-        [Produces(typeof(List<PurchaseOrderViewModel>))]
         public IActionResult GetReceivingPurchaseOrderForEditById(long receivingId)
         {
             try
             {
                 var receivingData = unitOfWork.PartStockLineMapper.GetReceivingPurchaseOrderEdit(receivingId);
+                return Ok(receivingData);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+        }
+
+        [HttpGet("GetReceivingPurchaseForView/{receivingId}")]
+        public IActionResult GetReceivingPurchaseOrderForViewId(long receivingId)
+        {
+            try
+            {
+                var receivingData = unitOfWork.PartStockLineMapper.GetReceivingPurchaseOrderView(receivingId);
                 return Ok(receivingData);
             }
             catch (Exception)
@@ -207,7 +236,7 @@ namespace QuickApp.Pro.Controllers
                                 var isSerialExist = unitOfWork.Repository<StockLine>().Find(x => x.ItemMasterId == stockLine.ItemMasterId && x.ManufacturerId == stockLine.ManufacturerId && x.SerialNumber == stockLine.SerialNumber).FirstOrDefault();
                                 if (isSerialExist != null)
                                 {
-                                    return BadRequest("Serial Number - " + stockLine.SerialNumber + " at page - " + (index + 1) + " already exists.");
+                                    return BadRequest(new Exception("Serial Number - " + stockLine.SerialNumber + " at page - " + (index + 1) + " already exists."));
                                 }
                             }
                             quantity = (int)stockLine.Quantity;
@@ -280,7 +309,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest("Something went wrong while adding part, Please contact administrator");
+                return BadRequest(ex.Message);
             }
         }
 
@@ -349,7 +378,7 @@ namespace QuickApp.Pro.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest("Something went wrong while adding part, Please contact administrator");
+                return BadRequest(ex.Message);
             }
         }
 
@@ -387,7 +416,6 @@ namespace QuickApp.Pro.Controllers
                     unitOfWork.SaveChanges();
                 }
             }
-
         }
 
         #endregion Private Methods

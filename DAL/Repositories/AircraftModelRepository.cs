@@ -132,6 +132,7 @@ namespace DAL.Repositories
 
         }
 
+        override
         public IQueryable<DAL.Models.AircraftModel> GetPaginationData()
         {
             return _appContext.AircraftModel.Include("AircraftType").Where(c => (c.IsDeleted == false || c.IsDeleted == null))
@@ -144,10 +145,9 @@ namespace DAL.Repositories
             {
                 return _appContext.AircraftModelAudit.Where(p => p.AircraftModelId == aircraftModelId).OrderByDescending(p => p.UpdatedDate).ToList();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
         }
 

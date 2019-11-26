@@ -11,7 +11,7 @@
 
                             <div class="inner-addon right-addon w200 inline-block">
                                 <i class="fa fa-search"></i>
-                                <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter">
+                                <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter">
                             </div>
                             <button type="button" pButton icon="fa-download" iconPos="left" label="All Data" (click)="dt.exportCSV()"></button>
                             <button type="button" pButton icon="fa-download" iconPos="left" label="Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>

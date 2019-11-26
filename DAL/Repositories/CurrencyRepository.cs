@@ -36,8 +36,7 @@ namespace DAL.Repositories
             }
             catch (Exception ex)
             {
-
-                return null;
+                throw ex;
             }
         }
 

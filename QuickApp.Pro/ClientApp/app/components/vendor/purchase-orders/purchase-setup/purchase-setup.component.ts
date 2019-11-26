@@ -341,7 +341,7 @@ export class PurchaseSetupComponent implements OnInit {
 					this.tempPOHeaderAddress = {
 						purchaseOrderNumber: res.purchaseOrderNumber,
 						openDate: new Date(res.openDate),
-						closedDate: new Date(res.closedDate),
+						closedDate: res.closedDate ? new Date(res.closedDate) : '',
 						needByDate: new Date(res.needByDate),
 						priorityId: getObjectById('value', res.priorityId, this.allPriorityInfo),
 						deferredReceiver: res.deferredReceiver,
@@ -388,7 +388,7 @@ export class PurchaseSetupComponent implements OnInit {
 						billToAddress2: res.billToAddress2,
 						billToAddress3: res.billToAddress3,
 						billToCity: res.billToCity,
-						billToStateOrProvince: res.billToStateOrProvince,
+						billToStateOrProvince: res.billToState,
 						billToPostalCode: res.billToPostalCode,
 						billToCountry: res.billToCountry,
 						billToAddressId: res.billToAddressId,
@@ -428,10 +428,10 @@ export class PurchaseSetupComponent implements OnInit {
 						this.newPartsList = {
 							...x,
 							partNumberId: getObjectById('value', x.itemMasterId, this.allPartnumbersInfo),					
-							ifSplitShip: x.purchaseOrderSplitParts ? true : false,
+							ifSplitShip: x.purchaseOrderSplitParts.length > 0 ? true : false,
 							partNumber: x.partNumber,
 							partDescription: x.partDescription,
-							needByDate: new Date(x.needByDate),
+							needByDate: x.needByDate ? new Date(x.needByDate) : '',
 							conditionId: getObjectById('conditionId', x.conditionId, this.allconditioninfo),
 							discountPercent: getObjectById('percentId', x.discountPercent, this.allPercentData),
 							discountPerUnit: x.discountPerUnit,
@@ -460,7 +460,7 @@ export class PurchaseSetupComponent implements OnInit {
 			return partList.purchaseOrderSplitParts.map((y, cindex) => {
 				const splitpart = {
 					...y,
-					needByDate: new Date(y.needByDate),
+					needByDate: y.needByDate ? new Date(y.needByDate) : '',
 					partListUserTypeId: y.poPartSplitUserTypeId,
 					partListUserId: this.getPartSplitUserIdEdit(y, pindex, cindex),
 					partListAddressId: y.poPartSplitAddressId ? y.poPartSplitAddressId : 0,
@@ -473,7 +473,8 @@ export class PurchaseSetupComponent implements OnInit {
 	}	
 
 	getManagementStructureForParentEdit(partList) {
-		this.commonService.getManagementStructureDetails(partList.managementStructureId).subscribe(msparent => {
+		const msId = partList.managementStructureId ? partList.managementStructureId : this.sourcePoApproval.managementStructureId;
+		this.commonService.getManagementStructureDetails(msId).subscribe(msparent => {
 			if (msparent.Level1) {
 				partList.parentCompanyId = msparent.Level1;
 				this.getParentBUList(partList);				
@@ -876,6 +877,7 @@ export class PurchaseSetupComponent implements OnInit {
 				if (childDataList.length > 0) {
 					console.log(childDataList);
 					for (let j = 0; j < childDataList.length; j++) {
+						console.log(this["splitAddressData"+i+j]);						
 						this.childObject = {
 							purchaseOrderId: purId,
 							//isParent: false,
@@ -886,13 +888,13 @@ export class PurchaseSetupComponent implements OnInit {
 							poPartSplitUserTypeId: childDataList[j].partListUserTypeId ? childDataList[j].partListUserTypeId : 0,
 							poPartSplitUserId: childDataList[j].partListUserId ? this.getIdByObject(childDataList[j].partListUserId) : 0,
 							poPartSplitAddressId: childDataList[j].partListAddressId ? childDataList[j].partListAddressId : 0,
-							poPartSplitAddress1: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('address1', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
-							poPartSplitAddress2: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('address2', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
-							poPartSplitAddress3: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('address3', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
-							poPartSplitCity: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('city', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
-							poPartSplitStateOrProvince: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('stateOrProvince', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
-							poPartSplitPostalCode: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('postalCode', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
-							poPartSplitCountry: childDataList[j].partListAddressId ? getValueFromArrayOfObjectById('country', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							poPartSplitAddress1: this["splitAddressData"+i+j].length > 0 ? getValueFromArrayOfObjectById('address1', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							poPartSplitAddress2: this["splitAddressData"+i+j].length > 0 ? getValueFromArrayOfObjectById('address2', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							poPartSplitAddress3: this["splitAddressData"+i+j].length > 0 ? getValueFromArrayOfObjectById('address3', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							poPartSplitCity: this["splitAddressData"+i+j].length > 0 ? getValueFromArrayOfObjectById('city', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							poPartSplitStateOrProvince: this["splitAddressData"+i+j].length > 0 ? getValueFromArrayOfObjectById('stateOrProvince', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							poPartSplitPostalCode: this["splitAddressData"+i+j].length > 0 ? getValueFromArrayOfObjectById('postalCode', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							poPartSplitCountry: this["splitAddressData"+i+j].length > 0 ? getValueFromArrayOfObjectById('country', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
 							UOMId: this.partListData[i].UOMId ? this.partListData[i].UOMId : 0,
 							quantityOrdered: childDataList[j].quantityOrdered ? childDataList[j].quantityOrdered : 0,
 							needByDate: this.datePipe.transform(childDataList[j].needByDate, "MM/dd/yyyy"),
@@ -1055,17 +1057,19 @@ export class PurchaseSetupComponent implements OnInit {
 			purchaseOrderId: purchaseOrderId ? purchaseOrderId : this.poId,
 			purchaseOrderApproverList: this.poApproverList
 		}
-		this.purchaseOrderService.saveCreatePOApproval(this.poApproverData).subscribe(res => {
-			console.log(res);
-			if(this.isEditMode) {
-				this.getApproversListById(this.poId);
-				this.alertService.showMessage(
-					'Success',
-					`Added Approvers Successfully`,
-					MessageSeverity.success
-				);
-			}
-		})
+		if(this.poApproverList.length > 0) {
+			this.purchaseOrderService.saveCreatePOApproval(this.poApproverData).subscribe(res => {
+				console.log(res);
+				if(this.isEditMode) {
+					this.getApproversListById(this.poId);
+					this.alertService.showMessage(
+						'Success',
+						`Added Approvers Successfully`,
+						MessageSeverity.success
+					);
+				}
+			})
+		}		
 	}
 
 	updatePOApproverData() {
@@ -1200,7 +1204,7 @@ export class PurchaseSetupComponent implements OnInit {
 		}
 	}
 
-	onCustomerNameChange(customerId, data?, pindex?, cindex?) {
+	onCustomerNameChange(customerId, data?, pindex?, cindex?) {		
 		//this.gridSelectedCustomerId = customer ? customer.value : this.gridSelectedCustomerId;
 		//console.log(part, customer)
 		// part.poPartSplitUserId = customer.customerId;
@@ -1209,20 +1213,24 @@ export class PurchaseSetupComponent implements OnInit {
 			//this["splitAddressData"+index] = returnedcustomerAddressses[0];
 			//console.log(this["splitAddressData"+index])
 			 //this.splitAddressData = returnedcustomerAddressses[0];
+			 this["splitAddressData"+pindex+cindex] = [];
 			 this["splitAddressData"+pindex+cindex] = returnedcustomerAddressses[0];
 			if(this.isEditMode) {
 				if(data.poPartSplitAddressId == 0) {
-					this["splitAddressData"+pindex+cindex].push({customerShippingAddressId: 0, address1: data.poPartSplitAddress1, address2: data.poPartSplitAddress2, address3: data.poPartSplitAddress3, city: data.poPartSplitCity, stateOrProvince: data.poPartSplitState, postalCode: data.poPartSplitPostalCode, country: data.poPartSplitCountry})
+					this["splitAddressData"+pindex+cindex].push({addressId: 0, address1: data.poPartSplitAddress1, address2: data.poPartSplitAddress2, address3: data.poPartSplitAddress3, city: data.poPartSplitCity, stateOrProvince: data.poPartSplitState, postalCode: data.poPartSplitPostalCode, country: data.poPartSplitCountry})
 				}
 				this["splitAddressData"+pindex+cindex].map(x => {
-					if(x.customerShippingAddressId == 0) {
-						data.partListAddressId = x.customerShippingAddressId;
+					if(x.addressId == 0) {
+						data.partListAddressId = x.addressId;
 					}
 				});
+				console.log(this["splitAddressData"+pindex+cindex]);				
 				//this.onShipToGetAddress(data, data.poPartSplitAddressId);
 			}
 			//part.poPartSplitAddressId = 0;
-		});
+			data.poPartSplitAddressId = null;
+			data.partListAddressId = null;
+		});		
 	}
 
 	getAddressDetails(variable, pindex, cindex) {
@@ -1246,20 +1254,24 @@ export class PurchaseSetupComponent implements OnInit {
 		this.vendorService.getVendorShipAddressGet(vendorId).subscribe(
 			vendorAddresses => {
 				//this.vendorSelectedforSplit = vendorAddresses[0];
+				this["splitAddressData"+pindex+cindex] = [];
 				this["splitAddressData"+pindex+cindex] = vendorAddresses[0];
 				//part.addressData = vendorAddresses[0];;
 				//this.splitAddressData = vendorAddresses[0];
 				if(this.isEditMode) {
 					if(data.poPartSplitAddressId == 0) {
-						this["splitAddressData"+pindex+cindex].push({vendorShippingAddressId: 0, address1: data.poPartSplitAddress1, address2: data.poPartSplitAddress2, address3: data.poPartSplitAddress3, city: data.poPartSplitCity, stateOrProvince: data.poPartSplitState, postalCode: data.poPartSplitPostalCode, country: data.poPartSplitCountry})
+						this["splitAddressData"+pindex+cindex].push({addressId: 0, address1: data.poPartSplitAddress1, address2: data.poPartSplitAddress2, address3: data.poPartSplitAddress3, city: data.poPartSplitCity, stateOrProvince: data.poPartSplitState, postalCode: data.poPartSplitPostalCode, country: data.poPartSplitCountry})
 					}
 					//this.onShipToGetAddress(data, data.poPartSplitAddressId);
 				}
+				data.poPartSplitAddressId = null;
+				data.partListAddressId = null;
 			})
 	}
 
 	onCompanyNameChange(companyId, data?, pindex?, cindex?) {
 		this.legalEntityService.getLegalEntityAddressById(companyId).subscribe(response => {
+			this["splitAddressData"+pindex+cindex] = [];
 			this["splitAddressData"+pindex+cindex] = response[0].map(x => {
 				return {
 					...x,
@@ -1270,11 +1282,13 @@ export class PurchaseSetupComponent implements OnInit {
 			});
 			if(this.isEditMode) {
 				if(data.poPartSplitAddressId == 0) {
-					this["splitAddressData"+pindex+cindex].push({legalEntityShippingAddressId: 0, address1: data.poPartSplitAddress1, address2: data.poPartSplitAddress2, address3: data.poPartSplitAddress3, city: data.poPartSplitCity, country: data.poPartSplitCountry, postalCode: data.poPartSplitPostalCode, stateOrProvince: data.poPartSplitState});
+					this["splitAddressData"+pindex+cindex].push({addressId: 0, address1: data.poPartSplitAddress1, address2: data.poPartSplitAddress2, address3: data.poPartSplitAddress3, city: data.poPartSplitCity, country: data.poPartSplitCountry, postalCode: data.poPartSplitPostalCode, stateOrProvince: data.poPartSplitState});
 				}
 			} else {
 				this.onShipToGetCompanyAddress(this.companySiteList_Shipping[0].legalEntityShippingAddressId);
-			}	
+			}
+			data.poPartSplitAddressId = null;
+			data.partListAddressId = null;
 		})	
 	}
 
@@ -2018,6 +2032,7 @@ export class PurchaseSetupComponent implements OnInit {
 						...newParentObject,
 						partNumberId: getObjectById('value', x.itemMasterId, this.allPartnumbersInfo)
 					}
+					this.getManagementStructureForParentEdit(newObject);
 					this.getPNDetailsById(newObject)
 					this.partListData = [...this.partListData, newObject]
 				}
@@ -2822,7 +2837,7 @@ export class PurchaseSetupComponent implements OnInit {
 					this.sourcePoApproval.shipToAddressId = x.legalEntityShippingAddressId;
 				}
 			});
-			this.shipToAddress = this.addressFormForShipping;
+			this.shipToAddress = addressInfo;
 			//this.onShipToGetCompanyAddressThisPO(this.sourcePoApproval.shipToAddressId);
 		}
 		if(!this.isEditModeShipping) {
@@ -2980,7 +2995,7 @@ export class PurchaseSetupComponent implements OnInit {
 					this.sourcePoApproval.billToAddressId = x.legalEntityBillingAddressId;
 				}
 			});
-			this.billToAddress = this.addressFormForBilling;
+			this.billToAddress = addressInfo;
 		}		
 		if(!this.isEditModeBilling) {
 			this.alertService.showMessage(
@@ -3215,8 +3230,11 @@ export class PurchaseSetupComponent implements OnInit {
 			this.tempSplitAddressData.map(x => {
 				if(x.addressId == 0) {
 					this.tempSplitPart.partListAddressId = x.addressId;
+					//this.tempSplitPart.address1 = addressInfo.address1;
 				}
 			});
+			this["splitAddressData"+this.parentIndex+this.childIndex] = this.tempSplitAddressData;
+
 			if(!this.isEditModeSplitAddress) {
 				this.alertService.showMessage(
 					'Success',
@@ -3275,7 +3293,8 @@ export class PurchaseSetupComponent implements OnInit {
 	onEditShipVia(data) {
 		//if(value == 'EditCustShipVia') {
 			this.tempshipVia = getObjectById('shippingViaId', data.shipViaId, this.shipViaList);
-			this.addShipViaFormForShipping = {...this.tempshipVia};
+			this.addShipViaFormForShipping = {...this.tempshipVia, shipVia: this.tempshipVia.name};
+			console.log(this.addShipViaFormForShipping);		
 			this.isEditModeShipVia = true;
 		//}
 	}
@@ -3355,6 +3374,7 @@ export class PurchaseSetupComponent implements OnInit {
 	onChangeChildQtyOrdered(partList) {
 		this.childOrderQtyArray = [];
 		this.childOrderQtyTotal = null;
+		this.parentQty = this.parentQty ? this.parentQty : partList.quantityOrdered;
 		console.log(partList.childList);
 		for (let i = 0; i < partList.childList.length; i++) {
 			if (partList.childList[i].quantityOrdered === null || partList.childList[i].quantityOrdered === undefined) {
