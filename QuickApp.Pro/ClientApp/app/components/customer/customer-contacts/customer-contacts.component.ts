@@ -70,7 +70,7 @@ export class CustomerContactsComponent implements OnInit {
 	id: number;
 	customerCode: any;
 	customerName: any;
-	emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{3,}";
+	emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}";
 	urlPattern = "^((ht|f)tp(s?))\://([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(/\S*)?$";
 	sourceViewforContact: any;
 	add_SelectedId: any;
@@ -265,7 +265,9 @@ export class CustomerContactsComponent implements OnInit {
 		})
 	}
 
-	addATAChapter(rowData) {
+    addATAChapter(rowData) {
+        this.sourceViewforContact = '';
+
 		this.selectedContact = rowData;
 		this.ataListDataValues = [];
 		this.getATACustomerContactMapped();
@@ -276,7 +278,8 @@ export class CustomerContactsComponent implements OnInit {
 
 
 	// get subchapter by Id in the add ATA Mapping
-	getATASubChapterByATAChapter() {
+    getATASubChapterByATAChapter() {
+
 		const selectedATAId = getValueFromObjectByKey('ataChapterId', this.add_SelectedId)
 		this.atasubchapter1service.getATASubChapterListByATAChapterId(selectedATAId).subscribe(atasubchapter => {
 			const responseData = atasubchapter[0];

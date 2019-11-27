@@ -115,7 +115,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
       // let m = Math.floor(diff % 3600 / 60).toString();
       // let s = Math.floor(diff % 3600 % 60).toString();
       // obj['adjustedHours'] = `${(h.length ==1)?'0'+h:h}.${(m.length ==1)?'0'+m:m}`;
-      obj['adjustedHours'] = Number(obj.hours) - Number(obj.adjustments)
+      obj['adjustedHours'] = Number(obj.hours) + Number(obj.adjustments)
       var totalHours = 0;
       for(let task in this.laborForm.workOrderLaborList[0]){
         if(this.laborForm.workOrderLaborList[0][task][0]['hours'] != null){
@@ -149,6 +149,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   getAllEmployees(): void {
     this.commonService.smartDropDownList('Employee', 'EmployeeId', 'FirstName').subscribe(res => {
       this.employeesOriginalData = res;
+      this.employeeList = res;
     })
   }
 

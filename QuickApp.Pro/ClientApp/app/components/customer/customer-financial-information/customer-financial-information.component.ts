@@ -613,7 +613,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 MessageSeverity.success
             );
             this.restDiscount();
-            this.savedGeneralInformationData.discountId = data.discountId;
+            this.savedGeneralInformationData.discountId = data.discontValue;
         })
 
     }

@@ -961,5 +961,77 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(result);
         }
+
+        [HttpPost("search")]
+        public IActionResult SearchItemMaster([FromBody]ItemMasterSearchViewModel searchView)
+        {
+            if (searchView == null
+                   || searchView.partSearchParamters == null
+                   || !searchView.partSearchParamters.partId.HasValue)
+            {
+                return BadRequest(new Exception("Invalid request parameter, partId not passed"));
+            }
+
+            IEnumerable<object> result = null;
+
+            if (searchView.partSearchParamters.includeAlternatePartNumber)
+            {
+
+            }
+            else
+            {
+                result = GetPartDetails(searchView);
+            }
+
+
+            var pageCount = (searchView.first / searchView.rows) + 1;
+
+            var searchData = new GetSearchData<object>();
+
+            searchData.Data = DAL.Common.PaginatedList<object>.Create(result.AsQueryable<object>(), pageCount, searchView.rows);
+
+            return Ok(searchData);
+        }
+
+        private IEnumerable<object> GetPartDetails(ItemMasterSearchViewModel searchView)
+        {
+            var result = Enumerable.Empty<object>();
+
+            result = from item in _context.ItemMaster
+                     join sl in _context.StockLine on item.ItemMasterId equals sl.ItemMasterId
+                     join uom in _context.UnitOfMeasure on item.ConsumeUnitOfMeasureId equals uom.UnitOfMeasureId into iuom
+                     from iu in iuom.DefaultIfEmpty()
+                     join currency in _context.Currency on item.CurrencyId equals currency.CurrencyId into itemcurrecy
+                     from ic in itemcurrecy.DefaultIfEmpty()
+                     where item.IsActive.HasValue && item.IsActive.Value == true
+                            && (item.IsDeleted.HasValue && !item.IsDeleted == true || !item.IsDeleted.HasValue)
+                            && (item.MasterCompanyId.HasValue && item.MasterCompanyId.Value == 1)
+                            && item.ItemMasterId == searchView.partSearchParamters.partId
+
+                     select new
+                     {
+                         method = "Stock Line",
+                         itemId = item.ItemMasterId,
+                         partNumber = item.PartNumber,
+                         alternatePartId = item.PartAlternatePartId,
+                         alternateFor = string.Empty,
+                         description = item.PartDescription,
+                         conditionType = string.Empty,
+                         stockLineNumber = sl.StockLineNumber,
+                         uomDescription = iu.Description,
+                         qtyAvailable = sl.QuantityAvailable ?? 0,
+                         qtyOnHand = sl.QuantityOnHand ?? 0,
+                         qtyToOrder = 0,
+                         qtyOnOrder = sl.QuantityOnOrder ?? 0,
+                         itemClassification = item.ItemClassification,
+                         itemGroup = string.Empty,
+                         controlNumber = sl.ControlNumber,
+                         idNumber = sl.IdNumber,  
+                         serialNumber = sl.SerialNumber, 
+                     };
+
+
+            return result.ToList<object>();
+        }
     }
 }

@@ -714,7 +714,7 @@ namespace DAL.Repositories
                                  join emp in _appContext.Employee on lh.EmployeeId equals emp.EmployeeId into lhemp
                                  from emp in lhemp.DefaultIfEmpty()
                                  join wfwo in _appContext.WorkOrderWorkFlow on lh.WorkFlowWorkOrderId equals wfwo.WorkFlowWorkOrderId
-                                 where lh.IsDeleted == false && (lh.WorkFlowWorkOrderId == wfwoId || lh.WorkOrderId == workOrderId)
+                                 where lh.IsDeleted == false && (lh.WorkFlowWorkOrderId == wfwoId)
                                  select new
                                  {
                                      lh.CreatedBy,
@@ -771,7 +771,7 @@ namespace DAL.Repositories
                                                       wol.WorkOrderLaborId,
                                                       EmployeeName = emp.FirstName
                                                   }
-                                                 ).ToList()
+                                                 ).Distinct().ToList()
                                      // _appContext.WorkOrderLabor.Where(p => p.WorkOrderLaborHeaderId == lh.WorkOrderLaborHeaderId).ToList()
                                  }
 
@@ -862,7 +862,7 @@ namespace DAL.Repositories
                             join ct in _appContext.ChargesTypes on woc.ChargesTypeId equals ct.Id
                             join v in _appContext.Vendor on woc.VendorId equals v.VendorId into wocv
                             from v in wocv.DefaultIfEmpty()
-                            where woc.IsDeleted == false && (woc.WorkFlowWorkOrderId == wfwoId || woc.WorkOrderId == workOrderId)
+                            where woc.IsDeleted == false && (woc.WorkFlowWorkOrderId == wfwoId)
                             select new
                             {
                                 woc.ChargesTypeId,
@@ -2852,7 +2852,7 @@ namespace DAL.Repositories
                     workOrderLaborHeader.IsDeleted = false;
                     workOrderLaborHeader.WorkOrderId = workOrderId;
                     workOrderLaborHeader.MasterCompanyId = Convert.ToInt32(masterCompanyId);
-
+                    
                     workOrderLabor.ExpertiseId = Convert.ToInt32(item.ExpertiseTypeId);
                     workOrderLabor.Hours = item.EstimatedHours;
                     workOrderLabor.TaskId = item.TaskId;
@@ -3332,6 +3332,20 @@ namespace DAL.Repositories
 
                     var exDirections = _appContext.WorkOrderDirections.Where(p => p.WorkFlowWorkOrderId == workFlow.workFlowWorkOrderId && p.WorkOrderId == workFlow.workOrderId && p.IsFromWorkFlow == true).ToList();
                     _appContext.WorkOrderDirections.RemoveRange(exDirections);
+
+                    var woPublication = _appContext.WorkOrderPublications.Where(p => p.WorkFlowWorkOrderId == workFlow.workFlowWorkOrderId).ToList();
+
+                    if (woPublication != null && woPublication.Count>0)
+                    {
+                        foreach(var pub in woPublication)
+                        {
+                            var exPublicationDashNumbers = _appContext.WorkOrderPublicationDashNumber.Where(p => p.WorkOrderPublicationId == pub.WorkOrderPublicationId).ToList();
+                            _appContext.WorkOrderPublicationDashNumber.RemoveRange(exPublicationDashNumbers);
+                            _appContext.SaveChanges();
+                        }
+                        
+                    }
+                    
 
                     var exPublication = _appContext.WorkOrderPublications.Where(p => p.WorkFlowWorkOrderId == workFlow.workFlowWorkOrderId && p.WorkOrderId == workFlow.workOrderId && p.IsFromWorkFlow == true).ToList();
                     _appContext.WorkOrderPublications.RemoveRange(exPublication);

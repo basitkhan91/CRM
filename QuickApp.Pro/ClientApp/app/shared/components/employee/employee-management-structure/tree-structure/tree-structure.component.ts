@@ -55,6 +55,11 @@ export class TreeStructureComponent implements OnInit{
     }
 
     checkLegalEntityExist(id){
+        this.employeeService.legalEnityList.forEach((le)=>{
+            if(document.getElementById(`${le.managementStructureId}`) != null){
+                document.getElementById(`${le.managementStructureId}`)['checked'] = true;
+            }
+        })
         this.employeeService.legalEnityList.forEach((legEntity, index)=>{
             if(id == legEntity.managementStructureId){
                 return true;

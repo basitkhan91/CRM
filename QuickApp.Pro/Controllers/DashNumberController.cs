@@ -42,6 +42,12 @@ namespace QuickApp.Pro.Controllers
             var asset = unitOfWork.Repository<AircraftDashNumber>().Find(x => x.DashNumberId == id && x.IsDeleted != true);
             return Ok(asset);
         }
+        [HttpGet("getByModelId/{id}")]
+        public IActionResult getDashNumberByModelId(long id)
+        {
+            var asset = unitOfWork.Repository<AircraftDashNumber>().Find(x => x.AircraftModelId == id && x.IsDeleted != true);
+            return Ok(asset);
+        }
 
         [HttpPost("add")]
         public IActionResult addDashNumber([FromBody]AircraftDashNumber dashNumber)

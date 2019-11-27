@@ -156,9 +156,10 @@ export class CustomerAircraftComponent implements OnInit {
 
 
     searchByFieldUrlCreateforAircraftInformation() {
+     
         this.aircraftManfacturerIdsUrl = this.selectAircraftManfacturer;
-        // if (this.selectAircraftManfacturer.length > 0) {
-        //     const aircraftTypeIds = this.selectAircraftManfacturer.reduce(
+        //if (this.selectAircraftManfacturer.length >= 0) {
+        //    const aircraftTypeIds = this.selectAircraftManfacturer.reduce(
         //         (acc, value) => {
         //             return `${acc},${value}`;
         //         },
@@ -170,6 +171,7 @@ export class CustomerAircraftComponent implements OnInit {
         // }
 
         if (this.selectedAircraftModel.length > 0) {
+            
             const aircraftModelIds = this.selectedAircraftModel.reduce((acc, id) => {
                 return `${acc},${id}`;
             }, '');
@@ -242,33 +244,50 @@ export class CustomerAircraftComponent implements OnInit {
 
         await this.searchByFieldUrlCreateforAircraftInformation();
         this.searchAircraftParams = '';
-
+     
         // checks where multi select is empty or not and calls the service
         if (
             this.aircraftManfacturerIdsUrl !== '' &&
             this.aircraftModelsIdUrl !== '' &&
             this.dashNumberIdUrl !== ''
         ) {
-            this.searchAircraftParams = `aircraftTypeID=${this.aircraftManfacturerIdsUrl}&aircraftModelID=${this.aircraftModelsIdUrl}&dashNumberId=${this.dashNumberIdUrl}`;
+          
+            this.searchAircraftParams = `AircraftTypeId=${this.aircraftManfacturerIdsUrl}&AircraftModelId=${this.aircraftModelsIdUrl}&DashNumberId=${this.dashNumberIdUrl}`;
         }
         // search only by manfacturer and Model and  publicationId
         else if (
             this.aircraftManfacturerIdsUrl !== '' &&
             this.aircraftModelsIdUrl !== ''
         ) {
-            this.searchAircraftParams = `aircraftTypeID=${this.aircraftManfacturerIdsUrl}&aircraftModelID=${this.aircraftModelsIdUrl}`;
-        } else if (this.aircraftManfacturerIdsUrl !== '') {
-            this.searchAircraftParams = `aircraftTypeID=${this.aircraftManfacturerIdsUrl}`;
+            this.searchAircraftParams = `AircraftTypeId=${this.aircraftManfacturerIdsUrl}&AircraftModelId=${this.aircraftModelsIdUrl}`;
+        }
+
+        else if (
+            this.aircraftManfacturerIdsUrl !== '' &&
+            this.dashNumberIdUrl !== ''
+        ) {
+            this.searchAircraftParams = `AircraftTypeId=${this.aircraftManfacturerIdsUrl}&DashNumberId=${this.dashNumberIdUrl}`;
+        }
+        else if (
+            this.aircraftModelsIdUrl !== '' &&
+            this.dashNumberIdUrl !== ''
+        ) {
+            this.searchAircraftParams = `AircraftModelId=${this.aircraftModelsIdUrl}&DashNumberId=${this.dashNumberIdUrl}`;
+        }
+
+
+        else if (this.aircraftManfacturerIdsUrl !== '') {
+            this.searchAircraftParams = `AircraftTypeId=${this.aircraftManfacturerIdsUrl}`;
         }
         // search only by model and publicationId
         else if (this.aircraftModelsIdUrl !== '') {
-            this.searchAircraftParams = `aircraftModelID=${this.aircraftModelsIdUrl}`;
+            this.searchAircraftParams = `AircraftModelId=${this.aircraftModelsIdUrl}`;
         }
         // search only by dashNumber and publicationId
         else if (this.dashNumberIdUrl !== '') {
-            this.searchAircraftParams = `dashNumberId=${this.dashNumberIdUrl}`;
+            this.searchAircraftParams = `DashNumberId=${this.dashNumberIdUrl}`;
         }
-        this.customerService.searchAirMappedByMultiTypeIDModelIDDashIDByCustomerId(this.id, this.searchAircraftParams).subscribe(res => {
+          this.customerService.searchAirMappedByMultiTypeIDModelIDDashIDByCustomerId(this.id, this.searchAircraftParams).subscribe(res => {
             this.aircraftListDataValues = res;
 
 

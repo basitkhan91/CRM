@@ -3245,7 +3245,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
-        [HttpGet("updatevendormemotext")]
+        [HttpPut("updatevendormemotext")]
         public IActionResult UpdateVendorMemoText(long id, string type, string memoText, string updatedBy)
         {
             _unitOfWork.Vendor.UpdateVendorMemoText(id, type, memoText, updatedBy);

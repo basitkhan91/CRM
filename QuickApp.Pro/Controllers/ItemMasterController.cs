@@ -1727,39 +1727,126 @@ namespace QuickApp.Pro.Controllers
             return Ok(allPartDetails);
         }
 
+        [HttpGet("searchpartnumber/{partNumber}")]
+        public IActionResult SearchPartNumber(string partNumber)
+        {
+            if(partNumber == null && partNumber.Trim() == string.Empty)
+            {
+                return BadRequest(new Exception("Part Number cannot be empty."));
+            }
+
+            var partDetails = _context.ItemMaster
+                                .Where(a => 
+                                    (a.IsActive == null || a.IsActive == true) 
+                                    && (a.IsDeleted == false || a.IsDeleted == null)
+                                    && a.PartNumber.Trim().ToLower().Contains(partNumber.Trim().ToLower()))
+                                    .Select(x => new
+                                    {
+                                        partId = x.ItemMasterId,
+                                        partNumber = x.PartNumber,
+                                        partDescription = x.PartDescription
+
+                                    }).OrderBy(a => a.partNumber).ToList();
+
+            return Ok(partDetails);
+        }
+
         [HttpPost("search")]
         public IActionResult SearchItemMaster([FromBody]ItemMasterSearchViewModel searchView)
         {
-            if (searchView == null 
-                   || string.IsNullOrWhiteSpace(searchView?.partSearchParamters?.partNumber))
-                  
-              return BadRequest(new Exception("Error Occured while fetching item master details.")); 
-                
+            if (searchView == null
+                   || searchView.partSearchParamters == null
+                   || !searchView.partSearchParamters.partId.HasValue)
+            {
+                return BadRequest(new Exception("Invalid request parameter, partId not passed"));
+            }
 
-            var result = from item in _context.ItemMaster
+            IEnumerable<object> result = null;
+
+            if (searchView.partSearchParamters.includeAlternatePartNumber)
+            {
+
+            }
+            else
+            {
+                result = GetPartDetails(searchView);
+            }
+            
+           
+            var pageCount = (searchView.first / searchView.rows) + 1;
+
+            var searchData = new GetSearchData<object>();
+
+            searchData.Data = DAL.Common.PaginatedList<object>.Create(result.AsQueryable<object>(), pageCount, searchView.rows);
+
+            return Ok(searchData);
+        }
+
+        private IEnumerable<object> GetPartDetails(ItemMasterSearchViewModel searchView)
+        {
+            var result = Enumerable.Empty<object>();
+
+            var itemQuantityDetails = from item in _context.ItemMaster
+                                       join stock in _context.StockLine on item.ItemMasterId equals stock.ItemMasterId
+                                       join po in _context.PurchaseOrder on stock.PurchaseOrderId equals po.PurchaseOrderId into stockpo
+                                       from spo in stockpo.DefaultIfEmpty()
+                                       join pop in _context.PurchaseOrderPart
+                                        on new { poid = spo.PurchaseOrderId ?? 0, imid = item.ItemMasterId ?? 0  }
+                                        equals new { poid = pop.PurchaseOrderId, imid = pop.ItemMasterId}
+                                        into stockpop
+                                       from spop in stockpop.DefaultIfEmpty()
+                                       where (item.IsActive.HasValue && item.IsActive.Value == true)
+                                          && (item.IsDeleted.HasValue && !item.IsDeleted == true || !item.IsDeleted.HasValue)
+                                          && (item.MasterCompanyId.HasValue && item.MasterCompanyId.Value == 1)
+                                          && item.ItemMasterId == searchView.partSearchParamters.partId
+                                       select new
+                                       {
+                                           partNumber = item.PartNumber,
+                                           qtyOnHand = stock.QuantityOnHand,
+                                           qtyAvailable = stock.QuantityAvailable,
+                                           qtyOnOrder = spop.QuantityOrdered  
+                                       };
+
+
+            var query = from iqd in itemQuantityDetails
+                        group iqd by iqd.partNumber into g
+                         select new
+                         {
+                             partNumber = g.Key,
+                             qtyOnHand = g.Sum(qh => qh.qtyOnHand),
+                             qtyAvailable = g.Sum(qh => qh.qtyAvailable),
+                             qtyOnOrder = g.Sum(qh => qh.qtyOnOrder)
+                         };
+
+            var itemQuantity = query.FirstOrDefault();
+
+            if (itemQuantity == null) return result;  
+
+            result = from item in _context.ItemMaster
                          join uom in _context.UnitOfMeasure on item.ConsumeUnitOfMeasureId equals uom.UnitOfMeasureId into iuom
                          from iu in iuom.DefaultIfEmpty()
                          join currency in _context.Currency on item.CurrencyId equals currency.CurrencyId into itemcurrecy
                          from ic in itemcurrecy.DefaultIfEmpty()
-                         join part in _context.Part on item.PartAlternatePartId equals part.PartId into ip
-                         from subset in ip.DefaultIfEmpty()
                          where item.IsActive.HasValue && item.IsActive.Value == true
+                                && (item.IsDeleted.HasValue && !item.IsDeleted == true || !item.IsDeleted.HasValue)
                                 && (item.MasterCompanyId.HasValue && item.MasterCompanyId.Value == 1)
-                                && IsValidSearch(item, searchView.partSearchParamters)
+                                && item.ItemMasterId == searchView.partSearchParamters.partId
+
                          select new
                          {
+                             method = "Item Master",
                              itemId = item.ItemMasterId,
                              partNumber = item.PartNumber,
                              alternatePartId = item.PartAlternatePartId,
-                             alternatePartNumber = subset.PartNumber,
+                             alternateFor = string.Empty,
                              description = item.PartDescription,
                              conditionType = string.Empty,
                              uomDescription = iu.Description,
                              unitCost = item.UnitCost,
                              unitListPrice = item.ListPrice,
-                             qtyOnHand = item.StockLevel,
-                             qtyToOrder = item.ReorderQuantiy,
-                             qtyOnOrder = item.MinimumOrderQuantity,
+                             qtyOnHand = itemQuantity.qtyOnHand ?? 0,
+                             qtyToOrder = 0,
+                             qtyOnOrder = itemQuantity.qtyOnOrder ?? 0,
                              itemClassification = item.ItemClassification,
                              itemGroup = string.Empty,
                              pma = item.PMA,
@@ -1771,28 +1858,13 @@ namespace QuickApp.Pro.Controllers
                              glAccount = item.GLAccount,
                              itar = item.ITARNumber,
                              eccn = item.ExportECCN,
-                             memo = item.Memo, 
-                             currencyId = item.CurrencyId,  
+                             memo = item.Memo,
+                             currencyId = item.CurrencyId,
                              currencyDescription = ic.DisplayName
                          };
 
 
-           
-            var pageCount = (searchView.first / searchView.rows) + 1;
-
-            var searchData = new GetSearchData<object>();
-
-            searchData.Data = DAL.Common.PaginatedList<object>.Create(result.AsQueryable<object>(), pageCount, searchView.rows);
-
-            return Ok(searchData);
+            return result.ToList<object>();
         }
-
-
-        private bool IsValidSearch(ItemMaster master, PartSearchParamters parameters)
-        {
-            return (parameters.partNumber != null && master.PartNumber.ToLower().StartsWith(parameters.partNumber.ToLower()))
-                ;
-        }
-        
     }
 }

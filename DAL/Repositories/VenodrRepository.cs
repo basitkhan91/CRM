@@ -791,8 +791,8 @@ namespace DAL.Repositories
                             select new
                             {
                                 Module = "PO",
-                                po.PurchaseOrderId,
-                                po.PurchaseOrderNumber,
+                                OrderNumberId=po.PurchaseOrderId,
+                                OrderNumber=po.PurchaseOrderNumber,
                                 po.Notes
                             }).Distinct().ToList();
                 return list;
@@ -813,9 +813,9 @@ namespace DAL.Repositories
                             select new
                             {
                                 Module = "RO",
-                                ro.RepairOrderId,
-                                ro.RepairOrderNumber,
-                                ro.RoMemo
+                                OrderNumberId = ro.RepairOrderId,
+                                OrderNumber = ro.RepairOrderNumber,
+                                Notes=ro.RoMemo
                             }).Distinct().ToList();
                 return list;
             }

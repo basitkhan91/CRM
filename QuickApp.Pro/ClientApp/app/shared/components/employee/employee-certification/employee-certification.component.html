@@ -134,8 +134,8 @@
 
 
         </div>
-        <button type="button" [disabled]="nextbuttonEnable == false" class="btn btn-success pull-right submit-btn" (click)="saveCertificateData()">Save & Next </button>
-        <button type="button" class="btn btn-success pull-right submit-btn" (click)="previousClick()">Previous</button>
+        <button type="button" [disabled]="nextbuttonEnable == false" class="btn btn-primary-cstm pull-right" (click)="saveCertificateData()">Save & Next </button>
+        <button type="button" class="btn btn-primary-cstm pull-right" (click)="previousClick()">Previous</button>
     </div>
 
 </div>
@@ -181,7 +181,7 @@
 
             <div class="modal-footer">
 
-                <button class="btn btn-success pull-right submit-btn" [disabled]="disablesave" (click)="saveCertification()">Save</button>
+                <button class="btn btn-primary-cstm pull-right" [disabled]="disablesave" (click)="saveCertification()">Save</button>
                 <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
             </div>
         </form>
