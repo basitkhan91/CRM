@@ -26,7 +26,7 @@ export class CustomerBillingInformationComponent {
 		{ field: 'siteName', header: 'Site Name' },
 		{ field: 'address1', header: 'Address1' },
 		{ field: 'address2', header: 'Address2' },
-		{ field: 'address3', header: 'Address3' },
+	
 		{ field: 'city', header: 'City' },
 		{ field: 'stateOrProvince', header: 'State/Prov' },
 		{ field: 'postalCode', header: 'Postal Code' },

@@ -364,7 +364,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Web Site</label>
-                                <input class="form-control" type="text" name="websiteURL" #url="ngModel" [pattern]="urlPattern" [(ngModel)]="contactInformation.websiteURL">
+                                <input class="form-control" type="text" name="websiteURL" #url="ngModel"  [(ngModel)]="contactInformation.websiteURL">
                                 <div *ngIf="url.errors" [ngClass]="'error'">
                                     <div *ngIf="url.errors.pattern">
                                         <span style="color:red">URL not valid</span>
