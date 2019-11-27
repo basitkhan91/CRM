@@ -42,7 +42,13 @@ select:disabled {
     color: #fff;
     border-radius: 4px !important;
 }
-.btn-po-details:hover {
+.btn-po-details-child {
+    width: 75px !important;
+    font-size: 12px !important;
+    color: #fff;
+    border-radius: 4px !important;
+}
+.btn-po-details:hover, .btn-po-details-child:hover {
     color: #fff;
     background-color: #286090 !important;
     border-color: #204d74;

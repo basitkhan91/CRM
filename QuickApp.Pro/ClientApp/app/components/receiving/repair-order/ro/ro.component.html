@@ -81,6 +81,11 @@
                                                     <i class="fa fa-edit"></i>
                                                 </a>
                                             </span>
+                                            <span *ngIf="rowData.statusId == 4" (click)="viewSummary(rowData)">
+                                                <a data-toggle="tooltip" pTooltip="View Summary" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="" edit="">
+                                                    <i class="fa fa-external-link"></i>
+                                                </a>
+                                            </span>
                                         </td>
                                     </tr>
                                 </ng-template>

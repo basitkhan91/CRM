@@ -301,7 +301,9 @@ export class RoComponent implements OnInit, AfterViewInit {
         this._router.navigateByUrl(`/receivingmodule/receivingpages/app-edit-ro?repairOrderId=${rowData.repairOrderId}`);
     }
 
-    
+    public viewSummary(rowData) {
+        this._router.navigateByUrl(`/receivingmodule/receivingpages/app-view-ro?repairOrderId=${rowData.repairOrderId}`);
+    }
 
 
     // public applyFilter(filterValue: string) {
