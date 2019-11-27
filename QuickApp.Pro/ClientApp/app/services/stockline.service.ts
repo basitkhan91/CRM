@@ -24,7 +24,7 @@ export type RolesChangedEventArg = { roles: Role[] | string[], operation: RolesC
 @Injectable()
 export class StocklineService {
 
-	  
+
 	listCollection: any;
 	isEditMode: boolean;
 	//isEditMode: boolean;
@@ -45,8 +45,8 @@ export class StocklineService {
 	public indexObjChangeObject$ = this.indexObj.asObservable();
 	public bredcrumbObj = new Subject<any>();
 	public bredcrumbObjChangeObject$ = this.bredcrumbObj.asObservable();
-    isAdjustment: boolean;
-    adjustmentCollection: any;
+	isAdjustment: boolean;
+	adjustmentCollection: any;
 
 	constructor(
 		private router: Router,
@@ -54,11 +54,11 @@ export class StocklineService {
 		private authService: AuthService,
 		private stocklineEndpoint: StocklineEndpoint) { }
 	//For getting the stockline List
-    getStockLineList() {
-        return Observable.forkJoin(
-            this.stocklineEndpoint.getStockLineEndpoint<any[]>());
+	getStockLineList() {
+		return Observable.forkJoin(
+			this.stocklineEndpoint.getStockLineEndpoint<any[]>());
 	}
-    
+
 	getStockLineAdjustmentDatatypeList() {
 		return Observable.forkJoin(
 			this.stocklineEndpoint.getStockLineAdjustmentDatatypeDataEndpoint<any[]>());
@@ -69,10 +69,10 @@ export class StocklineService {
 			this.stocklineEndpoint.getStockLineCompanyListEndpoint<any[]>());
 	}
 
-    getManagemtentLengalEntityData() {
-        return Observable.forkJoin(
-            this.stocklineEndpoint.getManagemtentLengalEntityEndpoint<any[]>());
-    }
+	getManagemtentLengalEntityData() {
+		return Observable.forkJoin(
+			this.stocklineEndpoint.getManagemtentLengalEntityEndpoint<any[]>());
+	}
 	//For entering into the new stockline values
 	newStockLine(sourceStockLine: any) {
 		return this.stocklineEndpoint.getNewstockLineEndpoint<any>(sourceStockLine);
@@ -80,8 +80,7 @@ export class StocklineService {
 
 
 	//For updating the stockline set up values
-	updateStockSetupLine(sourceStockLine: any)
-	{
+	updateStockSetupLine(sourceStockLine: any) {
 		return this.stocklineEndpoint.getUpdatestockLineSetupEndpoint<any>(sourceStockLine, sourceStockLine.stockLineId);
 	}
 
@@ -93,10 +92,9 @@ export class StocklineService {
 		return this.stocklineEndpoint.getUpdateStockLineAdjustmentToListEndpoint<any>(sourceStockLine, sourceStockLine.StockLineId);
 	}
 
-    getStocklineListById(stocklineId)
-    {
-        return this.stocklineEndpoint.getStockLineByIdEndpoint(stocklineId);
-    }
+	getStocklineListById(stocklineId) {
+		return this.stocklineEndpoint.getStockLineByIdEndpoint(stocklineId);
+	}
 
 	//For getting the stockline Adjustment values
 	getStockLineAdjustmentList(stocklineId) {
@@ -118,7 +116,7 @@ export class StocklineService {
 		return this.stocklineEndpoint.getBinDataFromShelfIdBeforeChange(shelfId);
 	}
 
-	
+
 
 	//For entering into the new stocklineadjustment values of Part-A
 	newStockLineAdjustment(sourceStockLineAdjustment: any) {
@@ -126,8 +124,7 @@ export class StocklineService {
 	}
 
 	//for Update Time Life
-	updateStockLineTimelife(sourceTimeLife: any)
-	{
+	updateStockLineTimelife(sourceTimeLife: any) {
 		return this.stocklineEndpoint.getUpdatestockLineTimeLifeEndpoint<any>(sourceTimeLife, sourceTimeLife.timeLifeCyclesId);
 	}
 
@@ -142,8 +139,7 @@ export class StocklineService {
 		return this.stocklineEndpoint.getNewstockLineTimeAdjustmentEndpoint<any>(sourceStockLine);
 	}
 
-	saveStocklineIntegrationPortalData(sourceIntegrationPortalData: any)
-	{
+	saveStocklineIntegrationPortalData(sourceIntegrationPortalData: any) {
 		return this.stocklineEndpoint.saveStocklineIntegrationPortalDataEndpoint<any>(sourceIntegrationPortalData);
 	}
 
@@ -159,22 +155,21 @@ export class StocklineService {
 
 
 
-    //for Stockline Adjustment Reason for Single Screen
+	//for Stockline Adjustment Reason for Single Screen
 
-    getStocklineAdjustmentreason() {
-        return Observable.forkJoin(
-            this.stocklineEndpoint.getStocklineAdjustmentReasonEndpoint<any>());
-    }
+	getStocklineAdjustmentreason() {
+		return Observable.forkJoin(
+			this.stocklineEndpoint.getStocklineAdjustmentReasonEndpoint<any>());
+	}
 
-    newStockLineAdjustmentReason(stocklineAdjustmentReason: any)
-    {
-        
-        return this.stocklineEndpoint.getNewstockLineAdjustmentReasonEndpoint<any>(stocklineAdjustmentReason);
-    }
+	newStockLineAdjustmentReason(stocklineAdjustmentReason: any) {
 
-    getUpdateStocklineAdjustmentReasonEndpoint(Object: any) {
-        return this.stocklineEndpoint.getUpdateStocklineAdjustmentReasonEndpoint(Object);
-    }
+		return this.stocklineEndpoint.getNewstockLineAdjustmentReasonEndpoint<any>(stocklineAdjustmentReason);
+	}
+
+	getUpdateStocklineAdjustmentReasonEndpoint(Object: any) {
+		return this.stocklineEndpoint.getUpdateStocklineAdjustmentReasonEndpoint(Object);
+	}
 
 	deleteStocklineAdjustment(Object: any) {
 		return this.stocklineEndpoint.getDeleteStocklineAdjustmentReasonEndpoin(Object);
@@ -188,15 +183,19 @@ export class StocklineService {
 		return this.stocklineEndpoint.getROUnitCostEndpoint(Object);
 	}
 
-    getPurchaseOrderUnitCost(POId: any) {
-        return this.stocklineEndpoint.getPurchaseOrderUnitCostEndpoint(POId);
-    }
+	getPurchaseOrderUnitCost(POId: any) {
+		return this.stocklineEndpoint.getPurchaseOrderUnitCostEndpoint(POId);
+	}
 
-    getRepairOrderUnitCost(ROId: any) {
-        return this.stocklineEndpoint.getRepairOrderUnitCostEndpoint(ROId);
-    }
+	getRepairOrderUnitCost(ROId: any) {
+		return this.stocklineEndpoint.getRepairOrderUnitCostEndpoint(ROId);
+	}
 
 	deleteIntegrationById(actionId: number) {
 		return this.stocklineEndpoint.getDeleteIntegrationEndpoint(actionId);
+	}
+
+	search(searchParameters: any) {
+		return this.stocklineEndpoint.searchItemMaster(searchParameters);
 	}
 }
