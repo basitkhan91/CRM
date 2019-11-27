@@ -47,7 +47,7 @@ export class AtaMainService {
   }
 
   historyATAMain(ataChapterId: number) {
-    return Observable.forkJoin(this.ataMainEndpoint.getHistoryATAMainEndpoint<AuditHistory[]>(ataChapterId));
+    return this.ataMainEndpoint.getHistoryATAMainEndpoint<any[]>(ataChapterId);
   }
 
   getATAMain(ataMainId?: number) {
@@ -71,5 +71,8 @@ export class AtaMainService {
   }
   getMultiATASubDesc(Chapterids: string) {
     return this.ataMainEndpoint.getMultiATASubByID<any>(Chapterids);
+    }
+  ataChapterCustomUpload(file) {
+      return this.ataMainEndpoint.ataChapterCustomUpload(file);
   }
 }
