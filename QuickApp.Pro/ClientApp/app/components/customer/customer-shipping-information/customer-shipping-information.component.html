@@ -1157,16 +1157,17 @@
                             </td>
 
                             <td>
+                               
 
-                                <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActiveIS{{rowIndex}}" (onChange)="updateActiveorInActiveForIS(rowData)"></p-inputSwitch>
+
+                                <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActiveIS{{rowIndex}}" (onChange)="updateActiveorInActiveForS(rowData)"></p-inputSwitch>
                                 <span data-toggle="modal" data-target="#viewDomesticVia"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" matTooltip="View" (click)="openDomesticShippingViewVia(rowData)"><i class="fa fa-eye"></i></a> </span> <!-- (click)="openInterShippingView(rowData)" -->
 
-                                <button class="btn-edit" mat-icon-button data-toggle="modal" matTooltip="edit"  (click)="editDomesticShipVia(rowData)"
-                                   >
+                                <button class="btn-edit" mat-icon-button data-toggle="modal" matTooltip="edit" (click)="editDomesticShipVia(rowData)">
                                     <mat-icon>edit</mat-icon>
                                 </button>
 
-                                <button class="btn-delete" mat-icon-button matTooltip="delete">
+                                <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteShipVia(rowData)">
                                     <!--(click)="deleteInternationalShipping(rowData)"-->
                                     <mat-icon color="warn">delete</mat-icon>
                                 </button>

@@ -2873,7 +2873,18 @@ namespace QuickApp.Pro.Controllers
                 return Ok(result);
             }
         }
-        
+        [HttpGet("deleteshipviadetails")]
+        public IActionResult DeleteShipViaDetails(long id, string updatedBy)
+        {
+            _unitOfWork.Customer.DeleteShipViaDetails(id, updatedBy);
+            return Ok();
+        }
+        [HttpGet("shippingdetailsviastatus")]
+        public IActionResult CustomerShippingDetailsViaStatus(long id, bool status, string updatedBy)
+        {
+            _unitOfWork.Customer.CustomerShippingDetailsViaStatus(id, status, updatedBy);
+            return Ok();
+        }
     }
 
 }
