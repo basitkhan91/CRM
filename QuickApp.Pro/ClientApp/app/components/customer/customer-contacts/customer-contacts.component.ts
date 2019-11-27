@@ -266,6 +266,7 @@ export class CustomerContactsComponent implements OnInit {
 	}
 
     addATAChapter(rowData) {
+        this.sourceViewforContact = '';
 
 		this.selectedContact = rowData;
 		this.ataListDataValues = [];

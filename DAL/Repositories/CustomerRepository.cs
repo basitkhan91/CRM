@@ -1714,6 +1714,53 @@ namespace DAL.Repositories
                 throw ex;
             }
         }
+        public void DeleteShipViaDetails(long id, string updatedBy)
+        {
+            try
+            {
+                CustomerShipping model = new CustomerShipping();
+                model.CustomerShippingId = id;
+                model.UpdatedDate = DateTime.Now;
+                model.IsDeleted = true;
+                model.UpdatedBy = updatedBy;
+
+                _appContext.CustomerShipping.Attach(model);
+
+                _appContext.Entry(model).Property(x => x.IsDeleted).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
+
+                _appContext.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public void CustomerShippingDetailsViaStatus(long id, bool status, string updatedBy)
+        {
+            try
+            {
+                CustomerShipping model = new CustomerShipping();
+                model.CustomerShippingId = id;
+                model.UpdatedDate = DateTime.Now;
+                model.IsActive = status;
+
+                _appContext.CustomerShipping.Attach(model);
+
+                _appContext.Entry(model).Property(x => x.IsActive).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
+
+                _appContext.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
     }
 }
