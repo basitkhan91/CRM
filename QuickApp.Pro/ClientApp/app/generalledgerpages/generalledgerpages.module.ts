@@ -43,6 +43,9 @@ import { AuditModule } from "../audit/audit.module";
 import { InterCompanySetupComponent } from "../components/general-ledger/intercompany-setup/intercompany-setup.component";
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { TooltipModule } from "../../../node_modules/primeng/tooltip";
+import { AccountListingComponent } from "../components/general-ledger/account-listing/account-listing.component";
+import { AccountListingCreateComponent } from "../components/general-ledger/account-listing-create/account-listing-create.component";
+import {DropdownModule} from 'primeng/dropdown';
 
 @NgModule({
     imports: [
@@ -61,7 +64,8 @@ import { TooltipModule } from "../../../node_modules/primeng/tooltip";
         TreeModule, DialogModule, CalendarModule, InputSwitchModule,
         AuditModule,
         AutoCompleteModule,
-        TooltipModule
+        TooltipModule,
+        DropdownModule
 
     ],
     declarations: [
@@ -80,7 +84,8 @@ import { TooltipModule } from "../../../node_modules/primeng/tooltip";
         GlaccountCreateComponent,
         PoRoCategoryComponent,
         InterCompanySetupComponent,
-
+        AccountListingComponent,
+        AccountListingCreateComponent
 
     ],
     providers: [

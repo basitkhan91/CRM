@@ -209,6 +209,7 @@ import { AssetAttributeTypeEndpointService } from './services/asset-attribute-ty
 import { AssetIntangibleAttributeTypeService } from './services/asset-intangible-attribute-type/asset-intangible-attribute-type.service';
 import { AssetIntangibleAttributeTypeEndpointService } from './services/asset-intangible-attribute-type/asset-intangible-attribute-type-endpoint.service';
 //import { AuditComponent } from "./components/Audit/audit.component";
+import { AccountListingService } from './services/account-listing/account-listing.service'
 
 @NgModule({
     imports: [
@@ -422,7 +423,8 @@ import { AssetIntangibleAttributeTypeEndpointService } from './services/asset-in
         PurchaseOrderService,
         PurchaseOrderEndpoint,
         GLAccountService,
-        GLAccountEndpoint
+        GLAccountEndpoint,
+        AccountListingService
     ],
     entryComponents: [LoginDialogComponent, AddTaskDialogComponent],
     bootstrap: [AppComponent],
