@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "app-sales-part-number",
@@ -7,6 +7,7 @@ import { Component } from "@angular/core";
 })
 export class SalesPartNumberComponent {
   show: boolean;
+  @Input() customer: any;
   constructor() {
     this.show = false;
   }

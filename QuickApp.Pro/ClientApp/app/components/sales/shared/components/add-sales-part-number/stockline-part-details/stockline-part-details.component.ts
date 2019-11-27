@@ -3,11 +3,11 @@ import { ISalesQuote } from "../../../../../../models/sales/ISalesQuote.model";
 import { DataTable } from "primeng/datatable";
 
 @Component({
-  selector: "app-part-details",
-  templateUrl: "./part-details.component.html",
-  styleUrls: ["./part-details.component.scss"]
+  selector: "app-stockline-part-details",
+  templateUrl: "./stockline-part-details.component.html",
+  styleUrls: ["./stockline-part-details.component.scss"]
 })
-export class PartDetailsComponent implements OnChanges {
+export class StocklinePartDetailsComponent implements OnChanges {
   @Input() customer: any;
   @Input() parts: any[];
   selectedColumns: any[];
@@ -36,22 +36,15 @@ export class PartDetailsComponent implements OnChanges {
       { field: 'description', header: 'PN Description', width: '200px' },
       { field: 'conditionType', header: 'Cond Type', width: '200px' },
       { field: 'uom', header: 'UOM', width: '200px' },
-      { field: 'unitCost', header: 'Unit Cost', width: '200px' },
-      { field: 'unitListPrice', header: 'Unit List Price', width: '200px' },
+      { field: 'qtyAvailable', header: 'Qty Available', width: '200px' },
       { field: 'qtyOnHand', header: 'Qty On Hand', width: '200px' },
       { field: 'qtyToOrder', header: 'Qty To Order', width: '200px' },
       { field: 'qtyOnOrder', header: 'Qty On Order', width: '200px' },
       { field: 'itemClassification', header: 'Item Classification', width: '200px' },
       { field: 'itemGroup', header: 'Item Group', width: '200px' },
-      { field: 'oempmpder', header: 'OEM/PMA/DER', width: '200px' },
-      { field: 'mfg', header: 'MFG', width: '200px' },
-      { field: 'customerRef', header: 'Customer Ref', width: '200px' },
-      { field: 'currency', header: 'currency', width: '200px' },
-      { field: 'coreUnitCost', header: 'Core Unit Cost', width: '200px' },
-      { field: 'glAccount', header: 'GL Account', width: '200px' },
-      { field: 'itar', header: 'ITAR', width: '200px' },
-      { field: 'eccn', header: 'ECCN', width: '200px' },
-      { field: 'memo', header: 'Memo', width: '200px' },
+      { field: 'controlName', header: 'Control Name', width: '200px' },
+      { field: 'idNumber', header: 'Id Num', width: '200px' },
+      { field: 'serialNumber', header: 'Serial Num', width: '200px' },
     ]
   }
 
