@@ -645,7 +645,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
   }
 
   getWorkOrderWorkFlowNos() {
-
+debugger;
     if (this.workOrderId) {
       this.workOrderService.getWorkOrderWorkFlowNumbers(this.workOrderId).subscribe(res => {
         this.workOrderWorkFlowOriginalData = res;
