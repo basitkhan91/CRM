@@ -208,7 +208,7 @@
                                         <th>Site Name</th>
                                         <th>Address 1</th>
                                         <th>Address 2</th>
-                                        <th>Address 3</th>
+                                       
                                         <th>City</th>
                                         <th>State/Prov</th>
                                         <th>Postal Code</th>
@@ -219,7 +219,7 @@
                                     <td>Name</td>
                                     <td>Address1</td>
                                     <td>Address2</td>
-                                    <td>Address3</td>
+                                   
                                     <td>City</td>
                                     <td>State</td>
                                     <td>Postal Code</td>
@@ -262,7 +262,7 @@
                                 <label>Bill To Address 2</label>
                                 <input class="form-control" id="csaddress2" type="text" name="address2" [(ngModel)]="billingInfo.address2">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="display:none">
                                 <label>Bill To Address 3</label>
                                 <input class="form-control" id="csaddress3" type="text" name="address3" [(ngModel)]="billingInfo.address3">
                             </div>
@@ -273,6 +273,7 @@
                                         <label style="width: 20px;">
                                             <input type="checkbox" name="isPrimary" [(ngModel)]="billingInfo.isPrimary">
                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                            
                                         </label>
                                     </span>
                                 </div>
@@ -342,7 +343,7 @@
                             <p><span class="label"><b>Site Name: </b></span><span class="value">{{viewData.siteName}}</span></p>
                             <p><span class="label"><b>Bill To Address 1: </b></span><span class="value">{{viewData.address1}}</span></p>
                             <p><span class="label"><b>Bill To Address 2: </b></span><span class="value">{{viewData.address2}}</span></p>
-                            <p><span class="label"><b>Bill To Address 3: </b></span><span class="value">{{viewData.address3}}</span></p>
+                            <p style="display:none"><span class="label"><b>Bill To Address 3: </b></span><span class="value">{{viewData.address3}}</span></p>
                             <p><span class="label"><b>Bill To City: </b></span><span class="value">{{viewData.city}}</span></p>
                             <p><span class="label"><b>Bill To State/Prov: </b></span><span class="value">{{viewData.stateOrProvince}}</span></p>
                             <p><span class="label"><b>Bill To Postal Code :</b></span><span class="value">{{viewData.postalCode}}</span></p>

@@ -310,15 +310,16 @@ export class CustomerContactsComponent implements OnInit {
 				UpdatedDate: new Date(),
 				IsDeleted: false,
 			}
-		})
-
+        })
+       
 		this.add_SelectedModels = undefined;
 		this.add_SelectedId = undefined;
 
 		await this.saveCustomerContactATAMapped.emit(ataMappingData);
 
+        this.getATACustomerContactMapped();
 
-		this.getATACustomerContactMapped();
+		
 
 
 
