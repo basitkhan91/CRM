@@ -88,7 +88,7 @@ namespace DAL.Models
         public int? ManagementStructureId { get; set; }
         public DateTime? NeedByDate { get; set; }
         public long RepairOrderPartRecordId { get; set; }
-         public long? StockLineId {get; set;}
+        public long? StockLineId { get; set; }
     }
 
     [NotMapped]
@@ -123,7 +123,7 @@ namespace DAL.Models
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public long RepairOrderPartRecordId { get; set; }
-        public long? StockLineId {get; set;}
+        public long? StockLineId { get; set; }
         public List<RoPartSplits> RoPartSplits { get; set; }
     }
 
@@ -144,7 +144,7 @@ namespace DAL.Models
         public string ReportCurrency { get; set; }
         public string WorkOrderNo { get; set; }
         public int? SalesOrderNo { get; set; }
-        public string ReapairOrderNo { get; set; }
+        public string RepairOrderNo { get; set; }
         public DateTime? NeedByDate { get; set; }
         public int? QuantityOrdered { get; set; }
         public int? UnitCost { get; set; }
@@ -158,7 +158,9 @@ namespace DAL.Models
         public int? ManagementStructureId { get; set; }
         public string Memo { get; set; }
         public List<RepairOrderSplitParts> RepairOrderSplitParts { get; set; }
-
+        public string StockLineNumber { get; set; }
+        public string ControlId { get; set; }
+        public string ControlNumber { get; set; }
     }
 
     [NotMapped]
@@ -181,9 +183,9 @@ namespace DAL.Models
         public string UnitOfMeasure { get; set; }
         public int? QuantityOrdered { get; set; }
         public DateTime? NeedByDate { get; set; }
-
-
-        //"poPartSplitState":null,
+        public string StockLineNumber { get; set; }
+        public string ControlId { get; set; }
+        public string ControlNumber { get; set; }
 
     }
 }
