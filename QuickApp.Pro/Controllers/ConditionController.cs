@@ -174,6 +174,14 @@ namespace QuickApp.Pro.Controllers
             return Ok(dynamicGridData);
         }
 
+        [HttpPost("UploadConditionCustomData")]
+        public IActionResult UploadConditionCustomData()
+        {
+
+            _unitOfWork.FileUploadRepository.UploadCustomFile(Convert.ToString("Condition"), Request.Form.Files[0]);
+            return Ok();
+        }
+
     }
 
 

@@ -38,6 +38,7 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
     createdByInputFieldValue: any;
     descriptionInputFieldValue: any;
     matvhMode: any;
+    formData = new FormData();
     field: any;
     itemClassificationCodeInputFieldValue: any;
     itemClassificationPagination: any;
@@ -342,22 +343,22 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
           console.log(file);
         if (file.length > 0) {
 
-            //this.formData.append('file', file[0])
-            // this.itemClassificationService.UOMFileUpload(this.formData).subscribe(res => {
-            //     event.target.value = '';
+            this.formData.append('file', file[0])
+            this.itemClassificationService.ItemClassCustomUpload(this.formData).subscribe(res => {
+                 event.target.value = '';
          
-            //     this.existingRecordsResponse = res;
-            //     this.getItemClassificationList();
-            //     this.alertService.showMessage(
-            //         'Success',
-            //         `Successfully Uploaded  `,
-            //         MessageSeverity.success
-            //     );
+                 this.existingRecordsResponse = res;
+                 this.getItemClassificationList();
+                 this.alertService.showMessage(
+                     'Success',
+                     `Successfully Uploaded  `,
+                     MessageSeverity.success
+                 );
 
             //     // $('#duplicateRecords').modal('show');
             //     // document.getElementById('duplicateRecords').click();
 
-            // })
+             })
         }
 
     }
