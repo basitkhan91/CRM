@@ -2147,7 +2147,7 @@ namespace QuickApp.Pro.Controllers
                 VendorPayment defaultPaymentObj = new VendorPayment();
                 defaultPaymentObj.IsActive = true;
                 defaultPaymentObj.MasterCompanyId = 1;
-                defaultPaymentObj.IsActive = vendorPaymentViewModel.IsActive;
+                //defaultPaymentObj.IsActive = vendorPaymentViewModel.IsActive;
                 defaultPaymentObj.DefaultPaymentMethod = vendorPaymentViewModel.DefaultPaymentMethod;
                 defaultPaymentObj.VendorId = vendorPaymentViewModel.VendorId;
                 defaultPaymentObj.CreatedDate = DateTime.Now;

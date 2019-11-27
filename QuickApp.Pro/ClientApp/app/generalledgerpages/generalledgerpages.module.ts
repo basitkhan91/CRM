@@ -43,6 +43,7 @@ import { AuditModule } from "../audit/audit.module";
 import { InterCompanySetupComponent } from "../components/general-ledger/intercompany-setup/intercompany-setup.component";
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { TooltipModule } from "../../../node_modules/primeng/tooltip";
+import { CommonService } from "../services/common.service";
 
 @NgModule({
     imports: [
@@ -87,7 +88,8 @@ import { TooltipModule } from "../../../node_modules/primeng/tooltip";
         NodeSetupService,
         NodeSetupEndpointService,
         POROCategoryEndpoint,
-        POROCategoryService
+        POROCategoryService,
+        CommonService
 
 
     ],
