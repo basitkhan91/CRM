@@ -48,7 +48,6 @@ namespace QuickApp.Pro.Controllers
             return Ok(repairOrderParts);
         }
 
-
         [HttpPost("receiveParts")]
         public IActionResult ReceiveParts([FromBody] List<ReceiveParts> receiveParts)
         {
@@ -159,9 +158,8 @@ namespace QuickApp.Pro.Controllers
             }
         }
 
-
         [HttpGet("GetReceieveROPartsForView/{repairOrderId}")]
-        public IActionResult GetReceivingPurchaseOrderForViewId(long repairOrderId)
+        public IActionResult GetReceivingPurchaseOrderForView(long repairOrderId)
         {
             try
             {
@@ -174,6 +172,14 @@ namespace QuickApp.Pro.Controllers
             }
 
         }
+
+        [HttpGet("GetReceieveROPartsForEdit/{repairOrderId}")]
+        public IActionResult GetReceieveROPartsForEdit(long repairOrderId) {
+            var parts = unitOfWork.ReceiveRepairOrder.GetReceivingRepairOrderForEdit(repairOrderId);
+            return Ok(parts);
+        }
+
+         
         #endregion Public Members
 
         #region Private Methods
