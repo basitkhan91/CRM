@@ -11,10 +11,12 @@
                     <h4 class="page-heading clr-green">Receiving</h4>
                 </div>
                 <div class="clear"></div>
+                <div class="tab-content form-bg">
+                    <div class="tab-pane active" id="home">
                 <form action="#" method="post" id="add-customerwork" name="" class="form-horizontal add-custustomer">
-                    <div class="col-md-12 col-sm-12 col-12">
-                        <div class="tab-content form-bg">
-                            <div class="tab-pane active" id="home">
+
+                    <div class="card">
+                        <div class="form-row col-row col-row1">
                                 <div class="col-sm-4 blocks3">
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">Employee Name</label>
@@ -26,8 +28,12 @@
                                         </p-autoComplete>
                                     </div>
                                 </div>
+                        </div>
+                    </div>
                                 <div class="clear"></div>
                                 <hr class="hr-dark">
+                                <div class="card">
+                                    <div class="form-row col-row col-row1 padding-10">
                                 <div class="col-sm-4 blocks3">
 
                                     <div class="form-group col-sm-12">
@@ -342,32 +348,40 @@
                                             <input class="" type="checkbox" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.isTimeLife">
                                         </div>
                                     </div>
-
                                     <div *ngIf="this.sourcereceving.isTimeLife" class="timelife-block">
-                                        <hr>
-                                        <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4">Date</label>
-                                            <div class="col-sm-7">
-                                                <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeLifeDate"></p-calendar>
+                                            <hr>
+                                            <div class="form-group col-sm-12">
+                                                <label class="control-label col-sm-4">Date</label>
+                                                <div class="col-sm-7">
+                                                    <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeLifeDate"></p-calendar>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4">Origin</label>
-                                            <div class="col-sm-7">
-                                                <input class="" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeLifeOrigin ">
+                                            <div class="form-group col-sm-12">
+                                                <label class="control-label col-sm-4">Origin</label>
+                                                <div class="col-sm-7">
+                                                    <input class="" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeLifeOrigin ">
+                                                </div>
                                             </div>
+                                            <div class="clear"></div>
                                         </div>
+                                </div>
+                            </div>
+
+                             
                                         <div class="clear"></div>
-                                        <div class="table-responsive form-group col-sm-12">
+                                        <div class="table-responsive form-group col-sm-12" *ngIf="this.sourcereceving.isTimeLife">
                                             <table class="table table-bordered table-striped">
                                                 <thead>
                                                     <tr>
-                                                        <th colspan="2" class="text-center">Cycles</th>
-                                                        <th colspan="2" class="text-center">Time</th>
-                                                        <th colspan="2" class="text-center">Last</th>
+                                                        <th colspan="15" class="text-center"><strong>TIME LIFE ADJUSTMENTS</strong></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    <tr>
+                                                                <th colspan="2" class="text-center">Cycles</th>
+                                                                <th colspan="2" class="text-center">Time</th>
+                                                                <th colspan="2" class="text-center">Last</th>
+                                                    </tr>
                                                     <tr>
                                                         <td>Remaining</td>
                                                         <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesRemaining"></td>
@@ -411,8 +425,7 @@
                                                 </tbody>
                                             </table>
                                         </div>
-                                        <div class="clear"></div>
-                                    </div>
+                                       
 
 
 
@@ -427,24 +440,31 @@
 
 
 
+                                
                                 </div>
                                 <div class="clear"></div>
-                                <hr>
+                               
+                                <div class="col-sm-12 mt8">
+                                        <div class="col-sm-6">
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <button class="btn btn-primary-cstm float-right" pButton type="button" (click)="editItemAndCloseModel()" icon="pi pi-angle-right" iconPos="right" label="Submit" style="padding: 0 !important;"></button>
+                                        </div>
+                                    </div>
 
+                               
+                            
 
-                                <a class="btn btn-success pull-right" (click)="editItemAndCloseModel()">Submit</a>
-                            </div>
-
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
+                   
                 </form>
+            </div>
+            </div>
                 <div class="pull-right"> © 2018 <a routerLink="/">PAS</a> </div>
             </div>
 
 
         </div>
-    </div>
+    
 
 </div>
 
