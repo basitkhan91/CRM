@@ -20,7 +20,8 @@ namespace DAL.Repositories
         public IEnumerable<object> RecevingRolist()
         {
             var roList = (from ro in _appContext.RepairOrder
-                          join emp in _appContext.Employee on ro.RequestedBy equals emp.EmployeeId
+                          join emp in _appContext.Employee on ro.RequestedBy equals emp.EmployeeId into empo
+                          from emp in empo.DefaultIfEmpty()
                           join v in _appContext.Vendor on ro.VendorId equals v.VendorId
                           join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
                           from appr in approver.DefaultIfEmpty()
