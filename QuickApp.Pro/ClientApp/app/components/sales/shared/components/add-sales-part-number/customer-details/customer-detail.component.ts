@@ -8,5 +8,11 @@ import { ISalesQuote } from "../../../../../../models/sales/ISalesQuote.model";
 })
 export class CustomerDetailComponent {
   @Input() customer: any;
-  constructor() { }
+  constructor() {
+    this.customer = {
+      customerName: '',
+      customerCode: '',
+      promisedDate: ''
+    }
+  }
 }
