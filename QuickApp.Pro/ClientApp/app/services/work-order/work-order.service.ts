@@ -36,8 +36,8 @@ export class WorkOrderService {
         return this.workOrderEndpointService.createNewWorkOrder<any>(workOrder);
     }
 
-    update<T>(workOrder: WorkOrder) {
-        return this.workOrderEndpointService.updateWorkOrder<T>(workOrder);
+    updateNewWorkOrder(workOrder: WorkOrder) {
+        return this.workOrderEndpointService.updateNewWorkOrder<any>(workOrder);
     }
 
     remove(workOrderId: number) {
@@ -123,9 +123,12 @@ export class WorkOrderService {
     createWorkOrderLabor(data) {
         return this.workOrderEndpointService.createWorkOrderLabor(data);
     }
-    
-    createWorkOrderMaterialList(data){
+
+    createWorkOrderMaterialList(data) {
         return this.workOrderEndpointService.createWorkOrderMaterialList(data);
+    }
+    createWorkOrderEquipmentList(data){
+        return this.workOrderEndpointService.createWorkOrderEquipmentList(data);
     }
     getAllTasks() {
         return this.workOrderEndpointService.getTasks();
@@ -148,6 +151,10 @@ export class WorkOrderService {
         return this.workOrderEndpointService.getWorkOrderLaborList(workFlowWorkOrderId, workOrderId)
     }
 
+    getWorkOrderDirectionList(workFlowWorkOrderId, workOrderId){
+        return this.workOrderEndpointService.getWorkOrderDirectionList(workFlowWorkOrderId, workOrderId)
+    }
+
     getWorkOrderWorkFlowByWorkFlowWorkOrderId(workFlowWorkOrderId) {
         return this.workOrderEndpointService.getWorkOrderWorkFlowByWorkFlowWorkOrderId(workFlowWorkOrderId)
     }
@@ -159,8 +166,18 @@ export class WorkOrderService {
         return this.workOrderEndpointService.viewWorkOrderPartNumber(workOrderId);
     }
 
-    getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId){
+    getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId) {
         return this.workOrderEndpointService.getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId);
     }
-    
+    saveReservedPartorIssue(alternatePart){
+        return this.workOrderEndpointService.saveReservedPartorIssue(alternatePart)
+    }
+    assetsCheckInByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy){
+        return this.workOrderEndpointService.assetsCheckInByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy);
+    }
+    assetsCheckOutByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy){ 
+        return this.workOrderEndpointService.assetsCheckOutByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy);
+    }
+
+
 }

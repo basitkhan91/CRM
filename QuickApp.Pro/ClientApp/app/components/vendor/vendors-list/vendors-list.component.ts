@@ -18,6 +18,7 @@ import { VendorService } from '../../../services/vendor.service';
 import { MasterComapnyService } from '../../../services/mastercompany.service';
 import { Vendor } from '../../../models/vendor.model';
 import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/router';
+import $ from "jquery";
 
 @Component({
     selector: 'app-vendors-list',
@@ -614,5 +615,22 @@ export class VendorsListComponent implements OnInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
         this.loadContactDataData(row.vendorId);
+    }
+
+    ExpandAllVenodrDetailsModel()
+    {
+        $('#step1').collapse('show');
+        $('#step2').collapse('show');
+        $('#step3').collapse('show');
+        $('#step4').collapse('show');
+        $('#step5').collapse('show');
+    }
+    CloseAllVenodrDetailsModel()
+    {
+        $('#step1').collapse('hide');
+        $('#step2').collapse('hide');
+        $('#step3').collapse('hide');
+        $('#step4').collapse('hide');
+        $('#step5').collapse('hide');
     }
 }

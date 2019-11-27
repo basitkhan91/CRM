@@ -777,6 +777,8 @@ namespace QuickApp.Pro.Controllers
                 contactObj.MiddleName = contactViewModel.MiddleName;
                 contactObj.ContactTitle = contactViewModel.ContactTitle;
                 contactObj.MobilePhone = contactViewModel.MobilePhone;
+                contactObj.Tag = contactViewModel.Tag;
+
                 contactObj.Notes = contactViewModel.Notes;
                 contactObj.WorkPhone = contactViewModel.WorkPhone;
                 contactObj.WebsiteURL = contactViewModel.WebsiteURL;
@@ -1716,7 +1718,7 @@ namespace QuickApp.Pro.Controllers
                 customerObj.TaxRateStateOrProvince = customerViewModel.TaxRateStateOrProvince;
                 customerObj.AllowPartialBilling = customerViewModel.AllowPartialBilling;
                 customerObj.AllowProformaBilling = customerViewModel.AllowProformaBilling;
-                customerObj.CurrencyId = customerViewModel.CurrencyId;
+                customerObj.CurrencyId = customerViewModel.GeneralCurrencyId;
                 customerObj.Discount = customerViewModel.Discount;
                 customerObj.DiscountId = customerViewModel.DiscountId;
                 customerObj.EDIDescription = customerViewModel.EDIDescription;
@@ -2642,9 +2644,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("searchGetCustomerATAMappedByMultiATAIDATASubID")]
-        public IActionResult CustomerATAMappedList(long contactId, string ATAChapterId, string ATASubChapterID)
+        public IActionResult CustomerATAMappedList(long customerId, string ATAChapterId, string ATASubChapterID)
         {
-            var result = _unitOfWork.Customer.searchgetCustomerATAMappingDataByMultiTypeIdATAIDATASUBID(contactId, ATAChapterId, ATASubChapterID);
+            var result = _unitOfWork.Customer.searchgetCustomerATAMappingDataByMultiTypeIdATAIDATASUBID(customerId, ATAChapterId, ATASubChapterID);
 
             if (result == null)
             {
@@ -2838,6 +2840,40 @@ namespace QuickApp.Pro.Controllers
             return Ok(allCusShippingDetails);
         }
 
+        [HttpGet("deletesRestrictedParts")]
+        public IActionResult DeleteRestrictedParts(long id, string updatedBy)
+        {
+            _unitOfWork.Customer.DeleteRestrictedParts(id, updatedBy);
+            return Ok();
+        }
+        [HttpGet("shippingdetailsstatus")]
+        public IActionResult CustomerShippingDetailsStatus(long id, bool status, string updatedBy)
+        {
+            _unitOfWork.Customer.CustomerShippingDetailsStatus(id, status, updatedBy);
+            return Ok();
+        }
+        [HttpGet("customersBillingUpdateStatus")]
+        public IActionResult CustomerBillingStatus(long id, bool status, string updatedBy)
+        {
+            _unitOfWork.Customer.CustomerBillingStatus(id, status, updatedBy);
+            return Ok();
+
+        }
+        [HttpGet("searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID")]
+        public IActionResult searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID(long customerId, string AircraftTypeId, string AircraftModelId, string DashNumberId)
+        {
+            var result = _unitOfWork.Customer.searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID(customerId, AircraftTypeId, AircraftModelId, DashNumberId);
+
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+        
     }
 
 }

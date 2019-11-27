@@ -55,7 +55,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     memoPopupValue: any;
     isCustomerNameAlreadyExists: boolean = false;
     isCustomerCodeAlreadyExists: boolean = false;
-    emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{3,}";
+    emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}";
     urlPattern = "^((ht|f)tp(s?))\://([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(/\S*)?$";
 
     classificationNew = {
@@ -83,6 +83,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
     partListOriginal: any;
     selectedActionName: any;
     disableSaveCustomerName: boolean;
+    disableRestrictedDER: boolean = false;
+    disableRestrictedPMA: boolean = false;
     // restrictsPMAList: any;
     // restrictBERList: any;
     restictDERtempList: any = [];
@@ -487,6 +489,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
     async getCustomerRestrictedPMAByCustomerId() {
         await this.commonService.getRestrictedParts(1, this.id, 'PMA').subscribe(res => {
             this.generalInformation.restrictedPMAParts = res;
+            //if (this.generalInformation.restrictedPMAParts.length > 0) {
+            //    this.disableRestrictedPMA = true;
+            //}
             this.restictPMAtempList = res.map(x => x.itemMasterId);
             // this.generalInformation.restrictedPMAParts = res.map(x => {
             //     return  { 
@@ -505,6 +510,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
         await this.commonService.getRestrictedParts(1, this.id, 'DER').subscribe(res => {
 
             this.generalInformation.restrictedDERParts = res;
+           
             this.restictDERtempList = res.map(x => x.itemMasterId);
             // this.generalInformation.restrictedDERParts = res.map(x => {
             //     return  { 
@@ -563,6 +569,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
             this.customertypes = responseData;
         })
     }
+    addclassification() {
+        this.isClassificationAlreadyExists = false;
+        this.addNewclassification.description = '';
+    }
 
     // async getAllCustomers() {
     //     await this.customerService.getCustomers().subscribe(res => {
@@ -607,7 +617,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
     // }
 
     addRestrictPMA() {
-
+       
+        //if (this.restictPMAtempList.length>0) {
+        //    this.disableRestrictedPMA = true;
+        //}
         this.generalInformation.restrictedPMAParts = this.restictPMAtempList;
 
         this.partListForPMA = this.restictPMAtempList.reduce((acc, obj) => {
@@ -615,19 +628,49 @@ export class CustomerGeneralInformationComponent implements OnInit {
         }, this.partListOriginal)
     }
     deleteRestirctPMA(i, rowData) {
+      
+        if (rowData.restrictedPartId > 0) {
+
+            this.customerService.deleteRestrictedPartsById(rowData.restrictedPartId, this.userName).subscribe(res => {
+                this.alertService.showMessage(
+                    'Success',
+                    `Sucessfully Deleted Restricted Part`,
+                    MessageSeverity.success
+                );
+            })
+        }
         this.partListForPMA = [{ label: rowData.partNumber, value: rowData }, ...this.partListForPMA];
         this.generalInformation.restrictedPMAParts.splice(i, 1);
+       
+        //if (this.generalInformation.restrictedPMAParts.length == 0) {
+        //    this.disableRestrictedPMA = false;
+        //}
+       
     }
 
     addRestrictBER() {
+        
+
         this.generalInformation.restrictedDERParts = this.restictDERtempList;
         this.partListForDER = this.restictDERtempList.reduce((acc, obj) => {
             return acc.filter(x => x.value.masterPartId !== obj.masterPartId)
         }, this.partListOriginal)
     }
     deleteRestrictDER(i, rowData) {
+        if (rowData.restrictedPartId > 0) {
+
+            this.customerService.deleteRestrictedPartsById(rowData.restrictedPartId, this.userName).subscribe(res => {
+                this.alertService.showMessage(
+                    'Success',
+                    `Sucessfully Deleted Restricted Part`,
+                    MessageSeverity.success
+                );
+            })
+        }
         this.partListForDER = [{ label: rowData.partNumber, value: rowData }, ...this.partListForDER];
         this.generalInformation.restrictedDERParts.splice(i, 1);
+       
+
     }
 
 
@@ -831,7 +874,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     }
     checkClassificationExists(value) {
-        debugger
+    
         this.isClassificationAlreadyExists = false;
 
         for (let i = 0; i < this.allcustomerclassificationInfo.length; i++) {

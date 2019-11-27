@@ -65,6 +65,8 @@ namespace DAL.Models
         public Nullable<long> DefaultVendorId { get; set; }
         public Nullable<long> GLAccountId { get; set; }
         public Nullable<bool> IsDelete { get; set; }
+
+        public Nullable<long> MasterPartId { get; set; }
         public string MaintenanceMemo { get; set; }
         public Nullable<bool> IsWarrantyRequired { get; set; }
         public Nullable<bool> Warranty { get; set; }

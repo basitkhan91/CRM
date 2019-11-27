@@ -284,7 +284,7 @@ namespace QuickApp.Pro.Controllers
                 actionobject1.Quantity = stockLineViewModel.Quantity;
                 actionobject1.QuantityOnOrder = stockLineViewModel.QuantityOnOrder;
                 actionobject1.QuantityAvailable = stockLineViewModel.QuantityAvailable;
-                actionobject1.QuantityOnHand = stockLineViewModel.QuantityOnOrder;
+                actionobject1.QuantityOnHand = stockLineViewModel.QuantityOnHand;
                 actionobject1.QuantityIssued = stockLineViewModel.QuantityAvailable;
                 actionobject1.QuantityTurnIn = stockLineViewModel.QuantityTurnIn;
                 actionobject1.QuantityReserved = stockLineViewModel.QuantityReserved;
@@ -399,7 +399,7 @@ namespace QuickApp.Pro.Controllers
             actionobject1.Quantity = stockLineViewModel.Quantity;
             actionobject1.QuantityOnOrder = stockLineViewModel.QuantityOnOrder;
             actionobject1.QuantityAvailable = stockLineViewModel.QuantityAvailable;
-            actionobject1.QuantityOnHand = stockLineViewModel.QuantityOnOrder;
+            actionobject1.QuantityOnHand = stockLineViewModel.QuantityOnHand;
             actionobject1.QuantityIssued = stockLineViewModel.QuantityAvailable;
             actionobject1.QuantityTurnIn = stockLineViewModel.QuantityTurnIn;
             actionobject1.QuantityReserved = stockLineViewModel.QuantityReserved;
@@ -470,10 +470,6 @@ namespace QuickApp.Pro.Controllers
             actionobject1.TimeLifeDetailsNotProvided = stockLineViewModel.TimeLifeDetailsNotProvided;
             actionobject1.UnitCostAdjustmentReasonTypeId = stockLineViewModel.UnitCostAdjustmentReasonTypeId;
             actionobject1.UnitSalePriceAdjustmentReasonTypeId = stockLineViewModel.UnitSalePriceAdjustmentReasonTypeId;
-            actionobject1.QuantityOnHand = stockLineViewModel.QuantityOnHand;
-            actionobject1.QuantityAvailable = stockLineViewModel.QuantityAvailable;
-            actionobject1.QuantityIssued = stockLineViewModel.QuantityIssued;
-            actionobject1.QuantityReserved = stockLineViewModel.QuantityReserved;
             actionobject1.CreatedDate = DateTime.Now;
             actionobject1.UpdatedDate = DateTime.Now;
             _context.StockLine.Update(actionobject1);
@@ -604,7 +600,7 @@ namespace QuickApp.Pro.Controllers
                 }
                 actionobject.QuantityOnOrder = stockLineViewModel.QuantityOnOrder;
                 actionobject.QuantityAvailable = stockLineViewModel.QuantityAvailable;
-                actionobject.QuantityOnHand = stockLineViewModel.QuantityOnOrder;
+                actionobject.QuantityOnHand = stockLineViewModel.QuantityOnHand;
                 actionobject.QuantityIssued = stockLineViewModel.QuantityAvailable;
                 actionobject.QuantityTurnIn = stockLineViewModel.QuantityTurnIn;
                 actionobject.QuantityReserved = stockLineViewModel.QuantityReserved;

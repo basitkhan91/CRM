@@ -28,6 +28,7 @@ export class CustomerShippingInformationComponent implements OnInit {
     internationalShippingInfo = new CustomerInternationalShippingModel()
 
     internationalShippingViaData: any;
+    demosticShippingViaData: any;
     totalRecordsForInternationalShipVia: any;
     isEditInternationalShipVia: boolean = false;
     isEditDomesticShipVia: boolean = false;
@@ -41,7 +42,7 @@ export class CustomerShippingInformationComponent implements OnInit {
         { field: 'city', header: 'City' },
         { field: 'stateOrProvince', header: 'State Or Province' },
         { field: 'postalCode', header: 'Postal Code' },
-        { field: 'country', header: 'Country' }
+        { field: 'countryName', header: 'Country' }
     ]
     internationalShippingHeaders = [
         { field: 'exportLicense', header: 'Export License' },
@@ -53,6 +54,7 @@ export class CustomerShippingInformationComponent implements OnInit {
     ]
     selectedColumnsForDomesticTable = this.domesticShippingHeaders;
     selectedColumnsForInternationTable = this.internationalShippingHeaders;
+   
     domesticShippingData: any[];
     sourceViewforShipping: any;
     isEditDomestic: boolean = false;
@@ -67,6 +69,7 @@ export class CustomerShippingInformationComponent implements OnInit {
     totalRecordsForInternationalShipping: any;
     sourceViewforInterShipping: any;
     sourceViewforInterShippingVia: any;
+    sourceViewforDomesticShippingVia: any;
     shipViaInternational = new CustomerInternationalShipVia();
     shipViaDomestic = new CustomerInternationalShipVia();
     editableRowIndexForIS: any;
@@ -84,13 +87,15 @@ export class CustomerShippingInformationComponent implements OnInit {
     selectedShipViaDomestic: any;
     customerCode: any;
     customerName: any;
+    selectedColumnsForDomesticShipVia = this.selectedColumnsForInternationShipViaTable;
+
     constructor(private customerService: CustomerService, private authService: AuthService,
         private alertService: AlertService,
     ) { }
 
     ngOnInit() {
         if (this.editMode) {
-           
+
             this.id = this.editGeneralInformationData.customerId;
             this.customerCode = this.editGeneralInformationData.customerCode;
             this.customerName = this.editGeneralInformationData.name;
@@ -169,6 +174,7 @@ export class CustomerShippingInformationComponent implements OnInit {
         // const id = this.savedGeneralInformationData.customerId;
         this.customerService.getCustomerShipAddressGet(this.id).subscribe(res => {
             console.log(res);
+            
             this.domesticShippingData = res[0];
         })
     }
@@ -178,11 +184,29 @@ export class CustomerShippingInformationComponent implements OnInit {
     }
     // edit Domestic details data 
     openEditDomestic(rowData) {
+       
         console.log(rowData);
         this.isEditDomestic = true;
         // this.selectedShipViaDomestic = rowData;
         this.domesticShippingInfo = rowData;
+        this.domesticShippingInfo = { ...rowData, country: getObjectById('countries_id', rowData.country, this.countryListOriginal) };
+        //
 
+
+    }
+    //async openEditDomestic(rowData) {
+    //    debugger
+
+    //    await this.customerService.getCustomerShipAddressGet(rowData.customerShippingAddressId).subscribe(res => {
+    //        this.isEditDomestic = true;
+    //       this.domesticShippingInfo = { ...res, countryId: getObjectById('countries_id', res.countryId, this.countryListOriginal) };
+    //    })
+    //}
+    addDomesticShipping() {
+        this.domesticShippingInfo = new CustomerShippingModel();
+    }
+    addInternationalShipping() {
+        this.internationalShippingInfo = new CustomerInternationalShippingModel();
     }
     deleteDomesticShipping(rowData) {
         const obj = {
@@ -280,24 +304,31 @@ export class CustomerShippingInformationComponent implements OnInit {
         })
     }
 
-  
+
     openInterShippingView(rowData) {
-       
-        
+
+
         this.sourceViewforInterShipping = rowData;
         // this.getShipViaDataByInternationalShippingId();
 
     }
     openInterShippingViewVia(rowData) {
 
-        debugger
+
         this.sourceViewforInterShippingVia = rowData;
         // this.getShipViaDataByInternationalShippingId();
 
     }
-    
-    async getInternationalShippingById(rowData) {
+    openDomesticShippingViewVia(rowData) {
 
+
+        this.sourceViewforDomesticShippingVia = rowData;
+        // this.getShipViaDataByInternationalShippingId();
+
+    }
+
+    async getInternationalShippingById(rowData) {
+        
         await this.customerService.getInternationalShippingById(rowData.internationalShippingId).subscribe(res => {
             this.isEditInternational = true;
             this.internationalShippingInfo = { ...res, shipToCountryId: getObjectById('countries_id', res.shipToCountryId, this.countryListOriginal) };
@@ -305,11 +336,13 @@ export class CustomerShippingInformationComponent implements OnInit {
     }
     selectedInternationalShipForShipVia(rowData) {
         this.selectedShipViaInternational = rowData;
-        
-       this.getShipViaDataByInternationalShippingId();
+
+        this.getShipViaDataByInternationalShippingId();
     }
     selectedDomesticForShipVia(rowData) {
         this.selectedShipViaDomestic = rowData;
+        this.getShipViaByDomesticShippingId(rowData.customerShippingAddressId)
+
     }
     closeInternationalModal() {
         this.isEditInternational = false;
@@ -326,11 +359,12 @@ export class CustomerShippingInformationComponent implements OnInit {
         })
     }
     deleteInternationalShippingVia(rowData) {
-        this.customerService.deleteInternationalShipping(rowData.internationalShippingId, this.userName).subscribe(res => {
-            this.getInternationalShippingByCustomerId();
+
+        this.customerService.deleteInternationalShipViaId(rowData.shippingViaDetailsId, this.userName).subscribe(res => {
+            this.getShipViaDataByInternationalShippingId();
             this.alertService.showMessage(
                 'Success',
-                `Sucessfully Deleted International Shipping`,
+                `Sucessfully Deleted International Ship Via`,
                 MessageSeverity.success
             );
         })
@@ -397,10 +431,11 @@ export class CustomerShippingInformationComponent implements OnInit {
         })
     }
 
-    getShipViaByDomesticShippingId(customerShippingAddressId){
+    getShipViaByDomesticShippingId(customerShippingAddressId) {
         this.customerService.getShipViaByDomesticShippingId(customerShippingAddressId).subscribe(res => {
-            
-            
+
+
+            this.demosticShippingViaData = res;
         })
     }
 
@@ -429,6 +464,12 @@ export class CustomerShippingInformationComponent implements OnInit {
         this.shipViaInternational = { ...rowData };
 
     }
+    editDomesticShipVia(rowData) {
+        this.isEditDomesticShipVia = true;
+        this.shipViaDomestic = { ...rowData };
+
+    }
+    
     resetShipViaInternational() {
         this.shipViaInternational = new CustomerInternationalShipVia();
     }
@@ -444,7 +485,19 @@ export class CustomerShippingInformationComponent implements OnInit {
     }
 
 
+    async updateActiveorInActiveForShipping(rowData) {
 
+        console.log(rowData);
+
+        await this.customerService.updateStatusForShippingDetails(rowData.customerShippingAddressId, rowData.isActive, this.userName).subscribe(res => {
+            this.getDomesticShippingByCustomerId();
+            this.alertService.showMessage(
+                'Success',
+                `Sucessfully Updated   Shipping Status`,
+                MessageSeverity.success
+            );
+        })
+    }
 
     // countryName: string;
     // countrycollection: any;

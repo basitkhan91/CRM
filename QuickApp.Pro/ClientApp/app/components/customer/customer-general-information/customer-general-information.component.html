@@ -1,6 +1,6 @@
 ﻿
 <div>
-    <h4 class="page-heading clr-green"> Creating Customer</h4>
+    <h4 class="page-heading clr-green">  Customer General Info</h4>
     <div>
 
 
@@ -140,7 +140,7 @@
                                                         </div>
                                                         
                                                         <div class="col-md-4">
-                                                                <input type="text"  name="phoneExt" pInputText pKeyFilter="num" maxlength="3" [(ngModel)]="generalInformation.customerPhoneExt">
+                                                                <input type="text"  name="phoneExt" pInputText  maxlength="5" [(ngModel)]="generalInformation.customerPhoneExt">
                                                         </div>
 
                                                     </div>
@@ -191,7 +191,7 @@
                                                         <p-autoComplete class="autocomp-customer-cstm" filter="true" 
                                                         [(ngModel)]="generalInformation.country" 
                                                         emptyMessage="No Match Found"
-                                                         name="country" [suggestions]="countrycollection"  field="nice_name" (completeMethod)="filterCountries($event)" [size]="30"
+                                                         name="country1" [suggestions]="countrycollection"  field="nice_name" (completeMethod)="filterCountries($event)" [size]="30"
                                                                         [minLength]="1" [dropdown]="true" [forceSelection]="true" required>
                                                             <!-- <ng-template let-nice_name pTemplate="item">
                                                                 <div class="ui-helper-clearfix">{{nice_name}}</div>
@@ -235,7 +235,7 @@
                                                 <div class="form-group">
                                                     <label>
                                                         <span class="pull-left">Customer Classification</span> <span class="clr-red">*</span>
-                                                        <span style="margin-left:3px;cursor:pointer;"><a  class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClassification" ></a></span>
+                                                        <span style="margin-left:3px;cursor:pointer;"><a  class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClassification" (click)="addclassification()" ></a></span>
                                                     </label>
                                                    
                                                     <p-multiSelect [options]="allcustomerclassificationInfo" [(ngModel)]="generalInformation.customerClassificationIds"  name="customerClassificationId" required>
@@ -359,26 +359,28 @@
                                                                     <span style="margin-left:3px;cursor:pointer;"><a  class="fa fa-plus-circle fa-lg" (click)="addRestrictPMA()" ></a></span>
                                                                 </div>
                                                                 </div>
-                                                                    <p-table class="table-responsive" [value]="generalInformation.restrictedPMAParts"  [paginator]="true" [rows]="3" [columns]="restrictHeaders">
-                                                                        <ng-template pTemplate="header" let-columns>
-                                                                            <tr>
-                                                                                <th *ngFor="let col of columns">
-                                                                                    {{col.header}}
-                                                                                </th>
-                                                                                <th>Actions</th>
-                                                                            </tr>
-                                                                        </ng-template>
-                                                                        <ng-template pTemplate="body" let-part let-rowData let-columns="columns"  let-i="rowIndex">
-                                                                            <tr>
-                                                                                <td *ngFor="let col of columns">
+                                                                    <div>
+                                                                        <p-table class="table-responsive" [value]="generalInformation.restrictedPMAParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
+                                                                            <ng-template pTemplate="header" let-columns>
+                                                                                <tr>
+                                                                                    <th *ngFor="let col of columns">
+                                                                                        {{col.header}}
+                                                                                    </th>
+                                                                                    <th>Actions</th>
+                                                                                </tr>
+                                                                            </ng-template>
+                                                                            <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
+                                                                                <tr>
+                                                                                    <td *ngFor="let col of columns">
                                                                                         {{part[col.field]}}
-                                                                                </td>
-                                                                                <button class="btn-delete"  (click)="deleteRestirctPMA(i, rowData)" mat-icon-button matTooltip="Delete" >
-                                                                                    <mat-icon color="warn">delete</mat-icon>
-                                                                                </button>
-                                                                            </tr>
-                                                                        </ng-template>
-                                                                    </p-table>
+                                                                                    </td>
+                                                                                    <button class="btn-delete" (click)="deleteRestirctPMA(i, rowData)" mat-icon-button matTooltip="Delete">
+                                                                                        <mat-icon color="warn">delete</mat-icon>
+                                                                                    </button>
+                                                                                </tr>
+                                                                            </ng-template>
+                                                                        </p-table>
+                                                                    </div>
 
 
         
@@ -598,7 +600,7 @@
             <div class="form-group">
                 <label for="description" class="control-label">Memo</label>
                 <div class="control-data">
-                    <input #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2">
+                    <input #memo="ngModel" placeholder="Tool Bar" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2">
                     <div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
                         Memo required.
                     </div>
@@ -763,49 +765,48 @@
 
 <div id="addCustomerClassification" class="modal fade" role="dialog">
     <div class="modal-dialog">
-  
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Add Customer Classification</h4>
-        </div>
-        <div class="modal-body">
-                <div class="form-group">
+        <form #addCustomerClassification="ngForm">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add Customer Classification</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
                         <label>Name <span class="clr-red">*</span></label>
                         <div class="inner-addon right-addon inline-block">
-                                <p-autoComplete class="p-dropdown-custom-2 p-dropdown-custom-gen" name="classificationName"  
-                                [(ngModel)]="addNewclassification.description" 
-                                (onSelect)="selectedClassification($event)"
-                            
-                                (onKeyUp)="checkClassificationExists($event.target.value)"
-                                [suggestions]="classificationList" field="label" (completeMethod)="filterclassifications($event)" 
-                                [size]="30"[minLength]="1" [dropdown]="true" required> 
-                               </p-autoComplete> 
-                           <div *ngIf="isClassificationAlreadyExists" class="clr-red">Entry Already Exists</div>  
+                            <p-autoComplete class="p-dropdown-custom-2 p-dropdown-custom-gen" name="classificationName"
+                                            [(ngModel)]="addNewclassification.description"
+                                            (onSelect)="selectedClassification($event)"
+                                            (onKeyUp)="checkClassificationExists($event.target.value)"
+                                            [suggestions]="classificationList" field="label" (completeMethod)="filterclassifications($event)"
+                                            [size]="30" [minLength]="1" [dropdown]="true" required>
+                            </p-autoComplete>
+                            <div *ngIf="isClassificationAlreadyExists" class="clr-red">Entry Already Exists</div>
                         </div>
                     </div>
                     <div class="form-group">
-                            <div class="col-sm-6">
-                                <span class="checkbox-cstm">
-                                    <label style="margin-top: 12px;" class="form-check-label" for="isActive">
-                                        <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="addNewclassification.isActive">
-                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span> Active
-                                    </label>
-                                </span>
-                            </div>
-                            <div class="clear"></div>
+                        <div class="col-sm-6">
+                            <span class="checkbox-cstm">
+                                <label style="margin-top: 12px;" class="form-check-label" for="isActive">
+                                    <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="addNewclassification.isActive">
+                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span> Active
+                                </label>
+                            </span>
                         </div>
-                    
-        </div>
+                        <div class="clear"></div>
+                    </div>
 
-        
-        <div class="modal-footer">
-          <button type="button"class="btn btn-primary-cstm" data-dismiss="modal" (click)="addClassification()" [disabled]="isClassificationAlreadyExists">Save</button>
-          <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetClassificationPopUp()">Close</button>
-        </div>
-      </div>
-  
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="addClassification()" [disabled]="isClassificationAlreadyExists ||addCustomerClassification.invalid ">Save</button>
+                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetClassificationPopUp()">Close</button>
+                </div>
+            </div>
+        </form>
     </div>
   </div>
 
@@ -842,7 +843,7 @@
 
                     <div class="form-group">
                         <label>Memo</label>
-                        <input class="form-control" [(ngModel)]="addNewIntergation.memo" name="memo">
+                        <input class="form-control" [(ngModel)]="addNewIntergation.memo" name="memo" placeholder="Tool Bar">
                     </div>
 
                     <div class="form-group">

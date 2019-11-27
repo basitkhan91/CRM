@@ -47,9 +47,9 @@ namespace DAL.Models
 
         [Required(ErrorMessage = "Sales person is required")]
         public long SalesPersonId { get; set; }
-
+        public string CustomerReference { get; set; }
+        public string CSR { get; set; }
         public int MasterCompanyId { get; set; }
-
         public string CreatedBy { get; set; }
         public Nullable<DateTime> CreatedDate { get; set; }
         public string UpdatedBy { get; set; }
@@ -59,12 +59,14 @@ namespace DAL.Models
 
         public virtual List<WorkOrderPartNumber> PartNumbers { get; set; }
 
+		[NotMapped]
+		public long WorkFlowWorkOrderId { get; set; }
         [NotMapped]
-        public long WorkFlowWorkOrderId { get; set; }
+        public string CustomerName { get; set; }
         [NotMapped]
         public CustomerDetails CustomerDetails { get;set;}
-        
-
+        [NotMapped]
+        public bool IsSubWorkOrder { get; set; }
 
 
     }

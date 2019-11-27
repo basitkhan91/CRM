@@ -35,8 +35,10 @@
                         <thead>
                             <tr>
                                 <th>Capability Types</th>
+                                <th>PN</th>
                                 <th>Aircraft Manufacturer</th>
                                 <th>Model</th>
+                                <th>Dash Number</th>
                                 <th>Add</th>
                             </tr>
                         </thead>
@@ -44,6 +46,22 @@
 
                             <tr style="background: #a5a5a5;">
                                 <td style="color: #fff; font-weight: bold;">{{cap.Description}}</td>
+                                <td>
+                                    <div class="input-group">
+                                        <label for="customerName">
+                                            PN <strong style="color:red">*</strong>
+                                               <p-autoComplete [(ngModel)]="cap.selectedPartId" (onKeyUp)=partPNentHandler($event)
+                                                               (onSelect)="partnmId($event)" [ngModelOptions]="{standalone: true}"
+                                                               [suggestions]="partCollection" (completeMethod)="filterPNpartItems($event)" [size]="30"
+                                                               [minLength]="1" [dropdown]="true">
+                                                   <ng-template let-partName pTemplate="part">
+                                                       <div class="ui-helper-clearfix">{{partName}}</div>
+                                                   </ng-template>
+                                               </p-autoComplete>
+
+                                        </label>
+                                    </div>
+                                </td>
                                 <td>
                                     <div class="input-group">
                                         <p-multiSelect [options]="manufacturerData"
@@ -63,6 +81,21 @@
                                         </p-multiSelect>
                                     </div>
                                 </td>
+                                <td>
+                                    <div class="input-group">
+                                        <!--<p-multiSelect [maxSelectedLabels]="2"
+                                                       [options]="search_AircraftDashNumberList"
+                                                       [(ngModel)]="cap.selectedDashNumbers"
+                                                       [ngModelOptions]="{ standalone: true }"
+                                                       class="pub-multi"
+                                                       [selectionLimit]="30"></p-multiSelect>-->
+
+                                        <select [(ngModel)]="cap.selectedDashNumbers" [ngModelOptions]="{standalone: true}">
+                                            <option>--Select--</option>
+                                            <option *ngFor="let dashnumbers of search_AircraftDashNumberList" [ngValue]="dashnumbers.label">{{dashnumbers.label}}</option>
+                                        </select>
+                                    </div>
+                                </td>
                                 <td [matTooltip]="addBtnTitle(cap)">
                                     <button class="btn btn-warning"
                                             (click)="addModels(cap)">
@@ -78,13 +111,18 @@
                                               [formGroupName]="i">
                                     <tr *ngIf="mfgFormArray.controls[i].controls['isDelete'].value != true">
                                         <td></td>
-
+                                        <td>
+                                            <input type="text" formControlName="PartId" disabled="true" />
+                                        </td>
                                         <td>
                                             <input type="text" formControlName="aircraftTypeName" disabled="true" />
                                         </td>
                                         <td>
                                             <input type="text" formControlName="aircraftModelName" disabled="true" />
+                                        </td>
                                         <td>
+                                            <input type="text" formControlName="DashNumber" disabled="true" /></td>
+                                        <!--<td>
                                             <span data-toggle="tooltip" class="status" title="" data-placement="right"
                                                   data-original-title="Active">
                                                 <div class="toggle btn btn-success" data-toggle="toggle"
@@ -114,7 +152,7 @@
                                                    class="btn btn-success nobg" data-toggle="tooltip" title=""
                                                    data-original-title="Delete"><i class="fa fa-trash"></i></a>
                                             </span>
-                                        </td>
+                                        </td>-->
                                     </tr>
                                 </ng-container>
                             </ng-container>
@@ -124,10 +162,16 @@
                                 <ng-container *ngFor="let item of overhaulFormArray.controls;let j=index" [formGroupName]="j">
                                     <tr *ngIf="overhaulFormArray.controls[j].controls['isDelete'].value != true">
                                         <td></td>
+                                        <td>
+                                            <input type="text" formControlName="PartId" disabled="true" />
+                                        </td>
                                         <td><input type="text" formControlName="aircraftTypeName" disabled="true" /></td>
                                         <td><input type="text" formControlName="aircraftModelName" disabled="true" /></td>
-
                                         <td>
+                                            <input type="text" formControlName="DashNumber" disabled="true" />
+                                        </td>
+                                        
+                                        <!--<td>
                                             <span data-toggle="tooltip" class="status" title="" data-placement="right"
                                                   data-original-title="Active">
                                                 <div class="toggle btn btn-success" data-toggle="toggle"
@@ -155,7 +199,7 @@
                                                    class="btn btn-success nobg" data-toggle="tooltip" title=""
                                                    data-original-title="Delete"><i class="fa fa-trash"></i></a>
                                             </span>
-                                        </td>
+                                        </td>-->
                                     </tr>
                                 </ng-container>
                             </ng-container>
@@ -165,10 +209,16 @@
                                 <ng-container *ngFor="let item of distributionFormArray.controls;let k=index" [formGroupName]="k">
                                     <tr *ngIf="distributionFormArray.controls[k].controls['isDelete'].value != true">
                                         <td></td>
+                                        <td>
+                                            <input type="text" formControlName="PartId" disabled="true" />
+                                        </td>
                                         <td><input type="text" formControlName="aircraftTypeName" disabled="true" /></td>
                                         <td><input type="text" formControlName="aircraftModelName" disabled="true" /></td>
-                                        <td><input type="text" class="form-control w100" formControlName="memo"></td>
+                                        <!--<td><input type="text" class="form-control w100" formControlName="memo"></td>-->
                                         <td>
+                                            <input type="text" formControlName="DashNumber" disabled="true" />
+                                        </td>
+                                        <!--<td>
                                             <span data-toggle="tooltip" class="status" title="" data-placement="right"
                                                   data-original-title="Active">
                                                 <div class="toggle btn btn-success" data-toggle="toggle"
@@ -196,7 +246,7 @@
                                                    class="btn btn-success nobg" data-toggle="tooltip" title=""
                                                    data-original-title="Delete"><i class="fa fa-trash"></i></a>
                                             </span>
-                                        </td>
+                                        </td>-->
                                     </tr>
                                 </ng-container>
                             </ng-container>
@@ -207,10 +257,15 @@
                                               [formGroupName]="l">
                                     <tr *ngIf="certificationFormArray.controls[l].controls['isDelete'].value != true">
                                         <td></td>
+                                        <td>
+                                            <input type="text" formControlName="PartId" disabled="true" />
+                                        </td>
                                         <td><input type="text" formControlName="aircraftTypeName" disabled="true" /></td>
                                         <td><input type="text" formControlName="aircraftModelName" disabled="true" /></td>
-
                                         <td>
+                                            <input type="text" formControlName="DashNumber" disabled="true" />
+                                        </td>
+                                        <!--<td>
                                             <span data-toggle="tooltip" class="status" title="" data-placement="right"
                                                   data-original-title="Active">
                                                 <div class="toggle btn btn-success" data-toggle="toggle"
@@ -238,7 +293,7 @@
                                                    class="btn btn-success nobg" data-toggle="tooltip" title=""
                                                    data-original-title="Delete"><i class="fa fa-trash"></i></a>
                                             </span>
-                                        </td>
+                                        </td>-->
                                     </tr>
                                 </ng-container>
                             </ng-container>
@@ -248,10 +303,15 @@
                                 <ng-container *ngFor="let item of repairFormArray.controls;let m=index" [formGroupName]="m">
                                     <tr *ngIf="repairFormArray.controls[m].controls['isDelete'].value != true">
                                         <td></td>
+                                        <td>
+                                            <input type="text" formControlName="PartId" disabled="true" />
+                                        </td>
                                         <td><input type="text" formControlName="aircraftTypeName" disabled="true" /></td>
                                         <td><input type="text" formControlName="aircraftModelName" disabled="true" /></td>
-
                                         <td>
+                                            <input type="text" formControlName="DashNumber" disabled="true" />
+                                        </td>
+                                        <!--<td>
                                             <span data-toggle="tooltip" class="status" title="" data-placement="right"
                                                   data-original-title="Active">
                                                 <div class="toggle btn btn-success" data-toggle="toggle"
@@ -279,7 +339,7 @@
                                                    class="btn btn-success nobg" data-toggle="tooltip" title=""
                                                    data-original-title="Delete"><i class="fa fa-trash"></i></a>
                                             </span>
-                                        </td>
+                                        </td>-->
                                     </tr>
                                 </ng-container>
                             </ng-container>
@@ -287,10 +347,15 @@
                                 <ng-container *ngFor="let item of exchangeFormArray.controls;let n=index" [formGroupName]="n">
                                     <tr *ngIf="exchangeFormArray.controls[n].controls['isDelete'].value != true">
                                         <td></td>
+                                        <td>
+                                            <input type="text" formControlName="PartId" disabled="true" />
+                                        </td>
                                         <td><input type="text" formControlName="aircraftTypeName" disabled="true" /></td>
                                         <td><input type="text" formControlName="aircraftModelName" disabled="true" /></td>
-                                        <td></td>
                                         <td>
+                                            <input type="text" formControlName="DashNumber" disabled="true" />
+                                        </td>
+                                        <!--<td>
                                             <span data-toggle="tooltip" class="status" title="" data-placement="right"
                                                   data-original-title="Active">
                                                 <div class="toggle btn btn-success" data-toggle="toggle"
@@ -318,7 +383,7 @@
                                                    class="btn btn-success nobg" data-toggle="tooltip" title=""
                                                    data-original-title="Delete"><i class="fa fa-trash"></i></a>
                                             </span>
-                                        </td>
+                                        </td>-->
                                     </tr>
                                 </ng-container>
                             </ng-container>
@@ -375,7 +440,7 @@
                 <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                 <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
 
-                <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+                <!--<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>-->
                 <button class="btn-edit" mat-icon-button (click)="opencapesToEdit(content,rowData)" matTooltip="Edit">
                     <mat-icon>edit</mat-icon>
                 </button>
@@ -386,9 +451,9 @@
                 </button>
 
 
-                <button class="btn-history" mat-icon-button matTooltip="History">
+                <!--<button class="btn-history" mat-icon-button matTooltip="History">
                     <mat-icon color="green">history</mat-icon>
-                </button>
+                </button>-->
             </td>
         </tr>
     </ng-template>
@@ -412,6 +477,7 @@
 </div>
 
 <div class="form-group col-sm-12">
+    m-
     <button type="submit" class="btn btn-success pull-right submit-btn" (click)="openCapes(content)">
         Add Capability
     </button>

@@ -11,9 +11,9 @@ import { VendorService } from '../../../../services/vendor.service';
 import { fadeInOut } from '../../../../services/animations';
 import { Router } from '@angular/router';
 import { ReceivingService } from '../../../../services/receiving/receiving.service';
-// import { PurchaseOrder, DropDownData, StockLine } from '../receivng-po/PurchaseOrder.model';
+import { RepairOrder, DropDownData, StockLine, RepairOrderPart } from '../receiving-ro/RepairOrder.model';
 import { LegalEntityService } from '../../../../services/legalentity.service';
-// import { ManagementStructure } from '../receivng-po/managementstructure.model';
+import { ManagementStructure } from '../receiving-ro/managementstructure.model';
 import { Manufacturer } from '../../../../models/manufacturer.model';
 import { ManufacturerService } from '../../../../services/manufacturer.service';
 import { UnitOfMeasureService } from '../../../../services/unitofmeasure.service';
@@ -23,7 +23,7 @@ import { GlAccountService } from '../../../../services/glAccount/glAccount.servi
 import { SiteService } from '../../../../services/site.service';
 import { ShippingService } from '../../../../services/shipping/shipping-service';
 import { BinService } from '../../../../services/bin.service';
-import { PurchaseOrderService } from '../../../../services/purchase-order.service';
+//import { PurchaseOrderService } from '../../../../services/purchase-order.service';
 import { VendorCapabilitiesService } from '../../../../services/vendorcapabilities.service';
 import { CommonService } from '../../../../services/common.service';
 
@@ -45,10 +45,12 @@ export class RoComponent implements OnInit, AfterViewInit {
     vendorCapesCols: any[];
     selectedColumns: any[];
     selectedColumn: any[];
-    allPolistInfo: any;
+    allROlistInfo: any;
+    repairOrderData: RepairOrderPart[] = [];
+    managementStructure: ManagementStructure[];
 
-    /*selectedRow: any;
-    purchaseOrderNumber: any = "";
+    selectedRow: any;
+    //purchaseOrderNumber: any = "";
     requestedBy: any = "";
     dateApprovied: any = "";
     approver: any = "";
@@ -63,11 +65,6 @@ export class RoComponent implements OnInit, AfterViewInit {
 
     auditHisory: AuditHistory[];
     Active: string = "Active";
-    headerManagementStructure: any = {};
-    roPartsList: any = [];
-    approveList: any = [];
-    vendorCapesInfo: any = [];
-    vendorCapesCols: any[];
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -85,24 +82,18 @@ export class RoComponent implements OnInit, AfterViewInit {
     title: string = "Create";
     id: number;
 
-    cols: any[];
-    selectedColumns: any[];
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
     allComapnies: MasterCompany[];
     private isSaving: boolean;
     modal: NgbModalRef;
-    selectedColumn: any[];
     currencyName: string;
     filteredBrands: any[];
     localCollection: any[] = [];
-    allPolistInfo: any;
-    allPurchaseorderInfo: PurchaseOrder;
+    //allPurchaseorderInfo: PurchaseOrder;
     toggle_po_header: boolean = false;
 
     pageTitle: string = 'Purchase Order';
-    purchaseOrderData: PurchaseOrder;
-    managementStructure: ManagementStructure[];
     ManufacturerList: DropDownData[];
     allManufacturerInfo: any[];
     UOMList: any[];
@@ -110,7 +101,7 @@ export class RoComponent implements OnInit, AfterViewInit {
     managementInfo: any[] = [];
     GLAccountList: GlAccount[];
     SiteList: any[];
-    ShippingViaList: DropDownData[];*/
+    ShippingViaList: DropDownData[];
 
     constructor(private receivingService: ReceivingService,
         private authService: AuthService,
@@ -127,10 +118,9 @@ export class RoComponent implements OnInit, AfterViewInit {
         private conditionService: ConditionService,
         private glAccountService: GlAccountService,
         private siteService: SiteService,
-        private route: Router,
         private shippingService: ShippingService,
         private binservice: BinService,
-        private purchaseOrderService: PurchaseOrderService,
+        //private purchaseOrderService: PurchaseOrderService,
         private vendorCapesService: VendorCapabilitiesService,
         private commonService: CommonService
     ) {
@@ -175,34 +165,35 @@ export class RoComponent implements OnInit, AfterViewInit {
     }
 
     private loadData() {
-        this.allPolistInfo = [
-            {'repairOrderNumber': 'RO1', 'statusId': 3},
-            {'repairOrderNumber': 'RO2', 'statusId': 3},
-            {'repairOrderNumber': 'RO3', 'statusId': 2}
-        ]
-    //  this.vendorService.getReceivingPOListing().subscribe(res => {
-    //         this.allPolistInfo = res;
-    //     });
+        // this.allROlistInfo = [
+        //     {'repairOrderNumber': 'RO1', 'statusId': 3},
+        //     {'repairOrderNumber': 'RO2', 'statusId': 3},
+        //     {'repairOrderNumber': 'RO3', 'statusId': 2}
+        // ]
+     this.vendorService.getReceivingROList().subscribe(res => {
+            this.allROlistInfo = res;
+        });
     }
 
     openCreateRO() {
         this._router.navigateByUrl('/vendorsmodule/vendorpages/app-create-ro');
     }
 
-    editSelectedRO(rowData) {
-        this._router.navigateByUrl('/receivingmodule/receivingpages/app-edit-ro');
-    }
+    // editSelectedRO(rowData) {
+    //     this._router.navigateByUrl(`/receivingmodule/receivingpages/app-edit-ro?repairOrderId=${rowData.repairOrderId}`);
+    // }
 
     viewSelectedRow(rowData) {
         this.getROViewById(rowData.repairOrderId);
         this.getROPartsViewById(rowData.repairOrderId);
         this.getApproversListById(rowData.repairOrderId);
-        //this.viewPurchaseOrder(rowData.purchaseOrderId);
+        this.viewRepairOrder(rowData.repairOrderId);
     }
 
     public getSelectedRow(rowData) {
         //this.receivingService.purchaseOrderId = rowData.purchaseOrderId;
-        this._router.navigateByUrl('/receivingmodule/receivingpages/app-receiving-ro');
+        // this._router.navigateByUrl('/receivingmodule/receivingpages/app-receiving-ro');
+        this._router.navigateByUrl(`/receivingmodule/receivingpages/app-receiving-ro?repairOrderId=${rowData.repairOrderId}`);
     }
 
     getROViewById(roId) {
@@ -304,6 +295,15 @@ export class RoComponent implements OnInit, AfterViewInit {
         })
     }
 
+    public editStockLine(rowData) {
+        //this.receivingService.purchaseOrderId = rowData.purchaseOrderId;
+        //return this._router.navigate(['/receivingmodule/receivingpages/app-edit-ro']);
+        this._router.navigateByUrl(`/receivingmodule/receivingpages/app-edit-ro?repairOrderId=${rowData.repairOrderId}`);
+    }
+
+    
+
+
     // public applyFilter(filterValue: string) {
     //     this.dataSource.filter = filterValue;
     // }
@@ -319,7 +319,7 @@ export class RoComponent implements OnInit, AfterViewInit {
 
     //     for (let purchaseOrder of purchaseOrderList) {
     //         let partIds: string[] = [];
-    //         for (let part of purchaseOrder.purchaseOderPart) {
+    //         for (let part of purchaseOrder) {
     //             if (partIds.indexOf(part.itemMasterId) == -1) {
     //                 partIds.push(part.itemMasterId);
     //             }
@@ -355,15 +355,15 @@ export class RoComponent implements OnInit, AfterViewInit {
     //     }
 
     //     this.dataSource.data = purchaseOrderList;
-    //     this.allPolistInfo = purchaseOrderList;
+    //     this.allROlistInfo = purchaseOrderList;
     // }
 
-    // private onDataLoadFailed(error: any) {
-    //     // alert(error);
-    //     this.alertService.stopLoadingMessage();
-    //     this.loadingIndicator = false;
+    private onDataLoadFailed(error: any) {
+        // alert(error);
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
 
-    // }
+    }
 
     // private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
     //     // alert('success');
@@ -526,14 +526,14 @@ export class RoComponent implements OnInit, AfterViewInit {
     //     this.alertService.showStickyMessage(error, null, MessageSeverity.error);
     // }
 
-    // private getStatus() {
-    //     this.poStatus = [];
-    //     this.poStatus.push(<DropDownData>{ Key: '1', Value: 'Open' });
-    //     this.poStatus.push(<DropDownData>{ Key: '2', Value: 'Pending Approval' });
-    //     this.poStatus.push(<DropDownData>{ Key: '3', Value: 'Approved' });
-    //     this.poStatus.push(<DropDownData>{ Key: '4', Value: 'Rejected' });
-    //     this.poStatus.push(<DropDownData>{ Key: '4', Value: 'Fulfilled' });
-    // }
+    private getStatus() {
+        this.poStatus = [];
+        this.poStatus.push(<DropDownData>{ Key: '1', Value: 'Open' });
+        this.poStatus.push(<DropDownData>{ Key: '2', Value: 'Pending Approval' });
+        this.poStatus.push(<DropDownData>{ Key: '3', Value: 'Approved' });
+        this.poStatus.push(<DropDownData>{ Key: '4', Value: 'Rejected' });
+        this.poStatus.push(<DropDownData>{ Key: '4', Value: 'Fulfilled' });
+    }
 
     // //////////////////View Functionality///////////////////////////////
 
@@ -541,491 +541,491 @@ export class RoComponent implements OnInit, AfterViewInit {
     //     this.modal.close();
     // }
 
-    // private viewPurchaseOrder(purchaseOrderId: number): void {
-    //     this.receivingService.getPurchaseOrderDataForEditById(purchaseOrderId).subscribe(
-    //         results => {
-    //             this.purchaseOrderData = results[0];
-    //             this.purchaseOrderData.openDate = new Date(results[0].openDate).toLocaleDateString();
-    //             this.purchaseOrderData.needByDate = new Date(results[0].needByDate);
-    //             this.purchaseOrderData.dateApproved = new Date(results[0].dateApproved).toLocaleDateString();
+    private viewRepairOrder(repairOrderId: number): void {
+        this.receivingService.getPurchaseOrderDataForViewById(repairOrderId).subscribe(
+            results => {
+                this.repairOrderData = results[0];
+                // this.repairOrderData.openDate = new Date(results[0].openDate).toLocaleDateString();
+                // this.repairOrderData.needByDate = new Date(results[0].needByDate);
+                // this.repairOrderData.dateApproved = new Date(results[0].dateApproved).toLocaleDateString();
 
-    //             this.getManagementStructure().subscribe(
-    //                 results => {
-    //                     this.managementStructure = results[0];
-    //                     var allParentParts = this.purchaseOrderData.purchaseOderPart.filter(x => x.isParent == true);
-    //                     for (let parent of allParentParts) {
-    //                         var splitParts = this.purchaseOrderData.purchaseOderPart.filter(x => !x.isParent && x.itemMaster.partNumber == parent.itemMaster.partNumber);
+                this.getManagementStructure().subscribe(
+                    results => {
+                        this.managementStructure = results[0];
+                        var allParentParts = this.repairOrderData.filter(x => x.isParent == true);
+                        for (let parent of allParentParts) {
+                            var splitParts = this.repairOrderData.filter(x => !x.isParent && x.itemMaster.partNumber == parent.itemMaster.partNumber);
 
-    //                         if (splitParts.length > 0) {
+                            if (splitParts.length > 0) {
 
-    //                             parent.hasChildren = true;
-    //                             parent.quantityOrdered = 0;
-    //                             for (let childPart of splitParts) {
-    //                                 parent.stockLineCount += childPart.stockLineCount;
-    //                                 childPart.managementStructureId = parent.managementStructureId;
-    //                                 childPart.managementStructureName = parent.managementStructureName;
-    //                                 parent.quantityOrdered += childPart.quantityOrdered;
-    //                             }
-    //                         }
-    //                         else {
-    //                             parent.hasChildren = false;
-    //                         }
-    //                     }
+                                parent.hasChildren = true;
+                                parent.quantityOrdered = 0;
+                                for (let childPart of splitParts) {
+                                    parent.stockLineCount += childPart.stockLineCount;
+                                    childPart.managementStructureId = parent.managementStructureId;
+                                    childPart.managementStructureName = parent.managementStructureName;
+                                    parent.quantityOrdered += childPart.quantityOrdered;
+                                }
+                            }
+                            else {
+                                parent.hasChildren = false;
+                            }
+                        }
 
 
-    //                     for (let part of this.purchaseOrderData.purchaseOderPart) {
-    //                         part.toggleIcon = false;
-    //                         part.currentSLIndex = 0;
-    //                         part.currentTLIndex = 0;
-    //                         part.currentSERIndex = 0;
-    //                         part.visible = false;
-    //                         part.showStockLineGrid = false;
+                        for (let part of this.repairOrderData) {
+                            part.toggleIcon = false;
+                            part.currentSLIndex = 0;
+                            part.currentTLIndex = 0;
+                            part.currentSERIndex = 0;
+                            part.visible = false;
+                            part.showStockLineGrid = false;
 
-    //                         part.isEnabled = false;
-    //                         part.conditionId = 0;
-    //                         let managementHierarchy: ManagementStructure[][] = [];
-    //                         let selectedManagementStructure: ManagementStructure[] = [];
-    //                         this.getManagementStructureHierarchy(part.managementStructureId, managementHierarchy, selectedManagementStructure);
-    //                         managementHierarchy.reverse();
-    //                         selectedManagementStructure.reverse();
+                            part.isEnabled = false;
+                            part.conditionId = 0;
+                            let managementHierarchy: ManagementStructure[][] = [];
+                            let selectedManagementStructure: ManagementStructure[] = [];
+                            this.getManagementStructureHierarchy(part.managementStructureId, managementHierarchy, selectedManagementStructure);
+                            managementHierarchy.reverse();
+                            selectedManagementStructure.reverse();
 
-    //                         if (managementHierarchy[0] != undefined && managementHierarchy[0].length > 0) {
-    //                             part.companyId = selectedManagementStructure[0].managementStructureId;
-    //                             var management = managementHierarchy[0].filter(x => x.managementStructureId == part.companyId)[0];
-    //                             part.companyText = management != undefined ? management.code : '';
+                            if (managementHierarchy[0] != undefined && managementHierarchy[0].length > 0) {
+                                part.companyId = selectedManagementStructure[0].managementStructureId;
+                                var management = managementHierarchy[0].filter(x => x.managementStructureId == part.companyId)[0];
+                                part.companyText = management != undefined ? management.code : '';
 
-    //                             part.CompanyList = [];
-    //                             for (let managementStruct of managementHierarchy[0]) {
-    //                                 var dropdown = new DropDownData();
-    //                                 dropdown.Key = managementStruct.managementStructureId.toLocaleString();
-    //                                 dropdown.Value = managementStruct.code;
-    //                                 part.CompanyList.push(dropdown);
-    //                             }
-    //                         }
-    //                         if (managementHierarchy[1] != undefined && managementHierarchy[1].length > 0) {
-    //                             part.businessUnitId = selectedManagementStructure[1].managementStructureId;
-    //                             var management = managementHierarchy[1].filter(x => x.managementStructureId == part.businessUnitId)[0];
-    //                             part.businessUnitText = management != undefined ? management.code : '';
+                                part.CompanyList = [];
+                                for (let managementStruct of managementHierarchy[0]) {
+                                    var dropdown = new DropDownData();
+                                    dropdown.Key = managementStruct.managementStructureId.toLocaleString();
+                                    dropdown.Value = managementStruct.code;
+                                    part.CompanyList.push(dropdown);
+                                }
+                            }
+                            if (managementHierarchy[1] != undefined && managementHierarchy[1].length > 0) {
+                                part.businessUnitId = selectedManagementStructure[1].managementStructureId;
+                                var management = managementHierarchy[1].filter(x => x.managementStructureId == part.businessUnitId)[0];
+                                part.businessUnitText = management != undefined ? management.code : '';
 
-    //                             part.BusinessUnitList = [];
-    //                             for (let managementStruct of managementHierarchy[1]) {
-    //                                 var dropdown = new DropDownData();
-    //                                 dropdown.Key = managementStruct.managementStructureId.toLocaleString();
-    //                                 dropdown.Value = managementStruct.code;
-    //                                 part.BusinessUnitList.push(dropdown);
-    //                             }
-    //                         }
-    //                         if (managementHierarchy[2] != undefined && managementHierarchy[2].length > 0) {
-    //                             part.divisionId = selectedManagementStructure[2].managementStructureId;
-    //                             var management = managementHierarchy[2].filter(x => x.managementStructureId == part.divisionId)[0];
-    //                             part.divisionText = management != undefined ? management.code : '';
-    //                             part.DivisionList = [];
-    //                             for (let managementStruct of managementHierarchy[2]) {
-    //                                 var dropdown = new DropDownData();
-    //                                 dropdown.Key = managementStruct.managementStructureId.toLocaleString();
-    //                                 dropdown.Value = managementStruct.code;
-    //                                 part.DivisionList.push(dropdown);
-    //                             }
-    //                         }
-    //                         if (managementHierarchy[3] != undefined && managementHierarchy[3].length > 0) {
-    //                             part.departmentId = selectedManagementStructure[3].managementStructureId;
-    //                             var management = managementHierarchy[3].filter(x => x.managementStructureId == part.departmentId)[0];
-    //                             part.departmentText = management != undefined ? management.code : '';
+                                part.BusinessUnitList = [];
+                                for (let managementStruct of managementHierarchy[1]) {
+                                    var dropdown = new DropDownData();
+                                    dropdown.Key = managementStruct.managementStructureId.toLocaleString();
+                                    dropdown.Value = managementStruct.code;
+                                    part.BusinessUnitList.push(dropdown);
+                                }
+                            }
+                            if (managementHierarchy[2] != undefined && managementHierarchy[2].length > 0) {
+                                part.divisionId = selectedManagementStructure[2].managementStructureId;
+                                var management = managementHierarchy[2].filter(x => x.managementStructureId == part.divisionId)[0];
+                                part.divisionText = management != undefined ? management.code : '';
+                                part.DivisionList = [];
+                                for (let managementStruct of managementHierarchy[2]) {
+                                    var dropdown = new DropDownData();
+                                    dropdown.Key = managementStruct.managementStructureId.toLocaleString();
+                                    dropdown.Value = managementStruct.code;
+                                    part.DivisionList.push(dropdown);
+                                }
+                            }
+                            if (managementHierarchy[3] != undefined && managementHierarchy[3].length > 0) {
+                                part.departmentId = selectedManagementStructure[3].managementStructureId;
+                                var management = managementHierarchy[3].filter(x => x.managementStructureId == part.departmentId)[0];
+                                part.departmentText = management != undefined ? management.code : '';
 
-    //                             part.DepartmentList = [];
-    //                             for (let managementStruct of managementHierarchy[3]) {
-    //                                 var dropdown = new DropDownData();
-    //                                 dropdown.Key = managementStruct.managementStructureId.toLocaleString();
-    //                                 dropdown.Value = managementStruct.code;
-    //                                 part.DepartmentList.push(dropdown);
-    //                             }
-    //                         }
+                                part.DepartmentList = [];
+                                for (let managementStruct of managementHierarchy[3]) {
+                                    var dropdown = new DropDownData();
+                                    dropdown.Key = managementStruct.managementStructureId.toLocaleString();
+                                    dropdown.Value = managementStruct.code;
+                                    part.DepartmentList.push(dropdown);
+                                }
+                            }
 
-    //                         if (part.stockLine != null) {
-    //                             for (var SL of part.stockLine) {
-    //                                 SL.isEnabled = false;
-    //                                 let stockLinemanagementHierarchy: ManagementStructure[][] = [];
-    //                                 let stockLineSelectedManagementStructure: ManagementStructure[] = [];
-    //                                 this.getManagementStructureHierarchy(SL.managementStructureEntityId, stockLinemanagementHierarchy, stockLineSelectedManagementStructure);
-    //                                 stockLinemanagementHierarchy.reverse();
-    //                                 stockLineSelectedManagementStructure.reverse();
+                            if (part.stockLine != null) {
+                                for (var SL of part.stockLine) {
+                                    SL.isEnabled = false;
+                                    let stockLinemanagementHierarchy: ManagementStructure[][] = [];
+                                    let stockLineSelectedManagementStructure: ManagementStructure[] = [];
+                                    this.getManagementStructureHierarchy(SL.managementStructureEntityId, stockLinemanagementHierarchy, stockLineSelectedManagementStructure);
+                                    stockLinemanagementHierarchy.reverse();
+                                    stockLineSelectedManagementStructure.reverse();
 
-    //                                 if (stockLinemanagementHierarchy[0] != undefined && stockLinemanagementHierarchy[0].length > 0) {
-    //                                     SL.companyId = stockLineSelectedManagementStructure[0].managementStructureId;
-    //                                     var management = managementHierarchy[0].filter(x => x.managementStructureId == part.companyId)[0];
-    //                                     SL.companyText = management != undefined ? management.code : '';
+                                    if (stockLinemanagementHierarchy[0] != undefined && stockLinemanagementHierarchy[0].length > 0) {
+                                        SL.companyId = stockLineSelectedManagementStructure[0].managementStructureId;
+                                        var management = managementHierarchy[0].filter(x => x.managementStructureId == part.companyId)[0];
+                                        SL.companyText = management != undefined ? management.code : '';
 
-    //                                     SL.CompanyList = [];
-    //                                     for (let managementStruct of stockLinemanagementHierarchy[0]) {
-    //                                         var dropdown = new DropDownData();
-    //                                         dropdown.Key = managementStruct.managementStructureId.toLocaleString();
-    //                                         dropdown.Value = managementStruct.code;
-    //                                         SL.CompanyList.push(dropdown);
-    //                                     }
-    //                                 }
-    //                                 if (stockLinemanagementHierarchy[1] != undefined && stockLinemanagementHierarchy[1].length > 0) {
+                                        SL.CompanyList = [];
+                                        for (let managementStruct of stockLinemanagementHierarchy[0]) {
+                                            var dropdown = new DropDownData();
+                                            dropdown.Key = managementStruct.managementStructureId.toLocaleString();
+                                            dropdown.Value = managementStruct.code;
+                                            SL.CompanyList.push(dropdown);
+                                        }
+                                    }
+                                    if (stockLinemanagementHierarchy[1] != undefined && stockLinemanagementHierarchy[1].length > 0) {
 
-    //                                     SL.businessUnitId = stockLineSelectedManagementStructure[1].managementStructureId;
-    //                                     var management = managementHierarchy[1].filter(x => x.managementStructureId == part.businessUnitId)[0];
-    //                                     SL.businessUnitText = management != undefined ? management.code : '';
+                                        SL.businessUnitId = stockLineSelectedManagementStructure[1].managementStructureId;
+                                        var management = managementHierarchy[1].filter(x => x.managementStructureId == part.businessUnitId)[0];
+                                        SL.businessUnitText = management != undefined ? management.code : '';
 
-    //                                     SL.BusinessUnitList = [];
-    //                                     for (let managementStruct of stockLinemanagementHierarchy[1]) {
-    //                                         var dropdown = new DropDownData();
-    //                                         dropdown.Key = managementStruct.managementStructureId.toLocaleString();
-    //                                         dropdown.Value = managementStruct.code;
-    //                                         SL.BusinessUnitList.push(dropdown);
-    //                                     }
-    //                                 }
-    //                                 if (stockLinemanagementHierarchy[2] != undefined && stockLinemanagementHierarchy[2].length > 0) {
-    //                                     SL.divisionId = stockLineSelectedManagementStructure[2].managementStructureId;
-    //                                     var management = managementHierarchy[2].filter(x => x.managementStructureId == part.divisionId)[0];
-    //                                     SL.divisionText = management != undefined ? management.code : '';
+                                        SL.BusinessUnitList = [];
+                                        for (let managementStruct of stockLinemanagementHierarchy[1]) {
+                                            var dropdown = new DropDownData();
+                                            dropdown.Key = managementStruct.managementStructureId.toLocaleString();
+                                            dropdown.Value = managementStruct.code;
+                                            SL.BusinessUnitList.push(dropdown);
+                                        }
+                                    }
+                                    if (stockLinemanagementHierarchy[2] != undefined && stockLinemanagementHierarchy[2].length > 0) {
+                                        SL.divisionId = stockLineSelectedManagementStructure[2].managementStructureId;
+                                        var management = managementHierarchy[2].filter(x => x.managementStructureId == part.divisionId)[0];
+                                        SL.divisionText = management != undefined ? management.code : '';
 
-    //                                     SL.DivisionList = [];
-    //                                     for (let managementStruct of stockLinemanagementHierarchy[2]) {
-    //                                         var dropdown = new DropDownData();
-    //                                         dropdown.Key = managementStruct.managementStructureId.toLocaleString();
-    //                                         dropdown.Value = managementStruct.code;
-    //                                         SL.DivisionList.push(dropdown);
-    //                                     }
-    //                                 }
-    //                                 if (stockLinemanagementHierarchy[3] != undefined && stockLinemanagementHierarchy[3].length > 0) {
-    //                                     SL.departmentId = stockLineSelectedManagementStructure[3].managementStructureId;
-    //                                     var management = managementHierarchy[3].filter(x => x.managementStructureId == part.departmentId)[0];
-    //                                     SL.departmentText = management != undefined ? management.code : '';
+                                        SL.DivisionList = [];
+                                        for (let managementStruct of stockLinemanagementHierarchy[2]) {
+                                            var dropdown = new DropDownData();
+                                            dropdown.Key = managementStruct.managementStructureId.toLocaleString();
+                                            dropdown.Value = managementStruct.code;
+                                            SL.DivisionList.push(dropdown);
+                                        }
+                                    }
+                                    if (stockLinemanagementHierarchy[3] != undefined && stockLinemanagementHierarchy[3].length > 0) {
+                                        SL.departmentId = stockLineSelectedManagementStructure[3].managementStructureId;
+                                        var management = managementHierarchy[3].filter(x => x.managementStructureId == part.departmentId)[0];
+                                        SL.departmentText = management != undefined ? management.code : '';
 
-    //                                     SL.DepartmentList = [];
-    //                                     for (let managementStruct of stockLinemanagementHierarchy[3]) {
-    //                                         var dropdown = new DropDownData();
-    //                                         dropdown.Key = managementStruct.managementStructureId.toLocaleString();
-    //                                         dropdown.Value = managementStruct.code;
-    //                                         SL.DepartmentList.push(dropdown);
-    //                                     }
-    //                                 }
-    //                             }
+                                        SL.DepartmentList = [];
+                                        for (let managementStruct of stockLinemanagementHierarchy[3]) {
+                                            var dropdown = new DropDownData();
+                                            dropdown.Key = managementStruct.managementStructureId.toLocaleString();
+                                            dropdown.Value = managementStruct.code;
+                                            SL.DepartmentList.push(dropdown);
+                                        }
+                                    }
+                                }
 
-    //                         }
+                            }
 
-    //                     }
+                        }
 
-    //                     this.purchaseOrderData.dateRequested = new Date(); //new Date(this.purchaseOrderData.dateRequested);
-    //                     this.purchaseOrderData.dateApprovied = new Date(this.purchaseOrderData.dateApprovied);
-    //                     this.purchaseOrderData.needByDate = new Date(); //new Date(this.purchaseOrderData.needByDate);
-    //                     this.getManufacturers();
-    //                     this.getStatus();
-    //                     this.getUOMList();
-    //                     this.getConditionList();
-    //                     this.loadManagementdata();
-    //                     this.loadManufacturerData();
-    //                     this.getAllSite();
-    //                     this.getAllGLAccount();
-    //                     this.getShippingVia();
-    //                 },
-    //                 error => this.onDataLoadFailed(error)
-    //             );
-    //         },
-    //         error => {
-    //             this.alertService.showMessage(this.pageTitle, "Something went wrong while loading the Purchase Order detail", MessageSeverity.error);
-    //             return this.route.navigate(['/receivingmodule/receivingpages/app-purchase-order']);
-    //         }
-    //     );
-    // }
+                        // this.repairOrderData.dateRequested = new Date(); //new Date(this.repairOrderData.dateRequested);
+                        // this.repairOrderData.dateApprovied = new Date(this.repairOrderData.dateApprovied);
+                        // this.repairOrderData.needByDate = new Date(); //new Date(this.repairOrderData.needByDate);
+                        this.getManufacturers();
+                        this.getStatus();
+                        this.getUOMList();
+                        this.getConditionList();
+                        this.loadManagementdata();
+                        this.loadManufacturerData();
+                        this.getAllSite();
+                        this.getAllGLAccount();
+                        this.getShippingVia();
+                    },
+                    error => this.onDataLoadFailed(error)
+                );
+            },
+            error => {
+                this.alertService.showMessage(this.pageTitle, "Something went wrong while loading the Repair Order detail", MessageSeverity.error);
+                //return this.route.navigate(['/receivingmodule/receivingpages/app-purchase-order']);
+            }
+        );
+    }
 
-    // private getManufacturers() {
-    //     this.ManufacturerList = [];
-    //     this.manufacturerService.getManufacturers().subscribe(
-    //         results => {
-    //             for (let manufacturer of results[0]) {
-    //                 var dropdown = new DropDownData();
-    //                 dropdown.Key = manufacturer.manufacturerId.toLocaleString();
-    //                 dropdown.Value = manufacturer.name;
-    //                 this.ManufacturerList.push(dropdown);
-    //             }
-    //         },
-    //         error => this.onDataLoadFailed(error)
-    //     );
-    // }
+    private getManufacturers() {
+        this.ManufacturerList = [];
+        this.manufacturerService.getManufacturers().subscribe(
+            results => {
+                for (let manufacturer of results[0]) {
+                    var dropdown = new DropDownData();
+                    dropdown.Key = manufacturer.manufacturerId.toLocaleString();
+                    dropdown.Value = manufacturer.name;
+                    this.ManufacturerList.push(dropdown);
+                }
+            },
+            error => this.onDataLoadFailed(error)
+        );
+    }
 
-    // private getManagementStructure() {
-    //     return this.legalEntityService.getManagemententity();
-    // }
+    private getManagementStructure() {
+        return this.legalEntityService.getManagemententity();
+    }
 
-    // private getUOMList() {
-    //     this.uomService.getUnitOfMeasureList().subscribe(
-    //         result => {
-    //             this.UOMList = result[0];
-    //             for (var part of this.purchaseOrderData.purchaseOderPart) {
-    //                 var uom = this.UOMList.filter(x => x.unitOfMeasureId == part.uomId)[0];
-    //                 if (uom != undefined) {
-    //                     part.UOMText = uom.shortName;
-    //                 }
-    //             }
-    //         }
-    //     );
-    // }
+    private getUOMList() {
+        this.uomService.getUnitOfMeasureList().subscribe(
+            result => {
+                this.UOMList = result[0];
+                for (var part of this.repairOrderData) {
+                    var uom = this.UOMList.filter(x => x.unitOfMeasureId == part.uomId)[0];
+                    if (uom != undefined) {
+                        part.UOMText = uom.shortName;
+                    }
+                }
+            }
+        );
+    }
 
-    // private getManagementStructureHierarchy(managementStructureId: number, managementStructureHierarchy: ManagementStructure[][], selectedManagementStructure: ManagementStructure[]) {
+    private getManagementStructureHierarchy(managementStructureId: number, managementStructureHierarchy: ManagementStructure[][], selectedManagementStructure: ManagementStructure[]) {
 
-    //     var selectedManagementStructures = this.managementStructure.filter(function (management) {
-    //         return management.managementStructureId == managementStructureId;
-    //     });
+        var selectedManagementStructures = this.managementStructure.filter(function (management) {
+            return management.managementStructureId == managementStructureId;
+        });
 
-    //     if (selectedManagementStructures != undefined && selectedManagementStructures.length > 0) {
-    //         var selectedMangStruc = selectedManagementStructures[0];
+        if (selectedManagementStructures != undefined && selectedManagementStructures.length > 0) {
+            var selectedMangStruc = selectedManagementStructures[0];
 
-    //         if (selectedMangStruc.parentId != null) {
-    //             var selectedMSList = this.managementStructure.filter(function (management) {
-    //                 return management.parentId == selectedMangStruc.parentId;
-    //             });
+            if (selectedMangStruc.parentId != null) {
+                var selectedMSList = this.managementStructure.filter(function (management) {
+                    return management.parentId == selectedMangStruc.parentId;
+                });
 
-    //             if (managementStructureHierarchy != null) {
-    //                 managementStructureHierarchy.push(selectedMSList);
-    //             }
+                if (managementStructureHierarchy != null) {
+                    managementStructureHierarchy.push(selectedMSList);
+                }
 
-    //             if (selectedManagementStructure != null) {
-    //                 selectedManagementStructure.push(selectedMangStruc);
-    //             }
+                if (selectedManagementStructure != null) {
+                    selectedManagementStructure.push(selectedMangStruc);
+                }
 
-    //             this.getManagementStructureHierarchy(selectedMangStruc.parentId, managementStructureHierarchy, selectedManagementStructure);
-    //         }
-    //         else {
-    //             var selectedMSList = this.managementStructure.filter(function (management) {
-    //                 return management.parentId == null;
-    //             });
+                this.getManagementStructureHierarchy(selectedMangStruc.parentId, managementStructureHierarchy, selectedManagementStructure);
+            }
+            else {
+                var selectedMSList = this.managementStructure.filter(function (management) {
+                    return management.parentId == null;
+                });
 
-    //             if (managementStructureHierarchy != null) {
-    //                 managementStructureHierarchy.push(selectedMSList);
-    //             }
+                if (managementStructureHierarchy != null) {
+                    managementStructureHierarchy.push(selectedMSList);
+                }
 
-    //             if (selectedManagementStructure != null) {
-    //                 selectedManagementStructure.push(selectedMangStruc);
-    //             }
-    //         }
-    //     }
-    // }
+                if (selectedManagementStructure != null) {
+                    selectedManagementStructure.push(selectedMangStruc);
+                }
+            }
+        }
+    }
 
-    // private getConditionList(): void {
-    //     this.ConditionList = [];
-    //     this.conditionService.getConditionList().subscribe(
-    //         results => {
-    //             for (let condition of results[0]) {
-    //                 var dropdown = new DropDownData();
-    //                 dropdown.Key = condition.conditionId.toLocaleString();
-    //                 dropdown.Value = condition.description;
-    //                 this.ConditionList.push(dropdown);
-    //             }
-    //         },
-    //         error => this.onDataLoadFailed(error)
-    //     );
-    // }
+    private getConditionList(): void {
+        this.ConditionList = [];
+        this.conditionService.getConditionList().subscribe(
+            results => {
+                for (let condition of results[0]) {
+                    var dropdown = new DropDownData();
+                    dropdown.Key = condition.conditionId.toLocaleString();
+                    dropdown.Value = condition.description;
+                    this.ConditionList.push(dropdown);
+                }
+            },
+            error => this.onDataLoadFailed(error)
+        );
+    }
 
-    // private loadManagementdata() {
-    //     this.legalEntityService.getManagemententity().subscribe(data => {
-    //         this.managementInfo = data[0]
-    //     });
-    // }
+    private loadManagementdata() {
+        this.legalEntityService.getManagemententity().subscribe(data => {
+            this.managementInfo = data[0]
+        });
+    }
 
-    // private loadManufacturerData() {
+    private loadManufacturerData() {
 
-    //     this.manufacturerService.getWorkFlows().subscribe(data => {
-    //         this.allManufacturerInfo = data[0];
-    //     });
-    // }
+        this.manufacturerService.getWorkFlows().subscribe(data => {
+            this.allManufacturerInfo = data[0];
+        });
+    }
 
-    // private getAllSite(): void {
-    //     this.siteService.getSiteList().subscribe(
-    //         results => {
-    //             this.SiteList = results[0];
-    //             for (var part of this.purchaseOrderData.purchaseOderPart) {
-    //                 if (part.stockLine) {
-    //                     part.siteId = 0;
-    //                     part.warehouseId = 0;
-    //                     part.locationId = 0;
-    //                     part.shelfId = 0;
-    //                     part.binId = 0;
-    //                     part.SiteList = [];
-    //                     for (var site of results[0]) {
-    //                         var row = new DropDownData();
-    //                         row.Key = site.siteId.toLocaleString();
-    //                         row.Value = site.name;
-    //                         part.SiteList.push(row);
-    //                     }
+    private getAllSite(): void {
+        this.siteService.getSiteList().subscribe(
+            results => {
+                this.SiteList = results[0];
+                for (var part of this.repairOrderData) {
+                    if (part.stockLine) {
+                        part.siteId = 0;
+                        part.warehouseId = 0;
+                        part.locationId = 0;
+                        part.shelfId = 0;
+                        part.binId = 0;
+                        part.SiteList = [];
+                        for (var site of results[0]) {
+                            var row = new DropDownData();
+                            row.Key = site.siteId.toLocaleString();
+                            row.Value = site.name;
+                            part.SiteList.push(row);
+                        }
 
-    //                     for (var SL of part.stockLine) {
-    //                         SL.SiteList = [];
+                        for (var SL of part.stockLine) {
+                            SL.SiteList = [];
 
-    //                         for (var site of results[0]) {
-    //                             var row = new DropDownData();
-    //                             row.Key = site.siteId.toLocaleString();
-    //                             row.Value = site.name;
-    //                             SL.SiteList.push(row);
-    //                         }
-    //                         //var filterSite = SL.SiteList.filter(x => x.Key == SL.siteId.toString())[0];
+                            for (var site of results[0]) {
+                                var row = new DropDownData();
+                                row.Key = site.siteId.toLocaleString();
+                                row.Value = site.name;
+                                SL.SiteList.push(row);
+                            }
+                            //var filterSite = SL.SiteList.filter(x => x.Key == SL.siteId.toString())[0];
 
-    //                         //if (filterSite) {
-    //                         //    SL.siteText = filterSite.Value;
-    //                         //}
+                            //if (filterSite) {
+                            //    SL.siteText = filterSite.Value;
+                            //}
 
-    //                         if (SL.warehouseId > 0) {
-    //                             this.getStockLineWareHouse(SL, true);
-    //                         }
+                            if (SL.warehouseId > 0) {
+                                this.getStockLineWareHouse(SL, true);
+                            }
 
-    //                         if (SL.locationId > 0) {
-    //                             this.getStockLineLocation(SL, true);
-    //                         }
-    //                         //var filterWareHouse = SL.WareHouseList.filter(x => x.Key == SL.warehouseId.toString())[0];
-    //                         //if (filterWareHouse) {
-    //                         //    SL.wareHouseText = filterWareHouse.Value;
-    //                         //}
-    //                         if (SL.shelfId > 0) {
-    //                             this.getStockLineShelf(SL, true);
-    //                         }
+                            if (SL.locationId > 0) {
+                                this.getStockLineLocation(SL, true);
+                            }
+                            //var filterWareHouse = SL.WareHouseList.filter(x => x.Key == SL.warehouseId.toString())[0];
+                            //if (filterWareHouse) {
+                            //    SL.wareHouseText = filterWareHouse.Value;
+                            //}
+                            if (SL.shelfId > 0) {
+                                this.getStockLineShelf(SL, true);
+                            }
 
-    //                         //var filterLocation = SL.LocationList.filter(x => x.Key == SL.locationId.toString())[0];
-    //                         //if (filterLocation) {
-    //                         //    SL.locationText = filterLocation.Value;
-    //                         //}
+                            //var filterLocation = SL.LocationList.filter(x => x.Key == SL.locationId.toString())[0];
+                            //if (filterLocation) {
+                            //    SL.locationText = filterLocation.Value;
+                            //}
 
-    //                         if (SL.binId > 0) {
-    //                             this.getStockLineBin(SL, true);
-    //                         }
+                            if (SL.binId > 0) {
+                                this.getStockLineBin(SL, true);
+                            }
 
-    //                         //var filterShelf = SL.ShelfList.filter(x => x.Key == SL.shelfId.toString())[0];
-    //                         //if (filterShelf) {
-    //                         //    SL.shelfText = filterShelf.Value;
-    //                         //}
+                            //var filterShelf = SL.ShelfList.filter(x => x.Key == SL.shelfId.toString())[0];
+                            //if (filterShelf) {
+                            //    SL.shelfText = filterShelf.Value;
+                            //}
 
-    //                     }
-    //                 }
-    //             }
-    //         },
-    //         error => this.onDataLoadFailed(error)
-    //     );
-    // }
+                        }
+                    }
+                }
+            },
+            error => this.onDataLoadFailed(error)
+        );
+    }
 
-    // private getAllGLAccount(): void {
-    //     this.glAccountService.getAll().subscribe(glAccountData => {
-    //         this.GLAccountList = glAccountData[0];
+    private getAllGLAccount(): void {
+        this.glAccountService.getAll().subscribe(glAccountData => {
+            this.GLAccountList = glAccountData[0];
 
-    //         for (var part of this.purchaseOrderData.purchaseOderPart) {
-    //             if (part.stockLine) {
-    //                 for (var SL of part.stockLine) {
-    //                     if (SL.glAccountId > 0) {
-    //                         var glAccount = this.GLAccountList.filter(x => x.glAccountId == SL.glAccountId)[0];
-    //                         SL.glAccountText = glAccount.accountCode + " (" + glAccount.accountDescription + ")";
-    //                     }
-    //                 }
-    //             }
-    //         }
+            for (var part of this.repairOrderData) {
+                if (part.stockLine) {
+                    for (var SL of part.stockLine) {
+                        if (SL.glAccountId > 0) {
+                            var glAccount = this.GLAccountList.filter(x => x.glAccountId == SL.glAccountId)[0];
+                            SL.glAccountText = glAccount.accountCode + " (" + glAccount.accountDescription + ")";
+                        }
+                    }
+                }
+            }
 
-    //     });
-    // }
+        });
+    }
 
-    // private getShippingVia(): void {
-    //     this.shippingService.getAllShippingVia().subscribe(results => {
-    //         this.ShippingViaList = [];
-    //         for (let shippingVia of results[0]) {
-    //             var dropdown = new DropDownData();
-    //             dropdown.Key = shippingVia.shippingViaId.toLocaleString();
-    //             dropdown.Value = shippingVia.name;
-    //             this.ShippingViaList.push(dropdown);
-    //         }
-    //     });
-    // }
+    private getShippingVia(): void {
+        this.shippingService.getAllShippingVia().subscribe(results => {
+            this.ShippingViaList = [];
+            for (let shippingVia of results[0]) {
+                var dropdown = new DropDownData();
+                dropdown.Key = shippingVia.shippingViaId.toLocaleString();
+                dropdown.Value = shippingVia.name;
+                this.ShippingViaList.push(dropdown);
+            }
+        });
+    }
 
-    // private getStockLineWareHouse(stockLine: StockLine, onPageLoad: boolean): void {
-    //     stockLine.WareHouseList = [];
-    //     stockLine.LocationList = [];
-    //     stockLine.ShelfList = [];
-    //     stockLine.BinList = [];
+    private getStockLineWareHouse(stockLine: StockLine, onPageLoad: boolean): void {
+        stockLine.WareHouseList = [];
+        stockLine.LocationList = [];
+        stockLine.ShelfList = [];
+        stockLine.BinList = [];
 
-    //     if (!onPageLoad) {
-    //         stockLine.warehouseId = 0;
-    //         stockLine.locationId = 0;
-    //         stockLine.shelfId = 0;
-    //         stockLine.binId = 0;
-    //     }
+        if (!onPageLoad) {
+            stockLine.warehouseId = 0;
+            stockLine.locationId = 0;
+            stockLine.shelfId = 0;
+            stockLine.binId = 0;
+        }
 
-    //     this.binservice.getWareHouseBySiteId(stockLine.siteId).subscribe(
-    //         results => {
-    //             for (let wareHouse of results) {
-    //                 var dropdown = new DropDownData();
-    //                 dropdown.Key = wareHouse.warehouseId.toLocaleString();
-    //                 dropdown.Value = wareHouse.warehouseName;
-    //                 stockLine.WareHouseList.push(dropdown);
-    //             }
-    //         },
-    //         error => this.onDataLoadFailed(error)
-    //     );
-    // }
+        this.binservice.getWareHouseBySiteId(stockLine.siteId).subscribe(
+            results => {
+                for (let wareHouse of results) {
+                    var dropdown = new DropDownData();
+                    dropdown.Key = wareHouse.warehouseId.toLocaleString();
+                    dropdown.Value = wareHouse.warehouseName;
+                    stockLine.WareHouseList.push(dropdown);
+                }
+            },
+            error => this.onDataLoadFailed(error)
+        );
+    }
 
-    // private getStockLineLocation(stockLine: StockLine, onPageLoad: boolean): void {
-    //     stockLine.LocationList = [];
-    //     stockLine.ShelfList = [];
-    //     stockLine.BinList = [];
+    private getStockLineLocation(stockLine: StockLine, onPageLoad: boolean): void {
+        stockLine.LocationList = [];
+        stockLine.ShelfList = [];
+        stockLine.BinList = [];
 
-    //     if (!onPageLoad) {
-    //         stockLine.locationId = 0;
-    //         stockLine.shelfId = 0;
-    //         stockLine.binId = 0;
-    //     }
+        if (!onPageLoad) {
+            stockLine.locationId = 0;
+            stockLine.shelfId = 0;
+            stockLine.binId = 0;
+        }
 
-    //     this.binservice.getLocationByWareHouseId(stockLine.warehouseId).subscribe(
-    //         results => {
-    //             console.log(results);
-    //             for (let loc of results) {
-    //                 var dropdown = new DropDownData();
-    //                 dropdown.Key = loc.locationId.toLocaleString();
-    //                 dropdown.Value = loc.name;
-    //                 stockLine.LocationList.push(dropdown);
-    //             }
-    //         },
-    //         error => this.onDataLoadFailed(error)
-    //     );
-    // }
+        this.binservice.getLocationByWareHouseId(stockLine.warehouseId).subscribe(
+            results => {
+                console.log(results);
+                for (let loc of results) {
+                    var dropdown = new DropDownData();
+                    dropdown.Key = loc.locationId.toLocaleString();
+                    dropdown.Value = loc.name;
+                    stockLine.LocationList.push(dropdown);
+                }
+            },
+            error => this.onDataLoadFailed(error)
+        );
+    }
 
-    // private getStockLineShelf(stockLine: StockLine, onPageLoad: boolean): void {
-    //     stockLine.ShelfList = [];
-    //     stockLine.BinList = [];
+    private getStockLineShelf(stockLine: StockLine, onPageLoad: boolean): void {
+        stockLine.ShelfList = [];
+        stockLine.BinList = [];
 
-    //     if (!onPageLoad) {
-    //         stockLine.shelfId = 0;
-    //         stockLine.binId = 0;
-    //     }
+        if (!onPageLoad) {
+            stockLine.shelfId = 0;
+            stockLine.binId = 0;
+        }
 
-    //     this.binservice.getShelfByLocationId(stockLine.locationId).subscribe(
-    //         results => {
+        this.binservice.getShelfByLocationId(stockLine.locationId).subscribe(
+            results => {
 
-    //             for (let shelf of results) {
-    //                 var dropdown = new DropDownData();
-    //                 dropdown.Key = shelf.shelfId.toLocaleString();
-    //                 dropdown.Value = shelf.name;
-    //                 stockLine.ShelfList.push(dropdown);
-    //             }
-    //         },
-    //         error => this.onDataLoadFailed(error)
-    //     );
-    // }
+                for (let shelf of results) {
+                    var dropdown = new DropDownData();
+                    dropdown.Key = shelf.shelfId.toLocaleString();
+                    dropdown.Value = shelf.name;
+                    stockLine.ShelfList.push(dropdown);
+                }
+            },
+            error => this.onDataLoadFailed(error)
+        );
+    }
 
-    // private getStockLineBin(stockLine: StockLine, onPageLoad: boolean): void {
-    //     stockLine.BinList = [];
+    private getStockLineBin(stockLine: StockLine, onPageLoad: boolean): void {
+        stockLine.BinList = [];
 
-    //     if (!onPageLoad) {
-    //         stockLine.binId = 0;
-    //     }
+        if (!onPageLoad) {
+            stockLine.binId = 0;
+        }
 
-    //     this.binservice.getBinByShelfId(stockLine.shelfId).subscribe(
-    //         results => {
-    //             for (let bin of results) {
-    //                 var dropdown = new DropDownData();
-    //                 dropdown.Key = bin.binId.toLocaleString();
-    //                 dropdown.Value = bin.name;
-    //                 stockLine.BinList.push(dropdown);
-    //             }
-    //         },
-    //         error => this.onDataLoadFailed(error)
-    //     );
-    // }
+        this.binservice.getBinByShelfId(stockLine.shelfId).subscribe(
+            results => {
+                for (let bin of results) {
+                    var dropdown = new DropDownData();
+                    dropdown.Key = bin.binId.toLocaleString();
+                    dropdown.Value = bin.name;
+                    stockLine.BinList.push(dropdown);
+                }
+            },
+            error => this.onDataLoadFailed(error)
+        );
+    }
     
 }

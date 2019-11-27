@@ -687,6 +687,26 @@ export class VendorService {
     getROApproverList(purchaseOrderId){
         return this.actionEndpoint.getROApproverList(purchaseOrderId);
       }
+
+    getReceivingROList(){
+    return this.actionEndpoint.getReceivingROList();
+    }
+
+    getVendorPOMemolist(vendorId)
+    {
+        return this.actionEndpoint.getVendorPOMemolist<any>(vendorId);
+    }
+
+    getVendorROMemolist(vendorId)
+    {
+        return this.actionEndpoint.getVendorROMemolist<any>(vendorId);
+    }
+
+    updateVendorPOROmemolist(id, type, memoText,updatedBy)
+    {
+        return this.actionEndpoint.updateVendorPOROmemolist(id, type, memoText,updatedBy);
+    }
+    
       
 }
 

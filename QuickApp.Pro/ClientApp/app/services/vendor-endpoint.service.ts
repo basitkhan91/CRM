@@ -153,8 +153,11 @@ export class VendorEndpointService extends EndpointFactory {
 	private readonly _roListWithFiltersUrl: string = "/api/Vendor/roListWithFilters";
 	private readonly _saveCreateROApproval: string = "/api/Vendor/createRoApprover";
 	private readonly _updateROApproval: string = "/api/Vendor/updateRoApprover";
-    
 
+	private readonly _getVendorPOmemolist: string = "/api/Vendor/vendorpomemolist";
+	private readonly _getVendorROmemolist: string = "/api/Vendor/vendorromemolist";
+	private readonly _updateVendorPOROmemolist: string = "/api/Vendor/updatevendormemotext";
+    
 	get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
 	get vendorlistsUrl() { return this.configurations.baseUrl + this._vendrUrl; }
 	get vendorBasicListUrl(){return this.configurations.baseUrl+ this._vendorLiteUrl}
@@ -1495,4 +1498,32 @@ updateROApproval<T>(param: any): Observable<any> {
 getROApproverList(repairOrderId) {
 	return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/roApproversList?repairOrderId=${repairOrderId}`)
 }
+
+getReceivingROList() {
+	return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/recevingRoList`)
+}
+
+getVendorPOMemolist<T>(vendorId: number): Observable<T> {
+
+	let endpointUrl = `${this._getVendorPOmemolist}?vendorId=${vendorId}`;
+	return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+		.catch(error => {
+			return this.handleError(error, () => this.getVendorPOMemolist(vendorId));
+		});
+}
+
+getVendorROMemolist<T>(vendorId: number): Observable<T> {
+	let endpointUrl = `${this._getVendorROmemolist}?vendorId=${vendorId}`;
+	return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+		.catch(error => {
+			return this.handleError(error, () => this.getVendorROMemolist(vendorId));
+		});
+}
+
+updateVendorPOROmemolist(id, type, memoText,updatedBy) {
+	return this.http.put(`${this._updateVendorPOROmemolist}?id=${id}&type=${type}&memoText=${memoText}&updatedBy=${updatedBy}`, {} , this.getRequestHeaders())
+}
+
+
+
 }

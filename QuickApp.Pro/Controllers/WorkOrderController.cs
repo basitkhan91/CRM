@@ -313,14 +313,14 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("saveassetcheckedin")]
-        public IActionResult SaveAssetCheckedIn(long WorkOrderAssetId, long? checkedInById, DateTime? checkedInDate, string updatedBy)
+        public IActionResult SaveAssetCheckedIn(long WorkOrderAssetId, long checkedInById, DateTime checkedInDate, string updatedBy)
         {
              unitOfWork.WorkOrderRepository.SaveAssetCheckedIn(WorkOrderAssetId, checkedInById, checkedInDate, updatedBy);
             return Ok();
         }
 
         [HttpGet("saveassetcheckedout")]
-        public IActionResult SaveAssetCheckedOut(long WorkOrderAssetId, long? checkedOutById, DateTime? checkedOutDate, string updatedBy)
+        public IActionResult SaveAssetCheckedOut(long WorkOrderAssetId, long checkedOutById, DateTime checkedOutDate, string updatedBy)
         {
             unitOfWork.WorkOrderRepository.SaveAssetCheckedOut(WorkOrderAssetId, checkedOutById, checkedOutDate, updatedBy);
             return Ok();
@@ -330,6 +330,13 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetAssetCheckedInandOutDetails(long assetRecordId=0, long workOrderAssetId=0)
         {
             var result = unitOfWork.WorkOrderRepository.GetAssetCheckedInandOutDetails(assetRecordId, workOrderAssetId);
+            return Ok(result);
+        }
+
+        [HttpGet("workorderassetview")]
+        public IActionResult WorkOrderAssetView(long assetRecordId)
+        {
+            var result = unitOfWork.WorkOrderRepository.WorkOrderAssetView(assetRecordId);
             return Ok(result);
         }
 
@@ -379,12 +386,12 @@ namespace QuickApp.Pro.Controllers
         #region Work Order Documents
 
         [HttpPost("createworkorderdocuments")]
-        public IActionResult CreateWorkOrderDocuments([FromBody]WorkOrderDocuments workOrderDocuments)
+        public IActionResult CreateWorkOrderDocuments([FromBody]List<WorkOrderDocuments> workOrderDocuments)
         {
             if (ModelState.IsValid)
             {
-                workOrderDocuments.WorkOrderDocumentsId = unitOfWork.WorkOrderRepository.CreateWorkOrderDocuments(workOrderDocuments);
-                return Ok(workOrderDocuments);
+                var result = unitOfWork.WorkOrderRepository.CreateWorkOrderDocuments(workOrderDocuments);
+                return Ok(result);
             }
             else
             {
@@ -490,7 +497,7 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        [HttpGet("getworkflowWorkorderquote")]
+        [HttpGet("getworkorderquote")]
         public IActionResult GetWorkFlowWorkOrderQuote(long wfwoId = 0, long workOrderId = 0)
         {
             var result = unitOfWork.WorkOrderRepository.GetWorkFlowWorkOrderQuote(wfwoId, workOrderId);
@@ -874,7 +881,6 @@ namespace QuickApp.Pro.Controllers
                             }
 
                             workFlow.Charges.AddRange(itemsToRemove);
-
                         }
 
                     }

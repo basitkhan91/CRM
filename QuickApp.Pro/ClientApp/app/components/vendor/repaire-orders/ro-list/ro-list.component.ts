@@ -213,7 +213,7 @@ export class RoListComponent implements OnInit {
         }
 
         this.lazyLoadEventDataInput.filters = {
-            repairOrderNumber: this.repairOrderNoInput,
+            repairOrderNo: this.repairOrderNoInput,
             openDate: this.openDateInput,
             closedDate: this.closedDateInput,
             vendorName: this.vendorNameInput,

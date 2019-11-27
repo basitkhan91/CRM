@@ -4,3 +4,11 @@
 .credit{
     width: 100px;
 }
+.table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    padding: 0 3px;
+    line-height: 1.42857143;
+    vertical-align: top;
+    font-size: 12px;
+    vertical-align: middle;
+    border-top: 1px solid #e7ecf1;
+}

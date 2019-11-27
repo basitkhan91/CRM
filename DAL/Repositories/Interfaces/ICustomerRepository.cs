@@ -68,5 +68,12 @@ namespace DAL.Repositories.Interfaces
         void AddCustomerBillinggAddress(Customer objCustomer);
     		IEnumerable<object> GetCustomerNameAndCodesByCustomerId(long customerId);
         IEnumerable<object> SearchCustomer(string value, CustomerSearchType searchType);
-  }	
+        void DeleteRestrictedParts(long id, string updatedBy);
+
+        void CustomerShippingDetailsStatus(long id, bool status, string updatedBy);
+        void CustomerBillingStatus(long id, bool status, string updatedBy);
+
+
+    }
+
 }

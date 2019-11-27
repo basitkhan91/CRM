@@ -172,7 +172,8 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 	allConditionInfo: Condition[] = [];
     allManufacturerInfo: any[] = [];
     availableQty: number;
-
+    invalidQty: boolean;
+    invalidQtyError: boolean;
 	constructor(public integrationService: IntegrationService,private empService: EmployeeService,public vendorservice: VendorService,public manufacturerService: ManufacturerService,public itemser: ItemMasterService,public glAccountService: GLAccountClassService,public vendorService: VendorService,public customerService: CustomerService,public inteService: IntegrationService,public workFlowtService1: LegalEntityService,public workFlowtService: BinService,public siteService: SiteService,public integration: IntegrationService, public stocklineser: StocklineService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public conditionService: ConditionService, private dialog: MatDialog)
 	{
         this.dataSource = new MatTableDataSource();
@@ -382,7 +383,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 
     calculateQtyAvailable(event) {
         
-        if (this.sourceStockLineSetup.QuantityOnHand) { this.availableQty = 0 };
+        if (this.sourceStockLineSetup.QuantityOnHand) { this.availableQty = this.sourceStockLineSetup.QuantityOnHand };
         if (this.sourceStockLineSetup.QuantityOnHand && this.sourceStockLineSetup.QuantityReserved) {
             this.availableQty = this.sourceStockLineSetup.QuantityOnHand - this.sourceStockLineSetup.QuantityReserved
         }
@@ -442,18 +443,10 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			this.hasSerialized = false; //for Knowing is Serialized or not for Serial Number 
 		}
 
-		if (allWorkFlows[0].isShelfLifeAvailable == null)
-		{
-			this.sourceStockLineSetup.shelfLife = false;
-		}
-		else
-		{
-			this.sourceStockLineSetup.shelfLife = allWorkFlows[0].isShelfLifeAvailable;
-		}
-
         this.sourceStockLineSetup.isPMA = allWorkFlows[0].IsPMA;
         this.sourceStockLineSetup.isDER = allWorkFlows[0].IsDER;
         this.sourceStockLineSetup.oem = allWorkFlows[0].OEM;
+        this.sourceStockLineSetup.oem = true;
 
 		this.sourceTimeLife.timeLife = allWorkFlows[0].isTimeLife;
 
@@ -468,6 +461,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 
 		this.sourceStockLineSetup.itemMasterId = allWorkFlows[0].itemMasterId;
         this.sourceStockLineSetup.glAccountId = allWorkFlows[0].glAccountId;
+        this.sourceStockLineSetup.glAccountName = allWorkFlows[0].accountName;
         this.sourceStockLineSetup.NHA = allWorkFlows[0].NHA;
        
 	}
@@ -571,13 +565,10 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			let value = event.target.value.toLowerCase();
 			if (this.selectedActionName) {
 				if (value == this.selectedActionName.toLowerCase()) {
-					//alert("Action Name already Exists");
 					this.disableSaveglAccount = true;
-
 				}
 				else {
 					this.disableSaveglAccount = false;
-
 				}
 			}
 
@@ -1001,6 +992,10 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			this.showSerialNumberError = true;
 		}
 
+        if (this.availableQty < 0) {
+            this.invalidQty = true;
+            this.invalidQtyError = true;
+        }
         this.isSaving = true;
 
 		if (
@@ -1026,7 +1021,8 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			((this.sourceStockLineSetup.isSerialized == true) && (this.sourceStockLineSetup.serialNumber)) &&
 			(this.sourceStockLineSetup.companyId) && (this.sourceStockLineSetup.partNumber) && (this.sourceStockLineSetup.partDescription)
 			|| (this.sourceStockLineSetup.conditionId) && (this.sourceStockLineSetup.siteId) && (this.sourceStockLineSetup.receivedDate)
-			|| (this.sourceStockLineSetup.receiverNumber) && (this.sourceStockLineSetup.glAccountId)
+            || (this.sourceStockLineSetup.receiverNumber) && (this.sourceStockLineSetup.glAccountId)
+            || (this.invalidQty)
 		)
 		{
 			if (!this.sourceStockLine.stockLineId) {

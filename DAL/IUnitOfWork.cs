@@ -277,5 +277,7 @@ namespace DAL
         IItemMasterExchangeLoanRepository ItemMasterExchangeLoan { get; }
       
         void SaveChanges(Employee employeeobject);
+
+        IReceiveRepairOrderRepository ReceiveRepairOrder { get; }
     }
 }

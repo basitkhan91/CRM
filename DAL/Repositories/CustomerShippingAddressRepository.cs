@@ -48,7 +48,9 @@ namespace DAL.Repositories
                             c.CustomerId,
                             c.IsActive,
                             c.IsPrimary,
-                            Country = co.countries_name
+							CountryName = co.countries_name,
+							Country = co.countries_id,
+                           
 
 
                         }).ToList();

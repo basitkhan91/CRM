@@ -63,7 +63,7 @@ export class ItemClassificationService {
 
     }
     historyAcion(actionId: number) {
-        return Observable.forkJoin(this.itemclassificationEndpoint.getHistoryActionEndpoint<AuditHistory[]>(actionId));
+        return this.itemclassificationEndpoint.getHistoryActionEndpoint<any[]>(actionId);
     }
     getItemClassificationAudit(classificationAuditId: number) {
         return this.itemclassificationEndpoint.getItemClassificationDataAuditById<any>(classificationAuditId);

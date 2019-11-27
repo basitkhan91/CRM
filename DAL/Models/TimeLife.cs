@@ -51,6 +51,12 @@ namespace DAL.Models
         [ForeignKey("PurchaseOrderId")]
         public long? PurchaseOrderPartRecordId { get; set; }
 
+        [ForeignKey("RepairOrderId")]
+        public long? RepairOrderId { get; set; }
+        
+        [ForeignKey("RepairOrderPartRecordId")]
+        public long? RepairOrderPartRecordId { get; set; }
+
         public virtual PurchaseOrder PurchaseOrder { get; set; }
     }
 }

@@ -61,6 +61,7 @@ export class EmployeeEndpoint extends EndpointFactory {
 	private readonly _getStoreEmployeeRolesUrl: string = "/api/Employee/employeeroles";
 	private readonly _getEmployeeRolesUrl: string = "/api/Employee/getEmployeeRoles";
 	private readonly _getStoreEmployeeManagementStructure: string = "/api/Employee/employeeManagementStructure";
+	private readonly _getEmployeeManagementStructure: string = "/api/Employee/getemployeeManagementStructure";
  
     
 
@@ -88,6 +89,7 @@ export class EmployeeEndpoint extends EndpointFactory {
 	get getStoreEmployeeRolesUrl() { return `${this.configurations.baseUrl}${this._getStoreEmployeeRolesUrl}`}
 	get getEmployeeRolesUrl() { return `${this.configurations.baseUrl}${this._getEmployeeRolesUrl}`}
 	get getStoreEmployeeManagementStructure() { return `${this.configurations.baseUrl}${this._getStoreEmployeeManagementStructure}`}
+	get getEmployeeManagementStructure() { return `${this.configurations.baseUrl}${this._getEmployeeManagementStructure}`}
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -441,12 +443,19 @@ export class EmployeeEndpoint extends EndpointFactory {
 			});
 	}
 
-	getEmployeeRoles<T>(): Observable<T> {
+	getEmployeeRoles<T>(empId: any): Observable<T> {
 
-		return this.http.get<T>(this._getEmployeeRolesUrl, this.getRequestHeaders())
+		return this.http.get<T>(`${this._getEmployeeRolesUrl}?employeeId=${empId}`, this.getRequestHeaders())
 			.catch(error => {
 				return this.handleError(error, () => this.getEmployeeEndpoint());
 			});
+	}
+
+	getStoredEmployeeManagementStructure<T>(employeeId): Observable<T> {
+		return this.http.get<T>(`${this._getEmployeeManagementStructure}?employeeId=${employeeId}`, this.getRequestHeaders())
+		.catch(error => {
+			return this.handleError(error, () => this.getEmployeeEndpoint());
+		});
 	}
 }
 

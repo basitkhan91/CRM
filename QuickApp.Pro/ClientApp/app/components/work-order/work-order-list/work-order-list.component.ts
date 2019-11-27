@@ -18,6 +18,7 @@ import { Router } from '@angular/router';
 export class WorkOrderListComponent implements OnInit {
     /** WorkOrderList ctor */
     workOrderData: any;
+    isWorkOrder = true;
     pageSize: number = 10;
     @ViewChild('dt')
     private table: Table;
@@ -44,6 +45,24 @@ export class WorkOrderListComponent implements OnInit {
     workOrderChargesList: Object;
     workOrderExclusionsList: Object;
     workOrderLaborList: Object;
+    mpnPartNumbersList: any;
+    workOrderId: any;
+    workFlowId: any;
+    showTableGrid: boolean = false;
+    showMPN: boolean = false;
+    workOrderDirectionList: Object;
+    otherOptions = [
+        { label: 'Other Options', value: '' },
+        { label: 'Freight', value: 'freight' },
+        { label: 'ContactGrid', value: 'contactGrid' },
+        { label: 'Accounting', value: 'accounting' },
+        { label: 'Charges', value: 'charges' },
+        { label: 'Exclusion', value: 'exclusion' },
+
+    ]
+    selectedOtherSubTask: string = ''
+    activeIndex: number;
+    otherOptionShow: boolean = false;
     constructor(private workOrderService: WorkOrderService,
         private route: Router,
         private authService: AuthService,
@@ -91,6 +110,10 @@ export class WorkOrderListComponent implements OnInit {
 
         })
     }
+    otherOptionSelected(value) {
+        this.selectedOtherSubTask = value;
+        this.otherOptionShow = false;
+    }
 
     globalSearch(value) {
         // this.pageIndex = 0;
@@ -105,27 +128,96 @@ export class WorkOrderListComponent implements OnInit {
 
 
     async view(rowData) {
-        const { workOrderId } = rowData;
+
+        this.workOrderId = rowData.workOrderId;
+
+
+
+
         // const { workFlowWorkOrderId } = rowData;
         // const workOrderId = 46;
-        const workFlowWorkOrderId = 0;
+        // const workFlowWorkOrderId = 0;
 
-        await this.workOrderService.viewWorkOrderHeader(workOrderId).subscribe(res => {
+        await this.workOrderService.viewWorkOrderHeader(this.workOrderId).subscribe(res => {
             this.viewWorkOrderHeader = res;
+            if (res.singleMPN === "Single MPN") {
+                this.showMPN = false;
+                this.getAllTabsData(res.workFlowWorkOrderId, 0);
+            } else {
+                this.showMPN = true;
+            }
+            this.workFlowId = res.workFlowId;
+
         })
 
-        await this.workOrderService.viewWorkOrderPartNumber(workOrderId).subscribe(res => {
+        await this.workOrderService.viewWorkOrderPartNumber(this.workOrderId).subscribe(res => {
             this.viewWorkOrderMPN = res;
         })
 
+        console.log(rowData);
+
+
+
+        // this.workOrderId = 0;
+        this.getWorkOrderWorkFlowNos(this.workOrderId)
+
+
+
+
+    }
+
+
+
+
+    getWorkOrderWorkFlowNos(workOrderId) {
+        if (workOrderId) {
+            this.workOrderService.getWorkOrderWorkFlowNumbers(workOrderId).subscribe(res => {
+
+                this.mpnPartNumbersList = res.map(x => {
+
+
+                    return {
+                        value: { workflowId: x.workflowId, workFlowWorkOrderId: x.value },
+                        label: x.workflowNo
+                    }
+                })
+
+                // if (this.viewWorkOrderHeader.singleMPN === 'Single MPN') {
+                //     const data = this.mpnPartNumbersList;
+
+                //     if (data.length === 1) {
+                //         this.getAllTabsData(data[0].value.workFlowWorkOrderId, this.workOrderId);
+                //         this.showTableGrid = true;
+                //     }
+                // }
+                // else {
+                //     this.showTableGrid = true;
+                // }
+
+            })
+        }
+
+    }
+
+    changeofMPN(object) {
+        console.log(this.showTableGrid);
+
+
+        this.workFlowId = object.workflowId;
+        this.getAllTabsData(object.workFlowWorkOrderId, this.workOrderId);
+
+    }
+
+    getAllTabsData(workFlowWorkOrderId, workOrderId) {
         this.getEquipmentByWorkOrderId(workFlowWorkOrderId, workOrderId);
         this.getMaterialListByWorkOrderId(workFlowWorkOrderId, workOrderId);
         this.getPublicationListByWorkOrderId(workFlowWorkOrderId, workOrderId);
         this.getChargesListByWorkOrderId(workFlowWorkOrderId, workOrderId);
         this.getExclusionListByWorkOrderId(workFlowWorkOrderId, workOrderId);
         this.getLaborListByWorkOrderId(workFlowWorkOrderId, workOrderId);
-
-
+        this.getDirectionByWorkOrderId(workFlowWorkOrderId, workOrderId);
+        this.showTableGrid = true;
+        this.activeIndex = 0;
     }
 
 
@@ -134,7 +226,7 @@ export class WorkOrderListComponent implements OnInit {
 
         // if (workFlowWorkOrderId || workFlowWorkOrderId === 0) {
         // this.workFlowWorkOrderId = this.workFlowWorkOrderData.workFlowWorkOrderId;
-        if (workOrderId) {
+        if (workFlowWorkOrderId) {
             this.workOrderService.getWorkOrderAssetList(workFlowWorkOrderId, workOrderId).subscribe(
                 result => {
                     console.log(result);
@@ -146,7 +238,7 @@ export class WorkOrderListComponent implements OnInit {
     }
 
     getMaterialListByWorkOrderId(workFlowWorkOrderId, workOrderId) {
-        if (workOrderId) {
+        if (workFlowWorkOrderId) {
             this.workOrderService.getWorkOrderMaterialList(workFlowWorkOrderId, workOrderId).subscribe(res => {
 
                 this.workOrderMaterialList = res;
@@ -158,7 +250,7 @@ export class WorkOrderListComponent implements OnInit {
 
     getPublicationListByWorkOrderId(workFlowWorkOrderId, workOrderId) {
 
-        if (workOrderId) {
+        if (workFlowWorkOrderId) {
             this.workOrderService.getWorkOrderPublicationList(workFlowWorkOrderId, workOrderId).subscribe(res => {
                 this.workOrderPublicationList = res;
             })
@@ -168,7 +260,7 @@ export class WorkOrderListComponent implements OnInit {
 
     getChargesListByWorkOrderId(workFlowWorkOrderId, workOrderId) {
 
-        if (workOrderId) {
+        if (workFlowWorkOrderId) {
             this.workOrderService.getWorkOrderChargesList(workFlowWorkOrderId, workOrderId).subscribe(res => {
                 this.workOrderChargesList = res;
             })
@@ -179,7 +271,7 @@ export class WorkOrderListComponent implements OnInit {
 
     getExclusionListByWorkOrderId(workFlowWorkOrderId, workOrderId) {
 
-        if (workOrderId) {
+        if (workFlowWorkOrderId) {
             this.workOrderService.getWorkOrderExclusionsList(workFlowWorkOrderId, workOrderId).subscribe(res => {
                 this.workOrderExclusionsList = res;
             })
@@ -190,13 +282,23 @@ export class WorkOrderListComponent implements OnInit {
 
     getLaborListByWorkOrderId(workFlowWorkOrderId, workOrderId) {
 
-        if (workOrderId) {
+        if (workFlowWorkOrderId) {
             this.workOrderService.getWorkOrderLaborList(workFlowWorkOrderId, workOrderId).subscribe(res => {
-                this.workOrderLaborList = res;
+                this.workOrderLaborList = res.laborList;
+
             })
 
         }
 
+    }
+
+    getDirectionByWorkOrderId(workFlowWorkOrderId, workOrderId) {
+        if (workFlowWorkOrderId) {
+            this.workOrderService.getWorkOrderDirectionList(workFlowWorkOrderId, workOrderId).subscribe(res => {
+                this.workOrderDirectionList = res;
+            })
+
+        }
     }
 
 
@@ -206,8 +308,8 @@ export class WorkOrderListComponent implements OnInit {
 
 
     edit(rowData) {
-        this.workOrderService.getWorkOrderById(rowData).subscribe(res => {
-            const { workOrderId } = rowData;
+        const { workOrderId } = rowData;
+        this.workOrderService.getWorkOrderById(workOrderId).subscribe(res => {
             this.route.navigate([`workordersmodule/workorderspages/app-work-order-edit/${workOrderId}`]);
         })
     }
@@ -238,6 +340,9 @@ export class WorkOrderListComponent implements OnInit {
 
     }
 
+    showOtherOptions() {
+        this.otherOptionShow = !this.otherOptionShow;
+    }
 
 
 }

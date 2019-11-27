@@ -4619,19 +4619,29 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.router.navigate(['itemmastersmodule/itemmasterpages/app-item-master-list'])
         })
     }
-    saveandcreate() {
-        const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
-        const data = { ...this.exportInfo, ExportCountryId: this.tempExportCountryId, ItemMasterId: ItemMasterID }
-
-        this.itemser.newItemMasterExportInformation(data).subscribe(datas => {
-            this.tempExportCountryId = null;
-            this.alertService.showMessage(
-                'Success',
-                `Saved Export Information Successfully `,
-                MessageSeverity.success
-            );
-            this.router.navigate(['itemmastersmodule/itemmasterpages/app-item-master-stock'])
-        })
+	saveandcreate() {
+        if(this.isValidClassification){
+            const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
+            const data = { ...this.exportInfo, ExportCountryId: this.tempExportCountryId, ItemMasterId: ItemMasterID }
+    
+            this.itemser.newItemMasterExportInformation(data).subscribe(datas => {
+                this.tempExportCountryId = null;
+                this.alertService.showMessage(
+                    'Success',
+                    `Saved Export Information Successfully `,
+                    MessageSeverity.success
+                );
+                this.router.navigate(['itemmastersmodule/itemmasterpages/app-item-master-stock']);
+               // Before this line we should clear form but I could not find all forms data and states
+               // so as of now I'm keeping in comments
+               // this.changeOfTab('General');
+            });
+        }else{
+            this.display = true;
+            this.modelValue = true;
+        }
+        
+        
     }
 
     selectedOEM(value) {

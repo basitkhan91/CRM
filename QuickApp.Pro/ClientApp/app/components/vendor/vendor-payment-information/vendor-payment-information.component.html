@@ -63,7 +63,21 @@
 								</td>
 
 								<td>
-									<p-inputSwitch name="isActive{{i}}" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData, $event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+									<!-- <p-inputSwitch name="isActive{{i}}" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData, $event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch> -->
+
+									<p-inputSwitch [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
+									*ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off"
+									(onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']">
+								</p-inputSwitch>
+								<p-inputSwitch [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
+									*ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on"
+									offLabel="off" (onChange)="handleChanges(rowData,$event)"
+									[(ngModel)]="rowData['isActive']"></p-inputSwitch>
+								<p-inputSwitch [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
+									*ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off"
+									(onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']">
+								</p-inputSwitch>
+
 									<!-- <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
 									<p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
 									<p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch> -->

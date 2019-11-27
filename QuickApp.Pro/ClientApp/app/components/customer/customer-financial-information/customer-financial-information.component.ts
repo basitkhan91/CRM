@@ -32,6 +32,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
     taxRatesList: any = [];
     creditTermList: any;
     discountList: any;
+    discountList1: any;
+
     markUpList: any;
     taxrateList: any;
     state_taxRateList: any;
@@ -241,6 +243,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
         if (this.editMode) {
 
             this.id = this.editGeneralInformationData.customerId
+         
             this.savedGeneralInformationData = this.editGeneralInformationData;
             this.customerCode = this.editGeneralInformationData.customerCode;
             this.customerName = this.editGeneralInformationData.name;
@@ -261,6 +264,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
         this.getAllPercentage();
         this.getAllTaxTypes();
         this.getTaxRates();
+        this.getAllDiscountList1();
+
     
     }
 
@@ -286,7 +291,9 @@ export class CustomerFinancialInformationComponent implements OnInit {
         // })
     }
     getAllCurrency() {
+       
         this.currencyService.getCurrencyList().subscribe(res => {
+
             this.allCurrencyInfo = res[0];
         })
     }
@@ -435,15 +442,15 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
 
 
-    //getAllDiscountList() {
-    //    this.customerService.getDiscountList().subscribe(res => {
-    //        this.discountList = res[0];
-    //    })
-    //}
-   
     getAllDiscountList() {
+        this.customerService.getDiscountList().subscribe(res => {
+            this.discountList = res[0];
+        })
+    }
+   
+    getAllDiscountList1() {
         this.commonservice.smartDropDownList('[Discount]', 'DiscountId', 'DiscontValue').subscribe(res => {
-            this.discountList = res;
+            this.discountList1 = res;
         })
     }
 
@@ -452,10 +459,10 @@ export class CustomerFinancialInformationComponent implements OnInit {
     filterDiscount(event) {
      
         console.log();
-        this._discountList = this.discountList;
+        this._discountList = this.discountList1;
     
 
-        this._discountList = [...this.discountList.filter(x => {
+        this._discountList = [...this.discountList1.filter(x => {
             console.log(x);
             return x.label.includes(event.query.toLowerCase())
 
@@ -463,21 +470,21 @@ export class CustomerFinancialInformationComponent implements OnInit {
         })]
     }
 
-    //checkDiscountExists(field, value) {
-    //    const exists = validateRecordExistsOrNot(field, value, this.creditTermList)
-    //    console.log(exists);
-    //    if (exists.length > 0) {
-    //        this.isDiscountExists = true;
-    //    } else {
-    //        this.isDiscountExists = false;
-    //    }
-    //}
-    checkDiscountExists(value) {
+    checkDiscountExists(field, value) {
+        const exists = validateRecordExistsOrNot(field, value, this.creditTermList)
+        console.log(exists);
+        if (exists.length > 0) {
+            this.isDiscountExists = true;
+        } else {
+            this.isDiscountExists = false;
+        }
+    }
+    checkDiscountExistss(value) {
       
         this.isDiscountExists = false;
 
-        for (let i = 0; i < this.discountList.length; i++) {
-            if (this.discontValue == this.discountList[i].label || value == this.discountList[i].label) {
+        for (let i = 0; i < this.discountList1.length; i++) {
+            if (this.discontValue == this.discountList1[i].label || value == this.discountList[i].label) {
                 this.isDiscountExists = true;
                 // this.disableSave = true;
 
@@ -606,7 +613,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 MessageSeverity.success
             );
             this.restDiscount();
-            this.savedGeneralInformationData.discountId = data.discountId;
+            this.savedGeneralInformationData.discountId = data.discontValue;
         })
 
     }
@@ -681,6 +688,15 @@ export class CustomerFinancialInformationComponent implements OnInit {
     }
 
 
+    deleteTaxTypeRate(i) {
+       
+     
+      //  this.partListForPMA = [{ label: rowData.partNumber, value: rowData }, ...this.partListForPMA];
+        this.taxTypeRateMapping.splice(i, 1);
+
+      
+
+    }
 
     // newAddDiscount
     //     this.itemQuantity = Array(100).fill(1).map((x, i) => i + 1);
