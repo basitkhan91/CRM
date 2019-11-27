@@ -197,7 +197,7 @@
                             </div>
 
                         </div>
-                        <button type="button" class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!financialInfoForm.valid" (click)="saveFinancialInformation();">Save & Next</button>
+                        <button type="button" class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!financialInfoForm.valid" (click)="saveFinancialInformation();"> Next</button>
                         <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="backClick()">Previous</button>
                     </div>
 
@@ -568,7 +568,7 @@
                         <div class="form-group">
                             <label for="description" class="control-label w100">Memo</label>
                             <div class="control-data">
-                                <input type="text" id="" class="form-control" name="memo" [(ngModel)]="addNewCreditTerms.memo">
+                                <input type="text" id=""  placeholder="Tool Bar" class="form-control" name="memo" [(ngModel)]="addNewCreditTerms.memo">
 
                             </div>
                             <div class="clear"></div>
@@ -617,7 +617,7 @@
 
                                 <p-autoComplete  class="p-dropdown-custom-2" name="discontValue"
                                                 [(ngModel)]="discontValue"
-                                               
+                                               pKeyFilter="num"
                                                (onSelect)="selectedDiscount()"
                                                 (onKeyUp)="checkDiscountExistss($event)"
                                                
@@ -670,7 +670,7 @@
                         <div class="form-group">
                             <label for="description" class="control-label w100">Memo</label>
                             <div class="control-data">
-                                <input type="text" id="" class="form-control" name="memo" [(ngModel)]="addNewTaxType.memo">
+                                <input type="text" id="" class="form-control" placeholder="Tool Bar" name="memo" [(ngModel)]="addNewTaxType.memo">
 
                             </div>
                             <div class="clear"></div>
@@ -706,7 +706,7 @@
                         <div class="form-group">
                             <label>Tax Type <span class="clr-red">*</span></label>
                             <div class="inner-addon right-addon inline-block">
-                                <select name="taxTypeId" [(ngModel)]="addNewTaxRate.taxTypeId" placeholder="Select TaxType">
+                                <select name="taxTypeId" [(ngModel)]="addNewTaxRate.taxTypeId" placeholder="Select TaxType" required>
                                   <option value="">Select Tax Type</option>
                                     <option *ngFor="let TaxTypelist of taxTypeList" [ngValue]="TaxTypelist.value">{{TaxTypelist.label}}</option>
                                 </select>
@@ -733,7 +733,7 @@
                         <div class="form-group">
                             <label for="description" class="control-label w100">Memo</label>
                             <div class="control-data">
-                                <input type="text" id="" class="form-control" name="memo" [(ngModel)]="addNewTaxRate.memo">
+                                <input type="text" id="" class="form-control" placeholder="Tool Bar" name="memo" [(ngModel)]="addNewTaxRate.memo">
 
                             </div>
                             <div class="clear"></div>
@@ -743,7 +743,7 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-primary-cstm" data-dismiss="modal" (click)="newTaxRateAdd()" [disabled]="!addTaxRate.valid || isTaxTypeExists">Submit</button>
+                        <button class="btn btn-primary-cstm" data-dismiss="modal" (click)="newTaxRateAdd()" [disabled]="!addTaxRate.valid || isTaxTypeExists || isTaxRateExists">Submit</button>
 
                         <button type="button" class="btn btn-default" data-dismiss="modal" (click)="resetTaxRate()">Close</button>
 

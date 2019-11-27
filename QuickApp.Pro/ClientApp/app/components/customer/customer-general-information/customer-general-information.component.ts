@@ -569,6 +569,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
             this.customertypes = responseData;
         })
     }
+    addclassification() {
+        this.isClassificationAlreadyExists = false;
+        this.addNewclassification.description = '';
+    }
 
     // async getAllCustomers() {
     //     await this.customerService.getCustomers().subscribe(res => {

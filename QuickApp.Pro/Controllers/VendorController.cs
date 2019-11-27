@@ -3219,6 +3219,27 @@ namespace QuickApp.Pro.Controllers
             return Ok(allVendorShippingDetails);
         }
 
+        [HttpGet("vendorpomemolist")]
+        public IActionResult GetVendorPOMemoList(long vendorId)
+        {
+            var result = _unitOfWork.Vendor.GetVendorPOMemoList(vendorId);
+            return Ok(result);
+        }
+
+        [HttpGet("vendorromemolist")]
+        public IActionResult GetVendorROMemoList(long vendorId)
+        {
+            var result = _unitOfWork.Vendor.GetVendorROMemoList(vendorId);
+            return Ok(result);
+        }
+
+        [HttpPut("updatevendormemotext")]
+        public IActionResult UpdateVendorMemoText(long id, string type, string memoText, string updatedBy)
+        {
+            _unitOfWork.Vendor.UpdateVendorMemoText(id, type, memoText, updatedBy);
+            return Ok();
+        }
+
 
         #region Capes
 

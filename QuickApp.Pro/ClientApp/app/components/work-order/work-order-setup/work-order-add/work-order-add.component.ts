@@ -101,7 +101,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
   // quote Object Modal
   quote: WorkOrderQuote;
   // labor Object Modal
-  labor: WorkOrderLabor;
+  labor = new WorkOrderLabor();
   isWorkOrder: boolean = true;
 
   workFlowList: any;
@@ -149,6 +149,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
   materialStatus: any;
   workOrderLaborList: any;
   taskList: any;
+  subTabOtherOptions: any;
+  workOrderChargesList: Object;
 
 
   constructor(
@@ -174,7 +176,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     this.moduleName = 'Work Order';
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     this.getTaskList();
   }
   async ngOnInit() {
@@ -204,6 +206,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         customerReference: data.customerReference,
         csr: data.csr,
         customerId: data.customerDetails,
+        employeeId: getObjectById('value', data.employeeId, this.employeesOriginalData),
+        salesPersonId: getObjectById('value', data.employeeId, this.employeesOriginalData),
         partNumbers: data.partNumbers.map((x, index) => {
 
           this.getRevisedpartNumberByItemMasterId(x.masterPartId, index);
@@ -211,6 +215,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
           this.getConditionByItemMasterId(x.masterPartId, index);
           return {
             ...x,
+            technicianId: getObjectById('value', x.technicianId, this.employeesOriginalData),
             masterPartId: getObjectById('itemMasterId', x.masterPartId, this.partNumberOriginalData),
             mappingItemMasterId: getObjectById('mappingItemMasterId', x.mappingItemMasterId, x.revisedParts),
           }
@@ -219,6 +224,11 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
       }
       this.showTableGrid = true;
       this.workFlowWorkOrderId = data.workFlowWorkOrderId;
+      if (data.isSinglePN) {
+        this.workFlowId = data.partNumbers[0].workflowId;
+
+      }
+
       this.workOrderId = data.workOrderId;
       this.savedWorkOrderData = this.workOrderGeneralInformation;
       this.getWorkOrderWorkFlowNos();
@@ -235,25 +245,25 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     return this.authService.currentUser ? this.authService.currentUser.userName : "";
   }
 
-  getTaskList(){
-    if(this.labor == undefined){
+  getTaskList() {
+    if (this.labor == undefined) {
       this.labor = new WorkOrderLabor()
     }
     this.labor.workOrderLaborList = [];
     this.labor.workOrderLaborList.push({})
     this.workOrderService.getAllTasks()
-    .subscribe(
-      (taskList)=>{
-        this.labor.workOrderLaborList[0] = {}
-        this.taskList = taskList;
-        this.taskList.forEach(task => {
-          this.labor.workOrderLaborList[0][task.description.toLowerCase()] = [new AllTasks()];
-        });
-      },
-      (error)=>{
-        console.log(error);
-      }
-    )
+      .subscribe(
+        (taskList) => {
+          this.labor.workOrderLaborList[0] = {}
+          this.taskList = taskList;
+          this.taskList.forEach(task => {
+            this.labor.workOrderLaborList[0][task.description.toLowerCase()] = [new AllTasks()];
+          });
+        },
+        (error) => {
+          console.log(error);
+        }
+      )
   }
 
   // loadMPNlist() {
@@ -599,6 +609,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     this.getEquipmentByWorkOrderId();
     this.getMaterialListByWorkOrderId();
     this.getWorkFlowLaborList();
+    this.getChargesListByWorkOrderId();
     // this.getWorkOrderWorkFlowBywfwoId(this.workFlowWorkOrderId);
   }
 
@@ -634,7 +645,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
   }
 
   getWorkOrderWorkFlowNos() {
-
+debugger;
     if (this.workOrderId) {
       this.workOrderService.getWorkOrderWorkFlowNumbers(this.workOrderId).subscribe(res => {
         this.workOrderWorkFlowOriginalData = res;
@@ -785,39 +796,63 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     }
   }
 
-  getWorkFlowLaborList(){
+  getChargesListByWorkOrderId() {
+
+    if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
+      this.workOrderService.getWorkOrderChargesList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
+        this.workOrderChargesList = res;
+      })
+
+    }
+
+  }
+
+  getWorkFlowLaborList() {
     if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
       this.workOrderService.getWorkOrderLaborList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
-        this.workOrderLaborList = res;
-        if(res){
-          for( let labList of res['laborList']){
-            for(let task of this.taskList){
-              if(task.taskId == labList['wol']['taskId']){
-                if(this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == undefined || this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == null){
-                  this.labor.workOrderLaborList[0][task.description.toLowerCase()].splice(0,1);
+        const data = res;
+        this.workOrderLaborList = {
+          ...data,
+          workFlowWorkOrderId: getObjectById('value', data.workFlowWorkOrderId, this.workOrderWorkFlowOriginalData),
+          employeeId: getObjectById('value', data.employeeId, this.employeesOriginalData),
+          dataEnteredBy: getObjectById('value', data.employeeId, this.employeesOriginalData),
+        };
+        if (res) {
+          for (let labList of res['laborList']) {
+            for (let task of this.taskList) {
+              if (task.taskId == labList['taskId']) {
+                if (this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == undefined || this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == null) {
+                  this.labor.workOrderLaborList[0][task.description.toLowerCase()].splice(0, 1);
                 }
                 let taskData = new AllTasks()
-                taskData['expertiseId'] = labList['wol']['expertiseId'];
-                taskData['employeeId'] = labList['wol']['employeeId'];
-                taskData['billableId'] = labList['wol']['billableId'];
-                taskData['startDate'] = labList['wol']['startDate'];
-                taskData['endDate'] = labList['wol']['endDate'];
-                taskData['hours'] = labList['wol']['hours'];
-                taskData['adjustments'] = labList['wol']['adjustments'];
-                taskData['adjustedHours'] = labList['wol']['adjustedHours'];
-                taskData['memo'] = labList['wol']['memo'];
+                taskData['expertiseId'] = labList['expertiseId'];
+                taskData['employeeId'] = labList['employeeId'];
+                taskData['billableId'] = labList['billableId'];
+                taskData['startDate'] = labList['startDate'];
+                taskData['endDate'] = labList['endDate'];
+                taskData['hours'] = labList['hours'];
+                taskData['adjustments'] = labList['adjustments'];
+                taskData['adjustedHours'] = labList['adjustedHours'];
+                taskData['memo'] = labList['memo'];
                 this.labor.workOrderLaborList[0][task.description.toLowerCase()].push(taskData);
               }
             }
           }
         }
+        console.log(this.workOrderLaborList);
       })
     }
   }
 
 
 
+  otherOptionSelected(value) {
+    this.subTabOtherOptions = value;
+    if (value === 'charges') {
+      this.getChargesListByWorkOrderId();
+    }
 
+  }
 
 
 

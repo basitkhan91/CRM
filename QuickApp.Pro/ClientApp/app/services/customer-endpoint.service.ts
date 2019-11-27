@@ -92,7 +92,8 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _CustomerAircraftPostUrl: string = "/api/Customer/CustomerAircraftPost";
     private readonly _getTaxTypeRateMapped: string = "/api/Customer/getCustomerTaxTypeRateMapped";
     private readonly _CustomerTaxTypeRatePostUrl: string = "/api/Customer/CustomerTaxTypeRatePost";
-    private readonly _CustomerAircraftSearchUrl: string = '/api/Customer/searchGetCustomerAirMappedByMultiTypeIDModelIDDashID';
+
+    private readonly _CustomerAircraftSearchUrl: string = '/api/Customer/searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID';
     private readonly _CustomerATAPostUrl: string = "/api/Customer/CustomerContactATAPost";
     private readonly _getATAMappedByContactId: string = "/api/Customer/getCustomerContactATAMapped";
     private readonly _getATAMappedByCustomerId: string = "/api/Customer/getCustomerATAMapped";
@@ -290,18 +291,18 @@ export class CustomerEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.deleteTaxTypeRateMappedDataById(id));
             });
     }
-    searchATAMappedByMultiATAIDATASUBIDByCustomerId<T>(customerId: number, searchUrl: string) {
-        console.log(customerId, searchUrl)
-        let endpointUrl = `${this.CustomerATASearchUrl}/${customerId}?${searchUrl}`;
+    searchATAMappedByMultiATAIDATASUBIDByCustomerId<T>(contactId: number, searchUrl: string) {
+        console.log(contactId, searchUrl)
+        let endpointUrl = `${this.CustomerATASearchUrl}?customerId=${contactId}&${searchUrl}`;
 
         return this.http
             .get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.searchATAMappedByMultiATAIDATASUBIDByCustomerId(customerId, searchUrl));
+                return this.handleError(error, () => this.searchATAMappedByMultiATAIDATASUBIDByCustomerId(contactId, searchUrl));
             });
     }
     searchAirMappedByMultiTypeIDModelIDDashIDByCustomerId<T>(customerId: number, searchUrl: string) {
-        let endpointUrl = `${this.CustomerAircraftSearchUrl}/${customerId}?${searchUrl}`;
+        let endpointUrl = `${this.CustomerAircraftSearchUrl}?customerId=${customerId}&${searchUrl}`;
 
         return this.http
             .get<T>(endpointUrl, this.getRequestHeaders())

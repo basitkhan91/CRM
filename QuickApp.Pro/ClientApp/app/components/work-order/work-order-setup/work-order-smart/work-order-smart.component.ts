@@ -70,13 +70,11 @@ export class WorkOrderSmartComponent implements OnInit {
                     workOrderNumber: res.workOrderNum,
                     openDate: new Date(res.openDate),
                     customerId: res.customerId,
-                    employeeId: getObjectById('value', workOrderData.employeeId, this.employeesOriginalData),
-                    salesPersonId: getObjectById('value', workOrderData.employeeId, this.employeesOriginalData),
                     partNumbers: res.partNumbers.map(x => {
                         return {
                             ...x,
 
-                            technicianId: getObjectById('value', x.technicianId, this.employeesOriginalData),
+                         
                             customerRequestDate: new Date(x.customerRequestDate),
                             promisedDate: new Date(x.promisedDate),
                             estimatedCompletionDate: new Date(x.estimatedCompletionDate),

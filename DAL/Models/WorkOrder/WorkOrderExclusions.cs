@@ -44,6 +44,8 @@ namespace DAL.Models
         public string EstOcuurance { get; set; }
         [NotMapped]
         public string MarkUpPercentage { get; set; }
+        [NotMapped]
+        public string Task { get; set; }
 
     }
 }

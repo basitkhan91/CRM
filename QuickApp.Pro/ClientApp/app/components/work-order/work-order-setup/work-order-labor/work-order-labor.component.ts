@@ -51,6 +51,8 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   // ];
   ngOnInit() {
 
+    
+
     if(this.workOrderLaborList){
       this.laborForm.workFlowWorkOrderId = this.workOrderLaborList['workFlowWorkOrderNo'];
       this.laborForm.dataEnteredBy = this.workOrderLaborList['dataEnteredBy'];
@@ -147,6 +149,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   getAllEmployees(): void {
     this.commonService.smartDropDownList('Employee', 'EmployeeId', 'FirstName').subscribe(res => {
       this.employeesOriginalData = res;
+      this.employeeList = res;
     })
   }
 
