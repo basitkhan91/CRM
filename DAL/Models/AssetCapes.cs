@@ -22,7 +22,7 @@ namespace DAL.Models
         public string AircraftType { get; set; }
         public string AircraftModel { get; set; }
         public string AircraftDashNumber { get; set; }
-        public long ItemMasterId { get; set; }
+        public long? ItemMasterId { get; set; }
         //public virtual Asset Asset { get; set; }
     }
 }
