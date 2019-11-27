@@ -207,7 +207,7 @@ export class CustomerBillingInformationComponent {
                 updatedBy: this.userName,
                 country: getValueFromObjectByKey('countries_id', this.billingInfo.country),
 	      masterCompanyId: 1,
-                isPrimary: false,
+               // isPrimary: false,
                 isActive: true,
                 customerId: this.id
              
