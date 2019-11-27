@@ -614,7 +614,7 @@ namespace DAL.Repositories
                             repairOrderPartViewDto.ForeignExchangeRate = repairOrderPart.ForeignExchangeRate;
                             repairOrderPartViewDto.ManagementStructureId = repairOrderPart.ManagementStructureId;
                             repairOrderPartViewDto.StockLineNumber = _getStockLine(repairOrderPart.RepairOrderId, repairOrderPart.RepairOrderPartRecordId).StockLineNumber;
-                            repairOrderPartViewDto.ControlId = _getStockLine(repairOrderPart.RepairOrderId, repairOrderPart.RepairOrderPartRecordId).ConditionId.ToString();
+                            repairOrderPartViewDto.ControlId = _getStockLine(repairOrderPart.RepairOrderId, repairOrderPart.RepairOrderPartRecordId).IdNumber;
                             repairOrderPartViewDto.ControlNumber = _getStockLine(repairOrderPart.RepairOrderId, repairOrderPart.RepairOrderPartRecordId).ControlNumber;
                             repairOrderPartViewDto.RepairOrderNo = roNumber;
                             repairOrderPartViewDto.Memo = repairOrderPart.Memo;
@@ -644,7 +644,7 @@ namespace DAL.Repositories
                                     : (repairOrderPart.RoPartSplitUserTypeId == 2 ? "Vendor" : "Company"),
                                 User = _getUser(repairOrderPart.RoPartSplitUserTypeId, repairOrderPart.RepairOrderId),
                                 StockLineNumber = _getStockLine(repairOrderPart.RepairOrderId, repairOrderPart.RepairOrderPartRecordId).StockLineNumber,
-                                ControlId = _getStockLine(repairOrderPart.RepairOrderId, repairOrderPart.RepairOrderPartRecordId).ConditionId.ToString(),
+                                ControlId = _getStockLine(repairOrderPart.RepairOrderId, repairOrderPart.RepairOrderPartRecordId).IdNumber,
                                 ControlNumber = _getStockLine(repairOrderPart.RepairOrderId, repairOrderPart.RepairOrderPartRecordId).ControlNumber,
                             };
                             if (repairOrderPartViewDto.RepairOrderSplitParts == null)

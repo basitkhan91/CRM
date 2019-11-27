@@ -533,8 +533,7 @@ namespace DAL.Repositories
                             repairOrderPartDto.ManufacturerName = roPart?.ItemMaster?.Manufacturer?.Name;
                             repairOrderPartDto.StockLineId = _getStockLineInfo(roPart.RepairOrderPartRecordId).StockLineId;
                             repairOrderPartDto.StockLineNumber = _getStockLineInfo(roPart.RepairOrderPartRecordId).StockLineNumber;
-                            // TODO: Not sure about "ControlId"
-                            repairOrderPartDto.ControlId = _getStockLineInfo(roPart.RepairOrderPartRecordId).ConditionId.ToString();
+                            repairOrderPartDto.ControlId = _getStockLineInfo(roPart.RepairOrderPartRecordId).IdNumber;
                             repairOrderPartDto.ControlNumber = _getStockLineInfo(roPart.RepairOrderPartRecordId).ControlNumber;
 
                             repairOrderDto.RepairOrderPart.Add(repairOrderPartDto);
@@ -560,7 +559,7 @@ namespace DAL.Repositories
                                 Address = string.Empty,
                                 StockLineId = _getStockLineInfo(roPart.RepairOrderPartRecordId).StockLineId,
                                 StockLineNumber = _getStockLineInfo(roPart.RepairOrderPartRecordId).StockLineNumber,
-                                ControlId = _getStockLineInfo(roPart.RepairOrderPartRecordId).ConditionId.ToString(),
+                                ControlId = _getStockLineInfo(roPart.RepairOrderPartRecordId).IdNumber,
                                 ControlNumber = _getStockLineInfo(roPart.RepairOrderPartRecordId).ControlNumber,
                             };
 

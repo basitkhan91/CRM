@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using DAL;
+﻿using DAL;
 using DAL.Common;
 using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +6,10 @@ using Microsoft.Extensions.Logging;
 using OfficeOpenXml;
 using QuickApp.Pro.Helpers;
 using QuickApp.Pro.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -75,7 +75,7 @@ namespace QuickApp.Pro.Controllers
             }
         }
 
-        
+
         [HttpGet("GetCompanyData")]
         [Produces(typeof(List<StockLineViewModel>))]
         public IActionResult GetCompanyData()
@@ -836,11 +836,11 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = (from pop in _context.PurchaseOrderPart
-                              where pop.PurchaseOrderId== POId
+                              where pop.PurchaseOrderId == POId
                               select new PurchaseOrderPart
                               {
-                                UnitCost=  pop.UnitCost,
-                                PurchaseOrderId=pop.PurchaseOrderId
+                                  UnitCost = pop.UnitCost,
+                                  PurchaseOrderId = pop.PurchaseOrderId
                               }).ToList();
                 return Ok(result);
             }
@@ -861,8 +861,8 @@ namespace QuickApp.Pro.Controllers
                               where rop.RepairOrderId == ROId
                               select new RepairOrderPart
                               {
-                                UnitCost =   rop.UnitCost,
-                                RepairOrderId=rop.RepairOrderId
+                                  UnitCost = rop.UnitCost,
+                                  RepairOrderId = rop.RepairOrderId
                               }).ToList();
                 return Ok(result);
             }
@@ -943,6 +943,23 @@ namespace QuickApp.Pro.Controllers
             stream.Position = 0;
             string excelName = $"StockLineReport-{DateTime.Now.ToString("ddMMMyyyy")}.xlsx";
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+        }
+
+        [HttpGet("getStocklineDetailsById/{stockLineId}")]
+        public IActionResult GetStockLineDetailsById(long stockLineId)
+        {
+            var result = (from s in _context.StockLine
+                          join ro in _context.RepairOrder on s.RepairOrderId equals ro.RepairOrderId
+                          where s.StockLineId == stockLineId
+                          select new
+                          {
+                              s.ControlNumber,
+                              ro.RepairOrderNumber,
+                              ControlId = s.IdNumber
+
+                          }).FirstOrDefault();
+
+            return Ok(result);
         }
     }
 }
