@@ -42,6 +42,7 @@ export class CustomerATAInformationComponent implements OnInit {
     search_ataSubChapterList: any;
     // search_ataChapterList: { value: number; label: string; }[];
     id: number;
+    contactid: number;
     searchATAParams: string;
     customerName: any;
     customerCode: any;
@@ -58,6 +59,8 @@ export class CustomerATAInformationComponent implements OnInit {
     ngOnInit() {
         if (this.editMode) {
             this.id = this.editGeneralInformationData.customerId;
+           
+
             this.customerCode = this.editGeneralInformationData.customerCode;
             this.customerName = this.editGeneralInformationData.name;
             this.getMappedATAByCustomerId();
@@ -194,6 +197,7 @@ export class CustomerATAInformationComponent implements OnInit {
 
     // get sub chapter by multiple ids in the search
     getSubChapterByATAChapter() {
+
         console.log(this.search_SelectedATA);
         this.searchByFieldUrlCreateforATA();
 
@@ -223,11 +227,13 @@ export class CustomerATAInformationComponent implements OnInit {
         this.searchATAParams = '';
         // checks where multi select is empty or not and calls the service
         if (this.ataChapterIdUrl !== '' && this.ataSubchapterIdUrl !== '') {
+          
             this.searchATAParams = `ataChapterId=${
                 this.ataChapterIdUrl
                 }&ataSubChapterId=${this.ataSubchapterIdUrl}`;
         }
         else if (this.ataChapterIdUrl !== '') {
+
             this.searchATAParams = `ataChapterId=${this.ataChapterIdUrl}`;
         }
         else if (this.ataSubchapterIdUrl !== '') {

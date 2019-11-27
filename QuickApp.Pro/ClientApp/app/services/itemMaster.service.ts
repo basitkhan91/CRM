@@ -362,4 +362,9 @@ export class ItemMasterService {
     search(searchParameters: any) {
         return this.itemMasterEndpoint.searchItemMaster(searchParameters);
     }
+
+    searchPartNumber(partNumber: string) {
+        return Observable.forkJoin(
+            this.itemMasterEndpoint.searchPartNumber<any[]>(partNumber));
+    }
 }

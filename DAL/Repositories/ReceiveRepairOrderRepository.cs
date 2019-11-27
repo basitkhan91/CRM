@@ -165,7 +165,7 @@ namespace DAL.Repositories
         {
             var parts = (from part in _appContext.RepairOrderPart
                          join itm in _appContext.ItemMaster on part.ItemMasterId equals itm.ItemMasterId
-                         join glAcc in  _appContext.GLAccount on itm.GLAccountId equals glAcc.GLAccountId
+                         join glAcc in _appContext.GLAccount on itm.GLAccountId equals glAcc.GLAccountId
                          join manf in _appContext.Manufacturer on itm.ManufacturerId equals manf.ManufacturerId
                          into leftManf
                          from manf in leftManf.DefaultIfEmpty()
@@ -173,11 +173,16 @@ namespace DAL.Repositories
                          where part.RepairOrderId == repairOrderId
                          select new
                          {
-                             ItemMasterId = itm.ItemMasterId,
-                             PartNumber = itm.PartNumber,
-                             PartDescription = itm.PartDescription,
+                             RepairOrderId = part.RepairOrderId,
+                             RepairOrderPartRecordId = part.RepairOrderPartRecordId,
+                             UOMId = part.UOMId,
+                             ConditionId = part.ConditionId,
+                             IsParent = part.IsParent,
+                             ManagementStructureId = part.ManagementStructureId,
                              QuantityToRepair = part.QuantityOrdered,
-                             StockLineCount = _appContext.StockLine.Count(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == part.RepairOrderPartRecordId),
+                             DiscountPerUnit = part.DiscountPercent,
+                             ExtendedCost = part.ExtendedCost,
+                             UnitCost = part.UnitCost,
                              StockLine = _appContext.StockLine.Where(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == part.RepairOrderPartRecordId).Select(SL => new
                              {
                                  StockLineId = SL.StockLineId,
@@ -187,8 +192,110 @@ namespace DAL.Repositories
                                  ConditionId = SL.ConditionId,
                                  SerialNumber = SL.SerialNumber,
                                  Quantity = SL.Quantity,
-                                 PurchaseOrderUnitCost = SL.PurchaseOrderUnitCost,
-                                 PurchaseOrderExtendedCost = SL.PurchaseOrderExtendedCost,
+                                 RepairOrderUnitCost = SL.RepairOrderUnitCost,
+                                 RepairOrderExtendedCost = SL.RepairOrderExtendedCost,
+                                 ReceiverNumber = SL.ReceiverNumber,
+                                 WorkOrder = 0,
+                                 SalesOrder = 0,
+                                 SubWorkOrder = 0,
+                                 OwnerType = SL.OwnerType,
+                                 ObtainFromType = SL.ObtainFromType,
+                                 TraceableToType = SL.TraceableToType,
+                                 ManufacturingTrace = SL.ManufacturingTrace,
+                                 ManufacturerId = SL.ManufacturerId,
+                                 ManufacturerLotNumber = SL.ManufacturerLotNumber,
+                                 ManufacturingDate = SL.ManufacturingDate != null ? Convert.ToDateTime(SL.ManufacturingDate).ToShortDateString() : null,
+                                 ManufacturingBatchNumber = SL.ManufacturingBatchNumber,
+                                 PartCertificationNumber = SL.PartCertificationNumber,
+                                 EngineSerialNumber = SL.EngineSerialNumber,
+                                 ShippingViaId = SL.ShippingViaId,
+                                 ShippingReference = SL.ShippingReference,
+                                 ShippingAccount = SL.ShippingAccount,
+                                 CertifiedDate = SL.CertifiedDate != null ? Convert.ToDateTime(SL.CertifiedDate).ToShortDateString() : null,
+                                 CertifiedBy = SL.CertifiedBy,
+                                 TagDate = SL.TagDate != null ? Convert.ToDateTime(SL.TagDate).ToShortDateString() : null,
+                                 ExpirationDate = SL.ExpirationDate != null ? Convert.ToDateTime(SL.ExpirationDate).ToShortDateString() : null,
+                                 CertifiedDueDate = SL.CertifiedDueDate != null ? Convert.ToDateTime(SL.CertifiedDueDate).ToShortDateString() : null,
+                                 AircraftTailNumber = SL.AircraftTailNumber,
+                                 GLAccountId = SL.GLAccountId,
+                                 GLAccountText = _appContext.GLAccount.Where(p => p.GLAccountId == SL.GLAccountId).FirstOrDefault().AccountName,
+                                 ConditionText = SL.ConditionId != null ? _appContext.Condition.Where(p => p.ConditionId == SL.ConditionId).FirstOrDefault().Description : "",
+                                 ManagementStructureEntityId = SL.ManagementStructureEntityId,
+                                 SiteId = SL.SiteId,
+                                 WarehouseId = SL.WarehouseId,
+                                 LocationId = SL.LocationId,
+                                 ShelfId = SL.ShelfId,
+                                 BinId = SL.BinId,
+                                 SiteText = GetSiteText(SL.SiteId),
+                                 WarehouseText = GetWarehouseText(SL.WarehouseId),
+                                 LocationText = GetLocationText(SL.LocationId),
+                                 ShelfText = GetShelfText(SL.ShelfId),
+                                 BinText = GetBinText(SL.BinId),
+                                 ObtainFrom =  SL.ObtainFrom,
+                                 Owner = SL.Owner,
+                                 TraceableTo = SL.TraceableTo,
+                                 ObtainFromText = SL.ObtainFromType == 2 ? SL.ObtainFrom : GetCustomerVendor(SL.ObtainFrom, SL.ObtainFromType),
+                                 OwnerText = SL.OwnerType == 2 ? SL.Owner : GetCustomerVendor(SL.Owner, SL.OwnerType),
+                                 TraceableToText = SL.TraceableToType == 2 ? SL.TraceableTo : GetCustomerVendor(SL.TraceableTo, SL.TraceableToType)
+                             }),
+                             TimeLife = _appContext.TimeLife.Where(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == part.RepairOrderPartRecordId),
+                             ItemMaster = new
+                             {
+                                 PartNumber = itm.PartNumber,
+                                 PartDescription = itm.PartDescription,
+                                 GLAccountId = itm.GLAccountId,
+                                 GLAccount = new
+                                 {
+                                     GLAccountId = glAcc.GLAccountId,
+                                     AccountCode = glAcc.AccountCode,
+                                     AccountName = glAcc.AccountName,
+                                     AccountCodeDescription = glAcc.AccountCodeDescription
+                                 },
+                                 IsTimeLife = itm.IsTimeLife,
+                                 IsSerialized = itm.IsSerialized,
+                                 ManufacturerId = itm.ManufacturerId,
+                                 IsPma = itm.isPma,
+                                 IsDer = itm.DER,
+                                 Manufacturer = manf != null ? new
+                                 {
+                                     ManufacturerId = manf.ManufacturerId,
+                                     Name = manf.Name,
+                                 } : null
+                             }
+                         }).ToList();
+
+            return parts;
+        }
+
+        public object GetReceivingRepairOrderForEdit(long repairOrderId)
+        {
+            var parts = (from part in _appContext.RepairOrderPart
+                         join itm in _appContext.ItemMaster on part.ItemMasterId equals itm.ItemMasterId
+                         join manf in _appContext.Manufacturer on itm.ManufacturerId equals manf.ManufacturerId
+                         into leftManf
+                         from manf in leftManf.DefaultIfEmpty()
+                         where part.RepairOrderId == repairOrderId
+                         select new
+                         {
+                             ItemMasterId = itm.ItemMasterId,
+                             PartNumber = itm.PartNumber,
+                             PartDescription = itm.PartDescription,
+                             QuantityToRepair = part.QuantityOrdered,
+                             StockLineCount = _appContext.StockLine.Count(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == part.RepairOrderPartRecordId),
+
+                             StockLine = _appContext.StockLine.Where(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == part.RepairOrderPartRecordId).Select(SL => new
+                             {
+                                 RepairOrderId = SL.RepairOrderId,
+                                 RepairOrderPartRecordId = SL.RepairOrderPartRecordId,
+                                 StockLineId = SL.StockLineId,
+                                 StockLineNumber = SL.StockLineNumber,
+                                 ControlNumber = SL.ControlNumber,
+                                 IdNumber = SL.IdNumber,
+                                 ConditionId = SL.ConditionId,
+                                 SerialNumber = SL.SerialNumber,
+                                 Quantity = SL.Quantity,
+                                 RepairOrderUnitCost = SL.RepairOrderUnitCost,
+                                 RepairOrderExtendedCost = SL.RepairOrderExtendedCost,
                                  ReceiverNumber = SL.ReceiverNumber,
                                  WorkOrder = 0,
                                  SalesOrder = 0,
@@ -236,12 +343,6 @@ namespace DAL.Repositories
                                  PartNumber = itm.PartNumber,
                                  PartDescription = itm.PartDescription,
                                  GLAccountId = itm.GLAccountId,
-                                 GLAccount = new {
-                                     GLAccountId = glAcc.GLAccountId,
-                                     AccountCode = glAcc.AccountCode,
-                                     AccountName = glAcc.AccountName,
-                                     AccountCodeDescription = glAcc.AccountCodeDescription
-                                 },
                                  IsTimeLife = itm.IsTimeLife,
                                  IsSerialized = itm.IsSerialized,
                                  ManufacturerId = itm.ManufacturerId,
@@ -256,6 +357,7 @@ namespace DAL.Repositories
                          }).ToList();
 
             return parts;
+
         }
 
         #endregion Public Methods

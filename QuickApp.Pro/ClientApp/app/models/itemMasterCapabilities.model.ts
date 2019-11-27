@@ -16,6 +16,8 @@ export class ItemMasterCapabilitiesModel {
     aircraftModelId: any;
     aircraftModelName:any;
     aircraftManufacturer: any;
+    PartId: any;
+    DashNumber: any;
     itemMasterId: any = NaN;
     entryDate: Date = new Date();
     isCMMExist: any;

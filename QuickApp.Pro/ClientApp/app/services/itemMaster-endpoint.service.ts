@@ -10,7 +10,7 @@ import { Url } from '../app.settings';
 import { ItemMasterLoanExchange } from '../models/item-master-loan-exchange.model';
 @Injectable()
 export class ItemMasterEndpoint extends EndpointFactory {
-    
+
 
     private readonly _actionsUrl: string = "/api/ItemMaster/Get";
     private readonly _actionsCapsUrl: string = "/api/ItemMaster/GetListforCapes";
@@ -58,7 +58,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
     //get
     private readonly _getAircraftMapped: string = "/api/ItemMaster/getAircraftMapped";
     private readonly _getATAMapped: string = "/api/ItemMaster/getATAMapped";
-    private readonly _getExchangeLoan: string="/api/ItemMaster/exchangeloan";
+    private readonly _getExchangeLoan: string = "/api/ItemMaster/exchangeloan";
     private readonly _ItemMasterExportInfoUrlNew: string = "/api/ItemMaster/ExportInfoPostBy_IMastID";
     //update
     private readonly _ItemMasterAircraftUpdate: string = "/api/ItemMaster/ItemMasterAircraftUpdate";
@@ -80,6 +80,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
     private readonly _getPartsDropDown: string = '/api/itemmaster/GetPartDetailsDropDown';
     private readonly _getpartdetailsWithidUrl: string = "/api/ItemMaster/GetpartdetailsWithid";
     private readonly _searchItemMaster: string = "/api/ItemMaster/search";
+    private readonly _searchPartNumberUrl: string = "/api/ItemMaster/searchpartnumber";
 
 
     get getItemMasterAircrafPosttUrl() { return this.configurations.baseUrl + this._ItemMasterAircraftPostUrlNew }
@@ -110,8 +111,9 @@ export class ItemMasterEndpoint extends EndpointFactory {
     get UpdateItemMasterTimeLifeURL() { return this.configurations.baseUrl + this._updateItemMasterTimeLife }
     get GetPartsDropDownURL() { return this.configurations.baseUrl + this._getPartsDropDown }
     get getpartdetailsWithidUrl() { return this.configurations.baseUrl + this._getpartdetailsWithidUrl };
-    get ExchangeLoanUrl(){ return this.configurations.baseUrl+ this._getExchangeLoan};
-    get getSearchUrl(){ return this.configurations.baseUrl+ this._searchItemMaster};
+    get ExchangeLoanUrl() { return this.configurations.baseUrl + this._getExchangeLoan };
+    get getSearchUrl() { return this.configurations.baseUrl + this._searchItemMaster };
+    get searchPartNumberUrl() { return this.configurations.baseUrl + this._searchPartNumberUrl; }
 
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -983,7 +985,15 @@ export class ItemMasterEndpoint extends EndpointFactory {
     searchItemMaster<T>(searchParameters: any): Observable<T> {
         return this.http.post<T>(this.getSearchUrl, JSON.stringify(searchParameters), this.getRequestHeaders())
             .catch(err => {
-                return this.handleError(err, () => this.saveATAMapping(searchParameters));
+                return this.handleError(err, () => this.searchItemMaster(searchParameters));
             })
+    }
+
+    searchPartNumber<T>(partNumber: string): Observable<T> {
+        let url = `${this.searchPartNumberUrl}/${partNumber}`;
+        return this.http.get<T>(url, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.searchPartNumber(partNumber));
+            });
     }
 }

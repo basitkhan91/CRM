@@ -3,21 +3,21 @@
     <div class="col-2 column">
       <div class="form-group">
         <label>Customer Name</label>
-        <input type="text" pInputText name="customerName" disabled="true" />
+        <input type="text" pInputText name="customerName" [ngModel]="customer.customerName" disabled="true" />
       </div>
     </div>
 
     <div class="col-2 column">
       <div class="form-group">
         <label>Customer Code</label>
-        <input type="text" pInputText name="customerCode" disabled="true" />
+        <input type="text" pInputText name="customerCode" [ngModel]="customer.customerCode" disabled="true" />
       </div>
     </div>
 
     <div class="col-2 column">
       <div class="form-group">
         <label>Promised Date</label>
-        <input type="text" pInputText name="promisedDate" disabled="true" />
+        <input type="text" pInputText name="promisedDate" [ngModel]="customer.promisedDate" disabled="true" />
       </div>
     </div>
   </div>
