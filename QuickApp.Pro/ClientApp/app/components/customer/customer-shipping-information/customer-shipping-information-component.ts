@@ -304,7 +304,19 @@ export class CustomerShippingInformationComponent implements OnInit {
         })
     }
 
+    async updateActiveorInActiveForS(rowData) {
+        console.log(rowData);
+      
+        await this.customerService.Shippingdetailsviastatus(rowData.customerShippingId, rowData.isActive, this.userName).subscribe(res => {
 
+            this.getShipViaByDomesticShippingId(rowData.customerShippingAddressId)
+           this.alertService.showMessage(
+                'Success',
+                `Sucessfully Updated   Shipping Via Status`,
+                MessageSeverity.success
+            );
+        })
+    }
     openInterShippingView(rowData) {
 
 
@@ -359,7 +371,7 @@ export class CustomerShippingInformationComponent implements OnInit {
         })
     }
     deleteInternationalShippingVia(rowData) {
-
+      
         this.customerService.deleteInternationalShipViaId(rowData.shippingViaDetailsId, this.userName).subscribe(res => {
             this.getShipViaDataByInternationalShippingId();
             this.alertService.showMessage(
@@ -369,7 +381,19 @@ export class CustomerShippingInformationComponent implements OnInit {
             );
         })
     }
+    deleteShipVia(rowData) {
+  
+        this.customerService.deleteShipViaDetails(rowData.customerShippingId, this.userName).subscribe(res => {
+            this.getShipViaByDomesticShippingId(rowData.customerShippingAddressId)
 
+            this.alertService.showMessage(
+                'Success',
+                `Sucessfully Deleted  Ship Via`,
+                MessageSeverity.success
+            );
+           
+        })
+    }
     async saveshipViaInternational() {
         const data = {
             ...this.shipViaInternational,
@@ -408,7 +432,7 @@ export class CustomerShippingInformationComponent implements OnInit {
 
     }
 
-    saveshipViaDomestic() {
+ async   saveshipViaDomestic() {
         const data = {
             ...this.shipViaDomestic,
             customerShippingAddressId: this.selectedShipViaDomestic.customerShippingAddressId,
@@ -416,24 +440,42 @@ export class CustomerShippingInformationComponent implements OnInit {
             masterCompanyId: 1,
             createdBy: this.userName,
             updatedBy: this.userName,
+
         }
+        if (!this.isEditDomesticShipVia) {
+            await this.customerService.newShippingViaAdd(data).subscribe(res => {
+                this.getShipViaByDomesticShippingId(this.selectedShipViaDomestic.customerShippingAddressId)
 
-        this.shipViaDomestic = new CustomerInternationalShipVia()
-        this.customerService.newShippingViaAdd(data).subscribe(res => {
+                this.shipViaDomestic = new CustomerInternationalShipVia()
+                this.alertService.showMessage(
+                    'Success',
+                    `Sucessfully Added Ship via for Shipping`,
+                    MessageSeverity.success
+                );
+            })
+        } else {
+            
+            await this.customerService.updateshippingViainfo(data).subscribe(res => {
+                this.getShipViaByDomesticShippingId(this.selectedShipViaDomestic.customerShippingAddressId)
+                this.isEditDomesticShipVia = false;
 
-            this.getShipViaByDomesticShippingId(this.selectedShipViaDomestic.customerShippingAddressId)
+                this.shipViaDomestic = new CustomerInternationalShipVia()
+                this.alertService.showMessage(
+                    'Success',
+                    `Sucessfully Updated Ship via for Shipping`,
+                    MessageSeverity.success
+                );
+            })
+        }
+     
 
-            this.alertService.showMessage(
-                'Success',
-                `Sucessfully Updated Ship Via `,
-                MessageSeverity.success
-            );
-        })
+        
+      
     }
 
     getShipViaByDomesticShippingId(customerShippingAddressId) {
         this.customerService.getShipViaByDomesticShippingId(customerShippingAddressId).subscribe(res => {
-
+          
 
             this.demosticShippingViaData = res;
         })
